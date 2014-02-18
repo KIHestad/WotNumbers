@@ -33,10 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
+    <Reference Include="IronPython.Modules, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,32 +67,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Dossier2json\0710.dat" />
-    <None Include="Dossier2json\0710.json" />
-    <None Include="Dossier2json\0711.dat" />
-    <None Include="Dossier2json\0711.json" />
-    <None Include="Dossier2json\0720.dat" />
-    <None Include="Dossier2json\0720.json" />
-    <None Include="Dossier2json\0730.dat" />
-    <None Include="Dossier2json\0730.json" />
-    <None Include="Dossier2json\0740.dat" />
-    <None Include="Dossier2json\0740.json" />
-    <None Include="Dossier2json\0750.dat" />
-    <None Include="Dossier2json\0750.json" />
-    <None Include="Dossier2json\0800.dat" />
-    <None Include="Dossier2json\0800.json" />
-    <None Include="Dossier2json\0810.dat" />
-    <None Include="Dossier2json\0810.json" />
-    <None Include="Dossier2json\0820.dat" />
-    <None Include="Dossier2json\0820.json" />
-    <None Include="Dossier2json\0830.dat" />
-    <None Include="Dossier2json\0830.json" />
-    <None Include="Dossier2json\0840.dat" />
-    <None Include="Dossier2json\0840.json" />
-    <None Include="Dossier2json\0850.dat" />
-    <None Include="Dossier2json\0850.json" />
-    <None Include="Dossier2json\0860.dat" />
-    <None Include="Dossier2json\0860.json" />
     <None Include="Dossier2json\compile.cmd" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\process_all_dossiers.cmd" />
@@ -113,8 +85,6 @@
     <None Include="Dossier2json\structures_65.json" />
     <None Include="Dossier2json\structures_69.json" />
     <None Include="Dossier2json\tanks.json" />
-    <None Include="Dossier2json\_damaged_.dat" />
-    <None Include="Dossier2json\_damaged_.json" />
     <None Include="Dossier2json\_error.dat" />
     <None Include="Dossier2json\_error.json" />
     <None Include="Dossier2json\_nulled_.dat" />

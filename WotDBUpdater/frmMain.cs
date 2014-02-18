@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
+using System.Collections;
+using IronPython.Runtime;
 
 namespace WotDBUpdater
 {
@@ -124,15 +126,34 @@ namespace WotDBUpdater
                 file.CopyTo(dossierfile, true);
                 Dossier2Jason(dossierfile, dossier2json);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // nothing
+                MessageBox.Show(ex.Message,"DossierFileChanged");
             }
             // Continue listening to dossier file
             fileSystemWatcherDossierFile.EnableRaisingEvents = true;
-            
         }
 
+        private void btnManualRun_Click(object sender, EventArgs e)
+        {
+            // Get new dossier file
+            ConfigData conf = new ConfigData();
+            conf = Config.GetConfig();
+            FileInfo file = new FileInfo(conf.Filename);
+            Log(DateTime.Now.ToString() + " - Manual check");
+            string appPath = Path.GetDirectoryName(Application.ExecutablePath);
+            string dossierfile = appPath + "/dossier.dat";
+            string dossier2json = appPath + "/dossier2json/wotdc2j.py";
+            try
+            {
+                file.CopyTo(dossierfile, true);
+                Dossier2Jason(dossierfile, dossier2json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "btnManualRun_Click");
+            }
+        }
         
         protected virtual bool IsFileLocked(FileInfo file)
         {
@@ -160,9 +181,24 @@ namespace WotDBUpdater
             return false;
         }
 
+
+
         static void Dossier2Jason(string dossierfile, string dossier2json)
         {
-            //ScriptEngine engine = Python.CreateEngine();
+            //try
+            //{
+            //    IDictionary<string, object> options = new Dictionary<string, object>();
+            //    dossierfile = dossierfile.Replace("\\","/");
+            //    options["Arguments"] = new[] { dossierfile, "-f", "-r" };
+            //    ScriptEngine engine = Python.CreateEngine(options);
+            //    dossier2json = dossier2json.Replace("\\", "/");
+            //    engine.ExecuteFile(dossier2json);
+            
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message,"Dossier2Jason");
+            //}
             //engine.ExecuteFile(dossier2json + " " + dossierfile + " -f -r");
 
 
@@ -171,7 +207,7 @@ namespace WotDBUpdater
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
             startInfo.FileName = "c:\\python27\\python.exe";
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.WindowStyle = ProcessWindowStyle.Normal; //.Hidden;
             startInfo.Arguments = dossier2json + " " + dossierfile + " -f -r";
 
             try
@@ -183,10 +219,11 @@ namespace WotDBUpdater
                     exeProcess.WaitForExit();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Log error.
+                MessageBox.Show(ex.Message);
             }
         }
+                
     }
 }
