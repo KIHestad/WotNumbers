@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{55E2A3AB-AA77-42B1-9720-038AED1250E3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WotDBUpdater</RootNamespace>
+    <AssemblyName>WotDBUpdater</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Dossier2json\0710.dat" />
+    <None Include="Dossier2json\0710.json" />
+    <None Include="Dossier2json\0711.dat" />
+    <None Include="Dossier2json\0711.json" />
+    <None Include="Dossier2json\0720.dat" />
+    <None Include="Dossier2json\0720.json" />
+    <None Include="Dossier2json\0730.dat" />
+    <None Include="Dossier2json\0730.json" />
+    <None Include="Dossier2json\0740.dat" />
+    <None Include="Dossier2json\0740.json" />
+    <None Include="Dossier2json\0750.dat" />
+    <None Include="Dossier2json\0750.json" />
+    <None Include="Dossier2json\0800.dat" />
+    <None Include="Dossier2json\0800.json" />
+    <None Include="Dossier2json\0810.dat" />
+    <None Include="Dossier2json\0810.json" />
+    <None Include="Dossier2json\0820.dat" />
+    <None Include="Dossier2json\0820.json" />
+    <None Include="Dossier2json\0830.dat" />
+    <None Include="Dossier2json\0830.json" />
+    <None Include="Dossier2json\0840.dat" />
+    <None Include="Dossier2json\0840.json" />
+    <None Include="Dossier2json\0850.dat" />
+    <None Include="Dossier2json\0850.json" />
+    <None Include="Dossier2json\0860.dat" />
+    <None Include="Dossier2json\0860.json" />
+    <None Include="Dossier2json\compile.cmd" />
+    <None Include="Dossier2json\maps.json" />
+    <None Include="Dossier2json\process_all_dossiers.cmd" />
+    <None Include="Dossier2json\process_last.cmd" />
+    <None Include="Dossier2json\README.md" />
+    <None Include="Dossier2json\structures_10.json" />
+    <None Include="Dossier2json\structures_17.json" />
+    <None Include="Dossier2json\structures_18.json" />
+    <None Include="Dossier2json\structures_20.json" />
+    <None Include="Dossier2json\structures_22.json" />
+    <None Include="Dossier2json\structures_24.json" />
+    <None Include="Dossier2json\structures_26.json" />
+    <None Include="Dossier2json\structures_27.json" />
+    <None Include="Dossier2json\structures_28.json" />
+    <None Include="Dossier2json\structures_29.json" />
+    <None Include="Dossier2json\structures_65.json" />
+    <None Include="Dossier2json\structures_69.json" />
+    <None Include="Dossier2json\tanks.json" />
+    <None Include="Dossier2json\_damaged_.dat" />
+    <None Include="Dossier2json\_damaged_.json" />
+    <None Include="Dossier2json\_error.dat" />
+    <None Include="Dossier2json\_error.json" />
+    <None Include="Dossier2json\_nulled_.dat" />
+    <None Include="Dossier2json\_nulled_.json" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dossier2json\compile.py" />
+    <Content Include="Dossier2json\wotdc2j.py" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
