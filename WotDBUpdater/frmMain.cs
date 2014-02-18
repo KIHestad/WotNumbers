@@ -13,7 +13,7 @@ using System.Diagnostics;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System.Collections;
-using IronPython.Runtime;
+//using IronPython.Runtime;
 
 namespace WotDBUpdater
 {
@@ -136,7 +136,7 @@ namespace WotDBUpdater
 
         private void btnManualRun_Click(object sender, EventArgs e)
         {
-            // Get new dossier file
+            // Get new dossier file -
             ConfigData conf = new ConfigData();
             conf = Config.GetConfig();
             FileInfo file = new FileInfo(conf.Filename);
