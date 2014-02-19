@@ -12,8 +12,9 @@ namespace WotDBUpdater
     [Serializable()]
     public class ConfigData
     {
-        public string Filename { get; set; }
+        public string DossierFilePath { get; set; }
         public int Run { get; set; }
+        public string DatabaseConn { get; set; }
     }
     
     class Config
@@ -54,8 +55,9 @@ namespace WotDBUpdater
         {
             // Create one with default values
             ConfigData newconf = new ConfigData();
-            newconf.Filename = "";
+            newconf.DossierFilePath = "";
             newconf.Run = 0;
+            newconf.DatabaseConn = ".;Initial Catalog=Databasename;Integrated Security=True";
             SaveConfig(newconf);   
         }
 
