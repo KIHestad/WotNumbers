@@ -56,6 +56,12 @@
     <Compile Include="frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmAddCountryToTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddCountryToTable.Designer.cs">
+      <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmDatabaseSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +95,9 @@
     </Compile>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAddCountryToTable.resx">
+      <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDatabaseSetting.resx">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>

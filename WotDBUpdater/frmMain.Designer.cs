@@ -44,6 +44,7 @@
             this.showCountryTableInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherDossierFile)).BeginInit();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
@@ -156,7 +157,8 @@
             // testingToolStripMenuItem
             // 
             this.testingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showCountryTableInGridToolStripMenuItem});
+            this.showCountryTableInGridToolStripMenuItem,
+            this.addCountryToTableToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.testingToolStripMenuItem.Text = "&Testing";
@@ -182,6 +184,13 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // addCountryToTableToolStripMenuItem
+            // 
+            this.addCountryToTableToolStripMenuItem.Name = "addCountryToTableToolStripMenuItem";
+            this.addCountryToTableToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.addCountryToTableToolStripMenuItem.Text = "Add country to table";
+            this.addCountryToTableToolStripMenuItem.Click += new System.EventHandler(this.addCountryToTableToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -228,6 +237,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem databaseSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showCountryTableInGridToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addCountryToTableToolStripMenuItem;
     }
 }
 

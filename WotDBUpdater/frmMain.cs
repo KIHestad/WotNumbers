@@ -330,7 +330,11 @@ namespace WotDBUpdater
             frm.ShowDialog();
         }
 
-        
+        private void addCountryToTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmAddCountryToTable();
+            frm.ShowDialog();
+        }
                 
     }
 }
