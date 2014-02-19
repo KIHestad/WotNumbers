@@ -45,13 +45,14 @@
             // txtConnStr
             // 
             this.txtConnStr.Location = new System.Drawing.Point(15, 32);
+            this.txtConnStr.Multiline = true;
             this.txtConnStr.Name = "txtConnStr";
-            this.txtConnStr.Size = new System.Drawing.Size(344, 20);
+            this.txtConnStr.Size = new System.Drawing.Size(344, 39);
             this.txtConnStr.TabIndex = 1;
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(284, 60);
+            this.btnSave.Location = new System.Drawing.Point(285, 81);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(74, 25);
             this.btnSave.TabIndex = 2;
@@ -63,7 +64,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(374, 98);
+            this.ClientSize = new System.Drawing.Size(373, 118);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.txtConnStr);
             this.Controls.Add(this.label1);

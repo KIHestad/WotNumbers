@@ -57,7 +57,7 @@ namespace WotDBUpdater
             ConfigData newconf = new ConfigData();
             newconf.DossierFilePath = "";
             newconf.Run = 0;
-            newconf.DatabaseConn = ".;Initial Catalog=Databasename;Integrated Security=True";
+            newconf.DatabaseConn = "Data Source=.;Initial Catalog=Databasename;Integrated Security=True;";
             SaveConfig(newconf);   
         }
 

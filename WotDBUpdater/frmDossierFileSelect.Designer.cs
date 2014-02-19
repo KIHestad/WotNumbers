@@ -37,7 +37,7 @@
             // 
             // btnOpenDossierFile
             // 
-            this.btnOpenDossierFile.Location = new System.Drawing.Point(332, 69);
+            this.btnOpenDossierFile.Location = new System.Drawing.Point(258, 69);
             this.btnOpenDossierFile.Name = "btnOpenDossierFile";
             this.btnOpenDossierFile.Size = new System.Drawing.Size(110, 25);
             this.btnOpenDossierFile.TabIndex = 5;
@@ -59,12 +59,12 @@
             this.txtDossierFilePath.Location = new System.Drawing.Point(18, 27);
             this.txtDossierFilePath.Multiline = true;
             this.txtDossierFilePath.Name = "txtDossierFilePath";
-            this.txtDossierFilePath.Size = new System.Drawing.Size(497, 36);
+            this.txtDossierFilePath.Size = new System.Drawing.Size(423, 36);
             this.txtDossierFilePath.TabIndex = 6;
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(448, 69);
+            this.btnSave.Location = new System.Drawing.Point(374, 69);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(67, 25);
             this.btnSave.TabIndex = 7;
@@ -76,7 +76,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 102);
+            this.ClientSize = new System.Drawing.Size(459, 102);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.txtDossierFilePath);
             this.Controls.Add(this.btnOpenDossierFile);
