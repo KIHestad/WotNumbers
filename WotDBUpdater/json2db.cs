@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 namespace WotDBUpdater
@@ -31,9 +32,39 @@ namespace WotDBUpdater
             }
 
             string json = sb.ToString();
+
+            try
+            {
+                ConfigData conf = new ConfigData();
+                conf = Config.GetConfig();
+                SqlConnection con = new SqlConnection(conf.DatabaseConn);
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO json (jsonId, jsonString) values (1, @json)", con);
+                cmd.Parameters.AddWithValue("@json", json);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
             //json = json.Replace("-", "999");
 
             JsonTextReader reader = new JsonTextReader(new StringReader(json));
+
+
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -62,6 +93,7 @@ namespace WotDBUpdater
             //myConnection.Open();
             //myCommand = new SqlCommand(sql, myConnection);
             //dr = myCommand.ExecuteReader(CommandBehavior.CloseConnection);
+
             //// Loop through datareader 
             //Stopwatch s = new Stopwatch();
             //s.Start();
