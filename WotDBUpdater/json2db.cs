@@ -95,7 +95,7 @@ namespace WotDBUpdater
             //myConnection.Close();
 
 
-            return (ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds);
+            return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds);
         }
     }
 }
