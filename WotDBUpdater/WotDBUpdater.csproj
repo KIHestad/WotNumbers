@@ -47,40 +47,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="frmAbout.cs">
+    <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAbout.Designer.cs">
+    <Compile Include="Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmAddCountryToTable.cs">
+    <Compile Include="Forms\frmAddCountryToTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAddCountryToTable.Designer.cs">
+    <Compile Include="Forms\frmAddCountryToTable.Designer.cs">
       <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmDatabaseSetting.cs">
+    <Compile Include="Forms\frmDatabaseSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmDatabaseSetting.Designer.cs">
+    <Compile Include="Forms\frmDatabaseSetting.Designer.cs">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmDossierFileSelect.cs">
+    <Compile Include="Forms\frmDossierFileSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmDossierFileSelect.Designer.cs">
+    <Compile Include="Forms\frmDossierFileSelect.Designer.cs">
       <DependentUpon>frmDossierFileSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMain.cs">
+    <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.cs">
+    <Compile Include="Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmCountryInGrid.cs">
+    <Compile Include="Forms\frmCountryInGrid.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmCountryInGrid.Designer.cs">
+    <Compile Include="Forms\frmCountryInGrid.Designer.cs">
       <DependentUpon>frmCountryInGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="json2db.cs" />
@@ -91,22 +91,22 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="frmAbout.resx">
+    <EmbeddedResource Include="Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmAddCountryToTable.resx">
+    <EmbeddedResource Include="Forms\frmAddCountryToTable.resx">
       <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmDatabaseSetting.resx">
+    <EmbeddedResource Include="Forms\frmDatabaseSetting.resx">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmDossierFileSelect.resx">
+    <EmbeddedResource Include="Forms\frmDossierFileSelect.resx">
       <DependentUpon>frmDossierFileSelect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmCountryInGrid.resx">
+    <EmbeddedResource Include="Forms\frmCountryInGrid.resx">
       <DependentUpon>frmCountryInGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
