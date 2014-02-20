@@ -165,6 +165,7 @@ namespace WotDBUpdater
             string dossier2jsonfile = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
             string dossiernewfile = appPath + "/dossier_new.dat"; // new dossier file
             string dossierprevfile = appPath + "/dossier_prev.dat"; // previous dossier file
+            string jsonfile = appPath + "/dossier_new.json"; // output file
             try
             {
                 bool ok = true;
@@ -184,7 +185,7 @@ namespace WotDBUpdater
                 if (ok)
                 {
                     // Convert file
-                    Dossier2Jason(dossier2jsonfile, dossiernewfile); // convert to json
+                    Dossier2Jason(dossier2jsonfile, dossiernewfile, jsonfile); // convert to json
                     // Move new file as previos (copy and delete)
                     fileInfonew.CopyTo(dossierprevfile, true); // copy and rename dossier file
                     fileInfonew.Delete();
@@ -197,7 +198,7 @@ namespace WotDBUpdater
             }
         }
                 
-        private static void Dossier2Jason(string dossier2jsonfile, string dossierfile)
+        private static void Dossier2Jason(string dossier2jsonfile, string dossierfile, string jsonfile)
         {
             // Convert to json format using python conversion from cPicle stream format
             
@@ -221,6 +222,8 @@ namespace WotDBUpdater
             {
                 MessageBox.Show(ex.Message);
             }
+            String s = json2db.readJson(jsonfile);
+            MessageBox.Show(s);
 
             // Alternative model - using IronPython
             //try
