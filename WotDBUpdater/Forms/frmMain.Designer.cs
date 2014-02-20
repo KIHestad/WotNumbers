@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.fileSystemWatcherDossierFile = new System.IO.FileSystemWatcher();
             this.btnStartStop = new System.Windows.Forms.Button();
             this.listBoxLog = new System.Windows.Forms.ListBox();
             this.btnManualRun = new System.Windows.Forms.Button();
@@ -42,23 +41,17 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCountryTableInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherDossierFile)).BeginInit();
+            this.btnTestPrev = new System.Windows.Forms.Button();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
             // 
-            // fileSystemWatcherDossierFile
-            // 
-            this.fileSystemWatcherDossierFile.EnableRaisingEvents = true;
-            this.fileSystemWatcherDossierFile.NotifyFilter = System.IO.NotifyFilters.FileName;
-            this.fileSystemWatcherDossierFile.SynchronizingObject = this;
-            // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(18, 85);
+            this.btnStartStop.Location = new System.Drawing.Point(18, 83);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(89, 34);
             this.btnStartStop.TabIndex = 3;
@@ -71,13 +64,13 @@
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.Location = new System.Drawing.Point(117, 41);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(336, 121);
+            this.listBoxLog.Size = new System.Drawing.Size(336, 160);
             this.listBoxLog.TabIndex = 4;
             this.listBoxLog.DoubleClick += new System.EventHandler(this.listBoxLog_DoubleClick);
             // 
             // btnManualRun
             // 
-            this.btnManualRun.Location = new System.Drawing.Point(18, 128);
+            this.btnManualRun.Location = new System.Drawing.Point(18, 125);
             this.btnManualRun.Name = "btnManualRun";
             this.btnManualRun.Size = new System.Drawing.Size(89, 34);
             this.btnManualRun.TabIndex = 5;
@@ -170,6 +163,13 @@
             this.showCountryTableInGridToolStripMenuItem.Text = "Show country table in grid";
             this.showCountryTableInGridToolStripMenuItem.Click += new System.EventHandler(this.showTankTableInGridToolStripMenuItem_Click);
             // 
+            // addCountryToTableToolStripMenuItem
+            // 
+            this.addCountryToTableToolStripMenuItem.Name = "addCountryToTableToolStripMenuItem";
+            this.addCountryToTableToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.addCountryToTableToolStripMenuItem.Text = "Add country to table";
+            this.addCountryToTableToolStripMenuItem.Click += new System.EventHandler(this.addCountryToTableToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -185,18 +185,22 @@
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // addCountryToTableToolStripMenuItem
+            // btnTestPrev
             // 
-            this.addCountryToTableToolStripMenuItem.Name = "addCountryToTableToolStripMenuItem";
-            this.addCountryToTableToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.addCountryToTableToolStripMenuItem.Text = "Add country to table";
-            this.addCountryToTableToolStripMenuItem.Click += new System.EventHandler(this.addCountryToTableToolStripMenuItem_Click);
+            this.btnTestPrev.Location = new System.Drawing.Point(18, 167);
+            this.btnTestPrev.Name = "btnTestPrev";
+            this.btnTestPrev.Size = new System.Drawing.Size(89, 34);
+            this.btnTestPrev.TabIndex = 11;
+            this.btnTestPrev.Text = "Test prev";
+            this.btnTestPrev.UseVisualStyleBackColor = true;
+            this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 184);
+            this.ClientSize = new System.Drawing.Size(469, 229);
+            this.Controls.Add(this.btnTestPrev);
             this.Controls.Add(this.pnlStatus);
             this.Controls.Add(this.btnManualRun);
             this.Controls.Add(this.menuMain);
@@ -209,7 +213,6 @@
             this.Name = "frmMain";
             this.Text = "WotDBUpdater";
             this.Load += new System.EventHandler(this.frmMain_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherDossierFile)).EndInit();
             this.pnlStatus.ResumeLayout(false);
             this.pnlStatus.PerformLayout();
             this.menuMain.ResumeLayout(false);
@@ -221,7 +224,6 @@
 
         #endregion
 
-        private System.IO.FileSystemWatcher fileSystemWatcherDossierFile;
         private System.Windows.Forms.Button btnStartStop;
         private System.Windows.Forms.ListBox listBoxLog;
         private System.Windows.Forms.Button btnManualRun;
@@ -238,6 +240,7 @@
         private System.Windows.Forms.ToolStripMenuItem databaseSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showCountryTableInGridToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addCountryToTableToolStripMenuItem;
+        private System.Windows.Forms.Button btnTestPrev;
     }
 }
 
