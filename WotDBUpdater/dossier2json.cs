@@ -221,7 +221,7 @@ namespace WotDBUpdater
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
             startInfo.FileName = "c:\\python27\\python.exe";
-            startInfo.WindowStyle = ProcessWindowStyle.Normal; //.Hidden;
+            startInfo.WindowStyle = ProcessWindowStyle.Normal;
             startInfo.Arguments = dossier2jsonfile + " " + dossierfile + " -f -r";
             try
             {
