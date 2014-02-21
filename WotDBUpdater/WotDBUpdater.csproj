@@ -123,10 +123,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Dossier2json\compile.cmd" />
     <None Include="Dossier2json\maps.json" />
-    <None Include="Dossier2json\process_all_dossiers.cmd" />
-    <None Include="Dossier2json\process_last.cmd" />
     <None Include="Dossier2json\README.md" />
     <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_17.json" />
