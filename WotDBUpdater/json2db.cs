@@ -16,12 +16,8 @@ namespace WotDBUpdater
 {
     class json2db
     {
-        private static class SectionType
-        {
-            public static string header = "header";
-            public static string tanks = "tanks";
-            public static string tanks_v2 = "tanks_v2";
-        }
+        
+
 
         private class TankData
         {
@@ -78,10 +74,8 @@ namespace WotDBUpdater
 
             // Declare
             TankData tank = new TankData();
-            string currentsection1 = "";
-            string currentsection3 = "";
-            string currentproperty = "";
-            object currentvalue = null;
+            jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
+            jsonProperty.Item currentItem = new jsonProperty.Item();
             
             // Loop through json file
             while (reader.Read())
@@ -90,15 +84,16 @@ namespace WotDBUpdater
                 {
                     if (reader.Value != null) // ********************************************  found main level - get section type  ************************************************************
                     {
-                        string mainlevel = reader.Value.ToString();
-                        if (mainlevel == SectionType.header) currentsection1 = SectionType.header;
-                        if (mainlevel == SectionType.tanks) currentsection1 = SectionType.tanks;
-                        if (mainlevel == SectionType.tanks_v2) currentsection1 = SectionType.tanks_v2;
-                        log.Add("\nMain section: " + currentsection1 + "(Line: " + reader.LineNumber + ")");
+                        string currentSectionType = reader.Value.ToString();
+
+                        if (currentSectionType == mainSection.header) currentItem.mainSection = mainSection.header;
+                        if (currentSectionType == mainSection.tanks) currentItem.mainSection = mainSection.tanks;
+                        if (currentSectionType == mainSection.tanks_v2) currentItem.mainSection = mainSection.tanks_v2;
+                        log.Add("\nMain section: " + currentItem.mainSection + "(Line: " + reader.LineNumber + ")");
                     }
                 }
 
-                if (currentsection1 == SectionType.tanks || currentsection1 == SectionType.tanks_v2) // Only get data from tank or tank_v2 sections, skpi header for now....
+                if (currentItem.mainSection == mainSection.tanks || currentItem.mainSection == mainSection.tanks_v2) // Only get data from tank or tank_v2 sections, skpi header for now....
                 {
                     if (reader.Depth == 2) // ********************************************  found second level = tank level  ************************************************************
                     {
@@ -106,50 +101,56 @@ namespace WotDBUpdater
                         {
                             if (tank.tankName != "") // Tank data exist, save and log
                             {
-                                log.Add("  Tank: '" + tank.tankName + "' | battleCount:" + tank.battleCount);
+                                log.Add("  > READY TO SAVE TO DB - Tank: '" + tank.tankName + "' | battleCount:" + tank.battleCount + "\n");
                             }
                             // Reset all values
                             tank.Clear();
                             // Get new tank name
-                            tank.tankName = reader.Value.ToString();
+                            currentItem.tank = reader.Value.ToString(); // add to current item
+                            tank.tankName = reader.Value.ToString(); // add to current tank
                         }
                     }
                     else
                     {
-                        if (reader.Depth == 3) // ********************************************  found third level = datatype  ************************************************************
+                        if (reader.Depth == 3) // ********************************************  found third level = subsection  ************************************************************
                         {
                             if (reader.Value != null)
                             {
-                                currentsection3 = reader.Value.ToString();
+                                currentItem.subSection = reader.Value.ToString();
+                                currentItem.property = ""; // reset property for reading next
                             }
                         }
                         else // ********************************************  found fourth level = property and value  ************************************************************
                         {
-                            if (reader.TokenType == JsonToken.PropertyName)
+                            if (currentItem.subSection != "rawdata") // skip these subsections
                             {
-                                // Property
-                                currentproperty = reader.Value.ToString();
-                            }
-                            else
-                            {
-                                if (reader.Value != null)
+                                if (reader.TokenType == JsonToken.PropertyName)
                                 {
-                                    // Value
-                                    currentvalue = reader.Value.ToString();
-
-                                    // Check data here - make separate class for this later
-                                    //
-                                    if (currentsection1 == SectionType.tanks)
+                                    // Property
+                                    currentItem.property = reader.Value.ToString();
+                                }
+                                else
+                                {
+                                    if (reader.Value != null)
                                     {
-                                        if (currentsection3 == "tankdata" && currentproperty == "battlesCount") tank.battleCount = Convert.ToInt32(currentvalue);
-                                    }
-                                    else if (currentsection1 == SectionType.tanks_v2)
-                                    {
-                                        if (currentsection3 == "a15x15" && currentproperty == "battlesCount") tank.battleCount = Convert.ToInt32(currentvalue);
-                                    }
+                                        // Value
+                                        currentItem.value = reader.Value;
 
-                                    // Temp log all data
-                                    // log.Add("      > " + currentsection1 + "  |  " + tank.tankName + "  |  " + currentsection3 + "  |  " + currentproperty + ":" + currentvalue.ToString());
+                                        // Check data here - make separate class for this later
+                                        //
+                                        if (currentItem.mainSection == mainSection.tanks)
+                                        {
+                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") tank.battleCount = Convert.ToInt32(currentItem.value);
+                                        }
+                                        else if (currentItem.mainSection == mainSection.tanks_v2)
+                                        {
+                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") tank.battleCount = Convert.ToInt32(currentItem.value);
+                                        }
+
+                                        // Temp log all data
+                                        log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+
+                                    }
                                 }
                             }
                         }

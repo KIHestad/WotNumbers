@@ -85,6 +85,7 @@
       <DependentUpon>frmCountryInGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="json2db.cs" />
+    <Compile Include="jsonProperty.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
