@@ -16,21 +16,6 @@ namespace WotDBUpdater
 {
     class json2db
     {
-        
-
-
-        private class TankData
-        {
-            public string tankName = "";
-            public int battleCount = 0;
-
-            public void Clear()
-            {
-                tankName = "";
-                battleCount = 0;
-            }
-        }
-        
         public static String readJson(string filename)
         {
             StringBuilder sb = new StringBuilder();
@@ -73,7 +58,8 @@ namespace WotDBUpdater
             List<string> log = new List<string>();
 
             // Declare
-            TankData tank = new TankData();
+            TankDataResult tdr = new TankDataResult();
+
             jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
             jsonProperty.Item currentItem = new jsonProperty.Item();
             
@@ -99,15 +85,16 @@ namespace WotDBUpdater
                     {
                         if (reader.Value != null) // found new tank
                         {
-                            if (tank.tankName != "") // Tank data exist, save and log
+                            // Tank data exist, save data found and log
+                            if (tdr.tankName != "") 
                             {
-                                log.Add("  > READY TO SAVE TO DB - Tank: '" + tank.tankName + "' | battleCount:" + tank.battleCount + "\n");
+                                log.Add("  > READY TO SAVE TO DB - Tank: '" + tdr.tankName + " | 15x15:" + tdr.used15 + " | 7x7:" + tdr.used7 + "\n");
                             }
                             // Reset all values
-                            tank.Clear();
+                            tdr.Clear();
                             // Get new tank name
                             currentItem.tank = reader.Value.ToString(); // add to current item
-                            tank.tankName = reader.Value.ToString(); // add to current tank
+                            tdr.tankName = reader.Value.ToString(); // add to current tank
                         }
                     }
                     else
@@ -143,15 +130,16 @@ namespace WotDBUpdater
                                         //
                                         if (currentItem.mainSection == mainSection.tanks)
                                         {
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") tank.battleCount = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") tdr.used15 = Convert.ToInt32(currentItem.value);
                                         }
                                         else if (currentItem.mainSection == mainSection.tanks_v2)
                                         {
-                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") tank.battleCount = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") tdr.used15 = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") tdr.used7 = Convert.ToInt32(currentItem.value);
                                         }
 
                                         // Temp log all data
-                                        log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+                                        //log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
 
                                     }
                                 }
