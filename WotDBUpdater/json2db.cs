@@ -136,6 +136,9 @@ namespace WotDBUpdater
                                         // Value
                                         currentItem.value = reader.Value;
 
+                                        // Check data
+                                        
+
                                         // Check data here - make separate class for this later
                                         //
                                         if (currentItem.mainSection == mainSection.tanks)

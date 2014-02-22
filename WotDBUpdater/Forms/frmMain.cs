@@ -28,9 +28,26 @@ namespace WotDBUpdater
         private void frmMain_Load(object sender, EventArgs e)
         {
             // Startup settings
+            Config.GetConfig();
+            Config.CheckDBConn();
+
             string result = dossier2json.updateDossierFileWatcher();
             Log(result);
             SetStartStopButton();
+            SetFormTitle();
+        }
+
+        private void SetFormTitle()
+        {
+            // Check / show logged in user
+            if (Config.Settings.UserName == "")
+            {
+                this.Text = "WotDBUpdater - NO USER SELECTED";
+            }
+            else
+            {
+                this.Text = "WotDBUpdater - " + Config.Settings.UserName;
+            }
         }
 
         void Log(string logtext, bool addTime = false)
@@ -52,10 +69,8 @@ namespace WotDBUpdater
 
         private void SetStartStopButton()
         {
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
             // Set Start - Stop button properties
-            if (conf.Run == 1)
+            if (Config.Settings.Run == 1)
             {
                 btnStartStop.Text = "Stop";
                 lblStatus.Text = "RUNNING";
@@ -72,11 +87,9 @@ namespace WotDBUpdater
         private void btnStartStop_Click(object sender, EventArgs e)
         {
             // Start - Stop button event for listening to dossier file
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
-            bool run = !(conf.Run == 1); // toggle run
-            if (run) conf.Run = 1; else conf.Run = 0; // save as 0 = false, 1=true
-            Config.SaveConfig(conf);
+            bool run = !(Config.Settings.Run == 1); // toggle run
+            if (run) Config.Settings.Run = 1; else Config.Settings.Run = 0; // save as 0 = false, 1=true
+            Config.SaveConfig();
             string result = dossier2json.updateDossierFileWatcher();
             Log(result);
             SetStartStopButton();
@@ -112,10 +125,11 @@ namespace WotDBUpdater
             Application.Exit();
         }
 
-        private void selectDossierFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void selectApplicationSetting_Click(object sender, EventArgs e)
         {
-            Form frm = new frmDossierFileSelect();
+            Form frm = new frmApplicationSetting();
             frm.ShowDialog();
+            SetFormTitle();
         }
 
         private void databaseSettingsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -20,18 +20,18 @@ namespace WotDBUpdater
         private void frmDatabaseSetting_Load(object sender, EventArgs e)
         {
             // Startup settings
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
-            txtConnStr.Text = conf.DatabaseConn;
+            txtConnStr.Text = Config.Settings.DatabaseConn;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
-            conf.DatabaseConn = txtConnStr.Text;
-            Config.SaveConfig(conf);
-            Form.ActiveForm.Close();
+            Config.Settings.DatabaseConn = txtConnStr.Text;
+            if (Config.CheckDBConn()) // check db config, displays message if error
+            {
+                Config.SaveConfig(false, false); // save without db check
+                Config.SaveConfig(false, true); // save and check user
+                Form.ActiveForm.Close();
+            }
         }
     }
 }

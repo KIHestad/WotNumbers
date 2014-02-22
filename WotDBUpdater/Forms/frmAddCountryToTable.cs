@@ -23,9 +23,7 @@ namespace WotDBUpdater
             try
             {
                 // Cet config data
-                ConfigData conf = new ConfigData();
-                conf = Config.GetConfig();
-                SqlConnection con = new SqlConnection(conf.DatabaseConn);
+                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                 con.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO country (countryid, name, shortname) VALUES (@countryid, @name, @shortname)", con);
                 cmd.Parameters.AddWithValue("@countryid", txtid.Text);

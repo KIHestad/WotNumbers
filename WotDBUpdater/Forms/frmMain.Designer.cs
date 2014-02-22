@@ -124,26 +124,26 @@
             // selectDossierFileToolStripMenuItem
             // 
             this.selectDossierFileToolStripMenuItem.Name = "selectDossierFileToolStripMenuItem";
-            this.selectDossierFileToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.selectDossierFileToolStripMenuItem.Text = "Select Dossier Filepath";
-            this.selectDossierFileToolStripMenuItem.Click += new System.EventHandler(this.selectDossierFileToolStripMenuItem_Click);
+            this.selectDossierFileToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.selectDossierFileToolStripMenuItem.Text = "Application settings";
+            this.selectDossierFileToolStripMenuItem.Click += new System.EventHandler(this.selectApplicationSetting_Click);
             // 
             // databaseSettingsToolStripMenuItem
             // 
             this.databaseSettingsToolStripMenuItem.Name = "databaseSettingsToolStripMenuItem";
-            this.databaseSettingsToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.databaseSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.databaseSettingsToolStripMenuItem.Text = "Database Settings";
             this.databaseSettingsToolStripMenuItem.Click += new System.EventHandler(this.databaseSettingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(176, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 

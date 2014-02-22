@@ -21,13 +21,11 @@ namespace WotDBUpdater
         public static string updateDossierFileWatcher()
         {
             string logtext = "Dossier file watcher stopped";
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
-            bool run = (conf.Run == 1);
+            bool run = (Config.Settings.Run == 1);
             if (run)
             {
                 logtext = "Dossier file watcher started";
-                dossierFileWatcher.Path = Path.GetDirectoryName(conf.DossierFilePath + "\\");
+                dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.DossierFilePath + "\\");
                 dossierFileWatcher.Filter = "*.dat";
                 dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
                 dossierFileWatcher.Changed += new FileSystemEventHandler(dossierFileChanged);
@@ -46,28 +44,34 @@ namespace WotDBUpdater
             {
                 // Dossier file manual handling - get all dossier files
                 logtext.Add(LogText("Manual run, looking for new dossier file"));
-                ConfigData conf = new ConfigData();
-                conf = Config.GetConfig();
-                string[] files = Directory.GetFiles(conf.DossierFilePath, "*.dat");
-                DateTime dossierfiledate = new DateTime(1970, 1, 1);
-                foreach (string file in files)
+                if (Directory.Exists(Config.Settings.DossierFilePath))
                 {
-                    FileInfo checkfile = new FileInfo(file);
-                    if (checkfile.LastWriteTime > dossierfiledate)
+                    string[] files = Directory.GetFiles(Config.Settings.DossierFilePath, "*.dat");
+                    DateTime dossierfiledate = new DateTime(1970, 1, 1);
+                    foreach (string file in files)
                     {
-                        dossierfile = checkfile.FullName;
-                        dossierfiledate = checkfile.LastWriteTime;
+                        FileInfo checkfile = new FileInfo(file);
+                        if (checkfile.LastWriteTime > dossierfiledate)
+                        {
+                            dossierfile = checkfile.FullName;
+                            dossierfiledate = checkfile.LastWriteTime;
+                        }
+                    }
+                    if (dossierfile == "")
+                    {
+                        logtext.Add(LogText(" > No dossier file found"));
+                        ok = false;
+                    }
+                    else
+                    {
+                        logtext.Add(LogText(" > Dossier file found"));
                     }
                 }
-                if (dossierfile == "")
-                {
-                    logtext.Add(LogText(" > No dossier file found"));
-                    ok = false;
-                }
                 else
-                {
-                    logtext.Add(LogText(" > Dossier file found"));
-                }
+	            {
+                    logtext.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
+                    ok = false;
+	            }
             }
             else
             {
@@ -222,7 +226,7 @@ namespace WotDBUpdater
             startInfo.UseShellExecute = false;
             startInfo.FileName = "c:\\python27\\python.exe";
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            startInfo.Arguments = dossier2jsonfile + " " + dossierfile + " -f -r";
+            startInfo.Arguments = dossier2jsonfile + " " + dossierfile +" -f -r";
             try
             {
                 // Start the process with the info we specified.

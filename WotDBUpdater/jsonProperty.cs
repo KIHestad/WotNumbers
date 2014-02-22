@@ -24,6 +24,21 @@ namespace WotDBUpdater
             public object value = null;
         }
 
+        public class ItemMapping
+        {
+            public string mainSection = "";
+            public string subSection = "";
+            public string property = "";
+            public string dbtable = "";
+            public string dbfield = "";
+        }
+
+        public List<ItemMapping> itemMappings = new List<ItemMapping>();
+
+        public void initItemMappings(List<ItemMapping> itemMappings)
+        {
+            
+        }
 
 
     }

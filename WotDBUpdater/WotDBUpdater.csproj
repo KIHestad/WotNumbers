@@ -66,11 +66,11 @@
     <Compile Include="Forms\frmDatabaseSetting.Designer.cs">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmDossierFileSelect.cs">
+    <Compile Include="Forms\frmApplicationSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmDossierFileSelect.Designer.cs">
-      <DependentUpon>frmDossierFileSelect.cs</DependentUpon>
+    <Compile Include="Forms\frmApplicationSetting.Designer.cs">
+      <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
@@ -103,8 +103,8 @@
     <EmbeddedResource Include="Forms\frmDatabaseSetting.resx">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmDossierFileSelect.resx">
-      <DependentUpon>frmDossierFileSelect.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\frmApplicationSetting.resx">
+      <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

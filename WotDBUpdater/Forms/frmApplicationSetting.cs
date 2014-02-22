@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater
 {
-    public partial class frmDossierFileSelect : Form
+    public partial class frmApplicationSetting : Form
     {
-        public frmDossierFileSelect()
+        public frmApplicationSetting()
         {
             InitializeComponent();
         }
@@ -21,9 +21,8 @@ namespace WotDBUpdater
         private void frmDossierFileSelect_Load(object sender, EventArgs e)
         {
             // Startup settings
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
-            txtDossierFilePath.Text = conf.DossierFilePath;
+            txtDossierFilePath.Text = Config.Settings.DossierFilePath;
+            txtUserName.Text = Config.Settings.UserName;
         }
 
         private void btnOpenDossierFile_Click(object sender, EventArgs e)
@@ -48,11 +47,12 @@ namespace WotDBUpdater
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            ConfigData conf = new ConfigData();
-            conf = Config.GetConfig();
-            conf.DossierFilePath = txtDossierFilePath.Text;
-            Config.SaveConfig(conf);
-            Form.ActiveForm.Close();
+            Config.Settings.DossierFilePath = txtDossierFilePath.Text;
+            Config.Settings.UserName = txtUserName.Text;
+            if (Config.SaveConfig(true,true)) // Try saving, returns error message and is false if failed
+            {
+                Form.ActiveForm.Close();
+            }
         }
 
     }
