@@ -150,9 +150,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Docs\WotStatistics\1.png" />
+    <Content Include="Docs\WotStatistics\2.png" />
+    <Content Include="Docs\WotStatistics\3.png" />
+    <Content Include="Docs\WotStatistics\4.png" />
+    <Content Include="Docs\Database\createTable.txt" />
+    <Content Include="Docs\Database\dropFk.txt" />
+    <Content Include="Docs\Database\insert.txt" />
     <Content Include="Dossier2json\compile.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>md "$(TargetDir)Dossier2json"

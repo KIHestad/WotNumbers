@@ -1,0 +1,247 @@
+
+
+drop table frag
+drop table userTankAch
+drop table battleAch
+drop table ach
+drop table battle
+drop table userTank
+drop table tank
+drop table wotUser
+drop table tankType
+drop table country
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------
+
+create table tankType (
+	tankTypeID int primary key,
+	name varchar(255),
+	shortName varchar(255)
+)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table country (
+	countryId int primary key,
+	name varchar(255),
+	shortName varchar(255)
+)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table wotUser (
+	wotUserId int identity(1,1) primary key,
+	name varchar(255)
+)
+alter table wotUser wotUserId int identity(1,1) primary key
+
+
+-------------------------------------------------------------------------------------------------
+
+create table tank (
+	tankId int primary key,
+	tankTypeId int not null,
+	countryId int not null,
+	name varchar(255),
+	tier int,
+	premium int,
+	nomDmg int,
+	expDmg int,
+	expWR int,
+	expSpot int,
+	expFrags int,
+	expDef int
+)
+
+alter table tank add foreign key (tankTypeId) references tankType (tankTypeId)
+alter table tank add foreign key (countryId) references country (countryId)
+
+
+-------------------------------------------------------------------------------------------------
+
+--Trekke ut 15 / 7 / clan / company i egne tabeller?
+--Droppe originalXP / pre88-felt?
+
+create table userTank (
+	userTankId int identity(1,1) primary key,
+	tankId int not null,
+	wotUserId int not null,
+	creationTime date,			--common.creationTime
+	updatedTime date,			--common.updated
+	lastBattleTime date,		--common.lastBattleTime
+	used15 int,					--common.has_15x15
+	battles15 int,				--a15x15.battlesCount
+	battles8p15 int,			--a15x15.battlesCountBefore8_8      aktuell i andre modi?
+	wins15 int,					--a15x15.wins
+	losses15 int,				--a15x15.losses
+	survived15 int,				--a15x15.survivedBattles
+	frags15 int,				--a15x15.frags
+	frags8p15 int,				--a15x15.frags8p					frags før ver 8.8?
+	dmg15 int,					--a15x15.damageDealt
+	dmgReceived15 int,			--a15x15.damageReceived
+	assistSpot15 int,			--a15x15_2.damageAssistedRadio
+	assistTrack15 int,			--a15x15_2.damageAssistedTrack
+	cap15 int,					--a15x15.capturePoints
+	def15 int,					--a15x15.droppedCapturePoints
+	spot15 int,					--a15x15.spotted
+	xp15 int,					--a15x15.xp
+	xp8p15 int,					--a15x15.xpBefore8_8
+	xpOriginal15 int,			--a15x15_2.originalXP				?
+	shots15 int,				--a15x15.shots
+	hits15 int,					--a15x15.hits
+	heHits15 int,				--a15x15_2.he_hits
+	pierced15 int,				--a15x15_2.pierced
+	shotsReceived15 int,		--a15x15_2.shotsReceived
+	piercedReceived15 int,		--a15x15_2.piercedReceived
+	heHitsReceived15 int,		--a15x15_2.heHitsReceived
+	noDmgShotsReceived15 int,	--a15x15_2.noDamageShotsReceived
+	maxDmg15 int,				--max15x15.maxDamage
+	maxFrags15 int,				--max15x15.maxFrags
+	maxXp15 int,				--max15x15.maxXP
+
+	used7 int,					--common.has_7x7
+	battles7 int,				--a7x7.battlesCount
+	wins7 int,					--a7x7.wins
+	losses7 int,				--a7x7.losses
+	survived7 int,				--a7x7.survivedBattles
+	frags7 int,					--a7x7.frags
+	frags8p7 int,				--a7x7.frags8p						frags før ver 8.8?
+	dmg7 int,					--a7x7.damageDealt
+	dmgReceived7 int,			--a7x7.damageReceived
+	assistSpot7 int,			--a7x7.damageAssistedRadio
+	assistTrack7 int,			--a7x7.damageAssistedTrack
+	cap7 int,					--a7x7.capturePoints
+	def7 int,					--a7x7.droppedCapturePoints
+	spot7 int,					--a7x7.spotted
+	xp7 int,					--a7x7.xp
+	xpOriginal7 int,			--a7x7.originalXP					?
+	shots7 int,					--a7x7.shots
+	hits7 int,					--a7x7.hits
+	heHits7 int,				--a7x7.he_hits
+	pierced7 int,				--a7x7.pierced
+	shotsReceived7 int,			--a7x7.shotsReceived
+	piercedReceived7 int,		--a7x7.piercedReceived
+	heHitsReceived7 int,		--a7x7.heHitsReceived
+	noDmgShotsReceived7 int,	--a7x7.noDamageShotsReceived
+	maxDmg7 int,				--max7x7.maxDamage
+	maxFrags7 int,				--max7x7.maxFrags
+	maxXp7 int,					--max7x7.maxXP
+
+	usedCompany int,			--common.has_company
+	usedClan int,				--common.has_clan
+	
+	basedOnVersion int,			--common.basedonversion			hente fra tank-tabellen?
+	battleLifeTime int,			--total.battleLifeTime
+	mileage int,				--total.mileage
+	treesCut int,				--total.treesCut
+
+	favList int,
+	eqBino int,
+	eqCoated int,
+	eqCamo int,
+	skillRecon int,
+	skillAwareness int,
+	skillCamo int,
+	skillBia int,
+	premiumCons int,
+	vehicleCamo int
+)
+
+alter table userTank add foreign key (tankId) references tank (tankId)
+alter table userTank add foreign key (wotUserId) references wotUser (wotUserId)
+
+-------------------------------------------------------------------------------------------------
+
+create table favList (
+	favListId int identity(1,1) primary key,
+	tankId int,
+	wotUserId int
+)
+
+alter table favList add foreign key (tankId) references tank (tankId)
+alter table favList add foreign key (wotUserId) references wotUser (wotUserId)
+
+-------------------------------------------------------------------------------------------------
+
+create table battle (
+	battleId int primary key,
+	userTankId int not null,
+	battleTime date,
+	victory int,
+	survived int,
+	frags int,
+	dmg int,
+	dmgReceived int,
+	assistSpot int,
+	assistTrack int,
+	cap int,
+	def int,
+	shots int,
+	hits int
+)
+
+alter table battle add foreign key (userTankId) references userTank (userTankId)
+
+-------------------------------------------------------------------------------------------------
+
+create table frag (
+	fragId int identity(1,1) primary key,
+	battleId int not null,
+	fraggedTankId int not null
+)
+
+alter table frag add foreign key (battleId) references battle (battleId)
+alter table frag add foreign key (fraggedTankId) references tank (tankId)
+
+-------------------------------------------------------------------------------------------------
+
+create table ach (
+	achId int identity(1,1) primary key,
+	name varChar(255)
+)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table userTankAch (
+	userTankId int not null,
+	achId int not null,
+	achCount int
+)
+
+alter table userTankAch add primary key (userTankId, achId)
+alter table userTankAch add foreign key (achId) references ach (achId)
+alter table userTankAch add foreign key (userTankId) references userTank (userTankId)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table battleAch (
+	battleId int not null,
+	achId int not null,
+	achCount int
+)
+
+alter table battleAch add primary key (battleId, achId)
+alter table battleAch add foreign key (achId) references ach (achId)
+alter table battleAch add foreign key (battleId) references battle (battleId)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table json (
+	jsonId int,
+	jsonString varchar(max)
+)
+

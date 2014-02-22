@@ -1,0 +1,52 @@
+----------------------------------------------------------------------------------------
+-- Foreign keys
+----------------------------------------------------------------------------------------
+
+
+set nocount on
+ 
+declare @constname      varchar(255),
+         @cmd            varchar(1024),
+ @tableid  int,
+ @tablename varchar(255)
+ 
+print ''
+print 'FJERNER FOREIGN KEYS'
+print ''
+ 
+--LOOP 1: TABLES
+declare curs_tables cursor for
+ select name, id 
+ from sysobjects 
+ where xtype = 'U ' and name != 'dtproperties'
+open curs_tables
+fetch next from curs_tables into @tablename, @tableid
+while (@@fetch_status = 0)
+begin
+ 
+ --LOOP 2: CONST
+ print 'Check table: [' + @tablename + ']'
+ declare curs_constraints cursor for
+         select  name
+         from    sysobjects 
+         where   xtype = 'F' and (status & 64) = 0 and (parent_obj = @tableid)
+ open curs_constraints
+ fetch next from curs_constraints into @constname
+ while (@@fetch_status = 0)
+ begin
+         select @cmd = 'ALTER TABLE ' + @tablename + ' DROP CONSTRAINT ' + @constname
+         exec(@cmd)
+         print ' - Delete constraint : [' + @constname + ']'
+         fetch next from curs_constraints into @constname
+ end 
+ close curs_constraints
+ deallocate curs_constraints
+ 
+fetch next from curs_tables into @tablename, @tableid
+end
+ 
+ 
+close curs_tables
+deallocate curs_tables
+/* return 0 */
+GO
