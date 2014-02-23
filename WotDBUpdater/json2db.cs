@@ -32,22 +32,6 @@ namespace WotDBUpdater
 
             string json = sb.ToString();
 
-            //try
-            //{
-            //    ConfigData conf = new ConfigData();
-            //    conf = Config.GetConfig();
-            //    SqlConnection con = new SqlConnection(conf.DatabaseConn);
-            //    con.Open();
-            //    SqlCommand cmd = new SqlCommand("INSERT INTO json (jsonId, jsonString) values (1, @json)", con);
-            //    cmd.Parameters.AddWithValue("@json", json);
-            //    cmd.ExecuteNonQuery();
-            //    con.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Database error: " + ex.Message);
-            //}
-
             Stopwatch sw = new Stopwatch();
             sw.Start();
             
@@ -88,7 +72,8 @@ namespace WotDBUpdater
                             // Tank data exist, save data found and log
                             if (tdr.tankName != "") 
                             {
-                                log.Add("  > READY TO SAVE TO DB - Tank: '" + tdr.tankName + " | 15x15:" + tdr.used15 + " | 7x7:" + tdr.used7 + "\n");
+                                tankData.SaveTankDataResult(tdr);
+                                log.Add("  > Saved to DB - Tank: '" + tdr.tankName + " | 15x15:" + tdr.battles15 + " | 7x7:" + tdr.battles7 + "\n");
                             }
                             // Reset all values
                             tdr.Clear();
@@ -130,12 +115,12 @@ namespace WotDBUpdater
                                         //
                                         if (currentItem.mainSection == mainSection.tanks)
                                         {
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") tdr.used15 = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") tdr.battles15 = Convert.ToInt32(currentItem.value);
                                         }
                                         else if (currentItem.mainSection == mainSection.tanks_v2)
                                         {
-                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") tdr.used15 = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") tdr.used7 = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") tdr.battles15 = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") tdr.battles7 = Convert.ToInt32(currentItem.value);
                                         }
 
                                         // Temp log all data
@@ -149,7 +134,10 @@ namespace WotDBUpdater
                 }
             }
             reader.Close();
-            
+
+            // Update local variables after changes
+            tankData.GetUserTanksFromDB();
+
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Log.LogToFile(log);

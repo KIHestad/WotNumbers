@@ -37,6 +37,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectDossierFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databaseSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.importTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +50,9 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listUserTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -143,6 +146,11 @@
             this.databaseSettingsToolStripMenuItem.Text = "Database Settings";
             this.databaseSettingsToolStripMenuItem.Click += new System.EventHandler(this.databaseSettingsToolStripMenuItem_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(176, 6);
+            // 
             // importTanksToolStripMenuItem
             // 
             this.importTanksToolStripMenuItem.Name = "importTanksToolStripMenuItem";
@@ -189,7 +197,10 @@
             // 
             this.testingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showCountryTableInGridToolStripMenuItem,
-            this.addCountryToTableToolStripMenuItem});
+            this.addCountryToTableToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.listTanksToolStripMenuItem,
+            this.listUserTanksToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.testingToolStripMenuItem.Text = "&Testing";
@@ -233,10 +244,24 @@
             this.btnTestPrev.UseVisualStyleBackColor = true;
             this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
-            // toolStripSeparator2
+            // toolStripSeparator3
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(210, 6);
+            // 
+            // listTanksToolStripMenuItem
+            // 
+            this.listTanksToolStripMenuItem.Name = "listTanksToolStripMenuItem";
+            this.listTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.listTanksToolStripMenuItem.Text = "List Tanks";
+            this.listTanksToolStripMenuItem.Click += new System.EventHandler(this.listTanksToolStripMenuItem_Click);
+            // 
+            // listUserTanksToolStripMenuItem
+            // 
+            this.listUserTanksToolStripMenuItem.Name = "listUserTanksToolStripMenuItem";
+            this.listUserTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.listUserTanksToolStripMenuItem.Text = "List User Tanks";
+            this.listUserTanksToolStripMenuItem.Click += new System.EventHandler(this.listUserTanksToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -289,6 +314,9 @@
         private System.Windows.Forms.ToolStripMenuItem showDatabaseTableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showDatabaseViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem listTanksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem listUserTanksToolStripMenuItem;
     }
 }
 
