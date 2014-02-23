@@ -47,12 +47,13 @@
             this.testingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCountryTableInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnTestPrev = new System.Windows.Forms.Button();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listUserTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnTestPrev = new System.Windows.Forms.Button();
+            this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -200,7 +201,8 @@
             this.addCountryToTableToolStripMenuItem,
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
-            this.listUserTanksToolStripMenuItem});
+            this.listUserTanksToolStripMenuItem,
+            this.testURLToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.testingToolStripMenuItem.Text = "&Testing";
@@ -218,6 +220,25 @@
             this.addCountryToTableToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.addCountryToTableToolStripMenuItem.Text = "Add country to table";
             this.addCountryToTableToolStripMenuItem.Click += new System.EventHandler(this.addCountryToTableToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(210, 6);
+            // 
+            // listTanksToolStripMenuItem
+            // 
+            this.listTanksToolStripMenuItem.Name = "listTanksToolStripMenuItem";
+            this.listTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.listTanksToolStripMenuItem.Text = "List Tanks";
+            this.listTanksToolStripMenuItem.Click += new System.EventHandler(this.listTanksToolStripMenuItem_Click);
+            // 
+            // listUserTanksToolStripMenuItem
+            // 
+            this.listUserTanksToolStripMenuItem.Name = "listUserTanksToolStripMenuItem";
+            this.listUserTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.listUserTanksToolStripMenuItem.Text = "List User Tanks";
+            this.listUserTanksToolStripMenuItem.Click += new System.EventHandler(this.listUserTanksToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -244,24 +265,12 @@
             this.btnTestPrev.UseVisualStyleBackColor = true;
             this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
-            // toolStripSeparator3
+            // testURLToolStripMenuItem
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(210, 6);
-            // 
-            // listTanksToolStripMenuItem
-            // 
-            this.listTanksToolStripMenuItem.Name = "listTanksToolStripMenuItem";
-            this.listTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.listTanksToolStripMenuItem.Text = "List Tanks";
-            this.listTanksToolStripMenuItem.Click += new System.EventHandler(this.listTanksToolStripMenuItem_Click);
-            // 
-            // listUserTanksToolStripMenuItem
-            // 
-            this.listUserTanksToolStripMenuItem.Name = "listUserTanksToolStripMenuItem";
-            this.listUserTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.listUserTanksToolStripMenuItem.Text = "List User Tanks";
-            this.listUserTanksToolStripMenuItem.Click += new System.EventHandler(this.listUserTanksToolStripMenuItem_Click);
+            this.testURLToolStripMenuItem.Name = "testURLToolStripMenuItem";
+            this.testURLToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testURLToolStripMenuItem.Text = "Test URL";
+            this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -317,6 +326,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem listTanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listUserTanksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testURLToolStripMenuItem;
     }
 }
 

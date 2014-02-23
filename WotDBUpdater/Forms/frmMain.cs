@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections;
 using WotDBUpdater.Forms;
+using System.Net;
 
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
@@ -182,6 +183,21 @@ namespace WotDBUpdater
         {
             string s = tankData.listUserTanks();
             MessageBox.Show(s);
+        }
+
+        private void testURLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
+            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(lcUrl);
+
+            httpRequest.Timeout = 10000;     // 10 secs
+            httpRequest.UserAgent = "Code Sample Web Client";
+
+            HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+            StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+
+            string content = responseStream.ReadToEnd();
+            MessageBox.Show(content);
         }
     }
 
