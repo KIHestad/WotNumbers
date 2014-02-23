@@ -48,28 +48,28 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="dossier2json.cs" />
-    <Compile Include="Forms\frmAbout.cs">
+    <Compile Include="Forms\Help\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmAbout.Designer.cs">
+    <Compile Include="Forms\Help\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmAddCountryToTable.cs">
+    <Compile Include="Forms\Test\frmAddCountryToTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmAddCountryToTable.Designer.cs">
+    <Compile Include="Forms\Test\frmAddCountryToTable.Designer.cs">
       <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmDatabaseSetting.cs">
+    <Compile Include="Forms\File\frmDatabaseSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmDatabaseSetting.Designer.cs">
+    <Compile Include="Forms\File\frmDatabaseSetting.Designer.cs">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmApplicationSetting.cs">
+    <Compile Include="Forms\File\frmApplicationSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmApplicationSetting.Designer.cs">
+    <Compile Include="Forms\File\frmApplicationSetting.Designer.cs">
       <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmImportTank.cs">
@@ -84,10 +84,10 @@
     <Compile Include="Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Reports\frmCountryInGrid.cs">
+    <Compile Include="Forms\Test\frmCountryInGrid.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Reports\frmCountryInGrid.Designer.cs">
+    <Compile Include="Forms\Test\frmCountryInGrid.Designer.cs">
       <DependentUpon>frmCountryInGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Reports\frmDBTable.cs">
@@ -114,16 +114,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="tankData.cs" />
-    <EmbeddedResource Include="Forms\frmAbout.resx">
+    <EmbeddedResource Include="Forms\Help\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmAddCountryToTable.resx">
+    <EmbeddedResource Include="Forms\Test\frmAddCountryToTable.resx">
       <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmDatabaseSetting.resx">
+    <EmbeddedResource Include="Forms\File\frmDatabaseSetting.resx">
       <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmApplicationSetting.resx">
+    <EmbeddedResource Include="Forms\File\frmApplicationSetting.resx">
       <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmImportTank.resx">
@@ -132,7 +132,7 @@
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Reports\frmCountryInGrid.resx">
+    <EmbeddedResource Include="Forms\Test\frmCountryInGrid.resx">
       <DependentUpon>frmCountryInGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Reports\frmDBTable.resx">
