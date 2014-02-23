@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Data.SqlClient;
+using System.Data.Sql;
 
 namespace WotDBUpdater
 {
@@ -22,7 +24,7 @@ namespace WotDBUpdater
         public static String fetchTanks()
         {
             string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string jsonfile = appPath + "/tanks.json";
+            string jsonfile = appPath + "/Dossier2json/tanks.json";
             StringBuilder sb = new StringBuilder();
             using (StreamReader sr = new StreamReader(jsonfile))
             {
@@ -40,26 +42,84 @@ namespace WotDBUpdater
 
         public static void string2json()
         {
-            String s = fetchTanks();
-            JsonTextReader reader = new JsonTextReader(new StringReader(s));
-            jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
-            jsonProperty.Item currentItem = new jsonProperty.Item();
+            String s = "{items:" + fetchTanks() + "}";
+            SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+            con.Open();
 
-            while (reader.Read())
+            int jsonCompDescr = 0;
+            int jsonType = 0;
+            int jsonCountryid = 0;
+            string jsonTitle = "";
+            int jsonTier = 0;
+            int jsonPremium = 0;
+
+            try
             {
-                if (reader.Depth <= 1) // main level ( 0 or 1)
+                SqlCommand cmd = new SqlCommand("INSERT INTO tank (tankId, tankTypeId, countryId, name, tier, premium) VALUES (@tankId, @tankTypeId, @countryId, @name, @tier, @premium)", con);
+
+                JObject root = JObject.Parse(s);
+                JArray items = (JArray)root["items"];
+                JObject item;
+                JToken jtoken;
+
+                for (int i = 0; i < items.Count; i++) //loop through rows
                 {
-                    int d = reader.Depth;
-                    
-                    int rv = (int)reader.Value;
-                    //if (reader.Value != null) // ********************************************  found main level - get section type  ************************************************************
-                    //{
-                    //    //string currentSectionType = reader.Value.ToString();
-                    //    //string cs = currentSectionType;
-                    //}
+                    item = (JObject)items[i];
+                    jtoken = item.First;
+                    string tokenValue;
+                    while (jtoken != null) //loop through columns
+                    {
+                        tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
+                        jtoken = jtoken.Next;
+
+                        if (jtoken != null)
+                        {
+                            if ((string)((JProperty)jtoken).Name.ToString() == "countryid")
+                            {
+                                jsonCountryid = (int)((JProperty)jtoken).Value;
+                            }
+                            else if ((string)((JProperty)jtoken).Name.ToString() == "type")
+                            {
+                                jsonType = (int)((JProperty)jtoken).Value;
+                            }
+                            else if ((string)((JProperty)jtoken).Name.ToString() == "tier")
+                            {
+                                jsonTier = (int)((JProperty)jtoken).Value;
+                            }
+                            else if ((string)((JProperty)jtoken).Name.ToString() == "premium")
+                            {
+                                jsonPremium = (int)((JProperty)jtoken).Value;
+                            }
+                            else if ((string)((JProperty)jtoken).Name.ToString() == "title")
+                            {
+                                jsonTitle = (string)((JProperty)jtoken).Value.ToString();
+                            }
+                            else if ((string)((JProperty)jtoken).Name.ToString() == "compDescr")
+                            {
+                                jsonCompDescr = (int)((JProperty)jtoken).Value;
+                            }
+                        }
+                    }
+
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@tankId", jsonCompDescr);
+                    cmd.Parameters.AddWithValue("@tankTypeId", jsonType);
+                    cmd.Parameters.AddWithValue("@countryid", jsonCountryid);
+                    cmd.Parameters.AddWithValue("@name", jsonTitle);
+                    cmd.Parameters.AddWithValue("@tier", jsonTier);
+                    cmd.Parameters.AddWithValue("@premium", jsonPremium);
+
+                    cmd.ExecuteNonQuery();
                 }
+                con.Close();
+
+                MessageBox.Show("Import complete!");
             }
 
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         
 
