@@ -153,8 +153,14 @@ namespace WotDBUpdater
 
         private void importTanksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new frmImportTanks();
-            frm.ShowDialog();
+            // Form frm = new frmImportTanks();
+            // frm.ShowDialog();
+        }
+
+        private void showDatabaseTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Reports.frmDBTable();
+            frm.Show();
         }
     }
 
