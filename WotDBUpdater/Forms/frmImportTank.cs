@@ -40,7 +40,7 @@ namespace WotDBUpdater.Forms
             //List<string> result = importTanks2DB.importTanks();
             //Log(result);
             //importTanks2DB.fetchTanks();
-            importTanks2DB.doSomething();
+            importTanks2DB.string2json();
         }
     }
 }

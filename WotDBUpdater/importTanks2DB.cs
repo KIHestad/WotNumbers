@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WotDBUpdater
 {
@@ -36,10 +38,12 @@ namespace WotDBUpdater
             return json;
         }
 
-        public static void doSomething()
+        public static void string2json()
         {
             String s = fetchTanks();
-            String x = s;
+            JsonTextReader reader = new JsonTextReader(new StringReader(s));
+            jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
+            jsonProperty.Item currentItem = new jsonProperty.Item();
 
         }
         
