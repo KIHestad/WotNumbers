@@ -72,6 +72,12 @@
     <Compile Include="Forms\frmApplicationSetting.Designer.cs">
       <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmImportTanks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmImportTanks.Designer.cs">
+      <DependentUpon>frmImportTanks.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,7 @@
     <Compile Include="Forms\frmCountryInGrid.Designer.cs">
       <DependentUpon>frmCountryInGrid.cs</DependentUpon>
     </Compile>
+    <Compile Include="importTanks2DB.cs" />
     <Compile Include="json2db.cs" />
     <Compile Include="jsonProperty.cs" />
     <Compile Include="Log.cs" />
@@ -106,6 +113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmApplicationSetting.resx">
       <DependentUpon>frmApplicationSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmImportTanks.resx">
+      <DependentUpon>frmImportTanks.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -151,6 +161,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Docs\Dev log\Ragnvald.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />
     <Content Include="Docs\WotStatistics\3.png" />

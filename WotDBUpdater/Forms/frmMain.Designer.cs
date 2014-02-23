@@ -45,6 +45,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
+            this.importTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -115,6 +116,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectDossierFileToolStripMenuItem,
             this.databaseSettingsToolStripMenuItem,
+            this.importTanksToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -195,6 +197,13 @@
             this.btnTestPrev.UseVisualStyleBackColor = true;
             this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
+            // importTanksToolStripMenuItem
+            // 
+            this.importTanksToolStripMenuItem.Name = "importTanksToolStripMenuItem";
+            this.importTanksToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.importTanksToolStripMenuItem.Text = "Import tanks";
+            this.importTanksToolStripMenuItem.Click += new System.EventHandler(this.importTanksToolStripMenuItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,6 +250,7 @@
         private System.Windows.Forms.ToolStripMenuItem showCountryTableInGridToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addCountryToTableToolStripMenuItem;
         private System.Windows.Forms.Button btnTestPrev;
+        private System.Windows.Forms.ToolStripMenuItem importTanksToolStripMenuItem;
     }
 }
 

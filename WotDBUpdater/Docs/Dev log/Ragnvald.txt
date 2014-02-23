@@ -1,0 +1,4 @@
+﻿22.02.14
+- Opprettet Docs for databasescript, dev log, etc
+- Opprettet menypunkt File >> Import tanks
+- Opprettet frmImportTanks. Trykk på knappen skriver tekst til listbox.

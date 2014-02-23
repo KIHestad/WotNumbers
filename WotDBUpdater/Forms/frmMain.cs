@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections;
+using WotDBUpdater.Forms;
 
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
@@ -147,6 +148,12 @@ namespace WotDBUpdater
         private void addCountryToTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form frm = new frmAddCountryToTable();
+            frm.ShowDialog();
+        }
+
+        private void importTanksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmImportTanks();
             frm.ShowDialog();
         }
     }
