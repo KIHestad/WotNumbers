@@ -143,18 +143,18 @@ namespace WotDBUpdater
                 GetUserTankBattelCount(out battles15, out battles7, tankID);
                 // 15x15 battles
                 battlessNew15 = tdr.battles15 - battles15;
-                if (battlessNew15 > 0)
+                if (battlessNew15 != 0)
                 {
                     AddComma(ref sqlFields, "battles15 = " + tdr.battles15);
                 }
                 // 7x7 battles
                 battlessNew7 = tdr.battles7 - battles7;
-                if (battlessNew7 > 0)
+                if (battlessNew7 != 0)
                 {
                     AddComma(ref sqlFields, "battles7 = " + tdr.battles7);
                 }
                 // Update now
-                UpdateUserTank(sqlFields);
+                UpdateUserTank(sqlFields, tankID);
             }
         }
 
@@ -172,14 +172,15 @@ namespace WotDBUpdater
             GetUserTanksFromDB();
         }
 
-        private static void UpdateUserTank(string sqlFields)
+        private static void UpdateUserTank(string sqlFields, int TankID)
         {
             // Update database
             if (sqlFields.Length > 0 )
             {
                 SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                 con.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE userTank SET " + sqlFields + " WHERE wotUserId=@wotUserId", con);
+                SqlCommand cmd = new SqlCommand("UPDATE userTank SET " + sqlFields + " WHERE wotUserId=@wotUserId and tankId=@tankID ", con);
+                cmd.Parameters.AddWithValue("@tankId", TankID);
                 cmd.Parameters.AddWithValue("@wotUserId", Config.Settings.UserID);
                 cmd.ExecuteNonQuery();
                 con.Close();
