@@ -80,8 +80,9 @@ create table userTank (
 	creationTime date,			--common.creationTime
 	updatedTime date,			--common.updated
 	lastBattleTime date,		--common.lastBattleTime
+	
 	used15 int,					--common.has_15x15
-	battles15 int,				--a15x15.battlesCount
+	battles15 int not null,		--a15x15.battlesCount
 	battles8p15 int,			--a15x15.battlesCountBefore8_8      aktuell i andre modi?
 	wins15 int,					--a15x15.wins
 	losses15 int,				--a15x15.losses
@@ -111,7 +112,7 @@ create table userTank (
 	maxXp15 int,				--max15x15.maxXP
 
 	used7 int,					--common.has_7x7
-	battles7 int,				--a7x7.battlesCount
+	battles7 int not null,		--a7x7.battlesCount
 	wins7 int,					--a7x7.wins
 	losses7 int,				--a7x7.losses
 	survived7 int,				--a7x7.survivedBattles
@@ -160,6 +161,8 @@ create table userTank (
 
 alter table userTank add foreign key (tankId) references tank (tankId)
 alter table userTank add foreign key (wotUserId) references wotUser (wotUserId)
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF_userTank_battles15]  DEFAULT ((0)) FOR [battles15]
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF_userTank_battles7]  DEFAULT ((0)) FOR [battles7]
 
 -------------------------------------------------------------------------------------------------
 
