@@ -41,6 +41,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDatabaseViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showDatabaseTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCountryTableInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,7 +49,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
-            this.showDatabaseViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -120,6 +121,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectDossierFileToolStripMenuItem,
             this.databaseSettingsToolStripMenuItem,
+            this.toolStripSeparator2,
             this.importTanksToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
@@ -168,6 +170,13 @@
             this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
             this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.reportsToolStripMenuItem.Text = "&Reports";
+            // 
+            // showDatabaseViewToolStripMenuItem
+            // 
+            this.showDatabaseViewToolStripMenuItem.Name = "showDatabaseViewToolStripMenuItem";
+            this.showDatabaseViewToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.showDatabaseViewToolStripMenuItem.Text = "Show Database View";
+            this.showDatabaseViewToolStripMenuItem.Click += new System.EventHandler(this.showDatabaseViewToolStripMenuItem_Click);
             // 
             // showDatabaseTableToolStripMenuItem
             // 
@@ -224,12 +233,10 @@
             this.btnTestPrev.UseVisualStyleBackColor = true;
             this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
-            // showDatabaseViewToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.showDatabaseViewToolStripMenuItem.Name = "showDatabaseViewToolStripMenuItem";
-            this.showDatabaseViewToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-            this.showDatabaseViewToolStripMenuItem.Text = "Show Database View";
-            this.showDatabaseViewToolStripMenuItem.Click += new System.EventHandler(this.showDatabaseViewToolStripMenuItem_Click);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(176, 6);
             // 
             // frmMain
             // 
@@ -281,6 +288,7 @@
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showDatabaseTableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showDatabaseViewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

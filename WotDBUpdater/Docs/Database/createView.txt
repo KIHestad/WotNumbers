@@ -1,27 +1,27 @@
 ﻿
--- Delete views first
+-- Create View showing tank data short info
 
 DROP VIEW [dbo].[tankInfoShort]
-DROP VIEW [dbo].[userTankInfoBattleCount]
-
-
--- View showing tank data short info
-
+GO
 CREATE VIEW [dbo].[tankInfoShort]
 AS
-SELECT        dbo.tank.tankId AS TankID, dbo.tank.name AS Tank, dbo.tankType.shortName AS Tanktype, dbo.country.shortName AS Country
+SELECT        dbo.tank.tankId AS TankID, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country
 FROM            dbo.country INNER JOIN
                          dbo.tank ON dbo.country.countryId = dbo.tank.countryId INNER JOIN
                          dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.tankTypeID
+GO
 
--- View showing user tanks, short tank info and battle count
+-- CreateView showing user tanks, short tank info and battle count
 
+DROP VIEW [dbo].[userTankInfoBattleCount]
+GO
 CREATE VIEW [dbo].[userTankInfoBattleCount]
 AS
-SELECT        dbo.wotUser.name AS Username, dbo.tank.name AS Tank, dbo.tankType.shortName AS Tanktype, dbo.country.shortName AS Country, 
+SELECT        dbo.wotUser.name AS Username, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
                          dbo.userTank.battles15 AS [Battles 15x15], dbo.userTank.battles7 AS [Battles 7x7]
 FROM            dbo.userTank INNER JOIN
                          dbo.wotUser ON dbo.userTank.wotUserId = dbo.wotUser.wotUserId INNER JOIN
                          dbo.tank ON dbo.userTank.tankId = dbo.tank.tankId INNER JOIN
                          dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.tankTypeID INNER JOIN
                          dbo.country ON dbo.tank.countryId = dbo.country.countryId
+GO

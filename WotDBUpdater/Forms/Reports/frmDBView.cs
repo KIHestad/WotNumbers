@@ -16,13 +16,14 @@ namespace WotDBUpdater.Forms.Reports
         public frmDBView()
         {
             InitializeComponent();
+
         }
 
         private void frmDBView_Load(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
             con.Open();
-            SqlCommand cmd = new SqlCommand("SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.tables ORDER BY TableName", con);
+            SqlCommand cmd = new SqlCommand("SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.views ORDER BY TableName", con);
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
@@ -34,10 +35,7 @@ namespace WotDBUpdater.Forms.Reports
             ddSelectView.ValueMember = "TableName";
         }
 
-        private void ddSelectView_SelectedValueChanged(object sender, EventArgs e)
-        {
-            RefreshDataGrid();
-        }
+        
 
         private void frmDBView_SizeChanged(object sender, EventArgs e)
         {
@@ -70,10 +68,19 @@ namespace WotDBUpdater.Forms.Reports
             }
         }
 
-        private void btnRefresh_Click_1(object sender, EventArgs e)
+       
+
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
             RefreshDataGrid();
         }
+
+        private void ddSelectView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshDataGrid();
+        }
+
+        
      
     }
 }

@@ -59,15 +59,16 @@
             this.ddSelectView.Name = "ddSelectView";
             this.ddSelectView.Size = new System.Drawing.Size(226, 21);
             this.ddSelectView.TabIndex = 3;
+            this.ddSelectView.SelectedIndexChanged += new System.EventHandler(this.ddSelectView_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(7, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(65, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Select Table:";
+            this.label1.Text = "Select view:";
             // 
             // panel1
             // 
@@ -88,7 +89,7 @@
             this.btnRefresh.TabIndex = 4;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click_1);
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // panel2
             // 
@@ -109,6 +110,8 @@
             this.Controls.Add(this.panel2);
             this.Name = "frmDBView";
             this.Text = "Show Database View";
+            this.Load += new System.EventHandler(this.frmDBView_Load);
+            this.SizeChanged += new System.EventHandler(this.frmDBView_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowView)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
