@@ -45,6 +45,21 @@ namespace WotDBUpdater
             jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
             jsonProperty.Item currentItem = new jsonProperty.Item();
 
+            while (reader.Read())
+            {
+                if (reader.Depth <= 1) // main level ( 0 or 1)
+                {
+                    int d = reader.Depth;
+                    
+                    int rv = (int)reader.Value;
+                    //if (reader.Value != null) // ********************************************  found main level - get section type  ************************************************************
+                    //{
+                    //    //string currentSectionType = reader.Value.ToString();
+                    //    //string cs = currentSectionType;
+                    //}
+                }
+            }
+
         }
         
 
