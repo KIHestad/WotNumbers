@@ -67,11 +67,12 @@ namespace WotDBUpdater
                     item = (JObject)items[i];
                     jtoken = item.First;
                     string tokenValue;
+                    bool tankExists = false;
                     while (jtoken != null) //loop through columns
                     {
                         tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
                         jtoken = jtoken.Next;
-
+                        
                         if (jtoken != null)
                         {
                             if ((string)((JProperty)jtoken).Name.ToString() == "countryid")
@@ -97,19 +98,27 @@ namespace WotDBUpdater
                             else if ((string)((JProperty)jtoken).Name.ToString() == "compDescr")
                             {
                                 jsonCompDescr = (int)((JProperty)jtoken).Value;
+                                tankExists = tankData.TankExist(jsonCompDescr); // Check if tank exsits
                             }
                         }
                     }
 
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@tankId", jsonCompDescr);
-                    cmd.Parameters.AddWithValue("@tankTypeId", jsonType);
-                    cmd.Parameters.AddWithValue("@countryid", jsonCountryid);
-                    cmd.Parameters.AddWithValue("@name", jsonTitle);
-                    cmd.Parameters.AddWithValue("@tier", jsonTier);
-                    cmd.Parameters.AddWithValue("@premium", jsonPremium);
-
-                    cmd.ExecuteNonQuery();
+                    if (!tankExists) // Only run if Tank does not exists in table
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@tankId", jsonCompDescr);
+                        cmd.Parameters.AddWithValue("@tankTypeId", jsonType);
+                        cmd.Parameters.AddWithValue("@countryid", jsonCountryid);
+                        cmd.Parameters.AddWithValue("@name", jsonTitle);
+                        cmd.Parameters.AddWithValue("@tier", jsonTier);
+                        cmd.Parameters.AddWithValue("@premium", jsonPremium);
+                        cmd.ExecuteNonQuery();
+                        Log.LogToFile("Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")", true);
+                    }
+                    else
+                    {
+                        Log.LogToFile("Check completed, tank exsits: " + jsonTitle + "(" + jsonCompDescr + ")", true);
+                    }
                 }
                 con.Close();
 

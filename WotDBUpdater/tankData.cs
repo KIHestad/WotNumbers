@@ -97,11 +97,16 @@ namespace WotDBUpdater
 
         public static bool HasUserTank(int tankID)
         {
-            bool hasTank = false;
             string expression = "tankId = " + tankID.ToString();
             DataRow[] foundRows = UserTank.Select(expression);
-            hasTank = (foundRows.Length > 0);
-            return hasTank;
+            return (foundRows.Length > 0);
+        }
+
+        public static bool TankExist(int tankID)
+        {
+            string expression = "tankId = " + tankID.ToString();
+            DataRow[] foundRows = Tank.Select(expression);
+            return (foundRows.Length > 0);
         }
 
         public static void GetUserTankBattelCount(out int battles15, out int battles7, int tankID)
