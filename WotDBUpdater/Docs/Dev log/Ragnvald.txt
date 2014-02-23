@@ -2,3 +2,10 @@
 - Added Docs for databasescript, dev log, etc.
 - Added menu item File >> Import tanks.
 - Added frmImportTanks. Import function stores file content in a string for now.
+
+23.02.14
+- Import Tanks function now writes tanks to DB.
+- Remaining:
+	- Add status message 'Importing tanks...'
+	- Import fails if one or more tankIds alrady exist. Function should be able to append new tanks
+	- Add function for truncing the tank table?
