@@ -36,6 +36,12 @@ namespace WotDBUpdater
             return json;
         }
 
+        public static void doSomething()
+        {
+            String s = fetchTanks();
+            String x = s;
+
+        }
         
 
 
