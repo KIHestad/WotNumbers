@@ -57,8 +57,12 @@
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.listBoxLog);
             this.Controls.Add(this.btnImportTanks);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmImportTank";
-            this.Text = "frmImportTank";
+            this.ShowInTaskbar = false;
+            this.Text = "Import Tank";
             this.ResumeLayout(false);
 
         }
