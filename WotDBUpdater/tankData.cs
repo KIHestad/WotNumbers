@@ -34,6 +34,7 @@ namespace WotDBUpdater
                 SqlCommand command = new SqlCommand("SELECT tankId, name FROM tank", conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(Tanks);
+                conn.Close();
             }
         }
 
@@ -44,9 +45,10 @@ namespace WotDBUpdater
             using(SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT userTankId, used15, used7, battles FROM tank", conn);
+                SqlCommand command = new SqlCommand("SELECT userTankId, battles15, battles7 FROM userTank", conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(UserTanks);
+                conn.Close();
             }
         }
 

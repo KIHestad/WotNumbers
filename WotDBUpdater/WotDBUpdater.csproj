@@ -170,6 +170,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Docs\Database\createView.txt" />
     <Content Include="Docs\Dev log\BadButton.txt" />
     <Content Include="Docs\Dev log\Ragnvald.txt" />
     <Content Include="Docs\WotStatistics\1.png" />

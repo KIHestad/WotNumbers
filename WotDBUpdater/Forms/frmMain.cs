@@ -36,6 +36,9 @@ namespace WotDBUpdater
             Log(result);
             SetStartStopButton();
             SetFormTitle();
+            // Init
+            tankData.GetTanks();
+            tankData.GetUserTanks();
         }
 
         private void SetFormTitle()
