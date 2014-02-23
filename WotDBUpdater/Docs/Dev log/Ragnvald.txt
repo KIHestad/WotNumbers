@@ -1,4 +1,4 @@
 ﻿22.02.14
-- Opprettet Docs for databasescript, dev log, etc
-- Opprettet menypunkt File >> Import tanks
-- Opprettet frmImportTanks. Trykk på knappen skriver tekst til listbox.
+- Added Docs for databasescript, dev log, etc.
+- Added menu item File >> Import tanks.
+- Added frmImportTanks. Import function stores file content in a string for now.

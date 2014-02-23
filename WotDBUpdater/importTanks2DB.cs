@@ -17,8 +17,33 @@ namespace WotDBUpdater
             return DateTime.Now + " " + logtext;
         }
 
+        public static String fetchTanks()
+        {
+            string appPath = Path.GetDirectoryName(Application.ExecutablePath);
+            string jsonfile = appPath + "/tanks.json";
+            StringBuilder sb = new StringBuilder();
+            using (StreamReader sr = new StreamReader(jsonfile))
+            {
+                String line;
+                // Read and display lines from the file until the end of 
+                // the file is reached.
+                while ((line = sr.ReadLine()) != null)
+                {
+                    sb.AppendLine(line);
+                }
+            }
+            string json = sb.ToString();
+            return json;
+        }
+
+        
+
+
         public static List<string> importTanks(bool TestRunPrevJsonFile = false)
         {
+
+            
+
             List<string> logtext = new List<string>();
 
             
