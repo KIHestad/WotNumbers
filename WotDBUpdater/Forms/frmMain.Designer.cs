@@ -40,14 +40,15 @@
             this.importTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDatabaseTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCountryTableInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showDatabaseTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDatabaseViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -159,6 +160,22 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // reportsToolStripMenuItem
+            // 
+            this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showDatabaseViewToolStripMenuItem,
+            this.showDatabaseTableToolStripMenuItem});
+            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
+            this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.reportsToolStripMenuItem.Text = "&Reports";
+            // 
+            // showDatabaseTableToolStripMenuItem
+            // 
+            this.showDatabaseTableToolStripMenuItem.Name = "showDatabaseTableToolStripMenuItem";
+            this.showDatabaseTableToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.showDatabaseTableToolStripMenuItem.Text = "Show Database Table";
+            this.showDatabaseTableToolStripMenuItem.Click += new System.EventHandler(this.showDatabaseTableToolStripMenuItem_Click);
+            // 
             // testingToolStripMenuItem
             // 
             this.testingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -207,20 +224,12 @@
             this.btnTestPrev.UseVisualStyleBackColor = true;
             this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
-            // reportsToolStripMenuItem
+            // showDatabaseViewToolStripMenuItem
             // 
-            this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showDatabaseTableToolStripMenuItem});
-            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
-            this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            this.reportsToolStripMenuItem.Text = "&Reports";
-            // 
-            // showDatabaseTableToolStripMenuItem
-            // 
-            this.showDatabaseTableToolStripMenuItem.Name = "showDatabaseTableToolStripMenuItem";
-            this.showDatabaseTableToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-            this.showDatabaseTableToolStripMenuItem.Text = "Show Database Table";
-            this.showDatabaseTableToolStripMenuItem.Click += new System.EventHandler(this.showDatabaseTableToolStripMenuItem_Click);
+            this.showDatabaseViewToolStripMenuItem.Name = "showDatabaseViewToolStripMenuItem";
+            this.showDatabaseViewToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.showDatabaseViewToolStripMenuItem.Text = "Show Database View";
+            this.showDatabaseViewToolStripMenuItem.Click += new System.EventHandler(this.showDatabaseViewToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -271,6 +280,7 @@
         private System.Windows.Forms.ToolStripMenuItem importTanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showDatabaseTableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showDatabaseViewToolStripMenuItem;
     }
 }
 

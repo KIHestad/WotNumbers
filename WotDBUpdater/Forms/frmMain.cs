@@ -165,6 +165,12 @@ namespace WotDBUpdater
             Form frm = new Forms.Reports.frmDBTable();
             frm.Show();
         }
+
+        private void showDatabaseViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Reports.frmDBView();
+            frm.Show();
+        }
     }
 
     
