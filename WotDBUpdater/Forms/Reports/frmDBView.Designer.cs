@@ -109,6 +109,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Name = "frmDBView";
+            this.ShowInTaskbar = false;
             this.Text = "Show Database View";
             this.Load += new System.EventHandler(this.frmDBView_Load);
             this.SizeChanged += new System.EventHandler(this.frmDBView_SizeChanged);

@@ -37,8 +37,8 @@ namespace WotDBUpdater
             SetStartStopButton();
             SetFormTitle();
             // Init
-            tankData.GetTanks();
-            tankData.GetUserTanks();
+            tankData.GetTanksFromDB();
+            tankData.GetUserTanksFromDB();
         }
 
         private void SetFormTitle()
@@ -170,6 +170,18 @@ namespace WotDBUpdater
         {
             Form frm = new Forms.Reports.frmDBView();
             frm.Show();
+        }
+
+        private void listTanksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = tankData.listTanks();
+            MessageBox.Show(s);
+        }
+
+        private void listUserTanksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = tankData.listUserTanks();
+            MessageBox.Show(s);
         }
     }
 
