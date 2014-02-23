@@ -13,12 +13,16 @@ namespace WotDBUpdater
         public string tankName = "";
         public int battles15 = 0;
         public int battles7 = 0;
+        public int wins15 = 0;
+        public int wins7 = 0;
 
         public void Clear()
         {
             tankName = "";
             battles15 = 0;
             battles7 = 0;
+            wins15 = 0;
+            wins7 = 0;
         }
     }
     
@@ -109,7 +113,7 @@ namespace WotDBUpdater
             return (foundRows.Length > 0);
         }
 
-        public static void GetUserTankBattelCount(out int battles15, out int battles7, int tankID)
+        public static void GetUserTankBattleCount(out int battles15, out int battles7, int tankID)
         {
             string expression = "tankId = " + tankID.ToString();
             DataRow[] foundRows = UserTank.Select(expression);
@@ -120,12 +124,6 @@ namespace WotDBUpdater
         #endregion
 
         #region Main
-
-        private static void AddComma(ref string current, string add)
-        {
-            if (current.Length > 0) current += ", ";
-            current += add;
-        }
 
         public static void SaveTankDataResult(TankDataResult tdr)
         {
@@ -140,23 +138,24 @@ namespace WotDBUpdater
                 }
                 // Prepare SQL UPDATE
                 string sqlFields = "";
-                // Check if battle count has increased
+                // Check if battle count has increased, first get existing battle count
                 int battles15 = 0;
                 int battles7 = 0;
-                int battlessNew15 = 0;
-                int battlessNew7 = 0;
-                GetUserTankBattelCount(out battles15, out battles7, tankID);
+                GetUserTankBattleCount(out battles15, out battles7, tankID);
                 // 15x15 battles
-                battlessNew15 = tdr.battles15 - battles15;
+                int battlessNew15 = tdr.battles15 - battles15;
                 if (battlessNew15 != 0)
                 {
-                    AddComma(ref sqlFields, "battles15 = " + tdr.battles15);
+                    sqlFields = "battles15 = " + tdr.battles15;
+                    sqlFields += ", wins15 = " + tdr.wins15;
                 }
                 // 7x7 battles
-                battlessNew7 = tdr.battles7 - battles7;
+                int battlessNew7 = tdr.battles7 - battles7;
                 if (battlessNew7 != 0)
                 {
-                    AddComma(ref sqlFields, "battles7 = " + tdr.battles7);
+                    if (sqlFields.Length > 0) sqlFields += ", ";
+                    sqlFields = "battles7 = " + tdr.battles7;
+                    sqlFields += ", wins7 = " + tdr.wins7;
                 }
                 // Update now
                 UpdateUserTank(sqlFields, tankID);

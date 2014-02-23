@@ -40,7 +40,7 @@
             this.btnImportTanks.TabIndex = 0;
             this.btnImportTanks.Text = "Import tanks";
             this.btnImportTanks.UseVisualStyleBackColor = true;
-            this.btnImportTanks.Click += new System.EventHandler(this.button1_Click);
+            this.btnImportTanks.Click += new System.EventHandler(this.btnImportTanks_Click);
             // 
             // listBoxLog
             // 

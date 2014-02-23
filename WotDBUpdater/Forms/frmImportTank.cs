@@ -35,12 +35,13 @@ namespace WotDBUpdater.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnImportTanks_Click(object sender, EventArgs e)
         {
             //List<string> result = importTanks2DB.importTanks();
             //Log(result);
             //importTanks2DB.fetchTanks();
             importTanks2DB.string2json();
+            tankData.GetTanksFromDB();
         }
     }
 }
