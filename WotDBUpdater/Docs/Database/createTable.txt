@@ -247,3 +247,28 @@ create table json (
 	jsonString varchar(max)
 )
 
+
+-------------------------------------------------------------------------------------------------
+
+--https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankturrets/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
+
+create table turret (
+	turretId int primary key,	--moduleId
+	tankId int not null,		--tanks[]
+	name varchar(255),			--name_i18n
+	tier int,					--level
+	viewRange int,				--circular_vision_radius
+	armorFront int,				--armor_forehead
+	armorSides int,				--armor_board
+	armorRead int				--armor_fedd
+)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table jsonUserTank (
+	dbField varchar(255),
+	jsonMain varchar(255),
+	jsonSub varchar(255),
+	jsonProperty varchar(255)
+)
