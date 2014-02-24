@@ -112,7 +112,7 @@ namespace WotDBUpdater
 
                                         // Temp log all data
                                         //log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
-                                        log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
+                                        //log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
                                     }
                                 }
                             }

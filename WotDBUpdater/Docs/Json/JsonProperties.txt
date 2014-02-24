@@ -154,7 +154,6 @@ tanks.tankdata.winAndSurvived
 tanks.tankdata.wins
 tanks.tankdata.xp
 tanks.tankdata.xpBefore8_8
-
 tanks.battle.battleHeroes
 tanks.battle.confederate
 tanks.battle.defender
@@ -309,6 +308,7 @@ tanks.tankdata.winAndSurvived
 tanks.tankdata.wins
 tanks.tankdata.xp
 tanks.tankdata.xpBefore8_8
+
 tanks_v2.a15x15.battlesCount
 tanks_v2.a15x15.battlesCountBefore8_8
 tanks_v2.a15x15.capturePoints
