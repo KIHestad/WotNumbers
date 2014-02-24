@@ -16,7 +16,7 @@ namespace WotDBUpdater
 {
     class json2db
     {
-        public static String readJson(string filename)
+        public static String readJson(string filename, bool ForceUpdate = false)
         {
             StringBuilder sb = new StringBuilder();
             using (StreamReader sr = new StreamReader(filename))
@@ -42,7 +42,10 @@ namespace WotDBUpdater
             List<string> log = new List<string>();
 
             // Declare
-            TankDataResult tdr = new TankDataResult();
+            DataTable NewUserTankTable = tankData.GetUserTankTableFromDB(-1); // Return no data, only empty database with structure
+            DataRow NewUserTankRow = NewUserTankTable.NewRow();
+            string tankName = "";
+            //TankDataResult tdr = new TankDataResult();
 
             jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
             jsonProperty.Item currentItem = new jsonProperty.Item();
@@ -70,16 +73,17 @@ namespace WotDBUpdater
                         if (reader.Value != null) // found new tank
                         {
                             // Tank data exist, save data found and log
-                            if (tdr.tankName != "") 
+                            if  (tankName != "") 
                             {
-                                tankData.SaveTankDataResult(tdr);
-                                log.Add("  > Saved to DB - Tank: '" + tdr.tankName + " | 15x15:" + tdr.battles15 + " | 7x7:" + tdr.battles7 + "\n");
+                                tankData.SaveTankDataResult(tankName, NewUserTankRow, ForceUpdate);
+                                log.Add("  > Saved to DB - Tank: '" + tankName + " | 15x15:" + NewUserTankRow["battles15"] + " | 7x7:" + NewUserTankRow["battles7"] + "\n");
                             }
                             // Reset all values
-                            tdr.Clear();
+                            NewUserTankTable.Clear();
+                            NewUserTankRow = NewUserTankTable.NewRow();
                             // Get new tank name
                             currentItem.tank = reader.Value.ToString(); // add to current item
-                            tdr.tankName = reader.Value.ToString(); // add to current tank
+                            tankName = reader.Value.ToString(); // add to current tank
                         }
                     }
                     else
@@ -115,19 +119,20 @@ namespace WotDBUpdater
                                         //
                                         if (currentItem.mainSection == mainSection.tanks)
                                         {
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") tdr.battles15 = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "wins") tdr.wins15 = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
                                         }
                                         else if (currentItem.mainSection == mainSection.tanks_v2)
                                         {
-                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") tdr.battles15 = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a15x15" && currentItem.property == "wins") tdr.battles15 = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") tdr.battles7 = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a7x7" && currentItem.property == "wins") tdr.battles7 = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a15x15" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") NewUserTankRow["battles7"] = Convert.ToInt32(currentItem.value);
+                                            if (currentItem.subSection == "a7x7" && currentItem.property == "wins") NewUserTankRow["wins7"] = Convert.ToInt32(currentItem.value);
                                         }
 
                                         // Temp log all data
-                                        log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+                                        // log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
 
                                     }
                                 }
@@ -137,9 +142,6 @@ namespace WotDBUpdater
                 }
             }
             reader.Close();
-
-            // Update local variables after changes
-            tankData.GetUserTanksFromDB();
 
             sw.Stop();
             TimeSpan ts = sw.Elapsed;

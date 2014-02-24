@@ -8,53 +8,35 @@ using System.Threading.Tasks;
 
 namespace WotDBUpdater
 {
-    public class TankDataResult
-    {
-        public string tankName = "";
-        public int battles15 = 0;
-        public int battles7 = 0;
-        public int wins15 = 0;
-        public int wins7 = 0;
-
-        public void Clear()
-        {
-            tankName = "";
-            battles15 = 0;
-            battles7 = 0;
-            wins15 = 0;
-            wins7 = 0;
-        }
-    }
-    
     public static class tankData
     {
         #region DatabaseLookup
 
-        public static DataTable Tank = new DataTable();
+        public static DataTable TankList = new DataTable();
 
-        public static void GetTanksFromDB()
+        public static void GetTankListFromDB()
         {
             using(SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT tankId, name FROM tank", conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(Tank);
+                adapter.Fill(TankList);
                 conn.Close();
             }
         }
 
-        public static DataTable UserTank = new DataTable();
-
-        public static void GetUserTanksFromDB()
+        public static DataTable GetUserTankTableFromDB(int tankId)
         {
-            using(SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
+                DataTable dt = new DataTable();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT tankId, battles15, battles7 FROM userTank WHERE wotUserId = " + Config.Settings.UserID, conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM userTank WHERE wotUserId = " + Config.Settings.UserID + " AND tankId=" + tankId.ToString(), conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(UserTank);
+                adapter.Fill(dt);
                 conn.Close();
+                return dt;
             }
         }
 
@@ -66,19 +48,9 @@ namespace WotDBUpdater
         public static string listTanks()
         {
             string s = "";
-            foreach (DataRow dr in Tank.Rows)
+            foreach (DataRow dr in TankList.Rows)
             {
                 s += dr["tankId"] + " : " + dr["name"] + "\n";
-            }
-            return s;
-        }
-
-        public static string listUserTanks()
-        {
-            string s = "";
-            foreach (DataRow dr in UserTank.Rows)
-            {
-                s += dr["tankId"] + "\n";
             }
             return s;
         }
@@ -87,79 +59,54 @@ namespace WotDBUpdater
         {
             int tankID = 0;
             string expression = "name = '" + TankName + "'";
-            DataRow[] foundRows = Tank.Select(expression);
+            DataRow[] foundRows = TankList.Select(expression);
             if (foundRows.Length > 0) // If tank exist in Tank table
                 tankID = Convert.ToInt32(foundRows[0]["tankId"]);
-            
-            //foreach (DataRow dr in foundRows)
-            //{
-            //    tankID = Convert.ToInt32(dr["tankId"]);
-            //}
-            
             return tankID;
-        }
-
-        public static bool HasUserTank(int tankID)
-        {
-            string expression = "tankId = " + tankID.ToString();
-            DataRow[] foundRows = UserTank.Select(expression);
-            return (foundRows.Length > 0);
         }
 
         public static bool TankExist(int tankID)
         {
             string expression = "tankId = " + tankID.ToString();
-            DataRow[] foundRows = Tank.Select(expression);
+            DataRow[] foundRows = TankList.Select(expression);
             return (foundRows.Length > 0);
-        }
-
-        public static void GetUserTankBattleCount(out int battles15, out int battles7, int tankID)
-        {
-            string expression = "tankId = " + tankID.ToString();
-            DataRow[] foundRows = UserTank.Select(expression);
-            battles15 = Convert.ToInt32(foundRows[0]["battles15"]);
-            battles7 = Convert.ToInt32(foundRows[0]["battles7"]);
         }
 
         #endregion
 
         #region Main
 
-        public static void SaveTankDataResult(TankDataResult tdr)
+        public static void SaveTankDataResult(string tankName, DataRow NewUserTankRow, bool ForceUpdate = false)
         {
             // Get Tank ID
-            int tankID = GetTankID(tdr.tankName);
+            int tankID = GetTankID(tankName);
             if (tankID > 0) // when tankid=0 the tank is not found in tank table
             {
+                // Check if battle count has increased, first get existing battle count
+                DataTable OldUserTankTable = tankData.GetUserTankTableFromDB(tankID); // Return Existing User Tank Data
                 // Check if user has this tank
-                if (!HasUserTank(tankID))
+                if (OldUserTankTable.Rows.Count == 0)
                 {
                     SaveNewUserTank(tankID);
+                    OldUserTankTable = tankData.GetUserTankTableFromDB(tankID); // Return once more now after row is added
                 }
-                // Prepare SQL UPDATE
-                string sqlFields = "";
-                // Check if battle count has increased, first get existing battle count
-                int battles15 = 0;
-                int battles7 = 0;
-                GetUserTankBattleCount(out battles15, out battles7, tankID);
-                // 15x15 battles
-                int battlessNew15 = tdr.battles15 - battles15;
-                if (battlessNew15 != 0)
+                // Check if battle count has increased, first get existing (old) tank data
+                DataRow OldUserTankRow = OldUserTankTable.Rows[0];
+                // Compare with last battle result
+                int NewUserTankRow_battles15 = 0;
+                int NewUserTankRow_battles7 = 0;
+                if (NewUserTankRow["battles15"] != DBNull.Value) NewUserTankRow_battles15 = Convert.ToInt32(NewUserTankRow["battles15"]);
+                if (NewUserTankRow["battles7"] != DBNull.Value) NewUserTankRow_battles7 = Convert.ToInt32(NewUserTankRow["battles7"]);
+                int battlessNew15 = NewUserTankRow_battles15 - Convert.ToInt32(OldUserTankRow["battles15"]);
+                int battlessNew7 = NewUserTankRow_battles7 - Convert.ToInt32(OldUserTankRow["battles7"]);
+                // Check if new battle on this tank
+                if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
                 {
-                    sqlFields = "battles15 = " + tdr.battles15;
-                    sqlFields += ", wins15 = " + tdr.wins15;
+                    // New battle detected, update tankData in DB
+                    UpdateUserTank(NewUserTankRow, OldUserTankTable);
                 }
-                // 7x7 battles
-                int battlessNew7 = tdr.battles7 - battles7;
-                if (battlessNew7 != 0)
-                {
-                    if (sqlFields.Length > 0) sqlFields += ", ";
-                    sqlFields = "battles7 = " + tdr.battles7;
-                    sqlFields += ", wins7 = " + tdr.wins7;
-                }
-                // Update now
-                UpdateUserTank(sqlFields, tankID);
             }
+            
         }
 
         private static void SaveNewUserTank(int TankID)
@@ -172,23 +119,39 @@ namespace WotDBUpdater
             cmd.Parameters.AddWithValue("@wotUserId", Config.Settings.UserID);
             cmd.ExecuteNonQuery();
             con.Close();
-            // Update local variables
-            GetUserTanksFromDB();
         }
 
-        private static void UpdateUserTank(string sqlFields, int TankID)
+        private static void UpdateUserTank(DataRow NewUserTankRow, DataTable OldUserTankTable)
         {
+            // Get fields to update
+            string sqlFields = "";
+            foreach (DataColumn column in OldUserTankTable.Columns)
+            {
+                if (column.ColumnName != "userTankId" && NewUserTankRow[column.ColumnName] != DBNull.Value) // avoid the PK
+                {
+                    if (sqlFields.Length > 0) sqlFields += ", "; // Add comma exept for first element
+                    sqlFields += column.ColumnName + "=";
+                    if (column.DataType.Name == "String")
+                    {
+                        sqlFields += "'" + NewUserTankRow[column.ColumnName] + "'";
+                    }
+                    else
+                    {
+                        sqlFields += NewUserTankRow[column.ColumnName];
+                    }
+                }
+            }
             // Update database
-            if (sqlFields.Length > 0 )
+            if (sqlFields.Length > 0)
             {
                 SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                 con.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE userTank SET " + sqlFields + " WHERE wotUserId=@wotUserId and tankId=@tankID ", con);
-                cmd.Parameters.AddWithValue("@tankId", TankID);
-                cmd.Parameters.AddWithValue("@wotUserId", Config.Settings.UserID);
+                SqlCommand cmd = new SqlCommand("UPDATE userTank SET " + sqlFields + " WHERE userTankId=@userTankId ", con);
+                cmd.Parameters.AddWithValue("@userTankId", OldUserTankTable.Rows[0]["userTankId"]);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }
+            
         }
 
         #endregion

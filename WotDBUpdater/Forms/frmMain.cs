@@ -38,8 +38,7 @@ namespace WotDBUpdater
             SetStartStopButton();
             SetFormTitle();
             // Init
-            tankData.GetTanksFromDB();
-            tankData.GetUserTanksFromDB();
+            tankData.GetTankListFromDB();
         }
 
         private void SetFormTitle()
@@ -179,12 +178,6 @@ namespace WotDBUpdater
             MessageBox.Show(s);
         }
 
-        private void listUserTanksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string s = tankData.listUserTanks();
-            MessageBox.Show(s);
-        }
-
         private void testURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
@@ -198,6 +191,13 @@ namespace WotDBUpdater
 
             string content = responseStream.ReadToEnd();
             MessageBox.Show(content);
+        }
+
+        private void btntestForce_Click(object sender, EventArgs e)
+        {
+            // Test running previous dossier file, force update - even if no more battles is detected
+            List<string> result = dossier2json.manualRun(true, true);
+            Log(result);
         }
     }
 

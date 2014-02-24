@@ -1,3 +1,6 @@
 ﻿23.2.2014
 	Moved Report Forms to separate folder
 	Added Show Table Report
+24.2.2014
+	Rewritten method for updating tankData, using DataTable and DataRow with lookup directly to DB instead of storing values in locally variables
+

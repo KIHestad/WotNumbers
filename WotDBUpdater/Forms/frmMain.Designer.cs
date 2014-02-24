@@ -49,18 +49,18 @@
             this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listUserTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
-            this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btntestForce = new System.Windows.Forms.Button();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(18, 83);
+            this.btnStartStop.Location = new System.Drawing.Point(18, 80);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(89, 34);
             this.btnStartStop.TabIndex = 3;
@@ -73,13 +73,13 @@
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.Location = new System.Drawing.Point(117, 41);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(336, 160);
+            this.listBoxLog.Size = new System.Drawing.Size(336, 199);
             this.listBoxLog.TabIndex = 4;
             this.listBoxLog.DoubleClick += new System.EventHandler(this.listBoxLog_DoubleClick);
             // 
             // btnManualRun
             // 
-            this.btnManualRun.Location = new System.Drawing.Point(18, 125);
+            this.btnManualRun.Location = new System.Drawing.Point(18, 120);
             this.btnManualRun.Name = "btnManualRun";
             this.btnManualRun.Size = new System.Drawing.Size(89, 34);
             this.btnManualRun.TabIndex = 5;
@@ -201,7 +201,6 @@
             this.addCountryToTableToolStripMenuItem,
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
-            this.listUserTanksToolStripMenuItem,
             this.testURLToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
@@ -233,12 +232,12 @@
             this.listTanksToolStripMenuItem.Text = "List Tanks";
             this.listTanksToolStripMenuItem.Click += new System.EventHandler(this.listTanksToolStripMenuItem_Click);
             // 
-            // listUserTanksToolStripMenuItem
+            // testURLToolStripMenuItem
             // 
-            this.listUserTanksToolStripMenuItem.Name = "listUserTanksToolStripMenuItem";
-            this.listUserTanksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.listUserTanksToolStripMenuItem.Text = "List User Tanks";
-            this.listUserTanksToolStripMenuItem.Click += new System.EventHandler(this.listUserTanksToolStripMenuItem_Click);
+            this.testURLToolStripMenuItem.Name = "testURLToolStripMenuItem";
+            this.testURLToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testURLToolStripMenuItem.Text = "Test URL";
+            this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -257,26 +256,30 @@
             // 
             // btnTestPrev
             // 
-            this.btnTestPrev.Location = new System.Drawing.Point(18, 167);
+            this.btnTestPrev.Location = new System.Drawing.Point(18, 160);
             this.btnTestPrev.Name = "btnTestPrev";
             this.btnTestPrev.Size = new System.Drawing.Size(89, 34);
             this.btnTestPrev.TabIndex = 11;
-            this.btnTestPrev.Text = "Test prev";
+            this.btnTestPrev.Text = "Test normal";
             this.btnTestPrev.UseVisualStyleBackColor = true;
             this.btnTestPrev.Click += new System.EventHandler(this.btnTestPrev_Click);
             // 
-            // testURLToolStripMenuItem
+            // btntestForce
             // 
-            this.testURLToolStripMenuItem.Name = "testURLToolStripMenuItem";
-            this.testURLToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.testURLToolStripMenuItem.Text = "Test URL";
-            this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
+            this.btntestForce.Location = new System.Drawing.Point(18, 200);
+            this.btntestForce.Name = "btntestForce";
+            this.btntestForce.Size = new System.Drawing.Size(89, 34);
+            this.btntestForce.TabIndex = 12;
+            this.btntestForce.Text = "Test force";
+            this.btntestForce.UseVisualStyleBackColor = true;
+            this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 229);
+            this.ClientSize = new System.Drawing.Size(469, 249);
+            this.Controls.Add(this.btntestForce);
             this.Controls.Add(this.btnTestPrev);
             this.Controls.Add(this.pnlStatus);
             this.Controls.Add(this.btnManualRun);
@@ -325,8 +328,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem listTanksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem listUserTanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testURLToolStripMenuItem;
+        private System.Windows.Forms.Button btntestForce;
     }
 }
 

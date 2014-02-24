@@ -41,7 +41,7 @@ namespace WotDBUpdater.Forms
             //Log(result);
             //importTanks2DB.fetchTanks();
             importTanks2DB.string2json();
-            tankData.GetTanksFromDB();
+            tankData.GetTankListFromDB();
         }
     }
 }

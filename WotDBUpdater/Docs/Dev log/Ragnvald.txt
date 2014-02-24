@@ -9,3 +9,5 @@
 	- Add status message 'Importing tanks...'
 	- Import fails if one or more tankIds alrady exist. Function should be able to append new tanks
 	- Add function for truncing the tank table?
+- BadButton-Comment 
+	- Fixed check for tankIds already exists, but json file method is pretty slow.... ^_^
