@@ -182,6 +182,7 @@
     <Content Include="Docs\Database\createView.txt" />
     <Content Include="Docs\Dev log\BadButton.txt" />
     <Content Include="Docs\Dev log\Ragnvald.txt" />
+    <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />
     <Content Include="Docs\WotStatistics\3.png" />

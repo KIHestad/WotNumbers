@@ -1,15 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 
 namespace WotDBUpdater
@@ -116,8 +111,8 @@ namespace WotDBUpdater
                                         UpdateNewUserTankRow(ref NewUserTankRow, currentItem); 
 
                                         // Temp log all data
-                                        log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
-
+                                        //log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+                                        log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
                                     }
                                 }
                             }

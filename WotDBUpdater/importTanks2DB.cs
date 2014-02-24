@@ -111,8 +111,9 @@ namespace WotDBUpdater
                     }
                 }
                 con.Close();
-                Log.LogToFile(log);
                 MessageBox.Show("Import complete!");
+                Log.LogToFile(log);
+                
             }
 
             catch (Exception ex)
