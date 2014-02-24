@@ -39,6 +39,7 @@ namespace WotDBUpdater
             SetFormTitle();
             // Init
             tankData.GetTankListFromDB();
+            tankData.GetJsonUserTankFromDB();
         }
 
         private void SetFormTitle()

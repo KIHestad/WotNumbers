@@ -26,7 +26,7 @@ namespace WotDBUpdater
             }
         }
 
-        public static DataTable GetUserTankTableFromDB(int tankId)
+        public static DataTable GetUserTankDataFromDB(int tankId)
         {
             using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
@@ -37,6 +37,21 @@ namespace WotDBUpdater
                 adapter.Fill(dt);
                 conn.Close();
                 return dt;
+            }
+        }
+
+        public static DataTable jsonUserTankTable = new DataTable();
+
+        public static void GetJsonUserTankFromDB()
+        {
+            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            {
+                DataTable dt = new DataTable();
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM jsonUserTank", conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(jsonUserTankTable);
+                conn.Close();
             }
         }
 
@@ -83,12 +98,12 @@ namespace WotDBUpdater
             if (tankID > 0) // when tankid=0 the tank is not found in tank table
             {
                 // Check if battle count has increased, first get existing battle count
-                DataTable OldUserTankTable = tankData.GetUserTankTableFromDB(tankID); // Return Existing User Tank Data
+                DataTable OldUserTankTable = tankData.GetUserTankDataFromDB(tankID); // Return Existing User Tank Data
                 // Check if user has this tank
                 if (OldUserTankTable.Rows.Count == 0)
                 {
                     SaveNewUserTank(tankID);
-                    OldUserTankTable = tankData.GetUserTankTableFromDB(tankID); // Return once more now after row is added
+                    OldUserTankTable = tankData.GetUserTankDataFromDB(tankID); // Return once more now after row is added
                 }
                 // Check if battle count has increased, first get existing (old) tank data
                 DataRow OldUserTankRow = OldUserTankTable.Rows[0];
