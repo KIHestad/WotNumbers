@@ -108,11 +108,11 @@ namespace WotDBUpdater
                                         currentItem.value = reader.Value;
 
                                         // Check data
-                                        string expression = "json_main='" + currentItem.mainSection + "' and json_sub='" + currentItem.subSection + "' and json_property='" + currentItem.property + "'";
+                                        string expression = "jsonMain='" + currentItem.mainSection + "' and jsonSub='" + currentItem.subSection + "' and jsonProperty='" + currentItem.property + "'";
                                         DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
                                         if (foundRows.Length != 0)
                                         {
-                                            string dbField = foundRows[0]["db_field"].ToString();
+                                            string dbField = foundRows[0]["dbField"].ToString();
                                             NewUserTankRow[dbField] = currentItem.value;
                                         }
 
