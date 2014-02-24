@@ -37,7 +37,7 @@ namespace WotDBUpdater
             List<string> log = new List<string>();
 
             // Declare
-            DataTable NewUserTankTable = tankData.GetUserTankTableFromDB(-1); // Return no data, only empty database with structure
+            DataTable NewUserTankTable = tankData.GetUserTankDataFromDB(-1); // Return no data, only empty database with structure
             DataRow NewUserTankRow = NewUserTankTable.NewRow();
             string tankName = "";
             //TankDataResult tdr = new TankDataResult();
@@ -70,8 +70,8 @@ namespace WotDBUpdater
                             // Tank data exist, save data found and log
                             if  (tankName != "") 
                             {
+                                log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewUserTankRow["battles15"] + " | battles7:" + NewUserTankRow["battles7"]);
                                 tankData.SaveTankDataResult(tankName, NewUserTankRow, ForceUpdate);
-                                log.Add("  > Saved to DB - Tank: '" + tankName + " | 15x15:" + NewUserTankRow["battles15"] + " | 7x7:" + NewUserTankRow["battles7"] + "\n");
                             }
                             // Reset all values
                             NewUserTankTable.Clear();
@@ -108,7 +108,13 @@ namespace WotDBUpdater
                                         currentItem.value = reader.Value;
 
                                         // Check data
-                                        UpdateNewUserTankRow(ref NewUserTankRow, currentItem); 
+                                        string expression = "json_main='" + currentItem.mainSection + "' and json_sub='" + currentItem.subSection + "' and json_property='" + currentItem.property + "'";
+                                        DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
+                                        if (foundRows.Length != 0)
+                                        {
+                                            string dbField = foundRows[0]["db_field"].ToString();
+                                            NewUserTankRow[dbField] = currentItem.value;
+                                        }
 
                                         // Temp log all data
                                         //log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
@@ -144,5 +150,7 @@ namespace WotDBUpdater
                 if (currentItem.subSection == "a7x7" && currentItem.property == "wins") NewUserTankRow["wins7"] = Convert.ToInt32(currentItem.value);
             }
         }
+
+     
     }
 }
