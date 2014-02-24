@@ -11,3 +11,7 @@
 	- Add function for truncing the tank table?
 - BadButton-Comment 
 	- Fixed check for tankIds already exists, but json file method is pretty slow.... ^_^
+
+24.02.14
+- BadButton Comment:
+	- Improved function for Importing tanks, problem with slow performance was due to huge log file - but some improvment added anyway

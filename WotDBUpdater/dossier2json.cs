@@ -37,6 +37,7 @@ namespace WotDBUpdater
 
         public static List<string> manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
         {
+            Log.CheckLogFileSize();
             List<string> logtext = new List<string>();
             bool ok = true;
             String dossierfile = "";
@@ -91,6 +92,7 @@ namespace WotDBUpdater
 
         private static void dossierFileChanged(object source, FileSystemEventArgs e)
         {
+            Log.CheckLogFileSize();
             List<string> logtext = new List<string>();
             logtext.Add(LogText("Dossier file watcher detected updated dossier file"));
             // Dossier file automatic handling

@@ -53,6 +53,10 @@ namespace WotDBUpdater
             int jsonTier = 0;
             int jsonPremium = 0;
 
+            Log.CheckLogFileSize();
+            List<string> log = new List<string>();
+            log.Add(DateTime.Now.ToString() + "Start checking tanks");
+
             try
             {
                 SqlCommand cmd = new SqlCommand("INSERT INTO tank (tankId, tankTypeId, countryId, name, tier, premium) VALUES (@tankId, @tankTypeId, @countryId, @name, @tier, @premium)", con);
@@ -72,33 +76,19 @@ namespace WotDBUpdater
                     {
                         tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
                         jtoken = jtoken.Next;
-                        
+                        tankExists = true;
+
                         if (jtoken != null)
                         {
-                            if ((string)((JProperty)jtoken).Name.ToString() == "countryid")
-                            {
-                                jsonCountryid = (int)((JProperty)jtoken).Value;
-                            }
-                            else if ((string)((JProperty)jtoken).Name.ToString() == "type")
-                            {
-                                jsonType = (int)((JProperty)jtoken).Value;
-                            }
-                            else if ((string)((JProperty)jtoken).Name.ToString() == "tier")
-                            {
-                                jsonTier = (int)((JProperty)jtoken).Value;
-                            }
-                            else if ((string)((JProperty)jtoken).Name.ToString() == "premium")
-                            {
-                                jsonPremium = (int)((JProperty)jtoken).Value;
-                            }
-                            else if ((string)((JProperty)jtoken).Name.ToString() == "title")
-                            {
-                                jsonTitle = (string)((JProperty)jtoken).Value.ToString();
-                            }
-                            else if ((string)((JProperty)jtoken).Name.ToString() == "compDescr")
-                            {
-                                jsonCompDescr = (int)((JProperty)jtoken).Value;
-                                tankExists = tankData.TankExist(jsonCompDescr); // Check if tank exsits
+                            string tokenName = (string)((JProperty)jtoken).Name.ToString();
+                            switch (tokenName)
+	                        {
+		                        case "countryid" : jsonCountryid = (int)((JProperty)jtoken).Value; break;
+                                case "type" : jsonType = (int)((JProperty)jtoken).Value; break;
+                                case "tier" : jsonTier = (int)((JProperty)jtoken).Value; break;
+                                case "premium" : jsonPremium = (int)((JProperty)jtoken).Value; break;
+                                case "title" : jsonTitle = (string)((JProperty)jtoken).Value.ToString(); break;
+                                case "compDescr" : jsonCompDescr = (int)((JProperty)jtoken).Value; tankExists = tankData.TankExist(jsonCompDescr); break; // Check if tank exsits
                             }
                         }
                     }
@@ -113,15 +103,15 @@ namespace WotDBUpdater
                         cmd.Parameters.AddWithValue("@tier", jsonTier);
                         cmd.Parameters.AddWithValue("@premium", jsonPremium);
                         cmd.ExecuteNonQuery();
-                        Log.LogToFile("Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")", true);
+                        log.Add("  Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")");
                     }
                     else
                     {
-                        Log.LogToFile("Check completed, tank exsits: " + jsonTitle + "(" + jsonCompDescr + ")", true);
+                        log.Add("  Check completed, tank exsits: " + jsonTitle + "(" + jsonCompDescr + ")");
                     }
                 }
                 con.Close();
-
+                Log.LogToFile(log);
                 MessageBox.Show("Import complete!");
             }
 

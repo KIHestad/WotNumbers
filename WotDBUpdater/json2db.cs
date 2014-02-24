@@ -113,26 +113,10 @@ namespace WotDBUpdater
                                         currentItem.value = reader.Value;
 
                                         // Check data
-                                        //tankData.MapData(tdr, currentItem);
-
-                                        // Check data here - make separate class for this later
-                                        //
-                                        if (currentItem.mainSection == mainSection.tanks)
-                                        {
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
-                                        }
-                                        else if (currentItem.mainSection == mainSection.tanks_v2)
-                                        {
-                                            if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a15x15" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") NewUserTankRow["battles7"] = Convert.ToInt32(currentItem.value);
-                                            if (currentItem.subSection == "a7x7" && currentItem.property == "wins") NewUserTankRow["wins7"] = Convert.ToInt32(currentItem.value);
-                                        }
+                                        UpdateNewUserTankRow(ref NewUserTankRow, currentItem); 
 
                                         // Temp log all data
-                                        // log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+                                        log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
 
                                     }
                                 }
@@ -142,13 +126,28 @@ namespace WotDBUpdater
                 }
             }
             reader.Close();
-
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Log.LogToFile(log);
-
-
             return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000"));
+        }
+
+        private static void UpdateNewUserTankRow(ref DataRow NewUserTankRow, jsonProperty.Item currentItem)
+        {
+            jsonProperty.MainSection mainSection = new jsonProperty.MainSection(); 
+            if (currentItem.mainSection == mainSection.tanks)
+            {
+                if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);
+                if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
+                if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
+            }
+            else if (currentItem.mainSection == mainSection.tanks_v2)
+            {
+                if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);
+                if (currentItem.subSection == "a15x15" && currentItem.property == "wins") NewUserTankRow["wins15"] = Convert.ToInt32(currentItem.value);
+                if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") NewUserTankRow["battles7"] = Convert.ToInt32(currentItem.value);
+                if (currentItem.subSection == "a7x7" && currentItem.property == "wins") NewUserTankRow["wins7"] = Convert.ToInt32(currentItem.value);
+            }
         }
     }
 }
