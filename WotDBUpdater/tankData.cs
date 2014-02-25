@@ -151,7 +151,7 @@ namespace WotDBUpdater
                     switch (colType)
 	                {
 		                case "String"   : sqlFields += "'" + NewUserTankRow[colName] + "'"; break;
-                        case "DateTime" : sqlFields += ConvertFromUnixTimestamp(Convert.ToDouble(NewUserTankRow[colName])).ToString("yyyy-MM-dd HH:mm:ss"); break;
+                        case "DateTime" : sqlFields += "'" + Convert.ToDateTime(NewUserTankRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
                         default         : sqlFields += NewUserTankRow[colName]; break;
 	                }
                 }
@@ -169,11 +169,7 @@ namespace WotDBUpdater
             
         }
 
-        static DateTime ConvertFromUnixTimestamp(double timestamp)
-        {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return origin.AddSeconds(timestamp);
-        }       
+            
 
         #endregion
 

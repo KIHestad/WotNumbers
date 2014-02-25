@@ -128,8 +128,14 @@ namespace WotDBUpdater
                                         DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
                                         if (foundRows.Length != 0)
                                         {
+                                            string dbType = foundRows[0]["dbType"].ToString();
                                             string dbField = foundRows[0]["dbField"].ToString();
-                                            NewUserTankRow[dbField] = currentItem.value;
+                                            switch (dbType)
+                                            {
+                                                case "String": NewUserTankRow[dbField] = currentItem.value.ToString(); ; break;
+                                                case "DateTime": NewUserTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); ; break;
+                                                case "Int": NewUserTankRow[dbField] = Convert.ToInt32(currentItem.value); ; break;
+                                            }
                                         }
 
                                         // Temp log all data
@@ -148,6 +154,12 @@ namespace WotDBUpdater
             Log.LogToFile(log);
             return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000"));
         }
+
+        static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
+        }   
 
         private static void UpdateNewUserTankRow(ref DataRow NewUserTankRow, JsonItem currentItem)
         {
