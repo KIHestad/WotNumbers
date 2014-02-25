@@ -89,7 +89,7 @@ insert into ach (name) values ('titleSniper')
 insert into ach (name) values ('warrior')
 
 
-insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField) values ('tank_v1', 'common', 'creationTime', 'creationTime')
+insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField) values ('tank_v2', 'common', 'creationTime', 'creationTime')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField) values ('tank_v2', 'common', 'updated', 'updatedTimedate')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField) values ('tank_v2', 'common', 'lastBattleTime', 'lastBattleTimedate')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField) values ('tank_v2', 'common', 'has_15x15', 'used15')

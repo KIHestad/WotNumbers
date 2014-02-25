@@ -104,7 +104,6 @@
     </Compile>
     <Compile Include="importTanks2DB.cs" />
     <Compile Include="json2db.cs" />
-    <Compile Include="jsonProperty.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

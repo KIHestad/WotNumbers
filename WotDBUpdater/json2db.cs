@@ -11,6 +11,22 @@ namespace WotDBUpdater
 {
     class json2db
     {
+        public class JsonMainSection
+        {
+            public string header = "header";
+            public string tanks = "tanks";
+            public string tanks_v2 = "tanks_v2";
+        }
+
+        public class JsonItem
+        {
+            public string mainSection = "";
+            public string tank = "";
+            public string subSection = "";
+            public string property = "";
+            public object value = null;
+        }
+        
         public static String readJson(string filename, bool ForceUpdate = false)
         {
             StringBuilder sb = new StringBuilder();
@@ -42,8 +58,8 @@ namespace WotDBUpdater
             string tankName = "";
             //TankDataResult tdr = new TankDataResult();
 
-            jsonProperty.MainSection mainSection = new jsonProperty.MainSection();
-            jsonProperty.Item currentItem = new jsonProperty.Item();
+            JsonMainSection mainSection = new JsonMainSection();
+            JsonItem currentItem = new JsonItem();
             
             // Loop through json file
             while (reader.Read())
@@ -133,9 +149,9 @@ namespace WotDBUpdater
             return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000"));
         }
 
-        private static void UpdateNewUserTankRow(ref DataRow NewUserTankRow, jsonProperty.Item currentItem)
+        private static void UpdateNewUserTankRow(ref DataRow NewUserTankRow, JsonItem currentItem)
         {
-            jsonProperty.MainSection mainSection = new jsonProperty.MainSection(); 
+            JsonMainSection mainSection = new JsonMainSection(); 
             if (currentItem.mainSection == mainSection.tanks)
             {
                 if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewUserTankRow["battles15"] = Convert.ToInt32(currentItem.value);

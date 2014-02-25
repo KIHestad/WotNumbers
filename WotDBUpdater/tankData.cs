@@ -145,15 +145,15 @@ namespace WotDBUpdater
                 if (column.ColumnName != "userTankId" && NewUserTankRow[column.ColumnName] != DBNull.Value) // avoid the PK
                 {
                     if (sqlFields.Length > 0) sqlFields += ", "; // Add comma exept for first element
-                    sqlFields += column.ColumnName + "=";
-                    if (column.DataType.Name == "String")
-                    {
-                        sqlFields += "'" + NewUserTankRow[column.ColumnName] + "'";
-                    }
-                    else
-                    {
-                        sqlFields += NewUserTankRow[column.ColumnName];
-                    }
+                    string colName = column.ColumnName;
+                    string colType = column.DataType.Name;
+                    sqlFields += colName + "=";
+                    switch (colType)
+	                {
+		                case "String"   : sqlFields += "'" + NewUserTankRow[colName] + "'"; break;
+                        case "DateTime" : sqlFields += ConvertFromUnixTimestamp(Convert.ToDouble(NewUserTankRow[colName])).ToString("yyyy-MM-dd HH:mm:ss"); break;
+                        default         : sqlFields += NewUserTankRow[colName]; break;
+	                }
                 }
             }
             // Update database
@@ -168,6 +168,12 @@ namespace WotDBUpdater
             }
             
         }
+
+        static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
+        }       
 
         #endregion
 
