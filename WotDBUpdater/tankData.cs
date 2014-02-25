@@ -41,6 +41,7 @@ namespace WotDBUpdater
         }
 
         public static DataTable jsonUserTankTable = new DataTable();
+        public static DataView jsonUserTankTableView;
 
         public static void GetJsonUserTankFromDB()
         {
@@ -53,6 +54,7 @@ namespace WotDBUpdater
                 adapter.Fill(jsonUserTankTable);
                 conn.Close();
             }
+            jsonUserTankTableView = new DataView(jsonUserTable);
         }
 
         #endregion
