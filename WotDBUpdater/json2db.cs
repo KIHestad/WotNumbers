@@ -136,8 +136,8 @@ namespace WotDBUpdater
                                         if (foundRows.Length != 0)
                                         {
                                             // test
-                                            string dataType = tankData.jsonUserTankView.[0]["dataType"].ToString();
-                                            string dbField = tankData.jsonUserTankView.[0]["dbField"].ToString();
+                                            string dataType = tankData.jsonUserTankView[0]["dataType"].ToString();
+                                            string dbField = tankData.jsonUserTankView[0]["dbField"].ToString();
                                             // old
                                             //string dataType = foundRows[0]["dataType"].ToString();
                                             //string dbField = foundRows[0]["dbField"].ToString();
