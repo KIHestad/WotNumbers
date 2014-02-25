@@ -267,6 +267,7 @@ create table turret (
 -------------------------------------------------------------------------------------------------
 
 create table jsonUserTank (
+	jsonUserTankId int identity(1,1) primary key,
 	jsonMain varchar(255),
 	jsonSub varchar(255),
 	jsonProperty varchar(255),
