@@ -55,6 +55,7 @@ namespace WotDBUpdater
                 conn.Close();
             }
             jsonUserTankView = new DataView(jsonUserTankTable);
+            //jsonUserTankView.Sort = "jsonMain,jsonSub,jsonProperty";
         }
 
         #endregion
