@@ -28,15 +28,10 @@ GO
 
 -- Create view for simulating one PK on jsonUserTank table
 
-jsonUserTankTable.PrimaryKey = new DataColumn[] {jsonUserTankTable.Columns["json
-bruker du da syntax: Concat(jsonMain, '.', jsonSub, '.', jsonProperty) as jsonMainSubProperty
-
 DROP VIEW [dbo].[jsonUserTankView]
 GO
 CREATE VIEW [dbo].[jsonUserTankView]
 AS
-SELECT        Concat(dbo.jsonUserTank.jsonMain, '.', dbo.jsonUserTank.jsonSub, '.', dbo.jsonUserTank.jsonProperty) as jsonMainSubProperty, dbo.jsonUserTank.dbField, dbo.jsonUserTank.dataType
+SELECT        Concat(dbo.jsonUserTank.jsonMain, '.', dbo.jsonUserTank.jsonSub, '.', dbo.jsonUserTank.jsonProperty) as jsonMainSubProperty,  dbo.jsonUserTank.dbField, dbo.jsonUserTank.dataType
 FROM          dbo.jsonUserTank
-ORDER BY      dbo.jsonUserTank.jsonMain, dbo.jsonUserTank.jsonSub, dbo.jsonUserTank.jsonProperty
 GO
-
