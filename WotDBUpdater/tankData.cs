@@ -54,7 +54,7 @@ namespace WotDBUpdater
                 adapter.Fill(jsonUserTankTable);
                 conn.Close();
             }
-            jsonUserTankView = new DataView(jsonUserTable);
+            jsonUserTankView = new DataView(jsonUserTankTable);
         }
 
         #endregion

@@ -127,13 +127,13 @@ namespace WotDBUpdater
                                         string expression = "jsonMain='" + currentItem.mainSection + "' and jsonSub='" + currentItem.subSection + "' and jsonProperty='" + currentItem.property + "'";
                                         
                                         // Test using DataView
-                                        tankData.jsonUserTankView.RowFilter(expression);
+                                        tankData.jsonUserTankView.RowFilter = expression;
                                         
                                         // Old
                                         //DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
-                                        
 
-                                        if (foundRows.Length != 0)
+
+                                        if (tankData.jsonUserTankView.Count != 0)
                                         {
                                             // test
                                             string dataType = tankData.jsonUserTankView[0]["dataType"].ToString();
