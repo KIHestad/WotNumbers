@@ -123,7 +123,7 @@ insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) va
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'max15x15', 'maxXP', 'maxXp15', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'common', 'has_7x7', 'used7', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'a7x7', 'battlesCount', 'battles7', 'Int')
-insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'a7x7', 'wins', 'wins7intnotnulldefault0', 'Int')
+insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'a7x7', 'wins', 'wins7', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'a7x7', 'losses', 'losses7', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'a7x7', 'survivedBattles', 'survived7', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'a7x7', 'frags', 'frags7', 'Int')
