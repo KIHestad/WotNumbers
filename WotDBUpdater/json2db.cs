@@ -126,11 +126,12 @@ namespace WotDBUpdater
                                         // Check data
                                         string expression = "jsonMain='" + currentItem.mainSection + "' and jsonSub='" + currentItem.subSection + "' and jsonProperty='" + currentItem.property + "'";
                                         DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
+
                                         if (foundRows.Length != 0)
                                         {
-                                            string dbType = foundRows[0]["dbType"].ToString();
+                                            string dataType = foundRows[0]["dataType"].ToString();
                                             string dbField = foundRows[0]["dbField"].ToString();
-                                            switch (dbType)
+                                            switch (dataType)
                                             {
                                                 case "String": NewUserTankRow[dbField] = currentItem.value.ToString(); ; break;
                                                 case "DateTime": NewUserTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); ; break;
