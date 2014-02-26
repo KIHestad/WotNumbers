@@ -40,6 +40,8 @@ namespace WotDBUpdater
             // Init
             tankData.GetTankListFromDB();
             tankData.GetJsonUserTankFromDB();
+            moduleData.GetTankListFromDB();
+            moduleData.GetJsonTurretFromDB();
         }
 
         private void SetFormTitle()
@@ -199,6 +201,17 @@ namespace WotDBUpdater
             // Test running previous dossier file, force update - even if no more battles is detected
             List<string> result = dossier2json.manualRun(true, true);
             Log(result);
+        }
+
+        private void testTankStats2DBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String s = tankStats2DB.importTurrets();
+            MessageBox.Show(s);
+        }
+
+        private void testUpdateTurretToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

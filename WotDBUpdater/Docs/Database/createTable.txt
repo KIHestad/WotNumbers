@@ -263,6 +263,62 @@ create table turret (
 	armorRead int				--armor_fedd
 )
 
+alter table turret add foreign key (tankId) references tank (tankId)
+
+
+-------------------------------------------------------------------------------------------------
+
+--https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankguns/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
+
+create table gun (
+	gunId int primary key,		--module_id
+	name varchar(255),			--name_i18n
+	tier int,					--level
+	dmg1 int,					--damage[0]
+	dmg2 int,					--damage[1]
+	dmg3 int,					--damage[2]
+	pen1 int,					--piercing_power[0]
+	pen2 int,					--piercing_power[1]
+	pen3 int,					--piercing_power[2]
+	fireRate int				--rate (missing info on autoload)
+)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table turretGun (
+	turretId int not null,		--turrets[] (gun)
+	gunId int not null,			--module_id (gun)
+)
+
+alter table turretGun add primary key (turretId, gunId)
+alter table turretGun add foreign key (turretId) references turret (turretId)
+alter table turretGun add foreign key (gunId) references gun (gunId)
+
+
+-------------------------------------------------------------------------------------------------
+
+--https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankradios/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
+
+create table radio (
+	radioId int primary key,	--module_id
+	name varchar(255),			--name_i18n
+	tier int,					--level
+	signalRange int				--distance
+)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table tankRadio (
+	tankId int not null,		--tanks[] (radio)
+	radioId int not null,		--module_id (radio)
+)
+
+alter table tankRadio add primary key (tankId, radioId)
+alter table tankRadio add foreign key (tankId) references tank (tankId)
+alter table tankRadio add foreign key (radioId) references radio (radioId)
+
 
 -------------------------------------------------------------------------------------------------
 
@@ -270,6 +326,13 @@ create table jsonUserTank (
 	jsonUserTankId int identity(1,1) primary key,
 	jsonMain varchar(255),
 	jsonSub varchar(255),
+	jsonProperty varchar(255),
+	dbField varchar(255),
+	dataType varchar(255)
+)
+
+create table jsonTurret (
+	jsonTurretId int identity(1,1) primary key,
 	jsonProperty varchar(255),
 	dbField varchar(255),
 	dataType varchar(255)

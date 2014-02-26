@@ -50,6 +50,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testTankStats2DBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
@@ -201,7 +202,8 @@
             this.addCountryToTableToolStripMenuItem,
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
-            this.testURLToolStripMenuItem});
+            this.testURLToolStripMenuItem,
+            this.testTankStats2DBToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.testingToolStripMenuItem.Text = "&Testing";
@@ -238,6 +240,13 @@
             this.testURLToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.testURLToolStripMenuItem.Text = "Test URL";
             this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
+            // 
+            // testTankStats2DBToolStripMenuItem
+            // 
+            this.testTankStats2DBToolStripMenuItem.Name = "testTankStats2DBToolStripMenuItem";
+            this.testTankStats2DBToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testTankStats2DBToolStripMenuItem.Text = "Test tankStats2DB";
+            this.testTankStats2DBToolStripMenuItem.Click += new System.EventHandler(this.testTankStats2DBToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -330,6 +339,7 @@
         private System.Windows.Forms.ToolStripMenuItem listTanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testURLToolStripMenuItem;
         private System.Windows.Forms.Button btntestForce;
+        private System.Windows.Forms.ToolStripMenuItem testTankStats2DBToolStripMenuItem;
     }
 }
 
