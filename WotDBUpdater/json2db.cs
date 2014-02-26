@@ -123,24 +123,16 @@ namespace WotDBUpdater
                                         // Value
                                         currentItem.value = reader.Value;
 
-                                        // Check data
-                                        string expression = "jsonMain='" + currentItem.mainSection + "' and jsonSub='" + currentItem.subSection + "' and jsonProperty='" + currentItem.property + "'";
-                                        
-                                        // Test using DataView
-                                        tankData.jsonUserTankView.RowFilter = expression;
-                                        
-                                        // Old
-                                        //DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
+                                        // Check data by getting jsonUserTank Mapping
+                                        string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
+                                        DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
 
-
-                                        if (tankData.jsonUserTankView.Count != 0)
+                                        // IF mapping found add currentItem into NewUserTankRow
+                                        if (foundRows.Length != 0)
                                         {
-                                            // test
-                                            string dataType = tankData.jsonUserTankView[0]["dataType"].ToString();
-                                            string dbField = tankData.jsonUserTankView[0]["dbField"].ToString();
-                                            // old
-                                            //string dataType = foundRows[0]["dataType"].ToString();
-                                            //string dbField = foundRows[0]["dbField"].ToString();
+                                            // Add now
+                                            string dataType = foundRows[0]["dataType"].ToString();
+                                            string dbField = foundRows[0]["dbField"].ToString();
                                             switch (dataType)
                                             {
                                                 case "String": NewUserTankRow[dbField] = currentItem.value.ToString(); ; break;

@@ -41,21 +41,19 @@ namespace WotDBUpdater
         }
 
         public static DataTable jsonUserTankTable = new DataTable();
-        public static DataView jsonUserTankView;
-
+        
         public static void GetJsonUserTankFromDB()
         {
             using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM jsonUserTank", conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM jsonUserTankView", conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(jsonUserTankTable);
                 conn.Close();
             }
-            jsonUserTankView = new DataView(jsonUserTankTable);
-            //jsonUserTankView.Sort = "jsonMain,jsonSub,jsonProperty";
+            jsonUserTankTable.PrimaryKey = new DataColumn[] {jsonUserTankTable.Columns["jsonMainSubProperty"]};
         }
 
         #endregion
