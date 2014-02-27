@@ -76,7 +76,7 @@ namespace WotDBUpdater
             int tankID = 0;
             string expression = "name = '" + TankName + "'";
             DataRow[] foundRows = TankList.Select(expression);
-            if (foundRows.Length > 0) // If tank exist in Tank table
+            if (foundRows.Length > 0) // If tank exist in Tank table 
                 tankID = Convert.ToInt32(foundRows[0]["tankId"]);
             return tankID;
         }
