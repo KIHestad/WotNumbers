@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="tankData.cs" />
     <Compile Include="tankStats2DB.cs" />
+    <Compile Include="test.cs" />
     <EmbeddedResource Include="Forms\Help\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
