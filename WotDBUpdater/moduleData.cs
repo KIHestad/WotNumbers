@@ -54,7 +54,7 @@ namespace WotDBUpdater
                 adapter.Fill(jsonTurretTable);
                 conn.Close();
             }
-            //jsonTurretView = new DataView(jsonTurretTable);
+            //jsonTurretView = new DataView(jsonTurretTable); 
             //jsonTurretTable.PrimaryKey = new DataColumn[] { jsonTurretTable.Columns["jsonProperty"] };
         }
 
