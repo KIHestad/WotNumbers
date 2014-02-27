@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace WotDBUpdater
 {
-    class json2db
+    class dossier2db
     {
         public class JsonMainSection
         {

@@ -46,8 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
-    <Compile Include="dossier2json.cs" />
+    <Compile Include="Business.Logic\Support\Config.cs" />
+    <Compile Include="Business.Logic\dossier2json.cs" />
     <Compile Include="Forms\Help\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,11 +102,11 @@
     <Compile Include="Forms\Reports\frmDBView.Designer.cs">
       <DependentUpon>frmDBView.cs</DependentUpon>
     </Compile>
-    <Compile Include="importTanks2DB.cs" />
-    <Compile Include="json2db.cs" />
-    <Compile Include="Log.cs" />
-    <Compile Include="moduleData.cs" />
-    <Compile Include="mudules2DB.cs" />
+    <Compile Include="Business.Logic\importTanks2DB.cs" />
+    <Compile Include="Business.Logic\dossier2db.cs" />
+    <Compile Include="Business.Logic\Support\Log.cs" />
+    <Compile Include="Business.Logic\moduleData.cs" />
+    <Compile Include="Business.Logic\mudules2DB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
@@ -114,8 +114,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="tankData.cs" />
-    <Compile Include="test.cs" />
+    <Compile Include="Business.Logic\tankData.cs" />
     <EmbeddedResource Include="Forms\Help\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
