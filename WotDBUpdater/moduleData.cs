@@ -41,7 +41,7 @@ namespace WotDBUpdater
         }
 
         public static DataTable jsonTurretTable = new DataTable();
-        public static DataView jsonTurretView;
+        //public static DataView jsonTurretView;
 
         public static void GetJsonTurretFromDB()
         {
@@ -54,7 +54,8 @@ namespace WotDBUpdater
                 adapter.Fill(jsonTurretTable);
                 conn.Close();
             }
-            jsonTurretView = new DataView(jsonTurretTable);
+            //jsonTurretView = new DataView(jsonTurretTable);
+            //jsonTurretTable.PrimaryKey = new DataColumn[] { jsonTurretTable.Columns["jsonProperty"] };
         }
 
 
@@ -91,13 +92,14 @@ namespace WotDBUpdater
 
         #region main
 
-        private static void saveNewTurret(int turretId)
+        private static void saveNewTurret2DB(int turretId)
         {
             // Add to database
             SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
             con.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO turret (tankId) VALUES (@turretId)", con);
+            SqlCommand cmd = new SqlCommand("INSERT INTO turret (turretId, tankId) VALUES (@turretId, @tankId)", con);
             cmd.Parameters.AddWithValue("@turretId", turretId);
+            cmd.Parameters.AddWithValue("@tankId", turretId);      //  <---------
             cmd.ExecuteNonQuery();
             con.Close();
         }
@@ -109,10 +111,12 @@ namespace WotDBUpdater
             {
                 // Check if battle count has increased, first get existing battle count
                 DataTable OldTurretTable = GetTurretDataFromDB(turretId); // Return Existing User Tank Data
+                Array a = OldTurretTable.Select();
+                int c = OldTurretTable.Rows.Count;
                 // Check if turret exists
                 if (OldTurretTable.Rows.Count == 0)
                 {
-                    saveNewTurret(turretId);
+                    saveNewTurret2DB(turretId);
                     OldTurretTable = GetTurretDataFromDB(turretId); // Return once more now after row is added
                 }
                 //DataRow OldTurretRow = OldTurretTable.Rows[0];

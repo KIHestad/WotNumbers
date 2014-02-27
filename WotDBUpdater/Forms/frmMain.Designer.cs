@@ -55,6 +55,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
+            this.testReadModuleDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -203,7 +204,8 @@
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
             this.testURLToolStripMenuItem,
-            this.testTankStats2DBToolStripMenuItem});
+            this.testTankStats2DBToolStripMenuItem,
+            this.testReadModuleDataToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.testingToolStripMenuItem.Text = "&Testing";
@@ -283,6 +285,13 @@
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
             // 
+            // testReadModuleDataToolStripMenuItem
+            // 
+            this.testReadModuleDataToolStripMenuItem.Name = "testReadModuleDataToolStripMenuItem";
+            this.testReadModuleDataToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testReadModuleDataToolStripMenuItem.Text = "Test read module data";
+            this.testReadModuleDataToolStripMenuItem.Click += new System.EventHandler(this.testReadModuleDataToolStripMenuItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -340,6 +349,7 @@
         private System.Windows.Forms.ToolStripMenuItem testURLToolStripMenuItem;
         private System.Windows.Forms.Button btntestForce;
         private System.Windows.Forms.ToolStripMenuItem testTankStats2DBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testReadModuleDataToolStripMenuItem;
     }
 }
 

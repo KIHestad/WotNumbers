@@ -213,6 +213,12 @@ namespace WotDBUpdater
         {
 
         }
+
+        private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tankStats2DB.readModuleData();
+
+        }
     }
 
     
