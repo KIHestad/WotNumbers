@@ -205,7 +205,7 @@ namespace WotDBUpdater
 
         private void testTankStats2DBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String s = tankStats2DB.importTurrets();
+            String s = modules2DB.importTurrets();
             MessageBox.Show(s);
         }
 
@@ -216,7 +216,7 @@ namespace WotDBUpdater
 
         private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            tankStats2DB.readModuleData();
+            modules2DB.readModuleData();
 
         }
     }
