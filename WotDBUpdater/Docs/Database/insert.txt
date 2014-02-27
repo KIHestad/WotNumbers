@@ -154,7 +154,6 @@ insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) va
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'total', 'battleLifeTime', 'battleLifeTime', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'total', 'mileage', 'mileage', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks_v2', 'total', 'treesCut', 'treesCut', 'Int')
-
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks', 'common', 'creationTime', 'creationTime', 'DateTime')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks', 'common', 'updatedTime', 'updatedTime', 'DateTime')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks', 'common', 'lastBattleTime', 'lastBattleTime', 'DateTime')
@@ -177,3 +176,13 @@ insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) va
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks', 'common', 'basedonversion', 'basedOnVersion', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks', 'tankdata', 'battleLifeTime', 'battleLifeTime', 'Int')
 insert into jsonUserTank (jsonMain, jsonSub, jsonProperty, dbField, dataType) values ('tanks', 'tankdata', 'treesCut', 'treesCut', 'Int')
+
+
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('module_id', 'turretId', 'Int')
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('tanks', 'tankId', 'Int') -- array
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('name_i18n', 'name', 'String')
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('level', 'tier', 'Int')
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('circular_vision_radius', 'viewRange', 'Int')
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('armor_forehead', 'armorFront', 'Int')
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('armor_board', 'armorSides', 'Int')
+insert into jsonTurret (jsonProperty, dbField, dataType) values ('armor_fedd', 'armorRead', 'Int')
