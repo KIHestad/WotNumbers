@@ -50,12 +50,11 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testTankStats2DBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testReadModuleDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
-            this.testReadModuleDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -204,7 +203,6 @@
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
             this.testURLToolStripMenuItem,
-            this.testTankStats2DBToolStripMenuItem,
             this.testReadModuleDataToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
@@ -243,12 +241,12 @@
             this.testURLToolStripMenuItem.Text = "Test URL";
             this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
             // 
-            // testTankStats2DBToolStripMenuItem
+            // testReadModuleDataToolStripMenuItem
             // 
-            this.testTankStats2DBToolStripMenuItem.Name = "testTankStats2DBToolStripMenuItem";
-            this.testTankStats2DBToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.testTankStats2DBToolStripMenuItem.Text = "Test tankStats2DB";
-            this.testTankStats2DBToolStripMenuItem.Click += new System.EventHandler(this.testTankStats2DBToolStripMenuItem_Click);
+            this.testReadModuleDataToolStripMenuItem.Name = "testReadModuleDataToolStripMenuItem";
+            this.testReadModuleDataToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testReadModuleDataToolStripMenuItem.Text = "Test read module data";
+            this.testReadModuleDataToolStripMenuItem.Click += new System.EventHandler(this.testReadModuleDataToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -284,13 +282,6 @@
             this.btntestForce.Text = "Test force";
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
-            // 
-            // testReadModuleDataToolStripMenuItem
-            // 
-            this.testReadModuleDataToolStripMenuItem.Name = "testReadModuleDataToolStripMenuItem";
-            this.testReadModuleDataToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.testReadModuleDataToolStripMenuItem.Text = "Test read module data";
-            this.testReadModuleDataToolStripMenuItem.Click += new System.EventHandler(this.testReadModuleDataToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -348,7 +339,6 @@
         private System.Windows.Forms.ToolStripMenuItem listTanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testURLToolStripMenuItem;
         private System.Windows.Forms.Button btntestForce;
-        private System.Windows.Forms.ToolStripMenuItem testTankStats2DBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testReadModuleDataToolStripMenuItem;
     }
 }

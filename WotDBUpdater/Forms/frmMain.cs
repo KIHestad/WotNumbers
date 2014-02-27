@@ -203,21 +203,12 @@ namespace WotDBUpdater
             Log(result);
         }
 
-        private void testTankStats2DBToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            String s = modules2DB.importTurrets();
-            MessageBox.Show(s);
-        }
 
-        private void testUpdateTurretToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            modules2DB.readModuleData();
-
+            string s = modules2DB.importTurrets();
+            MessageBox.Show(s);
         }
     }
 
