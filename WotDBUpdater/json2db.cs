@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-
+using System.Linq;
 
 namespace WotDBUpdater
 {
@@ -182,6 +183,52 @@ namespace WotDBUpdater
             }
         }
 
-     
+        private static void dossier2db_ver2(string filename, bool ForceUpdate = false)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (StreamReader sr = new StreamReader(filename))
+            {
+                String line;
+                // Read and display lines from the file until the end of 
+                // the file is reached.
+                while ((line = sr.ReadLine()) != null)
+                {
+                    sb.AppendLine(line);
+                }
+            }
+
+            string json = sb.ToString();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            
+            JToken rootToken;
+            JsonTextReader reader = new JsonTextReader(new StringReader(json));
+            JObject fileContent = JObject.Parse(json);
+            rootToken = fileContent.First;
+            if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+            {
+                rootToken = rootToken.Next.Next;
+                rootToken = rootToken.Next;
+                List<string> logtxt = new List<string>();
+                JToken turrets = rootToken.Children().First();
+                foreach (JProperty turretItem in turrets.Children())
+                {
+                    JToken t = turretItem.First();
+                    String result = t["name"].ToString();
+                    result += " | " + t["nation_i18n"].ToString();
+                    result += " | " + t["armor_fedd"].ToString();
+                    result += " | " + t["circular_vision_radius"].ToString();
+                    result += " | " + t["weight"].ToString();
+                    result += " | " + t["name"].ToString();
+                    JArray tanksArray = (JArray)t["tanks"];
+                    result += " | " + tanksArray[0].ToString();
+                    logtxt.Add(result);
+                }
+                Log.LogToFile(logtxt);
+
+            }
+        }
+
     }
 }
