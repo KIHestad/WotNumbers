@@ -260,7 +260,7 @@ create table turret (
 	viewRange int,				--circular_vision_radius
 	armorFront int,				--armor_forehead
 	armorSides int,				--armor_board
-	armorRead int				--armor_fedd
+	armorRear int				--armor_fedd
 )
 
 alter table turret add foreign key (tankId) references tank (tankId)
