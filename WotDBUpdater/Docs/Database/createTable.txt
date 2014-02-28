@@ -260,7 +260,7 @@ create table turret (
 	viewRange int,				--circular_vision_radius
 	armorFront int,				--armor_forehead
 	armorSides int,				--armor_board
-	armorRead int				--armor_fedd
+	armorRear int				--armor_fedd
 )
 
 alter table turret add foreign key (tankId) references tank (tankId)
@@ -280,7 +280,7 @@ create table gun (
 	pen1 int,					--piercing_power[0]
 	pen2 int,					--piercing_power[1]
 	pen3 int,					--piercing_power[2]
-	fireRate int				--rate (missing info on autoload)
+	fireRate numeric			--rate (missing info on autoload)
 )
 
 
@@ -294,6 +294,18 @@ create table turretGun (
 alter table turretGun add primary key (turretId, gunId)
 alter table turretGun add foreign key (turretId) references turret (turretId)
 alter table turretGun add foreign key (gunId) references gun (gunId)
+
+
+-------------------------------------------------------------------------------------------------
+
+create table tankGun (
+	tankId int not null,		--tanks[] (gun)
+	gunId int not null,			--module_id (gun)
+)
+
+alter table tankGun add primary key (tankId, gunId)
+alter table tankGun add foreign key (tankId) references tank (tankId)
+alter table tankGun add foreign key (gunId) references gun (gunId)
 
 
 -------------------------------------------------------------------------------------------------

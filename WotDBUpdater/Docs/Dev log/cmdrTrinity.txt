@@ -15,3 +15,8 @@
 24.02.14
 - BadButton Comment:
 	- Improved function for Importing tanks, problem with slow performance was due to huge log file - but some improvment added anyway
+
+28.02.14
+- Added functions for importing turrets, guns and radios
+	- Utilizing JObject, JToken, JProperty and JArray from Newtonsoft libraries
+- Previous attempts using JsonTextReader, deserializing, etc are rejected

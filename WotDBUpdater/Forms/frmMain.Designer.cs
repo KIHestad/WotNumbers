@@ -51,10 +51,12 @@
             this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testReadModuleDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importGunsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
+            this.importRadiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -203,7 +205,9 @@
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
             this.testURLToolStripMenuItem,
-            this.testReadModuleDataToolStripMenuItem});
+            this.testReadModuleDataToolStripMenuItem,
+            this.importGunsToolStripMenuItem,
+            this.importRadiosToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.testingToolStripMenuItem.Text = "&Testing";
@@ -245,8 +249,15 @@
             // 
             this.testReadModuleDataToolStripMenuItem.Name = "testReadModuleDataToolStripMenuItem";
             this.testReadModuleDataToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.testReadModuleDataToolStripMenuItem.Text = "Test read module data";
+            this.testReadModuleDataToolStripMenuItem.Text = "Import turrets";
             this.testReadModuleDataToolStripMenuItem.Click += new System.EventHandler(this.testReadModuleDataToolStripMenuItem_Click);
+            // 
+            // importGunsToolStripMenuItem
+            // 
+            this.importGunsToolStripMenuItem.Name = "importGunsToolStripMenuItem";
+            this.importGunsToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.importGunsToolStripMenuItem.Text = "Import guns";
+            this.importGunsToolStripMenuItem.Click += new System.EventHandler(this.importGunsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -282,6 +293,13 @@
             this.btntestForce.Text = "Test force";
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
+            // 
+            // importRadiosToolStripMenuItem
+            // 
+            this.importRadiosToolStripMenuItem.Name = "importRadiosToolStripMenuItem";
+            this.importRadiosToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.importRadiosToolStripMenuItem.Text = "Import radios";
+            this.importRadiosToolStripMenuItem.Click += new System.EventHandler(this.importRadiosToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -340,6 +358,8 @@
         private System.Windows.Forms.ToolStripMenuItem testURLToolStripMenuItem;
         private System.Windows.Forms.Button btntestForce;
         private System.Windows.Forms.ToolStripMenuItem testReadModuleDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importGunsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importRadiosToolStripMenuItem;
     }
 }
 

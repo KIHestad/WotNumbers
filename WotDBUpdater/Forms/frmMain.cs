@@ -39,10 +39,7 @@ namespace WotDBUpdater
             SetFormTitle();
             // Init
             tankData.GetTankListFromDB();
-            tankData.GetJson2dbMappingViewFromDB();
-            tankData.GettankData2BattleMappingViewFromDB();
-            moduleData.GetTankListFromDB();
-            moduleData.GetJsonTurretFromDB();
+            tankData.GetJsonUserTankFromDB();
         }
 
         private void SetFormTitle()
@@ -209,6 +206,18 @@ namespace WotDBUpdater
         private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = modules2DB.importTurrets();
+            MessageBox.Show(s);
+        }
+
+        private void importGunsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = modules2DB.importGuns();
+            MessageBox.Show(s);
+        }
+
+        private void importRadiosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = modules2DB.importRadios();
             MessageBox.Show(s);
         }
     }
