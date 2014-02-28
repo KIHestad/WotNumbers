@@ -1,0 +1,11 @@
+﻿select t.name, r.radioId, r.name, r.tier, r.signalRange
+from radio r
+left join tankRadio tr on r.radioId = tr.radioId
+left join tank t on tr.tankId = t.tankId
+order by t.name, r.tier
+
+select t.name, g.gunId, g.name, g.tier, g.dmg1, g.dmg2, g.dmg3, g.pen1, g.pen2, g.pen3, g.fireRate
+from gun g
+left join tankGun tg on g.gunId = tg.gunId
+left join tank t on tg.tankId = t.tankId
+order by t.tankId, g.tier

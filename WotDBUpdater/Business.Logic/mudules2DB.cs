@@ -31,7 +31,10 @@ namespace WotDBUpdater
             {
                 url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
             }
-
+            else if (moduleType == "radio")
+            {
+                url = "https://api.worldoftanks.eu/wot/encyclopedia/tankradios/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+            }
 
 
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -50,7 +53,7 @@ namespace WotDBUpdater
 
 
 
-        #region readFromImpotedData
+        #region readFromImportedData
 
         public static String importTurrets()
         {
@@ -141,8 +144,8 @@ namespace WotDBUpdater
                     int tier = Int32.Parse(moduleToken["level"].ToString());
                     JArray dmgArray = (JArray)moduleToken["damage"];
                     int dmg1 = Int32.Parse(dmgArray[0].ToString());
-                    int dmg2 = 0;
-                    if (dmgArray.Count > 1) { dmg2 = Int32.Parse(dmgArray[1].ToString()); }
+                    int dmg2 = 0;                                                           // guns have 1, 2 or 3 types of ammo
+                    if (dmgArray.Count > 1) { dmg2 = Int32.Parse(dmgArray[1].ToString()); } // fetch damage and penetration if available
                     int dmg3 = 0;
                     if (dmgArray.Count > 2) { dmg3 = Int32.Parse(dmgArray[2].ToString()); }
                     JArray penArray = (JArray)moduleToken["piercing_power"];
@@ -180,10 +183,7 @@ namespace WotDBUpdater
                             tankSql = tankSql + "); ";
                         }
                     }
-                  
-
                 }
-                //write2DB(sql, turretSql);
 
                 try
                 {
@@ -194,6 +194,80 @@ namespace WotDBUpdater
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from turretGun; delete from tankGun; delete from gun", con);
                     string inserts = gunSql + turretSql + tankSql;
+                    SqlCommand insert = new SqlCommand(inserts, con);
+                    delete.ExecuteNonQuery();
+                    insert.ExecuteNonQuery();
+                    con.Close();
+
+                    sw.Stop();
+                    TimeSpan ts = sw.Elapsed;
+                    string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            return ("Import Complete");
+        }
+
+
+
+        public static String importRadios()
+        {
+            string json = fetchFromAPI("radio");
+            int moduleCount;
+            JToken rootToken;
+            JToken moduleToken;
+            string radioSql = "";
+            string tankSql = "";
+
+            JObject allTokens = JObject.Parse(json);
+            rootToken = allTokens.First;
+
+            if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+            {
+                rootToken = rootToken.Next;
+                moduleCount = (int)((JProperty)rootToken).Value;
+
+                rootToken = rootToken.Next;
+                JToken guns = rootToken.Children().First();
+
+                foreach (JProperty gun in guns)
+                {
+                    moduleToken = gun.First();
+
+                    int radioId = Int32.Parse(((JProperty)moduleToken.Parent).Name);
+                    string name = moduleToken["name_i18n"].ToString();
+                    int tier = Int32.Parse(moduleToken["level"].ToString());
+                    int signalRange = Int32.Parse(moduleToken["distance"].ToString());
+
+                    radioSql = radioSql + "insert into radio (radioId, name, tier, signalRange) values "
+                                    + "('" + radioId + "', '" + name + "', '" + tier + "', '" + signalRange + "'); ";
+
+                    // Create relation to tank
+                    JArray tankArray = (JArray)moduleToken["tanks"];
+                    if (tankArray.Count > 0)
+                    {
+                        for (int i = 0; i < tankArray.Count; i++)
+                        {
+                            tankSql = tankSql + "insert into tankRadio (tankId, radioId) values (";
+                            tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + radioId;
+                            tankSql = tankSql + "); ";
+                        }
+                    }
+                }
+
+                try
+                {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+
+                    SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                    con.Open();
+                    SqlCommand delete = new SqlCommand("delete from tankRadio; delete from radio;", con);
+                    string inserts = radioSql + tankSql;
                     SqlCommand insert = new SqlCommand(inserts, con);
                     delete.ExecuteNonQuery();
                     insert.ExecuteNonQuery();
