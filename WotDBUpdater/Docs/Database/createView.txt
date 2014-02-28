@@ -28,10 +28,10 @@ GO
 
 -- Create view for simulating one PK on jsonUserTank table
 
-DROP VIEW [dbo].[jsonUserTankView]
+DROP VIEW [dbo].[json2dbMappingView]
 GO
-CREATE VIEW [dbo].[jsonUserTankView]
+CREATE VIEW [dbo].[json2dbMappingView]
 AS
-SELECT        Concat(dbo.jsonUserTank.jsonMain, '.', dbo.jsonUserTank.jsonSub, '.', dbo.jsonUserTank.jsonProperty) as jsonMainSubProperty,  dbo.jsonUserTank.dbField, dbo.jsonUserTank.dataType
-FROM          dbo.jsonUserTank
+SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  dbo.json2dbMapping.dbDataType, dbo.json2dbMapping.dbUserTank, dbo.json2dbMapping.dbBattle
+FROM          dbo.json2dbMapping
 GO

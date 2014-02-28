@@ -26,7 +26,9 @@ namespace WotDBUpdater
             }
         }
 
-        public static DataTable GetUserTankDataFromDB(int tankId)
+        public static DataTable UserTankList = new DataTable();
+
+        public static DataTable GetUserTankFromDB(int tankId)
         {
             using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
@@ -40,20 +42,49 @@ namespace WotDBUpdater
             }
         }
 
-        public static DataTable jsonUserTankTable = new DataTable();
-        
-        public static void GetJsonUserTankFromDB()
+        public static DataTable GetBattleFromDB(int battleId)
         {
             using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM jsonUserTankView", conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM battle WHERE battleId=" + battleId.ToString(), conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(jsonUserTankTable);
+                adapter.Fill(dt);
+                conn.Close();
+                return dt;
+            }
+        }
+
+        public static DataTable json2dbMappingView = new DataTable();
+        
+        public static void GetJson2dbMappingViewFromDB()
+        {
+            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            {
+                DataTable dt = new DataTable();
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM json2dbMappingView ORDER BY jsonMainSubProperty", conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(json2dbMappingView);
                 conn.Close();
             }
-            jsonUserTankTable.PrimaryKey = new DataColumn[] {jsonUserTankTable.Columns["jsonMainSubProperty"]};
+            json2dbMappingView.PrimaryKey = new DataColumn[] {json2dbMappingView.Columns["jsonMainSubProperty"]};
+        }
+
+        public static DataTable tankData2BattleMappingView = new DataTable();
+
+        public static void GettankData2BattleMappingViewFromDB()
+        {
+            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            {
+                DataTable dt = new DataTable();
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM tankData2BattleMappingView", conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(tankData2BattleMappingView);
+                conn.Close();
+            }
         }
 
         #endregion
@@ -90,90 +121,6 @@ namespace WotDBUpdater
 
         #endregion
 
-        #region Main
-
-        public static void SaveTankDataResult(string tankName, DataRow NewUserTankRow, bool ForceUpdate = false)
-        {
-            // Get Tank ID
-            int tankID = GetTankID(tankName);
-            if (tankID > 0) // when tankid=0 the tank is not found in tank table
-            {
-                // Check if battle count has increased, first get existing battle count
-                DataTable OldUserTankTable = tankData.GetUserTankDataFromDB(tankID); // Return Existing User Tank Data
-                // Check if user has this tank
-                if (OldUserTankTable.Rows.Count == 0)
-                {
-                    SaveNewUserTank(tankID);
-                    OldUserTankTable = tankData.GetUserTankDataFromDB(tankID); // Return once more now after row is added
-                }
-                // Check if battle count has increased, first get existing (old) tank data
-                DataRow OldUserTankRow = OldUserTankTable.Rows[0];
-                // Compare with last battle result
-                int NewUserTankRow_battles15 = 0;
-                int NewUserTankRow_battles7 = 0;
-                if (NewUserTankRow["battles15"] != DBNull.Value) NewUserTankRow_battles15 = Convert.ToInt32(NewUserTankRow["battles15"]);
-                if (NewUserTankRow["battles7"] != DBNull.Value) NewUserTankRow_battles7 = Convert.ToInt32(NewUserTankRow["battles7"]);
-                int battlessNew15 = NewUserTankRow_battles15 - Convert.ToInt32(OldUserTankRow["battles15"]);
-                int battlessNew7 = NewUserTankRow_battles7 - Convert.ToInt32(OldUserTankRow["battles7"]);
-                // Check if new battle on this tank
-                if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
-                {
-                    // New battle detected, update tankData in DB
-                    UpdateUserTank(NewUserTankRow, OldUserTankTable);
-                }
-            }
-            
-        }
-
-        private static void SaveNewUserTank(int TankID)
-        {
-            // Add to database
-            SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
-            con.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO userTank (tankId, wotUserId) VALUES (@tankId, @wotUserId)", con);
-            cmd.Parameters.AddWithValue("@tankId", TankID);
-            cmd.Parameters.AddWithValue("@wotUserId", Config.Settings.UserID);
-            cmd.ExecuteNonQuery();
-            con.Close();
-        }
-
-        private static void UpdateUserTank(DataRow NewUserTankRow, DataTable OldUserTankTable)
-        {
-            // Get fields to update
-            string sqlFields = "";
-            foreach (DataColumn column in OldUserTankTable.Columns)
-            {
-                if (column.ColumnName != "userTankId" && NewUserTankRow[column.ColumnName] != DBNull.Value) // avoid the PK
-                {
-                    if (sqlFields.Length > 0) sqlFields += ", "; // Add comma exept for first element
-                    string colName = column.ColumnName;
-                    string colType = column.DataType.Name;
-                    sqlFields += colName + "=";
-                    switch (colType)
-	                {
-		                case "String"   : sqlFields += "'" + NewUserTankRow[colName] + "'"; break;
-                        case "DateTime" : sqlFields += "'" + Convert.ToDateTime(NewUserTankRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
-                        default         : sqlFields += NewUserTankRow[colName]; break;
-	                }
-                }
-            }
-            // Update database
-            if (sqlFields.Length > 0)
-            {
-                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
-                con.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE userTank SET " + sqlFields + " WHERE userTankId=@userTankId ", con);
-                cmd.Parameters.AddWithValue("@userTankId", OldUserTankTable.Rows[0]["userTankId"]);
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-            
-        }
-
-            
-
-        #endregion
-
-
+       
     }
 }

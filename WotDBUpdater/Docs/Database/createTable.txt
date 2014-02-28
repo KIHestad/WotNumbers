@@ -78,9 +78,9 @@ create table userTank (
 	userTankId int identity(1,1) primary key,
 	tankId int not null,
 	wotUserId int not null,
-	creationTime date,								--common.creationTime
-	updatedTime date,								--common.updated
-	lastBattleTime date,							--common.lastBattleTime
+	creationTime datetime,							--common.creationTime
+	updatedTime datetime,							--common.updated
+	lastBattleTime datetime,						--common.lastBattleTime
 	
 	used15 int not null default 0,					--common.has_15x15
 	battles15 int not null default 0,				--a15x15.battlesCount
@@ -179,7 +179,7 @@ alter table favList add foreign key (wotUserId) references wotUser (wotUserId)
 create table battle (
 	battleId int primary key,
 	userTankId int not null,
-	battleTime date,
+	battleTime datetime,
 	victory int,
 	survived int,
 	frags int,
@@ -322,14 +322,15 @@ alter table tankRadio add foreign key (radioId) references radio (radioId)
 
 -------------------------------------------------------------------------------------------------
 
-create table jsonUserTank (
-	jsonUserTankId int identity(1,1) primary key,
-	jsonMain varchar(255),
-	jsonSub varchar(255),
-	jsonProperty varchar(255),
-	dbField varchar(255),
-	dataType varchar(255)
-)
+CREATE TABLE [dbo].[json2dbMapping](
+	[jsonDossier2dbMappingID] [int] IDENTITY(1,1) NOT NULL,
+	[jsonMain] [varchar](255) NULL,
+	[jsonSub] [varchar](255) NULL,
+	[jsonProperty] [varchar](255) NULL,
+	[dbDataType] [varchar](255) NULL,
+	[dbUserTank] [varchar](255) NULL,
+	[dbBattle] [varchar](255) NULL,
+ CONSTRAINT [PK_jsonUserTank] PRIMARY KEY CLUSTERED 
 
 create table jsonTurret (
 	jsonTurretId int identity(1,1) primary key,

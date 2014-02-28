@@ -39,7 +39,8 @@ namespace WotDBUpdater
             SetFormTitle();
             // Init
             tankData.GetTankListFromDB();
-            tankData.GetJsonUserTankFromDB();
+            tankData.GetJson2dbMappingViewFromDB();
+            tankData.GettankData2BattleMappingViewFromDB();
             moduleData.GetTankListFromDB();
             moduleData.GetJsonTurretFromDB();
         }
