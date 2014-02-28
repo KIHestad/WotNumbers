@@ -19,11 +19,21 @@ namespace WotDBUpdater
 
         #region fetchFromAPI
 
-        public static String fetchFromAPI()
+        public static String fetchFromAPI(string moduleType)
         {
             Log.LogToFile("test");
+            string url = "";
+            if (moduleType == "turret")
+            {
+                url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+            }
+            else if (moduleType == "gun")
+            {
+                url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+            }
 
-            string url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+
+
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 
             httpRequest.Timeout = 10000;     // 10 secs
@@ -33,21 +43,83 @@ namespace WotDBUpdater
             StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 
             return responseStream.ReadToEnd();
+            //return "x";
         }
 
         #endregion
 
 
 
-        #region test
+        #region readFromImpotedData
 
         public static String importTurrets()
         {
-            string json = fetchFromAPI();
+            string json = fetchFromAPI("turret");
             int moduleCount;
             JToken rootToken;
             JToken moduleToken;
             string sql = "";
+
+            JObject allTokens = JObject.Parse(json);
+            rootToken = allTokens.First;   // returns status token
+
+            if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+            {
+                rootToken = rootToken.Next;
+                moduleCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+
+                rootToken = rootToken.Next;   // start reading modules
+                JToken turrets = rootToken.Children().First();   // read all tokens in data token
+                
+                foreach (JProperty turret in turrets)   // turret = turretId + child tokens
+                {
+                    moduleToken = turret.First();   // First() returns only child tokens of turret
+                    
+                    int turretId = Int32.Parse(((JProperty)moduleToken.Parent).Name);   // step back to parent to fetch the isolated turretId
+                    JArray tanksArray = (JArray)moduleToken["tanks"];
+                    int tankId = Int32.Parse(tanksArray[0].ToString());   // fetch only the first tank in the array for now (all turrets are related to one tank)
+                    string name = moduleToken["name_i18n"].ToString();
+                    int tier = Int32.Parse(moduleToken["level"].ToString());
+                    int viewRange = Int32.Parse(moduleToken["circular_vision_radius"].ToString());
+                    int armorFront = Int32.Parse(moduleToken["armor_forehead"].ToString());
+                    int armorSides = Int32.Parse(moduleToken["armor_board"].ToString());
+                    int armorRear = Int32.Parse(moduleToken["armor_fedd"].ToString());
+
+                    sql = sql + "insert into turret (turretId, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) values "
+                              + "('" + turretId + "', '" + tankId + "', '" + name + "', '" + tier + "', '" + viewRange + "', '" + armorFront 
+                              + "', '" + armorSides + "', '" + armorRear +"'); ";
+                }
+                
+                // Execute delete and insert statements
+                try
+                {
+                    SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                    con.Open();
+                    SqlCommand delete = new SqlCommand("delete from turret", con);
+                    SqlCommand insert = new SqlCommand(sql, con);
+                    delete.ExecuteNonQuery();
+                    insert.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            return ("Import Complete");
+        }
+
+
+        public static String importGuns()
+        {
+            string json = fetchFromAPI("gun");
+            int moduleCount;
+            JToken rootToken;
+            JToken moduleToken;
+            string gunSql = "";
+            string turretSql = "";
+            string tankSql = "";
 
             JObject allTokens = JObject.Parse(json);
             rootToken = allTokens.First;
@@ -55,54 +127,90 @@ namespace WotDBUpdater
             if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
             {
                 rootToken = rootToken.Next;
-                moduleCount = (int)((JProperty)rootToken).Value;  // returns count
+                moduleCount = (int)((JProperty)rootToken).Value;
 
-                rootToken = rootToken.Next;  // start reading modules
+                rootToken = rootToken.Next;
+                JToken guns = rootToken.Children().First();
 
-                JToken turrets = rootToken.Children().First();  // read all tokens 
-                
-                foreach (JProperty turret in turrets)
-                { 
-                    moduleToken = turret.First();
-                    
-                    int turretId = Int32.Parse(((JProperty)moduleToken.Parent).Name);
-                    JArray tanksArray = (JArray)moduleToken["tanks"];
-                    int tankId = Int32.Parse(tanksArray[0].ToString());
+                foreach (JProperty gun in guns)
+                {
+                    moduleToken = gun.First();
+
+                    int gunId = Int32.Parse(((JProperty)moduleToken.Parent).Name);
                     string name = moduleToken["name_i18n"].ToString();
                     int tier = Int32.Parse(moduleToken["level"].ToString());
-                    int viewRange = Int32.Parse(moduleToken["circular_vision_radius"].ToString());
-                    int armorFront = Int32.Parse(moduleToken["armor_forehead"].ToString());
-                    int armorSides = Int32.Parse(moduleToken["armor_board"].ToString());
-                    int armorRear = Int32.Parse(moduleToken["armor_fedd"].ToString());
-                    
-                    //string weight = moduleToken["weight"].ToString();
-                    //string s = moduleToken["name"].ToString();
+                    JArray dmgArray = (JArray)moduleToken["damage"];
+                    int dmg1 = Int32.Parse(dmgArray[0].ToString());
+                    int dmg2 = 0;
+                    if (dmgArray.Count > 1) { dmg2 = Int32.Parse(dmgArray[1].ToString()); }
+                    int dmg3 = 0;
+                    if (dmgArray.Count > 2) { dmg3 = Int32.Parse(dmgArray[2].ToString()); }
+                    JArray penArray = (JArray)moduleToken["piercing_power"];
+                    int pen1 = Int32.Parse(penArray[0].ToString());
+                    int pen2 = 0;
+                    if (penArray.Count > 1) { pen2 = Int32.Parse(penArray[1].ToString()); }
+                    int pen3 = 0;
+                    if (penArray.Count > 2) { pen3 = Int32.Parse(penArray[2].ToString()); }
+                    string fireRate = ((moduleToken["rate"].ToString())).Replace(",", ".");
 
-                    sql = sql + "insert into turret (turretId, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) values"
-                              + "('" + turretId + "', '" + tankId + "', '" + name + "', '" + tier + "', '" + viewRange + "', '" + armorFront 
-                              + "', '" + armorSides + "', '" + armorRear +"'); ";
+                    gunSql = gunSql + "insert into gun (gunId, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) values "
+                                    + "('" + gunId + "', '" + name + "', '" + tier + "', '" + dmg1 + "', '" + dmg2 + "', '" + dmg3
+                                    + "', '" + pen1 + "', '" + pen2 + "', '" + pen3 + "', '" + fireRate +"'); ";
+                    
+                    // Create relation to turret if possible
+                    JArray turretArray = (JArray)moduleToken["turrets"];
+                    if (turretArray.Count > 0)
+                    {
+                        for (int i = 0; i < turretArray.Count; i++)
+                        {
+                            turretSql = turretSql + "insert into turretGun (turretId, gunId) values (";
+                            turretSql = turretSql + Int32.Parse(turretArray[i].ToString()) + ", " + gunId;
+                            turretSql = turretSql + "); ";
+                        }
+                    }
+
+                    // Create relation to tank
+                    JArray tankArray = (JArray)moduleToken["tanks"];
+                    if (tankArray.Count > 0)
+                    {
+                        for (int i = 0; i < tankArray.Count; i++)
+                        {
+                            tankSql = tankSql + "insert into tankGun (tankId, gunId) values (";
+                            tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + gunId;
+                            tankSql = tankSql + "); ";
+                        }
+                    }
+                  
+
                 }
-                write2DB(sql);
+                //write2DB(sql, turretSql);
+
+                try
+                {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+
+                    SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                    con.Open();
+                    SqlCommand delete = new SqlCommand("delete from turretGun; delete from tankGun; delete from gun", con);
+                    string inserts = gunSql + turretSql + tankSql;
+                    SqlCommand insert = new SqlCommand(inserts, con);
+                    delete.ExecuteNonQuery();
+                    insert.ExecuteNonQuery();
+                    con.Close();
+
+                    sw.Stop();
+                    TimeSpan ts = sw.Elapsed;
+                    string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
             }
 
             return ("Import Complete");
-        }
-
-
-        public static void write2DB(string sql)
-        {
-            try
-            {
-                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
-                con.Open();
-                SqlCommand cmd = new SqlCommand(sql, con);
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
 

@@ -210,6 +210,12 @@ namespace WotDBUpdater
             string s = modules2DB.importTurrets();
             MessageBox.Show(s);
         }
+
+        private void importGunsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = modules2DB.importGuns();
+            MessageBox.Show(s);
+        }
     }
 
     

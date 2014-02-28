@@ -105,7 +105,6 @@
     <Compile Include="Business.Logic\importTanks2DB.cs" />
     <Compile Include="Business.Logic\dossier2db.cs" />
     <Compile Include="Business.Logic\Support\Log.cs" />
-    <Compile Include="Business.Logic\moduleData.cs" />
     <Compile Include="Business.Logic\mudules2DB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
