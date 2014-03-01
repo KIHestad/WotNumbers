@@ -1,8 +1,14 @@
 ﻿
+DROP VIEW [dbo].[tankInfoShort]
+DROP VIEW [dbo].[userTankInfoBattleCount]
+DROP VIEW [dbo].[json2dbMappingView]
+DROP VIEW [dbo].[tankData2BattleMappingView]
+GO
+
 -- Create view showing tank data short info
 
-DROP VIEW [dbo].[tankInfoShort]
-GO
+
+
 CREATE VIEW [dbo].[tankInfoShort]
 AS
 SELECT        dbo.tank.tankId AS TankID, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country
@@ -13,8 +19,6 @@ GO
 
 -- Create view showing user tanks, short tank info and battle count
 
-DROP VIEW [dbo].[userTankInfoBattleCount]
-GO
 CREATE VIEW [dbo].[userTankInfoBattleCount]
 AS
 SELECT        dbo.wotUser.name AS Username, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
@@ -28,10 +32,18 @@ GO
 
 -- Create view for simulating one PK on jsonUserTank table
 
-DROP VIEW [dbo].[json2dbMappingView]
-GO
 CREATE VIEW [dbo].[json2dbMappingView]
 AS
 SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  dbo.json2dbMapping.dbDataType, dbo.json2dbMapping.dbUserTank, dbo.json2dbMapping.dbBattle
 FROM          dbo.json2dbMapping
+GO
+
+-- Create view for mapping Battele data
+
+CREATE VIEW [dbo].[tankData2BattleMappingView]
+AS
+SELECT        TOP (100) PERCENT dbDataType, dbUserTank, dbBattle
+FROM            dbo.json2dbMapping
+WHERE        (dbBattle IS NOT NULL)
+GROUP BY dbDataType, dbUserTank, dbBattle
 GO

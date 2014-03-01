@@ -40,7 +40,7 @@ namespace WotDBUpdater
             return json;
         }
 
-        public static void string2json()
+        public static List<string> string2json()
         {
             String s = "{items:" + fetchTanks() + "}";
             SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
@@ -55,7 +55,7 @@ namespace WotDBUpdater
 
             Log.CheckLogFileSize();
             List<string> log = new List<string>();
-            log.Add(DateTime.Now.ToString() + "Start checking tanks");
+            log.Add("Start checking tanks (" + DateTime.Now.ToString() + ")");
 
             try
             {
@@ -76,7 +76,7 @@ namespace WotDBUpdater
                     {
                         tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
                         jtoken = jtoken.Next;
-                        tankExists = true;
+                        
 
                         if (jtoken != null)
                         {
@@ -111,14 +111,15 @@ namespace WotDBUpdater
                     }
                 }
                 con.Close();
-                MessageBox.Show("Import complete!");
+                log.Add("Import complete! (" + DateTime.Now.ToString() + ")");
                 Log.LogToFile(log);
-                
+                return log;
             }
 
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+                return log;
             }
         }
         
