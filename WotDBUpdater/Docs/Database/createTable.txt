@@ -50,7 +50,6 @@ create table wotUser (
 	wotUserId int identity(1,1) primary key,
 	name varchar(255)
 )
--- alter table wotUser wotUserId int identity(1,1) primary key
 
 
 -------------------------------------------------------------------------------------------------

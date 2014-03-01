@@ -276,12 +276,3 @@ GO
 SET IDENTITY_INSERT [dbo].[json2dbMapping] OFF
 GO
 
-
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('module_id', 'turretId', 'Int')
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('tanks', 'tankId', 'Int') -- array
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('name_i18n', 'name', 'String')
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('level', 'tier', 'Int')
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('circular_vision_radius', 'viewRange', 'Int')
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('armor_forehead', 'armorFront', 'Int')
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('armor_board', 'armorSides', 'Int')
-insert into jsonTurret (jsonProperty, dbField, dataType) values ('armor_fedd', 'armorRead', 'Int')

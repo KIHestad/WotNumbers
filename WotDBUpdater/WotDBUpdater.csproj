@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business.Logic\ratings.cs" />
     <Compile Include="Business.Logic\Support\Config.cs" />
     <Compile Include="Business.Logic\dossier2json.cs" />
     <Compile Include="Forms\Help\frmAbout.cs">
