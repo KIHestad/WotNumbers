@@ -3,6 +3,7 @@ DROP VIEW [dbo].[tankInfoShort]
 DROP VIEW [dbo].[userTankInfoBattleCount]
 DROP VIEW [dbo].[json2dbMappingView]
 DROP VIEW [dbo].[tankData2BattleMappingView]
+DROP VIEW [dbo].[battleResultView]
 GO
 
 -- Create view showing tank data short info
@@ -46,4 +47,21 @@ SELECT        TOP (100) PERCENT dbDataType, dbUserTank, dbBattle
 FROM            dbo.json2dbMapping
 WHERE        (dbBattle IS NOT NULL)
 GROUP BY dbDataType, dbUserTank, dbBattle
+GO
+
+-- View for battle result
+
+CREATE VIEW [dbo].[BattleResultView]
+AS
+SELECT        TOP (100) PERCENT dbo.wotUser.name AS [User], dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.battle.battleTime AS Time, 
+                         CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) 
+                         WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS [Vict-Draw-Def], 
+                         CASE WHEN battlescount > 1 THEN CAST(dbo.battle.survived AS varchar) WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, 
+                         dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.xp, dbo.battle.spotted AS Detected, 
+                         dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots, dbo.battle.hits
+FROM            dbo.battle INNER JOIN
+                         dbo.userTank ON dbo.battle.userTankId = dbo.userTank.userTankId INNER JOIN
+                         dbo.wotUser ON dbo.userTank.wotUserId = dbo.wotUser.wotUserId INNER JOIN
+                         dbo.tank ON dbo.userTank.tankId = dbo.tank.tankId
+
 GO
