@@ -35,3 +35,19 @@ AS
 SELECT        Concat(dbo.jsonUserTank.jsonMain, '.', dbo.jsonUserTank.jsonSub, '.', dbo.jsonUserTank.jsonProperty) as jsonMainSubProperty,  dbo.jsonUserTank.dbField, dbo.jsonUserTank.dataType
 FROM          dbo.jsonUserTank
 GO
+
+
+-- Joined radios and tanks
+
+create view tankRadioView
+as
+select 
+  t.name as tank,
+  r.name as radio,
+  r.tier as tier,
+  r.signalRange as signalRange
+from 
+  radio r 
+  left join tankRadio tr on r.radioId = tr.radioId
+  left join tank t on tr.tankId = t.tankId
+go

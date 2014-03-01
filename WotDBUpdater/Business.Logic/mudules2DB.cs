@@ -16,6 +16,11 @@ namespace WotDBUpdater
 {
     class modules2DB
     {
+        /* 
+         * Import functions for tank modules
+         * Data is retrieved from Wargaming API
+         * Tables are emptied before import begins
+         */
 
         #region fetchFromAPI
 
@@ -51,9 +56,7 @@ namespace WotDBUpdater
 
         #endregion
 
-
-
-        #region readFromImportedData
+        #region importTurrets
 
         public static String importTurrets()
         {
@@ -113,6 +116,9 @@ namespace WotDBUpdater
             return ("Import Complete");
         }
 
+        #endregion
+
+        #region importGuns
 
         public static String importGuns()
         {
@@ -212,7 +218,9 @@ namespace WotDBUpdater
             return ("Import Complete");
         }
 
+        #endregion
 
+        #region importRadios
 
         public static String importRadios()
         {
