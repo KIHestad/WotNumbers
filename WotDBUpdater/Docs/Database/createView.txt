@@ -65,3 +65,20 @@ FROM            dbo.battle INNER JOIN
                          dbo.tank ON dbo.userTank.tankId = dbo.tank.tankId
 
 GO
+
+
+
+-- Joined radios and tanks
+
+create view tankRadioView
+as
+select 
+  t.name as tank,
+  r.name as radio,
+  r.tier as tier,
+  r.signalRange as signalRange
+from 
+  radio r 
+  left join tankRadio tr on r.radioId = tr.radioId
+  left join tank t on tr.tankId = t.tankId
+go

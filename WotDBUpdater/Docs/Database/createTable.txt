@@ -11,11 +11,14 @@ drop table wotUser
 drop table tankType
 drop table country
 drop table favlist
-drop table json
 drop table jsonUserTank
 drop table json2dbMapping
-
-
+drop table turret
+drop table gun
+drop table turretGun
+drop table tankGun
+drop table radio
+drop table tankRadio
 
 
 
@@ -506,14 +509,6 @@ alter table battleAch add foreign key (battleId) references battle (battleId)
 
 -------------------------------------------------------------------------------------------------
 
-create table json (
-	jsonId int,
-	jsonString varchar(max)
-)
-
-
--------------------------------------------------------------------------------------------------
-
 --https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankturrets/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
 
 create table turret (
@@ -606,10 +601,3 @@ CREATE TABLE [dbo].[json2dbMapping](
 	[dbDataType] [varchar](255) NULL,
 	[dbUserTank] [varchar](255) NULL,
 	[dbBattle] [varchar](255) NULL)
-
-create table jsonTurret (
-	jsonTurretId int identity(1,1) primary key,
-	jsonProperty varchar(255),
-	dbField varchar(255),
-	dataType varchar(255)
-)
