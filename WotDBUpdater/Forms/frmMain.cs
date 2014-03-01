@@ -39,7 +39,8 @@ namespace WotDBUpdater
             SetFormTitle();
             // Init
             tankData.GetTankListFromDB();
-            tankData.GetJsonUserTankFromDB();
+            tankData.GetJson2dbMappingViewFromDB();
+            tankData.GettankData2BattleMappingViewFromDB();
         }
 
         private void SetFormTitle()
@@ -116,7 +117,16 @@ namespace WotDBUpdater
 
         private void listBoxLog_DoubleClick(object sender, EventArgs e)
         {
-            MessageBox.Show(listBoxLog.Items[listBoxLog.SelectedIndex].ToString(), "Log Details");
+            try
+            {
+                MessageBox.Show(listBoxLog.Items[listBoxLog.SelectedIndex].ToString(), "Log Details");
+            }
+            catch (Exception)
+            {
+                
+                // nothing
+            }
+            
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -135,6 +145,7 @@ namespace WotDBUpdater
             Form frm = new frmApplicationSetting();
             frm.ShowDialog();
             SetFormTitle();
+            // Init
         }
 
         private void databaseSettingsToolStripMenuItem_Click(object sender, EventArgs e)

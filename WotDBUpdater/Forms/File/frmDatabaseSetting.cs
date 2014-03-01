@@ -30,8 +30,13 @@ namespace WotDBUpdater
             {
                 Config.SaveConfig(false, false); // save without db check
                 Config.SaveConfig(false, true); // save and check user
+                // Init
+                tankData.GetTankListFromDB();
+                tankData.GetJson2dbMappingViewFromDB();
+                tankData.GettankData2BattleMappingViewFromDB();
                 Form.ActiveForm.Close();
             }
+            
         }
     }
 }

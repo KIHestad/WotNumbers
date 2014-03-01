@@ -11,13 +11,13 @@ drop table wotUser
 drop table tankType
 drop table country
 drop table favlist
-drop table turret
-drop table gun
-drop table turretGun
-drop table tankGun
-drop table radio
-drop table tankRadio
+drop table json
 drop table jsonUserTank
+drop table json2dbMapping
+
+
+
+
 
 
 
@@ -73,97 +73,330 @@ alter table tank add foreign key (countryId) references country (countryId)
 
 -------------------------------------------------------------------------------------------------
 
---Trekke ut 15 / 7 / clan / company i egne tabeller?
---Droppe originalXP / pre88-felt?
+CREATE TABLE [dbo].[userTank](
+	[userTankId] [int] IDENTITY(1,1) NOT NULL,
+	[tankId] [int] NOT NULL,
+	[wotUserId] [int] NOT NULL,
+	[creationTime] [datetime] NULL,
+	[updatedTime] [datetime] NULL,
+	[lastBattleTime] [datetime] NULL,
+	[has15] [int] NOT NULL,
+	[battles15] [int] NOT NULL,
+	[battles8p15] [int] NOT NULL,
+	[wins15] [int] NOT NULL,
+	[losses15] [int] NOT NULL,
+	[survived15] [int] NOT NULL,
+	[frags15] [int] NOT NULL,
+	[frags8p15] [int] NOT NULL,
+	[dmg15] [int] NOT NULL,
+	[dmgReceived15] [int] NOT NULL,
+	[assistSpot15] [int] NOT NULL,
+	[assistTrack15] [int] NOT NULL,
+	[cap15] [int] NOT NULL,
+	[def15] [int] NOT NULL,
+	[spot15] [int] NOT NULL,
+	[xp15] [int] NOT NULL,
+	[xp8p15] [int] NOT NULL,
+	[xpOriginal15] [int] NOT NULL,
+	[shots15] [int] NOT NULL,
+	[hits15] [int] NOT NULL,
+	[heHits15] [int] NOT NULL,
+	[pierced15] [int] NOT NULL,
+	[shotsReceived15] [int] NOT NULL,
+	[piercedReceived15] [int] NOT NULL,
+	[heHitsReceived15] [int] NOT NULL,
+	[noDmgShotsReceived15] [int] NOT NULL,
+	[maxDmg15] [int] NOT NULL,
+	[maxFrags15] [int] NOT NULL,
+	[maxXp15] [int] NOT NULL,
+	[has7] [int] NOT NULL,
+	[battles7] [int] NOT NULL,
+	[wins7] [int] NOT NULL,
+	[losses7] [int] NOT NULL,
+	[survived7] [int] NOT NULL,
+	[frags7] [int] NOT NULL,
+	[frags8p7] [int] NOT NULL,
+	[dmg7] [int] NOT NULL,
+	[dmgReceived7] [int] NOT NULL,
+	[assistSpot7] [int] NOT NULL,
+	[assistTrack7] [int] NOT NULL,
+	[cap7] [int] NOT NULL,
+	[def7] [int] NOT NULL,
+	[spot7] [int] NOT NULL,
+	[xp7] [int] NOT NULL,
+	[xpOriginal7] [int] NOT NULL,
+	[shots7] [int] NOT NULL,
+	[hits7] [int] NOT NULL,
+	[heHits7] [int] NOT NULL,
+	[pierced7] [int] NOT NULL,
+	[shotsReceived7] [int] NOT NULL,
+	[piercedReceived7] [int] NOT NULL,
+	[heHitsReceived7] [int] NOT NULL,
+	[noDmgShotsReceived7] [int] NOT NULL,
+	[maxDmg7] [int] NOT NULL,
+	[maxFrags7] [int] NOT NULL,
+	[maxXp7] [int] NOT NULL,
+	[hasCompany] [int] NOT NULL,
+	[hasClan] [int] NOT NULL,
+	[basedOnVersion] [int] NOT NULL,
+	[battleLifeTime] [int] NOT NULL,
+	[mileage] [int] NOT NULL,
+	[treesCut] [int] NOT NULL,
+	[favList] [int] NOT NULL,
+	[eqBino] [int] NOT NULL,
+	[eqCoated] [int] NOT NULL,
+	[eqCamo] [int] NOT NULL,
+	[skillRecon] [int] NOT NULL,
+	[skillAwareness] [int] NOT NULL,
+	[skillCamo] [int] NOT NULL,
+	[skillBia] [int] NOT NULL,
+	[premiumCons] [int] NOT NULL,
+	[vehicleCamo] [int] NOT NULL,
+	[battlesCompany] [int] NOT NULL,
+	[battlesClan] [int] NOT NULL,
+ CONSTRAINT [PK__userTank__6CE5277F1CCB5CFE] PRIMARY KEY CLUSTERED 
+(
+	[userTankId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-create table userTank (
-	userTankId int identity(1,1) primary key,
-	tankId int not null,
-	wotUserId int not null,
-	creationTime date,								--common.creationTime
-	updatedTime date,								--common.updated
-	lastBattleTime date,							--common.lastBattleTime
-	
-	used15 int not null default 0,					--common.has_15x15
-	battles15 int not null default 0,				--a15x15.battlesCount
-	battles8p15 int not null default 0,				--a15x15.battlesCountBefore8_8
-	wins15 int not null default 0,					--a15x15.wins
-	losses15 int not null default 0,				--a15x15.losses
-	survived15 int not null default 0,				--a15x15.survivedBattles
-	frags15 int not null default 0,					--a15x15.frags
-	frags8p15 int not null default 0,				--a15x15.frags8p					frags før ver 8.8?
-	dmg15 int not null default 0,					--a15x15.damageDealt
-	dmgReceived15 int not null default 0,			--a15x15.damageReceived
-	assistSpot15 int not null default 0,			--a15x15_2.damageAssistedRadio
-	assistTrack15 int not null default 0,			--a15x15_2.damageAssistedTrack
-	cap15 int not null default 0,					--a15x15.capturePoints
-	def15 int not null default 0,					--a15x15.droppedCapturePoints
-	spot15 int not null default 0,					--a15x15.spotted
-	xp15 int not null default 0,					--a15x15.xp
-	xp8p15 int not null default 0,					--a15x15.xpBefore8_8
-	xpOriginal15 int not null default 0,			--a15x15_2.originalXP				?
-	shots15 int not null default 0,					--a15x15.shots
-	hits15 int not null default 0,					--a15x15.hits
-	heHits15 int not null default 0,				--a15x15_2.he_hits
-	pierced15 int not null default 0,				--a15x15_2.pierced
-	shotsReceived15 int not null default 0,			--a15x15_2.shotsReceived
-	piercedReceived15 int not null default 0,		--a15x15_2.piercedReceived
-	heHitsReceived15 int not null default 0,		--a15x15_2.heHitsReceived
-	noDmgShotsReceived15 int not null default 0,	--a15x15_2.noDamageShotsReceived
-	maxDmg15 int not null default 0,				--max15x15.maxDamage
-	maxFrags15 int not null default 0,				--max15x15.maxFrags
-	maxXp15 int not null default 0,					--max15x15.maxXP
+GO
 
-	used7 int not null default 0,					--common.has_7x7
-	battles7 int not null default 0,				--a7x7.battlesCount
-	wins7 int not null  default 0,					--a7x7.wins
-	losses7 int not null default 0,					--a7x7.losses
-	survived7 int not null default 0,				--a7x7.survivedBattles
-	frags7 int not null default 0,					--a7x7.frags
-	frags8p7 int not null default 0,				--a7x7.frags8p						frags før ver 8.8?
-	dmg7 int not null default 0,					--a7x7.damageDealt
-	dmgReceived7 int not null default 0,			--a7x7.damageReceived
-	assistSpot7 int not null default 0,				--a7x7.damageAssistedRadio
-	assistTrack7 int not null default 0,			--a7x7.damageAssistedTrack
-	cap7 int not null default 0,					--a7x7.capturePoints
-	def7 int not null default 0,					--a7x7.droppedCapturePoints
-	spot7 int not null default 0,					--a7x7.spotted
-	xp7 int not null default 0,						--a7x7.xp
-	xpOriginal7 int not null default 0,				--a7x7.originalXP					?
-	shots7 int not null default 0,					--a7x7.shots
-	hits7 int not null default 0,					--a7x7.hits
-	heHits7 int not null default 0,					--a7x7.he_hits
-	pierced7 int not null default 0,				--a7x7.pierced
-	shotsReceived7 int not null default 0,			--a7x7.shotsReceived
-	piercedReceived7 int not null default 0,		--a7x7.piercedReceived
-	heHitsReceived7 int not null default 0,			--a7x7.heHitsReceived
-	noDmgShotsReceived7 int not null default 0,		--a7x7.noDamageShotsReceived
-	maxDmg7 int not null default 0,					--max7x7.maxDamage
-	maxFrags7 int not null default 0,				--max7x7.maxFrags
-	maxXp7 int not null default 0,					--max7x7.maxXP
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__used15__38EE7070]  DEFAULT ((0)) FOR [has15]
+GO
 
-	usedCompany int not null default 0,				--common.has_company
-	usedClan int not null default 0,				--common.has_clan
-	
-	basedOnVersion int not null default 0,			--common.basedonversion			hente fra tank-tabellen?
-	battleLifeTime int not null default 0,			--total.battleLifeTime
-	mileage int not null default 0,					--total.mileage
-	treesCut int not null default 0,				--total.treesCut
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__battle__39E294A9]  DEFAULT ((0)) FOR [battles15]
+GO
 
-	favList int not null default 0,
-	eqBino int not null default 0,
-	eqCoated int not null default 0,
-	eqCamo int not null default 0,
-	skillRecon int not null default 0,
-	skillAwareness int not null default 0,
-	skillCamo int not null default 0,
-	skillBia int not null default 0,
-	premiumCons int not null default 0,
-	vehicleCamo int not null default 0
-)
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__battle__3AD6B8E2]  DEFAULT ((0)) FOR [battles8p15]
+GO
 
-alter table userTank add foreign key (tankId) references tank (tankId)
-alter table userTank add foreign key (wotUserId) references wotUser (wotUserId)
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__wins15__3BCADD1B]  DEFAULT ((0)) FOR [wins15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__losses__3CBF0154]  DEFAULT ((0)) FOR [losses15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__surviv__3DB3258D]  DEFAULT ((0)) FOR [survived15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__frags1__3EA749C6]  DEFAULT ((0)) FOR [frags15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__frags8__3F9B6DFF]  DEFAULT ((0)) FOR [frags8p15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__dmg15__408F9238]  DEFAULT ((0)) FOR [dmg15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__dmgRec__4183B671]  DEFAULT ((0)) FOR [dmgReceived15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__assist__4277DAAA]  DEFAULT ((0)) FOR [assistSpot15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__assist__436BFEE3]  DEFAULT ((0)) FOR [assistTrack15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__cap15__4460231C]  DEFAULT ((0)) FOR [cap15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__def15__45544755]  DEFAULT ((0)) FOR [def15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__spot15__46486B8E]  DEFAULT ((0)) FOR [spot15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__xp15__473C8FC7]  DEFAULT ((0)) FOR [xp15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__xp8p15__4830B400]  DEFAULT ((0)) FOR [xp8p15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__xpOrig__4924D839]  DEFAULT ((0)) FOR [xpOriginal15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__shots1__4A18FC72]  DEFAULT ((0)) FOR [shots15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__hits15__4B0D20AB]  DEFAULT ((0)) FOR [hits15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__heHits__4C0144E4]  DEFAULT ((0)) FOR [heHits15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__pierce__4CF5691D]  DEFAULT ((0)) FOR [pierced15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__shotsR__4DE98D56]  DEFAULT ((0)) FOR [shotsReceived15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__pierce__4EDDB18F]  DEFAULT ((0)) FOR [piercedReceived15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__heHits__4FD1D5C8]  DEFAULT ((0)) FOR [heHitsReceived15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__noDmgS__50C5FA01]  DEFAULT ((0)) FOR [noDmgShotsReceived15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__maxDmg__51BA1E3A]  DEFAULT ((0)) FOR [maxDmg15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__maxFra__52AE4273]  DEFAULT ((0)) FOR [maxFrags15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__maxXp1__53A266AC]  DEFAULT ((0)) FOR [maxXp15]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__used7__54968AE5]  DEFAULT ((0)) FOR [has7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__battle__558AAF1E]  DEFAULT ((0)) FOR [battles7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__wins7__567ED357]  DEFAULT ((0)) FOR [wins7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__losses__5772F790]  DEFAULT ((0)) FOR [losses7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__surviv__58671BC9]  DEFAULT ((0)) FOR [survived7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__frags7__595B4002]  DEFAULT ((0)) FOR [frags7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__frags8__5A4F643B]  DEFAULT ((0)) FOR [frags8p7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__dmg7__5B438874]  DEFAULT ((0)) FOR [dmg7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__dmgRec__5C37ACAD]  DEFAULT ((0)) FOR [dmgReceived7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__assist__5D2BD0E6]  DEFAULT ((0)) FOR [assistSpot7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__assist__5E1FF51F]  DEFAULT ((0)) FOR [assistTrack7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__cap7__5F141958]  DEFAULT ((0)) FOR [cap7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__def7__60083D91]  DEFAULT ((0)) FOR [def7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__spot7__60FC61CA]  DEFAULT ((0)) FOR [spot7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__xp7__61F08603]  DEFAULT ((0)) FOR [xp7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__xpOrig__62E4AA3C]  DEFAULT ((0)) FOR [xpOriginal7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__shots7__63D8CE75]  DEFAULT ((0)) FOR [shots7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__hits7__64CCF2AE]  DEFAULT ((0)) FOR [hits7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__heHits__65C116E7]  DEFAULT ((0)) FOR [heHits7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__pierce__66B53B20]  DEFAULT ((0)) FOR [pierced7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__shotsR__67A95F59]  DEFAULT ((0)) FOR [shotsReceived7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__pierce__689D8392]  DEFAULT ((0)) FOR [piercedReceived7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__heHits__6991A7CB]  DEFAULT ((0)) FOR [heHitsReceived7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__noDmgS__6A85CC04]  DEFAULT ((0)) FOR [noDmgShotsReceived7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__maxDmg__6B79F03D]  DEFAULT ((0)) FOR [maxDmg7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__maxFra__6C6E1476]  DEFAULT ((0)) FOR [maxFrags7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__maxXp7__6D6238AF]  DEFAULT ((0)) FOR [maxXp7]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__usedCo__6E565CE8]  DEFAULT ((0)) FOR [hasCompany]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__usedCl__6F4A8121]  DEFAULT ((0)) FOR [hasClan]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__basedO__703EA55A]  DEFAULT ((0)) FOR [basedOnVersion]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__battle__7132C993]  DEFAULT ((0)) FOR [battleLifeTime]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__mileag__7226EDCC]  DEFAULT ((0)) FOR [mileage]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__treesC__731B1205]  DEFAULT ((0)) FOR [treesCut]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__favLis__740F363E]  DEFAULT ((0)) FOR [favList]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__eqBino__75035A77]  DEFAULT ((0)) FOR [eqBino]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__eqCoat__75F77EB0]  DEFAULT ((0)) FOR [eqCoated]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__eqCamo__76EBA2E9]  DEFAULT ((0)) FOR [eqCamo]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__skillR__77DFC722]  DEFAULT ((0)) FOR [skillRecon]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__skillA__78D3EB5B]  DEFAULT ((0)) FOR [skillAwareness]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__skillC__79C80F94]  DEFAULT ((0)) FOR [skillCamo]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__skillB__7ABC33CD]  DEFAULT ((0)) FOR [skillBia]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__premiu__7BB05806]  DEFAULT ((0)) FOR [premiumCons]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF__userTank__vehicl__7CA47C3F]  DEFAULT ((0)) FOR [vehicleCamo]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF_userTank_battlesCompany]  DEFAULT ((0)) FOR [battlesCompany]
+GO
+
+ALTER TABLE [dbo].[userTank] ADD  CONSTRAINT [DF_userTank_battlesClan]  DEFAULT ((0)) FOR [battlesClan]
+GO
+
+ALTER TABLE [dbo].[userTank]  WITH CHECK ADD  CONSTRAINT [FK__userTank__tankId__7D98A078] FOREIGN KEY([tankId])
+REFERENCES [dbo].[tank] ([tankId])
+GO
+
+ALTER TABLE [dbo].[userTank] CHECK CONSTRAINT [FK__userTank__tankId__7D98A078]
+GO
+
+ALTER TABLE [dbo].[userTank]  WITH CHECK ADD  CONSTRAINT [FK__userTank__wotUse__7E8CC4B1] FOREIGN KEY([wotUserId])
+REFERENCES [dbo].[wotUser] ([wotUserId])
+GO
+
+ALTER TABLE [dbo].[userTank] CHECK CONSTRAINT [FK__userTank__wotUse__7E8CC4B1]
+GO
 
 -------------------------------------------------------------------------------------------------
 
@@ -178,24 +411,53 @@ alter table favList add foreign key (wotUserId) references wotUser (wotUserId)
 
 -------------------------------------------------------------------------------------------------
 
-create table battle (
-	battleId int primary key,
-	userTankId int not null,
-	battleTime date,
-	victory int,
-	survived int,
-	frags int,
-	dmg int,
-	dmgReceived int,
-	assistSpot int,
-	assistTrack int,
-	cap int,
-	def int,
-	shots int,
-	hits int
-)
+CREATE TABLE [dbo].[battle] (
+	[battleId] [int] IDENTITY(1,1) primary key,
+	[userTankId] [int] NOT NULL,
+	[battlesCount] [int] NULL,
+	[battleTime] [datetime] NULL,
+	[battleLifeTime] [int] NULL,
+	[victory] [int] NULL,
+	[loss] [int] NULL,
+	[survived] [int] NULL,
+	[frags] [int] NULL,
+	[dmg] [int] NULL,
+	[dmgReceived] [int] NULL,
+	[assistSpot] [int] NULL,
+	[assistTrack] [int] NULL,
+	[cap] [int] NULL,
+	[def] [int] NULL,
+	[shots] [int] NULL,
+	[hits] [int] NULL,
+	[shotsReceived] [int] NULL,
+	[pierced] [int] NULL,
+	[piercedReceived] [int] NULL,
+	[spotted] [int] NULL,
+	[mileage] [int] NULL,
+	[treesCut] [int] NULL,
+	[xp] [int] NULL,
+	[mode15] [int] NOT NULL,
+	[mode7] [int] NOT NULL,
+	[modeClan] [int] NOT NULL,
+	[modeCompany] [int] NOT NULL,
+) 
 
-alter table battle add foreign key (userTankId) references userTank (userTankId)
+GO
+ALTER TABLE [dbo].[battle] ADD  CONSTRAINT [DF_battle_mode15]  DEFAULT ((0)) FOR [mode15]
+GO
+ALTER TABLE [dbo].[battle] ADD  CONSTRAINT [DF_battle_mode7]  DEFAULT ((0)) FOR [mode7]
+GO
+ALTER TABLE [dbo].[battle] ADD  CONSTRAINT [DF_battle_modeClan]  DEFAULT ((0)) FOR [modeClan]
+GO
+ALTER TABLE [dbo].[battle] ADD  CONSTRAINT [DF_battle_modeCompany]  DEFAULT ((0)) FOR [modeCompany]
+GO
+ALTER TABLE [dbo].[battle]  WITH CHECK ADD  CONSTRAINT [FK__battle__userTank__0539C240] FOREIGN KEY([userTankId]) REFERENCES [dbo].[userTank] ([userTankId])
+GO
+ALTER TABLE [dbo].[battle] CHECK CONSTRAINT [FK__battle__userTank__0539C240]
+GO
+
+
+
 
 -------------------------------------------------------------------------------------------------
 
@@ -244,6 +506,14 @@ alter table battleAch add foreign key (battleId) references battle (battleId)
 
 -------------------------------------------------------------------------------------------------
 
+create table json (
+	jsonId int,
+	jsonString varchar(max)
+)
+
+
+-------------------------------------------------------------------------------------------------
+
 --https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankturrets/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
 
 create table turret (
@@ -274,7 +544,7 @@ create table gun (
 	pen1 int,					--piercing_power[0]
 	pen2 int,					--piercing_power[1]
 	pen3 int,					--piercing_power[2]
-	fireRate decimal(10,2)		--rate (missing info on autoload)
+	fireRate numeric			--rate (missing info on autoload)
 )
 
 
@@ -328,10 +598,17 @@ alter table tankRadio add foreign key (radioId) references radio (radioId)
 
 -------------------------------------------------------------------------------------------------
 
-create table jsonUserTank (
-	jsonUserTankId int identity(1,1) primary key,
-	jsonMain varchar(255),
-	jsonSub varchar(255),
+CREATE TABLE [dbo].[json2dbMapping](
+	[jsonDossier2dbMappingID] [int] IDENTITY(1,1) primary key,
+	[jsonMain] [varchar](255) NULL,
+	[jsonSub] [varchar](255) NULL,
+	[jsonProperty] [varchar](255) NULL,
+	[dbDataType] [varchar](255) NULL,
+	[dbUserTank] [varchar](255) NULL,
+	[dbBattle] [varchar](255) NULL)
+
+create table jsonTurret (
+	jsonTurretId int identity(1,1) primary key,
 	jsonProperty varchar(255),
 	dbField varchar(255),
 	dataType varchar(255)

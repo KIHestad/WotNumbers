@@ -34,7 +34,7 @@
             // 
             // btnImportTanks
             // 
-            this.btnImportTanks.Location = new System.Drawing.Point(12, 12);
+            this.btnImportTanks.Location = new System.Drawing.Point(284, 317);
             this.btnImportTanks.Name = "btnImportTanks";
             this.btnImportTanks.Size = new System.Drawing.Size(83, 23);
             this.btnImportTanks.TabIndex = 0;
@@ -45,16 +45,16 @@
             // listBoxLog
             // 
             this.listBoxLog.FormattingEnabled = true;
-            this.listBoxLog.Location = new System.Drawing.Point(12, 41);
+            this.listBoxLog.Location = new System.Drawing.Point(12, 12);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(260, 212);
+            this.listBoxLog.Size = new System.Drawing.Size(355, 290);
             this.listBoxLog.TabIndex = 1;
             // 
             // frmImportTank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(381, 352);
             this.Controls.Add(this.listBoxLog);
             this.Controls.Add(this.btnImportTanks);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

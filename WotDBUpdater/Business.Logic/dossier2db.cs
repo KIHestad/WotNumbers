@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Linq;
+using System.Data.SqlClient;
 
 namespace WotDBUpdater
 {
@@ -54,7 +55,7 @@ namespace WotDBUpdater
             List<string> log = new List<string>();
 
             // Declare
-            DataTable NewUserTankTable = tankData.GetUserTankDataFromDB(-1); // Return no data, only empty database with structure
+            DataTable NewUserTankTable = tankData.GetUserTankFromDB(-1); // Return no data, only empty database with structure
             DataRow NewUserTankRow = NewUserTankTable.NewRow();
             string tankName = "";
             //TankDataResult tdr = new TankDataResult();
@@ -88,7 +89,7 @@ namespace WotDBUpdater
                             if  (tankName != "") 
                             {
                                 log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewUserTankRow["battles15"] + " | battles7:" + NewUserTankRow["battles7"]);
-                                tankData.SaveTankDataResult(tankName, NewUserTankRow, ForceUpdate);
+                                SaveTankDataResult(tankName, NewUserTankRow, ForceUpdate);
                             }
                             // Reset all values
                             NewUserTankTable.Clear();
@@ -126,14 +127,14 @@ namespace WotDBUpdater
 
                                         // Check data by getting jsonUserTank Mapping
                                         string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
-                                        DataRow[] foundRows = tankData.jsonUserTankTable.Select(expression);
+                                        DataRow[] foundRows = tankData.json2dbMappingView.Select(expression);
 
                                         // IF mapping found add currentItem into NewUserTankRow
                                         if (foundRows.Length != 0)
                                         {
                                             // Add now
-                                            string dataType = foundRows[0]["dataType"].ToString();
-                                            string dbField = foundRows[0]["dbField"].ToString();
+                                            string dataType = foundRows[0]["dbDataType"].ToString();
+                                            string dbField = foundRows[0]["dbUserTank"].ToString();
                                             switch (dataType)
                                             {
                                                 case "String": NewUserTankRow[dbField] = currentItem.value.ToString(); ; break;
@@ -183,7 +184,8 @@ namespace WotDBUpdater
             }
         }
 
-        private static void dossier2db_ver2(string filename, bool ForceUpdate = false)
+        // TODO: Check if using this model gives better perfomance and code than readJson
+        private static void readJson_ver2(string filename, bool ForceUpdate = false)
         {
             StringBuilder sb = new StringBuilder();
             using (StreamReader sr = new StreamReader(filename))
@@ -228,6 +230,176 @@ namespace WotDBUpdater
                 Log.LogToFile(logtxt);
 
             }
+        }
+
+        public static void SaveTankDataResult(string tankName, DataRow NewUserTankRow, bool ForceUpdate = false)
+        {
+            // Get Tank ID
+            int tankID = tankData.GetTankID(tankName);
+            if (tankID > 0) // when tankid=0 the tank is not found in tank table
+            {
+                // Check if battle count has increased, first get existing battle count
+                DataTable OldUserTankTable = tankData.GetUserTankFromDB(tankID); // Return Existing User Tank Data
+                // Check if user has this tank
+                if (OldUserTankTable.Rows.Count == 0)
+                {
+                    SaveNewUserTank(tankID);
+                    OldUserTankTable = tankData.GetUserTankFromDB(tankID); // Return once more now after row is added
+                }
+                // Check if battle count has increased, first get existing (old) tank data
+                DataRow OldUserTankRow = OldUserTankTable.Rows[0];
+                // Compare with last battle result
+                int NewUserTankRow_battles15 = 0;
+                int NewUserTankRow_battles7 = 0;
+                if (NewUserTankRow["battles15"] != DBNull.Value) NewUserTankRow_battles15 = Convert.ToInt32(NewUserTankRow["battles15"]);
+                if (NewUserTankRow["battles7"] != DBNull.Value) NewUserTankRow_battles7 = Convert.ToInt32(NewUserTankRow["battles7"]);
+                int battlessNew15 = NewUserTankRow_battles15 - Convert.ToInt32(OldUserTankRow["battles15"]);
+                int battlessNew7 = NewUserTankRow_battles7 - Convert.ToInt32(OldUserTankRow["battles7"]);
+                // Check if new battle on this tank then do db update, if force do it anyway
+                if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
+                {
+                    // New battle detected, update tankData in DB
+                    UpdateUserTank(NewUserTankRow, OldUserTankTable);
+                    // If new battle on this tank also update battle table to store result of last battle(s)
+                    if (battlessNew15 != 0 || battlessNew7 != 0)
+                    {
+                        // New battle detected, update tankData in DB
+                        UpdateBattle(NewUserTankRow, OldUserTankTable, tankID, battlessNew15, battlessNew7);
+                    }
+                }
+            }
+        }
+
+        private static void SaveNewUserTank(int TankID)
+        {
+            // Add to database
+            SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+            con.Open();
+            SqlCommand cmd = new SqlCommand("INSERT INTO userTank (tankId, wotUserId) VALUES (@tankId, @wotUserId)", con);
+            cmd.Parameters.AddWithValue("@tankId", TankID);
+            cmd.Parameters.AddWithValue("@wotUserId", Config.Settings.UserID);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        private static void UpdateUserTank(DataRow NewUserTankRow, DataTable OldUserTankTable)
+        {
+            // Get fields to update
+            string sqlFields = "";
+            foreach (DataColumn column in OldUserTankTable.Columns)
+            {
+                if (column.ColumnName != "userTankId" && NewUserTankRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+                {
+                    if (sqlFields.Length > 0) sqlFields += ", "; // Add comma exept for first element
+                    string colName = column.ColumnName;
+                    string colType = column.DataType.Name;
+                    sqlFields += colName + "=";
+                    switch (colType)
+                    {
+                        case "String": sqlFields += "'" + NewUserTankRow[colName] + "'"; break;
+                        case "DateTime": sqlFields += "'" + Convert.ToDateTime(NewUserTankRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+                        default: sqlFields += NewUserTankRow[colName]; break;
+                    }
+                }
+            }
+            // Update database
+            if (sqlFields.Length > 0)
+            {
+                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE userTank SET " + sqlFields + " WHERE userTankId=@userTankId ", con);
+                cmd.Parameters.AddWithValue("@userTankId", OldUserTankTable.Rows[0]["userTankId"]);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
+        private static void UpdateBattle(DataRow NewUserTankRow, DataTable OldUserTankTable, int tankID, int battlessNew15, int battlessNew7)
+        {
+            // Greate datarow to put calculated battle data
+            DataTable NewBattleTable = tankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
+            DataRow NewbattleRow = NewBattleTable.NewRow();            
+            // Get fields to map UserTank data to Battle data
+            bool modeCompany = false;
+            bool modeClan = false;
+            foreach (DataRow dr in tankData.tankData2BattleMappingView.Rows)
+            {
+                if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
+                {
+                    // Get field to be checked
+                    string battleField = dr["dbBattle"].ToString();
+                    string userTankField = dr["dbUserTank"].ToString();
+                    // Check datatype and calculate value
+                    if (dr["dbDataType"].ToString() == "DateTime") // For DateTime get the new value
+                    {
+                        NewbattleRow[battleField] = NewUserTankRow[userTankField];
+                    }
+                    else // For integers calculate new value as diff between new and old value
+                    {
+                        // Calculate difference from old to new usertank result
+                        if (NewbattleRow[battleField] == DBNull.Value) NewbattleRow[battleField] = 0;
+                        int oldvalue = 0;
+                        int newvalue = 0;
+                        if (NewUserTankRow[userTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewUserTankRow[userTankField]);
+                        if (OldUserTankTable.Rows[0][userTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldUserTankTable.Rows[0][userTankField]);
+                        NewbattleRow[battleField] = Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue;
+                    }
+                }
+                else // Check in unmapped fields for calculate clan and company battle mode
+                {
+                    // Get field to be checked
+                    string userTankField = dr["dbUserTank"].ToString();
+                    // Check datatype and calculate value
+                    if (userTankField == "battlesClan" || userTankField == "battlesCompany") // For DateTime get the new value
+                    {
+                        // Calculate difference from old to new usertank result
+                        int oldvalue = 0;
+                        int newvalue = 0;
+                        if (NewUserTankRow[userTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewUserTankRow[userTankField]);
+                        if (OldUserTankTable.Rows[0][userTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldUserTankTable.Rows[0][userTankField]);
+                        if (newvalue > oldvalue)
+                        {
+                            modeClan = (userTankField == "battlesClan");
+                            modeCompany = (userTankField == "battlesCompany");
+                        }
+                    }
+                }
+            }
+            // Get value to userTankID, FK to parent table userTank
+            DataTable dt = tankData.GetUserTankFromDB(tankID);
+            string sqlFields = "userTankID";
+            string sqlValues = dt.Rows[0]["userTankID"].ToString();
+            // Get fields to update, loop through mapping table to get allgenerate SQL
+            foreach (DataColumn column in NewBattleTable.Columns)
+            {
+                if (column.ColumnName != "battleId" && column.ColumnName != "wotUserId" && NewbattleRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+                {
+                    string colName = column.ColumnName;
+                    string colType = column.DataType.Name;
+                    sqlFields += ", " + colName;
+                    switch (colType)
+                    {
+                        case "String": sqlValues += ", '" + NewbattleRow[colName] + "'"; break;
+                        case "DateTime": sqlValues += ", '" + Convert.ToDateTime(NewbattleRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+                        default: sqlValues += ", " + NewbattleRow[colName]; break;
+                    }
+                }
+            }
+            // Add battle mode
+            if (battlessNew15 != 0) { sqlFields += ", mode15"; sqlValues += ", 1"; }
+            if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }
+            if (modeCompany) { sqlFields += ", modeCompany"; sqlValues += ", 1"; }
+            if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
+            // Update database
+            if (sqlFields.Length > 0)
+            {
+                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO battle (" + sqlFields + ") VALUES (" + sqlValues + ")", con);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
         }
 
     }

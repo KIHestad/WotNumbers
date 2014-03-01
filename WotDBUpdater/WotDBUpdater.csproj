@@ -72,10 +72,10 @@
     <Compile Include="Forms\File\frmApplicationSetting.Designer.cs">
       <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmImportTank.cs">
+    <Compile Include="Forms\File\frmImportTank.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmImportTank.Designer.cs">
+    <Compile Include="Forms\File\frmImportTank.Designer.cs">
       <DependentUpon>frmImportTank.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmMain.cs">
@@ -126,7 +126,7 @@
     <EmbeddedResource Include="Forms\File\frmApplicationSetting.resx">
       <DependentUpon>frmApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmImportTank.resx">
+    <EmbeddedResource Include="Forms\File\frmImportTank.resx">
       <DependentUpon>frmImportTank.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
