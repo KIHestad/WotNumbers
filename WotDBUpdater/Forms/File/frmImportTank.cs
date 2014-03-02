@@ -48,5 +48,11 @@ namespace WotDBUpdater.Forms
             tankData.GetTankListFromDB();
 
         }
+
+        private void btnUpdateWN8_Click(object sender, EventArgs e)
+        {
+            importTanks2DB.UpdateWN8();
+            MessageBox.Show("Update complete");
+        }
     }
 }
