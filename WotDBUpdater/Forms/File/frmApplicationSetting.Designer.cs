@@ -34,7 +34,7 @@
             this.openFileDialogDossierFile = new System.Windows.Forms.OpenFileDialog();
             this.btnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtUserName = new System.Windows.Forms.TextBox();
+            this.txtPlayerName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -85,16 +85,16 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Username:";
             // 
-            // txtUserName
+            // txtPlayerName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(18, 36);
-            this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(171, 20);
-            this.txtUserName.TabIndex = 9;
+            this.txtPlayerName.Location = new System.Drawing.Point(18, 36);
+            this.txtPlayerName.Name = "txtPlayerName";
+            this.txtPlayerName.Size = new System.Drawing.Size(171, 20);
+            this.txtPlayerName.TabIndex = 9;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtUserName);
+            this.groupBox1.Controls.Add(this.txtPlayerName);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtDossierFilePath);
             this.groupBox1.Controls.Add(this.btnOpenDossierFile);
@@ -134,7 +134,7 @@
         private System.Windows.Forms.TextBox txtDossierFilePath;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtUserName;
+        private System.Windows.Forms.TextBox txtPlayerName;
         private System.Windows.Forms.GroupBox groupBox1;
     }
 }

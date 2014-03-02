@@ -22,7 +22,7 @@ namespace WotDBUpdater
         {
             // Startup settings
             txtDossierFilePath.Text = Config.Settings.DossierFilePath;
-            txtUserName.Text = Config.Settings.UserName;
+            txtPlayerName.Text = Config.Settings.playerName;
         }
 
         private void btnOpenDossierFile_Click(object sender, EventArgs e)
@@ -48,7 +48,7 @@ namespace WotDBUpdater
         private void btnSave_Click(object sender, EventArgs e)
         {
             Config.Settings.DossierFilePath = txtDossierFilePath.Text;
-            Config.Settings.UserName = txtUserName.Text;
+            Config.Settings.playerName = txtPlayerName.Text;
             if (Config.SaveConfig(true,true)) // Try saving, returns error message and is false if failed
             {
                 Form.ActiveForm.Close();

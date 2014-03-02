@@ -81,7 +81,7 @@ namespace WotDBUpdater
                 {
                     moduleToken = turret.First();   // First() returns only child tokens of turret
                     
-                    int turretId = Int32.Parse(((JProperty)moduleToken.Parent).Name);   // step back to parent to fetch the isolated turretId
+                    int id = Int32.Parse(((JProperty)moduleToken.Parent).Name);   // step back to parent to fetch the isolated turretId
                     JArray tanksArray = (JArray)moduleToken["tanks"];
                     int tankId = Int32.Parse(tanksArray[0].ToString());   // fetch only the first tank in the array for now (all turrets are related to one tank)
                     string name = moduleToken["name_i18n"].ToString();
@@ -91,8 +91,8 @@ namespace WotDBUpdater
                     int armorSides = Int32.Parse(moduleToken["armor_board"].ToString());
                     int armorRear = Int32.Parse(moduleToken["armor_fedd"].ToString());
 
-                    sql = sql + "insert into turret (turretId, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) values "
-                              + "('" + turretId + "', '" + tankId + "', '" + name + "', '" + tier + "', '" + viewRange + "', '" + armorFront 
+                    sql = sql + "insert into modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) values "
+                              + "('" + id + "', '" + tankId + "', '" + name + "', '" + tier + "', '" + viewRange + "', '" + armorFront 
                               + "', '" + armorSides + "', '" + armorRear +"'); ";
                 }
                 
@@ -101,7 +101,7 @@ namespace WotDBUpdater
                 {
                     SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                     con.Open();
-                    SqlCommand delete = new SqlCommand("delete from turret", con);
+                    SqlCommand delete = new SqlCommand("delete from modTurret", con);
                     SqlCommand insert = new SqlCommand(sql, con);
                     delete.ExecuteNonQuery();
                     insert.ExecuteNonQuery();
@@ -145,7 +145,7 @@ namespace WotDBUpdater
                 {
                     moduleToken = gun.First();
 
-                    int gunId = Int32.Parse(((JProperty)moduleToken.Parent).Name);
+                    int id = Int32.Parse(((JProperty)moduleToken.Parent).Name);
                     string name = moduleToken["name_i18n"].ToString();
                     int tier = Int32.Parse(moduleToken["level"].ToString());
                     JArray dmgArray = (JArray)moduleToken["damage"];
@@ -162,8 +162,8 @@ namespace WotDBUpdater
                     if (penArray.Count > 2) { pen3 = Int32.Parse(penArray[2].ToString()); }
                     string fireRate = ((moduleToken["rate"].ToString())).Replace(",", ".");
 
-                    gunSql = gunSql + "insert into gun (gunId, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) values "
-                                    + "('" + gunId + "', '" + name + "', '" + tier + "', '" + dmg1 + "', '" + dmg2 + "', '" + dmg3
+                    gunSql = gunSql + "insert into modGun (id, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) values "
+                                    + "('" + id + "', '" + name + "', '" + tier + "', '" + dmg1 + "', '" + dmg2 + "', '" + dmg3
                                     + "', '" + pen1 + "', '" + pen2 + "', '" + pen3 + "', '" + fireRate +"'); ";
                     
                     // Create relation to turret if possible
@@ -172,8 +172,8 @@ namespace WotDBUpdater
                     {
                         for (int i = 0; i < turretArray.Count; i++)
                         {
-                            turretSql = turretSql + "insert into turretGun (turretId, gunId) values (";
-                            turretSql = turretSql + Int32.Parse(turretArray[i].ToString()) + ", " + gunId;
+                            turretSql = turretSql + "insert into modTurretGun (turretId, gunId) values (";
+                            turretSql = turretSql + Int32.Parse(turretArray[i].ToString()) + ", " + id;
                             turretSql = turretSql + "); ";
                         }
                     }
@@ -184,8 +184,8 @@ namespace WotDBUpdater
                     {
                         for (int i = 0; i < tankArray.Count; i++)
                         {
-                            tankSql = tankSql + "insert into tankGun (tankId, gunId) values (";
-                            tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + gunId;
+                            tankSql = tankSql + "insert into modTankGun (tankId, gunId) values (";
+                            tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + id;
                             tankSql = tankSql + "); ";
                         }
                     }
@@ -198,7 +198,7 @@ namespace WotDBUpdater
 
                     SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                     con.Open();
-                    SqlCommand delete = new SqlCommand("delete from turretGun; delete from tankGun; delete from gun", con);
+                    SqlCommand delete = new SqlCommand("delete from modTurretGun; delete from modTankGun; delete from modGun", con);
                     string inserts = gunSql + turretSql + tankSql;
                     SqlCommand insert = new SqlCommand(inserts, con);
                     delete.ExecuteNonQuery();
@@ -246,13 +246,13 @@ namespace WotDBUpdater
                 {
                     moduleToken = gun.First();
 
-                    int radioId = Int32.Parse(((JProperty)moduleToken.Parent).Name);
+                    int id = Int32.Parse(((JProperty)moduleToken.Parent).Name);
                     string name = moduleToken["name_i18n"].ToString();
                     int tier = Int32.Parse(moduleToken["level"].ToString());
                     int signalRange = Int32.Parse(moduleToken["distance"].ToString());
 
-                    radioSql = radioSql + "insert into radio (radioId, name, tier, signalRange) values "
-                                    + "('" + radioId + "', '" + name + "', '" + tier + "', '" + signalRange + "'); ";
+                    radioSql = radioSql + "insert into modRadio (id, name, tier, signalRange) values "
+                                    + "('" + id + "', '" + name + "', '" + tier + "', '" + signalRange + "'); ";
 
                     // Create relation to tank
                     JArray tankArray = (JArray)moduleToken["tanks"];
@@ -260,8 +260,8 @@ namespace WotDBUpdater
                     {
                         for (int i = 0; i < tankArray.Count; i++)
                         {
-                            tankSql = tankSql + "insert into tankRadio (tankId, radioId) values (";
-                            tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + radioId;
+                            tankSql = tankSql + "insert into modTankRadio (tankId, radioId) values (";
+                            tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + id;
                             tankSql = tankSql + "); ";
                         }
                     }
@@ -274,7 +274,7 @@ namespace WotDBUpdater
 
                     SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                     con.Open();
-                    SqlCommand delete = new SqlCommand("delete from tankRadio; delete from radio;", con);
+                    SqlCommand delete = new SqlCommand("delete from modTankRadio; delete from modRadio;", con);
                     string inserts = radioSql + tankSql;
                     SqlCommand insert = new SqlCommand(inserts, con);
                     delete.ExecuteNonQuery();

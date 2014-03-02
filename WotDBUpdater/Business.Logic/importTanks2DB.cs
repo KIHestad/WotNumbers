@@ -59,7 +59,7 @@ namespace WotDBUpdater
 
             try
             {
-                SqlCommand cmd = new SqlCommand("INSERT INTO tank (tankId, tankTypeId, countryId, name, tier, premium) VALUES (@tankId, @tankTypeId, @countryId, @name, @tier, @premium)", con);
+                SqlCommand cmd = new SqlCommand("INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)", con);
 
                 JObject root = JObject.Parse(s);
                 JArray items = (JArray)root["items"];
@@ -96,7 +96,7 @@ namespace WotDBUpdater
                     if (!tankExists) // Only run if Tank does not exists in table
                     {
                         cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@tankId", jsonCompDescr);
+                        cmd.Parameters.AddWithValue("@id", jsonCompDescr);
                         cmd.Parameters.AddWithValue("@tankTypeId", jsonType);
                         cmd.Parameters.AddWithValue("@countryid", jsonCountryid);
                         cmd.Parameters.AddWithValue("@name", jsonTitle);

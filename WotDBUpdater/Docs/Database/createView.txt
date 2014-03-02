@@ -1,6 +1,6 @@
 ﻿
 DROP VIEW [dbo].[tankInfoShort]
-DROP VIEW [dbo].[userTankInfoBattleCount]
+DROP VIEW [dbo].[playerTankInfoBattleCount]
 DROP VIEW [dbo].[json2dbMappingView]
 DROP VIEW [dbo].[tankData2BattleMappingView]
 DROP VIEW [dbo].[battleResultView]
@@ -18,24 +18,24 @@ FROM            dbo.country INNER JOIN
                          dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.tankTypeID
 GO
 
--- Create view showing user tanks, short tank info and battle count
+-- Create view showing player tanks, short tank info and battle count
 
-CREATE VIEW [dbo].[userTankInfoBattleCount]
+CREATE VIEW [dbo].[playerTankInfoBattleCount]
 AS
-SELECT        dbo.wotUser.name AS Username, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
-                         dbo.userTank.battles15 AS [Battles 15x15], dbo.userTank.battles7 AS [Battles 7x7]
-FROM            dbo.userTank INNER JOIN
-                         dbo.wotUser ON dbo.userTank.wotUserId = dbo.wotUser.wotUserId INNER JOIN
-                         dbo.tank ON dbo.userTank.tankId = dbo.tank.tankId INNER JOIN
-                         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.tankTypeID INNER JOIN
-                         dbo.country ON dbo.tank.countryId = dbo.country.countryId
+SELECT        dbo.player.name AS Playername, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
+                         dbo.playerTank.battles15 AS [Battles 15x15], dbo.playerTank.battles7 AS [Battles 7x7]
+FROM            dbo.playerTank INNER JOIN
+                         dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
+                         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN
+                         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN
+                         dbo.country ON dbo.tank.countryId = dbo.country.id
 GO
 
--- Create view for simulating one PK on jsonUserTank table
+-- Create view for simulating one PK on jsonPlayerTank table
 
 CREATE VIEW [dbo].[json2dbMappingView]
 AS
-SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  dbo.json2dbMapping.dbDataType, dbo.json2dbMapping.dbUserTank, dbo.json2dbMapping.dbBattle
+SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  dbo.json2dbMapping.dbDataType, dbo.json2dbMapping.dbPlayerTank, dbo.json2dbMapping.dbBattle
 FROM          dbo.json2dbMapping
 GO
 
@@ -43,26 +43,26 @@ GO
 
 CREATE VIEW [dbo].[tankData2BattleMappingView]
 AS
-SELECT        TOP (100) PERCENT dbDataType, dbUserTank, dbBattle
+SELECT        TOP (100) PERCENT dbDataType, dbPlayerTank, dbBattle
 FROM            dbo.json2dbMapping
 WHERE        (dbBattle IS NOT NULL)
-GROUP BY dbDataType, dbUserTank, dbBattle
+GROUP BY dbDataType, dbPlayerTank, dbBattle
 GO
 
 -- View for battle result
 
 CREATE VIEW [dbo].[BattleResultView]
 AS
-SELECT        TOP (100) PERCENT dbo.wotUser.name AS [User], dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.battle.battleTime AS Time, 
+SELECT        TOP (100) PERCENT dbo.player.name AS [Player], dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.battle.battleTime AS Time, 
                          CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) 
                          WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS [Vict-Draw-Def], 
                          CASE WHEN battlescount > 1 THEN CAST(dbo.battle.survived AS varchar) WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, 
                          dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.xp, dbo.battle.spotted AS Detected, 
                          dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots, dbo.battle.hits
 FROM            dbo.battle INNER JOIN
-                         dbo.userTank ON dbo.battle.userTankId = dbo.userTank.userTankId INNER JOIN
-                         dbo.wotUser ON dbo.userTank.wotUserId = dbo.wotUser.wotUserId INNER JOIN
-                         dbo.tank ON dbo.userTank.tankId = dbo.tank.tankId
+                         dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN
+                         dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
+                         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id
 
 GO
 
@@ -79,6 +79,6 @@ select
   r.signalRange as signalRange
 from 
   radio r 
-  left join tankRadio tr on r.radioId = tr.radioId
-  left join tank t on tr.tankId = t.tankId
+  left join tankRadio tr on r.id = tr.radioId
+  left join tank t on tr.tankId = t.id
 go

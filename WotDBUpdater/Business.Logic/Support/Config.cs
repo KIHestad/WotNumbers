@@ -15,8 +15,8 @@ namespace WotDBUpdater
     public class ConfigData
     {
         public string DatabaseConn { get; set; }
-        public int UserID { get; set; }
-        public string UserName { get; set; }
+        public int playerID { get; set; }
+        public string playerName { get; set; }
         public string DossierFilePath { get; set; }
         public int Run { get; set; }
     }
@@ -31,8 +31,8 @@ namespace WotDBUpdater
         {
             // Insert default values as settings
             Config.Settings.DatabaseConn = "Data Source=.;Initial Catalog=Databasename;Integrated Security=True;";
-            Config.Settings.UserID = 0;
-            Config.Settings.UserName = "";
+            Config.Settings.playerID = 0;
+            Config.Settings.playerName = "";
             Config.Settings.DossierFilePath = "";
             Config.Settings.Run = 0;
             // Message
@@ -56,49 +56,49 @@ namespace WotDBUpdater
             return ok;
         }
 
-        public static bool SaveConfig(bool CheckDBSetting = false, bool LookupUserInDB = false)
+        public static bool SaveConfig(bool CheckDBSetting = false, bool LookupPlayerInDB = false)
         {
             bool DBok = true;
             if (CheckDBSetting) DBok = CheckDBConn();
 
             if (DBok)
             {
-                if (LookupUserInDB)
+                if (LookupPlayerInDB)
                 {
                     try
                     {
-                        // Check if user exist in database, if not create
+                        // Check if player exist in database, if not create
                         SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
                         con.Open();
-                        Config.Settings.UserName = Config.Settings.UserName.Trim();
-                        // Check if user exist
-                        bool createnewuser = false;
-                        SqlCommand cmd = new SqlCommand("SELECT * FROM wotUser WHERE name=@name", con);
-                        cmd.Parameters.AddWithValue("@name", Config.Settings.UserName);
+                        Config.Settings.playerName = Config.Settings.playerName.Trim();
+                        // Check if player exist
+                        bool createnewplayer = false;
+                        SqlCommand cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
+                        cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
                         SqlDataReader reader = cmd.ExecuteReader();
-                        if (!reader.HasRows) createnewuser = true;
+                        if (!reader.HasRows) createnewplayer = true;
                         reader.Close();
-                        if (createnewuser)
+                        if (createnewplayer)
                         {
-                            // create new user
-                            cmd = new SqlCommand("INSERT INTO wotUser (name) VALUES (@name)", con);
-                            cmd.Parameters.AddWithValue("@name", Config.Settings.UserName);
+                            // create new player
+                            cmd = new SqlCommand("INSERT INTO player (name) VALUES (@name)", con);
+                            cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
                             cmd.ExecuteNonQuery();
                         }
-                        // Get User ID
-                        cmd = new SqlCommand("SELECT * FROM wotUser WHERE name=@name", con);
-                        cmd.Parameters.AddWithValue("@name", Config.Settings.UserName);
+                        // Get player ID
+                        cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
+                        cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            Config.Settings.UserID = Convert.ToInt32(reader["wotUserId"]);
+                            Config.Settings.playerID = Convert.ToInt32(reader["id"]);
                         }
                         con.Close();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error occured looup user in database, check your Application Settings.\n\n" + ex.Message, "Config error");
-                        Config.Settings.UserID = 0;
+                        MessageBox.Show("Error occured lookup player in database, check your Application Settings.\n\n" + ex.Message, "Config error");
+                        Config.Settings.playerID = 0;
                     }
                 }
                 // Write new settings to XML

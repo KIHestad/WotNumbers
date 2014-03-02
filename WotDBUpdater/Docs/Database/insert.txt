@@ -1,19 +1,19 @@
 -- Tank type
-insert into tankType (tankTypeID, name, shortName) values (1, 'Light tank', 'LT')
-insert into tankType (tankTypeID, name, shortName) values (2, 'Medium tank', 'MT')
-insert into tankType (tankTypeID, name, shortName) values (3, 'Heavy tank', 'HT')
-insert into tankType (tankTypeID, name, shortName) values (4, 'Tank destroyer', 'TD')
-insert into tankType (tankTypeID, name, shortName) values (5, 'Self propelled gun', 'SPG')
+insert into tankType (id, name, shortName) values (1, 'Light tank', 'LT')
+insert into tankType (id, name, shortName) values (2, 'Medium tank', 'MT')
+insert into tankType (id, name, shortName) values (3, 'Heavy tank', 'HT')
+insert into tankType (id, name, shortName) values (4, 'Tank destroyer', 'TD')
+insert into tankType (id, name, shortName) values (5, 'Self propelled gun', 'SPG')
 
 
 --json, common, countryid
-insert into country (countryId, name, shortName) values (0, 'USSR', 'USR')
-insert into country (countryId, name, shortName) values (1, 'Germany', 'GER')
-insert into country (countryId, name, shortName) values (2, 'USA', 'USA')
-insert into country (countryId, name, shortName) values (3, 'China', 'CHI')
-insert into country (countryId, name, shortName) values (4, 'France', 'FRA')
-insert into country (countryId, name, shortName) values (5, 'UK', 'UK')
-insert into country (countryId, name, shortName) values (6, 'Japan', 'JAP')
+insert into country (id, name, shortName) values (0, 'USSR', 'USR')
+insert into country (id, name, shortName) values (1, 'Germany', 'GER')
+insert into country (id, name, shortName) values (2, 'USA', 'USA')
+insert into country (id, name, shortName) values (3, 'China', 'CHI')
+insert into country (id, name, shortName) values (4, 'France', 'FRA')
+insert into country (id, name, shortName) values (5, 'UK', 'UK')
+insert into country (id, name, shortName) values (6, 'Japan', 'JAP')
 
 -- Ach
 insert into ach (name) values ('alaric')
@@ -87,6 +87,8 @@ insert into ach (name) values ('supporter')
 insert into ach (name) values ('tankExpertStrg')
 insert into ach (name) values ('titleSniper')
 insert into ach (name) values ('warrior')
+
+
 
 
 SET IDENTITY_INSERT [dbo].[json2dbMapping] ON 

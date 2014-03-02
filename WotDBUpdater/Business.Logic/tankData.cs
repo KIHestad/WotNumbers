@@ -19,22 +19,22 @@ namespace WotDBUpdater
             using(SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT tankId, name FROM tank", conn);
+                SqlCommand command = new SqlCommand("SELECT id, name FROM tank", conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(TankList);
                 conn.Close();
             }
         }
 
-        public static DataTable UserTankList = new DataTable();
+        public static DataTable PlayerTankList = new DataTable();
 
-        public static DataTable GetUserTankFromDB(int tankId)
+        public static DataTable GetPlayerTankFromDB(int tankId)
         {
             using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM userTank WHERE wotUserId = " + Config.Settings.UserID + " AND tankId=" + tankId.ToString(), conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerID + " AND tankId=" + tankId.ToString(), conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dt);
                 conn.Close();
@@ -48,7 +48,7 @@ namespace WotDBUpdater
             {
                 DataTable dt = new DataTable();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM battle WHERE battleId=" + battleId.ToString(), conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM battle WHERE id=" + battleId.ToString(), conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dt);
                 conn.Close();
@@ -97,7 +97,7 @@ namespace WotDBUpdater
             string s = "";
             foreach (DataRow dr in TankList.Rows)
             {
-                s += dr["tankId"] + " : " + dr["name"] + "\n";
+                s += dr["id"] + " : " + dr["name"] + "\n";
             }
             return s;
         }
@@ -108,13 +108,13 @@ namespace WotDBUpdater
             string expression = "name = '" + TankName + "'";
             DataRow[] foundRows = TankList.Select(expression);
             if (foundRows.Length > 0) // If tank exist in Tank table 
-                tankID = Convert.ToInt32(foundRows[0]["tankId"]);
+                tankID = Convert.ToInt32(foundRows[0]["id"]);
             return tankID;
         }
 
         public static bool TankExist(int tankID)
         {
-            string expression = "tankId = " + tankID.ToString();
+            string expression = "id = " + tankID.ToString();
             DataRow[] foundRows = TankList.Select(expression);
             return (foundRows.Length > 0);
         }

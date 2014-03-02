@@ -20,3 +20,13 @@
 - Added functions for importing turrets, guns and radios
 	- Utilizing JObject, JToken, JProperty and JArray from Newtonsoft libraries
 - Previous attempts using JsonTextReader, deserializing, etc are rejected
+
+01.03.14
+- Major cleanup on naming conventions
+	- Tables, dbfields, functions, etc containing 'user'/'wotUser' renamed to 'player'
+	- Primary keys in db renamed to 'id' (except combined pk's)
+	- Pascal Casing will be used except for parameters, database tables/fields
+	  http://msdn.microsoft.com/en-us/library/vstudio/ms229043(v=vs.100.aspx
+- Restructured the frag table
+	- Created battleFrag and playerTankFrag
+- Added prefix 'mod' to all module related tables

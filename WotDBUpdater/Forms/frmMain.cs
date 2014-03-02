@@ -45,14 +45,14 @@ namespace WotDBUpdater
 
         private void SetFormTitle()
         {
-            // Check / show logged in user
-            if (Config.Settings.UserName == "")
+            // Check / show logged in player
+            if (Config.Settings.playerName == "")
             {
-                this.Text = "WotDBUpdater - NO USER SELECTED";
+                this.Text = "WotDBUpdater - NO PLAYER SELECTED";
             }
             else
             {
-                this.Text = "WotDBUpdater - " + Config.Settings.UserName;
+                this.Text = "WotDBUpdater - " + Config.Settings.playerName;
             }
         }
 
