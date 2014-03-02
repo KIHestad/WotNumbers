@@ -233,6 +233,12 @@ namespace WotDBUpdater
             string s = modules2DB.importRadios();
             MessageBox.Show(s);
         }
+
+        private void testProgressBarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.frmTestProgressBar();
+            frm.Show();
+        }
     }
 
     
