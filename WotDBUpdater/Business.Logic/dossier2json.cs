@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Scripting.Hosting;
 
 namespace WotDBUpdater
 {
@@ -223,43 +224,27 @@ namespace WotDBUpdater
         {
             // Convert to json format using python conversion from cPicle stream format
             // Use ProcessStartInfo class to run python 
-            
-            //ProcessStartInfo startInfo = new ProcessStartInfo();
-            //startInfo.CreateNoWindow = false;
-            //startInfo.UseShellExecute = false;
-            //startInfo.FileName = "c:\\python27\\python.exe";
-            //startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            //startInfo.Arguments = dossier2jsonfile + " " + dossierfile +" -f -r";
-            //try
-            //{
-            //    // Start the process with the info we specified.
-            //    // Call WaitForExit and then the using statement will close.
-            //    using (Process exeProcess = Process.Start(startInfo))
-            //    {
-            //        exeProcess.WaitForExit();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return LogText(ex.Message);
-            //}
 
-            // Alternative model - using IronPython
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = false;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = "c:\\python27\\python.exe";
+            startInfo.WindowStyle = ProcessWindowStyle.Normal;
+            startInfo.Arguments = dossier2jsonfile + " " + dossierfile + " -f -r";
             try
             {
-                IDictionary<string, object> options = new Dictionary<string, object>();
-                dossierfile = dossierfile.Replace("\\", "/");
-                options["Arguments"] = new[] { dossierfile, "-f", "-r" };
-                ScriptEngine engine = Python.CreateEngine(options);
-                dossier2json = dossier2json.Replace("\\", "/");
-                engine.ExecuteFile(dossier2json);
-
+                // Start the process with the info we specified.
+                // Call WaitForExit and then the using statement will close.
+                using (Process exeProcess = Process.Start(startInfo))
+                {
+                    exeProcess.WaitForExit();
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Dossier2Jason");
+                return LogText(ex.Message);
             }
-            engine.ExecuteFile(dossier2json + " " + dossierfile + " -f -r");
+
             return "";
         }
 

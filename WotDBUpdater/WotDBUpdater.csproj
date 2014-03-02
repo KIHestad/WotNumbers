@@ -712,8 +712,8 @@
     <Content Include="Dossier2json\Lib\_weakrefset.py" />
     <Content Include="Dossier2json\Lib\__future__.py" />
     <Content Include="Dossier2json\Lib\__phello__.foo.py" />
+    <Content Include="Dossier2json\wotdc2_testj.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
-    <Content Include="Dossier2json\wotdc2j_org.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />

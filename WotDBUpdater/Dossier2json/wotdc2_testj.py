@@ -23,27 +23,12 @@ def main():
 	global filename_source, filename_target
 	global option_server, option_format
 	
-	filename_source = ""
-	option_raw = 0
-	option_format = 0
+	filename_source = "dossier.dat"
+	option_raw = 1
+	option_format = 1
 	option_server = 0
 	option_frags = 1
 	
-	for argument in sys.argv:
-		if argument == "-s":
-			option_server = 1
-			#print '-- SERVER mode enabled'
-		elif argument == "-r":
-			option_raw = 1
-			#print '-- RAW mode enabled'
-		elif argument == "-f":
-			option_format = 1
-			#print '-- FORMAT mode enabled'
-		elif argument == "-k":
-			option_frags = 0
-			#print '-- FRAGS will be excluded'
-		elif argument != sys.argv[0]:
-			filename_source = argument
 	
 	if filename_source == "":
 		usage()
@@ -406,8 +391,7 @@ def get_tank_details(compDescr, tanksdata):
 def printmessage(message):
 	global option_server
 	
-	if option_server == 0:
-		print message
+	write_to_log(message)
 
 
 def exitwitherror(message):
@@ -450,17 +434,13 @@ def write_to_log(logtext):
 	global working_directory, option_server
 	import datetime, os
 	
-	printmessage(logtext)
+	#printmessage(logtext)
 	now = datetime.datetime.now()
 	
 	#working_directory
-	if option_server == 1:
-		try:
-			logFile = open("/var/log/wotdc2j/wotdc2j.log", "a+b")
-			logFile.write(str(now.strftime("%Y-%m-%d %H:%M:%S")) + " # " + str(logtext) + " # " + str(filename_source) + "\r\n")
-			logFile.close()
-		except:
-			printmessage("Cannot write to wotdc2j.log")
+	logFile = open("wotdc2j.log", "a+b")
+	logFile.write(str(now.strftime("%Y-%m-%d %H:%M:%S")) + " # " + str(logtext) + " # " + str(filename_source) + "\r\n")
+	logFile.close()
 		
 
 def getstructureddata(category, tankversion, baseoffset):
@@ -573,9 +553,6 @@ def getdata(name, startoffset, offsetlength):
 
 	
 	return value
-
-
-
 
 if __name__ == '__main__':
 	main()

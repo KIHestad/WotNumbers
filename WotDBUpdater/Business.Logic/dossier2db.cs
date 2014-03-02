@@ -288,7 +288,7 @@ namespace WotDBUpdater
             string sqlFields = "";
             foreach (DataColumn column in OldPlayerTankTable.Columns)
             {
-                if (column.ColumnName != "playerId" && NewPlayerTankRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+                if (column.ColumnName != "Id" && NewPlayerTankRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
                 {
                     if (sqlFields.Length > 0) sqlFields += ", "; // Add comma exept for first element
                     string colName = column.ColumnName;
@@ -367,12 +367,12 @@ namespace WotDBUpdater
             }
             // Get value to playerTankID, FK to parent table playerTank
             DataTable dt = tankData.GetPlayerTankFromDB(tankID);
-            string sqlFields = "playerTankID";
-            string sqlValues = dt.Rows[0]["playerTankID"].ToString();
+            string sqlFields = "playerTankId";
+            string sqlValues = dt.Rows[0]["Id"].ToString();
             // Get fields to update, loop through mapping table to get allgenerate SQL
             foreach (DataColumn column in NewBattleTable.Columns)
             {
-                if (column.ColumnName != "battleId" && column.ColumnName != "playerId" && NewbattleRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+                if (column.ColumnName != "Id" && column.ColumnName != "playerTankID" && NewbattleRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
                 {
                     string colName = column.ColumnName;
                     string colType = column.DataType.Name;

@@ -194,8 +194,7 @@ create table battle (
 	modeCompany int not null default 0,
 )
 
-alter table battle add foreign key (playerTankId) references player (id)
-
+alter table battle add foreign key (playerTankId) references playerTank (id)
 
 
 -------------------------------------------------------------------------------------------------
