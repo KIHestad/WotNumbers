@@ -43,7 +43,7 @@ namespace WotDBUpdater
         public static List<string> string2json()
         {
             String s = "{items:" + fetchTanks() + "}";
-            SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+            SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
             con.Open();
 
             int jsonCompDescr = 0;

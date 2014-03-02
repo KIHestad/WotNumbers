@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -14,11 +15,16 @@ namespace WotDBUpdater
     [Serializable()]
     public class ConfigData
     {
-        public string DatabaseConn { get; set; }
-        public int playerID { get; set; }
+        public string databaseConn { get; set; }
+        public string databaseServer { get; set; }
+        public bool databaseWinAuth { get; set; }
+        public string databaseUid { get; set; }
+        public string databasePwd { get; set; }
+        public string databaseName { get; set; }
+        public int playerId { get; set; }
         public string playerName { get; set; }
-        public string DossierFilePath { get; set; }
-        public int Run { get; set; }
+        public string dossierFilePath { get; set; }
+        public int run { get; set; }
     }
 
     class Config
@@ -30,77 +36,97 @@ namespace WotDBUpdater
         private static void SetConfigDefaults(string message)
         {
             // Insert default values as settings
-            Config.Settings.DatabaseConn = "Data Source=.;Initial Catalog=Databasename;Integrated Security=True;";
-            Config.Settings.playerID = 0;
+            Config.Settings.databaseConn = "";
+            Config.Settings.databaseServer = ".";
+            Config.Settings.databaseWinAuth = true;
+            Config.Settings.databaseUid = "";
+            Config.Settings.databasePwd = "";
+            Config.Settings.databaseName = "";
+            Config.Settings.playerId = 0;
             Config.Settings.playerName = "";
-            Config.Settings.DossierFilePath = "";
-            Config.Settings.Run = 0;
-            // Message
-            MessageBox.Show(message, "Config error");
+            Config.Settings.dossierFilePath = "";
+            Config.Settings.run = 0;
         }
 
-        public static bool CheckDBConn()
+        public static string DatabaseConnection(string databaseServerOverride = "", string databaseNameOverride = "")
+        {
+            string databaseServer = Config.Settings.databaseServer;
+            if (databaseServerOverride != "") databaseServer = databaseServerOverride;
+            string databaseName = Config.Settings.databaseName;
+            if (databaseNameOverride != "") databaseName = databaseNameOverride;
+            string integratedSecurity = "True";
+            string userLogin = "";
+            if (!Config.Settings.databaseWinAuth)
+            {
+                integratedSecurity = "False";
+                userLogin = "User Id=" + Config.Settings.databaseUid +";Password=" + Config.Settings.databasePwd + ";";
+            }
+
+            return "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin;
+        }
+
+        public static bool CheckDBConn(string databaseNameOverride = "", bool showErrorIfNotExists = true)
         {
             bool ok = false;
-            try
+            // get databasename
+            string databaseName = "";
+            if (Config.Settings.databaseName != null) databaseName = Config.Settings.databaseName;
+            if (databaseNameOverride != "") databaseName = databaseNameOverride;
+            // Check data
+            if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || databaseName == "")
             {
-                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
-                con.Open();
-                ok = true;
-                con.Close();
+                MessageBox.Show("Missing database server and/or database name, check Database Settings.", "Config error");
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
+                try
+                {
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection("",databaseName));
+                    con.Open();
+                    ok = true;
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    if (showErrorIfNotExists) MessageBox.Show("Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
+                }
             }
             return ok;
         }
 
-        public static bool SaveConfig(bool CheckDBSetting = false, bool LookupPlayerInDB = false)
+        public static bool SaveDbConfig(out string msg)
         {
-            bool DBok = true;
-            if (CheckDBSetting) DBok = CheckDBConn();
-
-            if (DBok)
+            bool dbOk = false;
+            string returnMsg = "Database settings succsessfully saved. ";
+            try
             {
-                if (LookupPlayerInDB)
+                // Check if database and player exsists
+                SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+                con.Open();
+                dbOk = true; // if database og databaseserver not exsists exeption is thrown by now
+                // Check if player exist by lookup name
+                SqlCommand cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
+                cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (!reader.HasRows)
                 {
-                    try
+                    returnMsg = "Selected Player does not exist in database, please check your Application Settings.";
+                    Config.Settings.playerId = 0;
+                    Config.Settings.playerName = "";
+                }
+                else
+                {
+                    // Get player ID
+                    while (reader.Read())
                     {
-                        // Check if player exist in database, if not create
-                        SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
-                        con.Open();
-                        Config.Settings.playerName = Config.Settings.playerName.Trim();
-                        // Check if player exist
-                        bool createnewplayer = false;
-                        SqlCommand cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
-                        cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        if (!reader.HasRows) createnewplayer = true;
-                        reader.Close();
-                        if (createnewplayer)
-                        {
-                            // create new player
-                            cmd = new SqlCommand("INSERT INTO player (name) VALUES (@name)", con);
-                            cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
-                            cmd.ExecuteNonQuery();
-                        }
-                        // Get player ID
-                        cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
-                        cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            Config.Settings.playerID = Convert.ToInt32(reader["id"]);
-                        }
-                        con.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error occured lookup player in database, check your Application Settings.\n\n" + ex.Message, "Config error");
-                        Config.Settings.playerID = 0;
+                        Config.Settings.playerId = Convert.ToInt32(reader["id"]);
                     }
                 }
+                reader.Close();
+                con.Close();
+                // TODO: Update connection string - fix later
+                Config.Settings.databaseConn = Config.DatabaseConnection();
+
                 // Write new settings to XML
                 XmlSerializer writer = new XmlSerializer(typeof(ConfigData));
                 using (FileStream file = File.OpenWrite(configfile))
@@ -108,8 +134,68 @@ namespace WotDBUpdater
                     writer.Serialize(file, Config.Settings);
                 }
             }
-            return DBok;
+            catch (Exception ex)
+            {
+                returnMsg = "Error occured saving database settings: " + ex.Message;
+            }
+            msg = returnMsg;
+            return dbOk;
         }
+
+        public static bool SaveAppConfig(out string Msg)
+        {
+            bool appOk = false;
+            string returnMsg = "Application settings succsessfully saved";
+            try
+            {
+                // Check if database and player exsists
+                SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+                con.Open();
+                appOk = true; // if database og databaseserver not exsists exeption is thrown by now
+                // Check if player exist by lookup name
+                SqlCommand cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
+                cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (!reader.HasRows)
+                {
+                    // Add player to DB
+                    SqlConnection con2 = new SqlConnection(Config.DatabaseConnection());
+                    con2.Open();
+                    SqlCommand cmd2 = new SqlCommand("INSERT INTO player (name) VALUES (@name) SET @id=SCOPE_IDENTITY() RETURN @id", con2);
+                    cmd2.Parameters.AddWithValue("@name", Config.Settings.playerName);
+                    cmd2.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd2.ExecuteNonQuery();
+                    int id = Convert.ToInt32(cmd2.Parameters["@id"].Value);
+                    Config.Settings.playerId = id;
+                    Config.Settings.playerName = Config.Settings.playerName;
+                    returnMsg = "New player: '" + Config.Settings.playerName + "' added to database, application settings succsessfully saved.";
+                    con2.Close();
+                }
+                else
+                {
+                    // Get player ID
+                    while (reader.Read())
+                    {
+                        Config.Settings.playerId = Convert.ToInt32(reader["id"]);
+                    }
+                }
+                reader.Close();
+                con.Close();
+                // Write new settings to XML
+                XmlSerializer writer = new XmlSerializer(typeof(ConfigData));
+                using (FileStream file = File.OpenWrite(configfile))
+                {
+                    writer.Serialize(file, Config.Settings);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnMsg = "Error occured saving application settings: " + ex.Message;
+            }
+            Msg = returnMsg;
+            return appOk;
+        }
+
 
         public static void GetConfig()
         {

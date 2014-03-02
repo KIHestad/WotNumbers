@@ -31,16 +31,17 @@ namespace WotDBUpdater
         {
             // Startup settings
             Config.GetConfig();
-            Config.CheckDBConn();
-
-            string result = dossier2json.updateDossierFileWatcher();
-            Log(result);
-            SetStartStopButton();
-            SetFormTitle();
-            // Init
-            tankData.GetTankListFromDB();
-            tankData.GetJson2dbMappingViewFromDB();
-            tankData.GettankData2BattleMappingViewFromDB();
+            if (Config.CheckDBConn())
+            {
+                string result = dossier2json.updateDossierFileWatcher();
+                Log(result);
+                SetStartStopButton();
+                SetFormTitle();
+                // Init
+                tankData.GetTankListFromDB();
+                tankData.GetJson2dbMappingViewFromDB();
+                tankData.GettankData2BattleMappingViewFromDB();
+            }
         }
 
         private void SetFormTitle()
@@ -76,7 +77,7 @@ namespace WotDBUpdater
         private void SetStartStopButton()
         {
             // Set Start - Stop button properties
-            if (Config.Settings.Run == 1)
+            if (Config.Settings.run == 1)
             {
                 btnStartStop.Text = "Stop";
                 lblStatus.Text = "RUNNING";
@@ -93,9 +94,10 @@ namespace WotDBUpdater
         private void btnStartStop_Click(object sender, EventArgs e)
         {
             // Start - Stop button event for listening to dossier file
-            bool run = !(Config.Settings.Run == 1); // toggle run
-            if (run) Config.Settings.Run = 1; else Config.Settings.Run = 0; // save as 0 = false, 1=true
-            Config.SaveConfig();
+            bool run = !(Config.Settings.run == 1); // toggle run
+            if (run) Config.Settings.run = 1; else Config.Settings.run = 0; // save as 0 = false, 1=true
+            string msg = "";
+            Config.SaveAppConfig(out msg);
             string result = dossier2json.updateDossierFileWatcher();
             Log(result);
             SetStartStopButton();

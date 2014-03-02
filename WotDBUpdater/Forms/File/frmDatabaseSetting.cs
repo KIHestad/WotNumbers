@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace WotDBUpdater
 {
     public partial class frmDatabaseSetting : Form
     {
+        private static string lastDatabaseServer;
+        
         public frmDatabaseSetting()
         {
             InitializeComponent();
@@ -20,23 +23,106 @@ namespace WotDBUpdater
         private void frmDatabaseSetting_Load(object sender, EventArgs e)
         {
             // Startup settings
-            txtConnStr.Text = Config.Settings.DatabaseConn;
+            txtServerName.Text = Config.Settings.databaseServer;
+            rbWinAuth.Checked = Config.Settings.databaseWinAuth;
+            rbSqlAuth.Checked = !Config.Settings.databaseWinAuth;
+            cboDatabaseName.Text = Config.Settings.databaseName;
+            txtUid.Text = Config.Settings.databaseUid;
+            txtPwd.Text = Config.Settings.databasePwd;
+            txtConnStr.Text = Config.Settings.databaseConn;
+            // UpdateAuthSettings
+            UpdateLogin();
+        }
+
+        private void UpdateLogin()
+        {
+            bool enabled = (rbSqlAuth.Checked);
+            lblUid.Enabled = enabled;
+            lblPwd.Enabled = enabled;
+            txtUid.Enabled = enabled;
+            txtPwd.Enabled = enabled;
+        }
+
+        private void UpdateDatabaseList()
+        {
+            if (lastDatabaseServer != txtServerName.Text)
+            {
+                cboDatabaseName.Items.Clear();
+                lastDatabaseServer = txtServerName.Text;
+                Cursor.Current = Cursors.WaitCursor;
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(lastDatabaseServer)))
+                    {
+                        con.Open();
+                        string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
+                        SqlCommand cmd = new SqlCommand(sql, con);
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            cboDatabaseName.Items.Add(reader["name"]);
+                        }
+                        con.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Cursor.Current = Cursors.Default;
+                    MessageBox.Show ("Error getting databases: " + ex.Message,"Database server error") ;
+                }
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Config.Settings.DatabaseConn = txtConnStr.Text;
+            Config.Settings.databaseServer = txtServerName.Text;
+            Config.Settings.databaseWinAuth = rbWinAuth.Checked;
+            Config.Settings.databaseUid = txtUid.Text;
+            Config.Settings.databasePwd = txtPwd.Text;
+            Config.Settings.databaseName = cboDatabaseName.Text;
             if (Config.CheckDBConn()) // check db config, displays message if error
             {
-                Config.SaveConfig(false, false); // save without db check
-                Config.SaveConfig(false, true); // save and check user
-                // Init
-                tankData.GetTankListFromDB();
-                tankData.GetJson2dbMappingViewFromDB();
-                tankData.GettankData2BattleMappingViewFromDB();
-                Form.ActiveForm.Close();
+                string msg = "";
+                bool saveOk = false;
+                saveOk = Config.SaveDbConfig(out msg);
+                MessageBox.Show(msg, "Save database settings");
+                if (saveOk)
+                {
+                    // Init
+                    tankData.GetTankListFromDB();
+                    tankData.GetJson2dbMappingViewFromDB();
+                    tankData.GettankData2BattleMappingViewFromDB();
+                    //Form.ActiveForm.Close();
+                }
             }
-            
         }
+
+        private void rbWinAuth_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLogin();
+        }
+
+        private void rbSqlAuth_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateLogin();
+        }
+
+        private void cboDatabaseName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboDatabaseName_Click(object sender, EventArgs e)
+        {
+            UpdateDatabaseList();
+        }
+
+        private void btnNewDatabase_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.frmDatabaseNew();
+            frm.ShowDialog();
+        }
+
     }
 }

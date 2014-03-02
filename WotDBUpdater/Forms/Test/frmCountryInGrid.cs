@@ -23,7 +23,7 @@ namespace WotDBUpdater
             try
             {
                 // Cet config data
-                SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
                 SqlCommand cmd = new SqlCommand("SELECT * FROM country", con);
                 cmd.CommandType = CommandType.Text;
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);

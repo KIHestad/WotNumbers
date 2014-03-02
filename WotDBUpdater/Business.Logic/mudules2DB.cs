@@ -99,7 +99,7 @@ namespace WotDBUpdater
                 // Execute delete and insert statements
                 try
                 {
-                    SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from modTurret", con);
                     SqlCommand insert = new SqlCommand(sql, con);
@@ -196,7 +196,7 @@ namespace WotDBUpdater
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
 
-                    SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from modTurretGun; delete from modTankGun; delete from modGun", con);
                     string inserts = gunSql + turretSql + tankSql;
@@ -272,7 +272,7 @@ namespace WotDBUpdater
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
 
-                    SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from modTankRadio; delete from modRadio;", con);
                     string inserts = radioSql + tankSql;

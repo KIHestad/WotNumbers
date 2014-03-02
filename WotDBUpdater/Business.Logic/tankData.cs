@@ -16,7 +16,7 @@ namespace WotDBUpdater
 
         public static void GetTankListFromDB()
         {
-            using(SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            using(SqlConnection conn = new SqlConnection(Config.Settings.databaseConn))
             {
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT id, name FROM tank", conn);
@@ -30,11 +30,11 @@ namespace WotDBUpdater
 
         public static DataTable GetPlayerTankFromDB(int tankId)
         {
-            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            using (SqlConnection conn = new SqlConnection(Config.Settings.databaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerID + " AND tankId=" + tankId.ToString(), conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerId + " AND tankId=" + tankId.ToString(), conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dt);
                 conn.Close();
@@ -44,7 +44,7 @@ namespace WotDBUpdater
 
         public static DataTable GetBattleFromDB(int battleId)
         {
-            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            using (SqlConnection conn = new SqlConnection(Config.Settings.databaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -60,7 +60,7 @@ namespace WotDBUpdater
         
         public static void GetJson2dbMappingViewFromDB()
         {
-            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            using (SqlConnection conn = new SqlConnection(Config.Settings.databaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();
@@ -76,7 +76,7 @@ namespace WotDBUpdater
 
         public static void GettankData2BattleMappingViewFromDB()
         {
-            using (SqlConnection conn = new SqlConnection(Config.Settings.DatabaseConn))
+            using (SqlConnection conn = new SqlConnection(Config.Settings.databaseConn))
             {
                 DataTable dt = new DataTable();
                 conn.Open();

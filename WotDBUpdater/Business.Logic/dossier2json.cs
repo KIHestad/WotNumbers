@@ -22,11 +22,11 @@ namespace WotDBUpdater
         public static string updateDossierFileWatcher()
         {
             string logtext = "Dossier file watcher stopped";
-            bool run = (Config.Settings.Run == 1);
+            bool run = (Config.Settings.run == 1);
             if (run)
             {
                 logtext = "Dossier file watcher started";
-                dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.DossierFilePath + "\\");
+                dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
                 dossierFileWatcher.Filter = "*.dat";
                 dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
                 dossierFileWatcher.Changed += new FileSystemEventHandler(dossierFileChanged);
@@ -46,9 +46,9 @@ namespace WotDBUpdater
             {
                 // Dossier file manual handling - get all dossier files
                 logtext.Add(LogText("Manual run, looking for new dossier file"));
-                if (Directory.Exists(Config.Settings.DossierFilePath))
+                if (Directory.Exists(Config.Settings.dossierFilePath))
                 {
-                    string[] files = Directory.GetFiles(Config.Settings.DossierFilePath, "*.dat");
+                    string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
                     DateTime dossierfiledate = new DateTime(1970, 1, 1);
                     foreach (string file in files)
                     {
