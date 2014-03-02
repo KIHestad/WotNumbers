@@ -1,0 +1,51 @@
+﻿            // Alternative model - using IronPython
+
+            //ScriptEngine pyEngine = Python.CreateEngine();
+            //pyEngine.SetSearchPaths(new[] { "C:\\Program Files (x86)\\IronPython 2.7\\Lib" });
+            //ScriptScope pyScope = pyEngine.CreateScope();
+            //ScriptSource pyScript = pyEngine.CreateScriptSourceFromFile(dossier2jsonfile);
+            
+
+            //CompiledCode pyCompiled = pyScript.Compile();
+            //pyCompiled.Execute(pyScope);
+
+            //ScriptRuntime python = Python.CreateRuntime();
+            //dynamic pyfile = python.UseFile(dossier2jsonfile);
+            //pyfile.Main();
+
+
+
+            //try
+            //{
+            
+            string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
+            //appPath = dossierfile.Replace("\\", "/");
+            appPath += "\\Dossier2json\\";
+            //dossierfile = dossierfile.Replace("\\", "/");
+            //dossier2jsonfile = dossier2jsonfile.Replace("\\", "/");
+            IDictionary<string, object> options = new Dictionary<string, object>();
+            options["Arguments"] = new[] { dossierfile, "-f", "-r" };
+            ScriptEngine pyEngine = Python.CreateEngine(options);
+            pyEngine.SetSearchPaths(new[] { "C:\\dev\\WotDBUpdater\\packages\\IronPython.StdLib.2.7.4\\content\\Lib" });
+            //pyEngine.SetSearchPaths(new[] { "C:\\Program Files (x86)\\IronPython 2.7\\Lib" });
+            pyEngine.ExecuteFile(dossier2jsonfile);
+            //engine.ExecuteFile(dossier2jsonfile + " " + dossierfile + " -f -r");
+
+
+            //    //var scriptRuntime = Python.CreateRuntime();
+            //    //scriptRuntime.SetHostVariables(new[] { "C:\\dev\\WotDBUpdater\\packages\\IronPython.StdLib.2.7.4\\content\\Lib" });
+            //    //var argv = new List();
+            //    //List<string> args = new List<string>();
+            //    //args.Add(dossier2jsonfile);
+            //    //args.Add(dossierfile);
+            //    //args.Add("-f");
+            //    //args.Add("-r");
+            //    //args.ToList().ForEach(a => argv.Add(a));
+            //    //scriptRuntime.GetSysModule().SetVariable("argv", argv);
+            //    //scriptRuntime.ExecuteFile(args[0]);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Dossier2Jason");
+            //}
+            //engine.ExecuteFile(dossier2jsonfile + " " + dossierfile + " -f -r");
