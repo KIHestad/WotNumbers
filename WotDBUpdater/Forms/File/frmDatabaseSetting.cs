@@ -13,7 +13,7 @@ namespace WotDBUpdater
 {
     public partial class frmDatabaseSetting : Form
     {
-        private static string lastDatabaseServer;
+        private bool changedDbConfig = true;
         
         public frmDatabaseSetting()
         {
@@ -21,6 +21,11 @@ namespace WotDBUpdater
         }
 
         private void frmDatabaseSetting_Load(object sender, EventArgs e)
+        {
+            LoadConfig();
+        }
+
+        private void LoadConfig()
         {
             // Startup settings
             txtServerName.Text = Config.Settings.databaseServer;
@@ -45,14 +50,16 @@ namespace WotDBUpdater
 
         private void UpdateDatabaseList()
         {
-            if (lastDatabaseServer != txtServerName.Text)
+            if (changedDbConfig)
             {
+                changedDbConfig = false;
                 cboDatabaseName.Items.Clear();
-                lastDatabaseServer = txtServerName.Text;
                 Cursor.Current = Cursors.WaitCursor;
                 try
                 {
-                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(lastDatabaseServer)))
+                    string winAuth = "Win";
+                    if (rbSqlAuth.Checked) winAuth = "Sql";
+                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(txtServerName.Text, cboDatabaseName.Text, winAuth, txtUid.Text, txtPwd.Text)))
                     {
                         con.Open();
                         string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
@@ -81,7 +88,9 @@ namespace WotDBUpdater
             Config.Settings.databaseUid = txtUid.Text;
             Config.Settings.databasePwd = txtPwd.Text;
             Config.Settings.databaseName = cboDatabaseName.Text;
-            if (Config.CheckDBConn()) // check db config, displays message if error
+            string winAuth = "Win";
+            if (rbSqlAuth.Checked) winAuth = "Sql";
+            if (Config.CheckDBConn(true, txtServerName.Text, cboDatabaseName.Text, winAuth, txtUid.Text, txtPwd.Text)) // check db config, displays message if error
             {
                 string msg = "";
                 bool saveOk = false;
@@ -101,28 +110,43 @@ namespace WotDBUpdater
         private void rbWinAuth_CheckedChanged(object sender, EventArgs e)
         {
             UpdateLogin();
+            changedDbConfig = true;
         }
 
         private void rbSqlAuth_CheckedChanged(object sender, EventArgs e)
         {
             UpdateLogin();
-        }
-
-        private void cboDatabaseName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cboDatabaseName_Click(object sender, EventArgs e)
-        {
-            UpdateDatabaseList();
+            changedDbConfig = true;
         }
 
         private void btnNewDatabase_Click(object sender, EventArgs e)
         {
             Form frm = new Forms.File.frmDatabaseNew();
             frm.ShowDialog();
+            LoadConfig();
         }
+
+        private void txtServerName_TextChanged(object sender, EventArgs e)
+        {
+            changedDbConfig = true;
+        }
+
+        private void cboDatabaseName_Enter(object sender, EventArgs e)
+        {
+            UpdateDatabaseList();
+        }
+
+        private void txtUid_TextChanged(object sender, EventArgs e)
+        {
+            changedDbConfig = true;
+        }
+
+        private void txtPwd_TextChanged(object sender, EventArgs e)
+        {
+            changedDbConfig = true;
+        }
+
+       
 
     }
 }

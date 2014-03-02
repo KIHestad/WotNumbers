@@ -125,14 +125,9 @@ namespace WotDBUpdater
         
 
 
-        public static List<string> importTanks(bool TestRunPrevJsonFile = false)
+        public static List<string> importTanks()
         {
-
-            
-
             List<string> logtext = new List<string>();
-
-            
             logtext.Add(LogText("test"));
             return logtext;
         }

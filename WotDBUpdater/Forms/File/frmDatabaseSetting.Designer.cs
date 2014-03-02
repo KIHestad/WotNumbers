@@ -101,6 +101,7 @@
             this.txtPwd.PasswordChar = '*';
             this.txtPwd.Size = new System.Drawing.Size(179, 20);
             this.txtPwd.TabIndex = 5;
+            this.txtPwd.TextChanged += new System.EventHandler(this.txtPwd_TextChanged);
             // 
             // lblPwd
             // 
@@ -117,6 +118,7 @@
             this.txtUid.Name = "txtUid";
             this.txtUid.Size = new System.Drawing.Size(179, 20);
             this.txtUid.TabIndex = 3;
+            this.txtUid.TextChanged += new System.EventHandler(this.txtUid_TextChanged);
             // 
             // lblUid
             // 
@@ -175,6 +177,7 @@
             this.txtServerName.Name = "txtServerName";
             this.txtServerName.Size = new System.Drawing.Size(310, 20);
             this.txtServerName.TabIndex = 3;
+            this.txtServerName.TextChanged += new System.EventHandler(this.txtServerName_TextChanged);
             // 
             // txtServerType
             // 
@@ -234,8 +237,7 @@
             this.cboDatabaseName.Name = "cboDatabaseName";
             this.cboDatabaseName.Size = new System.Drawing.Size(179, 21);
             this.cboDatabaseName.TabIndex = 0;
-            this.cboDatabaseName.SelectedIndexChanged += new System.EventHandler(this.cboDatabaseName_SelectedIndexChanged);
-            this.cboDatabaseName.Click += new System.EventHandler(this.cboDatabaseName_Click);
+            this.cboDatabaseName.Enter += new System.EventHandler(this.cboDatabaseName_Enter);
             // 
             // frmDatabaseSetting
             // 

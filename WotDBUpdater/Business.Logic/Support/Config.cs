@@ -48,24 +48,35 @@ namespace WotDBUpdater
             Config.Settings.run = 0;
         }
 
-        public static string DatabaseConnection(string databaseServerOverride = "", string databaseNameOverride = "")
+        public static string DatabaseConnection(string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "")
         {
+            // Get databaseserver
             string databaseServer = Config.Settings.databaseServer;
             if (databaseServerOverride != "") databaseServer = databaseServerOverride;
+            // Get databasename
             string databaseName = Config.Settings.databaseName;
             if (databaseNameOverride != "") databaseName = databaseNameOverride;
+            // Get authentication type
             string integratedSecurity = "True";
+            bool winAuth = Config.Settings.databaseWinAuth;
+            if (databaseWinOrSql == "Win") winAuth = true;
+            if (databaseWinOrSql == "Sql") winAuth = false;
+            // Get user name and password for login when sql authentication
             string userLogin = "";
-            if (!Config.Settings.databaseWinAuth)
+            if (!winAuth)
             {
                 integratedSecurity = "False";
-                userLogin = "User Id=" + Config.Settings.databaseUid +";Password=" + Config.Settings.databasePwd + ";";
+                string uid = Config.Settings.databaseUid;
+                string pwd = Config.Settings.databasePwd;
+                if (databaseUidOverride != "") uid = databaseUidOverride;
+                if (databasePwdOverride != "") pwd = databasePwdOverride;
+                userLogin = "User Id=" + uid + ";Password=" + pwd + ";";
             }
 
             return "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin;
         }
 
-        public static bool CheckDBConn(string databaseNameOverride = "", bool showErrorIfNotExists = true)
+        public static bool CheckDBConn(bool showErrorIfNotExists = true, string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "")
         {
             bool ok = false;
             // get databasename
@@ -81,7 +92,7 @@ namespace WotDBUpdater
             {
                 try
                 {
-                    SqlConnection con = new SqlConnection(Config.DatabaseConnection("",databaseName));
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection(databaseServerOverride, databaseNameOverride,databaseWinOrSql,databaseUidOverride,databasePwdOverride));
                     con.Open();
                     ok = true;
                     con.Close();

@@ -724,11 +724,16 @@
     <Content Include="Dossier2json\wotdc2_testj.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>md "$(TargetDir)Dossier2json"
-xcopy "$(ProjectDir)Dossier2json" "$(TargetDir)Dossier2json" /y /s</PreBuildEvent>
+xcopy "$(ProjectDir)Dossier2json" "$(TargetDir)Dossier2json" /y /s
+md "$(TargetDir)Docs"
+md "$(TargetDir)Docs\Database"
+xcopy "$(ProjectDir)Docs\Database" "$(TargetDir)Docs\Database" /y /s</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
