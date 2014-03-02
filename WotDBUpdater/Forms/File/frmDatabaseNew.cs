@@ -122,7 +122,7 @@ namespace WotDBUpdater.Forms.File
             streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
             sql = streamReader.ReadToEnd();
             RunSql(sql);
-            importTanks2DB.fetchTanks();
+            importTanks2DB.fetchDataFromFile("tanks");
         }
 
         private void RunSql(string sql)
