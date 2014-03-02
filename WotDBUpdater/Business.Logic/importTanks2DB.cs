@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using System.Data.Sql;
+using System.Net;
 
 namespace WotDBUpdater
 {
@@ -21,28 +22,58 @@ namespace WotDBUpdater
             return DateTime.Now + " " + logtext;
         }
 
-        public static String fetchTanks()
+        
+        
+        public static String fetchDataFromFile(string type)
         {
             string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string jsonfile = appPath + "/Dossier2json/tanks.json";
-            StringBuilder sb = new StringBuilder();
-            using (StreamReader sr = new StreamReader(jsonfile))
+            string jsonfile = "";
+            string url = "";
+            string json = "";
+            if (type == "tanks")
             {
-                String line;
-                // Read and display lines from the file until the end of 
-                // the file is reached.
-                while ((line = sr.ReadLine()) != null)
+                jsonfile = appPath + "/Dossier2json/tanks.json";
+
+                StringBuilder sb = new StringBuilder();
+                using (StreamReader sr = new StreamReader(jsonfile))
                 {
-                    sb.AppendLine(line);
+                    String line;
+                    // Read and display lines from the file until the end of 
+                    // the file is reached.
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        sb.AppendLine(line);
+                    }
                 }
+                json = sb.ToString();
             }
-            string json = sb.ToString();
+
+            else if (type == "WN8")
+            {
+                //jsonfile = appPath + "/Dossier2json/wn8.json";
+                
+                url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
+                
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                
+                httpRequest.Timeout = 10000;     // 10 secs
+                httpRequest.UserAgent = "Code Sample Web Client";
+                
+                HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+                StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+                
+                json = responseStream.ReadToEnd();
+            }
+            
             return json;
         }
 
+
+        #region importTanks
+
         public static List<string> string2json()
         {
-            String s = "{items:" + fetchTanks() + "}";
+            String s = "{items:" + fetchDataFromFile("tanks") + "}";
             SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
             con.Open();
 
@@ -122,19 +153,87 @@ namespace WotDBUpdater
                 return log;
             }
         }
-        
 
 
         public static List<string> importTanks(bool TestRunPrevJsonFile = false)
         {
-
-            
-
             List<string> logtext = new List<string>();
-
-            
             logtext.Add(LogText("test"));
             return logtext;
         }
+
+        #endregion
+
+
+        #region updateWN8
+
+
+        public static String UpdateWN8()
+        {
+            String json = fetchDataFromFile("WN8");
+            string sql = "";
+            string tankId = "";
+            string expFrags = "";
+            string expDmg = "";
+            string expSpot = "";
+            string expDef = "";
+            string expWR = "";
+
+            JObject allTokens = JObject.Parse(json);
+            JArray items = (JArray)allTokens["data"];
+            JObject item;
+            JToken jtoken;
+            for (int i = 0; i < items.Count; i++) //loop through tanks
+            {
+                item = (JObject)items[i];
+                jtoken = item.First;
+                string tokenValue;
+                while (jtoken != null) //loop through values for each tank
+                {
+                    tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
+
+                    if (jtoken != null)
+                    {
+                        string tokenName = (string)((JProperty)jtoken).Name.ToString();
+                        switch (tokenName)
+                        {
+                            case "IDNum": tankId = (string)((JProperty)jtoken).Value.ToString(); break;
+                            case "expFrag": expFrags = (string)((JProperty)jtoken).Value.ToString(); break;
+                            case "expDamage": expDmg = (string)((JProperty)jtoken).Value.ToString(); break;
+                            case "expSpot": expSpot = (string)((JProperty)jtoken).Value.ToString(); break;
+                            case "expDef": expDef = (string)((JProperty)jtoken).Value.ToString(); break;
+                            case "expWinRate": expWR = (string)((JProperty)jtoken).Value.ToString(); break;
+                        }
+                    }
+                    jtoken = jtoken.Next;
+                }
+                
+                sql = sql + "update tank set expDmg = " + expDmg
+                                        + ", expWR = " + expWR
+                                        + ", expSpot = " + expSpot
+                                        + ", expFrags = " + expFrags
+                                        + ", expDef = " + expDef
+                                        + " where id = " + tankId
+                                        + "; ";
+            }
+
+            // Execute update statements
+            try
+            {
+                SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                con.Open();
+                SqlCommand update = new SqlCommand(sql, con);
+                update.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            return ("Import Complete");
+        }
+
+        #endregion
     }
 }
