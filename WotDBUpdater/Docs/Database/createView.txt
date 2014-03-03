@@ -4,18 +4,18 @@ DROP VIEW [dbo].[playerTankInfoBattleCount]
 DROP VIEW [dbo].[json2dbMappingView]
 DROP VIEW [dbo].[tankData2BattleMappingView]
 DROP VIEW [dbo].[battleResultView]
-GO
 */
+GO
 -- Create view showing tank data short info
-
 
 
 CREATE VIEW [dbo].[tankInfoShort]
 AS
-SELECT        dbo.tank.tankId AS TankID, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country
+SELECT        dbo.tank.Id AS TankID, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country
 FROM            dbo.country INNER JOIN
-                         dbo.tank ON dbo.country.countryId = dbo.tank.countryId INNER JOIN
-                         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.tankTypeID;
+                         dbo.tank ON dbo.country.Id = dbo.tank.countryId INNER JOIN
+                         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.ID
+
 GO
 
 -- Create view showing player tanks, short tank info and battle count
@@ -28,7 +28,7 @@ FROM            dbo.playerTank INNER JOIN
                          dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
                          dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN
                          dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN
-                         dbo.country ON dbo.tank.countryId = dbo.country.id;
+                         dbo.country ON dbo.tank.countryId = dbo.country.id
 GO
 
 -- Create view for simulating one PK on jsonPlayerTank table
@@ -36,7 +36,8 @@ GO
 CREATE VIEW [dbo].[json2dbMappingView]
 AS
 SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  dbo.json2dbMapping.dbDataType, dbo.json2dbMapping.dbPlayerTank, dbo.json2dbMapping.dbBattle
-FROM          dbo.json2dbMapping;
+FROM          dbo.json2dbMapping
+
 GO
 
 -- Create view for mapping Battele data
@@ -46,7 +47,8 @@ AS
 SELECT        TOP (100) PERCENT dbDataType, dbPlayerTank, dbBattle
 FROM            dbo.json2dbMapping
 WHERE        (dbBattle IS NOT NULL)
-GROUP BY dbDataType, dbPlayerTank, dbBattle;
+GROUP BY dbDataType, dbPlayerTank, dbBattle
+
 GO
 
 -- View for battle result
@@ -62,20 +64,6 @@ SELECT        TOP (100) PERCENT dbo.player.name AS [Player], dbo.tank.name AS Ta
 FROM            dbo.battle INNER JOIN
                          dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN
                          dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
-                         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id;
+                         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id
+
 GO
-
--- Joined radios and tanks
-
-create view tankRadioView
-as
-select 
-  t.name as tank,
-  r.name as radio,
-  r.tier as tier,
-  r.signalRange as signalRange
-from 
-  radio r 
-  left join tankRadio tr on r.id = tr.radioId
-  left join tank t on tr.tankId = t.id;
-go

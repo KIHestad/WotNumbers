@@ -71,7 +71,7 @@ namespace WotDBUpdater
 
         #region importTanks
 
-        public static List<string> string2json()
+        public static List<string> UpdateTanks()
         {
             String s = "{items:" + fetchDataFromFile("tanks") + "}";
             SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
@@ -152,14 +152,6 @@ namespace WotDBUpdater
                 log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
                 return log;
             }
-        }
-
-
-        public static List<string> importTanks(bool TestRunPrevJsonFile = false)
-        {
-            List<string> logtext = new List<string>();
-            logtext.Add(LogText("test"));
-            return logtext;
         }
 
         #endregion

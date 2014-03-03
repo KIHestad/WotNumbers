@@ -30,7 +30,7 @@ namespace WotDBUpdater.Forms.File
             // Check if database exists
             if (Config.CheckDBConn(false, txtDatabasename.Text))
             {
-                MessageBox.Show("Database with this name alreade exsits, choose another database name", "Cannot create database");
+                MessageBox.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
             }
             else
             {
@@ -40,7 +40,7 @@ namespace WotDBUpdater.Forms.File
                     // Fill database with default data
                     FillDatabase(txtDatabasename.Text);
                     // Done
-                    Form.ActiveForm.Close();
+                    MessageBox.Show("Database created successfully.", "Created database");
                 }
 
             }
@@ -111,6 +111,11 @@ namespace WotDBUpdater.Forms.File
 
         private void FillDatabase(string databaseName)
         {
+            // Init
+            tankData.GetTankListFromDB();
+            tankData.GetJson2dbMappingViewFromDB();
+            tankData.GettankData2BattleMappingViewFromDB();
+            // FIll data now
             string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
             string sql;
             StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
@@ -122,16 +127,28 @@ namespace WotDBUpdater.Forms.File
             streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
             sql = streamReader.ReadToEnd();
             RunSql(sql);
-            importTanks2DB.fetchDataFromFile("tanks");
+            importTanks2DB.UpdateTanks();
+            if (txtPlayerName.Text.Trim() != "")
+            {
+                RunSql("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
+            }
+            // Init
+            tankData.GetTankListFromDB();
+            tankData.GetJson2dbMappingViewFromDB();
+            tankData.GettankData2BattleMappingViewFromDB();
         }
 
-        private void RunSql(string sql)
+        private void RunSql(string sqlbatch)
         {
+            string[] sql = sqlbatch.Split(new string[] {"GO"}, StringSplitOptions.RemoveEmptyEntries);
             using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
             {
                 con.Open();
-                SqlCommand cmd = new SqlCommand(sql, con);
-                cmd.ExecuteNonQuery();
+                foreach (string s in sql)
+	            {
+		            SqlCommand cmd = new SqlCommand(s, con);
+                    cmd.ExecuteNonQuery();
+	            }
                 con.Close();
             }
         }

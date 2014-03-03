@@ -40,7 +40,7 @@ namespace WotDBUpdater.Forms
             //List<string> result = importTanks2DB.importTanks();
             //Log(result);
             //importTanks2DB.fetchTanks();
-            List<string> log = importTanks2DB.string2json();
+            List<string> log = importTanks2DB.UpdateTanks();
             foreach (string item in log)
             {
                 listBoxLog.Items.Add(item);
