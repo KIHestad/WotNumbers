@@ -11,7 +11,7 @@ namespace WotDBUpdater.Business.Logic
     {
         public static void efficiancy()
         {
-            //SqlConnection con = new SqlConnection(Config.Settings.DatabaseConn);
+            //SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             //SqlCommand cmd = new SqlCommand("SELECT * FROM country", con);
             //cmd.CommandType = CommandType.Text;
             //SqlDataAdapter sda = new SqlDataAdapter(cmd);

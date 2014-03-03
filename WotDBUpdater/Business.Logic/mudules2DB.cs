@@ -76,7 +76,9 @@ namespace WotDBUpdater
 
                 rootToken = rootToken.Next;   // start reading modules
                 JToken turrets = rootToken.Children().First();   // read all tokens in data token
-                
+
+                List<string> logtext = new List<string>();
+
                 foreach (JProperty turret in turrets)   // turret = turretId + child tokens
                 {
                     moduleToken = turret.First();   // First() returns only child tokens of turret
@@ -92,14 +94,18 @@ namespace WotDBUpdater
                     int armorRear = Int32.Parse(moduleToken["armor_fedd"].ToString());
 
                     sql = sql + "insert into modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) values "
-                              + "('" + id + "', '" + tankId + "', '" + name + "', '" + tier + "', '" + viewRange + "', '" + armorFront 
-                              + "', '" + armorSides + "', '" + armorRear +"'); ";
+                              + "(" + id + ", " + tankId + ", '" + name + "', " + tier + ", " + viewRange + ", " + armorFront 
+                              + ", " + armorSides + ", " + armorRear +");";
+                    
+                    
                 }
-                
+                logtext.Add(sql);
+                Log.CheckLogFileSize();
+                Log.LogToFile(logtext);
                 // Execute delete and insert statements
                 try
                 {
-                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from modTurret", con);
                     SqlCommand insert = new SqlCommand(sql, con);
@@ -196,7 +202,7 @@ namespace WotDBUpdater
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
 
-                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from modTurretGun; delete from modTankGun; delete from modGun", con);
                     string inserts = gunSql + turretSql + tankSql;
@@ -272,7 +278,7 @@ namespace WotDBUpdater
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
 
-                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                     con.Open();
                     SqlCommand delete = new SqlCommand("delete from modTankRadio; delete from modRadio;", con);
                     string inserts = radioSql + tankSql;

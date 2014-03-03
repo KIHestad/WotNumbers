@@ -78,6 +78,12 @@
     <Compile Include="Business.Logic\ratings.cs" />
     <Compile Include="Business.Logic\Support\Config.cs" />
     <Compile Include="Business.Logic\dossier2json.cs" />
+    <Compile Include="Forms\File\frmAddPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\frmAddPlayer.Designer.cs">
+      <DependentUpon>frmAddPlayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\File\frmDatabaseNew.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +163,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Business.Logic\tankData.cs" />
+    <EmbeddedResource Include="Forms\File\frmAddPlayer.resx">
+      <DependentUpon>frmAddPlayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\frmDatabaseNew.resx">
       <DependentUpon>frmDatabaseNew.cs</DependentUpon>
     </EmbeddedResource>

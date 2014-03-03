@@ -93,187 +93,187 @@ insert into ach (name) values ('warrior')
 
 SET IDENTITY_INSERT [dbo].[json2dbMapping] ON 
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (1, N'tanks_v2', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (1, N'tanks_v2', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (2, N'tanks_v2', N'common', N'updated', N'DateTime', N'updatedTime', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (2, N'tanks_v2', N'common', N'updated', N'DateTime', N'updatedTime', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (3, N'tanks_v2', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (3, N'tanks_v2', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (4, N'tanks_v2', N'common', N'has_15x15', N'Int', N'has15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (4, N'tanks_v2', N'common', N'has_15x15', N'Int', N'has15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (5, N'tanks_v2', N'a15x15', N'battlesCount', N'Int', N'battles15', N'battlesCount')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (5, N'tanks_v2', N'a15x15', N'battlesCount', N'Int', N'battles15', N'battlesCount')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (6, N'tanks_v2', N'a15x15', N'battlesCountBefore8_8', N'Int', N'battles8p15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (6, N'tanks_v2', N'a15x15', N'battlesCountBefore8_8', N'Int', N'battles8p15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (7, N'tanks_v2', N'a15x15', N'wins', N'Int', N'wins15', N'victory')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (7, N'tanks_v2', N'a15x15', N'wins', N'Int', N'wins15', N'victory')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (8, N'tanks_v2', N'a15x15', N'losses', N'Int', N'losses15', N'loss')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (8, N'tanks_v2', N'a15x15', N'losses', N'Int', N'losses15', N'loss')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (9, N'tanks_v2', N'a15x15', N'survivedBattles', N'Int', N'survived15', N'survived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (9, N'tanks_v2', N'a15x15', N'survivedBattles', N'Int', N'survived15', N'survived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (10, N'tanks_v2', N'a15x15', N'frags', N'Int', N'frags15', N'frags')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (10, N'tanks_v2', N'a15x15', N'frags', N'Int', N'frags15', N'frags')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (11, N'tanks_v2', N'a15x15', N'frags8p', N'Int', N'frags8p15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (11, N'tanks_v2', N'a15x15', N'frags8p', N'Int', N'frags8p15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (12, N'tanks_v2', N'a15x15', N'damageDealt', N'Int', N'dmg15', N'dmg')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (12, N'tanks_v2', N'a15x15', N'damageDealt', N'Int', N'dmg15', N'dmg')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (13, N'tanks_v2', N'a15x15', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (13, N'tanks_v2', N'a15x15', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (14, N'tanks_v2', N'a15x15_2', N'damageAssistedRadio', N'Int', N'assistSpot15', N'assistSpot')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (14, N'tanks_v2', N'a15x15_2', N'damageAssistedRadio', N'Int', N'assistSpot15', N'assistSpot')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (15, N'tanks_v2', N'a15x15_2', N'damageAssistedTrack', N'Int', N'assistTrack15', N'assistTrack')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (15, N'tanks_v2', N'a15x15_2', N'damageAssistedTrack', N'Int', N'assistTrack15', N'assistTrack')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (16, N'tanks_v2', N'a15x15', N'capturePoints', N'Int', N'cap15', N'cap')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (16, N'tanks_v2', N'a15x15', N'capturePoints', N'Int', N'cap15', N'cap')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (17, N'tanks_v2', N'a15x15', N'droppedCapturePoints', N'Int', N'def15', N'def')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (17, N'tanks_v2', N'a15x15', N'droppedCapturePoints', N'Int', N'def15', N'def')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (18, N'tanks_v2', N'a15x15', N'spotted', N'Int', N'spot15', N'spotted')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (18, N'tanks_v2', N'a15x15', N'spotted', N'Int', N'spot15', N'spotted')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (19, N'tanks_v2', N'a15x15', N'xp', N'Int', N'xp15', N'xp')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (19, N'tanks_v2', N'a15x15', N'xp', N'Int', N'xp15', N'xp')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (20, N'tanks_v2', N'a15x15', N'xpBefore8_8', N'Int', N'xp8p15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (20, N'tanks_v2', N'a15x15', N'xpBefore8_8', N'Int', N'xp8p15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (21, N'tanks_v2', N'a15x15_2', N'originalXP', N'Int', N'xpOriginal15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (21, N'tanks_v2', N'a15x15_2', N'originalXP', N'Int', N'xpOriginal15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (22, N'tanks_v2', N'a15x15', N'shots', N'Int', N'shots15', N'shots')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (22, N'tanks_v2', N'a15x15', N'shots', N'Int', N'shots15', N'shots')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (23, N'tanks_v2', N'a15x15', N'hits', N'Int', N'hits15', N'hits')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (23, N'tanks_v2', N'a15x15', N'hits', N'Int', N'hits15', N'hits')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (24, N'tanks_v2', N'a15x15_2', N'he_hits', N'Int', N'heHits15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (24, N'tanks_v2', N'a15x15_2', N'he_hits', N'Int', N'heHits15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (25, N'tanks_v2', N'a15x15_2', N'pierced', N'Int', N'pierced15', N'pierced')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (25, N'tanks_v2', N'a15x15_2', N'pierced', N'Int', N'pierced15', N'pierced')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (26, N'tanks_v2', N'a15x15_2', N'shotsReceived', N'Int', N'shotsReceived15', N'shotsReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (26, N'tanks_v2', N'a15x15_2', N'shotsReceived', N'Int', N'shotsReceived15', N'shotsReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (27, N'tanks_v2', N'a15x15_2', N'piercedReceived', N'Int', N'piercedReceived15', N'piercedReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (27, N'tanks_v2', N'a15x15_2', N'piercedReceived', N'Int', N'piercedReceived15', N'piercedReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (28, N'tanks_v2', N'a15x15_2', N'heHitsReceived', N'Int', N'heHitsReceived15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (28, N'tanks_v2', N'a15x15_2', N'heHitsReceived', N'Int', N'heHitsReceived15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (29, N'tanks_v2', N'a15x15_2', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (29, N'tanks_v2', N'a15x15_2', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (30, N'tanks_v2', N'max15x15', N'maxDamage', N'Int', N'maxDmg15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (30, N'tanks_v2', N'max15x15', N'maxDamage', N'Int', N'maxDmg15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (31, N'tanks_v2', N'max15x15', N'maxFrags', N'Int', N'maxFrags15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (31, N'tanks_v2', N'max15x15', N'maxFrags', N'Int', N'maxFrags15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (32, N'tanks_v2', N'max15x15', N'maxXP', N'Int', N'maxXp15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (32, N'tanks_v2', N'max15x15', N'maxXP', N'Int', N'maxXp15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (33, N'tanks_v2', N'common', N'has_7x7', N'Int', N'has7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (33, N'tanks_v2', N'common', N'has_7x7', N'Int', N'has7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (34, N'tanks_v2', N'a7x7', N'battlesCount', N'Int', N'battles7', N'battlesCount')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (34, N'tanks_v2', N'a7x7', N'battlesCount', N'Int', N'battles7', N'battlesCount')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (35, N'tanks_v2', N'a7x7', N'wins', N'Int', N'wins7', N'victory')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (35, N'tanks_v2', N'a7x7', N'wins', N'Int', N'wins7', N'victory')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (36, N'tanks_v2', N'a7x7', N'losses', N'Int', N'losses7', N'loss')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (36, N'tanks_v2', N'a7x7', N'losses', N'Int', N'losses7', N'loss')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (37, N'tanks_v2', N'a7x7', N'survivedBattles', N'Int', N'survived7', N'survived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (37, N'tanks_v2', N'a7x7', N'survivedBattles', N'Int', N'survived7', N'survived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (38, N'tanks_v2', N'a7x7', N'frags', N'Int', N'frags7', N'frags')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (38, N'tanks_v2', N'a7x7', N'frags', N'Int', N'frags7', N'frags')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (39, N'tanks_v2', N'a7x7', N'frags8p', N'Int', N'frags8p7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (39, N'tanks_v2', N'a7x7', N'frags8p', N'Int', N'frags8p7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (40, N'tanks_v2', N'a7x7', N'damageDealt', N'Int', N'dmg7', N'dmg')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (40, N'tanks_v2', N'a7x7', N'damageDealt', N'Int', N'dmg7', N'dmg')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (41, N'tanks_v2', N'a7x7', N'damageReceived', N'Int', N'dmgReceived7', N'dmgReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (41, N'tanks_v2', N'a7x7', N'damageReceived', N'Int', N'dmgReceived7', N'dmgReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (42, N'tanks_v2', N'a7x7', N'damageAssistedRadio', N'Int', N'assistSpot7', N'assistSpot')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (42, N'tanks_v2', N'a7x7', N'damageAssistedRadio', N'Int', N'assistSpot7', N'assistSpot')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (43, N'tanks_v2', N'a7x7', N'damageAssistedTrack', N'Int', N'assistTrack7', N'assistTrack')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (43, N'tanks_v2', N'a7x7', N'damageAssistedTrack', N'Int', N'assistTrack7', N'assistTrack')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (44, N'tanks_v2', N'a7x7', N'capturePoints', N'Int', N'cap7', N'cap')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (44, N'tanks_v2', N'a7x7', N'capturePoints', N'Int', N'cap7', N'cap')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (45, N'tanks_v2', N'a7x7', N'droppedCapturePoints', N'Int', N'def7', N'def')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (45, N'tanks_v2', N'a7x7', N'droppedCapturePoints', N'Int', N'def7', N'def')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (46, N'tanks_v2', N'a7x7', N'spotted', N'Int', N'spot7', N'spotted')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (46, N'tanks_v2', N'a7x7', N'spotted', N'Int', N'spot7', N'spotted')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (47, N'tanks_v2', N'a7x7', N'xp', N'Int', N'xp7', N'xp')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (47, N'tanks_v2', N'a7x7', N'xp', N'Int', N'xp7', N'xp')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (48, N'tanks_v2', N'a7x7', N'originalXP', N'Int', N'xpOriginal7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (48, N'tanks_v2', N'a7x7', N'originalXP', N'Int', N'xpOriginal7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (49, N'tanks_v2', N'a7x7', N'shots', N'Int', N'shots7', N'shots')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (49, N'tanks_v2', N'a7x7', N'shots', N'Int', N'shots7', N'shots')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (50, N'tanks_v2', N'a7x7', N'hits', N'Int', N'hits7', N'hits')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (50, N'tanks_v2', N'a7x7', N'hits', N'Int', N'hits7', N'hits')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (51, N'tanks_v2', N'a7x7', N'he_hits', N'Int', N'heHits7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (51, N'tanks_v2', N'a7x7', N'he_hits', N'Int', N'heHits7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (52, N'tanks_v2', N'a7x7', N'pierced', N'Int', N'pierced7', N'pierced')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (52, N'tanks_v2', N'a7x7', N'pierced', N'Int', N'pierced7', N'pierced')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (53, N'tanks_v2', N'a7x7', N'shotsReceived', N'Int', N'shotsReceived7', N'shotsReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (53, N'tanks_v2', N'a7x7', N'shotsReceived', N'Int', N'shotsReceived7', N'shotsReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (54, N'tanks_v2', N'a7x7', N'piercedReceived', N'Int', N'piercedReceived7', N'piercedReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (54, N'tanks_v2', N'a7x7', N'piercedReceived', N'Int', N'piercedReceived7', N'piercedReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (55, N'tanks_v2', N'a7x7', N'heHitsReceived', N'Int', N'heHitsReceived7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (55, N'tanks_v2', N'a7x7', N'heHitsReceived', N'Int', N'heHitsReceived7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (56, N'tanks_v2', N'a7x7', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (56, N'tanks_v2', N'a7x7', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (57, N'tanks_v2', N'max7x7', N'maxDamage', N'Int', N'maxDmg7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (57, N'tanks_v2', N'max7x7', N'maxDamage', N'Int', N'maxDmg7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (58, N'tanks_v2', N'max7x7', N'maxFrags', N'Int', N'maxFrags7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (58, N'tanks_v2', N'max7x7', N'maxFrags', N'Int', N'maxFrags7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (59, N'tanks_v2', N'max7x7', N'maxXP', N'Int', N'maxXp7', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (59, N'tanks_v2', N'max7x7', N'maxXP', N'Int', N'maxXp7', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (60, N'tanks_v2', N'common', N'has_company', N'Int', N'hasCompany', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (60, N'tanks_v2', N'common', N'has_company', N'Int', N'hasCompany', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (61, N'tanks_v2', N'common', N'has_clan', N'Int', N'hasClan', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (61, N'tanks_v2', N'common', N'has_clan', N'Int', N'hasClan', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (62, N'tanks_v2', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (62, N'tanks_v2', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (63, N'tanks_v2', N'total', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (63, N'tanks_v2', N'total', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (64, N'tanks_v2', N'total', N'mileage', N'Int', N'mileage', N'mileage')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (64, N'tanks_v2', N'total', N'mileage', N'Int', N'mileage', N'mileage')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (65, N'tanks_v2', N'total', N'treesCut', N'Int', N'treesCut', N'treesCut')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (65, N'tanks_v2', N'total', N'treesCut', N'Int', N'treesCut', N'treesCut')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (66, N'tanks', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (66, N'tanks', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (67, N'tanks', N'common', N'updatedtime', N'DateTime', N'updatedTime', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (67, N'tanks', N'common', N'updatedtime', N'DateTime', N'updatedTime', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (68, N'tanks', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (68, N'tanks', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (69, N'tanks', N'tankdata', N'battlesCount', N'Int', N'battles15', N'battlesCount')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (69, N'tanks', N'tankdata', N'battlesCount', N'Int', N'battles15', N'battlesCount')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (70, N'tanks', N'tankdata', N'wins', N'Int', N'wins15', N'victory')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (70, N'tanks', N'tankdata', N'wins', N'Int', N'wins15', N'victory')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (71, N'tanks', N'tankdata', N'losses', N'Int', N'losses15', N'loss')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (71, N'tanks', N'tankdata', N'losses', N'Int', N'losses15', N'loss')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (72, N'tanks', N'tankdata', N'survivedBattles', N'Int', N'survived15', N'survived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (72, N'tanks', N'tankdata', N'survivedBattles', N'Int', N'survived15', N'survived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (73, N'tanks', N'tankdata', N'frags', N'Int', N'frags15', N'frags')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (73, N'tanks', N'tankdata', N'frags', N'Int', N'frags15', N'frags')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (74, N'tanks', N'tankdata', N'frags8p', N'Int', N'frags8p15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (74, N'tanks', N'tankdata', N'frags8p', N'Int', N'frags8p15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (75, N'tanks', N'tankdata', N'damageDealt', N'Int', N'dmg15', N'dmg')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (75, N'tanks', N'tankdata', N'damageDealt', N'Int', N'dmg15', N'dmg')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (76, N'tanks', N'tankdata', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (76, N'tanks', N'tankdata', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (77, N'tanks', N'tankdata', N'capturePoints', N'Int', N'cap15', N'cap')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (77, N'tanks', N'tankdata', N'capturePoints', N'Int', N'cap15', N'cap')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (78, N'tanks', N'tankdata', N'droppedCapturePoints', N'Int', N'def15', N'def')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (78, N'tanks', N'tankdata', N'droppedCapturePoints', N'Int', N'def15', N'def')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (79, N'tanks', N'tankdata', N'spotted', N'Int', N'spot15', N'spotted')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (79, N'tanks', N'tankdata', N'spotted', N'Int', N'spot15', N'spotted')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (80, N'tanks', N'tankdata', N'xp', N'Int', N'xp15', N'xp')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (80, N'tanks', N'tankdata', N'xp', N'Int', N'xp15', N'xp')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (81, N'tanks', N'tankdata', N'shots', N'Int', N'shots15', N'shots')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (81, N'tanks', N'tankdata', N'shots', N'Int', N'shots15', N'shots')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (82, N'tanks', N'tankdata', N'hits', N'Int', N'hits15', N'hits')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (82, N'tanks', N'tankdata', N'hits', N'Int', N'hits15', N'hits')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (83, N'tanks', N'tankdata', N'maxFrags', N'Int', N'maxFrags15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (83, N'tanks', N'tankdata', N'maxFrags', N'Int', N'maxFrags15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (84, N'tanks', N'tankdata', N'maxXP', N'Int', N'maxXp15', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (84, N'tanks', N'tankdata', N'maxXP', N'Int', N'maxXp15', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (85, N'tanks', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (85, N'tanks', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (86, N'tanks', N'tankdata', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (86, N'tanks', N'tankdata', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (87, N'tanks', N'tankdata', N'treesCut', N'Int', N'treesCut', N'treesCut')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (87, N'tanks', N'tankdata', N'treesCut', N'Int', N'treesCut', N'treesCut')
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (88, N'tanks', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (88, N'tanks', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (89, N'tanks_v2', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (89, N'tanks_v2', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (90, N'tanks', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (90, N'tanks', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
 GO
-INSERT [dbo].[json2dbMapping] ([jsonDossier2dbMappingID], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (91, N'tanks_v2', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (91, N'tanks_v2', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
 GO
 SET IDENTITY_INSERT [dbo].[json2dbMapping] OFF
 GO

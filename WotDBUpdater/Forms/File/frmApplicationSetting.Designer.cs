@@ -34,8 +34,10 @@
             this.openFileDialogDossierFile = new System.Windows.Forms.OpenFileDialog();
             this.btnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtPlayerName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cboPlayer = new System.Windows.Forms.ComboBox();
+            this.btnAddPlayer = new System.Windows.Forms.Button();
+            this.btnRemovePlayer = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -85,16 +87,11 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Player name:";
             // 
-            // txtPlayerName
-            // 
-            this.txtPlayerName.Location = new System.Drawing.Point(18, 36);
-            this.txtPlayerName.Name = "txtPlayerName";
-            this.txtPlayerName.Size = new System.Drawing.Size(171, 20);
-            this.txtPlayerName.TabIndex = 9;
-            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtPlayerName);
+            this.groupBox1.Controls.Add(this.btnRemovePlayer);
+            this.groupBox1.Controls.Add(this.btnAddPlayer);
+            this.groupBox1.Controls.Add(this.cboPlayer);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtDossierFilePath);
             this.groupBox1.Controls.Add(this.btnOpenDossierFile);
@@ -105,6 +102,35 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
+            // 
+            // cboPlayer
+            // 
+            this.cboPlayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboPlayer.FormattingEnabled = true;
+            this.cboPlayer.Location = new System.Drawing.Point(18, 36);
+            this.cboPlayer.Name = "cboPlayer";
+            this.cboPlayer.Size = new System.Drawing.Size(237, 21);
+            this.cboPlayer.TabIndex = 10;
+            // 
+            // btnAddPlayer
+            // 
+            this.btnAddPlayer.Location = new System.Drawing.Point(261, 35);
+            this.btnAddPlayer.Name = "btnAddPlayer";
+            this.btnAddPlayer.Size = new System.Drawing.Size(87, 23);
+            this.btnAddPlayer.TabIndex = 11;
+            this.btnAddPlayer.Text = "Add player";
+            this.btnAddPlayer.UseVisualStyleBackColor = true;
+            this.btnAddPlayer.Click += new System.EventHandler(this.btnAddPlayer_Click);
+            // 
+            // btnRemovePlayer
+            // 
+            this.btnRemovePlayer.Location = new System.Drawing.Point(354, 35);
+            this.btnRemovePlayer.Name = "btnRemovePlayer";
+            this.btnRemovePlayer.Size = new System.Drawing.Size(87, 23);
+            this.btnRemovePlayer.TabIndex = 12;
+            this.btnRemovePlayer.Text = "Remove player";
+            this.btnRemovePlayer.UseVisualStyleBackColor = true;
+            this.btnRemovePlayer.Click += new System.EventHandler(this.btnRemovePlayer_Click);
             // 
             // frmApplicationSetting
             // 
@@ -134,7 +160,9 @@
         private System.Windows.Forms.TextBox txtDossierFilePath;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtPlayerName;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ComboBox cboPlayer;
+        private System.Windows.Forms.Button btnAddPlayer;
+        private System.Windows.Forms.Button btnRemovePlayer;
     }
 }

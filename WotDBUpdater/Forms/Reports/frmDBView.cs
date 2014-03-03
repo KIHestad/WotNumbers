@@ -21,7 +21,7 @@ namespace WotDBUpdater.Forms.Reports
 
         private void frmDBView_Load(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+            SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             con.Open();
             SqlCommand cmd = new SqlCommand("SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.views ORDER BY TableName", con);
             cmd.CommandType = CommandType.Text;
@@ -53,7 +53,7 @@ namespace WotDBUpdater.Forms.Reports
                 }
                 else
                 {
-                    SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                     SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableName, con);
                     cmd.CommandType = CommandType.Text;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);

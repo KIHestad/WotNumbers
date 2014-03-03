@@ -34,7 +34,7 @@ namespace WotDBUpdater
             cboDatabaseName.Text = Config.Settings.databaseName;
             txtUid.Text = Config.Settings.databaseUid;
             txtPwd.Text = Config.Settings.databasePwd;
-            txtConnStr.Text = Config.Settings.databaseConn;
+            txtConnStr.Text = Config.DatabaseConnection();
             // UpdateAuthSettings
             UpdateLogin();
         }
@@ -59,7 +59,7 @@ namespace WotDBUpdater
                 {
                     string winAuth = "Win";
                     if (rbSqlAuth.Checked) winAuth = "Sql";
-                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(txtServerName.Text, cboDatabaseName.Text, winAuth, txtUid.Text, txtPwd.Text)))
+                    using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUid.Text, txtPwd.Text)))
                     {
                         con.Open();
                         string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
