@@ -151,6 +151,10 @@ namespace WotDBUpdater.Forms.File
 	            }
                 con.Close();
             }
+
+            
         }
+
+
     }
 }
