@@ -316,7 +316,7 @@ namespace WotDBUpdater
             }
         }
 
-        private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankID, int battlessNew15, int battlessNew7)
+        private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battlessNew15, int battlessNew7)
         {
             // Greate datarow to put calculated battle data
             DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
@@ -368,7 +368,7 @@ namespace WotDBUpdater
                 }
             }
             // Get value to playerTankID, FK to parent table playerTank
-            DataTable dt = TankData.GetPlayerTankFromDB(tankID);
+            DataTable dt = TankData.GetPlayerTankFromDB(tankId);
             string sqlFields = "playerTankId";
             string sqlValues = dt.Rows[0]["Id"].ToString();
             // Get fields to update, loop through mapping table to get allgenerate SQL
@@ -392,6 +392,9 @@ namespace WotDBUpdater
             if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }
             if (modeCompany) { sqlFields += ", modeCompany"; sqlValues += ", 1"; }
             if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
+            // Calculate WN8
+            sqlFields += ", wn8";
+            sqlValues += ", " + Wn8Test.CalculateBattleWn8(tankId, (battlessNew15 + battlessNew7), NewbattleRow);
             // Update database
             if (sqlFields.Length > 0)
             {
