@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace WotDBUpdater
 {
-    public static class tankData
+    public static class TankData
     {
         #region DatabaseLookup
 
-        public static DataTable TankList = new DataTable();
+        public static DataTable tankList = new DataTable();
 
         public static void GetTankListFromDB()
         {
             using(SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
             {
-                TankList.Clear();
+                tankList.Clear();
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT id, name FROM tank", conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM tank", conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(TankList);
+                adapter.Fill(tankList);
                 conn.Close();
             }
         }
@@ -96,7 +96,7 @@ namespace WotDBUpdater
         public static string listTanks()
         {
             string s = "";
-            foreach (DataRow dr in TankList.Rows)
+            foreach (DataRow dr in tankList.Rows)
             {
                 s += dr["id"] + " : " + dr["name"] + "\n";
             }
@@ -107,7 +107,7 @@ namespace WotDBUpdater
         {
             int tankID = 0;
             string expression = "name = '" + TankName + "'";
-            DataRow[] foundRows = TankList.Select(expression);
+            DataRow[] foundRows = tankList.Select(expression);
             if (foundRows.Length > 0) // If tank exist in Tank table 
                 tankID = Convert.ToInt32(foundRows[0]["id"]);
             return tankID;
@@ -116,9 +116,20 @@ namespace WotDBUpdater
         public static bool TankExist(int tankID)
         {
             string expression = "id = " + tankID.ToString();
-            DataRow[] foundRows = TankList.Select(expression);
+            DataRow[] foundRows = tankList.Select(expression);
             return (foundRows.Length > 0);
         }
+
+        public static DataRow TankInfo(int tankID)
+        {
+            string expression = "id = " + tankID.ToString();
+            DataRow[] foundRows = tankList.Select(expression);
+            if (foundRows.Length > 0)
+                return foundRows[0];
+            else
+                return null;
+        }
+
 
         #endregion
 

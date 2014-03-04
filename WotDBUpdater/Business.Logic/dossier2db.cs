@@ -11,16 +11,16 @@ using System.Data.SqlClient;
 
 namespace WotDBUpdater
 {
-    class dossier2db
+    class Dossier2db
     {
-        public class JsonMainSection
+        public class jsonMainSection
         {
             public string header = "header";
             public string tanks = "tanks";
             public string tanks_v2 = "tanks_v2";
         }
 
-        public class JsonItem
+        public class jsonItem
         {
             public string mainSection = "";
             public string tank = "";
@@ -29,7 +29,7 @@ namespace WotDBUpdater
             public object value = null;
         }
         
-        public static String readJson(string filename, bool ForceUpdate = false)
+        public static String ReadJson(string filename, bool ForceUpdate = false)
         {
             StringBuilder sb = new StringBuilder();
             using (StreamReader sr = new StreamReader(filename))
@@ -55,13 +55,13 @@ namespace WotDBUpdater
             List<string> log = new List<string>();
 
             // Declare
-            DataTable NewPlayerTankTable = tankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
+            DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
             DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
             string tankName = "";
             //TankDataResult tdr = new TankDataResult();
 
-            JsonMainSection mainSection = new JsonMainSection();
-            JsonItem currentItem = new JsonItem();
+            jsonMainSection mainSection = new jsonMainSection();
+            jsonItem currentItem = new jsonItem();
             
             // Loop through json file
             while (reader.Read())
@@ -127,7 +127,7 @@ namespace WotDBUpdater
 
                                         // Check data by getting jsonPlayerTank Mapping
                                         string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
-                                        DataRow[] foundRows = tankData.json2dbMappingView.Select(expression);
+                                        DataRow[] foundRows = TankData.json2dbMappingView.Select(expression);
 
                                         // IF mapping found add currentItem into NewPlayerTankRow
                                         if (foundRows.Length != 0)
@@ -166,9 +166,9 @@ namespace WotDBUpdater
             return origin.AddSeconds(timestamp);
         }
 
-        private static void UpdateNewPlayerTankRow(ref DataRow NewPlayerTankRow, JsonItem currentItem)
+        private static void UpdateNewPlayerTankRow(ref DataRow NewPlayerTankRow, jsonItem currentItem)
         {
-            JsonMainSection mainSection = new JsonMainSection(); 
+            jsonMainSection mainSection = new jsonMainSection(); 
             if (currentItem.mainSection == mainSection.tanks)
             {
                 if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewPlayerTankRow["battles15"] = Convert.ToInt32(currentItem.value);
@@ -185,7 +185,7 @@ namespace WotDBUpdater
         }
 
         // TODO: Check if using this model gives better perfomance and code than readJson
-        private static void readJson_ver2(string filename, bool ForceUpdate = false)
+        private static void ReadJson_ver2(string filename, bool ForceUpdate = false)
         {
             StringBuilder sb = new StringBuilder();
             using (StreamReader sr = new StreamReader(filename))
@@ -235,16 +235,16 @@ namespace WotDBUpdater
         public static void SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, bool ForceUpdate = false)
         {
             // Get Tank ID
-            int tankID = tankData.GetTankID(tankName);
-            if (tankID > 0) // when tankid=0 the tank is not found in tank table
+            int tankId = TankData.GetTankID(tankName);
+            if (tankId > 0) // when tankid=0 the tank is not found in tank table
             {
                 // Check if battle count has increased, first get existing battle count
-                DataTable OldPlayerTankTable = tankData.GetPlayerTankFromDB(tankID); // Return Existing Player Tank Data
+                DataTable OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Return Existing Player Tank Data
                 // Check if Player has this tank
                 if (OldPlayerTankTable.Rows.Count == 0)
                 {
-                    SaveNewPlayerTank(tankID);
-                    OldPlayerTankTable = tankData.GetPlayerTankFromDB(tankID); // Return once more now after row is added
+                    SaveNewPlayerTank(tankId);
+                    OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Return once more now after row is added
                 }
                 // Check if battle count has increased, first get existing (old) tank data
                 DataRow OldPlayerTankRow = OldPlayerTankTable.Rows[0];
@@ -259,12 +259,12 @@ namespace WotDBUpdater
                 if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
                 {
                     // New battle detected, update tankData in DB
-                    UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable);
+                    UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, (NewPlayerTankRow_battles15 + NewPlayerTankRow_battles7));
                     // If new battle on this tank also update battle table to store result of last battle(s)
                     if (battlessNew15 != 0 || battlessNew7 != 0)
                     {
                         // New battle detected, update tankData in DB
-                        UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankID, battlessNew15, battlessNew7);
+                        UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, battlessNew15, battlessNew7);
                     }
                 }
             }
@@ -282,18 +282,20 @@ namespace WotDBUpdater
             con.Close();
         }
 
-        private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable)
+        private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int totalBattleCount)
         {
             // Get fields to update
             string sqlFields = "";
+            // Calculate WN8
+            sqlFields += "wn8=" + Wn8Test.CalculatePlayerTankWn8(tankId, totalBattleCount, NewPlayerTankRow);
             foreach (DataColumn column in OldPlayerTankTable.Columns)
             {
+                // Get columns and values from NewPlayerTankRow direct
                 if (column.ColumnName != "Id" && NewPlayerTankRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
                 {
-                    if (sqlFields.Length > 0) sqlFields += ", "; // Add comma exept for first element
                     string colName = column.ColumnName;
                     string colType = column.DataType.Name;
-                    sqlFields += colName + "=";
+                    sqlFields += ", " + colName + "=";
                     switch (colType)
                     {
                         case "String": sqlFields += "'" + NewPlayerTankRow[colName] + "'"; break;
@@ -317,12 +319,12 @@ namespace WotDBUpdater
         private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankID, int battlessNew15, int battlessNew7)
         {
             // Greate datarow to put calculated battle data
-            DataTable NewBattleTable = tankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
+            DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
             DataRow NewbattleRow = NewBattleTable.NewRow();
             // Get fields to map playerTank data to Battle data
             bool modeCompany = false;
             bool modeClan = false;
-            foreach (DataRow dr in tankData.tankData2BattleMappingView.Rows)
+            foreach (DataRow dr in TankData.tankData2BattleMappingView.Rows)
             {
                 if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
                 {
@@ -366,7 +368,7 @@ namespace WotDBUpdater
                 }
             }
             // Get value to playerTankID, FK to parent table playerTank
-            DataTable dt = tankData.GetPlayerTankFromDB(tankID);
+            DataTable dt = TankData.GetPlayerTankFromDB(tankID);
             string sqlFields = "playerTankId";
             string sqlValues = dt.Rows[0]["Id"].ToString();
             // Get fields to update, loop through mapping table to get allgenerate SQL

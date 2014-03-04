@@ -92,14 +92,14 @@ namespace WotDBUpdater.Forms.File
                     RunSql(sql);
                     UpdateProgressBar(ref step, maxStep);
                     // Get tanks, remember to init tankList first
-                    tankData.GetTankListFromDB();
+                    TankData.GetTankListFromDB();
                     Application.DoEvents();
                     importTanks2DB.UpdateTanks();
                     Application.DoEvents();
                     // Init after getting tanks and other basic data import
-                    tankData.GetTankListFromDB();
-                    tankData.GetJson2dbMappingViewFromDB();
-                    tankData.GettankData2BattleMappingViewFromDB();
+                    TankData.GetTankListFromDB();
+                    TankData.GetJson2dbMappingViewFromDB();
+                    TankData.GettankData2BattleMappingViewFromDB();
                     UpdateProgressBar(ref step, maxStep);
                     // Get turret
                     modules2DB.importTurrets();

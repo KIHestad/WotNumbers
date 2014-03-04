@@ -45,7 +45,7 @@ namespace WotDBUpdater.Forms
             {
                 listBoxLog.Items.Add(item);
             }
-            tankData.GetTankListFromDB();
+            TankData.GetTankListFromDB();
 
         }
 

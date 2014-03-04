@@ -119,7 +119,7 @@ namespace WotDBUpdater
                                 case "tier" : jsonTier = (int)((JProperty)jtoken).Value; break;
                                 case "premium" : jsonPremium = (int)((JProperty)jtoken).Value; break;
                                 case "title" : jsonTitle = (string)((JProperty)jtoken).Value.ToString(); break;
-                                case "compDescr" : jsonCompDescr = (int)((JProperty)jtoken).Value; tankExists = tankData.TankExist(jsonCompDescr); break; // Check if tank exsits
+                                case "compDescr" : jsonCompDescr = (int)((JProperty)jtoken).Value; tankExists = TankData.TankExist(jsonCompDescr); break; // Check if tank exsits
                             }
                         }
                     }

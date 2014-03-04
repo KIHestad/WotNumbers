@@ -99,9 +99,9 @@ namespace WotDBUpdater
                 if (saveOk)
                 {
                     // Init
-                    tankData.GetTankListFromDB();
-                    tankData.GetJson2dbMappingViewFromDB();
-                    tankData.GettankData2BattleMappingViewFromDB();
+                    TankData.GetTankListFromDB();
+                    TankData.GetJson2dbMappingViewFromDB();
+                    TankData.GettankData2BattleMappingViewFromDB();
                     //Form.ActiveForm.Close();
                 }
             }

@@ -38,9 +38,9 @@ namespace WotDBUpdater
                 SetStartStopButton();
                 SetFormTitle();
                 // Init
-                tankData.GetTankListFromDB();
-                tankData.GetJson2dbMappingViewFromDB();
-                tankData.GettankData2BattleMappingViewFromDB();
+                TankData.GetTankListFromDB();
+                TankData.GetJson2dbMappingViewFromDB();
+                TankData.GettankData2BattleMappingViewFromDB();
             }
         }
 
@@ -188,7 +188,7 @@ namespace WotDBUpdater
 
         private void listTanksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = tankData.listTanks();
+            string s = TankData.listTanks();
             MessageBox.Show(s);
         }
 

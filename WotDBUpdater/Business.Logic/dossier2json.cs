@@ -205,7 +205,7 @@ namespace WotDBUpdater
                 {
                     if (File.Exists(jsonfile))
                     {
-                        logtext.Add(LogText(dossier2db.readJson(jsonfile, ForceUpdate)));
+                        logtext.Add(LogText(Dossier2db.ReadJson(jsonfile, ForceUpdate)));
                     }
                     else
                     {
