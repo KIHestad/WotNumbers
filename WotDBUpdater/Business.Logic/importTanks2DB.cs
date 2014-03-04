@@ -74,7 +74,7 @@ namespace WotDBUpdater
         public static List<string> UpdateTanks()
         {
             String s = "{items:" + fetchDataFromFile("tanks") + "}";
-            SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+            SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             con.Open();
 
             int jsonCompDescr = 0;
@@ -212,7 +212,7 @@ namespace WotDBUpdater
             // Execute update statements
             try
             {
-                SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                 con.Open();
                 SqlCommand update = new SqlCommand(sql, con);
                 update.ExecuteNonQuery();

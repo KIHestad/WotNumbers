@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,31 +26,114 @@ namespace WotDBUpdater.Forms.File
             txtFileLocation.Text = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database";
         }
 
+        private void UpdateProgressBar(ref int step, int maxStep)
+        {
+            step++; // count step 1 to maxValue
+            int maxValue = (int)((double)maxStep / ((double)step / (double)maxStep) * 100); // calculate the maxValue to be correct according to that value = 1 all time
+            pbCreateDatabase.Maximum = maxValue;
+            Application.DoEvents();
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             // Check if database exists
-            if (Config.CheckDBConn(false, txtDatabasename.Text))
+            bool dbExists = false;
+            using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+            {
+                con.Open();
+                string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE [name] = '" + txtDatabasename.Text + "'";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows) dbExists = true;
+                con.Close();
+            }
+            if (dbExists)
             {
                 MessageBox.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
             }
             else
             {
+                Cursor.Current = Cursors.WaitCursor;
+                int maxStep = 16;
+                pbCreateDatabase.Maximum = maxStep * 100;
+                pbCreateDatabase.Value = maxStep * 100;
+                pbCreateDatabase.Visible = true;
+                int step = 0;
+                UpdateProgressBar(ref step, maxStep);
+                Application.DoEvents();
                 // Create db now
                 if (CreateDatabase(txtDatabasename.Text, txtFileLocation.Text))
                 {
+                    // Save new database to Config
+                    Config.Settings.databaseName = txtDatabasename.Text;
+                    string result = "";
+                    Config.SaveDbConfig(out result);
                     // Fill database with default data
-                    FillDatabase(txtDatabasename.Text);
+                    UpdateProgressBar(ref step, maxStep);
+                    // Update db by running sql scripts
+                    string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
+                    string sql;
+                    // Create Tables
+                    StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
+                    sql = streamReader.ReadToEnd();
+                    UpdateProgressBar(ref step, maxStep);
+                    RunSql(sql);
+                    UpdateProgressBar(ref step, maxStep);
+                    // Create Views
+                    streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
+                    sql = streamReader.ReadToEnd();
+                    UpdateProgressBar(ref step, maxStep);
+                    RunSql(sql);
+                    UpdateProgressBar(ref step, maxStep);
+                    // Insert default data
+                    streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
+                    sql = streamReader.ReadToEnd();
+                    UpdateProgressBar(ref step, maxStep);
+                    RunSql(sql);
+                    UpdateProgressBar(ref step, maxStep);
+                    // Get tanks, remember to init tankList first
+                    tankData.GetTankListFromDB();
+                    Application.DoEvents();
+                    importTanks2DB.UpdateTanks();
+                    Application.DoEvents();
+                    // Init after getting tanks and other basic data import
+                    tankData.GetTankListFromDB();
+                    tankData.GetJson2dbMappingViewFromDB();
+                    tankData.GettankData2BattleMappingViewFromDB();
+                    UpdateProgressBar(ref step, maxStep);
+                    // Get turret
+                    modules2DB.importTurrets();
+                    UpdateProgressBar(ref step, maxStep);
+                    // Get guns
+                    modules2DB.importGuns();
+                    UpdateProgressBar(ref step, maxStep);
+                    // Get radios
+                    modules2DB.importRadios();
+                    UpdateProgressBar(ref step, maxStep);
+                    // Get WN8 ratings
+                    importTanks2DB.UpdateWN8();
+                    UpdateProgressBar(ref step, maxStep);
+                    // Add player
+                    if (txtPlayerName.Text.Trim() != "")
+                    {
+                        RunSql("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
+                        Config.Settings.playerName = txtPlayerName.Text.Trim();
+                        Config.SaveAppConfig(out result);
+                        UpdateProgressBar(ref step, maxStep);
+                    }
+                    UpdateProgressBar(ref step, maxStep);
                     // Done
+                    UpdateProgressBar(ref step, maxStep);
+                    Cursor.Current = Cursors.Default;
+                    Application.DoEvents();
                     MessageBox.Show("Database created successfully.", "Created database");
+                    pbCreateDatabase.Visible = false;
                 }
-
             }
         }
 
         private bool CreateDatabase(string databaseName, string fileLocation)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Application.DoEvents();
             bool dbOk = false;
             // Check database file location
             bool fileLocationExsits = true;
@@ -64,6 +148,7 @@ namespace WotDBUpdater.Forms.File
                 {
                     fileLocationExsits = false;
                     MessageBox.Show("Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    pbCreateDatabase.Visible = false;
                 }
             }
 
@@ -89,7 +174,8 @@ namespace WotDBUpdater.Forms.File
                 catch (System.Exception ex)
                 {
                     dbOk = false;
-                    MessageBox.Show("Error createing database: " + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    pbCreateDatabase.Visible = false;
                 }
                 finally
                 {
@@ -105,39 +191,10 @@ namespace WotDBUpdater.Forms.File
                     }
                 }
             }
-            Cursor.Current = Cursors.Default;
             return dbOk;
         }
 
-        private void FillDatabase(string databaseName)
-        {
-            // Init
-            tankData.GetTankListFromDB();
-            tankData.GetJson2dbMappingViewFromDB();
-            tankData.GettankData2BattleMappingViewFromDB();
-            // FIll data now
-            string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
-            string sql;
-            StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
-            sql = streamReader.ReadToEnd();
-            RunSql(sql);
-            streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
-            sql = streamReader.ReadToEnd();
-            RunSql(sql);
-            streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
-            sql = streamReader.ReadToEnd();
-            RunSql(sql);
-            importTanks2DB.UpdateTanks();
-            if (txtPlayerName.Text.Trim() != "")
-            {
-                RunSql("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
-            }
-            // Init
-            tankData.GetTankListFromDB();
-            tankData.GetJson2dbMappingViewFromDB();
-            tankData.GettankData2BattleMappingViewFromDB();
-        }
-
+        
         private void RunSql(string sqlbatch)
         {
             string[] sql = sqlbatch.Split(new string[] {"GO"}, StringSplitOptions.RemoveEmptyEntries);
@@ -151,6 +208,10 @@ namespace WotDBUpdater.Forms.File
 	            }
                 con.Close();
             }
+
+            
         }
+
+
     }
 }

@@ -273,7 +273,7 @@ namespace WotDBUpdater
         private static void SaveNewPlayerTank(int TankID)
         {
             // Add to database
-            SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+            SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             con.Open();
             SqlCommand cmd = new SqlCommand("INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankID, @PlayerId)", con);
             cmd.Parameters.AddWithValue("@tankId", TankID);
@@ -305,7 +305,7 @@ namespace WotDBUpdater
             // Update database
             if (sqlFields.Length > 0)
             {
-                SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                 con.Open();
                 SqlCommand cmd = new SqlCommand("UPDATE playerTank SET " + sqlFields + " WHERE Id=@Id ", con);
                 cmd.Parameters.AddWithValue("@Id", OldPlayerTankTable.Rows[0]["id"]);
@@ -393,7 +393,7 @@ namespace WotDBUpdater
             // Update database
             if (sqlFields.Length > 0)
             {
-                SqlConnection con = new SqlConnection(Config.Settings.databaseConn);
+                SqlConnection con = new SqlConnection(Config.DatabaseConnection());
                 con.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO battle (" + sqlFields + ") VALUES (" + sqlValues + ")", con);
                 cmd.ExecuteNonQuery();
