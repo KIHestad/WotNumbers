@@ -146,7 +146,8 @@ create table playerTank (
 	premiumCons int not null default 0,
 	vehicleCamo int not null default 0,
 	battlesCompany int not null default 0,
-	battlesClan int not null default 0
+	battlesClan int not null default 0,
+	wn8 int not null default 0
 )
 
 alter table playerTank add constraint fk_playerTank_tank foreign key (tankId) references tank (id)
