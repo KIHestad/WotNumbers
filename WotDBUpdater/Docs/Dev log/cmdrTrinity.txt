@@ -1,25 +1,7 @@
-﻿22.02.14
-- Added Docs for databasescript, dev log, etc.
-- Added menu item File >> Import tanks.
-- Added frmImportTanks. Import function stores file content in a string for now.
+﻿02.03.14
+- Added function for updating WN8 stats in tank table
+- Added test frame for progress bar
 
-23.02.14
-- Import Tanks function now writes tanks to DB.
-- Remaining:
-	- Add status message 'Importing tanks...'
-	- Import fails if one or more tankIds alrady exist. Function should be able to append new tanks
-	- Add function for truncing the tank table?
-- BadButton-Comment 
-	- Fixed check for tankIds already exists, but json file method is pretty slow.... ^_^
-
-24.02.14
-- BadButton Comment:
-	- Improved function for Importing tanks, problem with slow performance was due to huge log file - but some improvment added anyway
-
-28.02.14
-- Added functions for importing turrets, guns and radios
-	- Utilizing JObject, JToken, JProperty and JArray from Newtonsoft libraries
-- Previous attempts using JsonTextReader, deserializing, etc are rejected
 
 01.03.14
 - Major cleanup on naming conventions
@@ -30,3 +12,38 @@
 - Restructured the frag table
 	- Created battleFrag and playerTankFrag
 - Added prefix 'mod' to all module related tables
+
+
+28.02.14
+- Added functions for importing turrets, guns and radios
+	- Utilizing JObject, JToken, JProperty and JArray from Newtonsoft libraries
+- Previous attempts using JsonTextReader, deserializing, etc are rejected
+
+
+24.02.14
+- BadButton Comment:
+	- Improved function for Importing tanks, problem with slow performance was due to huge log file - but some improvment added anyway
+
+
+23.02.14
+- Import Tanks function now writes tanks to DB.
+- Remaining:
+	- Add status message 'Importing tanks...'
+	- Import fails if one or more tankIds alrady exist. Function should be able to append new tanks
+	- Add function for truncing the tank table?
+- BadButton-Comment 
+	- Fixed check for tankIds already exists, but json file method is pretty slow.... ^_^
+
+
+22.02.14
+- Added Docs for databasescript, dev log, etc.
+- Added menu item File >> Import tanks.
+- Added frmImportTanks. Import function stores file content in a string for now.
+
+
+
+
+
+
+
+

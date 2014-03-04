@@ -59,12 +59,11 @@ create table tank (
 	name varchar(255),
 	tier int,
 	premium int,
-	nomDmg int,
-	expDmg int,
-	expWR int,
-	expSpot int,
-	expFrags int,
-	expDef int
+	expDmg decimal(10,2),
+	expWR decimal(10,2),
+	expSpot decimal(10,2),
+	expFrags decimal(10,2),
+	expDef decimal(10,2)
 )
 
 alter table tank add foreign key (tankTypeId) references tankType (id)
