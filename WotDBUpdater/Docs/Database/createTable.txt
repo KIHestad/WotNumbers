@@ -55,11 +55,11 @@ create table tank (
 	name varchar(255),
 	tier int,
 	premium int,
-	expDmg decimal(10,2),
-	expWR decimal(10,2),
-	expSpot decimal(10,2),
-	expFrags decimal(10,2),
-	expDef decimal(10,2)
+	expDmg float,
+	expWR float,
+	expSpot float,
+	expFrags float,
+	expDef float
 )
 
 alter table tank add constraint fk_tank_tankTypeId foreign key (tankTypeId) references tankType (id)
@@ -183,6 +183,7 @@ create table battle (
 	mode7 int not null default 0,
 	modeClan int not null default 0,
 	modeCompany int not null default 0,
+	wn8 int not null default 0
 )
 
 alter table battle add constraint fk_battle_playerTank foreign key (playerTankId) references playerTank (id)
