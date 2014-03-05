@@ -23,7 +23,7 @@ namespace WotDBUpdater.Forms.File
         private void frmDatabaseNew_Load(object sender, EventArgs e)
         {
             txtPlayerName.Text = Config.Settings.playerName;
-            txtFileLocation.Text = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database";
+            txtFileLocation.Text = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
         }
 
         private void UpdateProgressBar(ref int step, int maxStep)
@@ -137,18 +137,24 @@ namespace WotDBUpdater.Forms.File
             bool dbOk = false;
             // Check database file location
             bool fileLocationExsits = true;
-            if (Directory.Exists(fileLocation))
+            fileLocation = fileLocation.Trim();
+            if (fileLocation.Substring(fileLocation.Length-1, 1) != "\\" && fileLocation.Substring(fileLocation.Length-1, 1) != "/")
+                fileLocation += "\\";
+            if (!Directory.Exists(fileLocation))
             {
                 DirectoryInfo prevPath = Directory.GetParent(fileLocation);
-                if (prevPath.Exists)
+                if (!prevPath.Exists)
                 {
-                    Directory.CreateDirectory(fileLocation);
-                }
-                else
-                {
-                    fileLocationExsits = false;
-                    MessageBox.Show("Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    pbCreateDatabase.Visible = false;
+                    if (!Directory.GetParent(prevPath.FullName).Exists)
+                    {
+                        fileLocationExsits = false;
+                        MessageBox.Show("Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        pbCreateDatabase.Visible = false;
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(fileLocation);
+                    }
                 }
             }
 

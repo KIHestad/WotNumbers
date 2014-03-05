@@ -214,7 +214,12 @@ namespace WotDBUpdater
             Log(result);
         }
 
-
+        private void btnTestAlt_Click(object sender, EventArgs e)
+        {
+            // Test running previous dossier file, force update - even if no more battles is detected
+            List<string> result = dossier2json.manualRun(true, true, true);
+            Log(result);
+        }
 
         private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -239,6 +244,8 @@ namespace WotDBUpdater
             Form frm = new Forms.Test.frmTestProgressBar();
             frm.Show();
         }
+
+        
     }
 
     

@@ -36,7 +36,7 @@ namespace WotDBUpdater
             return LogText(logtext);
         }
 
-        public static List<string> manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+        public static List<string> manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false, bool AlternativeMethod = false)
         {
             Log.CheckLogFileSize();
             List<string> logtext = new List<string>();
@@ -81,7 +81,7 @@ namespace WotDBUpdater
             }
             if (ok)
             {
-                List<string> newlogtext = copyAndConvertFile(dossierfile, TestRunPrevJsonFile, ForceUpdate);
+                List<string> newlogtext = copyAndConvertFile(dossierfile, TestRunPrevJsonFile, ForceUpdate, AlternativeMethod);
                 foreach (string s in newlogtext)
                 {
                     logtext.Add(s);
@@ -153,7 +153,7 @@ namespace WotDBUpdater
             return logtext;
         }
 
-        private static List<string> copyAndConvertFile(string dossierfile, bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+        private static List<string> copyAndConvertFile(string dossierfile, bool TestRunPrevJsonFile = false, bool ForceUpdate = false, bool AlternativeMethod = false)
         {
             // Copy dossier file and perform file conversion til json format
             List<string> logtext = new List<string>();
@@ -205,7 +205,11 @@ namespace WotDBUpdater
                 {
                     if (File.Exists(jsonfile))
                     {
-                        logtext.Add(LogText(Dossier2db.ReadJson(jsonfile, ForceUpdate)));
+                        // TODO: tesing new method
+                        if (AlternativeMethod)
+                            logtext.Add(LogText(Dossier2db.ReadJson_ver2(jsonfile, ForceUpdate)));
+                        else
+                            logtext.Add(LogText(Dossier2db.ReadJson(jsonfile, ForceUpdate)));
                     }
                     else
                     {

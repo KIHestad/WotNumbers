@@ -743,9 +743,7 @@
     <Content Include="Dossier2json\wotdc2_testj.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>md "$(TargetDir)Dossier2json"

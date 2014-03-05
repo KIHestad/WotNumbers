@@ -53,11 +53,12 @@
             this.testReadModuleDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importGunsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRadiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testProgressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
-            this.testProgressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnTestAlt = new System.Windows.Forms.Button();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -77,7 +78,7 @@
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.Location = new System.Drawing.Point(117, 41);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(336, 199);
+            this.listBoxLog.Size = new System.Drawing.Size(336, 238);
             this.listBoxLog.TabIndex = 4;
             this.listBoxLog.DoubleClick += new System.EventHandler(this.listBoxLog_DoubleClick);
             // 
@@ -268,6 +269,13 @@
             this.importRadiosToolStripMenuItem.Text = "Import radios";
             this.importRadiosToolStripMenuItem.Click += new System.EventHandler(this.importRadiosToolStripMenuItem_Click);
             // 
+            // testProgressBarToolStripMenuItem
+            // 
+            this.testProgressBarToolStripMenuItem.Name = "testProgressBarToolStripMenuItem";
+            this.testProgressBarToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testProgressBarToolStripMenuItem.Text = "Test progress bar";
+            this.testProgressBarToolStripMenuItem.Click += new System.EventHandler(this.testProgressBarToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -303,18 +311,22 @@
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
             // 
-            // testProgressBarToolStripMenuItem
+            // btnTestAlt
             // 
-            this.testProgressBarToolStripMenuItem.Name = "testProgressBarToolStripMenuItem";
-            this.testProgressBarToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.testProgressBarToolStripMenuItem.Text = "Test progress bar";
-            this.testProgressBarToolStripMenuItem.Click += new System.EventHandler(this.testProgressBarToolStripMenuItem_Click);
+            this.btnTestAlt.Location = new System.Drawing.Point(18, 240);
+            this.btnTestAlt.Name = "btnTestAlt";
+            this.btnTestAlt.Size = new System.Drawing.Size(89, 34);
+            this.btnTestAlt.TabIndex = 13;
+            this.btnTestAlt.Text = "Test alternative";
+            this.btnTestAlt.UseVisualStyleBackColor = true;
+            this.btnTestAlt.Click += new System.EventHandler(this.btnTestAlt_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 249);
+            this.ClientSize = new System.Drawing.Size(469, 293);
+            this.Controls.Add(this.btnTestAlt);
             this.Controls.Add(this.btntestForce);
             this.Controls.Add(this.btnTestPrev);
             this.Controls.Add(this.pnlStatus);
@@ -370,6 +382,7 @@
         private System.Windows.Forms.ToolStripMenuItem importGunsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRadiosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testProgressBarToolStripMenuItem;
+        private System.Windows.Forms.Button btnTestAlt;
     }
 }
 

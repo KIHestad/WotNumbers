@@ -31,20 +31,10 @@ namespace WotDBUpdater
         
         public static String ReadJson(string filename, bool ForceUpdate = false)
         {
-            StringBuilder sb = new StringBuilder();
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                String line;
-                // Read and display lines from the file until the end of 
-                // the file is reached.
-                while ((line = sr.ReadLine()) != null)
-                {
-                    sb.AppendLine(line);
-                }
-            }
-
-            string json = sb.ToString();
-
+            // Read file into string
+            StreamReader sr = new StreamReader(filename, Encoding.UTF8);
+            string json = sr.ReadToEnd();
+                        
             Stopwatch sw = new Stopwatch();
             sw.Start();
             
@@ -185,51 +175,49 @@ namespace WotDBUpdater
         }
 
         // TODO: Check if using this model gives better perfomance and code than readJson
-        private static void ReadJson_ver2(string filename, bool ForceUpdate = false)
+        public static string ReadJson_ver2(string filename, bool ForceUpdate = false)
         {
-            StringBuilder sb = new StringBuilder();
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                String line;
-                // Read and display lines from the file until the end of 
-                // the file is reached.
-                while ((line = sr.ReadLine()) != null)
-                {
-                    sb.AppendLine(line);
-                }
-            }
+            // Read file into string
+            StreamReader sr = new StreamReader(filename, Encoding.UTF8);
+            string json = sr.ReadToEnd();
 
-            string json = sb.ToString();
-
+            // Time it and start logging
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            
-            JToken rootToken;
+            List<string> logtxt = new List<string>();
+            int i = 0;
+
+            // Read json using Newtonsoft JToken
             JsonTextReader reader = new JsonTextReader(new StringReader(json));
             JObject fileContent = JObject.Parse(json);
-            rootToken = fileContent.First;
-            if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+            JToken rootToken = fileContent.First.Next;
+            if (((JProperty)rootToken).Name.ToString() == "tanks")
             {
-                rootToken = rootToken.Next.Next;
-                rootToken = rootToken.Next;
-                List<string> logtxt = new List<string>();
-                JToken turrets = rootToken.Children().First();
-                foreach (JProperty turretItem in turrets.Children())
+                JToken tanksToken = rootToken.Children().First();
+                foreach (JProperty tanksItem in tanksToken.Children())
                 {
-                    JToken t = turretItem.First();
-                    String result = t["name"].ToString();
-                    result += " | " + t["nation_i18n"].ToString();
-                    result += " | " + t["armor_fedd"].ToString();
-                    result += " | " + t["circular_vision_radius"].ToString();
-                    result += " | " + t["weight"].ToString();
-                    result += " | " + t["name"].ToString();
-                    JArray tanksArray = (JArray)t["tanks"];
-                    result += " | " + tanksArray[0].ToString();
-                    logtxt.Add(result);
+                    i++;
+                    String tankname = tanksItem.Name.ToString() + " (v1 - row: " + i.ToString() + ")";
+                    logtxt.Add(tankname);
                 }
-                Log.LogToFile(logtxt);
-
             }
+            rootToken = fileContent.First.Next.Next;
+            if (((JProperty)rootToken).Name.ToString() == "tanks_v2")
+            {
+                JToken tanksToken = rootToken.Children().First();
+                foreach (JProperty tanksItem in tanksToken.Children())
+                {
+                    i++;
+                    String tankname = tanksItem.Name.ToString() + " (v2 - row: " + i.ToString() + ")";
+                    logtxt.Add(tankname);
+                }
+            }
+            // Finished, return time spent
+            sw.Stop();
+            Log.CheckLogFileSize();
+            Log.LogToFile(logtxt);
+            TimeSpan ts = sw.Elapsed;
+            return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000"));
         }
 
         public static void SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, bool ForceUpdate = false)
