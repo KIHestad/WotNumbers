@@ -31,7 +31,7 @@ namespace WotDBUpdater
                 double avgSpot = (ConvertDbVal2Double(playerTankData["spot15"]) + ConvertDbVal2Double(playerTankData["spot7"])) / totalBattleCount;
                 double avgFrag = (ConvertDbVal2Double(playerTankData["frags15"]) + ConvertDbVal2Double(playerTankData["frags7"])) / totalBattleCount;
                 double avgDef = (ConvertDbVal2Double(playerTankData["def15"]) + ConvertDbVal2Double(playerTankData["def7"])) / totalBattleCount;
-                double avgWinRate = (ConvertDbVal2Double(playerTankData["wins15"]) + ConvertDbVal2Double(playerTankData["wins7"])) / totalBattleCount;
+                double avgWinRate = (ConvertDbVal2Double(playerTankData["wins15"]) + ConvertDbVal2Double(playerTankData["wins7"])) / totalBattleCount * 100;
                 // get wn8 exp values for tank
                 double expDmg = Convert.ToDouble(tankInfo["expDmg"]);
                 double expSpot = Convert.ToDouble(tankInfo["expSpot"]);
@@ -51,7 +51,7 @@ namespace WotDBUpdater
                 double rSPOTc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rSPOT - 0.38) / (1 - 0.38)));
                 double rDEFc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rDEF - 0.10) / (1 - 0.10)));
                 // Step 3
-                WN8 = 980 * rDAMAGEc + 210 * rDAMAGEc * rFRAGc + 155 * rFRAGc * rSPOTc + 75 * rDEFc * rFRAGc + 145 * Math.Min(1.8, rWINc);
+                WN8 = (980 * rDAMAGEc) + (210 * rDAMAGEc * rFRAGc) + (155 * rFRAGc * rSPOTc) + (75 * rDEFc * rFRAGc) + (145 * Math.Min(1.8, rWINc));
                 // Return value
             }
             return Convert.ToInt32(WN8);
@@ -68,7 +68,7 @@ namespace WotDBUpdater
                 double avgSpot = (ConvertDbVal2Double(battleData["spotted"])) / battleCount;
                 double avgFrag = (ConvertDbVal2Double(battleData["frags"])) / battleCount;
                 double avgDef = (ConvertDbVal2Double(battleData["def"])) / battleCount;
-                double avgWinRate = (ConvertDbVal2Double(battleData["victory"])) / battleCount;
+                double avgWinRate = (ConvertDbVal2Double(battleData["victory"])) / battleCount * 100;
                 // get wn8 exp values for tank
                 double expDmg = Convert.ToDouble(tankInfo["expDmg"]);
                 double expSpot = Convert.ToDouble(tankInfo["expSpot"]);
@@ -88,7 +88,7 @@ namespace WotDBUpdater
                 double rSPOTc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rSPOT - 0.38) / (1 - 0.38)));
                 double rDEFc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rDEF - 0.10) / (1 - 0.10)));
                 // Step 3
-                WN8 = 980 * rDAMAGEc + 210 * rDAMAGEc * rFRAGc + 155 * rFRAGc * rSPOTc + 75 * rDEFc * rFRAGc + 145 * Math.Min(1.8, rWINc);
+                WN8 = (980 * rDAMAGEc) + (210 * rDAMAGEc * rFRAGc) + (155 * rFRAGc * rSPOTc) + (75 * rDEFc * rFRAGc) + (145 * Math.Min(1.8, rWINc));
                 // Return value
             }
             return Convert.ToInt32(WN8);
