@@ -168,12 +168,6 @@ namespace WotDBUpdater.Forms
             frm.ShowDialog();
         }
 
-        private void importTanksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.File.ImportTank();
-            frm.ShowDialog();
-        }
-
         private void showDatabaseTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form frm = new Forms.Reports.DBTable();
@@ -188,7 +182,7 @@ namespace WotDBUpdater.Forms
 
         private void listTanksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = TankData.listTanks();
+            string s = TankData.ListTanks();
             MessageBox.Show(s);
         }
 
@@ -243,6 +237,12 @@ namespace WotDBUpdater.Forms
         {
             Form frm = new Forms.Test.TestProgressBar();
             frm.Show();
+        }
+
+        private void importTankWn8ExpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.ImportTank();
+            frm.ShowDialog();
         }
 
         

@@ -38,8 +38,6 @@
             this.selectDossierFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databaseSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.importTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showDatabaseViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +56,9 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.importTankWn8ExpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -130,8 +131,6 @@
             this.selectDossierFileToolStripMenuItem,
             this.databaseSettingsToolStripMenuItem,
             this.toolStripSeparator2,
-            this.importTanksToolStripMenuItem,
-            this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -155,18 +154,6 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(176, 6);
-            // 
-            // importTanksToolStripMenuItem
-            // 
-            this.importTanksToolStripMenuItem.Name = "importTanksToolStripMenuItem";
-            this.importTanksToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.importTanksToolStripMenuItem.Text = "Import tanks";
-            this.importTanksToolStripMenuItem.Click += new System.EventHandler(this.importTanksToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(176, 6);
             // 
             // exitToolStripMenuItem
             // 
@@ -205,10 +192,13 @@
             this.addCountryToTableToolStripMenuItem,
             this.toolStripSeparator3,
             this.listTanksToolStripMenuItem,
-            this.testURLToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.importTankWn8ExpToolStripMenuItem,
             this.testReadModuleDataToolStripMenuItem,
             this.importGunsToolStripMenuItem,
             this.importRadiosToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.testURLToolStripMenuItem,
             this.testProgressBarToolStripMenuItem});
             this.testingToolStripMenuItem.Name = "testingToolStripMenuItem";
             this.testingToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
@@ -310,6 +300,23 @@
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(210, 6);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(210, 6);
+            // 
+            // importTankWn8ExpToolStripMenuItem
+            // 
+            this.importTankWn8ExpToolStripMenuItem.Name = "importTankWn8ExpToolStripMenuItem";
+            this.importTankWn8ExpToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.importTankWn8ExpToolStripMenuItem.Text = "Import tank & wn8 exp";
+            this.importTankWn8ExpToolStripMenuItem.Click += new System.EventHandler(this.importTankWn8ExpToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -348,7 +355,6 @@
         private System.Windows.Forms.MenuStrip menuMain;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectDossierFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -357,7 +363,6 @@
         private System.Windows.Forms.ToolStripMenuItem showCountryTableInGridToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addCountryToTableToolStripMenuItem;
         private System.Windows.Forms.Button btnTestPrev;
-        private System.Windows.Forms.ToolStripMenuItem importTanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showDatabaseTableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showDatabaseViewToolStripMenuItem;
@@ -370,6 +375,9 @@
         private System.Windows.Forms.ToolStripMenuItem importGunsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRadiosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testProgressBarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem importTankWn8ExpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 

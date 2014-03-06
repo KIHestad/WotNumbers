@@ -93,12 +93,12 @@ namespace WotDBUpdater
         #region LookupData
 
         // TODO: just for testing
-        public static string listTanks()
+        public static string ListTanks()
         {
             string s = "";
             foreach (DataRow dr in tankList.Rows)
             {
-                s += dr["id"] + " : " + dr["name"] + "\n";
+                s += dr["id"] + ":" + dr["name"] + ", ";
             }
             return s;
         }
