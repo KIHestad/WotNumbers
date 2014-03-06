@@ -13,9 +13,9 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Forms.File
 {
-    public partial class frmDatabaseNew : Form
+    public partial class DatabaseNew : Form
     {
-        public frmDatabaseNew()
+        public DatabaseNew()
         {
             InitializeComponent();
         }
@@ -94,7 +94,7 @@ namespace WotDBUpdater.Forms.File
                     // Get tanks, remember to init tankList first
                     TankData.GetTankListFromDB();
                     Application.DoEvents();
-                    importTanks2DB.UpdateTanks();
+                    ImportTanks2DB.UpdateTanks();
                     Application.DoEvents();
                     // Init after getting tanks and other basic data import
                     TankData.GetTankListFromDB();
@@ -102,16 +102,16 @@ namespace WotDBUpdater.Forms.File
                     TankData.GettankData2BattleMappingViewFromDB();
                     UpdateProgressBar(ref step, maxStep);
                     // Get turret
-                    modules2DB.importTurrets();
+                    Modules2DB.ImportTurrets();
                     UpdateProgressBar(ref step, maxStep);
                     // Get guns
-                    modules2DB.importGuns();
+                    Modules2DB.ImportGuns();
                     UpdateProgressBar(ref step, maxStep);
                     // Get radios
-                    modules2DB.importRadios();
+                    Modules2DB.ImportRadios();
                     UpdateProgressBar(ref step, maxStep);
                     // Get WN8 ratings
-                    importTanks2DB.UpdateWN8();
+                    ImportTanks2DB.UpdateWN8();
                     UpdateProgressBar(ref step, maxStep);
                     // Add player
                     if (txtPlayerName.Text.Trim() != "")

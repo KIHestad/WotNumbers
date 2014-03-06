@@ -10,12 +10,12 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Forms.Test
 {
-    public partial class frmTestProgressBar : Form
+    public partial class TestProgressBar : Form
     {
 
         private readonly BackgroundWorker _bw = new BackgroundWorker();
 
-        public frmTestProgressBar()
+        public TestProgressBar()
         {
             InitializeComponent();
 
@@ -34,7 +34,7 @@ namespace WotDBUpdater.Forms.Test
 
         private static void Import(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            importTanks2DB.UpdateWN8();
+            ImportTanks2DB.UpdateWN8();
             MessageBox.Show("Update complete");
         }
 

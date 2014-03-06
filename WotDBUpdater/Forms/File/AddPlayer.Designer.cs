@@ -1,6 +1,6 @@
 ﻿namespace WotDBUpdater.Forms.File
 {
-    partial class frmAddPlayer
+    partial class AddPlayer
     {
         /// <summary>
         /// Required designer variable.

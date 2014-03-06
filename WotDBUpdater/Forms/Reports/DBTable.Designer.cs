@@ -1,6 +1,6 @@
 ﻿namespace WotDBUpdater.Forms.Reports
 {
-    partial class frmDBTable
+    partial class DBTable
     {
         /// <summary>
         /// Required designer variable.

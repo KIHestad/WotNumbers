@@ -1,6 +1,6 @@
-﻿namespace WotDBUpdater
+﻿namespace WotDBUpdater.Forms.Test
 {
-    partial class frmAddCountryToTable
+    partial class AddCountryToTable
     {
         /// <summary>
         /// Required designer variable.

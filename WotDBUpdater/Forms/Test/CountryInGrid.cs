@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Forms.Test
 {
-    public partial class frmCountryInGrid : Form
+    public partial class CountryInGrid : Form
     {
-        public frmCountryInGrid()
+        public CountryInGrid()
         {
             InitializeComponent();
         }

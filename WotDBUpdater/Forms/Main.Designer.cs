@@ -1,6 +1,6 @@
-﻿namespace WotDBUpdater
+﻿namespace WotDBUpdater.Forms
 {
-    partial class frmMain
+    partial class Main
     {
         /// <summary>
         /// Required designer variable.

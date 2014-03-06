@@ -1,6 +1,6 @@
 ﻿namespace WotDBUpdater.Forms.Test
 {
-    partial class frmTestProgressBar
+    partial class TestProgressBar
     {
         /// <summary>
         /// Required designer variable.

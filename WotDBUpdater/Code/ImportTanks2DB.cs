@@ -14,7 +14,7 @@ using System.Net;
 
 namespace WotDBUpdater
 {
-    public static class importTanks2DB
+    public static class ImportTanks2DB
     {
 
         private static string LogText(string logtext)
@@ -24,7 +24,7 @@ namespace WotDBUpdater
 
         
         
-        public static String fetchDataFromFile(string type)
+        public static String FetchDataFromFile(string type)
         {
             string appPath = Path.GetDirectoryName(Application.ExecutablePath);
             string jsonfile = "";
@@ -73,7 +73,7 @@ namespace WotDBUpdater
 
         public static List<string> UpdateTanks()
         {
-            String s = "{items:" + fetchDataFromFile("tanks") + "}";
+            String s = "{items:" + FetchDataFromFile("tanks") + "}";
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             con.Open();
 
@@ -162,7 +162,7 @@ namespace WotDBUpdater
 
         public static String UpdateWN8()
         {
-            String json = fetchDataFromFile("WN8");
+            String json = FetchDataFromFile("WN8");
             string sql = "";
             string tankId = "";
             string expFrags = "";

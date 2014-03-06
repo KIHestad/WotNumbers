@@ -18,11 +18,11 @@ using System.Net;
 //using Microsoft.Scripting.Hosting;
 //using IronPython.Runtime;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Forms
 {
-    public partial class frmMain : Form
+    public partial class Main : Form
     {
-        public frmMain()
+        public Main()
         {
             InitializeComponent();
         }
@@ -133,7 +133,7 @@ namespace WotDBUpdater
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new frmAbout();
+            Form frm = new Forms.Help.About();
             frm.ShowDialog();
         }
 
@@ -144,7 +144,7 @@ namespace WotDBUpdater
 
         private void selectApplicationSetting_Click(object sender, EventArgs e)
         {
-            Form frm = new frmApplicationSetting();
+            Form frm = new Forms.File.ApplicationSetting();
             frm.ShowDialog();
             SetFormTitle();
             // Init
@@ -152,37 +152,37 @@ namespace WotDBUpdater
 
         private void databaseSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new frmDatabaseSetting();
+            Form frm = new Forms.File.DatabaseSetting();
             frm.ShowDialog();
         }
 
         private void showTankTableInGridToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new frmCountryInGrid();
+            Form frm = new Forms.Test.CountryInGrid();
             frm.ShowDialog();
         }
 
         private void addCountryToTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new frmAddCountryToTable();
+            Form frm = new Forms.Test.AddCountryToTable();
             frm.ShowDialog();
         }
 
         private void importTanksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new frmImportTank();
+            Form frm = new Forms.File.ImportTank();
             frm.ShowDialog();
         }
 
         private void showDatabaseTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.Reports.frmDBTable();
+            Form frm = new Forms.Reports.DBTable();
             frm.Show();
         }
 
         private void showDatabaseViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.Reports.frmDBView();
+            Form frm = new Forms.Reports.DBView();
             frm.Show();
         }
 
@@ -223,25 +223,25 @@ namespace WotDBUpdater
 
         private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = modules2DB.importTurrets();
+            string s = Modules2DB.ImportTurrets();
             MessageBox.Show(s);
         }
 
         private void importGunsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = modules2DB.importGuns();
+            string s = Modules2DB.ImportGuns();
             MessageBox.Show(s);
         }
 
         private void importRadiosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = modules2DB.importRadios();
+            string s = Modules2DB.ImportRadios();
             MessageBox.Show(s);
         }
 
         private void testProgressBarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.Test.frmTestProgressBar();
+            Form frm = new Forms.Test.TestProgressBar();
             frm.Show();
         }
 

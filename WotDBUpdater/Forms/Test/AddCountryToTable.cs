@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Forms.Test
 {
-    public partial class frmAddCountryToTable : Form
+    public partial class AddCountryToTable : Form
     {
-        public frmAddCountryToTable()
+        public AddCountryToTable()
         {
             InitializeComponent();
         }

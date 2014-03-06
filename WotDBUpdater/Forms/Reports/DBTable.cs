@@ -11,45 +11,52 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Forms.Reports
 {
-    public partial class frmDBView : Form
+    public partial class DBTable : Form
     {
-        public frmDBView()
+        public DBTable()
         {
             InitializeComponent();
-
         }
 
-        private void frmDBView_Load(object sender, EventArgs e)
+        private void frmDBTable_Load(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             con.Open();
-            SqlCommand cmd = new SqlCommand("SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.views ORDER BY TableName", con);
+            SqlCommand cmd = new SqlCommand("SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.tables ORDER BY TableName", con);
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            DataTable dt=new DataTable();
             da.Fill(dt);
             cmd.Dispose();
             con.Close();
-            ddSelectView.DataSource = dt;
-            ddSelectView.DisplayMember = "TableName";
-            ddSelectView.ValueMember = "TableName";
+            ddSelectTable.DataSource = dt;
+            ddSelectTable.DisplayMember = "TableName";
+            ddSelectTable.ValueMember = "TableName";
         }
 
-        
-
-        private void frmDBView_SizeChanged(object sender, EventArgs e)
+        private void ddSelectTable_SelectedValueChanged(object sender, EventArgs e)
         {
-            panel2.Height = frmDBView.ActiveForm.ClientSize.Height - panel1.Height;
+            RefreshDataGrid();
         }
 
-                private void RefreshDataGrid()
+        private void frmDBTable_SizeChanged(object sender, EventArgs e)
+        {
+            panel2.Height = DBTable.ActiveForm.ClientSize.Height - panel1.Height;
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshDataGrid();
+        }
+
+        private void RefreshDataGrid()
         {
             try
             {
-                string TableName = ddSelectView.SelectedValue.ToString();
+                string TableName = ddSelectTable.SelectedValue.ToString();
                 if (TableName == "( Select from list )")
                 {
-                    dataGridViewShowView.DataSource = null;
+                    dataGridViewShowTable.DataSource = null;
                 }
                 else
                 {
@@ -59,7 +66,7 @@ namespace WotDBUpdater.Forms.Reports
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
-                    dataGridViewShowView.DataSource = dt;
+                    dataGridViewShowTable.DataSource = dt;
                 }
             }
             catch (Exception)
@@ -67,20 +74,6 @@ namespace WotDBUpdater.Forms.Reports
                 // nothing
             }
         }
-
-       
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            RefreshDataGrid();
-        }
-
-        private void ddSelectView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            RefreshDataGrid();
-        }
-
-        
      
     }
 }

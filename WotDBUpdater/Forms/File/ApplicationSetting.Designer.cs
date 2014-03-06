@@ -1,6 +1,6 @@
-﻿namespace WotDBUpdater
+﻿namespace WotDBUpdater.Forms.File
 {
-    partial class frmApplicationSetting
+    partial class ApplicationSetting
     {
         /// <summary>
         /// Required designer variable.

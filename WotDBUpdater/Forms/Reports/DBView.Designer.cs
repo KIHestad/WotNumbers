@@ -1,6 +1,6 @@
 ﻿namespace WotDBUpdater.Forms.Reports
 {
-    partial class frmDBView
+    partial class DBView
     {
         /// <summary>
         /// Required designer variable.

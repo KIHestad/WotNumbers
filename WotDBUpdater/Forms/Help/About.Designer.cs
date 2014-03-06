@@ -1,6 +1,6 @@
-﻿namespace WotDBUpdater
+﻿namespace WotDBUpdater.Forms.Help
 {
-    partial class frmAbout
+    partial class About
     {
         /// <summary>
         /// Required designer variable.

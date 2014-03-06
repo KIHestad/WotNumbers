@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Forms.File
 {
-    public partial class frmApplicationSetting : Form
+    public partial class ApplicationSetting : Form
     {
-        public frmApplicationSetting()
+        public ApplicationSetting()
         {
             InitializeComponent();
         }
@@ -87,7 +87,7 @@ namespace WotDBUpdater
 
         private void btnAddPlayer_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.File.frmAddPlayer();
+            Form frm = new Forms.File.AddPlayer();
             frm.ShowDialog();
             UpdatePlayerList();
         }

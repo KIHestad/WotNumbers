@@ -1,6 +1,6 @@
-﻿namespace WotDBUpdater.Forms
+﻿namespace WotDBUpdater.Forms.File
 {
-    partial class frmImportTank
+    partial class ImportTank
     {
         /// <summary>
         /// Required designer variable.

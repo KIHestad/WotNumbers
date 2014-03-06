@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WotDBUpdater.Business.Logic
+namespace WotDBUpdater
 {
-    class ratings
+    class Ratings
     {
-        public static void efficiancy()
+        public static void Efficiancy()
         {
             //SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             //SqlCommand cmd = new SqlCommand("SELECT * FROM country", con);

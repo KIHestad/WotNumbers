@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater
 {
-    class modules2DB
+    class Modules2DB
     {
         /* 
          * Import functions for tank modules
@@ -24,7 +24,7 @@ namespace WotDBUpdater
 
         #region fetchFromAPI
 
-        public static String fetchFromAPI(string moduleType)
+        public static String FetchFromAPI(string moduleType)
         {
             Log.LogToFile("test");
             string url = "";
@@ -58,9 +58,9 @@ namespace WotDBUpdater
 
         #region importTurrets
 
-        public static String importTurrets()
+        public static String ImportTurrets()
         {
-            string json = fetchFromAPI("turret");
+            string json = FetchFromAPI("turret");
             int moduleCount;
             JToken rootToken;
             JToken moduleToken;
@@ -126,9 +126,9 @@ namespace WotDBUpdater
 
         #region importGuns
 
-        public static String importGuns()
+        public static String ImportGuns()
         {
-            string json = fetchFromAPI("gun");
+            string json = FetchFromAPI("gun");
             int moduleCount;
             JToken rootToken;
             JToken moduleToken;
@@ -228,9 +228,9 @@ namespace WotDBUpdater
 
         #region importRadios
 
-        public static String importRadios()
+        public static String ImportRadios()
         {
-            string json = fetchFromAPI("radio");
+            string json = FetchFromAPI("radio");
             int moduleCount;
             JToken rootToken;
             JToken moduleToken;

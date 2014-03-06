@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater.Forms
+namespace WotDBUpdater.Forms.File
 {
-    public partial class frmImportTank : Form
+    public partial class ImportTank : Form
     {
-        public frmImportTank()
+        public ImportTank()
         {
             InitializeComponent();
         }
@@ -40,7 +40,7 @@ namespace WotDBUpdater.Forms
             //List<string> result = importTanks2DB.importTanks();
             //Log(result);
             //importTanks2DB.fetchTanks();
-            List<string> log = importTanks2DB.UpdateTanks();
+            List<string> log = ImportTanks2DB.UpdateTanks();
             foreach (string item in log)
             {
                 listBoxLog.Items.Add(item);
@@ -51,7 +51,7 @@ namespace WotDBUpdater.Forms
 
         private void btnUpdateWN8_Click(object sender, EventArgs e)
         {
-            importTanks2DB.UpdateWN8();
+            ImportTanks2DB.UpdateWN8();
             MessageBox.Show("Update complete");
         }
     }

@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Forms.File
 {
-    public partial class frmAddPlayer : Form
+    public partial class AddPlayer : Form
     {
-        public frmAddPlayer()
+        public AddPlayer()
         {
             InitializeComponent();
         }

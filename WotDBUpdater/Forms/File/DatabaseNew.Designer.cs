@@ -1,6 +1,6 @@
 ﻿namespace WotDBUpdater.Forms.File
 {
-    partial class frmDatabaseNew
+    partial class DatabaseNew
     {
         /// <summary>
         /// Required designer variable.

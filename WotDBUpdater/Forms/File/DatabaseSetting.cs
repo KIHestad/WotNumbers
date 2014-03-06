@@ -9,13 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Forms.File
 {
-    public partial class frmDatabaseSetting : Form
+    public partial class DatabaseSetting : Form
     {
         private bool changedDbConfig = true;
         
-        public frmDatabaseSetting()
+        public DatabaseSetting()
         {
             InitializeComponent();
         }
@@ -121,7 +121,7 @@ namespace WotDBUpdater
 
         private void btnNewDatabase_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.File.frmDatabaseNew();
+            Form frm = new Forms.File.DatabaseNew();
             frm.ShowDialog();
             LoadConfig();
         }

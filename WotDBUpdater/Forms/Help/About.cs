@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Forms.Help
 {
-    public partial class frmAbout : Form
+    public partial class About : Form
     {
-        public frmAbout()
+        public About()
         {
             InitializeComponent();
         }

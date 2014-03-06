@@ -75,86 +75,86 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business.Logic\ratings.cs" />
-    <Compile Include="Business.Logic\Support\Config.cs" />
-    <Compile Include="Business.Logic\Dossier2json.cs" />
-    <Compile Include="Forms\File\frmAddPlayer.cs">
+    <Compile Include="Code\Ratings.cs" />
+    <Compile Include="Code\Support\Config.cs" />
+    <Compile Include="Code\Dossier2json.cs" />
+    <Compile Include="Forms\File\AddPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\frmAddPlayer.Designer.cs">
-      <DependentUpon>frmAddPlayer.cs</DependentUpon>
+    <Compile Include="Forms\File\AddPlayer.Designer.cs">
+      <DependentUpon>AddPlayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\frmDatabaseNew.cs">
+    <Compile Include="Forms\File\DatabaseNew.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\frmDatabaseNew.Designer.cs">
-      <DependentUpon>frmDatabaseNew.cs</DependentUpon>
+    <Compile Include="Forms\File\DatabaseNew.Designer.cs">
+      <DependentUpon>DatabaseNew.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Help\frmAbout.cs">
+    <Compile Include="Forms\Help\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Help\frmAbout.Designer.cs">
-      <DependentUpon>frmAbout.cs</DependentUpon>
+    <Compile Include="Forms\Help\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Test\frmAddCountryToTable.cs">
+    <Compile Include="Forms\Test\AddCountryToTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Test\frmAddCountryToTable.Designer.cs">
-      <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
+    <Compile Include="Forms\Test\AddCountryToTable.Designer.cs">
+      <DependentUpon>AddCountryToTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\frmDatabaseSetting.cs">
+    <Compile Include="Forms\File\DatabaseSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\frmDatabaseSetting.Designer.cs">
-      <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
+    <Compile Include="Forms\File\DatabaseSetting.Designer.cs">
+      <DependentUpon>DatabaseSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\frmApplicationSetting.cs">
+    <Compile Include="Forms\File\ApplicationSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\frmApplicationSetting.Designer.cs">
-      <DependentUpon>frmApplicationSetting.cs</DependentUpon>
+    <Compile Include="Forms\File\ApplicationSetting.Designer.cs">
+      <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\frmImportTank.cs">
+    <Compile Include="Forms\File\ImportTank.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\frmImportTank.Designer.cs">
-      <DependentUpon>frmImportTank.cs</DependentUpon>
+    <Compile Include="Forms\File\ImportTank.Designer.cs">
+      <DependentUpon>ImportTank.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmMain.cs">
+    <Compile Include="Forms\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
+    <Compile Include="Forms\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Test\frmCountryInGrid.cs">
+    <Compile Include="Forms\Test\CountryInGrid.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Test\frmCountryInGrid.Designer.cs">
-      <DependentUpon>frmCountryInGrid.cs</DependentUpon>
+    <Compile Include="Forms\Test\CountryInGrid.Designer.cs">
+      <DependentUpon>CountryInGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Reports\frmDBTable.cs">
+    <Compile Include="Forms\Reports\DBTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Reports\frmDBTable.Designer.cs">
-      <DependentUpon>frmDBTable.cs</DependentUpon>
+    <Compile Include="Forms\Reports\DBTable.Designer.cs">
+      <DependentUpon>DBTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Reports\frmDBView.cs">
+    <Compile Include="Forms\Reports\DBView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Reports\frmDBView.Designer.cs">
-      <DependentUpon>frmDBView.cs</DependentUpon>
+    <Compile Include="Forms\Reports\DBView.Designer.cs">
+      <DependentUpon>DBView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business.Logic\importTanks2DB.cs" />
-    <Compile Include="Business.Logic\Dossier2db.cs" />
-    <Compile Include="Business.Logic\Support\Log.cs" />
-    <Compile Include="Business.Logic\mudules2DB.cs" />
-    <Compile Include="Forms\Test\frmTestProgressBar.cs">
+    <Compile Include="Code\ImportTanks2DB.cs" />
+    <Compile Include="Code\Dossier2db.cs" />
+    <Compile Include="Code\Support\Log.cs" />
+    <Compile Include="Code\Mudules2DB.cs" />
+    <Compile Include="Forms\Test\TestProgressBar.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Test\frmTestProgressBar.Designer.cs">
-      <DependentUpon>frmTestProgressBar.cs</DependentUpon>
+    <Compile Include="Forms\Test\TestProgressBar.Designer.cs">
+      <DependentUpon>TestProgressBar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business.Logic\Wn8Test.cs" />
+    <Compile Include="Code\Wn8Test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
@@ -162,42 +162,42 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Business.Logic\TankData.cs" />
-    <EmbeddedResource Include="Forms\File\frmAddPlayer.resx">
-      <DependentUpon>frmAddPlayer.cs</DependentUpon>
+    <Compile Include="Code\TankData.cs" />
+    <EmbeddedResource Include="Forms\File\AddPlayer.resx">
+      <DependentUpon>AddPlayer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\frmDatabaseNew.resx">
-      <DependentUpon>frmDatabaseNew.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\File\DatabaseNew.resx">
+      <DependentUpon>DatabaseNew.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Help\frmAbout.resx">
-      <DependentUpon>frmAbout.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Help\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\frmAddCountryToTable.resx">
-      <DependentUpon>frmAddCountryToTable.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Test\AddCountryToTable.resx">
+      <DependentUpon>AddCountryToTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\frmDatabaseSetting.resx">
-      <DependentUpon>frmDatabaseSetting.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\File\DatabaseSetting.resx">
+      <DependentUpon>DatabaseSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\frmApplicationSetting.resx">
-      <DependentUpon>frmApplicationSetting.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\File\ApplicationSetting.resx">
+      <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\frmImportTank.resx">
-      <DependentUpon>frmImportTank.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\File\ImportTank.resx">
+      <DependentUpon>ImportTank.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmMain.resx">
-      <DependentUpon>frmMain.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\frmCountryInGrid.resx">
-      <DependentUpon>frmCountryInGrid.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Test\CountryInGrid.resx">
+      <DependentUpon>CountryInGrid.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Reports\frmDBTable.resx">
-      <DependentUpon>frmDBTable.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Reports\DBTable.resx">
+      <DependentUpon>DBTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Reports\frmDBView.resx">
-      <DependentUpon>frmDBView.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Reports\DBView.resx">
+      <DependentUpon>DBView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\frmTestProgressBar.resx">
-      <DependentUpon>frmTestProgressBar.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Test\TestProgressBar.resx">
+      <DependentUpon>TestProgressBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

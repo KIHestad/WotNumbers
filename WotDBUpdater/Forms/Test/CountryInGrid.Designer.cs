@@ -1,6 +1,6 @@
-﻿namespace WotDBUpdater
+﻿namespace WotDBUpdater.Forms.Test
 {
-    partial class frmCountryInGrid
+    partial class CountryInGrid
     {
         /// <summary>
         /// Required designer variable.
