@@ -202,7 +202,7 @@ namespace WotDBUpdater
                 if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
                 {
                     // New battle detected, update tankData in DB
-                    UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, (NewPlayerTankRow_battles15 + NewPlayerTankRow_battles7));
+                    UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
                     // If new battle on this tank also update battle table to store result of last battle(s)
                     if (battlessNew15 != 0 || battlessNew7 != 0)
                     {
@@ -225,12 +225,12 @@ namespace WotDBUpdater
             con.Close();
         }
 
-        private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int totalBattleCount)
+        private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battleCount15, int battleCount7)
         {
             // Get fields to update
             string sqlFields = "";
             // Calculate WN8
-            sqlFields += "wn8=" + Wn8Test.CalculatePlayerTankWn8(tankId, totalBattleCount, NewPlayerTankRow);
+            sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, battleCount15 , Rating.BattleMode.Random15, NewPlayerTankRow);
             foreach (DataColumn column in OldPlayerTankTable.Columns)
             {
                 // Get columns and values from NewPlayerTankRow direct
@@ -337,7 +337,7 @@ namespace WotDBUpdater
             if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
             // Calculate WN8
             sqlFields += ", wn8";
-            sqlValues += ", " + Wn8Test.CalculateBattleWn8(tankId, (battlessNew15 + battlessNew7), NewbattleRow);
+            sqlValues += ", " + Rating.CalculateBattleWn8(tankId, (battlessNew15 + battlessNew7), NewbattleRow);
             // Update database
             if (sqlFields.Length > 0)
             {

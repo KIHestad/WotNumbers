@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace WotDBUpdater
 {
-    class Wn8Test
+    class Rating
     {
+        public static class BattleMode
+        {
+            public static string Random15 = "15";
+            public static string Team7 = "7";
+            public static string Random15andTeam7 = "15_7";
+        }
+        
         private static double ConvertDbVal2Double(object dbValue)
         {
             double value = 0;
@@ -20,18 +27,34 @@ namespace WotDBUpdater
             return value;
         }
         
-        public static double CalculatePlayerTankWn8(int tankId, int totalBattleCount, DataRow playerTankData)
+        public static double CalculatePlayerTankWn8(int tankId, int totalBattleCount, string battlemode, DataRow playerTankData)
         {
             Double WN8 = 0;
             // get tankdata for current tank
             DataRow tankInfo = TankData.TankInfo(tankId);
             if (tankInfo != null && totalBattleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
             {
-                double avgDmg = (ConvertDbVal2Double(playerTankData["dmg15"]) + ConvertDbVal2Double(playerTankData["dmg7"])) / totalBattleCount;
-                double avgSpot = (ConvertDbVal2Double(playerTankData["spot15"]) + ConvertDbVal2Double(playerTankData["spot7"])) / totalBattleCount;
-                double avgFrag = (ConvertDbVal2Double(playerTankData["frags15"]) + ConvertDbVal2Double(playerTankData["frags7"])) / totalBattleCount;
-                double avgDef = (ConvertDbVal2Double(playerTankData["def15"]) + ConvertDbVal2Double(playerTankData["def7"])) / totalBattleCount;
-                double avgWinRate = (ConvertDbVal2Double(playerTankData["wins15"]) + ConvertDbVal2Double(playerTankData["wins7"])) / totalBattleCount * 100;
+                double avgDmg = 0;
+                double avgSpot = 0;
+                double avgFrag = 0;
+                double avgDef = 0;
+                double avgWinRate = 0;
+                if (battlemode == BattleMode.Random15andTeam7)
+                {
+                     avgDmg = (ConvertDbVal2Double(playerTankData["dmg15"]) + ConvertDbVal2Double(playerTankData["dmg7"])) / totalBattleCount;
+                     avgSpot = (ConvertDbVal2Double(playerTankData["spot15"]) + ConvertDbVal2Double(playerTankData["spot7"])) / totalBattleCount;
+                     avgFrag = (ConvertDbVal2Double(playerTankData["frags15"]) + ConvertDbVal2Double(playerTankData["frags7"])) / totalBattleCount;
+                     avgDef = (ConvertDbVal2Double(playerTankData["def15"]) + ConvertDbVal2Double(playerTankData["def7"])) / totalBattleCount;
+                     avgWinRate = (ConvertDbVal2Double(playerTankData["wins15"]) + ConvertDbVal2Double(playerTankData["wins7"])) / totalBattleCount * 100;
+                }
+                else
+                {
+                     avgDmg = ConvertDbVal2Double(playerTankData["dmg" + battlemode.ToString()])  / totalBattleCount;
+                     avgSpot = ConvertDbVal2Double(playerTankData["spot" + battlemode.ToString()]) / totalBattleCount;
+                     avgFrag = ConvertDbVal2Double(playerTankData["frags" + battlemode.ToString()])  / totalBattleCount;
+                     avgDef = ConvertDbVal2Double(playerTankData["def" + battlemode.ToString()]) / totalBattleCount;
+                     avgWinRate = ConvertDbVal2Double(playerTankData["wins" + battlemode.ToString()]) / totalBattleCount * 100;
+                }
                 // get wn8 exp values for tank
                 double expDmg = Convert.ToDouble(tankInfo["expDmg"]);
                 double expSpot = Convert.ToDouble(tankInfo["expSpot"]);
