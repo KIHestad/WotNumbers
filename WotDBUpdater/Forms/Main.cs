@@ -121,7 +121,7 @@ namespace WotDBUpdater.Forms
         {
             try
             {
-                MessageBox.Show(listBoxLog.Items[listBoxLog.SelectedIndex].ToString(), "Log Details");
+                MessageBoxEx.Show(this, listBoxLog.Items[listBoxLog.SelectedIndex].ToString(), "Log Details");
             }
             catch (Exception)
             {
@@ -183,7 +183,7 @@ namespace WotDBUpdater.Forms
         private void listTanksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = TankData.ListTanks();
-            MessageBox.Show(s);
+            MessageBoxEx.Show(this, s);
         }
 
         private void testURLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -198,7 +198,7 @@ namespace WotDBUpdater.Forms
             StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 
             string content = responseStream.ReadToEnd();
-            MessageBox.Show(content);
+            MessageBoxEx.Show(this, content);
         }
 
         private void btntestForce_Click(object sender, EventArgs e)
@@ -218,19 +218,19 @@ namespace WotDBUpdater.Forms
         private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = Modules2DB.ImportTurrets();
-            MessageBox.Show(s);
+            MessageBoxEx.Show(this, s);
         }
 
         private void importGunsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = Modules2DB.ImportGuns();
-            MessageBox.Show(s);
+            MessageBoxEx.Show(this, s);
         }
 
         private void importRadiosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = Modules2DB.ImportRadios();
-            MessageBox.Show(s);
+            MessageBoxEx.Show(this, s);
         }
 
         private void testProgressBarToolStripMenuItem_Click(object sender, EventArgs e)

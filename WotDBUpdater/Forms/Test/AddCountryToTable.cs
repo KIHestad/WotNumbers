@@ -34,7 +34,7 @@ namespace WotDBUpdater.Forms.Test
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBoxEx.Show(this, ex.Message);
             }
         }
     }

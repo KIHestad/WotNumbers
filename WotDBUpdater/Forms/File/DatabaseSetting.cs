@@ -94,14 +94,14 @@ namespace WotDBUpdater.Forms.File
                 string msg = "";
                 bool saveOk = false;
                 saveOk = Config.SaveDbConfig(out msg);
-                MessageBox.Show(msg, "Save database settings");
+                MessageBoxEx.Show(this, msg, "Save database settings");
                 if (saveOk)
                 {
                     // Init
                     TankData.GetTankListFromDB();
                     TankData.GetJson2dbMappingViewFromDB();
                     TankData.GettankData2BattleMappingViewFromDB();
-                    //Form.ActiveForm.Close();
+                    Form.ActiveForm.Close();
                 }
             }
         }

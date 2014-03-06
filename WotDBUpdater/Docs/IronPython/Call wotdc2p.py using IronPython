@@ -46,6 +46,6 @@
             //}
             //catch (Exception ex)
             //{
-            //    MessageBox.Show(ex.Message, "Dossier2Jason");
+            //    MessageBoxEx.Show(this, ex.Message, "Dossier2Jason");
             //}
             //engine.ExecuteFile(dossier2jsonfile + " " + dossierfile + " -f -r");

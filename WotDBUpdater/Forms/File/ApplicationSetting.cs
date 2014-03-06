@@ -78,7 +78,7 @@ namespace WotDBUpdater.Forms.File
             string msg = "";
             bool saveOk = false;
             saveOk = Config.SaveAppConfig(out msg);
-            MessageBox.Show(msg, "Save application settings");
+            MessageBoxEx.Show(this, msg, "Application settings saved");
             if (saveOk) 
             {
                 Form.ActiveForm.Close();
@@ -94,7 +94,7 @@ namespace WotDBUpdater.Forms.File
 
         private void btnRemovePlayer_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure you want to remove player: " + cboPlayer.Text + " ?", "Remove player", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBoxEx.Show(this, "Are you sure you want to remove player: " + cboPlayer.Text + " ?", "Remove player", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 try
@@ -105,12 +105,12 @@ namespace WotDBUpdater.Forms.File
                     cmd.Parameters.AddWithValue("@name", cboPlayer.Text);
                     cmd.ExecuteNonQuery();
                     con.Close();
-                    MessageBox.Show("Player successfully removed.", "Player removed");
+                    MessageBoxEx.Show(this, "Player successfully removed.", "Player removed");
                     UpdatePlayerList();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Cannot remove this player, probaly because data is stored for the player. Only players without any data can be removed.\n\n" + ex.Message, "Cannot remove player");
+                    MessageBoxEx.Show(this, "Cannot remove this player, probaly because data is stored for the player. Only players without any data can be removed.\n\n" + ex.Message, "Cannot remove player");
                 }
             }
         }

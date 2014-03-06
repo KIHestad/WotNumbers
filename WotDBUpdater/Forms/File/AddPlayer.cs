@@ -23,7 +23,7 @@ namespace WotDBUpdater.Forms.File
             // Add to database
             if (txtPlayer.Text.Trim() == "")
             {
-                MessageBox.Show("Please add a player name before saving u noob... ^_^", "Cannot save nothing....");
+                MessageBoxEx.Show(this, "Please add a player name before saving u noob... ^_^", "Cannot save nothing....");
             }
             else
             {
@@ -35,11 +35,11 @@ namespace WotDBUpdater.Forms.File
                     cmd.Parameters.AddWithValue("@name", txtPlayer.Text.Trim());
                     cmd.ExecuteNonQuery();
                     con.Close();
-                    MessageBox.Show("New player successfully saved.", "New player added");
+                    MessageBoxEx.Show(this, "New player successfully saved.", "New player added");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error saving new player to database, check that this player name not already exists.\n\nError from database: " + ex.Message, "Error saving new player");
+                    MessageBoxEx.Show(this, "Error saving new player to database, check that this player name not already exists.\n\nError from database: " + ex.Message, "Error saving new player");
                 }
             }
         }

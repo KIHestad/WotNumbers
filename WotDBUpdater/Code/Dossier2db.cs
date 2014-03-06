@@ -43,6 +43,7 @@ namespace WotDBUpdater
                         
             // logging
             List<string> log = new List<string>();
+            Log.CheckLogFileSize();
 
             // Declare
             DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
@@ -134,7 +135,7 @@ namespace WotDBUpdater
                                         }
 
                                         // Temp log all data
-                                        //log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+                                        log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
                                         //log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
                                     }
                                 }

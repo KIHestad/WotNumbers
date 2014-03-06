@@ -49,7 +49,7 @@ namespace WotDBUpdater.Forms.File
             }
             if (dbExists)
             {
-                MessageBox.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
+                MessageBoxEx.Show(this, "Database with this name alreade exsits, choose another database name.", "Cannot create database");
             }
             else
             {
@@ -130,7 +130,7 @@ namespace WotDBUpdater.Forms.File
                     // Done
                     Cursor.Current = Cursors.Default;
                     Application.DoEvents();
-                    MessageBox.Show("Database created successfully.", "Created database");
+                    MessageBoxEx.Show(this, "Database created successfully.", "Created database");
                     pbCreateDatabase.Visible = false;
                     Form.ActiveForm.Close();
                 }
@@ -153,7 +153,7 @@ namespace WotDBUpdater.Forms.File
                     if (!Directory.GetParent(prevPath.FullName).Exists)
                     {
                         fileLocationExsits = false;
-                        MessageBox.Show("Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBoxEx.Show(this, "Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         pbCreateDatabase.Visible = false;
                     }
                     else
@@ -185,7 +185,7 @@ namespace WotDBUpdater.Forms.File
                 catch (System.Exception ex)
                 {
                     dbOk = false;
-                    MessageBox.Show("Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxEx.Show(this, "Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     pbCreateDatabase.Visible = false;
                 }
                 finally
