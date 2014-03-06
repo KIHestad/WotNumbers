@@ -174,52 +174,6 @@ namespace WotDBUpdater
             }
         }
 
-        // TODO: Check if using this model gives better perfomance and code than readJson
-        public static string ReadJson_ver2(string filename, bool ForceUpdate = false)
-        {
-            // Read file into string
-            StreamReader sr = new StreamReader(filename, Encoding.UTF8);
-            string json = sr.ReadToEnd();
-
-            // Time it and start logging
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            List<string> logtxt = new List<string>();
-            int i = 0;
-
-            // Read json using Newtonsoft JToken
-            JsonTextReader reader = new JsonTextReader(new StringReader(json));
-            JObject fileContent = JObject.Parse(json);
-            JToken rootToken = fileContent.First.Next;
-            if (((JProperty)rootToken).Name.ToString() == "tanks")
-            {
-                JToken tanksToken = rootToken.Children().First();
-                foreach (JProperty tanksItem in tanksToken.Children())
-                {
-                    i++;
-                    String tankname = tanksItem.Name.ToString() + " (v1 - row: " + i.ToString() + ")";
-                    logtxt.Add(tankname);
-                }
-            }
-            rootToken = fileContent.First.Next.Next;
-            if (((JProperty)rootToken).Name.ToString() == "tanks_v2")
-            {
-                JToken tanksToken = rootToken.Children().First();
-                foreach (JProperty tanksItem in tanksToken.Children())
-                {
-                    i++;
-                    String tankname = tanksItem.Name.ToString() + " (v2 - row: " + i.ToString() + ")";
-                    logtxt.Add(tankname);
-                }
-            }
-            // Finished, return time spent
-            sw.Stop();
-            Log.CheckLogFileSize();
-            Log.LogToFile(logtxt);
-            TimeSpan ts = sw.Elapsed;
-            return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000"));
-        }
-
         public static void SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, bool ForceUpdate = false)
         {
             // Get Tank ID

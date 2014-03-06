@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtConnStr = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtPwd = new System.Windows.Forms.TextBox();
@@ -50,24 +48,6 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 383);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Database Connection String:";
-            // 
-            // txtConnStr
-            // 
-            this.txtConnStr.Enabled = false;
-            this.txtConnStr.Location = new System.Drawing.Point(9, 402);
-            this.txtConnStr.Multiline = true;
-            this.txtConnStr.Name = "txtConnStr";
-            this.txtConnStr.Size = new System.Drawing.Size(313, 39);
-            this.txtConnStr.TabIndex = 1;
             // 
             // btnSave
             // 
@@ -239,11 +219,11 @@
             this.cboDatabaseName.TabIndex = 0;
             this.cboDatabaseName.Enter += new System.EventHandler(this.cboDatabaseName_Enter);
             // 
-            // frmDatabaseSetting
+            // DatabaseSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 454);
+            this.ClientSize = new System.Drawing.Size(340, 378);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnChangeServerType);
             this.Controls.Add(this.txtServerType);
@@ -252,12 +232,10 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtConnStr);
-            this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmDatabaseSetting";
+            this.Name = "DatabaseSetting";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Database Settings";
@@ -273,8 +251,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtConnStr;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtPwd;

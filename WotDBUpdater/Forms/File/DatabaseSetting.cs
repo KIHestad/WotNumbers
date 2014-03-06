@@ -34,7 +34,6 @@ namespace WotDBUpdater.Forms.File
             cboDatabaseName.Text = Config.Settings.databaseName;
             txtUid.Text = Config.Settings.databaseUid;
             txtPwd.Text = Config.Settings.databasePwd;
-            txtConnStr.Text = Config.DatabaseConnection();
             // UpdateAuthSettings
             UpdateLogin();
         }

@@ -122,12 +122,17 @@ namespace WotDBUpdater.Forms.File
                         UpdateProgressBar(ref step, maxStep);
                     }
                     UpdateProgressBar(ref step, maxStep);
-                    // Done
+                    // Done creating db, save settings
+                    string msg = "";
+                    Config.SaveDbConfig(out msg);
+                    Config.SaveAppConfig(out msg);
                     UpdateProgressBar(ref step, maxStep);
+                    // Done
                     Cursor.Current = Cursors.Default;
                     Application.DoEvents();
                     MessageBox.Show("Database created successfully.", "Created database");
                     pbCreateDatabase.Visible = false;
+                    Form.ActiveForm.Close();
                 }
             }
         }

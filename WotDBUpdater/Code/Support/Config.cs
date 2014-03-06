@@ -15,7 +15,6 @@ namespace WotDBUpdater
     [Serializable()]
     public class ConfigData
     {
-        public string databaseConn { get; set; }
         public string databaseServer { get; set; }
         public bool databaseWinAuth { get; set; }
         public string databaseUid { get; set; }
@@ -36,7 +35,6 @@ namespace WotDBUpdater
         private static void SetConfigDefaults(string message)
         {
             // Insert default values as settings
-            Config.Settings.databaseConn = "";
             Config.Settings.databaseServer = ".";
             Config.Settings.databaseWinAuth = true;
             Config.Settings.databaseUid = "";
@@ -135,9 +133,7 @@ namespace WotDBUpdater
                 }
                 reader.Close();
                 con.Close();
-                // TODO: Update connection string - fix later
-                Config.Settings.databaseConn = Config.DatabaseConnection();
-
+                
                 // Write new settings to XML
                 XmlSerializer writer = new XmlSerializer(typeof(ConfigData));
                 using (FileStream file = File.OpenWrite(configfile))

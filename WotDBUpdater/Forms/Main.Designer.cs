@@ -58,7 +58,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
-            this.btnTestAlt = new System.Windows.Forms.Button();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +77,7 @@
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.Location = new System.Drawing.Point(117, 41);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(336, 238);
+            this.listBoxLog.Size = new System.Drawing.Size(336, 199);
             this.listBoxLog.TabIndex = 4;
             this.listBoxLog.DoubleClick += new System.EventHandler(this.listBoxLog_DoubleClick);
             // 
@@ -311,22 +310,11 @@
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
             // 
-            // btnTestAlt
-            // 
-            this.btnTestAlt.Location = new System.Drawing.Point(18, 240);
-            this.btnTestAlt.Name = "btnTestAlt";
-            this.btnTestAlt.Size = new System.Drawing.Size(89, 34);
-            this.btnTestAlt.TabIndex = 13;
-            this.btnTestAlt.Text = "Test alternative";
-            this.btnTestAlt.UseVisualStyleBackColor = true;
-            this.btnTestAlt.Click += new System.EventHandler(this.btnTestAlt_Click);
-            // 
-            // frmMain
+            // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 293);
-            this.Controls.Add(this.btnTestAlt);
+            this.ClientSize = new System.Drawing.Size(469, 252);
             this.Controls.Add(this.btntestForce);
             this.Controls.Add(this.btnTestPrev);
             this.Controls.Add(this.pnlStatus);
@@ -338,7 +326,7 @@
             this.MainMenuStrip = this.menuMain;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmMain";
+            this.Name = "Main";
             this.Text = "WotDBUpdater";
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.pnlStatus.ResumeLayout(false);
@@ -382,7 +370,6 @@
         private System.Windows.Forms.ToolStripMenuItem importGunsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRadiosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testProgressBarToolStripMenuItem;
-        private System.Windows.Forms.Button btnTestAlt;
     }
 }
 
