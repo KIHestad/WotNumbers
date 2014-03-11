@@ -103,13 +103,17 @@ namespace WotDBUpdater
             return s;
         }
 
-        public static int GetTankID(string TankName)
+        public static int GetTankID(string TankName, out int TankTier)
         {
             int tankID = 0;
+            TankTier = 0;
             string expression = "name = '" + TankName + "'";
             DataRow[] foundRows = tankList.Select(expression);
             if (foundRows.Length > 0) // If tank exist in Tank table 
+            {
                 tankID = Convert.ToInt32(foundRows[0]["id"]);
+                TankTier = Convert.ToInt32(foundRows[0]["tier"]);
+            }
             return tankID;
         }
 

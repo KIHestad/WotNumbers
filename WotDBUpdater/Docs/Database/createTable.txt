@@ -147,7 +147,8 @@ create table playerTank (
 	vehicleCamo int not null default 0,
 	battlesCompany int not null default 0,
 	battlesClan int not null default 0,
-	wn8 int not null default 0
+	wn8 int not null default 0,
+	eff int not null default 0
 )
 
 alter table playerTank add constraint fk_playerTank_tank foreign key (tankId) references tank (id)
@@ -157,34 +158,35 @@ alter table playerTank add constraint fk_playerTank_player foreign key (playerId
 
 create table battle (
 	id int IDENTITY(1,1) constraint pk_battleId primary key,
-	playerTankId int not null,
-	battlesCount int NULL,
-	battleTime datetime NULL,
-	battleLifeTime int NULL,
-	victory int NULL,
-	loss int NULL,
-	survived int NULL,
-	frags int NULL,
-	dmg int NULL,
-	dmgReceived int NULL,
-	assistSpot int NULL,
-	assistTrack int NULL,
-	cap int NULL,
-	def int NULL,
-	shots int NULL,
-	hits int NULL,
-	shotsReceived int NULL,
-	pierced int NULL,
-	piercedReceived int NULL,
-	spotted int NULL,
-	mileage int NULL,
-	treesCut int NULL,
-	xp int NULL,
+	playerTankId int not not null default 0,
+	battlesCount int not null default 0,
+	battleTime datetime not null default 0,
+	battleLifeTime int not null default 0,
+	victory int not null default 0,
+	loss int not null default 0,
+	survived int not null default 0,
+	frags int not null default 0,
+	dmg int not null default 0,
+	dmgReceived int not null default 0,
+	assistSpot int not null default 0,
+	assistTrack int not null default 0,
+	cap int not null default 0,
+	def int not null default 0,
+	shots int not null default 0,
+	hits int not null default 0,
+	shotsReceived int not null default 0,
+	pierced int not null default 0,
+	piercedReceived int not null default 0,
+	spotted int not null default 0,
+	mileage int not null default 0,
+	treesCut int not null default 0,
+	xp int not null default 0,
 	mode15 int not null default 0,
 	mode7 int not null default 0,
 	modeClan int not null default 0,
 	modeCompany int not null default 0,
-	wn8 int not null default 0
+	wn8 int not null default 0,
+	eff int not null default 0
 )
 
 alter table battle add constraint fk_battle_playerTank foreign key (playerTankId) references playerTank (id)

@@ -80,6 +80,47 @@ namespace WotDBUpdater
             return Convert.ToInt32(WN8);
         }
 
+        public static double CalculatePlayerTankEff(int tankId, int tankTier, int totalBattleCount, string battlemode, DataRow playerTankData)
+        {
+            Double EFF = 0;
+            // get tankdata for current tank
+            DataRow tankInfo = TankData.TankInfo(tankId);
+            if (tankInfo != null && totalBattleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
+            {
+                double TIER = tankTier;
+                double DAMAGE = 0;
+                double SPOT = 0;
+                double FRAGS = 0;
+                double DEF = 0;
+                double CAP = 0;
+                if (battlemode == BattleMode.Random15andTeam7)
+                {
+                    DAMAGE = (ConvertDbVal2Double(playerTankData["dmg15"]) + ConvertDbVal2Double(playerTankData["dmg7"])) / totalBattleCount;
+                    SPOT = (ConvertDbVal2Double(playerTankData["spot15"]) + ConvertDbVal2Double(playerTankData["spot7"])) / totalBattleCount;
+                    FRAGS = (ConvertDbVal2Double(playerTankData["frags15"]) + ConvertDbVal2Double(playerTankData["frags7"])) / totalBattleCount;
+                    DEF = (ConvertDbVal2Double(playerTankData["def15"]) + ConvertDbVal2Double(playerTankData["def7"])) / totalBattleCount;
+                    CAP = (ConvertDbVal2Double(playerTankData["cap15"]) + ConvertDbVal2Double(playerTankData["cap7"])) / totalBattleCount;
+                }
+                else
+                {
+                    DAMAGE = ConvertDbVal2Double(playerTankData["dmg" + battlemode.ToString()]) / totalBattleCount;
+                    SPOT = ConvertDbVal2Double(playerTankData["spot" + battlemode.ToString()]) / totalBattleCount;
+                    FRAGS = ConvertDbVal2Double(playerTankData["frags" + battlemode.ToString()]) / totalBattleCount;
+                    DEF = ConvertDbVal2Double(playerTankData["def" + battlemode.ToString()]) / totalBattleCount;
+                    CAP = ConvertDbVal2Double(playerTankData["cap" + battlemode.ToString()]) / totalBattleCount;
+                }
+                // CALC
+                EFF = FRAGS * (350.0 - TIER * 20.0)
+                    + DAMAGE * (0.2 + 1.5 / TIER)
+                    + 200.0 * SPOT
+                    + 15.0 * CAP
+                    + 15.0 * DEF;
+            }
+            // Return value
+            return Convert.ToInt32(EFF);
+        }
+
+
         public static double CalculateBattleWn8(int tankId, int battleCount, DataRow battleData)
         {
             Double WN8 = 0;
@@ -91,7 +132,9 @@ namespace WotDBUpdater
                 double avgSpot = (ConvertDbVal2Double(battleData["spotted"])) / battleCount;
                 double avgFrag = (ConvertDbVal2Double(battleData["frags"])) / battleCount;
                 double avgDef = (ConvertDbVal2Double(battleData["def"])) / battleCount;
-                double avgWinRate = (ConvertDbVal2Double(battleData["victory"])) / battleCount * 100;
+                //double avgWinRate = (ConvertDbVal2Double(battleData["victory"])) / battleCount * 100;
+                // WN8 WRx = Winrate is fixed to the expected winRate 
+                double avgWinRate = Convert.ToDouble(tankInfo["expWR"]);
                 // get wn8 exp values for tank
                 double expDmg = Convert.ToDouble(tankInfo["expDmg"]);
                 double expSpot = Convert.ToDouble(tankInfo["expSpot"]);
@@ -116,5 +159,31 @@ namespace WotDBUpdater
             }
             return Convert.ToInt32(WN8);
         }
+
+        public static double CalculateBattleEff(int tankId, int tankTier, int battleCount, DataRow battleData)
+        {
+            Double EFF = 0;
+            // get tankdata for current tank
+            DataRow tankInfo = TankData.TankInfo(tankId);
+            if (tankInfo != null && battleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
+            {
+                double TIER = tankTier;
+                double DAMAGE = (ConvertDbVal2Double(battleData["dmg"])) / battleCount;
+                double SPOT = (ConvertDbVal2Double(battleData["spotted"])) / battleCount;
+                double FRAGS = (ConvertDbVal2Double(battleData["frags"])) / battleCount;
+                double DEF = (ConvertDbVal2Double(battleData["def"])) / battleCount;
+                double CAP = (ConvertDbVal2Double(battleData["cap"])) / battleCount;
+                // CALC
+                EFF = FRAGS * (350.0 - TIER * 20.0)
+                    + DAMAGE * (0.2 + 1.5 / TIER)
+                    + 200.0 * SPOT
+                    + 15.0 * CAP
+                    + 15.0 * DEF;
+            }
+            // Return value
+            return Convert.ToInt32(EFF);
+        }
+
+
     }
 }

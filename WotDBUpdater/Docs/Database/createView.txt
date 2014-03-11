@@ -20,10 +20,10 @@ GO
 
 -- Create view showing player tanks, short tank info and battle count
 
-CREATE VIEW [dbo].[playerTankInfoBattleCount]
+CREATE VIEW [dbo].[PlayerTankStatsView]
 AS
-SELECT        dbo.player.name AS Playername, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
-                         dbo.playerTank.battles15 AS [Battles 15x15], dbo.playerTank.battles7 AS [Battles 7x7]
+SELECT        dbo.player.name AS Playername, dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
+                         dbo.playerTank.battles15 AS [Battles 15x15], dbo.playerTank.battles7 AS [Battles 7x7], dbo.playerTank.wn8 AS WN8, dbo.playerTank.eff AS Eff
 FROM            dbo.playerTank INNER JOIN
                          dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
                          dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN
@@ -55,12 +55,12 @@ GO
 
 CREATE VIEW [dbo].[BattleResultView]
 AS
-SELECT        TOP (100) PERCENT dbo.player.name AS [Player], dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.battle.battleTime AS Time, 
+SELECT        TOP (100) PERCENT dbo.player.name AS Player, dbo.tank.name AS Tank, dbo.tank.tier, dbo.battle.battleTime AS Time, 
                          CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) 
                          WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS [Vict-Draw-Def], 
                          CASE WHEN battlescount > 1 THEN CAST(dbo.battle.survived AS varchar) WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, 
-                         dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.xp, dbo.battle.spotted AS Detected, 
-                         dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots, dbo.battle.hits
+                         dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp, dbo.battle.spotted AS Detected, 
+                         dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots, dbo.battle.hits, dbo.battle.wn8, dbo.battle.eff
 FROM            dbo.battle INNER JOIN
                          dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN
                          dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
