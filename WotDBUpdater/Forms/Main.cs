@@ -45,9 +45,11 @@ namespace WotDBUpdater.Forms
 
         private void panelMaster_Paint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, Color.DarkOrange, ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
         }
+        
 
+        
         #endregion
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -70,13 +72,7 @@ namespace WotDBUpdater.Forms
             menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
             panelTop.BackColor = Color.FromArgb(255, 45, 45, 45); 
             // Size
-            panelTop.Left = 1;
-            panelTop.Top = 1;
-            panelMain.Left = 1;
-            panelMain.Top = panelTop.Height + 1;
-            panelMain.Height = panelMaster.Height - panelTop.Height - 2;
-            picResize.Left = panelMain.Width - picResize.Width;
-            picResize.Top = panelMain.Height - picResize.Height;
+            RefreshForm();
         }
 
         private void SetFormTitle()
@@ -280,11 +276,6 @@ namespace WotDBUpdater.Forms
             frm.ShowDialog();
         }
 
-        private void gButtonClose_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
         #region resize
 
         private bool dragging = false;
@@ -317,6 +308,79 @@ namespace WotDBUpdater.Forms
             panelTop.Width = panelMaster.Width - 2;
             panelMain.Width = panelMaster.Width - 2;
             panelMain.Height = panelMain.Height - panelTop.Height - 2;
+        }
+
+        #endregion
+
+        #region resize
+
+        private void picClose_MouseHover(object sender, EventArgs e)
+        {
+            picClose.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+        }
+
+        private void picClose_MouseLeave(object sender, EventArgs e)
+        {
+            picClose.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+        }
+
+        private void picNormalize_MouseHover(object sender, EventArgs e)
+        {
+            picNormalize.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+        }
+
+        private void picNormalize_MouseLeave(object sender, EventArgs e)
+        {
+            picNormalize.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+        }
+
+        private void picMinimize_MouseHover(object sender, EventArgs e)
+        {
+            picMinimize.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+        }
+
+        private void picMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            picMinimize.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+        }
+
+        private void picClose_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void picNormalize_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+            RefreshForm();
+        }
+
+        private void picMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void RefreshForm()
+        {
+            Refresh();
+            panelTop.Left = 1;
+            panelTop.Top = 1;
+            panelMain.Left = 1;
+            panelMain.Top = panelTop.Height + 1;
+            panelMain.Height = panelMaster.Height - panelTop.Height - 2;
+            picResize.Left = panelMain.Width - picResize.Width;
+            picResize.Top = panelMain.Height - picResize.Height;
+            picResize.Visible = (this.WindowState != FormWindowState.Maximized);
+            picClose.Left = panelMain.Width - picClose.Width;
+            picNormalize.Left = picClose.Left - picNormalize.Width;
+            picMinimize.Left = picNormalize.Left - picMinimize.Width;
         }
 
         #endregion

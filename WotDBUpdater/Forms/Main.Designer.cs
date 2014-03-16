@@ -61,17 +61,24 @@
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
             this.panelTop = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.panelMaster = new System.Windows.Forms.Panel();
             this.picResize = new System.Windows.Forms.PictureBox();
-            this.gButtonClose = new WotDBUpdater.Code.Support.GButton();
+            this.panelMaster = new System.Windows.Forms.Panel();
+            this.picClose = new System.Windows.Forms.PictureBox();
+            this.picMinimize = new System.Windows.Forms.PictureBox();
+            this.picNormalize = new System.Windows.Forms.PictureBox();
+            this.picLogo = new System.Windows.Forms.PictureBox();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             this.panelMain.SuspendLayout();
-            this.panelMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picResize)).BeginInit();
+            this.panelMaster.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMinimize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStartStop
@@ -331,25 +338,29 @@
             // 
             // panelTop
             // 
-            this.panelTop.Controls.Add(this.label1);
-            this.panelTop.Controls.Add(this.gButtonClose);
+            this.panelTop.Controls.Add(this.picLogo);
+            this.panelTop.Controls.Add(this.picNormalize);
+            this.panelTop.Controls.Add(this.picMinimize);
+            this.panelTop.Controls.Add(this.picClose);
+            this.panelTop.Controls.Add(this.lblTitle);
             this.panelTop.Location = new System.Drawing.Point(12, 12);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(475, 30);
+            this.panelTop.Size = new System.Drawing.Size(475, 26);
             this.panelTop.TabIndex = 14;
             this.panelTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseDown);
             this.panelTop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseMove);
             this.panelTop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseUp);
             // 
-            // label1
+            // lblTitle
             // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.DarkGray;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(128, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "World of Tanks DB Stats ";
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Gray;
+            this.lblTitle.Location = new System.Drawing.Point(52, 6);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(143, 17);
+            this.lblTitle.TabIndex = 1;
+            this.lblTitle.Text = "World of Tanks DB Stats ";
             // 
             // panelMain
             // 
@@ -366,6 +377,15 @@
             this.panelMain.Size = new System.Drawing.Size(475, 271);
             this.panelMain.TabIndex = 15;
             // 
+            // picResize
+            // 
+            this.picResize.Image = ((System.Drawing.Image)(resources.GetObject("picResize.Image")));
+            this.picResize.Location = new System.Drawing.Point(415, 239);
+            this.picResize.Name = "picResize";
+            this.picResize.Size = new System.Drawing.Size(43, 30);
+            this.picResize.TabIndex = 13;
+            this.picResize.TabStop = false;
+            // 
             // panelMaster
             // 
             this.panelMaster.Controls.Add(this.panelTop);
@@ -373,37 +393,61 @@
             this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMaster.Location = new System.Drawing.Point(0, 0);
             this.panelMaster.Name = "panelMaster";
-            this.panelMaster.Size = new System.Drawing.Size(488, 313);
+            this.panelMaster.Size = new System.Drawing.Size(532, 384);
             this.panelMaster.TabIndex = 16;
             this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
             // 
-            // picResize
+            // picClose
             // 
-            this.picResize.Image = ((System.Drawing.Image)(resources.GetObject("picResize.Image")));
-            this.picResize.Location = new System.Drawing.Point(440, 250);
-            this.picResize.Name = "picResize";
-            this.picResize.Size = new System.Drawing.Size(18, 19);
-            this.picResize.TabIndex = 13;
-            this.picResize.TabStop = false;
+            this.picClose.Image = ((System.Drawing.Image)(resources.GetObject("picClose.Image")));
+            this.picClose.Location = new System.Drawing.Point(437, 0);
+            this.picClose.Name = "picClose";
+            this.picClose.Size = new System.Drawing.Size(34, 26);
+            this.picClose.TabIndex = 2;
+            this.picClose.TabStop = false;
+            this.picClose.Click += new System.EventHandler(this.picClose_Click);
+            this.picClose.MouseLeave += new System.EventHandler(this.picClose_MouseLeave);
+            this.picClose.MouseHover += new System.EventHandler(this.picClose_MouseHover);
             // 
-            // gButtonClose
+            // picMinimize
             // 
-            this.gButtonClose.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.gButtonClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.gButtonClose.Image = null;
-            this.gButtonClose.Location = new System.Drawing.Point(433, -3);
-            this.gButtonClose.Name = "gButtonClose";
-            this.gButtonClose.Size = new System.Drawing.Size(33, 25);
-            this.gButtonClose.TabIndex = 0;
-            this.gButtonClose.Text = "X";
-            this.gButtonClose.Click += new System.EventHandler(this.gButtonClose_Click);
+            this.picMinimize.Image = ((System.Drawing.Image)(resources.GetObject("picMinimize.Image")));
+            this.picMinimize.Location = new System.Drawing.Point(357, 0);
+            this.picMinimize.Name = "picMinimize";
+            this.picMinimize.Size = new System.Drawing.Size(34, 26);
+            this.picMinimize.TabIndex = 3;
+            this.picMinimize.TabStop = false;
+            this.picMinimize.Click += new System.EventHandler(this.picMinimize_Click);
+            this.picMinimize.MouseLeave += new System.EventHandler(this.picMinimize_MouseLeave);
+            this.picMinimize.MouseHover += new System.EventHandler(this.picMinimize_MouseHover);
+            // 
+            // picNormalize
+            // 
+            this.picNormalize.Image = ((System.Drawing.Image)(resources.GetObject("picNormalize.Image")));
+            this.picNormalize.Location = new System.Drawing.Point(397, 0);
+            this.picNormalize.Name = "picNormalize";
+            this.picNormalize.Size = new System.Drawing.Size(34, 26);
+            this.picNormalize.TabIndex = 4;
+            this.picNormalize.TabStop = false;
+            this.picNormalize.Click += new System.EventHandler(this.picNormalize_Click);
+            this.picNormalize.MouseLeave += new System.EventHandler(this.picNormalize_MouseLeave);
+            this.picNormalize.MouseHover += new System.EventHandler(this.picNormalize_MouseHover);
+            // 
+            // picLogo
+            // 
+            this.picLogo.Image = ((System.Drawing.Image)(resources.GetObject("picLogo.Image")));
+            this.picLogo.Location = new System.Drawing.Point(11, 4);
+            this.picLogo.Name = "picLogo";
+            this.picLogo.Size = new System.Drawing.Size(35, 18);
+            this.picLogo.TabIndex = 5;
+            this.picLogo.TabStop = false;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(488, 313);
+            this.ClientSize = new System.Drawing.Size(532, 384);
             this.Controls.Add(this.panelMaster);
             this.MainMenuStrip = this.menuMain;
             this.Name = "Main";
@@ -418,8 +462,12 @@
             this.panelTop.PerformLayout();
             this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
-            this.panelMaster.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picResize)).EndInit();
+            this.panelMaster.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMinimize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picNormalize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -458,11 +506,14 @@
         private System.Windows.Forms.ToolStripMenuItem importTankWn8ExpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.Panel panelTop;
-        private System.Windows.Forms.Label label1;
-        private Code.Support.GButton gButtonClose;
+        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelMaster;
         private System.Windows.Forms.PictureBox picResize;
+        private System.Windows.Forms.PictureBox picLogo;
+        private System.Windows.Forms.PictureBox picNormalize;
+        private System.Windows.Forms.PictureBox picMinimize;
+        private System.Windows.Forms.PictureBox picClose;
     }
 }
 

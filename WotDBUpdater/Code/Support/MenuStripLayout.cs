@@ -6,6 +6,14 @@ namespace WotDBUpdater.Code.Support
 {
     public class MenuStripLayout : ProfessionalColorTable
     {
+        public static Color colorGrayDropDownBack = Color.FromArgb(255, 22, 22, 22);
+        public static Color colorGrayMain = Color.FromArgb(255, 45, 45, 45);
+        public static Color colorGrayHover = Color.FromArgb(255, 68, 68, 68);
+        public static Color colorGrayOverFlowButton = Color.FromArgb(255, 82, 82, 82);
+        public static Color colorGrayDiv = Color.FromArgb(255, 96, 96, 96);
+        public static Color colorGrayCheckPressed = Color.FromArgb(255, 177, 177, 177);
+        public static Color colorBlue = Color.FromArgb(255, 66, 125, 215);
+        
         public override Color ButtonSelectedHighlight
         {
             get { return ButtonSelectedGradientMiddle; }

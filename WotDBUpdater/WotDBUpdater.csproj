@@ -246,6 +246,9 @@
     <Content Include="Docs\Database\select.txt" />
     <Content Include="Docs\Dev log\BadButton.txt" />
     <Content Include="Docs\Dev log\cmdrTrinity.txt" />
+    <Content Include="Docs\Img\exit.png" />
+    <Content Include="Docs\Img\minimize.png" />
+    <Content Include="Docs\Img\normalize.png" />
     <Content Include="Docs\Img\resize.png" />
     <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
