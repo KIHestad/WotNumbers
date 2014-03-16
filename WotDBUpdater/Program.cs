@@ -16,7 +16,9 @@ namespace WotDBUpdater
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.Main());
+            Form mainForm = new Forms.Main();
+            mainForm.FormBorderStyle = FormBorderStyle.None;
+            Application.Run(mainForm);
         }
     }
 }

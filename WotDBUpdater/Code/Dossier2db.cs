@@ -34,6 +34,7 @@ namespace WotDBUpdater
             // Read file into string
             StreamReader sr = new StreamReader(filename, Encoding.UTF8);
             string json = sr.ReadToEnd();
+            sr.Close();
                         
             Stopwatch sw = new Stopwatch();
             sw.Start();

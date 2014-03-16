@@ -75,6 +75,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Support\FormTheme.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Code\Support\MenuStripLayout.cs" />
     <Compile Include="Code\Support\MessageBoxEx.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
@@ -242,6 +246,7 @@
     <Content Include="Docs\Database\select.txt" />
     <Content Include="Docs\Dev log\BadButton.txt" />
     <Content Include="Docs\Dev log\cmdrTrinity.txt" />
+    <Content Include="Docs\Img\resize.png" />
     <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />

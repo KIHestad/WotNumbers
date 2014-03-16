@@ -27,6 +27,29 @@ namespace WotDBUpdater.Forms
             InitializeComponent();
         }
 
+        #region layout
+
+        class MyToolStripRenderer : ToolStripProfessionalRenderer
+        {
+            public MyToolStripRenderer()
+                : base(new Code.Support.MenuStripLayout())
+            {
+            }
+
+            protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+            {
+                base.OnRenderItemText(e);
+                e.Item.ForeColor = Color.FromArgb(255, 240, 240, 240);
+            }
+        }
+
+        private void panelMaster_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, Color.DarkOrange, ButtonBorderStyle.Solid);
+        }
+
+        #endregion
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             // Startup settings
@@ -42,6 +65,18 @@ namespace WotDBUpdater.Forms
                 TankData.GetJson2dbMappingViewFromDB();
                 TankData.GettankData2BattleMappingViewFromDB();
             }
+            // Style
+            menuMain.Renderer = new MyToolStripRenderer();
+            menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
+            panelTop.BackColor = Color.FromArgb(255, 45, 45, 45); 
+            // Size
+            panelTop.Left = 1;
+            panelTop.Top = 1;
+            panelMain.Left = 1;
+            panelMain.Top = panelTop.Height + 1;
+            panelMain.Height = panelMaster.Height - panelTop.Height - 2;
+            picResize.Left = panelMain.Width - picResize.Width;
+            picResize.Top = panelMain.Height - picResize.Height;
         }
 
         private void SetFormTitle()
@@ -245,7 +280,47 @@ namespace WotDBUpdater.Forms
             frm.ShowDialog();
         }
 
-        
+        private void gButtonClose_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        #region resize
+
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
+
+        private void panelTop_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void panelTop_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+            }
+        }
+
+        private void panelTop_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
+
+        private void Main_Resize(object sender, EventArgs e)
+        {
+            panelTop.Width = panelMaster.Width - 2;
+            panelMain.Width = panelMaster.Width - 2;
+            panelMain.Height = panelMain.Height - panelTop.Height - 2;
+        }
+
+        #endregion
+
     }
 
     

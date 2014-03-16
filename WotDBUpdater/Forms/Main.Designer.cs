@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.btnStartStop = new System.Windows.Forms.Button();
             this.listBoxLog = new System.Windows.Forms.ListBox();
             this.btnManualRun = new System.Windows.Forms.Button();
@@ -47,25 +48,35 @@
             this.addCountryToTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.listTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.importTankWn8ExpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testReadModuleDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importGunsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRadiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.testURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testProgressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTestPrev = new System.Windows.Forms.Button();
             this.btntestForce = new System.Windows.Forms.Button();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.importTankWn8ExpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panelTop = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panelMain = new System.Windows.Forms.Panel();
+            this.panelMaster = new System.Windows.Forms.Panel();
+            this.picResize = new System.Windows.Forms.PictureBox();
+            this.gButtonClose = new WotDBUpdater.Code.Support.GButton();
             this.pnlStatus.SuspendLayout();
             this.menuMain.SuspendLayout();
+            this.panelTop.SuspendLayout();
+            this.panelMain.SuspendLayout();
+            this.panelMaster.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picResize)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(18, 80);
+            this.btnStartStop.Location = new System.Drawing.Point(23, 84);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(89, 34);
             this.btnStartStop.TabIndex = 3;
@@ -76,7 +87,7 @@
             // listBoxLog
             // 
             this.listBoxLog.FormattingEnabled = true;
-            this.listBoxLog.Location = new System.Drawing.Point(117, 41);
+            this.listBoxLog.Location = new System.Drawing.Point(122, 45);
             this.listBoxLog.Name = "listBoxLog";
             this.listBoxLog.Size = new System.Drawing.Size(336, 199);
             this.listBoxLog.TabIndex = 4;
@@ -84,7 +95,7 @@
             // 
             // btnManualRun
             // 
-            this.btnManualRun.Location = new System.Drawing.Point(18, 120);
+            this.btnManualRun.Location = new System.Drawing.Point(23, 124);
             this.btnManualRun.Name = "btnManualRun";
             this.btnManualRun.Size = new System.Drawing.Size(89, 34);
             this.btnManualRun.TabIndex = 5;
@@ -96,7 +107,7 @@
             // 
             this.pnlStatus.BackColor = System.Drawing.Color.Gray;
             this.pnlStatus.Controls.Add(this.lblStatus);
-            this.pnlStatus.Location = new System.Drawing.Point(18, 41);
+            this.pnlStatus.Location = new System.Drawing.Point(23, 45);
             this.pnlStatus.Name = "pnlStatus";
             this.pnlStatus.Size = new System.Drawing.Size(89, 33);
             this.pnlStatus.TabIndex = 8;
@@ -106,7 +117,7 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.White;
-            this.lblStatus.Location = new System.Drawing.Point(13, 10);
+            this.lblStatus.Location = new System.Drawing.Point(14, 9);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(61, 13);
             this.lblStatus.TabIndex = 0;
@@ -114,6 +125,7 @@
             // 
             // menuMain
             // 
+            this.menuMain.BackColor = System.Drawing.SystemColors.Menu;
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.reportsToolStripMenuItem,
@@ -121,7 +133,7 @@
             this.helpToolStripMenuItem});
             this.menuMain.Location = new System.Drawing.Point(0, 0);
             this.menuMain.Name = "menuMain";
-            this.menuMain.Size = new System.Drawing.Size(469, 24);
+            this.menuMain.Size = new System.Drawing.Size(475, 24);
             this.menuMain.TabIndex = 10;
             this.menuMain.Text = "menuMain";
             // 
@@ -230,12 +242,17 @@
             this.listTanksToolStripMenuItem.Text = "List Tanks";
             this.listTanksToolStripMenuItem.Click += new System.EventHandler(this.listTanksToolStripMenuItem_Click);
             // 
-            // testURLToolStripMenuItem
+            // toolStripSeparator4
             // 
-            this.testURLToolStripMenuItem.Name = "testURLToolStripMenuItem";
-            this.testURLToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.testURLToolStripMenuItem.Text = "Test URL";
-            this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(210, 6);
+            // 
+            // importTankWn8ExpToolStripMenuItem
+            // 
+            this.importTankWn8ExpToolStripMenuItem.Name = "importTankWn8ExpToolStripMenuItem";
+            this.importTankWn8ExpToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.importTankWn8ExpToolStripMenuItem.Text = "Import tank & wn8 exp";
+            this.importTankWn8ExpToolStripMenuItem.Click += new System.EventHandler(this.importTankWn8ExpToolStripMenuItem_Click);
             // 
             // testReadModuleDataToolStripMenuItem
             // 
@@ -257,6 +274,18 @@
             this.importRadiosToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.importRadiosToolStripMenuItem.Text = "Import radios";
             this.importRadiosToolStripMenuItem.Click += new System.EventHandler(this.importRadiosToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(210, 6);
+            // 
+            // testURLToolStripMenuItem
+            // 
+            this.testURLToolStripMenuItem.Name = "testURLToolStripMenuItem";
+            this.testURLToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.testURLToolStripMenuItem.Text = "Test URL";
+            this.testURLToolStripMenuItem.Click += new System.EventHandler(this.testURLToolStripMenuItem_Click);
             // 
             // testProgressBarToolStripMenuItem
             // 
@@ -282,7 +311,7 @@
             // 
             // btnTestPrev
             // 
-            this.btnTestPrev.Location = new System.Drawing.Point(18, 160);
+            this.btnTestPrev.Location = new System.Drawing.Point(23, 164);
             this.btnTestPrev.Name = "btnTestPrev";
             this.btnTestPrev.Size = new System.Drawing.Size(89, 34);
             this.btnTestPrev.TabIndex = 11;
@@ -292,7 +321,7 @@
             // 
             // btntestForce
             // 
-            this.btntestForce.Location = new System.Drawing.Point(18, 200);
+            this.btntestForce.Location = new System.Drawing.Point(23, 204);
             this.btntestForce.Name = "btntestForce";
             this.btntestForce.Size = new System.Drawing.Size(89, 34);
             this.btntestForce.TabIndex = 12;
@@ -300,48 +329,98 @@
             this.btntestForce.UseVisualStyleBackColor = true;
             this.btntestForce.Click += new System.EventHandler(this.btntestForce_Click);
             // 
-            // toolStripSeparator4
+            // panelTop
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(210, 6);
+            this.panelTop.Controls.Add(this.label1);
+            this.panelTop.Controls.Add(this.gButtonClose);
+            this.panelTop.Location = new System.Drawing.Point(12, 12);
+            this.panelTop.Name = "panelTop";
+            this.panelTop.Size = new System.Drawing.Size(475, 30);
+            this.panelTop.TabIndex = 14;
+            this.panelTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseDown);
+            this.panelTop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseMove);
+            this.panelTop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseUp);
             // 
-            // toolStripSeparator5
+            // label1
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(210, 6);
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.DarkGray;
+            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(128, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "World of Tanks DB Stats ";
             // 
-            // importTankWn8ExpToolStripMenuItem
+            // panelMain
             // 
-            this.importTankWn8ExpToolStripMenuItem.Name = "importTankWn8ExpToolStripMenuItem";
-            this.importTankWn8ExpToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.importTankWn8ExpToolStripMenuItem.Text = "Import tank & wn8 exp";
-            this.importTankWn8ExpToolStripMenuItem.Click += new System.EventHandler(this.importTankWn8ExpToolStripMenuItem_Click);
+            this.panelMain.Controls.Add(this.picResize);
+            this.panelMain.Controls.Add(this.menuMain);
+            this.panelMain.Controls.Add(this.listBoxLog);
+            this.panelMain.Controls.Add(this.pnlStatus);
+            this.panelMain.Controls.Add(this.btnStartStop);
+            this.panelMain.Controls.Add(this.btntestForce);
+            this.panelMain.Controls.Add(this.btnManualRun);
+            this.panelMain.Controls.Add(this.btnTestPrev);
+            this.panelMain.Location = new System.Drawing.Point(12, 48);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(475, 271);
+            this.panelMain.TabIndex = 15;
+            // 
+            // panelMaster
+            // 
+            this.panelMaster.Controls.Add(this.panelTop);
+            this.panelMaster.Controls.Add(this.panelMain);
+            this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMaster.Location = new System.Drawing.Point(0, 0);
+            this.panelMaster.Name = "panelMaster";
+            this.panelMaster.Size = new System.Drawing.Size(488, 313);
+            this.panelMaster.TabIndex = 16;
+            this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
+            // 
+            // picResize
+            // 
+            this.picResize.Image = ((System.Drawing.Image)(resources.GetObject("picResize.Image")));
+            this.picResize.Location = new System.Drawing.Point(440, 250);
+            this.picResize.Name = "picResize";
+            this.picResize.Size = new System.Drawing.Size(18, 19);
+            this.picResize.TabIndex = 13;
+            this.picResize.TabStop = false;
+            // 
+            // gButtonClose
+            // 
+            this.gButtonClose.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.gButtonClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.gButtonClose.Image = null;
+            this.gButtonClose.Location = new System.Drawing.Point(433, -3);
+            this.gButtonClose.Name = "gButtonClose";
+            this.gButtonClose.Size = new System.Drawing.Size(33, 25);
+            this.gButtonClose.TabIndex = 0;
+            this.gButtonClose.Text = "X";
+            this.gButtonClose.Click += new System.EventHandler(this.gButtonClose_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 252);
-            this.Controls.Add(this.btntestForce);
-            this.Controls.Add(this.btnTestPrev);
-            this.Controls.Add(this.pnlStatus);
-            this.Controls.Add(this.btnManualRun);
-            this.Controls.Add(this.menuMain);
-            this.Controls.Add(this.listBoxLog);
-            this.Controls.Add(this.btnStartStop);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.ClientSize = new System.Drawing.Size(488, 313);
+            this.Controls.Add(this.panelMaster);
             this.MainMenuStrip = this.menuMain;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "Main";
             this.Text = "WotDBUpdater";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            this.Resize += new System.EventHandler(this.Main_Resize);
             this.pnlStatus.ResumeLayout(false);
             this.pnlStatus.PerformLayout();
             this.menuMain.ResumeLayout(false);
             this.menuMain.PerformLayout();
+            this.panelTop.ResumeLayout(false);
+            this.panelTop.PerformLayout();
+            this.panelMain.ResumeLayout(false);
+            this.panelMain.PerformLayout();
+            this.panelMaster.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picResize)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -378,6 +457,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem importTankWn8ExpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.Panel panelTop;
+        private System.Windows.Forms.Label label1;
+        private Code.Support.GButton gButtonClose;
+        private System.Windows.Forms.Panel panelMain;
+        private System.Windows.Forms.Panel panelMaster;
+        private System.Windows.Forms.PictureBox picResize;
     }
 }
 
