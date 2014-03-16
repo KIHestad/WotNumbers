@@ -78,6 +78,8 @@
     <Compile Include="Code\Support\MessageBoxEx.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
+    <Compile Include="Code\TankPerformance.cs" />
+    <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Forms\File\AddPlayer.cs">
       <SubType>Form</SubType>
     </Compile>

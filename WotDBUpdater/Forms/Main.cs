@@ -245,6 +245,11 @@ namespace WotDBUpdater.Forms
             frm.ShowDialog();
         }
 
+        private void testViewRangeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewRange.CalcViewRange();
+        }
+
         
     }
 
