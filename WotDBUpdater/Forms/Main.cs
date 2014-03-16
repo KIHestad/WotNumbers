@@ -27,6 +27,31 @@ namespace WotDBUpdater.Forms
             InitializeComponent();
         }
 
+        private void Main_Load(object sender, EventArgs e)
+        {
+            // Startup settings
+            Config.GetConfig();
+            if (Config.CheckDBConn())
+            {
+                string result = dossier2json.updateDossierFileWatcher();
+                SetStatus2(result);
+                SetListener();
+                SetFormTitle();
+                // Init
+                TankData.GetTankListFromDB();
+                TankData.GetJson2dbMappingViewFromDB();
+                TankData.GettankData2BattleMappingViewFromDB();
+            }
+            // Style
+            menuMain.Renderer = new MyToolStripRenderer();
+            menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
+            panelTop.BackColor = Color.FromArgb(255, 45, 45, 45);
+            // Size
+            RefreshForm();
+            // Ready
+            SetStatus2("Application started");
+        }
+
         #region layout
 
         class MyToolStripRenderer : ToolStripProfessionalRenderer
@@ -47,32 +72,50 @@ namespace WotDBUpdater.Forms
         {
             ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
         }
-        
-
-        
+                
         #endregion
 
-        private void frmMain_Load(object sender, EventArgs e)
+        #region mainEvents
+
+        private int status2DefaultColor = 200;
+        private int status2fadeColor = 200;
+
+        private void timerStatus2_Tick(object sender, EventArgs e)
         {
-            // Startup settings
-            Config.GetConfig();
-            if (Config.CheckDBConn())
+            if (timerStatus2.Interval > 100)
             {
-                string result = dossier2json.updateDossierFileWatcher();
-                Log(result);
-                SetStartStopButton();
-                SetFormTitle();
-                // Init
-                TankData.GetTankListFromDB();
-                TankData.GetJson2dbMappingViewFromDB();
-                TankData.GettankData2BattleMappingViewFromDB();
+                // Change to fadeout
+                timerStatus2.Interval = 20;
+                status2fadeColor = status2DefaultColor;
             }
-            // Style
-            menuMain.Renderer = new MyToolStripRenderer();
-            menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
-            panelTop.BackColor = Color.FromArgb(255, 45, 45, 45); 
-            // Size
-            RefreshForm();
+            else
+            {
+                status2fadeColor = status2fadeColor - 2;
+                if (status2fadeColor >= 2)
+                {
+                    lblStatus2.ForeColor = Color.FromArgb(255, status2fadeColor, status2fadeColor, status2fadeColor);
+                    Application.DoEvents();
+                }
+                else
+                {
+                    timerStatus2.Enabled = false;
+                    lblStatus2.Text = "";
+                    Application.DoEvents();
+                }
+            }
+        }
+
+        private void SetStatus2(string txt)
+        {
+            timerStatus2.Enabled = false;
+            Application.DoEvents();
+            Thread.Sleep(20);
+            timerStatus2.Interval = 10000;
+            lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor);
+            lblStatus2.Text = txt;
+            Application.DoEvents();
+            Thread.Sleep(20);
+            timerStatus2.Enabled = true;
         }
 
         private void SetFormTitle()
@@ -80,203 +123,34 @@ namespace WotDBUpdater.Forms
             // Check / show logged in player
             if (Config.Settings.playerName == "")
             {
-                this.Text = "WotDBUpdater - NO PLAYER SELECTED";
+                lblTitle.Text = "WoT DBstats - NO PLAYER SELECTED";
             }
             else
             {
-                this.Text = "WotDBUpdater - " + Config.Settings.playerName;
+                lblTitle.Text = "WoT DBstats - " + Config.Settings.playerName;
             }
         }
 
-        void Log(string logtext, bool addTime = false)
+        private void SetListener()
         {
-            // log to ListBox and scroll to bottom
-            string timestamp = "";
-            if (addTime) timestamp = DateTime.Now.ToString() + " ";
-            listBoxLog.Items.Add(timestamp + logtext);
-            listBoxLog.TopIndex = listBoxLog.Items.Count - 1;
-        }
-
-        void Log(List<string> logtext)
-        {
-            foreach (string s in logtext)
-            {
-                Log(s);
-            }
-        }
-
-        private void SetStartStopButton()
-        {
-            // Set Start - Stop button properties
+            menuItemRunStopToggle.Checked = (Config.Settings.run == 1);
             if (Config.Settings.run == 1)
             {
-                btnStartStop.Text = "Stop";
-                lblStatus.Text = "RUNNING";
-                pnlStatus.BackColor = System.Drawing.Color.ForestGreen; 
+                lblStatus1.Text = "Running";
+                lblStatus1.ForeColor = System.Drawing.Color.ForestGreen;
             }
             else
             {
-                btnStartStop.Text = "Start";
-                lblStatus.Text = "STOPPED";
-                pnlStatus.BackColor = System.Drawing.Color.Gray;
+                lblStatus1.Text = "Stopped";
+                lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
             }
-        }
-
-        private void btnStartStop_Click(object sender, EventArgs e)
-        {
-            // Start - Stop button event for listening to dossier file
-            bool run = !(Config.Settings.run == 1); // toggle run
-            if (run) Config.Settings.run = 1; else Config.Settings.run = 0; // save as 0 = false, 1=true
-            string msg = "";
-            Config.SaveAppConfig(out msg);
             string result = dossier2json.updateDossierFileWatcher();
-            Log(result);
-            SetStartStopButton();
+            SetStatus2(result);
         }
+        
+        #endregion
 
-        private void btnManualRun_Click(object sender, EventArgs e)
-        {
-            // Dossier file manual handling
-            List<string> result = dossier2json.manualRun();
-            Log(result);
-        }
-
-        private void btnTestPrev_Click(object sender, EventArgs e)
-        {
-            // Test running previous dossier file
-            List<string> result = dossier2json.manualRun(true);
-            Log(result);
-        }
-
-        private void listBoxLog_DoubleClick(object sender, EventArgs e)
-        {
-            try
-            {
-                MessageBoxEx.Show(this, listBoxLog.Items[listBoxLog.SelectedIndex].ToString(), "Log Details");
-            }
-            catch (Exception)
-            {
-                
-                // nothing
-            }
-            
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Help.About();
-            frm.ShowDialog();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void selectApplicationSetting_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.File.ApplicationSetting();
-            frm.ShowDialog();
-            SetFormTitle();
-            // Init
-        }
-
-        private void databaseSettingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.File.DatabaseSetting();
-            frm.ShowDialog();
-        }
-
-        private void showTankTableInGridToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Test.CountryInGrid();
-            frm.ShowDialog();
-        }
-
-        private void addCountryToTableToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Test.AddCountryToTable();
-            frm.ShowDialog();
-        }
-
-        private void showDatabaseTableToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Reports.DBTable();
-            frm.Show();
-        }
-
-        private void showDatabaseViewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Reports.DBView();
-            frm.Show();
-        }
-
-        private void listTanksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string s = TankData.ListTanks();
-            MessageBoxEx.Show(this, s);
-        }
-
-        private void testURLToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
-            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(lcUrl);
-
-            httpRequest.Timeout = 10000;     // 10 secs
-            httpRequest.UserAgent = "Code Sample Web Client";
-
-            HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-            StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-
-            string content = responseStream.ReadToEnd();
-            MessageBoxEx.Show(this, content);
-        }
-
-        private void btntestForce_Click(object sender, EventArgs e)
-        {
-            // Test running previous dossier file, force update - even if no more battles is detected
-            List<string> result = dossier2json.manualRun(true, true);
-            Log(result);
-        }
-
-        private void btnTestAlt_Click(object sender, EventArgs e)
-        {
-            // Test running previous dossier file, force update - even if no more battles is detected
-            List<string> result = dossier2json.manualRun(true, true);
-            Log(result);
-        }
-
-        private void testReadModuleDataToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string s = Modules2DB.ImportTurrets();
-            MessageBoxEx.Show(this, s);
-        }
-
-        private void importGunsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string s = Modules2DB.ImportGuns();
-            MessageBoxEx.Show(this, s);
-        }
-
-        private void importRadiosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string s = Modules2DB.ImportRadios();
-            MessageBoxEx.Show(this, s);
-        }
-
-        private void testProgressBarToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Test.TestProgressBar();
-            frm.Show();
-        }
-
-        private void importTankWn8ExpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.File.ImportTank();
-            frm.ShowDialog();
-        }
-
-        #region resize
+        #region moveForm
 
         private bool dragging = false;
         private Point dragCursorPoint;
@@ -312,7 +186,46 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        #region resize
+        #region resizeForm
+
+        private bool moving = false;
+        private Point moveFromPoint;
+        private int formX;
+        private int formY;
+
+        private void picResize_MouseDown(object sender, MouseEventArgs e)
+        {
+            moving = true;
+            moveFromPoint = Cursor.Position;
+            formX = Main.ActiveForm.Width;
+            formY = Main.ActiveForm.Height;
+        }
+
+        private void picResize_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (moving)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(moveFromPoint));
+                if (formX + dif.X > 300) Main.ActiveForm.Width = formX + dif.X;
+                if (formY + dif.Y > 150) Main.ActiveForm.Height = formY + dif.Y;
+                RefreshForm();
+            }
+        }
+
+        private void picResize_MouseUp(object sender, MouseEventArgs e)
+        {
+            moving = false;
+        }
+
+        private void picResize_MouseHover(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.SizeNWSE;
+        }
+
+        private void picResize_MouseLeave(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Default;
+        }
 
         private void picClose_MouseHover(object sender, EventArgs e)
         {
@@ -370,21 +283,180 @@ namespace WotDBUpdater.Forms
         private void RefreshForm()
         {
             Refresh();
+            // Title bar
             panelTop.Left = 1;
             panelTop.Top = 1;
-            panelMain.Left = 1;
-            panelMain.Top = panelTop.Height + 1;
-            panelMain.Height = panelMaster.Height - panelTop.Height - 2;
-            picResize.Left = panelMain.Width - picResize.Width;
-            picResize.Top = panelMain.Height - picResize.Height;
-            picResize.Visible = (this.WindowState != FormWindowState.Maximized);
+            // Title bar form handling
             picClose.Left = panelMain.Width - picClose.Width;
             picNormalize.Left = picClose.Left - picNormalize.Width;
             picMinimize.Left = picNormalize.Left - picMinimize.Width;
+            // Main Area including menu
+            panelMain.Left = 1;
+            panelMain.Top = panelTop.Height + 1;
+            panelMain.Height = panelMaster.Height - panelTop.Height - 2;
+            // Status bar
+            panelStatus.Left = 1;
+            panelStatus.Top = panelMaster.Height - panelStatus.Height - 1;
+            panelStatus.Width = panelMaster.Width - 2;
+            // Status bar resize handling
+            picResize.Left = panelStatus.Width - picResize.Width;
+            picResize.Visible = (this.WindowState != FormWindowState.Maximized);
+            
         }
 
         #endregion
 
+        #region menuItemAction
+
+        private void menuItemAppSettings_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.ApplicationSetting();
+            frm.ShowDialog();
+            SetFormTitle();
+        }
+
+        private void menuItemDbSettings_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.DatabaseSetting();
+            frm.ShowDialog();
+        }
+
+        private void menuItemExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void menuItemReportView_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Reports.DBView();
+            frm.Show();
+        }
+
+        private void menuItemReportTable_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Reports.DBTable();
+            frm.Show();
+        }
+
+        private void menuItemAbout_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Help.About();
+            frm.ShowDialog();
+        }
+
+        private void menuItemRunStopToggle_Click(object sender, EventArgs e)
+        {
+            menuItemRunStopToggle.Checked = !menuItemRunStopToggle.Checked;
+            // Set Start - Stop button properties
+            if (menuItemRunStopToggle.Checked)
+            {
+                Config.Settings.run = 1;
+            }
+            else
+            {
+                Config.Settings.run = 0;
+            }
+            string msg = "";
+            Config.SaveAppConfig(out msg);
+            SetListener();
+        }
+
+        private void menuItemManualRun_Click(object sender, EventArgs e)
+        {
+            // Dossier file manual handling
+            SetStatus2("Starting manual dossier check...");
+            string result = dossier2json.manualRun();
+            SetStatus2(result);
+        }
+
+        private void menuItemRunPrev_Click(object sender, EventArgs e)
+        {
+            // Test running previous dossier file
+            SetStatus2("Starting check on previous dossier file...");
+            string result = dossier2json.manualRun(true);
+            SetStatus2(result);
+        }
+
+        private void menuItemRunPrevForceUpdate_Click(object sender, EventArgs e)
+        {
+            // Test running previous dossier file, force update - even if no more battles is detected
+            SetStatus2("Starting check on previous dossier file with force update...");
+            string result = dossier2json.manualRun(true, true);
+            SetStatus2(result);
+        }
+
+        #endregion
+
+        #region menuItem_TESTING
+
+        private void menuItemTest_ShowCountry_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.CountryInGrid();
+            frm.ShowDialog();
+        }
+
+        private void menuItemTest_AddCountry_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.AddCountryToTable();
+            frm.ShowDialog();
+        }
+
+        private void menuItemTest_ListTanks_Click(object sender, EventArgs e)
+        {
+            string s = TankData.ListTanks();
+            MessageBoxEx.Show(this, s);
+        }
+
+        private void menuItemTest_ImportTank_Wn8exp_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.ImportTank();
+            frm.ShowDialog();
+        }
+
+        private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
+        {
+            string s = Modules2DB.ImportTurrets();
+            MessageBoxEx.Show(this, s);
+        }
+
+        private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
+        {
+            string s = Modules2DB.ImportGuns();
+            MessageBoxEx.Show(this, s);
+        }
+
+        private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
+        {
+            string s = Modules2DB.ImportRadios();
+            MessageBoxEx.Show(this, s);
+        }
+
+        private void menuItemTest_WotURL_Click(object sender, EventArgs e)
+        {
+            string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
+            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(lcUrl);
+
+            httpRequest.Timeout = 10000;     // 10 secs
+            httpRequest.UserAgent = "Code Sample Web Client";
+
+            HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+            StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+
+            string content = responseStream.ReadToEnd();
+            MessageBoxEx.Show(this, content);
+        }
+
+        private void menuItemTest_ProgressBar_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.TestProgressBar();
+            frm.Show();
+        }
+
+        #endregion
+
+        
+
+        
     }
 
     

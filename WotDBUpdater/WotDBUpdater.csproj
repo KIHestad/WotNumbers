@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo_org_icon3.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -258,6 +261,8 @@
     <Content Include="Docs\Database\createTable.txt" />
     <Content Include="Docs\Database\dropFk.txt" />
     <Content Include="Docs\Database\insert.txt" />
+    <Content Include="logo_org_icon2.ico" />
+    <Content Include="logo_org_icon3.ico" />
     <None Include="Dossier2json\compile.py" />
     <Content Include="Dossier2json\Lib\abc.py" />
     <Content Include="Dossier2json\Lib\aifc.py" />
