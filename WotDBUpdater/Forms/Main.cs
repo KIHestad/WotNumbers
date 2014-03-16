@@ -29,9 +29,19 @@ namespace WotDBUpdater.Forms
 
         private void Main_Load(object sender, EventArgs e)
         {
+            // Style
+            menuMain.Renderer = new MyToolStripRenderer();
+            menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
+            panelTop.BackColor = Color.FromArgb(255, 45, 45, 45);
+            // Size
+            RefreshForm();
             // Startup settings
-            Config.GetConfig();
-            if (Config.CheckDBConn())
+            string msg = Config.GetConfig();
+            if (msg != "") 
+            {
+                MessageBoxEx.Show(this, msg,"Could not load config data");
+            }
+            else if (Config.CheckDBConn())
             {
                 string result = dossier2json.updateDossierFileWatcher();
                 SetStatus2(result);
@@ -42,13 +52,7 @@ namespace WotDBUpdater.Forms
                 TankData.GetJson2dbMappingViewFromDB();
                 TankData.GettankData2BattleMappingViewFromDB();
             }
-            // Style
-            menuMain.Renderer = new MyToolStripRenderer();
-            menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
-            panelTop.BackColor = Color.FromArgb(255, 45, 45, 45);
-            // Size
-            RefreshForm();
-            // Ready
+            
             SetStatus2("Application started");
         }
 

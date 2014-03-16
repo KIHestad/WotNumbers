@@ -34,7 +34,7 @@ namespace WotDBUpdater
             }
             dossierFileWatcher.EnableRaisingEvents = run;
             Log.LogToFile(logtext,true);
-            return LogText(logtext);
+            return logtext;
         }
 
         public static string manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)

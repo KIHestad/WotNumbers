@@ -32,7 +32,7 @@ namespace WotDBUpdater
         
         private const string configfile = "WotDBUpdaterConfig.xml";
 
-        private static void SetConfigDefaults(string message)
+        private static void SetConfigDefaults()
         {
             // Insert default values as settings
             Config.Settings.databaseServer = ".";
@@ -204,12 +204,14 @@ namespace WotDBUpdater
         }
 
 
-        public static void GetConfig()
+        public static string GetConfig()
         {
+            string msg = "";
             // Does config file exist?
             if (!File.Exists(configfile))
             {
-                SetConfigDefaults("Config file is missing, setting default values. Please check Database and Application settings.");
+                SetConfigDefaults();
+                msg = "Config file is missing, setting default values. Please check Database and Application settings.";
             }
             else
             {
@@ -221,9 +223,11 @@ namespace WotDBUpdater
                 catch (Exception ex)
                 {
                     File.Delete(configfile);
-                    SetConfigDefaults("Error reading config file, might be corrupted. The config file is now deleted. Please check Database and Application settings.\n\n" + ex.Message);
+                    SetConfigDefaults();
+                    msg = "Error reading config file, might be corrupted. The config file is now deleted. Please check Database and Application settings.\n\n" + ex.Message;
                 }
             }
+            return msg;
         }
 
         private static ConfigData LoadConfig()

@@ -71,9 +71,9 @@
             this.picResize = new System.Windows.Forms.PictureBox();
             this.panelMaster = new System.Windows.Forms.Panel();
             this.panelStatus = new System.Windows.Forms.Panel();
-            this.lblStatus1 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblStatus2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
@@ -407,7 +407,7 @@
             this.panelMain.Controls.Add(this.menuMain);
             this.panelMain.Location = new System.Drawing.Point(12, 48);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(475, 324);
+            this.panelMain.Size = new System.Drawing.Size(475, 274);
             this.panelMain.TabIndex = 15;
             // 
             // picResize
@@ -432,7 +432,7 @@
             this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMaster.Location = new System.Drawing.Point(0, 0);
             this.panelMaster.Name = "panelMaster";
-            this.panelMaster.Size = new System.Drawing.Size(634, 521);
+            this.panelMaster.Size = new System.Drawing.Size(503, 379);
             this.panelMaster.TabIndex = 16;
             this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
             // 
@@ -443,29 +443,10 @@
             this.panelStatus.Controls.Add(this.lblStatus2);
             this.panelStatus.Controls.Add(this.label1);
             this.panelStatus.Controls.Add(this.lblStatus1);
-            this.panelStatus.Location = new System.Drawing.Point(11, 481);
+            this.panelStatus.Location = new System.Drawing.Point(12, 337);
             this.panelStatus.Name = "panelStatus";
-            this.panelStatus.Size = new System.Drawing.Size(471, 24);
+            this.panelStatus.Size = new System.Drawing.Size(475, 24);
             this.panelStatus.TabIndex = 16;
-            // 
-            // lblStatus1
-            // 
-            this.lblStatus1.AutoSize = true;
-            this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblStatus1.Location = new System.Drawing.Point(8, 5);
-            this.lblStatus1.Name = "lblStatus1";
-            this.lblStatus1.Size = new System.Drawing.Size(37, 13);
-            this.lblStatus1.TabIndex = 14;
-            this.lblStatus1.Text = "Status";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.DarkGray;
-            this.label1.Location = new System.Drawing.Point(72, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 15;
             // 
             // lblStatus2
             // 
@@ -477,6 +458,25 @@
             this.lblStatus2.TabIndex = 16;
             this.lblStatus2.Text = "Last action...";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.DarkGray;
+            this.label1.Location = new System.Drawing.Point(72, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 15;
+            // 
+            // lblStatus1
+            // 
+            this.lblStatus1.AutoSize = true;
+            this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblStatus1.Location = new System.Drawing.Point(8, 5);
+            this.lblStatus1.Name = "lblStatus1";
+            this.lblStatus1.Size = new System.Drawing.Size(37, 13);
+            this.lblStatus1.TabIndex = 14;
+            this.lblStatus1.Text = "Status";
+            // 
             // timerStatus2
             // 
             this.timerStatus2.Interval = 5000;
@@ -487,7 +487,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(634, 521);
+            this.ClientSize = new System.Drawing.Size(503, 379);
             this.Controls.Add(this.panelMaster);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuMain;
