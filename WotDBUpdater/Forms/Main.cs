@@ -456,11 +456,14 @@ namespace WotDBUpdater.Forms
             frm.Show();
         }
 
+        private void menuItemTest_ViewRange_Click(object sender, EventArgs e)
+        {
+            string vr = ViewRange.CalcViewRange().ToString();
+            MessageBoxEx.Show(this,vr,"Test calc view range");
+        }
+
         #endregion
 
-        
-
-        
     }
 
     

@@ -139,6 +139,7 @@ create table playerTank (
 	eqBino int not null default 0,
 	eqCoated int not null default 0,
 	eqCamo int not null default 0,
+	equVent int not null default 0,
 	skillRecon int not null default 0,
 	skillAwareness int not null default 0,
 	skillCamo int not null default 0,
@@ -148,7 +149,10 @@ create table playerTank (
 	battlesCompany int not null default 0,
 	battlesClan int not null default 0,
 	wn8 int not null default 0,
-	eff int not null default 0
+	eff int not null default 0,
+	modRadioId int not null default 0,
+	modTurretId int not null default 0,
+	modGunId int not null default 0
 )
 
 alter table playerTank add constraint fk_playerTank_tank foreign key (tankId) references tank (id)

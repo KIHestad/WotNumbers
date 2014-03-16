@@ -75,6 +75,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
+            this.menuItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -227,7 +228,8 @@
             this.menuItemTest_ImportRadio,
             this.toolStripSeparator5,
             this.menuItemTest_WotURL,
-            this.menuItemTest_ProgressBar});
+            this.menuItemTest_ProgressBar,
+            this.menuItemTest_ViewRange});
             this.menuItemTest.Name = "menuItemTest";
             this.menuItemTest.Size = new System.Drawing.Size(58, 20);
             this.menuItemTest.Text = "&Testing";
@@ -482,6 +484,13 @@
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
             // 
+            // menuItemTest_ViewRange
+            // 
+            this.menuItemTest_ViewRange.Name = "menuItemTest_ViewRange";
+            this.menuItemTest_ViewRange.Size = new System.Drawing.Size(213, 22);
+            this.menuItemTest_ViewRange.Text = "Test View Range";
+            this.menuItemTest_ViewRange.Click += new System.EventHandler(this.menuItemTest_ViewRange_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -560,6 +569,7 @@
         private System.Windows.Forms.Label lblStatus2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerStatus2;
+        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ViewRange;
     }
 }
 
