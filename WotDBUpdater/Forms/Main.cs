@@ -222,14 +222,35 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        #region resizeFormmoveScroll
+        #region scrollGrid
 
-        private bool moving = false;
         private bool scrolling = false;
         private Point moveFromPoint;
-        private int formX;
-        private int formY;
         private int scrollY;
+
+        private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // scroll in grid from mouse wheel
+            int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex;
+            int scrollLines = SystemInformation.MouseWheelScrollLines;
+
+            if (e.Delta > 0)
+            {
+                this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+            }
+            else if (e.Delta < 0)
+            {
+                this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+            }
+            // move scrollbar
+            // Pos in datagrid
+            double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedColumnCount(false);
+            double gridpos = dataGridMain.FirstDisplayedScrollingRowIndex / rowcount;
+            // Calc scroll positions
+            double scrollMax = panelMain.Height - panelStatus.Height - pnlScrollbar.Height - menuMain.Height - 8;
+            // Move to position
+            pnlScrollbar.Top = Convert.ToInt32(gridpos * scrollMax) + pnlScrollbar.Height;
+        }
 
         private void pnlScrollbar_MouseHover(object sender, EventArgs e)
         {
@@ -267,7 +288,14 @@ namespace WotDBUpdater.Forms
             }
         }
 
+        #endregion
 
+        #region formResize
+
+        private bool moving = false;
+        private int formX;
+        private int formY;
+        
         private void picResize_MouseDown(object sender, MouseEventArgs e)
         {
             moving = true;
@@ -369,6 +397,7 @@ namespace WotDBUpdater.Forms
             dataGridMain.Top = menuMain.Height;
             // Scrollbar
             pnlScrollbar.Top = menuMain.Height + 4;
+            dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
         }
 
         private void RefreshScroll()
@@ -588,8 +617,9 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        
-        
+
+
+
     }
 
     
