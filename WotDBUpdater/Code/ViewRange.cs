@@ -17,7 +17,7 @@ namespace WotDBUpdater
 
         public static double CalcViewRange()
         {
-            // Example values for T18
+            // Catch selected values from form
             double baseTankVR = 420;
             double basePrimarySkill = 100;
             double baseBIASkill = 100;
@@ -28,6 +28,7 @@ namespace WotDBUpdater
             int eqVent = 1;
             int premiumCons = 1;
 
+            // Declare factors
             double BIAFactor = 0;
             double reconFactor = 0;
             double awarenessFactor = 0;
@@ -37,6 +38,7 @@ namespace WotDBUpdater
             double premiumConsFactor = 0;
             double bonus = 0;
 
+            // Declare final calculation variables
             double calcBaseVR = 0;
             double calcPrimarySkill = 0;
             double calcSecondarySkill = 0;
@@ -46,7 +48,7 @@ namespace WotDBUpdater
             // Set BIAFactor
             if (baseBIASkill > 0)
             {
-                BIAFactor = 5;
+                BIAFactor = 5 * baseBIASkill / 100;
             }
 
             // Set ventFactor
@@ -70,7 +72,7 @@ namespace WotDBUpdater
             // Set opticsFactor
             if (eqOptics > 0)
             {
-                if (eqBino > 0 && eqOptics > 0)
+                if (eqBino > 0 && eqOptics > 0)  // Bino and optics don't stack
                 {
                     opticsFactor = 1;
                 }
@@ -79,7 +81,6 @@ namespace WotDBUpdater
                     opticsFactor = 1.1;
                 }
             }
-
 
             // Calculate reconFactor after adding bonus
             if (baseReconSkill > 0)
@@ -100,7 +101,6 @@ namespace WotDBUpdater
                 reconFactor = 1 + (0.0002 * baseReconSkill);
             }
 
-
             // Calculate awarenessFactor after adding bonus
             bonus = 0;
             if (baseAwarenessSkill > 0)
@@ -117,18 +117,17 @@ namespace WotDBUpdater
                 {
                     bonus = bonus + 10;
                 }
-                baseAwarenessSkill = baseAwarenessSkill * (1 + (bonus / 100));
+                baseAwarenessSkill = (baseAwarenessSkill + 10) * (1 + (bonus / 100));       // magic number 10? (from wotinfo.net formula)
                 awarenessFactor = 1 + (0.0003 * baseAwarenessSkill);
             }
 
 
+            // Calculate performance factors
             calcBaseVR = baseTankVR / 0.875;
-
             calcPrimarySkill = 0.5 + (0.00375 * (basePrimarySkill + ventFactor + BIAFactor + premiumConsFactor));
-
             calcSecondarySkill = awarenessFactor * reconFactor * binoFactor * opticsFactor;
 
-
+            // Calculate final view range
             calcVR = calcBaseVR * calcPrimarySkill * calcSecondarySkill;
 
 
