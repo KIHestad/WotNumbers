@@ -26,6 +26,24 @@ namespace WotDBUpdater.Forms
         {
             panelTop.Top = 1;
             panelTop.Left = 1;
+            string msg = txtMessage.Text;
+            int lines = Convert.ToInt32((Convert.ToDouble(msg.Length) / 45));
+            int pos = 0;
+            // search for to LF = add lines
+            while (msg.IndexOf(Environment.NewLine, pos) > 0)
+            {
+                pos = msg.IndexOf(Environment.NewLine, pos) + 2;
+                if (msg.Length > pos && msg.Substring(pos, 2) == Environment.NewLine)
+                {
+                    lines++;
+                    pos = pos + 2;
+                }
+            }
+            if (lines >= 5)
+            {
+                if (lines > 12) lines = 12; // max size
+                this.Height = txtMessage.Top + (lines * 25); // resize initial height of form to fit content
+            }
             RefreshForm();
         }
 

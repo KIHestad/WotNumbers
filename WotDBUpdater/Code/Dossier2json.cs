@@ -21,11 +21,11 @@ namespace WotDBUpdater
 
         public static string updateDossierFileWatcher()
         {
-            string logtext = "Dossier file watcher stopped";
+            string logtext = "Dossier file listener stopped";
             bool run = (Config.Settings.run == 1);
             if (run)
             {
-                logtext = "Dossier file watcher started";
+                logtext = "Dossier file listener started";
                 dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
                 dossierFileWatcher.Filter = "*.dat";
                 dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
@@ -99,7 +99,7 @@ namespace WotDBUpdater
         {
             Log.CheckLogFileSize();
             List<string> logtext = new List<string>();
-            logtext.Add(LogText("Dossier file watcher detected updated dossier file"));
+            logtext.Add(LogText("Dossier file listener detected updated dossier file"));
             // Dossier file automatic handling
             // Stop listening to dossier file
             dossierFileWatcher.EnableRaisingEvents = false;

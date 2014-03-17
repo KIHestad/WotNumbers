@@ -13,6 +13,9 @@ using System.Diagnostics;
 using System.Collections;
 using WotDBUpdater.Forms;
 using System.Net;
+using System.Reflection;
+using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
@@ -31,12 +34,14 @@ namespace WotDBUpdater.Forms
         {
             // Style
             menuMain.Renderer = new MyToolStripRenderer();
-            menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
-            panelTop.BackColor = Color.FromArgb(255, 45, 45, 45);
+            menuMain.BackColor = Color.FromArgb(255, 45, 45, 49);
+            panelTop.BackColor = Color.FromArgb(255, 45, 45, 49);
             Config.Settings.run = 0;
             SetListener();
             // Size
+            InitForm();
             RefreshForm();
+            
             // Startup settings
             string statusmsg = "Application started with issues...";
             string msg = Config.GetConfig();
@@ -55,8 +60,9 @@ namespace WotDBUpdater.Forms
                 TankData.GettankData2BattleMappingViewFromDB();
                 statusmsg = "Welcome " + Config.Settings.playerName;
             }
-            
             SetStatus2(statusmsg);
+            // Populate main datagrid
+            ShowDataGrid();
         }
 
         #region layout
@@ -126,7 +132,7 @@ namespace WotDBUpdater.Forms
             timerStatus2.Enabled = false;
             Application.DoEvents();
             Thread.Sleep(20);
-            timerStatus2.Interval = 10000;
+            timerStatus2.Interval = 6000;
             lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor);
             lblStatus2.Text = txt;
             Application.DoEvents();
@@ -164,7 +170,19 @@ namespace WotDBUpdater.Forms
             RefreshForm();
             SetStatus2(result);
         }
-        
+
+        private void ShowDataGrid()
+        {
+            SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+            SqlCommand cmd = new SqlCommand("SELECT * FROM battleresultview ORDER BY time DESC", con);
+            cmd.CommandType = CommandType.Text;
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            dataGridMain.DataSource = dt;
+            InitForm(); // Make scrollbar go to top
+        }
+
         #endregion
 
         #region moveForm
@@ -194,6 +212,7 @@ namespace WotDBUpdater.Forms
             dragging = false;
         }
 
+        
         private void Main_Resize(object sender, EventArgs e)
         {
             panelTop.Width = panelMaster.Width - 2;
@@ -203,12 +222,51 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        #region resizeForm
+        #region resizeFormmoveScroll
 
         private bool moving = false;
+        private bool scrolling = false;
         private Point moveFromPoint;
         private int formX;
         private int formY;
+        private int scrollY;
+
+        private void pnlScrollbar_MouseHover(object sender, EventArgs e)
+        {
+            pnlScrollbar.BackColor = Color.FromArgb(255, 102, 102, 106);
+        }
+
+        private void pnlScrollbar_MouseLeave(object sender, EventArgs e)
+        {
+            pnlScrollbar.BackColor = Color.FromArgb(255, 82, 82, 86);
+        }
+
+        private void pnlScrollbar_MouseDown(object sender, MouseEventArgs e)
+        {
+            pnlScrollbar.BackColor = Color.FromArgb(255, 132, 132, 136);
+            scrolling = true;
+            moveFromPoint = Cursor.Position;
+            scrollY = pnlScrollbar.Top;
+        }
+
+        private void pnlScrollbar_MouseUp(object sender, MouseEventArgs e)
+        {
+            pnlScrollbar.BackColor = Color.FromArgb(255, 82, 82, 86);
+            scrolling = false;
+        }
+
+        private void pnlScrollbar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (scrolling)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(moveFromPoint));
+                int t = scrollY + dif.Y;
+                if (t >= menuMain.Height + 4 && t <= panelMain.Height - panelStatus.Height - pnlScrollbar.Height - 4)
+                    pnlScrollbar.Top = t;
+                RefreshScroll();
+            }
+        }
+
 
         private void picResize_MouseDown(object sender, MouseEventArgs e)
         {
@@ -297,33 +355,67 @@ namespace WotDBUpdater.Forms
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void RefreshForm()
+        private void InitForm()
         {
-            Refresh();
             // Title bar
             panelTop.Left = 1;
             panelTop.Top = 1;
+            // Main Area including menu
+            panelMain.Left = 1;
+            // Status bar
+            panelStatus.Left = 1;
+            // Grid
+            dataGridMain.Left = 0;
+            dataGridMain.Top = menuMain.Height;
+            // Scrollbar
+            pnlScrollbar.Top = menuMain.Height + 4;
+        }
+
+        private void RefreshScroll()
+        { 
+            // Calc position
+            double scrollMax = panelMain.Height - panelStatus.Height - pnlScrollbar.Height - menuMain.Height - 8;
+            double scrollPos = pnlScrollbar.Top - menuMain.Height;
+            // Move datagrid
+            double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedColumnCount(false);
+            // Move to position
+            int pos = Convert.ToInt32(rowcount * (scrollPos / scrollMax));
+            dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+        }
+
+        private void RefreshForm()
+        {
+            Refresh();
             // Title bar form handling
             picClose.Left = panelMain.Width - picClose.Width;
             picNormalize.Left = picClose.Left - picNormalize.Width;
             picMinimize.Left = picNormalize.Left - picMinimize.Width;
             // Main Area including menu
-            panelMain.Left = 1;
             panelMain.Top = panelTop.Height + 1;
             panelMain.Height = panelMaster.Height - panelTop.Height - 2;
             // Status bar
-            panelStatus.Left = 1;
             panelStatus.Top = panelMaster.Height - panelStatus.Height - 1;
             panelStatus.Width = panelMaster.Width - 2;
             // Status bar resize handling
             picResize.Left = panelStatus.Width - picResize.Width;
             picResize.Visible = (this.WindowState != FormWindowState.Maximized);
-            
+            // Grid
+            dataGridMain.Height = panelMain.Height - menuMain.Height - panelStatus.Height;
+            dataGridMain.Width = panelMain.Width-20; // room for scrollbar
+            // Scrollbar
+            pnlScrollbar.Left = dataGridMain.Width + 4;
         }
 
         #endregion
 
         #region menuItemAction
+
+        private void menuItemRefresh_Click(object sender, EventArgs e)
+        {
+            SetStatus2("Refreshing grid...");
+            ShowDataGrid();
+            SetStatus2("Grid refreshed");
+        }
 
         private void menuItemAppSettings_Click(object sender, EventArgs e)
         {
@@ -357,8 +449,22 @@ namespace WotDBUpdater.Forms
 
         private void menuItemAbout_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.Help.About();
-            frm.ShowDialog();
+            //Form frm = new Forms.Help.About();
+            //frm.ShowDialog();
+            string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
+                         "Tool for getting data from WoT dossier file to MS SQL Database" + Environment.NewLine + Environment.NewLine +
+                         "Created by: BadButton and cmdrTrinity";
+            Code.Support.Message.Show(msg, "About WoT DBstat");
+        }
+
+        private string AssemblyVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
+                    Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + " (" +
+                    Assembly.GetExecutingAssembly().GetName().Version.MinorRevision.ToString() + ")";
+            }
         }
 
         private void menuItemRunStopToggle_Click(object sender, EventArgs e)
@@ -475,13 +581,15 @@ namespace WotDBUpdater.Forms
             Code.Support.Message.Show(vr,"Test calc view range");
         }
 
-        #endregion
-
         private void menuItemTest_Message_Click(object sender, EventArgs e)
         {
             Code.Support.Message.Show("Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding.", "Test");
         }
 
+        #endregion
+
+        
+        
     }
 
     

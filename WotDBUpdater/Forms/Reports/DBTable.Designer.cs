@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBTable));
             this.dataGridViewShowTable = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.ddSelectTable = new System.Windows.Forms.ComboBox();
@@ -101,15 +102,15 @@
             this.panel2.Size = new System.Drawing.Size(815, 402);
             this.panel2.TabIndex = 5;
             // 
-            // frmDBTable
+            // DBTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(815, 433);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Name = "frmDBTable";
-            this.ShowInTaskbar = false;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "DBTable";
             this.Text = "Show Database Table";
             this.Load += new System.EventHandler(this.frmDBTable_Load);
             this.SizeChanged += new System.EventHandler(this.frmDBTable_SizeChanged);

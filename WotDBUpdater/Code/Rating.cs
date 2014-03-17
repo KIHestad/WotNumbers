@@ -110,11 +110,18 @@ namespace WotDBUpdater
                     CAP = ConvertDbVal2Double(playerTankData["cap" + battlemode.ToString()]) / totalBattleCount;
                 }
                 // CALC
-                EFF = FRAGS * (350.0 - TIER * 20.0)
-                    + DAMAGE * (0.2 + 1.5 / TIER)
-                    + 200.0 * SPOT
-                    + 15.0 * CAP
-                    + 15.0 * DEF;
+                    EFF =
+                        DAMAGE * (10 / (TIER + 2)) * (0.23 + 2 * TIER / 100) +
+                        FRAGS * 250 +
+                        SPOT * 150 +
+                        Math.Log(CAP + 1, 1.732) * 150 +
+                        DEF * 150;
+
+                    //EFF = FRAGS * (350.0 - TIER * 20.0)
+                    //    + DAMAGE * (0.2 + 1.5 / TIER)
+                    //    + 200.0 * SPOT
+                    //    + 15.0 * CAP
+                    //    + 15.0 * DEF;
             }
             // Return value
             return Convert.ToInt32(EFF);
@@ -174,11 +181,19 @@ namespace WotDBUpdater
                 double DEF = (ConvertDbVal2Double(battleData["def"])) / battleCount;
                 double CAP = (ConvertDbVal2Double(battleData["cap"])) / battleCount;
                 // CALC
-                EFF = FRAGS * (350.0 - TIER * 20.0)
-                    + DAMAGE * (0.2 + 1.5 / TIER)
-                    + 200.0 * SPOT
-                    + 15.0 * CAP
-                    + 15.0 * DEF;
+                EFF =
+                        DAMAGE * (10 / (TIER + 2)) * (0.23 + 2 * TIER / 100) +
+                        FRAGS * 250 +
+                        SPOT * 150 +
+                        Math.Log(CAP + 1, 1.732) * 150 +
+                        DEF * 150;
+                
+                //EFF = FRAGS * (350.0 - TIER * 20.0)
+                //    + DAMAGE * (0.2 + 1.5 / TIER)
+                //    + 200.0 * SPOT
+                //    + 15.0 * CAP
+                //    + 15.0 * DEF;
+
             }
             // Return value
             return Convert.ToInt32(EFF);

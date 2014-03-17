@@ -42,7 +42,7 @@ namespace WotDBUpdater.Forms.Reports
             panel2.Height = DBView.ActiveForm.ClientSize.Height - panel1.Height;
         }
 
-                private void RefreshDataGrid()
+        private void RefreshDataGrid()
         {
             try
             {

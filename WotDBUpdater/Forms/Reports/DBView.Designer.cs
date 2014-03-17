@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBView));
             this.dataGridViewShowView = new System.Windows.Forms.DataGridView();
             this.ddSelectView = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -101,15 +102,15 @@
             this.panel2.Size = new System.Drawing.Size(851, 402);
             this.panel2.TabIndex = 7;
             // 
-            // frmDBView
+            // DBView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(851, 432);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
-            this.Name = "frmDBView";
-            this.ShowInTaskbar = false;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "DBView";
             this.Text = "Show Database View";
             this.Load += new System.EventHandler(this.frmDBView_Load);
             this.SizeChanged += new System.EventHandler(this.frmDBView_SizeChanged);
