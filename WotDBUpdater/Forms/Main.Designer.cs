@@ -76,6 +76,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItemTest_Message = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -229,7 +231,9 @@
             this.toolStripSeparator5,
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
-            this.menuItemTest_ViewRange});
+            this.menuItemTest_ViewRange,
+            this.toolStripSeparator7,
+            this.menuItemTest_Message});
             this.menuItemTest.Name = "menuItemTest";
             this.menuItemTest.Size = new System.Drawing.Size(58, 20);
             this.menuItemTest.Text = "&Testing";
@@ -343,7 +347,7 @@
             this.panelTop.Controls.Add(this.lblTitle);
             this.panelTop.Location = new System.Drawing.Point(12, 12);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(475, 26);
+            this.panelTop.Size = new System.Drawing.Size(475, 30);
             this.panelTop.TabIndex = 14;
             this.panelTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseDown);
             this.panelTop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseMove);
@@ -352,7 +356,7 @@
             // picLogo
             // 
             this.picLogo.Image = ((System.Drawing.Image)(resources.GetObject("picLogo.Image")));
-            this.picLogo.Location = new System.Drawing.Point(11, 4);
+            this.picLogo.Location = new System.Drawing.Point(11, 8);
             this.picLogo.Name = "picLogo";
             this.picLogo.Size = new System.Drawing.Size(35, 18);
             this.picLogo.TabIndex = 5;
@@ -402,7 +406,7 @@
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Gray;
-            this.lblTitle.Location = new System.Drawing.Point(52, 5);
+            this.lblTitle.Location = new System.Drawing.Point(52, 9);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(83, 17);
             this.lblTitle.TabIndex = 1;
@@ -414,9 +418,9 @@
             // panelMain
             // 
             this.panelMain.Controls.Add(this.menuMain);
-            this.panelMain.Location = new System.Drawing.Point(12, 48);
+            this.panelMain.Location = new System.Drawing.Point(12, 67);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(475, 274);
+            this.panelMain.Size = new System.Drawing.Size(475, 250);
             this.panelMain.TabIndex = 15;
             // 
             // picResize
@@ -490,6 +494,18 @@
             // 
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(210, 6);
+            // 
+            // menuItemTest_Message
+            // 
+            this.menuItemTest_Message.Name = "menuItemTest_Message";
+            this.menuItemTest_Message.Size = new System.Drawing.Size(213, 22);
+            this.menuItemTest_Message.Text = "Message";
+            this.menuItemTest_Message.Click += new System.EventHandler(this.menuItemTest_Message_Click);
             // 
             // Main
             // 
@@ -570,6 +586,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerStatus2;
         private System.Windows.Forms.ToolStripMenuItem menuItemTest_ViewRange;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripMenuItem menuItemTest_Message;
     }
 }
 

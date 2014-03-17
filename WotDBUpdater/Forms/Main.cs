@@ -33,6 +33,8 @@ namespace WotDBUpdater.Forms
             menuMain.Renderer = new MyToolStripRenderer();
             menuMain.BackColor = Color.FromArgb(255, 45, 45, 45);
             panelTop.BackColor = Color.FromArgb(255, 45, 45, 45);
+            Config.Settings.run = 0;
+            SetListener();
             // Size
             RefreshForm();
             // Startup settings
@@ -45,7 +47,6 @@ namespace WotDBUpdater.Forms
             else if (Config.CheckDBConn())
             {
                 string result = dossier2json.updateDossierFileWatcher();
-                SetStatus2(result);
                 SetListener();
                 SetFormTitle();
                 // Init
@@ -76,7 +77,16 @@ namespace WotDBUpdater.Forms
 
         private void panelMaster_Paint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
+            Color border = Color.Black;
+            // Border color according to run state
+            //if (this.WindowState != FormWindowState.Maximized)
+            //{
+            //    if (Config.Settings.run == 1) 
+            //        border = System.Drawing.Color.ForestGreen;
+            //    else
+            //        border = System.Drawing.Color.DarkRed;
+            //}
+            ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, border, ButtonBorderStyle.Solid);
         }
                 
         #endregion
@@ -151,6 +161,7 @@ namespace WotDBUpdater.Forms
                 lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
             }
             string result = dossier2json.updateDossierFileWatcher();
+            RefreshForm();
             SetStatus2(result);
         }
         
@@ -465,6 +476,11 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
+
+        private void menuItemTest_Message_Click(object sender, EventArgs e)
+        {
+            Code.Support.Message.Show("Test", "Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. ");
+        }
 
     }
 
