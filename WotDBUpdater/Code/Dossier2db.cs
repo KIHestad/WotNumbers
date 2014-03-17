@@ -34,6 +34,7 @@ namespace WotDBUpdater
             // Read file into string
             StreamReader sr = new StreamReader(filename, Encoding.UTF8);
             string json = sr.ReadToEnd();
+            sr.Close();
                         
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -148,7 +149,7 @@ namespace WotDBUpdater
             sw.Stop();
             TimeSpan ts = sw.Elapsed;
             Log.LogToFile(log);
-            return (" > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000"));
+            return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
         }
 
         static DateTime ConvertFromUnixTimestamp(double timestamp)

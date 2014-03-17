@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo_org_icon3.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -45,6 +48,9 @@
     </Reference>
     <Reference Include="IronPython.Wpf, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.4\lib\Net45\IronPython.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="LibGit2Sharp">
+      <HintPath>..\packages\LibGit2Sharp.0.16.0.0\lib\net35\LibGit2Sharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -75,6 +81,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Support\MenuStripLayout.cs" />
+    <Compile Include="Code\Support\Message.cs" />
     <Compile Include="Code\Support\MessageBoxEx.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
@@ -97,6 +105,12 @@
     </Compile>
     <Compile Include="Forms\Help\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Message.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Message.Designer.cs">
+      <DependentUpon>Message.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Test\AddCountryToTable.cs">
       <SubType>Form</SubType>
@@ -174,6 +188,9 @@
     <EmbeddedResource Include="Forms\Help\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Message.resx">
+      <DependentUpon>Message.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\AddCountryToTable.resx">
       <DependentUpon>AddCountryToTable.cs</DependentUpon>
     </EmbeddedResource>
@@ -213,6 +230,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Docs\Img\logo_org.pdn" />
+    <None Include="Docs\Img\logo_org_icon.pdn" />
+    <None Include="Docs\Img\logo_org_icon3.pdn" />
     <None Include="Docs\IronPython\Call wotdc2p.py using IronPython" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\README.md" />
@@ -244,7 +264,20 @@
     <Content Include="Docs\Database\select.txt" />
     <Content Include="Docs\Dev log\BadButton.txt" />
     <Content Include="Docs\Dev log\cmdrTrinity.txt" />
-    <Content Include="Docs\Dev log\test.txt" />
+    <Content Include="Docs\Img\exit.png" />
+    <Content Include="Docs\Img\logo.png" />
+    <Content Include="Docs\Img\logo2.png" />
+    <Content Include="Docs\Img\logo3.png" />
+    <Content Include="Docs\Img\logo_org_icon.bmp" />
+    <Content Include="Docs\Img\logo_org_icon.ico" />
+    <Content Include="Docs\Img\logo_org_icon2.ico" />
+    <Content Include="Docs\Img\logo_org_icon3.bmp" />
+    <Content Include="Docs\Img\logo_org_icon3.ico" />
+    <Content Include="Docs\Img\minimize.png" />
+    <Content Include="Docs\Img\normalize.png" />
+    <Content Include="Docs\Img\resize.png" />
+    <Content Include="Docs\Img\resize2.png" />
+    <Content Include="Docs\Img\resize3.png" />
     <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />
@@ -253,6 +286,8 @@
     <Content Include="Docs\Database\createTable.txt" />
     <Content Include="Docs\Database\dropFk.txt" />
     <Content Include="Docs\Database\insert.txt" />
+    <Content Include="logo_org_icon2.ico" />
+    <Content Include="logo_org_icon3.ico" />
     <None Include="Dossier2json\compile.py" />
     <Content Include="Dossier2json\Lib\abc.py" />
     <Content Include="Dossier2json\Lib\aifc.py" />
@@ -754,6 +789,14 @@ xcopy "$(ProjectDir)Dossier2json" "$(TargetDir)Dossier2json" /y /s
 md "$(TargetDir)Docs"
 md "$(TargetDir)Docs\Database"
 xcopy "$(ProjectDir)Docs\Database" "$(TargetDir)Docs\Database" /y /s</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)NativeBinaries" md "$(TargetDir)NativeBinaries"
+if not exist "$(TargetDir)NativeBinaries\x86" md "$(TargetDir)NativeBinaries\x86"
+xcopy /s /y /d "$(SolutionDir)packages\LibGit2Sharp.0.16.0.0\lib\net35\NativeBinaries\x86\*.*" "$(TargetDir)NativeBinaries\x86"
+if not exist "$(TargetDir)NativeBinaries\amd64" md "$(TargetDir)NativeBinaries\amd64"
+xcopy /s /y /d "$(SolutionDir)packages\LibGit2Sharp.0.16.0.0\lib\net35\NativeBinaries\amd64\*.*" "$(TargetDir)NativeBinaries\amd64"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

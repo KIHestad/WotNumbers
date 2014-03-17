@@ -33,11 +33,13 @@ namespace WotDBUpdater
                 dossierFileWatcher.EnableRaisingEvents = true;
             }
             dossierFileWatcher.EnableRaisingEvents = run;
-            return LogText(logtext);
+            Log.LogToFile(logtext,true);
+            return logtext;
         }
 
-        public static List<string> manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+        public static string manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
         {
+            string returval = "Manual dossier file check started...";
             Log.CheckLogFileSize();
             List<string> logtext = new List<string>();
             bool ok = true;
@@ -62,6 +64,7 @@ namespace WotDBUpdater
                     if (dossierfile == "")
                     {
                         logtext.Add(LogText(" > No dossier file found"));
+                        returval = "No dossier file found - check Application Settings";
                         ok = false;
                     }
                     else
@@ -72,6 +75,7 @@ namespace WotDBUpdater
                 else
 	            {
                     logtext.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
+                    returval = "Inncorrect path to dossier file - check Application Settings";
                     ok = false;
 	            }
             }
@@ -81,14 +85,14 @@ namespace WotDBUpdater
             }
             if (ok)
             {
-                List<string> newlogtext = copyAndConvertFile(dossierfile, TestRunPrevJsonFile, ForceUpdate);
+                List<string> newlogtext = copyAndConvertFile(out returval, dossierfile, TestRunPrevJsonFile, ForceUpdate);
                 foreach (string s in newlogtext)
                 {
                     logtext.Add(s);
                 }
             }
             Log.LogToFile(logtext);
-            return logtext;
+            return returval;
         }
 
         private static void dossierFileChanged(object source, FileSystemEventArgs e)
@@ -106,7 +110,8 @@ namespace WotDBUpdater
             // Wait until file is ready to read, 
             List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierfile, 4000);
             // Perform file conversion from picle til json
-            List<string> logtextnew2 = copyAndConvertFile(dossierfile);
+            string statusresult;
+            List<string> logtextnew2 = copyAndConvertFile(out statusresult, dossierfile);
             // Add logtext
             foreach (string s in logtextnew1)
 	        {
@@ -153,7 +158,7 @@ namespace WotDBUpdater
             return logtext;
         }
 
-        private static List<string> copyAndConvertFile(string dossierfile, bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+        private static List<string> copyAndConvertFile(out string statusresult, string dossierfile, bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
         {
             // Copy dossier file and perform file conversion til json format
             List<string> logtext = new List<string>();
@@ -162,6 +167,7 @@ namespace WotDBUpdater
             string dossiernewfile = appPath + "/dossier.dat"; // new dossier file
             string dossierprevfile = appPath + "/dossier_prev.dat"; // previous dossier file
             string jsonfile = appPath + "/dossier.json"; // output file
+            string returval = "Starting file handling...";
             try
             {
                 bool ok = true;
@@ -177,6 +183,7 @@ namespace WotDBUpdater
                         {
                             // Files are identical, skip convert
                             logtext.Add(LogText(" > File skipped, same content as previos"));
+                            returval = "Manual dossier file check skipped - same content as previous";
                             fileInfonew.Delete();
                             ok = false;
                         }
@@ -188,6 +195,7 @@ namespace WotDBUpdater
                     if (result != "") // error occured
                     {
                         logtext.Add(result);
+                        returval = "Error converting dossier file to json - check log file";
                         ok = false;
                     }
                     else
@@ -205,19 +213,23 @@ namespace WotDBUpdater
                 {
                     if (File.Exists(jsonfile))
                     {
-                        // TODO: tesing new method
-                        logtext.Add(LogText(Dossier2db.ReadJson(jsonfile, ForceUpdate)));
+                        returval = Dossier2db.ReadJson(jsonfile, ForceUpdate);
+                        logtext.Add(LogText(" > " + returval));
                     }
                     else
                     {
                         logtext.Add(LogText(" > No json file found"));
+                        returval = "No previous dossier file found - run manual check";
                     }
                 }
             }
             catch (Exception ex)
             {
                 logtext.Add(LogText(" > General file copy or conversion error: " + ex.Message));
+                returval = "General file copy or conversion error - check log file";
             }
+            Log.LogToFile(logtext);
+            statusresult = returval;
             return logtext;
         }
 

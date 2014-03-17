@@ -220,7 +220,7 @@ namespace WotDBUpdater
             }
             catch (Exception ex)
             {
-                MessageBoxEx.Show(Form.ActiveForm, ex.Message);
+                Code.Support.Message.Show(ex.Message, "Error occured");
             }
 
             return ("Import Complete");

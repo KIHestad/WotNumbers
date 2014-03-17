@@ -115,7 +115,7 @@ namespace WotDBUpdater
                 }
                 catch (Exception ex)
                 {
-                    MessageBoxEx.Show(Form.ActiveForm, ex.Message.ToString());
+                    Code.Support.Message.Show(ex.Message.ToString(), "Error occured");
                 }
             }
 
@@ -217,7 +217,7 @@ namespace WotDBUpdater
                 }
                 catch (Exception ex)
                 {
-                    MessageBoxEx.Show(Form.ActiveForm, ex.Message);
+                    Code.Support.Message.Show(ex.Message, "Error occured");
                 }
             }
 
@@ -293,7 +293,7 @@ namespace WotDBUpdater
                 }
                 catch (Exception ex)
                 {
-                    MessageBoxEx.Show(Form.ActiveForm, ex.Message);
+                    Code.Support.Message.Show(ex.Message, "Error occured");
                 }
 
             }

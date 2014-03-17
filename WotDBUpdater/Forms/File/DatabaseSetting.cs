@@ -74,7 +74,7 @@ namespace WotDBUpdater.Forms.File
                 catch (Exception ex)
                 {
                     Cursor.Current = Cursors.Default;
-                    MessageBox.Show ("Error getting databases: " + ex.Message,"Database server error") ;
+                    MessageBoxEx.Show (this,"Error getting databases: " + ex.Message,"Database server error") ;
                 }
                 Cursor.Current = Cursors.Default;
             }
