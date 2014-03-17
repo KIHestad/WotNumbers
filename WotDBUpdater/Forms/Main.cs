@@ -36,6 +36,7 @@ namespace WotDBUpdater.Forms
             // Size
             RefreshForm();
             // Startup settings
+            string statusmsg = "Application started with issues...";
             string msg = Config.GetConfig();
             if (msg != "") 
             {
@@ -51,9 +52,10 @@ namespace WotDBUpdater.Forms
                 TankData.GetTankListFromDB();
                 TankData.GetJson2dbMappingViewFromDB();
                 TankData.GettankData2BattleMappingViewFromDB();
+                statusmsg = "Welcome " + Config.Settings.playerName;
             }
             
-            SetStatus2("Application started");
+            SetStatus2(statusmsg);
         }
 
         #region layout

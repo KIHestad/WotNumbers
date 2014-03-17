@@ -59,6 +59,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemTest_WotURL = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemTest_ProgressBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.panelTop = new System.Windows.Forms.Panel();
@@ -75,7 +76,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
-            this.menuItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -312,6 +312,13 @@
             this.menuItemTest_ProgressBar.Text = "Test progress bar";
             this.menuItemTest_ProgressBar.Click += new System.EventHandler(this.menuItemTest_ProgressBar_Click);
             // 
+            // menuItemTest_ViewRange
+            // 
+            this.menuItemTest_ViewRange.Name = "menuItemTest_ViewRange";
+            this.menuItemTest_ViewRange.Size = new System.Drawing.Size(213, 22);
+            this.menuItemTest_ViewRange.Text = "Test View Range";
+            this.menuItemTest_ViewRange.Click += new System.EventHandler(this.menuItemTest_ViewRange_Click);
+            // 
             // menuItemHelp
             // 
             this.menuItemHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -454,7 +461,7 @@
             // 
             this.lblStatus2.AutoSize = true;
             this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatus2.Location = new System.Drawing.Point(75, 5);
+            this.lblStatus2.Location = new System.Drawing.Point(67, 5);
             this.lblStatus2.Name = "lblStatus2";
             this.lblStatus2.Size = new System.Drawing.Size(68, 13);
             this.lblStatus2.TabIndex = 16;
@@ -483,13 +490,6 @@
             // 
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
-            // 
-            // menuItemTest_ViewRange
-            // 
-            this.menuItemTest_ViewRange.Name = "menuItemTest_ViewRange";
-            this.menuItemTest_ViewRange.Size = new System.Drawing.Size(213, 22);
-            this.menuItemTest_ViewRange.Text = "Test View Range";
-            this.menuItemTest_ViewRange.Click += new System.EventHandler(this.menuItemTest_ViewRange_Click);
             // 
             // Main
             // 
