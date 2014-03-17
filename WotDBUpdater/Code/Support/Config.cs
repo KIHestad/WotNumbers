@@ -84,7 +84,7 @@ namespace WotDBUpdater
             // Check data
             if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || databaseName == "")
             {
-                MessageBoxEx.Show(Form.ActiveForm, "Missing database server and/or database name, check Database Settings.", "Config error");
+                Code.Support.Message.Show("Missing database server and/or database name, check Database Settings.", "Config error");
             }
             else
             {
@@ -97,7 +97,7 @@ namespace WotDBUpdater
                 }
                 catch (Exception ex)
                 {
-                    if (showErrorIfNotExists) MessageBoxEx.Show(Form.ActiveForm, "Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
+                    if (showErrorIfNotExists) Code.Support.Message.Show("Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
                 }
             }
             return ok;

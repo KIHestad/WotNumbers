@@ -42,7 +42,7 @@ namespace WotDBUpdater.Forms
             string msg = Config.GetConfig();
             if (msg != "") 
             {
-                MessageBoxEx.Show(this, msg,"Could not load config data");
+                Code.Support.Message.Show(msg,"Could not load config data");
             }
             else if (Config.CheckDBConn())
             {
@@ -421,7 +421,7 @@ namespace WotDBUpdater.Forms
         private void menuItemTest_ListTanks_Click(object sender, EventArgs e)
         {
             string s = TankData.ListTanks();
-            MessageBoxEx.Show(this, s);
+            Code.Support.Message.Show(s);
         }
 
         private void menuItemTest_ImportTank_Wn8exp_Click(object sender, EventArgs e)
@@ -433,19 +433,19 @@ namespace WotDBUpdater.Forms
         private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
         {
             string s = Modules2DB.ImportTurrets();
-            MessageBoxEx.Show(this, s);
+            Code.Support.Message.Show(s);
         }
 
         private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
         {
             string s = Modules2DB.ImportGuns();
-            MessageBoxEx.Show(this, s);
+            Code.Support.Message.Show(s);
         }
 
         private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
         {
             string s = Modules2DB.ImportRadios();
-            MessageBoxEx.Show(this, s);
+            Code.Support.Message.Show(s);
         }
 
         private void menuItemTest_WotURL_Click(object sender, EventArgs e)
@@ -460,7 +460,7 @@ namespace WotDBUpdater.Forms
             StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 
             string content = responseStream.ReadToEnd();
-            MessageBoxEx.Show(this, content);
+            Code.Support.Message.Show(content);
         }
 
         private void menuItemTest_ProgressBar_Click(object sender, EventArgs e)
@@ -472,14 +472,14 @@ namespace WotDBUpdater.Forms
         private void menuItemTest_ViewRange_Click(object sender, EventArgs e)
         {
             string vr = ViewRange.CalcViewRange().ToString();
-            MessageBoxEx.Show(this,vr,"Test calc view range");
+            Code.Support.Message.Show(vr,"Test calc view range");
         }
 
         #endregion
 
         private void menuItemTest_Message_Click(object sender, EventArgs e)
         {
-            Code.Support.Message.Show("Test", "Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. ");
+            Code.Support.Message.Show("Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding. Dette er en veldig lang testmelding.", "Test");
         }
 
     }

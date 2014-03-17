@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code.Support
 {
     class Message
     {
-        public static void Show(string title, string message)
+        public static void Show(string message, string title = "Message")
         {
             Form frm = new Forms.Message(title, message);
             frm.FormBorderStyle = FormBorderStyle.None;
