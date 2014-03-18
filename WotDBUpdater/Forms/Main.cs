@@ -185,7 +185,8 @@ namespace WotDBUpdater.Forms
                 "SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, " +
                 "  CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) " +
                 "       WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS Result, " +
-                "  CASE WHEN battlescount > 1 THEN CAST(dbo.battle.survived AS varchar) WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
+                "  CASE WHEN battlescount > 1 THEN RIGHT('00' + CAST(ROUND(CAST(dbo.battle.survived AS FLOAT) / CAST(dbo.battle.battlescount AS float) * 100,0) AS varchar),2) + ' %'  " +
+                "       WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
                 "  dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp AS XP, dbo.battle.spotted AS Detected, " +
                 "  dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots AS Shots, dbo.battle.hits AS Hits, dbo.battle.wn8 AS WN8, " +
                 "  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.victory, dbo.battle.loss, dbo.battle.survived as surivivedcount " +
@@ -209,13 +210,59 @@ namespace WotDBUpdater.Forms
             InitForm(); // Make scrollbar go to top
         }
 
+        private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // Victory color
+            if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Result"))
+            {
+                DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+                int wins = (int)dataGridMain["victory", e.RowIndex].Value;
+                int loss = (int)dataGridMain["loss", e.RowIndex].Value;
+                if (wins > loss)
+                {
+                    cell.Style.ForeColor = Color.Green;
+                }
+                else if (wins == loss)
+                {
+                    cell.Style.ForeColor = Color.Yellow;
+                }
+                else
+                {
+                    cell.Style.ForeColor = Color.Red;
+                }
+            }
+            // Survived color and formatting
+            if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
+            {
+                DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+                double battlecount = Convert.ToDouble(dataGridMain["battlescount", e.RowIndex].Value);
+                double survivedcount = Convert.ToDouble(dataGridMain["surivivedcount", e.RowIndex].Value);
+                double surviverate = survivedcount / battlecount;
+                if (surviverate < 0.48)
+                {
+                    cell.Style.ForeColor = Color.Red;
+                }
+                else if (surviverate > 0.50)
+                {
+                    cell.Style.ForeColor = Color.Green;
+                }
+                else
+                {
+                    cell.Style.ForeColor = Color.Yellow;
+                }
+            }
+        }
+
         public void FormatDataGrid()
         {
+            return;
             foreach (DataGridViewRow Myrow in dataGridMain.Rows)
             {
                 // Victory
                 int wins = (int)Myrow.Cells["victory"].Value;
                 int loss = (int)Myrow.Cells["loss"].Value;
+                double battlecount = Convert.ToDouble(Myrow.Cells["battlescount"].Value);
+                double survivedcount = Convert.ToDouble(Myrow.Cells["surivivedcount"].Value);
                 if (wins > loss)
                 {
                     Myrow.Cells["Result"].Style.ForeColor = Color.Green;
@@ -229,12 +276,12 @@ namespace WotDBUpdater.Forms
                     Myrow.Cells["Result"].Style.ForeColor = Color.Red;
                 }
                 // Survived
-                double surviverate = Convert.ToInt32(Myrow.Cells["surivivedcount"].Value) / Convert.ToInt32(Myrow.Cells["battlescount"].Value);
-                if (surviverate < 0.5)
+                double surviverate = survivedcount / battlecount;
+                if (surviverate < 0.48)
                 {
                     Myrow.Cells["survived"].Style.ForeColor = Color.Red;
                 }
-                else if (surviverate > 0.5)
+                else if (surviverate > 0.50)
                 {
                     Myrow.Cells["survived"].Style.ForeColor = Color.Green;
                 }
@@ -242,6 +289,7 @@ namespace WotDBUpdater.Forms
                 {
                     Myrow.Cells["survived"].Style.ForeColor = Color.Yellow;
                 }
+               
             }
         }
 
@@ -678,6 +726,8 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
+
+        
 
         
 
