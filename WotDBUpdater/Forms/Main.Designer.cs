@@ -83,7 +83,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
-            this.viewRangeFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -250,7 +249,6 @@
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
             this.menuItemTest_ViewRange,
-            this.viewRangeFormToolStripMenuItem,
             this.toolStripSeparator7,
             this.menuItemTest_Message});
             this.menuItemTest.Name = "menuItemTest";
@@ -509,6 +507,7 @@
             this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridMain.Size = new System.Drawing.Size(412, 184);
             this.dataGridMain.TabIndex = 11;
+            this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
             // 
             // picResize
             // 
@@ -532,7 +531,7 @@
             this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMaster.Location = new System.Drawing.Point(0, 0);
             this.panelMaster.Name = "panelMaster";
-            this.panelMaster.Size = new System.Drawing.Size(1012, 497);
+            this.panelMaster.Size = new System.Drawing.Size(961, 497);
             this.panelMaster.TabIndex = 16;
             this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
             // 
@@ -582,25 +581,19 @@
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
             // 
-            // viewRangeFormToolStripMenuItem
-            // 
-            this.viewRangeFormToolStripMenuItem.Name = "viewRangeFormToolStripMenuItem";
-            this.viewRangeFormToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.viewRangeFormToolStripMenuItem.Text = "View Range form";
-            this.viewRangeFormToolStripMenuItem.Click += new System.EventHandler(this.viewRangeFormToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(1012, 497);
+            this.ClientSize = new System.Drawing.Size(961, 497);
             this.Controls.Add(this.panelMaster);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuMain;
             this.Name = "Main";
             this.Text = "WotDBUpdater";
             this.Load += new System.EventHandler(this.Main_Load);
+            this.Shown += new System.EventHandler(this.Main_Shown);
             this.Resize += new System.EventHandler(this.Main_Resize);
             this.menuMain.ResumeLayout(false);
             this.menuMain.PerformLayout();
@@ -674,7 +667,6 @@
         private System.Windows.Forms.DataGridView dataGridMain;
         private System.Windows.Forms.ToolStripMenuItem menuItemRefresh;
         private System.Windows.Forms.Panel pnlScrollbar;
-        private System.Windows.Forms.ToolStripMenuItem viewRangeFormToolStripMenuItem;
     }
 }
 

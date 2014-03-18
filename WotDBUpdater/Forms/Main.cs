@@ -62,7 +62,14 @@ namespace WotDBUpdater.Forms
             }
             SetStatus2(statusmsg);
             // Populate main datagrid
+            
+        }
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
             ShowDataGrid();
+            Refresh();
+            FormatDataGrid();
         }
 
         #region layout
@@ -174,13 +181,116 @@ namespace WotDBUpdater.Forms
         private void ShowDataGrid()
         {
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-            SqlCommand cmd = new SqlCommand("SELECT * FROM battleresultview ORDER BY time DESC", con);
+            string sql =
+                "SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, " +
+                "  CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) " +
+                "       WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS Result, " +
+                "  CASE WHEN battlescount > 1 THEN RIGHT('00' + CAST(ROUND(CAST(dbo.battle.survived AS FLOAT) / CAST(dbo.battle.battlescount AS float) * 100,0) AS varchar),2) + ' %'  " +
+                "       WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
+                "  dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp AS XP, dbo.battle.spotted AS Detected, " +
+                "  dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots AS Shots, dbo.battle.hits AS Hits, dbo.battle.wn8 AS WN8, " +
+                "  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.victory, dbo.battle.loss, dbo.battle.survived as surivivedcount " +
+                "FROM    dbo.battle INNER JOIN " +
+                "        dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN " +
+                "        dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
+                "        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id " +
+                "WHERE   dbo.player.id=@playerid " +
+                "ORDER BY dbo.battle.battleTime DESC ";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
+            dataGridMain.Columns["battlesCount"].Visible = false;
+            dataGridMain.Columns["victory"].Visible = false;
+            dataGridMain.Columns["loss"].Visible = false;
+            dataGridMain.Columns["surivivedcount"].Visible = false;
             InitForm(); // Make scrollbar go to top
+        }
+
+        private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // Victory color
+            if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Result"))
+            {
+                DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+                int wins = (int)dataGridMain["victory", e.RowIndex].Value;
+                int loss = (int)dataGridMain["loss", e.RowIndex].Value;
+                if (wins > loss)
+                {
+                    cell.Style.ForeColor = Color.Green;
+                }
+                else if (wins == loss)
+                {
+                    cell.Style.ForeColor = Color.Yellow;
+                }
+                else
+                {
+                    cell.Style.ForeColor = Color.Red;
+                }
+            }
+            // Survived color and formatting
+            if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
+            {
+                DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+                double battlecount = Convert.ToDouble(dataGridMain["battlescount", e.RowIndex].Value);
+                double survivedcount = Convert.ToDouble(dataGridMain["surivivedcount", e.RowIndex].Value);
+                double surviverate = survivedcount / battlecount;
+                if (surviverate < 0.48)
+                {
+                    cell.Style.ForeColor = Color.Red;
+                }
+                else if (surviverate > 0.50)
+                {
+                    cell.Style.ForeColor = Color.Green;
+                }
+                else
+                {
+                    cell.Style.ForeColor = Color.Yellow;
+                }
+            }
+        }
+
+        public void FormatDataGrid()
+        {
+            return;
+            foreach (DataGridViewRow Myrow in dataGridMain.Rows)
+            {
+                // Victory
+                int wins = (int)Myrow.Cells["victory"].Value;
+                int loss = (int)Myrow.Cells["loss"].Value;
+                double battlecount = Convert.ToDouble(Myrow.Cells["battlescount"].Value);
+                double survivedcount = Convert.ToDouble(Myrow.Cells["surivivedcount"].Value);
+                if (wins > loss)
+                {
+                    Myrow.Cells["Result"].Style.ForeColor = Color.Green;
+                }
+                else if (wins == loss)
+                {
+                    Myrow.Cells["Result"].Style.ForeColor = Color.Yellow;
+                }
+                else
+                {
+                    Myrow.Cells["Result"].Style.ForeColor = Color.Red;
+                }
+                // Survived
+                double surviverate = survivedcount / battlecount;
+                if (surviverate < 0.48)
+                {
+                    Myrow.Cells["survived"].Style.ForeColor = Color.Red;
+                }
+                else if (surviverate > 0.50)
+                {
+                    Myrow.Cells["survived"].Style.ForeColor = Color.Green;
+                }
+                else
+                {
+                    Myrow.Cells["survived"].Style.ForeColor = Color.Yellow;
+                }
+               
+            }
         }
 
         #endregion
@@ -222,14 +332,35 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        #region resizeFormmoveScroll
+        #region scrollGrid
 
-        private bool moving = false;
         private bool scrolling = false;
         private Point moveFromPoint;
-        private int formX;
-        private int formY;
         private int scrollY;
+
+        private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // scroll in grid from mouse wheel
+            int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex;
+            int scrollLines = SystemInformation.MouseWheelScrollLines;
+
+            if (e.Delta > 0)
+            {
+                this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+            }
+            else if (e.Delta < 0)
+            {
+                this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+            }
+            // move scrollbar
+            // Pos in datagrid
+            double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedColumnCount(false);
+            double gridpos = dataGridMain.FirstDisplayedScrollingRowIndex / rowcount;
+            // Calc scroll positions
+            double scrollMax = panelMain.Height - panelStatus.Height - pnlScrollbar.Height - menuMain.Height - 8;
+            // Move to position
+            pnlScrollbar.Top = Convert.ToInt32(gridpos * scrollMax) + pnlScrollbar.Height;
+        }
 
         private void pnlScrollbar_MouseHover(object sender, EventArgs e)
         {
@@ -267,7 +398,14 @@ namespace WotDBUpdater.Forms
             }
         }
 
+        #endregion
 
+        #region formResize
+
+        private bool moving = false;
+        private int formX;
+        private int formY;
+        
         private void picResize_MouseDown(object sender, MouseEventArgs e)
         {
             moving = true;
@@ -369,6 +507,7 @@ namespace WotDBUpdater.Forms
             dataGridMain.Top = menuMain.Height;
             // Scrollbar
             pnlScrollbar.Top = menuMain.Height + 4;
+            dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
         }
 
         private void RefreshScroll()
@@ -595,7 +734,11 @@ namespace WotDBUpdater.Forms
         }
 
         
+
         
+
+        
+
     }
 
     
