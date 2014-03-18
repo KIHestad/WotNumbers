@@ -42,7 +42,6 @@ namespace WotDBUpdater.Forms.Test
         {
             progressBar.Show();
             _bw.RunWorkerAsync();
-            
         }
     }
 }
