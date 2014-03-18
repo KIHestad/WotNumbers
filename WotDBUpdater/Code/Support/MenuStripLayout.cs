@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Code.Support
 {
-    public class MenuStripLayout : ProfessionalColorTable
+    public class StripLayout : ProfessionalColorTable
     {
         public static Color colorGrayDropDownBack = Color.FromArgb(255, 22, 22, 22);
         public static Color colorGrayMain = Color.FromArgb(255, 45, 45, 49);
