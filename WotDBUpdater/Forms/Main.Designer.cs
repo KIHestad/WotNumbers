@@ -83,6 +83,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
+            this.viewRangeFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -249,6 +250,7 @@
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
             this.menuItemTest_ViewRange,
+            this.viewRangeFormToolStripMenuItem,
             this.toolStripSeparator7,
             this.menuItemTest_Message});
             this.menuItemTest.Name = "menuItemTest";
@@ -581,6 +583,13 @@
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
             // 
+            // viewRangeFormToolStripMenuItem
+            // 
+            this.viewRangeFormToolStripMenuItem.Name = "viewRangeFormToolStripMenuItem";
+            this.viewRangeFormToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.viewRangeFormToolStripMenuItem.Text = "View Range Form";
+            this.viewRangeFormToolStripMenuItem.Click += new System.EventHandler(this.viewRangeFormToolStripMenuItem_Click_1);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -667,6 +676,7 @@
         private System.Windows.Forms.DataGridView dataGridMain;
         private System.Windows.Forms.ToolStripMenuItem menuItemRefresh;
         private System.Windows.Forms.Panel pnlScrollbar;
+        private System.Windows.Forms.ToolStripMenuItem viewRangeFormToolStripMenuItem;
     }
 }
 

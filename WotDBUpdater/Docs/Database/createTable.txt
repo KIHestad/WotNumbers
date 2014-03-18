@@ -162,7 +162,7 @@ alter table playerTank add constraint fk_playerTank_player foreign key (playerId
 
 create table battle (
 	id int IDENTITY(1,1) constraint pk_battleId primary key,
-	playerTankId int not not null default 0,
+	playerTankId int not null default 0,
 	battlesCount int not null default 0,
 	battleTime datetime not null default 0,
 	battleLifeTime int not null default 0,

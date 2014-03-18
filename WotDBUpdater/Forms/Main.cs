@@ -733,6 +733,12 @@ namespace WotDBUpdater.Forms
             frm.Show();
         }
 
+        private void viewRangeFormToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.ViewRange();
+            frm.Show();
+        }
+
         
 
         

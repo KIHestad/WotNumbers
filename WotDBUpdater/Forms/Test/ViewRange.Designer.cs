@@ -72,6 +72,7 @@
             this.checkBoxVent.TabIndex = 1;
             this.checkBoxVent.Text = "Ventilation";
             this.checkBoxVent.UseVisualStyleBackColor = true;
+            this.checkBoxVent.CheckedChanged += new System.EventHandler(this.checkBoxVent_CheckedChanged);
             // 
             // comboBIA
             // 
