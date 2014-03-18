@@ -33,9 +33,12 @@ namespace WotDBUpdater.Forms
         private void Main_Load(object sender, EventArgs e)
         {
             // Style
-            menuMain.Renderer = new MyToolStripRenderer();
-            menuMain.BackColor = Color.FromArgb(255, 45, 45, 49);
-            panelTop.BackColor = Color.FromArgb(255, 45, 45, 49);
+            toolMain.Renderer = new StripRenderer();
+            //toolMain.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            toolMain.BackColor = Code.Support.StripLayout.colorGrayMain;
+            menuMain.Renderer = new StripRenderer();
+            menuMain.BackColor = Code.Support.StripLayout.colorGrayMain;
+            panelTop.BackColor = Code.Support.StripLayout.colorGrayMain;
             Config.Settings.run = 0;
             SetListener();
             // Size
@@ -74,11 +77,11 @@ namespace WotDBUpdater.Forms
 
         #region layout
 
-        class MyToolStripRenderer : ToolStripProfessionalRenderer
+        class StripRenderer : ToolStripProfessionalRenderer
         {
-            public MyToolStripRenderer()
-                : base(new Code.Support.MenuStripLayout())
+            public StripRenderer() : base(new Code.Support.StripLayout())
             {
+                this.RoundedEdges = false;
             }
 
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
@@ -442,32 +445,32 @@ namespace WotDBUpdater.Forms
 
         private void picClose_MouseHover(object sender, EventArgs e)
         {
-            picClose.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+            picClose.BackColor = Code.Support.StripLayout.colorGrayHover;
         }
 
         private void picClose_MouseLeave(object sender, EventArgs e)
         {
-            picClose.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+            picClose.BackColor = Code.Support.StripLayout.colorGrayMain;
         }
 
         private void picNormalize_MouseHover(object sender, EventArgs e)
         {
-            picNormalize.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+            picNormalize.BackColor = Code.Support.StripLayout.colorGrayHover;
         }
 
         private void picNormalize_MouseLeave(object sender, EventArgs e)
         {
-            picNormalize.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+            picNormalize.BackColor = Code.Support.StripLayout.colorGrayMain;
         }
 
         private void picMinimize_MouseHover(object sender, EventArgs e)
         {
-            picMinimize.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+            picMinimize.BackColor = Code.Support.StripLayout.colorGrayHover;
         }
 
         private void picMinimize_MouseLeave(object sender, EventArgs e)
         {
-            picMinimize.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+            picMinimize.BackColor = Code.Support.StripLayout.colorGrayMain;
         }
 
         private void picClose_Click(object sender, EventArgs e)
@@ -500,6 +503,10 @@ namespace WotDBUpdater.Forms
             panelTop.Top = 1;
             // Main Area including menu
             panelMain.Left = 1;
+            // Toolstrip
+            toolMain.Left = menuMain.Width;
+            // PanelStrip - just to get correct back color
+            panelStrip.Left = 0;
             // Status bar
             panelStatus.Left = 1;
             // Grid
@@ -532,6 +539,10 @@ namespace WotDBUpdater.Forms
             // Main Area including menu
             panelMain.Top = panelTop.Height + 1;
             panelMain.Height = panelMaster.Height - panelTop.Height - 2;
+            // Toolstrip
+            toolMain.Width = panelMain.Width - menuMain.Width;
+            // PanelStrip - just to get correct back color
+            panelStrip.Width = panelMain.Width;
             // Status bar
             panelStatus.Top = panelMaster.Height - panelStatus.Height - 1;
             panelStatus.Width = panelMaster.Width - 2;
@@ -548,13 +559,6 @@ namespace WotDBUpdater.Forms
         #endregion
 
         #region menuItemAction
-
-        private void menuItemRefresh_Click(object sender, EventArgs e)
-        {
-            SetStatus2("Refreshing grid...");
-            ShowDataGrid();
-            SetStatus2("Grid refreshed");
-        }
 
         private void menuItemAppSettings_Click(object sender, EventArgs e)
         {
@@ -726,6 +730,13 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
+
+        private void toolItemRefresh_Click(object sender, EventArgs e)
+        {
+            SetStatus2("Refreshing grid...");
+            ShowDataGrid();
+            SetStatus2("Grid refreshed");
+        }
 
         private void viewRangeFormToolStripMenuItem_Click(object sender, EventArgs e)
         {

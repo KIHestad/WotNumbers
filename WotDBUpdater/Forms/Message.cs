@@ -65,12 +65,12 @@ namespace WotDBUpdater.Forms
 
         private void picClose_MouseHover(object sender, EventArgs e)
         {
-            picClose.BackColor = Code.Support.MenuStripLayout.colorGrayHover;
+            picClose.BackColor = Code.Support.StripLayout.colorGrayHover;
         }
 
         private void picClose_MouseLeave(object sender, EventArgs e)
         {
-            picClose.BackColor = Code.Support.MenuStripLayout.colorGrayMain;
+            picClose.BackColor = Code.Support.StripLayout.colorGrayMain;
         }
 
         private void MessageBox_Paint(object sender, PaintEventArgs e)

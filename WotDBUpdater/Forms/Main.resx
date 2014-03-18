@@ -164,6 +164,18 @@
         RK5CYII=
 </value>
   </data>
+  <metadata name="toolMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>650, 17</value>
+  </metadata>
+  <data name="toolItemRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC3SURBVDhPzVLbDcMgEGOADtD/DpAdOlsmygL8IB4DdJ70
+        jHzhoLRKv1pLpwj7fBiC+y+klDap3Rb5Pcb4yDnfa+MM0vRiRlGz3FYNM8gu69BcB2BnJFBumgSkNthm
+        yq6UclUeX9INVvTeXzigi2s3IdWggsYbzYBoy5kBC6kDOuyrBAqYweNY5m4i5QZ7ByGEG+ljsDGf+wt6
+        FOWMtlbDDNLQPSZy3QDW+8eEJBoX68H42fwDOPcEM4pSv3K3at8AAAAASUVORK5CYII=
+</value>
+  </data>
   <data name="picResize.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
