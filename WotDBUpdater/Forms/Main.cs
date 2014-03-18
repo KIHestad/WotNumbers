@@ -62,7 +62,14 @@ namespace WotDBUpdater.Forms
             }
             SetStatus2(statusmsg);
             // Populate main datagrid
+            
+        }
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
             ShowDataGrid();
+            Refresh();
+            FormatDataGrid();
         }
 
         #region layout
@@ -174,13 +181,68 @@ namespace WotDBUpdater.Forms
         private void ShowDataGrid()
         {
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-            SqlCommand cmd = new SqlCommand("SELECT * FROM battleresultview ORDER BY time DESC", con);
+            string sql =
+                "SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, " +
+                "  CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) " +
+                "       WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS Result, " +
+                "  CASE WHEN battlescount > 1 THEN CAST(dbo.battle.survived AS varchar) WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
+                "  dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp AS XP, dbo.battle.spotted AS Detected, " +
+                "  dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots AS Shots, dbo.battle.hits AS Hits, dbo.battle.wn8 AS WN8, " +
+                "  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.victory, dbo.battle.loss, dbo.battle.survived as surivivedcount " +
+                "FROM    dbo.battle INNER JOIN " +
+                "        dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN " +
+                "        dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
+                "        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id " +
+                "WHERE   dbo.player.id=@playerid " +
+                "ORDER BY dbo.battle.battleTime DESC ";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
+            dataGridMain.Columns["battlesCount"].Visible = false;
+            dataGridMain.Columns["victory"].Visible = false;
+            dataGridMain.Columns["loss"].Visible = false;
+            dataGridMain.Columns["surivivedcount"].Visible = false;
             InitForm(); // Make scrollbar go to top
+        }
+
+        public void FormatDataGrid()
+        {
+            foreach (DataGridViewRow Myrow in dataGridMain.Rows)
+            {
+                // Victory
+                int wins = (int)Myrow.Cells["victory"].Value;
+                int loss = (int)Myrow.Cells["loss"].Value;
+                if (wins > loss)
+                {
+                    Myrow.Cells["Result"].Style.ForeColor = Color.Green;
+                }
+                else if (wins == loss)
+                {
+                    Myrow.Cells["Result"].Style.ForeColor = Color.Yellow;
+                }
+                else
+                {
+                    Myrow.Cells["Result"].Style.ForeColor = Color.Red;
+                }
+                // Survived
+                double surviverate = Convert.ToInt32(Myrow.Cells["surivivedcount"].Value) / Convert.ToInt32(Myrow.Cells["battlescount"].Value);
+                if (surviverate < 0.5)
+                {
+                    Myrow.Cells["survived"].Style.ForeColor = Color.Red;
+                }
+                else if (surviverate > 0.5)
+                {
+                    Myrow.Cells["survived"].Style.ForeColor = Color.Green;
+                }
+                else
+                {
+                    Myrow.Cells["survived"].Style.ForeColor = Color.Yellow;
+                }
+            }
         }
 
         #endregion
@@ -617,8 +679,9 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
+        
 
-
+        
 
     }
 
