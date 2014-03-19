@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.menuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemAppSettings = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,9 +74,21 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolItemViewLabel = new System.Windows.Forms.ToolStripLabel();
+            this.toolItemViewOverall = new System.Windows.Forms.ToolStripButton();
+            this.toolItemViewTankInfo = new System.Windows.Forms.ToolStripButton();
+            this.toolItenViewBattles = new System.Windows.Forms.ToolStripButton();
             this.toolItemRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolItemViewSelect = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolItemSelectOverall = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolItemSelectTankInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolItemSelectRecentBattles = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlScrollbar = new System.Windows.Forms.Panel();
             this.dataGridMain = new System.Windows.Forms.DataGridView();
+            this.panelStrip = new System.Windows.Forms.Panel();
             this.picResize = new System.Windows.Forms.PictureBox();
             this.panelMaster = new System.Windows.Forms.Panel();
             this.panelStatus = new System.Windows.Forms.Panel();
@@ -84,7 +96,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
-            this.panelStrip = new System.Windows.Forms.Panel();
+            this.toolItemSettings = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolItemSettingsDb = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
+            this.toolItemSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolItemSettingsDossierOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolItemSettingsRunManual = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolItemSettingsUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolItemSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
@@ -109,7 +132,7 @@
             this.menuItemReport,
             this.menuItemTest,
             this.menuItemHelp});
-            this.menuMain.Location = new System.Drawing.Point(0, 0);
+            this.menuMain.Location = new System.Drawing.Point(11, 50);
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(263, 24);
             this.menuMain.TabIndex = 10;
@@ -446,7 +469,7 @@
             this.panelMain.Controls.Add(this.panelStrip);
             this.panelMain.Location = new System.Drawing.Point(12, 48);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(810, 250);
+            this.panelMain.Size = new System.Drawing.Size(915, 250);
             this.panelMain.TabIndex = 15;
             // 
             // toolMain
@@ -454,14 +477,72 @@
             this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
             this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemRefresh});
+            this.toolItemViewLabel,
+            this.toolItemViewOverall,
+            this.toolItemViewTankInfo,
+            this.toolItenViewBattles,
+            this.toolItemRefresh,
+            this.toolStripSeparator8,
+            this.toolStripLabel1,
+            this.toolItemViewSelect,
+            this.toolStripSeparator10,
+            this.toolItemSettings,
+            this.toolItemHelp,
+            this.toolStripSeparator9});
             this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolMain.Location = new System.Drawing.Point(414, 0);
+            this.toolMain.Location = new System.Drawing.Point(11, 13);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(57, 25);
+            this.toolMain.Size = new System.Drawing.Size(418, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 13;
             this.toolMain.Text = "toolStrip1";
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolItemViewLabel
+            // 
+            this.toolItemViewLabel.Name = "toolItemViewLabel";
+            this.toolItemViewLabel.Size = new System.Drawing.Size(35, 22);
+            this.toolItemViewLabel.Text = "View:";
+            this.toolItemViewLabel.ToolTipText = "Select view by pressing one of the buttons to the right";
+            // 
+            // toolItemViewOverall
+            // 
+            this.toolItemViewOverall.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolItemViewOverall.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewOverall.Image")));
+            this.toolItemViewOverall.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemViewOverall.Name = "toolItemViewOverall";
+            this.toolItemViewOverall.Size = new System.Drawing.Size(48, 22);
+            this.toolItemViewOverall.Text = "&Overall";
+            this.toolItemViewOverall.ToolTipText = "Show overall stats";
+            this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
+            // 
+            // toolItemViewTankInfo
+            // 
+            this.toolItemViewTankInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolItemViewTankInfo.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewTankInfo.Image")));
+            this.toolItemViewTankInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemViewTankInfo.Name = "toolItemViewTankInfo";
+            this.toolItemViewTankInfo.Size = new System.Drawing.Size(42, 22);
+            this.toolItemViewTankInfo.Text = "&Tanks";
+            this.toolItemViewTankInfo.ToolTipText = "Show tank info";
+            this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
+            // 
+            // toolItenViewBattles
+            // 
+            this.toolItenViewBattles.Checked = true;
+            this.toolItenViewBattles.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolItenViewBattles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolItenViewBattles.Image = ((System.Drawing.Image)(resources.GetObject("toolItenViewBattles.Image")));
+            this.toolItenViewBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItenViewBattles.Name = "toolItenViewBattles";
+            this.toolItenViewBattles.Size = new System.Drawing.Size(46, 22);
+            this.toolItenViewBattles.Text = "&Battles";
+            this.toolItenViewBattles.ToolTipText = "Show your recent battles";
+            this.toolItenViewBattles.Click += new System.EventHandler(this.toolItenViewBattles_Click);
             // 
             // toolItemRefresh
             // 
@@ -470,13 +551,59 @@
             this.toolItemRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemRefresh.Name = "toolItemRefresh";
             this.toolItemRefresh.Size = new System.Drawing.Size(23, 22);
-            this.toolItemRefresh.Text = "Reload";
+            this.toolItemRefresh.Text = "Refresh grid";
             this.toolItemRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel1.Text = "View:";
+            this.toolStripLabel1.ToolTipText = "Select view in dropdown";
+            // 
+            // toolItemViewSelect
+            // 
+            this.toolItemViewSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolItemViewSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemSelectOverall,
+            this.toolItemSelectTankInfo,
+            this.toolItemSelectRecentBattles});
+            this.toolItemViewSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewSelect.Image")));
+            this.toolItemViewSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemViewSelect.Name = "toolItemViewSelect";
+            this.toolItemViewSelect.Size = new System.Drawing.Size(94, 22);
+            this.toolItemViewSelect.Text = "Recent Battles";
+            // 
+            // toolItemSelectOverall
+            // 
+            this.toolItemSelectOverall.Name = "toolItemSelectOverall";
+            this.toolItemSelectOverall.Size = new System.Drawing.Size(152, 22);
+            this.toolItemSelectOverall.Text = "&Overall";
+            this.toolItemSelectOverall.Click += new System.EventHandler(this.toolItemSelectOverall_Click);
+            // 
+            // toolItemSelectTankInfo
+            // 
+            this.toolItemSelectTankInfo.Name = "toolItemSelectTankInfo";
+            this.toolItemSelectTankInfo.Size = new System.Drawing.Size(152, 22);
+            this.toolItemSelectTankInfo.Text = "&Tanks";
+            this.toolItemSelectTankInfo.Click += new System.EventHandler(this.toolItemSelectTankInfo_Click);
+            // 
+            // toolItemSelectRecentBattles
+            // 
+            this.toolItemSelectRecentBattles.Name = "toolItemSelectRecentBattles";
+            this.toolItemSelectRecentBattles.Size = new System.Drawing.Size(152, 22);
+            this.toolItemSelectRecentBattles.Text = "&Battles";
+            this.toolItemSelectRecentBattles.Click += new System.EventHandler(this.toolItemSelectRecentBattles_Click);
             // 
             // pnlScrollbar
             // 
             this.pnlScrollbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(82)))), ((int)(((byte)(86)))));
-            this.pnlScrollbar.Location = new System.Drawing.Point(795, 29);
+            this.pnlScrollbar.Location = new System.Drawing.Point(891, 34);
             this.pnlScrollbar.Name = "pnlScrollbar";
             this.pnlScrollbar.Size = new System.Drawing.Size(12, 30);
             this.pnlScrollbar.TabIndex = 12;
@@ -496,37 +623,45 @@
             this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridMain.CausesValidation = false;
             this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle7.Padding = new System.Windows.Forms.Padding(3, 0, 1, 0);
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(3, 0, 1, 0);
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.LightGray;
-            dataGridViewCellStyle8.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.LightGray;
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridMain.EnableHeadersVisualStyles = false;
             this.dataGridMain.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.dataGridMain.Location = new System.Drawing.Point(11, 61);
+            this.dataGridMain.Location = new System.Drawing.Point(11, 88);
             this.dataGridMain.Name = "dataGridMain";
             this.dataGridMain.ReadOnly = true;
             this.dataGridMain.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dataGridMain.RowHeadersVisible = false;
             this.dataGridMain.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dataGridMain.Size = new System.Drawing.Size(347, 161);
+            this.dataGridMain.Size = new System.Drawing.Size(314, 110);
             this.dataGridMain.TabIndex = 11;
             this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
+            // 
+            // panelStrip
+            // 
+            this.panelStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
+            this.panelStrip.Location = new System.Drawing.Point(891, 0);
+            this.panelStrip.Name = "panelStrip";
+            this.panelStrip.Size = new System.Drawing.Size(24, 24);
+            this.panelStrip.TabIndex = 14;
             // 
             // picResize
             // 
@@ -600,13 +735,102 @@
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
             // 
-            // panelStrip
+            // toolItemSettings
             // 
-            this.panelStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
-            this.panelStrip.Location = new System.Drawing.Point(722, 0);
-            this.panelStrip.Name = "panelStrip";
-            this.panelStrip.Size = new System.Drawing.Size(24, 24);
-            this.panelStrip.TabIndex = 14;
+            this.toolItemSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolItemSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemSettingsRun,
+            this.toolItemSettingsDossierOptions,
+            this.toolStripSeparator11,
+            this.toolItemSettingsApp,
+            this.toolItemSettingsDb});
+            this.toolItemSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolItemSettings.Image")));
+            this.toolItemSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemSettings.Name = "toolItemSettings";
+            this.toolItemSettings.ShowDropDownArrow = false;
+            this.toolItemSettings.Size = new System.Drawing.Size(20, 22);
+            this.toolItemSettings.Text = "toolStripDropDownButton1";
+            this.toolItemSettings.ToolTipText = "Settings";
+            // 
+            // toolItemSettingsApp
+            // 
+            this.toolItemSettingsApp.Name = "toolItemSettingsApp";
+            this.toolItemSettingsApp.Size = new System.Drawing.Size(216, 22);
+            this.toolItemSettingsApp.Text = "Application settings";
+            this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
+            // 
+            // toolItemSettingsDb
+            // 
+            this.toolItemSettingsDb.Name = "toolItemSettingsDb";
+            this.toolItemSettingsDb.Size = new System.Drawing.Size(216, 22);
+            this.toolItemSettingsDb.Text = "Database settings";
+            this.toolItemSettingsDb.Click += new System.EventHandler(this.toolItemSettingsDb_Click);
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolItemHelp
+            // 
+            this.toolItemHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolItemHelp.Image")));
+            this.toolItemHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemHelp.Name = "toolItemHelp";
+            this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
+            this.toolItemHelp.Text = "toolStripButton1";
+            this.toolItemHelp.ToolTipText = "Help | About";
+            this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
+            // 
+            // toolItemSettingsRun
+            // 
+            this.toolItemSettingsRun.Name = "toolItemSettingsRun";
+            this.toolItemSettingsRun.Size = new System.Drawing.Size(216, 22);
+            this.toolItemSettingsRun.Text = "Listen to dossier file";
+            this.toolItemSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(213, 6);
+            // 
+            // toolItemSettingsDossierOptions
+            // 
+            this.toolItemSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemSettingsRunManual,
+            this.toolStripSeparator12,
+            this.toolItemSettingsUpdateFromPrev,
+            this.toolItemSettingsForceUpdateFromPrev});
+            this.toolItemSettingsDossierOptions.Name = "toolItemSettingsDossierOptions";
+            this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(216, 22);
+            this.toolItemSettingsDossierOptions.Text = "Manual dossier file options";
+            this.toolItemSettingsDossierOptions.Click += new System.EventHandler(this.toolItemSettingsDossierOptions_Click);
+            // 
+            // toolItemSettingsRunManual
+            // 
+            this.toolItemSettingsRunManual.Name = "toolItemSettingsRunManual";
+            this.toolItemSettingsRunManual.Size = new System.Drawing.Size(279, 22);
+            this.toolItemSettingsRunManual.Text = "Manual dossier file read";
+            this.toolItemSettingsRunManual.Click += new System.EventHandler(this.toolItemSettingsRunManual_Click);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(276, 6);
+            // 
+            // toolItemSettingsUpdateFromPrev
+            // 
+            this.toolItemSettingsUpdateFromPrev.Name = "toolItemSettingsUpdateFromPrev";
+            this.toolItemSettingsUpdateFromPrev.Size = new System.Drawing.Size(279, 22);
+            this.toolItemSettingsUpdateFromPrev.Text = "Normal check previous dossier file";
+            this.toolItemSettingsUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsUpdateFromPrev_Click);
+            // 
+            // toolItemSettingsForceUpdateFromPrev
+            // 
+            this.toolItemSettingsForceUpdateFromPrev.Name = "toolItemSettingsForceUpdateFromPrev";
+            this.toolItemSettingsForceUpdateFromPrev.Size = new System.Drawing.Size(279, 22);
+            this.toolItemSettingsForceUpdateFromPrev.Text = "Force update from previous dossier file";
+            this.toolItemSettingsForceUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsForceUpdateFromPrev_Click);
             // 
             // Main
             // 
@@ -698,6 +922,29 @@
         private System.Windows.Forms.ToolStrip toolMain;
         private System.Windows.Forms.ToolStripButton toolItemRefresh;
         private System.Windows.Forms.Panel panelStrip;
+        private System.Windows.Forms.ToolStripLabel toolItemViewLabel;
+        private System.Windows.Forms.ToolStripDropDownButton toolItemViewSelect;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSelectOverall;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSelectTankInfo;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSelectRecentBattles;
+        private System.Windows.Forms.ToolStripButton toolItemViewOverall;
+        private System.Windows.Forms.ToolStripButton toolItemViewTankInfo;
+        private System.Windows.Forms.ToolStripButton toolItenViewBattles;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripDropDownButton toolItemSettings;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsApp;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDb;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripButton toolItemHelp;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRun;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDossierOptions;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRunManual;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsUpdateFromPrev;
+        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsForceUpdateFromPrev;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
     }
 }
 

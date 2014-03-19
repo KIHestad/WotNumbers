@@ -72,7 +72,6 @@ namespace WotDBUpdater.Forms
         {
             ShowDataGrid();
             Refresh();
-            FormatDataGrid();
         }
 
         #region layout
@@ -166,6 +165,7 @@ namespace WotDBUpdater.Forms
         private void SetListener()
         {
             menuItemRunStopToggle.Checked = (Config.Settings.run == 1);
+            toolItemSettingsRun.Checked = (Config.Settings.run == 1);
             if (Config.Settings.run == 1)
             {
                 lblStatus1.Text = "Running";
@@ -253,46 +253,6 @@ namespace WotDBUpdater.Forms
                 {
                     cell.Style.ForeColor = Color.Yellow;
                 }
-            }
-        }
-
-        public void FormatDataGrid()
-        {
-            return;
-            foreach (DataGridViewRow Myrow in dataGridMain.Rows)
-            {
-                // Victory
-                int wins = (int)Myrow.Cells["victory"].Value;
-                int loss = (int)Myrow.Cells["loss"].Value;
-                double battlecount = Convert.ToDouble(Myrow.Cells["battlescount"].Value);
-                double survivedcount = Convert.ToDouble(Myrow.Cells["surivivedcount"].Value);
-                if (wins > loss)
-                {
-                    Myrow.Cells["Result"].Style.ForeColor = Color.Green;
-                }
-                else if (wins == loss)
-                {
-                    Myrow.Cells["Result"].Style.ForeColor = Color.Yellow;
-                }
-                else
-                {
-                    Myrow.Cells["Result"].Style.ForeColor = Color.Red;
-                }
-                // Survived
-                double surviverate = survivedcount / battlecount;
-                if (surviverate < 0.48)
-                {
-                    Myrow.Cells["survived"].Style.ForeColor = Color.Red;
-                }
-                else if (surviverate > 0.50)
-                {
-                    Myrow.Cells["survived"].Style.ForeColor = Color.Green;
-                }
-                else
-                {
-                    Myrow.Cells["survived"].Style.ForeColor = Color.Yellow;
-                }
-               
             }
         }
 
@@ -424,13 +384,14 @@ namespace WotDBUpdater.Forms
                 Point dif = Point.Subtract(Cursor.Position, new Size(moveFromPoint));
                 if (formX + dif.X > 300) Main.ActiveForm.Width = formX + dif.X;
                 if (formY + dif.Y > 150) Main.ActiveForm.Height = formY + dif.Y;
-                RefreshForm();
+                RefreshForm(true);
             }
         }
 
         private void picResize_MouseUp(object sender, MouseEventArgs e)
         {
             moving = false;
+            RefreshForm();
         }
 
         private void picResize_MouseHover(object sender, EventArgs e)
@@ -504,7 +465,11 @@ namespace WotDBUpdater.Forms
             // Main Area including menu
             panelMain.Left = 1;
             // Toolstrip
-            toolMain.Left = menuMain.Width;
+            toolMain.Left = 5;
+            toolMain.Top = 0;
+            // Menu bar - remove?
+            menuMain.Left = toolMain.Width;
+            menuMain.Top = 0;
             // PanelStrip - just to get correct back color
             panelStrip.Left = 0;
             // Status bar
@@ -529,9 +494,17 @@ namespace WotDBUpdater.Forms
             dataGridMain.FirstDisplayedScrollingRowIndex = pos;
         }
 
-        private void RefreshForm()
+        private void RefreshForm(bool notrefreshgrid = false)
         {
-            Refresh();
+            // Grid
+            if (!notrefreshgrid)
+            {
+                Refresh();
+                dataGridMain.Height = panelMain.Height - menuMain.Height - panelStatus.Height;
+                dataGridMain.Width = panelMain.Width - 20; // room for scrollbar
+                // Scrollbar
+                pnlScrollbar.Left = dataGridMain.Width + 4;
+            }
             // Title bar form handling
             picClose.Left = panelMain.Width - picClose.Width;
             picNormalize.Left = picClose.Left - picNormalize.Width;
@@ -540,7 +513,7 @@ namespace WotDBUpdater.Forms
             panelMain.Top = panelTop.Height + 1;
             panelMain.Height = panelMaster.Height - panelTop.Height - 2;
             // Toolstrip
-            toolMain.Width = panelMain.Width - menuMain.Width;
+            // toolMain.Width = panelMain.Width - menuMain.Width;
             // PanelStrip - just to get correct back color
             panelStrip.Width = panelMain.Width;
             // Status bar
@@ -549,11 +522,7 @@ namespace WotDBUpdater.Forms
             // Status bar resize handling
             picResize.Left = panelStatus.Width - picResize.Width;
             picResize.Visible = (this.WindowState != FormWindowState.Maximized);
-            // Grid
-            dataGridMain.Height = panelMain.Height - menuMain.Height - panelStatus.Height;
-            dataGridMain.Width = panelMain.Width-20; // room for scrollbar
-            // Scrollbar
-            pnlScrollbar.Left = dataGridMain.Width + 4;
+            
         }
 
         #endregion
@@ -731,6 +700,8 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
+        #region toolStripActions
+        
         private void toolItemRefresh_Click(object sender, EventArgs e)
         {
             SetStatus2("Refreshing grid...");
@@ -738,11 +709,119 @@ namespace WotDBUpdater.Forms
             SetStatus2("Grid refreshed");
         }
 
-        
+        private void toolItemViewOverall_Click(object sender, EventArgs e)
+        {
+            if (toolItemViewOverall.Checked) return; // quit if this view is already selected
+            toolItemViewTankInfo.Checked = false;
+            toolItenViewBattles.Checked = false;
+            toolItemViewOverall.Checked = true;
+            SetStatus2("Selected view: Overall");
+        }
 
-        
+        private void toolItemViewTankInfo_Click(object sender, EventArgs e)
+        {
+            if (toolItemViewTankInfo.Checked) return; // quit if this view is already selected
+            toolItemViewOverall.Checked = false;
+            toolItenViewBattles.Checked = false;
+            toolItemViewTankInfo.Checked = true;
+            SetStatus2("Selected view: Tanks");
+        }
 
-        
+        private void toolItenViewBattles_Click(object sender, EventArgs e)
+        {
+            if (toolItenViewBattles.Checked) return; // quit if this view is already selected
+            toolItemViewOverall.Checked = false;
+            toolItemViewTankInfo.Checked = false;
+            toolItenViewBattles.Checked = true;
+            SetStatus2("Selected view: Battles");
+        }
+
+        private void toolItemSelectOverall_Click(object sender, EventArgs e)
+        {
+            toolItemViewSelect.Text = "Overall";
+        }
+
+        private void toolItemSelectTankInfo_Click(object sender, EventArgs e)
+        {
+            toolItemViewSelect.Text = "Tank Info";
+        }
+
+        private void toolItemSelectRecentBattles_Click(object sender, EventArgs e)
+        {
+            toolItemViewSelect.Text = "Recent Battles";
+        }
+
+        private void toolItemSettingsApp_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.ApplicationSetting();
+            frm.ShowDialog();
+            SetFormTitle();
+        }
+
+        private void toolItemSettingsDb_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.DatabaseSetting();
+            frm.ShowDialog();
+        }
+
+        private void toolItemHelp_Click(object sender, EventArgs e)
+        {
+            //Form frm = new Forms.Help.About();
+            //frm.ShowDialog();
+            string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
+                         "Tool for getting data from WoT dossier file to MS SQL Database" + Environment.NewLine + Environment.NewLine +
+                         "Created by: BadButton and cmdrTrinity";
+            Code.Support.Message.Show(msg, "About WoT DBstat");
+        }
+
+        private void toolItemSettingsRun_Click(object sender, EventArgs e)
+        {
+            toolItemSettingsRun.Checked = !toolItemSettingsRun.Checked;
+            // Set Start - Stop button properties
+            if (toolItemSettingsRun.Checked)
+            {
+                Config.Settings.run = 1;
+            }
+            else
+            {
+                Config.Settings.run = 0;
+            }
+            string msg = "";
+            Config.SaveAppConfig(out msg);
+            SetListener();
+        }
+
+        private void toolItemSettingsDossierOptions_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolItemSettingsRunManual_Click(object sender, EventArgs e)
+        {
+            // Dossier file manual handling
+            SetStatus2("Starting manual dossier check...");
+            string result = dossier2json.manualRun();
+            SetStatus2(result);
+        }
+
+        private void toolItemSettingsUpdateFromPrev_Click(object sender, EventArgs e)
+        {
+            // Test running previous dossier file
+            SetStatus2("Starting check on previous dossier file...");
+            string result = dossier2json.manualRun(true);
+            SetStatus2(result);
+        }
+
+        private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
+        {
+            // Test running previous dossier file, force update - even if no more battles is detected
+            SetStatus2("Starting check on previous dossier file with force update...");
+            string result = dossier2json.manualRun(true, true);
+            SetStatus2(result);
+        }
+
+        #endregion
+
 
     }
 

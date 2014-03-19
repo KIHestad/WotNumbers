@@ -13,6 +13,7 @@ namespace WotDBUpdater.Code.Support
         public static Color colorGrayDiv = Color.FromArgb(255, 96, 96, 100);
         public static Color colorGrayCheckPressed = Color.FromArgb(255, 177, 177, 177);
         public static Color colorBlue = Color.FromArgb(255, 66, 125, 215);
+        public static Color colorSelectedButton = Color.FromArgb(255, 68, 96, 127);
         
         public override Color ButtonSelectedHighlight
         {
@@ -48,15 +49,15 @@ namespace WotDBUpdater.Code.Support
         }
         public override Color ButtonCheckedGradientBegin
         {
-            get { return colorBlue; }
+            get { return colorSelectedButton; } // show selected view
         }
         public override Color ButtonCheckedGradientMiddle
         {
-            get { return colorBlue; }
+            get { return colorSelectedButton; } // show selected view
         }
         public override Color ButtonCheckedGradientEnd
         {
-            get { return colorBlue; }
+            get { return colorSelectedButton; } // show selected view
         }
         public override Color ButtonSelectedGradientBegin
         {
