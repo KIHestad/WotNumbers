@@ -613,11 +613,13 @@ namespace WotDBUpdater.Forms
                 this.WindowState = FormWindowState.Normal;
             }
             RefreshFormAfterResize();
+            Refresh();
         }
 
         private void picMinimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+            Refresh();
         }
 
         #endregion
