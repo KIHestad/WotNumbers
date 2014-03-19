@@ -287,6 +287,9 @@
     <Content Include="Docs\Img\resize.png" />
     <Content Include="Docs\Img\resize2.png" />
     <Content Include="Docs\Img\resize3.png" />
+    <Content Include="Docs\Img\toolStripIcons\iconHelp.png" />
+    <Content Include="Docs\Img\toolStripIcons\iconReload.png" />
+    <Content Include="Docs\Img\toolStripIcons\iconSettings.png" />
     <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />

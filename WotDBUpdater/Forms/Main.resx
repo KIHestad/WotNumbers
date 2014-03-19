@@ -239,21 +239,21 @@
   <data name="toolItemSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACgSURBVDhPtZLhDYUgDIRZgHmc5G3lFCzBX5hM+QiXVwXM
-        iz4vueS4lrZU3Wvw3i855w2im32NlNKnXFiNrgXQeMSkO9gLIYQtxlg1ROPpPCxSAqsSfmCdsoO60NF2
-        QWsicpr9BUuySaMR8Wzxw2IJWDa7wzRvGjhhmvf4CcLtJYISfPYZNSKkizpCtKaDdroDWpF7v/IZLEkF
-        hgv7D5zbAbMgZMh/mpmcAAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADr4AAA6+AepCscAAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAA
+        mUlEQVQ4T7WS0Q2AIAxE2YBxnMStmIIl+GYy7JErIggfoC9pUq5HwYr5DWvtEWNMCOSU54j5lHBVnhsg
+        p+Y070CB5uS9TyEE3ZxzaLqW6JuIiO61aRb5lh16Ck8vpyDXG8FD+YYDK6Z6swINNW3+GCw3laDcMfQN
+        Cw1D3/YnKMtDBFLc+40i7j0kgILE2lNu4WBzg9eBfYMxF6crZUDSDCpiAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="toolItemHelp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEFSURBVDhPtVKxDcIwEEzBINkARqGgoIAuo9BRMAKjOImV
-        KkIpEBtQ0KegoIC75x05L7uDk07Yf3fvt0nxF7Rtu63r+tQ0jSe5Rm2jch7OuRIBB74zhMWVap9Dw6MJ
-        pDgmm0CIT35675es85f7SCOdhAJwv7UxHBjE3S+hEWqzJsxImIDxGIvgXSlr9Zx1L2RGwgQKfO1JjAnj
-        jR7bAPQSJrDpjSgM42vYvkMvYQIG/uexKKSGF9+nNGYkTOBBdikT+ADtyUJmNC6nLFAcjEGukJlgYEbj
-        X6CwgvAKpq7r5Ar6HcThF70SstAm0yRswknCnlo2HMDRYKz05a+kritqavsViuIDQs/sLqFAAHAAAAAA
-        SUVORK5CYII=
+        YQUAAAAJcEhZcwAADr4AAA6+AepCscAAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAA
+        80lEQVQ4T6WRMQ6CQBBFKTgIN5CjUFhYYOdR7Cg4gkchQKiIsTDewMLewsJinW9mNn8naGIsXnZ3/p+/
+        s5CFEP5isdj3/UZohVHBfr3kTQ5iKoROCB+AVnCPb76r8RvwxBAO4JsfwkpAHSvOHNIlAVKonGEvoPGo
+        Kzw+pOKAxolXxfbwHPRsNByAL80icxGWAkYOmJ1o2Pho9k+YOQD/mUUD2tbVjJYDaicaN8HfbNQckAsn
+        EsMwDFjxhKUJ4M1jgIaUwlMNYZomrKgjhJvhKa0vBlBInAQhOokBLTaDJACIAc/ZCfjyZwV71N5jM8nh
+        d0L2Anf2A1jGsqcOAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="picResize.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
