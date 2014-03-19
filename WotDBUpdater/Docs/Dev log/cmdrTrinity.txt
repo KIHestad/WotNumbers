@@ -1,4 +1,9 @@
-﻿03.16.14
+﻿03.17.14
+- Completed view range function
+- Formula now returns same result as wotinfo.net
+
+
+03.16.14
 - Added function for calculating view range
 
 

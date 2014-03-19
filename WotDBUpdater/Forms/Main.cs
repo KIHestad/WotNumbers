@@ -498,8 +498,8 @@ namespace WotDBUpdater.Forms
         {
             // Grid
             if (!notrefreshgrid)
-            {
-                Refresh();
+        {
+            Refresh();
                 dataGridMain.Height = panelMain.Height - menuMain.Height - panelStatus.Height;
                 dataGridMain.Width = panelMain.Width - 20; // room for scrollbar
                 // Scrollbar
@@ -717,7 +717,7 @@ namespace WotDBUpdater.Forms
             toolItemViewOverall.Checked = true;
             SetStatus2("Selected view: Overall");
         }
-
+        
         private void toolItemViewTankInfo_Click(object sender, EventArgs e)
         {
             if (toolItemViewTankInfo.Checked) return; // quit if this view is already selected
@@ -735,7 +735,7 @@ namespace WotDBUpdater.Forms
             toolItenViewBattles.Checked = true;
             SetStatus2("Selected view: Battles");
         }
-
+        
         private void toolItemSelectOverall_Click(object sender, EventArgs e)
         {
             toolItemViewSelect.Text = "Overall";
@@ -821,7 +821,7 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
-
+        
 
     }
 

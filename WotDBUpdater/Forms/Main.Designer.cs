@@ -265,6 +265,7 @@
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
             this.menuItemTest_ViewRange,
+            this.viewRangeFormToolStripMenuItem,
             this.toolStripSeparator7,
             this.menuItemTest_Message});
             this.menuItemTest.Name = "menuItemTest";
@@ -735,97 +736,7 @@
             this.timerStatus2.Interval = 5000;
             this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
             // 
-            // toolItemSettings
-            // 
-            this.toolItemSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolItemSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemSettingsRun,
-            this.toolItemSettingsDossierOptions,
-            this.toolStripSeparator11,
-            this.toolItemSettingsApp,
-            this.toolItemSettingsDb});
-            this.toolItemSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolItemSettings.Image")));
-            this.toolItemSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolItemSettings.Name = "toolItemSettings";
-            this.toolItemSettings.ShowDropDownArrow = false;
-            this.toolItemSettings.Size = new System.Drawing.Size(20, 22);
-            this.toolItemSettings.Text = "toolStripDropDownButton1";
-            this.toolItemSettings.ToolTipText = "Settings";
-            // 
-            // toolItemSettingsApp
-            // 
-            this.toolItemSettingsApp.Name = "toolItemSettingsApp";
-            this.toolItemSettingsApp.Size = new System.Drawing.Size(216, 22);
-            this.toolItemSettingsApp.Text = "Application settings";
-            this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
-            // 
-            // toolItemSettingsDb
-            // 
-            this.toolItemSettingsDb.Name = "toolItemSettingsDb";
-            this.toolItemSettingsDb.Size = new System.Drawing.Size(216, 22);
-            this.toolItemSettingsDb.Text = "Database settings";
-            this.toolItemSettingsDb.Click += new System.EventHandler(this.toolItemSettingsDb_Click);
-            // 
-            // toolStripSeparator10
-            // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolItemHelp
-            // 
-            this.toolItemHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolItemHelp.Image")));
-            this.toolItemHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolItemHelp.Name = "toolItemHelp";
-            this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
-            this.toolItemHelp.Text = "toolStripButton1";
-            this.toolItemHelp.ToolTipText = "Help | About";
-            this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
-            // 
-            // toolItemSettingsRun
-            // 
-            this.toolItemSettingsRun.Name = "toolItemSettingsRun";
-            this.toolItemSettingsRun.Size = new System.Drawing.Size(216, 22);
-            this.toolItemSettingsRun.Text = "Listen to dossier file";
-            this.toolItemSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(213, 6);
-            // 
-            // toolItemSettingsDossierOptions
-            // 
-            this.toolItemSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemSettingsRunManual,
-            this.toolStripSeparator12,
-            this.toolItemSettingsUpdateFromPrev,
-            this.toolItemSettingsForceUpdateFromPrev});
-            this.toolItemSettingsDossierOptions.Name = "toolItemSettingsDossierOptions";
-            this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(216, 22);
-            this.toolItemSettingsDossierOptions.Text = "Manual dossier file options";
-            this.toolItemSettingsDossierOptions.Click += new System.EventHandler(this.toolItemSettingsDossierOptions_Click);
-            // 
-            // toolItemSettingsRunManual
-            // 
-            this.toolItemSettingsRunManual.Name = "toolItemSettingsRunManual";
-            this.toolItemSettingsRunManual.Size = new System.Drawing.Size(279, 22);
-            this.toolItemSettingsRunManual.Text = "Manual dossier file read";
-            this.toolItemSettingsRunManual.Click += new System.EventHandler(this.toolItemSettingsRunManual_Click);
-            // 
-            // toolStripSeparator12
-            // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(276, 6);
-            // 
-            // toolItemSettingsUpdateFromPrev
-            // 
-            this.toolItemSettingsUpdateFromPrev.Name = "toolItemSettingsUpdateFromPrev";
-            this.toolItemSettingsUpdateFromPrev.Size = new System.Drawing.Size(279, 22);
-            this.toolItemSettingsUpdateFromPrev.Text = "Normal check previous dossier file";
-            this.toolItemSettingsUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsUpdateFromPrev_Click);
-            // 
-            // toolItemSettingsForceUpdateFromPrev
+            // panelStrip
             // 
             this.toolItemSettingsForceUpdateFromPrev.Name = "toolItemSettingsForceUpdateFromPrev";
             this.toolItemSettingsForceUpdateFromPrev.Size = new System.Drawing.Size(279, 22);
@@ -919,6 +830,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemTest_Message;
         private System.Windows.Forms.DataGridView dataGridMain;
         private System.Windows.Forms.Panel pnlScrollbar;
+        private System.Windows.Forms.ToolStripMenuItem viewRangeFormToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolMain;
         private System.Windows.Forms.ToolStripButton toolItemRefresh;
         private System.Windows.Forms.Panel panelStrip;
