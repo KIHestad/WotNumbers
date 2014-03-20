@@ -678,6 +678,12 @@ namespace WotDBUpdater.Forms
             Code.Support.Message.Show(vr,"Test calc view range");
         }
 
+        private void viewRangeFormToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.ViewRange();
+            frm.ShowDialog();
+        }
+
         
         #endregion
 
@@ -864,6 +870,7 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
+
 
 
 

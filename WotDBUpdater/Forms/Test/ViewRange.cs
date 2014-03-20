@@ -18,26 +18,11 @@ namespace WotDBUpdater.Forms.Test
         }
 
 
-        private void ViewRange_Load(object sender, EventArgs e)
-        {
-            loadComboRecon();
-            loadComboAwareness();
-        }
 
-        private void loadComboRecon()
-        {
-            comboRecon.SelectedIndex = 0;
-        }
-
-        private void loadComboAwareness()
-        {
-            comboAwareness.SelectedIndex = 0;
-        }
-
-
-        //private void PropertiesChanged(object sender, EventArgs e, bool vent = false, bool bino = false, bool optics = false, int BIA = 0, int awareness = 0, int recon = 0, bool cons = false)
         private void PropertiesChanged(object sender, EventArgs e)
         {
+            int baseVR = 0;
+            int primarySkill = 0;
             bool vent = false;
             bool bino = false;
             bool optics = false;
@@ -45,6 +30,11 @@ namespace WotDBUpdater.Forms.Test
             int awareness = 0;
             int recon = 0;
             bool cons = false;
+
+            if (textBoxBaseVR.Text != "")
+                baseVR = Int32.Parse(textBoxBaseVR.Text.ToString());
+            if (textBoxPrimarySkill.Text != "")
+                primarySkill = Int32.Parse(textBoxPrimarySkill.Text.ToString());
             if (cbVent.Checked)
                 vent = true;
             if (cbBino.Checked)
@@ -53,12 +43,14 @@ namespace WotDBUpdater.Forms.Test
                 optics = true;
             if (cbBIA.Checked)
                 BIA = true;
-            //awareness = Int32.Parse(comboAwareness.SelectedItem.ToString());
-            //recon = Int32.Parse(comboRecon.SelectedItem.ToString());
+            if (textBoxAwareness.Text != "")
+                awareness = Int32.Parse(textBoxAwareness.Text.ToString());
+            if (textBoxRecon.Text != "")
+                recon = Int32.Parse(textBoxRecon.Text.ToString());
             if (cbCons.Checked)
                 cons = true;
-            double vr = TankPerformance.CalcViewRange(vent, bino, optics, BIA, awareness, recon, cons);
-            labelBaseVR.Text = vr.ToString();
+            double vr = TankPerformance.CalcViewRange(baseVR, primarySkill, vent, bino, optics, BIA, awareness, recon, cons);
+            labelBaseVR.Text = Math.Round(vr, 2).ToString();
         }
 
 

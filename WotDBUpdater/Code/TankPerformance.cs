@@ -14,11 +14,11 @@ namespace WotDBUpdater
         // http://www.wotinfo.net/en/camo-calculator
         // http://wiki.worldoftanks.com/Battle_Mechanics#How_tank_stats_are_calculated
 
-        public static double CalcViewRange(bool vent, bool bino, bool optics, bool BIA, int awareness, int recon, bool cons)
+        public static double CalcViewRange(int baseVR, int primarySkill, bool vent, bool bino, bool optics, bool BIA, int awareness, int recon, bool cons)
         {
             // Catch selected values from form
-            double baseTankVR = 420;
-            double basePrimarySkill = 100;
+            double baseTankVR = baseVR;
+            double basePrimarySkill = primarySkill;
             bool baseBIASkill = BIA;
             double baseReconSkill = recon;
             double baseAwarenessSkill = awareness;
