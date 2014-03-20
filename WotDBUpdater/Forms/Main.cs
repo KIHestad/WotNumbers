@@ -35,8 +35,11 @@ namespace WotDBUpdater.Forms
             // Style
             toolMain.Renderer = new StripRenderer();
             toolMain.BackColor = Code.Support.StripLayout.colorGrayMain;
+            toolBattle.Renderer = new StripRenderer();
+            toolBattle.BackColor = Code.Support.StripLayout.colorGrayMain;
             menuMain.Renderer = new StripRenderer();
             menuMain.BackColor = Code.Support.StripLayout.colorGrayMain;
+
             panelTop.BackColor = Code.Support.StripLayout.colorGrayMain;
             toolMain.ShowItemToolTips = false;
             Config.Settings.run = 0;
@@ -247,6 +250,11 @@ namespace WotDBUpdater.Forms
         {
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+            string battleFilter = "";
+            if (!toolBattleFilterAll.Checked)
+            {
+                battleFilter = "AND battleTime>=@battleTime ";
+            }
             string sql =
                 "SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, " +
                 "  CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) " +
@@ -260,10 +268,19 @@ namespace WotDBUpdater.Forms
                 "        dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN " +
                 "        dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
                 "        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id " +
-                "WHERE   dbo.player.id=@playerid " +
+                "WHERE   dbo.player.id=@playerid " + battleFilter + 
                 "ORDER BY dbo.battle.battleTime DESC ";
             SqlCommand cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
+            if (!toolBattleFilterAll.Checked)
+            {
+                DateTime dateFilter = DateTime.Now.AddDays(-360);
+                if (toolBattleFilterToday.Checked) dateFilter = DateTime.Now.AddDays(-1);
+                if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
+                if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
+                if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddDays(-30);
+                cmd.Parameters.AddWithValue("@battleTime", dateFilter);
+            }
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
@@ -274,6 +291,7 @@ namespace WotDBUpdater.Forms
             dataGridMain.Columns["loss"].Visible = false;
             dataGridMain.Columns["surivivedcount"].Visible = false;
             InitForm(); // Make scrollbar go to top
+            toolBattle.Visible = true;
         }
 
         private void GridResizeBattle()
@@ -484,8 +502,14 @@ namespace WotDBUpdater.Forms
             // Panel strip - holds menu / toolbar
             panelStrip.Left = 1;
             panelStrip.Top = 1 + panelTop.Height;
+            panelStrip.Height = 26;
+            // Main Toolbar
             toolMain.Top = 0;
             toolMain.Left = 12; // margin to left - center below icon
+            // Battle Toolbar
+            toolBattle.Top = 0;
+            toolBattle.Left = toolMain.Left + toolMain.Width;
+            toolBattle.Visible = false;
             // Panel info - showing picture / welcome
             panelInfo.Left = 1;
             panelInfo.Top = panelStrip.Top + panelStrip.Height;
@@ -870,6 +894,64 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
+
+        private void ToolBatteFilterClear()
+        {
+            toolBattleFilterToday.Checked = false;
+            toolBattleFilter3days.Checked = false;
+            toolBattleFilterWeek.Checked = false;
+            toolBattleFilterMonth.Checked = false;
+            toolBattleFilterYear.Checked = false;
+            toolBattleFilterAll.Checked = false;
+        }
+
+        private void toolBattleFilterToday_Click(object sender, EventArgs e)
+        {
+            ToolBatteFilterClear();
+            toolBattleFilterToday.Checked = true;
+            toolBattleFilter.Text = toolBattleFilterToday.Text;
+            GridShowBattle();
+        }
+
+        private void toolBattleFilter3days_Click(object sender, EventArgs e)
+        {
+            ToolBatteFilterClear();
+            toolBattleFilter3days.Checked = true;
+            toolBattleFilter.Text = toolBattleFilter3days.Text;
+            GridShowBattle();
+        }
+
+        private void toolBattleFilterWeek_Click(object sender, EventArgs e)
+        {
+            ToolBatteFilterClear();
+            toolBattleFilterWeek.Checked = true;
+            toolBattleFilter.Text = toolBattleFilterWeek.Text;
+            GridShowBattle();
+        }
+
+        private void toolBattleFilterMonth_Click(object sender, EventArgs e)
+        {
+            ToolBatteFilterClear();
+            toolBattleFilterMonth.Checked = true;
+            toolBattleFilter.Text = toolBattleFilterMonth.Text;
+            GridShowBattle();
+        }
+
+        private void toolBattleFilterYear_Click(object sender, EventArgs e)
+        {
+            ToolBatteFilterClear();
+            toolBattleFilterYear.Checked = true;
+            toolBattleFilter.Text = toolBattleFilterYear.Text;
+            GridShowBattle();
+        }
+
+        private void toolBattleFilterAll_Click(object sender, EventArgs e)
+        {
+            ToolBatteFilterClear();
+            toolBattleFilterAll.Checked = true;
+            toolBattleFilter.Text = toolBattleFilterAll.Text;
+            GridShowBattle();
+        }
 
 
 
