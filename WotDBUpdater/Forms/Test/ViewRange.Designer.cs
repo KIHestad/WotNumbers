@@ -44,6 +44,7 @@
             this.textBoxPrimarySkill = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.btnClear = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cbBino
@@ -115,7 +116,7 @@
             this.textBoxBaseVR.Name = "textBoxBaseVR";
             this.textBoxBaseVR.Size = new System.Drawing.Size(28, 20);
             this.textBoxBaseVR.TabIndex = 1;
-            this.textBoxBaseVR.TextChanged += new System.EventHandler(this.PropertiesChanged);
+            this.textBoxBaseVR.Leave += new System.EventHandler(this.PropertiesChanged);
             // 
             // labelBaseVR
             // 
@@ -144,7 +145,7 @@
             this.textBoxAwareness.Name = "textBoxAwareness";
             this.textBoxAwareness.Size = new System.Drawing.Size(28, 20);
             this.textBoxAwareness.TabIndex = 7;
-            this.textBoxAwareness.TextChanged += new System.EventHandler(this.PropertiesChanged);
+            this.textBoxAwareness.Leave += new System.EventHandler(this.PropertiesChanged);
             // 
             // textBoxRecon
             // 
@@ -153,7 +154,7 @@
             this.textBoxRecon.Name = "textBoxRecon";
             this.textBoxRecon.Size = new System.Drawing.Size(28, 20);
             this.textBoxRecon.TabIndex = 8;
-            this.textBoxRecon.TextChanged += new System.EventHandler(this.PropertiesChanged);
+            this.textBoxRecon.Leave += new System.EventHandler(this.PropertiesChanged);
             // 
             // label2
             // 
@@ -181,7 +182,7 @@
             this.textBoxPrimarySkill.Size = new System.Drawing.Size(28, 20);
             this.textBoxPrimarySkill.TabIndex = 2;
             this.textBoxPrimarySkill.Text = "100";
-            this.textBoxPrimarySkill.TextChanged += new System.EventHandler(this.PropertiesChanged);
+            this.textBoxPrimarySkill.Leave += new System.EventHandler(this.PropertiesChanged);
             // 
             // label4
             // 
@@ -202,11 +203,22 @@
             this.label5.TabIndex = 15;
             this.label5.Text = "View range calculator";
             // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(22, 285);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(43, 23);
+            this.btnClear.TabIndex = 16;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // ViewRange
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(397, 340);
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxPrimarySkill);
@@ -249,5 +261,6 @@
         private System.Windows.Forms.TextBox textBoxPrimarySkill;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnClear;
     }
 }
