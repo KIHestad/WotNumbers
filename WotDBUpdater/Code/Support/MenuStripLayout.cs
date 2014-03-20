@@ -6,14 +6,23 @@ namespace WotDBUpdater.Code.Support
 {
     public class StripLayout : ProfessionalColorTable
     {
+        // From Dark Grey
         public static Color colorGrayDropDownBack = Color.FromArgb(255, 22, 22, 22);
         public static Color colorGrayMain = Color.FromArgb(255, 45, 45, 49);
         public static Color colorGrayHover = Color.FromArgb(255, 68, 68, 72);
-        public static Color colorGrayOverFlowButton = Color.FromArgb(255, 82, 82, 86);
-        public static Color colorGrayDiv = Color.FromArgb(255, 96, 96, 100);
-        public static Color colorGrayCheckPressed = Color.FromArgb(255, 177, 177, 177);
+        public static Color colorGrayOutline = Color.FromArgb(255, 82, 82, 96);
+        public static Color colorGrayScrollbar = Color.FromArgb(255, 102, 102, 106);
+        public static Color colorGrayScrollbarHover = Color.FromArgb(255, 126, 126, 130);
+        public static Color colorGrayCheckPressed = Color.FromArgb(255, 177, 177, 180);
+        // To light grey
+
+        // White
+        public static Color colorWhiteToolStrip = Color.FromArgb(255, 240, 240, 240); 
+        // Blue
         public static Color colorBlue = Color.FromArgb(255, 66, 125, 215);
+        public static Color colorBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
         
+
         public override Color ButtonSelectedHighlight
         {
             get { return ButtonSelectedGradientMiddle; }
@@ -48,15 +57,15 @@ namespace WotDBUpdater.Code.Support
         }
         public override Color ButtonCheckedGradientBegin
         {
-            get { return colorBlue; }
+            get { return colorBlueSelectedButton; } // show selected view
         }
         public override Color ButtonCheckedGradientMiddle
         {
-            get { return colorBlue; }
+            get { return colorBlueSelectedButton; } // show selected view
         }
         public override Color ButtonCheckedGradientEnd
         {
-            get { return colorBlue; }
+            get { return colorBlueSelectedButton; } // show selected view
         }
         public override Color ButtonSelectedGradientBegin
         {
@@ -84,11 +93,11 @@ namespace WotDBUpdater.Code.Support
         }
         public override Color CheckBackground
         {
-            get { return colorGrayDiv; }
+            get { return colorGrayScrollbarHover; }
         }
         public override Color CheckSelectedBackground
         {
-            get { return colorGrayDiv; }
+            get { return colorGrayScrollbarHover; }
         }
         public override Color CheckPressedBackground
         {
@@ -96,11 +105,11 @@ namespace WotDBUpdater.Code.Support
         }
         public override Color GripDark
         {
-            get { return colorGrayDiv; }
+            get { return colorGrayScrollbarHover; }
         }
         public override Color GripLight
         {
-            get { return colorGrayMain; }
+            get { return colorGrayScrollbarHover; }
         }
         public override Color ImageMarginGradientBegin
         {
@@ -180,7 +189,7 @@ namespace WotDBUpdater.Code.Support
         }
         public override Color SeparatorLight
         {
-            get { return colorGrayDiv; }
+            get { return colorGrayScrollbarHover; }
         }
         public override Color StatusStripGradientBegin
         {
@@ -228,15 +237,15 @@ namespace WotDBUpdater.Code.Support
         }
         public override Color OverflowButtonGradientBegin
         {
-            get { return colorGrayOverFlowButton; }
+            get { return colorGrayOutline; }
         }
         public override Color OverflowButtonGradientMiddle
         {
-            get { return colorGrayOverFlowButton; }
+            get { return colorGrayOutline; }
         }
         public override Color OverflowButtonGradientEnd
         {
-            get { return colorGrayOverFlowButton; }
+            get { return colorGrayOutline; }
         }
     }
 }

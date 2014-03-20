@@ -112,12 +112,6 @@
     <Compile Include="Forms\Message.Designer.cs">
       <DependentUpon>Message.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Test\AddCountryToTable.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\AddCountryToTable.Designer.cs">
-      <DependentUpon>AddCountryToTable.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\File\DatabaseSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,12 +135,6 @@
     </Compile>
     <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Test\CountryInGrid.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\CountryInGrid.Designer.cs">
-      <DependentUpon>CountryInGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Reports\DBTable.cs">
       <SubType>Form</SubType>
@@ -197,9 +185,6 @@
     <EmbeddedResource Include="Forms\Message.resx">
       <DependentUpon>Message.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\AddCountryToTable.resx">
-      <DependentUpon>AddCountryToTable.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\DatabaseSetting.resx">
       <DependentUpon>DatabaseSetting.cs</DependentUpon>
     </EmbeddedResource>
@@ -211,9 +196,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\CountryInGrid.resx">
-      <DependentUpon>CountryInGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Reports\DBTable.resx">
       <DependentUpon>DBTable.cs</DependentUpon>
@@ -287,6 +269,9 @@
     <Content Include="Docs\Img\resize.png" />
     <Content Include="Docs\Img\resize2.png" />
     <Content Include="Docs\Img\resize3.png" />
+    <Content Include="Docs\Img\toolStripIcons\iconHelp.png" />
+    <Content Include="Docs\Img\toolStripIcons\iconReload.png" />
+    <Content Include="Docs\Img\toolStripIcons\iconSettings.png" />
     <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />
