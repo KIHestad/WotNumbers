@@ -28,57 +28,58 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBoxBino = new System.Windows.Forms.CheckBox();
-            this.checkBoxCoated = new System.Windows.Forms.CheckBox();
-            this.checkBoxVent = new System.Windows.Forms.CheckBox();
-            this.comboBIA = new System.Windows.Forms.ComboBox();
-            this.labelBIA = new System.Windows.Forms.Label();
-            this.comboBoxAwareness = new System.Windows.Forms.ComboBox();
+            this.cbBino = new System.Windows.Forms.CheckBox();
+            this.cbOptics = new System.Windows.Forms.CheckBox();
+            this.cbVent = new System.Windows.Forms.CheckBox();
+            this.comboAwareness = new System.Windows.Forms.ComboBox();
             this.labelAwareness = new System.Windows.Forms.Label();
             this.comboRecon = new System.Windows.Forms.ComboBox();
             this.labelRecon = new System.Windows.Forms.Label();
-            this.checkBoxPremiumCons = new System.Windows.Forms.CheckBox();
+            this.cbCons = new System.Windows.Forms.CheckBox();
             this.buttonCalcViewRange = new System.Windows.Forms.Button();
             this.textBoxBaseVR = new System.Windows.Forms.TextBox();
             this.labelBaseVR = new System.Windows.Forms.Label();
+            this.cbBIA = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // checkBoxBino
+            // cbBino
             // 
-            this.checkBoxBino.AutoSize = true;
-            this.checkBoxBino.Location = new System.Drawing.Point(19, 150);
-            this.checkBoxBino.Name = "checkBoxBino";
-            this.checkBoxBino.Size = new System.Drawing.Size(75, 17);
-            this.checkBoxBino.TabIndex = 2;
-            this.checkBoxBino.Text = "Binoculars";
-            this.checkBoxBino.UseVisualStyleBackColor = true;
+            this.cbBino.AutoSize = true;
+            this.cbBino.Location = new System.Drawing.Point(19, 150);
+            this.cbBino.Name = "cbBino";
+            this.cbBino.Size = new System.Drawing.Size(75, 17);
+            this.cbBino.TabIndex = 2;
+            this.cbBino.Text = "Binoculars";
+            this.cbBino.UseVisualStyleBackColor = true;
+            this.cbBino.CheckedChanged += new System.EventHandler(this.PropertiesChanged);
             // 
-            // checkBoxCoated
+            // cbOptics
             // 
-            this.checkBoxCoated.AutoSize = true;
-            this.checkBoxCoated.Location = new System.Drawing.Point(19, 177);
-            this.checkBoxCoated.Name = "checkBoxCoated";
-            this.checkBoxCoated.Size = new System.Drawing.Size(91, 17);
-            this.checkBoxCoated.TabIndex = 3;
-            this.checkBoxCoated.Text = "Coated optics";
-            this.checkBoxCoated.UseVisualStyleBackColor = true;
+            this.cbOptics.AutoSize = true;
+            this.cbOptics.Location = new System.Drawing.Point(19, 177);
+            this.cbOptics.Name = "cbOptics";
+            this.cbOptics.Size = new System.Drawing.Size(91, 17);
+            this.cbOptics.TabIndex = 3;
+            this.cbOptics.Text = "Coated optics";
+            this.cbOptics.UseVisualStyleBackColor = true;
+            this.cbOptics.CheckedChanged += new System.EventHandler(this.PropertiesChanged);
             // 
-            // checkBoxVent
+            // cbVent
             // 
-            this.checkBoxVent.AutoSize = true;
-            this.checkBoxVent.Location = new System.Drawing.Point(19, 123);
-            this.checkBoxVent.Name = "checkBoxVent";
-            this.checkBoxVent.Size = new System.Drawing.Size(75, 17);
-            this.checkBoxVent.TabIndex = 1;
-            this.checkBoxVent.Text = "Ventilation";
-            this.checkBoxVent.UseVisualStyleBackColor = true;
-            this.checkBoxVent.CheckedChanged += new System.EventHandler(this.checkBoxVent_CheckedChanged);
+            this.cbVent.AutoSize = true;
+            this.cbVent.Location = new System.Drawing.Point(19, 123);
+            this.cbVent.Name = "cbVent";
+            this.cbVent.Size = new System.Drawing.Size(75, 17);
+            this.cbVent.TabIndex = 1;
+            this.cbVent.Text = "Ventilation";
+            this.cbVent.UseVisualStyleBackColor = true;
+            this.cbVent.CheckedChanged += new System.EventHandler(this.PropertiesChanged);
             // 
-            // comboBIA
+            // comboAwareness
             // 
-            this.comboBIA.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBIA.FormattingEnabled = true;
-            this.comboBIA.Items.AddRange(new object[] {
+            this.comboAwareness.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboAwareness.FormattingEnabled = true;
+            this.comboAwareness.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
@@ -180,131 +181,11 @@
             "98",
             "99",
             "100"});
-            this.comboBIA.Location = new System.Drawing.Point(149, 121);
-            this.comboBIA.Name = "comboBIA";
-            this.comboBIA.Size = new System.Drawing.Size(43, 21);
-            this.comboBIA.TabIndex = 4;
-            this.comboBIA.SelectedIndexChanged += new System.EventHandler(this.comboBIA_SelectedIndexChanged);
-            // 
-            // labelBIA
-            // 
-            this.labelBIA.AutoSize = true;
-            this.labelBIA.Location = new System.Drawing.Point(198, 125);
-            this.labelBIA.Name = "labelBIA";
-            this.labelBIA.Size = new System.Drawing.Size(24, 13);
-            this.labelBIA.TabIndex = 0;
-            this.labelBIA.Text = "BIA";
-            // 
-            // comboBoxAwareness
-            // 
-            this.comboBoxAwareness.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAwareness.FormattingEnabled = true;
-            this.comboBoxAwareness.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "40",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50",
-            "51",
-            "52",
-            "53",
-            "54",
-            "55",
-            "56",
-            "57",
-            "58",
-            "59",
-            "60",
-            "61",
-            "62",
-            "63",
-            "64",
-            "65",
-            "66",
-            "67",
-            "68",
-            "69",
-            "70",
-            "71",
-            "72",
-            "73",
-            "74",
-            "75",
-            "76",
-            "77",
-            "78",
-            "79",
-            "80",
-            "81",
-            "82",
-            "83",
-            "84",
-            "85",
-            "86",
-            "87",
-            "88",
-            "89",
-            "90",
-            "91",
-            "92",
-            "93",
-            "94",
-            "95",
-            "96",
-            "97",
-            "98",
-            "99",
-            "100"});
-            this.comboBoxAwareness.Location = new System.Drawing.Point(149, 148);
-            this.comboBoxAwareness.Name = "comboBoxAwareness";
-            this.comboBoxAwareness.Size = new System.Drawing.Size(43, 21);
-            this.comboBoxAwareness.TabIndex = 5;
+            this.comboAwareness.Location = new System.Drawing.Point(149, 148);
+            this.comboAwareness.Name = "comboAwareness";
+            this.comboAwareness.Size = new System.Drawing.Size(43, 21);
+            this.comboAwareness.TabIndex = 5;
+            this.comboAwareness.SelectedIndexChanged += new System.EventHandler(this.PropertiesChanged);
             // 
             // labelAwareness
             // 
@@ -425,6 +306,7 @@
             this.comboRecon.Name = "comboRecon";
             this.comboRecon.Size = new System.Drawing.Size(43, 21);
             this.comboRecon.TabIndex = 6;
+            this.comboRecon.SelectedIndexChanged += new System.EventHandler(this.PropertiesChanged);
             // 
             // labelRecon
             // 
@@ -435,15 +317,16 @@
             this.labelRecon.TabIndex = 0;
             this.labelRecon.Text = "Recon";
             // 
-            // checkBoxPremiumCons
+            // cbCons
             // 
-            this.checkBoxPremiumCons.AutoSize = true;
-            this.checkBoxPremiumCons.Location = new System.Drawing.Point(298, 123);
-            this.checkBoxPremiumCons.Name = "checkBoxPremiumCons";
-            this.checkBoxPremiumCons.Size = new System.Drawing.Size(89, 17);
-            this.checkBoxPremiumCons.TabIndex = 7;
-            this.checkBoxPremiumCons.Text = "Consumables";
-            this.checkBoxPremiumCons.UseVisualStyleBackColor = true;
+            this.cbCons.AutoSize = true;
+            this.cbCons.Location = new System.Drawing.Point(298, 123);
+            this.cbCons.Name = "cbCons";
+            this.cbCons.Size = new System.Drawing.Size(89, 17);
+            this.cbCons.TabIndex = 7;
+            this.cbCons.Text = "Consumables";
+            this.cbCons.UseVisualStyleBackColor = true;
+            this.cbCons.CheckedChanged += new System.EventHandler(this.PropertiesChanged);
             // 
             // buttonCalcViewRange
             // 
@@ -470,26 +353,37 @@
             this.labelBaseVR.TabIndex = 10;
             this.labelBaseVR.Text = "x";
             // 
+            // cbBIA
+            // 
+            this.cbBIA.AutoSize = true;
+            this.cbBIA.Location = new System.Drawing.Point(149, 123);
+            this.cbBIA.Name = "cbBIA";
+            this.cbBIA.Size = new System.Drawing.Size(43, 17);
+            this.cbBIA.TabIndex = 11;
+            this.cbBIA.Text = "BIA";
+            this.cbBIA.UseVisualStyleBackColor = true;
+            this.cbBIA.CheckedChanged += new System.EventHandler(this.PropertiesChanged);
+            // 
             // ViewRange
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 340);
+            this.Controls.Add(this.cbBIA);
             this.Controls.Add(this.labelBaseVR);
             this.Controls.Add(this.textBoxBaseVR);
             this.Controls.Add(this.buttonCalcViewRange);
-            this.Controls.Add(this.checkBoxPremiumCons);
+            this.Controls.Add(this.cbCons);
             this.Controls.Add(this.labelRecon);
             this.Controls.Add(this.comboRecon);
             this.Controls.Add(this.labelAwareness);
-            this.Controls.Add(this.comboBoxAwareness);
-            this.Controls.Add(this.labelBIA);
-            this.Controls.Add(this.comboBIA);
-            this.Controls.Add(this.checkBoxVent);
-            this.Controls.Add(this.checkBoxCoated);
-            this.Controls.Add(this.checkBoxBino);
+            this.Controls.Add(this.comboAwareness);
+            this.Controls.Add(this.cbVent);
+            this.Controls.Add(this.cbOptics);
+            this.Controls.Add(this.cbBino);
             this.Name = "ViewRange";
             this.Text = "ViewRange";
+            this.Load += new System.EventHandler(this.ViewRange_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -497,18 +391,17 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBoxBino;
-        private System.Windows.Forms.CheckBox checkBoxCoated;
-        private System.Windows.Forms.CheckBox checkBoxVent;
-        private System.Windows.Forms.ComboBox comboBIA;
-        private System.Windows.Forms.Label labelBIA;
-        private System.Windows.Forms.ComboBox comboBoxAwareness;
+        private System.Windows.Forms.CheckBox cbBino;
+        private System.Windows.Forms.CheckBox cbOptics;
+        private System.Windows.Forms.CheckBox cbVent;
+        private System.Windows.Forms.ComboBox comboAwareness;
         private System.Windows.Forms.Label labelAwareness;
         private System.Windows.Forms.ComboBox comboRecon;
         private System.Windows.Forms.Label labelRecon;
-        private System.Windows.Forms.CheckBox checkBoxPremiumCons;
+        private System.Windows.Forms.CheckBox cbCons;
         private System.Windows.Forms.Button buttonCalcViewRange;
         private System.Windows.Forms.TextBox textBoxBaseVR;
         private System.Windows.Forms.Label labelBaseVR;
+        private System.Windows.Forms.CheckBox cbBIA;
     }
 }

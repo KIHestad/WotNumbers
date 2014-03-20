@@ -14,27 +14,25 @@ namespace WotDBUpdater
         // http://www.wotinfo.net/en/camo-calculator
         // http://wiki.worldoftanks.com/Battle_Mechanics#How_tank_stats_are_calculated
 
-
-        public static double CalcViewRange(int _eqVent)
+        public static double CalcViewRange(bool vent, bool bino, bool optics, bool BIA, int awareness, int recon, bool cons)
         {
             // Catch selected values from form
             double baseTankVR = 420;
             double basePrimarySkill = 100;
-            double baseBIASkill = 100;
-            double baseReconSkill = 100;
-            double baseAwarenessSkill = 100;
-            int eqBino = 1;
-            int eqOptics = 1;
-            //int eqVent = 1;
-            int eqVent = _eqVent;
-            int premiumCons = 1;
+            bool baseBIASkill = BIA;
+            double baseReconSkill = recon;
+            double baseAwarenessSkill = awareness;
+            bool eqBino = bino;
+            bool eqOptics = optics;
+            bool eqVent = vent;
+            bool premiumCons = cons;
 
             // Declare factors
             double BIAFactor = 0;
-            double reconFactor = 0;
-            double awarenessFactor = 0;
-            double binoFactor = 0;
-            double opticsFactor = 0;
+            double reconFactor = 1;
+            double awarenessFactor = 1;
+            double binoFactor = 1;
+            double opticsFactor = 1;
             double ventFactor = 0;
             double premiumConsFactor = 0;
             double bonus = 0;
@@ -47,33 +45,33 @@ namespace WotDBUpdater
 
 
             // Set BIAFactor
-            if (baseBIASkill > 0)
+            if (baseBIASkill)
             {
-                BIAFactor = 5 * baseBIASkill / 100;
+                BIAFactor = 5;
             }
 
             // Set ventFactor
-            if (eqVent > 0)
+            if (eqVent)
             {
                 ventFactor = 5;
             }
 
             // Set premiumConsFactor
-            if (premiumCons > 0)
+            if (premiumCons)
             {
                 premiumConsFactor = 10;
             }
 
             // Set binoFactor
-            if (eqBino > 0)
+            if (eqBino)
             {
                 binoFactor = 1.25;
             }
 
             // Set opticsFactor
-            if (eqOptics > 0)
+            if (eqOptics)
             {
-                if (eqBino > 0 && eqOptics > 0)  // Bino and optics don't stack
+                if (eqBino && eqOptics)  // Bino and optics don't stack
                 {
                     opticsFactor = 1;
                 }
@@ -86,15 +84,15 @@ namespace WotDBUpdater
             // Calculate reconFactor after adding bonus
             if (baseReconSkill > 0)
             {
-                if (eqVent > 0)
+                if (eqVent)
                 {
                     bonus = bonus + 5;
                 }
-                if (baseBIASkill > 0)
+                if (baseBIASkill)
                 {
                     bonus = bonus + 5;
                 }
-                if (premiumCons > 0)
+                if (premiumCons)
                 {
                     bonus = bonus + 10;
                 }
@@ -106,15 +104,15 @@ namespace WotDBUpdater
             bonus = 0;
             if (baseAwarenessSkill > 0)
             {
-                if (eqVent > 0)
+                if (eqVent)
                 {
                     bonus = bonus + 5;
                 }
-                if (baseBIASkill > 0)
+                if (baseBIASkill)
                 {
                     bonus = bonus + 5;
                 }
-                if (premiumCons > 0)
+                if (premiumCons)
                 {
                     bonus = bonus + 10;
                 }
