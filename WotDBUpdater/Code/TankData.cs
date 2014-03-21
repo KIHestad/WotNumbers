@@ -27,8 +27,6 @@ namespace WotDBUpdater
             }
         }
 
-        // public static DataTable PlayerTankList = new DataTable();
-
         public static DataTable GetPlayerTankFromDB(int tankId)
         {
             using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
@@ -42,6 +40,26 @@ namespace WotDBUpdater
                 return dt;
             }
         }
+
+
+        public static int GetPlayerTankCount()
+        {
+            using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+            {
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT count(id) AS count  FROM playerTank WHERE playerId = " + Config.Settings.playerId, conn);
+                SqlDataReader myReader = command.ExecuteReader();
+                int count = 0;
+                while (myReader.Read())
+                {
+                    count = Convert.ToInt32(myReader["count"]);
+                }
+                conn.Close();
+                return count;
+            }
+        }
+
+
 
         public static DataTable GetBattleFromDB(int battleId)
         {

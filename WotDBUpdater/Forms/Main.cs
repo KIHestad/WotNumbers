@@ -286,12 +286,14 @@ namespace WotDBUpdater.Forms
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
+            GridResizeBattle();
             dataGridMain.Columns["battlesCount"].Visible = false;
             dataGridMain.Columns["victory"].Visible = false;
             dataGridMain.Columns["loss"].Visible = false;
             dataGridMain.Columns["surivivedcount"].Visible = false;
             InitForm(); // Make scrollbar go to top
             toolBattle.Visible = true;
+            SetStatus2("Selected view: Battle - Filter: " + toolBattleFilter.Text);
         }
 
         private void GridResizeBattle()
@@ -759,13 +761,11 @@ namespace WotDBUpdater.Forms
         private void toolItenViewBattles_Click(object sender, EventArgs e)
         {
             if (toolItemViewBattles.Checked) return; // quit if this view is already selected
-            SetStatus2("Selected view: Battles");
             panelInfoSlideStart(false);
             toolItemViewOverall.Checked = false;
             toolItemViewTankInfo.Checked = false;
             toolItemViewBattles.Checked = true;
             GridShowBattle();
-            GridResizeBattle();
         }
         
         private void toolItemSettingsApp_Click(object sender, EventArgs e)

@@ -46,16 +46,17 @@ namespace WotDBUpdater
             List<string> log = new List<string>();
             Log.CheckLogFileSize();
 
+            // Check for first run (if player tank = 0), then dont get battle result
+            bool saveBattleResult = (TankData.GetPlayerTankCount() > 0);
+
             // Declare
             DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
             DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
             string tankName = "";
-            //TankDataResult tdr = new TankDataResult();
-
             jsonMainSection mainSection = new jsonMainSection();
             jsonItem currentItem = new jsonItem();
             
-            // Loop through json file
+                        // Loop through json file
             while (reader.Read())
             {
                 if (reader.Depth <= 1) // main level ( 0 or 1)
@@ -81,7 +82,7 @@ namespace WotDBUpdater
                             if  (tankName != "") 
                             {
                                 log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
-                                SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate);
+                                SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate, saveBattleResult);
                             }
                             // Reset all values
                             NewPlayerTankTable.Clear();
@@ -176,7 +177,7 @@ namespace WotDBUpdater
             }
         }
 
-        public static void SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, bool ForceUpdate = false)
+        public static void SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, bool ForceUpdate = false, bool saveBattleResult = true)
         {
             // Get Tank ID
             int tankTier = 0;
@@ -206,10 +207,13 @@ namespace WotDBUpdater
                     // New battle detected, update tankData in DB
                     UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
                     // If new battle on this tank also update battle table to store result of last battle(s)
-                    if (battlessNew15 != 0 || battlessNew7 != 0)
+                    if (saveBattleResult)
                     {
-                        // New battle detected, update tankData in DB
-                        UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, battlessNew15, battlessNew7);
+                        if (battlessNew15 != 0 || battlessNew7 != 0)
+                        {
+                            // New battle detected, update tankData in DB
+                            UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, battlessNew15, battlessNew7);
+                        }
                     }
                 }
             }
