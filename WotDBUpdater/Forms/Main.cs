@@ -109,7 +109,7 @@ namespace WotDBUpdater.Forms
                 
         #endregion
 
-        #region Events
+        #region Common Events
 
         private int status2DefaultColor = 200;
         private int status2fadeColor = 200;
@@ -196,7 +196,7 @@ namespace WotDBUpdater.Forms
                 "UNION " +
                 "SELECT 'Total battles' as Data ,cast( SUM(battles15) + SUM(battles7) as varchar) from dbo.playerTank where playerid=@playerid " +
                 "UNION " +
-                "SELECT 'Comment' as Data ,'This is an alpha version of a statiscics application - supposed to rule the World (of Tanks) :-)' ";
+                "SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
                 
             SqlCommand cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
@@ -649,70 +649,50 @@ namespace WotDBUpdater.Forms
         }
 
         #endregion
+        
+        #region Panel Info - Slider Events
+
+        private int panelInfoSlideSpeed;
+        
+        private void panelInfoSlideStart(bool show)
+        {
+            if (show)
+            {
+                panelInfoSlideSpeed = 4;
+                panelInfo.Visible = true;
+                panelMain.Height = panelMaster.Height - panelInfo.Top - panelInfo.Height - panelStatus.Height - 2;
+            }
+            else if (!show)
+            {
+                panelInfoSlideSpeed = -4;
+                panelMain.Height = panelMaster.Height - panelInfo.Top - panelStatus.Height - 2;        
+            }
+            timerPanelSlide.Enabled = true;
+        }
+
+        private void timerPanelSlide_Tick(object sender, EventArgs e)
+        {
+            // Expand or collapse panel
+            int panelInfoMaxSize = 72;
+            if (panelInfo.Height + panelInfoSlideSpeed < 0)
+            {
+                panelInfo.Height = 0;
+                timerPanelSlide.Enabled=false;
                 
-        #region Menu Item -> TESTING
-
-        
-        private void menuItemTest_ImportTank_Wn8exp_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.File.ImportTank();
-            frm.ShowDialog();
+            }
+            else if (panelInfo.Height + panelInfoSlideSpeed > panelInfoMaxSize)
+            {
+                panelInfo.Height = panelInfoMaxSize;
+                timerPanelSlide.Enabled = false;
+            }
+            else
+                panelInfo.Height += panelInfoSlideSpeed;
+            // Move sub leves togheter with panel
+            panelMain.Top = panelInfo.Top + panelInfo.Height;
         }
 
-        private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
-        {
-            string s = Modules2DB.ImportTurrets();
-            Code.Support.Message.Show(s);
-        }
-
-        private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
-        {
-            string s = Modules2DB.ImportGuns();
-            Code.Support.Message.Show(s);
-        }
-
-        private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
-        {
-            string s = Modules2DB.ImportRadios();
-            Code.Support.Message.Show(s);
-        }
-
-        private void menuItemTest_WotURL_Click(object sender, EventArgs e)
-        {
-            string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
-            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(lcUrl);
-
-            httpRequest.Timeout = 10000;     // 10 secs
-            httpRequest.UserAgent = "Code Sample Web Client";
-
-            HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-            StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-
-            string content = responseStream.ReadToEnd();
-            Code.Support.Message.Show(content);
-        }
-
-        private void menuItemTest_ProgressBar_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Test.TestProgressBar();
-            frm.Show();
-        }
-
-        private void menuItemTest_ViewRange_Click(object sender, EventArgs e)
-        {
-            string vr = ViewRange.CalcViewRange().ToString();
-            Code.Support.Message.Show(vr,"Test calc view range");
-        }
-
-        private void viewRangeFormToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Test.ViewRange();
-            frm.ShowDialog();
-        }
-
-        
-        #endregion
-
+        #endregion       
+     
         #region Toolstrip Events
         
         private void toolItemRefresh_Click(object sender, EventArgs e)
@@ -849,52 +829,6 @@ namespace WotDBUpdater.Forms
             frm.Show();
         }
 
-
-        #endregion
-
-        #region Panel Info - Slider Events
-
-        private int panelInfoSlideSpeed;
-        
-        private void panelInfoSlideStart(bool show)
-        {
-            if (show)
-            {
-                panelInfoSlideSpeed = 4;
-                panelInfo.Visible = true;
-                panelMain.Height = panelMaster.Height - panelInfo.Top - panelInfo.Height - panelStatus.Height - 2;
-            }
-            else if (!show)
-            {
-                panelInfoSlideSpeed = -4;
-                panelMain.Height = panelMaster.Height - panelInfo.Top - panelStatus.Height - 2;        
-            }
-            timerPanelSlide.Enabled = true;
-        }
-
-        private void timerPanelSlide_Tick(object sender, EventArgs e)
-        {
-            // Expand or collapse panel
-            int panelInfoMaxSize = 72;
-            if (panelInfo.Height + panelInfoSlideSpeed < 0)
-            {
-                panelInfo.Height = 0;
-                timerPanelSlide.Enabled=false;
-                
-            }
-            else if (panelInfo.Height + panelInfoSlideSpeed > panelInfoMaxSize)
-            {
-                panelInfo.Height = panelInfoMaxSize;
-                timerPanelSlide.Enabled = false;
-            }
-            else
-                panelInfo.Height += panelInfoSlideSpeed;
-            // Move sub leves togheter with panel
-            panelMain.Top = panelInfo.Top + panelInfo.Height;
-        }
-
-        #endregion
-
         private void ToolBatteFilterClear()
         {
             toolBattleFilterToday.Checked = false;
@@ -953,9 +887,70 @@ namespace WotDBUpdater.Forms
             GridShowBattle();
         }
 
+        #endregion
 
+        #region Menu Item -> TESTING
 
+        
+        private void menuItemTest_ImportTank_Wn8exp_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.ImportTank();
+            frm.ShowDialog();
+        }
 
+        private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
+        {
+            string s = Modules2DB.ImportTurrets();
+            Code.Support.Message.Show(s);
+        }
+
+        private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
+        {
+            string s = Modules2DB.ImportGuns();
+            Code.Support.Message.Show(s);
+        }
+
+        private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
+        {
+            string s = Modules2DB.ImportRadios();
+            Code.Support.Message.Show(s);
+        }
+
+        private void menuItemTest_WotURL_Click(object sender, EventArgs e)
+        {
+            string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
+            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(lcUrl);
+
+            httpRequest.Timeout = 10000;     // 10 secs
+            httpRequest.UserAgent = "Code Sample Web Client";
+
+            HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+            StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+
+            string content = responseStream.ReadToEnd();
+            Code.Support.Message.Show(content);
+        }
+
+        private void menuItemTest_ProgressBar_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.TestProgressBar();
+            frm.Show();
+        }
+
+        private void menuItemTest_ViewRange_Click(object sender, EventArgs e)
+        {
+            string vr = ViewRange.CalcViewRange().ToString();
+            Code.Support.Message.Show(vr,"Test calc view range");
+        }
+
+        private void viewRangeFormToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.ViewRange();
+            frm.ShowDialog();
+        }
+
+        
+        #endregion
 
     }
 
