@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.menuItemTest = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemTest_ImportTank_Wn8exp = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,15 +78,6 @@
             this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.panelStrip = new System.Windows.Forms.Panel();
-            this.picResize = new System.Windows.Forms.PictureBox();
-            this.panelMaster = new System.Windows.Forms.Panel();
-            this.panelStatus = new System.Windows.Forms.Panel();
-            this.lblStatus2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblStatus1 = new System.Windows.Forms.Label();
-            this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
             this.toolBattle = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolBattleFilter = new System.Windows.Forms.ToolStripDropDownButton();
@@ -96,6 +87,15 @@
             this.toolBattleFilterMonth = new System.Windows.Forms.ToolStripMenuItem();
             this.toolBattleFilterYear = new System.Windows.Forms.ToolStripMenuItem();
             this.toolBattleFilterAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.picResize = new System.Windows.Forms.PictureBox();
+            this.panelMaster = new System.Windows.Forms.Panel();
+            this.panelStatus = new System.Windows.Forms.Panel();
+            this.lblStatus2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblStatus1 = new System.Windows.Forms.Label();
+            this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
@@ -109,10 +109,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.picIS7)).BeginInit();
             this.toolMain.SuspendLayout();
             this.panelStrip.SuspendLayout();
+            this.toolBattle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picResize)).BeginInit();
             this.panelMaster.SuspendLayout();
             this.panelStatus.SuspendLayout();
-            this.toolBattle.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuMain
@@ -323,25 +323,25 @@
             this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridMain.CausesValidation = false;
             this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle13.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridMain.ColumnHeadersHeight = 36;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.LightGray;
-            dataGridViewCellStyle14.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.LightGray;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridMain.Dock = System.Windows.Forms.DockStyle.Left;
             this.dataGridMain.EnableHeadersVisualStyles = false;
             this.dataGridMain.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -578,6 +578,86 @@
             this.panelStrip.Size = new System.Drawing.Size(915, 78);
             this.panelStrip.TabIndex = 14;
             // 
+            // toolBattle
+            // 
+            this.toolBattle.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolBattle.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolBattle.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.toolBattleFilter});
+            this.toolBattle.Location = new System.Drawing.Point(13, 25);
+            this.toolBattle.Name = "toolBattle";
+            this.toolBattle.Size = new System.Drawing.Size(124, 25);
+            this.toolBattle.TabIndex = 14;
+            this.toolBattle.Text = "toolStrip1";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel1.Text = "Filter:";
+            // 
+            // toolBattleFilter
+            // 
+            this.toolBattleFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolBattleFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBattleFilterToday,
+            this.toolBattleFilter3days,
+            this.toolBattleFilterWeek,
+            this.toolBattleFilterMonth,
+            this.toolBattleFilterYear,
+            this.toolBattleFilterAll});
+            this.toolBattleFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolBattleFilter.Image")));
+            this.toolBattleFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBattleFilter.Name = "toolBattleFilter";
+            this.toolBattleFilter.ShowDropDownArrow = false;
+            this.toolBattleFilter.Size = new System.Drawing.Size(85, 22);
+            this.toolBattleFilter.Text = "Today\'s battle";
+            // 
+            // toolBattleFilterToday
+            // 
+            this.toolBattleFilterToday.Checked = true;
+            this.toolBattleFilterToday.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolBattleFilterToday.Name = "toolBattleFilterToday";
+            this.toolBattleFilterToday.Size = new System.Drawing.Size(148, 22);
+            this.toolBattleFilterToday.Text = "Today\'s Battle";
+            this.toolBattleFilterToday.Click += new System.EventHandler(this.toolBattleFilterToday_Click);
+            // 
+            // toolBattleFilter3days
+            // 
+            this.toolBattleFilter3days.Name = "toolBattleFilter3days";
+            this.toolBattleFilter3days.Size = new System.Drawing.Size(148, 22);
+            this.toolBattleFilter3days.Text = "Last 3 Days";
+            this.toolBattleFilter3days.Click += new System.EventHandler(this.toolBattleFilter3days_Click);
+            // 
+            // toolBattleFilterWeek
+            // 
+            this.toolBattleFilterWeek.Name = "toolBattleFilterWeek";
+            this.toolBattleFilterWeek.Size = new System.Drawing.Size(148, 22);
+            this.toolBattleFilterWeek.Text = "Last Week";
+            this.toolBattleFilterWeek.Click += new System.EventHandler(this.toolBattleFilterWeek_Click);
+            // 
+            // toolBattleFilterMonth
+            // 
+            this.toolBattleFilterMonth.Name = "toolBattleFilterMonth";
+            this.toolBattleFilterMonth.Size = new System.Drawing.Size(148, 22);
+            this.toolBattleFilterMonth.Text = "Last Month";
+            this.toolBattleFilterMonth.Click += new System.EventHandler(this.toolBattleFilterMonth_Click);
+            // 
+            // toolBattleFilterYear
+            // 
+            this.toolBattleFilterYear.Name = "toolBattleFilterYear";
+            this.toolBattleFilterYear.Size = new System.Drawing.Size(148, 22);
+            this.toolBattleFilterYear.Text = "Last Year";
+            this.toolBattleFilterYear.Click += new System.EventHandler(this.toolBattleFilterYear_Click);
+            // 
+            // toolBattleFilterAll
+            // 
+            this.toolBattleFilterAll.Name = "toolBattleFilterAll";
+            this.toolBattleFilterAll.Size = new System.Drawing.Size(148, 22);
+            this.toolBattleFilterAll.Text = "All Battles";
+            this.toolBattleFilterAll.Click += new System.EventHandler(this.toolBattleFilterAll_Click);
+            // 
             // picResize
             // 
             this.picResize.Image = ((System.Drawing.Image)(resources.GetObject("picResize.Image")));
@@ -662,86 +742,6 @@
             this.timerPanelSlide.Interval = 5;
             this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
             // 
-            // toolBattle
-            // 
-            this.toolBattle.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolBattle.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolBattle.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.toolBattleFilter});
-            this.toolBattle.Location = new System.Drawing.Point(13, 25);
-            this.toolBattle.Name = "toolBattle";
-            this.toolBattle.Size = new System.Drawing.Size(155, 25);
-            this.toolBattle.TabIndex = 14;
-            this.toolBattle.Text = "toolStrip1";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
-            this.toolStripLabel1.Text = "Filter:";
-            // 
-            // toolBattleFilter
-            // 
-            this.toolBattleFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolBattleFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolBattleFilterToday,
-            this.toolBattleFilter3days,
-            this.toolBattleFilterWeek,
-            this.toolBattleFilterMonth,
-            this.toolBattleFilterYear,
-            this.toolBattleFilterAll});
-            this.toolBattleFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolBattleFilter.Image")));
-            this.toolBattleFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBattleFilter.Name = "toolBattleFilter";
-            this.toolBattleFilter.ShowDropDownArrow = false;
-            this.toolBattleFilter.Size = new System.Drawing.Size(85, 22);
-            this.toolBattleFilter.Text = "Today\'s battle";
-            // 
-            // toolBattleFilterToday
-            // 
-            this.toolBattleFilterToday.Checked = true;
-            this.toolBattleFilterToday.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolBattleFilterToday.Name = "toolBattleFilterToday";
-            this.toolBattleFilterToday.Size = new System.Drawing.Size(152, 22);
-            this.toolBattleFilterToday.Text = "Today\'s Battle";
-            this.toolBattleFilterToday.Click += new System.EventHandler(this.toolBattleFilterToday_Click);
-            // 
-            // toolBattleFilter3days
-            // 
-            this.toolBattleFilter3days.Name = "toolBattleFilter3days";
-            this.toolBattleFilter3days.Size = new System.Drawing.Size(152, 22);
-            this.toolBattleFilter3days.Text = "Last 3 Days";
-            this.toolBattleFilter3days.Click += new System.EventHandler(this.toolBattleFilter3days_Click);
-            // 
-            // toolBattleFilterWeek
-            // 
-            this.toolBattleFilterWeek.Name = "toolBattleFilterWeek";
-            this.toolBattleFilterWeek.Size = new System.Drawing.Size(152, 22);
-            this.toolBattleFilterWeek.Text = "Last Week";
-            this.toolBattleFilterWeek.Click += new System.EventHandler(this.toolBattleFilterWeek_Click);
-            // 
-            // toolBattleFilterMonth
-            // 
-            this.toolBattleFilterMonth.Name = "toolBattleFilterMonth";
-            this.toolBattleFilterMonth.Size = new System.Drawing.Size(152, 22);
-            this.toolBattleFilterMonth.Text = "Last Month";
-            this.toolBattleFilterMonth.Click += new System.EventHandler(this.toolBattleFilterMonth_Click);
-            // 
-            // toolBattleFilterYear
-            // 
-            this.toolBattleFilterYear.Name = "toolBattleFilterYear";
-            this.toolBattleFilterYear.Size = new System.Drawing.Size(152, 22);
-            this.toolBattleFilterYear.Text = "Last Year";
-            this.toolBattleFilterYear.Click += new System.EventHandler(this.toolBattleFilterYear_Click);
-            // 
-            // toolBattleFilterAll
-            // 
-            this.toolBattleFilterAll.Name = "toolBattleFilterAll";
-            this.toolBattleFilterAll.Size = new System.Drawing.Size(152, 22);
-            this.toolBattleFilterAll.Text = "All Battles";
-            this.toolBattleFilterAll.Click += new System.EventHandler(this.toolBattleFilterAll_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -773,12 +773,12 @@
             this.toolMain.PerformLayout();
             this.panelStrip.ResumeLayout(false);
             this.panelStrip.PerformLayout();
+            this.toolBattle.ResumeLayout(false);
+            this.toolBattle.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picResize)).EndInit();
             this.panelMaster.ResumeLayout(false);
             this.panelStatus.ResumeLayout(false);
             this.panelStatus.PerformLayout();
-            this.toolBattle.ResumeLayout(false);
-            this.toolBattle.PerformLayout();
             this.ResumeLayout(false);
 
         }

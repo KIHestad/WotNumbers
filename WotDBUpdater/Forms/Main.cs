@@ -46,7 +46,7 @@ namespace WotDBUpdater.Forms
             SetListener();
             // Size
             InitForm();
-            
+            RefreshFormAfterResize(true);
             // Startup settings
             string statusmsg = "Application started with issues...";
             string msg = Config.GetConfig();
@@ -68,8 +68,6 @@ namespace WotDBUpdater.Forms
                 // Show data
                 lblOverView.Text = "Welcome back " + Config.Settings.playerName;
                 GridShowOverall();
-                GridResizeOverall();
-                RefreshFormAfterResize();
             }
             SetStatus2(statusmsg);
             // Populate main datagrid
@@ -189,6 +187,7 @@ namespace WotDBUpdater.Forms
         
         private void GridShowOverall()
         {
+            dataGridMain.DataSource = null;
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             string sql =
@@ -205,7 +204,9 @@ namespace WotDBUpdater.Forms
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
-            InitForm(); // Make scrollbar go to top
+            Application.DoEvents();
+            GridResizeOverall();
+            GridScrollShowCurPos();
         }
 
         private void GridResizeOverall()
@@ -216,6 +217,7 @@ namespace WotDBUpdater.Forms
 
         private void GridShowTankInfo()
         {
+            dataGridMain.DataSource = null;
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             string sql =
@@ -234,7 +236,8 @@ namespace WotDBUpdater.Forms
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
-            InitForm(); // Make scrollbar go to top
+            GridResizeTankInfo();
+            GridScrollShowCurPos();
         }
 
         private void GridResizeTankInfo()
@@ -248,6 +251,7 @@ namespace WotDBUpdater.Forms
 
         private void GridShowBattle()
         {
+            dataGridMain.DataSource = null;
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             string battleFilter = "";
@@ -286,12 +290,12 @@ namespace WotDBUpdater.Forms
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
-            GridResizeBattle();
             dataGridMain.Columns["battlesCount"].Visible = false;
             dataGridMain.Columns["victory"].Visible = false;
             dataGridMain.Columns["loss"].Visible = false;
             dataGridMain.Columns["surivivedcount"].Visible = false;
-            InitForm(); // Make scrollbar go to top
+            GridResizeBattle();
+            GridScrollShowCurPos();
             toolBattle.Visible = true;
             SetStatus2("Selected view: Battle - Filter: " + toolBattleFilter.Text);
         }
@@ -402,12 +406,19 @@ namespace WotDBUpdater.Forms
             {
                 // Calc position
                 double scrollMax = panelScrollArea.Height - panelScrollbar.Height - 8;
-                double scrollPos = panelScrollbar.Top - 4;
-                // Move datagrid
-                double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedColumnCount(false);
-                // Move to position
-                int pos = Convert.ToInt32(rowcount * (scrollPos / scrollMax));
-                dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+                if (scrollMax > 0)
+                {
+                    double scrollPos = panelScrollbar.Top - 4;
+                    // Move datagrid
+                    double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedRowCount(false);
+                    // Move to position
+                    int pos = Convert.ToInt32(rowcount * (scrollPos / scrollMax));
+                    dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+                }
+                else
+                { 
+                    scrolling = false; 
+                }
             }
             catch (Exception ex)
             {
@@ -419,15 +430,34 @@ namespace WotDBUpdater.Forms
         private void GridScrollShowCurPos()
         {
             // Pos in datagrid
-            double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedColumnCount(false);
-            double gridpos = dataGridMain.FirstDisplayedScrollingRowIndex / rowcount;
-            // Calc scroll positions
-            double scrollMax = panelScrollArea.Height - panelScrollbar.Height - 8;
-            // Move to position
-            int newpos = Convert.ToInt32(gridpos * scrollMax);
-            if (newpos < 4) newpos = 4;
-            if (newpos > scrollMax + 4) newpos = Convert.ToInt32(scrollMax + 4);
-            panelScrollbar.Top = newpos;
+            double rowcount = dataGridMain.RowCount;
+            double gridrowcount = dataGridMain.DisplayedRowCount(false);
+            double gridpos = dataGridMain.FirstDisplayedScrollingRowIndex / (rowcount - gridrowcount);
+            int scrollMax = panelScrollArea.Height - 8; // Calc max height of scrollbar
+            int scrollheight = 30; // Default height - minimum size
+            // Calc scroll height
+            if (rowcount <= gridrowcount) // Visible area > content = No scrolling
+            {
+                scrollheight = scrollMax;
+            }
+            else // Visible area to small for show all - calc scrollbar height now
+            {
+                double scrollheigthfactor = rowcount / gridrowcount;
+                scrollheight = Convert.ToInt32(scrollMax / scrollheigthfactor);
+                if (scrollheight < 30) scrollheight = 30;
+            }
+            // Calc scroll pos
+            int scrollMaxArea = panelScrollArea.Height - scrollheight - 8; // Calc max height of scrollbar
+            int scrollpos = 4; // Top
+            if (rowcount > gridrowcount) // Visible area < content = scrolling)
+            {
+                scrollpos = Convert.ToInt32(gridpos * scrollMaxArea);
+                if (scrollpos < 4) scrollpos = 4;
+                if (scrollpos > scrollMaxArea + 4) scrollpos = Convert.ToInt32(scrollMaxArea + 4);
+            }
+            // Move to position and set height
+            panelScrollbar.Top = scrollpos;
+            panelScrollbar.Height = scrollheight;
         }
 
         private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
@@ -678,7 +708,6 @@ namespace WotDBUpdater.Forms
             {
                 panelInfo.Height = 0;
                 timerPanelSlide.Enabled=false;
-                
             }
             else if (panelInfo.Height + panelInfoSlideSpeed > panelInfoMaxSize)
             {
@@ -689,6 +718,8 @@ namespace WotDBUpdater.Forms
                 panelInfo.Height += panelInfoSlideSpeed;
             // Move sub leves togheter with panel
             panelMain.Top = panelInfo.Top + panelInfo.Height;
+            panelMain.Height = panelMaster.Height - panelMain.Top - panelStatus.Height - 2;
+            GridScrollShowCurPos();
         }
 
         #endregion       
@@ -723,7 +754,6 @@ namespace WotDBUpdater.Forms
             toolItemViewBattles.Checked = false;
             toolItemViewOverall.Checked = true;
             GridShowOverall();
-            GridResizeOverall();
         }
         
         private void toolItemViewTankInfo_Click(object sender, EventArgs e)
@@ -735,7 +765,6 @@ namespace WotDBUpdater.Forms
             toolItemViewBattles.Checked = false;
             toolItemViewTankInfo.Checked = true;
             GridShowTankInfo();
-            GridResizeTankInfo();
         }
 
         private void toolItenViewBattles_Click(object sender, EventArgs e)
