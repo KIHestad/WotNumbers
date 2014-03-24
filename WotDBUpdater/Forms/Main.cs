@@ -524,7 +524,7 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        #region Form Resize
+        #region Form Init and Resize
 
         private void InitForm()
         {
@@ -550,6 +550,8 @@ namespace WotDBUpdater.Forms
             panelMain.Top = panelInfo.Top + panelInfo.Height;
             // Status bar
             panelStatus.Left = 1;
+            // Datagrid init size
+            dataGridMain.Width = panelMain.Width - 20; // room for scrollbar
             // Mouse wheel handle grid
             dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
         }
