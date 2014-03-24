@@ -205,7 +205,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(22, 285);
+            this.btnClear.Location = new System.Drawing.Point(22, 291);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(43, 23);
             this.btnClear.TabIndex = 16;
