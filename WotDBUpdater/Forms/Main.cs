@@ -863,7 +863,7 @@ namespace WotDBUpdater.Forms
         private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
         {
             Form frm = new Forms.File.ImportWotStat();
-            frm.Show();
+            frm.ShowDialog();
         }
 
         private void ToolBatteFilterClear()
