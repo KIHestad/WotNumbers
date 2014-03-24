@@ -858,6 +858,12 @@ namespace WotDBUpdater.Forms
             frm.Show();
         }
 
+        private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.File.ImportWotStat();
+            frm.Show();
+        }
+
         private void ToolBatteFilterClear()
         {
             toolBattleFilterToday.Checked = false;
@@ -980,6 +986,8 @@ namespace WotDBUpdater.Forms
 
         
         #endregion
+
+        
 
     }
 

@@ -35,6 +35,12 @@
     <ApplicationIcon>logo_org_icon3.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\IronPython.2.7.4\lib\Net45\IronPython.dll</HintPath>
@@ -71,6 +77,16 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.92.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.92.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -99,6 +115,12 @@
     </Compile>
     <Compile Include="Forms\File\DatabaseNew.Designer.cs">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\File\ImportWotStat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\ImportWotStat.Designer.cs">
+      <DependentUpon>ImportWotStat.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Help\About.cs">
       <SubType>Form</SubType>
@@ -178,6 +200,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\DatabaseNew.resx">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\File\ImportWotStat.resx">
+      <DependentUpon>ImportWotStat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Help\About.resx">
       <DependentUpon>About.cs</DependentUpon>
@@ -282,6 +307,12 @@
     <Content Include="Docs\Database\insert.txt" />
     <Content Include="logo_org_icon2.ico" />
     <Content Include="logo_org_icon3.ico" />
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Dossier2json\compile.py" />
     <Content Include="Dossier2json\Lib\abc.py" />
     <Content Include="Dossier2json\Lib\aifc.py" />

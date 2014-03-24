@@ -96,6 +96,8 @@
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
@@ -405,7 +407,7 @@
             this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolMain.Location = new System.Drawing.Point(13, 0);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(313, 25);
+            this.toolMain.Size = new System.Drawing.Size(344, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 13;
             this.toolMain.Text = "toolStrip1";
@@ -473,7 +475,9 @@
             this.toolItemSettingsApp,
             this.toolItemSettingsDb,
             this.toolStripSeparator1,
-            this.toolItemShowDbTables});
+            this.toolItemShowDbTables,
+            this.toolStripSeparator2,
+            this.toolItemImportBattlesFromWotStat});
             this.toolItemSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolItemSettings.Image")));
             this.toolItemSettings.Name = "toolItemSettings";
             this.toolItemSettings.ShowDropDownArrow = false;
@@ -483,7 +487,7 @@
             // toolItemSettingsRun
             // 
             this.toolItemSettingsRun.Name = "toolItemSettingsRun";
-            this.toolItemSettingsRun.Size = new System.Drawing.Size(191, 22);
+            this.toolItemSettingsRun.Size = new System.Drawing.Size(254, 22);
             this.toolItemSettingsRun.Text = "&Listen To Dossier File";
             this.toolItemSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
             // 
@@ -495,7 +499,7 @@
             this.toolItemSettingsUpdateFromPrev,
             this.toolItemSettingsForceUpdateFromPrev});
             this.toolItemSettingsDossierOptions.Name = "toolItemSettingsDossierOptions";
-            this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(191, 22);
+            this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(254, 22);
             this.toolItemSettingsDossierOptions.Text = "D&ossier File Options";
             // 
             // toolItemSettingsRunManual
@@ -527,31 +531,31 @@
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(251, 6);
             // 
             // toolItemSettingsApp
             // 
             this.toolItemSettingsApp.Name = "toolItemSettingsApp";
-            this.toolItemSettingsApp.Size = new System.Drawing.Size(191, 22);
+            this.toolItemSettingsApp.Size = new System.Drawing.Size(254, 22);
             this.toolItemSettingsApp.Text = "&Application Settings";
             this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
             // 
             // toolItemSettingsDb
             // 
             this.toolItemSettingsDb.Name = "toolItemSettingsDb";
-            this.toolItemSettingsDb.Size = new System.Drawing.Size(191, 22);
+            this.toolItemSettingsDb.Size = new System.Drawing.Size(254, 22);
             this.toolItemSettingsDb.Text = "&Database Settings";
             this.toolItemSettingsDb.Click += new System.EventHandler(this.toolItemSettingsDb_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(251, 6);
             // 
             // toolItemShowDbTables
             // 
             this.toolItemShowDbTables.Name = "toolItemShowDbTables";
-            this.toolItemShowDbTables.Size = new System.Drawing.Size(191, 22);
+            this.toolItemShowDbTables.Size = new System.Drawing.Size(254, 22);
             this.toolItemShowDbTables.Text = "Show Database &Tables";
             this.toolItemShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
             // 
@@ -742,6 +746,18 @@
             this.timerPanelSlide.Interval = 5;
             this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
+            // 
+            // toolItemImportBattlesFromWotStat
+            // 
+            this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
+            this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(254, 22);
+            this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics";
+            this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -849,6 +865,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolBattleFilterMonth;
         private System.Windows.Forms.ToolStripMenuItem toolBattleFilterYear;
         private System.Windows.Forms.ToolStripMenuItem toolBattleFilterAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
     }
 }
 
