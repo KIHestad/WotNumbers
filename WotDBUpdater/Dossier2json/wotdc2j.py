@@ -1,6 +1,9 @@
 ###################################################
 # World of Tanks Dossier Cache to JSON            #
 # Initial version by Phalynx www.vbaddict.net/wot #
+#                                                 #
+# Modified to run from c# using IronPhyton        #
+# Edited version by BadButton -> 2014-03-26       #
 ###################################################
 import cPickle, struct, json, time, sys, os
 	
@@ -23,9 +26,11 @@ def main():
 	global filename_source, filename_target
 	global option_server, option_format
 	
-	filename_source = ""
+	# IRONPYTHON MODIFIED: added manually input dossier filename
+	filename_source = "dossier.dat"
 	option_raw = 0
-	option_format = 0
+	# IRONPYTHON MODIFIED: setting option_formal = 1 to get better readable json file output
+	option_format = 1
 	option_server = 0
 	option_frags = 1
 	
@@ -54,6 +59,9 @@ def main():
 	
 	working_directory = os.path.dirname(os.path.realpath(__file__))
 	
+	# IRONPYTHON MODIFIED: select current path as working directory
+	os.chdir(working_directory)
+
 	printmessage('Processing ' + filename_source)
 	
 	tanksdata = dict()
@@ -378,9 +386,14 @@ def main():
 
 	dumpjson(dossier)
 
+	# IRONPYTHON MODIFIED: close dossier input file
+	cachefile.close()
+
 	printmessage('###### Done!')
 	printmessage('')
-	sys.exit(0)
+
+	# IRONPYTHON MODIFIED: no need for exit, throws error when calling sys.exit
+	#sys.exit(0)
 	
 def contains_block(blockname, blockdata):
 	
@@ -404,11 +417,10 @@ def get_tank_details(compDescr, tanksdata):
 
 
 def printmessage(message):
-	write_to_log(message)
-	#global option_server
+	global option_server
 	
-	#if option_server == 0:
-	#	print message
+	if option_server == 0:
+		print message
 
 
 def exitwitherror(message):
@@ -434,6 +446,10 @@ def dumpjson(dossier):
 				finalfile.write(json.dumps(dossier, sort_keys=True, indent=4))
 			else:
 				finalfile.write(json.dumps(dossier))
+
+			# IRONPYTHON MODIFIED: close dossier input file
+			finalfile.close()
+
 		else:
 			print json.dumps(dossier)
 	except Exception, e:
@@ -451,7 +467,7 @@ def write_to_log(logtext):
 	global working_directory, option_server
 	import datetime, os
 	
-	#printmessage(logtext)
+	printmessage(logtext)
 	now = datetime.datetime.now()
 	
 	#working_directory
@@ -483,7 +499,9 @@ def get_json_data(filename):
 	import json, time, sys, os
 	
 	#os.chdir(os.getcwd())
-	os.chdir(sys.path[0])
+
+	# IRONPYTHON MODIFIED: removed setting path, use working directory (set in main)
+	#os.chdir(sys.path[0])
 	
 	
 	if not os.path.exists(filename) or not os.path.isfile(filename) or not os.access(filename, os.R_OK):
