@@ -249,7 +249,6 @@
     <None Include="Docs\Img\logo_org.pdn" />
     <None Include="Docs\Img\logo_org_icon.pdn" />
     <None Include="Docs\Img\logo_org_icon3.pdn" />
-    <None Include="Docs\IronPython\Call wotdc2p.py using IronPython" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\README.md" />
     <None Include="Dossier2json\structures_10.json" />
@@ -297,6 +296,7 @@
     <Content Include="Docs\Img\toolStripIcons\iconHelp.png" />
     <Content Include="Docs\Img\toolStripIcons\iconReload.png" />
     <Content Include="Docs\Img\toolStripIcons\iconSettings.png" />
+    <Content Include="Docs\IronPython\Modifications of Phalynx wotdc2j.py.txt" />
     <Content Include="Docs\Json\JsonProperties.txt" />
     <Content Include="Docs\WotStatistics\1.png" />
     <Content Include="Docs\WotStatistics\2.png" />

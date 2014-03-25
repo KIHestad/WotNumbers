@@ -16,7 +16,7 @@ namespace WotDBUpdater
 			return DateTime.Now + " " + logtext;
 		}
 
-		public static string updateDossierFileWatcher()
+		public static string UpdateDossierFileWatcher()
 		{
 			string logtext = "Dossier file listener stopped";
 			bool run = (Config.Settings.run == 1);
@@ -26,7 +26,7 @@ namespace WotDBUpdater
 				dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
 				dossierFileWatcher.Filter = "*.dat";
 				dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
-				dossierFileWatcher.Changed += new FileSystemEventHandler(dossierFileChanged);
+				dossierFileWatcher.Changed += new FileSystemEventHandler(DossierFileChanged);
 				dossierFileWatcher.EnableRaisingEvents = true;
 			}
 			dossierFileWatcher.EnableRaisingEvents = run;
@@ -34,95 +34,95 @@ namespace WotDBUpdater
 			return logtext;
 		}
 
-		public static string manualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+		public static string ManualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
 		{
-			string returval = "Manual dossier file check started...";
+			string returVal = "Manual dossier file check started...";
 			Log.CheckLogFileSize();
-			List<string> logtext = new List<string>();
+			List<string> logText = new List<string>();
 			bool ok = true;
-			String dossierfile = "";
+			String dossierFile = "";
 			if (!TestRunPrevJsonFile)
 			{
 				// Dossier file manual handling - get all dossier files
-				logtext.Add(LogText("Manual run, looking for new dossier file"));
+				logText.Add(LogText("Manual run, looking for new dossier file"));
 				if (Directory.Exists(Config.Settings.dossierFilePath))
 				{
 					string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
-					DateTime dossierfiledate = new DateTime(1970, 1, 1);
+					DateTime dossierFileDate = new DateTime(1970, 1, 1);
 					foreach (string file in files)
 					{
-						FileInfo checkfile = new FileInfo(file);
-						if (checkfile.LastWriteTime > dossierfiledate)
+						FileInfo checkFile = new FileInfo(file);
+						if (checkFile.LastWriteTime > dossierFileDate)
 						{
-							dossierfile = checkfile.FullName;
-							dossierfiledate = checkfile.LastWriteTime;
+							dossierFile = checkFile.FullName;
+							dossierFileDate = checkFile.LastWriteTime;
 						}
 					}
-					if (dossierfile == "")
+					if (dossierFile == "")
 					{
-						logtext.Add(LogText(" > No dossier file found"));
-						returval = "No dossier file found - check Application Settings";
+						logText.Add(LogText(" > No dossier file found"));
+						returVal = "No dossier file found - check Application Settings";
 						ok = false;
 					}
 					else
 					{
-						logtext.Add(LogText(" > Dossier file found"));
+						logText.Add(LogText(" > Dossier file found"));
 					}
 				}
 				else
 				{
-					logtext.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
-					returval = "Inncorrect path to dossier file - check Application Settings";
+					logText.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
+					returVal = "Inncorrect path to dossier file - check Application Settings";
 					ok = false;
 				}
 			}
 			else
 			{
-				logtext.Add(LogText("Test run, using latest converted json file"));
+				logText.Add(LogText("Test run, using latest converted json file"));
 			}
 			if (ok)
 			{
-				List<string> newlogtext = copyAndConvertFile(out returval, dossierfile, TestRunPrevJsonFile, ForceUpdate);
-				foreach (string s in newlogtext)
+				List<string> newLogText = CopyAndConvertFile(out returVal, dossierFile, TestRunPrevJsonFile, ForceUpdate);
+				foreach (string s in newLogText)
 				{
-					logtext.Add(s);
+					logText.Add(s);
 				}
 			}
-			Log.LogToFile(logtext);
-			return returval;
+			Log.LogToFile(logText);
+			return returVal;
 		}
 
-		private static void dossierFileChanged(object source, FileSystemEventArgs e)
+		private static void DossierFileChanged(object source, FileSystemEventArgs e)
 		{
 			Log.CheckLogFileSize();
-			List<string> logtext = new List<string>();
-			logtext.Add(LogText("Dossier file listener detected updated dossier file"));
+			List<string> logText = new List<string>();
+			logText.Add(LogText("Dossier file listener detected updated dossier file"));
 			// Dossier file automatic handling
 			// Stop listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = false;
 			//Log("Dossier file updated");
 			// Get config data
-			string dossierfile = e.FullPath;
-			FileInfo file = new FileInfo(dossierfile);
+			string dossierFile = e.FullPath;
+			FileInfo file = new FileInfo(dossierFile);
 			// Wait until file is ready to read, 
-			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierfile, 4000);
+			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierFile, 4000);
 			// Perform file conversion from picle til json
-			string statusresult;
-			List<string> logtextnew2 = copyAndConvertFile(out statusresult, dossierfile);
+			string statusResult;
+			List<string> logTextNew2 = CopyAndConvertFile(out statusResult, dossierFile);
 			// Add logtext
 			foreach (string s in logtextnew1)
 			{
-				logtext.Add(s);
+				logText.Add(s);
 			}
-			foreach (string s in logtextnew2)
+			foreach (string s in logTextNew2)
 			{
-				logtext.Add(s);
+				logText.Add(s);
 			}
 			
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
 			// Save log to textfile
-			Log.LogToFile(logtext);
+			Log.LogToFile(logText);
 		}
 
 		private static List<string> WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
@@ -130,7 +130,7 @@ namespace WotDBUpdater
 			// Checks file is readable
 			List<string> logtext = new List<string>();
 			bool fileOK = false;
-			int waitinterval = 100; // time to wait in ms per read operation to check filesize
+			int waitInterval = 100; // time to wait in ms per read operation to check filesize
 			Stopwatch stopWatch = new Stopwatch();
 			stopWatch.Start();
 			while (stopWatch.ElapsedMilliseconds < maxWaitTime && !fileOK)
@@ -148,99 +148,99 @@ namespace WotDBUpdater
 				{
 					// could not read file
 					logtext.Add(LogText(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
-					System.Threading.Thread.Sleep(waitinterval);
+					System.Threading.Thread.Sleep(waitInterval);
 				}
 			}
 			stopWatch.Stop();
 			return logtext;
 		}
 
-		private static List<string> copyAndConvertFile(out string statusresult, string dossierfile, bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+		private static List<string> CopyAndConvertFile(out string statusResult, string dossierFile, bool testRunPrevJsonFile = false, bool forceUpdate = false)
 		{
 			// Copy dossier file and perform file conversion til json format
-			List<string> logtext = new List<string>();
+			List<string> logText = new List<string>();
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-			string dossier2jsonfile = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
-			string dossiernewfile = appPath + "/dossier2json/dossier.dat"; // new dossier file
-			string dossierprevfile = appPath + "/dossier2json/dossier_prev.dat"; // previous dossier file
-			string jsonfile = appPath + "/dossier2json/dossier.json"; // output file
-			string returval = "Starting file handling...";
+			string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
+			string dossierDatNewFile = appPath + "/dossier2json/dossier.dat"; // new dossier file
+			string dossierDatPrevFile = appPath + "/dossier2json/dossier_prev.dat"; // previous dossier file
+			string dossierJsonFile = appPath + "/dossier2json/dossier.json"; // output file
+			string returVal = "Starting file handling...";
 			try
 			{
 				bool ok = true;
-				if (!TestRunPrevJsonFile)
+				if (!testRunPrevJsonFile)
 				{
-					FileInfo fileDossierOriginal = new FileInfo(dossierfile); // the original dossier file
-					fileDossierOriginal.CopyTo(dossiernewfile, true); // copy original dossier fil and rename it for analyze
-					if (File.Exists(dossierprevfile)) // check if previous file exist, and new one is different (skip if testrun)
+					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
+					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
+					if (File.Exists(dossierDatPrevFile)) // check if previous file exist, and new one is different (skip if testrun)
 					{
-						FileInfo fileInfonew = new FileInfo(dossiernewfile); // the new dossier file
-						FileInfo fileInfoprev = new FileInfo(dossierprevfile); // the previous dossier file
+						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+						FileInfo fileInfoprev = new FileInfo(dossierDatPrevFile); // the previous dossier file
 						if (dossier2json.FilesContentsAreEqual(fileInfonew, fileInfoprev))
 						{
 							// Files are identical, skip convert
-							logtext.Add(LogText(" > File skipped, same content as previos"));
-							returval = "Manual dossier file check skipped - same content as previous";
+							logText.Add(LogText(" > File skipped, same content as previos"));
+							returVal = "Manual dossier file check skipped - same content as previous";
 							fileInfonew.Delete();
 							ok = false;
 						}
 					}
 				}
-				if (!TestRunPrevJsonFile && ok) // Convert file to json (skip if testrun)
+				if (!testRunPrevJsonFile && ok) // Convert file to json (skip if testrun)
 				{
-					string result = dossier2json.ConvertDossierUsingPython(dossier2jsonfile, dossiernewfile); // convert to json
+					string result = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
 					if (result != "") // error occured
 					{
-						logtext.Add(result);
-						returval = "Error converting dossier file to json - check log file";
+						logText.Add(result);
+						returVal = "Error converting dossier file to json - check log file";
 						ok = false;
 					}
 					else
 					{
-						logtext.Add(LogText(" > Successfully convertet dossier file to json"));
+						logText.Add(LogText(" > Successfully convertet dossier file to json"));
 						// Move new file as previos (copy and delete)
-						FileInfo fileInfonew = new FileInfo(dossiernewfile); // the new dossier file
-						fileInfonew = new FileInfo(dossiernewfile); // the new dossier file
-						fileInfonew.CopyTo(dossierprevfile, true); // copy and rename dossier file
+						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+						fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+						fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
 						fileInfonew.Delete();
-						logtext.Add(LogText(" > Renamed copied dossierfile as previous file"));
+						logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
 					}
 				}
 				if (ok) // Analyze json file and add to db
 				{
-					if (File.Exists(jsonfile))
+					if (File.Exists(dossierJsonFile))
 					{
-						returval = Dossier2db.ReadJson(jsonfile, ForceUpdate);
-						logtext.Add(LogText(" > " + returval));
+						returVal = Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
+						logText.Add(LogText(" > " + returVal));
 					}
 					else
 					{
-						logtext.Add(LogText(" > No json file found"));
-						returval = "No previous dossier file found - run manual check";
+						logText.Add(LogText(" > No json file found"));
+						returVal = "No previous dossier file found - run manual check";
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				logtext.Add(LogText(" > General file copy or conversion error: " + ex.Message));
-				returval = "General file copy or conversion error - check log file";
+				logText.Add(LogText(" > General file copy or conversion error: " + ex.Message));
+				returVal = "General file copy or conversion error - check log file";
 			}
-			Log.LogToFile(logtext);
-			statusresult = returval;
-			return logtext;
+			Log.LogToFile(logText);
+			statusResult = returVal;
+			return logText;
 		}
 
-		private static string ConvertDossierUsingPython(string dossier2jsonfile, string dossierfile)
+		private static string ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
 			// Convert to json format using python conversion from cPicle stream format
-			// Use ProcessStartInfo class to run python 
-
+			
+			// //Use ProcessStartInfo class to run python 
 			//ProcessStartInfo startInfo = new ProcessStartInfo();
 			//startInfo.CreateNoWindow = false;
 			//startInfo.UseShellExecute = false;
 			//startInfo.FileName = "c:\\python27\\python.exe";
 			//startInfo.WindowStyle = ProcessWindowStyle.Normal;
-			//startInfo.Arguments = dossier2jsonfile + " " + dossierfile + " -f -r";
+			//startInfo.Arguments = dossier2jsonScript + " " + dossierDatFile + " -f -r";
 			//try
 			//{
 			//	// Start the process with the info we specified.
@@ -259,7 +259,7 @@ namespace WotDBUpdater
 			try
 			{
 				var ipy = Python.CreateRuntime();
-				dynamic ipyrun = ipy.UseFile(dossier2jsonfile);
+				dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
 				ipyrun.main();
 			}
 			catch (Exception ex)

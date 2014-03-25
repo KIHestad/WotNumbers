@@ -57,7 +57,7 @@ namespace WotDBUpdater.Forms
             }
             else if (Config.CheckDBConn())
             {
-                string result = dossier2json.updateDossierFileWatcher();
+                string result = dossier2json.UpdateDossierFileWatcher();
                 SetListener();
                 SetFormTitle();
                 // Init
@@ -176,7 +176,7 @@ namespace WotDBUpdater.Forms
                 lblStatus1.Text = "Stopped";
                 lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
             }
-            string result = dossier2json.updateDossierFileWatcher();
+            string result = dossier2json.UpdateDossierFileWatcher();
             Refresh();
             SetStatus2(result);
         }
@@ -834,7 +834,7 @@ namespace WotDBUpdater.Forms
         {
             // Dossier file manual handling
             SetStatus2("Starting manual dossier check...");
-            string result = dossier2json.manualRun();
+            string result = dossier2json.ManualRun();
             SetStatus2(result);
         }
 
@@ -842,7 +842,7 @@ namespace WotDBUpdater.Forms
         {
             // Test running previous dossier file
             SetStatus2("Starting check on previous dossier file...");
-            string result = dossier2json.manualRun(true);
+            string result = dossier2json.ManualRun(true);
             SetStatus2(result);
         }
 
@@ -850,7 +850,7 @@ namespace WotDBUpdater.Forms
         {
             // Test running previous dossier file, force update - even if no more battles is detected
             SetStatus2("Starting check on previous dossier file with force update...");
-            string result = dossier2json.manualRun(true, true);
+            string result = dossier2json.ManualRun(true, true);
             SetStatus2(result);
         }
 
