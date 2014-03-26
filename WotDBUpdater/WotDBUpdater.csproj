@@ -290,8 +290,6 @@
     <Content Include="Docs\Img\logo_org_icon3.ico" />
     <Content Include="Docs\Img\minimize.png" />
     <Content Include="Docs\Img\normalize.png" />
-    <Content Include="Docs\Img\resize.png" />
-    <Content Include="Docs\Img\resize2.png" />
     <Content Include="Docs\Img\resize3.png" />
     <Content Include="Docs\Img\toolStripIcons\iconHelp.png" />
     <Content Include="Docs\Img\toolStripIcons\iconReload.png" />
