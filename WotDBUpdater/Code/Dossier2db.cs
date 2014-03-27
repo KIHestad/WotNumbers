@@ -274,96 +274,128 @@ namespace WotDBUpdater
 
 		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int tankTier, int battlessNew15, int battlessNew7)
 		{
-			// Greate datarow to put calculated battle data
-			DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
-			DataRow NewbattleRow = NewBattleTable.NewRow();
-			// Get fields to map playerTank data to Battle data
-			bool modeCompany = false;
-			bool modeClan = false;
-			foreach (DataRow dr in TankData.tankData2BattleMappingView.Rows)
+			try
 			{
-				if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
+
+				// Greate datarow to put calculated battle data
+				DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
+				DataRow NewbattleRow = NewBattleTable.NewRow();
+				// Get fields to map playerTank data to Battle data
+				bool modeCompany = false;
+				bool modeClan = false;
+				int wincount = 0;
+				int defeatcount = 0;
+				foreach (DataRow dr in TankData.tankData2BattleMappingView.Rows)
 				{
-					// Get field to be checked
-					string battleField = dr["dbBattle"].ToString();
-					string playerTankField = dr["dbPlayerTank"].ToString();
-					// Check datatype and calculate value
-					if (dr["dbDataType"].ToString() == "DateTime") // For DateTime get the new value
+					if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
 					{
-						NewbattleRow[battleField] = NewPlayerTankRow[playerTankField];
+						// Get field to be checked
+						string battleField = dr["dbBattle"].ToString();
+						string playerTankField = dr["dbPlayerTank"].ToString();
+						// Check datatype and calculate value
+						if (dr["dbDataType"].ToString() == "DateTime") // For DateTime get the new value
+						{
+							NewbattleRow[battleField] = NewPlayerTankRow[playerTankField];
+						}
+						else // For integers calculate new value as diff between new and old value
+						{
+							// Calculate difference from old to new Playertank result
+							if (NewbattleRow[battleField] == DBNull.Value) NewbattleRow[battleField] = 0;
+							int oldvalue = 0;
+							int newvalue = 0;
+							if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
+							if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
+							NewbattleRow[battleField] = Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue;
+						}
 					}
-					else // For integers calculate new value as diff between new and old value
+					else // Check in unmapped fields 
 					{
-						// Calculate difference from old to new Playertank result
-						if (NewbattleRow[battleField] == DBNull.Value) NewbattleRow[battleField] = 0;
-						int oldvalue = 0;
-						int newvalue = 0;
-						if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
-						if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
-						NewbattleRow[battleField] = Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue;
+						// Get field to be checked
+						string playerTankField = dr["dbPlayerTank"].ToString();
+						// Calculate clan and company battle mode
+						if (playerTankField == "battlesClan" || playerTankField == "battlesCompany") // For DateTime get the new value
+						{
+							// Calculate difference from old to new playertank result
+							int oldvalue = 0;
+							int newvalue = 0;
+							if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
+							if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
+							if (newvalue > oldvalue)
+							{
+								modeClan = (playerTankField == "battlesClan");
+								modeCompany = (playerTankField == "battlesCompany");
+							}
+						}
+						// Get win count result
+						else if ((playerTankField == "wins7" || playerTankField == "wins15") && NewPlayerTankRow[playerTankField] != DBNull.Value) 
+							wincount += Convert.ToInt32(NewPlayerTankRow[playerTankField]) - Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
+						// Get defeat count result
+						else if ((playerTankField == "losses7" || playerTankField == "losses15") && NewPlayerTankRow[playerTankField] != DBNull.Value) 
+							defeatcount += Convert.ToInt32(NewPlayerTankRow[playerTankField]) - Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
 					}
 				}
-				else // Check in unmapped fields for calculate clan and company battle mode
+				// Get value to playerTankID, FK to parent table playerTank
+				DataTable dt = TankData.GetPlayerTankFromDB(tankId);
+				string sqlFields = "playerTankId";
+				string sqlValues = dt.Rows[0]["Id"].ToString();
+				// Get fields to update, loop through mapping table to get allgenerate SQL
+				foreach (DataColumn column in NewBattleTable.Columns)
 				{
-					// Get field to be checked
-					string playerTankField = dr["dbPlayerTank"].ToString();
-					// Check datatype and calculate value
-					if (playerTankField == "battlesClan" || playerTankField == "battlesCompany") // For DateTime get the new value
+					if (column.ColumnName != "Id" && column.ColumnName != "playerTankID" && NewbattleRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
 					{
-						// Calculate difference from old to new playertank result
-						int oldvalue = 0;
-						int newvalue = 0;
-						if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
-						if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
-						if (newvalue > oldvalue)
+						string colName = column.ColumnName;
+						string colType = column.DataType.Name;
+						sqlFields += ", " + colName;
+						switch (colType)
 						{
-							modeClan = (playerTankField == "battlesClan");
-							modeCompany = (playerTankField == "battlesCompany");
+							case "String": sqlValues += ", '" + NewbattleRow[colName] + "'"; break;
+							case "DateTime": sqlValues += ", '" + Convert.ToDateTime(NewbattleRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+							default: sqlValues += ", " + NewbattleRow[colName]; break;
 						}
 					}
 				}
-			}
-			// Get value to playerTankID, FK to parent table playerTank
-			DataTable dt = TankData.GetPlayerTankFromDB(tankId);
-			string sqlFields = "playerTankId";
-			string sqlValues = dt.Rows[0]["Id"].ToString();
-			// Get fields to update, loop through mapping table to get allgenerate SQL
-			foreach (DataColumn column in NewBattleTable.Columns)
-			{
-				if (column.ColumnName != "Id" && column.ColumnName != "playerTankID" && NewbattleRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+				// Add battle mode
+				if (battlessNew15 != 0) { sqlFields += ", mode15"; sqlValues += ", 1"; }
+				if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }
+				if (modeCompany) { sqlFields += ", modeCompany"; sqlValues += ", 1"; }
+				if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
+				// Calculate WN8
+				sqlFields += ", wn8";
+				sqlValues += ", " + Rating.CalculateBattleWn8(tankId, (battlessNew15 + battlessNew7), NewbattleRow);
+				// Calc Eff
+				sqlFields += ", eff";
+				sqlValues += ", " + Rating.CalculateBattleEff(tankId, tankTier, (battlessNew15 + battlessNew7), NewbattleRow);
+				// Calculate battle result
+				int battleResult = 0;
+				// (1, 'Victory', 1, '#00FF21')
+				// (2, 'Draw', 1, '#FFFF00')
+				// (3, 'Defeat', 1 ,'#FF0000')
+				// (4, 'Several', '#0094FF')
+				if (wincount > 0 && wincount == (battlessNew15 + battlessNew7))
+					battleResult = 1;
+				else if (defeatcount > 0 && defeatcount == (battlessNew15 + battlessNew7))
+					battleResult = 3;
+				else if ((wincount + defeatcount) == 0)
+					battleResult = 2;
+				else
+					battleResult = 4;
+				sqlFields += ", battleResultId "; sqlValues += ", " + battleResult.ToString();
+				// Update database
+				if (sqlFields.Length > 0)
 				{
-					string colName = column.ColumnName;
-					string colType = column.DataType.Name;
-					sqlFields += ", " + colName;
-					switch (colType)
-					{
-						case "String": sqlValues += ", '" + NewbattleRow[colName] + "'"; break;
-						case "DateTime": sqlValues += ", '" + Convert.ToDateTime(NewbattleRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
-						default: sqlValues += ", " + NewbattleRow[colName]; break;
-					}
+					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+					con.Open();
+					SqlCommand cmd = new SqlCommand("INSERT INTO battle (" + sqlFields + ") VALUES (" + sqlValues + ")", con);
+					cmd.ExecuteNonQuery();
+					con.Close();
 				}
 			}
-			// Add battle mode
-			if (battlessNew15 != 0) { sqlFields += ", mode15"; sqlValues += ", 1"; }
-			if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }
-			if (modeCompany) { sqlFields += ", modeCompany"; sqlValues += ", 1"; }
-			if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
-			// Calculate WN8
-			sqlFields += ", wn8";
-			sqlValues += ", " + Rating.CalculateBattleWn8(tankId, (battlessNew15 + battlessNew7), NewbattleRow);
-			// Calc Eff
-			sqlFields += ", eff";
-			sqlValues += ", " + Rating.CalculateBattleEff(tankId, tankTier, (battlessNew15 + battlessNew7), NewbattleRow);
-			// Update database
-			if (sqlFields.Length > 0)
+			catch (Exception ex)
 			{
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
-				SqlCommand cmd = new SqlCommand("INSERT INTO battle (" + sqlFields + ") VALUES (" + sqlValues + ")", con);
-				cmd.ExecuteNonQuery();
-				con.Close();
+				string s = ex.Message;
+				throw;
 			}
-
+			
 		}
 	}
 }

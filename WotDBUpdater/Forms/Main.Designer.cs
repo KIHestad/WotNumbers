@@ -125,9 +125,9 @@
 			this.menuMain.Dock = System.Windows.Forms.DockStyle.Right;
 			this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemTest});
-			this.menuMain.Location = new System.Drawing.Point(868, 0);
+			this.menuMain.Location = new System.Drawing.Point(817, 0);
 			this.menuMain.Name = "menuMain";
-			this.menuMain.Size = new System.Drawing.Size(47, 78);
+			this.menuMain.Size = new System.Drawing.Size(98, 78);
 			this.menuMain.TabIndex = 10;
 			this.menuMain.Text = "menuMain";
 			// 
@@ -144,7 +144,7 @@
             this.menuItemTest_ViewRange,
             this.viewRangeFormToolStripMenuItem});
 			this.menuItemTest.Name = "menuItemTest";
-			this.menuItemTest.Size = new System.Drawing.Size(34, 19);
+			this.menuItemTest.Size = new System.Drawing.Size(85, 19);
 			this.menuItemTest.Text = "Test";
 			// 
 			// menuItemTest_ImportTank_Wn8exp

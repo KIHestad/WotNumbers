@@ -51,19 +51,3 @@ GROUP BY dbDataType, dbPlayerTank, dbBattle
 
 GO
 
--- View for battle result
-
-CREATE VIEW [dbo].[BattleResultView]
-AS
-SELECT        TOP (100) PERCENT dbo.player.name AS Player, dbo.tank.name AS Tank, dbo.tank.tier, dbo.battle.battleTime AS Time, 
-                         CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) 
-                         WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS [Vict-Draw-Def], 
-                         CASE WHEN battlescount > 1 THEN CAST(dbo.battle.survived AS varchar) WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, 
-                         dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp, dbo.battle.spotted AS Detected, 
-                         dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots, dbo.battle.hits, dbo.battle.wn8, dbo.battle.eff
-FROM            dbo.battle INNER JOIN
-                         dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN
-                         dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
-                         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id
-
-GO

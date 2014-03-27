@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 
+
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
 //using IronPython.Runtime;
@@ -272,18 +273,17 @@ namespace WotDBUpdater.Forms
 				battleFilter = "AND battleTime>=@battleTime ";
 			}
 			string sql =
-				"SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, " +
-				"  CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) " +
-				"       WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS Result, " +
+				"SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, dbo.battleResult.name as Result, " +
 				"  CASE WHEN battlescount > 1 THEN RIGHT('00' + CAST(ROUND(CAST(dbo.battle.survived AS FLOAT) / CAST(dbo.battle.battlescount AS float) * 100,0) AS varchar),2) + ' %'  " +
 				"       WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
 				"  dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp AS XP, dbo.battle.spotted AS Detected, " +
 				"  dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots AS Shots, dbo.battle.hits AS Hits, dbo.battle.wn8 AS WN8, " +
-				"  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.victory, dbo.battle.loss, dbo.battle.survived as surivivedcount " +
+				"  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.survived as surivivedcount,  dbo.battleResult.color as battleResultColor " +
 				"FROM    dbo.battle INNER JOIN " +
 				"        dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN " +
 				"        dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
-				"        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id " +
+				"        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN " +
+				"        dbo.battleResult ON dbo.battle.battleResultId = dbo.battleResult.id " +		
 				"WHERE   dbo.player.id=@playerid " + battleFilter + 
 				"ORDER BY dbo.battle.battleTime DESC ";
 			SqlCommand cmd = new SqlCommand(sql, con);
@@ -302,9 +302,7 @@ namespace WotDBUpdater.Forms
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			dataGridMain.DataSource = dt;
-			dataGridMain.Columns["battlesCount"].Visible = false;
-			dataGridMain.Columns["victory"].Visible = false;
-			dataGridMain.Columns["loss"].Visible = false;
+			dataGridMain.Columns["battleResultColor"].Visible = false;
 			dataGridMain.Columns["surivivedcount"].Visible = false;
 			GridResizeBattle();
 			GridScrollShowCurPos();
@@ -327,27 +325,15 @@ namespace WotDBUpdater.Forms
 		
 		private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			// Victory color
+			// Battle Result color color
 			if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Result"))
 			{
 				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-				int wins = (int)dataGridMain["victory", e.RowIndex].Value;
-				int loss = (int)dataGridMain["loss", e.RowIndex].Value;
-				if (wins > loss)
-				{
-					cell.Style.ForeColor = Color.Green;
-				}
-				else if (wins == loss)
-				{
-					cell.Style.ForeColor = Color.Yellow;
-				}
-				else
-				{
-					cell.Style.ForeColor = Color.Red;
-				}
+				string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+				cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
 			}
 			// Survived color and formatting
-			if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
+			else if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
 			{
 				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
 				double battlecount = Convert.ToDouble(dataGridMain["battlescount", e.RowIndex].Value);
@@ -1005,7 +991,7 @@ namespace WotDBUpdater.Forms
 		
 		#endregion
 
-		
+			
 
 	}
 

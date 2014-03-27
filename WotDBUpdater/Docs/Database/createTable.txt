@@ -4,13 +4,13 @@ drop table country
 drop table player
 drop table tank
 drop table playerTank
-drop table battle
 drop table ach
-drop table battleAch
 drop table playerTankAch
 drop table playerTankFrag
+drop table battle
+drop table battleResult
+drop table battleAch
 drop table battleFrag
-drop table jsonUserTank
 drop table json2dbMapping
 drop table modTurret
 drop table modGun
@@ -160,14 +160,29 @@ alter table playerTank add constraint fk_playerTank_player foreign key (playerId
 
 -------------------------------------------------------------------------------------------------
 
+CREATE TABLE battleResult (
+	id int constraint pk_battleResult_Id primary key,
+	name varchar(50) NOT NULL,
+	color varchar(50) NOT NULL,
+	victory bit NOT NULL default 0,
+	draw bit NOT NULL default 0,
+	defeat bit NOT NULL default 0
+)
+
+-------------------------------------------------------------------------------------------------
+
+-- Removed columns:
+-- victory int not null default 0,
+-- loss int not null default 0,
+	
+
 create table battle (
 	id int IDENTITY(1,1) constraint pk_battleId primary key,
 	playerTankId int not null default 0,
 	battlesCount int not null default 0,
 	battleTime datetime not null default 0,
 	battleLifeTime int not null default 0,
-	victory int not null default 0,
-	loss int not null default 0,
+	battleResultId int not null,
 	survived int not null default 0,
 	frags int not null default 0,
 	dmg int not null default 0,
@@ -194,6 +209,7 @@ create table battle (
 )
 
 alter table battle add constraint fk_battle_playerTank foreign key (playerTankId) references playerTank (id)
+alter table battle add constraint fk_battle_battleResult foreign key (battleResultId) references playerTank (id)
 
 -------------------------------------------------------------------------------------------------
 
