@@ -89,6 +89,7 @@ namespace WotDBUpdater.Forms.File
 			sqlConn.Open();
 
 			// Create temp table for import
+			// drop table wsRecentBattles; 
 			string sql = "create table wsRecentBattles (rbId int, rbTankId int, rbCountryId int, rbBattles int, rbKills int, rbDamageDealt int, rbDamageReceived int,"
 					   + "rbSpotted int, rbCapturePoints int, rbDefencePoints int, rbSurvived int, rbVictory int, rbBattleTime int, rbShot int, rbHits int, rbBattleMode int); ";
 			SqlCommand startup = new SqlCommand(sql, sqlConn);
@@ -110,6 +111,9 @@ namespace WotDBUpdater.Forms.File
 			SqlCommand insertRB = new SqlCommand(sql, sqlConn);
 			while (i < recentBattles.Rows.Count)
 			{
+				progressBarImport.Value++;
+				lblResult.Text = "Reading id: " + recentBattles.Rows[i]["rbId"].ToString();
+				Application.DoEvents();
 				insertRB.Parameters.Clear();
 				insertRB.Parameters.AddWithValue("@rbId", recentBattles.Rows[i]["rbId"].ToString());
 				insertRB.Parameters.AddWithValue("@rbTankId", recentBattles.Rows[i]["rbTankId"].ToString());
@@ -143,5 +147,12 @@ namespace WotDBUpdater.Forms.File
 			sqlConn.Close();
 			sqliteConn.Close();
 		}
+
+		private void ImportWotStat_Load(object sender, EventArgs e)
+		{
+			lblResult.Text = "";
+		}
+
+
 	}
 }

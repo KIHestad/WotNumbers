@@ -48,7 +48,7 @@ namespace WotDBUpdater
 			bool battleSave = false;
 
 			// Check for first run (if player tank = 0), then dont get battle result
-			bool saveBattleResult = true; // (TankData.GetPlayerTankCount() > 0);
+			bool saveBattleResult = (TankData.GetPlayerTankCount() > 0);
 
 			// Declare
 			DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
@@ -57,7 +57,7 @@ namespace WotDBUpdater
 			jsonMainSection mainSection = new jsonMainSection();
 			jsonItem currentItem = new jsonItem();
 			string fraglist = "";
-			string achlist = "";
+			//string achlist = "";
 			
 						// Loop through json file
 			while (reader.Read())
@@ -94,7 +94,7 @@ namespace WotDBUpdater
 							currentItem.tank = reader.Value.ToString(); // add to current item
 							tankName = reader.Value.ToString(); // add to current tank
 							fraglist = "";
-							achlist = "";
+							//achlist = "";
 						}
 					}
 					else
