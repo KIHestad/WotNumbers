@@ -75,8 +75,8 @@
             this.toolItemSettingsDb = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolItemShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.panelStrip = new System.Windows.Forms.Panel();
@@ -99,6 +99,7 @@
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
             this.testImportWs2dbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
@@ -116,6 +117,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picResize)).BeginInit();
             this.panelMaster.SuspendLayout();
             this.panelStatus.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.SuspendLayout();
             // 
             // menuMain
@@ -327,7 +329,7 @@
             this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridMain.CausesValidation = false;
             this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
@@ -337,13 +339,15 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridMain.ColumnHeadersHeight = 36;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.LightGray;
+			dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+			dataGridViewCellStyle2.Format = "N0";
+			dataGridViewCellStyle2.NullValue = null;
             dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Gainsboro;
+			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridMain.Dock = System.Windows.Forms.DockStyle.Left;
@@ -356,6 +360,8 @@
             this.dataGridMain.RowHeadersVisible = false;
             this.dataGridMain.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
+			this.dataGridMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+			this.dataGridMain.ShowEditingIcon = false;
             this.dataGridMain.Size = new System.Drawing.Size(455, 96);
             this.dataGridMain.TabIndex = 11;
             this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
@@ -409,7 +415,7 @@
             this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolMain.Location = new System.Drawing.Point(13, 0);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(313, 25);
+			this.toolMain.Size = new System.Drawing.Size(313, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 13;
             this.toolMain.Text = "toolStrip1";
@@ -561,18 +567,18 @@
             this.toolItemShowDbTables.Text = "Show Database &Tables";
             this.toolItemShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
-            // 
-            // toolItemImportBattlesFromWotStat
-            // 
-            this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
-            this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(254, 22);
-            this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics";
-            this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
-            // 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
+			// 
+			// toolItemImportBattlesFromWotStat
+			// 
+			this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
+			this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(254, 22);
+			this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics";
+			this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
+			// 
             // toolItemHelp
             // 
             this.toolItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolItemHelp.Image")));
@@ -605,6 +611,7 @@
             this.toolBattleFilter});
             this.toolBattle.Location = new System.Drawing.Point(13, 25);
             this.toolBattle.Name = "toolBattle";
+			this.toolBattle.ShowItemToolTips = false;
             this.toolBattle.Size = new System.Drawing.Size(124, 25);
             this.toolBattle.TabIndex = 14;
             this.toolBattle.Text = "toolStrip1";
@@ -700,7 +707,7 @@
             this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMaster.Location = new System.Drawing.Point(0, 0);
             this.panelMaster.Name = "panelMaster";
-            this.panelMaster.Size = new System.Drawing.Size(936, 565);
+			this.panelMaster.Size = new System.Drawing.Size(964, 532);
             this.panelMaster.TabIndex = 16;
             this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
             // 
@@ -761,7 +768,10 @@
             this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
             // 
             // testImportWs2dbToolStripMenuItem
+			// fileSystemWatcherNewBattle
             // 
+			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
             this.testImportWs2dbToolStripMenuItem.Name = "testImportWs2dbToolStripMenuItem";
             this.testImportWs2dbToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.testImportWs2dbToolStripMenuItem.Text = "Test import ws2db";
@@ -772,7 +782,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(936, 565);
+			this.ClientSize = new System.Drawing.Size(964, 532);
             this.Controls.Add(this.panelMaster);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuMain;
@@ -804,6 +814,7 @@
             this.panelMaster.ResumeLayout(false);
             this.panelStatus.ResumeLayout(false);
             this.panelStatus.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -877,6 +888,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
         private System.Windows.Forms.ToolStripMenuItem testImportWs2dbToolStripMenuItem;
+		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
     }
 }
 

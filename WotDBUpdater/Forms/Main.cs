@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 
+
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
 //using IronPython.Runtime;
@@ -57,7 +58,7 @@ namespace WotDBUpdater.Forms
             }
             else if (Config.CheckDBConn())
             {
-                string result = dossier2json.updateDossierFileWatcher();
+				string result = dossier2json.UpdateDossierFileWatcher();
                 SetListener();
                 SetFormTitle();
                 // Init
@@ -70,8 +71,12 @@ namespace WotDBUpdater.Forms
                 GridShowOverall();
             }
             SetStatus2(statusmsg);
-            // Populate main datagrid
-            
+			// Battle result file watcher
+			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
+			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
+			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
+			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
+			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
         }
 
         #region Layout
@@ -111,6 +116,14 @@ namespace WotDBUpdater.Forms
 
         private int status2DefaultColor = 200;
         private int status2fadeColor = 200;
+
+		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
+		{
+			if (toolItemViewBattles.Checked)
+			{
+				GridShowBattle("New battle result detected, grid refreshed");
+			}
+		}
 
         private void timerStatus2_Tick(object sender, EventArgs e)
         {
@@ -176,7 +189,7 @@ namespace WotDBUpdater.Forms
                 lblStatus1.Text = "Stopped";
                 lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
             }
-            string result = dossier2json.updateDossierFileWatcher();
+			string result = dossier2json.UpdateDossierFileWatcher();
             Refresh();
             SetStatus2(result);
         }
@@ -185,8 +198,19 @@ namespace WotDBUpdater.Forms
 
         #region Data Grid
         
+		private enum DataGridType
+		{
+			None = 0,
+			Overall = 1,
+			Tank = 2,
+			Battle = 3
+		}
+
+		private DataGridType DateGridSelected = DataGridType.None;
+		
         private void GridShowOverall()
         {
+			DateGridSelected = DataGridType.None;
             dataGridMain.DataSource = null;
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
@@ -204,7 +228,13 @@ namespace WotDBUpdater.Forms
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
-            Application.DoEvents();
+			DateGridSelected = DataGridType.Overall;
+			// Text cols
+			dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			// Finish
             GridResizeOverall();
             GridScrollShowCurPos();
         }
@@ -217,11 +247,12 @@ namespace WotDBUpdater.Forms
 
         private void GridShowTankInfo()
         {
+			DateGridSelected = DataGridType.None;
             dataGridMain.DataSource = null;
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
             string sql =
-                "SELECT   dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, " +
+				"SELECT   dbo.tank.tier AS Tier, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, " +
                 "         dbo.playerTank.battles15 AS [Battles15], dbo.playerTank.battles7 AS [Battles7], dbo.playerTank.wn8 as WN8, dbo.playerTank.eff as EFF " +
                 "FROM    dbo.playerTank INNER JOIN " +
                 "         dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
@@ -236,21 +267,33 @@ namespace WotDBUpdater.Forms
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridMain.DataSource = dt;
+			DateGridSelected = DataGridType.Tank;
+			// Text cols
+			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Tank"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Tanktype"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Tanktype"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Country"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Country"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			// Finish
             GridResizeTankInfo();
             GridScrollShowCurPos();
         }
 
         private void GridResizeTankInfo()
         {
-            dataGridMain.Columns[1].Width = 40;
-            for (int i = 4; i <= 7 ; i++)
+			dataGridMain.Columns[0].Width = 35;
+			dataGridMain.Columns[1].Width = 120;
+			dataGridMain.Columns[2].Width = 100;
+			for (int i = 3; i <= 7 ; i++)
             {
                 dataGridMain.Columns[i].Width = 70;
             }
         }
 
-        private void GridShowBattle()
+		private void GridShowBattle(string statusmessage = "")
         {
+			DateGridSelected = DataGridType.None;
             dataGridMain.DataSource = null;
             if (!Config.CheckDBConn()) return;
             SqlConnection con = new SqlConnection(Config.DatabaseConnection());
@@ -260,97 +303,191 @@ namespace WotDBUpdater.Forms
                 battleFilter = "AND battleTime>=@battleTime ";
             }
             string sql =
-                "SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, " +
-                "  CASE WHEN battlescount > 1 THEN concat(CAST(victory AS varchar), ' - ', CAST(battlescount - victory - loss AS varchar), ' - ', CAST(loss AS varchar)) " +
-                "       WHEN victory - loss > 0 THEN 'Victory' WHEN victory - loss < 0 THEN 'Defeat' ELSE 'Draw' END AS Result, " +
-                "  CASE WHEN battlescount > 1 THEN RIGHT('00' + CAST(ROUND(CAST(dbo.battle.survived AS FLOAT) / CAST(dbo.battle.battlescount AS float) * 100,0) AS varchar),2) + ' %'  " +
-                "       WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
-                "  dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp AS XP, dbo.battle.spotted AS Detected, " +
-                "  dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots AS Shots, dbo.battle.hits AS Hits, dbo.battle.wn8 AS WN8, " +
-                "  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.victory, dbo.battle.loss, dbo.battle.survived as surivivedcount " +
-                "FROM    dbo.battle INNER JOIN " +
-                "        dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN " +
-                "        dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
-                "        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id " +
-                "WHERE   dbo.player.id=@playerid " + battleFilter + 
-                "ORDER BY dbo.battle.battleTime DESC ";
+				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
+				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
+				"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
+				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, battle.battleTime, battle.battleResultId, battle.battleSurviveId, " +
+				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer " +
+				"FROM    battle INNER JOIN " +
+				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
+				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
+				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
+				"WHERE   playerTank.playerId=@playerid " + battleFilter +
+				"ORDER BY battle.battleTime DESC ";
+				
             SqlCommand cmd = new SqlCommand(sql, con);
             cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
             if (!toolBattleFilterAll.Checked)
             {
-                DateTime dateFilter = DateTime.Now.AddDays(-360);
-                if (toolBattleFilterToday.Checked) dateFilter = DateTime.Now.AddDays(-1);
+				DateTime basedate = DateTime.Now;
+				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); 
+				// Adjust time scale according to selected filter
                 if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
-                if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
-                if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddDays(-30);
+				else if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
+				else if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddMonths(-1);
+				else if (toolBattleFilterYear.Checked) dateFilter = DateTime.Now.AddYears(-1);
                 cmd.Parameters.AddWithValue("@battleTime", dateFilter);
             }
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
+			// Add footer
+			if (dt.Rows.Count > 1)
+			{
+				sql =
+					"SELECT  AVG(CAST(tank.tier AS FLOAT)) AS Tier, " +
+					"        'Average on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
+					"        CAST(ROUND(SUM(CAST(battle.victory AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Result, " +
+					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
+					"        AVG(CAST(battle.dmg AS FLOAT)) AS [Damage Caused], " +
+					"        AVG(CAST(battle.dmgReceived AS FLOAT)) AS [Damage Received], " +
+					"        AVG(CAST(battle.frags AS FLOAT)) AS Kills, " +
+					"        AVG(CAST(battle.xp AS FLOAT)) AS XP, " +
+					"        AVG(CAST(battle.spotted AS FLOAT)) AS Detected," +
+					"		 AVG(CAST(battle.cap AS FLOAT)) AS [Capture Points], " +
+					"		 AVG(CAST(battle.def AS FLOAT)) AS [Defense Points], " +
+					"		 AVG(CAST(battle.shots AS FLOAT)) AS Shots, " +
+					"		 AVG(CAST(battle.hits AS FLOAT)) AS Hits, " +
+					"		 AVG(CAST(battle.wn8 AS FLOAT)) AS WN8, " +
+					"		 AVG(CAST(battle.eff AS FLOAT)) AS EFF, " +
+					"		 '#F0F0F0' as battleResultColor, " +
+					"		 '#F0F0F0' as battleSurviveColor, " +
+					"		 SUM(battlescount) AS battlescount, " +
+					"		 GETDATE() AS battleTime, " +
+					"		 4 AS battleResultId, " +
+					"		 2 AS battleSurviveId," +
+					"		 SUM (battle.victory) AS victory, " +
+					"		 SUM (battle.draw) AS draw, " +
+					"		 SUM (battle.defeat) AS defeat, " +
+					"		 SUM (battle.survived) as survivedcount, " +
+					"		 SUM (battle.killed) as killedcount, " +
+					"        1 as footer " +
+					"FROM    battle INNER JOIN " +
+					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+					"        tank ON playerTank.tankId = tank.id " +
+					"WHERE   playerTank.playerId=@playerid " + battleFilter;
+				cmd = new SqlCommand(sql, con);
+				cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
+				if (!toolBattleFilterAll.Checked)
+				{
+					DateTime basedate = DateTime.Now;
+					if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+					DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0);
+					// Adjust time scale according to selected filter
+					if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
+					else if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
+					else if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddMonths(-1);
+					else if (toolBattleFilterYear.Checked) dateFilter = DateTime.Now.AddYears(-1);
+					cmd.Parameters.AddWithValue("@battleTime", dateFilter);
+				}
+				cmd.CommandType = CommandType.Text;
+				da = new SqlDataAdapter(cmd);
+				da.Fill(dt);
+			}
+			// populate datagrid
             dataGridMain.DataSource = dt;
-            dataGridMain.Columns["battlesCount"].Visible = false;
+			DateGridSelected = DataGridType.Battle;
+			// Hide cols
+			dataGridMain.Columns["battleResultColor"].Visible = false;
+			dataGridMain.Columns["battleSurviveColor"].Visible = false;
+			dataGridMain.Columns["battleTime"].Visible = false;
+			dataGridMain.Columns["battlescount"].Visible = false;
+			dataGridMain.Columns["battleResultId"].Visible = false;
+			dataGridMain.Columns["battleSurviveId"].Visible = false;
             dataGridMain.Columns["victory"].Visible = false;
-            dataGridMain.Columns["loss"].Visible = false;
-            dataGridMain.Columns["surivivedcount"].Visible = false;
+			dataGridMain.Columns["draw"].Visible = false;
+			dataGridMain.Columns["defeat"].Visible = false;
+			dataGridMain.Columns["survivedcount"].Visible = false;
+			dataGridMain.Columns["killedcount"].Visible = false;
+			dataGridMain.Columns["footer"].Visible = false;
+			// Text cols
+			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Result"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Survived"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Tank"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Result"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["Survived"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			
+			// Finish up
             GridResizeBattle();
             GridScrollShowCurPos();
             toolBattle.Visible = true;
-            SetStatus2("Selected view: Battle - Filter: " + toolBattleFilter.Text);
+			if (statusmessage == "") statusmessage = "Selected view: Battle - Filter: " + toolBattleFilter.Text;
+			SetStatus2(statusmessage);
         }
 
         private void GridResizeBattle()
         {
-            dataGridMain.Columns[0].Width = 105;
-            dataGridMain.Columns[1].Width = 40;
-            dataGridMain.Columns[2].Width = 120;
-            dataGridMain.Columns[3].Width = 60;
-            for (int i = 4; i <= 15; i++)
+			dataGridMain.Columns[0].Width = 35;
+			dataGridMain.Columns[1].Width = 120;
+			for (int i = 2; i <= 15; i++)
             {
-                dataGridMain.Columns[i].Width = 50;
+				dataGridMain.Columns[i].Width = 60;
             }
+			dataGridMain.Columns[6].Width = 50;
         }
         
         private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            // Victory color
-            if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Result"))
+			if (DateGridSelected == DataGridType.Battle)
             {
+				bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1);
+				string col = dataGridMain.Columns[e.ColumnIndex].Name;
+				if (col.Equals("Tank"))
+				{
                 DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-                int wins = (int)dataGridMain["victory", e.RowIndex].Value;
-                int loss = (int)dataGridMain["loss", e.RowIndex].Value;
-                if (wins > loss)
+					string battleTime = dataGridMain["battleTime", e.RowIndex].Value.ToString();
+					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+					// Check if this row is normal or footer
+					if (!footer) // normal line
                 {
-                    cell.Style.ForeColor = Color.Green;
+						cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
                 }
-                else if (wins == loss)
+					else // footer
                 {
-                    cell.Style.ForeColor = Color.Yellow;
+						cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.StripLayout.colorGrayDropDownBack;
+					}
                 }
-                else
+				// Battle Result color color
+				else if (col.Equals("Result"))
+				{
+					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+					cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+					if (battlesCount > 1)
                 {
-                    cell.Style.ForeColor = Color.Red;
+						cell.ToolTipText = "Victory: " + dataGridMain["victory", e.RowIndex].Value.ToString() + Environment.NewLine +
+							"Draw: " + dataGridMain["draw", e.RowIndex].Value.ToString() + Environment.NewLine +
+							"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString() ;
                 }
             }
             // Survived color and formatting
-            if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
+				else if (col.Equals("Survived"))
             {
                 DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-                double battlecount = Convert.ToDouble(dataGridMain["battlescount", e.RowIndex].Value);
-                double survivedcount = Convert.ToDouble(dataGridMain["surivivedcount", e.RowIndex].Value);
-                double surviverate = survivedcount / battlecount;
-                if (surviverate < 0.48)
+					string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
+					cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+					if (battlesCount > 1)
                 {
-                    cell.Style.ForeColor = Color.Red;
+						cell.ToolTipText = "Survived: " + dataGridMain["survivedcount", e.RowIndex].Value.ToString() + Environment.NewLine +
+							"Killed: " + dataGridMain["killedcount", e.RowIndex].Value.ToString();
+					}
                 }
-                else if (surviverate > 0.50)
+				// Foter desimal
+				if (footer)
+				{
+					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					if (col == "Tier" || col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits" || col == "Capture Points" || col == "Defense Points")
                 {
-                    cell.Style.ForeColor = Color.Green;
+						cell.Style.Format = "n1";
                 }
-                else
-                {
-                    cell.Style.ForeColor = Color.Yellow;
+
                 }
             }
         }
@@ -524,7 +661,7 @@ namespace WotDBUpdater.Forms
 
         #endregion
 
-        #region Form Resize
+		#region Form Init and Resize
 
         private void InitForm()
         {
@@ -550,6 +687,8 @@ namespace WotDBUpdater.Forms
             panelMain.Top = panelInfo.Top + panelInfo.Height;
             // Status bar
             panelStatus.Left = 1;
+			// Datagrid init size
+			dataGridMain.Width = panelMain.Width - 20; // room for scrollbar
             // Mouse wheel handle grid
             dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
         }
@@ -735,7 +874,6 @@ namespace WotDBUpdater.Forms
                 GridShowTankInfo();
             else if (toolItemViewOverall.Checked)
                 GridShowOverall();
-            
             SetStatus2("Grid refreshed");
         }
 
@@ -753,6 +891,7 @@ namespace WotDBUpdater.Forms
             toolItemViewTankInfo.Checked = false;
             toolItemViewBattles.Checked = false;
             toolItemViewOverall.Checked = true;
+			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
             GridShowOverall();
         }
         
@@ -764,6 +903,7 @@ namespace WotDBUpdater.Forms
             toolItemViewOverall.Checked = false;
             toolItemViewBattles.Checked = false;
             toolItemViewTankInfo.Checked = true;
+			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
             GridShowTankInfo();
         }
 
@@ -774,6 +914,7 @@ namespace WotDBUpdater.Forms
             toolItemViewOverall.Checked = false;
             toolItemViewTankInfo.Checked = false;
             toolItemViewBattles.Checked = true;
+			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
             GridShowBattle();
         }
         
@@ -832,7 +973,7 @@ namespace WotDBUpdater.Forms
         {
             // Dossier file manual handling
             SetStatus2("Starting manual dossier check...");
-            string result = dossier2json.manualRun();
+			string result = dossier2json.ManualRun();
             SetStatus2(result);
         }
 
@@ -840,7 +981,7 @@ namespace WotDBUpdater.Forms
         {
             // Test running previous dossier file
             SetStatus2("Starting check on previous dossier file...");
-            string result = dossier2json.manualRun(true);
+			string result = dossier2json.ManualRun(true);
             SetStatus2(result);
         }
 
@@ -848,7 +989,7 @@ namespace WotDBUpdater.Forms
         {
             // Test running previous dossier file, force update - even if no more battles is detected
             SetStatus2("Starting check on previous dossier file with force update...");
-            string result = dossier2json.manualRun(true, true);
+			string result = dossier2json.ManualRun(true, true);
             SetStatus2(result);
         }
 
@@ -861,7 +1002,7 @@ namespace WotDBUpdater.Forms
         private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
         {
             Form frm = new Forms.File.ImportWotStat();
-            frm.Show();
+			frm.ShowDialog();
         }
 
         private void ToolBatteFilterClear()
@@ -992,9 +1133,7 @@ namespace WotDBUpdater.Forms
         
         #endregion
 
-
         
-
     }
 
     

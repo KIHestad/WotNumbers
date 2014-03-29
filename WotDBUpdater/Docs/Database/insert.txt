@@ -5,6 +5,16 @@ insert into tankType (id, name, shortName) values (3, 'Heavy tank', 'HT')
 insert into tankType (id, name, shortName) values (4, 'Tank destroyer', 'TD')
 insert into tankType (id, name, shortName) values (5, 'Self propelled gun', 'SPG')
 
+-- Battle result
+insert into battleResult (id, name, victory, color) values (1, 'Victory', 1, '#00FF21')
+insert into battleResult (id, name, draw, color)    values (2, 'Draw', 1, '#FFFF00')
+insert into battleResult (id, name, defeat, color)  values (3, 'Defeat', 1 ,'#FF0000')
+insert into battleResult (id, name, color)          values (4, 'Several', '#0094FF')
+
+-- Battle survive
+insert into battleSurvive (id, name, survived, color) values (1, 'Yes', 1, '#00FF21')
+insert into battleSurvive (id, name, color)    values (2, 'Some', '#0094FF')
+insert into battleSurvive (id, name, killed, color)  values (3, 'No', 1 ,'#FF0000')
 
 --json, common, countryid
 insert into country (id, name, shortName) values (0, 'USSR', 'USR')
@@ -107,7 +117,7 @@ INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbD
 GO
 INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (7, N'tanks_v2', N'a15x15', N'wins', N'Int', N'wins15', N'victory')
 GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (8, N'tanks_v2', N'a15x15', N'losses', N'Int', N'losses15', N'loss')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (8, N'tanks_v2', N'a15x15', N'losses', N'Int', N'losses15', N'defeat')
 GO
 INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (9, N'tanks_v2', N'a15x15', N'survivedBattles', N'Int', N'survived15', N'survived')
 GO
@@ -163,7 +173,7 @@ INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbD
 GO
 INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (35, N'tanks_v2', N'a7x7', N'wins', N'Int', N'wins7', N'victory')
 GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (36, N'tanks_v2', N'a7x7', N'losses', N'Int', N'losses7', N'loss')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (36, N'tanks_v2', N'a7x7', N'losses', N'Int', N'losses7', N'defeat')
 GO
 INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (37, N'tanks_v2', N'a7x7', N'survivedBattles', N'Int', N'survived7', N'survived')
 GO
@@ -233,7 +243,7 @@ INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbD
 GO
 INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (70, N'tanks', N'tankdata', N'wins', N'Int', N'wins15', N'victory')
 GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (71, N'tanks', N'tankdata', N'losses', N'Int', N'losses15', N'loss')
+INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (71, N'tanks', N'tankdata', N'losses', N'Int', N'losses15', N'defeat')
 GO
 INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (72, N'tanks', N'tankdata', N'survivedBattles', N'Int', N'survived15', N'survived')
 GO

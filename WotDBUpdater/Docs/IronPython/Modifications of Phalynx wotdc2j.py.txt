@@ -1,0 +1,26 @@
+﻿###################################################
+# World of Tanks Dossier Cache to JSON            #
+# Initial version by Phalynx www.vbaddict.net/wot #
+#                                                 #
+# Modified to run from c# using IronPhyton        #
+# Edited version by BadButton -> 2014-03-26       #
+###################################################
+
+The Phalunx project is included in folder .\Dossier2json
+
+All Phython Libs is copied to .\Lib
+
+Script file converting dossier.dat to dossier.json is: wotdc2j.py
+- This file is modified to run from c# by IronPhyton
+
+Code running wotdc2j.py is located in .\Code\Dossier2json.cs -> private static string ConvertDossierUsingPython() 
+- the main code part is:
+
+	var ipy = Python.CreateRuntime();
+	dynamic ipyrun = ipy.UseFile(dossier2jsonfile);
+	ipyrun.main();
+
+The modifications in wotdc2j.py is commented like this:
+
+	# IRONPYTHON MODIFIED: <text describing changes from the original Phalynx script>
+
