@@ -198,8 +198,19 @@ namespace WotDBUpdater.Forms
 
 		#region Data Grid
 		
+		private enum DataGridType
+		{
+			None = 0,
+			Overall = 1,
+			Tank = 2,
+			Battle = 3
+		}
+
+		private DataGridType DateGridSelected = DataGridType.None;
+		
 		private void GridShowOverall()
 		{
+			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
 			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
@@ -217,7 +228,7 @@ namespace WotDBUpdater.Forms
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			dataGridMain.DataSource = dt;
-			Application.DoEvents();
+			DateGridSelected = DataGridType.Overall;
 			GridResizeOverall();
 			GridScrollShowCurPos();
 		}
@@ -230,6 +241,7 @@ namespace WotDBUpdater.Forms
 
 		private void GridShowTankInfo()
 		{
+			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
 			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
@@ -249,6 +261,7 @@ namespace WotDBUpdater.Forms
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			dataGridMain.DataSource = dt;
+			DateGridSelected = DataGridType.Tank;
 			GridResizeTankInfo();
 			GridScrollShowCurPos();
 		}
@@ -264,6 +277,7 @@ namespace WotDBUpdater.Forms
 
 		private void GridShowBattle(string statusmessage = "")
 		{
+			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
 			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
@@ -273,19 +287,19 @@ namespace WotDBUpdater.Forms
 				battleFilter = "AND battleTime>=@battleTime ";
 			}
 			string sql =
-				"SELECT dbo.battle.battleTime AS Time, dbo.tank.tier AS Tier, dbo.tank.name AS Tank, dbo.battleResult.name as Result, " +
-				"  CASE WHEN battlescount > 1 THEN RIGHT('00' + CAST(ROUND(CAST(dbo.battle.survived AS FLOAT) / CAST(dbo.battle.battlescount AS float) * 100,0) AS varchar),2) + ' %'  " +
-				"       WHEN battle.survived > 0 THEN 'Yes' ELSE 'No' END AS Survived, " +
-				"  dbo.battle.dmg AS [Damage Caused], dbo.battle.dmgReceived AS [Damage Received], dbo.battle.frags AS Kills, dbo.battle.xp AS XP, dbo.battle.spotted AS Detected, " +
-				"  dbo.battle.cap AS [Capture Points], dbo.battle.def AS [Defense Points], dbo.battle.shots AS Shots, dbo.battle.hits AS Hits, dbo.battle.wn8 AS WN8, " +
-				"  dbo.battle.eff AS EFF, dbo.battle.battlesCount, dbo.battle.survived as surivivedcount,  dbo.battleResult.color as battleResultColor " +
-				"FROM    dbo.battle INNER JOIN " +
-				"        dbo.playerTank ON dbo.battle.playerTankId = dbo.playerTank.id INNER JOIN " +
-				"        dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
-				"        dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN " +
-				"        dbo.battleResult ON dbo.battle.battleResultId = dbo.battleResult.id " +		
-				"WHERE   dbo.player.id=@playerid " + battleFilter + 
-				"ORDER BY dbo.battle.battleTime DESC ";
+				"SELECT tank.tier AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
+				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], battle.frags AS Kills, battle.xp AS XP, battle.spotted AS Detected, " +
+				"  battle.cap AS [Capture Points], battle.def AS [Defense Points], battle.shots AS Shots, battle.hits AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
+				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, battle.battleTime, battle.battleResultId, battle.battleSurviveId, " +
+				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer " +
+				"FROM    battle INNER JOIN " +
+				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
+				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
+				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
+				"WHERE   playerTank.playerId=@playerid " + battleFilter +
+				"ORDER BY battle.battleTime DESC ";
+				
 			SqlCommand cmd = new SqlCommand(sql, con);
 			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
 			if (!toolBattleFilterAll.Checked)
@@ -301,9 +315,73 @@ namespace WotDBUpdater.Forms
 			SqlDataAdapter da = new SqlDataAdapter(cmd);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
+			// Add footer
+			if (dt.Rows.Count > 1)
+			{
+				sql =
+					"SELECT  ROUND(AVG(CAST(tank.tier AS FLOAT)),1) AS Tier, " +
+					"        'Average on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
+					"        'Several' AS Result, " +
+					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
+					"        ROUND(AVG(CAST(battle.dmg AS FLOAT)),0) AS [Damage Caused], " +
+					"        ROUND(AVG(CAST(battle.dmgReceived AS FLOAT)),0) AS [Damage Received], " +
+					"        ROUND(AVG(CAST(battle.frags AS FLOAT)),1) AS Kills, " +
+					"        ROUND(AVG(CAST(battle.xp AS FLOAT)),0) AS XP, " +
+					"        ROUND(AVG(CAST(battle.spotted AS FLOAT)),1) AS Detected," +
+					"		 ROUND(AVG(CAST(battle.cap AS FLOAT)),1) AS [Capture Points], " +
+					"		 ROUND(AVG(CAST(battle.def AS FLOAT)),1) AS [Defense Points], " +
+					"		 ROUND(AVG(CAST(battle.shots AS FLOAT)),1) AS Shots, " +
+					"		 ROUND(AVG(CAST(battle.hits AS FLOAT)),1) AS Hits, " +
+					"		 ROUND(AVG(CAST(battle.wn8 AS FLOAT)),0) AS WN8, " +
+					"		 ROUND(AVG(CAST(battle.eff AS FLOAT)),0) AS EFF, " +
+					"		 '#FF00DC' as battleResultColor, " +
+					"		 '#FF00DC' as battleSurviveColor, " +
+					"		 SUM(battlescount) AS battlescount, " +
+					"		 GETDATE() AS battleTime, " +
+					"		 4 AS battleResultId, " +
+					"		 2 AS battleSurviveId," +
+					"		 SUM (battle.victory) AS victory, " +
+					"		 SUM (battle.draw) AS draw, " +
+					"		 SUM (battle.defeat) AS defeat, " +
+					"		 SUM (battle.survived) as survivedcount, " +
+					"		 SUM (battle.killed) as killedcount, " +
+					"        1 as footer " +
+					"FROM    battle INNER JOIN " +
+					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+					"        tank ON playerTank.tankId = tank.id " +
+					"WHERE   playerTank.playerId=@playerid " + battleFilter;
+				cmd = new SqlCommand(sql, con);
+				cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
+				if (!toolBattleFilterAll.Checked)
+				{
+					DateTime dateFilter = DateTime.Now.AddDays(-360);
+					if (toolBattleFilterToday.Checked) dateFilter = DateTime.Now.AddDays(-1);
+					if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
+					if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
+					if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddDays(-30);
+					cmd.Parameters.AddWithValue("@battleTime", dateFilter);
+				}
+				cmd.CommandType = CommandType.Text;
+				da = new SqlDataAdapter(cmd);
+				da.Fill(dt);
+			}
+			// populate datagrid
 			dataGridMain.DataSource = dt;
+			DateGridSelected = DataGridType.Battle;
+			// Hide cols
 			dataGridMain.Columns["battleResultColor"].Visible = false;
-			dataGridMain.Columns["surivivedcount"].Visible = false;
+			dataGridMain.Columns["battleSurviveColor"].Visible = false;
+			dataGridMain.Columns["battleTime"].Visible = false;
+			dataGridMain.Columns["battlescount"].Visible = false;
+			dataGridMain.Columns["battleResultId"].Visible = false;
+			dataGridMain.Columns["battleSurviveId"].Visible = false;
+			dataGridMain.Columns["victory"].Visible = false;
+			dataGridMain.Columns["draw"].Visible = false;
+			dataGridMain.Columns["defeat"].Visible = false;
+			dataGridMain.Columns["survivedcount"].Visible = false;
+			dataGridMain.Columns["killedcount"].Visible = false;
+			dataGridMain.Columns["footer"].Visible = false;
+			// Finish up
 			GridResizeBattle();
 			GridScrollShowCurPos();
 			toolBattle.Visible = true;
@@ -313,43 +391,58 @@ namespace WotDBUpdater.Forms
 
 		private void GridResizeBattle()
 		{
-			dataGridMain.Columns[0].Width = 105;
-			dataGridMain.Columns[1].Width = 40;
-			dataGridMain.Columns[2].Width = 120;
-			dataGridMain.Columns[3].Width = 60;
-			for (int i = 4; i <= 15; i++)
+			dataGridMain.Columns[0].Width = 35;
+			dataGridMain.Columns[1].Width = 120;
+			for (int i = 2; i <= 15; i++)
 			{
-				dataGridMain.Columns[i].Width = 50;
+				dataGridMain.Columns[i].Width = 60;
 			}
+			dataGridMain.Columns[6].Width = 35;
 		}
-		
+
 		private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			// Battle Result color color
-			if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Result"))
+			if (DateGridSelected == DataGridType.Battle)
 			{
-				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-				string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
-				cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-			}
-			// Survived color and formatting
-			else if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
-			{
-				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-				double battlecount = Convert.ToDouble(dataGridMain["battlescount", e.RowIndex].Value);
-				double survivedcount = Convert.ToDouble(dataGridMain["surivivedcount", e.RowIndex].Value);
-				double surviverate = survivedcount / battlecount;
-				if (surviverate < 0.48)
+				if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Tank"))
 				{
-					cell.Style.ForeColor = Color.Red;
+					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					string battleTime = dataGridMain["battleTime", e.RowIndex].Value.ToString();
+					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+					cell.ToolTipText = "Based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine +
+						"Battle time: " + battleTime;
+					// Also check if this row is footer
+					if (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1)
+					{
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.StripLayout.colorGrayDropDownBack;
+					}
 				}
-				else if (surviverate > 0.50)
+				// Battle Result color color
+				else if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Result"))
 				{
-					cell.Style.ForeColor = Color.Green;
+					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+					cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+					if (battlesCount > 1)
+					{
+						cell.ToolTipText = "Victory: " + dataGridMain["victory", e.RowIndex].Value.ToString() + Environment.NewLine +
+							"Draw: " + dataGridMain["draw", e.RowIndex].Value.ToString() + Environment.NewLine +
+							"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString() ;
+					}
 				}
-				else
+				// Survived color and formatting
+				else if (dataGridMain.Columns[e.ColumnIndex].Name.Equals("Survived"))
 				{
-					cell.Style.ForeColor = Color.Yellow;
+					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
+					cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+					if (battlesCount > 1)
+					{
+						cell.ToolTipText = "Survived: " + dataGridMain["survivedcount", e.RowIndex].Value.ToString() + Environment.NewLine +
+							"Killed: " + dataGridMain["killedcount", e.RowIndex].Value.ToString();
+					}
 				}
 			}
 		}
@@ -736,7 +829,6 @@ namespace WotDBUpdater.Forms
 				GridShowTankInfo();
 			else if (toolItemViewOverall.Checked)
 				GridShowOverall();
-			
 			SetStatus2("Grid refreshed");
 		}
 
@@ -777,8 +869,8 @@ namespace WotDBUpdater.Forms
 			toolItemViewOverall.Checked = false;
 			toolItemViewTankInfo.Checked = false;
 			toolItemViewBattles.Checked = true;
-			GridShowBattle();
 			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+			GridShowBattle();
 		}
 		
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
@@ -991,8 +1083,7 @@ namespace WotDBUpdater.Forms
 		
 		#endregion
 
-			
-
+		
 	}
 
 	

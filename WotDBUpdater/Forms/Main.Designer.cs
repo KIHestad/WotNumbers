@@ -1,33 +1,33 @@
 ﻿namespace WotDBUpdater.Forms
 {
-    partial class Main
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class Main
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -125,9 +125,9 @@
 			this.menuMain.Dock = System.Windows.Forms.DockStyle.Right;
 			this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemTest});
-			this.menuMain.Location = new System.Drawing.Point(817, 0);
+			this.menuMain.Location = new System.Drawing.Point(868, 0);
 			this.menuMain.Name = "menuMain";
-			this.menuMain.Size = new System.Drawing.Size(98, 78);
+			this.menuMain.Size = new System.Drawing.Size(47, 78);
 			this.menuMain.TabIndex = 10;
 			this.menuMain.Text = "menuMain";
 			// 
@@ -144,7 +144,7 @@
             this.menuItemTest_ViewRange,
             this.viewRangeFormToolStripMenuItem});
 			this.menuItemTest.Name = "menuItemTest";
-			this.menuItemTest.Size = new System.Drawing.Size(85, 19);
+			this.menuItemTest.Size = new System.Drawing.Size(34, 19);
 			this.menuItemTest.Text = "Test";
 			// 
 			// menuItemTest_ImportTank_Wn8exp
@@ -356,6 +356,8 @@
 			this.dataGridMain.RowHeadersVisible = false;
 			this.dataGridMain.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
 			this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
+			this.dataGridMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+			this.dataGridMain.ShowEditingIcon = false;
 			this.dataGridMain.Size = new System.Drawing.Size(455, 96);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
@@ -605,6 +607,7 @@
             this.toolBattleFilter});
 			this.toolBattle.Location = new System.Drawing.Point(13, 25);
 			this.toolBattle.Name = "toolBattle";
+			this.toolBattle.ShowItemToolTips = false;
 			this.toolBattle.Size = new System.Drawing.Size(124, 25);
 			this.toolBattle.TabIndex = 14;
 			this.toolBattle.Text = "toolStrip1";
@@ -700,7 +703,7 @@
 			this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelMaster.Location = new System.Drawing.Point(0, 0);
 			this.panelMaster.Name = "panelMaster";
-			this.panelMaster.Size = new System.Drawing.Size(936, 565);
+			this.panelMaster.Size = new System.Drawing.Size(964, 532);
 			this.panelMaster.TabIndex = 16;
 			this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
 			// 
@@ -770,7 +773,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.ClientSize = new System.Drawing.Size(936, 565);
+			this.ClientSize = new System.Drawing.Size(964, 532);
 			this.Controls.Add(this.panelMaster);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuMain;
@@ -805,77 +808,77 @@
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
 			this.ResumeLayout(false);
 
-        }
+		}
 
-        #endregion
+		#endregion
 
-        private System.Windows.Forms.MenuStrip menuMain;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_WotURL;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportTurret;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportGun;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportRadio;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ProgressBar;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportTank_Wn8exp;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.Panel panelTop;
-        private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Panel panelMain;
-        private System.Windows.Forms.Panel panelMaster;
-        private System.Windows.Forms.PictureBox picResize;
-        private System.Windows.Forms.PictureBox picLogo;
-        private System.Windows.Forms.PictureBox picNormalize;
-        private System.Windows.Forms.PictureBox picMinimize;
-        private System.Windows.Forms.PictureBox picClose;
-        private System.Windows.Forms.Panel panelStatus;
-        private System.Windows.Forms.Label lblStatus1;
-        private System.Windows.Forms.Label lblStatus2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Timer timerStatus2;
-        private System.Windows.Forms.ToolStripMenuItem menuItemTest_ViewRange;
-        private System.Windows.Forms.DataGridView dataGridMain;
-        private System.Windows.Forms.Panel panelScrollbar;
-        private System.Windows.Forms.ToolStrip toolMain;
-        private System.Windows.Forms.ToolStripButton toolItemRefresh;
-        private System.Windows.Forms.Panel panelStrip;
-        private System.Windows.Forms.ToolStripLabel toolItemViewLabel;
-        private System.Windows.Forms.ToolStripButton toolItemViewOverall;
-        private System.Windows.Forms.ToolStripButton toolItemViewTankInfo;
-        private System.Windows.Forms.ToolStripButton toolItemViewBattles;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripDropDownButton toolItemSettings;
-        private System.Windows.Forms.ToolStripButton toolItemHelp;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRun;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDossierOptions;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsApp;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDb;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRunManual;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsUpdateFromPrev;
-        private System.Windows.Forms.ToolStripMenuItem toolItemSettingsForceUpdateFromPrev;
-        private System.Windows.Forms.Panel panelInfo;
-        private System.Windows.Forms.Label lblOverView;
-        private System.Windows.Forms.PictureBox picIS7;
-        private System.Windows.Forms.Timer timerPanelSlide;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem toolItemShowDbTables;
-        private System.Windows.Forms.Panel panelScrollArea;
-        private System.Windows.Forms.ToolStripMenuItem viewRangeFormToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolBattle;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripDropDownButton toolBattleFilter;
-        private System.Windows.Forms.ToolStripMenuItem toolBattleFilterToday;
-        private System.Windows.Forms.ToolStripMenuItem toolBattleFilter3days;
-        private System.Windows.Forms.ToolStripMenuItem toolBattleFilterWeek;
-        private System.Windows.Forms.ToolStripMenuItem toolBattleFilterMonth;
-        private System.Windows.Forms.ToolStripMenuItem toolBattleFilterYear;
-        private System.Windows.Forms.ToolStripMenuItem toolBattleFilterAll;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
+		private System.Windows.Forms.MenuStrip menuMain;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_WotURL;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportTurret;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportGun;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportRadio;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ProgressBar;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportTank_Wn8exp;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+		private System.Windows.Forms.Panel panelTop;
+		private System.Windows.Forms.Label lblTitle;
+		private System.Windows.Forms.Panel panelMain;
+		private System.Windows.Forms.Panel panelMaster;
+		private System.Windows.Forms.PictureBox picResize;
+		private System.Windows.Forms.PictureBox picLogo;
+		private System.Windows.Forms.PictureBox picNormalize;
+		private System.Windows.Forms.PictureBox picMinimize;
+		private System.Windows.Forms.PictureBox picClose;
+		private System.Windows.Forms.Panel panelStatus;
+		private System.Windows.Forms.Label lblStatus1;
+		private System.Windows.Forms.Label lblStatus2;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Timer timerStatus2;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ViewRange;
+		private System.Windows.Forms.DataGridView dataGridMain;
+		private System.Windows.Forms.Panel panelScrollbar;
+		private System.Windows.Forms.ToolStrip toolMain;
+		private System.Windows.Forms.ToolStripButton toolItemRefresh;
+		private System.Windows.Forms.Panel panelStrip;
+		private System.Windows.Forms.ToolStripLabel toolItemViewLabel;
+		private System.Windows.Forms.ToolStripButton toolItemViewOverall;
+		private System.Windows.Forms.ToolStripButton toolItemViewTankInfo;
+		private System.Windows.Forms.ToolStripButton toolItemViewBattles;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+		private System.Windows.Forms.ToolStripDropDownButton toolItemSettings;
+		private System.Windows.Forms.ToolStripButton toolItemHelp;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRun;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDossierOptions;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsApp;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDb;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRunManual;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsUpdateFromPrev;
+		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsForceUpdateFromPrev;
+		private System.Windows.Forms.Panel panelInfo;
+		private System.Windows.Forms.Label lblOverView;
+		private System.Windows.Forms.PictureBox picIS7;
+		private System.Windows.Forms.Timer timerPanelSlide;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripMenuItem toolItemShowDbTables;
+		private System.Windows.Forms.Panel panelScrollArea;
+		private System.Windows.Forms.ToolStripMenuItem viewRangeFormToolStripMenuItem;
+		private System.Windows.Forms.ToolStrip toolBattle;
+		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+		private System.Windows.Forms.ToolStripDropDownButton toolBattleFilter;
+		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterToday;
+		private System.Windows.Forms.ToolStripMenuItem toolBattleFilter3days;
+		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterWeek;
+		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterMonth;
+		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterYear;
+		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterAll;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
-    }
+	}
 }
 

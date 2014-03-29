@@ -283,8 +283,6 @@ namespace WotDBUpdater
 				// Get fields to map playerTank data to Battle data
 				bool modeCompany = false;
 				bool modeClan = false;
-				int wincount = 0;
-				int defeatcount = 0;
 				foreach (DataRow dr in TankData.tankData2BattleMappingView.Rows)
 				{
 					if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
@@ -326,12 +324,6 @@ namespace WotDBUpdater
 								modeCompany = (playerTankField == "battlesCompany");
 							}
 						}
-						// Get win count result
-						else if ((playerTankField == "wins7" || playerTankField == "wins15") && NewPlayerTankRow[playerTankField] != DBNull.Value) 
-							wincount += Convert.ToInt32(NewPlayerTankRow[playerTankField]) - Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
-						// Get defeat count result
-						else if ((playerTankField == "losses7" || playerTankField == "losses15") && NewPlayerTankRow[playerTankField] != DBNull.Value) 
-							defeatcount += Convert.ToInt32(NewPlayerTankRow[playerTankField]) - Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
 					}
 				}
 				// Get value to playerTankID, FK to parent table playerTank
@@ -366,20 +358,40 @@ namespace WotDBUpdater
 				sqlFields += ", eff";
 				sqlValues += ", " + Rating.CalculateBattleEff(tankId, tankTier, (battlessNew15 + battlessNew7), NewbattleRow);
 				// Calculate battle result
+				int victorycount = Convert.ToInt32(NewbattleRow["victory"]);
+				int defeatcount = Convert.ToInt32(NewbattleRow["defeat"]);
+				int drawcount = (battlessNew15 + battlessNew7) - victorycount - defeatcount;
+				NewbattleRow["draw"] = (battlessNew15 + battlessNew7) - victorycount - defeatcount;
 				int battleResult = 0;
 				// (1, 'Victory', 1, '#00FF21')
 				// (2, 'Draw', 1, '#FFFF00')
 				// (3, 'Defeat', 1 ,'#FF0000')
 				// (4, 'Several', '#0094FF')
-				if (wincount > 0 && wincount == (battlessNew15 + battlessNew7))
+				if (victorycount > 0 && victorycount == (battlessNew15 + battlessNew7))
 					battleResult = 1;
 				else if (defeatcount > 0 && defeatcount == (battlessNew15 + battlessNew7))
 					battleResult = 3;
-				else if ((wincount + defeatcount) == 0)
+				else if ((victorycount + defeatcount) == 0)
 					battleResult = 2;
 				else
 					battleResult = 4;
 				sqlFields += ", battleResultId "; sqlValues += ", " + battleResult.ToString();
+				sqlFields += ", draw "; sqlValues += ", " + drawcount.ToString();
+				// Calculate battle survive
+				int survivecount = Convert.ToInt32(NewbattleRow["survived"]);
+				int killedcount = (battlessNew15 + battlessNew7) - survivecount;
+				int battleSurvive = 0;
+				// (1, 'Yes', 1, '#00FF21')
+				// (2, 'Some', '#0094FF')
+				// (3, 'No', 1 ,'#FF0000')
+				if (survivecount == 0)
+					battleSurvive = 3;
+				else if (survivecount == (battlessNew15 + battlessNew7))
+					battleSurvive = 1;
+				else
+					battleSurvive = 2;
+				sqlFields += ", battleSurviveId "; sqlValues += ", " + battleSurvive.ToString();
+				sqlFields += ", killed "; sqlValues += ", " + killedcount.ToString();
 				// Update database
 				if (sqlFields.Length > 0)
 				{
