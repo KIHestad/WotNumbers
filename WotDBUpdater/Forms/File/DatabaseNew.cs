@@ -54,7 +54,7 @@ namespace WotDBUpdater.Forms.File
 			else
 			{
 				Cursor.Current = Cursors.WaitCursor;
-				int maxStep = 16;
+				int maxStep = 17;
 				pbCreateDatabase.Maximum = maxStep * 100;
 				pbCreateDatabase.Value = maxStep * 100;
 				pbCreateDatabase.Visible = true;
@@ -81,6 +81,12 @@ namespace WotDBUpdater.Forms.File
 					UpdateProgressBar(ref step, maxStep);
 					// Create Views
 					streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
+					sql = streamReader.ReadToEnd();
+					UpdateProgressBar(ref step, maxStep);
+					RunSql(sql);
+					UpdateProgressBar(ref step, maxStep);
+					// Create Stored Procedures
+					streamReader = new StreamReader(path + "createProc.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
 					UpdateProgressBar(ref step, maxStep);
 					RunSql(sql);
