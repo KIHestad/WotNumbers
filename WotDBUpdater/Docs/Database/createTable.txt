@@ -369,3 +369,14 @@ create table json2dbMapping (
 	dbDataType varchar(255) null,
 	dbPlayerTank varchar(255) null,
 	dbBattle varchar(255) null)
+
+
+-------------------------------------------------------------------------------------------------
+
+
+create table wsTankId (
+  tankId int,
+  tankName varchar(100),
+  wsTankId int,
+  wsCountryId int
+)

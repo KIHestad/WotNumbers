@@ -27,7 +27,8 @@ namespace WotDBUpdater
             sqlConn.Open();
 
             // Create temp table for import
-            string sql = "create table wsRecentBattles (rbId int, rbTankId int, rbCountryId int, rbBattles int, rbKills int, rbDamageDealt int, rbDamageReceived int,"
+            string sql = "drop table wsRecentBattles; "
+                       + "create table wsRecentBattles (rbId int, rbTankId int, rbCountryId int, rbBattles int, rbKills int, rbDamageDealt int, rbDamageReceived int,"
                        + "rbSpotted int, rbCapturePoints int, rbDefencePoints int, rbSurvived int, rbVictory int, rbBattleTime int, rbShot int, rbHits int, rbBattleMode int); ";
             SqlCommand startup = new SqlCommand(sql, sqlConn);
             startup.ExecuteNonQuery();
