@@ -276,6 +276,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Docs\Database\createProc.txt" />
     <Content Include="Docs\Database\createView.txt" />
     <Content Include="Docs\Database\select.txt" />
     <Content Include="Docs\Dev log\BadButton.txt" />

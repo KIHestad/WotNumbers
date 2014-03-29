@@ -1,0 +1,36 @@
+﻿create procedure importBattle
+as
+insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, battleSurviveId, victory, battleResultId, battleTime, shots, hits, mode15, mode7)
+select 
+  pt.id, 
+  wsrb.rbId, 
+  wsrb.rbBattles / 100, 
+  wsrb.rbKills / 100, 
+  wsrb.rbDamageDealt / 100, 
+  wsrb.rbDamageReceived / 100, 
+  wsrb.rbSpotted / 100, 
+  wsrb.rbCapturePoints / 100, 
+  wsrb.rbDefencePoints / 100, 
+  wsrb.rbSurvived,
+  case 
+    when wsrb.rbSurvived = 0 then 3  -- not survived
+	when wsrb.rbSurvived = 1 then 1  -- survived
+	else 2                           -- some
+  end,
+  wsrb.rbVictory, 
+  case 
+    when wsrb.rbVictory = 0 then 1   -- vicory
+	when wsrb.rbVictory = 1 then 3   -- def
+	when wsrb.rbVictory = 2 then 2   -- draw
+	else 4
+  end,
+  dateadd(s, wsrb.rbBattleTime, '19700101 01:00:00'), 
+  wsrb.rbShot / 100, 
+  wsrb.rbHits / 100, 
+  case when wsrb.rbBattleMode = 15 then 1 else 0 end,
+  case when wsrb.rbBattleMode = 7 then 1 else 0 end
+from wsRecentBattles wsrb 
+left join wsTankId wst on wsrb.rbTankId = wst.wsTankId and wsrb.rbCountryId = wst.wsCountryId
+left join tank t on wst.tankId = t.id
+left join playerTank pt on t.id = pt.tankId
+where pt.id is not null

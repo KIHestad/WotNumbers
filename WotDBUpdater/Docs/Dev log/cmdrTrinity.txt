@@ -1,4 +1,8 @@
-﻿03.17.14
+﻿03.29.14
+- Created function for importing recentBattles from Wot Statistics
+
+
+03.17.14
 - Completed view range function
 - Formula now returns same result as wotinfo.net
 

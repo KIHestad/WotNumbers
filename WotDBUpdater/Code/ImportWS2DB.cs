@@ -26,55 +26,17 @@ namespace WotDBUpdater
             SqlConnection sqlConn = new SqlConnection(Config.DatabaseConnection());
             sqlConn.Open();
 
-            // Delete from tmp tables
-            SqlCommand cleanup = new SqlCommand("delete from tankId; delete from wsRecentBattles", sqlConn);
-            cleanup.ExecuteNonQuery();
+            // Create temp table for import
+            string sql = "create table wsRecentBattles (rbId int, rbTankId int, rbCountryId int, rbBattles int, rbKills int, rbDamageDealt int, rbDamageReceived int,"
+                       + "rbSpotted int, rbCapturePoints int, rbDefencePoints int, rbSurvived int, rbVictory int, rbBattleTime int, rbShot int, rbHits int, rbBattleMode int); ";
+            SqlCommand startup = new SqlCommand(sql, sqlConn);
+            startup.ExecuteNonQuery();
 
-            // Fetch tank id from WS into datatable
-            sqLiteCmd.CommandText = "SELECT distinct cmTankId, cmCountryId, cmTankTitle FROM file_TankDetails";
-            SQLiteDataReader reader = sqLiteCmd.ExecuteReader();
-            DataTable wsTankId = new DataTable();
-            wsTankId.Load(reader);
-
-            // Fetch tank id from SQL server into datatable
-            SqlCommand sqlCmd = new SqlCommand("select t.id tankId, t.name tankName, pt.id playerTankId from tank t inner join playerTank pt on t.id = pt.tankId", sqlConn);
-            sqlCmd.CommandType = CommandType.Text;
-            SqlDataAdapter adapter = new SqlDataAdapter(sqlCmd);
-            DataTable playerTankId = new DataTable();
-            adapter.Fill(playerTankId);
-
-            // Join datatables on tank name 
-            var result = from ws in wsTankId.AsEnumerable()
-                         join t in playerTankId.AsEnumerable()
-                         on ws.Field<string>("cmTankTitle") equals t.Field<string>("tankName")
-                         select new
-                         {
-                             tankId = t["tankId"],
-                             tankName = ws["cmTankTitle"],
-                             playerTankId = t["playerTankId"],
-                             cmTankId = ws["cmTankId"],
-                             cmCountryId = ws["cmCountryId"]
-                         };
-
-            // Write joined tankdata to db
-            string sql = "";
-            foreach (var rowInfo in result)
-            {
-                sql = sql + "insert into tankId (tankId, tankName, playerTankId, cmTankId, cmCountryId) values ("
-                          + rowInfo.tankId.ToString() + ", '"
-                          + rowInfo.tankName.ToString() + "', "
-                          + rowInfo.playerTankId.ToString() + ", "
-                          + rowInfo.cmTankId.ToString() + ", "
-                          + rowInfo.cmCountryId.ToString() + "); ";
-            }
-
-            SqlCommand insert = new SqlCommand(sql, sqlConn);
-            insert.ExecuteNonQuery();
 
             // Fetch WS recentBattles into datatable
             sqLiteCmd.CommandText = "SELECT rbId, rbTankId, rbCountryId, rbBattles, rbKills, rbDamageDealt, rbDamageReceived, rbSpotted, rbCapturePoints, rbDefencePoints, "
                                   + "rbSurvived, rbVictory, rbBattleTime, rbShot, rbHits, rbBattleMode FROM recentBattles";  //rbFragList
-            reader = sqLiteCmd.ExecuteReader();
+            SQLiteDataReader reader = sqLiteCmd.ExecuteReader();
             DataTable recentBattles = new DataTable();
             recentBattles.Load(reader);
 
@@ -111,8 +73,11 @@ namespace WotDBUpdater
             SqlCommand runProc = new SqlCommand("exec importBattle", sqlConn);
             runProc.ExecuteNonQuery();
 
+            // Remove temp tables
+            SqlCommand cleanup = new SqlCommand("drop table wsRecentBattles", sqlConn);
+            cleanup.ExecuteNonQuery();
+
             // Close db connections
-            sqlCmd.Dispose();
             sqlConn.Close();
             sqliteConn.Close();
         }

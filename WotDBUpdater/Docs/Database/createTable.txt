@@ -217,7 +217,8 @@ create table battle (
 	modeClan int not null default 0,
 	modeCompany int not null default 0,
 	wn8 int not null default 0,
-	eff int not null default 0
+	eff int not null default 0,
+	wsId int
 )
 
 alter table battle add constraint fk_battle_playerTank foreign key (playerTankId) references playerTank (id)
