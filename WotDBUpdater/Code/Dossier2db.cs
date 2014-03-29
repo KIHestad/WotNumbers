@@ -48,7 +48,7 @@ namespace WotDBUpdater
 			bool battleSave = false;
 
 			// Check for first run (if player tank = 0), then dont get battle result
-			bool saveBattleResult = (TankData.GetPlayerTankCount() > 0);
+			bool saveBattleResult = true; // (TankData.GetPlayerTankCount() > 0);
 
 			// Declare
 			DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
