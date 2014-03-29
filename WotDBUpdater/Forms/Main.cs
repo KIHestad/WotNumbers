@@ -320,11 +320,14 @@ namespace WotDBUpdater.Forms
 			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
 			if (!toolBattleFilterAll.Checked)
 			{
-				DateTime dateFilter = DateTime.Now.AddDays(-360);
-				if (toolBattleFilterToday.Checked) dateFilter = DateTime.Now.AddDays(-1);
+				DateTime basedate = DateTime.Now;
+				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); 
+				// Adjust time scale according to selected filter
 				if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
-				if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
-				if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddDays(-30);
+				else if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
+				else if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddMonths(-1);
+				else if (toolBattleFilterYear.Checked) dateFilter = DateTime.Now.AddYears(-1);
 				cmd.Parameters.AddWithValue("@battleTime", dateFilter);
 			}
 			cmd.CommandType = CommandType.Text;
@@ -370,11 +373,14 @@ namespace WotDBUpdater.Forms
 				cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
 				if (!toolBattleFilterAll.Checked)
 				{
-					DateTime dateFilter = DateTime.Now.AddDays(-360);
-					if (toolBattleFilterToday.Checked) dateFilter = DateTime.Now.AddDays(-1);
+					DateTime basedate = DateTime.Now;
+					if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+					DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0);
+					// Adjust time scale according to selected filter
 					if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
-					if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
-					if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddDays(-30);
+					else if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
+					else if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddMonths(-1);
+					else if (toolBattleFilterYear.Checked) dateFilter = DateTime.Now.AddYears(-1);
 					cmd.Parameters.AddWithValue("@battleTime", dateFilter);
 				}
 				cmd.CommandType = CommandType.Text;
