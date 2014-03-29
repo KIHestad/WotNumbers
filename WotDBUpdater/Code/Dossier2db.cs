@@ -283,6 +283,7 @@ namespace WotDBUpdater
 				// Get fields to map playerTank data to Battle data
 				bool modeCompany = false;
 				bool modeClan = false;
+				int battlesCount = (battlessNew15 + battlessNew7);
 				foreach (DataRow dr in TankData.tankData2BattleMappingView.Rows)
 				{
 					if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
@@ -303,7 +304,7 @@ namespace WotDBUpdater
 							int newvalue = 0;
 							if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
 							if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
-							NewbattleRow[battleField] = Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue;
+							NewbattleRow[battleField] = (Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue);
 						}
 					}
 					else // Check in unmapped fields 
@@ -328,9 +329,13 @@ namespace WotDBUpdater
 				}
 				// Get value to playerTankID, FK to parent table playerTank
 				DataTable dt = TankData.GetPlayerTankFromDB(tankId);
-				string sqlFields = "playerTankId";
-				string sqlValues = dt.Rows[0]["Id"].ToString();
-				// Get fields to update, loop through mapping table to get allgenerate SQL
+				// Create SQl to insert new battle row
+				// First add player id
+				string sqlFields = "playerTankId"; string sqlValues = dt.Rows[0]["Id"].ToString();
+				// Loop through mapping table to get all generate fields, check against column names if average values must be calculted when more than one battle is detected
+				string[] avgCols = new string[] { "battleLifeTime", "killed", "frags", "dmg", "dmgReceived", "assistSpot", "assistTrack", 
+					"cap", "def", "shots", "hits", "shotsReceived", "pierced", "piercedReceived", "spotted", "mileage", "treesCut", "xp" 
+				}; 
 				foreach (DataColumn column in NewBattleTable.Columns)
 				{
 					if (column.ColumnName != "Id" && column.ColumnName != "playerTankID" && NewbattleRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
@@ -342,34 +347,41 @@ namespace WotDBUpdater
 						{
 							case "String": sqlValues += ", '" + NewbattleRow[colName] + "'"; break;
 							case "DateTime": sqlValues += ", '" + Convert.ToDateTime(NewbattleRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
-							default: sqlValues += ", " + NewbattleRow[colName]; break;
+							default:
+								{
+									int value = Convert.ToInt32(NewbattleRow[colName]);
+									if (battlesCount > 1 && avgCols.Contains(colName)) value = value / battlesCount; // Calc average values
+									sqlValues += ", " + value.ToString(); 
+									break;
+								}
 						}
 					}
 				}
+				// Calculate WN8
+				sqlFields += ", wn8";
+				sqlValues += ", " + Rating.CalculateBattleWn8(tankId, battlesCount, NewbattleRow);
+				// Calc Eff
+				sqlFields += ", eff";
+				sqlValues += ", " + Rating.CalculateBattleEff(tankId, tankTier, battlesCount, NewbattleRow);
 				// Add battle mode
 				if (battlessNew15 != 0) { sqlFields += ", mode15"; sqlValues += ", 1"; }
 				if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }
 				if (modeCompany) { sqlFields += ", modeCompany"; sqlValues += ", 1"; }
 				if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
-				// Calculate WN8
-				sqlFields += ", wn8";
-				sqlValues += ", " + Rating.CalculateBattleWn8(tankId, (battlessNew15 + battlessNew7), NewbattleRow);
-				// Calc Eff
-				sqlFields += ", eff";
-				sqlValues += ", " + Rating.CalculateBattleEff(tankId, tankTier, (battlessNew15 + battlessNew7), NewbattleRow);
+				
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(NewbattleRow["victory"]);
 				int defeatcount = Convert.ToInt32(NewbattleRow["defeat"]);
-				int drawcount = (battlessNew15 + battlessNew7) - victorycount - defeatcount;
-				NewbattleRow["draw"] = (battlessNew15 + battlessNew7) - victorycount - defeatcount;
+				int drawcount = battlesCount - victorycount - defeatcount;
+				NewbattleRow["draw"] = battlesCount - victorycount - defeatcount;
 				int battleResult = 0;
 				// (1, 'Victory', 1, '#00FF21')
 				// (2, 'Draw', 1, '#FFFF00')
 				// (3, 'Defeat', 1 ,'#FF0000')
 				// (4, 'Several', '#0094FF')
-				if (victorycount > 0 && victorycount == (battlessNew15 + battlessNew7))
+				if (victorycount > 0 && victorycount == battlesCount)
 					battleResult = 1;
-				else if (defeatcount > 0 && defeatcount == (battlessNew15 + battlessNew7))
+				else if (defeatcount > 0 && defeatcount == battlesCount)
 					battleResult = 3;
 				else if ((victorycount + defeatcount) == 0)
 					battleResult = 2;
@@ -379,14 +391,14 @@ namespace WotDBUpdater
 				sqlFields += ", draw "; sqlValues += ", " + drawcount.ToString();
 				// Calculate battle survive
 				int survivecount = Convert.ToInt32(NewbattleRow["survived"]);
-				int killedcount = (battlessNew15 + battlessNew7) - survivecount;
+				int killedcount = battlesCount - survivecount;
 				int battleSurvive = 0;
 				// (1, 'Yes', 1, '#00FF21')
 				// (2, 'Some', '#0094FF')
 				// (3, 'No', 1 ,'#FF0000')
 				if (survivecount == 0)
 					battleSurvive = 3;
-				else if (survivecount == (battlessNew15 + battlessNew7))
+				else if (survivecount == battlesCount)
 					battleSurvive = 1;
 				else
 					battleSurvive = 2;

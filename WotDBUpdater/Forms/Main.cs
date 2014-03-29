@@ -303,9 +303,9 @@ namespace WotDBUpdater.Forms
 				battleFilter = "AND battleTime>=@battleTime ";
 			}
 			string sql =
-				"SELECT tank.tier AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
+				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
 				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
-				"  battle.cap AS [Capture Points], battle.def AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
+				"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
 				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, battle.battleTime, battle.battleResultId, battle.battleSurviveId, " +
 				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer " +
 				"FROM    battle INNER JOIN " +
@@ -335,7 +335,7 @@ namespace WotDBUpdater.Forms
 			if (dt.Rows.Count > 1)
 			{
 				sql =
-					"SELECT  ROUND(AVG(CAST(tank.tier AS FLOAT)),1) AS Tier, " +
+					"SELECT  AVG(CAST(tank.tier AS FLOAT)) AS Tier, " +
 					"        'Average on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
 					"        CAST(ROUND(SUM(CAST(battle.victory AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Result, " +
 					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
@@ -477,7 +477,7 @@ namespace WotDBUpdater.Forms
 				if (footer)
 				{
 					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-					if (col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits")
+					if (col == "Tier" || col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits" || col == "Capture Points" || col == "Defense Points")
 					{
 						cell.Style.Format = "n1";
 					}
