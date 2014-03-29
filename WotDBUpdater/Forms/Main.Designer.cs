@@ -98,6 +98,7 @@
 			this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
+            this.testImportWs2dbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
 			this.menuMain.SuspendLayout();
 			this.panelTop.SuspendLayout();
@@ -142,7 +143,8 @@
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
             this.menuItemTest_ViewRange,
-            this.viewRangeFormToolStripMenuItem});
+            this.viewRangeFormToolStripMenuItem,
+            this.testImportWs2dbToolStripMenuItem});
 			this.menuItemTest.Name = "menuItemTest";
 			this.menuItemTest.Size = new System.Drawing.Size(34, 19);
 			this.menuItemTest.Text = "Test";
@@ -766,10 +768,15 @@
 			this.timerPanelSlide.Interval = 5;
 			this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
 			// 
+            // testImportWs2dbToolStripMenuItem
 			// fileSystemWatcherNewBattle
 			// 
 			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
+            this.testImportWs2dbToolStripMenuItem.Name = "testImportWs2dbToolStripMenuItem";
+            this.testImportWs2dbToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.testImportWs2dbToolStripMenuItem.Text = "Test import ws2db";
+            this.testImportWs2dbToolStripMenuItem.Click += new System.EventHandler(this.testImportWs2dbToolStripMenuItem_Click);
 			// 
 			// Main
 			// 
@@ -881,6 +888,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterAll;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
+        private System.Windows.Forms.ToolStripMenuItem testImportWs2dbToolStripMenuItem;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
 	}
 }
