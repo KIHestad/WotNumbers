@@ -14,7 +14,7 @@ namespace WotDBUpdater
         
         public static void importWotStats2DB()
         {
-            string WSDB = "C:\\Users\\Kontor\\AppData\\Roaming\\WOT Statistics\\Hist_cmdrTrinity\\LastBattle\\WOTSStore.db";
+            string WSDB = "C:\\Users\\Loftet\\AppData\\Roaming\\WOT Statistics\\Hist_BadButton\\LastBattle\\WOTSStore.db";
 
             // SQLite dbconn
             String sqliteDbConnection = "Data Source=" + WSDB;
