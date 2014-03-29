@@ -984,8 +984,14 @@ namespace WotDBUpdater.Forms
             frm.ShowDialog();
         }
 
+        private void testImportWs2dbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImportWS2DB.importWotStats2DB();
+        }
+
         
         #endregion
+
 
         
 

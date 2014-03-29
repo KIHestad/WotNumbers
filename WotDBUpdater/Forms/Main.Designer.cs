@@ -75,6 +75,8 @@
             this.toolItemSettingsDb = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolItemShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.panelStrip = new System.Windows.Forms.Panel();
@@ -96,8 +98,7 @@
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
+            this.testImportWs2dbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
@@ -123,9 +124,9 @@
             this.menuMain.Dock = System.Windows.Forms.DockStyle.Right;
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemTest});
-            this.menuMain.Location = new System.Drawing.Point(868, 0);
+            this.menuMain.Location = new System.Drawing.Point(817, 0);
             this.menuMain.Name = "menuMain";
-            this.menuMain.Size = new System.Drawing.Size(47, 78);
+            this.menuMain.Size = new System.Drawing.Size(98, 78);
             this.menuMain.TabIndex = 10;
             this.menuMain.Text = "menuMain";
             // 
@@ -140,9 +141,10 @@
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
             this.menuItemTest_ViewRange,
-            this.viewRangeFormToolStripMenuItem});
+            this.viewRangeFormToolStripMenuItem,
+            this.testImportWs2dbToolStripMenuItem});
             this.menuItemTest.Name = "menuItemTest";
-            this.menuItemTest.Size = new System.Drawing.Size(34, 19);
+            this.menuItemTest.Size = new System.Drawing.Size(85, 19);
             this.menuItemTest.Text = "Test";
             // 
             // menuItemTest_ImportTank_Wn8exp
@@ -407,7 +409,7 @@
             this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolMain.Location = new System.Drawing.Point(13, 0);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(344, 25);
+            this.toolMain.Size = new System.Drawing.Size(313, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 13;
             this.toolMain.Text = "toolStrip1";
@@ -558,6 +560,18 @@
             this.toolItemShowDbTables.Size = new System.Drawing.Size(254, 22);
             this.toolItemShowDbTables.Text = "Show Database &Tables";
             this.toolItemShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
+            // 
+            // toolItemImportBattlesFromWotStat
+            // 
+            this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
+            this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(254, 22);
+            this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics";
+            this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
             // 
             // toolItemHelp
             // 
@@ -746,17 +760,12 @@
             this.timerPanelSlide.Interval = 5;
             this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
             // 
-            // toolStripSeparator2
+            // testImportWs2dbToolStripMenuItem
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
-            // 
-            // toolItemImportBattlesFromWotStat
-            // 
-            this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
-            this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(254, 22);
-            this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics";
-            this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
+            this.testImportWs2dbToolStripMenuItem.Name = "testImportWs2dbToolStripMenuItem";
+            this.testImportWs2dbToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.testImportWs2dbToolStripMenuItem.Text = "Test import ws2db";
+            this.testImportWs2dbToolStripMenuItem.Click += new System.EventHandler(this.testImportWs2dbToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -867,6 +876,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolBattleFilterAll;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
+        private System.Windows.Forms.ToolStripMenuItem testImportWs2dbToolStripMenuItem;
     }
 }
 
