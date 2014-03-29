@@ -86,8 +86,6 @@ namespace WotDBUpdater
 							{
 								log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
 								if (SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate, saveBattleResult)) battleSave = true;
-								string s1 = fraglist;
-								string s2 = achlist;
 							}
 							// Reset all values
 							NewPlayerTankTable.Clear();
@@ -159,6 +157,10 @@ namespace WotDBUpdater
 				}
 			}
 			reader.Close();
+			// Also write last tank found
+			log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
+			if (SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate, saveBattleResult)) battleSave = true;
+			// Done
 			if (battleSave) Log.BattleResultDoneLog();
 			sw.Stop();
 			TimeSpan ts = sw.Elapsed;
