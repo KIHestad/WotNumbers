@@ -413,7 +413,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(13, 0);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(313, 25);
+			this.toolMain.Size = new System.Drawing.Size(295, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -474,6 +474,7 @@
 			// 
 			// toolItemSettings
 			// 
+			this.toolItemSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolItemSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemSettingsRun,
             this.toolItemSettingsDossierOptions,
@@ -487,7 +488,7 @@
 			this.toolItemSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolItemSettings.Image")));
 			this.toolItemSettings.Name = "toolItemSettings";
 			this.toolItemSettings.ShowDropDownArrow = false;
-			this.toolItemSettings.Size = new System.Drawing.Size(69, 22);
+			this.toolItemSettings.Size = new System.Drawing.Size(20, 22);
 			this.toolItemSettings.Text = "Settings";
 			// 
 			// toolItemSettingsRun

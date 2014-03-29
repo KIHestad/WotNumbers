@@ -56,6 +56,8 @@ namespace WotDBUpdater
 			string tankName = "";
 			jsonMainSection mainSection = new jsonMainSection();
 			jsonItem currentItem = new jsonItem();
+			string fraglist = "";
+			string achlist = "";
 			
 						// Loop through json file
 			while (reader.Read())
@@ -84,6 +86,8 @@ namespace WotDBUpdater
 							{
 								log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
 								if (SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate, saveBattleResult)) battleSave = true;
+								string s1 = fraglist;
+								string s2 = achlist;
 							}
 							// Reset all values
 							NewPlayerTankTable.Clear();
@@ -91,6 +95,8 @@ namespace WotDBUpdater
 							// Get new tank name
 							currentItem.tank = reader.Value.ToString(); // add to current item
 							tankName = reader.Value.ToString(); // add to current tank
+							fraglist = "";
+							achlist = "";
 						}
 					}
 					else
@@ -137,6 +143,11 @@ namespace WotDBUpdater
 											}
 										}
 
+										// fraglist
+										if (currentItem.subSection == "fraglist" || currentItem.subSection == "kills")
+											fraglist += currentItem.value.ToString() + ";";
+
+										
 										// Temp log all data
 										log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
 										//log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
