@@ -1,4 +1,8 @@
-﻿03.29.14
+﻿03.30.14
+- Added frags to recentBattles import
+
+
+03.29.14
 - Created function for importing recentBattles from Wot Statistics
 
 
