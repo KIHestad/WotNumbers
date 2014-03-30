@@ -13,14 +13,14 @@ namespace WotDBUpdater
 {
 	class Dossier2db
 	{
-		public class jsonMainSection
+		public class JsonMainSection
 		{
 			public string header = "header";
 			public string tanks = "tanks";
 			public string tanks_v2 = "tanks_v2";
 		}
 
-		public class jsonItem
+		public class JsonItem
 		{
 			public string mainSection = "";
 			public string tank = "";
@@ -28,7 +28,17 @@ namespace WotDBUpdater
 			public string property = "";
 			public object value = null;
 		}
-		
+
+		public class FragItem
+		{
+			public int dossierNation = 0;
+			public int dossierId = 0;
+			public int fragCount = 0;
+			public string tankName = "";
+			public int tankId = 0;
+			public int playerTankId = 0;
+		}
+
 		public static String ReadJson(string filename, bool ForceUpdate = false)
 		{
 			// Read file into string
@@ -54,8 +64,8 @@ namespace WotDBUpdater
 			DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
 			DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
 			string tankName = "";
-			jsonMainSection mainSection = new jsonMainSection();
-			jsonItem currentItem = new jsonItem();
+			JsonMainSection mainSection = new JsonMainSection();
+			JsonItem currentItem = new JsonItem();
 			string fraglist = "";
 			//string achlist = "";
 			
@@ -85,7 +95,7 @@ namespace WotDBUpdater
 							if  (tankName != "") 
 							{
 								log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
-								if (SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate, saveBattleResult)) battleSave = true;
+								if (SaveTankDataResult(tankName, NewPlayerTankRow, fraglist, ForceUpdate, saveBattleResult)) battleSave = true;
 							}
 							// Reset all values
 							NewPlayerTankTable.Clear();
@@ -142,7 +152,7 @@ namespace WotDBUpdater
 										}
 
 										// fraglist
-										if (currentItem.subSection == "fraglist" || currentItem.subSection == "kills")
+										if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills")
 											fraglist += currentItem.value.ToString() + ";";
 
 										
@@ -159,7 +169,7 @@ namespace WotDBUpdater
 			reader.Close();
 			// Also write last tank found
 			log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
-			if (SaveTankDataResult(tankName, NewPlayerTankRow, ForceUpdate, saveBattleResult)) battleSave = true;
+			if (SaveTankDataResult(tankName, NewPlayerTankRow, fraglist, ForceUpdate, saveBattleResult)) battleSave = true;
 			// Done
 			if (battleSave) Log.BattleResultDoneLog();
 			sw.Stop();
@@ -174,9 +184,9 @@ namespace WotDBUpdater
 			return origin.AddSeconds(timestamp);
 		}
 
-		private static void UpdateNewPlayerTankRow(ref DataRow NewPlayerTankRow, jsonItem currentItem)
+		private static void UpdateNewPlayerTankRow(ref DataRow NewPlayerTankRow, JsonItem currentItem)
 		{
-			jsonMainSection mainSection = new jsonMainSection(); 
+			JsonMainSection mainSection = new JsonMainSection(); 
 			if (currentItem.mainSection == mainSection.tanks)
 			{
 				if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewPlayerTankRow["battles15"] = Convert.ToInt32(currentItem.value);
@@ -192,7 +202,7 @@ namespace WotDBUpdater
 			}
 		}
 
-		public static bool SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, bool ForceUpdate = false, bool saveBattleResult = true)
+		public static bool SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, string fraglist, bool ForceUpdate = false, bool saveBattleResult = true )
 		{
 			// Get Tank ID
 			bool battleSave = false;
@@ -222,13 +232,15 @@ namespace WotDBUpdater
 				{
 					// New battle detected, update tankData in DB
 					UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
+					// Check fraglist to update playertank frags
+					List<FragItem> battlefraglist = UpdatePlayerTankFrag(tankId, fraglist);
 					// If new battle on this tank also update battle table to store result of last battle(s)
 					if (saveBattleResult)
 					{
 						if (battlessNew15 != 0 || battlessNew7 != 0)
 						{
 							// New battle detected, update tankData in DB
-							UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, battlessNew15, battlessNew7);
+							UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, battlessNew15, battlessNew7, battlefraglist);
 							battleSave = true;
 						}
 					}
@@ -285,12 +297,106 @@ namespace WotDBUpdater
 			}
 		}
 
-		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int tankTier, int battlessNew15, int battlessNew7)
+		private static List<FragItem> UpdatePlayerTankFrag(int tankId, string fraglist)
+		{
+			List<FragItem> battleFrag = new List<FragItem>();
+			try
+			{
+				// fraglist is semicolon separated string, each 4. element is one frag, split the string and create a list of FragItem
+				List<FragItem> newFrag = new List<FragItem>();
+				string[] stringSeparators = new string[] { ";" };
+				string[] dossierFragItem = fraglist.Split(stringSeparators, StringSplitOptions.None);
+				int fragcount = dossierFragItem.Count() / 4;
+				for (int i = 0; i < fragcount; i++)
+				{
+					FragItem FragItem = new FragItem();
+					FragItem.dossierNation = Convert.ToInt32(dossierFragItem[i * 4 + 0]);
+					FragItem.dossierId = Convert.ToInt32(dossierFragItem[i * 4 + 1]);
+					FragItem.fragCount = Convert.ToInt32(dossierFragItem[i * 4 + 2]);
+					FragItem.tankName = dossierFragItem[i * 4 + 3].ToString();
+					FragItem.tankId = TankData.GetTankID(FragItem.tankName);
+					newFrag.Add(FragItem);
+				}
+				// Check newFrag compared to existing frags for this tank
+				List<FragItem> oldFrag = new List<FragItem>();
+				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+				con.Open();
+				SqlCommand cmd = new SqlCommand(
+					"SELECT playerTank.id AS playerTankId, playerTankFrag.* " +
+					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
+					"WHERE playerTank.tankId=@tankId", con);
+				cmd.Parameters.AddWithValue("@tankId", tankId);
+				SqlDataReader reader = cmd.ExecuteReader();
+				// If no frags exists for this tank get playerTankId separately
+				while (reader.Read())
+				{
+					FragItem FragItem = new FragItem();
+					FragItem.tankId = Convert.ToInt32(reader["fraggedTankId"]);
+					FragItem.playerTankId = Convert.ToInt32(reader["playerTankId"]); 
+					FragItem.fragCount = Convert.ToInt32(reader["fragCount"]);
+					oldFrag.Add(FragItem);
+				}
+				reader.Close();
+				// Now we got old and new frags, calculate update and inserts to playerTankFrag, and battleFrag
+				string playerTankFragSQL = "";
+				// Loop through new frags
+				foreach (var newFragItem in newFrag)
+				{
+					// Check if frags exists for this fragged tank
+					int i = -1;
+					bool foundFraggedTank = false;
+					while (i < oldFrag.Count - 1 && !foundFraggedTank)
+					{
+						i++;
+						foundFraggedTank = (oldFrag[i].tankId == newFragItem.tankId);
+					}
+					if (foundFraggedTank)
+					{
+						// fragged tank exsist, check if frag count has increased
+						if (newFragItem.fragCount > oldFrag[i].fragCount)
+						{
+							// new frag on existing fragged tank, update
+							playerTankFragSQL += "UPDATE playerTankFrag " +
+												"SET fragCount = " + newFragItem.fragCount.ToString() +
+												"WHERE playerTankId=" + oldFrag[i].playerTankId +
+												"  AND fraggedTankId=" + newFragItem.tankId + "\n";
+							// Add new frag count to battle Frag
+							newFragItem.fragCount = newFragItem.fragCount - oldFrag[i].fragCount;
+							battleFrag.Add(newFragItem);
+						}
+					}
+					else
+					{
+						// new fragged tank, insert
+						int playerTankId = TankData.GetPlayerTankId(tankId);				
+						playerTankFragSQL += "INSERT INTO playerTankFrag (playerTankId, fraggedTankId, fragCount) " +
+											"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + ")\n";
+						// Add new frag count to battle Frag
+						battleFrag.Add(newFragItem);
+					}
+				}
+				// Add to database
+				if (playerTankFragSQL != "")
+				{
+					cmd = new SqlCommand(playerTankFragSQL, con);
+					cmd.ExecuteNonQuery();
+				}
+				con.Close();
+			}
+			catch (Exception ex)
+			{
+				string s = ex.Message;
+				throw;
+			}
+			
+			return battleFrag;
+		}
+
+		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int tankTier, int battlessNew15, int battlessNew7, List<FragItem> battlefraglist)
 		{
 			try
 			{
-
-				// Greate datarow to put calculated battle data
+				// Create datarow to put calculated battle data
 				DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
 				DataRow NewbattleRow = NewBattleTable.NewRow();
 				// Get fields to map playerTank data to Battle data
@@ -344,7 +450,9 @@ namespace WotDBUpdater
 				DataTable dt = TankData.GetPlayerTankFromDB(tankId);
 				// Create SQl to insert new battle row
 				// First add player id
-				string sqlFields = "playerTankId"; string sqlValues = dt.Rows[0]["Id"].ToString();
+				int playerTankId = Convert.ToInt32(dt.Rows[0]["Id"]);
+				string sqlFields = ""; // string sqlFields = "playerTankId"; 
+				string sqlValues = ""; // string sqlValues = dt.Rows[0]["Id"].ToString();
 				// Loop through mapping table to get all generate fields, check against column names if average values must be calculted when more than one battle is detected
 				string[] avgCols = new string[] { "battleLifeTime", "killed", "frags", "dmg", "dmgReceived", "assistSpot", "assistTrack", 
 					"cap", "def", "shots", "hits", "shotsReceived", "pierced", "piercedReceived", "spotted", "mileage", "treesCut", "xp" 
@@ -420,10 +528,36 @@ namespace WotDBUpdater
 				// Update database
 				if (sqlFields.Length > 0)
 				{
+					// Insert Battle
 					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 					con.Open();
-					SqlCommand cmd = new SqlCommand("INSERT INTO battle (" + sqlFields + ") VALUES (" + sqlValues + ")", con);
+					string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + ")";
+					SqlCommand cmd = new SqlCommand(sql, con);
+					cmd.Parameters.AddWithValue("@playerTankId", playerTankId);
 					cmd.ExecuteNonQuery();
+					// Insert Battle Frags
+					if (battlefraglist.Count > 0)
+					{
+						// Get the last battle id
+						int battleId = 0;
+						cmd = new SqlCommand("select max(id) as battleId from battle", con);
+						SqlDataReader myReader = cmd.ExecuteReader();
+						while (myReader.Read())
+						{
+							battleId = Convert.ToInt32(myReader["battleId"]);
+						}
+						myReader.Close();
+						// Loop through new frags
+						string battleTankFragSQL = "";
+						foreach (var newFragItem in battlefraglist)
+						{
+							battleTankFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
+													"VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + ")\n";
+						}
+						// Add to database
+						cmd = new SqlCommand(battleTankFragSQL, con);
+						cmd.ExecuteNonQuery();
+					}
 					con.Close();
 				}
 			}
