@@ -14,7 +14,8 @@ namespace WotDBUpdater
         
         public static void importWotStats2DB()
         {
-            string WSDB = "C:\\Users\\Loftet\\AppData\\Roaming\\WOT Statistics\\Hist_BadButton\\LastBattle\\WOTSStore.db";
+            string WSDB = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                "\\WOT Statistics\\Hist_" + Config.Settings.playerName + "\\LastBattle\\WOTSStore.db";
 
             // SQLite dbconn
             String sqliteDbConnection = "Data Source=" + WSDB;
@@ -27,8 +28,7 @@ namespace WotDBUpdater
             sqlConn.Open();
 
             // Create temp table for import
-            string sql = "drop table wsRecentBattles; "
-                       + "create table wsRecentBattles (rbId int, rbTankId int, rbCountryId int, rbBattles int, rbKills int, rbDamageDealt int, rbDamageReceived int,"
+            string sql = "create table wsRecentBattles (rbId int, rbTankId int, rbCountryId int, rbBattles int, rbKills int, rbDamageDealt int, rbDamageReceived int,"
                        + "rbSpotted int, rbCapturePoints int, rbDefencePoints int, rbSurvived int, rbVictory int, rbBattleTime int, rbShot int, rbHits int, rbBattleMode int); ";
             SqlCommand startup = new SqlCommand(sql, sqlConn);
             startup.ExecuteNonQuery();
