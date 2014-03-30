@@ -797,10 +797,10 @@
     <Content Include="Lib\__phello__.foo.py" />
     <Content Include="logo_org_icon2.ico" />
     <Content Include="logo_org_icon3.ico" />
-    <Content Include="x64\SQLite.Interop.dll">
+    <Content Include="Lib\_SQLite\x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="x86\SQLite.Interop.dll">
+    <Content Include="Lib\_SQLite\x86\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Dossier2json\compile.py" />
