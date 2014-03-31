@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater
 {
-    class Modules2DB
+    class ImportWotApi2DB
     {
         /* 
          * Import functions for tank modules

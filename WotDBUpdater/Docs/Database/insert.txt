@@ -25,6 +25,8 @@ insert into country (id, name, shortName) values (4, 'France', 'FRA')
 insert into country (id, name, shortName) values (5, 'UK', 'UK')
 insert into country (id, name, shortName) values (6, 'Japan', 'JAP')
 
+
+/*
 -- Ach
 insert into ach (name) values ('alaric')
 insert into ach (name) values ('armorPiercer')
@@ -97,7 +99,7 @@ insert into ach (name) values ('supporter')
 insert into ach (name) values ('tankExpertStrg')
 insert into ach (name) values ('titleSniper')
 insert into ach (name) values ('warrior')
-
+*/
 
 
 

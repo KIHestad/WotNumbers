@@ -154,6 +154,7 @@ namespace WotDBUpdater
 										// fraglist
 										if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills")
 											fraglist += currentItem.value.ToString() + ";";
+										// Achivement
 
 										
 										// Temp log all data

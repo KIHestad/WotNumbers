@@ -1076,19 +1076,19 @@ namespace WotDBUpdater.Forms
 
         private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
         {
-            string s = Modules2DB.ImportTurrets();
+            string s = ImportWotApi2DB.ImportTurrets();
             Code.Support.Message.Show(s);
         }
 
         private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
         {
-            string s = Modules2DB.ImportGuns();
+            string s = ImportWotApi2DB.ImportGuns();
             Code.Support.Message.Show(s);
         }
 
         private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
         {
-            string s = Modules2DB.ImportRadios();
+            string s = ImportWotApi2DB.ImportRadios();
             Code.Support.Message.Show(s);
         }
 

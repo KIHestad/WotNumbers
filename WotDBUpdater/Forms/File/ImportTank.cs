@@ -40,7 +40,7 @@ namespace WotDBUpdater.Forms.File
             //List<string> result = importTanks2DB.importTanks();
             //Log(result);
             //importTanks2DB.fetchTanks();
-            List<string> log = ImportTanks2DB.UpdateTanks();
+            List<string> log = ImportMisc2DB.UpdateTanks();
             foreach (string item in log)
             {
                 listBoxLog.Items.Add(item);
@@ -51,7 +51,7 @@ namespace WotDBUpdater.Forms.File
 
         private void btnUpdateWN8_Click(object sender, EventArgs e)
         {
-            ImportTanks2DB.UpdateWN8();
+            ImportMisc2DB.UpdateWN8();
             Code.Support.Message.Show("Update complete");
         }
     }

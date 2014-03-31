@@ -253,7 +253,23 @@ alter table battleFrag add constraint fk_battleFrag_fraggedTankId foreign key (f
 
 create table ach (
 	id int identity(1,1) constraint pk_achId primary key,
-	name varChar(255)
+	name varchar(50) not null,
+	section varchar(50) not null,
+	options varchar(2000),
+	section_order int not null,
+	image varchar(255),
+	name_i18n varchar(50),
+	type varchar(50),
+	ordernum int not null,
+	description varchar(255) not null,
+	image1 varchar(255),
+	image2 varchar(255),
+	image3 varchar(255),
+	image4 varchar(255),
+	name_i18n1 varchar(50),
+	name_i18n2 varchar(50),
+	name_i18n3 varchar(50),
+	name_i18n4 varchar(50)
 )
 
 -------------------------------------------------------------------------------------------------

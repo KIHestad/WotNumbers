@@ -171,10 +171,10 @@
     <Compile Include="Forms\Reports\DBView.Designer.cs">
       <DependentUpon>DBView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\ImportTanks2DB.cs" />
+    <Compile Include="Code\ImportMisc2DB.cs" />
     <Compile Include="Code\Dossier2db.cs" />
     <Compile Include="Code\Support\Log.cs" />
-    <Compile Include="Code\Mudules2DB.cs" />
+    <Compile Include="Code\ImportWotApi2DB.cs" />
     <Compile Include="Forms\Test\TestProgressBar.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -34,7 +34,7 @@ namespace WotDBUpdater.Forms.Test
 
         private static void Import(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            ImportTanks2DB.UpdateWN8();
+            ImportMisc2DB.UpdateWN8();
             Code.Support.Message.Show("Import status","Done");
         }
 
