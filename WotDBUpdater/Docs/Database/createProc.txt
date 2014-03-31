@@ -24,13 +24,13 @@ select
   wsrb.rbDefencePoints / 100,
   wsrb.rbSurvived,
   case
-    when wsrb.rbSurvived = 0 then 3  -- not survived
+	when wsrb.rbSurvived = 0 then 3  -- not survived
 	when wsrb.rbSurvived = 1 then 1  -- survived
 	else 2                           -- some
   end,
   case when wsrb.rbVictory = 0 then 1 else 0 end,
   case
-    when wsrb.rbVictory = 0 then 1   -- vicory
+	when wsrb.rbVictory = 0 then 1   -- vicory
 	when wsrb.rbVictory = 1 then 3   -- def
 	when wsrb.rbVictory = 2 then 2   -- draw
 	else 4
@@ -88,9 +88,9 @@ begin
   /* Read frag data when there are multiple frags in current battle*/
   while (charindex(';', @fragList) > 0)
   begin
-    set @fragIdSplit = charindex(':', @fragList)+1              -- split arrayId and frag on :
+	set @fragIdSplit = charindex(':', @fragList)+1              -- split arrayId and frag on :
 	set @idSplit = charindex('_', @fragList)+1                  -- split countryId and tankId on _
-    set @fragSplit = (charindex(';', @fragList)) - @idSplit     -- split frags on ;
+	set @fragSplit = (charindex(';', @fragList)) - @idSplit     -- split frags on ;
 
 	set @countryId = substring(@fragList, @fragIdSplit, @idSplit - @fragIdSplit - 1)
 	set @tankId = substring(@fragList, @idSplit, @fragSplit)
@@ -104,7 +104,7 @@ begin
 	else
 	  update battleFrag set fragCount = fragCount + 1 where battleId = @battleId and fraggedTankId = @fraggedTankId
 	
-    set @fragList = substring(@fragList, charindex(';', @fragList) + 1, len(@fragList))
+	set @fragList = substring(@fragList, charindex(';', @fragList) + 1, len(@fragList))
   end
   
 
@@ -119,7 +119,7 @@ begin
   select @fraggedTankId = tankId from wsTankId where wsTankId = @tankId and wsCountryId = @countryId
 
   if not exists (select 1 from battleFrag where battleId = @battleId and fraggedTankId = @fraggedTankId)
-    insert into battleFrag (battleId, fraggedTankId, fragCount) values (@battleId, @fraggedTankId, 1)
+	insert into battleFrag (battleId, fraggedTankId, fragCount) values (@battleId, @fraggedTankId, 1)
   else
 	update battleFrag set fragCount = fragCount + 1 where battleId = @battleId and fraggedTankId = @fraggedTankId
 

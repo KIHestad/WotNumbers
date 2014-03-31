@@ -264,6 +264,7 @@
     <None Include="Dossier2json\structures_29.json" />
     <None Include="Dossier2json\structures_65.json" />
     <None Include="Dossier2json\structures_69.json" />
+    <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="Dossier2json\_error.dat" />
     <None Include="Dossier2json\_error.json" />
@@ -306,6 +307,7 @@
     <Content Include="Docs\Database\dropFk.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <Content Include="Dossier2json\wotdc2j.py" />
+    <Content Include="Dossier2json\wotdc2j_8_11.py" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
