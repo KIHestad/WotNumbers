@@ -315,52 +315,78 @@ namespace WotDBUpdater
 
 		#region importAchievements
 
-		public static String ImportAchievements()
+		public static void ImportAchievements()
 		{
 			string json = FetchFromAPI(WotApiType.Achievement);
-			int achCount;
-			JToken rootToken;
-			JToken moduleToken;
-			string achSql = "";
-			
 			JObject allTokens = JObject.Parse(json);
-			rootToken = allTokens.First;
-
+			JToken rootToken = allTokens.First;
 			if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 			{
 				rootToken = rootToken.Next;
-				achCount = (int)((JProperty)rootToken).Value;
-
+				int achCount = (int)((JProperty)rootToken).Value;
 				rootToken = rootToken.Next;
 				JToken achList = rootToken.Children().First();
-
+				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+				con.Open();
 				foreach (JProperty ach in achList)
 				{
-					moduleToken = ach.First();
+					JToken medalToken = ach.First();
+					string sql = "insert into ach (name, section, options, section_order, image, name_i18n, type ,ordernum, description, " +
+							"  image1 ,image2 ,image3 ,image4 ,name_i18n1 ,name_i18n2 ,name_i18n3 ,name_i18n4) " +
+							"values (@name, @section, @options, @section_order, @image, @name_i18n, @type , @ordernum, @description, " +
+							"  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
+					// Get data from json token and insert to query
+					SqlCommand cmd = new SqlCommand(sql, con);
+					// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
+					cmd.Parameters.AddWithValue("@name", medalToken["name"].ToString());
+					cmd.Parameters.AddWithValue("@section", medalToken["section"].ToString());
+					cmd.Parameters.AddWithValue("@section_order", medalToken["section_order"].ToString());
+					cmd.Parameters.AddWithValue("@type", medalToken["type"].ToString());
+					cmd.Parameters.AddWithValue("@ordernum", medalToken["order"].ToString());
+					cmd.Parameters.AddWithValue("@description", medalToken["description"].ToString());
+					// Check if several medal alternatives, and get images and names, set NULL as default value
+					string options = medalToken["options"].ToString();
+					if (options == "") // no options, get default medal image and name
+					{
+						cmd.Parameters.AddWithValue("@image", medalToken["image"].ToString());
+						cmd.Parameters.AddWithValue("@name_i18n", medalToken["name_i18n"].ToString());
+						cmd.Parameters.AddWithValue("@options", DBNull.Value);
+						cmd.Parameters.AddWithValue("@image1", DBNull.Value);
+						cmd.Parameters.AddWithValue("@image2", DBNull.Value);
+						cmd.Parameters.AddWithValue("@image3", DBNull.Value);
+						cmd.Parameters.AddWithValue("@image4", DBNull.Value);
+						cmd.Parameters.AddWithValue("@name_i18n1", DBNull.Value);
+						cmd.Parameters.AddWithValue("@name_i18n2", DBNull.Value);
+						cmd.Parameters.AddWithValue("@name_i18n3", DBNull.Value);
+						cmd.Parameters.AddWithValue("@name_i18n4", DBNull.Value);
+					}
+					else // get medal optional images and names
+					{
+						cmd.Parameters.AddWithValue("@image", DBNull.Value);
+						cmd.Parameters.AddWithValue("@name_i18n", DBNull.Value);
+						cmd.Parameters.AddWithValue("@options", options);
+						// Get the medal options from array
+						JArray medalArray = (JArray)medalToken["options"];
+						int num = medalArray.Count;
+						if (num > 4) num = 4;
+						for (int i = 1; i <= num; i++)
+						{
+							cmd.Parameters.AddWithValue("@image" + i.ToString(), medalArray[i-1]["image"].ToString());
+							cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), medalArray[i-1]["name_i18n"].ToString());	
+						}
+						// If not 4, put null in rest
+						for (int i = num+1; i <= 4; i++)
+						{
+							cmd.Parameters.AddWithValue("@image" + i.ToString(), DBNull.Value);
+							cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), DBNull.Value);
+						}
 
-					string achSectionName = ((JProperty)moduleToken.Parent).Name.ToString();
-					string name = moduleToken["name"].ToString();
-					
-					// TODO:
-					achSql = achSql + "insert into ach (name, tier, signalRange) values "
-									+ "('" + name + "', '" + name + "', '" + name + "', '" + name + "'); ";
-
+					}
+					// Insert to db now
+					cmd.ExecuteNonQuery();
 				}
-
-				try
-				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					SqlCommand insert = new SqlCommand(achSql, con);
-					insert.ExecuteNonQuery();
-					con.Close();
-				}
-				catch (Exception ex)
-				{
-					Code.Support.Message.Show(ex.Message, "Error occured");
-				}
+				con.Close();
 			}
-			return ("Import Complete");
 		}
 
 

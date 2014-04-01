@@ -43,6 +43,7 @@
 			this.menuItemTest_ProgressBar = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewRangeFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testImportWs2dbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.panelTop = new System.Windows.Forms.Panel();
 			this.picNormalize = new System.Windows.Forms.PictureBox();
 			this.picMinimize = new System.Windows.Forms.PictureBox();
@@ -98,8 +99,8 @@
 			this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
-            this.testImportWs2dbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
+			this.menuItemTest_ImportAch = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuMain.SuspendLayout();
 			this.panelTop.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
@@ -126,9 +127,9 @@
 			this.menuMain.Dock = System.Windows.Forms.DockStyle.Right;
 			this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemTest});
-			this.menuMain.Location = new System.Drawing.Point(868, 0);
+			this.menuMain.Location = new System.Drawing.Point(817, 0);
 			this.menuMain.Name = "menuMain";
-			this.menuMain.Size = new System.Drawing.Size(47, 78);
+			this.menuMain.Size = new System.Drawing.Size(98, 78);
 			this.menuMain.TabIndex = 10;
 			this.menuMain.Text = "menuMain";
 			// 
@@ -139,6 +140,7 @@
             this.menuItemTest_ImportTurret,
             this.menuItemTest_ImportGun,
             this.menuItemTest_ImportRadio,
+            this.menuItemTest_ImportAch,
             this.toolStripSeparator5,
             this.menuItemTest_WotURL,
             this.menuItemTest_ProgressBar,
@@ -146,7 +148,7 @@
             this.viewRangeFormToolStripMenuItem,
             this.testImportWs2dbToolStripMenuItem});
 			this.menuItemTest.Name = "menuItemTest";
-			this.menuItemTest.Size = new System.Drawing.Size(34, 19);
+			this.menuItemTest.Size = new System.Drawing.Size(85, 19);
 			this.menuItemTest.Text = "Test";
 			// 
 			// menuItemTest_ImportTank_Wn8exp
@@ -209,6 +211,13 @@
 			this.viewRangeFormToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
 			this.viewRangeFormToolStripMenuItem.Text = "View Range form";
 			this.viewRangeFormToolStripMenuItem.Click += new System.EventHandler(this.viewRangeFormToolStripMenuItem_Click);
+			// 
+			// testImportWs2dbToolStripMenuItem
+			// 
+			this.testImportWs2dbToolStripMenuItem.Name = "testImportWs2dbToolStripMenuItem";
+			this.testImportWs2dbToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.testImportWs2dbToolStripMenuItem.Text = "Test import ws2db";
+			this.testImportWs2dbToolStripMenuItem.Click += new System.EventHandler(this.testImportWs2dbToolStripMenuItem_Click);
 			// 
 			// panelTop
 			// 
@@ -415,7 +424,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(13, 0);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(295, 25);
+			this.toolMain.Size = new System.Drawing.Size(264, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -768,15 +777,17 @@
 			this.timerPanelSlide.Interval = 5;
 			this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
 			// 
-            // testImportWs2dbToolStripMenuItem
 			// fileSystemWatcherNewBattle
 			// 
 			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
-            this.testImportWs2dbToolStripMenuItem.Name = "testImportWs2dbToolStripMenuItem";
-            this.testImportWs2dbToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.testImportWs2dbToolStripMenuItem.Text = "Test import ws2db";
-            this.testImportWs2dbToolStripMenuItem.Click += new System.EventHandler(this.testImportWs2dbToolStripMenuItem_Click);
+			// 
+			// menuItemTest_ImportAch
+			// 
+			this.menuItemTest_ImportAch.Name = "menuItemTest_ImportAch";
+			this.menuItemTest_ImportAch.Size = new System.Drawing.Size(185, 22);
+			this.menuItemTest_ImportAch.Text = "Import Achievment";
+			this.menuItemTest_ImportAch.Click += new System.EventHandler(this.menuItemTest_ImportAch_Click);
 			// 
 			// Main
 			// 
@@ -890,6 +901,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
         private System.Windows.Forms.ToolStripMenuItem testImportWs2dbToolStripMenuItem;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
+		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportAch;
 	}
 }
 

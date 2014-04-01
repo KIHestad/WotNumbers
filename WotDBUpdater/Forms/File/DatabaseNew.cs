@@ -54,7 +54,7 @@ namespace WotDBUpdater.Forms.File
 			else
 			{
 				Cursor.Current = Cursors.WaitCursor;
-				int maxStep = 17;
+				int maxStep = 14;
 				pbCreateDatabase.Maximum = maxStep * 100;
 				pbCreateDatabase.Value = maxStep * 100;
 				pbCreateDatabase.Visible = true;
@@ -76,25 +76,21 @@ namespace WotDBUpdater.Forms.File
 					// Create Tables
 					StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
-					UpdateProgressBar(ref step, maxStep);
 					RunSql(sql);
 					UpdateProgressBar(ref step, maxStep);
 					// Create Views
 					streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
-					UpdateProgressBar(ref step, maxStep);
 					RunSql(sql);
 					UpdateProgressBar(ref step, maxStep);
 					// Create Stored Procedures
 					streamReader = new StreamReader(path + "createProc.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
-					UpdateProgressBar(ref step, maxStep);
 					RunSql(sql);
 					UpdateProgressBar(ref step, maxStep);
 					// Insert default data
 					streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 					sql = streamReader.ReadToEnd();
-					UpdateProgressBar(ref step, maxStep);
 					RunSql(sql);
 					UpdateProgressBar(ref step, maxStep);
 					// Get tanks, remember to init tankList first
@@ -115,6 +111,9 @@ namespace WotDBUpdater.Forms.File
 					UpdateProgressBar(ref step, maxStep);
 					// Get radios
 					ImportWotApi2DB.ImportRadios();
+					UpdateProgressBar(ref step, maxStep);
+					// Get achievements
+					ImportWotApi2DB.ImportAchievements();
 					UpdateProgressBar(ref step, maxStep);
 					// Get WN8 ratings
 					ImportMisc2DB.UpdateWN8();

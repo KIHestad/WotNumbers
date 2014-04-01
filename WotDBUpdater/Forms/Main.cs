@@ -1133,6 +1133,11 @@ namespace WotDBUpdater.Forms
         
         #endregion
 
+		private void menuItemTest_ImportAch_Click(object sender, EventArgs e)
+		{
+			ImportWotApi2DB.ImportAchievements();
+		}
+
         
     }
 
