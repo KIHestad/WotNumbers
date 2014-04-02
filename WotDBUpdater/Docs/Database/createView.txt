@@ -35,16 +35,16 @@ GO
 
 CREATE VIEW [dbo].[json2dbMappingView]
 AS
-SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  dbo.json2dbMapping.dbDataType, dbo.json2dbMapping.dbPlayerTank, dbo.json2dbMapping.dbBattle
+SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  *
 FROM          dbo.json2dbMapping
 
 GO
 
--- Create view for mapping Battele data
+-- Create view for mapping Battle data
 
 CREATE VIEW [dbo].[tankData2BattleMappingView]
 AS
-SELECT        TOP (100) PERCENT dbDataType, dbPlayerTank, dbBattle
+SELECT        dbDataType, dbPlayerTank, dbBattle
 FROM            dbo.json2dbMapping
 WHERE        (dbBattle IS NOT NULL)
 GROUP BY dbDataType, dbPlayerTank, dbBattle

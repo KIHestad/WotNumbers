@@ -152,7 +152,8 @@ create table playerTank (
 	eff int not null default 0,
 	modRadioId int not null default 0,
 	modTurretId int not null default 0,
-	modGunId int not null default 0
+	modGunId int not null default 0,
+	markOfMastery int not null default 0
 )
 
 alter table playerTank add constraint fk_playerTank_tank foreign key (tankId) references tank (id)
@@ -384,7 +385,9 @@ create table json2dbMapping (
 	jsonProperty varchar(255) null,
 	dbDataType varchar(255) null,
 	dbPlayerTank varchar(255) null,
-	dbBattle varchar(255) null)
+	dbBattle varchar(255) null,
+	dbAch varchar(255) null 
+)
 
 
 -------------------------------------------------------------------------------------------------

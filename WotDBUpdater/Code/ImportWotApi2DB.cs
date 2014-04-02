@@ -391,8 +391,6 @@ namespace WotDBUpdater
 					}
 				}
 				con.Close();
-				// Make sure all playerTanks has the achivements
-				TankData.SetPlayerTankAllAch();
 			}
 		}
 

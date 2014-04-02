@@ -27,7 +27,7 @@ insert into country (id, name, shortName) values (6, 'Japan', 'JAP')
 
 
 /*
--- Ach
+-- Ach old
 insert into ach (name) values ('alaric')
 insert into ach (name) values ('armorPiercer')
 insert into ach (name) values ('battleHeroes')
@@ -101,191 +101,319 @@ insert into ach (name) values ('titleSniper')
 insert into ach (name) values ('warrior')
 */
 
+-- Manually added acheivments not included in WoT API
+insert into ach (name,section,section_order,ordernum,description) values ('alaric','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('battleHeroes','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('confederate','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('diehardSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('fragsBeast','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('fragsPatton','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('fragsSinai','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('geniusForWar','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('invincibleSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('killingSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('lumberjack','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('maxDiehardSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('maxInvincibleSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('maxKillingSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('maxPiercingSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('maxSniperSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('maxTacticalBreakthroughSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('medalErohin','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('medalHoroshilov','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('medalLister','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('piercingSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('sniperSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('sniperspecial','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('tacticalBreakthroughSeries','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('tankExpertStrg','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
+insert into ach (name,section,section_order,ordernum,description) values ('wolfAmongSheep','special',0,0,'Unknown achievment according to WoT API, manually added from dossier achivment name')
 
+
+-- Mapping of dossier items to playertank, battle and achivment database table fields
 
 SET IDENTITY_INSERT [dbo].[json2dbMapping] ON 
 GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (1, N'tanks_v2', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (2, N'tanks_v2', N'common', N'updated', N'DateTime', N'updatedTime', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (3, N'tanks_v2', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (4, N'tanks_v2', N'common', N'has_15x15', N'Int', N'has15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (5, N'tanks_v2', N'a15x15', N'battlesCount', N'Int', N'battles15', N'battlesCount')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (6, N'tanks_v2', N'a15x15', N'battlesCountBefore8_8', N'Int', N'battles8p15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (7, N'tanks_v2', N'a15x15', N'wins', N'Int', N'wins15', N'victory')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (8, N'tanks_v2', N'a15x15', N'losses', N'Int', N'losses15', N'defeat')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (9, N'tanks_v2', N'a15x15', N'survivedBattles', N'Int', N'survived15', N'survived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (10, N'tanks_v2', N'a15x15', N'frags', N'Int', N'frags15', N'frags')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (11, N'tanks_v2', N'a15x15', N'frags8p', N'Int', N'frags8p15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (12, N'tanks_v2', N'a15x15', N'damageDealt', N'Int', N'dmg15', N'dmg')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (13, N'tanks_v2', N'a15x15', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (14, N'tanks_v2', N'a15x15_2', N'damageAssistedRadio', N'Int', N'assistSpot15', N'assistSpot')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (15, N'tanks_v2', N'a15x15_2', N'damageAssistedTrack', N'Int', N'assistTrack15', N'assistTrack')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (16, N'tanks_v2', N'a15x15', N'capturePoints', N'Int', N'cap15', N'cap')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (17, N'tanks_v2', N'a15x15', N'droppedCapturePoints', N'Int', N'def15', N'def')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (18, N'tanks_v2', N'a15x15', N'spotted', N'Int', N'spot15', N'spotted')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (19, N'tanks_v2', N'a15x15', N'xp', N'Int', N'xp15', N'xp')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (20, N'tanks_v2', N'a15x15', N'xpBefore8_8', N'Int', N'xp8p15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (21, N'tanks_v2', N'a15x15_2', N'originalXP', N'Int', N'xpOriginal15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (22, N'tanks_v2', N'a15x15', N'shots', N'Int', N'shots15', N'shots')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (23, N'tanks_v2', N'a15x15', N'hits', N'Int', N'hits15', N'hits')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (24, N'tanks_v2', N'a15x15_2', N'he_hits', N'Int', N'heHits15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (25, N'tanks_v2', N'a15x15_2', N'pierced', N'Int', N'pierced15', N'pierced')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (26, N'tanks_v2', N'a15x15_2', N'shotsReceived', N'Int', N'shotsReceived15', N'shotsReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (27, N'tanks_v2', N'a15x15_2', N'piercedReceived', N'Int', N'piercedReceived15', N'piercedReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (28, N'tanks_v2', N'a15x15_2', N'heHitsReceived', N'Int', N'heHitsReceived15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (29, N'tanks_v2', N'a15x15_2', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (30, N'tanks_v2', N'max15x15', N'maxDamage', N'Int', N'maxDmg15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (31, N'tanks_v2', N'max15x15', N'maxFrags', N'Int', N'maxFrags15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (32, N'tanks_v2', N'max15x15', N'maxXP', N'Int', N'maxXp15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (33, N'tanks_v2', N'common', N'has_7x7', N'Int', N'has7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (34, N'tanks_v2', N'a7x7', N'battlesCount', N'Int', N'battles7', N'battlesCount')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (35, N'tanks_v2', N'a7x7', N'wins', N'Int', N'wins7', N'victory')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (36, N'tanks_v2', N'a7x7', N'losses', N'Int', N'losses7', N'defeat')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (37, N'tanks_v2', N'a7x7', N'survivedBattles', N'Int', N'survived7', N'survived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (38, N'tanks_v2', N'a7x7', N'frags', N'Int', N'frags7', N'frags')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (39, N'tanks_v2', N'a7x7', N'frags8p', N'Int', N'frags8p7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (40, N'tanks_v2', N'a7x7', N'damageDealt', N'Int', N'dmg7', N'dmg')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (41, N'tanks_v2', N'a7x7', N'damageReceived', N'Int', N'dmgReceived7', N'dmgReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (42, N'tanks_v2', N'a7x7', N'damageAssistedRadio', N'Int', N'assistSpot7', N'assistSpot')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (43, N'tanks_v2', N'a7x7', N'damageAssistedTrack', N'Int', N'assistTrack7', N'assistTrack')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (44, N'tanks_v2', N'a7x7', N'capturePoints', N'Int', N'cap7', N'cap')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (45, N'tanks_v2', N'a7x7', N'droppedCapturePoints', N'Int', N'def7', N'def')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (46, N'tanks_v2', N'a7x7', N'spotted', N'Int', N'spot7', N'spotted')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (47, N'tanks_v2', N'a7x7', N'xp', N'Int', N'xp7', N'xp')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (48, N'tanks_v2', N'a7x7', N'originalXP', N'Int', N'xpOriginal7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (49, N'tanks_v2', N'a7x7', N'shots', N'Int', N'shots7', N'shots')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (50, N'tanks_v2', N'a7x7', N'hits', N'Int', N'hits7', N'hits')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (51, N'tanks_v2', N'a7x7', N'he_hits', N'Int', N'heHits7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (52, N'tanks_v2', N'a7x7', N'pierced', N'Int', N'pierced7', N'pierced')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (53, N'tanks_v2', N'a7x7', N'shotsReceived', N'Int', N'shotsReceived7', N'shotsReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (54, N'tanks_v2', N'a7x7', N'piercedReceived', N'Int', N'piercedReceived7', N'piercedReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (55, N'tanks_v2', N'a7x7', N'heHitsReceived', N'Int', N'heHitsReceived7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (56, N'tanks_v2', N'a7x7', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (57, N'tanks_v2', N'max7x7', N'maxDamage', N'Int', N'maxDmg7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (58, N'tanks_v2', N'max7x7', N'maxFrags', N'Int', N'maxFrags7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (59, N'tanks_v2', N'max7x7', N'maxXP', N'Int', N'maxXp7', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (60, N'tanks_v2', N'common', N'has_company', N'Int', N'hasCompany', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (61, N'tanks_v2', N'common', N'has_clan', N'Int', N'hasClan', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (62, N'tanks_v2', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (63, N'tanks_v2', N'total', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (64, N'tanks_v2', N'total', N'mileage', N'Int', N'mileage', N'mileage')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (65, N'tanks_v2', N'total', N'treesCut', N'Int', N'treesCut', N'treesCut')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (66, N'tanks', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (67, N'tanks', N'common', N'updatedtime', N'DateTime', N'updatedTime', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (68, N'tanks', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (69, N'tanks', N'tankdata', N'battlesCount', N'Int', N'battles15', N'battlesCount')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (70, N'tanks', N'tankdata', N'wins', N'Int', N'wins15', N'victory')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (71, N'tanks', N'tankdata', N'losses', N'Int', N'losses15', N'defeat')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (72, N'tanks', N'tankdata', N'survivedBattles', N'Int', N'survived15', N'survived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (73, N'tanks', N'tankdata', N'frags', N'Int', N'frags15', N'frags')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (74, N'tanks', N'tankdata', N'frags8p', N'Int', N'frags8p15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (75, N'tanks', N'tankdata', N'damageDealt', N'Int', N'dmg15', N'dmg')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (76, N'tanks', N'tankdata', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (77, N'tanks', N'tankdata', N'capturePoints', N'Int', N'cap15', N'cap')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (78, N'tanks', N'tankdata', N'droppedCapturePoints', N'Int', N'def15', N'def')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (79, N'tanks', N'tankdata', N'spotted', N'Int', N'spot15', N'spotted')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (80, N'tanks', N'tankdata', N'xp', N'Int', N'xp15', N'xp')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (81, N'tanks', N'tankdata', N'shots', N'Int', N'shots15', N'shots')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (82, N'tanks', N'tankdata', N'hits', N'Int', N'hits15', N'hits')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (83, N'tanks', N'tankdata', N'maxFrags', N'Int', N'maxFrags15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (84, N'tanks', N'tankdata', N'maxXP', N'Int', N'maxXp15', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (85, N'tanks', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (86, N'tanks', N'tankdata', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (87, N'tanks', N'tankdata', N'treesCut', N'Int', N'treesCut', N'treesCut')
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (88, N'tanks', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (89, N'tanks_v2', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (90, N'tanks', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
-GO
-INSERT [dbo].[json2dbMapping] ([Id], [jsonMain], [jsonSub], [jsonProperty], [dbDataType], [dbPlayerTank], [dbBattle]) VALUES (91, N'tanks_v2', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (1, N'tanks_v2', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (2, N'tanks_v2', N'common', N'updated', N'DateTime', N'updatedTime', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (3, N'tanks_v2', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (4, N'tanks_v2', N'common', N'has_15x15', N'Int', N'has15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (5, N'tanks_v2', N'a15x15', N'battlesCount', N'Int', N'battles15', N'battlesCount')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (6, N'tanks_v2', N'a15x15', N'battlesCountBefore8_8', N'Int', N'battles8p15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (7, N'tanks_v2', N'a15x15', N'wins', N'Int', N'wins15', N'victory')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (8, N'tanks_v2', N'a15x15', N'losses', N'Int', N'losses15', N'defeat')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (9, N'tanks_v2', N'a15x15', N'survivedBattles', N'Int', N'survived15', N'survived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (10, N'tanks_v2', N'a15x15', N'frags', N'Int', N'frags15', N'frags')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (11, N'tanks_v2', N'a15x15', N'frags8p', N'Int', N'frags8p15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (12, N'tanks_v2', N'a15x15', N'damageDealt', N'Int', N'dmg15', N'dmg')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (13, N'tanks_v2', N'a15x15', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (14, N'tanks_v2', N'a15x15_2', N'damageAssistedRadio', N'Int', N'assistSpot15', N'assistSpot')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (15, N'tanks_v2', N'a15x15_2', N'damageAssistedTrack', N'Int', N'assistTrack15', N'assistTrack')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (16, N'tanks_v2', N'a15x15', N'capturePoints', N'Int', N'cap15', N'cap')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (17, N'tanks_v2', N'a15x15', N'droppedCapturePoints', N'Int', N'def15', N'def')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (18, N'tanks_v2', N'a15x15', N'spotted', N'Int', N'spot15', N'spotted')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (19, N'tanks_v2', N'a15x15', N'xp', N'Int', N'xp15', N'xp')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (20, N'tanks_v2', N'a15x15', N'xpBefore8_8', N'Int', N'xp8p15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (21, N'tanks_v2', N'a15x15_2', N'originalXP', N'Int', N'xpOriginal15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (22, N'tanks_v2', N'a15x15', N'shots', N'Int', N'shots15', N'shots')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (23, N'tanks_v2', N'a15x15', N'hits', N'Int', N'hits15', N'hits')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (24, N'tanks_v2', N'a15x15_2', N'he_hits', N'Int', N'heHits15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (25, N'tanks_v2', N'a15x15_2', N'pierced', N'Int', N'pierced15', N'pierced')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (26, N'tanks_v2', N'a15x15_2', N'shotsReceived', N'Int', N'shotsReceived15', N'shotsReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (27, N'tanks_v2', N'a15x15_2', N'piercedReceived', N'Int', N'piercedReceived15', N'piercedReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (28, N'tanks_v2', N'a15x15_2', N'heHitsReceived', N'Int', N'heHitsReceived15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (29, N'tanks_v2', N'a15x15_2', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (30, N'tanks_v2', N'max15x15', N'maxDamage', N'Int', N'maxDmg15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (31, N'tanks_v2', N'max15x15', N'maxFrags', N'Int', N'maxFrags15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (32, N'tanks_v2', N'max15x15', N'maxXP', N'Int', N'maxXp15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (33, N'tanks_v2', N'common', N'has_7x7', N'Int', N'has7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (34, N'tanks_v2', N'a7x7', N'battlesCount', N'Int', N'battles7', N'battlesCount')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (35, N'tanks_v2', N'a7x7', N'wins', N'Int', N'wins7', N'victory')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (36, N'tanks_v2', N'a7x7', N'losses', N'Int', N'losses7', N'defeat')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (37, N'tanks_v2', N'a7x7', N'survivedBattles', N'Int', N'survived7', N'survived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (38, N'tanks_v2', N'a7x7', N'frags', N'Int', N'frags7', N'frags')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (39, N'tanks_v2', N'a7x7', N'frags8p', N'Int', N'frags8p7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (40, N'tanks_v2', N'a7x7', N'damageDealt', N'Int', N'dmg7', N'dmg')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (41, N'tanks_v2', N'a7x7', N'damageReceived', N'Int', N'dmgReceived7', N'dmgReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (42, N'tanks_v2', N'a7x7', N'damageAssistedRadio', N'Int', N'assistSpot7', N'assistSpot')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (43, N'tanks_v2', N'a7x7', N'damageAssistedTrack', N'Int', N'assistTrack7', N'assistTrack')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (44, N'tanks_v2', N'a7x7', N'capturePoints', N'Int', N'cap7', N'cap')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (45, N'tanks_v2', N'a7x7', N'droppedCapturePoints', N'Int', N'def7', N'def')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (46, N'tanks_v2', N'a7x7', N'spotted', N'Int', N'spot7', N'spotted')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (47, N'tanks_v2', N'a7x7', N'xp', N'Int', N'xp7', N'xp')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (48, N'tanks_v2', N'a7x7', N'originalXP', N'Int', N'xpOriginal7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (49, N'tanks_v2', N'a7x7', N'shots', N'Int', N'shots7', N'shots')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (50, N'tanks_v2', N'a7x7', N'hits', N'Int', N'hits7', N'hits')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (51, N'tanks_v2', N'a7x7', N'he_hits', N'Int', N'heHits7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (52, N'tanks_v2', N'a7x7', N'pierced', N'Int', N'pierced7', N'pierced')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (53, N'tanks_v2', N'a7x7', N'shotsReceived', N'Int', N'shotsReceived7', N'shotsReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (54, N'tanks_v2', N'a7x7', N'piercedReceived', N'Int', N'piercedReceived7', N'piercedReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (55, N'tanks_v2', N'a7x7', N'heHitsReceived', N'Int', N'heHitsReceived7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (56, N'tanks_v2', N'a7x7', N'noDamageShotsReceived', N'Int', N'noDmgShotsReceived7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (57, N'tanks_v2', N'max7x7', N'maxDamage', N'Int', N'maxDmg7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (58, N'tanks_v2', N'max7x7', N'maxFrags', N'Int', N'maxFrags7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (59, N'tanks_v2', N'max7x7', N'maxXP', N'Int', N'maxXp7', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (60, N'tanks_v2', N'common', N'has_company', N'Int', N'hasCompany', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (61, N'tanks_v2', N'common', N'has_clan', N'Int', N'hasClan', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (62, N'tanks_v2', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (63, N'tanks_v2', N'total', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (64, N'tanks_v2', N'total', N'mileage', N'Int', N'mileage', N'mileage')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (65, N'tanks_v2', N'total', N'treesCut', N'Int', N'treesCut', N'treesCut')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (66, N'tanks', N'common', N'creationTime', N'DateTime', N'creationTime', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (67, N'tanks', N'common', N'updatedtime', N'DateTime', N'updatedTime', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (68, N'tanks', N'common', N'lastBattleTime', N'DateTime', N'lastBattleTime', N'battletime')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (69, N'tanks', N'tankdata', N'battlesCount', N'Int', N'battles15', N'battlesCount')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (70, N'tanks', N'tankdata', N'wins', N'Int', N'wins15', N'victory')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (71, N'tanks', N'tankdata', N'losses', N'Int', N'losses15', N'defeat')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (72, N'tanks', N'tankdata', N'survivedBattles', N'Int', N'survived15', N'survived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (73, N'tanks', N'tankdata', N'frags', N'Int', N'frags15', N'frags')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (74, N'tanks', N'tankdata', N'frags8p', N'Int', N'frags8p15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (75, N'tanks', N'tankdata', N'damageDealt', N'Int', N'dmg15', N'dmg')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (76, N'tanks', N'tankdata', N'damageReceived', N'Int', N'dmgReceived15', N'dmgReceived')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (77, N'tanks', N'tankdata', N'capturePoints', N'Int', N'cap15', N'cap')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (78, N'tanks', N'tankdata', N'droppedCapturePoints', N'Int', N'def15', N'def')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (79, N'tanks', N'tankdata', N'spotted', N'Int', N'spot15', N'spotted')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (80, N'tanks', N'tankdata', N'xp', N'Int', N'xp15', N'xp')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (81, N'tanks', N'tankdata', N'shots', N'Int', N'shots15', N'shots')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (82, N'tanks', N'tankdata', N'hits', N'Int', N'hits15', N'hits')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (83, N'tanks', N'tankdata', N'maxFrags', N'Int', N'maxFrags15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (84, N'tanks', N'tankdata', N'maxXP', N'Int', N'maxXp15', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (85, N'tanks', N'common', N'basedonversion', N'Int', N'basedOnVersion', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (86, N'tanks', N'tankdata', N'battleLifeTime', N'Int', N'battleLifeTime', N'battleLifeTime')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (87, N'tanks', N'tankdata', N'treesCut', N'Int', N'treesCut', N'treesCut')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (88, N'tanks', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (89, N'tanks_v2', N'company', N'battlesCount', N'Int', N'battlesCompany', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (90, N'tanks', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (91, N'tanks_v2', N'clan', N'battlesCount', N'Int', N'battlesClan', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (92, N'tanks', N'special', N'markOfMastery', N'Int', N'markOfMastery', NULL)
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle) VALUES (93, N'tanks_v2', N'achievements', N'markOfMastery', N'Int', N'markOfMastery', NULL)
+GO
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (94, 'tanks_v2', 'achievements7x7', 'armoredFist', 'Int', 'armoredFist')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (95, 'tanks_v2', 'achievements', 'armorPiercer', 'Int', 'armorPiercer')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (96, 'tanks', 'special', 'armorPiercer', 'Int', 'armorPiercer')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (97, 'tanks_v2', 'achievements', 'alaric', 'Int', 'alaric')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (98, 'tanks', 'special', 'alaric', 'Int', 'alaric')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (99, 'tanks_v2', 'achievements', 'battleHeroes', 'Int', 'battleHeroes')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (100, 'tanks', 'battle', 'battleHeroes', 'Int', 'battleHeroes')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (101, 'tanks', 'battle', 'confederate', 'Int', 'confederate')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (102, 'tanks_v2', 'achievements', 'diehardSeries', 'Int', 'diehardSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (103, 'tanks', 'series', 'diehardSeries', 'Int', 'diehardSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (104, 'tanks_v2', 'achievements', 'fragsBeast', 'Int', 'fragsBeast')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (105, 'tanks_v2', 'achievements', 'fragsPatton', 'Int', 'fragsPatton')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (106, 'tanks', 'special', 'fragsPatton', 'Int', 'fragsPatton')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (107, 'tanks_v2', 'achievements', 'fragsSinai', 'Int', 'fragsSinai')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (108, 'tanks', 'battle', 'fragsSinai', 'Int', 'fragsSinai')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (109, 'tanks_v2', 'achievements7x7', 'geniusForWar', 'Int', 'geniusForWar')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (110, 'tanks_v2', 'achievements', 'invincibleSeries', 'Int', 'invincibleSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (111, 'tanks', 'series', 'invincibleSeries', 'Int', 'invincibleSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (112, 'tanks_v2', 'achievements', 'killingSeries', 'Int', 'killingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (113, 'tanks', 'series', 'killingSeries', 'Int', 'killingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (114, 'tanks_v2', 'achievements', 'lumberjack', 'Int', 'lumberjack')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (115, 'tanks', 'special', 'lumberjack', 'Int', 'lumberjack')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (116, 'tanks_v2', 'achievements', 'maxDiehardSeries', 'Int', 'maxDiehardSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (117, 'tanks', 'series', 'maxDiehardSeries', 'Int', 'maxDiehardSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (118, 'tanks_v2', 'achievements', 'maxInvincibleSeries', 'Int', 'maxInvincibleSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (119, 'tanks', 'series', 'maxInvincibleSeries', 'Int', 'maxInvincibleSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (120, 'tanks_v2', 'achievements', 'maxKillingSeries', 'Int', 'maxKillingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (121, 'tanks', 'series', 'maxKillingSeries', 'Int', 'maxKillingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (122, 'tanks_v2', 'achievements', 'maxPiercingSeries', 'Int', 'maxPiercingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (123, 'tanks', 'series', 'maxPiercingSeries', 'Int', 'maxPiercingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (124, 'tanks_v2', 'achievements', 'maxSniperSeries', 'Int', 'maxSniperSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (125, 'tanks', 'series', 'maxSniperSeries', 'Int', 'maxSniperSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (126, 'tanks_v2', 'achievements7x7', 'maxTacticalBreakthroughSeries', 'Int', 'maxTacticalBreakthroughSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (127, 'tanks', 'epic', 'medalErohin', 'Int', 'medalErohin')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (128, 'tanks', 'epic', 'medalHoroshilov', 'Int', 'medalHoroshilov')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (129, 'tanks', 'epic', 'medalLister', 'Int', 'medalLister')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (130, 'tanks_v2', 'achievements', 'piercingSeries', 'Int', 'piercingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (131, 'tanks', 'series', 'piercingSeries', 'Int', 'piercingSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (132, 'tanks_v2', 'achievements', 'sniperSeries', 'Int', 'sniperSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (133, 'tanks', 'series', 'sniperSeries', 'Int', 'sniperSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (134, 'tanks', 'special', 'sniperspecial', 'Int', 'sniperspecial')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (135, 'tanks_v2', 'achievements7x7', 'tacticalBreakthroughSeries', 'Int', 'tacticalBreakthroughSeries')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (136, 'tanks_v2', 'achievements', 'tankExpertStrg', 'Int', 'tankExpertStrg')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (137, 'tanks', 'special', 'tankExpertStrg', 'Int', 'tankExpertStrg')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (138, 'tanks_v2', 'achievements7x7', 'wolfAmongSheep', 'Int', 'wolfAmongSheep')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (139, 'tanks_v2', 'achievements', 'beasthunter', 'Int', 'beasthunter')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (140, 'tanks', 'special', 'beasthunter', 'Int', 'beasthunter')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (141, 'tanks_v2', 'achievements', 'bombardier', 'Int', 'bombardier')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (142, 'tanks', 'special', 'bombardier', 'Int', 'bombardier')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (143, 'tanks_v2', 'achievements', 'defender', 'Int', 'defender')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (144, 'tanks', 'battle', 'defender', 'Int', 'defender')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (145, 'tanks', 'special', 'diehard', 'Int', 'diehard')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (146, 'tanks_v2', 'achievements', 'diehard', 'Int', 'diehard')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (147, 'tanks_v2', 'achievements', 'evileye', 'Int', 'evileye')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (148, 'tanks', 'battle', 'evileye', 'Int', 'evileye')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (149, 'tanks_v2', 'achievements7x7', 'geniusForWarMedal', 'Int', 'geniusForWarMedal')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (150, 'tanks_v2', 'achievements', 'handOfDeath', 'Int', 'handOfDeath')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (151, 'tanks', 'special', 'handOfDeath', 'Int', 'handOfDeath')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (152, 'tanks_v2', 'achievements', 'heroesOfRassenay', 'Int', 'heroesOfRassenay')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (153, 'tanks', 'special', 'heroesOfRassenay', 'Int', 'heroesOfRassenay')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (154, 'tanks_v2', 'achievements', 'huntsman', 'Int', 'huntsman')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (155, 'tanks', 'special', 'huntsman', 'Int', 'huntsman')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (156, 'tanks_v2', 'achievements', 'invader', 'Int', 'invader')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (157, 'tanks', 'battle', 'invader', 'Int', 'invader')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (158, 'tanks_v2', 'achievements', 'invincible', 'Int', 'invincible')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (159, 'tanks', 'special', 'invincible', 'Int', 'invincible')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (160, 'tanks_v2', 'achievements', 'ironMan', 'Int', 'ironMan')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (161, 'tanks', 'special', 'ironMan', 'Int', 'ironMan')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (162, 'tanks_v2', 'achievements', 'kamikaze', 'Int', 'kamikaze')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (163, 'tanks', 'special', 'kamikaze', 'Int', 'kamikaze')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (164, 'tanks_v2', 'achievements7x7', 'kingOfTheHill', 'Int', 'kingOfTheHill')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (165, 'tanks_v2', 'achievements', 'luckyDevil', 'Int', 'luckyDevil')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (166, 'tanks', 'special', 'luckyDevil', 'Int', 'luckyDevil')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (167, 'tanks_v2', 'achievements', 'mainGun', 'Int', 'mainGun')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (168, 'tanks_v2', 'achievements', 'medalAbrams', 'Int', 'medalAbrams')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (169, 'tanks', 'major', 'medalAbrams', 'Int', 'medalAbrams')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (170, 'tanks_v2', 'achievements', 'medalBillotte', 'Int', 'medalBillotte')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (171, 'tanks', 'epic', 'medalBillotte', 'Int', 'medalBillotte')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (172, 'tanks_v2', 'achievements', 'medalBrothersInArms', 'Int', 'medalBrothersInArms')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (173, 'tanks', 'epic', 'medalBrothersInArms', 'Int', 'medalBrothersInArms')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (174, 'tanks_v2', 'achievements', 'medalBrunoPietro', 'Int', 'medalBrunoPietro')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (175, 'tanks', 'epic', 'medalBrunoPietro', 'Int', 'medalBrunoPietro')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (176, 'tanks_v2', 'achievements', 'medalBurda', 'Int', 'medalBurda')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (177, 'tanks', 'epic', 'medalBurda', 'Int', 'medalBurda')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (178, 'tanks_v2', 'achievements', 'medalCarius', 'Int', 'medalCarius')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (179, 'tanks', 'major', 'medalCarius', 'Int', 'medalCarius')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (180, 'tanks_v2', 'achievements', 'medalCrucialContribution', 'Int', 'medalCrucialContribution')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (181, 'tanks', 'epic', 'medalCrucialContribution', 'Int', 'medalCrucialContribution')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (182, 'tanks_v2', 'achievements', 'medalDeLanglade', 'Int', 'medalDeLanglade')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (183, 'tanks', 'epic', 'medalDeLanglade', 'Int', 'medalDeLanglade')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (184, 'tanks_v2', 'achievements', 'medalDumitru', 'Int', 'medalDumitru')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (185, 'tanks', 'epic', 'medalDumitru', 'Int', 'medalDumitru')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (186, 'tanks_v2', 'achievements', 'medalEkins', 'Int', 'medalEkins')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (187, 'tanks', 'major', 'medalEkins', 'Int', 'medalEkins')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (188, 'tanks_v2', 'achievements', 'medalFadin', 'Int', 'medalFadin')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (189, 'tanks', 'epic', 'medalFadin', 'Int', 'medalFadin')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (190, 'tanks_v2', 'achievements', 'medalHalonen', 'Int', 'medalHalonen')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (191, 'tanks', 'epic', 'medalHalonen', 'Int', 'medalHalonen')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (192, 'tanks_v2', 'achievements', 'medalKay', 'Int', 'medalKay')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (193, 'tanks', 'major', 'medalKay', 'Int', 'medalKay')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (194, 'tanks_v2', 'achievements', 'medalKnispel', 'Int', 'medalKnispel')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (195, 'tanks', 'major', 'medalKnispel', 'Int', 'medalKnispel')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (196, 'tanks_v2', 'achievements', 'medalKolobanov', 'Int', 'medalKolobanov')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (197, 'tanks', 'epic', 'medalKolobanov', 'Int', 'medalKolobanov')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (198, 'tanks_v2', 'achievements', 'medalLafayettePool', 'Int', 'medalLafayettePool')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (199, 'tanks', 'epic', 'medalLafayettePool', 'Int', 'medalLafayettePool')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (200, 'tanks_v2', 'achievements', 'medalLavrinenko', 'Int', 'medalLavrinenko')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (201, 'tanks', 'major', 'medalLavrinenko', 'Int', 'medalLavrinenko')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (202, 'tanks_v2', 'achievements', 'medalLeClerc', 'Int', 'medalLeClerc')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (203, 'tanks', 'major', 'medalLeClerc', 'Int', 'medalLeClerc')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (204, 'tanks_v2', 'achievements', 'medalLehvaslaiho', 'Int', 'medalLehvaslaiho')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (205, 'tanks', 'epic', 'medalLehvaslaiho', 'Int', 'medalLehvaslaiho')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (206, 'tanks_v2', 'achievements', 'medalNikolas', 'Int', 'medalNikolas')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (207, 'tanks', 'epic', 'medalNikolas', 'Int', 'medalNikolas')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (208, 'tanks_v2', 'achievements', 'medalOrlik', 'Int', 'medalOrlik')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (209, 'tanks', 'epic', 'medalOrlik', 'Int', 'medalOrlik')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (210, 'tanks_v2', 'achievements', 'medalOskin', 'Int', 'medalOskin')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (211, 'tanks', 'epic', 'medalOskin', 'Int', 'medalOskin')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (212, 'tanks_v2', 'achievements', 'medalPascucci', 'Int', 'medalPascucci')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (213, 'tanks', 'epic', 'medalPascucci', 'Int', 'medalPascucci')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (214, 'tanks_v2', 'achievements', 'medalPoppel', 'Int', 'medalPoppel')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (215, 'tanks', 'major', 'medalPoppel', 'Int', 'medalPoppel')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (216, 'tanks_v2', 'achievements', 'medalRadleyWalters', 'Int', 'medalRadleyWalters')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (217, 'tanks', 'epic', 'medalRadleyWalters', 'Int', 'medalRadleyWalters')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (218, 'tanks_v2', 'achievements', 'medalTamadaYoshio', 'Int', 'medalTamadaYoshio')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (219, 'tanks', 'epic', 'medalTamadaYoshio', 'Int', 'medalTamadaYoshio')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (220, 'tanks_v2', 'achievements', 'medalTarczay', 'Int', 'medalTarczay')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (221, 'tanks', 'epic', 'medalTarczay', 'Int', 'medalTarczay')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (222, 'tanks_v2', 'achievements', 'medalWittmann', 'Int', 'medalWittmann')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (223, 'tanks', 'epic', 'medalWittmann', 'Int', 'medalWittmann')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (224, 'tanks_v2', 'achievements', 'mousebane', 'Int', 'mousebane')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (225, 'tanks', 'special', 'mousebane', 'Int', 'mousebane')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (226, 'tanks_v2', 'achievements', 'pattonValley', 'Int', 'pattonValley')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (227, 'tanks', 'special', 'pattonValley', 'Int', 'pattonValley')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (228, 'tanks_v2', 'achievements', 'raider', 'Int', 'raider')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (229, 'tanks', 'special', 'raider', 'Int', 'raider')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (230, 'tanks_v2', 'achievements', 'scout', 'Int', 'scout')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (231, 'tanks', 'battle', 'scout', 'Int', 'scout')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (232, 'tanks_v2', 'achievements', 'sinai', 'Int', 'sinai')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (233, 'tanks', 'special', 'sinai', 'Int', 'sinai')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (234, 'tanks_v2', 'achievements', 'sniper', 'Int', 'sniper')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (235, 'tanks', 'battle', 'sniper', 'Int', 'sniper')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (236, 'tanks_v2', 'achievements', 'sniper2', 'Int', 'sniper2')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (237, 'tanks_v2', 'achievements', 'steelwall', 'Int', 'steelwall')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (238, 'tanks', 'battle', 'steelwall', 'Int', 'steelwall')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (239, 'tanks_v2', 'achievements', 'sturdy', 'Int', 'sturdy')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (240, 'tanks', 'special', 'sturdy', 'Int', 'sturdy')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (241, 'tanks_v2', 'achievements', 'supporter', 'Int', 'supporter')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (242, 'tanks', 'battle', 'supporter', 'Int', 'supporter')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (243, 'tanks_v2', 'achievements7x7', 'tacticalBreakthrough', 'Int', 'tacticalBreakthrough')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (244, 'tanks', 'special', 'tankExpert', 'Int', 'tankExpert')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (245, 'tanks_v2', 'achievements', 'titleSniper', 'Int', 'titleSniper')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (246, 'tanks', 'special', 'titleSniper', 'Int', 'titleSniper')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (247, 'tanks_v2', 'achievements', 'warrior', 'Int', 'warrior')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (248, 'tanks', 'battle', 'warrior', 'Int', 'warrior')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (249, 'tanks_v2', 'achievements7x7', 'wolfAmongSheepMedal', 'Int', 'wolfAmongSheepMedal')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (250, 'tanks_v2', 'achievements', 'mechanicEngineer', 'Int', 'mechanicEngineer')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (251, 'tanks', 'special', 'mechanicEngineer', 'Int', 'mechanicEngineer')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (252, 'tanks_v2', 'achievements', 'mechanicEngineer0', 'Int', 'mechanicEngineer0')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (253, 'tanks', 'special', 'mechanicEngineer0', 'Int', 'mechanicEngineer0')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (254, 'tanks_v2', 'achievements', 'mechanicEngineer1', 'Int', 'mechanicEngineer1')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (255, 'tanks', 'special', 'mechanicEngineer1', 'Int', 'mechanicEngineer1')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (256, 'tanks_v2', 'achievements', 'mechanicEngineer2', 'Int', 'mechanicEngineer2')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (257, 'tanks', 'special', 'mechanicEngineer2', 'Int', 'mechanicEngineer2')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (258, 'tanks_v2', 'achievements', 'mechanicEngineer3', 'Int', 'mechanicEngineer3')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (259, 'tanks', 'special', 'mechanicEngineer3', 'Int', 'mechanicEngineer3')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (260, 'tanks_v2', 'achievements', 'mechanicEngineer4', 'Int', 'mechanicEngineer4')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (261, 'tanks', 'special', 'mechanicEngineer4', 'Int', 'mechanicEngineer4')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (262, 'tanks_v2', 'achievements', 'mechanicEngineer5', 'Int', 'mechanicEngineer5')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (263, 'tanks', 'special', 'mechanicEngineer5', 'Int', 'mechanicEngineer5')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (264, 'tanks_v2', 'achievements', 'mechanicEngineer6', 'Int', 'mechanicEngineer6')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (265, 'tanks', 'special', 'mechanicEngineer6', 'Int', 'mechanicEngineer6')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (266, 'tanks_v2', 'achievements', 'tankExpert0', 'Int', 'tankExpert0')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (267, 'tanks', 'special', 'tankExpert0', 'Int', 'tankExpert0')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (278, 'tanks_v2', 'achievements', 'tankExpert1', 'Int', 'tankExpert1')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (279, 'tanks', 'special', 'tankExpert1', 'Int', 'tankExpert1')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (280, 'tanks_v2', 'achievements', 'tankExpert2', 'Int', 'tankExpert2')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (281, 'tanks', 'special', 'tankExpert2', 'Int', 'tankExpert2')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (282, 'tanks_v2', 'achievements', 'tankExpert3', 'Int', 'tankExpert3')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (283, 'tanks', 'special', 'tankExpert3', 'Int', 'tankExpert3')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (284, 'tanks_v2', 'achievements', 'tankExpert4', 'Int', 'tankExpert4')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (285, 'tanks', 'special', 'tankExpert4', 'Int', 'tankExpert4')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (286, 'tanks_v2', 'achievements', 'tankExpert5', 'Int', 'tankExpert5')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (287, 'tanks', 'special', 'tankExpert5', 'Int', 'tankExpert5')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (288, 'tanks_v2', 'achievements', 'tankExpert6', 'Int', 'tankExpert6')
+INSERT json2dbMapping (Id, jsonMain, jsonSub, jsonProperty, dbDataType, dbAch) VALUES (289, 'tanks', 'special', 'tankExpert6', 'Int', 'tankExpert6')
 GO
 SET IDENTITY_INSERT [dbo].[json2dbMapping] OFF
 GO
