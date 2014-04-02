@@ -51,3 +51,11 @@ GROUP BY dbDataType, dbPlayerTank, dbBattle
 
 GO
 
+-- create view for adding all achievments to all player tanks
+
+CREATE VIEW [dbo].[playerTankAchAllView]
+AS
+SELECT        dbo.playerTank.id AS playerTankId, dbo.ach.id AS achId
+FROM          dbo.ach, dbo.playerTank
+
+GO

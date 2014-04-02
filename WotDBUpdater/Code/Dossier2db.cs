@@ -67,9 +67,7 @@ namespace WotDBUpdater
 			JsonMainSection mainSection = new JsonMainSection();
 			JsonItem currentItem = new JsonItem();
 			string fraglist = "";
-			//string achlist = "";
-			
-						// Loop through json file
+			// Loop through json file
 			while (reader.Read())
 			{
 				if (reader.Depth <= 1) // main level ( 0 or 1)
@@ -155,7 +153,8 @@ namespace WotDBUpdater
 										if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills")
 											fraglist += currentItem.value.ToString() + ";";
 										// Achivement
-
+										// TODO:
+										// get all ach and save to string[] 
 										
 										// Temp log all data
 										log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
@@ -233,6 +232,8 @@ namespace WotDBUpdater
 				{
 					// New battle detected, update tankData in DB
 					UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
+					// Check for new achivment
+					TankData.SetPlayerTankAllAch(Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"])); // make sure this player tanks has all available achievments
 					// Check fraglist to update playertank frags
 					List<FragItem> battlefraglist = UpdatePlayerTankFrag(tankId, fraglist);
 					// If new battle on this tank also update battle table to store result of last battle(s)

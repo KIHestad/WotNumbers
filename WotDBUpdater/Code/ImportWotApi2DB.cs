@@ -331,61 +331,68 @@ namespace WotDBUpdater
 				foreach (JProperty ach in achList)
 				{
 					JToken medalToken = ach.First();
-					string sql = "insert into ach (name, section, options, section_order, image, name_i18n, type ,ordernum, description, " +
-							"  image1 ,image2 ,image3 ,image4 ,name_i18n1 ,name_i18n2 ,name_i18n3 ,name_i18n4) " +
-							"values (@name, @section, @options, @section_order, @image, @name_i18n, @type , @ordernum, @description, " +
-							"  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
-					// Get data from json token and insert to query
-					SqlCommand cmd = new SqlCommand(sql, con);
-					// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
-					cmd.Parameters.AddWithValue("@name", medalToken["name"].ToString());
-					cmd.Parameters.AddWithValue("@section", medalToken["section"].ToString());
-					cmd.Parameters.AddWithValue("@section_order", medalToken["section_order"].ToString());
-					cmd.Parameters.AddWithValue("@type", medalToken["type"].ToString());
-					cmd.Parameters.AddWithValue("@ordernum", medalToken["order"].ToString());
-					cmd.Parameters.AddWithValue("@description", medalToken["description"].ToString());
-					// Check if several medal alternatives, and get images and names, set NULL as default value
-					string options = medalToken["options"].ToString();
-					if (options == "") // no options, get default medal image and name
+					// Check if ach already exists
+					if (!TankData.GetAchievmentExist(medalToken["name"].ToString()))
 					{
-						cmd.Parameters.AddWithValue("@image", medalToken["image"].ToString());
-						cmd.Parameters.AddWithValue("@name_i18n", medalToken["name_i18n"].ToString());
-						cmd.Parameters.AddWithValue("@options", DBNull.Value);
-						cmd.Parameters.AddWithValue("@image1", DBNull.Value);
-						cmd.Parameters.AddWithValue("@image2", DBNull.Value);
-						cmd.Parameters.AddWithValue("@image3", DBNull.Value);
-						cmd.Parameters.AddWithValue("@image4", DBNull.Value);
-						cmd.Parameters.AddWithValue("@name_i18n1", DBNull.Value);
-						cmd.Parameters.AddWithValue("@name_i18n2", DBNull.Value);
-						cmd.Parameters.AddWithValue("@name_i18n3", DBNull.Value);
-						cmd.Parameters.AddWithValue("@name_i18n4", DBNull.Value);
-					}
-					else // get medal optional images and names
-					{
-						cmd.Parameters.AddWithValue("@image", DBNull.Value);
-						cmd.Parameters.AddWithValue("@name_i18n", DBNull.Value);
-						cmd.Parameters.AddWithValue("@options", options);
-						// Get the medal options from array
-						JArray medalArray = (JArray)medalToken["options"];
-						int num = medalArray.Count;
-						if (num > 4) num = 4;
-						for (int i = 1; i <= num; i++)
+						string sql = "insert into ach (name, section, options, section_order, image, name_i18n, type ,ordernum, description, " +
+									"  image1 ,image2 ,image3 ,image4 ,name_i18n1 ,name_i18n2 ,name_i18n3 ,name_i18n4) " +
+									"values (@name, @section, @options, @section_order, @image, @name_i18n, @type , @ordernum, @description, " +
+									"  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
+						// Get data from json token and insert to query
+						SqlCommand cmd = new SqlCommand(sql, con);
+						// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
+						cmd.Parameters.AddWithValue("@name", medalToken["name"].ToString());
+						cmd.Parameters.AddWithValue("@section", medalToken["section"].ToString());
+						cmd.Parameters.AddWithValue("@section_order", medalToken["section_order"].ToString());
+						cmd.Parameters.AddWithValue("@type", medalToken["type"].ToString());
+						cmd.Parameters.AddWithValue("@ordernum", medalToken["order"].ToString());
+						cmd.Parameters.AddWithValue("@description", medalToken["description"].ToString());
+						// Check if several medal alternatives, and get images and names, set NULL as default value
+						string options = medalToken["options"].ToString();
+						if (options == "") // no options, get default medal image and name
 						{
-							cmd.Parameters.AddWithValue("@image" + i.ToString(), medalArray[i-1]["image"].ToString());
-							cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), medalArray[i-1]["name_i18n"].ToString());	
+							cmd.Parameters.AddWithValue("@image", medalToken["image"].ToString());
+							cmd.Parameters.AddWithValue("@name_i18n", medalToken["name_i18n"].ToString());
+							cmd.Parameters.AddWithValue("@options", DBNull.Value);
+							cmd.Parameters.AddWithValue("@image1", DBNull.Value);
+							cmd.Parameters.AddWithValue("@image2", DBNull.Value);
+							cmd.Parameters.AddWithValue("@image3", DBNull.Value);
+							cmd.Parameters.AddWithValue("@image4", DBNull.Value);
+							cmd.Parameters.AddWithValue("@name_i18n1", DBNull.Value);
+							cmd.Parameters.AddWithValue("@name_i18n2", DBNull.Value);
+							cmd.Parameters.AddWithValue("@name_i18n3", DBNull.Value);
+							cmd.Parameters.AddWithValue("@name_i18n4", DBNull.Value);
 						}
-						// If not 4, put null in rest
-						for (int i = num+1; i <= 4; i++)
+						else // get medal optional images and names
 						{
-							cmd.Parameters.AddWithValue("@image" + i.ToString(), DBNull.Value);
-							cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), DBNull.Value);
+							cmd.Parameters.AddWithValue("@image", DBNull.Value);
+							cmd.Parameters.AddWithValue("@name_i18n", DBNull.Value);
+							cmd.Parameters.AddWithValue("@options", options);
+							// Get the medal options from array
+							JArray medalArray = (JArray)medalToken["options"];
+							int num = medalArray.Count;
+							if (num > 4) num = 4;
+							for (int i = 1; i <= num; i++)
+							{
+								cmd.Parameters.AddWithValue("@image" + i.ToString(), medalArray[i - 1]["image"].ToString());
+								cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString());
+							}
+							// If not 4, put null in rest
+							for (int i = num + 1; i <= 4; i++)
+							{
+								cmd.Parameters.AddWithValue("@image" + i.ToString(), DBNull.Value);
+								cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), DBNull.Value);
+							}
+
 						}
 
+						// Insert to db now
+						cmd.ExecuteNonQuery();
 					}
-					// Insert to db now
-					cmd.ExecuteNonQuery();
 				}
 				con.Close();
+				// Make sure all playerTanks has the achivements
+				TankData.SetPlayerTankAllAch();
 			}
 		}
 

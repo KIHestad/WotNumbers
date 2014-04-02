@@ -181,6 +181,50 @@ namespace WotDBUpdater
 				return null;
 		}
 
+		public static void SetPlayerTankAllAch()
+		{
+			// This makes sure all player tanks has all achievmenets - default value count=0
+			string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
+						"select playerTankAchAllView.playerTankId, playerTankAchAllView.achId, 0 from playerTankAchAllView left join " +
+						"playerTankAch on playerTankAchAllView.playerTankId = playerTankAch.playerTankId and playerTankAchAllView.achId = playerTankAch.achId " +
+						"where playerTankAch.playerTankId is null";
+			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+			con.Open();
+			SqlCommand cmd = new SqlCommand(sql, con);
+			cmd.ExecuteNonQuery();
+			con.Close();
+		}
+
+		public static void SetPlayerTankAllAch(int playerTankId)
+		{
+			// This makes sure this player tanks has all achievmenets - default value count=0
+			string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
+						"select " + playerTankId.ToString() + ", ach.id, 0 from ach left join " +
+						"playerTankAch on ach.id = playerTankAch.achId and playerTankAch.playerTankId = " + playerTankId.ToString() + " " +
+						"where playerTankAch.playerTankId is null";
+			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+			con.Open();
+			SqlCommand cmd = new SqlCommand(sql, con);
+			cmd.ExecuteNonQuery();
+			con.Close();
+		}
+
+
+		public static bool GetAchievmentExist(string achName)
+		{
+			bool exists = false;
+			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+			{
+				conn.Open();
+				SqlCommand command = new SqlCommand("SELECT ach.id " +
+													"FROM ach  " +
+													"WHERE name = '" + achName + "'", conn);
+				SqlDataReader myReader = command.ExecuteReader();
+				exists = myReader.HasRows;
+				conn.Close();
+			}
+			return exists;
+		}
 
 		#endregion
 
