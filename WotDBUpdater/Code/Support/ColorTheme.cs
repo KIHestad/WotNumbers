@@ -11,6 +11,8 @@ namespace WotDBUpdater.Code.Support
 	{
 		// Control container and control colors
 		public static Color FormBack = Color.FromArgb(255, 32, 32, 32);
+		public static Color FormBackTitle = Color.FromArgb(255, 32, 32, 32);
+		public static Color FormBackFooter = Color.FromArgb(255, 8, 8, 8);
 		public static Color FormBorderBlack = Color.FromArgb(255, 0, 0, 0);
 		public static Color FormBorderBlue = Color.FromArgb(255, 68, 96, 127);
 		public static Color FormBorderRed = System.Drawing.Color.DarkRed;

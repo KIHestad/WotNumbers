@@ -13,13 +13,13 @@ using WotDBUpdater.Code.Support;
 
 abstract class BadThemeContainerControl : ContainerControl
 {
-	protected Bitmap BitmapObject;
-	protected Graphics GraphicObject;
+	protected Bitmap bitmapObject;
+	protected Graphics graphicObject;
 	public BadThemeContainerControl()
 	{
 		SetStyle((ControlStyles)8198, true);
-		BitmapObject = new Bitmap(1, 1);
-		GraphicObject = Graphics.FromImage(BitmapObject);
+		bitmapObject = new Bitmap(1, 1);
+		graphicObject = Graphics.FromImage(bitmapObject);
 	}
 
 	private bool ParentIsForm;
@@ -137,10 +137,10 @@ abstract class BadThemeContainerControl : ContainerControl
 	protected override void OnSizeChanged(EventArgs e)
 	{
 		Header = new Rectangle(7, 7, Width - 14, _TitleHeight);
-		GraphicObject.Dispose();
-		BitmapObject.Dispose();
-		BitmapObject = new Bitmap(Width, Height);
-		GraphicObject = Graphics.FromImage(BitmapObject);
+		graphicObject.Dispose();
+		bitmapObject.Dispose();
+		bitmapObject = new Bitmap(Width, Height);
+		graphicObject = Graphics.FromImage(bitmapObject);
 		Invalidate();
 		base.OnSizeChanged(e);
 	}
@@ -155,40 +155,42 @@ abstract class BadThemeContainerControl : ContainerControl
 
 	public void DrawCorners(Color c, Rectangle rect)
 	{
-		BitmapObject.SetPixel(rect.X, rect.Y, c);
-		BitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y, c);
-		BitmapObject.SetPixel(rect.X, rect.Y + (rect.Height - 1), c);
-		BitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y + (rect.Height - 1), c);
+		bitmapObject.SetPixel(rect.X, rect.Y, c);
+		bitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y, c);
+		bitmapObject.SetPixel(rect.X, rect.Y + (rect.Height - 1), c);
+		bitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y + (rect.Height - 1), c);
 	}
 
-	public void DrawBorder(Pen outerPen, Pen innerPen, Rectangle rect)
+	public void DrawBorder(Pen outerPen, Pen innerPen, Rectangle rect, int BorderSize)
 	{
-		GraphicObject.DrawRectangle(outerPen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
-		GraphicObject.DrawRectangle(innerPen, rect.X + 1, rect.Y + 1, rect.Width - 3, rect.Height - 3);
+		graphicObject.DrawRectangle(outerPen, rect.X + BorderSize, rect.Y + BorderSize, rect.Width - (BorderSize * 2) - 1, rect.Height - (BorderSize * 2) - 1); 
+		BorderSize--;
+		graphicObject.DrawRectangle(outerPen, rect.X + BorderSize, rect.Y + BorderSize, rect.Width - (BorderSize * 2) - 1, rect.Height - (BorderSize * 2) - 1);
 	}
 
-	public void DrawBorder(Pen outerPen, Rectangle rect)
+	public void DrawBorder(Pen outerPen, Rectangle rect, int BorderSize)
 	{
-		GraphicObject.DrawRectangle(outerPen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
+		graphicObject.DrawRectangle(outerPen, rect.X + BorderSize, rect.Y + BorderSize, rect.Width - (BorderSize * 2) -1, rect.Height - (BorderSize * 2) -1);
 	}
 
 	private Size TextSize;
-	public void DrawText(HorizontalAlignment a, Brush b, int offset = 0) // Form text
+	public void DrawText(HorizontalAlignment a, Brush b, int imageWidth = 0, int formMargin = 0) // Form text
 	{
+		formMargin = formMargin + 2;
 		if (string.IsNullOrEmpty(Text))
 			return;
-		TextSize = GraphicObject.MeasureString(Text, Font).ToSize();
+		TextSize = graphicObject.MeasureString(Text, Font).ToSize();
 
 		switch (a)
 		{
 			case HorizontalAlignment.Left:
-				GraphicObject.DrawString(Text, Font, b, 19 + offset, _TitleHeight / 2 - TextSize.Height / 2 + 2);
+				graphicObject.DrawString(Text, Font, b, 19 + imageWidth + formMargin, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
 				break;
 			case HorizontalAlignment.Right:
-				GraphicObject.DrawString(Text, Font, b, Width - 5 - TextSize.Width - offset, _TitleHeight / 2 - TextSize.Height / 2 + 2);
+				graphicObject.DrawString(Text, Font, b, Width - 5 - TextSize.Width - imageWidth - formMargin, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
 				break;
 			case HorizontalAlignment.Center:
-				GraphicObject.DrawString(Text, Font, b, Width / 2 - TextSize.Width / 2, _TitleHeight / 2 - TextSize.Height / 2 + 2);
+				graphicObject.DrawString(Text, Font, b, Width / 2 - TextSize.Width / 2, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
 				break;
 		}
 	}
@@ -214,20 +216,21 @@ abstract class BadThemeContainerControl : ContainerControl
 		}
 	}
 
-	public void DrawIcon(HorizontalAlignment a, int offset = 5)
+	public void DrawIcon(HorizontalAlignment a, int formMargin = 0)
 	{
+		formMargin = formMargin + 2;
 		if (_Image == null)
 			return;
 		switch (a)
 		{
 			case HorizontalAlignment.Left:
-				GraphicObject.DrawImage(_Image, 7 + offset, _TitleHeight / 2 - _Image.Height / 2 + 1);
+				graphicObject.DrawImage(_Image, 9 + formMargin, _TitleHeight / 2 - _Image.Height / 2 + formMargin);
 				break;
 			case HorizontalAlignment.Right:
-				GraphicObject.DrawImage(_Image, Width - 5 - TextSize.Width - offset, _TitleHeight / 2 - TextSize.Height / 2 + 1);
+				graphicObject.DrawImage(_Image, Width - 9 - TextSize.Width - formMargin, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
 				break;
 			case HorizontalAlignment.Center:
-				GraphicObject.DrawImage(_Image, Width / 2 - TextSize.Width / 2, _TitleHeight / 2 - TextSize.Height / 2 + 1);
+				graphicObject.DrawImage(_Image, Width / 2 - TextSize.Width / 2, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
 				break;
 		}
 	}
@@ -246,7 +249,31 @@ abstract class BadThemeContainerControl : ContainerControl
 		}
 	}
 
+	private bool _FormFooter = false;
+	public bool FormFooter
+	{
+		get
+		{
+			return _FormFooter;
+		}
+		set
+		{
+			_FormFooter = value;
+		}
+	}
 
+	private int _FormFooterHeight = 26;
+	public int FormFooterHeight
+	{
+		get
+		{
+			return _FormFooterHeight;
+		}
+		set
+		{
+			_FormFooterHeight = value;
+		}
+	}
 }
 
 abstract class BadThemeControl : Control
@@ -399,53 +426,35 @@ class BadForm : BadThemeContainerControl
 {
 	public BadForm()
 	{
-		SetTransparent(Color.Fuchsia); // Transparency color = purple (FF00FF)
+		SetTransparent(Color.Transparent); // Transparency color = purple (FF00FF)
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
 	{
-		GraphicObject.Clear(ColorTheme.FormBorderBlack);
-
-		Rectangle RectangleTitle = new Rectangle(1, 1, Width -2, TitleHeight);
-		Rectangle RectangleMain = new Rectangle(1, TitleHeight + 1 , Width -2, Height - TitleHeight -2);
-
-		// BackGradient = new LinearGradientBrush(RectangleTitle, ColorMain, ColorTitle, LinearGradientMode.Vertical); // Alternative gradient background
+		graphicObject.Clear(Color.Transparent);
+		int formMargin = 0;
+		// Draw title and main area
+		Rectangle rectangleTitle = new Rectangle(formMargin + 1, formMargin + 1, ClientRectangle.Width - (formMargin * 2) - 2, TitleHeight);
+		Rectangle rectangleMain = new Rectangle(formMargin + 1, TitleHeight + formMargin + 1, ClientRectangle.Width - (formMargin * 2) - 2, ClientRectangle.Height - TitleHeight - (formMargin * 2) - 1);
 		SolidBrush brush = new SolidBrush(ColorTheme.ControlBack);
-		GraphicObject.FillRectangle(brush, RectangleTitle);
+		graphicObject.FillRectangle(brush, rectangleTitle);
 		brush = new SolidBrush(ColorTheme.FormBack);
-		GraphicObject.FillRectangle(brush, RectangleMain);
-
-		// G.DrawLine(P2, 0, 28, Width, 28); // Separator line #1 below title header
-		// G.DrawLine(P1, 0, 29, Width, 29); // Separator line #2 below title header
-
-		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont), ImageWidth); // Add title text
-		DrawIcon(HorizontalAlignment.Left); // Add title icon
+		graphicObject.FillRectangle(brush, rectangleMain);
+		// Footer
+		if (FormFooter)
+		{
+			Rectangle rectangleFooter = new Rectangle(formMargin + 1, ClientRectangle.Height - FormFooterHeight - (formMargin * 2) - 1, ClientRectangle.Width - (formMargin * 2) - 2, FormFooterHeight);
+			brush = new SolidBrush(ColorTheme.FormBackFooter);
+			graphicObject.FillRectangle(brush, rectangleFooter);
+		}
+		// Add title icon and text
+		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont), ImageWidth, formMargin); // Add title text
+		DrawIcon(HorizontalAlignment.Left, formMargin); // Add title icon
 		Pen FormBorderPenColor = new Pen(FormBorderColor);
-		DrawBorder(FormBorderPenColor, ClientRectangle); // Outer Border
+		DrawBorder(FormBorderPenColor, ClientRectangle, formMargin); // Outer Border
 		//DrawCorners(Color.Fuchsia, ClientRectangle); // Corner pixel color
 
-		e.Graphics.DrawImage(BitmapObject, 0, 0);
-	}
-}
-
-class BadPanelFooter : BadThemeContainerControl
-{
-
-	public BadPanelFooter()
-	{
-		SetTransparent(Color.Fuchsia); // Transparency color = purple (FF00FF)
-	}
-
-	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
-	{
-		GraphicObject.Clear(ColorTheme.FormBorderBlack);
-		Rectangle RectangleFooter = new Rectangle(1, Height-27, Width - 2, 26);
-		SolidBrush brush = new SolidBrush(ColorTheme.FormBorderBlack);
-		GraphicObject.FillRectangle(brush, RectangleFooter);
-		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont), ImageWidth); // Add title text
-		DrawIcon(HorizontalAlignment.Left); // Add title icon
-		Pen FormBorderPenColor = new Pen(FormBorderColor);
-		e.Graphics.DrawImage(BitmapObject, 0, 0);
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 }
 

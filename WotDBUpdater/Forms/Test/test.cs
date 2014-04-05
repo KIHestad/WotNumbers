@@ -15,8 +15,6 @@ namespace WotDBUpdater.Forms.Test
 		public test()
 		{
 			InitializeComponent();
-			panel1.Left = 7;
-			panel1.Top = 26 + 7;
 
 		}
 
@@ -47,8 +45,7 @@ namespace WotDBUpdater.Forms.Test
 
 		private void test_Resize(object sender, EventArgs e)
 		{
-			panel1.Width = badForm1.Width - 14;
-			panel1.Height = badForm1.Height - 26 - 7;
+
 		}
 	}
 }

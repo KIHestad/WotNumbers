@@ -45,6 +45,8 @@
 			this.menuItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemTest_viewRangeForm = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemTest_testImport = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.menuItemTest_NewFormStyle = new System.Windows.Forms.ToolStripMenuItem();
 			this.panelTop = new System.Windows.Forms.Panel();
 			this.picNormalize = new System.Windows.Forms.PictureBox();
 			this.picMinimize = new System.Windows.Forms.PictureBox();
@@ -101,8 +103,6 @@
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.menuItemTest_NewFormStyle = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuMain.SuspendLayout();
 			this.panelTop.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
@@ -129,9 +129,9 @@
 			this.menuMain.Dock = System.Windows.Forms.DockStyle.Right;
 			this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemTest});
-			this.menuMain.Location = new System.Drawing.Point(817, 0);
+			this.menuMain.Location = new System.Drawing.Point(868, 0);
 			this.menuMain.Name = "menuMain";
-			this.menuMain.Size = new System.Drawing.Size(98, 78);
+			this.menuMain.Size = new System.Drawing.Size(47, 78);
 			this.menuMain.TabIndex = 10;
 			this.menuMain.Text = "menuMain";
 			// 
@@ -152,7 +152,7 @@
             this.toolStripSeparator3,
             this.menuItemTest_NewFormStyle});
 			this.menuItemTest.Name = "menuItemTest";
-			this.menuItemTest.Size = new System.Drawing.Size(85, 19);
+			this.menuItemTest.Size = new System.Drawing.Size(34, 19);
 			this.menuItemTest.Text = "Test";
 			// 
 			// menuItemTest_ImportTank_Wn8exp
@@ -229,6 +229,18 @@
 			this.menuItemTest_testImport.Size = new System.Drawing.Size(185, 22);
 			this.menuItemTest_testImport.Text = "Test import ws2db";
 			this.menuItemTest_testImport.Click += new System.EventHandler(this.testImportWs2dbToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(182, 6);
+			// 
+			// menuItemTest_NewFormStyle
+			// 
+			this.menuItemTest_NewFormStyle.Name = "menuItemTest_NewFormStyle";
+			this.menuItemTest_NewFormStyle.Size = new System.Drawing.Size(185, 22);
+			this.menuItemTest_NewFormStyle.Text = "New form style";
+			this.menuItemTest_NewFormStyle.Click += new System.EventHandler(this.menuItemTest_NewFormStyle_Click);
 			// 
 			// panelTop
 			// 
@@ -792,18 +804,6 @@
 			// 
 			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(182, 6);
-			// 
-			// menuItemTest_NewFormStyle
-			// 
-			this.menuItemTest_NewFormStyle.Name = "menuItemTest_NewFormStyle";
-			this.menuItemTest_NewFormStyle.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_NewFormStyle.Text = "New form style";
-			this.menuItemTest_NewFormStyle.Click += new System.EventHandler(this.menuItemTest_NewFormStyle_Click);
 			// 
 			// Main
 			// 

@@ -1141,7 +1141,7 @@ namespace WotDBUpdater.Forms
 		private void menuItemTest_NewFormStyle_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.Test.test();
-			frm.Show();
+			frm.ShowDialog();
 		}
 
 		#endregion
