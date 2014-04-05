@@ -52,7 +52,7 @@ namespace WotDBUpdater.Forms.File
         private void btnUpdateWN8_Click(object sender, EventArgs e)
         {
             ImportMisc2DB.UpdateWN8();
-            Code.Support.Message.Show("Update complete");
+            Code.Support.MessageDark.Show("Update complete");
         }
     }
 }

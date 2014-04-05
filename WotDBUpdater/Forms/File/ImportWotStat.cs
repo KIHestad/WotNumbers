@@ -70,7 +70,7 @@ namespace WotDBUpdater.Forms.File
 			}
 			else
 			{
-				Code.Support.Message.Show("Select a file u noob...", "Noob message");
+				Code.Support.MessageDark.Show("Select a file u noob...", "Noob message");
 			}
 		}
 

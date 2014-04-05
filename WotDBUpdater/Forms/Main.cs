@@ -35,13 +35,13 @@ namespace WotDBUpdater.Forms
 		{
 			// Style
 			toolMain.Renderer = new StripRenderer();
-			toolMain.BackColor = Code.Support.StripLayout.colorGrayMain;
+			toolMain.BackColor = Code.Support.ColorTheme.colorGrayMain;
 			toolBattle.Renderer = new StripRenderer();
-			toolBattle.BackColor = Code.Support.StripLayout.colorGrayMain;
+			toolBattle.BackColor = Code.Support.ColorTheme.colorGrayMain;
 			menuMain.Renderer = new StripRenderer();
-			menuMain.BackColor = Code.Support.StripLayout.colorGrayMain;
+			menuMain.BackColor = Code.Support.ColorTheme.colorGrayMain;
 
-			panelTop.BackColor = Code.Support.StripLayout.colorGrayMain;
+			panelTop.BackColor = Code.Support.ColorTheme.colorGrayMain;
 			toolMain.ShowItemToolTips = false;
 			Config.Settings.run = 0;
 			SetListener();
@@ -53,7 +53,7 @@ namespace WotDBUpdater.Forms
 			string msg = Config.GetConfig();
 			if (msg != "") 
 			{
-				Code.Support.Message.Show(msg,"Could not load config data");
+				Code.Support.MessageDark.Show(msg,"Could not load config data");
 				lblOverView.Text = "Please check app and db settings...";
 			}
 			else if (Config.CheckDBConn())
@@ -83,15 +83,16 @@ namespace WotDBUpdater.Forms
 
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
-			public StripRenderer() : base(new Code.Support.StripLayout())
+			public StripRenderer()
+				: base(new Code.Support.StripLayout())
 			{
 				this.RoundedEdges = false;
 			}
-			
+
 			protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
 			{
 				base.OnRenderItemText(e);
-				e.Item.ForeColor = Code.Support.StripLayout.colorWhiteToolStrip;
+				e.Item.ForeColor = Code.Support.ColorTheme.colorWhiteToolStrip;
 			}
 		}
 
@@ -103,7 +104,7 @@ namespace WotDBUpdater.Forms
 			if (this.WindowState != FormWindowState.Maximized)
 			{
 				if (Config.Settings.run == 1)
-					borderColor = Code.Support.StripLayout.colorBlueSelectedButton;
+					borderColor = Code.Support.ColorTheme.colorBlueSelectedButton;
 				else
 					borderColor = System.Drawing.Color.DarkRed;
 			}
@@ -449,7 +450,7 @@ namespace WotDBUpdater.Forms
 					else // footer
 				{
 						cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.StripLayout.colorGrayDropDownBack;
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.colorGrayDropDownBack;
 					}
 				}
 				// Battle Result color color
@@ -559,7 +560,7 @@ namespace WotDBUpdater.Forms
 			}
 			catch (Exception ex)
 			{
-				Code.Support.Message.Show("Error when trying to scroll the grid, might be caused by empty datagrid (missing data connection)." + Environment.NewLine + Environment.NewLine + ex.Message, "Error scrolling");
+				Code.Support.MessageDark.Show("Error when trying to scroll the grid, might be caused by empty datagrid (missing data connection)." + Environment.NewLine + Environment.NewLine + ex.Message, "Error scrolling");
 			}
 
 		}
@@ -625,17 +626,17 @@ namespace WotDBUpdater.Forms
 
 		private void pnlScrollbar_MouseHover(object sender, EventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.StripLayout.colorGrayScrollbarHover; 
+			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayScrollbarHover; 
 		}
 
 		private void pnlScrollbar_MouseLeave(object sender, EventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.StripLayout.colorGrayScrollbar;
+			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayScrollbar;
 		}
 
 		private void pnlScrollbar_MouseDown(object sender, MouseEventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.StripLayout.colorGrayCheckPressed;
+			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayCheckPressed;
 			scrolling = true;
 			moveFromPoint = Cursor.Position;
 			scrollY = panelScrollbar.Top;
@@ -643,7 +644,7 @@ namespace WotDBUpdater.Forms
 
 		private void pnlScrollbar_MouseUp(object sender, MouseEventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.StripLayout.colorGrayScrollbar;
+			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayScrollbar;
 			scrolling = false;
 		}
 
@@ -764,32 +765,32 @@ namespace WotDBUpdater.Forms
 
 		private void picClose_MouseHover(object sender, EventArgs e)
 		{
-			picClose.BackColor = Code.Support.StripLayout.colorGrayHover;
+			picClose.BackColor = Code.Support.ColorTheme.colorGrayHover;
 		}
 
 		private void picClose_MouseLeave(object sender, EventArgs e)
 		{
-			picClose.BackColor = Code.Support.StripLayout.colorGrayMain;
+			picClose.BackColor = Code.Support.ColorTheme.colorGrayMain;
 		}
 
 		private void picNormalize_MouseHover(object sender, EventArgs e)
 		{
-			picNormalize.BackColor = Code.Support.StripLayout.colorGrayHover;
+			picNormalize.BackColor = Code.Support.ColorTheme.colorGrayHover;
 		}
 
 		private void picNormalize_MouseLeave(object sender, EventArgs e)
 		{
-			picNormalize.BackColor = Code.Support.StripLayout.colorGrayMain;
+			picNormalize.BackColor = Code.Support.ColorTheme.colorGrayMain;
 		}
 
 		private void picMinimize_MouseHover(object sender, EventArgs e)
 		{
-			picMinimize.BackColor = Code.Support.StripLayout.colorGrayHover;
+			picMinimize.BackColor = Code.Support.ColorTheme.colorGrayHover;
 		}
 
 		private void picMinimize_MouseLeave(object sender, EventArgs e)
 		{
-			picMinimize.BackColor = Code.Support.StripLayout.colorGrayMain;
+			picMinimize.BackColor = Code.Support.ColorTheme.colorGrayMain;
 		}
 
 		private void picClose_Click(object sender, EventArgs e)
@@ -951,7 +952,7 @@ namespace WotDBUpdater.Forms
 			string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
 						 "Tool for getting data from WoT dossier file to MS SQL Database" + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
-			Code.Support.Message.Show(msg, "About WoT DBstat");
+			Code.Support.MessageDark.Show(msg, "About WoT DBstat");
 		}
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
@@ -1079,19 +1080,19 @@ namespace WotDBUpdater.Forms
 		private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
 		{
 			string s = ImportWotApi2DB.ImportTurrets();
-			Code.Support.Message.Show(s);
+			Code.Support.MessageDark.Show(s);
 		}
 
 		private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
 		{
 			string s = ImportWotApi2DB.ImportGuns();
-			Code.Support.Message.Show(s);
+			Code.Support.MessageDark.Show(s);
 		}
 
 		private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
 		{
 			string s = ImportWotApi2DB.ImportRadios();
-			Code.Support.Message.Show(s);
+			Code.Support.MessageDark.Show(s);
 		}
 
 		private void menuItemTest_WotURL_Click(object sender, EventArgs e)
@@ -1106,7 +1107,7 @@ namespace WotDBUpdater.Forms
 			StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 
 			string content = responseStream.ReadToEnd();
-			Code.Support.Message.Show(content);
+			Code.Support.MessageDark.Show(content);
 		}
 
 		private void menuItemTest_ProgressBar_Click(object sender, EventArgs e)
@@ -1118,7 +1119,7 @@ namespace WotDBUpdater.Forms
 		private void menuItemTest_ViewRange_Click(object sender, EventArgs e)
 		{
 			string vr = ViewRange.CalcViewRange().ToString();
-			Code.Support.Message.Show(vr,"Test calc view range");
+			Code.Support.MessageDark.Show(vr,"Test calc view range");
 		}
 
 		private void viewRangeFormToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1132,13 +1133,20 @@ namespace WotDBUpdater.Forms
 			ImportWS2DB.importWotStats2DB();
 		}
 
-		
-		#endregion
-
 		private void menuItemTest_ImportAch_Click(object sender, EventArgs e)
 		{
 			ImportWotApi2DB.ImportAchievements();
 		}
+
+		private void menuItemTest_NewFormStyle_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.Test.test();
+			frm.Show();
+		}
+
+		#endregion
+
+		
 
 		
 	}

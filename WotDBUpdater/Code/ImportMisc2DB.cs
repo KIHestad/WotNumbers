@@ -198,7 +198,7 @@ namespace WotDBUpdater
 			}
 			catch (Exception ex)
 			{
-				Code.Support.Message.Show(ex.Message, "Error occured");
+				Code.Support.MessageDark.Show(ex.Message, "Error occured");
 			}
 
 			return ("Import Complete");

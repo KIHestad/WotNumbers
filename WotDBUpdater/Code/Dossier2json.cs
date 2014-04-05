@@ -264,7 +264,7 @@ namespace WotDBUpdater
 			}
 			catch (Exception ex)
 			{
-				Code.Support.Message.Show("Error running Python script converting dossier file: " + ex.Message, "Error converting dossier file to json");
+				Code.Support.MessageDark.Show("Error running Python script converting dossier file: " + ex.Message, "Error converting dossier file to json");
 				return "Error converting dossier file to json";
 			}
 			return "";

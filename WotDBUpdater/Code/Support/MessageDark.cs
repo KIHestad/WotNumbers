@@ -8,7 +8,7 @@ using WotDBUpdater.Forms;
 
 namespace WotDBUpdater.Code.Support
 {
-    class Message
+    class MessageDark
     {
         public static void Show(string message, string title = "Message")
         {
