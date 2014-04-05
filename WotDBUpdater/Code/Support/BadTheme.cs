@@ -146,23 +146,26 @@ abstract class BadThemeContainerControl : ContainerControl
 
 			return new Pointer(Cursors.Default, 0);
 		}
-		// Check Border position
-		if (F1 & F3)
-			return new Pointer(Cursors.SizeNWSE, 13);
-		if (F1 & F4)
-			return new Pointer(Cursors.SizeNESW, 16);
-		if (F2 & F3)
-			return new Pointer(Cursors.SizeNESW, 14);
-		if (F2 & F4)
-			return new Pointer(Cursors.SizeNWSE, 17);
-		if (F1)
-			return new Pointer(Cursors.SizeWE, 10);
-		if (F2)
-			return new Pointer(Cursors.SizeWE, 11);
-		if (F3)
-			return new Pointer(Cursors.SizeNS, 12);
-		if (F4)
-			return new Pointer(Cursors.SizeNS, 15);
+		// Check Border position for resizing
+		if (_Resizable)
+		{
+			if (F1 & F3)
+				return new Pointer(Cursors.SizeNWSE, 13);
+			if (F1 & F4)
+				return new Pointer(Cursors.SizeNESW, 16);
+			if (F2 & F3)
+				return new Pointer(Cursors.SizeNESW, 14);
+			if (F2 & F4)
+				return new Pointer(Cursors.SizeNWSE, 17);
+			if (F1)
+				return new Pointer(Cursors.SizeWE, 10);
+			if (F2)
+				return new Pointer(Cursors.SizeWE, 11);
+			if (F3)
+				return new Pointer(Cursors.SizeNS, 12);
+			if (F4)
+				return new Pointer(Cursors.SizeNS, 15);
+		}
 		if (SystemExitImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemExitImageBackColor = ColorTheme.FormBackTitle;
@@ -252,8 +255,7 @@ abstract class BadThemeContainerControl : ContainerControl
 
 	protected override void OnMouseMove(MouseEventArgs e)
 	{
-		if (_Resizable)
-			SetCurrent();
+		SetCurrent();
 		base.OnMouseMove(e);
 	}
 
@@ -300,7 +302,7 @@ abstract class BadThemeContainerControl : ContainerControl
 	private Size TextSize;
 	public void DrawText(HorizontalAlignment a, Brush b, int imageWidth = 0, int formMargin = 0) // Form text
 	{
-		formMargin = formMargin + 2;
+		formMargin = formMargin + 1;
 		if (string.IsNullOrEmpty(Text))
 			return;
 		TextSize = graphicObject.MeasureString(Text, Font).ToSize();
@@ -308,7 +310,7 @@ abstract class BadThemeContainerControl : ContainerControl
 		switch (a)
 		{
 			case HorizontalAlignment.Left:
-				graphicObject.DrawString(Text, Font, b, 19 + imageWidth + formMargin, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
+				graphicObject.DrawString(Text, Font, b, 8 + imageWidth + formMargin, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);
 				break;
 			case HorizontalAlignment.Right:
 				graphicObject.DrawString(Text, Font, b, Width - 5 - TextSize.Width - imageWidth - formMargin, _TitleHeight / 2 - TextSize.Height / 2 + formMargin);

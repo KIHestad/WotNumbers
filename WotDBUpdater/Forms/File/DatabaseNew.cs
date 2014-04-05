@@ -34,7 +34,94 @@ namespace WotDBUpdater.Forms.File
 			Application.DoEvents();
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+
+		private bool CreateDatabase(string databaseName, string fileLocation)
+		{
+			bool dbOk = false;
+			// Check database file location
+			bool fileLocationExsits = true;
+			fileLocation = fileLocation.Trim();
+			if (fileLocation.Substring(fileLocation.Length-1, 1) != "\\" && fileLocation.Substring(fileLocation.Length-1, 1) != "/")
+				fileLocation += "\\";
+			if (!Directory.Exists(fileLocation))
+			{
+				DirectoryInfo prevPath = Directory.GetParent(fileLocation);
+				if (!prevPath.Exists)
+				{
+					if (!Directory.GetParent(prevPath.FullName).Exists)
+					{
+						fileLocationExsits = false;
+						MessageBoxEx.Show(this, "Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						pbCreateDatabase.Visible = false;
+					}
+					else
+					{
+						Directory.CreateDirectory(fileLocation);
+					}
+				}
+			}
+
+			if (fileLocationExsits)
+			{
+				SqlConnection myConn = new SqlConnection(Config.DatabaseConnection("", "master"));
+				string sql = "CREATE DATABASE " + databaseName + " ON PRIMARY " +
+							"(NAME = " + databaseName + ", " +
+							"FILENAME = '" + fileLocation + databaseName + ".mdf', " +
+							"SIZE = 5MB, FILEGROWTH = 10%) " +
+							"LOG ON (NAME = " + databaseName + "_Log, " +
+							"FILENAME = '" + fileLocation + databaseName + "_log.ldf', " +
+							"SIZE = 1MB, " +
+							"FILEGROWTH = 10%)";
+
+				SqlCommand myCommand = new SqlCommand(sql, myConn);
+				try
+				{
+					myConn.Open();
+					myCommand.ExecuteNonQuery();
+					dbOk = true;
+				}
+				catch (System.Exception ex)
+				{
+					dbOk = false;
+					MessageBoxEx.Show(this, "Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					pbCreateDatabase.Visible = false;
+				}
+				finally
+				{
+					if (dbOk)
+					{
+						if (myConn.State == ConnectionState.Open)
+						{
+							myConn.Close();
+							Config.Settings.databaseName = databaseName;
+							string msg = "";
+							Config.SaveDbConfig(out msg);
+						}
+					}
+				}
+			}
+			return dbOk;
+		}
+
+		
+		private void RunSql(string sqlbatch)
+		{
+			string[] sql = sqlbatch.Split(new string[] {"GO"}, StringSplitOptions.RemoveEmptyEntries);
+			using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+			{
+				con.Open();
+				foreach (string s in sql)
+				{
+					SqlCommand cmd = new SqlCommand(s, con);
+					cmd.ExecuteNonQuery();
+				}
+				con.Close();
+			}
+
+			
+		}
+
+		private void btnCreateDB_Click(object sender, EventArgs e)
 		{
 			// Check if database exists
 			bool dbExists = false;
@@ -140,92 +227,6 @@ namespace WotDBUpdater.Forms.File
 					Form.ActiveForm.Close();
 				}
 			}
-		}
-
-		private bool CreateDatabase(string databaseName, string fileLocation)
-		{
-			bool dbOk = false;
-			// Check database file location
-			bool fileLocationExsits = true;
-			fileLocation = fileLocation.Trim();
-			if (fileLocation.Substring(fileLocation.Length-1, 1) != "\\" && fileLocation.Substring(fileLocation.Length-1, 1) != "/")
-				fileLocation += "\\";
-			if (!Directory.Exists(fileLocation))
-			{
-				DirectoryInfo prevPath = Directory.GetParent(fileLocation);
-				if (!prevPath.Exists)
-				{
-					if (!Directory.GetParent(prevPath.FullName).Exists)
-					{
-						fileLocationExsits = false;
-						MessageBoxEx.Show(this, "Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-						pbCreateDatabase.Visible = false;
-					}
-					else
-					{
-						Directory.CreateDirectory(fileLocation);
-					}
-				}
-			}
-
-			if (fileLocationExsits)
-			{
-				SqlConnection myConn = new SqlConnection(Config.DatabaseConnection("", "master"));
-				string sql = "CREATE DATABASE " + databaseName + " ON PRIMARY " +
-							"(NAME = " + databaseName + ", " +
-							"FILENAME = '" + fileLocation + databaseName + ".mdf', " +
-							"SIZE = 5MB, FILEGROWTH = 10%) " +
-							"LOG ON (NAME = " + databaseName + "_Log, " +
-							"FILENAME = '" + fileLocation + databaseName + "_log.ldf', " +
-							"SIZE = 1MB, " +
-							"FILEGROWTH = 10%)";
-
-				SqlCommand myCommand = new SqlCommand(sql, myConn);
-				try
-				{
-					myConn.Open();
-					myCommand.ExecuteNonQuery();
-					dbOk = true;
-				}
-				catch (System.Exception ex)
-				{
-					dbOk = false;
-					MessageBoxEx.Show(this, "Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-					pbCreateDatabase.Visible = false;
-				}
-				finally
-				{
-					if (dbOk)
-					{
-						if (myConn.State == ConnectionState.Open)
-						{
-							myConn.Close();
-							Config.Settings.databaseName = databaseName;
-							string msg = "";
-							Config.SaveDbConfig(out msg);
-						}
-					}
-				}
-			}
-			return dbOk;
-		}
-
-		
-		private void RunSql(string sqlbatch)
-		{
-			string[] sql = sqlbatch.Split(new string[] {"GO"}, StringSplitOptions.RemoveEmptyEntries);
-			using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
-			{
-				con.Open();
-				foreach (string s in sql)
-				{
-					SqlCommand cmd = new SqlCommand(s, con);
-					cmd.ExecuteNonQuery();
-				}
-				con.Close();
-			}
-
-			
 		}
 
 
