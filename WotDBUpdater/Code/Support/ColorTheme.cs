@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WotDBUpdater.Code.Support
 {
@@ -11,7 +13,7 @@ namespace WotDBUpdater.Code.Support
 	{
 		// Control container and control colors
 		public static Color FormBack = Color.FromArgb(255, 32, 32, 32);
-		public static Color FormBackTitle = Color.FromArgb(255, 32, 32, 32);
+		public static Color FormBackTitle = Color.FromArgb(255, 45, 45, 49);
 		public static Color FormBackFooter = Color.FromArgb(255, 8, 8, 8);
 		public static Color FormBorderBlack = Color.FromArgb(255, 0, 0, 0);
 		public static Color FormBorderBlue = Color.FromArgb(255, 68, 96, 127);
@@ -33,6 +35,5 @@ namespace WotDBUpdater.Code.Support
 		public static Color colorBlue = Color.FromArgb(255, 66, 125, 215);
 		public static Color colorBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
 		
-
 	}
 }

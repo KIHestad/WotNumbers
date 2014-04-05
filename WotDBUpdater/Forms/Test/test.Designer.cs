@@ -47,11 +47,15 @@
 			this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.badForm1.FormFooter = true;
 			this.badForm1.FormFooterHeight = 24;
+			this.badForm1.FormMargin = 0;
 			this.badForm1.Image = ((System.Drawing.Image)(resources.GetObject("badForm1.Image")));
 			this.badForm1.Location = new System.Drawing.Point(0, 0);
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = true;
 			this.badForm1.Size = new System.Drawing.Size(366, 234);
+			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
+			this.badForm1.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemMaximizeImage")));
+			this.badForm1.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemMinimizeImage")));
 			this.badForm1.TabIndex = 0;
 			this.badForm1.Text = "WoT DBstats";
 			this.badForm1.TitleHeight = 26;
