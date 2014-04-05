@@ -74,7 +74,7 @@ namespace WotDBUpdater.Forms.File
 				catch (Exception ex)
 				{
 					Cursor.Current = Cursors.Default;
-					MessageBoxEx.Show (this,"Error getting databases: " + ex.Message,"Database server error") ;
+					Code.Support.MessageDark.Show ("Error getting databases: " + ex.Message,"Database server error") ;
 				}
 				Cursor.Current = Cursors.Default;
 			}
@@ -141,7 +141,7 @@ namespace WotDBUpdater.Forms.File
 				string msg = "";
 				bool saveOk = false;
 				saveOk = Config.SaveDbConfig(out msg);
-				MessageBoxEx.Show(this, msg, "Save database settings");
+				Code.Support.MessageDark.Show(msg, "Save database settings");
 				if (saveOk)
 				{
 					// Init

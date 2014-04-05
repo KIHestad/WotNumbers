@@ -51,7 +51,7 @@ namespace WotDBUpdater.Forms.File
 					if (!Directory.GetParent(prevPath.FullName).Exists)
 					{
 						fileLocationExsits = false;
-						MessageBoxEx.Show(this, "Error createing database, file parh does not exist", "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						Code.Support.MessageDark.Show("Error createing database, file parh does not exist", "Error creating database");
 						pbCreateDatabase.Visible = false;
 					}
 					else
@@ -83,7 +83,7 @@ namespace WotDBUpdater.Forms.File
 				catch (System.Exception ex)
 				{
 					dbOk = false;
-					MessageBoxEx.Show(this, "Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					Code.Support.MessageDark.Show("Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database");
 					pbCreateDatabase.Visible = false;
 				}
 				finally
@@ -136,7 +136,7 @@ namespace WotDBUpdater.Forms.File
 			}
 			if (dbExists)
 			{
-				MessageBoxEx.Show(this, "Database with this name alreade exsits, choose another database name.", "Cannot create database");
+				Code.Support.MessageDark.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
 			}
 			else
 			{
@@ -222,7 +222,7 @@ namespace WotDBUpdater.Forms.File
 					// Done
 					Cursor.Current = Cursors.Default;
 					Application.DoEvents();
-					MessageBoxEx.Show(this, "Database created successfully.", "Created database");
+					Code.Support.MessageDark.Show("Database created successfully.", "Created database");
 					pbCreateDatabase.Visible = false;
 					Form.ActiveForm.Close();
 				}
