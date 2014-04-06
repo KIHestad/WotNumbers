@@ -33,12 +33,14 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.badButton2 = new BadButton();
 			this.badButton1 = new BadButton();
+			this.label2 = new System.Windows.Forms.Label();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// badForm1
 			// 
 			this.badForm1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badForm1.Controls.Add(this.label2);
 			this.badForm1.Controls.Add(this.label1);
 			this.badForm1.Controls.Add(this.badButton2);
 			this.badForm1.Controls.Add(this.badButton1);
@@ -57,7 +59,7 @@
 			this.badForm1.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemMaximizeImage")));
 			this.badForm1.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemMinimizeImage")));
 			this.badForm1.TabIndex = 0;
-			this.badForm1.Text = "WoT DBstats";
+			this.badForm1.Text = "te";
 			this.badForm1.TitleHeight = 26;
 			// 
 			// label1
@@ -95,6 +97,15 @@
 			this.badButton1.Text = "Close";
 			this.badButton1.Click += new System.EventHandler(this.badButton1_Click);
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(61, 85);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(24, 13);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "test";
+			// 
 			// test
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -122,6 +133,7 @@
 		private BadForm badForm1;
 		private BadButton badButton2;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label2;
 
 
 
