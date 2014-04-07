@@ -772,6 +772,39 @@ namespace WotDBUpdater.Forms
 
 		}
 
+		private int tankFilterItemCount = 0;
+		// TODO: List<string> tankFilter = new List<string>();
+
+		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
+		{
+			toolItemTankFilter_All.Checked = true;
+			toolItemTankFilter_Tier1.Checked = false;
+			toolItemTankFilter_Tier2.Checked = false;
+			toolItemTankFilter_Tier3.Checked = false;
+			toolItemTankFilter_Tier4.Checked = false;
+			toolItemTankFilter_Tier5.Checked = false;
+			toolItemTankFilter_Tier6.Checked = false;
+			toolItemTankFilter_Tier7.Checked = false;
+			toolItemTankFilter_Tier8.Checked = false;
+			toolItemTankFilter_Tier9.Checked = false;
+			toolItemTankFilter_Tier10.Checked = false;
+			tankFilterItemCount = 0;
+			this.toolItemTankFilter.ShowDropDown();			
+		}
+
+		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			menuItem.Checked = !menuItem.Checked;
+			if (menuItem.Checked)
+				tankFilterItemCount++;
+			else
+				tankFilterItemCount--;
+			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
+			this.toolItemTankFilter.ShowDropDown();			
+			this.toolItemTankFilter_Tier.ShowDropDown();			
+		}
+
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.ApplicationSetting();
@@ -885,6 +918,9 @@ namespace WotDBUpdater.Forms
 		}
 
 		#endregion
+
+		
+			
 
 	}
 
