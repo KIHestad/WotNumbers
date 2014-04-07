@@ -33,21 +33,15 @@ namespace WotDBUpdater.Forms
 
 		private void Main_Load(object sender, EventArgs e)
 		{
-			// Style
+			// Hide form until ready
+			MainTheme.Visible = false;
+			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
-			toolMain.BackColor = Code.Support.ColorTheme.colorGrayMain;
-			toolBattle.Renderer = new StripRenderer();
-			toolBattle.BackColor = Code.Support.ColorTheme.colorGrayMain;
-			menuMain.Renderer = new StripRenderer();
-			menuMain.BackColor = Code.Support.ColorTheme.colorGrayMain;
-
-			panelTop.BackColor = Code.Support.ColorTheme.colorGrayMain;
+			toolMain.BackColor = Code.Support.ColorTheme.FormBackTitle;
 			toolMain.ShowItemToolTips = false;
-			Config.Settings.run = 0;
-			SetListener();
-			// Size
-			InitForm();
-			RefreshFormAfterResize(true);
+			toolItemBattles.Visible = false;
+			// Style datagrid
+			dataGridMain.BackgroundColor = Code.Support.ColorTheme.FormBack;
 			// Startup settings
 			string statusmsg = "Application started with issues...";
 			string msg = Config.GetConfig();
@@ -55,6 +49,8 @@ namespace WotDBUpdater.Forms
 			{
 				Code.Support.MessageDark.Show(msg,"Could not load config data");
 				lblOverView.Text = "Please check app and db settings...";
+				Config.Settings.run = 0;
+				SetListener();
 			}
 			else if (Config.CheckDBConn())
 			{
@@ -70,13 +66,20 @@ namespace WotDBUpdater.Forms
 				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
 				GridShowOverall();
 			}
-			SetStatus2(statusmsg);
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
 			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
 			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
+			// Display form and status message 
+			MainTheme.Visible = true;
+			// Draw form 
+			
+			SetListener();
+			RefreshFormAfterResize(true);
+			InitForm();
+			SetStatus2(statusmsg);
 		}
 
 		#region Layout
@@ -92,25 +95,10 @@ namespace WotDBUpdater.Forms
 			protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
 			{
 				base.OnRenderItemText(e);
-				e.Item.ForeColor = Code.Support.ColorTheme.colorWhiteToolStrip;
+				e.Item.ForeColor = Code.Support.ColorTheme.ToolWhiteToolStrip;
 			}
 		}
-
-		private void panelMaster_Paint(object sender, PaintEventArgs e)
-		{
-			// Default Border Color
-			Color borderColor = Color.Black;
-			// Border color according to run state
-			if (this.WindowState != FormWindowState.Maximized)
-			{
-				if (Config.Settings.run == 1)
-					borderColor = Code.Support.ColorTheme.colorBlueSelectedButton;
-				else
-					borderColor = System.Drawing.Color.DarkRed;
-			}
-			ControlPaint.DrawBorder(e.Graphics, this.panelMaster.ClientRectangle, borderColor, ButtonBorderStyle.Solid);
-		}
-				
+	
 		#endregion
 
 		#region Common Events
@@ -169,11 +157,11 @@ namespace WotDBUpdater.Forms
 			// Check / show logged in player
 			if (Config.Settings.playerName == "")
 			{
-				lblTitle.Text = "WoT DBstats - NO PLAYER SELECTED";
+				MainTheme.Text = "WoT DBstats - NO PLAYER SELECTED";
 			}
 			else
 			{
-				lblTitle.Text = "WoT DBstats - " + Config.Settings.playerName;
+				MainTheme.Text = "WoT DBstats - " + Config.Settings.playerName;
 			}
 		}
 
@@ -189,12 +177,26 @@ namespace WotDBUpdater.Forms
 			{
 				lblStatus1.Text = "Stopped";
 				lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
+				
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
-			Refresh();
+			SetFormBorder();
 			SetStatus2(result);
 		}
 
+		private void SetFormBorder()
+		{
+			if (this.WindowState == FormWindowState.Maximized)
+				MainTheme.FormBorderColor = Code.Support.ColorTheme.FormBorderBlack;
+			else
+			{
+				if (Config.Settings.run == 1)
+					MainTheme.FormBorderColor = Code.Support.ColorTheme.FormBorderBlue;
+				else
+					MainTheme.FormBorderColor = Code.Support.ColorTheme.FormBorderRed;
+			}
+			Refresh();
+		}
 		#endregion
 
 		#region Data Grid
@@ -299,7 +301,7 @@ namespace WotDBUpdater.Forms
 			if (!Config.CheckDBConn()) return;
 			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 			string battleFilter = "";
-			if (!toolBattleFilterAll.Checked)
+			if (!toolItemBattlesAll.Checked)
 			{
 				battleFilter = "AND battleTime>=@battleTime ";
 			}
@@ -319,16 +321,16 @@ namespace WotDBUpdater.Forms
 				
 			SqlCommand cmd = new SqlCommand(sql, con);
 			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
-			if (!toolBattleFilterAll.Checked)
+			if (!toolItemBattlesAll.Checked)
 			{
 				DateTime basedate = DateTime.Now;
 				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); 
 				// Adjust time scale according to selected filter
-				if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
-				else if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
-				else if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddMonths(-1);
-				else if (toolBattleFilterYear.Checked) dateFilter = DateTime.Now.AddYears(-1);
+				if (toolItemBattles3d.Checked) dateFilter = DateTime.Now.AddDays(-3);
+				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
+				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
+				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
 				cmd.Parameters.AddWithValue("@battleTime", dateFilter);
 			}
 			cmd.CommandType = CommandType.Text;
@@ -372,16 +374,16 @@ namespace WotDBUpdater.Forms
 					"WHERE   playerTank.playerId=@playerid " + battleFilter;
 				cmd = new SqlCommand(sql, con);
 				cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
-				if (!toolBattleFilterAll.Checked)
+				if (!toolItemBattlesAll.Checked)
 				{
 					DateTime basedate = DateTime.Now;
 					if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 					DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0);
 					// Adjust time scale according to selected filter
-					if (toolBattleFilter3days.Checked) dateFilter = DateTime.Now.AddDays(-3);
-					else if (toolBattleFilterWeek.Checked) dateFilter = DateTime.Now.AddDays(-7);
-					else if (toolBattleFilterMonth.Checked) dateFilter = DateTime.Now.AddMonths(-1);
-					else if (toolBattleFilterYear.Checked) dateFilter = DateTime.Now.AddYears(-1);
+					if (toolItemBattles3d.Checked) dateFilter = DateTime.Now.AddDays(-3);
+					else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
+					else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
+					else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
 					cmd.Parameters.AddWithValue("@battleTime", dateFilter);
 				}
 				cmd.CommandType = CommandType.Text;
@@ -415,8 +417,8 @@ namespace WotDBUpdater.Forms
 			// Finish up
 			GridResizeBattle();
 			GridScrollShowCurPos();
-			toolBattle.Visible = true;
-			if (statusmessage == "") statusmessage = "Selected view: Battle - Filter: " + toolBattleFilter.Text;
+			toolItemBattles.Visible = true;
+			if (statusmessage == "") statusmessage = "Selected view: Battle - Filter: " + toolItemBattles.Text;
 			SetStatus2(statusmessage);
 		}
 
@@ -450,7 +452,7 @@ namespace WotDBUpdater.Forms
 					else // footer
 				{
 						cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.colorGrayDropDownBack;
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.ToolGrayDropDownBack;
 					}
 				}
 				// Battle Result color color
@@ -491,43 +493,6 @@ namespace WotDBUpdater.Forms
 
 				}
 			}
-		}
-
-		#endregion
-
-		#region Move Form
-
-		private bool dragging = false;
-		private Point dragCursorPoint;
-		private Point dragFormPoint;
-
-		private void panelTop_MouseDown(object sender, MouseEventArgs e)
-		{
-			dragging = true;
-			dragCursorPoint = Cursor.Position;
-			dragFormPoint = this.Location;
-		}
-
-		private void panelTop_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (dragging)
-			{
-				Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
-				this.Location = Point.Add(dragFormPoint, new Size(dif));
-			}
-		}
-
-		private void panelTop_MouseUp(object sender, MouseEventArgs e)
-		{
-			dragging = false;
-		}
-
-		
-		private void Main_Resize(object sender, EventArgs e)
-		{
-			panelTop.Width = panelMaster.Width - 2;
-			panelMain.Width = panelMaster.Width - 2;
-			panelMain.Height = panelMain.Height - panelTop.Height - 2;
 		}
 
 		#endregion
@@ -626,17 +591,17 @@ namespace WotDBUpdater.Forms
 
 		private void pnlScrollbar_MouseHover(object sender, EventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayScrollbarHover; 
+			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayScrollbarHover; 
 		}
 
 		private void pnlScrollbar_MouseLeave(object sender, EventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayScrollbar;
+			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayScrollbar;
 		}
 
 		private void pnlScrollbar_MouseDown(object sender, MouseEventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayCheckPressed;
+			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayCheckPressed;
 			scrolling = true;
 			moveFromPoint = Cursor.Position;
 			scrollY = panelScrollbar.Top;
@@ -644,7 +609,7 @@ namespace WotDBUpdater.Forms
 
 		private void pnlScrollbar_MouseUp(object sender, MouseEventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.colorGrayScrollbar;
+			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayScrollbar;
 			scrolling = false;
 		}
 
@@ -662,161 +627,43 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-		#region Form Init and Resize
+		#region Form Init and Form Resize
 
 		private void InitForm()
 		{
-			// Title bar
-			panelTop.Left = 1;
-			panelTop.Top = 1;
-			// Panel strip - holds menu / toolbar
-			panelStrip.Left = 1;
-			panelStrip.Top = 1 + panelTop.Height;
-			panelStrip.Height = 26;
-			// Main Toolbar
-			toolMain.Top = 0;
-			toolMain.Left = 12; // margin to left - center below icon
-			// Battle Toolbar
-			toolBattle.Top = 0;
-			toolBattle.Left = toolMain.Left + toolMain.Width;
-			toolBattle.Visible = false;
-			// Panel info - showing picture / welcome
-			panelInfo.Left = 1;
-			panelInfo.Top = panelStrip.Top + panelStrip.Height;
-			// Main Area including grid
-			panelMain.Left = 1;
-			panelMain.Top = panelInfo.Top + panelInfo.Height;
-			// Status bar
-			panelStatus.Left = 1;
-			// Datagrid init size
-			dataGridMain.Width = panelMain.Width - 20; // room for scrollbar
-			// Mouse wheel handle grid
+			panelMainArea.Left = MainTheme.MainArea.Left;
+			panelMainArea.Top = MainTheme.MainArea.Top;
+			panelGrid.Left = 0;
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 		}
 
 		private void RefreshFormAfterResize(bool notrefreshgrid = false)
 		{
-			// Title bar form handling with min, max, close buttons
-			int fullWidth = panelMaster.Width - 2; // remove for border on panelMaster
-			panelTop.Width = fullWidth;
-			picClose.Left = panelMain.Width - picClose.Width;
-			picNormalize.Left = picClose.Left - picNormalize.Width;
-			picMinimize.Left = picNormalize.Left - picMinimize.Width;
-			// Strip panel holding toolbar/menu
-			panelStrip.Width = fullWidth;
-			// Info panel with picture
-			panelInfo.Width = fullWidth;
-			// Status panel at bottom, with resize button
-			panelStatus.Top = panelMaster.Height - panelStatus.Height - 1;
-			panelStatus.Width = fullWidth;
-			picResize.Left = panelStatus.Width - picResize.Width;
-			picResize.Visible = (this.WindowState != FormWindowState.Maximized);
-			// Main panel with grid
-			panelMain.Width = fullWidth;
-			panelMain.Height = panelMaster.Height - panelMain.Top - panelStatus.Height - 2;
+			// Set Form border color
+			SetFormBorder(); 
+			// Set Main Area Panel
+			panelMainArea.Width = MainTheme.MainArea.Width;
+			panelMainArea.Height = MainTheme.MainArea.Height;
+			// Set grid panel position and size
+			panelGrid.Top = panelInfo.Height;
+			panelGrid.Width = panelMainArea.Width;
+			panelGrid.Height = panelMainArea.Height - panelInfo.Height;
+			// Set height on grid Panel and grid width
+			panelGrid.Height = MainTheme.MainArea.Height - panelInfo.Height;
+			dataGridMain.Width = panelMainArea.Width - 20; // room for scrollbar
 			// Grid
 			if (!notrefreshgrid)
 			{
-				dataGridMain.Width = panelMain.Width - 20; // room for scrollbar
 				// Update grid scroll pos
 				GridScrollShowCurPos(); 
 			}
-			
 		}
 
-		private bool moving = false;
-		private int formX;
-		private int formY;
-		
-		private void picResize_MouseDown(object sender, MouseEventArgs e)
+		private void MainTheme_Resize(object sender, EventArgs e)
 		{
-			moving = true;
-			moveFromPoint = Cursor.Position;
-			formX = Main.ActiveForm.Width;
-			formY = Main.ActiveForm.Height;
-		}
-
-		private void picResize_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (moving)
-			{
-				Point dif = Point.Subtract(Cursor.Position, new Size(moveFromPoint));
-				if (formX + dif.X > 300) Main.ActiveForm.Width = formX + dif.X;
-				if (formY + dif.Y > 150) Main.ActiveForm.Height = formY + dif.Y;
-				RefreshFormAfterResize(true);
-			}
-		}
-
-		private void picResize_MouseUp(object sender, MouseEventArgs e)
-		{
-			moving = false;
 			RefreshFormAfterResize();
 		}
-
-		private void picResize_MouseHover(object sender, EventArgs e)
-		{
-			this.Cursor = Cursors.SizeNWSE;
-		}
-
-		private void picResize_MouseLeave(object sender, EventArgs e)
-		{
-			this.Cursor = Cursors.Default;
-		}
-
-		private void picClose_MouseHover(object sender, EventArgs e)
-		{
-			picClose.BackColor = Code.Support.ColorTheme.colorGrayHover;
-		}
-
-		private void picClose_MouseLeave(object sender, EventArgs e)
-		{
-			picClose.BackColor = Code.Support.ColorTheme.colorGrayMain;
-		}
-
-		private void picNormalize_MouseHover(object sender, EventArgs e)
-		{
-			picNormalize.BackColor = Code.Support.ColorTheme.colorGrayHover;
-		}
-
-		private void picNormalize_MouseLeave(object sender, EventArgs e)
-		{
-			picNormalize.BackColor = Code.Support.ColorTheme.colorGrayMain;
-		}
-
-		private void picMinimize_MouseHover(object sender, EventArgs e)
-		{
-			picMinimize.BackColor = Code.Support.ColorTheme.colorGrayHover;
-		}
-
-		private void picMinimize_MouseLeave(object sender, EventArgs e)
-		{
-			picMinimize.BackColor = Code.Support.ColorTheme.colorGrayMain;
-		}
-
-		private void picClose_Click(object sender, EventArgs e)
-		{
-			Application.Exit();
-		}
-
-		private void picNormalize_Click(object sender, EventArgs e)
-		{
-			if (this.WindowState == FormWindowState.Normal)
-			{
-				this.WindowState = FormWindowState.Maximized;
-			}
-			else
-			{
-				this.WindowState = FormWindowState.Normal;
-			}
-			RefreshFormAfterResize();
-			Refresh();
-		}
-
-		private void picMinimize_Click(object sender, EventArgs e)
-		{
-			this.WindowState = FormWindowState.Minimized;
-			Refresh();
-		}
+				
 
 		#endregion
 		
@@ -829,13 +676,11 @@ namespace WotDBUpdater.Forms
 			if (show)
 			{
 				panelInfoSlideSpeed = 4;
-				panelInfo.Visible = true;
-				panelMain.Height = panelMaster.Height - panelInfo.Top - panelInfo.Height - panelStatus.Height - 2;
+				//panelInfo.Visible = true;
 			}
 			else if (!show)
 			{
 				panelInfoSlideSpeed = -4;
-				panelMain.Height = panelMaster.Height - panelInfo.Top - panelStatus.Height - 2;        
 			}
 			timerPanelSlide.Enabled = true;
 		}
@@ -843,22 +688,20 @@ namespace WotDBUpdater.Forms
 		private void timerPanelSlide_Tick(object sender, EventArgs e)
 		{
 			// Expand or collapse panel
-			int panelInfoMaxSize = 72;
-			if (panelInfo.Height + panelInfoSlideSpeed < 0)
-			{
-				panelInfo.Height = 0;
-				timerPanelSlide.Enabled=false;
-			}
-			else if (panelInfo.Height + panelInfoSlideSpeed > panelInfoMaxSize)
-			{
-				panelInfo.Height = panelInfoMaxSize;
-				timerPanelSlide.Enabled = false;
-			}
-			else
-				panelInfo.Height += panelInfoSlideSpeed;
-			// Move sub leves togheter with panel
-			panelMain.Top = panelInfo.Top + panelInfo.Height;
-			panelMain.Height = panelMaster.Height - panelMain.Top - panelStatus.Height - 2;
+			// int panelInfoMaxSize = 72;
+			//if (panelInfo.Height + panelInfoSlideSpeed < 0)
+			//{
+			//	panelInfo.Height = 0;
+			//	timerPanelSlide.Enabled=false;
+			//}
+			//else if (panelInfo.Height + panelInfoSlideSpeed > panelInfoMaxSize)
+			//{
+			//	panelInfo.Height = panelInfoMaxSize;
+			//	timerPanelSlide.Enabled = false;
+			//}
+			//else
+			//panelInfo.Height += panelInfoSlideSpeed;
+			//panelGrid.Height = panelMainArea.Height - panelInfo.Height;
 			GridScrollShowCurPos();
 		}
 
@@ -866,6 +709,37 @@ namespace WotDBUpdater.Forms
 	 
 		#region Toolstrip Events
 		
+		private void toolItemViewSelected_Click(object sender, EventArgs e)
+		{
+			ToolStripButton menuItem = (ToolStripButton)sender;
+			if (!menuItem.Checked)
+			{
+				toolItemViewOverall.Checked = false;
+				toolItemViewBattles.Checked = false;
+				toolItemViewTankInfo.Checked = false;
+				toolItemBattles.Visible = false;
+				menuItem.Checked = true;
+				SetStatus2("Selected view: " + menuItem.Text);
+				if (toolItemViewOverall.Checked)
+				{
+					panelInfoSlideStart(true);
+					GridShowOverall();
+				}
+				else if (toolItemViewTankInfo.Checked)
+				{
+					panelInfoSlideStart(false);
+					GridShowTankInfo();
+				}
+				else if (toolItemViewBattles.Checked)
+				{
+					panelInfoSlideStart(false);
+					toolItemBattles.Visible = true;
+					GridShowBattle();
+					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+				}
+			}
+		}
+
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
 			SetStatus2("Refreshing grid...");
@@ -878,49 +752,21 @@ namespace WotDBUpdater.Forms
 			SetStatus2("Grid refreshed");
 		}
 
-		private void toolItemViewOverall_Click(object sender, EventArgs e)
+		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
 		{
-			if (toolItemViewOverall.Checked) return; // quit if this view is already selected
-			SetStatus2("Selected view: Overall");
-			string s = Config.Settings.playerName;
-			if (s == "") 
-				s = "Check app settings, missing player name";
-			else
-				s = "Statistic Overview for " + s;
-			lblOverView.Text = s;
-			panelInfoSlideStart(true);
-			toolItemViewTankInfo.Checked = false;
-			toolItemViewBattles.Checked = false;
-			toolItemViewOverall.Checked = true;
-			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
-			toolBattle.Visible = false;
-			GridShowOverall();
-		}
-		
-		private void toolItemViewTankInfo_Click(object sender, EventArgs e)
-		{
-			if (toolItemViewTankInfo.Checked) return; // quit if this view is already selected
-			SetStatus2("Selected view: Tanks");
-			panelInfoSlideStart(false);
-			toolItemViewOverall.Checked = false;
-			toolItemViewBattles.Checked = false;
-			toolItemViewTankInfo.Checked = true;
-			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
-			toolBattle.Visible = false;
-			GridShowTankInfo();
+			toolItemBattles1d.Checked = false;
+			toolItemBattles3d.Checked = false;
+			toolItemBattles1w.Checked = false;
+			toolItemBattles1m.Checked = false;
+			toolItemBattles1y.Checked = false;
+			toolItemBattlesAll.Checked = false;
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			menuItem.Checked = true;
+			toolItemBattles.Text = menuItem.Text;
+			GridShowBattle();
+
 		}
 
-		private void toolItenViewBattles_Click(object sender, EventArgs e)
-		{
-			if (toolItemViewBattles.Checked) return; // quit if this view is already selected
-			panelInfoSlideStart(false);
-			toolItemViewOverall.Checked = false;
-			toolItemViewTankInfo.Checked = false;
-			toolItemViewBattles.Checked = true;
-			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
-			GridShowBattle();
-		}
-		
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.ApplicationSetting();
@@ -943,8 +789,6 @@ namespace WotDBUpdater.Forms
 					Assembly.GetExecutingAssembly().GetName().Version.MinorRevision.ToString() + ")";
 			}
 		}
-
-
 		private void toolItemHelp_Click(object sender, EventArgs e)
 		{
 			//Form frm = new Forms.Help.About();
@@ -1008,147 +852,36 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
-		private void ToolBatteFilterClear()
-		{
-			toolBattleFilterToday.Checked = false;
-			toolBattleFilter3days.Checked = false;
-			toolBattleFilterWeek.Checked = false;
-			toolBattleFilterMonth.Checked = false;
-			toolBattleFilterYear.Checked = false;
-			toolBattleFilterAll.Checked = false;
-		}
-
-		private void toolBattleFilterToday_Click(object sender, EventArgs e)
-		{
-			ToolBatteFilterClear();
-			toolBattleFilterToday.Checked = true;
-			toolBattleFilter.Text = toolBattleFilterToday.Text;
-			GridShowBattle();
-		}
-
-		private void toolBattleFilter3days_Click(object sender, EventArgs e)
-		{
-			ToolBatteFilterClear();
-			toolBattleFilter3days.Checked = true;
-			toolBattleFilter.Text = toolBattleFilter3days.Text;
-			GridShowBattle();
-		}
-
-		private void toolBattleFilterWeek_Click(object sender, EventArgs e)
-		{
-			ToolBatteFilterClear();
-			toolBattleFilterWeek.Checked = true;
-			toolBattleFilter.Text = toolBattleFilterWeek.Text;
-			GridShowBattle();
-		}
-
-		private void toolBattleFilterMonth_Click(object sender, EventArgs e)
-		{
-			ToolBatteFilterClear();
-			toolBattleFilterMonth.Checked = true;
-			toolBattleFilter.Text = toolBattleFilterMonth.Text;
-			GridShowBattle();
-		}
-
-		private void toolBattleFilterYear_Click(object sender, EventArgs e)
-		{
-			ToolBatteFilterClear();
-			toolBattleFilterYear.Checked = true;
-			toolBattleFilter.Text = toolBattleFilterYear.Text;
-			GridShowBattle();
-		}
-
-		private void toolBattleFilterAll_Click(object sender, EventArgs e)
-		{
-			ToolBatteFilterClear();
-			toolBattleFilterAll.Checked = true;
-			toolBattleFilter.Text = toolBattleFilterAll.Text;
-			GridShowBattle();
-		}
-
 		#endregion
 
 		#region Menu Item -> TESTING
 
-		
-		private void menuItemTest_ImportTank_Wn8exp_Click(object sender, EventArgs e)
+	
+		#endregion
+
+		private void toolItemTest_ImportTankWn8_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.ImportTank();
 			frm.ShowDialog();
 		}
 
-		private void menuItemTest_ImportTurret_Click(object sender, EventArgs e)
-		{
-			string s = ImportWotApi2DB.ImportTurrets();
-			Code.Support.MessageDark.Show(s);
-		}
-
-		private void menuItemTest_ImportGun_Click(object sender, EventArgs e)
-		{
-			string s = ImportWotApi2DB.ImportGuns();
-			Code.Support.MessageDark.Show(s);
-		}
-
-		private void menuItemTest_ImportRadio_Click(object sender, EventArgs e)
-		{
-			string s = ImportWotApi2DB.ImportRadios();
-			Code.Support.MessageDark.Show(s);
-		}
-
-		private void menuItemTest_WotURL_Click(object sender, EventArgs e)
-		{
-			string lcUrl = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&tank_id=49";
-			HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(lcUrl);
-
-			httpRequest.Timeout = 10000;     // 10 secs
-			httpRequest.UserAgent = "Code Sample Web Client";
-
-			HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-			StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-
-			string content = responseStream.ReadToEnd();
-			Code.Support.MessageDark.Show(content);
-		}
-
-		private void menuItemTest_ProgressBar_Click(object sender, EventArgs e)
+		private void toolItemTest_ProgressBar_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.Test.TestProgressBar();
 			frm.Show();
 		}
 
-		private void menuItemTest_ViewRange_Click(object sender, EventArgs e)
-		{
-			string vr = ViewRange.CalcViewRange().ToString();
-			Code.Support.MessageDark.Show(vr,"Test calc view range");
-		}
-
-		private void viewRangeFormToolStripMenuItem_Click(object sender, EventArgs e)
+		private void toolItemTest_ViewRange_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.Test.ViewRange();
 			frm.ShowDialog();
 		}
 
-		private void testImportWs2dbToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SetDefaultCursor(object sender, MouseEventArgs e)
 		{
-			ImportWS2DB.importWotStats2DB();
+			MainTheme.Cursor = Cursors.Default;
 		}
 
-		private void menuItemTest_ImportAch_Click(object sender, EventArgs e)
-		{
-			ImportWotApi2DB.ImportAchievements();
-		}
-
-		private void menuItemTest_NewFormStyle_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.Test.test();
-			frm.ShowDialog();
-		}
-
-		#endregion
-
-		
-
-		
 	}
 
 	

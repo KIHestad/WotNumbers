@@ -29,34 +29,20 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-			this.menuMain = new System.Windows.Forms.MenuStrip();
-			this.menuItemTest = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ImportTank_Wn8exp = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ImportTurret = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ImportGun = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ImportRadio = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ImportAch = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-			this.menuItemTest_WotURL = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ProgressBar = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_viewRangeForm = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuItemTest_testImport = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.menuItemTest_NewFormStyle = new System.Windows.Forms.ToolStripMenuItem();
-			this.panelTop = new System.Windows.Forms.Panel();
-			this.picNormalize = new System.Windows.Forms.PictureBox();
-			this.picMinimize = new System.Windows.Forms.PictureBox();
-			this.picClose = new System.Windows.Forms.PictureBox();
-			this.picLogo = new System.Windows.Forms.PictureBox();
-			this.lblTitle = new System.Windows.Forms.Label();
-			this.panelMain = new System.Windows.Forms.Panel();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+			this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
+			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
+			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
+			this.MainTheme = new BadForm();
+			this.panelMainArea = new System.Windows.Forms.Panel();
+			this.panelGrid = new System.Windows.Forms.Panel();
+			this.dataGridMain = new System.Windows.Forms.DataGridView();
 			this.panelScrollArea = new System.Windows.Forms.Panel();
 			this.panelScrollbar = new System.Windows.Forms.Panel();
-			this.dataGridMain = new System.Windows.Forms.DataGridView();
 			this.panelInfo = new System.Windows.Forms.Panel();
 			this.lblOverView = new System.Windows.Forms.Label();
 			this.picIS7 = new System.Windows.Forms.PictureBox();
@@ -66,6 +52,54 @@
 			this.toolItemViewTankInfo = new System.Windows.Forms.ToolStripButton();
 			this.toolItemViewBattles = new System.Windows.Forms.ToolStripButton();
 			this.toolItemRefresh = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolItemTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
+			this.allTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
+			this.countryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.chinaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.franceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.germanyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.uKToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.uSAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.uSSRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.japanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tankTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lightTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mediumTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.heavyTanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tankDestroyersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.scumbagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.favouriteListItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem6ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem7ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem9ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.favouriteItem10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.editFavouriteTankListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattles = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolItemBattles1d = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattles3d = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattles1w = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattles1m = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattles1y = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemSettings = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolItemSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,282 +116,94 @@
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-			this.panelStrip = new System.Windows.Forms.Panel();
-			this.toolBattle = new System.Windows.Forms.ToolStrip();
-			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-			this.toolBattleFilter = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolBattleFilterToday = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolBattleFilter3days = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolBattleFilterWeek = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolBattleFilterMonth = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolBattleFilterYear = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolBattleFilterAll = new System.Windows.Forms.ToolStripMenuItem();
-			this.picResize = new System.Windows.Forms.PictureBox();
-			this.panelMaster = new System.Windows.Forms.Panel();
-			this.panelStatus = new System.Windows.Forms.Panel();
+			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolItemTest = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolItemTest_ImportTankWn8 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemTest_ProgressBar = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
-			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
-			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
-			this.menuMain.SuspendLayout();
-			this.panelTop.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picNormalize)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picMinimize)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
-			this.panelMain.SuspendLayout();
-			this.panelScrollArea.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
+			this.MainTheme.SuspendLayout();
+			this.panelMainArea.SuspendLayout();
+			this.panelGrid.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).BeginInit();
+			this.panelScrollArea.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picIS7)).BeginInit();
 			this.toolMain.SuspendLayout();
-			this.panelStrip.SuspendLayout();
-			this.toolBattle.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picResize)).BeginInit();
-			this.panelMaster.SuspendLayout();
-			this.panelStatus.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// menuMain
+			// timerStatus2
 			// 
-			this.menuMain.BackColor = System.Drawing.SystemColors.Menu;
-			this.menuMain.Dock = System.Windows.Forms.DockStyle.Right;
-			this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItemTest});
-			this.menuMain.Location = new System.Drawing.Point(868, 0);
-			this.menuMain.Name = "menuMain";
-			this.menuMain.Size = new System.Drawing.Size(47, 78);
-			this.menuMain.TabIndex = 10;
-			this.menuMain.Text = "menuMain";
+			this.timerStatus2.Interval = 5000;
+			this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
 			// 
-			// menuItemTest
+			// toolStripSeparator11
 			// 
-			this.menuItemTest.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItemTest_ImportTank_Wn8exp,
-            this.menuItemTest_ImportTurret,
-            this.menuItemTest_ImportGun,
-            this.menuItemTest_ImportRadio,
-            this.menuItemTest_ImportAch,
-            this.toolStripSeparator5,
-            this.menuItemTest_WotURL,
-            this.menuItemTest_ProgressBar,
-            this.menuItemTest_ViewRange,
-            this.menuItemTest_viewRangeForm,
-            this.menuItemTest_testImport,
-            this.toolStripSeparator3,
-            this.menuItemTest_NewFormStyle});
-			this.menuItemTest.Name = "menuItemTest";
-			this.menuItemTest.Size = new System.Drawing.Size(34, 19);
-			this.menuItemTest.Text = "Test";
+			this.toolStripSeparator11.Name = "toolStripSeparator11";
+			this.toolStripSeparator11.Size = new System.Drawing.Size(6, 6);
 			// 
-			// menuItemTest_ImportTank_Wn8exp
+			// timerPanelSlide
 			// 
-			this.menuItemTest_ImportTank_Wn8exp.Name = "menuItemTest_ImportTank_Wn8exp";
-			this.menuItemTest_ImportTank_Wn8exp.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ImportTank_Wn8exp.Text = "Import tank & wn8 exp";
-			this.menuItemTest_ImportTank_Wn8exp.Click += new System.EventHandler(this.menuItemTest_ImportTank_Wn8exp_Click);
+			this.timerPanelSlide.Interval = 5;
+			this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
 			// 
-			// menuItemTest_ImportTurret
+			// fileSystemWatcherNewBattle
 			// 
-			this.menuItemTest_ImportTurret.Name = "menuItemTest_ImportTurret";
-			this.menuItemTest_ImportTurret.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ImportTurret.Text = "Import turrets";
-			this.menuItemTest_ImportTurret.Click += new System.EventHandler(this.menuItemTest_ImportTurret_Click);
+			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
 			// 
-			// menuItemTest_ImportGun
+			// MainTheme
 			// 
-			this.menuItemTest_ImportGun.Name = "menuItemTest_ImportGun";
-			this.menuItemTest_ImportGun.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ImportGun.Text = "Import guns";
-			this.menuItemTest_ImportGun.Click += new System.EventHandler(this.menuItemTest_ImportGun_Click);
+			this.MainTheme.Controls.Add(this.panelMainArea);
+			this.MainTheme.Controls.Add(this.toolMain);
+			this.MainTheme.Controls.Add(this.lblStatus2);
+			this.MainTheme.Controls.Add(this.lblStatus1);
+			this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.MainTheme.FormFooter = true;
+			this.MainTheme.FormFooterHeight = 26;
+			this.MainTheme.FormMargin = 0;
+			this.MainTheme.Image = ((System.Drawing.Image)(resources.GetObject("MainTheme.Image")));
+			this.MainTheme.Location = new System.Drawing.Point(0, 0);
+			this.MainTheme.MainArea = mainAreaClass1;
+			this.MainTheme.Name = "MainTheme";
+			this.MainTheme.Resizable = true;
+			this.MainTheme.Size = new System.Drawing.Size(670, 431);
+			this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
+			this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
+			this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
+			this.MainTheme.TabIndex = 18;
+			this.MainTheme.Text = "WoT DBstat";
+			this.MainTheme.TitleHeight = 53;
+			this.MainTheme.Resize += new System.EventHandler(this.MainTheme_Resize);
 			// 
-			// menuItemTest_ImportRadio
+			// panelMainArea
 			// 
-			this.menuItemTest_ImportRadio.Name = "menuItemTest_ImportRadio";
-			this.menuItemTest_ImportRadio.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ImportRadio.Text = "Import radios";
-			this.menuItemTest_ImportRadio.Click += new System.EventHandler(this.menuItemTest_ImportRadio_Click);
+			this.panelMainArea.Controls.Add(this.panelGrid);
+			this.panelMainArea.Controls.Add(this.panelInfo);
+			this.panelMainArea.Location = new System.Drawing.Point(9, 57);
+			this.panelMainArea.Name = "panelMainArea";
+			this.panelMainArea.Size = new System.Drawing.Size(649, 336);
+			this.panelMainArea.TabIndex = 18;
 			// 
-			// menuItemTest_ImportAch
+			// panelGrid
 			// 
-			this.menuItemTest_ImportAch.Name = "menuItemTest_ImportAch";
-			this.menuItemTest_ImportAch.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ImportAch.Text = "Import Achievment";
-			this.menuItemTest_ImportAch.Click += new System.EventHandler(this.menuItemTest_ImportAch_Click);
-			// 
-			// toolStripSeparator5
-			// 
-			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(182, 6);
-			// 
-			// menuItemTest_WotURL
-			// 
-			this.menuItemTest_WotURL.Name = "menuItemTest_WotURL";
-			this.menuItemTest_WotURL.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_WotURL.Text = "Test URL";
-			this.menuItemTest_WotURL.Click += new System.EventHandler(this.menuItemTest_WotURL_Click);
-			// 
-			// menuItemTest_ProgressBar
-			// 
-			this.menuItemTest_ProgressBar.Name = "menuItemTest_ProgressBar";
-			this.menuItemTest_ProgressBar.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ProgressBar.Text = "Test progress bar";
-			this.menuItemTest_ProgressBar.Click += new System.EventHandler(this.menuItemTest_ProgressBar_Click);
-			// 
-			// menuItemTest_ViewRange
-			// 
-			this.menuItemTest_ViewRange.Name = "menuItemTest_ViewRange";
-			this.menuItemTest_ViewRange.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_ViewRange.Text = "Test View Range";
-			this.menuItemTest_ViewRange.Click += new System.EventHandler(this.menuItemTest_ViewRange_Click);
-			// 
-			// menuItemTest_viewRangeForm
-			// 
-			this.menuItemTest_viewRangeForm.Name = "menuItemTest_viewRangeForm";
-			this.menuItemTest_viewRangeForm.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_viewRangeForm.Text = "View Range form";
-			this.menuItemTest_viewRangeForm.Click += new System.EventHandler(this.viewRangeFormToolStripMenuItem_Click);
-			// 
-			// menuItemTest_testImport
-			// 
-			this.menuItemTest_testImport.Name = "menuItemTest_testImport";
-			this.menuItemTest_testImport.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_testImport.Text = "Test import ws2db";
-			this.menuItemTest_testImport.Click += new System.EventHandler(this.testImportWs2dbToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(182, 6);
-			// 
-			// menuItemTest_NewFormStyle
-			// 
-			this.menuItemTest_NewFormStyle.Name = "menuItemTest_NewFormStyle";
-			this.menuItemTest_NewFormStyle.Size = new System.Drawing.Size(185, 22);
-			this.menuItemTest_NewFormStyle.Text = "New form style";
-			this.menuItemTest_NewFormStyle.Click += new System.EventHandler(this.menuItemTest_NewFormStyle_Click);
-			// 
-			// panelTop
-			// 
-			this.panelTop.BackColor = System.Drawing.Color.Transparent;
-			this.panelTop.Controls.Add(this.picNormalize);
-			this.panelTop.Controls.Add(this.picMinimize);
-			this.panelTop.Controls.Add(this.picClose);
-			this.panelTop.Controls.Add(this.picLogo);
-			this.panelTop.Controls.Add(this.lblTitle);
-			this.panelTop.Location = new System.Drawing.Point(12, 12);
-			this.panelTop.Name = "panelTop";
-			this.panelTop.Size = new System.Drawing.Size(915, 30);
-			this.panelTop.TabIndex = 14;
-			this.panelTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseDown);
-			this.panelTop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseMove);
-			this.panelTop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseUp);
-			// 
-			// picNormalize
-			// 
-			this.picNormalize.Image = ((System.Drawing.Image)(resources.GetObject("picNormalize.Image")));
-			this.picNormalize.Location = new System.Drawing.Point(819, 0);
-			this.picNormalize.Name = "picNormalize";
-			this.picNormalize.Size = new System.Drawing.Size(34, 26);
-			this.picNormalize.TabIndex = 4;
-			this.picNormalize.TabStop = false;
-			this.picNormalize.Click += new System.EventHandler(this.picNormalize_Click);
-			this.picNormalize.MouseLeave += new System.EventHandler(this.picNormalize_MouseLeave);
-			this.picNormalize.MouseHover += new System.EventHandler(this.picNormalize_MouseHover);
-			// 
-			// picMinimize
-			// 
-			this.picMinimize.Image = ((System.Drawing.Image)(resources.GetObject("picMinimize.Image")));
-			this.picMinimize.Location = new System.Drawing.Point(779, 0);
-			this.picMinimize.Name = "picMinimize";
-			this.picMinimize.Size = new System.Drawing.Size(34, 26);
-			this.picMinimize.TabIndex = 3;
-			this.picMinimize.TabStop = false;
-			this.picMinimize.Click += new System.EventHandler(this.picMinimize_Click);
-			this.picMinimize.MouseLeave += new System.EventHandler(this.picMinimize_MouseLeave);
-			this.picMinimize.MouseHover += new System.EventHandler(this.picMinimize_MouseHover);
-			// 
-			// picClose
-			// 
-			this.picClose.Image = ((System.Drawing.Image)(resources.GetObject("picClose.Image")));
-			this.picClose.Location = new System.Drawing.Point(859, 0);
-			this.picClose.Name = "picClose";
-			this.picClose.Size = new System.Drawing.Size(34, 26);
-			this.picClose.TabIndex = 2;
-			this.picClose.TabStop = false;
-			this.picClose.Click += new System.EventHandler(this.picClose_Click);
-			this.picClose.MouseLeave += new System.EventHandler(this.picClose_MouseLeave);
-			this.picClose.MouseHover += new System.EventHandler(this.picClose_MouseHover);
-			// 
-			// picLogo
-			// 
-			this.picLogo.Image = ((System.Drawing.Image)(resources.GetObject("picLogo.Image")));
-			this.picLogo.Location = new System.Drawing.Point(11, 8);
-			this.picLogo.Name = "picLogo";
-			this.picLogo.Size = new System.Drawing.Size(35, 18);
-			this.picLogo.TabIndex = 5;
-			this.picLogo.TabStop = false;
-			this.picLogo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseDown);
-			this.picLogo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseMove);
-			this.picLogo.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseUp);
-			// 
-			// lblTitle
-			// 
-			this.lblTitle.AutoSize = true;
-			this.lblTitle.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(156)))));
-			this.lblTitle.Location = new System.Drawing.Point(52, 9);
-			this.lblTitle.Name = "lblTitle";
-			this.lblTitle.Size = new System.Drawing.Size(83, 17);
-			this.lblTitle.TabIndex = 1;
-			this.lblTitle.Text = "WoT DBstats ";
-			this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseDown);
-			this.lblTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseMove);
-			this.lblTitle.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelTop_MouseUp);
-			// 
-			// panelMain
-			// 
-			this.panelMain.Controls.Add(this.panelScrollArea);
-			this.panelMain.Controls.Add(this.dataGridMain);
-			this.panelMain.Location = new System.Drawing.Point(9, 351);
-			this.panelMain.Name = "panelMain";
-			this.panelMain.Size = new System.Drawing.Size(918, 96);
-			this.panelMain.TabIndex = 15;
-			// 
-			// panelScrollArea
-			// 
-			this.panelScrollArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(59)))));
-			this.panelScrollArea.Controls.Add(this.panelScrollbar);
-			this.panelScrollArea.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelScrollArea.Location = new System.Drawing.Point(900, 0);
-			this.panelScrollArea.Name = "panelScrollArea";
-			this.panelScrollArea.Size = new System.Drawing.Size(18, 96);
-			this.panelScrollArea.TabIndex = 16;
-			// 
-			// panelScrollbar
-			// 
-			this.panelScrollbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(102)))), ((int)(((byte)(106)))));
-			this.panelScrollbar.Location = new System.Drawing.Point(4, 4);
-			this.panelScrollbar.Name = "panelScrollbar";
-			this.panelScrollbar.Size = new System.Drawing.Size(10, 30);
-			this.panelScrollbar.TabIndex = 12;
-			this.panelScrollbar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseDown);
-			this.panelScrollbar.MouseLeave += new System.EventHandler(this.pnlScrollbar_MouseLeave);
-			this.panelScrollbar.MouseHover += new System.EventHandler(this.pnlScrollbar_MouseHover);
-			this.panelScrollbar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseMove);
-			this.panelScrollbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseUp);
+			this.panelGrid.Controls.Add(this.dataGridMain);
+			this.panelGrid.Controls.Add(this.panelScrollArea);
+			this.panelGrid.Location = new System.Drawing.Point(21, 92);
+			this.panelGrid.Name = "panelGrid";
+			this.panelGrid.Size = new System.Drawing.Size(609, 224);
+			this.panelGrid.TabIndex = 19;
+			this.panelGrid.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SetDefaultCursor);
 			// 
 			// dataGridMain
 			// 
 			this.dataGridMain.AllowUserToAddRows = false;
 			this.dataGridMain.AllowUserToDeleteRows = false;
 			this.dataGridMain.AllowUserToOrderColumns = true;
-			this.dataGridMain.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.dataGridMain.BackgroundColor = System.Drawing.Color.Gray;
 			this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridMain.CausesValidation = false;
 			this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -394,19 +240,45 @@
 			this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
 			this.dataGridMain.ShowEditingIcon = false;
-			this.dataGridMain.Size = new System.Drawing.Size(455, 96);
+			this.dataGridMain.Size = new System.Drawing.Size(558, 224);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
+			// 
+			// panelScrollArea
+			// 
+			this.panelScrollArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(59)))));
+			this.panelScrollArea.Controls.Add(this.panelScrollbar);
+			this.panelScrollArea.Dock = System.Windows.Forms.DockStyle.Right;
+			this.panelScrollArea.Location = new System.Drawing.Point(591, 0);
+			this.panelScrollArea.Name = "panelScrollArea";
+			this.panelScrollArea.Size = new System.Drawing.Size(18, 224);
+			this.panelScrollArea.TabIndex = 16;
+			this.panelScrollArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SetDefaultCursor);
+			// 
+			// panelScrollbar
+			// 
+			this.panelScrollbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(102)))), ((int)(((byte)(106)))));
+			this.panelScrollbar.Location = new System.Drawing.Point(4, 4);
+			this.panelScrollbar.Name = "panelScrollbar";
+			this.panelScrollbar.Size = new System.Drawing.Size(10, 30);
+			this.panelScrollbar.TabIndex = 12;
+			this.panelScrollbar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseDown);
+			this.panelScrollbar.MouseLeave += new System.EventHandler(this.pnlScrollbar_MouseLeave);
+			this.panelScrollbar.MouseHover += new System.EventHandler(this.pnlScrollbar_MouseHover);
+			this.panelScrollbar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseMove);
+			this.panelScrollbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseUp);
 			// 
 			// panelInfo
 			// 
 			this.panelInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.panelInfo.Controls.Add(this.lblOverView);
 			this.panelInfo.Controls.Add(this.picIS7);
-			this.panelInfo.Location = new System.Drawing.Point(9, 176);
+			this.panelInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panelInfo.Location = new System.Drawing.Point(0, 0);
 			this.panelInfo.Name = "panelInfo";
-			this.panelInfo.Size = new System.Drawing.Size(918, 72);
-			this.panelInfo.TabIndex = 15;
+			this.panelInfo.Size = new System.Drawing.Size(649, 72);
+			this.panelInfo.TabIndex = 18;
+			this.panelInfo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SetDefaultCursor);
 			// 
 			// lblOverView
 			// 
@@ -414,7 +286,7 @@
 			this.lblOverView.BackColor = System.Drawing.Color.Transparent;
 			this.lblOverView.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblOverView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127)))));
-			this.lblOverView.Location = new System.Drawing.Point(3, 40);
+			this.lblOverView.Location = new System.Drawing.Point(16, 34);
 			this.lblOverView.Name = "lblOverView";
 			this.lblOverView.Size = new System.Drawing.Size(123, 29);
 			this.lblOverView.TabIndex = 0;
@@ -424,11 +296,12 @@
 			// 
 			this.picIS7.Dock = System.Windows.Forms.DockStyle.Right;
 			this.picIS7.Image = ((System.Drawing.Image)(resources.GetObject("picIS7.Image")));
-			this.picIS7.Location = new System.Drawing.Point(450, 0);
+			this.picIS7.Location = new System.Drawing.Point(193, 0);
 			this.picIS7.Name = "picIS7";
-			this.picIS7.Size = new System.Drawing.Size(468, 72);
+			this.picIS7.Size = new System.Drawing.Size(456, 72);
 			this.picIS7.TabIndex = 17;
 			this.picIS7.TabStop = false;
+			this.picIS7.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SetDefaultCursor);
 			// 
 			// toolMain
 			// 
@@ -440,14 +313,18 @@
             this.toolItemViewTankInfo,
             this.toolItemViewBattles,
             this.toolItemRefresh,
+            this.toolStripSeparator9,
+            this.toolItemTankFilter,
+            this.toolItemBattles,
             this.toolStripSeparator8,
             this.toolItemSettings,
             this.toolItemHelp,
-            this.toolStripSeparator9});
+            this.toolStripSeparator5,
+            this.toolItemTest});
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolMain.Location = new System.Drawing.Point(13, 0);
+			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(264, 25);
+			this.toolMain.Size = new System.Drawing.Size(495, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -469,7 +346,7 @@
 			this.toolItemViewOverall.Size = new System.Drawing.Size(60, 22);
 			this.toolItemViewOverall.Text = "&Overview";
 			this.toolItemViewOverall.ToolTipText = " ";
-			this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
+			this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewSelected_Click);
 			// 
 			// toolItemViewTankInfo
 			// 
@@ -479,7 +356,7 @@
 			this.toolItemViewTankInfo.Name = "toolItemViewTankInfo";
 			this.toolItemViewTankInfo.Size = new System.Drawing.Size(42, 22);
 			this.toolItemViewTankInfo.Text = "&Tanks";
-			this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
+			this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewSelected_Click);
 			// 
 			// toolItemViewBattles
 			// 
@@ -489,7 +366,7 @@
 			this.toolItemViewBattles.Name = "toolItemViewBattles";
 			this.toolItemViewBattles.Size = new System.Drawing.Size(46, 22);
 			this.toolItemViewBattles.Text = "&Battles";
-			this.toolItemViewBattles.Click += new System.EventHandler(this.toolItenViewBattles_Click);
+			this.toolItemViewBattles.Click += new System.EventHandler(this.toolItemViewSelected_Click);
 			// 
 			// toolItemRefresh
 			// 
@@ -500,6 +377,355 @@
 			this.toolItemRefresh.Size = new System.Drawing.Size(23, 22);
 			this.toolItemRefresh.Text = "Refresh grid";
 			this.toolItemRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
+			// 
+			// toolStripSeparator9
+			// 
+			this.toolStripSeparator9.Name = "toolStripSeparator9";
+			this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolItemTankFilter
+			// 
+			this.toolItemTankFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolItemTankFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.allTanksToolStripMenuItem,
+            this.tierToolStripMenuItem,
+            this.countryToolStripMenuItem,
+            this.tankTypeToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.favouriteListItemsToolStripMenuItem,
+            this.favouriteItem2ToolStripMenuItem,
+            this.favouriteItem3ToolStripMenuItem,
+            this.favouriteItem4ToolStripMenuItem,
+            this.favouriteItem5ToolStripMenuItem,
+            this.favouriteItem6ToolStripMenuItem,
+            this.favouriteItem7ToolStripMenuItem,
+            this.favouriteItem8ToolStripMenuItem,
+            this.favouriteItem9ToolStripMenuItem,
+            this.favouriteItem10ToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.editFavouriteTankListToolStripMenuItem});
+			this.toolItemTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter.Image")));
+			this.toolItemTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolItemTankFilter.Name = "toolItemTankFilter";
+			this.toolItemTankFilter.ShowDropDownArrow = false;
+			this.toolItemTankFilter.Size = new System.Drawing.Size(59, 22);
+			this.toolItemTankFilter.Text = "All Tanks";
+			// 
+			// allTanksToolStripMenuItem
+			// 
+			this.allTanksToolStripMenuItem.Name = "allTanksToolStripMenuItem";
+			this.allTanksToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.allTanksToolStripMenuItem.Text = "All Tanks";
+			// 
+			// tierToolStripMenuItem
+			// 
+			this.tierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem6,
+            this.toolStripMenuItem7,
+            this.toolStripMenuItem8,
+            this.toolStripMenuItem9,
+            this.toolStripMenuItem10,
+            this.toolStripMenuItem11});
+			this.tierToolStripMenuItem.Name = "tierToolStripMenuItem";
+			this.tierToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.tierToolStripMenuItem.Text = "Tier";
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem2.Text = "1";
+			// 
+			// toolStripMenuItem3
+			// 
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem3.Text = "2";
+			// 
+			// toolStripMenuItem4
+			// 
+			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem4.Text = "3";
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem5.Text = "4";
+			// 
+			// toolStripMenuItem6
+			// 
+			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+			this.toolStripMenuItem6.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem6.Text = "5";
+			// 
+			// toolStripMenuItem7
+			// 
+			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+			this.toolStripMenuItem7.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem7.Text = "6";
+			// 
+			// toolStripMenuItem8
+			// 
+			this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+			this.toolStripMenuItem8.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem8.Text = "7";
+			// 
+			// toolStripMenuItem9
+			// 
+			this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+			this.toolStripMenuItem9.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem9.Text = "8";
+			// 
+			// toolStripMenuItem10
+			// 
+			this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+			this.toolStripMenuItem10.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem10.Text = "9";
+			// 
+			// toolStripMenuItem11
+			// 
+			this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+			this.toolStripMenuItem11.Size = new System.Drawing.Size(86, 22);
+			this.toolStripMenuItem11.Text = "10";
+			// 
+			// countryToolStripMenuItem
+			// 
+			this.countryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chinaToolStripMenuItem,
+            this.franceToolStripMenuItem,
+            this.germanyToolStripMenuItem,
+            this.uKToolStripMenuItem,
+            this.uSAToolStripMenuItem,
+            this.uSSRToolStripMenuItem,
+            this.japanToolStripMenuItem});
+			this.countryToolStripMenuItem.Name = "countryToolStripMenuItem";
+			this.countryToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.countryToolStripMenuItem.Text = "Country";
+			// 
+			// chinaToolStripMenuItem
+			// 
+			this.chinaToolStripMenuItem.Name = "chinaToolStripMenuItem";
+			this.chinaToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.chinaToolStripMenuItem.Text = "China";
+			// 
+			// franceToolStripMenuItem
+			// 
+			this.franceToolStripMenuItem.Name = "franceToolStripMenuItem";
+			this.franceToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.franceToolStripMenuItem.Text = "France";
+			// 
+			// germanyToolStripMenuItem
+			// 
+			this.germanyToolStripMenuItem.Name = "germanyToolStripMenuItem";
+			this.germanyToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.germanyToolStripMenuItem.Text = "Germany";
+			// 
+			// uKToolStripMenuItem
+			// 
+			this.uKToolStripMenuItem.Name = "uKToolStripMenuItem";
+			this.uKToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.uKToolStripMenuItem.Text = "U.K.";
+			// 
+			// uSAToolStripMenuItem
+			// 
+			this.uSAToolStripMenuItem.Name = "uSAToolStripMenuItem";
+			this.uSAToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.uSAToolStripMenuItem.Text = "U.S.A.";
+			// 
+			// uSSRToolStripMenuItem
+			// 
+			this.uSSRToolStripMenuItem.Name = "uSSRToolStripMenuItem";
+			this.uSSRToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.uSSRToolStripMenuItem.Text = "U.S.S.R.";
+			// 
+			// japanToolStripMenuItem
+			// 
+			this.japanToolStripMenuItem.Name = "japanToolStripMenuItem";
+			this.japanToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+			this.japanToolStripMenuItem.Text = "Japan";
+			// 
+			// tankTypeToolStripMenuItem
+			// 
+			this.tankTypeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lightTanksToolStripMenuItem,
+            this.mediumTanksToolStripMenuItem,
+            this.heavyTanksToolStripMenuItem,
+            this.tankDestroyersToolStripMenuItem,
+            this.scumbagsToolStripMenuItem});
+			this.tankTypeToolStripMenuItem.Name = "tankTypeToolStripMenuItem";
+			this.tankTypeToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.tankTypeToolStripMenuItem.Text = "Tank Type";
+			// 
+			// lightTanksToolStripMenuItem
+			// 
+			this.lightTanksToolStripMenuItem.Name = "lightTanksToolStripMenuItem";
+			this.lightTanksToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+			this.lightTanksToolStripMenuItem.Text = "Light Tanks";
+			// 
+			// mediumTanksToolStripMenuItem
+			// 
+			this.mediumTanksToolStripMenuItem.Name = "mediumTanksToolStripMenuItem";
+			this.mediumTanksToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+			this.mediumTanksToolStripMenuItem.Text = "Medium Tanks";
+			// 
+			// heavyTanksToolStripMenuItem
+			// 
+			this.heavyTanksToolStripMenuItem.Name = "heavyTanksToolStripMenuItem";
+			this.heavyTanksToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+			this.heavyTanksToolStripMenuItem.Text = "Heavy Tanks";
+			// 
+			// tankDestroyersToolStripMenuItem
+			// 
+			this.tankDestroyersToolStripMenuItem.Name = "tankDestroyersToolStripMenuItem";
+			this.tankDestroyersToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+			this.tankDestroyersToolStripMenuItem.Text = "Tank Destroyers";
+			// 
+			// scumbagsToolStripMenuItem
+			// 
+			this.scumbagsToolStripMenuItem.Name = "scumbagsToolStripMenuItem";
+			this.scumbagsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+			this.scumbagsToolStripMenuItem.Text = "Scumbags (SPGs)";
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(202, 6);
+			// 
+			// favouriteListItemsToolStripMenuItem
+			// 
+			this.favouriteListItemsToolStripMenuItem.Name = "favouriteListItemsToolStripMenuItem";
+			this.favouriteListItemsToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteListItemsToolStripMenuItem.Text = "Favourite item #1";
+			// 
+			// favouriteItem2ToolStripMenuItem
+			// 
+			this.favouriteItem2ToolStripMenuItem.Name = "favouriteItem2ToolStripMenuItem";
+			this.favouriteItem2ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem2ToolStripMenuItem.Text = "Favourite item #2";
+			// 
+			// favouriteItem3ToolStripMenuItem
+			// 
+			this.favouriteItem3ToolStripMenuItem.Name = "favouriteItem3ToolStripMenuItem";
+			this.favouriteItem3ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem3ToolStripMenuItem.Text = "Favourite item #3";
+			// 
+			// favouriteItem4ToolStripMenuItem
+			// 
+			this.favouriteItem4ToolStripMenuItem.Name = "favouriteItem4ToolStripMenuItem";
+			this.favouriteItem4ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem4ToolStripMenuItem.Text = "Favourite item #4";
+			// 
+			// favouriteItem5ToolStripMenuItem
+			// 
+			this.favouriteItem5ToolStripMenuItem.Name = "favouriteItem5ToolStripMenuItem";
+			this.favouriteItem5ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem5ToolStripMenuItem.Text = "Favourite item #5";
+			// 
+			// favouriteItem6ToolStripMenuItem
+			// 
+			this.favouriteItem6ToolStripMenuItem.Name = "favouriteItem6ToolStripMenuItem";
+			this.favouriteItem6ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem6ToolStripMenuItem.Text = "Favourite item #6";
+			// 
+			// favouriteItem7ToolStripMenuItem
+			// 
+			this.favouriteItem7ToolStripMenuItem.Name = "favouriteItem7ToolStripMenuItem";
+			this.favouriteItem7ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem7ToolStripMenuItem.Text = "Favourite item #7";
+			// 
+			// favouriteItem8ToolStripMenuItem
+			// 
+			this.favouriteItem8ToolStripMenuItem.Name = "favouriteItem8ToolStripMenuItem";
+			this.favouriteItem8ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem8ToolStripMenuItem.Text = "Favourite item #8";
+			// 
+			// favouriteItem9ToolStripMenuItem
+			// 
+			this.favouriteItem9ToolStripMenuItem.Name = "favouriteItem9ToolStripMenuItem";
+			this.favouriteItem9ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem9ToolStripMenuItem.Text = "Favourite item #9";
+			// 
+			// favouriteItem10ToolStripMenuItem
+			// 
+			this.favouriteItem10ToolStripMenuItem.Name = "favouriteItem10ToolStripMenuItem";
+			this.favouriteItem10ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.favouriteItem10ToolStripMenuItem.Text = "Favourite item #10";
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(202, 6);
+			// 
+			// editFavouriteTankListToolStripMenuItem
+			// 
+			this.editFavouriteTankListToolStripMenuItem.Name = "editFavouriteTankListToolStripMenuItem";
+			this.editFavouriteTankListToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.editFavouriteTankListToolStripMenuItem.Text = "Edit Favourite Tank List...";
+			// 
+			// toolItemBattles
+			// 
+			this.toolItemBattles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolItemBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemBattles1d,
+            this.toolItemBattles3d,
+            this.toolItemBattles1w,
+            this.toolItemBattles1m,
+            this.toolItemBattles1y,
+            this.toolItemBattlesAll});
+			this.toolItemBattles.Image = ((System.Drawing.Image)(resources.GetObject("toolItemBattles.Image")));
+			this.toolItemBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolItemBattles.Name = "toolItemBattles";
+			this.toolItemBattles.ShowDropDownArrow = false;
+			this.toolItemBattles.Size = new System.Drawing.Size(90, 22);
+			this.toolItemBattles.Text = "Today\'s Battles";
+			// 
+			// toolItemBattles1d
+			// 
+			this.toolItemBattles1d.Name = "toolItemBattles1d";
+			this.toolItemBattles1d.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattles1d.Text = "Today\'s Battles";
+			this.toolItemBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			// 
+			// toolItemBattles3d
+			// 
+			this.toolItemBattles3d.Name = "toolItemBattles3d";
+			this.toolItemBattles3d.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattles3d.Text = "Battles Last 3 Days";
+			this.toolItemBattles3d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			// 
+			// toolItemBattles1w
+			// 
+			this.toolItemBattles1w.Name = "toolItemBattles1w";
+			this.toolItemBattles1w.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattles1w.Text = "Battles Last Week";
+			this.toolItemBattles1w.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			// 
+			// toolItemBattles1m
+			// 
+			this.toolItemBattles1m.Name = "toolItemBattles1m";
+			this.toolItemBattles1m.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattles1m.Text = "Battles Last Month";
+			this.toolItemBattles1m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			// 
+			// toolItemBattles1y
+			// 
+			this.toolItemBattles1y.Name = "toolItemBattles1y";
+			this.toolItemBattles1y.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattles1y.Text = "Battles Last Year";
+			this.toolItemBattles1y.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			// 
+			// toolItemBattlesAll
+			// 
+			this.toolItemBattlesAll.Name = "toolItemBattlesAll";
+			this.toolItemBattlesAll.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattlesAll.Text = "All Battles";
+			this.toolItemBattlesAll.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			// 
 			// toolStripSeparator8
 			// 
@@ -528,8 +754,8 @@
 			// toolItemSettingsRun
 			// 
 			this.toolItemSettingsRun.Name = "toolItemSettingsRun";
-			this.toolItemSettingsRun.Size = new System.Drawing.Size(254, 22);
-			this.toolItemSettingsRun.Text = "&Listen To Dossier File";
+			this.toolItemSettingsRun.Size = new System.Drawing.Size(263, 22);
+			this.toolItemSettingsRun.Text = "Listen To Dossier File";
 			this.toolItemSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
 			// 
 			// toolItemSettingsDossierOptions
@@ -540,14 +766,14 @@
             this.toolItemSettingsUpdateFromPrev,
             this.toolItemSettingsForceUpdateFromPrev});
 			this.toolItemSettingsDossierOptions.Name = "toolItemSettingsDossierOptions";
-			this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(254, 22);
-			this.toolItemSettingsDossierOptions.Text = "D&ossier File Options";
+			this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
+			this.toolItemSettingsDossierOptions.Text = "Dossier File Options";
 			// 
 			// toolItemSettingsRunManual
 			// 
 			this.toolItemSettingsRunManual.Name = "toolItemSettingsRunManual";
 			this.toolItemSettingsRunManual.Size = new System.Drawing.Size(285, 22);
-			this.toolItemSettingsRunManual.Text = "&Manual Dossier File Check";
+			this.toolItemSettingsRunManual.Text = "Manual Dossier File Check";
 			this.toolItemSettingsRunManual.Click += new System.EventHandler(this.toolItemSettingsRunManual_Click);
 			// 
 			// toolStripSeparator12
@@ -559,57 +785,57 @@
 			// 
 			this.toolItemSettingsUpdateFromPrev.Name = "toolItemSettingsUpdateFromPrev";
 			this.toolItemSettingsUpdateFromPrev.Size = new System.Drawing.Size(285, 22);
-			this.toolItemSettingsUpdateFromPrev.Text = "&Normal Check Previous Dossier File";
+			this.toolItemSettingsUpdateFromPrev.Text = "Normal Check Previous Dossier File";
 			this.toolItemSettingsUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsUpdateFromPrev_Click);
 			// 
 			// toolItemSettingsForceUpdateFromPrev
 			// 
 			this.toolItemSettingsForceUpdateFromPrev.Name = "toolItemSettingsForceUpdateFromPrev";
 			this.toolItemSettingsForceUpdateFromPrev.Size = new System.Drawing.Size(285, 22);
-			this.toolItemSettingsForceUpdateFromPrev.Text = "&Force Update From Previous Dossier File";
+			this.toolItemSettingsForceUpdateFromPrev.Text = "Force Update From Previous Dossier File";
 			this.toolItemSettingsForceUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsForceUpdateFromPrev_Click);
 			// 
 			// toolStripSeparator13
 			// 
 			this.toolStripSeparator13.Name = "toolStripSeparator13";
-			this.toolStripSeparator13.Size = new System.Drawing.Size(251, 6);
+			this.toolStripSeparator13.Size = new System.Drawing.Size(260, 6);
 			// 
 			// toolItemSettingsApp
 			// 
 			this.toolItemSettingsApp.Name = "toolItemSettingsApp";
-			this.toolItemSettingsApp.Size = new System.Drawing.Size(254, 22);
-			this.toolItemSettingsApp.Text = "&Application Settings";
+			this.toolItemSettingsApp.Size = new System.Drawing.Size(263, 22);
+			this.toolItemSettingsApp.Text = "&Application Settings...";
 			this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
 			// 
 			// toolItemSettingsDb
 			// 
 			this.toolItemSettingsDb.Name = "toolItemSettingsDb";
-			this.toolItemSettingsDb.Size = new System.Drawing.Size(254, 22);
-			this.toolItemSettingsDb.Text = "&Database Settings";
+			this.toolItemSettingsDb.Size = new System.Drawing.Size(263, 22);
+			this.toolItemSettingsDb.Text = "Database Settings";
 			this.toolItemSettingsDb.Click += new System.EventHandler(this.toolItemSettingsDb_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(251, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
 			// 
 			// toolItemShowDbTables
 			// 
 			this.toolItemShowDbTables.Name = "toolItemShowDbTables";
-			this.toolItemShowDbTables.Size = new System.Drawing.Size(254, 22);
-			this.toolItemShowDbTables.Text = "Show Database &Tables";
+			this.toolItemShowDbTables.Size = new System.Drawing.Size(263, 22);
+			this.toolItemShowDbTables.Text = "Show Database Tables...";
 			this.toolItemShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(251, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(260, 6);
 			// 
 			// toolItemImportBattlesFromWotStat
 			// 
 			this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
-			this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(254, 22);
-			this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics";
+			this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(263, 22);
+			this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
 			this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
 			// 
 			// toolItemHelp
@@ -619,265 +845,106 @@
 			this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
 			this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
 			// 
-			// toolStripSeparator9
+			// toolStripSeparator5
 			// 
-			this.toolStripSeparator9.Name = "toolStripSeparator9";
-			this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+			this.toolStripSeparator5.Name = "toolStripSeparator5";
+			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
 			// 
-			// panelStrip
+			// toolItemTest
 			// 
-			this.panelStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
-			this.panelStrip.Controls.Add(this.toolBattle);
-			this.panelStrip.Controls.Add(this.menuMain);
-			this.panelStrip.Controls.Add(this.toolMain);
-			this.panelStrip.Location = new System.Drawing.Point(12, 84);
-			this.panelStrip.Name = "panelStrip";
-			this.panelStrip.Size = new System.Drawing.Size(915, 78);
-			this.panelStrip.TabIndex = 14;
+			this.toolItemTest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolItemTest.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemTest_ImportTankWn8,
+            this.toolItemTest_ProgressBar,
+            this.toolItemTest_ViewRange});
+			this.toolItemTest.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTest.Image")));
+			this.toolItemTest.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolItemTest.Name = "toolItemTest";
+			this.toolItemTest.ShowDropDownArrow = false;
+			this.toolItemTest.Size = new System.Drawing.Size(76, 22);
+			this.toolItemTest.Text = "Admin tools";
 			// 
-			// toolBattle
+			// toolItemTest_ImportTankWn8
 			// 
-			this.toolBattle.Dock = System.Windows.Forms.DockStyle.None;
-			this.toolBattle.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.toolBattle.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.toolBattleFilter});
-			this.toolBattle.Location = new System.Drawing.Point(13, 25);
-			this.toolBattle.Name = "toolBattle";
-			this.toolBattle.ShowItemToolTips = false;
-			this.toolBattle.Size = new System.Drawing.Size(100, 25);
-			this.toolBattle.TabIndex = 14;
-			this.toolBattle.Text = "toolStrip1";
+			this.toolItemTest_ImportTankWn8.Name = "toolItemTest_ImportTankWn8";
+			this.toolItemTest_ImportTankWn8.Size = new System.Drawing.Size(200, 22);
+			this.toolItemTest_ImportTankWn8.Text = "Import Tank and WN8...";
+			this.toolItemTest_ImportTankWn8.Click += new System.EventHandler(this.toolItemTest_ImportTankWn8_Click);
 			// 
-			// toolStripLabel1
+			// toolItemTest_ProgressBar
 			// 
-			this.toolStripLabel1.Name = "toolStripLabel1";
-			this.toolStripLabel1.Size = new System.Drawing.Size(45, 22);
-			this.toolStripLabel1.Text = "Battles:";
+			this.toolItemTest_ProgressBar.Name = "toolItemTest_ProgressBar";
+			this.toolItemTest_ProgressBar.Size = new System.Drawing.Size(200, 22);
+			this.toolItemTest_ProgressBar.Text = "Progress Bar...";
+			this.toolItemTest_ProgressBar.Click += new System.EventHandler(this.toolItemTest_ProgressBar_Click);
 			// 
-			// toolBattleFilter
+			// toolItemTest_ViewRange
 			// 
-			this.toolBattleFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolBattleFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolBattleFilterToday,
-            this.toolBattleFilter3days,
-            this.toolBattleFilterWeek,
-            this.toolBattleFilterMonth,
-            this.toolBattleFilterYear,
-            this.toolBattleFilterAll});
-			this.toolBattleFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolBattleFilter.Image")));
-			this.toolBattleFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolBattleFilter.Name = "toolBattleFilter";
-			this.toolBattleFilter.ShowDropDownArrow = false;
-			this.toolBattleFilter.Size = new System.Drawing.Size(52, 22);
-			this.toolBattleFilter.Text = "Today\'s";
-			// 
-			// toolBattleFilterToday
-			// 
-			this.toolBattleFilterToday.Checked = true;
-			this.toolBattleFilterToday.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolBattleFilterToday.Name = "toolBattleFilterToday";
-			this.toolBattleFilterToday.Size = new System.Drawing.Size(134, 22);
-			this.toolBattleFilterToday.Text = "Today\'s";
-			this.toolBattleFilterToday.Click += new System.EventHandler(this.toolBattleFilterToday_Click);
-			// 
-			// toolBattleFilter3days
-			// 
-			this.toolBattleFilter3days.Name = "toolBattleFilter3days";
-			this.toolBattleFilter3days.Size = new System.Drawing.Size(134, 22);
-			this.toolBattleFilter3days.Text = "Last 3 Days";
-			this.toolBattleFilter3days.Click += new System.EventHandler(this.toolBattleFilter3days_Click);
-			// 
-			// toolBattleFilterWeek
-			// 
-			this.toolBattleFilterWeek.Name = "toolBattleFilterWeek";
-			this.toolBattleFilterWeek.Size = new System.Drawing.Size(134, 22);
-			this.toolBattleFilterWeek.Text = "Last Week";
-			this.toolBattleFilterWeek.Click += new System.EventHandler(this.toolBattleFilterWeek_Click);
-			// 
-			// toolBattleFilterMonth
-			// 
-			this.toolBattleFilterMonth.Name = "toolBattleFilterMonth";
-			this.toolBattleFilterMonth.Size = new System.Drawing.Size(134, 22);
-			this.toolBattleFilterMonth.Text = "Last Month";
-			this.toolBattleFilterMonth.Click += new System.EventHandler(this.toolBattleFilterMonth_Click);
-			// 
-			// toolBattleFilterYear
-			// 
-			this.toolBattleFilterYear.Name = "toolBattleFilterYear";
-			this.toolBattleFilterYear.Size = new System.Drawing.Size(134, 22);
-			this.toolBattleFilterYear.Text = "Last Year";
-			this.toolBattleFilterYear.Click += new System.EventHandler(this.toolBattleFilterYear_Click);
-			// 
-			// toolBattleFilterAll
-			// 
-			this.toolBattleFilterAll.Name = "toolBattleFilterAll";
-			this.toolBattleFilterAll.Size = new System.Drawing.Size(134, 22);
-			this.toolBattleFilterAll.Text = "All";
-			this.toolBattleFilterAll.Click += new System.EventHandler(this.toolBattleFilterAll_Click);
-			// 
-			// picResize
-			// 
-			this.picResize.Image = ((System.Drawing.Image)(resources.GetObject("picResize.Image")));
-			this.picResize.Location = new System.Drawing.Point(869, 0);
-			this.picResize.Name = "picResize";
-			this.picResize.Size = new System.Drawing.Size(24, 24);
-			this.picResize.TabIndex = 13;
-			this.picResize.TabStop = false;
-			this.picResize.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picResize_MouseDown);
-			this.picResize.MouseLeave += new System.EventHandler(this.picResize_MouseLeave);
-			this.picResize.MouseHover += new System.EventHandler(this.picResize_MouseHover);
-			this.picResize.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picResize_MouseMove);
-			this.picResize.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picResize_MouseUp);
-			// 
-			// panelMaster
-			// 
-			this.panelMaster.Controls.Add(this.panelStatus);
-			this.panelMaster.Controls.Add(this.panelInfo);
-			this.panelMaster.Controls.Add(this.panelTop);
-			this.panelMaster.Controls.Add(this.panelStrip);
-			this.panelMaster.Controls.Add(this.panelMain);
-			this.panelMaster.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelMaster.Location = new System.Drawing.Point(0, 0);
-			this.panelMaster.Name = "panelMaster";
-			this.panelMaster.Size = new System.Drawing.Size(964, 532);
-			this.panelMaster.TabIndex = 16;
-			this.panelMaster.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMaster_Paint);
-			// 
-			// panelStatus
-			// 
-			this.panelStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(8)))), ((int)(((byte)(8)))), ((int)(((byte)(8)))));
-			this.panelStatus.Controls.Add(this.picResize);
-			this.panelStatus.Controls.Add(this.lblStatus2);
-			this.panelStatus.Controls.Add(this.label1);
-			this.panelStatus.Controls.Add(this.lblStatus1);
-			this.panelStatus.Location = new System.Drawing.Point(9, 475);
-			this.panelStatus.Name = "panelStatus";
-			this.panelStatus.Size = new System.Drawing.Size(915, 24);
-			this.panelStatus.TabIndex = 16;
+			this.toolItemTest_ViewRange.Name = "toolItemTest_ViewRange";
+			this.toolItemTest_ViewRange.Size = new System.Drawing.Size(200, 22);
+			this.toolItemTest_ViewRange.Text = "View Range...";
+			this.toolItemTest_ViewRange.Click += new System.EventHandler(this.toolItemTest_ViewRange_Click);
 			// 
 			// lblStatus2
 			// 
+			this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lblStatus2.AutoSize = true;
+			this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatus2.Location = new System.Drawing.Point(67, 5);
+			this.lblStatus2.Location = new System.Drawing.Point(92, 410);
 			this.lblStatus2.Name = "lblStatus2";
 			this.lblStatus2.Size = new System.Drawing.Size(68, 13);
 			this.lblStatus2.TabIndex = 16;
 			this.lblStatus2.Text = "Last action...";
 			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.ForeColor = System.Drawing.Color.DarkGray;
-			this.label1.Location = new System.Drawing.Point(72, 6);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(0, 13);
-			this.label1.TabIndex = 15;
-			// 
 			// lblStatus1
 			// 
+			this.lblStatus1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lblStatus1.AutoSize = true;
+			this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.lblStatus1.Location = new System.Drawing.Point(8, 5);
+			this.lblStatus1.Location = new System.Drawing.Point(13, 410);
 			this.lblStatus1.Name = "lblStatus1";
 			this.lblStatus1.Size = new System.Drawing.Size(37, 13);
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
-			// 
-			// timerStatus2
-			// 
-			this.timerStatus2.Interval = 5000;
-			this.timerStatus2.Tick += new System.EventHandler(this.timerStatus2_Tick);
-			// 
-			// toolStripSeparator11
-			// 
-			this.toolStripSeparator11.Name = "toolStripSeparator11";
-			this.toolStripSeparator11.Size = new System.Drawing.Size(6, 6);
-			// 
-			// timerPanelSlide
-			// 
-			this.timerPanelSlide.Interval = 5;
-			this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
-			// 
-			// fileSystemWatcherNewBattle
-			// 
-			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
-			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.ClientSize = new System.Drawing.Size(964, 532);
-			this.Controls.Add(this.panelMaster);
+			this.ClientSize = new System.Drawing.Size(670, 431);
+			this.Controls.Add(this.MainTheme);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MainMenuStrip = this.menuMain;
+			this.MinimumSize = new System.Drawing.Size(450, 250);
 			this.Name = "Main";
 			this.Text = "WotDBUpdater";
+			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.Main_Load);
-			this.Resize += new System.EventHandler(this.Main_Resize);
-			this.menuMain.ResumeLayout(false);
-			this.menuMain.PerformLayout();
-			this.panelTop.ResumeLayout(false);
-			this.panelTop.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picNormalize)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picMinimize)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
-			this.panelMain.ResumeLayout(false);
-			this.panelScrollArea.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
+			this.MainTheme.ResumeLayout(false);
+			this.MainTheme.PerformLayout();
+			this.panelMainArea.ResumeLayout(false);
+			this.panelGrid.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).EndInit();
+			this.panelScrollArea.ResumeLayout(false);
 			this.panelInfo.ResumeLayout(false);
 			this.panelInfo.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picIS7)).EndInit();
 			this.toolMain.ResumeLayout(false);
 			this.toolMain.PerformLayout();
-			this.panelStrip.ResumeLayout(false);
-			this.panelStrip.PerformLayout();
-			this.toolBattle.ResumeLayout(false);
-			this.toolBattle.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picResize)).EndInit();
-			this.panelMaster.ResumeLayout(false);
-			this.panelStatus.ResumeLayout(false);
-			this.panelStatus.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.MenuStrip menuMain;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_WotURL;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportTurret;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportGun;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportRadio;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ProgressBar;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportTank_Wn8exp;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-		private System.Windows.Forms.Panel panelTop;
-		private System.Windows.Forms.Label lblTitle;
-		private System.Windows.Forms.Panel panelMain;
-		private System.Windows.Forms.Panel panelMaster;
-		private System.Windows.Forms.PictureBox picResize;
-		private System.Windows.Forms.PictureBox picLogo;
-		private System.Windows.Forms.PictureBox picNormalize;
-		private System.Windows.Forms.PictureBox picMinimize;
-		private System.Windows.Forms.PictureBox picClose;
-		private System.Windows.Forms.Panel panelStatus;
-		private System.Windows.Forms.Label lblStatus1;
-		private System.Windows.Forms.Label lblStatus2;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Timer timerStatus2;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ViewRange;
-		private System.Windows.Forms.DataGridView dataGridMain;
 		private System.Windows.Forms.Panel panelScrollbar;
 		private System.Windows.Forms.ToolStrip toolMain;
 		private System.Windows.Forms.ToolStripButton toolItemRefresh;
-		private System.Windows.Forms.Panel panelStrip;
 		private System.Windows.Forms.ToolStripLabel toolItemViewLabel;
 		private System.Windows.Forms.ToolStripButton toolItemViewOverall;
 		private System.Windows.Forms.ToolStripButton toolItemViewTankInfo;
@@ -896,30 +963,74 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsUpdateFromPrev;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsForceUpdateFromPrev;
-		private System.Windows.Forms.Panel panelInfo;
 		private System.Windows.Forms.Label lblOverView;
 		private System.Windows.Forms.PictureBox picIS7;
 		private System.Windows.Forms.Timer timerPanelSlide;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem toolItemShowDbTables;
 		private System.Windows.Forms.Panel panelScrollArea;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_viewRangeForm;
-		private System.Windows.Forms.ToolStrip toolBattle;
-		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-		private System.Windows.Forms.ToolStripDropDownButton toolBattleFilter;
-		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterToday;
-		private System.Windows.Forms.ToolStripMenuItem toolBattleFilter3days;
-		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterWeek;
-		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterMonth;
-		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterYear;
-		private System.Windows.Forms.ToolStripMenuItem toolBattleFilterAll;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_testImport;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_ImportAch;
+		private BadForm MainTheme;
+		private System.Windows.Forms.Label lblStatus2;
+		private System.Windows.Forms.Label lblStatus1;
+		private System.Windows.Forms.DataGridView dataGridMain;
+		private System.Windows.Forms.ToolStripDropDownButton toolItemBattles;
+		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1d;
+		private System.Windows.Forms.ToolStripMenuItem toolItemBattles3d;
+		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1w;
+		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1m;
+		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1y;
+		private System.Windows.Forms.ToolStripMenuItem toolItemBattlesAll;
+		private System.Windows.Forms.ToolStripDropDownButton toolItemTest;
+		private System.Windows.Forms.ToolStripMenuItem toolItemTest_ImportTankWn8;
+		private System.Windows.Forms.ToolStripMenuItem toolItemTest_ProgressBar;
+		private System.Windows.Forms.ToolStripMenuItem toolItemTest_ViewRange;
+		private System.Windows.Forms.ToolStripDropDownButton toolItemTankFilter;
+		private System.Windows.Forms.ToolStripMenuItem allTanksToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tierToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
+		private System.Windows.Forms.ToolStripMenuItem countryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem chinaToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem franceToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem germanyToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem uKToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem uSAToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem uSSRToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem japanToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tankTypeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lightTanksToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mediumTanksToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem heavyTanksToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tankDestroyersToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem scumbagsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripMenuItem menuItemTest_NewFormStyle;
+		private System.Windows.Forms.ToolStripMenuItem favouriteListItemsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem2ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem3ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem4ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem5ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem6ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem7ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem8ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem9ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem favouriteItem10ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripMenuItem editFavouriteTankListToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+		private System.Windows.Forms.Panel panelMainArea;
+		private System.Windows.Forms.Panel panelInfo;
+		private System.Windows.Forms.Panel panelGrid;
 	}
 }
 

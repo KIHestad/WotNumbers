@@ -7,9 +7,6 @@ namespace WotDBUpdater.Code.Support
 
 	public class StripLayout : ProfessionalColorTable
 	{
-		// From Dark Grey
-		
-
 		public override Color ButtonSelectedHighlight
 		{
 			get { return ButtonSelectedGradientMiddle; }
@@ -40,75 +37,75 @@ namespace WotDBUpdater.Code.Support
 		}
 		public override Color ButtonSelectedBorder
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ButtonCheckedGradientBegin
 		{
-			get { return ColorTheme.colorBlueSelectedButton; } // show selected view
+			get { return ColorTheme.ToolBlueSelectedButton; } // show selected view
 		}
 		public override Color ButtonCheckedGradientMiddle
 		{
-			get { return ColorTheme.colorBlueSelectedButton; } // show selected view
+			get { return ColorTheme.ToolBlueSelectedButton; } // show selected view
 		}
 		public override Color ButtonCheckedGradientEnd
 		{
-			get { return ColorTheme.colorBlueSelectedButton; } // show selected view
+			get { return ColorTheme.ToolBlueSelectedButton; } // show selected view
 		}
 		public override Color ButtonSelectedGradientBegin
 		{
-			get { return ColorTheme.colorGrayHover; }
+			get { return ColorTheme.ToolGrayHover; }
 		}
 		public override Color ButtonSelectedGradientMiddle
 		{
-			get { return ColorTheme.colorGrayHover; }
+			get { return ColorTheme.ToolGrayHover; }
 		}
 		public override Color ButtonSelectedGradientEnd
 		{
-			get { return ColorTheme.colorGrayHover; }
+			get { return ColorTheme.ToolGrayHover; }
 		}
 		public override Color ButtonPressedGradientBegin
 		{
-			get { return ColorTheme.colorBlue; }
+			get { return ColorTheme.ToolBlue; }
 		}
 		public override Color ButtonPressedGradientMiddle
 		{
-			get { return ColorTheme.colorBlue; }
+			get { return ColorTheme.ToolBlue; }
 		}
 		public override Color ButtonPressedGradientEnd
 		{
-			get { return ColorTheme.colorBlue; }
+			get { return ColorTheme.ToolBlue; }
 		}
 		public override Color CheckBackground
 		{
-			get { return ColorTheme.colorGrayScrollbarHover; }
+			get { return ColorTheme.ToolGrayScrollbarHover; }
 		}
 		public override Color CheckSelectedBackground
 		{
-			get { return ColorTheme.colorGrayScrollbarHover; }
+			get { return ColorTheme.ToolGrayScrollbarHover; }
 		}
 		public override Color CheckPressedBackground
 		{
-			get { return ColorTheme.colorGrayCheckPressed; }
+			get { return ColorTheme.ToolGrayCheckPressed; }
 		}
 		public override Color GripDark
 		{
-			get { return ColorTheme.colorGrayScrollbarHover; }
+			get { return ColorTheme.ToolGrayScrollbarHover; }
 		}
 		public override Color GripLight
 		{
-			get { return ColorTheme.colorGrayScrollbarHover; }
+			get { return ColorTheme.ToolGrayScrollbarHover; }
 		}
 		public override Color ImageMarginGradientBegin
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color ImageMarginGradientMiddle
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color ImageMarginGradientEnd
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color ImageMarginRevealedGradientBegin
 		{
@@ -124,43 +121,43 @@ namespace WotDBUpdater.Code.Support
 		}
 		public override Color MenuStripGradientBegin
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color MenuStripGradientEnd
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color MenuItemSelected
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color MenuItemBorder
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color MenuBorder
 		{
-			get { return ColorTheme.colorGrayHover; }
+			get { return ColorTheme.ToolGrayHover; }
 		}
 		public override Color MenuItemSelectedGradientBegin
 		{
-			get { return ColorTheme.colorGrayHover; }
+			get { return ColorTheme.ToolGrayHover; }
 		}
 		public override Color MenuItemSelectedGradientEnd
 		{
-			get { return ColorTheme.colorGrayHover; }
+			get { return ColorTheme.ToolGrayHover; }
 		}
 		public override Color MenuItemPressedGradientBegin
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color MenuItemPressedGradientMiddle
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color MenuItemPressedGradientEnd
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color RaftingContainerGradientBegin
 		{
@@ -172,67 +169,67 @@ namespace WotDBUpdater.Code.Support
 		}
 		public override Color SeparatorDark
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color SeparatorLight
 		{
-			get { return ColorTheme.colorGrayScrollbarHover; }
+			get { return ColorTheme.ToolGrayScrollbarHover; }
 		}
 		public override Color StatusStripGradientBegin
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color StatusStripGradientEnd
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripBorder
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripDropDownBackground
 		{
-			get { return ColorTheme.colorGrayDropDownBack; }
+			get { return ColorTheme.ToolGrayDropDownBack; }
 		}
 		public override Color ToolStripGradientBegin
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripGradientMiddle
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripGradientEnd
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripContentPanelGradientBegin
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripContentPanelGradientEnd
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripPanelGradientBegin
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color ToolStripPanelGradientEnd
 		{
-			get { return ColorTheme.colorGrayMain; }
+			get { return ColorTheme.ToolGrayMain; }
 		}
 		public override Color OverflowButtonGradientBegin
 		{
-			get { return ColorTheme.colorGrayOutline; }
+			get { return ColorTheme.ToolGrayOutline; }
 		}
 		public override Color OverflowButtonGradientMiddle
 		{
-			get { return ColorTheme.colorGrayOutline; }
+			get { return ColorTheme.ToolGrayOutline; }
 		}
 		public override Color OverflowButtonGradientEnd
 		{
-			get { return ColorTheme.colorGrayOutline; }
+			get { return ColorTheme.ToolGrayOutline; }
 		}
 	}
 }

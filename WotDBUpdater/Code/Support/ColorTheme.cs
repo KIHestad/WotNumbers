@@ -12,6 +12,7 @@ namespace WotDBUpdater.Code.Support
 	class ColorTheme
 	{
 		// Control container and control colors
+		public static Color FormTranparency = Color.FromArgb(255, 1, 1, 1);
 		public static Color FormBack = Color.FromArgb(255, 32, 32, 32);
 		public static Color FormBackTitle = Color.FromArgb(255, 45, 45, 49);
 		public static Color FormBackFooter = Color.FromArgb(255, 8, 8, 8);
@@ -24,16 +25,16 @@ namespace WotDBUpdater.Code.Support
 		public static Color ControlFont = Color.FromArgb(255, 150, 150, 156);
 		
 		// Grid colors
-		public static Color colorGrayDropDownBack = Color.FromArgb(255, 22, 22, 22);
-		public static Color colorGrayMain = Color.FromArgb(255, 45, 45, 49);
-		public static Color colorGrayHover = Color.FromArgb(255, 68, 68, 72);
-		public static Color colorGrayOutline = Color.FromArgb(255, 82, 82, 96);
-		public static Color colorGrayScrollbar = Color.FromArgb(255, 102, 102, 106);
-		public static Color colorGrayScrollbarHover = Color.FromArgb(255, 126, 126, 130);
-		public static Color colorGrayCheckPressed = Color.FromArgb(255, 177, 177, 180);
-		public static Color colorWhiteToolStrip = Color.FromArgb(255, 240, 240, 240);
-		public static Color colorBlue = Color.FromArgb(255, 66, 125, 215);
-		public static Color colorBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
+		public static Color ToolGrayDropDownBack = Color.FromArgb(255, 22, 22, 22);
+		public static Color ToolGrayMain = Color.FromArgb(255, 45, 45, 49);
+		public static Color ToolGrayHover = Color.FromArgb(255, 68, 68, 72);
+		public static Color ToolGrayOutline = Color.FromArgb(255, 82, 82, 96);
+		public static Color ToolGrayScrollbar = Color.FromArgb(255, 102, 102, 106);
+		public static Color ToolGrayScrollbarHover = Color.FromArgb(255, 126, 126, 130);
+		public static Color ToolGrayCheckPressed = Color.FromArgb(255, 177, 177, 180);
+		public static Color ToolWhiteToolStrip = Color.FromArgb(255, 240, 240, 240);
+		public static Color ToolBlue = Color.FromArgb(255, 66, 125, 215);
+		public static Color ToolBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
 		
 	}
 }
