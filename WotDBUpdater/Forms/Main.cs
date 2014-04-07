@@ -634,6 +634,7 @@ namespace WotDBUpdater.Forms
 			panelMainArea.Left = MainTheme.MainArea.Left;
 			panelMainArea.Top = MainTheme.MainArea.Top;
 			panelGrid.Left = 0;
+			panelGrid.Top = panelInfo.Height;
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 		}
 
@@ -645,11 +646,9 @@ namespace WotDBUpdater.Forms
 			panelMainArea.Width = MainTheme.MainArea.Width;
 			panelMainArea.Height = MainTheme.MainArea.Height;
 			// Set grid panel position and size
-			panelGrid.Top = panelInfo.Height;
 			panelGrid.Width = panelMainArea.Width;
 			panelGrid.Height = panelMainArea.Height - panelInfo.Height;
-			// Set height on grid Panel and grid width
-			panelGrid.Height = MainTheme.MainArea.Height - panelInfo.Height;
+			// Set grid width
 			dataGridMain.Width = panelMainArea.Width - 20; // room for scrollbar
 			// Grid
 			if (!notrefreshgrid)
@@ -669,18 +668,18 @@ namespace WotDBUpdater.Forms
 		
 		#region Panel Info - Slider Events
 
-		private int panelInfoSlideSpeed;
+		private int infoPanelSlideSpeed;
 		
-		private void panelInfoSlideStart(bool show)
+		private void InfoPanelSlideStart(bool show)
 		{
 			if (show)
 			{
-				panelInfoSlideSpeed = 4;
-				//panelInfo.Visible = true;
+				infoPanelSlideSpeed = 4;
+				panelInfo.Visible = true;
 			}
 			else if (!show)
 			{
-				panelInfoSlideSpeed = -4;
+				infoPanelSlideSpeed = -4;
 			}
 			timerPanelSlide.Enabled = true;
 		}
@@ -688,20 +687,26 @@ namespace WotDBUpdater.Forms
 		private void timerPanelSlide_Tick(object sender, EventArgs e)
 		{
 			// Expand or collapse panel
-			// int panelInfoMaxSize = 72;
-			//if (panelInfo.Height + panelInfoSlideSpeed < 0)
-			//{
-			//	panelInfo.Height = 0;
-			//	timerPanelSlide.Enabled=false;
-			//}
-			//else if (panelInfo.Height + panelInfoSlideSpeed > panelInfoMaxSize)
-			//{
-			//	panelInfo.Height = panelInfoMaxSize;
-			//	timerPanelSlide.Enabled = false;
-			//}
-			//else
-			//panelInfo.Height += panelInfoSlideSpeed;
-			//panelGrid.Height = panelMainArea.Height - panelInfo.Height;
+			int panelInfoMaxSize = 72;
+			// Change InfoPanel Height if within boundary
+			if (panelInfo.Height + infoPanelSlideSpeed < 0)
+			{
+				panelInfo.Height = 0;
+				timerPanelSlide.Enabled = false;
+			}
+			else if (panelInfo.Height + infoPanelSlideSpeed > panelInfoMaxSize)
+			{
+				panelInfo.Height = panelInfoMaxSize;
+				timerPanelSlide.Enabled = false;
+			}
+			else
+			{
+				panelInfo.Height += infoPanelSlideSpeed;
+			}
+				
+			// Set grid panel height
+			panelGrid.Top = panelInfo.Height;
+			panelGrid.Height = panelMainArea.Height - panelInfo.Height;
 			GridScrollShowCurPos();
 		}
 
@@ -722,17 +727,17 @@ namespace WotDBUpdater.Forms
 				SetStatus2("Selected view: " + menuItem.Text);
 				if (toolItemViewOverall.Checked)
 				{
-					panelInfoSlideStart(true);
+					InfoPanelSlideStart(true);
 					GridShowOverall();
 				}
 				else if (toolItemViewTankInfo.Checked)
 				{
-					panelInfoSlideStart(false);
+					InfoPanelSlideStart(false);
 					GridShowTankInfo();
 				}
 				else if (toolItemViewBattles.Checked)
 				{
-					panelInfoSlideStart(false);
+					InfoPanelSlideStart(false);
 					toolItemBattles.Visible = true;
 					GridShowBattle();
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
@@ -855,10 +860,7 @@ namespace WotDBUpdater.Forms
 		#endregion
 
 		#region Menu Item -> TESTING
-
 	
-		#endregion
-
 		private void toolItemTest_ImportTankWn8_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.ImportTank();
@@ -881,6 +883,8 @@ namespace WotDBUpdater.Forms
 		{
 			MainTheme.Cursor = Cursors.Default;
 		}
+
+		#endregion
 
 	}
 
