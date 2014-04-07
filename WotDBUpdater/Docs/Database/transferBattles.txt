@@ -1,0 +1,11 @@
+﻿insert into battle (
+  playerTankId, battlesCount, battleTime, battleLifeTime, battleResultId, victory, draw, defeat,
+  battleSurviveId, survived, killed, frags, dmg, dmgReceived, assistSpot, assistTrack, cap, def,
+  shots, hits, shotsReceived, pierced, piercedReceived, spotted, mileage, treesCut, xp, mode15,
+  mode7, modeClan, modeCompany, wn8, eff, wsId)
+select
+  playerTankId, battlesCount, battleTime, battleLifeTime, battleResultId, victory, draw, defeat,
+  battleSurviveId, survived, killed, frags, dmg, dmgReceived, assistSpot, assistTrack, cap, def,
+  shots, hits, shotsReceived, pierced, piercedReceived, spotted, mileage, treesCut, xp, mode15,
+  mode7, modeClan, modeCompany, wn8, eff, wsId
+from oldDB.dbo.battle

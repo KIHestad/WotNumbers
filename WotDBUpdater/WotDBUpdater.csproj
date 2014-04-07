@@ -321,6 +321,7 @@
     <Content Include="Docs\Database\createTable.txt" />
     <Content Include="Docs\Database\dropFk.txt" />
     <Content Include="Docs\Database\insert.txt" />
+    <Content Include="Docs\Database\transferBattles.txt" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="Dossier2json\wotdc2j_8_11.py" />
     <Content Include="Lib\abc.py" />
