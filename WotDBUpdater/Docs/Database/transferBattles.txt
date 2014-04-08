@@ -1,11 +1,37 @@
-﻿insert into battle (
+﻿/*
+Transfers battles from old database to new
+- playerTankId relation will be updated
+*/
+
+insert into battle (
   playerTankId, battlesCount, battleTime, battleLifeTime, battleResultId, victory, draw, defeat,
   battleSurviveId, survived, killed, frags, dmg, dmgReceived, assistSpot, assistTrack, cap, def,
   shots, hits, shotsReceived, pierced, piercedReceived, spotted, mileage, treesCut, xp, mode15,
   mode7, modeClan, modeCompany, wn8, eff, wsId)
 select
-  playerTankId, battlesCount, battleTime, battleLifeTime, battleResultId, victory, draw, defeat,
-  battleSurviveId, survived, killed, frags, dmg, dmgReceived, assistSpot, assistTrack, cap, def,
-  shots, hits, shotsReceived, pierced, piercedReceived, spotted, mileage, treesCut, xp, mode15,
-  mode7, modeClan, modeCompany, wn8, eff, wsId
-from oldDB.dbo.battle
+  pt.id, ob.battlesCount, ob.battleTime, ob.battleLifeTime, ob.battleResultId, ob.victory, ob.draw, ob.defeat,
+  ob.battleSurviveId, ob.survived, ob.killed, ob.frags, ob.dmg, ob.dmgReceived, ob.assistSpot, ob.assistTrack, ob.cap, ob.def,
+  ob.shots, ob.hits, ob.shotsReceived, ob.pierced, ob.piercedReceived, ob.spotted, ob.mileage, ob.treesCut, ob.xp, ob.mode15,
+  ob.mode7, ob.modeClan, ob.modeCompany, ob.wn8, ob.eff, ob.wsId
+from oldDB.dbo.battle ob
+inner join oldDB.dbo.playerTank opt on opt.id = ob.playerTankId
+inner join oldDB.dbo.tank ot on ot.id = opt.tankId
+inner join playerTank pt on pt.tankId = ot.id
+
+
+
+/*
+
+-- Control select for playerTankId
+
+select
+  pt.id, opt.id, ob.playerTankId, ob.battlesCount, ob.battleTime, ob.battleLifeTime, ob.battleResultId, ob.victory, ob.draw, ob.defeat,
+  ob.battleSurviveId, ob.survived, ob.killed, ob.frags, ob.dmg, ob.dmgReceived, ob.assistSpot, ob.assistTrack, ob.cap, ob.def,
+  ob.shots, ob.hits, ob.shotsReceived, ob.pierced, ob.piercedReceived, ob.spotted, ob.mileage, ob.treesCut, ob.xp, ob.mode15,
+  ob.mode7, ob.modeClan, ob.modeCompany, ob.wn8, ob.eff, ob.wsId
+from testdb4.dbo.battle ob
+inner join testdb4.dbo.playerTank opt on opt.id = ob.playerTankId
+inner join testdb4.dbo.tank ot on ot.id = opt.tankId
+inner join playerTank pt on pt.tankId = ot.id
+
+*/
