@@ -292,9 +292,44 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DevDocs\Img\InfoPanel\bg1.png" />
+    <Content Include="DevDocs\Img\InfoPanel\bg1_large.png" />
+    <Content Include="DevDocs\Img\InfoPanel\bg2_72px.png" />
+    <Content Include="DevDocs\Img\InfoPanel\bg3_72px.png" />
+    <Content Include="DevDocs\Img\InfoPanel\bg4_72px.png" />
+    <Content Include="DevDocs\Img\InfoPanel\bg5_72px.png" />
+    <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
-    <Content Include="Docs\Database\createProc.txt" />
+    <Content Include="DevDocs\DatabaseLog\createProc.txt" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_china.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_france.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_germany.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_japan.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_main.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_uk.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_usa.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\country_ussr.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier1.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier2.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier3.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier4.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier5.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier6.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier7.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier8.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier9.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tierX.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\tier_main.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_heavy.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_light.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_light2.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_main.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_medium.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs2.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\type_TD.png" />
     <Content Include="Docs\Database\createView.txt" />
     <Content Include="Docs\Database\select.txt" />
     <Content Include="DevDocs\Dev log\BadButton.txt" />
