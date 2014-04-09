@@ -31,7 +31,8 @@ namespace WotDBUpdater.Code.Support
 		public static Color ToolGrayOutline = Color.FromArgb(255, 82, 82, 86);
 		public static Color ToolGrayScrollbar = Color.FromArgb(255, 102, 102, 106);
 		public static Color ToolGrayScrollbarHover = Color.FromArgb(255, 126, 126, 130);
-		public static Color ToolGrayCheckBack = Color.FromArgb(255, 88, 88, 92);
+		public static Color ToolGrayCheckBack = Color.FromArgb(255, 68, 68, 72);
+		public static Color ToolGrayCheckBorder = Color.FromArgb(255, 180, 180, 186);
 		public static Color ToolGrayCheckHover = Color.FromArgb(255, 92, 92, 96);
 		public static Color ToolGrayCheckPressed = Color.FromArgb(255, 108, 108, 112);
 		public static Color ToolWhiteToolStrip = Color.FromArgb(255, 220, 220, 220);

@@ -88,8 +88,7 @@ namespace WotDBUpdater.Forms
 
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
-			public StripRenderer()
-				: base(new Code.Support.StripLayout())
+			public StripRenderer() : base(new Code.Support.StripLayout())
 			{
 				this.RoundedEdges = false;
 			}
@@ -294,12 +293,12 @@ namespace WotDBUpdater.Forms
 				if (tier.Length > 0)
 				{
 					tierId = tier.Substring(0, tier.Length - 2);
-					tier = "Tier: " + tier.Substring(0, tier.Length - 2) + " - ";
+					tier = "Tier: " + tier.Substring(0, tier.Length - 2) + "   ";
 					sql = " tank.tier IN (" + tierId + ") ";
 				}
 				if (nation.Length > 0)
 				{
-					nation = "Nation: " + nation.Substring(0, nation.Length - 2) + " - ";
+					nation = "Nation: " + nation.Substring(0, nation.Length - 2) + "   ";
 					nationId = nationId.Substring(0, nationId.Length - 2);
 					if (sql != "") sql += " AND ";
 					sql += " tank.countryId IN (" + nationId + ") ";
@@ -307,12 +306,12 @@ namespace WotDBUpdater.Forms
 				if (type.Length > 0)
 				{
 					typeId = typeId.Substring(0, typeId.Length - 2);
-					type = "Type: " + type.Substring(0, type.Length - 2) + " - ";
+					type = "Type: " + type.Substring(0, type.Length - 2) + "   ";
 					if (sql != "") sql += " AND ";
 					sql += " tank.tankTypeId IN (" + typeId + ") ";
 				}
 				if (sql != "") sql = " AND (" + sql + ") ";
-				message = tier + nation + type;
+				message = nation + type + tier;
 				if (message.Length > 0) message = message.Substring(0, message.Length - 3);
 				// Add correct mein menu name
 				if (tankFilterItemCount == 1)
@@ -800,7 +799,28 @@ namespace WotDBUpdater.Forms
 		#endregion       
 	 
 		#region Toolstrip Events
-		
+
+		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
+		{
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			if (menu.Checked)
+			{
+				if (menu.Image == null)
+				{
+					// Default checkbox
+					e.Graphics.DrawImage(imageListToolStrip.Images[0], 5, 3);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
+				}
+				else
+				{
+					// Border around picture
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+				}
+
+			}
+		}
 
 		private void RefreshCurrentGrid()
 		{
@@ -875,6 +895,7 @@ namespace WotDBUpdater.Forms
 			toolItemBattlesAll.Checked = false;
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			menuItem.Checked = true;
+			toolItemBattles.Text = menuItem.Text;
 			GridShowBattle();
 
 		}
@@ -906,13 +927,6 @@ namespace WotDBUpdater.Forms
 				toolItemTankFilter_CountryUK.Checked = false;
 				toolItemTankFilter_CountryUSA.Checked = false;
 				toolItemTankFilter_CountryUSSR.Checked = false;
-				toolItemTankFilter_CountryChina.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-				toolItemTankFilter_CountryFrance.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-				toolItemTankFilter_CountryGermany.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-				toolItemTankFilter_CountryJapan.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-				toolItemTankFilter_CountryUK.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-				toolItemTankFilter_CountryUSA.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-				toolItemTankFilter_CountryUSSR.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
 			}
 			if (type)
 			{
@@ -946,6 +960,7 @@ namespace WotDBUpdater.Forms
 			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
+			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
 			// Reopen menu item
 			this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
@@ -957,8 +972,6 @@ namespace WotDBUpdater.Forms
 			toolItemTankFilter_Uncheck(true, true, true);
 		}
 
-
-
 		private void toolItemTankFilterSelected(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
 		{
 			// Update menu tank filter checked elements
@@ -968,16 +981,6 @@ namespace WotDBUpdater.Forms
 			else
 				tankFilterItemCount--;
 			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-			// For nations highlight whole menu element to get better visibility for checked element
-			if (parentMenuItem == toolItemTankFilter_Country)
-			{
-				if (menuItem.Checked)
-					menuItem.BackColor = Code.Support.ColorTheme.ToolGrayCheckBack;
-				else
-					menuItem.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
-
-			}
-			// Reopen menu item
 			toolItemTankFilter.ShowDropDown();
 			parentMenuItem.ShowDropDown();
 			// Refresh grid
@@ -1033,7 +1036,6 @@ namespace WotDBUpdater.Forms
 				toolItemTankFilter_Uncheck(true, false, false);
 			}
 		}
-
 
 		private void toolItemTankFilter_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -1128,7 +1130,7 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-		#region Menu Item -> TESTING
+		#region Toolstrip Events - TESTING
 	
 		private void toolItemTest_ImportTankWn8_Click(object sender, EventArgs e)
 		{
@@ -1155,7 +1157,6 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-					
 
 	}
 

@@ -292,6 +292,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
     <Content Include="Docs\Database\createProc.txt" />
     <Content Include="Docs\Database\createView.txt" />
     <Content Include="Docs\Database\select.txt" />

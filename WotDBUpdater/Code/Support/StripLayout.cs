@@ -4,7 +4,6 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Code.Support
 {
-
 	public class StripLayout : ProfessionalColorTable
 	{
 		public override Color ButtonSelectedHighlight				{get { return ButtonSelectedGradientMiddle; }}
