@@ -112,6 +112,7 @@ namespace WotDBUpdater.Forms.File
 						int cap = Convert.ToInt32(recentBattles.Rows[i]["rbCapturePoints"]) / 100;
 						int def = Convert.ToInt32(recentBattles.Rows[i]["rbDefencePoints"]) / 100;
 						int survived = Convert.ToInt32(recentBattles.Rows[i]["rbSurvived"]);
+						int killed = 1 - survived; // only one battle is imported, then this will work
 						int battleSurviveId = 2; // Survived some
 						if (recentBattles.Rows[i]["rbSurvived"].ToString() == "0") battleSurviveId = 3; // not survived
 						if (recentBattles.Rows[i]["rbSurvived"].ToString() == "1") battleSurviveId = 1; // survived
@@ -152,13 +153,13 @@ namespace WotDBUpdater.Forms.File
 						int battleId = TankData.GetBattleIdForImportedWsBattleFromDB(wsId);
 						if (battleId > 0)
 							sqlInsertBattle =
-							"update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, " +
+							"update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, killed=@killed, " +
 							"  battleSurviveId=@battleSurviveId, victory=@victory, draw=@draw, defeat=@defeat, battleResultId=@battleResultId, battleTime=@battleTime, shots=@shots, hits=@hits, xp=@xp, mode15=@mode15, mode7=@mode7, wn8=@wn8, eff=@eff " +
 							"where wsId=@wsId ";
 						else
 							sqlInsertBattle =
-							"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, mode15, mode7, wn8, eff) " +
-							"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @mode15, @mode7, @wn8, @eff)";
+							"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, mode15, mode7, wn8, eff) " +
+							"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @mode15, @mode7, @wn8, @eff)";
 						cmd = new SqlCommand(sqlInsertBattle, sqlConn);
 						cmd.Parameters.AddWithValue("@playerTankId", playerTankId);
 						cmd.Parameters.AddWithValue("@wsId", wsId);
@@ -170,6 +171,7 @@ namespace WotDBUpdater.Forms.File
 						cmd.Parameters.AddWithValue("@cap", cap);
 						cmd.Parameters.AddWithValue("@def", def);
 						cmd.Parameters.AddWithValue("@survived", survived);
+						cmd.Parameters.AddWithValue("@killed", killed);
 						cmd.Parameters.AddWithValue("@battleSurviveId", battleSurviveId);
 						cmd.Parameters.AddWithValue("@victory", victory);
 						cmd.Parameters.AddWithValue("@draw", draw);
@@ -206,7 +208,7 @@ namespace WotDBUpdater.Forms.File
 							string[] fragItems = wsfrags.Split(stringSeparators, StringSplitOptions.None);
 							foreach (string item in fragItems)
 							{
-								string newitem = item.Substring(2); // Format: 0:0_2 -> remove 2 first char = num sequence
+								string newitem = item.Substring(item.IndexOf(":")+1); // Format: 0:0_2 -> remove 2 first char = num sequence
 								string[] stringSeparators2 = new string[] { "_" };
 								string[] frag = newitem.Split(stringSeparators2, StringSplitOptions.None);
 								int wsfragcountryId = Convert.ToInt32(frag[0]);
