@@ -58,7 +58,7 @@ namespace WotDBUpdater.Forms.File
 				{
 					string winAuth = "Win";
 					if (rbSqlAuth.Checked) winAuth = "Sql";
-					using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUid.Text, txtPwd.Text)))
+					using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUid.Text, txtPwd.Text,10)))
 					{
 						con.Open();
 						string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";

@@ -29,9 +29,9 @@ namespace WotDBUpdater.Code.Support
 		public override Color CheckPressedBackground				{get { return ColorTheme.ToolGrayCheckPressed; }}
 		public override Color GripDark								{get { return ColorTheme.ToolGrayScrollbarHover; }}
 		public override Color GripLight								{get { return ColorTheme.ToolGrayScrollbarHover; }}
-		public override Color ImageMarginGradientBegin				{get { return ColorTheme.ToolGrayDropDownBack; }}
-		public override Color ImageMarginGradientMiddle				{get { return ColorTheme.ToolGrayDropDownBack; }}
-		public override Color ImageMarginGradientEnd				{get { return ColorTheme.ToolGrayDropDownBack; }}
+		public override Color ImageMarginGradientBegin				{get { return ColorTheme.ToolGrayMainBack; }}
+		public override Color ImageMarginGradientMiddle				{get { return ColorTheme.ToolGrayMainBack; }}
+		public override Color ImageMarginGradientEnd				{get { return ColorTheme.ToolGrayMainBack; }}
 		public override Color ImageMarginRevealedGradientBegin		{get { return Color.FromName("Red"); }}
 		public override Color ImageMarginRevealedGradientMiddle		{get { return Color.FromName("Red"); }}
 		public override Color ImageMarginRevealedGradientEnd		{get { return Color.FromName("Red"); }}
@@ -42,9 +42,9 @@ namespace WotDBUpdater.Code.Support
 		public override Color MenuBorder							{get { return ColorTheme.ToolGrayHover; }}
 		public override Color MenuItemSelectedGradientBegin			{get { return ColorTheme.ToolGrayHover; }}
 		public override Color MenuItemSelectedGradientEnd			{get { return ColorTheme.ToolGrayHover; }}
-		public override Color MenuItemPressedGradientBegin			{get { return ColorTheme.ToolGrayDropDownBack; }}
-		public override Color MenuItemPressedGradientMiddle			{get { return ColorTheme.ToolGrayDropDownBack; }}
-		public override Color MenuItemPressedGradientEnd			{get { return ColorTheme.ToolGrayDropDownBack; }}
+		public override Color MenuItemPressedGradientBegin			{get { return ColorTheme.ToolGrayMainBack; }}
+		public override Color MenuItemPressedGradientMiddle			{get { return ColorTheme.ToolGrayMainBack; }}
+		public override Color MenuItemPressedGradientEnd			{get { return ColorTheme.ToolGrayMainBack; }}
 		public override Color RaftingContainerGradientBegin			{get { return Color.FromName("White"); }}
 		public override Color RaftingContainerGradientEnd			{get { return Color.FromName("White"); }}
 		public override Color SeparatorDark							{get { return ColorTheme.ToolGrayMain; }}
@@ -52,7 +52,7 @@ namespace WotDBUpdater.Code.Support
 		public override Color StatusStripGradientBegin				{get { return ColorTheme.ToolGrayMain; }}
 		public override Color StatusStripGradientEnd				{get { return ColorTheme.ToolGrayMain; }}
 		public override Color ToolStripBorder						{get { return ColorTheme.ToolGrayMain; }}
-		public override Color ToolStripDropDownBackground			{get { return ColorTheme.ToolGrayDropDownBack; }}
+		public override Color ToolStripDropDownBackground			{get { return ColorTheme.ToolGrayMainBack; }}
 		public override Color ToolStripGradientBegin				{get { return ColorTheme.ToolGrayMain; }}
 		public override Color ToolStripGradientMiddle				{get { return ColorTheme.ToolGrayMain; }}
 		public override Color ToolStripGradientEnd					{get { return ColorTheme.ToolGrayMain; }}

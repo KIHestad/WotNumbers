@@ -252,11 +252,14 @@ namespace WotDBUpdater.Forms
 
 		private void GetTankfilter(out string whereSQL, out string Status2Message)
 		{
-			string sql = "";
 			string tier = "";
+			string tierId = "";
 			string nation = "";
+			string nationId = "";
 			string type = "";
+			string typeId = "";
 			string message = "";
+			string sql = "";
 			// Calc filter nad set main menu title
 			if (tankFilterItemCount == 0)
 			{
@@ -275,23 +278,40 @@ namespace WotDBUpdater.Forms
 				if (toolItemTankFilter_Tier8.Checked)	{tier += "8, ";}
 				if (toolItemTankFilter_Tier9.Checked)	{tier += "9, ";}
 				if (toolItemTankFilter_Tier10.Checked)	{tier += "10, ";}
-				if (toolItemTankFilter_CountryChina.Checked)	{nation += "China, ";}
-				if (toolItemTankFilter_CountryFrance.Checked)	{nation += "France, ";}
-				if (toolItemTankFilter_CountryGermany.Checked)	{nation += "Germany, ";}
-				if (toolItemTankFilter_CountryUK.Checked )		{nation += "UK, ";}
-				if (toolItemTankFilter_CountryUSA.Checked)		{nation += "USA, ";}
-				if (toolItemTankFilter_CountryUSSR.Checked )	{nation += "USSR, ";}
-				if (toolItemTankFilter_CountryJapan.Checked)    { nation += "Japan, "; }
-				if (toolItemTankFilter_TypeLT.Checked) { type += "Light, "; }
-				if (toolItemTankFilter_TypeMT.Checked) { type += "Medium, "; }
-				if (toolItemTankFilter_TypeHT.Checked) { type += "Heavy, "; }
-				if (toolItemTankFilter_TypeTD.Checked)	{type += "TD, ";}
-				if (toolItemTankFilter_TypeSPG.Checked) { type += "SPG, "; }
-				
+				if (toolItemTankFilter_CountryChina.Checked)	{nation += "China, "; nationId +="3, "; }
+				if (toolItemTankFilter_CountryFrance.Checked)	{nation += "France, "; nationId +="4, "; }
+				if (toolItemTankFilter_CountryGermany.Checked)	{nation += "Germany, "; nationId +="1, "; }
+				if (toolItemTankFilter_CountryUK.Checked )		{nation += "UK, "; nationId +="5, "; }
+				if (toolItemTankFilter_CountryUSA.Checked)		{nation += "USA, "; nationId +="2, "; }
+				if (toolItemTankFilter_CountryUSSR.Checked )	{nation += "USSR, "; nationId +="0, "; }
+				if (toolItemTankFilter_CountryJapan.Checked)    { nation += "Japan, "; nationId +="6, "; }
+				if (toolItemTankFilter_TypeLT.Checked) { type += "Light, "; typeId += "1, "; }
+				if (toolItemTankFilter_TypeMT.Checked) { type += "Medium, "; typeId += "2, "; }
+				if (toolItemTankFilter_TypeHT.Checked) { type += "Heavy, "; typeId += "3, "; }
+				if (toolItemTankFilter_TypeTD.Checked) { type += "TD, "; typeId += "4, "; }
+				if (toolItemTankFilter_TypeSPG.Checked) { type += "SPG, "; typeId += "5, "; }
 				// Compose status message
-				if (tier.Length > 0) tier = "Tier: " + tier.Substring(0, tier.Length - 2) + " - ";
-				if (nation.Length > 0) nation = "Nation: " + nation.Substring(0, nation.Length - 2) + " - ";
-				if (type.Length > 0) type = "Type: " + type.Substring(0, type.Length - 2) + " - ";
+				if (tier.Length > 0)
+				{
+					tierId = tier.Substring(0, tier.Length - 2);
+					tier = "Tier: " + tier.Substring(0, tier.Length - 2) + " - ";
+					sql = " tank.tier IN (" + tierId + ") ";
+				}
+				if (nation.Length > 0)
+				{
+					nation = "Nation: " + nation.Substring(0, nation.Length - 2) + " - ";
+					nationId = nationId.Substring(0, nationId.Length - 2);
+					if (sql != "") sql += " AND ";
+					sql += " tank.countryId IN (" + nationId + ") ";
+				}
+				if (type.Length > 0)
+				{
+					typeId = typeId.Substring(0, typeId.Length - 2);
+					type = "Type: " + type.Substring(0, type.Length - 2) + " - ";
+					if (sql != "") sql += " AND ";
+					sql += " tank.tankTypeId IN (" + typeId + ") ";
+				}
+				if (sql != "") sql = " AND (" + sql + ") ";
 				message = tier + nation + type;
 				if (message.Length > 0) message = message.Substring(0, message.Length - 3);
 				// Add correct mein menu name
@@ -303,7 +323,6 @@ namespace WotDBUpdater.Forms
 				{
 					toolItemTankFilter.Text = "Tank filter";
 				}
-				
 			}
 			whereSQL = sql;
 			Status2Message = message;
@@ -327,7 +346,7 @@ namespace WotDBUpdater.Forms
 				"         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN " +
 				"         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN " +
 				"         dbo.country ON dbo.tank.countryId = dbo.country.id " +
-				"WHERE   dbo.player.id=@playerid ";
+				"WHERE   dbo.player.id=@playerid " + where;
 			SqlCommand cmd = new SqlCommand(sql, con);
 			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
 			cmd.CommandType = CommandType.Text;
@@ -520,7 +539,7 @@ namespace WotDBUpdater.Forms
 					else // footer
 				{
 						cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.ToolGrayDropDownBack;
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
 					}
 				}
 				// Battle Result color color
@@ -862,37 +881,80 @@ namespace WotDBUpdater.Forms
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
 
-		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
+		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type)
 		{
-			// deselect all filters
-			toolItemTankFilter_All.Checked = true;
-			toolItemTankFilter_Tier1.Checked = false;
-			toolItemTankFilter_Tier2.Checked = false;
-			toolItemTankFilter_Tier3.Checked = false;
-			toolItemTankFilter_Tier4.Checked = false;
-			toolItemTankFilter_Tier5.Checked = false;
-			toolItemTankFilter_Tier6.Checked = false;
-			toolItemTankFilter_Tier7.Checked = false;
-			toolItemTankFilter_Tier8.Checked = false;
-			toolItemTankFilter_Tier9.Checked = false;
-			toolItemTankFilter_Tier10.Checked = false;
-			toolItemTankFilter_CountryChina.Checked = false;
-			toolItemTankFilter_CountryFrance.Checked = false;
-			toolItemTankFilter_CountryGermany.Checked = false;
-			toolItemTankFilter_CountryJapan.Checked = false;
-			toolItemTankFilter_CountryUK.Checked = false;
-			toolItemTankFilter_CountryUSA.Checked = false;
-			toolItemTankFilter_CountryUSSR.Checked = false;
-			toolItemTankFilter_TypeHT.Checked = false;
-			toolItemTankFilter_TypeLT.Checked = false;
-			toolItemTankFilter_TypeMT.Checked = false;
-			toolItemTankFilter_TypeSPG.Checked = false;
-			toolItemTankFilter_TypeTD.Checked = false;
+			if (tier)
+			{
+				toolItemTankFilter_All.Checked = true;
+				toolItemTankFilter_Tier1.Checked = false;
+				toolItemTankFilter_Tier2.Checked = false;
+				toolItemTankFilter_Tier3.Checked = false;
+				toolItemTankFilter_Tier4.Checked = false;
+				toolItemTankFilter_Tier5.Checked = false;
+				toolItemTankFilter_Tier6.Checked = false;
+				toolItemTankFilter_Tier7.Checked = false;
+				toolItemTankFilter_Tier8.Checked = false;
+				toolItemTankFilter_Tier9.Checked = false;
+				toolItemTankFilter_Tier10.Checked = false;
+			}
+			if (country)
+			{
+				toolItemTankFilter_CountryChina.Checked = false;
+				toolItemTankFilter_CountryFrance.Checked = false;
+				toolItemTankFilter_CountryGermany.Checked = false;
+				toolItemTankFilter_CountryJapan.Checked = false;
+				toolItemTankFilter_CountryUK.Checked = false;
+				toolItemTankFilter_CountryUSA.Checked = false;
+				toolItemTankFilter_CountryUSSR.Checked = false;
+				toolItemTankFilter_CountryChina.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+				toolItemTankFilter_CountryFrance.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+				toolItemTankFilter_CountryGermany.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+				toolItemTankFilter_CountryJapan.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+				toolItemTankFilter_CountryUK.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+				toolItemTankFilter_CountryUSA.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+				toolItemTankFilter_CountryUSSR.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+			}
+			if (type)
+			{
+				toolItemTankFilter_TypeHT.Checked = false;
+				toolItemTankFilter_TypeLT.Checked = false;
+				toolItemTankFilter_TypeMT.Checked = false;
+				toolItemTankFilter_TypeSPG.Checked = false;
+				toolItemTankFilter_TypeTD.Checked = false;
+			}
+			// Count selected menu items
 			tankFilterItemCount = 0;
+			if (toolItemTankFilter_CountryChina.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryFrance.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryGermany.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryUK.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryUSA.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryUSSR.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryJapan.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeLT.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeMT.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeHT.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeTD.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeSPG.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier1.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier2.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier3.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier4.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier5.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier6.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier7.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
 			// Reopen menu item
 			this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
 			RefreshCurrentGrid();
+		}
+
+		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
+		{
+			toolItemTankFilter_Uncheck(true, true, true);
 		}
 
 
@@ -906,6 +968,15 @@ namespace WotDBUpdater.Forms
 			else
 				tankFilterItemCount--;
 			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
+			// For nations highlight whole menu element to get better visibility for checked element
+			if (parentMenuItem == toolItemTankFilter_Country)
+			{
+				if (menuItem.Checked)
+					menuItem.BackColor = Code.Support.ColorTheme.ToolGrayCheckBack;
+				else
+					menuItem.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+
+			}
 			// Reopen menu item
 			toolItemTankFilter.ShowDropDown();
 			parentMenuItem.ShowDropDown();
@@ -943,17 +1014,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				int check = tankFilterItemCount;
-				if (toolItemTankFilter_CountryChina.Checked)	{tankFilterItemCount--; toolItemTankFilter_CountryChina.Checked = false;}
-				if (toolItemTankFilter_CountryFrance.Checked)	{tankFilterItemCount--; toolItemTankFilter_CountryFrance.Checked = false;}
-				if (toolItemTankFilter_CountryGermany.Checked)	{tankFilterItemCount--; toolItemTankFilter_CountryGermany.Checked = false;}
-				if (toolItemTankFilter_CountryUK.Checked )		{tankFilterItemCount--; toolItemTankFilter_CountryUK.Checked = false;}
-				if (toolItemTankFilter_CountryUSA.Checked)		{tankFilterItemCount--; toolItemTankFilter_CountryUSA.Checked = false;}
-				if (toolItemTankFilter_CountryUSSR.Checked )	{tankFilterItemCount--; toolItemTankFilter_CountryUSSR.Checked = false;}
-				if (toolItemTankFilter_CountryJapan.Checked)    {tankFilterItemCount--; toolItemTankFilter_CountryJapan.Checked = false;}
-				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-				if (check != tankFilterItemCount)
-					RefreshCurrentGrid(); // Refresh grid
+				toolItemTankFilter_Uncheck(false, true, false);
 			}
 		}
 
@@ -961,15 +1022,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				int check = tankFilterItemCount;
-				if (toolItemTankFilter_TypeLT.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeLT.Checked = false; }
-				if (toolItemTankFilter_TypeMT.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeMT.Checked = false; }
-				if (toolItemTankFilter_TypeHT.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeHT.Checked = false; }
-				if (toolItemTankFilter_TypeTD.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeTD.Checked = false; }
-				if (toolItemTankFilter_TypeSPG.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeSPG.Checked = false; }
-				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-				if (check != tankFilterItemCount)
-					RefreshCurrentGrid(); // Refresh grid
+				toolItemTankFilter_Uncheck(false, false, true);
 			}
 		}
 
@@ -977,20 +1030,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				int check = tankFilterItemCount;
-				if (toolItemTankFilter_Tier1.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier1.Checked = false; }
-				if (toolItemTankFilter_Tier2.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier2.Checked = false; }
-				if (toolItemTankFilter_Tier3.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier3.Checked = false; }
-				if (toolItemTankFilter_Tier4.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier4.Checked = false; }
-				if (toolItemTankFilter_Tier5.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier5.Checked = false; }
-				if (toolItemTankFilter_Tier6.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier6.Checked = false; }
-				if (toolItemTankFilter_Tier7.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier7.Checked = false; }
-				if (toolItemTankFilter_Tier8.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier8.Checked = false; }
-				if (toolItemTankFilter_Tier9.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier9.Checked = false; }
-				if (toolItemTankFilter_Tier10.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier10.Checked = false; }
-				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-				if (check != tankFilterItemCount)
-					RefreshCurrentGrid(); // Refresh grid
+				toolItemTankFilter_Uncheck(true, false, false);
 			}
 		}
 

@@ -324,7 +324,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(495, 25);
+			this.toolMain.Size = new System.Drawing.Size(526, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -447,6 +447,7 @@
 			// 
 			// toolItemTankFilter_CountryFrance
 			// 
+			this.toolItemTankFilter_CountryFrance.BackColor = System.Drawing.SystemColors.Control;
 			this.toolItemTankFilter_CountryFrance.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryFrance.Image")));
 			this.toolItemTankFilter_CountryFrance.Name = "toolItemTankFilter_CountryFrance";
 			this.toolItemTankFilter_CountryFrance.Size = new System.Drawing.Size(152, 22);
@@ -579,7 +580,7 @@
 			// 
 			this.toolItemTankFilter_Tier1.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier1.Image")));
 			this.toolItemTankFilter_Tier1.Name = "toolItemTankFilter_Tier1";
-			this.toolItemTankFilter_Tier1.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier1.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier1.Text = "1";
 			this.toolItemTankFilter_Tier1.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -588,7 +589,7 @@
 			// 
 			this.toolItemTankFilter_Tier2.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier2.Image")));
 			this.toolItemTankFilter_Tier2.Name = "toolItemTankFilter_Tier2";
-			this.toolItemTankFilter_Tier2.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier2.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier2.Text = "2";
 			this.toolItemTankFilter_Tier2.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -597,7 +598,7 @@
 			// 
 			this.toolItemTankFilter_Tier3.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier3.Image")));
 			this.toolItemTankFilter_Tier3.Name = "toolItemTankFilter_Tier3";
-			this.toolItemTankFilter_Tier3.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier3.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier3.Text = "3";
 			this.toolItemTankFilter_Tier3.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -606,7 +607,7 @@
 			// 
 			this.toolItemTankFilter_Tier4.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier4.Image")));
 			this.toolItemTankFilter_Tier4.Name = "toolItemTankFilter_Tier4";
-			this.toolItemTankFilter_Tier4.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier4.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier4.Text = "4";
 			this.toolItemTankFilter_Tier4.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -615,7 +616,7 @@
 			// 
 			this.toolItemTankFilter_Tier5.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier5.Image")));
 			this.toolItemTankFilter_Tier5.Name = "toolItemTankFilter_Tier5";
-			this.toolItemTankFilter_Tier5.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier5.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier5.Text = "5";
 			this.toolItemTankFilter_Tier5.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -624,7 +625,7 @@
 			// 
 			this.toolItemTankFilter_Tier6.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier6.Image")));
 			this.toolItemTankFilter_Tier6.Name = "toolItemTankFilter_Tier6";
-			this.toolItemTankFilter_Tier6.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier6.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier6.Text = "6";
 			this.toolItemTankFilter_Tier6.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -633,7 +634,7 @@
 			// 
 			this.toolItemTankFilter_Tier7.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier7.Image")));
 			this.toolItemTankFilter_Tier7.Name = "toolItemTankFilter_Tier7";
-			this.toolItemTankFilter_Tier7.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier7.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier7.Text = "7";
 			this.toolItemTankFilter_Tier7.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier7.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -642,7 +643,7 @@
 			// 
 			this.toolItemTankFilter_Tier8.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier8.Image")));
 			this.toolItemTankFilter_Tier8.Name = "toolItemTankFilter_Tier8";
-			this.toolItemTankFilter_Tier8.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier8.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier8.Text = "8";
 			this.toolItemTankFilter_Tier8.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier8.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -651,7 +652,7 @@
 			// 
 			this.toolItemTankFilter_Tier9.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier9.Image")));
 			this.toolItemTankFilter_Tier9.Name = "toolItemTankFilter_Tier9";
-			this.toolItemTankFilter_Tier9.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier9.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier9.Text = "9";
 			this.toolItemTankFilter_Tier9.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier9.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -660,7 +661,7 @@
 			// 
 			this.toolItemTankFilter_Tier10.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier10.Image")));
 			this.toolItemTankFilter_Tier10.Name = "toolItemTankFilter_Tier10";
-			this.toolItemTankFilter_Tier10.Size = new System.Drawing.Size(152, 22);
+			this.toolItemTankFilter_Tier10.Size = new System.Drawing.Size(86, 22);
 			this.toolItemTankFilter_Tier10.Text = "10";
 			this.toolItemTankFilter_Tier10.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.toolItemTankFilter_Tier10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
