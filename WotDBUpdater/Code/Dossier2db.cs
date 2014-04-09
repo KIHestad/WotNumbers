@@ -221,8 +221,7 @@ namespace WotDBUpdater
 		{
 			// Get Tank ID
 			bool battleSave = false;
-			int tankTier = 0;
-			int tankId = TankData.GetTankID(tankName, out tankTier);
+			int tankId = TankData.GetTankID(tankName);
 			if (tankId > 0) // when tankid=0 the tank is not found in tank table
 			{
 				// Check if battle count has increased, first get existing battle count
@@ -247,7 +246,7 @@ namespace WotDBUpdater
 				if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
 				{
 					// New battle detected, update tankData in DB
-					UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
+					UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
 					// Check fraglist to update playertank frags
 					List<FragItem> battleFragList = UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 					// Check if achivment exists
@@ -258,7 +257,7 @@ namespace WotDBUpdater
 						if (battlessNew15 != 0 || battlessNew7 != 0)
 						{
 							// New battle detected, update tankData in DB
-							UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, tankTier, battlessNew15, battlessNew7, battleFragList, battleAchList);
+							UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, battlessNew15, battlessNew7, battleFragList, battleAchList);
 							battleSave = true;
 						}
 					}
@@ -279,14 +278,14 @@ namespace WotDBUpdater
 			con.Close();
 		}
 
-		private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int tankTier, int battleCount15, int battleCount7)
+		private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battleCount15, int battleCount7)
 		{
 			// Get fields to update
 			string sqlFields = "";
 			// Calculate WN8
-			sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, battleCount15 + battleCount7, Rating.BattleMode.Random15andTeam7, NewPlayerTankRow);
+			sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, battleCount15 , Rating.BattleMode.Random15, NewPlayerTankRow);
 			// Calculate Eff
-			sqlFields += ", eff=" + Rating.CalculatePlayerTankEff(tankId, tankTier, battleCount15 + battleCount7, Rating.BattleMode.Random15andTeam7, NewPlayerTankRow);
+			sqlFields += ", eff=" + Rating.CalculatePlayerTankEff(tankId, battleCount15 , Rating.BattleMode.Random15, NewPlayerTankRow);
 			foreach (DataColumn column in OldPlayerTankTable.Columns)
 			{
 				// Get columns and values from NewPlayerTankRow direct
@@ -481,7 +480,7 @@ namespace WotDBUpdater
 			return battleFrag;
 		}
 
-		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int tankTier, int battlessNew15, int battlessNew7, List<FragItem> battleFragList, List<AchItem> battleAchList)
+		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battlessNew15, int battlessNew7, List<FragItem> battleFragList, List<AchItem> battleAchList)
 		{
 			try
 			{
@@ -572,7 +571,7 @@ namespace WotDBUpdater
 				sqlValues += ", " + Rating.CalculateBattleWn8(tankId, battlesCount, NewbattleRow);
 				// Calc Eff
 				sqlFields += ", eff";
-				sqlValues += ", " + Rating.CalculateBattleEff(tankId, tankTier, battlesCount, NewbattleRow);
+				sqlValues += ", " + Rating.CalculateBattleEff(tankId, battlesCount, NewbattleRow);
 				// Add battle mode
 				if (battlessNew15 != 0) { sqlFields += ", mode15"; sqlValues += ", 1"; }
 				if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }

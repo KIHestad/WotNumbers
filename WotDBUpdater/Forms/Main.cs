@@ -1070,7 +1070,7 @@ namespace WotDBUpdater.Forms
 			//Form frm = new Forms.Help.About();
 			//frm.ShowDialog();
 			string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
-						 "Tool for getting data from WoT dossier file to MS SQL Database" + Environment.NewLine + Environment.NewLine +
+						 "Statistics Tool for World Of Tanks" + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
 			Code.Support.MessageDark.Show(msg, "About WoT DBstat");
 		}

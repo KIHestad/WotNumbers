@@ -37,19 +37,26 @@ namespace WotDBUpdater.Forms
 					pos = pos + 2;
 				}
 			}
-			if (lines >= 5)
-			{
-				if (lines > 12) lines = 12; // max size
-				this.Height = txtMessage.Top + (lines * 25); // resize initial height of form to fit content
-			}
+			if (lines > 12) lines = 12; // max size
+			this.Height = txtMessage.Top + (lines * 30) + 20; // resize initial height of form to fit content
 			RefreshForm();
 		}
 
 		private void RefreshForm()
 		{
-			txtMessage.Height = this.Height - txtMessage.Top - 1;
+			txtMessage.Height = this.Height - txtMessage.Top - 20;
 			txtMessage.Width = this.Width - (txtMessage.Left * 2);
 			Refresh();
+		}
+
+		private void badForm1_Resize(object sender, EventArgs e)
+		{
+			RefreshForm();
+		}
+
+		private void cmdClose_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 
 

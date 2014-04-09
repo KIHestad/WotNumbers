@@ -58,6 +58,26 @@ namespace WotDBUpdater
 			}
 		}
 
+		public static int ConvertWs2TankId(int wsTankId, int wsCountryId)
+		{
+			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+			{
+				conn.Open();
+				SqlCommand command = new SqlCommand("SELECT tankId " +
+													"FROM wsTankId " +
+													"WHERE wsTankId = " + wsTankId.ToString() + " AND wsCountryId = " + wsCountryId.ToString(), conn);
+				SqlDataReader myReader = command.ExecuteReader();
+				int lookupTankId = 0;
+				while (myReader.Read())
+				{
+					lookupTankId = Convert.ToInt32(myReader["tankId"]);
+				}
+				conn.Close();
+				return lookupTankId;
+			}
+		}
+
+
 		public static int GetPlayerTankId(int tankId)
 		{
 			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
@@ -88,6 +108,23 @@ namespace WotDBUpdater
 				adapter.Fill(dt);
 				conn.Close();
 				return dt;
+			}
+		}
+
+		public static int GetBattleIdForImportedWsBattleFromDB(int wsId)
+		{
+			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+			{
+				conn.Open();
+				SqlCommand command = new SqlCommand("SELECT Id FROM battle WHERE wsId=" + wsId.ToString(), conn);
+				SqlDataReader myReader = command.ExecuteReader();
+				int lookupBattle = 0;
+				while (myReader.Read())
+				{
+					lookupBattle = Convert.ToInt32(myReader["Id"]);
+				}
+				conn.Close();
+				return (lookupBattle);
 			}
 		}
 
