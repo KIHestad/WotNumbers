@@ -40,6 +40,8 @@ namespace WotDBUpdater.Forms
 			toolMain.BackColor = Code.Support.ColorTheme.FormBackTitle;
 			toolMain.ShowItemToolTips = false;
 			toolItemBattles.Visible = false;
+			toolItemTankFilter.Visible = false;
+			toolItemRefreshSeparator.Visible = false;
 			// Style datagrid
 			dataGridMain.BackgroundColor = Code.Support.ColorTheme.FormBack;
 			// Startup settings
@@ -248,12 +250,75 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns[1].Width = 900;
 		}
 
-		private void GridShowTankInfo()
+		private void GetTankfilter(out string whereSQL, out string Status2Message)
+		{
+			string sql = "";
+			string tier = "";
+			string nation = "";
+			string type = "";
+			string message = "";
+			// Calc filter nad set main menu title
+			if (tankFilterItemCount == 0)
+			{
+				toolItemTankFilter.Text = "All Tanks";
+				message = "All Tanks";
+			}
+			else 
+			{
+				if (toolItemTankFilter_Tier1.Checked)	{tier += "1, ";}
+				if (toolItemTankFilter_Tier2.Checked)	{tier += "2, ";}
+				if (toolItemTankFilter_Tier3.Checked)	{tier += "3, ";}
+				if (toolItemTankFilter_Tier4.Checked)	{tier += "4, ";}
+				if (toolItemTankFilter_Tier5.Checked)	{tier += "5, ";}
+				if (toolItemTankFilter_Tier6.Checked)	{tier += "6, ";}
+				if (toolItemTankFilter_Tier7.Checked)	{tier += "7, ";}
+				if (toolItemTankFilter_Tier8.Checked)	{tier += "8, ";}
+				if (toolItemTankFilter_Tier9.Checked)	{tier += "9, ";}
+				if (toolItemTankFilter_Tier10.Checked)	{tier += "10, ";}
+				if (toolItemTankFilter_CountryChina.Checked)	{nation += "China, ";}
+				if (toolItemTankFilter_CountryFrance.Checked)	{nation += "France, ";}
+				if (toolItemTankFilter_CountryGermany.Checked)	{nation += "Germany, ";}
+				if (toolItemTankFilter_CountryUK.Checked )		{nation += "UK, ";}
+				if (toolItemTankFilter_CountryUSA.Checked)		{nation += "USA, ";}
+				if (toolItemTankFilter_CountryUSSR.Checked )	{nation += "USSR, ";}
+				if (toolItemTankFilter_CountryJapan.Checked)    { nation += "Japan, "; }
+				if (toolItemTankFilter_TypeLT.Checked) { type += "Light, "; }
+				if (toolItemTankFilter_TypeMT.Checked) { type += "Medium, "; }
+				if (toolItemTankFilter_TypeHT.Checked) { type += "Heavy, "; }
+				if (toolItemTankFilter_TypeTD.Checked)	{type += "TD, ";}
+				if (toolItemTankFilter_TypeSPG.Checked) { type += "SPG, "; }
+				
+				// Compose status message
+				if (tier.Length > 0) tier = "Tier: " + tier.Substring(0, tier.Length - 2) + " - ";
+				if (nation.Length > 0) nation = "Nation: " + nation.Substring(0, nation.Length - 2) + " - ";
+				if (type.Length > 0) type = "Type: " + type.Substring(0, type.Length - 2) + " - ";
+				message = tier + nation + type;
+				if (message.Length > 0) message = message.Substring(0, message.Length - 3);
+				// Add correct mein menu name
+				if (tankFilterItemCount == 1)
+				{
+					toolItemTankFilter.Text = message;
+				}
+				else
+				{
+					toolItemTankFilter.Text = "Tank filter";
+				}
+				
+			}
+			whereSQL = sql;
+			Status2Message = message;
+		}
+
+		private void GridShowTankInfo(string statusmessage = "")
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
 			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+			// Get Tank filter
+			string message = "";
+			string where = "";
+			GetTankfilter(out where, out message);
 			string sql =
 				"SELECT   dbo.tank.tier AS Tier, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, " +
 				"         dbo.playerTank.battles15 AS [Battles15], dbo.playerTank.battles7 AS [Battles7], dbo.playerTank.wn8 as WN8, dbo.playerTank.eff as EFF " +
@@ -281,6 +346,9 @@ namespace WotDBUpdater.Forms
 			// Finish
 			GridResizeTankInfo();
 			GridScrollShowCurPos();
+			// Add status message
+			if (statusmessage == "") statusmessage = message;
+			SetStatus2(statusmessage);
 		}
 
 		private void GridResizeTankInfo()
@@ -418,7 +486,7 @@ namespace WotDBUpdater.Forms
 			GridResizeBattle();
 			GridScrollShowCurPos();
 			toolItemBattles.Visible = true;
-			if (statusmessage == "") statusmessage = "Selected view: Battle - Filter: " + toolItemBattles.Text;
+			if (statusmessage == "") statusmessage = toolItemBattles.Text;
 			SetStatus2(statusmessage);
 		}
 
@@ -714,6 +782,23 @@ namespace WotDBUpdater.Forms
 	 
 		#region Toolstrip Events
 		
+
+		private void RefreshCurrentGrid()
+		{
+			if (toolItemViewOverall.Checked)
+			{
+				GridShowOverall();
+			}
+			else if (toolItemViewTankInfo.Checked)
+			{
+				GridShowTankInfo();
+			}
+			else if (toolItemViewBattles.Checked)
+			{
+				GridShowBattle();
+			}
+		}
+
 		private void toolItemViewSelected_Click(object sender, EventArgs e)
 		{
 			ToolStripButton menuItem = (ToolStripButton)sender;
@@ -723,16 +808,20 @@ namespace WotDBUpdater.Forms
 				toolItemViewBattles.Checked = false;
 				toolItemViewTankInfo.Checked = false;
 				toolItemBattles.Visible = false;
+				toolItemTankFilter.Visible = false;
+				toolItemRefreshSeparator.Visible = true;
 				menuItem.Checked = true;
-				SetStatus2("Selected view: " + menuItem.Text);
+				SetStatus2(menuItem.Text);
 				if (toolItemViewOverall.Checked)
 				{
+					toolItemRefreshSeparator.Visible = false;
 					InfoPanelSlideStart(true);
 					GridShowOverall();
 				}
 				else if (toolItemViewTankInfo.Checked)
 				{
 					InfoPanelSlideStart(false);
+					toolItemTankFilter.Visible = true;
 					GridShowTankInfo();
 				}
 				else if (toolItemViewBattles.Checked)
@@ -767,16 +856,15 @@ namespace WotDBUpdater.Forms
 			toolItemBattlesAll.Checked = false;
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			menuItem.Checked = true;
-			toolItemBattles.Text = menuItem.Text;
 			GridShowBattle();
 
 		}
 
-		private int tankFilterItemCount = 0;
-		// TODO: List<string> tankFilter = new List<string>();
+		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
 
 		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
+			// deselect all filters
 			toolItemTankFilter_All.Checked = true;
 			toolItemTankFilter_Tier1.Checked = false;
 			toolItemTankFilter_Tier2.Checked = false;
@@ -788,23 +876,131 @@ namespace WotDBUpdater.Forms
 			toolItemTankFilter_Tier8.Checked = false;
 			toolItemTankFilter_Tier9.Checked = false;
 			toolItemTankFilter_Tier10.Checked = false;
+			toolItemTankFilter_CountryChina.Checked = false;
+			toolItemTankFilter_CountryFrance.Checked = false;
+			toolItemTankFilter_CountryGermany.Checked = false;
+			toolItemTankFilter_CountryJapan.Checked = false;
+			toolItemTankFilter_CountryUK.Checked = false;
+			toolItemTankFilter_CountryUSA.Checked = false;
+			toolItemTankFilter_CountryUSSR.Checked = false;
+			toolItemTankFilter_TypeHT.Checked = false;
+			toolItemTankFilter_TypeLT.Checked = false;
+			toolItemTankFilter_TypeMT.Checked = false;
+			toolItemTankFilter_TypeSPG.Checked = false;
+			toolItemTankFilter_TypeTD.Checked = false;
 			tankFilterItemCount = 0;
-			this.toolItemTankFilter.ShowDropDown();			
+			// Reopen menu item
+			this.toolItemTankFilter.ShowDropDown();
+			// Refresh grid
+			RefreshCurrentGrid();
 		}
 
-		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
+
+
+		private void toolItemTankFilterSelected(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
 		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			// Update menu tank filter checked elements
 			menuItem.Checked = !menuItem.Checked;
 			if (menuItem.Checked)
 				tankFilterItemCount++;
 			else
 				tankFilterItemCount--;
 			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-			this.toolItemTankFilter.ShowDropDown();			
-			this.toolItemTankFilter_Tier.ShowDropDown();			
+			// Reopen menu item
+			toolItemTankFilter.ShowDropDown();
+			parentMenuItem.ShowDropDown();
+			// Refresh grid
+			RefreshCurrentGrid();
 		}
 
+		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			toolItemTankFilterSelected(menuItem, toolItemTankFilter_Tier);
+		}
+
+		private void toolItemTankFilter_Type_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			toolItemTankFilterSelected(menuItem, toolItemTankFilter_Type);
+		}
+
+		private void toolItemTankFilter_Country_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			toolItemTankFilterSelected(menuItem, toolItemTankFilter_Country);
+		}
+
+		private void ShowTankFilterStatus()
+		{
+			string where = "";
+			string message = "";
+			GetTankfilter(out where, out message);
+			SetStatus2(message);
+		}
+
+		private void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				int check = tankFilterItemCount;
+				if (toolItemTankFilter_CountryChina.Checked)	{tankFilterItemCount--; toolItemTankFilter_CountryChina.Checked = false;}
+				if (toolItemTankFilter_CountryFrance.Checked)	{tankFilterItemCount--; toolItemTankFilter_CountryFrance.Checked = false;}
+				if (toolItemTankFilter_CountryGermany.Checked)	{tankFilterItemCount--; toolItemTankFilter_CountryGermany.Checked = false;}
+				if (toolItemTankFilter_CountryUK.Checked )		{tankFilterItemCount--; toolItemTankFilter_CountryUK.Checked = false;}
+				if (toolItemTankFilter_CountryUSA.Checked)		{tankFilterItemCount--; toolItemTankFilter_CountryUSA.Checked = false;}
+				if (toolItemTankFilter_CountryUSSR.Checked )	{tankFilterItemCount--; toolItemTankFilter_CountryUSSR.Checked = false;}
+				if (toolItemTankFilter_CountryJapan.Checked)    {tankFilterItemCount--; toolItemTankFilter_CountryJapan.Checked = false;}
+				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
+				if (check != tankFilterItemCount)
+					RefreshCurrentGrid(); // Refresh grid
+			}
+		}
+
+		private void toolItemTankFilter_Type_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				int check = tankFilterItemCount;
+				if (toolItemTankFilter_TypeLT.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeLT.Checked = false; }
+				if (toolItemTankFilter_TypeMT.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeMT.Checked = false; }
+				if (toolItemTankFilter_TypeHT.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeHT.Checked = false; }
+				if (toolItemTankFilter_TypeTD.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeTD.Checked = false; }
+				if (toolItemTankFilter_TypeSPG.Checked) { tankFilterItemCount--; toolItemTankFilter_TypeSPG.Checked = false; }
+				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
+				if (check != tankFilterItemCount)
+					RefreshCurrentGrid(); // Refresh grid
+			}
+		}
+
+		private void toolItemTankFilter_Tier_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				int check = tankFilterItemCount;
+				if (toolItemTankFilter_Tier1.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier1.Checked = false; }
+				if (toolItemTankFilter_Tier2.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier2.Checked = false; }
+				if (toolItemTankFilter_Tier3.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier3.Checked = false; }
+				if (toolItemTankFilter_Tier4.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier4.Checked = false; }
+				if (toolItemTankFilter_Tier5.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier5.Checked = false; }
+				if (toolItemTankFilter_Tier6.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier6.Checked = false; }
+				if (toolItemTankFilter_Tier7.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier7.Checked = false; }
+				if (toolItemTankFilter_Tier8.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier8.Checked = false; }
+				if (toolItemTankFilter_Tier9.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier9.Checked = false; }
+				if (toolItemTankFilter_Tier10.Checked) { tankFilterItemCount--; toolItemTankFilter_Tier10.Checked = false; }
+				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
+				if (check != tankFilterItemCount)
+					RefreshCurrentGrid(); // Refresh grid
+			}
+		}
+
+
+		private void toolItemTankFilter_MouseDown(object sender, MouseEventArgs e)
+		{
+			// On right mouse click just display status message for current filter
+			if (e.Button == System.Windows.Forms.MouseButtons.Right) ShowTankFilterStatus();
+		}
+		
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.ApplicationSetting();
@@ -919,8 +1115,7 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-		
-			
+					
 
 	}
 

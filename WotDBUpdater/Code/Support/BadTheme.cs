@@ -107,7 +107,7 @@ abstract class BadThemeContainerControl : ContainerControl
 		bool FrameRight  = PTC.X > Width - 8;
 		bool FrameTop    = PTC.Y < 7;
 		bool FrameBottom = PTC.Y > Height - 8;
-		Debug.WriteLine (PTC.X.ToString() + ", " + PTC.Y.ToString());
+		// Debug.WriteLine (PTC.X.ToString() + ", " + PTC.Y.ToString());
 		// System Icons ponters
 		bool SysIconArea = false; 
 		int SysIconWidth = 0;
@@ -132,7 +132,6 @@ abstract class BadThemeContainerControl : ContainerControl
 					SystemExitImageBackColor = ColorTheme.ControlBackMouseOver;
 				else
 					SystemExitImageBackColor = ColorTheme.FormBackTitle;
-				Refresh();
 			}
 			if (SystemMaximizeImage != null)
 			{
@@ -141,7 +140,6 @@ abstract class BadThemeContainerControl : ContainerControl
 					SystemMaximizeImageBackColor = ColorTheme.ControlBackMouseOver;
 				else
 					SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
-				Refresh();
 			}
 			if (SystemMinimizeImage != null)
 			{
@@ -150,9 +148,8 @@ abstract class BadThemeContainerControl : ContainerControl
 					SystemMinimizeImageBackColor = ColorTheme.ControlBackMouseOver;
 				else
 					SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
-				Refresh();
 			}
-
+			PaintSysIcons();
 			return new Pointer(Cursors.Default, 0);
 		}
 		// Check Border position for resizing
@@ -178,17 +175,17 @@ abstract class BadThemeContainerControl : ContainerControl
 		if (SystemExitImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemExitImageBackColor = ColorTheme.FormBackTitle;
-			Refresh();
+			PaintSysIcons();
 		}
 		if (SystemMaximizeImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
-			Refresh();
+			PaintSysIcons();
 		}
 		if (SystemMinimizeImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
-			Refresh();
+			PaintSysIcons();
 		}
 		return new Pointer(Cursors.Default, 0);
 	}
@@ -252,17 +249,17 @@ abstract class BadThemeContainerControl : ContainerControl
 		if (SystemExitImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemExitImageBackColor = ColorTheme.FormBackTitle;
-			Refresh();
+			PaintSysIcons();
 		}
 		if (SystemMaximizeImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
-			Refresh();
+			PaintSysIcons();
 		}
 		if (SystemMinimizeImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
 			SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
-			Refresh();
+			PaintSysIcons();
 		}
 		base.OnMouseLeave(e);
 	}
@@ -485,7 +482,50 @@ abstract class BadThemeContainerControl : ContainerControl
 		get { return _MainArea; }
 		set { _MainArea = value; }
 	}
-	
+
+	public void PaintSysIcons()
+	{
+		graphicObject.Dispose();
+		bitmapObject.Dispose();
+		bitmapObject = new Bitmap(Width, Height);
+		graphicObject = Graphics.FromImage(bitmapObject);
+		Invalidate();
+	}
+
+	public void AddSysIcons()
+	{
+		SolidBrush brush;
+		// Add exit button
+		int sysImgX = ClientRectangle.Width - FormMargin - 1;
+		if (SystemExitImage != null)
+		{
+			sysImgX = sysImgX - SystemExitImage.Width;
+			Rectangle rectangleSystemExit = new Rectangle(sysImgX, FormMargin + 1, SystemExitImage.Width, SystemExitImage.Height);
+			brush = new SolidBrush(SystemExitImageBackColor);
+			graphicObject.FillRectangle(brush, rectangleSystemExit);
+			graphicObject.DrawImage(SystemExitImage, sysImgX, FormMargin + 1);
+
+		}
+		// Add max/normal button
+		if (SystemMaximizeImage != null)
+		{
+			sysImgX = sysImgX - SystemMaximizeImage.Width;
+			Rectangle rectangleSystemMaximize = new Rectangle(sysImgX, FormMargin + 1, SystemMaximizeImage.Width, SystemMaximizeImage.Height);
+			brush = new SolidBrush(SystemMaximizeImageBackColor);
+			graphicObject.FillRectangle(brush, rectangleSystemMaximize);
+			graphicObject.DrawImage(SystemMaximizeImage, sysImgX, FormMargin + 1);
+		}
+		// Add min button
+		if (SystemMinimizeImage != null)
+		{
+			sysImgX = sysImgX - SystemMinimizeImage.Width;
+			Rectangle rectangleSystemMinimize = new Rectangle(sysImgX, FormMargin + 1, SystemMinimizeImage.Width, SystemMinimizeImage.Height);
+			brush = new SolidBrush(SystemMinimizeImageBackColor);
+			graphicObject.FillRectangle(brush, rectangleSystemMinimize);
+			graphicObject.DrawImage(SystemMinimizeImage, sysImgX, FormMargin + 1);
+		}
+	}
+
 }
 
 abstract class BadThemeControl : Control
@@ -646,9 +686,7 @@ class BadForm : BadThemeContainerControl
 		graphicObject.Clear(Color.Fuchsia);
 		SolidBrush brush;
 		// Fill outer shading area with transparent bitmap, used for resize area when FormBorder > 0
-		
-		
-
+		// TODO...
 		// Draw title 
 		Rectangle rectangleTitle = new Rectangle(FormMargin + 1, FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, TitleHeight);
 		brush = new SolidBrush(ColorTheme.FormBackTitle);
@@ -657,6 +695,8 @@ class BadForm : BadThemeContainerControl
 		Rectangle rectangleMain = new Rectangle(FormMargin + 1, TitleHeight + FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, ClientRectangle.Height - TitleHeight - (FormMargin * 2) - 1);
 		brush = new SolidBrush(ColorTheme.FormBack);
 		graphicObject.FillRectangle(brush, rectangleMain);
+		// Draw sys icons
+		AddSysIcons(); // Add Sys Icons in title bar
 		// Footer
 		if (FormFooter)
 		{
@@ -667,40 +707,12 @@ class BadForm : BadThemeContainerControl
 		// Add title icon and text
 		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont)); // Add title text
 		DrawIcon(HorizontalAlignment.Left); // Add title icon
-		// Add exit button
-		int sysImgX = ClientRectangle.Width - FormMargin - 1;
-		if (SystemExitImage != null)
-		{
-			sysImgX = sysImgX - SystemExitImage.Width;
-			Rectangle rectangleSystemExit = new Rectangle(sysImgX, FormMargin + 1, SystemExitImage.Width, SystemExitImage.Height);
-			brush = new SolidBrush(SystemExitImageBackColor);
-			graphicObject.FillRectangle(brush, rectangleSystemExit);
-			graphicObject.DrawImage(SystemExitImage, sysImgX, FormMargin + 1);
-			
-		}
-		// Add max/normal button
-		if (SystemMaximizeImage != null)
-		{
-			sysImgX = sysImgX - SystemMaximizeImage.Width;
-			Rectangle rectangleSystemMaximize = new Rectangle(sysImgX, FormMargin + 1, SystemMaximizeImage.Width, SystemMaximizeImage.Height);
-			brush = new SolidBrush(SystemMaximizeImageBackColor);
-			graphicObject.FillRectangle(brush, rectangleSystemMaximize);
-			graphicObject.DrawImage(SystemMaximizeImage, sysImgX, FormMargin + 1);
-		}
-		// Add min button
-		if (SystemMinimizeImage != null)
-		{
-			sysImgX = sysImgX - SystemMinimizeImage.Width;
-			Rectangle rectangleSystemMinimize = new Rectangle(sysImgX, FormMargin + 1, SystemMinimizeImage.Width, SystemMinimizeImage.Height);
-			brush = new SolidBrush(SystemMinimizeImageBackColor);
-			graphicObject.FillRectangle(brush, rectangleSystemMinimize);
-			graphicObject.DrawImage(SystemMinimizeImage, sysImgX, FormMargin + 1);
-		}
+
 		// Add outer border
 		Pen FormBorderPenColor = new Pen(FormBorderColor);
 		DrawBorder(FormBorderPenColor, ClientRectangle, FormMargin); // Outer Border
 		//DrawCorners(Color.Fuchsia, ClientRectangle); // Corner pixel color
-		
+
 		// Set Main area values
 		MainAreaClass calcMainArea = new MainAreaClass();
 		calcMainArea.Top = FormMargin + TitleHeight + 1;
@@ -709,10 +721,12 @@ class BadForm : BadThemeContainerControl
 		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - 2 - TitleHeight;
 		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
 		MainArea = calcMainArea;
-
+		
 		// Draw theme on form
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
+
+
 }
 
 class BadButton : BadThemeControl
