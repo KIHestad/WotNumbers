@@ -31,12 +31,14 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Message));
 			this.badForm1 = new BadForm();
+			this.cmdClose = new BadButton();
 			this.txtMessage = new System.Windows.Forms.TextBox();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// badForm1
 			// 
+			this.badForm1.Controls.Add(this.cmdClose);
 			this.badForm1.Controls.Add(this.txtMessage);
 			this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -55,6 +57,18 @@
 			this.badForm1.TabIndex = 17;
 			this.badForm1.Text = "Message";
 			this.badForm1.TitleHeight = 26;
+			this.badForm1.Resize += new System.EventHandler(this.badForm1_Resize);
+			// 
+			// cmdClose
+			// 
+			this.cmdClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.cmdClose.Image = null;
+			this.cmdClose.Location = new System.Drawing.Point(121, 106);
+			this.cmdClose.Name = "cmdClose";
+			this.cmdClose.Size = new System.Drawing.Size(75, 23);
+			this.cmdClose.TabIndex = 17;
+			this.cmdClose.Text = "Close";
+			this.cmdClose.Click += new System.EventHandler(this.cmdClose_Click);
 			// 
 			// txtMessage
 			// 
@@ -97,5 +111,6 @@
 
 		private System.Windows.Forms.TextBox txtMessage;
 		private BadForm badForm1;
+		private BadButton cmdClose;
     }
 }

@@ -46,7 +46,7 @@ namespace WotDBUpdater
 			Config.Settings.run = 0;
 		}
 
-		public static string DatabaseConnection(string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "")
+		public static string DatabaseConnection(string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "", int connectionTimeot = 30)
 		{
 			// Get databaseserver
 			string databaseServer = Config.Settings.databaseServer;
@@ -71,7 +71,7 @@ namespace WotDBUpdater
 				userLogin = "User Id=" + uid + ";Password=" + pwd + ";";
 			}
 
-			return "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin + "; Connect Timeout=300";
+			return "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin + "; Connect Timeout=" + connectionTimeot.ToString();
 		}
 
 		public static bool CheckDBConn(bool showErrorIfNotExists = true, string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "")
