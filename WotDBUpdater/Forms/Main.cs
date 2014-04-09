@@ -386,11 +386,16 @@ namespace WotDBUpdater.Forms
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
 			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
 			{
 				battleFilter = "AND battleTime>=@battleTime ";
 			}
+			// Get Tank filter
+			string tankFilterMessage = "";
+			string tankFilter = "";
+			GetTankfilter(out tankFilter, out tankFilterMessage);
 			string sql =
 				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
 				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
@@ -402,7 +407,7 @@ namespace WotDBUpdater.Forms
 				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
 				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
-				"WHERE   playerTank.playerId=@playerid " + battleFilter +
+				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
 				"ORDER BY battle.battleTime DESC ";
 				
 			SqlCommand cmd = new SqlCommand(sql, con);
@@ -505,7 +510,7 @@ namespace WotDBUpdater.Forms
 			GridScrollShowCurPos();
 			toolItemBattles.Visible = true;
 			if (statusmessage == "") statusmessage = toolItemBattles.Text;
-			SetStatus2(statusmessage);
+			SetStatus2(statusmessage + " " + tankFilterMessage);
 		}
 
 		private void GridResizeBattle()
@@ -867,6 +872,7 @@ namespace WotDBUpdater.Forms
 				{
 					InfoPanelSlideStart(false);
 					toolItemBattles.Visible = true;
+					toolItemTankFilter.Visible = true;
 					GridShowBattle();
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 				}
