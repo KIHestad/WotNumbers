@@ -61,5 +61,24 @@ namespace WotDBUpdater
 			return ok;
 		}
 
+		public static DataTable ListTables()
+		{
+			DataTable dt = new DataTable();
+			if (Config.Settings.databaseType == dbType.MSSQLserver)
+			{
+				string sql = "SELECT '( Select from list )' AS TABLE_NAME UNION SELECT table_name AS TableName FROM information_schema.tables ORDER BY TableName";
+				dt = FetchData(sql);
+			}
+			else if (Config.Settings.databaseType == dbType.SQLite)
+			{
+				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+				con.Open();
+				dt = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
+			}
+			return dt;
+		}
+
+
+
 	}
 }

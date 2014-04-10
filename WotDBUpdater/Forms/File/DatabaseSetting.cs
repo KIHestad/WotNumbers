@@ -129,6 +129,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
+			Config.Settings.databaseFileName = txtSQLiteDatabaseFile.Text;
 			Config.Settings.databaseServer = txtServerName.Text;
 			Config.Settings.databaseWinAuth = rbWinAuth.Checked;
 			Config.Settings.databaseUid = txtUid.Text;
@@ -158,6 +159,20 @@ namespace WotDBUpdater.Forms.File
 			Form frm = new Forms.File.DatabaseNew();
 			frm.ShowDialog();
 			LoadConfig();
+		}
+
+		private void cmdSQLiteDatabaseFile_Click(object sender, EventArgs e)
+		{
+			// Select dossier file
+			openFileDialogSQLite.FileName = "*.db";
+			//openFileDialogSQLite.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+			//	"\\WOT Statistics\\Hist_" + Config.Settings.playerName + "\\LastBattle";
+			openFileDialogSQLite.ShowDialog();
+			if (openFileDialogSQLite.FileName != "")
+			{
+				txtSQLiteDatabaseFile.Text = openFileDialogSQLite.FileName;
+				changedDbConfig = true;
+			}
 		}
 
 	   

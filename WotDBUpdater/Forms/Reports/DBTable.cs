@@ -20,10 +20,9 @@ namespace WotDBUpdater.Forms.Reports
 
 		private void frmDBTable_Load(object sender, EventArgs e)
 		{
-			string sql = "SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.tables ORDER BY TableName";
-			ddSelectTable.DataSource = db.FetchData(sql);
-			ddSelectTable.DisplayMember = "TableName";
-			ddSelectTable.ValueMember = "TableName";
+			ddSelectTable.DataSource = db.ListTables();
+			ddSelectTable.DisplayMember = "TABLE_NAME";
+			ddSelectTable.ValueMember = "TABLE_NAME";
 		}
 
 		private void ddSelectTable_SelectedValueChanged(object sender, EventArgs e)
