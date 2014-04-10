@@ -39,6 +39,7 @@
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.MainTheme = new BadForm();
+			this.lblStatusRowCount = new System.Windows.Forms.Label();
 			this.panelMainArea = new System.Windows.Forms.Panel();
 			this.panelGrid = new System.Windows.Forms.Panel();
 			this.dataGridMain = new System.Windows.Forms.DataGridView();
@@ -163,6 +164,7 @@
 			// 
 			// MainTheme
 			// 
+			this.MainTheme.Controls.Add(this.lblStatusRowCount);
 			this.MainTheme.Controls.Add(this.panelMainArea);
 			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatus2);
@@ -185,6 +187,19 @@
 			this.MainTheme.Text = "WoT DBstat";
 			this.MainTheme.TitleHeight = 53;
 			this.MainTheme.Resize += new System.EventHandler(this.MainTheme_Resize);
+			// 
+			// lblStatusRowCount
+			// 
+			this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
+			this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
+			this.lblStatusRowCount.Location = new System.Drawing.Point(581, 411);
+			this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
+			this.lblStatusRowCount.Name = "lblStatusRowCount";
+			this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
+			this.lblStatusRowCount.TabIndex = 19;
+			this.lblStatusRowCount.Text = "Rows...";
+			this.lblStatusRowCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
 			// 
 			// panelMainArea
 			// 
@@ -331,7 +346,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(495, 25);
+			this.toolMain.Size = new System.Drawing.Size(526, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -809,6 +824,7 @@
 			this.toolItemBattles.ShowDropDownArrow = false;
 			this.toolItemBattles.Size = new System.Drawing.Size(90, 22);
 			this.toolItemBattles.Text = "Today\'s Battles";
+			this.toolItemBattles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemBattleFilter_MouseDown);
 			// 
 			// toolItemBattles1d
 			// 
@@ -1025,11 +1041,13 @@
 			this.lblStatus2.AutoSize = true;
 			this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatus2.Location = new System.Drawing.Point(92, 410);
+			this.lblStatus2.Location = new System.Drawing.Point(69, 411);
+			this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatus2.Name = "lblStatus2";
 			this.lblStatus2.Size = new System.Drawing.Size(68, 13);
 			this.lblStatus2.TabIndex = 16;
 			this.lblStatus2.Text = "Last action...";
+			this.lblStatus2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
 			// lblStatus1
 			// 
@@ -1037,11 +1055,13 @@
 			this.lblStatus1.AutoSize = true;
 			this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.lblStatus1.Location = new System.Drawing.Point(13, 410);
+			this.lblStatus1.Location = new System.Drawing.Point(13, 411);
+			this.lblStatus1.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatus1.Name = "lblStatus1";
 			this.lblStatus1.Size = new System.Drawing.Size(37, 13);
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
+			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
 			// Main
 			// 
@@ -1166,6 +1186,7 @@
 		private System.Windows.Forms.Panel panelInfo;
 		private System.Windows.Forms.Panel panelGrid;
 		private System.Windows.Forms.ImageList imageListToolStrip;
+		private System.Windows.Forms.Label lblStatusRowCount;
 	}
 }
 

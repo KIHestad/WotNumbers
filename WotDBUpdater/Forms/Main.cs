@@ -34,7 +34,7 @@ namespace WotDBUpdater.Forms
 		private void Main_Load(object sender, EventArgs e)
 		{
 			// Hide form until ready
-			MainTheme.Visible = false;
+			// MainTheme.Visible = false;
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
 			toolMain.BackColor = Code.Support.ColorTheme.FormBackTitle;
@@ -241,6 +241,7 @@ namespace WotDBUpdater.Forms
 			// Finish
 			GridResizeOverall();
 			GridScrollShowCurPos();
+			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 		}
 
 		private void GridResizeOverall()
@@ -367,6 +368,7 @@ namespace WotDBUpdater.Forms
 			// Add status message
 			if (statusmessage == "") statusmessage = message;
 			SetStatus2(statusmessage);
+			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 		}
 
 		private void GridResizeTankInfo()
@@ -380,7 +382,7 @@ namespace WotDBUpdater.Forms
 			}
 		}
 
-		private void GridShowBattle(string statusmessage = "")
+		private void GridShowBattle(string overrideStatus2Message = "")
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
@@ -509,8 +511,11 @@ namespace WotDBUpdater.Forms
 			GridResizeBattle();
 			GridScrollShowCurPos();
 			toolItemBattles.Visible = true;
-			if (statusmessage == "") statusmessage = toolItemBattles.Text;
-			SetStatus2(statusmessage + " " + tankFilterMessage);
+			if (overrideStatus2Message == "")
+				SetStatus2(toolItemBattles.Text + "   " + tankFilterMessage);
+			else
+				SetStatus2(overrideStatus2Message);
+			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString() ;
 		}
 
 		private void GridResizeBattle()
@@ -1016,7 +1021,10 @@ namespace WotDBUpdater.Forms
 			string where = "";
 			string message = "";
 			GetTankfilter(out where, out message);
-			SetStatus2(message);
+			if (toolItemViewBattles.Checked)
+				SetStatus2(toolItemBattles.Text + "   " + message);
+			else
+				SetStatus2(message);
 		}
 
 		private void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
@@ -1048,7 +1056,14 @@ namespace WotDBUpdater.Forms
 			// On right mouse click just display status message for current filter
 			if (e.Button == System.Windows.Forms.MouseButtons.Right) ShowTankFilterStatus();
 		}
+
+		private void toolItemBattleFilter_MouseDown(object sender, MouseEventArgs e)
+		{
+			// On right mouse click just display status message for current filter
+			if (e.Button == System.Windows.Forms.MouseButtons.Right) ShowTankFilterStatus();
 		
+		}
+
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.ApplicationSetting();
