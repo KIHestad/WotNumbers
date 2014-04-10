@@ -255,6 +255,18 @@ namespace WotDBUpdater.Forms.File
 			bool dbExists = false;
 			string db = "C:\\dev\\wotdb\\WotDBUpdater\\bin\\Debug\\wotdb.db";
 			SQLiteConnection.CreateFile(db);
+
+            //string sql = File.ReadAllText("x.sql");
+            SQLiteConnection conn = new SQLiteConnection("Data Source=" + db + ";Version=3;");
+            conn.Open();
+
+            string sql = "create table testc (id int)";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            command.ExecuteNonQuery();
+
+            conn.Close();
+
+
 			//string dbConnection = db;
 			//SQLiteConnection cnn = new SQLiteConnection(dbConnection);
 			//cnn.Open();
