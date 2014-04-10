@@ -16,15 +16,23 @@ namespace WotDBUpdater
 
 		public static void GetTankListFromDB()
 		{
-			using(SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+			try
 			{
-				tankList.Clear();
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT * FROM tank", conn);
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
-				adapter.Fill(tankList);
-				conn.Close();
+				using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+				{
+					tankList.Clear();
+					conn.Open();
+					SqlCommand command = new SqlCommand("SELECT * FROM tank", conn);
+					SqlDataAdapter adapter = new SqlDataAdapter(command);
+					adapter.Fill(tankList);
+					conn.Close();
+				}
 			}
+			catch (Exception)
+			{
+				// throw;
+			}
+			
 		}
 
 		public static DataTable GetPlayerTankFromDB(int tankId)

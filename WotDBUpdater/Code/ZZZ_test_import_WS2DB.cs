@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WotDBUpdater
 {
-    public static class ImportWS2DB
+    public static class zzz_ImportWS2DB
     {
         
         public static void importWotStats2DB()

@@ -11,69 +11,54 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Forms.Reports
 {
-    public partial class DBTable : Form
-    {
-        public DBTable()
-        {
-            InitializeComponent();
-        }
+	public partial class DBTable : Form
+	{
+		public DBTable()
+		{
+			InitializeComponent();
+		}
 
-        private void frmDBTable_Load(object sender, EventArgs e)
-        {
-            SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-            con.Open();
-            SqlCommand cmd = new SqlCommand("SELECT '( Select from list )' AS TableName UNION SELECT table_name AS TableName FROM information_schema.tables ORDER BY TableName", con);
-            cmd.CommandType = CommandType.Text;
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt=new DataTable();
-            da.Fill(dt);
-            cmd.Dispose();
-            con.Close();
-            ddSelectTable.DataSource = dt;
-            ddSelectTable.DisplayMember = "TableName";
-            ddSelectTable.ValueMember = "TableName";
-        }
+		private void frmDBTable_Load(object sender, EventArgs e)
+		{
+			ddSelectTable.DataSource = db.ListTables();
+			ddSelectTable.DisplayMember = "TABLE_NAME";
+			ddSelectTable.ValueMember = "TABLE_NAME";
+		}
 
-        private void ddSelectTable_SelectedValueChanged(object sender, EventArgs e)
-        {
-            RefreshDataGrid();
-        }
+		private void ddSelectTable_SelectedValueChanged(object sender, EventArgs e)
+		{
+			RefreshDataGrid();
+		}
 
-        private void frmDBTable_SizeChanged(object sender, EventArgs e)
-        {
-            panel2.Height = DBTable.ActiveForm.ClientSize.Height - panel1.Height;
-        }
+		private void frmDBTable_SizeChanged(object sender, EventArgs e)
+		{
+			panel2.Height = DBTable.ActiveForm.ClientSize.Height - panel1.Height;
+		}
 
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            RefreshDataGrid();
-        }
+		private void btnRefresh_Click(object sender, EventArgs e)
+		{
+			RefreshDataGrid();
+		}
 
-        private void RefreshDataGrid()
-        {
-            try
-            {
-                string TableName = ddSelectTable.SelectedValue.ToString();
-                if (TableName == "( Select from list )")
-                {
-                    dataGridViewShowTable.DataSource = null;
-                }
-                else
-                {
-                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM " + TableName, con);
-                    cmd.CommandType = CommandType.Text;
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dataGridViewShowTable.DataSource = dt;
-                }
-            }
-            catch (Exception)
-            {
-                // nothing
-            }
-        }
-     
-    }
+		private void RefreshDataGrid()
+		{
+			try
+			{
+				string TableName = ddSelectTable.SelectedValue.ToString();
+				if (TableName == "( Select from list )")
+				{
+					dataGridViewShowTable.DataSource = null;
+				}
+				else
+				{
+					dataGridViewShowTable.DataSource = db.FetchData("SELECT * FROM " + TableName);
+				}
+			}
+			catch (Exception)
+			{
+				// nothing
+			}
+		}
+	 
+	}
 }
