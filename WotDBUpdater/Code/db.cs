@@ -2,32 +2,63 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WotDBUpdater.Code
+namespace WotDBUpdater
 {
 	class db
 	{
-		public enum dbType
-		{
-			MSSQLserver = 1,
-			SQLite = 2
-		}
+		
 
-		public DataTable RunSQL(string sql)
+		public static DataTable FetchData(string sql)
 		{
 			DataTable dt = new DataTable();
-			using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+			if (Config.Settings.databaseType == dbType.MSSQLserver)
 			{
+				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 				con.Open();
 				SqlCommand command = new SqlCommand(sql, con);
 				SqlDataAdapter adapter = new SqlDataAdapter(command);
 				adapter.Fill(dt);
 				con.Close();
 			}
+			else if (Config.Settings.databaseType == dbType.SQLite)
+			{
+				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+				con.Open();
+				SQLiteDataAdapter adapter = new SQLiteDataAdapter(sql, con);
+				adapter.Fill(dt);
+				con.Close();
+			}
 			return dt;
+		}
+
+		public static bool ExecuteNonQuery(string sql)
+		{
+			bool ok = false;
+			if (Config.Settings.databaseType == dbType.MSSQLserver)
+			{
+				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+				con.Open();
+				SqlCommand command = new SqlCommand(sql, con);
+				command.ExecuteNonQuery();
+				con.Close();
+				ok = true;
+			}
+			else if (Config.Settings.databaseType == dbType.SQLite)
+			{
+				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+				con.Open();
+				SQLiteCommand command = new SQLiteCommand(sql, con);
+				command.ExecuteNonQuery();
+				con.Close();
+				ok = true;
+			}
+			return ok;
 		}
 
 	}
