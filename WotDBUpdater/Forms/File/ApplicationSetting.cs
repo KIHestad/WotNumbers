@@ -34,26 +34,13 @@ namespace WotDBUpdater.Forms.File
 
 		private void UpdatePlayerList()
 		{
-			try
+			DataTable playerList = db.FetchData("SELECT * FROM player");
+			if (playerList.Rows.Count > 0)
 			{
-				cboPlayer.Items.Clear();
-				using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
-				{
-					con.Open();
-					string sql = "SELECT * FROM player";
-					SqlCommand cmd = new SqlCommand(sql, con);
-					SqlDataReader reader = cmd.ExecuteReader();
-					while (reader.Read())
-					{
-						cboPlayer.Items.Add(reader["name"]);
-					}
-					con.Close();
-				}
+				cboPlayer.DataSource = playerList;
+				cboPlayer.DisplayMember = "name";
+				cboPlayer.ValueMember = "name";
 				cboPlayer.SelectedIndex = cboPlayer.FindString(Config.Settings.playerName);
-			}
-			catch (Exception)
-			{
-				// none
 			}
 		}
 
@@ -130,6 +117,11 @@ namespace WotDBUpdater.Forms.File
 		private void btnDatabaseSettings_Click(object sender, EventArgs e)
 		{
 			
+		}
+
+		private void cboDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
 		}
 
 

@@ -214,34 +214,36 @@ namespace WotDBUpdater.Forms
 		
 		private void GridShowOverall()
 		{
-			DateGridSelected = DataGridType.None;
-			dataGridMain.DataSource = null;
-			if (!Config.CheckDBConn()) return;
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-			string sql =
-				"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from  dbo.playerTank where playerid=@playerid " +
-				"UNION " +
-				"SELECT 'Total battles' as Data ,cast( SUM(battles15) + SUM(battles7) as varchar) from dbo.playerTank where playerid=@playerid " +
-				"UNION " +
-				"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
+			try
+			{
+				DateGridSelected = DataGridType.None;
+				dataGridMain.DataSource = null;
+				if (!Config.CheckDBConn()) return;
+				string sql =
+					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from  dbo.playerTank where playerid=@playerid " +
+					"UNION " +
+					"SELECT 'Total battles' as Data ,cast( SUM(battles15) + SUM(battles7) as varchar) from dbo.playerTank where playerid=@playerid " +
+					"UNION " +
+					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
+				sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+				dataGridMain.DataSource = db.FetchData(sql);
+				DateGridSelected = DataGridType.Overall;
+				// Text cols
+				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				// Finish
+				GridResizeOverall();
+				GridScrollShowCurPos();
+				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
+			}
+			catch (Exception)
+			{
 				
-			SqlCommand cmd = new SqlCommand(sql, con);
-			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
-			cmd.CommandType = CommandType.Text;
-			SqlDataAdapter da = new SqlDataAdapter(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			dataGridMain.DataSource = dt;
-			DateGridSelected = DataGridType.Overall;
-			// Text cols
-			dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			// Finish
-			GridResizeOverall();
-			GridScrollShowCurPos();
-			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
+				//throw;
+			}
+			
 		}
 
 		private void GridResizeOverall()
@@ -347,13 +349,8 @@ namespace WotDBUpdater.Forms
 				"         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN " +
 				"         dbo.country ON dbo.tank.countryId = dbo.country.id " +
 				"WHERE   dbo.player.id=@playerid " + where;
-			SqlCommand cmd = new SqlCommand(sql, con);
-			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
-			cmd.CommandType = CommandType.Text;
-			SqlDataAdapter da = new SqlDataAdapter(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			dataGridMain.DataSource = dt;
+			sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+			dataGridMain.DataSource = db.FetchData(sql);
 			DateGridSelected = DataGridType.Tank;
 			// Text cols
 			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -411,9 +408,7 @@ namespace WotDBUpdater.Forms
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
 				"ORDER BY battle.battleTime DESC ";
-				
-			SqlCommand cmd = new SqlCommand(sql, con);
-			cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
+			sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
 			if (!toolItemBattlesAll.Checked)
 			{
 				DateTime basedate = DateTime.Now;
@@ -424,12 +419,10 @@ namespace WotDBUpdater.Forms
 				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
 				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
 				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
-				cmd.Parameters.AddWithValue("@battleTime", dateFilter);
+				sql = sql.Replace("@battleTime", dateFilter.ToString("yyyy-MM-dd"));
 			}
-			cmd.CommandType = CommandType.Text;
-			SqlDataAdapter da = new SqlDataAdapter(cmd);
 			DataTable dt = new DataTable();
-			da.Fill(dt);
+			dt = db.FetchData(sql);
 			// Add footer
 			if (dt.Rows.Count > 1)
 			{
@@ -465,8 +458,7 @@ namespace WotDBUpdater.Forms
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"        tank ON playerTank.tankId = tank.id " +
 					"WHERE   playerTank.playerId=@playerid " + battleFilter;
-				cmd = new SqlCommand(sql, con);
-				cmd.Parameters.AddWithValue("@playerid", Config.Settings.playerId);
+				sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
 				if (!toolItemBattlesAll.Checked)
 				{
 					DateTime basedate = DateTime.Now;
@@ -477,11 +469,9 @@ namespace WotDBUpdater.Forms
 					else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
 					else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
 					else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
-					cmd.Parameters.AddWithValue("@battleTime", dateFilter);
+					sql = sql.Replace("@battleTime", dateFilter.ToString("yyyy-MM-dd"));
 				}
-				cmd.CommandType = CommandType.Text;
-				da = new SqlDataAdapter(cmd);
-				da.Fill(dt);
+				dt.Rows.Add(db.FetchData(sql).Rows);
 			}
 			// populate datagrid
 			dataGridMain.DataSource = dt;

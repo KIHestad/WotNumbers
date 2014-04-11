@@ -253,7 +253,7 @@ namespace WotDBUpdater.Forms.File
 		{
 			// Check if database exists
 			bool dbExists = false;
-			string db = "C:\\dev\\wotdb\\WotDBUpdater\\bin\\Debug\\wotdb.db";
+			string db = "C:\\wotdb.db";
 			SQLiteConnection.CreateFile(db);
 
             //string sql = File.ReadAllText("x.sql");

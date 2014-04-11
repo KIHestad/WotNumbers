@@ -16,23 +16,8 @@ namespace WotDBUpdater
 
 		public static void GetTankListFromDB()
 		{
-			try
-			{
-				using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-				{
-					tankList.Clear();
-					conn.Open();
-					SqlCommand command = new SqlCommand("SELECT * FROM tank", conn);
-					SqlDataAdapter adapter = new SqlDataAdapter(command);
-					adapter.Fill(tankList);
-					conn.Close();
-				}
-			}
-			catch (Exception)
-			{
-				// throw;
-			}
-			
+			tankList.Clear();
+			tankList = db.FetchData("SELECT * FROM tank");
 		}
 
 		public static DataTable GetPlayerTankFromDB(int tankId)
@@ -140,31 +125,25 @@ namespace WotDBUpdater
 		
 		public static void GetJson2dbMappingViewFromDB()
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
+			json2dbMappingView.Clear();
+			json2dbMappingView = db.FetchData("SELECT * FROM json2dbMappingView ORDER BY jsonMainSubProperty");
+			try
 			{
-				json2dbMappingView.Clear();
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT * FROM json2dbMappingView ORDER BY jsonMainSubProperty", conn);
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
-				adapter.Fill(json2dbMappingView);
-				conn.Close();
+				json2dbMappingView.PrimaryKey = new DataColumn[] { json2dbMappingView.Columns["jsonMainSubProperty"] };
 			}
-			json2dbMappingView.PrimaryKey = new DataColumn[] {json2dbMappingView.Columns["jsonMainSubProperty"]};
+			catch (Exception)
+			{
+				//throw;
+			}
+			
 		}
 
 		public static DataTable tankData2BattleMappingView = new DataTable();
 
 		public static void GettankData2BattleMappingViewFromDB()
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				tankData2BattleMappingView.Clear();
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT * FROM tankData2BattleMappingView", conn);
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
-				adapter.Fill(tankData2BattleMappingView);
-				conn.Close();
-			}
+			tankData2BattleMappingView.Clear();
+			tankData2BattleMappingView = db.FetchData("SELECT * FROM tankData2BattleMappingView");
 		}
 
 		#endregion
@@ -247,11 +226,7 @@ namespace WotDBUpdater
 						"select " + playerTankId.ToString() + ", ach.id, 0 from ach left join " +
 						"playerTankAch on ach.id = playerTankAch.achId and playerTankAch.playerTankId = " + playerTankId.ToString() + " " +
 						"where playerTankAch.playerTankId is null";
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-			con.Open();
-			SqlCommand cmd = new SqlCommand(sql, con);
-			cmd.ExecuteNonQuery();
-			con.Close();
+			db.ExecuteNonQuery(sql);
 		}
 
 

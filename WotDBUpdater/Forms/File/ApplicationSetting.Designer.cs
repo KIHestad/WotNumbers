@@ -35,12 +35,12 @@
 			this.btnSave = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnDatabaseSettings = new System.Windows.Forms.Button();
+			this.label2 = new System.Windows.Forms.Label();
+			this.cboDatabaseType = new System.Windows.Forms.ComboBox();
 			this.btnRemovePlayer = new System.Windows.Forms.Button();
 			this.btnAddPlayer = new System.Windows.Forms.Button();
 			this.cboPlayer = new System.Windows.Forms.ComboBox();
-			this.cboDatabaseType = new System.Windows.Forms.ComboBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.btnDatabaseSettings = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -109,6 +109,38 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Settings";
 			// 
+			// btnDatabaseSettings
+			// 
+			this.btnDatabaseSettings.Location = new System.Drawing.Point(261, 21);
+			this.btnDatabaseSettings.Name = "btnDatabaseSettings";
+			this.btnDatabaseSettings.Size = new System.Drawing.Size(87, 25);
+			this.btnDatabaseSettings.TabIndex = 15;
+			this.btnDatabaseSettings.Text = "Settings";
+			this.btnDatabaseSettings.UseVisualStyleBackColor = true;
+			this.btnDatabaseSettings.Click += new System.EventHandler(this.btnDatabaseSettings_Click);
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(15, 26);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(79, 13);
+			this.label2.TabIndex = 14;
+			this.label2.Text = "Database type:";
+			// 
+			// cboDatabaseType
+			// 
+			this.cboDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboDatabaseType.FormattingEnabled = true;
+			this.cboDatabaseType.Items.AddRange(new object[] {
+            "MS SQL Server",
+            "SQLite"});
+			this.cboDatabaseType.Location = new System.Drawing.Point(109, 23);
+			this.cboDatabaseType.Name = "cboDatabaseType";
+			this.cboDatabaseType.Size = new System.Drawing.Size(146, 21);
+			this.cboDatabaseType.TabIndex = 13;
+			this.cboDatabaseType.SelectedIndexChanged += new System.EventHandler(this.cboDatabaseType_SelectedIndexChanged);
+			// 
 			// btnRemovePlayer
 			// 
 			this.btnRemovePlayer.Location = new System.Drawing.Point(354, 80);
@@ -137,37 +169,6 @@
 			this.cboPlayer.Name = "cboPlayer";
 			this.cboPlayer.Size = new System.Drawing.Size(237, 21);
 			this.cboPlayer.TabIndex = 10;
-			// 
-			// cboDatabaseType
-			// 
-			this.cboDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboDatabaseType.FormattingEnabled = true;
-			this.cboDatabaseType.Items.AddRange(new object[] {
-            "MS SQL Server",
-            "SQLite"});
-			this.cboDatabaseType.Location = new System.Drawing.Point(109, 23);
-			this.cboDatabaseType.Name = "cboDatabaseType";
-			this.cboDatabaseType.Size = new System.Drawing.Size(146, 21);
-			this.cboDatabaseType.TabIndex = 13;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(15, 26);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(79, 13);
-			this.label2.TabIndex = 14;
-			this.label2.Text = "Database type:";
-			// 
-			// btnDatabaseSettings
-			// 
-			this.btnDatabaseSettings.Location = new System.Drawing.Point(261, 21);
-			this.btnDatabaseSettings.Name = "btnDatabaseSettings";
-			this.btnDatabaseSettings.Size = new System.Drawing.Size(87, 25);
-			this.btnDatabaseSettings.TabIndex = 15;
-			this.btnDatabaseSettings.Text = "Settings";
-			this.btnDatabaseSettings.UseVisualStyleBackColor = true;
-			this.btnDatabaseSettings.Click += new System.EventHandler(this.btnDatabaseSettings_Click);
 			// 
 			// ApplicationSetting
 			// 

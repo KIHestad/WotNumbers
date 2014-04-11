@@ -28,6 +28,7 @@ namespace WotDBUpdater.Forms.File
 		private void LoadConfig()
 		{
 			// Startup settings
+			txtSQLiteDatabaseFile.Text = Config.Settings.databaseFileName;
 			txtServerName.Text = Config.Settings.databaseServer;
 			rbWinAuth.Checked = Config.Settings.databaseWinAuth;
 			rbSqlAuth.Checked = !Config.Settings.databaseWinAuth;
