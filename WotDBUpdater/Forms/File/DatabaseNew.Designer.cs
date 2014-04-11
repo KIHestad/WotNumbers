@@ -28,196 +28,213 @@
         /// </summary>
         private void InitializeComponent()
         {
-            BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseNew));
-            this.badForm1 = new BadForm();
-            this.pbCreateDatabase = new System.Windows.Forms.ProgressBar();
-            this.label3 = new System.Windows.Forms.Label();
-            this.badSeperator1 = new BadSeperator();
-            this.txtFileLocation = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnCreateDB = new BadButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtDatabasename = new System.Windows.Forms.TextBox();
-            this.txtPlayerName = new System.Windows.Forms.TextBox();
-            this.btnCreateSQLiteDB = new BadButton();
-            this.pbCreateSQLiteDB = new System.Windows.Forms.ProgressBar();
-            this.badForm1.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // badForm1
-            // 
-            this.badForm1.Controls.Add(this.pbCreateSQLiteDB);
-            this.badForm1.Controls.Add(this.btnCreateSQLiteDB);
-            this.badForm1.Controls.Add(this.pbCreateDatabase);
-            this.badForm1.Controls.Add(this.label3);
-            this.badForm1.Controls.Add(this.badSeperator1);
-            this.badForm1.Controls.Add(this.txtFileLocation);
-            this.badForm1.Controls.Add(this.label2);
-            this.badForm1.Controls.Add(this.btnCreateDB);
-            this.badForm1.Controls.Add(this.label1);
-            this.badForm1.Controls.Add(this.txtDatabasename);
-            this.badForm1.Controls.Add(this.txtPlayerName);
-            this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.badForm1.FormFooter = false;
-            this.badForm1.FormFooterHeight = 26;
-            this.badForm1.FormMargin = 0;
-            this.badForm1.Image = null;
-            this.badForm1.Location = new System.Drawing.Point(0, 0);
-            this.badForm1.MainArea = mainAreaClass1;
-            this.badForm1.Name = "badForm1";
-            this.badForm1.Resizable = false;
-            this.badForm1.Size = new System.Drawing.Size(435, 254);
-            this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
-            this.badForm1.SystemMaximizeImage = null;
-            this.badForm1.SystemMinimizeImage = null;
-            this.badForm1.TabIndex = 14;
-            this.badForm1.Text = "Create New Database";
-            this.badForm1.TitleHeight = 26;
-            this.badForm1.Click += new System.EventHandler(this.badForm1_Click);
-            // 
-            // pbCreateDatabase
-            // 
-            this.pbCreateDatabase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCreateDatabase.Location = new System.Drawing.Point(27, 176);
-            this.pbCreateDatabase.MarqueeAnimationSpeed = 1;
-            this.pbCreateDatabase.Name = "pbCreateDatabase";
-            this.pbCreateDatabase.Size = new System.Drawing.Size(264, 10);
-            this.pbCreateDatabase.Step = 1;
-            this.pbCreateDatabase.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pbCreateDatabase.TabIndex = 13;
-            this.pbCreateDatabase.UseWaitCursor = true;
-            this.pbCreateDatabase.Value = 1;
-            this.pbCreateDatabase.Visible = false;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.label3.Location = new System.Drawing.Point(24, 88);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(112, 13);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Database file location:";
-            // 
-            // badSeperator1
-            // 
-            this.badSeperator1.BackColor = System.Drawing.Color.Transparent;
-            this.badSeperator1.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.badSeperator1.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.badSeperator1.Direction = System.Windows.Forms.Orientation.Horizontal;
-            this.badSeperator1.Image = null;
-            this.badSeperator1.Location = new System.Drawing.Point(27, 138);
-            this.badSeperator1.Name = "badSeperator1";
-            this.badSeperator1.Size = new System.Drawing.Size(380, 23);
-            this.badSeperator1.TabIndex = 14;
-            this.badSeperator1.Text = "gghjfgjh";
-            // 
-            // txtFileLocation
-            // 
-            this.txtFileLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.txtFileLocation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFileLocation.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.txtFileLocation.Location = new System.Drawing.Point(27, 104);
-            this.txtFileLocation.Name = "txtFileLocation";
-            this.txtFileLocation.Size = new System.Drawing.Size(380, 20);
-            this.txtFileLocation.TabIndex = 13;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.label2.Location = new System.Drawing.Point(24, 43);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Database name:";
-            // 
-            // btnCreateDB
-            // 
-            this.btnCreateDB.Image = null;
-            this.btnCreateDB.Location = new System.Drawing.Point(301, 170);
-            this.btnCreateDB.Name = "btnCreateDB";
-            this.btnCreateDB.Size = new System.Drawing.Size(106, 23);
-            this.btnCreateDB.TabIndex = 0;
-            this.btnCreateDB.Text = "Create Database";
-            this.btnCreateDB.Click += new System.EventHandler(this.btnCreateDB_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.label1.Location = new System.Drawing.Point(223, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Player name:";
-            // 
-            // txtDatabasename
-            // 
-            this.txtDatabasename.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.txtDatabasename.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDatabasename.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.txtDatabasename.Location = new System.Drawing.Point(27, 59);
-            this.txtDatabasename.Name = "txtDatabasename";
-            this.txtDatabasename.Size = new System.Drawing.Size(181, 20);
-            this.txtDatabasename.TabIndex = 11;
-            // 
-            // txtPlayerName
-            // 
-            this.txtPlayerName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.txtPlayerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPlayerName.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.txtPlayerName.Location = new System.Drawing.Point(226, 59);
-            this.txtPlayerName.Name = "txtPlayerName";
-            this.txtPlayerName.Size = new System.Drawing.Size(181, 20);
-            this.txtPlayerName.TabIndex = 9;
-            // 
-            // btnCreateSQLiteDB
-            // 
-            this.btnCreateSQLiteDB.Image = null;
-            this.btnCreateSQLiteDB.Location = new System.Drawing.Point(301, 209);
-            this.btnCreateSQLiteDB.Name = "btnCreateSQLiteDB";
-            this.btnCreateSQLiteDB.Size = new System.Drawing.Size(106, 23);
-            this.btnCreateSQLiteDB.TabIndex = 15;
-            this.btnCreateSQLiteDB.Text = "Create Database";
-            this.btnCreateSQLiteDB.Click += new System.EventHandler(this.btnCreateSQLiteDB_Click);
-            // 
-            // pbCreateSQLiteDB
-            // 
-            this.pbCreateSQLiteDB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCreateSQLiteDB.Location = new System.Drawing.Point(27, 215);
-            this.pbCreateSQLiteDB.MarqueeAnimationSpeed = 1;
-            this.pbCreateSQLiteDB.Name = "pbCreateSQLiteDB";
-            this.pbCreateSQLiteDB.Size = new System.Drawing.Size(264, 10);
-            this.pbCreateSQLiteDB.Step = 1;
-            this.pbCreateSQLiteDB.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pbCreateSQLiteDB.TabIndex = 16;
-            this.pbCreateSQLiteDB.UseWaitCursor = true;
-            this.pbCreateSQLiteDB.Value = 1;
-            this.pbCreateSQLiteDB.Visible = false;
-            // 
-            // DatabaseNew
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(435, 254);
-            this.Controls.Add(this.badForm1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "DatabaseNew";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Create New Database";
-            this.Load += new System.EventHandler(this.frmDatabaseNew_Load);
-            this.badForm1.ResumeLayout(false);
-            this.badForm1.PerformLayout();
-            this.ResumeLayout(false);
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseNew));
+			this.badForm1 = new BadForm();
+			this.pbCreateSQLiteDB = new System.Windows.Forms.ProgressBar();
+			this.btnCreateSQLiteDB = new BadButton();
+			this.pbCreateDatabase = new System.Windows.Forms.ProgressBar();
+			this.label3 = new System.Windows.Forms.Label();
+			this.badSeperator1 = new BadSeperator();
+			this.txtFileLocation = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.btnCreateDB = new BadButton();
+			this.label1 = new System.Windows.Forms.Label();
+			this.txtDatabasename = new System.Windows.Forms.TextBox();
+			this.txtPlayerName = new System.Windows.Forms.TextBox();
+			this.cmdSelectFIle = new BadButton();
+			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.badForm1.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// badForm1
+			// 
+			this.badForm1.Controls.Add(this.cmdSelectFIle);
+			this.badForm1.Controls.Add(this.pbCreateSQLiteDB);
+			this.badForm1.Controls.Add(this.btnCreateSQLiteDB);
+			this.badForm1.Controls.Add(this.pbCreateDatabase);
+			this.badForm1.Controls.Add(this.label3);
+			this.badForm1.Controls.Add(this.badSeperator1);
+			this.badForm1.Controls.Add(this.txtFileLocation);
+			this.badForm1.Controls.Add(this.label2);
+			this.badForm1.Controls.Add(this.btnCreateDB);
+			this.badForm1.Controls.Add(this.label1);
+			this.badForm1.Controls.Add(this.txtDatabasename);
+			this.badForm1.Controls.Add(this.txtPlayerName);
+			this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.badForm1.FormFooter = false;
+			this.badForm1.FormFooterHeight = 26;
+			this.badForm1.FormMargin = 0;
+			this.badForm1.Image = null;
+			this.badForm1.Location = new System.Drawing.Point(0, 0);
+			this.badForm1.MainArea = mainAreaClass1;
+			this.badForm1.Name = "badForm1";
+			this.badForm1.Resizable = false;
+			this.badForm1.Size = new System.Drawing.Size(435, 254);
+			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
+			this.badForm1.SystemMaximizeImage = null;
+			this.badForm1.SystemMinimizeImage = null;
+			this.badForm1.TabIndex = 14;
+			this.badForm1.Text = "Create New Database";
+			this.badForm1.TitleHeight = 26;
+			this.badForm1.Click += new System.EventHandler(this.badForm1_Click);
+			// 
+			// pbCreateSQLiteDB
+			// 
+			this.pbCreateSQLiteDB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.pbCreateSQLiteDB.Location = new System.Drawing.Point(27, 209);
+			this.pbCreateSQLiteDB.MarqueeAnimationSpeed = 1;
+			this.pbCreateSQLiteDB.Name = "pbCreateSQLiteDB";
+			this.pbCreateSQLiteDB.Size = new System.Drawing.Size(264, 23);
+			this.pbCreateSQLiteDB.Step = 1;
+			this.pbCreateSQLiteDB.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+			this.pbCreateSQLiteDB.TabIndex = 16;
+			this.pbCreateSQLiteDB.UseWaitCursor = true;
+			this.pbCreateSQLiteDB.Value = 1;
+			this.pbCreateSQLiteDB.Visible = false;
+			// 
+			// btnCreateSQLiteDB
+			// 
+			this.btnCreateSQLiteDB.Image = null;
+			this.btnCreateSQLiteDB.Location = new System.Drawing.Point(301, 209);
+			this.btnCreateSQLiteDB.Name = "btnCreateSQLiteDB";
+			this.btnCreateSQLiteDB.Size = new System.Drawing.Size(106, 23);
+			this.btnCreateSQLiteDB.TabIndex = 15;
+			this.btnCreateSQLiteDB.Text = "Create Database";
+			this.btnCreateSQLiteDB.Click += new System.EventHandler(this.btnCreateSQLiteDB_Click);
+			// 
+			// pbCreateDatabase
+			// 
+			this.pbCreateDatabase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.pbCreateDatabase.Location = new System.Drawing.Point(27, 170);
+			this.pbCreateDatabase.MarqueeAnimationSpeed = 1;
+			this.pbCreateDatabase.Name = "pbCreateDatabase";
+			this.pbCreateDatabase.Size = new System.Drawing.Size(264, 23);
+			this.pbCreateDatabase.Step = 1;
+			this.pbCreateDatabase.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+			this.pbCreateDatabase.TabIndex = 13;
+			this.pbCreateDatabase.UseWaitCursor = true;
+			this.pbCreateDatabase.Value = 1;
+			this.pbCreateDatabase.Visible = false;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.BackColor = System.Drawing.Color.Transparent;
+			this.label3.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+			this.label3.Location = new System.Drawing.Point(24, 88);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(112, 13);
+			this.label3.TabIndex = 12;
+			this.label3.Text = "Database file location:";
+			// 
+			// badSeperator1
+			// 
+			this.badSeperator1.BackColor = System.Drawing.Color.Transparent;
+			this.badSeperator1.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.badSeperator1.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+			this.badSeperator1.Direction = System.Windows.Forms.Orientation.Horizontal;
+			this.badSeperator1.Image = null;
+			this.badSeperator1.Location = new System.Drawing.Point(27, 138);
+			this.badSeperator1.Name = "badSeperator1";
+			this.badSeperator1.Size = new System.Drawing.Size(380, 23);
+			this.badSeperator1.TabIndex = 14;
+			this.badSeperator1.Text = "gghjfgjh";
+			// 
+			// txtFileLocation
+			// 
+			this.txtFileLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.txtFileLocation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.txtFileLocation.ForeColor = System.Drawing.SystemColors.ButtonFace;
+			this.txtFileLocation.Location = new System.Drawing.Point(27, 104);
+			this.txtFileLocation.Name = "txtFileLocation";
+			this.txtFileLocation.Size = new System.Drawing.Size(351, 20);
+			this.txtFileLocation.TabIndex = 13;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.BackColor = System.Drawing.Color.Transparent;
+			this.label2.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+			this.label2.Location = new System.Drawing.Point(24, 43);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(85, 13);
+			this.label2.TabIndex = 10;
+			this.label2.Text = "Database name:";
+			// 
+			// btnCreateDB
+			// 
+			this.btnCreateDB.Image = null;
+			this.btnCreateDB.Location = new System.Drawing.Point(301, 170);
+			this.btnCreateDB.Name = "btnCreateDB";
+			this.btnCreateDB.Size = new System.Drawing.Size(106, 23);
+			this.btnCreateDB.TabIndex = 0;
+			this.btnCreateDB.Text = "Create Database";
+			this.btnCreateDB.Click += new System.EventHandler(this.btnCreateDB_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.BackColor = System.Drawing.Color.Transparent;
+			this.label1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+			this.label1.Location = new System.Drawing.Point(223, 43);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(68, 13);
+			this.label1.TabIndex = 8;
+			this.label1.Text = "Player name:";
+			// 
+			// txtDatabasename
+			// 
+			this.txtDatabasename.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.txtDatabasename.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.txtDatabasename.ForeColor = System.Drawing.SystemColors.ButtonFace;
+			this.txtDatabasename.Location = new System.Drawing.Point(27, 59);
+			this.txtDatabasename.Name = "txtDatabasename";
+			this.txtDatabasename.Size = new System.Drawing.Size(181, 20);
+			this.txtDatabasename.TabIndex = 11;
+			// 
+			// txtPlayerName
+			// 
+			this.txtPlayerName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.txtPlayerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.txtPlayerName.ForeColor = System.Drawing.SystemColors.ButtonFace;
+			this.txtPlayerName.Location = new System.Drawing.Point(226, 59);
+			this.txtPlayerName.Name = "txtPlayerName";
+			this.txtPlayerName.Size = new System.Drawing.Size(181, 20);
+			this.txtPlayerName.TabIndex = 9;
+			// 
+			// cmdSelectFIle
+			// 
+			this.cmdSelectFIle.Image = null;
+			this.cmdSelectFIle.Location = new System.Drawing.Point(384, 104);
+			this.cmdSelectFIle.Name = "cmdSelectFIle";
+			this.cmdSelectFIle.Size = new System.Drawing.Size(23, 20);
+			this.cmdSelectFIle.TabIndex = 17;
+			this.cmdSelectFIle.Text = "...";
+			this.cmdSelectFIle.Click += new System.EventHandler(this.cmdSelectFIle_Click);
+			// 
+			// openFileDialog
+			// 
+			this.openFileDialog.FileName = "openFileDialog1";
+			// 
+			// DatabaseNew
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(435, 254);
+			this.Controls.Add(this.badForm1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "DatabaseNew";
+			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.Text = "Create New Database";
+			this.Load += new System.EventHandler(this.frmDatabaseNew_Load);
+			this.badForm1.ResumeLayout(false);
+			this.badForm1.PerformLayout();
+			this.ResumeLayout(false);
 
         }
 
@@ -235,5 +252,7 @@
 		private BadSeperator badSeperator1;
         private System.Windows.Forms.ProgressBar pbCreateSQLiteDB;
         private BadButton btnCreateSQLiteDB;
+		private BadButton cmdSelectFIle;
+		private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

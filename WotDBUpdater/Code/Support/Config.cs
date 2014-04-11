@@ -91,7 +91,9 @@ namespace WotDBUpdater
 			}
 			else if (Config.Settings.databaseType == dbType.SQLite)
 			{
-				dbcon = "Data Source=" + Config.Settings.databaseFileName;
+				string databaseFileName = Config.Settings.databaseFileName;
+				if (databaseNameOverride != "") databaseFileName = databaseNameOverride + ".db";
+				dbcon = "Data Source=" + databaseFileName + ";Version=3;";
 			}
 			return dbcon;
 		}
