@@ -112,7 +112,6 @@
 			this.toolItemSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemSettingsDb = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -347,7 +346,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(495, 25);
+			this.toolMain.Size = new System.Drawing.Size(526, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -890,7 +889,6 @@
             this.toolItemSettingsDossierOptions,
             this.toolStripSeparator13,
             this.toolItemSettingsApp,
-            this.toolItemSettingsDb,
             this.toolStripSeparator1,
             this.toolItemShowDbTables,
             this.toolStripSeparator2,
@@ -957,13 +955,6 @@
 			this.toolItemSettingsApp.Size = new System.Drawing.Size(263, 22);
 			this.toolItemSettingsApp.Text = "&Application Settings...";
 			this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
-			// 
-			// toolItemSettingsDb
-			// 
-			this.toolItemSettingsDb.Name = "toolItemSettingsDb";
-			this.toolItemSettingsDb.Size = new System.Drawing.Size(263, 22);
-			this.toolItemSettingsDb.Text = "Database Settings";
-			this.toolItemSettingsDb.Click += new System.EventHandler(this.toolItemSettingsDb_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -1114,7 +1105,6 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDossierOptions;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsApp;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDb;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRunManual;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsUpdateFromPrev;

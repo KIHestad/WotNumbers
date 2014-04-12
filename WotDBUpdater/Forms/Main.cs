@@ -1038,8 +1038,7 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemSettingsDb_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.DatabaseSetting();
-			frm.ShowDialog();
+			
 		}
 
 		private string AssemblyVersion
