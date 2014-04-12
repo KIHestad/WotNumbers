@@ -132,8 +132,6 @@
 			// badSeperator1
 			// 
 			this.badSeperator1.BackColor = System.Drawing.Color.Transparent;
-			this.badSeperator1.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-			this.badSeperator1.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
 			this.badSeperator1.Direction = System.Windows.Forms.Orientation.Horizontal;
 			this.badSeperator1.Image = null;
 			this.badSeperator1.Location = new System.Drawing.Point(27, 138);

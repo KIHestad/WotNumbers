@@ -34,7 +34,7 @@ namespace WotDBUpdater.Forms
 		private void Main_Load(object sender, EventArgs e)
 		{
 			// Hide form until ready
-			// MainTheme.Visible = false;
+			MainTheme.Visible = false;
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
 			toolMain.BackColor = Code.Support.ColorTheme.FormBackTitle;
@@ -43,7 +43,18 @@ namespace WotDBUpdater.Forms
 			toolItemTankFilter.Visible = false;
 			toolItemRefreshSeparator.Visible = false;
 			// Style datagrid
+			dataGridMain.BorderStyle = BorderStyle.None;
 			dataGridMain.BackgroundColor = Code.Support.ColorTheme.FormBack;
+			dataGridMain.GridColor = Code.Support.ColorTheme.GridBorders;
+			dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = Code.Support.ColorTheme.GridBorders;
+			dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = Code.Support.ColorTheme.ControlFont;
+			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = Code.Support.ColorTheme.ControlFont;
+			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.GridSelectedHeaderColor;
+			dataGridMain.DefaultCellStyle.BackColor = Code.Support.ColorTheme.FormBack;
+			dataGridMain.DefaultCellStyle.ForeColor = Code.Support.ColorTheme.ControlFont;
+			dataGridMain.DefaultCellStyle.SelectionForeColor = Code.Support.ColorTheme.ControlFont;
+			dataGridMain.DefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.GridSelectedCellColor;
+			
 			// Startup settings
 			string statusmsg = "Application started with issues...";
 			string msg = Config.GetConfig();
@@ -68,6 +79,10 @@ namespace WotDBUpdater.Forms
 				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
 				GridShowOverall();
 			}
+			// Draw form 
+			RefreshFormAfterResize(true);
+			InitForm();
+			SetListener();
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
@@ -76,11 +91,6 @@ namespace WotDBUpdater.Forms
 			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
 			// Display form and status message 
 			MainTheme.Visible = true;
-			// Draw form 
-			
-			SetListener();
-			RefreshFormAfterResize(true);
-			InitForm();
 			SetStatus2(statusmsg);
 		}
 
@@ -389,7 +399,7 @@ namespace WotDBUpdater.Forms
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
 			{
-				battleFilter = "AND battleTime>=@battleTime ";
+				battleFilter = "AND battleTime>='@battleTime' ";
 			}
 			// Get Tank filter
 			string tankFilterMessage = "";
@@ -409,11 +419,12 @@ namespace WotDBUpdater.Forms
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
 				"ORDER BY battle.battleTime DESC ";
 			sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+			DateTime dateFilter = new DateTime();
 			if (!toolItemBattlesAll.Checked)
 			{
 				DateTime basedate = DateTime.Now;
 				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); 
+				dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); 
 				// Adjust time scale according to selected filter
 				if (toolItemBattles3d.Checked) dateFilter = DateTime.Now.AddDays(-3);
 				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
@@ -431,17 +442,17 @@ namespace WotDBUpdater.Forms
 					"        'Average on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
 					"        CAST(ROUND(SUM(CAST(battle.victory AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Result, " +
 					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
-					"        AVG(CAST(battle.dmg AS FLOAT)) AS [Damage Caused], " +
-					"        AVG(CAST(battle.dmgReceived AS FLOAT)) AS [Damage Received], " +
+					"        CAST(AVG(CAST(battle.dmg AS FLOAT)) AS INT) AS [Damage Caused], " +
+					"        CAST(AVG(CAST(battle.dmgReceived AS FLOAT)) AS INT) AS [Damage Received], " +
 					"        AVG(CAST(battle.frags AS FLOAT)) AS Kills, " +
-					"        AVG(CAST(battle.xp AS FLOAT)) AS XP, " +
-					"        AVG(CAST(battle.spotted AS FLOAT)) AS Detected," +
-					"		 AVG(CAST(battle.cap AS FLOAT)) AS [Capture Points], " +
+					"        CAST(AVG(CAST(battle.xp AS FLOAT)) AS INT) AS XP, " +
+					"        AVG(CAST(battle.spotted AS FLOAT))  AS Detected," +
+					"		 AVG(CAST(battle.cap AS FLOAT))  AS [Capture Points], " +
 					"		 AVG(CAST(battle.def AS FLOAT)) AS [Defense Points], " +
-					"		 AVG(CAST(battle.shots AS FLOAT)) AS Shots, " +
+					"		 AVG(CAST(battle.shots AS FLOAT))  AS Shots, " +
 					"		 AVG(CAST(battle.hits AS FLOAT)) AS Hits, " +
-					"		 AVG(CAST(battle.wn8 AS FLOAT)) AS WN8, " +
-					"		 AVG(CAST(battle.eff AS FLOAT)) AS EFF, " +
+					"		 CAST(AVG(CAST(battle.wn8 AS FLOAT)) AS INT) AS WN8, " +
+					"		 CAST(AVG(CAST(battle.eff AS FLOAT)) AS INT) AS EFF, " +
 					"		 '#F0F0F0' as battleResultColor, " +
 					"		 '#F0F0F0' as battleSurviveColor, " +
 					"		 SUM(battlescount) AS battlescount, " +
@@ -457,21 +468,14 @@ namespace WotDBUpdater.Forms
 					"FROM    battle INNER JOIN " +
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"        tank ON playerTank.tankId = tank.id " +
-					"WHERE   playerTank.playerId=@playerid " + battleFilter;
+					"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter;
 				sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
 				if (!toolItemBattlesAll.Checked)
 				{
-					DateTime basedate = DateTime.Now;
-					if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-					DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0);
-					// Adjust time scale according to selected filter
-					if (toolItemBattles3d.Checked) dateFilter = DateTime.Now.AddDays(-3);
-					else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
-					else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
-					else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
 					sql = sql.Replace("@battleTime", dateFilter.ToString("yyyy-MM-dd"));
 				}
-				dt.Rows.Add(db.FetchData(sql).Rows);
+				dt.Merge(db.FetchData(sql));
+				
 			}
 			// populate datagrid
 			dataGridMain.DataSource = dt;

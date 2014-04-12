@@ -15,16 +15,19 @@ namespace WotDBUpdater.Code.Support
 		public static Color FormTranparency = Color.FromArgb(255, 1, 1, 1);
 		public static Color FormBack = Color.FromArgb(255, 32, 32, 32);
 		public static Color FormBackTitle = Color.FromArgb(255, 45, 45, 49);
+		public static Color FormBackTitleFont = Color.FromArgb(255, 180, 180, 186);
 		public static Color FormBackFooter = Color.FromArgb(255, 8, 8, 8);
 		public static Color FormBorderBlack = Color.FromArgb(255, 0, 0, 0);
 		public static Color FormBorderBlue = Color.FromArgb(255, 68, 96, 127);
 		public static Color FormBorderRed = System.Drawing.Color.DarkRed;
-		public static Color ControlBack = Color.FromArgb(255, 45, 45, 49);
-		public static Color ControlBackMouseOver = Color.FromArgb(255, 58, 58, 62);
-		public static Color ControlBackMouseDown = Color.FromArgb(255, 72, 72, 76);
-		public static Color ControlFont = Color.FromArgb(255, 150, 150, 156);
+		public static Color ControlBack = Color.FromArgb(255, 55, 55, 59);
+		public static Color ControlBorder = Color.FromArgb(255, 105, 105, 109);
+		public static Color ControlBackMouseOver = Color.FromArgb(255, 68, 68, 72);
+		public static Color ControlBackMouseDown = Color.FromArgb(255, 82, 82, 86);
+		public static Color ControlFont = Color.FromArgb(255, 200, 200, 206);
+		public static Color ControlDarkFont = Color.FromArgb(255, 150, 150, 156);
 		
-		// Grid colors
+		// ToolStrip colors
 		public static Color ToolGrayMainBack = Color.FromArgb(255, 22, 22, 22);
 		public static Color ToolGrayMain = Color.FromArgb(255, 45, 45, 49);
 		public static Color ToolGrayHover = Color.FromArgb(255, 68, 68, 72);
@@ -38,6 +41,12 @@ namespace WotDBUpdater.Code.Support
 		public static Color ToolWhiteToolStrip = Color.FromArgb(255, 220, 220, 220);
 		public static Color ToolBlue = Color.FromArgb(255, 66, 125, 215);
 		public static Color ToolBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
+		
+		// Grid Color
+		public static Color GridBorders = Color.FromArgb(255, 17, 17, 17);
+		public static Color GridSelectedHeaderColor = Color.FromArgb(255, 37, 37, 37);
+		public static Color GridSelectedCellColor = Color.FromArgb(255, 52, 52, 52);
+		public static Color GridCellFont = Color.FromArgb(255, 200, 200, 200);
 		
 	}
 }

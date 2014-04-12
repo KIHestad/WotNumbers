@@ -173,6 +173,7 @@
 			this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.MainTheme.FormFooter = true;
 			this.MainTheme.FormFooterHeight = 26;
+			this.MainTheme.FormInnerBorder = 0;
 			this.MainTheme.FormMargin = 0;
 			this.MainTheme.Image = ((System.Drawing.Image)(resources.GetObject("MainTheme.Image")));
 			this.MainTheme.Location = new System.Drawing.Point(0, 0);
@@ -268,7 +269,7 @@
 			// 
 			// panelScrollArea
 			// 
-			this.panelScrollArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(59)))));
+			this.panelScrollArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(69)))));
 			this.panelScrollArea.Controls.Add(this.panelScrollbar);
 			this.panelScrollArea.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panelScrollArea.Location = new System.Drawing.Point(591, 0);
@@ -346,7 +347,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(526, 25);
+			this.toolMain.Size = new System.Drawing.Size(495, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";

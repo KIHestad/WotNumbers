@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\db.cs" />
+    <Compile Include="Code\PopupGrid.cs" />
     <Compile Include="Code\ZZZ_test_import_WS2DB.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
@@ -165,6 +166,12 @@
     </Compile>
     <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PopupGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PopupGrid.Designer.cs">
+      <DependentUpon>PopupGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Reports\DBTable.cs">
       <SubType>Form</SubType>
@@ -235,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PopupGrid.resx">
+      <DependentUpon>PopupGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Reports\DBTable.resx">
       <DependentUpon>DBTable.cs</DependentUpon>
