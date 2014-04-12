@@ -109,7 +109,7 @@ namespace WotDBUpdater.Forms.Test
             if (cbCons.Checked)
                 cons = true;
 
-            double vr = TankPerformance.CalcViewRange(baseVR, primarySkill, vent, bino, optics, BIA, awareness, recon, cons);
+            double vr = Code.TankPerformance.CalcViewRange(baseVR, primarySkill, vent, bino, optics, BIA, awareness, recon, cons);
             labelBaseVR.Text = Math.Round(vr, 2).ToString();
         }
 

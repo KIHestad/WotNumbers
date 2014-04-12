@@ -8,19 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Code
 {
 	// The data class containing two properties 
 	[Serializable()]
-	public enum dbType
-	{
-		MSSQLserver = 1,
-		SQLite = 2
-	}
-	
 	public class ConfigData
 	{
+		public enum dbType
+		{
+			MSSQLserver = 1,
+			SQLite = 2
+		}
+
 		public dbType databaseType { get; set; }
 		public string databaseFileName { get; set; }
 		public string databaseServer { get; set; }
@@ -38,14 +39,14 @@ namespace WotDBUpdater
 	{
 		public static ConfigData Settings = new ConfigData();
 		
-		private const string configfile = "WotDBUpdaterConfig.xml";
+		private const string configfile = "config.json";
 
 		private static void SetConfigDefaults()
 		{
 			// Insert default values as settings
-			Config.Settings.databaseType = dbType.MSSQLserver;
+			Config.Settings.databaseType = ConfigData.dbType.SQLite;
 			// Params for SQLite
-			Config.Settings.databaseFileName = ".";
+			Config.Settings.databaseFileName = "";
 			// Params for MS SQL Server
 			Config.Settings.databaseServer = ".";
 			Config.Settings.databaseWinAuth = true;
@@ -59,11 +60,20 @@ namespace WotDBUpdater
 			Config.Settings.run = 0;
 		}
 
-		public static string DatabaseConnection(string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "", int connectionTimeot = 30)
+		public static string DatabaseConnection(string databaseServerOverride = "", 
+												string databaseNameOverride = "", 
+												string databaseWinOrSql = "", 
+												string databaseUidOverride = "", 
+												string databasePwdOverride = "", 
+												int connectionTimeot = 10, 
+												bool databasetypeOverride = false, 
+												ConfigData.dbType databaseType = ConfigData.dbType.MSSQLserver)
 		{
 			string dbcon = "";
 			// Get database type
-			if (Config.Settings.databaseType == dbType.MSSQLserver)
+			ConfigData.dbType dbType = Config.Settings.databaseType;
+			if (databasetypeOverride) dbType = databaseType;
+			if (dbType == ConfigData.dbType.MSSQLserver)
 			{
 				// Get databaseserver
 				string databaseServer = Config.Settings.databaseServer;
@@ -89,7 +99,7 @@ namespace WotDBUpdater
 				}
 				dbcon = "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin + "; Connect Timeout=" + connectionTimeot.ToString();
 			}
-			else if (Config.Settings.databaseType == dbType.SQLite)
+			else if (dbType == ConfigData.dbType.SQLite)
 			{
 				string databaseFileName = Config.Settings.databaseFileName;
 				if (databaseNameOverride != "") databaseFileName = databaseNameOverride + ".db";
@@ -102,7 +112,7 @@ namespace WotDBUpdater
 		{
 			bool ok = false;
 			// Get database type
-			if (Config.Settings.databaseType == dbType.MSSQLserver)
+			if (Config.Settings.databaseType ==ConfigData.dbType.MSSQLserver)
 			{
 				// get databasename
 				string databaseName = "";
@@ -111,7 +121,7 @@ namespace WotDBUpdater
 				// Check data
 				if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || databaseName == "")
 				{
-					Code.Support.MessageDark.Show("Missing database server and/or database name, check Database Settings.", "Config error");
+					Code.MsgBox.Show("Missing database server and/or database name, check Database Settings.", "Config error");
 				}
 				else
 				{
@@ -124,79 +134,116 @@ namespace WotDBUpdater
 					}
 					catch (Exception ex)
 					{
-						if (showErrorIfNotExists) Code.Support.MessageDark.Show("Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
+						if (showErrorIfNotExists) Code.MsgBox.Show("Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
 					}
 				}
 			}
-			else if (Config.Settings.databaseType == dbType.SQLite)
+			else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
 			{
 				ok = File.Exists(Config.Settings.databaseFileName);
+				if (!ok) Code.MsgBox.Show("No SQLite databasefile found", "Config error");
 			}
 			return ok;
 		}
 
-		public static bool SaveDbConfig(out string msg)
+		public static bool SaveConfig(out string msg)
 		{
-			bool dbOk = false;
-			string returnMsg = "Database settings succsessfully saved. ";
+			bool ok = true;
+			string returnMsg = "Application settings succsessfully saved.";
+			// Write new settings to Json
 			try
 			{
-				if (Config.Settings.databaseType == dbType.MSSQLserver)
-				{
-					// Check if database and player exsists
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					dbOk = true; // if database og databaseserver not exsists exeption is thrown by now
-					// Check if player exist by lookup name
-					SqlCommand cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
-					cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
-					SqlDataReader reader = cmd.ExecuteReader();
-					if (!reader.HasRows)
-					{
-						returnMsg = "Selected Player does not exist in database, please check your Application Settings.";
-						Config.Settings.playerId = 0;
-						Config.Settings.playerName = "";
-					}
-					else
-					{
-						// Get player ID
-						while (reader.Read())
-						{
-							Config.Settings.playerId = Convert.ToInt32(reader["id"]);
-						}
-					}
-					reader.Close();
-					con.Close();
-				}
-				else if (Config.Settings.databaseType == dbType.SQLite)
-				{
-					// TODO: Check if player exist in SQLite db
-					// Until now just check that databasefile exists
-					dbOk = File.Exists(Config.Settings.databaseFileName);
-				}
-				
-				// Write new settings to XML
-				XmlSerializer writer = new XmlSerializer(typeof(ConfigData));
-				using (FileStream file = File.OpenWrite(configfile))
-				{
-					writer.Serialize(file, Config.Settings);
-				}
+				string json = JsonConvert.SerializeObject(Config.Settings);
+				File.WriteAllText(configfile, json);
 			}
 			catch (Exception ex)
 			{
-				returnMsg = "Error occured saving database settings: " + ex.Message;
+				returnMsg = "Error occured saving application settings to config file" + Environment.NewLine + Environment.NewLine + ex.Message;
 			}
 			msg = returnMsg;
-			return dbOk;
+			return ok;
 		}
 
-		public static bool SaveAppConfig(out string Msg)
+		public static bool GetConfig(out string msg)
+		{
+			bool ok = true;
+			string returMsg = "Application settings succsessfully read.";
+			// Does config file exist?
+			if (!File.Exists(configfile))
+			{
+				SetConfigDefaults();
+				returMsg = "Config file is missing, please configure application settings.";
+				ok = false;
+			}
+			else
+			{
+				// Read from XML
+				try
+				{
+					ConfigData conf = new ConfigData();
+					string json = File.ReadAllText(configfile);
+					conf = JsonConvert.DeserializeObject<ConfigData>(json);
+					Config.Settings = conf;
+				}
+				catch (Exception ex)
+				{
+					File.Delete(configfile);
+					SetConfigDefaults();
+					returMsg = "Error reading config file, please configure application settings." + Environment.NewLine + Environment.NewLine + ex.Message;
+					ok = false;
+				}
+			}
+			msg = returMsg;
+			return ok;
+		}
+
+		private void temp()
+		{
+			bool dbOk;
+			string returnMsg;
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			{
+				// Check if database and player exsists
+				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+				con.Open();
+				dbOk = true; // if database og databaseserver not exsists exeption is thrown by now
+				// Check if player exist by lookup name
+				SqlCommand cmd = new SqlCommand("SELECT * FROM player WHERE name=@name", con);
+				cmd.Parameters.AddWithValue("@name", Config.Settings.playerName);
+				SqlDataReader reader = cmd.ExecuteReader();
+				if (!reader.HasRows)
+				{
+					returnMsg = "Selected Player does not exist in database, please check your Application Settings.";
+					Config.Settings.playerId = 0;
+					Config.Settings.playerName = "";
+				}
+				else
+				{
+					// Get player ID
+					while (reader.Read())
+					{
+						Config.Settings.playerId = Convert.ToInt32(reader["id"]);
+					}
+				}
+				reader.Close();
+				con.Close();
+			}
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+			{
+				// TODO: Check if player exist in SQLite db
+				// Until now just check that databasefile exists
+				dbOk = File.Exists(Config.Settings.databaseFileName);
+			}
+
+		}
+		
+		public static bool SaveAppConfigXXXX(out string Msg)
 		{
 			bool appOk = false;
 			string returnMsg = "Application settings succsessfully saved";
 			try
 			{
-				if (Config.Settings.databaseType == dbType.MSSQLserver)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
 					// Check if database and player exsists
 					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
@@ -240,7 +287,7 @@ namespace WotDBUpdater
 					reader.Close();
 					con.Close();
 				}
-				else if (Config.Settings.databaseType == dbType.SQLite)
+				else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
 				{
 					// TODO: Check if database exist and check if player exists, if not add player to db in SQLite db
 					// Return playerId and name back to Config.Settings
@@ -260,44 +307,6 @@ namespace WotDBUpdater
 			}
 			Msg = returnMsg;
 			return appOk;
-		}
-
-
-		public static string GetConfig()
-		{
-			string msg = "";
-			// Does config file exist?
-			if (!File.Exists(configfile))
-			{
-				SetConfigDefaults();
-				msg = "Config file is missing, setting default values. Please check Database and Application settings.";
-			}
-			else
-			{
-				// Read from XML
-				try
-				{
-					Config.Settings = LoadConfig();
-				}
-				catch (Exception ex)
-				{
-					File.Delete(configfile);
-					SetConfigDefaults();
-					msg = "Error reading config file, might be corrupted. The config file is now deleted. Please check Database and Application settings.\n\n" + ex.Message;
-				}
-			}
-			return msg;
-		}
-
-		private static ConfigData LoadConfig()
-		{
-			ConfigData conf = new ConfigData();
-			XmlSerializer reader = new XmlSerializer(typeof(ConfigData));
-			using (FileStream input = File.OpenRead(configfile))
-			{
-				conf = reader.Deserialize(input) as ConfigData;
-			}
-			return conf;
 		}
 	}
 }

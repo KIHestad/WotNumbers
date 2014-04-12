@@ -7,28 +7,31 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WotDBUpdater.Code;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Code
 {
 	class db
 	{
-		public static DataTable FetchData(string sql)
+		public static DataTable FetchData(string sql, string OverrideDbCon = "")
 		{
 			DataTable dt = new DataTable();
+			string connectionstring = Config.DatabaseConnection();
+			if (OverrideDbCon != "") connectionstring = OverrideDbCon;
 			try
 			{
-				if (Config.Settings.databaseType == dbType.MSSQLserver)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+					SqlConnection con = new SqlConnection(connectionstring);
 					con.Open();
 					SqlCommand command = new SqlCommand(sql, con);
 					SqlDataAdapter adapter = new SqlDataAdapter(command);
 					adapter.Fill(dt);
 					con.Close();
 				}
-				else if (Config.Settings.databaseType == dbType.SQLite)
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					SQLiteConnection con = new SQLiteConnection(connectionstring);
 					con.Open();
 					SQLiteCommand command = new SQLiteCommand(sql, con);
 					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
@@ -38,8 +41,8 @@ namespace WotDBUpdater
 			}
 			catch (Exception ex)
 			{
-				Code.Support.MessageDark.Show(ex.Message, "Error on data fetch");
-				//throw;
+				Code.MsgBox.Show("Error fetching data from database. Please check your database settings.\n\n" + 
+					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 			}
 			return dt;
 		}
@@ -48,29 +51,38 @@ namespace WotDBUpdater
 		{
 			bool ok = false;
 			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
-			if (Config.Settings.databaseType == dbType.MSSQLserver)
+			try
 			{
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
-				foreach (string s in sqlList)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlCommand command = new SqlCommand(s, con);
-					command.ExecuteNonQuery();
+					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+					con.Open();
+					foreach (string s in sqlList)
+					{
+						SqlCommand command = new SqlCommand(s, con);
+						command.ExecuteNonQuery();
+					}
+					con.Close();
+					ok = true;
 				}
-				con.Close();
-				ok = true;
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				{
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					con.Open();
+					foreach (string s in sqlList)
+					{
+						SQLiteCommand command = new SQLiteCommand(s, con);
+						command.ExecuteNonQuery();
+					}
+					con.Close();
+					ok = true;
+				}
 			}
-			else if (Config.Settings.databaseType == dbType.SQLite)
+			catch (Exception ex)
 			{
-				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-				con.Open();
-				foreach (string s in sqlList)
-				{
-					SQLiteCommand command = new SQLiteCommand(s, con);
-					command.ExecuteNonQuery();
-				}
-				con.Close();
-				ok = true;
+				Code.MsgBox.Show("Error execute query to database. Please check you input parameters." + 
+					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
+				ok = false;
 			}
 			return ok;
 		}
@@ -78,12 +90,12 @@ namespace WotDBUpdater
 		public static DataTable ListTables()
 		{
 			DataTable dt = new DataTable();
-			if (Config.Settings.databaseType == dbType.MSSQLserver)
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
 				string sql = "SELECT '( Select from list )' AS TABLE_NAME UNION SELECT table_name AS TABLE_NAME FROM information_schema.tables ORDER BY TableName";
 				dt = FetchData(sql);
 			}
-			else if (Config.Settings.databaseType == dbType.SQLite)
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 			{
 				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 				con.Open();
@@ -117,7 +129,7 @@ namespace WotDBUpdater
 					if (!Directory.GetParent(prevPath.FullName).Exists)
 					{
 						fileLocationExsits = false;
-						Code.Support.MessageDark.Show("Error createing database, file parh does not exist", "Error creating database");
+						Code.MsgBox.Show("Error createing database, file parh does not exist", "Error creating database");
 					}
 					else
 					{
@@ -128,7 +140,7 @@ namespace WotDBUpdater
 			// Start Creating if file location exists
 			if (fileLocationExsits)
 			{
-				if (Config.Settings.databaseType == dbType.MSSQLserver)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
 					// Check if database exists
 					bool dbExists = false;
@@ -143,7 +155,7 @@ namespace WotDBUpdater
 					}
 					if (dbExists)
 					{
-						Code.Support.MessageDark.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
+						Code.MsgBox.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
 					}
 					else
 					{
@@ -167,22 +179,23 @@ namespace WotDBUpdater
 							// Save new db into settings
 							Config.Settings.databaseName = databaseName;
 							string msg = "";
-							Config.SaveDbConfig(out msg);
+							Config.SaveConfig(out msg);
 							dbOk = true;
 						}
 						catch (System.Exception ex)
 						{
 							dbOk = false;
-							Code.Support.MessageDark.Show("Error creating database, check that valid databasename is selected.\n\n" + ex.ToString(), "Error creating database");
+							Code.MsgBox.Show("Error creating database, check that valid databasename is selected." + 
+								Environment.NewLine + Environment.NewLine + ex.ToString(), "Error creating database");
 						}
 					}
 				}
-				else if (Config.Settings.databaseType == dbType.SQLite)
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				{
 					// Check if database exists
 					if (File.Exists(fileLocation + databaseName + ".db"))
 					{
-						Code.Support.MessageDark.Show("Error creating database, databasefile already exists, select another database name", "Error creating database");
+						Code.MsgBox.Show("Error creating database, databasefile already exists, select another database name", "Error creating database");
 					}
 					else
 					{
@@ -192,15 +205,10 @@ namespace WotDBUpdater
 						// Save new db file into settings
 						Config.Settings.databaseFileName = fileLocation + databaseName + ".db";
 						string msg = "";
-						Config.SaveDbConfig(out msg);
+						Config.SaveConfig(out msg);
 						dbOk = true;
 					}
 				}
-			}
-			// Save Config
-			if (dbOk)
-			{
-				
 			}
 			return dbOk;
 		}

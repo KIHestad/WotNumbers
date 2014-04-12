@@ -30,45 +30,50 @@
         {
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Message));
-			this.badForm1 = new BadForm();
-			this.cmdClose = new BadButton();
+			this.MessageTheme = new BadForm();
+			this.btnClose = new BadButton();
 			this.txtMessage = new System.Windows.Forms.TextBox();
-			this.badForm1.SuspendLayout();
+			this.btnOK = new BadButton();
+			this.btnCancel = new BadButton();
+			this.MessageTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// badForm1
+			// MessageTheme
 			// 
-			this.badForm1.Controls.Add(this.cmdClose);
-			this.badForm1.Controls.Add(this.txtMessage);
-			this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-			this.badForm1.FormFooter = false;
-			this.badForm1.FormFooterHeight = 26;
-			this.badForm1.FormMargin = 0;
-			this.badForm1.Image = null;
-			this.badForm1.Location = new System.Drawing.Point(0, 0);
-			this.badForm1.MainArea = mainAreaClass1;
-			this.badForm1.Name = "badForm1";
-			this.badForm1.Resizable = true;
-			this.badForm1.Size = new System.Drawing.Size(304, 141);
-			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
-			this.badForm1.SystemMaximizeImage = null;
-			this.badForm1.SystemMinimizeImage = null;
-			this.badForm1.TabIndex = 17;
-			this.badForm1.Text = "Message";
-			this.badForm1.TitleHeight = 26;
-			this.badForm1.Resize += new System.EventHandler(this.badForm1_Resize);
+			this.MessageTheme.Controls.Add(this.btnClose);
+			this.MessageTheme.Controls.Add(this.btnCancel);
+			this.MessageTheme.Controls.Add(this.btnOK);
+			this.MessageTheme.Controls.Add(this.txtMessage);
+			this.MessageTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MessageTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.MessageTheme.FormFooter = false;
+			this.MessageTheme.FormFooterHeight = 26;
+			this.MessageTheme.FormInnerBorder = 3;
+			this.MessageTheme.FormMargin = 0;
+			this.MessageTheme.Image = null;
+			this.MessageTheme.Location = new System.Drawing.Point(0, 0);
+			this.MessageTheme.MainArea = mainAreaClass1;
+			this.MessageTheme.Name = "MessageTheme";
+			this.MessageTheme.Resizable = true;
+			this.MessageTheme.Size = new System.Drawing.Size(304, 141);
+			this.MessageTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MessageTheme.SystemExitImage")));
+			this.MessageTheme.SystemMaximizeImage = null;
+			this.MessageTheme.SystemMinimizeImage = null;
+			this.MessageTheme.TabIndex = 17;
+			this.MessageTheme.Text = "Message";
+			this.MessageTheme.TitleHeight = 26;
+			this.MessageTheme.Resize += new System.EventHandler(this.badForm1_Resize);
 			// 
-			// cmdClose
+			// btnClose
 			// 
-			this.cmdClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.cmdClose.Image = null;
-			this.cmdClose.Location = new System.Drawing.Point(121, 106);
-			this.cmdClose.Name = "cmdClose";
-			this.cmdClose.Size = new System.Drawing.Size(75, 23);
-			this.cmdClose.TabIndex = 17;
-			this.cmdClose.Text = "Close";
-			this.cmdClose.Click += new System.EventHandler(this.cmdClose_Click);
+			this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.btnClose.Image = null;
+			this.btnClose.Location = new System.Drawing.Point(117, 106);
+			this.btnClose.Name = "btnClose";
+			this.btnClose.Size = new System.Drawing.Size(75, 23);
+			this.btnClose.TabIndex = 17;
+			this.btnClose.Text = "Close";
+			this.btnClose.Click += new System.EventHandler(this.cmdClose_Click);
 			// 
 			// txtMessage
 			// 
@@ -85,13 +90,37 @@
 			this.txtMessage.TabIndex = 16;
 			this.txtMessage.TabStop = false;
 			// 
+			// btnOK
+			// 
+			this.btnOK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.btnOK.Image = null;
+			this.btnOK.Location = new System.Drawing.Point(69, 106);
+			this.btnOK.Name = "btnOK";
+			this.btnOK.Size = new System.Drawing.Size(75, 23);
+			this.btnOK.TabIndex = 18;
+			this.btnOK.Text = "OK";
+			this.btnOK.Visible = false;
+			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(165, 106);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 19;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Visible = false;
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			// 
 			// Message
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.ClientSize = new System.Drawing.Size(304, 141);
-			this.Controls.Add(this.badForm1);
+			this.Controls.Add(this.MessageTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -101,8 +130,8 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "MessageBox";
 			this.Load += new System.EventHandler(this.Message_Load);
-			this.badForm1.ResumeLayout(false);
-			this.badForm1.PerformLayout();
+			this.MessageTheme.ResumeLayout(false);
+			this.MessageTheme.PerformLayout();
 			this.ResumeLayout(false);
 
         }
@@ -110,7 +139,9 @@
         #endregion
 
 		private System.Windows.Forms.TextBox txtMessage;
-		private BadForm badForm1;
-		private BadButton cmdClose;
+		private BadForm MessageTheme;
+		private BadButton btnClose;
+		private BadButton btnCancel;
+		private BadButton btnOK;
     }
 }

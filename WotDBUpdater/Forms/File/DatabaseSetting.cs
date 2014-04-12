@@ -4,154 +4,123 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.File
 {
 	public partial class DatabaseSetting : Form
 	{
-		private bool changedDbConfig = true;
-		
 		public DatabaseSetting()
 		{
 			InitializeComponent();
 		}
 
-		private void frmDatabaseSetting_Load(object sender, EventArgs e)
+		private void DatabaseSetting_Load(object sender, EventArgs e)
 		{
 			LoadConfig();
 		}
 
 		private void LoadConfig()
 		{
-			// Startup settings
-			txtSQLiteDatabaseFile.Text = Config.Settings.databaseFileName;
+			// DB Type
+			if (Config.Settings.databaseType ==ConfigData.dbType.MSSQLserver)
+				popupDatabaseType.Text = "MS SQL Server";
+			else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
+				popupDatabaseType.Text = "SQLite";
+			// Startup settings SQLite
+			txtDatabaseFile.Text = Config.Settings.databaseFileName;
+			// Startup settings MS SQL Server
 			txtServerName.Text = Config.Settings.databaseServer;
-			rbWinAuth.Checked = Config.Settings.databaseWinAuth;
-			rbSqlAuth.Checked = !Config.Settings.databaseWinAuth;
-			cboDatabaseName.Text = Config.Settings.databaseName;
-			txtUid.Text = Config.Settings.databaseUid;
-			txtPwd.Text = Config.Settings.databasePwd;
+			popupDatabase.Text = Config.Settings.databaseName;
+			if (Config.Settings.databaseWinAuth)
+				popupDbAuth.Text = "Windows Authentication";
+			else
+				popupDbAuth.Text = "SQL Server Authentication";
+			txtUID.Text = Config.Settings.databaseUid;
+			txtPW.Text = Config.Settings.databasePwd;
 			// UpdateAuthSettings
 			UpdateLogin();
 		}
 
 		private void UpdateLogin()
 		{
-			bool enabled = (rbSqlAuth.Checked);
-			lblUid.Enabled = enabled;
-			lblPwd.Enabled = enabled;
-			txtUid.Enabled = enabled;
-			txtPwd.Enabled = enabled;
+			bool enabled = (popupDbAuth.Text == "SQL Server Authentication");
+			lblUIDPW.Dimmed = !enabled;
+			txtUID.Enabled = enabled;
+			txtPW.Enabled = enabled;
+			Refresh();
 		}
 
-		private void UpdateDatabaseList()
+		private void popupDatabase_Click(object sender, EventArgs e)
 		{
-			if (changedDbConfig)
+			// Do not use standard conn here, supply alternate sql conn string
+			string winAuth = "Win";
+			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
+			string connectionstring = Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text, 10, true, ConfigData.dbType.MSSQLserver);
+			string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
+			try
 			{
-				changedDbConfig = false;
-				cboDatabaseName.Items.Clear();
-				Cursor.Current = Cursors.WaitCursor;
-				try
+				SqlConnection con = new SqlConnection(connectionstring);
+				con.Open();
+				SqlCommand command = new SqlCommand(sql, con);
+				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				DataTable dt = new DataTable();
+				adapter.Fill(dt);
+				con.Close();
+				string dbList = "";
+				foreach (DataRow dr in dt.Rows)
 				{
-					string winAuth = "Win";
-					if (rbSqlAuth.Checked) winAuth = "Sql";
-					using (SqlConnection con = new SqlConnection(Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUid.Text, txtPwd.Text,10)))
-					{
-						con.Open();
-						string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
-						SqlCommand cmd = new SqlCommand(sql, con);
-						SqlDataReader reader = cmd.ExecuteReader();
-						while (reader.Read())
-						{
-							cboDatabaseName.Items.Add(reader["name"]);
-						}
-						con.Close();
-					}
+					dbList += dr["name"] + ",";
 				}
-				catch (Exception ex)
+				if (dbList.Length > 0)
 				{
-					Cursor.Current = Cursors.Default;
-					Code.Support.MessageDark.Show ("Error getting databases: " + ex.Message,"Database server error") ;
+					dbList = dbList.Substring(0, dbList.Length - 1);
+					popupDatabase.Text = Code.PopupGrid.Show("Select Database", Code.PopupGrid.PopupGridType.List, dbList);
 				}
-				Cursor.Current = Cursors.Default;
 			}
-		}
-
-		private void btnSave_Click(object sender, EventArgs e)
-		{
+			catch (Exception ex)
+			{
+				MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message,"Database error");
+			}
 			
 		}
-
-		private void rbWinAuth_CheckedChanged(object sender, EventArgs e)
-		{
-			UpdateLogin();
-			changedDbConfig = true;
-		}
-
-		private void rbSqlAuth_CheckedChanged(object sender, EventArgs e)
-		{
-			UpdateLogin();
-			changedDbConfig = true;
-		}
-
-		private void btnNewDatabase_Click(object sender, EventArgs e)
-		{
 			
-		}
-
-		private void txtServerName_TextChanged(object sender, EventArgs e)
-		{
-			changedDbConfig = true;
-		}
-
-		private void cboDatabaseName_Enter(object sender, EventArgs e)
-		{
-			UpdateDatabaseList();
-		}
-
-		private void txtUid_TextChanged(object sender, EventArgs e)
-		{
-			changedDbConfig = true;
-		}
-
-		private void txtPwd_TextChanged(object sender, EventArgs e)
-		{
-			changedDbConfig = true;
-		}
-
-		private void btnChangeServerType_Click(object sender, EventArgs e)
-		{
-
-		}
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
-			Config.Settings.databaseFileName = txtSQLiteDatabaseFile.Text;
+			// Save Db Type
+			if (popupDatabaseType.Text == "MS SQL Server")
+				Config.Settings.databaseType = ConfigData.dbType.MSSQLserver;
+			else if (popupDatabaseType.Text == "SQLite")
+				Config.Settings.databaseType = ConfigData.dbType.SQLite;
+			// Save SQLite settings
+			Config.Settings.databaseFileName = txtDatabaseFile.Text;
+			// Save SQL Server settings
 			Config.Settings.databaseServer = txtServerName.Text;
-			Config.Settings.databaseWinAuth = rbWinAuth.Checked;
-			Config.Settings.databaseUid = txtUid.Text;
-			Config.Settings.databasePwd = txtPwd.Text;
-			Config.Settings.databaseName = cboDatabaseName.Text;
+			Config.Settings.databaseWinAuth = (popupDbAuth.Text == "Windows Authentication");
+			Config.Settings.databaseUid = txtUID.Text;
+			Config.Settings.databasePwd = txtPW.Text;
+			Config.Settings.databaseName = popupDatabase.Text;
+			// Save now
+			string msg = "";
+			bool saveOk = false;
+			saveOk = Config.SaveConfig(out msg);
+			// Check if Connection to DB is OK, and get base data
 			string winAuth = "Win";
-			if (rbSqlAuth.Checked) winAuth = "Sql";
-			if (Config.CheckDBConn(true, txtServerName.Text, cboDatabaseName.Text, winAuth, txtUid.Text, txtPwd.Text)) // check db config, displays message if error
+			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
+			if (Config.CheckDBConn(true, txtServerName.Text, popupDatabase.Text, winAuth, txtUID.Text, txtPW.Text)) // check db config, displays message if error
 			{
-				string msg = "";
-				bool saveOk = false;
-				saveOk = Config.SaveDbConfig(out msg);
-				Code.Support.MessageDark.Show(msg, "Save database settings");
-				if (saveOk)
-				{
-					// Init
-					TankData.GetTankListFromDB();
-					TankData.GetJson2dbMappingViewFromDB();
-					TankData.GettankData2BattleMappingViewFromDB();
-					Form.ActiveForm.Close();
-				}
+				// Init
+				TankData.GetTankListFromDB();
+				TankData.GetJson2dbMappingViewFromDB();
+				TankData.GettankData2BattleMappingViewFromDB();
+				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
+				this.Close();
 			}
 		}
 
@@ -166,17 +135,28 @@ namespace WotDBUpdater.Forms.File
 		{
 			// Select dossier file
 			openFileDialogSQLite.FileName = "*.db";
-			//openFileDialogSQLite.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-			//	"\\WOT Statistics\\Hist_" + Config.Settings.playerName + "\\LastBattle";
+			openFileDialogSQLite.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
 			openFileDialogSQLite.ShowDialog();
 			if (openFileDialogSQLite.FileName != "")
 			{
-				txtSQLiteDatabaseFile.Text = openFileDialogSQLite.FileName;
-				changedDbConfig = true;
+				txtDatabaseFile.Text = openFileDialogSQLite.FileName;
 			}
 		}
 
-	   
+		private void popupDbAuth_Click(object sender, EventArgs e)
+		{
+			popupDbAuth.Text =
+				Code.PopupGrid.Show("Select SQL Server Authentication", 
+					Code.PopupGrid.PopupGridType.List, 
+					"Windows Authentication,SQL Server Authentication");
+			UpdateLogin();
+		}
 
+		private void popupDatabaseType_Click(object sender, EventArgs e)
+		{
+			popupDatabaseType.Text = Code.PopupGrid.Show("Select Database Type", Code.PopupGrid.PopupGridType.List,"SQLite,MS SQL Server");
+		}
+
+		
 	}
 }

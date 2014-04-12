@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 using System.Data.Sql;
 using System.Net;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Code
 {
 	public static class ImportMisc2DB
 	{
@@ -198,7 +198,7 @@ namespace WotDBUpdater
 			}
 			catch (Exception ex)
 			{
-				Code.Support.MessageDark.Show(ex.Message, "Error occured");
+				Code.MsgBox.Show(ex.Message, "Error occured");
 			}
 
 			return ("Import Complete");

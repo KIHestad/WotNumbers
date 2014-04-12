@@ -28,60 +28,90 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtPlayer = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // txtPlayer
-            // 
-            this.txtPlayer.Location = new System.Drawing.Point(95, 24);
-            this.txtPlayer.Name = "txtPlayer";
-            this.txtPlayer.Size = new System.Drawing.Size(185, 20);
-            this.txtPlayer.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 27);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Player name:";
-            // 
-            // btnSave
-            // 
-            this.btnSave.Location = new System.Drawing.Point(207, 58);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 2;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // frmAddPlayer
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(302, 99);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtPlayer);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmAddPlayer";
-            this.ShowInTaskbar = false;
-            this.Text = "Add Player";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddPlayer));
+			this.AddPlayerTheme = new BadForm();
+			this.btnAddNewPlayer = new BadButton();
+			this.txtNewPlayerName = new BadTextBox();
+			this.badLabel1 = new BadLabel();
+			this.AddPlayerTheme.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// AddPlayerTheme
+			// 
+			this.AddPlayerTheme.Controls.Add(this.btnAddNewPlayer);
+			this.AddPlayerTheme.Controls.Add(this.txtNewPlayerName);
+			this.AddPlayerTheme.Controls.Add(this.badLabel1);
+			this.AddPlayerTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AddPlayerTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.AddPlayerTheme.FormFooter = false;
+			this.AddPlayerTheme.FormFooterHeight = 26;
+			this.AddPlayerTheme.FormInnerBorder = 3;
+			this.AddPlayerTheme.FormMargin = 0;
+			this.AddPlayerTheme.Image = null;
+			this.AddPlayerTheme.Location = new System.Drawing.Point(0, 0);
+			this.AddPlayerTheme.MainArea = mainAreaClass1;
+			this.AddPlayerTheme.Name = "AddPlayerTheme";
+			this.AddPlayerTheme.Resizable = true;
+			this.AddPlayerTheme.Size = new System.Drawing.Size(386, 81);
+			this.AddPlayerTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("AddPlayerTheme.SystemExitImage")));
+			this.AddPlayerTheme.SystemMaximizeImage = null;
+			this.AddPlayerTheme.SystemMinimizeImage = null;
+			this.AddPlayerTheme.TabIndex = 3;
+			this.AddPlayerTheme.Text = "Add New player";
+			this.AddPlayerTheme.TitleHeight = 26;
+			// 
+			// btnAddNewPlayer
+			// 
+			this.btnAddNewPlayer.Image = null;
+			this.btnAddNewPlayer.Location = new System.Drawing.Point(289, 40);
+			this.btnAddNewPlayer.Name = "btnAddNewPlayer";
+			this.btnAddNewPlayer.Size = new System.Drawing.Size(75, 23);
+			this.btnAddNewPlayer.TabIndex = 5;
+			this.btnAddNewPlayer.Text = "Save";
+			this.btnAddNewPlayer.Click += new System.EventHandler(this.btnAddNewPlayer_Click);
+			// 
+			// txtNewPlayerName
+			// 
+			this.txtNewPlayerName.Image = null;
+			this.txtNewPlayerName.Location = new System.Drawing.Point(94, 40);
+			this.txtNewPlayerName.Name = "txtNewPlayerName";
+			this.txtNewPlayerName.Size = new System.Drawing.Size(189, 23);
+			this.txtNewPlayerName.TabIndex = 4;
+			// 
+			// badLabel1
+			// 
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(13, 40);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(75, 23);
+			this.badLabel1.TabIndex = 3;
+			this.badLabel1.Text = "Player Name:";
+			// 
+			// AddPlayer
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(386, 81);
+			this.Controls.Add(this.AddPlayerTheme);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "AddPlayer";
+			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.Text = "Add Player";
+			this.AddPlayerTheme.ResumeLayout(false);
+			this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtPlayer;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnSave;
+		private BadForm AddPlayerTheme;
+		private BadButton btnAddNewPlayer;
+		private BadTextBox txtNewPlayerName;
+		private BadLabel badLabel1;
     }
 }

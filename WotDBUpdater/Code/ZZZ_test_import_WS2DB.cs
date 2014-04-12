@@ -6,8 +6,9 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WotDBUpdater.Code;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Code
 {
     public static class zzz_ImportWS2DB
     {

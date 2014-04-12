@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.File
 {
@@ -59,7 +60,7 @@ namespace WotDBUpdater.Forms.File
 			}
 			else
 			{
-				Code.Support.MessageDark.Show("Select a file u noob...", "Noob message");
+				Code.MsgBox.Show("Select a file u noob...", "Noob message");
 			}
 		}
 

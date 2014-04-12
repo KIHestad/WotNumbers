@@ -199,7 +199,7 @@
 			this.lblStatusRowCount.Name = "lblStatusRowCount";
 			this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
 			this.lblStatusRowCount.TabIndex = 19;
-			this.lblStatusRowCount.Text = "Rows...";
+			this.lblStatusRowCount.Text = "Rows";
 			this.lblStatusRowCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
 			// 
 			// panelMainArea
@@ -1045,9 +1045,9 @@
 			this.lblStatus2.Location = new System.Drawing.Point(69, 411);
 			this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatus2.Name = "lblStatus2";
-			this.lblStatus2.Size = new System.Drawing.Size(68, 13);
+			this.lblStatus2.Size = new System.Drawing.Size(82, 13);
 			this.lblStatus2.TabIndex = 16;
-			this.lblStatus2.Text = "Last action...";
+			this.lblStatus2.Text = "Action message";
 			this.lblStatus2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
 			// lblStatus1
@@ -1078,6 +1078,7 @@
 			this.Text = "WotDBUpdater";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.Main_Load);
+			this.Shown += new System.EventHandler(this.Main_Shown);
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
 			this.MainTheme.ResumeLayout(false);
 			this.MainTheme.PerformLayout();

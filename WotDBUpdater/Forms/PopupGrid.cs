@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms
 {
 	public partial class PopupGrid : Form
 	{
+		
 		public PopupGrid(string title, DataTable dt)
 		{
 			InitializeComponent();
@@ -27,17 +29,22 @@ namespace WotDBUpdater.Forms
 
 		private void Popup_Load(object sender, EventArgs e)
 		{
-			// Style datagrid
-			dataGridPopup.BorderStyle = BorderStyle.None;
-			dataGridPopup.BackgroundColor = Code.Support.ColorTheme.FormBack;
-			dataGridPopup.GridColor = Code.Support.ColorTheme.GridBorders;
-			dataGridPopup.DefaultCellStyle.BackColor = Code.Support.ColorTheme.FormBack;
-			dataGridPopup.DefaultCellStyle.ForeColor = Code.Support.ColorTheme.ControlFont;
-			dataGridPopup.DefaultCellStyle.SelectionForeColor = Code.Support.ColorTheme.ControlFont;
-			dataGridPopup.DefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.FormBack;
-			dataGridPopup.Top = PopupGridTheme.MainArea.Top;
-			dataGridPopup.Left = PopupGridTheme.MainArea.Left;
-			ResizeNow();
+			if (dataGridPopup.RowCount > 0)
+			{
+				// Style datagrid
+				dataGridPopup.BorderStyle = BorderStyle.None;
+				dataGridPopup.BackgroundColor = ColorTheme.FormBack;
+				dataGridPopup.GridColor = ColorTheme.GridBorders;
+				dataGridPopup.DefaultCellStyle.BackColor = ColorTheme.FormBack;
+				dataGridPopup.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+				dataGridPopup.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+				dataGridPopup.DefaultCellStyle.SelectionBackColor = ColorTheme.FormBack;
+				dataGridPopup.Top = PopupGridTheme.MainArea.Top;
+				dataGridPopup.Left = PopupGridTheme.MainArea.Left;
+				ResizeNow();
+			}
+			else
+				this.Close();
 		}
 
 
@@ -56,14 +63,14 @@ namespace WotDBUpdater.Forms
 
 		private void dataGridPopup_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.FormBackTitle;
-			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.FormBackTitle;
+			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.FormBackTitle;
+			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.FormBackTitle;
 		}
 
 		private void dataGridPopup_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
 		{
-			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.FormBack;
-			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.FormBack;
+			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.FormBack;
+			dataGridPopup.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.FormBack;
 		}
 
 		private void dataGridPopup_CellClick(object sender, DataGridViewCellEventArgs e)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.Test
 {
@@ -25,19 +26,19 @@ namespace WotDBUpdater.Forms.Test
 
 		private void badButton2_Click(object sender, EventArgs e)
 		{
-			if (badForm1.FormBorderColor == Code.Support.ColorTheme.FormBorderBlack)
+			if (badForm1.FormBorderColor == ColorTheme.FormBorderBlack)
 			{
-				badForm1.FormBorderColor = Code.Support.ColorTheme.FormBorderBlue;
+				badForm1.FormBorderColor = ColorTheme.FormBorderBlue;
 				badButton2.Text = "FormBorderBlue";
 			}
-			else if (badForm1.FormBorderColor == Code.Support.ColorTheme.FormBorderBlue)
+			else if (badForm1.FormBorderColor == ColorTheme.FormBorderBlue)
 			{
-				badForm1.FormBorderColor = Code.Support.ColorTheme.FormBorderRed;
+				badForm1.FormBorderColor = ColorTheme.FormBorderRed;
 				badButton2.Text = "FormBorderRed";
 			}
 			else
 			{
-				badForm1.FormBorderColor = Code.Support.ColorTheme.FormBorderBlack;
+				badForm1.FormBorderColor = ColorTheme.FormBorderBlack;
 				badButton2.Text = "FormBorderBlack";
 			}
 			Refresh();

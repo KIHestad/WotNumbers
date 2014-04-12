@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Code
 {
 	class ImportWotApi2DB
 	{
@@ -124,7 +124,7 @@ namespace WotDBUpdater
 				}
 				catch (Exception ex)
 				{
-					Code.Support.MessageDark.Show(ex.Message.ToString(), "Error occured");
+					Code.MsgBox.Show(ex.Message.ToString(), "Error occured");
 				}
 			}
 
@@ -226,7 +226,7 @@ namespace WotDBUpdater
 				}
 				catch (Exception ex)
 				{
-					Code.Support.MessageDark.Show(ex.Message, "Error occured");
+					Code.MsgBox.Show(ex.Message, "Error occured");
 				}
 			}
 
@@ -302,7 +302,7 @@ namespace WotDBUpdater
 				}
 				catch (Exception ex)
 				{
-					Code.Support.MessageDark.Show(ex.Message, "Error occured");
+					Code.MsgBox.Show(ex.Message, "Error occured");
 				}
 
 			}

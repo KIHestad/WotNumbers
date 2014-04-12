@@ -8,16 +8,14 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Code
 {
-
-	public enum PopupDataSourceType
-	{
-		List = 1,
-		Sql = 2
-	}
-
 	class PopupGrid
 	{
-
+		public enum PopupGridType
+		{
+			List = 1,
+			Sql = 2
+		}
+		
 		private static string _SelectedValue = "";
 		public static string SelectedValue
 		{
@@ -25,10 +23,11 @@ namespace WotDBUpdater.Code
 			set { _SelectedValue = value; }
 		}	
 		
-		public static string Show(string Title, PopupDataSourceType DataSourceType, string DataSource)
+		public static string Show(string Title, PopupGridType DataSourceType, string DataSource, string OverrideDbCon = "")
 		{
+			SelectedValue = "";
 			DataTable dt = new DataTable();
-			if (DataSourceType == PopupDataSourceType.List)
+			if (DataSourceType == PopupGridType.List)
 			{
 				dt.Columns.Add("Items");
 				string[] list = DataSource.Split(new string[] { "," }, StringSplitOptions.None);
@@ -39,7 +38,7 @@ namespace WotDBUpdater.Code
 					dt.Rows.Add(dr);
 				}
 			}
-			else if (DataSourceType == PopupDataSourceType.Sql)
+			else if (DataSourceType == PopupGridType.Sql)
 			{
 				dt = db.FetchData(DataSource);
 			}

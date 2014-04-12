@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using IronPython.Hosting;
 
-namespace WotDBUpdater
+namespace WotDBUpdater.Code
 {
 	public static class dossier2json
 	{
@@ -264,7 +264,7 @@ namespace WotDBUpdater
 			}
 			catch (Exception ex)
 			{
-				Code.Support.MessageDark.Show("Error running Python script converting dossier file: " + ex.Message, "Error converting dossier file to json");
+				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message, "Error converting dossier file to json");
 				return "Error converting dossier file to json";
 			}
 			return "";

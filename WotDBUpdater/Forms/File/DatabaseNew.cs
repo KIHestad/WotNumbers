@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.File
 {
@@ -79,7 +80,7 @@ namespace WotDBUpdater.Forms.File
 		private void btnCreateDB_Click(object sender, EventArgs e)
 		{
 			Cursor.Current = Cursors.WaitCursor;
-			int maxStep = 13;
+			int maxStep = 12;
 			pbCreateDatabase.Maximum = maxStep * 100;
 			pbCreateDatabase.Value = maxStep * 100;
 			pbCreateDatabase.Visible = true;
@@ -140,21 +141,14 @@ namespace WotDBUpdater.Forms.File
 					db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
 					Config.Settings.playerName = txtPlayerName.Text.Trim();
 					string result = "";
-					Config.SaveAppConfig(out result);
-					UpdateProgressBar(ref step, maxStep);
+					Config.SaveConfig(out result);
 				}
-				UpdateProgressBar(ref step, maxStep);
-				// Done creating db, save settings
-				string msg = "";
-				Config.SaveDbConfig(out msg);
-				Config.SaveAppConfig(out msg);
 				UpdateProgressBar(ref step, maxStep);
 				// Done
 				Cursor.Current = Cursors.Default;
 				Application.DoEvents();
-				Code.Support.MessageDark.Show("Database created successfully.", "Created database");
-				pbCreateDatabase.Visible = false;
-				Form.ActiveForm.Close();
+				Code.MsgBox.Show("Database created successfully.", "Created database");
+				this.Close();
 			}	
 		}
 
@@ -168,15 +162,15 @@ namespace WotDBUpdater.Forms.File
 			string db = "C:\\wotdb.db";
 			SQLiteConnection.CreateFile(db);
 
-            //string sql = File.ReadAllText("x.sql");
-            SQLiteConnection conn = new SQLiteConnection("Data Source=" + db + ";Version=3;");
-            conn.Open();
+			//string sql = File.ReadAllText("x.sql");
+			SQLiteConnection conn = new SQLiteConnection("Data Source=" + db + ";Version=3;");
+			conn.Open();
 
-            string sql = "create table testc (id int)";
-            SQLiteCommand command = new SQLiteCommand(sql, conn);
-            command.ExecuteNonQuery();
+			string sql = "create table testc (id int)";
+			SQLiteCommand command = new SQLiteCommand(sql, conn);
+			command.ExecuteNonQuery();
 
-            conn.Close();
+			conn.Close();
 
 
 			//string dbConnection = db;
@@ -268,7 +262,7 @@ namespace WotDBUpdater.Forms.File
 					// Done
 					Cursor.Current = Cursors.Default;
 					Application.DoEvents();
-					Code.Support.MessageDark.Show("Database created successfully.", "Created database");
+					Code.MessageDark.Show("Database created successfully.", "Created database");
 					pbCreateDatabase.Visible = false;
 					Form.ActiveForm.Close();
 				}

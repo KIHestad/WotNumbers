@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.File
 {
@@ -52,7 +53,7 @@ namespace WotDBUpdater.Forms.File
         private void btnUpdateWN8_Click(object sender, EventArgs e)
         {
             ImportMisc2DB.UpdateWN8();
-            Code.Support.MessageDark.Show("Update complete");
+            Code.MsgBox.Show("Update complete");
         }
     }
 }

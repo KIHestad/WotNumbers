@@ -12,7 +12,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using WotDBUpdater.Code.Support;
+using WotDBUpdater.Code;
 
 abstract class BadThemeContainerControl : ContainerControl
 {
@@ -642,7 +642,10 @@ abstract class BadThemeControl : Control
 	public void DrawText(HorizontalAlignment horizontalAlignment, Brush brush, int offset = 0, bool verticalAlignmentMiddle = true) 
 	{
 		if (string.IsNullOrEmpty(Text))
+		{
+			TextSize = new Size(0, 13); // Default text heught
 			return;
+		}
 		TextSize = grapichObject.MeasureString(Text, Font).ToSize();
 
 		int yPos = 0;
@@ -700,6 +703,26 @@ abstract class BadThemeControl : Control
 				grapichObject.DrawImage(_Image, Width / 2 - TextSize.Width / 2, Height / 2 - TextSize.Height / 2 + yOffset);
 				break;
 		}
+	}
+}
+
+abstract class BadThemeControlTextBox : BadThemeControl
+{
+	private char _PasswordChar;
+	public char PasswordChar
+	{
+		get { return _PasswordChar; }
+		set	{ _PasswordChar = value; }
+	}
+}
+
+abstract class BadThemeControlLabel : BadThemeControl
+{
+	private bool _Dimmed = false;
+	public bool Dimmed
+	{
+		get { return _Dimmed; }
+		set { _Dimmed = value; }
 	}
 }
 
@@ -802,22 +825,10 @@ class BadSeperator : BadThemeControl
 		}
 	}
 
-	private Color _SeparatorColor = ColorTheme.FormBackTitle;
-	public Color SeparatorColor
-	{
-		get { return _SeparatorColor; }
-		set
-		{
-			_SeparatorColor = value;
-			Invalidate();
-		}
-	}
-
-
 	protected override void OnPaint(PaintEventArgs e)
 	{
 		grapichObject.Clear(BackColor);
-
+		Color SeparatorColor = ColorTheme.ControlSeparatorGroupBoxBorder;
 		if (_Direction == Orientation.Horizontal)
 		{
 			int Yoffset = 0;
@@ -861,7 +872,7 @@ class BadGroupBox : BadThemeControl
 		grapichObject.Clear(BackColor);
 		int Yoffset = 7;
 		// Outer Border
-		SolidBrush BorderColor = new SolidBrush(ColorTheme.FormBackTitle);
+		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlSeparatorGroupBoxBorder);
 		Rectangle GroupBoxOuter = new Rectangle(0, Yoffset, ClientRectangle.Width, ClientRectangle.Height - Yoffset);
 		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
 		// Inner Area
@@ -884,7 +895,7 @@ class BadGroupBox : BadThemeControl
 	}
 }
 
-class BadLabel : BadThemeControl
+class BadLabel : BadThemeControlLabel
 {
 	Label label = new Label();
 	public BadLabel()
@@ -892,14 +903,18 @@ class BadLabel : BadThemeControl
 		AllowTransparent();
 		BackColor = ColorTheme.FormBack;
 		label.BackColor = ColorTheme.FormBack;
-		label.ForeColor = ColorTheme.ControlFont;
 		label.Top = 5;
 		this.Controls.Add(label);
 	}
 
+	
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
 		label.Text = Text;
+		if (Dimmed)
+			label.ForeColor = ColorTheme.ControlDimmedFont;
+		else
+			label.ForeColor = ColorTheme.ControlFont;
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
@@ -910,7 +925,7 @@ class BadLabel : BadThemeControl
 	}
 }
 
-class BadTextBox : BadThemeControl
+class BadTextBox : BadThemeControlTextBox
 {
 
 	TextBox textBox = new TextBox();
@@ -930,13 +945,14 @@ class BadTextBox : BadThemeControl
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
 		// Outer Border
-		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlBorder);
+		SolidBrush BorderColor = new SolidBrush(ColorTheme.FormBackTitle);
 		Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height);
 		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
 		// Inner Area
 		BorderColor = new SolidBrush(ColorTheme.FormBack);
-		Rectangle GroupBoxInner = new Rectangle(1, 1, ClientRectangle.Width - 2, ClientRectangle.Height - 2);
+		Rectangle GroupBoxInner = new Rectangle(2, 2, ClientRectangle.Width - 4, ClientRectangle.Height - 4);
 		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
+		textBox.PasswordChar = PasswordChar;
 		textBox.Text = Text;
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
@@ -960,10 +976,10 @@ class BadTextBox : BadThemeControl
 }
 
 
-class BadComboBox : BadThemeControl
+class BadPopupBox : BadThemeControl
 {
 
-	public BadComboBox()
+	public BadPopupBox()
 	{
 		AllowTransparent();
 	}

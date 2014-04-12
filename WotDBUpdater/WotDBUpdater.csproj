@@ -99,12 +99,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\db.cs" />
-    <Compile Include="Code\PopupGrid.cs" />
+    <Compile Include="Code\Support\db.cs" />
+    <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\ZZZ_test_import_WS2DB.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
-    <Compile Include="Code\Support\MessageDark.cs" />
+    <Compile Include="Code\Support\MsgBox.cs" />
     <Compile Include="Code\Support\MessageBoxEx.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />

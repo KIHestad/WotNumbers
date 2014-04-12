@@ -11,15 +11,22 @@ using System.Windows.Forms;
 
 namespace WotDBUpdater.Forms
 {
+	
 	public partial class Message : Form
 	{
-		public Message(string title, string message)
+		public Message(string title, string message, Code.MsgBoxType MessageType = Code.MsgBoxType.Close)
 		{
 			InitializeComponent();
 			txtMessage.Text = message;
 			txtMessage.SelectionStart = 0;
 			txtMessage.SelectionLength = 0;
-			badForm1.Text = title;
+			MessageTheme.Text = title;
+			if (MessageType == Code.MsgBoxType.OKCancel)
+			{
+				btnClose.Visible = false;
+				btnCancel.Visible = true;
+				btnOK.Visible = true;
+			}
 		}
 
 		private void Message_Load(object sender, EventArgs e)
@@ -56,6 +63,19 @@ namespace WotDBUpdater.Forms
 
 		private void cmdClose_Click(object sender, EventArgs e)
 		{
+			Code.MsgBox.SelectedButton = Code.MsgBox.Button.CloseButton;
+			this.Close();
+		}
+
+		private void btnOK_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.SelectedButton = Code.MsgBox.Button.OKButton;
+			this.Close();
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.SelectedButton = Code.MsgBox.Button.CancelButton;
 			this.Close();
 		}
 

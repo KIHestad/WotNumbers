@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace WotDBUpdater.Code.Support
+namespace WotDBUpdater.Code
 {
 	public class StripLayout : ProfessionalColorTable
 	{

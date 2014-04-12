@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.File
 {
@@ -24,10 +25,13 @@ namespace WotDBUpdater.Forms.File
 			// Startup settings
 			txtDossierFilePath.Text = Config.Settings.dossierFilePath;
 			// Database type
-			if (Config.Settings.databaseType == dbType.MSSQLserver)
-				cboDatabaseType.Text = "MS SQL Server";
-			else if (Config.Settings.databaseType == dbType.SQLite)
-				cboDatabaseType.Text = "SQLite";
+			string databaseInfo = "";
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				databaseInfo = "Databasetype: MS SQL Server\n" +
+								"Sever/database: " + Config.Settings.databaseServer + "/" + Config.Settings.databaseName;
+			else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
+				databaseInfo = "Database Type: SQLite\nDatabase File: " + Config.Settings.databaseFileName;
+			lblDbSettings.Text = databaseInfo;
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
 		}
@@ -42,8 +46,8 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnRemovePlayer_Click_1(object sender, EventArgs e)
 		{
-			DialogResult result = MessageBoxEx.Show(this, "Are you sure you want to remove player: " + cboSelectPlayer.Text + " ?", "Remove player", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-			if (result == DialogResult.Yes)
+			Code.MsgBox.Button result = Code.MsgBox.Show("Are you sure you want to remove player: " + cboSelectPlayer.Text + " ?", "Remove player", Code.MsgBoxType.OKCancel);
+			if (result == Code.MsgBox.Button.OKButton)
 			{
 				try
 				{
@@ -53,12 +57,13 @@ namespace WotDBUpdater.Forms.File
 					cmd.Parameters.AddWithValue("@name", cboSelectPlayer.Text);
 					cmd.ExecuteNonQuery();
 					con.Close();
-					MessageBoxEx.Show(this, "Player successfully removed.", "Player removed");
+					Code.MsgBox.Show("Player successfully removed.", "Player removed");
 					cboSelectPlayer.Text = "";
+					Refresh();
 				}
 				catch (Exception ex)
 				{
-					MessageBoxEx.Show(this, "Cannot remove this player, probaly because data is stored for the player. Only players without any data can be removed.\n\n" + ex.Message, "Cannot remove player");
+					Code.MsgBox.Show("Cannot remove this player, probaly because data is stored for the player. Only players without any data can be removed.\n\n" + ex.Message, "Cannot remove player");
 				}
 			}
 		}
@@ -85,21 +90,22 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
-			// Database type
-			if (cboDatabaseType.Text == "MS SQL Server")
-				Config.Settings.databaseType = dbType.MSSQLserver;
-			else if (cboDatabaseType.Text == "SQLite")
-				Config.Settings.databaseType = dbType.SQLite;
-			// Other
 			Config.Settings.dossierFilePath = txtDossierFilePath.Text;
 			Config.Settings.playerName = cboSelectPlayer.Text;
+			DataTable dt = db.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
+			if (dt.Rows.Count > 0)
+				Config.Settings.playerId = Convert.ToInt32(dt.Rows[0][0]);
 			string msg = "";
 			bool saveOk = false;
-			saveOk = Config.SaveAppConfig(out msg);
-			MessageBoxEx.Show(this, msg, "Application settings saved");
+			saveOk = Config.SaveConfig(out msg);
 			if (saveOk)
 			{
+				MsgBox.Show(msg, "Application settings saved");
 				Form.ActiveForm.Close();
+			}
+			else
+			{
+				MsgBox.Show(msg, "Error saving application settings");
 			}
 		}
 
@@ -111,9 +117,8 @@ namespace WotDBUpdater.Forms.File
 
 		private void cboSelectPlayer_Click(object sender, EventArgs e)
 		{
-			cboSelectPlayer.Text = Code.PopupGrid.Show("Select Player", Code.PopupDataSourceType.Sql, "SELECT name FROM player ORDER BY name");
+			cboSelectPlayer.Text = Code.PopupGrid.Show("Select Player", Code.PopupGrid.PopupGridType.Sql, "SELECT name FROM player ORDER BY name");
 		}
-
 
 	}
 }

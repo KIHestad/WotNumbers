@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.Test
 {
@@ -35,7 +36,7 @@ namespace WotDBUpdater.Forms.Test
         private static void Import(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             ImportMisc2DB.UpdateWN8();
-            Code.Support.MessageDark.Show("Import status","Done");
+            Code.MsgBox.Show("Import status","Done");
         }
 
         private void buttonImport_Click(object sender, EventArgs e)

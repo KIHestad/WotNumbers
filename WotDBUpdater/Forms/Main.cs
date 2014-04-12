@@ -16,6 +16,7 @@ using System.Net;
 using System.Reflection;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
+using WotDBUpdater.Code;
 
 
 //using IronPython.Hosting;
@@ -37,68 +38,38 @@ namespace WotDBUpdater.Forms
 			MainTheme.Visible = false;
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
-			toolMain.BackColor = Code.Support.ColorTheme.FormBackTitle;
+			toolMain.BackColor = ColorTheme.FormBackTitle;
 			toolMain.ShowItemToolTips = false;
 			toolItemBattles.Visible = false;
 			toolItemTankFilter.Visible = false;
 			toolItemRefreshSeparator.Visible = false;
 			// Style datagrid
 			dataGridMain.BorderStyle = BorderStyle.None;
-			dataGridMain.BackgroundColor = Code.Support.ColorTheme.FormBack;
-			dataGridMain.GridColor = Code.Support.ColorTheme.GridBorders;
-			dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = Code.Support.ColorTheme.GridBorders;
-			dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = Code.Support.ColorTheme.ControlFont;
-			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = Code.Support.ColorTheme.ControlFont;
-			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.GridSelectedHeaderColor;
-			dataGridMain.DefaultCellStyle.BackColor = Code.Support.ColorTheme.FormBack;
-			dataGridMain.DefaultCellStyle.ForeColor = Code.Support.ColorTheme.ControlFont;
-			dataGridMain.DefaultCellStyle.SelectionForeColor = Code.Support.ColorTheme.ControlFont;
-			dataGridMain.DefaultCellStyle.SelectionBackColor = Code.Support.ColorTheme.GridSelectedCellColor;
-			
-			// Startup settings
-			string statusmsg = "Application started with issues...";
-			string msg = Config.GetConfig();
-			if (msg != "") 
-			{
-				Code.Support.MessageDark.Show(msg,"Could not load config data");
-				lblOverView.Text = "Please check app and db settings...";
-				Config.Settings.run = 0;
-				SetListener();
-			}
-			else if (Config.CheckDBConn())
-			{
-				string result = dossier2json.UpdateDossierFileWatcher();
-				SetListener();
-				SetFormTitle();
-				// Init
-				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
-				statusmsg = "Welcome back " + Config.Settings.playerName;
-				// Show data
-				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
-				GridShowOverall();
-			}
+			dataGridMain.BackgroundColor = ColorTheme.FormBack;
+			dataGridMain.GridColor = ColorTheme.GridBorders;
+			dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridBorders;
+			dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
+			dataGridMain.DefaultCellStyle.BackColor = ColorTheme.FormBack;
+			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 			// Draw form 
+			lblStatus1.Text = "Starting...";
+			lblStatus2.Text = "";
+			lblStatusRowCount.Text = "";
 			RefreshFormAfterResize(true);
 			InitForm();
-			SetListener();
-			// Battle result file watcher
-			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
-			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
-			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
-			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
-			// Display form and status message 
 			MainTheme.Visible = true;
-			SetStatus2(statusmsg);
+			Application.DoEvents();
 		}
 
 		#region Layout
 
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
-			public StripRenderer() : base(new Code.Support.StripLayout())
+			public StripRenderer() : base(new Code.StripLayout())
 			{
 				this.RoundedEdges = false;
 			}
@@ -106,7 +77,7 @@ namespace WotDBUpdater.Forms
 			protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
 			{
 				base.OnRenderItemText(e);
-				e.Item.ForeColor = Code.Support.ColorTheme.ToolWhiteToolStrip;
+				e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
 			}
 		}
 	
@@ -198,13 +169,13 @@ namespace WotDBUpdater.Forms
 		private void SetFormBorder()
 		{
 			if (this.WindowState == FormWindowState.Maximized)
-				MainTheme.FormBorderColor = Code.Support.ColorTheme.FormBorderBlack;
+				MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			else
 			{
 				if (Config.Settings.run == 1)
-					MainTheme.FormBorderColor = Code.Support.ColorTheme.FormBorderBlue;
+					MainTheme.FormBorderColor = ColorTheme.FormBorderBlue;
 				else
-					MainTheme.FormBorderColor = Code.Support.ColorTheme.FormBorderRed;
+					MainTheme.FormBorderColor = ColorTheme.FormBorderRed;
 			}
 			Refresh();
 		}
@@ -542,7 +513,7 @@ namespace WotDBUpdater.Forms
 					else // footer
 				{
 						cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = Code.Support.ColorTheme.ToolGrayMainBack;
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
 					}
 				}
 				// Battle Result color color
@@ -615,7 +586,7 @@ namespace WotDBUpdater.Forms
 			}
 			catch (Exception ex)
 			{
-				Code.Support.MessageDark.Show("Error when trying to scroll the grid, might be caused by empty datagrid (missing data connection)." + Environment.NewLine + Environment.NewLine + ex.Message, "Error scrolling");
+				Code.MsgBox.Show("Error when trying to scroll the grid, might be caused by empty datagrid (missing data connection)." + Environment.NewLine + Environment.NewLine + ex.Message, "Error scrolling");
 			}
 
 		}
@@ -681,17 +652,17 @@ namespace WotDBUpdater.Forms
 
 		private void pnlScrollbar_MouseHover(object sender, EventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayScrollbarHover; 
+			panelScrollbar.BackColor = ColorTheme.ToolGrayScrollbarHover; 
 		}
 
 		private void pnlScrollbar_MouseLeave(object sender, EventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayScrollbar;
+			panelScrollbar.BackColor = ColorTheme.ToolGrayScrollbar;
 		}
 
 		private void pnlScrollbar_MouseDown(object sender, MouseEventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayCheckPressed;
+			panelScrollbar.BackColor = ColorTheme.ToolGrayCheckPressed;
 			scrolling = true;
 			moveFromPoint = Cursor.Position;
 			scrollY = panelScrollbar.Top;
@@ -699,7 +670,7 @@ namespace WotDBUpdater.Forms
 
 		private void pnlScrollbar_MouseUp(object sender, MouseEventArgs e)
 		{
-			panelScrollbar.BackColor = Code.Support.ColorTheme.ToolGrayScrollbar;
+			panelScrollbar.BackColor = ColorTheme.ToolGrayScrollbar;
 			scrolling = false;
 		}
 
@@ -813,14 +784,14 @@ namespace WotDBUpdater.Forms
 				{
 					// Default checkbox
 					e.Graphics.DrawImage(imageListToolStrip.Images[0], 5, 3);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
 				}
 				else
 				{
 					// Border around picture
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, Code.Support.ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
 				}
 
 			}
@@ -1087,7 +1058,7 @@ namespace WotDBUpdater.Forms
 			string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
 						 "Statistics Tool for World Of Tanks" + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
-			Code.Support.MessageDark.Show(msg, "About WoT DBstat");
+			Code.MsgBox.Show(msg, "About WoT DBstat");
 		}
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
@@ -1103,7 +1074,7 @@ namespace WotDBUpdater.Forms
 				Config.Settings.run = 0;
 			}
 			string msg = "";
-			Config.SaveAppConfig(out msg);
+			Config.SaveConfig(out msg);
 			SetListener();
 		}
 
@@ -1171,6 +1142,46 @@ namespace WotDBUpdater.Forms
 		}
 
 		#endregion
+
+		private void Main_Shown(object sender, EventArgs e)
+		{
+			// Startup settings
+			string statusmsg = "Application started with issues...";
+			string msg = "";
+			bool ok = Config.GetConfig(out msg);
+			if (!ok)
+			{
+				Code.MsgBox.Show(msg, "Could not load config data");
+				lblOverView.Text = "";
+				Config.Settings.run = 0;
+				SetListener();
+				Form frm = new Forms.File.ApplicationSetting();
+				frm.ShowDialog();
+			}
+			else if (Config.CheckDBConn())
+			{
+				string result = dossier2json.UpdateDossierFileWatcher();
+				SetListener();
+				SetFormTitle();
+				// Init
+				TankData.GetTankListFromDB();
+				TankData.GetJson2dbMappingViewFromDB();
+				TankData.GettankData2BattleMappingViewFromDB();
+				statusmsg = "Welcome back " + Config.Settings.playerName;
+				// Show data
+				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
+				GridShowOverall();
+			}
+			SetListener();
+			// Battle result file watcher
+			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
+			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
+			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
+			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
+			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
+			// Display form and status message 
+			SetStatus2(statusmsg);
+		}
 
 
 	}
