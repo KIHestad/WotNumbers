@@ -56,13 +56,12 @@ namespace WotDBUpdater.Forms
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 			// Draw form 
-			lblStatus1.Text = "Starting...";
-			lblStatus2.Text = "";
+			lblStatus1.Text = "";
+			lblStatus2.Text = "Application init...";
 			lblStatusRowCount.Text = "";
 			RefreshFormAfterResize(true);
 			InitForm();
 			MainTheme.Visible = true;
-			Application.DoEvents();
 		}
 
 		#region Layout
@@ -83,18 +82,7 @@ namespace WotDBUpdater.Forms
 
 		private void Main_Shown(object sender, EventArgs e)
 		{
-			MainInit();
-		}
-
-		private void Main_Activated(object sender, EventArgs e)
-		{
-			MainInit();
-		}
-
-		private void MainInit()
-		{
 			// Startup settings
-			string statusmsg = "Application started with issues...";
 			string msg = "";
 			bool ok = Config.GetConfig(out msg);
 			if (!ok)
@@ -104,22 +92,17 @@ namespace WotDBUpdater.Forms
 				Config.Settings.run = 0;
 				SetListener();
 				Form frm = new Forms.File.ApplicationSetting();
-				ShowContent();
 			}
 			else if (Config.CheckDBConn())
 			{
-				string result = dossier2json.UpdateDossierFileWatcher();
-				SetListener();
-				SetFormTitle();
 				// Init
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingViewFromDB();
 				TankData.GettankData2BattleMappingViewFromDB();
-				statusmsg = "Welcome back " + Config.Settings.playerName;
-				// Show data
-				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
-				GridShowOverall();
 			}
+			string result = dossier2json.UpdateDossierFileWatcher();
+			SetFormTitle();
+			ShowContent();
 			SetListener();
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
@@ -128,9 +111,8 @@ namespace WotDBUpdater.Forms
 			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
 			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
 			// Display form and status message 
-			SetStatus2(statusmsg);
+			SetStatus2("Application started");
 		}
-
 
 		#endregion
 
@@ -196,6 +178,7 @@ namespace WotDBUpdater.Forms
 			{
 				MainTheme.Text = "WoT DBstats - " + Config.Settings.playerName;
 			}
+			Refresh();
 		}
 
 		private void SetListener()
@@ -868,6 +851,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (toolItemViewOverall.Checked)
 			{
+				lblOverView.Text = "Welcome " + Config.Settings.playerName;
 				GridShowOverall();
 			}
 			else if (toolItemViewTankInfo.Checked)
@@ -1099,6 +1083,7 @@ namespace WotDBUpdater.Forms
 			Form frm = new Forms.File.ApplicationSetting();
 			frm.ShowDialog();
 			SetFormTitle();
+			ShowContent();
 		}
 
 		private void toolItemSettingsDb_Click(object sender, EventArgs e)
