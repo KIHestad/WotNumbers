@@ -73,7 +73,7 @@
 			this.ApplicationSettingsTheme.Location = new System.Drawing.Point(0, 0);
 			this.ApplicationSettingsTheme.MainArea = mainAreaClass1;
 			this.ApplicationSettingsTheme.Name = "ApplicationSettingsTheme";
-			this.ApplicationSettingsTheme.Resizable = true;
+			this.ApplicationSettingsTheme.Resizable = false;
 			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(487, 331);
 			this.ApplicationSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ApplicationSettingsTheme.SystemExitImage")));
 			this.ApplicationSettingsTheme.SystemMaximizeImage = null;
@@ -124,6 +124,7 @@
 			// badLabel4
 			// 
 			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Dimmed = false;
 			this.badLabel4.Image = null;
 			this.badLabel4.Location = new System.Drawing.Point(40, 160);
 			this.badLabel4.Name = "badLabel4";
@@ -184,6 +185,7 @@
 			// badLabel3
 			// 
 			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel3.Dimmed = false;
 			this.badLabel3.Image = null;
 			this.badLabel3.Location = new System.Drawing.Point(40, 118);
 			this.badLabel3.Name = "badLabel3";
@@ -194,6 +196,7 @@
 			// lblDbSettings
 			// 
 			this.lblDbSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.lblDbSettings.Dimmed = false;
 			this.lblDbSettings.Image = null;
 			this.lblDbSettings.Location = new System.Drawing.Point(40, 60);
 			this.lblDbSettings.Name = "lblDbSettings";
@@ -224,6 +227,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Application settings";
+			this.Activated += new System.EventHandler(this.ApplicationSetting_Activated);
 			this.Load += new System.EventHandler(this.frmDossierFileSelect_Load);
 			this.ApplicationSettingsTheme.ResumeLayout(false);
 			this.ResumeLayout(false);

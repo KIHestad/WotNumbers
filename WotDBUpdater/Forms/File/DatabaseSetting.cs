@@ -15,9 +15,12 @@ namespace WotDBUpdater.Forms.File
 {
 	public partial class DatabaseSetting : Form
 	{
+		private ConfigData.dbType selectedDbType;
+		
 		public DatabaseSetting()
 		{
 			InitializeComponent();
+			this.Height = 350;
 		}
 
 		private void DatabaseSetting_Load(object sender, EventArgs e)
@@ -27,11 +30,11 @@ namespace WotDBUpdater.Forms.File
 
 		private void LoadConfig()
 		{
+			// Layout
+			panelSQLite.Top = panelMSSQL.Top;
 			// DB Type
-			if (Config.Settings.databaseType ==ConfigData.dbType.MSSQLserver)
-				popupDatabaseType.Text = "MS SQL Server";
-			else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
-				popupDatabaseType.Text = "SQLite";
+			selectedDbType = Config.Settings.databaseType; // As default the selected dbtype = cfrom config
+			UpateDbType();
 			// Startup settings SQLite
 			txtDatabaseFile.Text = Config.Settings.databaseFileName;
 			// Startup settings MS SQL Server
@@ -45,6 +48,23 @@ namespace WotDBUpdater.Forms.File
 			txtPW.Text = Config.Settings.databasePwd;
 			// UpdateAuthSettings
 			UpdateLogin();
+		}
+		
+		private void UpateDbType()
+		{
+			if (selectedDbType == ConfigData.dbType.MSSQLserver)
+			{
+				popupDatabaseType.Text = "MS SQL Server";
+				panelSQLite.Visible = false;
+				panelMSSQL.Visible = true;
+			}
+
+			else if (selectedDbType == ConfigData.dbType.SQLite)
+			{
+				popupDatabaseType.Text = "SQLite";
+				panelMSSQL.Visible = false;
+				panelSQLite.Visible = true;
+			}
 		}
 
 		private void UpdateLogin()
@@ -94,10 +114,7 @@ namespace WotDBUpdater.Forms.File
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
 			// Save Db Type
-			if (popupDatabaseType.Text == "MS SQL Server")
-				Config.Settings.databaseType = ConfigData.dbType.MSSQLserver;
-			else if (popupDatabaseType.Text == "SQLite")
-				Config.Settings.databaseType = ConfigData.dbType.SQLite;
+			Config.Settings.databaseType = selectedDbType;
 			// Save SQLite settings
 			Config.Settings.databaseFileName = txtDatabaseFile.Text;
 			// Save SQL Server settings
@@ -115,6 +132,18 @@ namespace WotDBUpdater.Forms.File
 			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
 			if (Config.CheckDBConn(true, txtServerName.Text, popupDatabase.Text, winAuth, txtUID.Text, txtPW.Text)) // check db config, displays message if error
 			{
+				// Check if current plyer exists in current database, if not remove it
+				DataTable dt = db.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerName + "'");
+				if (dt.Rows.Count == 0)
+				{
+					Config.Settings.playerId = 0;
+					Config.Settings.playerName = "";
+				}
+				else
+				{
+					Config.Settings.playerId = Convert.ToInt32(dt.Rows[0]["id"]);
+				}
+				Config.SaveConfig(out msg);
 				// Init
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingViewFromDB();
@@ -126,9 +155,37 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnNewDb_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.DatabaseNew();
-			frm.ShowDialog();
-			LoadConfig();
+			// If SQL Server, check if database settings is OK
+			bool ok = true;
+			if (selectedDbType == ConfigData.dbType.MSSQLserver)
+			{
+				// Do not use standard conn here, supply alternate sql conn string
+				string winAuth = "Win";
+				if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
+				string connectionstring = Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text, 10, true, ConfigData.dbType.MSSQLserver);
+				string sql = "SELECT * FROM master.dbo.sysdatabases";
+				try
+				{
+					SqlConnection con = new SqlConnection(connectionstring);
+					con.Open();
+					SqlCommand command = new SqlCommand(sql, con);
+					SqlDataAdapter adapter = new SqlDataAdapter(command);
+					DataTable dt = new DataTable();
+					adapter.Fill(dt);
+					con.Close();
+				}
+				catch (Exception ex)
+				{
+					MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message, "Database error");
+					ok = false;
+				}
+			}
+			if (ok)
+			{
+				Form frm = new Forms.File.DatabaseNew(selectedDbType);
+				frm.ShowDialog();
+				LoadConfig();
+			}
 		}
 
 		private void cmdSQLiteDatabaseFile_Click(object sender, EventArgs e)
@@ -155,6 +212,17 @@ namespace WotDBUpdater.Forms.File
 		private void popupDatabaseType_Click(object sender, EventArgs e)
 		{
 			popupDatabaseType.Text = Code.PopupGrid.Show("Select Database Type", Code.PopupGrid.PopupGridType.List,"SQLite,MS SQL Server");
+			// DB Type
+			if (popupDatabaseType.Text == "MS SQL Server")
+			{
+				selectedDbType = ConfigData.dbType.MSSQLserver;
+			}
+
+			else if (popupDatabaseType.Text == "SQLite")
+			{
+				selectedDbType = ConfigData.dbType.SQLite;
+			}
+			UpateDbType();
 		}
 
 		

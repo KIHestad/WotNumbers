@@ -346,7 +346,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(526, 25);
+			this.toolMain.Size = new System.Drawing.Size(495, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "toolStrip1";
@@ -1068,6 +1068,7 @@
 			this.Name = "Main";
 			this.Text = "WotDBUpdater";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.Activated += new System.EventHandler(this.Main_Activated);
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.Shown += new System.EventHandler(this.Main_Shown);
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();

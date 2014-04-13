@@ -22,6 +22,11 @@ namespace WotDBUpdater.Forms.File
 
 		private void frmDossierFileSelect_Load(object sender, EventArgs e)
 		{
+			UpdateSettings();
+		}
+
+		private void UpdateSettings()
+		{
 			// Startup settings
 			txtDossierFilePath.Text = Config.Settings.dossierFilePath;
 			// Database type
@@ -29,14 +34,14 @@ namespace WotDBUpdater.Forms.File
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				databaseInfo = "Databasetype: MS SQL Server\n" +
 								"Sever/database: " + Config.Settings.databaseServer + "/" + Config.Settings.databaseName;
-			else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				databaseInfo = "Database Type: SQLite\nDatabase File: " + Config.Settings.databaseFileName;
 			lblDbSettings.Text = databaseInfo;
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
+			Refresh();
 		}
 
-		
 		private void btmAddPlayer_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.File.AddPlayer();
@@ -118,6 +123,11 @@ namespace WotDBUpdater.Forms.File
 		private void cboSelectPlayer_Click(object sender, EventArgs e)
 		{
 			cboSelectPlayer.Text = Code.PopupGrid.Show("Select Player", Code.PopupGrid.PopupGridType.Sql, "SELECT name FROM player ORDER BY name");
+		}
+
+		private void ApplicationSetting_Activated(object sender, EventArgs e)
+		{
+			UpdateSettings();
 		}
 
 	}

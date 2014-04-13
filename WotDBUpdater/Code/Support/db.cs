@@ -92,7 +92,7 @@ namespace WotDBUpdater.Code
 			DataTable dt = new DataTable();
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
-				string sql = "SELECT '( Select from list )' AS TABLE_NAME UNION SELECT table_name AS TABLE_NAME FROM information_schema.tables ORDER BY TableName";
+				string sql = "SELECT '( Select from list )' AS TABLE_NAME UNION SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
 				dt = FetchData(sql);
 			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)

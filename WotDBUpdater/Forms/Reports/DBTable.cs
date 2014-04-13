@@ -19,16 +19,21 @@ namespace WotDBUpdater.Forms.Reports
 			InitializeComponent();
 		}
 
+		private bool init = true;
+
 		private void frmDBTable_Load(object sender, EventArgs e)
 		{
+
+			init = true;
 			ddSelectTable.DataSource = db.ListTables();
 			ddSelectTable.DisplayMember = "TABLE_NAME";
 			ddSelectTable.ValueMember = "TABLE_NAME";
+			init = false;
 		}
 
 		private void ddSelectTable_SelectedValueChanged(object sender, EventArgs e)
 		{
-			RefreshDataGrid();
+			if (!init) RefreshDataGrid();
 		}
 
 		private void frmDBTable_SizeChanged(object sender, EventArgs e)

@@ -80,7 +80,58 @@ namespace WotDBUpdater.Forms
 				e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
 			}
 		}
-	
+
+		private void Main_Shown(object sender, EventArgs e)
+		{
+			MainInit();
+		}
+
+		private void Main_Activated(object sender, EventArgs e)
+		{
+			MainInit();
+		}
+
+		private void MainInit()
+		{
+			// Startup settings
+			string statusmsg = "Application started with issues...";
+			string msg = "";
+			bool ok = Config.GetConfig(out msg);
+			if (!ok)
+			{
+				Code.MsgBox.Show(msg, "Could not load config data");
+				lblOverView.Text = "";
+				Config.Settings.run = 0;
+				SetListener();
+				Form frm = new Forms.File.ApplicationSetting();
+				ShowContent();
+			}
+			else if (Config.CheckDBConn())
+			{
+				string result = dossier2json.UpdateDossierFileWatcher();
+				SetListener();
+				SetFormTitle();
+				// Init
+				TankData.GetTankListFromDB();
+				TankData.GetJson2dbMappingViewFromDB();
+				TankData.GettankData2BattleMappingViewFromDB();
+				statusmsg = "Welcome back " + Config.Settings.playerName;
+				// Show data
+				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
+				GridShowOverall();
+			}
+			SetListener();
+			// Battle result file watcher
+			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
+			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
+			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
+			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
+			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
+			// Display form and status message 
+			SetStatus2(statusmsg);
+		}
+
+
 		#endregion
 
 		#region Common Events
@@ -813,6 +864,22 @@ namespace WotDBUpdater.Forms
 			}
 		}
 
+		private void ShowContent()
+		{
+			if (toolItemViewOverall.Checked)
+			{
+				GridShowOverall();
+			}
+			else if (toolItemViewTankInfo.Checked)
+			{
+				GridShowTankInfo();
+			}
+			else if (toolItemViewBattles.Checked)
+			{
+				GridShowBattle();
+			}
+		}
+
 		private void toolItemViewSelected_Click(object sender, EventArgs e)
 		{
 			ToolStripButton menuItem = (ToolStripButton)sender;
@@ -830,23 +897,21 @@ namespace WotDBUpdater.Forms
 				{
 					toolItemRefreshSeparator.Visible = false;
 					InfoPanelSlideStart(true);
-					GridShowOverall();
 				}
 				else if (toolItemViewTankInfo.Checked)
 				{
 					InfoPanelSlideStart(false);
 					toolItemTankFilter.Visible = true;
-					GridShowTankInfo();
 				}
 				else if (toolItemViewBattles.Checked)
 				{
 					InfoPanelSlideStart(false);
 					toolItemBattles.Visible = true;
 					toolItemTankFilter.Visible = true;
-					GridShowBattle();
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 				}
 			}
+			ShowContent();
 		}
 
 		private void toolItemRefresh_Click(object sender, EventArgs e)
@@ -1142,47 +1207,7 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-		private void Main_Shown(object sender, EventArgs e)
-		{
-			// Startup settings
-			string statusmsg = "Application started with issues...";
-			string msg = "";
-			bool ok = Config.GetConfig(out msg);
-			if (!ok)
-			{
-				Code.MsgBox.Show(msg, "Could not load config data");
-				lblOverView.Text = "";
-				Config.Settings.run = 0;
-				SetListener();
-				Form frm = new Forms.File.ApplicationSetting();
-				frm.ShowDialog();
-			}
-			else if (Config.CheckDBConn())
-			{
-				string result = dossier2json.UpdateDossierFileWatcher();
-				SetListener();
-				SetFormTitle();
-				// Init
-				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
-				statusmsg = "Welcome back " + Config.Settings.playerName;
-				// Show data
-				lblOverView.Text = "Welcome back " + Config.Settings.playerName;
-				GridShowOverall();
-			}
-			SetListener();
-			// Battle result file watcher
-			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
-			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
-			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
-			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
-			// Display form and status message 
-			SetStatus2(statusmsg);
-		}
-
-
+		
 	}
 
 	
