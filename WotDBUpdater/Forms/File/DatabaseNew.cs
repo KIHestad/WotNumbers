@@ -35,8 +35,8 @@ namespace WotDBUpdater.Forms.File
 		private void UpdateProgressBar(ref int step, int maxStep)
 		{
 			step++; // count step 1 to maxValue
-			int maxValue = (int)((double)maxStep / ((double)step / (double)maxStep) * 100); // calculate the maxValue to be correct according to that value = 1 all time
-			pbCreateDatabase.Maximum = maxValue;
+			badProgressBar.Value = step;
+			Refresh();
 			Application.DoEvents();
 		}
 
@@ -44,9 +44,10 @@ namespace WotDBUpdater.Forms.File
 		{
 			Cursor.Current = Cursors.WaitCursor;
 			int maxStep = 12;
-			pbCreateDatabase.Maximum = maxStep * 100;
-			pbCreateDatabase.Value = maxStep * 100;
-			pbCreateDatabase.Visible = true;
+			badProgressBar.ValueMax = maxStep ;
+			badProgressBar.Value = 0;
+			badProgressBar.Visible = true;
+
 			int step = 0;
 			UpdateProgressBar(ref step, maxStep);
 			Application.DoEvents();

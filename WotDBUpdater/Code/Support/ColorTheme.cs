@@ -47,6 +47,7 @@ namespace WotDBUpdater.Code
 		public static Color ToolBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
 		
 		// Grid 
+		public static Color GridHeaderBackLight = Color.FromArgb(255, 22, 22, 22);
 		public static Color GridBorders = Color.FromArgb(255, 17, 17, 17);
 		public static Color GridSelectedHeaderColor = Color.FromArgb(255, 37, 37, 37);
 		public static Color GridSelectedCellColor = Color.FromArgb(255, 52, 52, 52);

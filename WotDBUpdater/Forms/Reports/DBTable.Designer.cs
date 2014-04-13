@@ -28,108 +28,122 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBTable));
-            this.dataGridViewShowTable = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ddSelectTable = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).BeginInit();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // dataGridViewShowTable
-            // 
-            this.dataGridViewShowTable.AllowUserToAddRows = false;
-            this.dataGridViewShowTable.AllowUserToDeleteRows = false;
-            this.dataGridViewShowTable.AllowUserToOrderColumns = true;
-            this.dataGridViewShowTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewShowTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewShowTable.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewShowTable.Name = "dataGridViewShowTable";
-            this.dataGridViewShowTable.ReadOnly = true;
-            this.dataGridViewShowTable.Size = new System.Drawing.Size(815, 402);
-            this.dataGridViewShowTable.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Select table:";
-            // 
-            // ddSelectTable
-            // 
-            this.ddSelectTable.FormattingEnabled = true;
-            this.ddSelectTable.Location = new System.Drawing.Point(83, 5);
-            this.ddSelectTable.Name = "ddSelectTable";
-            this.ddSelectTable.Size = new System.Drawing.Size(226, 21);
-            this.ddSelectTable.TabIndex = 3;
-            this.ddSelectTable.SelectedValueChanged += new System.EventHandler(this.ddSelectTable_SelectedValueChanged);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnRefresh);
-            this.panel1.Controls.Add(this.ddSelectTable);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(815, 31);
-            this.panel1.TabIndex = 4;
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Location = new System.Drawing.Point(315, 4);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btnRefresh.TabIndex = 4;
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
-            // 
-            // panel2
-            // 
-            this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel2.Controls.Add(this.dataGridViewShowTable);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 31);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(815, 402);
-            this.panel2.TabIndex = 5;
-            // 
-            // DBTable
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(815, 433);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "DBTable";
-            this.Text = "Show Database Table";
-            this.Load += new System.EventHandler(this.frmDBTable_Load);
-            this.SizeChanged += new System.EventHandler(this.frmDBTable_SizeChanged);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.ResumeLayout(false);
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBTable));
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			this.DBTableTheme = new BadForm();
+			this.btnRefresh = new BadButton();
+			this.popupSelectTable = new BadPopupBox();
+			this.badLabel1 = new BadLabel();
+			this.dataGridViewShowTable = new System.Windows.Forms.DataGridView();
+			this.DBTableTheme.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).BeginInit();
+			this.SuspendLayout();
+			// 
+			// DBTableTheme
+			// 
+			this.DBTableTheme.Controls.Add(this.btnRefresh);
+			this.DBTableTheme.Controls.Add(this.popupSelectTable);
+			this.DBTableTheme.Controls.Add(this.badLabel1);
+			this.DBTableTheme.Controls.Add(this.dataGridViewShowTable);
+			this.DBTableTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DBTableTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.DBTableTheme.FormFooter = false;
+			this.DBTableTheme.FormFooterHeight = 26;
+			this.DBTableTheme.FormInnerBorder = 3;
+			this.DBTableTheme.FormMargin = 0;
+			this.DBTableTheme.Image = ((System.Drawing.Image)(resources.GetObject("DBTableTheme.Image")));
+			this.DBTableTheme.Location = new System.Drawing.Point(0, 0);
+			this.DBTableTheme.MainArea = mainAreaClass1;
+			this.DBTableTheme.Name = "DBTableTheme";
+			this.DBTableTheme.Resizable = true;
+			this.DBTableTheme.Size = new System.Drawing.Size(438, 320);
+			this.DBTableTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DBTableTheme.SystemExitImage")));
+			this.DBTableTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("DBTableTheme.SystemMaximizeImage")));
+			this.DBTableTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("DBTableTheme.SystemMinimizeImage")));
+			this.DBTableTheme.TabIndex = 5;
+			this.DBTableTheme.Text = "Database Tables";
+			this.DBTableTheme.TitleHeight = 26;
+			// 
+			// btnRefresh
+			// 
+			this.btnRefresh.Image = null;
+			this.btnRefresh.Location = new System.Drawing.Point(347, 38);
+			this.btnRefresh.Name = "btnRefresh";
+			this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+			this.btnRefresh.TabIndex = 7;
+			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+			// 
+			// popupSelectTable
+			// 
+			this.popupSelectTable.Image = ((System.Drawing.Image)(resources.GetObject("popupSelectTable.Image")));
+			this.popupSelectTable.Location = new System.Drawing.Point(93, 38);
+			this.popupSelectTable.Name = "popupSelectTable";
+			this.popupSelectTable.Size = new System.Drawing.Size(248, 23);
+			this.popupSelectTable.TabIndex = 6;
+			this.popupSelectTable.Click += new System.EventHandler(this.popupSelectTable_Click);
+			// 
+			// badLabel1
+			// 
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Dimmed = false;
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(12, 38);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(75, 23);
+			this.badLabel1.TabIndex = 5;
+			this.badLabel1.Text = "Select Table:";
+			// 
+			// dataGridViewShowTable
+			// 
+			this.dataGridViewShowTable.AllowUserToAddRows = false;
+			this.dataGridViewShowTable.AllowUserToDeleteRows = false;
+			this.dataGridViewShowTable.AllowUserToOrderColumns = true;
+			this.dataGridViewShowTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.dataGridViewShowTable.CausesValidation = false;
+			this.dataGridViewShowTable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.Red;
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dataGridViewShowTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			this.dataGridViewShowTable.EnableHeadersVisualStyles = false;
+			this.dataGridViewShowTable.Location = new System.Drawing.Point(12, 78);
+			this.dataGridViewShowTable.Name = "dataGridViewShowTable";
+			this.dataGridViewShowTable.ReadOnly = true;
+			this.dataGridViewShowTable.Size = new System.Drawing.Size(410, 227);
+			this.dataGridViewShowTable.TabIndex = 0;
+			this.dataGridViewShowTable.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridViewShowTable_MouseMove);
+			// 
+			// DBTable
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(438, 320);
+			this.Controls.Add(this.DBTableTheme);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Name = "DBTable";
+			this.Text = "Show Database Table";
+			this.Load += new System.EventHandler(this.frmDBTable_Load);
+			this.SizeChanged += new System.EventHandler(this.frmDBTable_SizeChanged);
+			this.DBTableTheme.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).EndInit();
+			this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridViewShowTable;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox ddSelectTable;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button btnRefresh;
+		private System.Windows.Forms.DataGridView dataGridViewShowTable;
+		private BadForm DBTableTheme;
+		private BadButton btnRefresh;
+		private BadPopupBox popupSelectTable;
+		private BadLabel badLabel1;
 
     }
 }

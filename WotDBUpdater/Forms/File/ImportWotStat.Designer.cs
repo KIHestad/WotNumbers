@@ -28,107 +28,121 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.label1 = new System.Windows.Forms.Label();
-			this.txtWotStatDb = new System.Windows.Forms.TextBox();
-			this.btnOpenWotStatDbFile = new System.Windows.Forms.Button();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.lblResult = new System.Windows.Forms.Label();
-			this.btnStartImport = new System.Windows.Forms.Button();
-			this.progressBarImport = new System.Windows.Forms.ProgressBar();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportWotStat));
 			this.openFileWotStatDbFile = new System.Windows.Forms.OpenFileDialog();
-			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.ImportWotStatTheme = new BadForm();
+			this.progressBarImport = new BadProgressBar();
+			this.btnStartImport = new BadButton();
+			this.btnOpenWotStatDbFile = new BadButton();
+			this.txtWotStatDb = new BadTextBox();
+			this.badLabel1 = new BadLabel();
+			this.badGroupBox1 = new BadGroupBox();
+			this.ImportWotStatTheme.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(18, 26);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(147, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "WoT Statisctics Databasefile:";
-			// 
-			// txtWotStatDb
-			// 
-			this.txtWotStatDb.Location = new System.Drawing.Point(21, 42);
-			this.txtWotStatDb.Name = "txtWotStatDb";
-			this.txtWotStatDb.Size = new System.Drawing.Size(378, 20);
-			this.txtWotStatDb.TabIndex = 1;
-			// 
-			// btnOpenWotStatDbFile
-			// 
-			this.btnOpenWotStatDbFile.Location = new System.Drawing.Point(405, 40);
-			this.btnOpenWotStatDbFile.Name = "btnOpenWotStatDbFile";
-			this.btnOpenWotStatDbFile.Size = new System.Drawing.Size(29, 23);
-			this.btnOpenWotStatDbFile.TabIndex = 2;
-			this.btnOpenWotStatDbFile.Text = "...";
-			this.btnOpenWotStatDbFile.UseVisualStyleBackColor = true;
-			this.btnOpenWotStatDbFile.Click += new System.EventHandler(this.btnOpenWotStatDbFile_Click);
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Controls.Add(this.txtWotStatDb);
-			this.groupBox1.Controls.Add(this.btnOpenWotStatDbFile);
-			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Location = new System.Drawing.Point(12, 12);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(452, 80);
-			this.groupBox1.TabIndex = 3;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Parameters";
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.lblResult);
-			this.groupBox2.Controls.Add(this.btnStartImport);
-			this.groupBox2.Controls.Add(this.progressBarImport);
-			this.groupBox2.Location = new System.Drawing.Point(13, 110);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(451, 88);
-			this.groupBox2.TabIndex = 4;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Import";
-			// 
-			// lblResult
-			// 
-			this.lblResult.AutoSize = true;
-			this.lblResult.Location = new System.Drawing.Point(17, 58);
-			this.lblResult.Name = "lblResult";
-			this.lblResult.Size = new System.Drawing.Size(47, 13);
-			this.lblResult.TabIndex = 2;
-			this.lblResult.Text = "Ready...";
-			// 
-			// btnStartImport
-			// 
-			this.btnStartImport.Location = new System.Drawing.Point(358, 53);
-			this.btnStartImport.Name = "btnStartImport";
-			this.btnStartImport.Size = new System.Drawing.Size(75, 23);
-			this.btnStartImport.TabIndex = 1;
-			this.btnStartImport.Text = "Start";
-			this.btnStartImport.UseVisualStyleBackColor = true;
-			this.btnStartImport.Click += new System.EventHandler(this.btnStartImport_Click);
-			// 
-			// progressBarImport
-			// 
-			this.progressBarImport.Location = new System.Drawing.Point(20, 20);
-			this.progressBarImport.Name = "progressBarImport";
-			this.progressBarImport.Size = new System.Drawing.Size(413, 23);
-			this.progressBarImport.TabIndex = 0;
 			// 
 			// openFileWotStatDbFile
 			// 
 			this.openFileWotStatDbFile.FileName = "*.db";
 			// 
+			// ImportWotStatTheme
+			// 
+			this.ImportWotStatTheme.Controls.Add(this.progressBarImport);
+			this.ImportWotStatTheme.Controls.Add(this.btnStartImport);
+			this.ImportWotStatTheme.Controls.Add(this.btnOpenWotStatDbFile);
+			this.ImportWotStatTheme.Controls.Add(this.txtWotStatDb);
+			this.ImportWotStatTheme.Controls.Add(this.badLabel1);
+			this.ImportWotStatTheme.Controls.Add(this.badGroupBox1);
+			this.ImportWotStatTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ImportWotStatTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.ImportWotStatTheme.FormFooter = false;
+			this.ImportWotStatTheme.FormFooterHeight = 26;
+			this.ImportWotStatTheme.FormInnerBorder = 3;
+			this.ImportWotStatTheme.FormMargin = 0;
+			this.ImportWotStatTheme.Image = null;
+			this.ImportWotStatTheme.Location = new System.Drawing.Point(0, 0);
+			this.ImportWotStatTheme.MainArea = mainAreaClass1;
+			this.ImportWotStatTheme.Name = "ImportWotStatTheme";
+			this.ImportWotStatTheme.Resizable = false;
+			this.ImportWotStatTheme.Size = new System.Drawing.Size(479, 225);
+			this.ImportWotStatTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ImportWotStatTheme.SystemExitImage")));
+			this.ImportWotStatTheme.SystemMaximizeImage = null;
+			this.ImportWotStatTheme.SystemMinimizeImage = null;
+			this.ImportWotStatTheme.TabIndex = 5;
+			this.ImportWotStatTheme.Text = "Import Battles From WoT Statistics";
+			this.ImportWotStatTheme.TitleHeight = 26;
+			// 
+			// progressBarImport
+			// 
+			this.progressBarImport.BackColor = System.Drawing.Color.Transparent;
+			this.progressBarImport.Image = null;
+			this.progressBarImport.Location = new System.Drawing.Point(21, 179);
+			this.progressBarImport.Name = "progressBarImport";
+			this.progressBarImport.Size = new System.Drawing.Size(356, 23);
+			this.progressBarImport.TabIndex = 8;
+			this.progressBarImport.Text = "badProgressBar1";
+			this.progressBarImport.Value = 0D;
+			this.progressBarImport.ValueMax = 100D;
+			this.progressBarImport.ValueMin = 0D;
+			this.progressBarImport.Visible = false;
+			// 
+			// btnStartImport
+			// 
+			this.btnStartImport.Image = null;
+			this.btnStartImport.Location = new System.Drawing.Point(383, 179);
+			this.btnStartImport.Name = "btnStartImport";
+			this.btnStartImport.Size = new System.Drawing.Size(75, 23);
+			this.btnStartImport.TabIndex = 7;
+			this.btnStartImport.Text = "Start";
+			this.btnStartImport.Click += new System.EventHandler(this.btnStartImport_Click);
+			// 
+			// btnOpenWotStatDbFile
+			// 
+			this.btnOpenWotStatDbFile.Image = null;
+			this.btnOpenWotStatDbFile.Location = new System.Drawing.Point(368, 129);
+			this.btnOpenWotStatDbFile.Name = "btnOpenWotStatDbFile";
+			this.btnOpenWotStatDbFile.Size = new System.Drawing.Size(75, 23);
+			this.btnOpenWotStatDbFile.TabIndex = 6;
+			this.btnOpenWotStatDbFile.Text = "Select File";
+			this.btnOpenWotStatDbFile.Click += new System.EventHandler(this.btnOpenWotStatDbFile_Click);
+			// 
+			// txtWotStatDb
+			// 
+			this.txtWotStatDb.Image = null;
+			this.txtWotStatDb.Location = new System.Drawing.Point(38, 84);
+			this.txtWotStatDb.Name = "txtWotStatDb";
+			this.txtWotStatDb.PasswordChar = '\0';
+			this.txtWotStatDb.Size = new System.Drawing.Size(405, 39);
+			this.txtWotStatDb.TabIndex = 5;
+			// 
+			// badLabel1
+			// 
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Dimmed = false;
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(38, 64);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(175, 23);
+			this.badLabel1.TabIndex = 4;
+			this.badLabel1.Text = "Wot Statistics Database File:";
+			// 
+			// badGroupBox1
+			// 
+			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox1.Image = null;
+			this.badGroupBox1.Location = new System.Drawing.Point(21, 43);
+			this.badGroupBox1.Name = "badGroupBox1";
+			this.badGroupBox1.Size = new System.Drawing.Size(437, 119);
+			this.badGroupBox1.TabIndex = 3;
+			this.badGroupBox1.Text = "Settings";
+			// 
 			// ImportWotStat
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(479, 214);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.groupBox1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.ClientSize = new System.Drawing.Size(479, 225);
+			this.Controls.Add(this.ImportWotStatTheme);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ImportWotStat";
@@ -136,24 +150,20 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Import Battles from WoT Statistics";
 			this.Load += new System.EventHandler(this.ImportWotStat_Load);
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
+			this.ImportWotStatTheme.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox txtWotStatDb;
-		private System.Windows.Forms.Button btnOpenWotStatDbFile;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Button btnStartImport;
-		private System.Windows.Forms.ProgressBar progressBarImport;
 		private System.Windows.Forms.OpenFileDialog openFileWotStatDbFile;
-		private System.Windows.Forms.Label lblResult;
+		private BadForm ImportWotStatTheme;
+		private BadTextBox txtWotStatDb;
+		private BadLabel badLabel1;
+		private BadGroupBox badGroupBox1;
+		private BadProgressBar progressBarImport;
+		private BadButton btnStartImport;
+		private BadButton btnOpenWotStatDbFile;
 	}
 }

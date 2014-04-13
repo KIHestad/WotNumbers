@@ -19,26 +19,44 @@ namespace WotDBUpdater.Forms.Reports
 			InitializeComponent();
 		}
 
-		private bool init = true;
-
 		private void frmDBTable_Load(object sender, EventArgs e)
 		{
-
-			init = true;
-			ddSelectTable.DataSource = db.ListTables();
-			ddSelectTable.DisplayMember = "TABLE_NAME";
-			ddSelectTable.ValueMember = "TABLE_NAME";
-			init = false;
-		}
-
-		private void ddSelectTable_SelectedValueChanged(object sender, EventArgs e)
-		{
-			if (!init) RefreshDataGrid();
+			dataGridViewShowTable.Top = DBTableTheme.MainArea.Top + 45;
+			dataGridViewShowTable.Left = DBTableTheme.MainArea.Left;
+			ResizeNow();
+			// Style datagrid
+			dataGridViewShowTable.BorderStyle = BorderStyle.None;
+			dataGridViewShowTable.BackgroundColor = ColorTheme.FormBack;
+			dataGridViewShowTable.GridColor = ColorTheme.GridBorders;
+			dataGridViewShowTable.EnableHeadersVisualStyles = false;
+			dataGridViewShowTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+			dataGridViewShowTable.ColumnHeadersHeight = 30;
+			dataGridViewShowTable.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+			dataGridViewShowTable.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
+			dataGridViewShowTable.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dataGridViewShowTable.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dataGridViewShowTable.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
+			dataGridViewShowTable.RowHeadersWidth = 20;
+			dataGridViewShowTable.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+			dataGridViewShowTable.RowHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
+			dataGridViewShowTable.RowHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dataGridViewShowTable.RowHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dataGridViewShowTable.RowHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
+			dataGridViewShowTable.DefaultCellStyle.BackColor = ColorTheme.FormBack;
+			dataGridViewShowTable.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dataGridViewShowTable.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dataGridViewShowTable.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
 
 		private void frmDBTable_SizeChanged(object sender, EventArgs e)
 		{
-			panel2.Height = DBTable.ActiveForm.ClientSize.Height - panel1.Height;
+			ResizeNow();	
+		}
+
+		private void ResizeNow()
+		{
+			dataGridViewShowTable.Width = DBTableTheme.MainArea.Width;
+			dataGridViewShowTable.Height = DBTableTheme.MainArea.Height - 45;
 		}
 
 		private void btnRefresh_Click(object sender, EventArgs e)
@@ -48,22 +66,30 @@ namespace WotDBUpdater.Forms.Reports
 
 		private void RefreshDataGrid()
 		{
-			try
+			string TableName = popupSelectTable.Text.ToString();
+			if (TableName != "")
+				dataGridViewShowTable.DataSource = db.FetchData("SELECT * FROM " + TableName);
+		}
+
+		private void popupSelectTable_Click(object sender, EventArgs e)
+		{
+			string tableList = "";
+			DataTable dt = db.ListTables();
+			foreach (DataRow dr in dt.Rows)
 			{
-				string TableName = ddSelectTable.SelectedValue.ToString();
-				if (TableName == "( Select from list )")
-				{
-					dataGridViewShowTable.DataSource = null;
-				}
-				else
-				{
-					dataGridViewShowTable.DataSource = db.FetchData("SELECT * FROM " + TableName);
-				}
+				tableList += dr["TABLE_NAME"].ToString() + ",";
 			}
-			catch (Exception)
+			if (tableList.Length > 0)
 			{
-				// nothing
+				tableList = tableList.Substring(0, tableList.Length - 1);
+				popupSelectTable.Text =  Code.PopupGrid.Show("Select Table", Code.PopupGrid.PopupGridType.List, tableList);
+				RefreshDataGrid();
 			}
+		}
+
+		private void dataGridViewShowTable_MouseMove(object sender, MouseEventArgs e)
+		{
+			DBTableTheme.Cursor = Cursors.Default;
 		}
 	 
 	}

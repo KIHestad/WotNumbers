@@ -47,6 +47,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.BorderStyle = BorderStyle.None;
 			dataGridMain.BackgroundColor = ColorTheme.FormBack;
 			dataGridMain.GridColor = ColorTheme.GridBorders;
+			dataGridMain.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
 			dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridBorders;
 			dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
@@ -55,6 +56,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
+
 			// Draw form 
 			lblStatus1.Text = "";
 			lblStatus2.Text = "Application init...";

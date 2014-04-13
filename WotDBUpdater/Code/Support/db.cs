@@ -92,23 +92,17 @@ namespace WotDBUpdater.Code
 			DataTable dt = new DataTable();
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
-				string sql = "SELECT '( Select from list )' AS TABLE_NAME UNION SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
+				string sql = "SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
 				dt = FetchData(sql);
 			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 			{
 				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 				con.Open();
-				DataTable Tables = new DataTable();
-				Tables = FetchData("SELECT '( Select from list )' AS TABLE_NAME");
 				DataTable TableList = new DataTable();
 				TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
-				foreach (DataRow r in TableList.Rows)
-				{
-					Tables.Rows.Add(r["TABLE_NAME"]);
-				}
 				con.Clone();
-				dt = Tables;
+				dt = TableList;
 			}
 			return dt;
 		}

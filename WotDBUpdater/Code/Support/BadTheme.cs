@@ -281,7 +281,8 @@ abstract class BadThemeContainerControl : ContainerControl
 	protected Rectangle Header;
 	protected override void OnSizeChanged(EventArgs e)
 	{
-		SetMainAreaSize(); //Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
+		SetMainAreaSize(); 
+		Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
 		graphicObject.Dispose();
 		bitmapObject.Dispose();
 		bitmapObject = new Bitmap(Width, Height);
@@ -706,26 +707,6 @@ abstract class BadThemeControl : Control
 	}
 }
 
-abstract class BadThemeControlTextBox : BadThemeControl
-{
-	private char _PasswordChar;
-	public char PasswordChar
-	{
-		get { return _PasswordChar; }
-		set	{ _PasswordChar = value; }
-	}
-}
-
-abstract class BadThemeControlLabel : BadThemeControl
-{
-	private bool _Dimmed = false;
-	public bool Dimmed
-	{
-		get { return _Dimmed; }
-		set { _Dimmed = value; }
-	}
-}
-
 class BadForm : BadThemeContainerControl
 {
 	public BadForm()
@@ -858,6 +839,59 @@ class BadSeperator : BadThemeControl
 }
 
 
+class BadProgressBar : BadThemeControl
+{
+	private double _ValueMax = 100;
+	public double ValueMax
+	{
+		get { return _ValueMax; }
+		set { _ValueMax = value; }
+	}
+
+	private double _ValueMin = 0;
+	public double ValueMin
+	{
+		get { return _ValueMin; }
+		set { _ValueMin = value; }
+	}
+
+	private double _Value = 0;
+	public double Value
+	{
+		get { return _Value; }
+		set { _Value = value; }
+	}
+	
+	public BadProgressBar()
+	{
+		AllowTransparent();
+		BackColor = Color.Transparent;
+	}
+
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		grapichObject.Clear(BackColor);
+		// Background
+		SolidBrush brushBackColor = new SolidBrush(ColorTheme.FormBackTitle);
+		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		// Inner
+		brushBackColor = new SolidBrush(ColorTheme.FormBack);
+		grapichObject.FillRectangle(brushBackColor, 2, 2, Width - 4 , Height - 4);
+		// Progress
+		Double progress = Value;
+		if (progress > ValueMax) progress = ValueMax;
+		if (progress < ValueMin) progress = ValueMin;
+		progress = (progress / (ValueMax - ValueMin)) * (Width - 8);
+		brushBackColor = new SolidBrush(ColorTheme.FormBorderBlue);
+		grapichObject.FillRectangle(brushBackColor, 4, 4, Convert.ToInt32(progress), Height - 8);
+		// Draw
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
+}
+
+
+
 class BadGroupBox : BadThemeControl
 {
 
@@ -895,8 +929,15 @@ class BadGroupBox : BadThemeControl
 	}
 }
 
-class BadLabel : BadThemeControlLabel
+class BadLabel : BadThemeControl
 {
+	private bool _Dimmed = false;
+	public bool Dimmed
+	{
+		get { return _Dimmed; }
+		set { _Dimmed = value; }
+	}
+	
 	Label label = new Label();
 	public BadLabel()
 	{
@@ -925,8 +966,14 @@ class BadLabel : BadThemeControlLabel
 	}
 }
 
-class BadTextBox : BadThemeControlTextBox
+class BadTextBox : BadThemeControl
 {
+	private char _PasswordChar;
+	public char PasswordChar
+	{
+		get { return _PasswordChar; }
+		set { _PasswordChar = value; }
+	}
 
 	TextBox textBox = new TextBox();
 	public BadTextBox()

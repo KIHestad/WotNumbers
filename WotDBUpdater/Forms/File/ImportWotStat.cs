@@ -50,12 +50,11 @@ namespace WotDBUpdater.Forms.File
 				{
 					rowcount = Convert.ToInt32(reader["rowcount"]);
 				}
-				progressBarImport.Maximum = rowcount;
+				progressBarImport.ValueMax = rowcount;
 				progressBarImport.Value = 0;
 				ImportNow();
 
 				// Done
-				lblResult.Text = "Done";
 				cnn.Close();
 			}
 			else
@@ -88,12 +87,13 @@ namespace WotDBUpdater.Forms.File
 
 			// Write recentBattles to db
 			int i = 0;
+			progressBarImport.Visible = true;
 			while (i < recentBattles.Rows.Count)
 			{
 				progressBarImport.Value++;
 				//lblResult.Text = "Reading id: " + recentBattles.Rows[i]["rbId"].ToString();
-				lblResult.Text = "Reading battle data: " + i.ToString();
 				Application.DoEvents();
+				Refresh();
 				// Get battles first
 				int battlesCount = Convert.ToInt32(recentBattles.Rows[i]["rbBattles"]) / 100;
 				if (battlesCount == 1) // Only read battles from WoT Statistics for "single" battle results and when player tank is found
@@ -250,11 +250,15 @@ namespace WotDBUpdater.Forms.File
 			// Close db connections
 			sqlConn.Close();
 			sqliteConn.Close();
+
+			// Done
+			Code.MsgBox.Show("Imported " + i.ToString() + " battles.","Import finished");
+			this.Close();
 		}
 
 		private void ImportWotStat_Load(object sender, EventArgs e)
 		{
-			lblResult.Text = "";
+			
 		}
 
 
