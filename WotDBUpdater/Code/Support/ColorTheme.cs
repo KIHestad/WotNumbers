@@ -53,5 +53,9 @@ namespace WotDBUpdater.Code
 		public static Color GridSelectedCellColor = Color.FromArgb(255, 52, 52, 52);
 		public static Color GridCellFont = Color.FromArgb(255, 200, 200, 200);
 		
+		// Scrollbar
+		public static Color ScrollbarBack = Color.FromArgb(255, 65, 65, 69);
+		public static Color ScrollbarFront = Color.FromArgb(255, 102, 102, 106);
+
 	}
 }

@@ -1187,12 +1187,19 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
+		private void toolItemTest_ScrollBar_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.Test.ScrollbarTest();
+			frm.ShowDialog();
+		}
+
+		#endregion
+
 		private void SetDefaultCursor(object sender, MouseEventArgs e)
 		{
 			MainTheme.Cursor = Cursors.Default;
 		}
 
-		#endregion
 
 		
 	}

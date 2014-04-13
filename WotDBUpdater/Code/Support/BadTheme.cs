@@ -245,6 +245,7 @@ abstract class BadThemeContainerControl : ContainerControl
 		MainAreaClass calcMainArea = new MainAreaClass();
 		calcMainArea.Top = FormMargin + TitleHeight + 1;
 		calcMainArea.Left = FormMargin + 1 + FormInnerBorder;
+		calcMainArea.Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1;
 		calcMainArea.Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2;
 		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight;
 		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
@@ -498,6 +499,7 @@ abstract class BadThemeContainerControl : ContainerControl
 	{
 		public int Top;
 		public int Left;
+		public int Right;
 		public int Width;
 		public int Height;
 	}
@@ -551,6 +553,55 @@ abstract class BadThemeContainerControl : ContainerControl
 			graphicObject.DrawImage(SystemMinimizeImage, sysImgX, FormMargin + 1);
 		}
 	}
+
+}
+
+class BadForm : BadThemeContainerControl
+{
+	public BadForm()
+	{
+		SetTransparent(Color.Fuchsia); // Transparency color = purple (FF00FF)
+	}
+
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		graphicObject.Clear(Color.Fuchsia);
+		SolidBrush brush;
+		// Draw Main area
+		Rectangle rectangleMain = new Rectangle(FormMargin + 1, TitleHeight + FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, ClientRectangle.Height - TitleHeight - (FormMargin * 2) - 1);
+		brush = new SolidBrush(ColorTheme.FormBack);
+		graphicObject.FillRectangle(brush, rectangleMain);
+		// Footer
+		if (FormFooter)
+		{
+			Rectangle rectangleFooter = new Rectangle(FormMargin + 1, ClientRectangle.Height - FormFooterHeight - FormMargin - FormInnerBorder - 1, ClientRectangle.Width - (FormMargin * 2) - 2, FormFooterHeight);
+			brush = new SolidBrush(ColorTheme.FormBackFooter);
+			graphicObject.FillRectangle(brush, rectangleFooter);
+		}
+		// Add outer border
+		Pen FormBorderPenColor = new Pen(FormBorderColor);
+		DrawBorder(FormBorderPenColor, ClientRectangle, FormMargin); // Outer Border
+		// Add inner border
+		FormBorderPenColor = new Pen(ColorTheme.FormBackTitle);
+		DrawInnerBorder(FormBorderPenColor, ClientRectangle, FormMargin, FormInnerBorder); // Inner Border
+		// Draw title 
+		Rectangle rectangleTitle = new Rectangle(FormMargin + 1, FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, TitleHeight);
+		brush = new SolidBrush(ColorTheme.FormBackTitle);
+		graphicObject.FillRectangle(brush, rectangleTitle);
+		// Draw sys icons
+		AddSysIcons(); // Add Sys Icons in title bar
+		// Add title icon and text
+		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.FormBackTitleFont)); // Add title text
+		DrawIcon(HorizontalAlignment.Left); // Add title icon
+
+
+		// Set Main area values
+		SetMainAreaSize();
+
+		// Draw theme on form
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
 
 }
 
@@ -707,55 +758,6 @@ abstract class BadThemeControl : Control
 	}
 }
 
-class BadForm : BadThemeContainerControl
-{
-	public BadForm()
-	{
-		SetTransparent(Color.Fuchsia); // Transparency color = purple (FF00FF)
-	}
-
-	protected override void OnPaint(PaintEventArgs e)
-	{
-		graphicObject.Clear(Color.Fuchsia);
-		SolidBrush brush;
-		// Draw Main area
-		Rectangle rectangleMain = new Rectangle(FormMargin + 1, TitleHeight + FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, ClientRectangle.Height - TitleHeight - (FormMargin * 2) - 1);
-		brush = new SolidBrush(ColorTheme.FormBack);
-		graphicObject.FillRectangle(brush, rectangleMain);
-		// Add outer border
-		Pen FormBorderPenColor = new Pen(FormBorderColor);
-		DrawBorder(FormBorderPenColor, ClientRectangle, FormMargin); // Outer Border
-		// Add inner border
-		FormBorderPenColor = new Pen(ColorTheme.FormBackTitle);
-		DrawInnerBorder(FormBorderPenColor, ClientRectangle, FormMargin, FormInnerBorder); // Inner Border
-		// Draw title 
-		Rectangle rectangleTitle = new Rectangle(FormMargin + 1, FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, TitleHeight);
-		brush = new SolidBrush(ColorTheme.FormBackTitle);
-		graphicObject.FillRectangle(brush, rectangleTitle);
-		// Draw sys icons
-		AddSysIcons(); // Add Sys Icons in title bar
-		// Footer
-		if (FormFooter)
-		{
-			Rectangle rectangleFooter = new Rectangle(FormMargin + 1, ClientRectangle.Height - FormFooterHeight - FormMargin - FormInnerBorder - 1 , ClientRectangle.Width - (FormMargin * 2) - 2, FormFooterHeight);
-			brush = new SolidBrush(ColorTheme.FormBackFooter);
-			graphicObject.FillRectangle(brush, rectangleFooter);
-		}
-		// Add title icon and text
-		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.FormBackTitleFont)); // Add title text
-		DrawIcon(HorizontalAlignment.Left); // Add title icon
-
-		
-		// Set Main area values
-		SetMainAreaSize();
-		
-		// Draw theme on form
-		e.Graphics.DrawImage(bitmapObject, 0, 0);
-	}
-
-
-}
-
 class BadButton : BadThemeControl
 {
 
@@ -845,21 +847,21 @@ class BadProgressBar : BadThemeControl
 	public double ValueMax
 	{
 		get { return _ValueMax; }
-		set { _ValueMax = value; }
+		set { _ValueMax = value; Invalidate(); }
 	}
 
 	private double _ValueMin = 0;
 	public double ValueMin
 	{
 		get { return _ValueMin; }
-		set { _ValueMin = value; }
+		set { _ValueMin = value; Invalidate(); }
 	}
 
 	private double _Value = 0;
 	public double Value
 	{
 		get { return _Value; }
-		set { _Value = value; }
+		set { _Value = value; Invalidate(); }
 	}
 	
 	public BadProgressBar()
@@ -1061,3 +1063,149 @@ class BadPopupBox : BadThemeControl
 
 }
 
+class BadScrollBar : BadThemeControl
+{
+	
+	private int _ScrollMarginPixels = 4;
+	public int ScrollMarginPixels
+	{
+		get { return _ScrollMarginPixels; }
+		set { _ScrollMarginPixels = value; Invalidate(); }
+	}
+
+	private int _ScrollPosition = 0;
+	public int ScrollPosition
+	{
+		get { return _ScrollPosition; }
+		set { _ScrollPosition = value; Invalidate(); }
+	}
+
+	private int _ScrollElementsTotals = 100;
+	public int ScrollElementsTotals
+	{
+		get { return _ScrollElementsTotals; }
+		set { _ScrollElementsTotals = value; Invalidate(); }
+	}
+
+	private int _ScrollElementsVisible = 20;
+	public int ScrollElementsVisible
+	{
+		get { return _ScrollElementsVisible; }
+		set { _ScrollElementsVisible = value; Invalidate(); }
+	}
+
+	private ScrollOrientation _ScrollOrientation = ScrollOrientation.VerticalScroll;
+	public ScrollOrientation ScrollOrientation
+	{
+		get { return _ScrollOrientation; }
+		set { _ScrollOrientation = value; Invalidate(); }
+	}
+
+
+	public BadScrollBar()
+	{
+		AllowTransparent();
+		BackColor = Color.Transparent;
+	}
+
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		grapichObject.Clear(BackColor);
+		// If no elements og fewer elements than visible area, do not whow scrollbar
+		if (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible)
+		{
+			Visible = true;
+			// Background
+			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
+			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+			// Calc Scroll Handle
+			DrawScrollhandle();
+			// Draw
+			e.Graphics.DrawImage(bitmapObject, 0, 0);
+		}
+		else
+		{
+			Visible = false;
+		}
+	}
+
+	int scrollPositionPixel = 0;
+	int scrollAreaPixels = 0;
+	int scrollMaxSizePixels = 100;
+	int scrollWidthPixels = 100;
+	int scrollSizePixels; // Size of scroll handle
+	private void DrawScrollhandle()
+	{
+		if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+		{
+			// Vertical Scrollbar
+			scrollMaxSizePixels = Height;
+			scrollWidthPixels = Width - (ScrollMarginPixels * 2);
+		}
+		else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+		{
+			scrollMaxSizePixels = Width;
+			scrollWidthPixels = Height - (ScrollMarginPixels * 2);
+		}
+		scrollAreaPixels = scrollMaxSizePixels - (ScrollMarginPixels * 2); // Total scrolling area 
+		scrollSizePixels = scrollAreaPixels * ScrollElementsVisible / ScrollElementsTotals; // Size relative to elements visible
+		if (scrollSizePixels < 20) scrollSizePixels = 20; // Minimum size
+		scrollAreaPixels = scrollMaxSizePixels - (ScrollMarginPixels * 2) - scrollSizePixels; // Actual scrolling area
+		double scPos = Convert.ToDouble(ScrollPosition);
+		double scElementsTot = Convert.ToDouble(ScrollElementsTotals);
+		if (scPos > scElementsTot) scPos = scElementsTot;
+		if (scPos < 0) scPos = 0;
+		// Calc Position
+		scrollPositionPixel = Convert.ToInt32(ScrollMarginPixels + (scrollAreaPixels * scPos / scElementsTot));
+		// Draw Scroll handle
+		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarFront);
+		if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+			grapichObject.FillRectangle(brushBackColor, ScrollMarginPixels, scrollPositionPixel, scrollWidthPixels, scrollSizePixels);
+		else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+			grapichObject.FillRectangle(brushBackColor, scrollPositionPixel, ScrollMarginPixels, scrollSizePixels, scrollWidthPixels);
+	}
+
+	bool move = false;
+	Point startPos;
+	protected override void OnMouseDown(MouseEventArgs e)
+	{
+		if (!(e.Button == MouseButtons.Left)) return;
+		move = true;
+		startPos = Cursor.Position;
+		base.OnMouseDown(e);
+	}
+
+	protected override void OnMouseMove(MouseEventArgs e)
+	{
+		if (move)
+		{
+			Point currentPos = Cursor.Position;
+			int movePixels = 0;
+			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+				movePixels = currentPos.Y - startPos.Y;
+			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+				movePixels = currentPos.X - startPos.X;
+			scrollPositionPixel = +movePixels;
+			if (scrollPositionPixel > scrollAreaPixels) scrollPositionPixel = scrollAreaPixels;
+			if (scrollPositionPixel < 0) scrollPositionPixel = 0;
+			// Background
+			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
+			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+			// Draw Scroll handle
+			brushBackColor = new SolidBrush(ColorTheme.ScrollbarFront);
+			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+				grapichObject.FillRectangle(brushBackColor, ScrollMarginPixels, scrollPositionPixel, scrollWidthPixels, scrollSizePixels);
+			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+				grapichObject.FillRectangle(brushBackColor, scrollPositionPixel, ScrollMarginPixels, scrollSizePixels, scrollWidthPixels);
+		
+		}
+		base.OnMouseMove(e);
+	}
+
+	protected override void OnMouseUp(MouseEventArgs e)
+	{
+		move = false;
+		base.OnMouseUp(e);
+	}
+
+}
