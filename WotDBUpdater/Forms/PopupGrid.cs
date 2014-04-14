@@ -19,6 +19,7 @@ namespace WotDBUpdater.Forms
 			InitializeComponent();
 			PopupGridTheme.Text = title;
 			dataGridPopup.DataSource = dt;
+			scrollGrid.ScrollElementsTotals = dt.Rows.Count;
 		}
 
 		
@@ -41,6 +42,8 @@ namespace WotDBUpdater.Forms
 				dataGridPopup.DefaultCellStyle.SelectionBackColor = ColorTheme.FormBack;
 				dataGridPopup.Top = PopupGridTheme.MainArea.Top;
 				dataGridPopup.Left = PopupGridTheme.MainArea.Left;
+				scrollGrid.Top = PopupGridTheme.MainArea.Top;
+				scrollGrid.ScrollNecessary = (scrollGrid.ScrollElementsTotals > scrollGrid.ScrollElementsVisible);
 				ResizeNow();
 			}
 			else
@@ -51,14 +54,30 @@ namespace WotDBUpdater.Forms
 
 		private void ResizeNow()
 		{
+			scrollGrid.ScrollElementsVisible = dataGridPopup.DisplayedRowCount(false);
 			dataGridPopup.Height = PopupGridTheme.MainArea.Height;
-			dataGridPopup.Width = PopupGridTheme.MainArea.Width;
+			scrollGrid.Left = PopupGridTheme.MainArea.Right - scrollGrid.Width;
+			scrollGrid.Height = PopupGridTheme.MainArea.Height;
+			if (scrollGrid.ScrollNecessary)
+			{
+				dataGridPopup.Width = PopupGridTheme.MainArea.Width - scrollGrid.Width;	
+			}
+			else
+			{
+				dataGridPopup.Width = PopupGridTheme.MainArea.Width - 1; // Have to show 1 pixel of scrollbar so it can be redrawn
+			}
 			dataGridPopup.Columns[0].Width = dataGridPopup.Width - 2;
+			
+		}
+
+		private void ScrollGrid()
+		{
+			dataGridPopup.FirstDisplayedScrollingRowIndex = scrollGrid.ScrollPosition;
 		}
 
 		private void dataGridPopup_MouseMove(object sender, MouseEventArgs e)
 		{
-			PopupGridTheme.Cursor = Cursors.Default;
+			
 		}
 
 		private void dataGridPopup_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
@@ -77,6 +96,23 @@ namespace WotDBUpdater.Forms
 		{
 			Code.PopupGrid.SelectedValue = dataGridPopup.Rows[e.RowIndex].Cells[0].Value.ToString();
 			this.Close();
+		}
+
+		private void scrollGrid_MouseDown(object sender, MouseEventArgs e)
+		{
+			ScrollGrid();
+		}
+
+		private void scrollGrid_MouseMove(object sender, MouseEventArgs e)
+		{
+			ScrollGrid();
+		}
+
+		private void PopupGrid_Shown(object sender, EventArgs e)
+		{
+			scrollGrid.ScrollElementsVisible = dataGridPopup.DisplayedRowCount(false);
+			scrollGrid.ScrollNecessary = (scrollGrid.ScrollElementsTotals > scrollGrid.ScrollElementsVisible);
+			ResizeNow();
 		}
 	}
 }

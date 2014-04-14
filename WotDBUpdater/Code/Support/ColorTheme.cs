@@ -56,6 +56,6 @@ namespace WotDBUpdater.Code
 		// Scrollbar
 		public static Color ScrollbarBack = Color.FromArgb(255, 65, 65, 69);
 		public static Color ScrollbarFront = Color.FromArgb(255, 102, 102, 106);
-
+		public static Color ScrollbarArrow = Color.FromArgb(255, 152, 152, 156);
 	}
 }

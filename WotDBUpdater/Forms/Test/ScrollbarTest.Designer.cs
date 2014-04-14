@@ -40,6 +40,7 @@
 			// 
 			// ScrollbarTestTheme
 			// 
+			this.ScrollbarTestTheme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.ScrollbarTestTheme.Controls.Add(this.txtX);
 			this.ScrollbarTestTheme.Controls.Add(this.txtY);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar2);
@@ -91,10 +92,9 @@
 			this.badScrollBar2.Name = "badScrollBar2";
 			this.badScrollBar2.ScrollElementsTotals = 100;
 			this.badScrollBar2.ScrollElementsVisible = 20;
-			this.badScrollBar2.ScrollMarginPixels = 4;
 			this.badScrollBar2.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
 			this.badScrollBar2.ScrollPosition = 0;
-			this.badScrollBar2.Size = new System.Drawing.Size(233, 20);
+			this.badScrollBar2.Size = new System.Drawing.Size(233, 17);
 			this.badScrollBar2.TabIndex = 1;
 			this.badScrollBar2.Text = "badScrollBar2";
 			this.badScrollBar2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.badScrollBar2_MouseMove);
@@ -107,10 +107,9 @@
 			this.badScrollBar1.Name = "badScrollBar1";
 			this.badScrollBar1.ScrollElementsTotals = 100;
 			this.badScrollBar1.ScrollElementsVisible = 20;
-			this.badScrollBar1.ScrollMarginPixels = 4;
 			this.badScrollBar1.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.badScrollBar1.ScrollPosition = 0;
-			this.badScrollBar1.Size = new System.Drawing.Size(18, 188);
+			this.badScrollBar1.Size = new System.Drawing.Size(17, 188);
 			this.badScrollBar1.TabIndex = 0;
 			this.badScrollBar1.Text = "badScrollBar1";
 			this.badScrollBar1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.badScrollBar1_MouseMove);
@@ -119,6 +118,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.ClientSize = new System.Drawing.Size(284, 262);
 			this.Controls.Add(this.ScrollbarTestTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

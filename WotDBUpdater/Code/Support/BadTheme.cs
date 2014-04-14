@@ -270,6 +270,7 @@ abstract class BadThemeContainerControl : ContainerControl
 			SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
 			PaintSysIcons();
 		}
+		Cursor = Cursors.Default;
 		base.OnMouseLeave(e);
 	}
 
@@ -1042,7 +1043,7 @@ class BadPopupBox : BadThemeControl
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
-		SolidBrush brushBackColor; //= new SolidBrush(); //ColorTheme.BackControl);
+		SolidBrush brushBackColor; 
 		if (MouseState == State.MouseDown)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
 		else if (MouseState == State.MouseOver)
@@ -1072,12 +1073,11 @@ class BadPopupBox : BadThemeControl
 
 class BadScrollBar : BadThemeControl
 {
-	
-	private int _ScrollMarginPixels = 4;
-	public int ScrollMarginPixels
+	private bool _ScrollNecessary = true;
+	public bool ScrollNecessary
 	{
-		get { return _ScrollMarginPixels; }
-		set { _ScrollMarginPixels = value; Invalidate(); }
+		get { return _ScrollNecessary; }
+		set { _ScrollNecessary = value; }
 	}
 
 	private int _ScrollPosition = 0;
@@ -1108,7 +1108,6 @@ class BadScrollBar : BadThemeControl
 		set { _ScrollOrientation = value; Invalidate(); }
 	}
 
-
 	public BadScrollBar()
 	{
 		AllowTransparent();
@@ -1121,72 +1120,95 @@ class BadScrollBar : BadThemeControl
 		// If no elements og fewer elements than visible area, do not whow scrollbar
 		if (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible)
 		{
-			Visible = true;
+			ScrollNecessary = true;
 			// Background
 			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
 			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
 			// Calc Scroll Handle
 			DrawScrollhandle();
-			// Draw
-			e.Graphics.DrawImage(bitmapObject, 0, 0);
+			// Arrows
+			Pen penArrow = new Pen(ColorTheme.ScrollbarArrow);
+			brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
+			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+			{
+				grapichObject.FillRectangle(brushBackColor, 8, 6, 1, 1); // Top arrow first pixel
+				int bottomArrowY = scrollArrowsArea + scrollAreaPixels + scrollHandleSizePixels + 10;
+				grapichObject.FillRectangle(brushBackColor, 8, bottomArrowY, 1, 1); // Bottom Arrow last pixel
+				for (int i = 1; i <= 4; i++)
+				{
+					grapichObject.DrawLine(penArrow, 8 - i, 6 + i, 8 + i, 6 + i); // Top arrow
+					grapichObject.DrawLine(penArrow, 8 - i, bottomArrowY - i, 8 + i, bottomArrowY - i); // Bottom arrow
+				}
+			}
+			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+			{
+				grapichObject.FillRectangle(brushBackColor, 6, 8, 1, 1); // Left arrow first pixel
+				int rightArrowX = scrollArrowsArea + scrollAreaPixels + scrollHandleSizePixels + 10;
+				grapichObject.FillRectangle(brushBackColor, rightArrowX, 8, 1, 1); // Right Arrow last pixel
+				for (int i = 1; i <= 4; i++)
+				{
+					grapichObject.DrawLine(penArrow, 6 + i, 8 - i, 6 + i, 8 + i); // Left arrow
+					grapichObject.DrawLine(penArrow, rightArrowX - i, 8 - i, rightArrowX - i, 8 + i); // Right Arrow
+				}
+			}
 		}
 		else
 		{
-			Visible = false;
+			ScrollNecessary = false;
 		}
+		// Draw 
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
+	protected int scrollMarginPixels = 4;
+	protected int scrollArrowsArea = 17;
 	protected int scrollPositionPixel;
 	protected int scrollAreaPixels = 0;
 	protected int scrollMaxSizePixels = 100;
 	protected int scrollWidthPixels = 100;
-	protected int scrollSizePixels; // Size of scroll handle
+	protected int scrollHandleSizePixels; // Size of scroll handle
 	private void DrawScrollhandle()
 	{
 		if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
 		{
 			// Vertical Scrollbar
 			scrollMaxSizePixels = Height;
-			scrollWidthPixels = Width - (ScrollMarginPixels * 2);
+			scrollWidthPixels = Width - (scrollMarginPixels * 2);
 		}
 		else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
 		{
 			scrollMaxSizePixels = Width;
-			scrollWidthPixels = Height - (ScrollMarginPixels * 2);
+			scrollWidthPixels = Height - (scrollMarginPixels * 2);
 		}
 		if (!move) // Position scrollbar from property
 		{
-			scrollAreaPixels = scrollMaxSizePixels - (ScrollMarginPixels * 2); // Total scrolling area 
-			scrollSizePixels = scrollAreaPixels * ScrollElementsVisible / ScrollElementsTotals; // Size relative to elements visible
-			if (scrollSizePixels < 20) scrollSizePixels = 20; // Minimum size
-			scrollAreaPixels = scrollMaxSizePixels - (ScrollMarginPixels * 2) - scrollSizePixels; // Actual scrolling area
+			scrollAreaPixels = scrollMaxSizePixels - (scrollArrowsArea * 2); // Total scrolling area 
+			scrollHandleSizePixels = scrollAreaPixels * ScrollElementsVisible / ScrollElementsTotals; // Size relative to elements visible
+			if (scrollHandleSizePixels < 20) scrollHandleSizePixels = 20; // Minimum size
+			scrollAreaPixels = scrollMaxSizePixels - (scrollArrowsArea * 2) - scrollHandleSizePixels; // Actual scrolling area
 			double scPos = Convert.ToDouble(ScrollPosition);
-			double scElementsTot = Convert.ToDouble(ScrollElementsTotals);
+			double scElementsTot = Convert.ToDouble(ScrollElementsTotals - ScrollElementsVisible);
 			if (scPos > scElementsTot) scPos = scElementsTot;
 			if (scPos < 0) scPos = 0;
 			// Calc Position
-			scrollPositionPixel = Convert.ToInt32(ScrollMarginPixels + (scrollAreaPixels * scPos / scElementsTot));
+			scrollPositionPixel = Convert.ToInt32(scrollArrowsArea + (scrollAreaPixels * scPos / scElementsTot));
 			// Draw scroll handle
 			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarFront);
 			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
-				grapichObject.FillRectangle(brushBackColor, ScrollMarginPixels, scrollPositionPixel, scrollWidthPixels, scrollSizePixels);
+				grapichObject.FillRectangle(brushBackColor, scrollMarginPixels, scrollPositionPixel, scrollWidthPixels, scrollHandleSizePixels);
 			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
-				grapichObject.FillRectangle(brushBackColor, scrollPositionPixel, ScrollMarginPixels, scrollSizePixels, scrollWidthPixels);
+				grapichObject.FillRectangle(brushBackColor, scrollPositionPixel, scrollMarginPixels, scrollHandleSizePixels, scrollWidthPixels);
 		}
 		else // Position scrollbar from mouse move
 		{
 			// Draw scroll handle
 			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarFront);
 			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
-				grapichObject.FillRectangle(brushBackColor, ScrollMarginPixels, NewScrollPositionPixel + ScrollMarginPixels, scrollWidthPixels, scrollSizePixels);
+				grapichObject.FillRectangle(brushBackColor, scrollMarginPixels, NewScrollPositionPixel , scrollWidthPixels, scrollHandleSizePixels);
 			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
-				grapichObject.FillRectangle(brushBackColor, NewScrollPositionPixel + ScrollMarginPixels, ScrollMarginPixels, scrollSizePixels, scrollWidthPixels);
-			ScrollPosition = ScrollElementsTotals * NewScrollPositionPixel / scrollAreaPixels;
+				grapichObject.FillRectangle(brushBackColor, NewScrollPositionPixel , scrollMarginPixels, scrollHandleSizePixels, scrollWidthPixels);
+			ScrollPosition = (ScrollElementsTotals - ScrollElementsVisible) * (NewScrollPositionPixel - scrollArrowsArea) / scrollAreaPixels;
 		}
-		Debug.WriteLine(scrollPositionPixel.ToString());
-		// Draw Scroll handle
-		
-		Debug.WriteLine(NewScrollPositionPixel.ToString());
 	}
 
 	bool move = false;
@@ -1198,28 +1220,66 @@ class BadScrollBar : BadThemeControl
 	protected override void OnMouseDown(MouseEventArgs e)
 	{
 		if (!(e.Button == MouseButtons.Left)) return;
-		move = true;
-		movePixels = 0;
+		startPos = PointToClient(MousePosition);
 		oldScrollPositionPixel = scrollPositionPixel;
-		startPos = Cursor.Position;
-		currentPos = Cursor.Position;
+		movePixels = 0;
+		int cursorPosition = 0;
+		// Check click area
+		if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+		{
+			cursorPosition = startPos.Y;
+		}
+		else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+		{
+			cursorPosition = startPos.X;
+		}
+		// Clicked above handle
+		if (cursorPosition < scrollArrowsArea)
+		{
+			// one element up
+			ScrollPosition -= 1;
+			if (ScrollPosition < 0) ScrollPosition = 0;
+			PaintControl();
+		}
+		else	if (cursorPosition < oldScrollPositionPixel)
+		{
+			// one page up
+			ScrollPosition -= (ScrollElementsVisible - 1);
+			if (ScrollPosition < 0) ScrollPosition = 0;
+			PaintControl();
+		}
+		else if (cursorPosition > scrollAreaPixels + scrollHandleSizePixels + scrollArrowsArea)
+		{
+			// one element down
+			ScrollPosition += 1;
+			if (ScrollPosition > ScrollElementsTotals - ScrollElementsVisible) ScrollPosition = ScrollElementsTotals - ScrollElementsVisible;
+			PaintControl();
+		}
+		else if (cursorPosition > oldScrollPositionPixel + scrollHandleSizePixels)
+		{
+			// one page down
+			ScrollPosition += (ScrollElementsVisible - 1);
+			if (ScrollPosition > ScrollElementsTotals - ScrollElementsVisible) ScrollPosition = ScrollElementsTotals - ScrollElementsVisible;
+			PaintControl();
+		}
+		else
+			move = true;
 		//base.OnMouseDown(e);
-		Debug.WriteLine("mouse down");
+		
 	}
 
 	protected override void OnMouseMove(MouseEventArgs e)
 	{
 		if (move)
 		{
-			currentPos = Cursor.Position;
+			currentPos = PointToClient(MousePosition);
 			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
 				movePixels = currentPos.Y - startPos.Y;
 			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
 				movePixels = currentPos.X - startPos.X;
 			NewScrollPositionPixel = oldScrollPositionPixel + movePixels ;
-			if (NewScrollPositionPixel > scrollAreaPixels) NewScrollPositionPixel = scrollAreaPixels;
-			if (NewScrollPositionPixel < 0) NewScrollPositionPixel = 0;
-			Debug.WriteLine("mouse move");
+			if (NewScrollPositionPixel > scrollAreaPixels + scrollArrowsArea) NewScrollPositionPixel = scrollAreaPixels + scrollArrowsArea;
+			if (NewScrollPositionPixel < scrollArrowsArea) NewScrollPositionPixel = scrollArrowsArea;
 			PaintControl();
 			
 		}
@@ -1229,7 +1289,6 @@ class BadScrollBar : BadThemeControl
 	protected override void OnMouseUp(MouseEventArgs e)
 	{
 		move = false;
-		Debug.WriteLine("mouse up");
 		base.OnMouseUp(e);
 		PaintControl();
 	}
@@ -1237,8 +1296,13 @@ class BadScrollBar : BadThemeControl
 	protected override void OnMouseLeave(EventArgs e)
 	{
 		move = false;
-		Debug.WriteLine("mouse leave");
 		base.OnMouseLeave(e);
 		PaintControl();
+	}
+
+	protected override void OnMouseHover(EventArgs e)
+	{
+		Cursor = Cursors.Default;
+		base.OnMouseHover(e);
 	}
 }
