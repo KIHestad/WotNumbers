@@ -31,17 +31,13 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScrollbarTest));
 			this.ScrollbarTestTheme = new BadForm();
-			this.badScrollBar4 = new BadScrollBar();
-			this.badScrollBar3 = new BadScrollBar();
-			this.badScrollBar2 = new BadScrollBar();
 			this.badScrollBar1 = new BadScrollBar();
+			this.badScrollBar2 = new BadScrollBar();
 			this.ScrollbarTestTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ScrollbarTestTheme
 			// 
-			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar4);
-			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar3);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar2);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar1);
 			this.ScrollbarTestTheme.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -63,65 +59,35 @@
 			this.ScrollbarTestTheme.Text = "Scrollbar Test";
 			this.ScrollbarTestTheme.TitleHeight = 26;
 			// 
-			// badScrollBar4
-			// 
-			this.badScrollBar4.BackColor = System.Drawing.Color.Transparent;
-			this.badScrollBar4.Image = null;
-			this.badScrollBar4.Location = new System.Drawing.Point(26, 215);
-			this.badScrollBar4.Name = "badScrollBar4";
-			this.badScrollBar4.ScrollElementsTotals = 100;
-			this.badScrollBar4.ScrollElementsVisible = 20;
-			this.badScrollBar4.ScrollMarginPixels = 4;
-			this.badScrollBar4.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
-			this.badScrollBar4.ScrollPosition = 90;
-			this.badScrollBar4.Size = new System.Drawing.Size(223, 21);
-			this.badScrollBar4.TabIndex = 3;
-			this.badScrollBar4.Text = "badScrollBar4";
-			// 
-			// badScrollBar3
-			// 
-			this.badScrollBar3.BackColor = System.Drawing.Color.Transparent;
-			this.badScrollBar3.Image = null;
-			this.badScrollBar3.Location = new System.Drawing.Point(13, 211);
-			this.badScrollBar3.Name = "badScrollBar3";
-			this.badScrollBar3.ScrollElementsTotals = 0;
-			this.badScrollBar3.ScrollElementsVisible = 0;
-			this.badScrollBar3.ScrollMarginPixels = 4;
-			this.badScrollBar3.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.badScrollBar3.ScrollPosition = 0;
-			this.badScrollBar3.Size = new System.Drawing.Size(75, 23);
-			this.badScrollBar3.TabIndex = 2;
-			this.badScrollBar3.Text = "badScrollBar3";
-			// 
-			// badScrollBar2
-			// 
-			this.badScrollBar2.BackColor = System.Drawing.Color.Transparent;
-			this.badScrollBar2.Image = null;
-			this.badScrollBar2.Location = new System.Drawing.Point(32, 203);
-			this.badScrollBar2.Name = "badScrollBar2";
-			this.badScrollBar2.ScrollElementsTotals = 0;
-			this.badScrollBar2.ScrollElementsVisible = 0;
-			this.badScrollBar2.ScrollMarginPixels = 4;
-			this.badScrollBar2.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.badScrollBar2.ScrollPosition = 0;
-			this.badScrollBar2.Size = new System.Drawing.Size(217, 23);
-			this.badScrollBar2.TabIndex = 1;
-			this.badScrollBar2.Text = "badScrollBar2";
-			// 
 			// badScrollBar1
 			// 
 			this.badScrollBar1.BackColor = System.Drawing.Color.Transparent;
 			this.badScrollBar1.Image = null;
-			this.badScrollBar1.Location = new System.Drawing.Point(231, 39);
+			this.badScrollBar1.Location = new System.Drawing.Point(254, 32);
 			this.badScrollBar1.Name = "badScrollBar1";
 			this.badScrollBar1.ScrollElementsTotals = 100;
 			this.badScrollBar1.ScrollElementsVisible = 20;
 			this.badScrollBar1.ScrollMarginPixels = 4;
 			this.badScrollBar1.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.badScrollBar1.ScrollPosition = 0;
-			this.badScrollBar1.Size = new System.Drawing.Size(18, 139);
+			this.badScrollBar1.Size = new System.Drawing.Size(18, 188);
 			this.badScrollBar1.TabIndex = 0;
 			this.badScrollBar1.Text = "badScrollBar1";
+			// 
+			// badScrollBar2
+			// 
+			this.badScrollBar2.BackColor = System.Drawing.Color.Transparent;
+			this.badScrollBar2.Image = null;
+			this.badScrollBar2.Location = new System.Drawing.Point(13, 230);
+			this.badScrollBar2.Name = "badScrollBar2";
+			this.badScrollBar2.ScrollElementsTotals = 100;
+			this.badScrollBar2.ScrollElementsVisible = 20;
+			this.badScrollBar2.ScrollMarginPixels = 4;
+			this.badScrollBar2.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
+			this.badScrollBar2.ScrollPosition = 0;
+			this.badScrollBar2.Size = new System.Drawing.Size(233, 20);
+			this.badScrollBar2.TabIndex = 1;
+			this.badScrollBar2.Text = "badScrollBar2";
 			// 
 			// ScrollbarTest
 			// 
@@ -144,8 +110,6 @@
 
 		private BadForm ScrollbarTestTheme;
 		private BadScrollBar badScrollBar1;
-		private BadScrollBar badScrollBar3;
 		private BadScrollBar badScrollBar2;
-		private BadScrollBar badScrollBar4;
 	}
 }
