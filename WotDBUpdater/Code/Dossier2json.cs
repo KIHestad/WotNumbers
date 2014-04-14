@@ -22,12 +22,20 @@ namespace WotDBUpdater.Code
 			bool run = (Config.Settings.run == 1);
 			if (run)
 			{
-				logtext = "Dossier file listener started";
-				dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
-				dossierFileWatcher.Filter = "*.dat";
-				dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
-				dossierFileWatcher.Changed += new FileSystemEventHandler(DossierFileChanged);
-				dossierFileWatcher.EnableRaisingEvents = true;
+				try
+				{
+					logtext = "Dossier file listener started";
+					dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
+					dossierFileWatcher.Filter = "*.dat";
+					dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+					dossierFileWatcher.Changed += new FileSystemEventHandler(DossierFileChanged);
+					dossierFileWatcher.EnableRaisingEvents = true;
+				}
+				catch (Exception)
+				{
+					Code.MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path");
+					run = false;
+				}
 			}
 			dossierFileWatcher.EnableRaisingEvents = run;
 			Log.LogToFile(logtext,true);
