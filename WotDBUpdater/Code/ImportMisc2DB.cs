@@ -58,7 +58,7 @@ namespace WotDBUpdater.Code
 				JArray items = (JArray)root["items"];
 				JObject item;
 				JToken jtoken;
-
+				bool ok = true;
 				for (int i = 0; i < items.Count; i++) //loop through rows
 				{
 					item = (JObject)items[i];
@@ -86,21 +86,28 @@ namespace WotDBUpdater.Code
 						}
 					}
 
+					string sql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, '@name', @tier, @premium)";
 					if (!tankExists) // Only run if Tank does not exists in table
 					{
-						string sql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, '@name', @tier, @premium)";
 						sql = sql.Replace("@id", jsonCompDescr.ToString());
 						sql = sql.Replace("@tankTypeId", jsonType.ToString());
 						sql = sql.Replace("@countryid", jsonCountryid.ToString());
 						sql = sql.Replace("@name", jsonTitle.ToString());
 						sql = sql.Replace("@tier", jsonTier.ToString());
 						sql = sql.Replace("@premium", jsonPremium.ToString());
-						db.ExecuteNonQuery(sql);
+						ok = db.ExecuteNonQuery(sql);
 						log.Add("  Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")");
 					}
 					else
 					{
 						log.Add("  Check completed, tank exsits: " + jsonTitle + "(" + jsonCompDescr + ")");
+					}
+					if (!ok)
+					{
+						log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
+						log.Add("ERROR - SQL:");
+						log.Add(sql);
+						return log;
 					}
 				}
 				log.Add("Import complete! (" + DateTime.Now.ToString() + ")");

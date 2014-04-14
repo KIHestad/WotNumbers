@@ -59,7 +59,7 @@ namespace WotDBUpdater.Code
 			{
 				if (SelectedDbType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+					SqlConnection con = new SqlConnection(Config.DatabaseConnection("", "", "", "", "", 10, true, SelectedDbType));
 					con.Open();
 					foreach (string s in sqlList)
 					{
@@ -71,7 +71,7 @@ namespace WotDBUpdater.Code
 				}
 				else if (SelectedDbType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection("", "", "", "", "", 10, true, SelectedDbType));
 					con.Open();
 					foreach (string s in sqlList)
 					{

@@ -114,13 +114,8 @@ namespace WotDBUpdater.Code
 				// Execute delete and insert statements
 				try
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					SqlCommand delete = new SqlCommand("delete from modTurret", con);
-					SqlCommand insert = new SqlCommand(sql, con);
-					delete.ExecuteNonQuery();
-					insert.ExecuteNonQuery();
-					con.Close();
+					db.ExecuteNonQuery("delete from modTurret");
+					db.ExecuteNonQuery(sql);
 				}
 				catch (Exception ex)
 				{
@@ -210,16 +205,8 @@ namespace WotDBUpdater.Code
 				{
 					Stopwatch sw = new Stopwatch();
 					sw.Start();
-
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					SqlCommand delete = new SqlCommand("delete from modTurretGun; delete from modTankGun; delete from modGun", con);
-					string inserts = gunSql + turretSql + tankSql;
-					SqlCommand insert = new SqlCommand(inserts, con);
-					delete.ExecuteNonQuery();
-					insert.ExecuteNonQuery();
-					con.Close();
-
+					db.ExecuteNonQuery("delete from modTurretGun; delete from modTankGun; delete from modGun;");
+					db.ExecuteNonQuery(gunSql + turretSql + tankSql);
 					sw.Stop();
 					TimeSpan ts = sw.Elapsed;
 					string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
@@ -286,16 +273,8 @@ namespace WotDBUpdater.Code
 				{
 					Stopwatch sw = new Stopwatch();
 					sw.Start();
-
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					SqlCommand delete = new SqlCommand("delete from modTankRadio; delete from modRadio;", con);
-					string inserts = radioSql + tankSql;
-					SqlCommand insert = new SqlCommand(inserts, con);
-					delete.ExecuteNonQuery();
-					insert.ExecuteNonQuery();
-					con.Close();
-
+					db.ExecuteNonQuery("delete from modTankRadio; delete from modRadio;");
+					db.ExecuteNonQuery(radioSql + tankSql);
 					sw.Stop();
 					TimeSpan ts = sw.Elapsed;
 					string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
@@ -326,8 +305,6 @@ namespace WotDBUpdater.Code
 				int achCount = (int)((JProperty)rootToken).Value;
 				rootToken = rootToken.Next;
 				JToken achList = rootToken.Children().First();
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
 				foreach (JProperty ach in achList)
 				{
 					JToken medalToken = ach.First();
@@ -339,58 +316,56 @@ namespace WotDBUpdater.Code
 									"values (@name, @section, @options, @section_order, @image, @name_i18n, @type , @ordernum, @description, " +
 									"  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
 						// Get data from json token and insert to query
-						SqlCommand cmd = new SqlCommand(sql, con);
 						// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
-						cmd.Parameters.AddWithValue("@name", medalToken["name"].ToString());
-						cmd.Parameters.AddWithValue("@section", medalToken["section"].ToString());
-						cmd.Parameters.AddWithValue("@section_order", medalToken["section_order"].ToString());
-						cmd.Parameters.AddWithValue("@type", medalToken["type"].ToString());
-						cmd.Parameters.AddWithValue("@ordernum", medalToken["order"].ToString());
-						cmd.Parameters.AddWithValue("@description", medalToken["description"].ToString());
+						sql = sql.Replace("@name", "'" + medalToken["name"].ToString()) + "'";
+						sql = sql.Replace("@section", "'" + medalToken["section"].ToString()) + "'";
+						sql = sql.Replace("@section_order", "'" + medalToken["section_order"].ToString()) + "'";
+						sql = sql.Replace("@type", "'" + medalToken["type"].ToString()) + "'";
+						sql = sql.Replace("@ordernum", "'" + medalToken["order"].ToString());
+						sql = sql.Replace("@description", "'" + medalToken["description"].ToString()) + "'";
 						// Check if several medal alternatives, and get images and names, set NULL as default value
 						string options = medalToken["options"].ToString();
 						if (options == "") // no options, get default medal image and name
 						{
-							cmd.Parameters.AddWithValue("@image", medalToken["image"].ToString());
-							cmd.Parameters.AddWithValue("@name_i18n", medalToken["name_i18n"].ToString());
-							cmd.Parameters.AddWithValue("@options", DBNull.Value);
-							cmd.Parameters.AddWithValue("@image1", DBNull.Value);
-							cmd.Parameters.AddWithValue("@image2", DBNull.Value);
-							cmd.Parameters.AddWithValue("@image3", DBNull.Value);
-							cmd.Parameters.AddWithValue("@image4", DBNull.Value);
-							cmd.Parameters.AddWithValue("@name_i18n1", DBNull.Value);
-							cmd.Parameters.AddWithValue("@name_i18n2", DBNull.Value);
-							cmd.Parameters.AddWithValue("@name_i18n3", DBNull.Value);
-							cmd.Parameters.AddWithValue("@name_i18n4", DBNull.Value);
+							sql = sql.Replace("@image", "'" + medalToken["image"].ToString()) + "'";
+							sql = sql.Replace("@name_i18n", "'" + medalToken["name_i18n"].ToString()) + "'";
+							sql = sql.Replace("@options", "Null");
+							sql = sql.Replace("@image1","Null");
+							sql = sql.Replace("@image2", "Null");
+							sql = sql.Replace("@image3", "Null");
+							sql = sql.Replace("@image4", "Null");
+							sql = sql.Replace("@name_i18n1", "Null");
+							sql = sql.Replace("@name_i18n2", "Null");
+							sql = sql.Replace("@name_i18n3", "Null");
+							sql = sql.Replace("@name_i18n4", "Null");
 						}
 						else // get medal optional images and names
 						{
-							cmd.Parameters.AddWithValue("@image", DBNull.Value);
-							cmd.Parameters.AddWithValue("@name_i18n", DBNull.Value);
-							cmd.Parameters.AddWithValue("@options", options);
+							sql = sql.Replace("@image", "Null");
+							sql = sql.Replace("@name_i18n", "Null");
+							sql = sql.Replace("@options", options);
 							// Get the medal options from array
 							JArray medalArray = (JArray)medalToken["options"];
 							int num = medalArray.Count;
 							if (num > 4) num = 4;
 							for (int i = 1; i <= num; i++)
 							{
-								cmd.Parameters.AddWithValue("@image" + i.ToString(), medalArray[i - 1]["image"].ToString());
-								cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString());
+								sql = sql.Replace("@image" + i.ToString(), "'" + medalArray[i - 1]["image"].ToString()) + "'";
+								sql = sql.Replace("@name_i18n" + i.ToString(), "'" + medalArray[i - 1]["name_i18n"].ToString() + "'");
 							}
 							// If not 4, put null in rest
 							for (int i = num + 1; i <= 4; i++)
 							{
-								cmd.Parameters.AddWithValue("@image" + i.ToString(), DBNull.Value);
-								cmd.Parameters.AddWithValue("@name_i18n" + i.ToString(), DBNull.Value);
+								sql = sql.Replace("@image" + i.ToString(), "Null");
+								sql = sql.Replace("@name_i18n" + i.ToString(), "Null");
 							}
 
 						}
 
 						// Insert to db now
-						cmd.ExecuteNonQuery();
+						if (!db.ExecuteNonQuery(sql)) return;
 					}
 				}
-				con.Close();
 			}
 		}
 

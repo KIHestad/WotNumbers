@@ -56,6 +56,7 @@ namespace WotDBUpdater.Forms.File
 			// Create db now
 			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, SelectedDbType))
 			{
+				bool ok = true;
 				// Fill database with default data
 				UpdateProgressBar(ref step, maxStep);
 				// Update db by running sql scripts
@@ -64,17 +65,20 @@ namespace WotDBUpdater.Forms.File
 				// Create Tables
 				StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				db.ExecuteNonQuery(sql, true, SelectedDbType);
+				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+				if (!ok) return;
 				UpdateProgressBar(ref step, maxStep);
 				// Create Views
 				streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				db.ExecuteNonQuery(sql, true, SelectedDbType);
+				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+				if (!ok) return;
 				UpdateProgressBar(ref step, maxStep);
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				db.ExecuteNonQuery(sql, true, SelectedDbType);
+				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+				if (!ok) return;
 				UpdateProgressBar(ref step, maxStep);
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();
@@ -104,7 +108,7 @@ namespace WotDBUpdater.Forms.File
 				// Add player
 				if (txtPlayerName.Text.Trim() != "")
 				{
-					db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
+					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')", true, SelectedDbType);
 					Config.Settings.playerName = txtPlayerName.Text.Trim();
 					string result = "";
 					Config.SaveConfig(out result);

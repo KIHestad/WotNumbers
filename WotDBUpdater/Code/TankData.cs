@@ -233,16 +233,11 @@ namespace WotDBUpdater.Code
 		public static bool GetAchievmentExist(string achName)
 		{
 			bool exists = false;
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT ach.id " +
-													"FROM ach  " +
-													"WHERE name = '" + achName + "'", conn);
-				SqlDataReader myReader = command.ExecuteReader();
-				exists = myReader.HasRows;
-				conn.Close();
-			}
+			string sql = "SELECT ach.id " +
+							"FROM ach  " +
+							"WHERE name = '" + achName + "'";
+			DataTable dt = db.FetchData(sql);
+			exists = (dt.Rows.Count > 0);
 			return exists;
 		}
 
