@@ -19,9 +19,23 @@ namespace WotDBUpdater.Forms.Test
 
 		private void ScrollbarTest_Resize(object sender, EventArgs e)
 		{
-			//SB.Top = ScrollbarTestTheme.MainArea.Top;
-			//SB.Left = ScrollbarTestTheme.MainArea.Right - SB.Width;
-			//SB.Height = ScrollbarTestTheme.MainArea.Height;
+			badScrollBar1.Top = ScrollbarTestTheme.MainArea.Top;
+			badScrollBar1.Left = ScrollbarTestTheme.MainArea.Right - badScrollBar1.Width;
+			badScrollBar1.Height = ScrollbarTestTheme.MainArea.Height - badScrollBar2.Height;
+			badScrollBar2.Top = ScrollbarTestTheme.MainArea.Bottom - badScrollBar2.Height;
+			badScrollBar2.Left = ScrollbarTestTheme.MainArea.Left;
+			badScrollBar2.Width = ScrollbarTestTheme.MainArea.Width - badScrollBar1.Width;
 		}
+
+		private void badScrollBar1_MouseMove(object sender, MouseEventArgs e)
+		{
+			txtY.Text = badScrollBar1.ScrollPosition.ToString();
+		}
+
+		private void badScrollBar2_MouseMove(object sender, MouseEventArgs e)
+		{
+			txtX.Text = badScrollBar2.ScrollPosition.ToString();
+		}
+
 	}
 }
