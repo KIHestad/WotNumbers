@@ -100,7 +100,8 @@ namespace WotDBUpdater.Forms.File
 				if (dbList.Length > 0)
 				{
 					dbList = dbList.Substring(0, dbList.Length - 1);
-					popupDatabase.Text = Code.PopupGrid.Show("Select Database", Code.PopupGrid.PopupGridType.List, dbList);
+					string newValue = Code.PopupGrid.Show("Select Database", Code.PopupGrid.PopupGridType.List, dbList);
+					if (Code.PopupGrid.ValueSelected) popupDatabase.Text = newValue;
 				}
 			}
 			catch (Exception ex)
@@ -202,16 +203,15 @@ namespace WotDBUpdater.Forms.File
 
 		private void popupDbAuth_Click(object sender, EventArgs e)
 		{
-			popupDbAuth.Text =
-				Code.PopupGrid.Show("Select SQL Server Authentication", 
-					Code.PopupGrid.PopupGridType.List, 
-					"Windows Authentication,SQL Server Authentication");
+			string newValue = Code.PopupGrid.Show("Select SQL Server Authentication", Code.PopupGrid.PopupGridType.List, "Windows Authentication,SQL Server Authentication");
+			if (Code.PopupGrid.ValueSelected) popupDbAuth.Text = newValue;
 			UpdateLogin();
 		}
 
 		private void popupDatabaseType_Click(object sender, EventArgs e)
 		{
-			popupDatabaseType.Text = Code.PopupGrid.Show("Select Database Type", Code.PopupGrid.PopupGridType.List,"SQLite,MS SQL Server");
+			string newValue = Code.PopupGrid.Show("Select Database Type", Code.PopupGrid.PopupGridType.List, "SQLite,MS SQL Server");
+			if (Code.PopupGrid.ValueSelected) popupDatabaseType.Text = newValue;
 			// DB Type
 			if (popupDatabaseType.Text == "MS SQL Server")
 			{

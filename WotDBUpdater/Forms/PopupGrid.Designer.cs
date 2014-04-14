@@ -79,7 +79,6 @@
 			this.dataGridPopup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridPopup_CellClick);
 			this.dataGridPopup.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridPopup_CellMouseLeave);
 			this.dataGridPopup.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridPopup_CellMouseMove);
-			this.dataGridPopup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridPopup_MouseMove);
 			// 
 			// scrollGrid
 			// 

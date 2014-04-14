@@ -82,7 +82,8 @@ namespace WotDBUpdater.Forms.Reports
 			if (tableList.Length > 0)
 			{
 				tableList = tableList.Substring(0, tableList.Length - 1);
-				popupSelectTable.Text =  Code.PopupGrid.Show("Select Table", Code.PopupGrid.PopupGridType.List, tableList);
+				string newValue = Code.PopupGrid.Show("Select Table", Code.PopupGrid.PopupGridType.List, tableList);
+				if (Code.PopupGrid.ValueSelected) popupSelectTable.Text = newValue;
 				RefreshDataGrid();
 			}
 		}

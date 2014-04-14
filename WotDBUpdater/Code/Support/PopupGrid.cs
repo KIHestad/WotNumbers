@@ -15,17 +15,25 @@ namespace WotDBUpdater.Code
 			List = 1,
 			Sql = 2
 		}
-		
-		private static string _SelectedValue = "";
-		public static string SelectedValue
+
+		private static bool _ValueSelected;
+		public static bool ValueSelected
 		{
-			get { return _SelectedValue; }
-			set { _SelectedValue = value; }
+			get { return _ValueSelected; }
+			set { _ValueSelected = value; }
+		}	
+		
+		private static string _Value = "";
+		public static string Value
+		{
+			get { return _Value; }
+			set { _Value = value; }
 		}	
 		
 		public static string Show(string Title, PopupGridType DataSourceType, string DataSource, string OverrideDbCon = "")
 		{
-			SelectedValue = "";
+			Value = "";
+			ValueSelected = false;
 			DataTable dt = new DataTable();
 			if (DataSourceType == PopupGridType.List)
 			{
@@ -44,7 +52,7 @@ namespace WotDBUpdater.Code
 			}
 			Form frm = new Forms.PopupGrid(Title, dt);
 			frm.ShowDialog();
-			return SelectedValue;
+			return Value;
 		}
 	}
 }
