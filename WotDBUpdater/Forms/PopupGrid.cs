@@ -20,6 +20,7 @@ namespace WotDBUpdater.Forms
 			PopupGridTheme.Text = title;
 			dataGridPopup.DataSource = dt;
 			scrollGrid.ScrollElementsTotals = dt.Rows.Count;
+			dataGridPopup.MouseWheel += new MouseEventHandler(dataGridPopup_MouseWheel);
 		}
 
 		
@@ -73,6 +74,31 @@ namespace WotDBUpdater.Forms
 		private void ScrollGrid()
 		{
 			dataGridPopup.FirstDisplayedScrollingRowIndex = scrollGrid.ScrollPosition;
+		}
+
+		private void dataGridPopup_MouseWheel(object sender, MouseEventArgs e)
+		{
+			try
+			{
+				// scroll in grid from mouse wheel
+				int currentIndex = this.dataGridPopup.FirstDisplayedScrollingRowIndex;
+				int scrollLines = SystemInformation.MouseWheelScrollLines;
+				if (e.Delta > 0)
+				{
+					this.dataGridPopup.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+				}
+				else if (e.Delta < 0)
+				{
+					this.dataGridPopup.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+				}
+				// move scrollbar
+				scrollGrid.ScrollPosition = dataGridPopup.FirstDisplayedScrollingRowIndex;
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+
 		}
 
 		private void dataGridPopup_MouseMove(object sender, MouseEventArgs e)
