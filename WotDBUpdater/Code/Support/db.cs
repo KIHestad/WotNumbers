@@ -83,6 +83,7 @@ namespace WotDBUpdater.Code
 			catch (Exception ex)
 			{
 				Code.MsgBox.Show("Error execute query to database. Please check you input parameters." + 
+					Environment.NewLine + Environment.NewLine + sql +
 					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 				ok = false;
 			}

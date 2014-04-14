@@ -41,9 +41,6 @@ namespace WotDBUpdater.Code
 			}
 			string json = sb.ToString();
 			String s = "{items:" + json + "}";
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-			con.Open();
-
 			int jsonCompDescr = 0;
 			int jsonType = 0;
 			int jsonCountryid = 0;
@@ -57,8 +54,6 @@ namespace WotDBUpdater.Code
 
 			try
 			{
-				SqlCommand cmd = new SqlCommand("INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)", con);
-
 				JObject root = JObject.Parse(s);
 				JArray items = (JArray)root["items"];
 				JObject item;
@@ -93,14 +88,14 @@ namespace WotDBUpdater.Code
 
 					if (!tankExists) // Only run if Tank does not exists in table
 					{
-						cmd.Parameters.Clear();
-						cmd.Parameters.AddWithValue("@id", jsonCompDescr);
-						cmd.Parameters.AddWithValue("@tankTypeId", jsonType);
-						cmd.Parameters.AddWithValue("@countryid", jsonCountryid);
-						cmd.Parameters.AddWithValue("@name", jsonTitle);
-						cmd.Parameters.AddWithValue("@tier", jsonTier);
-						cmd.Parameters.AddWithValue("@premium", jsonPremium);
-						cmd.ExecuteNonQuery();
+						string sql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, '@name', @tier, @premium)";
+						sql = sql.Replace("@id", jsonCompDescr.ToString());
+						sql = sql.Replace("@tankTypeId", jsonType.ToString());
+						sql = sql.Replace("@countryid", jsonCountryid.ToString());
+						sql = sql.Replace("@name", jsonTitle.ToString());
+						sql = sql.Replace("@tier", jsonTier.ToString());
+						sql = sql.Replace("@premium", jsonPremium.ToString());
+						db.ExecuteNonQuery(sql);
 						log.Add("  Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")");
 					}
 					else
@@ -108,7 +103,6 @@ namespace WotDBUpdater.Code
 						log.Add("  Check completed, tank exsits: " + jsonTitle + "(" + jsonCompDescr + ")");
 					}
 				}
-				con.Close();
 				log.Add("Import complete! (" + DateTime.Now.ToString() + ")");
 				Log.LogToFile(log);
 				return log;
@@ -190,11 +184,7 @@ namespace WotDBUpdater.Code
 			// Execute update statements
 			try
 			{
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
-				SqlCommand update = new SqlCommand(sql, con);
-				update.ExecuteNonQuery();
-				con.Close();
+				db.ExecuteNonQuery(sql);
 			}
 			catch (Exception ex)
 			{
