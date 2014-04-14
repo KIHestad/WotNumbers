@@ -17,6 +17,7 @@ namespace WotDBUpdater.Forms.File
 {
 	public partial class DatabaseNew : Form
 	{
+		private ConfigData.dbType SelectedDbType;
 		public DatabaseNew(ConfigData.dbType dbType)
 		{
 			InitializeComponent();
@@ -24,6 +25,7 @@ namespace WotDBUpdater.Forms.File
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
 			else if (dbType == ConfigData.dbType.SQLite)
 				DatabaseNewTheme.Text = "Create New SQLite Database";
+			SelectedDbType = dbType;
 		}
 
 		private void frmDatabaseNew_Load(object sender, EventArgs e)
@@ -52,7 +54,7 @@ namespace WotDBUpdater.Forms.File
 			UpdateProgressBar(ref step, maxStep);
 			Application.DoEvents();
 			// Create db now
-			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text))
+			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, SelectedDbType))
 			{
 				// Fill database with default data
 				UpdateProgressBar(ref step, maxStep);
@@ -62,17 +64,17 @@ namespace WotDBUpdater.Forms.File
 				// Create Tables
 				StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				db.ExecuteNonQuery(sql);
+				db.ExecuteNonQuery(sql, true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Create Views
 				streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				db.ExecuteNonQuery(sql);
+				db.ExecuteNonQuery(sql, true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				db.ExecuteNonQuery(sql);
+				db.ExecuteNonQuery(sql, true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();

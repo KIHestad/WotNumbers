@@ -47,13 +47,15 @@ namespace WotDBUpdater.Code
 			return dt;
 		}
 
-		public static bool ExecuteNonQuery(string sql)
+		public static bool ExecuteNonQuery(string sql, bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			bool ok = false;
 			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
 			try
 			{
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				if (SelectedDbType == ConfigData.dbType.MSSQLserver)
 				{
 					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 					con.Open();
@@ -65,7 +67,7 @@ namespace WotDBUpdater.Code
 					con.Close();
 					ok = true;
 				}
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				else if (SelectedDbType == ConfigData.dbType.SQLite)
 				{
 					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 					con.Open();
@@ -107,7 +109,7 @@ namespace WotDBUpdater.Code
 			return dt;
 		}
 
-		public static bool CreateDatabase(string databaseName, string fileLocation)
+		public static bool CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType)
 		{
 			bool dbOk = false;
 			// Check database file location
@@ -134,7 +136,7 @@ namespace WotDBUpdater.Code
 			// Start Creating if file location exists
 			if (fileLocationExsits)
 			{
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				if (dbType == ConfigData.dbType.MSSQLserver)
 				{
 					// Check if database exists
 					bool dbExists = false;
@@ -184,7 +186,7 @@ namespace WotDBUpdater.Code
 						}
 					}
 				}
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				else if (dbType == ConfigData.dbType.SQLite)
 				{
 					// Check if database exists
 					if (File.Exists(fileLocation + databaseName + ".db"))
