@@ -41,7 +41,8 @@ namespace WotDBUpdater.Code
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Error fetching data from database. Please check your database settings.\n\n" + 
+				Code.MsgBox.Show("Error fetching data from database. Please check your database settings." + 
+					Environment.NewLine + Environment.NewLine + sql +
 					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 			}
 			return dt;
@@ -51,6 +52,7 @@ namespace WotDBUpdater.Code
 		{
 			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
 			if (overrideDbType) SelectedDbType = dbType;
+			string lastRunnedSQL = "";
 			bool ok = false;
 			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
 			try
@@ -73,6 +75,7 @@ namespace WotDBUpdater.Code
 					con.Open();
 					foreach (string s in sqlList)
 					{
+						lastRunnedSQL = s;
 						SQLiteCommand command = new SQLiteCommand(s, con);
 						command.ExecuteNonQuery();
 					}
@@ -82,8 +85,8 @@ namespace WotDBUpdater.Code
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Error execute query to database. Please check you input parameters." + 
-					Environment.NewLine + Environment.NewLine + sql +
+				Code.MsgBox.Show("Error execute query to database. Please check you input parameters." +
+					Environment.NewLine + Environment.NewLine + lastRunnedSQL +
 					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 				ok = false;
 			}
