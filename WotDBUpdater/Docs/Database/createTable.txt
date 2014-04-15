@@ -392,10 +392,17 @@ create table json2dbMapping (
 
 -------------------------------------------------------------------------------------------------
 
-
 create table wsTankId (
   tankId int,
   tankName varchar(100),
   wsTankId int,
   wsCountryId int
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table favList (
+	id int identity(1,1) constraint pk_favListId primary key,
+	name varchar(50) not null,
+	position int null
 );

@@ -441,6 +441,7 @@ namespace WotDBUpdater.Forms
 			}
 			DataTable dt = new DataTable();
 			dt = db.FetchData(sql);
+			int rowcount = dt.Rows.Count;
 			// Add footer
 			if (dt.Rows.Count > 1)
 			{
@@ -516,7 +517,7 @@ namespace WotDBUpdater.Forms
 				SetStatus2(toolItemBattles.Text + "   " + tankFilterMessage);
 			else
 				SetStatus2(overrideStatus2Message);
-			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString() ;
+			lblStatusRowCount.Text = "Rows " + rowcount.ToString();
 		}
 
 		private void GridResizeBattle()
@@ -1198,6 +1199,12 @@ namespace WotDBUpdater.Forms
 		private void SetDefaultCursor(object sender, MouseEventArgs e)
 		{
 			MainTheme.Cursor = Cursors.Default;
+		}
+
+		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.File.FavTanks();
+			frm.ShowDialog();
 		}
 
 

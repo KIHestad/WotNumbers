@@ -126,6 +126,12 @@
     <Compile Include="Forms\File\DatabaseNew.Designer.cs">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\File\FavTanks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\FavTanks.Designer.cs">
+      <DependentUpon>FavTanks.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\File\ImportWotStat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\DatabaseNew.resx">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\File\FavTanks.resx">
+      <DependentUpon>FavTanks.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\ImportWotStat.resx">
       <DependentUpon>ImportWotStat.cs</DependentUpon>

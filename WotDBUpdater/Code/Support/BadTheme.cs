@@ -780,16 +780,16 @@ class BadButton : BadThemeControl
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
-		SolidBrush brushBackColor; //= new SolidBrush(); //ColorTheme.BackControl);
+		SolidBrush brushBackColor; 
+		brushBackColor = new SolidBrush(ColorTheme.ControlBack);
 		if (MouseState == State.MouseDown)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
 		else if (MouseState == State.MouseOver)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
-		else
-			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
 		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
-
-		DrawText(HorizontalAlignment.Center, new SolidBrush(ColorTheme.ControlFont));
+		SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
+		if (!Enabled) fontColor = new SolidBrush(ColorTheme.ControlDisabledFont);
+		DrawText(HorizontalAlignment.Center, fontColor);
 		DrawIcon(HorizontalAlignment.Left);
 
 		//Pen outerBorderPen = new Pen(Color.Black); // Button border
@@ -798,6 +798,7 @@ class BadButton : BadThemeControl
 
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
+	
 }
 
 class BadSeperator : BadThemeControl
@@ -1039,6 +1040,13 @@ class BadPopupBox : BadThemeControl
 	public BadPopupBox()
 	{
 		AllowTransparent();
+	}
+
+	private string _Text;
+	public override string Text
+	{
+		get { return _Text; }
+		set { _Text = value; Invalidate(); }
 	}
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)

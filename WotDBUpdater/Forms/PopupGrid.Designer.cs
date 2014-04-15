@@ -71,6 +71,7 @@
 			this.dataGridPopup.ColumnHeadersVisible = false;
 			this.dataGridPopup.Location = new System.Drawing.Point(12, 38);
 			this.dataGridPopup.Name = "dataGridPopup";
+			this.dataGridPopup.ReadOnly = true;
 			this.dataGridPopup.RowHeadersVisible = false;
 			this.dataGridPopup.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridPopup.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
