@@ -11,7 +11,7 @@ using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Code
 {
-	class db
+	public static class db
 	{
 		public static DataTable FetchData(string sql, string OverrideDbCon = "")
 		{
@@ -63,8 +63,12 @@ namespace WotDBUpdater.Code
 					con.Open();
 					foreach (string s in sqlList)
 					{
-						SqlCommand command = new SqlCommand(s, con);
-						command.ExecuteNonQuery();
+						if (s.Trim().Length > 0)
+						{
+							lastRunnedSQL = s;
+							SqlCommand command = new SqlCommand(s, con);
+							command.ExecuteNonQuery();
+						}
 					}
 					con.Close();
 					ok = true;
@@ -75,9 +79,12 @@ namespace WotDBUpdater.Code
 					con.Open();
 					foreach (string s in sqlList)
 					{
-						lastRunnedSQL = s;
-						SQLiteCommand command = new SQLiteCommand(s, con);
-						command.ExecuteNonQuery();
+						if (s.Trim().Length > 0)
+						{
+							lastRunnedSQL = s;
+							SQLiteCommand command = new SQLiteCommand(s, con);
+							command.ExecuteNonQuery();
+						}
 					}
 					con.Close();
 					ok = true;
@@ -85,7 +92,7 @@ namespace WotDBUpdater.Code
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Error execute query to database. Please check you input parameters." +
+				Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
 					Environment.NewLine + Environment.NewLine + lastRunnedSQL +
 					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
 				ok = false;
@@ -212,7 +219,63 @@ namespace WotDBUpdater.Code
 			}
 			return dbOk;
 		}
+		
+		public enum SqlDataType
+		{
+			VarChar = 1,
+			Int = 2,
+			DateTime = 3
+		}
 
+		public static void AddWithValue(ref string Sql, string Parameter, object Value, db.SqlDataType DataType)
+		{
+			if (Value == DBNull.Value)
+			{
+				Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL"); ;
+			}
+			else
+			{
+				string StringValue = Value.ToString();
+				if (DataType == SqlDataType.VarChar)
+				{
 
+					StringValue = StringValue.Replace("'", "''");
+					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'");
+				}
+				else if (DataType == SqlDataType.Int)
+				{
+					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue);
+				}
+				else if (DataType == SqlDataType.DateTime)
+				{
+					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'");
+				}
+			}
+		}
+
+		private static string ReplaceParameterWithValue(string Sql, string Parameter, string Value)
+		{
+			// Search for Parameter within SQL - must be followed by valid nextchar = " " or "," or ")"
+			string validchars = " ,)";
+			int pos = 0;
+			while (Sql.IndexOf(Parameter, pos) >= pos)
+			{
+				pos = Sql.IndexOf(Parameter, pos);
+				string nextchar = Sql.Substring(pos + Parameter.Length, 1);
+				if (validchars.Contains(nextchar))
+				{
+					// Found valid Parameter within SQL string now
+					Sql = Sql.Substring(0, pos) + Value + Sql.Substring(pos + Parameter.Length);
+				}
+				else
+				{
+					// Not valid parameter (part of other), move past to read rest of sql
+					pos += Parameter.Length;
+				}
+			}
+			return Sql;
+		}
+	
+	
 	}
 }
