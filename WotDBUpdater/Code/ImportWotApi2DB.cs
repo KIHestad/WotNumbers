@@ -311,53 +311,53 @@ namespace WotDBUpdater.Code
 					// Check if ach already exists
 					if (!TankData.GetAchievmentExist(medalToken["name"].ToString()))
 					{
-						string sql = "insert into ach (name, section, options, section_order, image, name_i18n, type ,ordernum, description, " +
-									"  image1 ,image2 ,image3 ,image4 ,name_i18n1 ,name_i18n2 ,name_i18n3 ,name_i18n4) " +
-									"values (@name, @section, @options, @section_order, @image, @name_i18n, @type , @ordernum, @description, " +
+						string sql = "insert into ach (name, section, options, section_order, image, name_i18n, type, ordernum, description, " +
+									"  image1, image2, image3, image4, name_i18n1, name_i18n2, name_i18n3, name_i18n4) " +
+									"values (@name, @section, @options, @section_order, @image, @name_i18n, @type, @ordernum, @description, " +
 									"  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
 						// Get data from json token and insert to query
 						// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
-						sql = sql.Replace("@name", "'" + medalToken["name"].ToString()) + "'";
-						sql = sql.Replace("@section", "'" + medalToken["section"].ToString()) + "'";
-						sql = sql.Replace("@section_order", "'" + medalToken["section_order"].ToString()) + "'";
-						sql = sql.Replace("@type", "'" + medalToken["type"].ToString()) + "'";
-						sql = sql.Replace("@ordernum", "'" + medalToken["order"].ToString());
-						sql = sql.Replace("@description", "'" + medalToken["description"].ToString()) + "'";
+						db.AddWithValue(ref sql, "@name", medalToken["name"].ToString(), db.SqlDataType.VarChar);
+						db.AddWithValue(ref sql, "@section", medalToken["section"].ToString(), db.SqlDataType.VarChar);
+						db.AddWithValue(ref sql, "@section_order", medalToken["section_order"].ToString(), db.SqlDataType.Int);
+						db.AddWithValue(ref sql, "@type", medalToken["type"].ToString(), db.SqlDataType.VarChar);
+						db.AddWithValue(ref sql, "@ordernum", medalToken["order"].ToString(), db.SqlDataType.Int);
+						db.AddWithValue(ref sql, "@description", medalToken["description"].ToString(), db.SqlDataType.VarChar);
 						// Check if several medal alternatives, and get images and names, set NULL as default value
 						string options = medalToken["options"].ToString();
 						if (options == "") // no options, get default medal image and name
 						{
-							sql = sql.Replace("@image", "'" + medalToken["image"].ToString()) + "'";
-							sql = sql.Replace("@name_i18n", "'" + medalToken["name_i18n"].ToString()) + "'";
-							sql = sql.Replace("@options", "Null");
-							sql = sql.Replace("@image1","Null");
-							sql = sql.Replace("@image2", "Null");
-							sql = sql.Replace("@image3", "Null");
-							sql = sql.Replace("@image4", "Null");
-							sql = sql.Replace("@name_i18n1", "Null");
-							sql = sql.Replace("@name_i18n2", "Null");
-							sql = sql.Replace("@name_i18n3", "Null");
-							sql = sql.Replace("@name_i18n4", "Null");
+							db.AddWithValue(ref sql, "@image", medalToken["image"].ToString(), db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@name_i18n", medalToken["name_i18n"].ToString(), db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@options", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@image1", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@image2", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@image3", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@image4", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@name_i18n1", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@name_i18n2", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@name_i18n3", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@name_i18n4", DBNull.Value, db.SqlDataType.VarChar);
 						}
 						else // get medal optional images and names
 						{
-							sql = sql.Replace("@image", "Null");
-							sql = sql.Replace("@name_i18n", "Null");
-							sql = sql.Replace("@options", options);
+							db.AddWithValue(ref sql, "@image", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@name_i18n", DBNull.Value, db.SqlDataType.VarChar);
+							db.AddWithValue(ref sql, "@options", options, db.SqlDataType.VarChar);
 							// Get the medal options from array
 							JArray medalArray = (JArray)medalToken["options"];
 							int num = medalArray.Count;
 							if (num > 4) num = 4;
 							for (int i = 1; i <= num; i++)
 							{
-								sql = sql.Replace("@image" + i.ToString(), "'" + medalArray[i - 1]["image"].ToString()) + "'";
-								sql = sql.Replace("@name_i18n" + i.ToString(), "'" + medalArray[i - 1]["name_i18n"].ToString() + "'");
+								db.AddWithValue(ref sql, "@image" + i.ToString(), medalArray[i - 1]["image"].ToString(), db.SqlDataType.VarChar);
+								db.AddWithValue(ref sql, "@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString(), db.SqlDataType.VarChar);
 							}
 							// If not 4, put null in rest
 							for (int i = num + 1; i <= 4; i++)
 							{
-								sql = sql.Replace("@image" + i.ToString(), "Null");
-								sql = sql.Replace("@name_i18n" + i.ToString(), "Null");
+								db.AddWithValue(ref sql, "@image" + i.ToString(), DBNull.Value, db.SqlDataType.VarChar);
+								db.AddWithValue(ref sql, "@name_i18n" + i.ToString(), DBNull.Value, db.SqlDataType.VarChar);
 							}
 
 						}
