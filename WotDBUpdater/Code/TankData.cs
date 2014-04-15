@@ -126,7 +126,7 @@ namespace WotDBUpdater.Code
 		public static void GetJson2dbMappingViewFromDB()
 		{
 			json2dbMappingView.Clear();
-			json2dbMappingView = db.FetchData("SELECT * FROM json2dbMappingView ORDER BY jsonMainSubProperty");
+			json2dbMappingView = db.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
 			try
 			{
 				json2dbMappingView.PrimaryKey = new DataColumn[] { json2dbMappingView.Columns["jsonMainSubProperty"] };
