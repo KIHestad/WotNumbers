@@ -415,7 +415,7 @@ namespace WotDBUpdater.Forms
 				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
 				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
 				"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
-				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, battle.battleTime, battle.battleResultId, battle.battleSurviveId, " +
+				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, CAST(battle.battleTime AS DATETIME) AS battleTime, battle.battleResultId, battle.battleSurviveId, " +
 				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer " +
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
