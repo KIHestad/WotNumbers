@@ -33,8 +33,8 @@ namespace WotDBUpdater.Forms.File
 			}
 			else
 			{
-				string sql = "INSERT INTO player (name) VALUES ('@name')";
-				sql = sql.Replace("@name", txtNewPlayerName.Text.Trim());
+				string sql = "INSERT INTO player (name) VALUES (@name)";
+				db.AddWithValue(ref sql, "@name", txtNewPlayerName.Text.Trim(), db.SqlDataType.VarChar);
 				if (db.ExecuteNonQuery(sql))
 				{
 					Code.MsgBox.Show("New player successfully saved.", "New player added");

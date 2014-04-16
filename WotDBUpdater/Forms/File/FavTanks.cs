@@ -109,10 +109,10 @@ namespace WotDBUpdater.Forms.File
 			// Remove positions above 10
 			sql += "update favlist set position = NULL where position > 10; ";
 			// Add new favlist
-			sql += "insert into favList (position, name) values (@newFavListPos, '@newFavListName'); ";
+			sql += "insert into favList (position, name) values (@newFavListPos, @newFavListName); ";
 			// Add parameters
-			sql = sql.Replace("@newFavListPos", newFavListPos);
-			sql = sql.Replace("@newFavListName", newFavListName);
+			db.AddWithValue(ref sql, "@newFavListPos", newFavListPos, db.SqlDataType.Int);
+			db.AddWithValue(ref sql, "@newFavListName", newFavListName, db.SqlDataType.VarChar);
 			// Execute now
 			db.ExecuteNonQuery(sql);
 			// Refresh Grid
@@ -195,9 +195,9 @@ namespace WotDBUpdater.Forms.File
 			// Add new favlist
 			sql += "update favList set position=@newFavListPos, name='@newFavListName' where name ='@oldFavListName'; ";
 			// Add parameters
-			sql = sql.Replace("@newFavListPos", newFavListPos);
-			sql = sql.Replace("@newFavListName", newFavListName);
-			sql = sql.Replace("@oldFavListName", oldFavListName);
+			db.AddWithValue(ref sql, "@newFavListPos", newFavListPos, db.SqlDataType.Int);
+			db.AddWithValue(ref sql, "@newFavListName", newFavListName, db.SqlDataType.VarChar);
+			db.AddWithValue(ref sql, "@oldFavListName", oldFavListName, db.SqlDataType.VarChar);
 			// Execute now
 			db.ExecuteNonQuery(sql);
 			// Refresh Grid

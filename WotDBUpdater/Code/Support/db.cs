@@ -248,7 +248,7 @@ namespace WotDBUpdater.Code
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
-					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'");
+					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'"); // yyyy-DD-mm
 				}
 			}
 		}

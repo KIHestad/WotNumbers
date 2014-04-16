@@ -242,7 +242,7 @@ namespace WotDBUpdater.Forms
 					"SELECT 'Total battles' as Data ,cast( SUM(battles15) + SUM(battles7) as varchar) from dbo.playerTank where playerid=@playerid " +
 					"UNION " +
 					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
-				sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.VarChar);
 				dataGridMain.DataSource = db.FetchData(sql);
 				DateGridSelected = DataGridType.Overall;
 				// Text cols
@@ -366,7 +366,7 @@ namespace WotDBUpdater.Forms
 				"         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN " +
 				"         dbo.country ON dbo.tank.countryId = dbo.country.id " +
 				"WHERE   dbo.player.id=@playerid " + where;
-			sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
 			dataGridMain.DataSource = db.FetchData(sql);
 			DateGridSelected = DataGridType.Tank;
 			// Text cols
@@ -406,7 +406,7 @@ namespace WotDBUpdater.Forms
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
 			{
-				battleFilter = "AND battleTime>='@battleTime' ";
+				battleFilter = "AND battleTime>=@battleTime ";
 			}
 			// Get Tank filter
 			string tankFilterMessage = "";
@@ -425,7 +425,7 @@ namespace WotDBUpdater.Forms
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
 				"ORDER BY battle.battleTime DESC ";
-			sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
 			DateTime dateFilter = new DateTime();
 			if (!toolItemBattlesAll.Checked)
 			{
@@ -437,7 +437,7 @@ namespace WotDBUpdater.Forms
 				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
 				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
 				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
-				sql = sql.Replace("@battleTime", dateFilter.ToString("yyyy-MM-dd"));
+				db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
 			}
 			DataTable dt = new DataTable();
 			dt = db.FetchData(sql);
@@ -480,7 +480,7 @@ namespace WotDBUpdater.Forms
 				sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
 				if (!toolItemBattlesAll.Checked)
 				{
-					sql = sql.Replace("@battleTime", dateFilter.ToString("yyyy-MM-dd"));
+					db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
 				}
 				dt.Merge(db.FetchData(sql));
 				
