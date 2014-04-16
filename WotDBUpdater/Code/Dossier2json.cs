@@ -173,8 +173,8 @@ namespace WotDBUpdater.Code
 			string dossierDatPrevFile = appPath + "/dossier2json/dossier_prev.dat"; // previous dossier file
 			string dossierJsonFile = appPath + "/dossier2json/dossier.json"; // output file
 			string returVal = "Starting file handling...";
-			try
-			{
+			//try
+			//{
 				bool ok = true;
 				if (!testRunPrevJsonFile)
 				{
@@ -227,12 +227,12 @@ namespace WotDBUpdater.Code
 						returVal = "No previous dossier file found - run manual check";
 					}
 				}
-			}
-			catch (Exception ex)
-			{
-				logText.Add(LogText(" > General file copy or conversion error: " + ex.Message));
-				returVal = "General file copy or conversion error - check log file";
-			}
+			//}
+			//catch (Exception ex)
+			//{
+			//	logText.Add(LogText(" > General file copy or conversion error: " + ex.Message));
+			//	returVal = "General file copy or conversion error - check log file";
+			//}
 			Log.LogToFile(logText);
 			statusResult = returVal;
 			return logText;

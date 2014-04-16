@@ -261,8 +261,15 @@ namespace WotDBUpdater.Code
 			while (Sql.IndexOf(Parameter, pos) >= pos)
 			{
 				pos = Sql.IndexOf(Parameter, pos);
-				string nextchar = Sql.Substring(pos + Parameter.Length, 1);
-				if (validchars.Contains(nextchar))
+				bool ok = false;
+				if (pos + Parameter.Length == Sql.Length)
+					ok = true; // found as last item in sql = ok
+				else
+				{
+					string nextchar = Sql.Substring(pos + Parameter.Length, 1);
+					ok = validchars.Contains(nextchar); // found valid char as next char
+				}
+				if (ok)
 				{
 					// Found valid Parameter within SQL string now
 					Sql = Sql.Substring(0, pos) + Value + Sql.Substring(pos + Parameter.Length);

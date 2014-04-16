@@ -269,13 +269,10 @@ namespace WotDBUpdater.Code
 		private static void SaveNewPlayerTank(int TankID)
 		{
 			// Add to database
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-			con.Open();
-			SqlCommand cmd = new SqlCommand("INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankID, @PlayerId)", con);
-			cmd.Parameters.AddWithValue("@tankId", TankID);
-			cmd.Parameters.AddWithValue("@playerId", Config.Settings.playerId);
-			cmd.ExecuteNonQuery();
-			con.Close();
+			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId)";
+			db.AddWithValue(ref sql, "@tankId", TankID, db.SqlDataType.Int);
+			db.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, db.SqlDataType.Int);
+			db.ExecuteNonQuery(sql);
 		}
 
 		private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battleCount15, int battleCount7)
@@ -305,12 +302,9 @@ namespace WotDBUpdater.Code
 			// Update database
 			if (sqlFields.Length > 0)
 			{
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
-				SqlCommand cmd = new SqlCommand("UPDATE playerTank SET " + sqlFields + " WHERE Id=@Id ", con);
-				cmd.Parameters.AddWithValue("@Id", OldPlayerTankTable.Rows[0]["id"]);
-				cmd.ExecuteNonQuery();
-				con.Close();
+				string sql = "UPDATE playerTank SET " + sqlFields + " WHERE Id=@Id ";
+				db.AddWithValue(ref sql, "@Id", OldPlayerTankTable.Rows[0]["id"], db.SqlDataType.Int);
+				db.ExecuteNonQuery(sql);
 			}
 		}
 
@@ -319,8 +313,6 @@ namespace WotDBUpdater.Code
 			List<AchItem> battleAchList = new List<AchItem>();
 			if (achList.Count > 0) // new ach detected
 			{
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
 				// Loop through all achivements
 				foreach (AchItem newAch in achList)
 				{
@@ -330,9 +322,7 @@ namespace WotDBUpdater.Code
 						string sql = "SELECT achId, ach.name ,achCount " +
 									"FROM playerTankAch INNER JOIN ach ON playerTankAch.achId = ach.Id " +
 									"WHERE playerTankId=" + playerTankId + " AND ach.name='" + newAch.achName + "'";
-						SqlDataAdapter adapter = new SqlDataAdapter(sql, con);
-						DataTable currentAch = new DataTable();
-						adapter.Fill(currentAch);
+						DataTable currentAch = db.FetchData(sql);
 						if (currentAch.Rows.Count == 0) // new achievment
 						{
 							// Get AchId 
@@ -340,18 +330,15 @@ namespace WotDBUpdater.Code
 							sql = "SELECT id " +
 									"FROM ach " +
 									"WHERE name='" + newAch.achName + "'";
-							adapter = new SqlDataAdapter(sql, con);
-							DataTable lookupAch = new DataTable();
-							adapter.Fill(lookupAch);
+							DataTable lookupAch = db.FetchData(sql);
 							int achId = Convert.ToInt32(lookupAch.Rows[0]["id"]);
 							// Insert new acheivement
 							sql = "INSERT INTO playerTankAch (achCount, playerTankId, achId) " +
 									"VALUES (@achCount, @playerTankId, @achId)";
-							SqlCommand updatecmd = new SqlCommand(sql, con);
-							updatecmd.Parameters.AddWithValue("@achCount", newAch.count);
-							updatecmd.Parameters.AddWithValue("@playerTankId", playerTankId);
-							updatecmd.Parameters.AddWithValue("@achId", achId);
-							updatecmd.ExecuteNonQuery();
+							db.AddWithValue(ref sql, "@achCount", newAch.count, db.SqlDataType.Int);
+							db.AddWithValue(ref sql, "@playerTankId", playerTankId, db.SqlDataType.Int);
+							db.AddWithValue(ref sql, "@achId", achId, db.SqlDataType.Int);
+							db.ExecuteNonQuery(sql);
 							// Add to battle achievment
 							AchItem ach = new AchItem();
 							ach.achId = achId;
@@ -367,11 +354,10 @@ namespace WotDBUpdater.Code
 								// Update achievment increased count
 								sql = "UPDATE playerTankAch SET achCount=@achCount " +
 										"WHERE playerTankId=@playerTankId AND achId=@achId";
-								SqlCommand updatecmd = new SqlCommand(sql, con);
-								updatecmd.Parameters.AddWithValue("@achCount", newAch.count);
-								updatecmd.Parameters.AddWithValue("@playerTankId", playerTankId);
-								updatecmd.Parameters.AddWithValue("@achId", achId);
-								updatecmd.ExecuteNonQuery();
+								db.AddWithValue(ref sql, "@achCount", newAch.count, db.SqlDataType.Int);
+								db.AddWithValue(ref sql, "@playerTankId", playerTankId, db.SqlDataType.Int);
+								db.AddWithValue(ref sql, "@achId", achId, db.SqlDataType.Int);
+								db.ExecuteNonQuery(sql);
 								// Add to battle achievment
 								AchItem ach = new AchItem();
 								ach.achId = achId;
@@ -381,7 +367,6 @@ namespace WotDBUpdater.Code
 						}
 					}
 				}
-				con.Close();
 			}
 			return battleAchList;
 		}
@@ -389,8 +374,8 @@ namespace WotDBUpdater.Code
 		private static List<FragItem> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
 		{
 			List<FragItem> battleFrag = new List<FragItem>();
-			try
-			{
+			//try
+			//{
 				// fraglist is semicolon separated string, each 4. element is one frag, split the string and create a list of FragItem
 				List<FragItem> newFrag = new List<FragItem>();
 				string[] stringSeparators = new string[] { ";" };
@@ -408,24 +393,21 @@ namespace WotDBUpdater.Code
 				}
 				// Check newFrag compared to existing frags for this tank
 				List<FragItem> oldFrag = new List<FragItem>();
-				SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-				con.Open();
-				SqlCommand cmd = new SqlCommand(
+				string sql =
 					"SELECT playerTank.id AS playerTankId, playerTankFrag.* " +
 					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
-					"WHERE playerTank.tankId=@tankId", con);
-				cmd.Parameters.AddWithValue("@tankId", tankId);
-				SqlDataReader reader = cmd.ExecuteReader();
+					"WHERE playerTank.tankId=@tankId";
+				db.AddWithValue(ref sql, "@tankId", tankId, db.SqlDataType.Int);
+				DataTable dt = db.FetchData(sql);
 				// If no frags exists for this tank get playerTankId separately
-				while (reader.Read())
+				foreach (DataRow reader in dt.Rows)
 				{
 					FragItem FragItem = new FragItem();
 					FragItem.tankId = Convert.ToInt32(reader["fraggedTankId"]);
-					FragItem.playerTankId = Convert.ToInt32(reader["playerTankId"]); 
+					FragItem.playerTankId = Convert.ToInt32(reader["playerTankId"]);
 					FragItem.fragCount = Convert.ToInt32(reader["fragCount"]);
 					oldFrag.Add(FragItem);
 				}
-				reader.Close();
 				// Now we got old and new frags, calculate update and inserts to playerTankFrag, and battleFrag
 				string playerTankFragSQL = "";
 				// Loop through new frags
@@ -448,7 +430,7 @@ namespace WotDBUpdater.Code
 							playerTankFragSQL += "UPDATE playerTankFrag " +
 												"SET fragCount = " + newFragItem.fragCount.ToString() +
 												"WHERE playerTankId=" + oldFrag[i].playerTankId +
-												"  AND fraggedTankId=" + newFragItem.tankId + "\n";
+												"  AND fraggedTankId=" + newFragItem.tankId + "; \n";
 							// Add new frag count to battle Frag
 							newFragItem.fragCount = newFragItem.fragCount - oldFrag[i].fragCount;
 							battleFrag.Add(newFragItem);
@@ -458,7 +440,7 @@ namespace WotDBUpdater.Code
 					{
 						// new fragged tank, insert
 						playerTankFragSQL += "INSERT INTO playerTankFrag (playerTankId, fraggedTankId, fragCount) " +
-											"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + ")\n";
+											"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); \n";
 						// Add new frag count to battle Frag
 						battleFrag.Add(newFragItem);
 					}
@@ -466,24 +448,22 @@ namespace WotDBUpdater.Code
 				// Add to database
 				if (playerTankFragSQL != "")
 				{
-					cmd = new SqlCommand(playerTankFragSQL, con);
-					cmd.ExecuteNonQuery();
+					db.ExecuteNonQuery(playerTankFragSQL);
 				}
-				con.Close();
-			}
-			catch (Exception ex)
-			{
-				string s = ex.Message;
-				throw;
-			}
+			//}
+			//catch (Exception ex)
+			//{
+			//	string s = ex.Message;
+			//	throw;
+			//}
 			
 			return battleFrag;
 		}
 
 		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battlessNew15, int battlessNew7, List<FragItem> battleFragList, List<AchItem> battleAchList)
 		{
-			try
-			{
+			//try
+			//{
 				// Create datarow to put calculated battle data
 				DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
 				DataRow NewbattleRow = NewBattleTable.NewRow();
@@ -617,21 +597,15 @@ namespace WotDBUpdater.Code
 				if (sqlFields.Length > 0)
 				{
 					// Insert Battle
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + ")";
-					SqlCommand cmd = new SqlCommand(sql, con);
-					cmd.Parameters.AddWithValue("@playerTankId", playerTankId);
-					cmd.ExecuteNonQuery();
+					string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";
+					db.AddWithValue(ref sql, "@playerTankId", playerTankId, db.SqlDataType.Int);
+					db.ExecuteNonQuery(sql);
 					// Get the last battle id
 					int battleId = 0;
-					cmd = new SqlCommand("select max(id) as battleId from battle", con);
-					SqlDataReader myReader = cmd.ExecuteReader();
-					while (myReader.Read())
-					{
-						battleId = Convert.ToInt32(myReader["battleId"]);
-					}
-					myReader.Close();
+					sql = "select max(id) as battleId from battle";
+					dt = db.FetchData(sql);
+					if (dt.Rows.Count > 0)
+						battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
 					// Insert Battle Frags
 					if (battleFragList.Count > 0)
 					{
@@ -640,11 +614,10 @@ namespace WotDBUpdater.Code
 						foreach (var newFragItem in battleFragList)
 						{
 							battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
-													"VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + ")\n";
+													"VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); \n";
 						}
 						// Add to database
-						cmd = new SqlCommand(battleFragSQL, con);
-						cmd.ExecuteNonQuery();
+						db.ExecuteNonQuery(battleFragSQL);
 					}
 					// Insert battle achievments
 					if (battleAchList.Count > 0)
@@ -654,21 +627,18 @@ namespace WotDBUpdater.Code
 						foreach (var newAchItem in battleAchList)
 						{
 							battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
-													"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + ")\n";
+													"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); \n";
 						}
 						// Add to database
-						cmd = new SqlCommand(battleAchSQL, con);
-						cmd.ExecuteNonQuery();
+						db.ExecuteNonQuery(battleAchSQL);
 					}
-					
-					con.Close();
 				}
-			}
-			catch (Exception ex)
-			{
-				string s = ex.Message;
-				throw;
-			}
+			//}
+			//catch (Exception ex)
+			//{
+			//	string s = ex.Message;
+			//	throw;
+			//}
 			
 		}
 	}

@@ -352,7 +352,6 @@ namespace WotDBUpdater.Forms
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 			// Get Tank filter
 			string message = "";
 			string where = "";
@@ -401,7 +400,6 @@ namespace WotDBUpdater.Forms
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
 			if (!Config.CheckDBConn()) return;
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -447,7 +445,7 @@ namespace WotDBUpdater.Forms
 			{
 				sql =
 					"SELECT  AVG(CAST(tank.tier AS FLOAT)) AS Tier, " +
-					"        'Average on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
+					"        'Average  on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
 					"        CAST(ROUND(SUM(CAST(battle.victory AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Result, " +
 					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
 					"        CAST(AVG(CAST(battle.dmg AS FLOAT)) AS INT) AS [Damage Caused], " +
@@ -464,7 +462,7 @@ namespace WotDBUpdater.Forms
 					"		 '#F0F0F0' as battleResultColor, " +
 					"		 '#F0F0F0' as battleSurviveColor, " +
 					"		 SUM(battlescount) AS battlescount, " +
-					"		 GETDATE() AS battleTime, " +
+					"		 @getdate AS battleTime, " +
 					"		 4 AS battleResultId, " +
 					"		 2 AS battleSurviveId," +
 					"		 SUM (battle.victory) AS victory, " +
@@ -477,12 +475,13 @@ namespace WotDBUpdater.Forms
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"        tank ON playerTank.tankId = tank.id " +
 					"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter;
-				sql = sql.Replace("@playerid", Config.Settings.playerId.ToString());
+				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
+				db.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
 				if (!toolItemBattlesAll.Checked)
 				{
 					db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
 				}
-				dt.Merge(db.FetchData(sql));
+				//dt.Merge(db.FetchData(sql));
 				
 			}
 			// populate datagrid

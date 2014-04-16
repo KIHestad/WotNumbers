@@ -22,103 +22,55 @@ namespace WotDBUpdater.Code
 
 		public static DataTable GetPlayerTankFromDB(int tankId)
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				DataTable dt = new DataTable();
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerId + " AND tankId=" + tankId.ToString(), conn);
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
-				adapter.Fill(dt);
-				conn.Close();
-				return dt;
-			}
+			string sql = "SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerId + " AND tankId=" + tankId.ToString();
+			return db.FetchData(sql);
 		}
 
 		public static int GetPlayerTankCount()
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT count(id) AS count FROM playerTank WHERE playerId = " + Config.Settings.playerId, conn);
-				SqlDataReader myReader = command.ExecuteReader();
-				int count = 0;
-				while (myReader.Read())
-				{
-					count = Convert.ToInt32(myReader["count"]);
-				}
-				conn.Close();
-				return count;
-			}
+			string sql = "SELECT count(id) AS count FROM playerTank WHERE playerId = " + Config.Settings.playerId;
+			DataTable dt = db.FetchData(sql);
+			int count = 0;
+			if (dt.Rows.Count > 0) count = Convert.ToInt32(dt.Rows[0]["count"]);
+			return count;
 		}
 
 		public static int ConvertWs2TankId(int wsTankId, int wsCountryId)
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT tankId " +
-													"FROM wsTankId " +
-													"WHERE wsTankId = " + wsTankId.ToString() + " AND wsCountryId = " + wsCountryId.ToString(), conn);
-				SqlDataReader myReader = command.ExecuteReader();
-				int lookupTankId = 0;
-				while (myReader.Read())
-				{
-					lookupTankId = Convert.ToInt32(myReader["tankId"]);
-				}
-				conn.Close();
-				return lookupTankId;
-			}
+			string sql = "SELECT tankId " +
+						 "FROM wsTankId " +
+						 "WHERE wsTankId = " + wsTankId.ToString() + " AND wsCountryId = " + wsCountryId.ToString();
+			DataTable dt = db.FetchData(sql);
+			int lookupTankId = 0;
+			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["tankId"]);
+			return lookupTankId;
 		}
 
 
 		public static int GetPlayerTankId(int tankId)
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT playerTank.id AS playerTankId " +
-													"FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " + 
-												    "WHERE tank.id = " + tankId, conn);
-				SqlDataReader myReader = command.ExecuteReader();
-				int lookupTankId = 0;
-				while (myReader.Read())
-				{
-					lookupTankId = Convert.ToInt32(myReader["playerTankId"]);
-				}
-				conn.Close();
-				return lookupTankId;
-			}
+			string sql = "SELECT playerTank.id AS playerTankId " +
+						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
+						 "WHERE tank.id = " + tankId;
+			DataTable dt = db.FetchData(sql);
+			int lookupTankId = 0;
+			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
+			return lookupTankId;
 		}
 
 		public static DataTable GetBattleFromDB(int battleId)
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				DataTable dt = new DataTable();
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT * FROM battle WHERE id=" + battleId.ToString(), conn);
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
-				adapter.Fill(dt);
-				conn.Close();
-				return dt;
-			}
+			string sql = "SELECT * FROM battle WHERE id=" + battleId.ToString();
+			return db.FetchData(sql);
 		}
 
 		public static int GetBattleIdForImportedWsBattleFromDB(int wsId)
 		{
-			using (SqlConnection conn = new SqlConnection(Config.DatabaseConnection()))
-			{
-				conn.Open();
-				SqlCommand command = new SqlCommand("SELECT Id FROM battle WHERE wsId=" + wsId.ToString(), conn);
-				SqlDataReader myReader = command.ExecuteReader();
-				int lookupBattle = 0;
-				while (myReader.Read())
-				{
-					lookupBattle = Convert.ToInt32(myReader["Id"]);
-				}
-				conn.Close();
-				return (lookupBattle);
-			}
+			string sql = "SELECT Id FROM battle WHERE wsId=" + wsId.ToString();
+			DataTable dt = db.FetchData(sql);
+			int lookupBattle = 0;
+			if (dt.Rows.Count > 0) lookupBattle = Convert.ToInt32(dt.Rows[0]["Id"]);
+			return (lookupBattle);
 		}
 
 		public static DataTable json2dbMappingView = new DataTable();
@@ -212,11 +164,7 @@ namespace WotDBUpdater.Code
 						"select playerTankAchAllView.playerTankId, playerTankAchAllView.achId, 0 from playerTankAchAllView left join " +
 						"playerTankAch on playerTankAchAllView.playerTankId = playerTankAch.playerTankId and playerTankAchAllView.achId = playerTankAch.achId " +
 						"where playerTankAch.playerTankId is null";
-			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-			con.Open();
-			SqlCommand cmd = new SqlCommand(sql, con);
-			cmd.ExecuteNonQuery();
-			con.Close();
+			db.ExecuteNonQuery(sql);
 		}
 
 		public static void SetPlayerTankAllAch(int playerTankId)
