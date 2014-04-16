@@ -237,9 +237,9 @@ namespace WotDBUpdater.Forms
 				dataGridMain.DataSource = null;
 				if (!Config.CheckDBConn()) return;
 				string sql =
-					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from  dbo.playerTank where playerid=@playerid " +
+					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
 					"UNION " +
-					"SELECT 'Total battles' as Data ,cast( SUM(battles15) + SUM(battles7) as varchar) from dbo.playerTank where playerid=@playerid " +
+					"SELECT 'Total battles' as Data, cast( SUM(battles15) + SUM(battles7) as varchar) from playerTank where playerid=@playerid " +
 					"UNION " +
 					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
 				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.VarChar);
@@ -358,14 +358,14 @@ namespace WotDBUpdater.Forms
 			string where = "";
 			GetTankfilter(out where, out message);
 			string sql =
-				"SELECT   dbo.tank.tier AS Tier, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, " +
-				"         dbo.playerTank.battles15 AS [Battles15], dbo.playerTank.battles7 AS [Battles7], dbo.playerTank.wn8 as WN8, dbo.playerTank.eff as EFF " +
-				"FROM    dbo.playerTank INNER JOIN " +
-				"         dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN " +
-				"         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN " +
-				"         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN " +
-				"         dbo.country ON dbo.tank.countryId = dbo.country.id " +
-				"WHERE   dbo.player.id=@playerid " + where;
+				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.name AS Tanktype, country.name AS Country, " +
+				"         playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF " +
+				"FROM     playerTank INNER JOIN " +
+				"         player ON playerTank.playerId = player.id INNER JOIN " +
+				"         tank ON playerTank.tankId = tank.id INNER JOIN " +
+				"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
+				"         country ON tank.countryId = country.id " +
+				"WHERE    player.id=@playerid " + where;
 			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
 			dataGridMain.DataSource = db.FetchData(sql);
 			DateGridSelected = DataGridType.Tank;
