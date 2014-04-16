@@ -142,7 +142,9 @@ namespace WotDBUpdater.Forms.File
 				}
 				else
 				{
-					Config.Settings.playerId = Convert.ToInt32(dt.Rows[0]["id"]);
+					int playerId = 0;
+					if (dt.Rows[0]["id"] != DBNull.Value)
+						Config.Settings.playerId = Convert.ToInt32(dt.Rows[0]["id"]);
 				}
 				Config.SaveConfig(out msg);
 				// Init

@@ -99,7 +99,11 @@ namespace WotDBUpdater.Forms.File
 			Config.Settings.playerName = cboSelectPlayer.Text;
 			DataTable dt = db.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
 			if (dt.Rows.Count > 0)
-				Config.Settings.playerId = Convert.ToInt32(dt.Rows[0][0]);
+			{
+				int playerId = 0;
+				if (dt.Rows[0][0] != DBNull.Value)
+					Config.Settings.playerId = Convert.ToInt32(dt.Rows[0][0]);
+			}
 			string msg = "";
 			bool saveOk = false;
 			saveOk = Config.SaveConfig(out msg);
