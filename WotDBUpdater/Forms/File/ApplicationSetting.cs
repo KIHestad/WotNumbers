@@ -35,7 +35,7 @@ namespace WotDBUpdater.Forms.File
 				databaseInfo = "Databasetype: MS SQL Server\n" +
 								"Sever/database: " + Config.Settings.databaseServer + "/" + Config.Settings.databaseName;
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-				databaseInfo = "Database Type: SQLite\nDatabase File: " + Config.Settings.databaseFileName;
+				databaseInfo = "Database Type: SQLite\nDatabase File: " + Path.GetFileName(Config.Settings.databaseFileName);
 			lblDbSettings.Text = databaseInfo;
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
