@@ -172,7 +172,7 @@ namespace WotDBUpdater.Forms.File
                         db.AddWithValue(ref sqlInsertBattle, "@draw", draw, db.SqlDataType.Int);
                         db.AddWithValue(ref sqlInsertBattle, "@defeat", defeat, db.SqlDataType.Int);
                         db.AddWithValue(ref sqlInsertBattle, "@battleResultId", battleResultId, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime, db.SqlDataType.DateTime);
+                        db.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
                         db.AddWithValue(ref sqlInsertBattle, "@shots", shots, db.SqlDataType.Int);
                         db.AddWithValue(ref sqlInsertBattle, "@hits", hits, db.SqlDataType.Int);
                         db.AddWithValue(ref sqlInsertBattle, "@xp", xp, db.SqlDataType.Int);
