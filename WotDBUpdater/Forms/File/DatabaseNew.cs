@@ -63,7 +63,12 @@ namespace WotDBUpdater.Forms.File
 				string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
 				string sql;
 				// Create Tables
-				StreamReader streamReader = new StreamReader(path + "createTable.txt", Encoding.UTF8);
+				string filename = "";
+				if (SelectedDbType == ConfigData.dbType.MSSQLserver)
+					filename = "createTableMSSQL.txt";
+				else if (SelectedDbType == ConfigData.dbType.SQLite)
+					filename = "createTableSQLite.txt";
+				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
 				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
 				if (!ok) return;
