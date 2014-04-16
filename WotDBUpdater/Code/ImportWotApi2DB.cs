@@ -67,8 +67,10 @@ namespace WotDBUpdater.Code
 
 		#region importTurrets
 
-		public static String ImportTurrets()
+		public static String ImportTurrets(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			string json = FetchFromAPI(WotApiType.Turret);
 			int moduleCount;
 			JToken rootToken;
@@ -114,8 +116,8 @@ namespace WotDBUpdater.Code
 				// Execute delete and insert statements
 				try
 				{
-					db.ExecuteNonQuery("delete from modTurret");
-					db.ExecuteNonQuery(sql);
+					db.ExecuteNonQuery("delete from modTurret", true, SelectedDbType);
+					db.ExecuteNonQuery(sql, true, SelectedDbType);
 				}
 				catch (Exception ex)
 				{
@@ -130,8 +132,10 @@ namespace WotDBUpdater.Code
 
 		#region importGuns
 
-		public static String ImportGuns()
+		public static String ImportGuns(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			string json = FetchFromAPI(WotApiType.Gun);
 			int moduleCount;
 			JToken rootToken;
@@ -205,8 +209,8 @@ namespace WotDBUpdater.Code
 				{
 					Stopwatch sw = new Stopwatch();
 					sw.Start();
-					db.ExecuteNonQuery("delete from modTurretGun; delete from modTankGun; delete from modGun;");
-					db.ExecuteNonQuery(gunSql + turretSql + tankSql);
+					db.ExecuteNonQuery("delete from modTurretGun; delete from modTankGun; delete from modGun;", true, SelectedDbType);
+					db.ExecuteNonQuery(gunSql + turretSql + tankSql, true, SelectedDbType);
 					sw.Stop();
 					TimeSpan ts = sw.Elapsed;
 					string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
@@ -224,8 +228,10 @@ namespace WotDBUpdater.Code
 
 		#region importRadios
 
-		public static String ImportRadios()
+		public static String ImportRadios(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			string json = FetchFromAPI(WotApiType.Radio);
 			int moduleCount;
 			JToken rootToken;
@@ -273,8 +279,8 @@ namespace WotDBUpdater.Code
 				{
 					Stopwatch sw = new Stopwatch();
 					sw.Start();
-					db.ExecuteNonQuery("delete from modTankRadio; delete from modRadio;");
-					db.ExecuteNonQuery(radioSql + tankSql);
+					db.ExecuteNonQuery("delete from modTankRadio; delete from modRadio;", true, SelectedDbType);
+					db.ExecuteNonQuery(radioSql + tankSql, true, SelectedDbType);
 					sw.Stop();
 					TimeSpan ts = sw.Elapsed;
 					string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
@@ -294,8 +300,10 @@ namespace WotDBUpdater.Code
 
 		#region importAchievements
 
-		public static void ImportAchievements()
+		public static void ImportAchievements(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			string json = FetchFromAPI(WotApiType.Achievement);
 			JObject allTokens = JObject.Parse(json);
 			JToken rootToken = allTokens.First;
@@ -363,7 +371,7 @@ namespace WotDBUpdater.Code
 						}
 
 						// Insert to db now
-						if (!db.ExecuteNonQuery(sql)) return;
+						if (!db.ExecuteNonQuery(sql, true, SelectedDbType)) return;
 					}
 				}
 			}

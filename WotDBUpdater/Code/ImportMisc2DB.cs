@@ -24,8 +24,10 @@ namespace WotDBUpdater.Code
 
 		#region importTanks
 
-		public static List<string> UpdateTanks()
+		public static List<string> UpdateTanks(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath);
 			string jsonfile = appPath + "/Dossier2json/tanks.json";
 			StringBuilder sb = new StringBuilder();
@@ -95,7 +97,7 @@ namespace WotDBUpdater.Code
 						db.AddWithValue(ref sql, "@name", jsonTitle, db.SqlDataType.VarChar);
 						db.AddWithValue(ref sql, "@tier", jsonTier, db.SqlDataType.Int);
 						db.AddWithValue(ref sql, "@premium", jsonPremium, db.SqlDataType.Int);
-						ok = db.ExecuteNonQuery(sql);
+						ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
 						log.Add("  Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")");
 					}
 					else
@@ -129,8 +131,10 @@ namespace WotDBUpdater.Code
 		#region updateWN8
 
 
-		public static String UpdateWN8()
+		public static String UpdateWN8(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
 		{
+			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
+			if (overrideDbType) SelectedDbType = dbType;
 			string sql = "";
 			string tankId = "";
 			string expFrags = "";
@@ -191,7 +195,7 @@ namespace WotDBUpdater.Code
 			// Execute update statements
 			try
 			{
-				db.ExecuteNonQuery(sql);
+				db.ExecuteNonQuery(sql, true, SelectedDbType);
 			}
 			catch (Exception ex)
 			{

@@ -83,7 +83,7 @@ namespace WotDBUpdater.Forms.File
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();
 				Application.DoEvents();
-				ImportMisc2DB.UpdateTanks();
+				ImportMisc2DB.UpdateTanks(true, SelectedDbType);
 				Application.DoEvents();
 				// Init after getting tanks and other basic data import
 				TankData.GetTankListFromDB();
@@ -91,19 +91,19 @@ namespace WotDBUpdater.Forms.File
 				TankData.GettankData2BattleMappingViewFromDB();
 				UpdateProgressBar(ref step, maxStep);
 				// Get turret
-				ImportWotApi2DB.ImportTurrets();
+				ImportWotApi2DB.ImportTurrets(true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Get guns
-				ImportWotApi2DB.ImportGuns();
+				ImportWotApi2DB.ImportGuns(true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Get radios
-				ImportWotApi2DB.ImportRadios();
+				ImportWotApi2DB.ImportRadios(true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Get achievements
-				ImportWotApi2DB.ImportAchievements();
+				ImportWotApi2DB.ImportAchievements(true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Get WN8 ratings
-				ImportMisc2DB.UpdateWN8();
+				ImportMisc2DB.UpdateWN8(true, SelectedDbType);
 				UpdateProgressBar(ref step, maxStep);
 				// Add player
 				if (txtPlayerName.Text.Trim() != "")
