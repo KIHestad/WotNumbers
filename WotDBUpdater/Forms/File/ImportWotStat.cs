@@ -73,11 +73,6 @@ namespace WotDBUpdater.Forms.File
 			sqliteConn.Open();
 			SQLiteCommand sqLiteCmd = new SQLiteCommand(sqliteConn);
 
-			// SQL Server dbconn
-			SqlConnection sqlConn = new SqlConnection(Config.DatabaseConnection());
-			sqlConn.Open();
-			SqlCommand cmd;
-
 			// Fetch WS recentBattles into datatable
 			sqLiteCmd.CommandText = "SELECT rbId, rbTankId, rbCountryId, rbBattles, rbKills, rbDamageDealt, rbDamageReceived, rbSpotted, rbCapturePoints, rbDefencePoints, "
 								  + "rbSurvived, rbVictory, rbBattleTime, rbShot, rbHits, rbFragList, rbXPReceived, rbBattleMode FROM recentBattles";
@@ -161,43 +156,41 @@ namespace WotDBUpdater.Forms.File
 							sqlInsertBattle =
 							"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, mode15, mode7, wn8, eff) " +
 							"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @mode15, @mode7, @wn8, @eff)";
-						cmd = new SqlCommand(sqlInsertBattle, sqlConn);
-						cmd.Parameters.AddWithValue("@playerTankId", playerTankId);
-						cmd.Parameters.AddWithValue("@wsId", wsId);
-						cmd.Parameters.AddWithValue("@battlesCount", battlesCount);
-						cmd.Parameters.AddWithValue("@frags", frags);
-						cmd.Parameters.AddWithValue("@dmg", dmg);
-						cmd.Parameters.AddWithValue("@dmgReceived", dmgReceived);
-						cmd.Parameters.AddWithValue("@spotted", spotted);
-						cmd.Parameters.AddWithValue("@cap", cap);
-						cmd.Parameters.AddWithValue("@def", def);
-						cmd.Parameters.AddWithValue("@survived", survived);
-						cmd.Parameters.AddWithValue("@killed", killed);
-						cmd.Parameters.AddWithValue("@battleSurviveId", battleSurviveId);
-						cmd.Parameters.AddWithValue("@victory", victory);
-						cmd.Parameters.AddWithValue("@draw", draw);
-						cmd.Parameters.AddWithValue("@defeat", defeat);
-						cmd.Parameters.AddWithValue("@battleResultId", battleResultId);
-						cmd.Parameters.AddWithValue("@battleTime", battleTime);
-						cmd.Parameters.AddWithValue("@shots", shots);
-						cmd.Parameters.AddWithValue("@hits", hits);
-						cmd.Parameters.AddWithValue("@xp", xp);
-						cmd.Parameters.AddWithValue("@mode15", mode15);
-						cmd.Parameters.AddWithValue("@mode7", mode7);
-						cmd.Parameters.AddWithValue("@wn8", wn8);
-						cmd.Parameters.AddWithValue("@eff", eff);
-						cmd.ExecuteNonQuery();
+                        db.AddWithValue(ref sqlInsertBattle, "@playerTankId", playerTankId, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@wsId", wsId, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@battlesCount", battlesCount, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@frags", frags, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@dmg", dmg, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@dmgReceived", dmgReceived, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@spotted", spotted, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@cap", cap, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@def", def, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@survived", survived, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@killed", killed, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@battleSurviveId", battleSurviveId, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@victory", victory, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@draw", draw, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@defeat", defeat, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@battleResultId", battleResultId, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime, db.SqlDataType.DateTime);
+                        db.AddWithValue(ref sqlInsertBattle, "@shots", shots, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@hits", hits, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@xp", xp, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@mode15", mode15, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@mode7", mode7, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, db.SqlDataType.Int);
+                        db.AddWithValue(ref sqlInsertBattle, "@eff", eff, db.SqlDataType.Int);
+                        db.ExecuteNonQuery(sqlInsertBattle);
 						
 						// Get the last battleId if inserted
 						if (battleId == 0)
 						{
-							cmd = new SqlCommand("select max(id) as battleId from battle", sqlConn);
-							SqlDataReader myReader = cmd.ExecuteReader();
-							while (myReader.Read())
-							{
-								battleId = Convert.ToInt32(myReader["battleId"]);
-							}
-							myReader.Close();
+                            DataTable dt = db.FetchData("select max(id) as battleId from battle");
+                            if (dt.Rows.Count > 0)
+                            {
+                                battleId = Convert.ToInt32(dt.Rows[0][0]);
+                            }
+                            else battleId = 0;
 						}
 						
 						// Insert Battle Frags
@@ -232,24 +225,19 @@ namespace WotDBUpdater.Forms.File
 									fragList.Add(newFraggedTank);
 								}
 							}
-							string sqlInsertBattleFrag = "DELETE FROM battleFrag WHERE battleId = " + battleId.ToString() + Environment.NewLine;
+							string sqlInsertBattleFrag = "DELETE FROM battleFrag WHERE battleId = " + battleId.ToString() + ";" + Environment.NewLine;
 							foreach (var battleFragItem in fragList)
 							{
 								sqlInsertBattleFrag += 
 									"INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) VALUES (" +
-									battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + ") " + Environment.NewLine;
+									battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + "); " + Environment.NewLine;
 							}
-							cmd = new SqlCommand(sqlInsertBattleFrag, sqlConn);
-							cmd.ExecuteNonQuery();
+                            db.ExecuteNonQuery(sqlInsertBattleFrag);
 						}
 					}
 				}
 				i++; // Next Battle
 			}
-
-			// Close db connections
-			sqlConn.Close();
-			sqliteConn.Close();
 
 			// Done
 			Code.MsgBox.Show("Imported " + i.ToString() + " battles.","Import finished");
