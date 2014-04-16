@@ -215,6 +215,7 @@ namespace WotDBUpdater.Forms
 			}
 			Refresh();
 		}
+
 		#endregion
 
 		#region Data Grid
@@ -462,7 +463,7 @@ namespace WotDBUpdater.Forms
 					"		 '#F0F0F0' as battleResultColor, " +
 					"		 '#F0F0F0' as battleSurviveColor, " +
 					"		 SUM(battlescount) AS battlescount, " +
-					"		 @getdate AS battleTime, " +
+					"		 CAST(@getdate AS DATETIME) AS battleTime, " +
 					"		 4 AS battleResultId, " +
 					"		 2 AS battleSurviveId," +
 					"		 SUM (battle.victory) AS victory, " +
@@ -475,13 +476,15 @@ namespace WotDBUpdater.Forms
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"        tank ON playerTank.tankId = tank.id " +
 					"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter;
+				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+					sql = sql.Replace("+", "||"); // For SQLite support use || instead of +
 				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
 				db.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
 				if (!toolItemBattlesAll.Checked)
 				{
 					db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
 				}
-				//dt.Merge(db.FetchData(sql));
+				dt.Merge(db.FetchData(sql));
 				
 			}
 			// populate datagrid
@@ -1165,6 +1168,12 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
+		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.File.FavTanks();
+			frm.ShowDialog();
+		}
+
 		#endregion
 
 		#region Toolstrip Events - TESTING
@@ -1194,18 +1203,6 @@ namespace WotDBUpdater.Forms
 		}
 
 		#endregion
-
-		private void SetDefaultCursor(object sender, MouseEventArgs e)
-		{
-			MainTheme.Cursor = Cursors.Default;
-		}
-
-		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.File.FavTanks();
-			frm.ShowDialog();
-		}
-
 
 		
 	}
