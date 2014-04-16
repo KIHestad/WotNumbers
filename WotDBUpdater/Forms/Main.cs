@@ -463,7 +463,7 @@ namespace WotDBUpdater.Forms
 					"		 '#F0F0F0' as battleResultColor, " +
 					"		 '#F0F0F0' as battleSurviveColor, " +
 					"		 SUM(battlescount) AS battlescount, " +
-					"		 @getdate AS battleTime, " +
+					"		 CAST(@getdate AS DATETIME) AS battleTime, " +
 					"		 4 AS battleResultId, " +
 					"		 2 AS battleSurviveId," +
 					"		 SUM (battle.victory) AS victory, " +
