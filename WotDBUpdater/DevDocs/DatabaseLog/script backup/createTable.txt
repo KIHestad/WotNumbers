@@ -21,21 +21,10 @@ drop table modTankRadio
 */
 
 
-/*
-SQLite:
-
-Autoincrement
-- A column declared INTEGER PRIMARY KEY will autoincrement
-- Omitting the autoincrement column in an insert is optional
-- SQL Server syntax IDENTITY does not seem to interupt table creation
-
-*/
-
-
 -------------------------------------------------------------------------------------------------
 
 create table tankType (
-	id int primary key,
+	id int constraint pk_tankTypeId primary key,
 	name varchar(255),
 	shortName varchar(255)
 );
@@ -43,7 +32,7 @@ create table tankType (
 -------------------------------------------------------------------------------------------------
 
 create table country (
-	id int primary key,
+	id int constraint pk_countryId primary key,
 	name varchar(255),
 	shortName varchar(255)
 );
@@ -51,7 +40,7 @@ create table country (
 -------------------------------------------------------------------------------------------------
 
 create table player (
-	id int identity(1,1) primary key,
+	id int identity(1,1) constraint pk_playerId primary key,
 	name varchar(255)
 );
 
@@ -60,7 +49,7 @@ create unique index ix_player_name_unique on player(name);
 -------------------------------------------------------------------------------------------------
 
 create table tank (
-	id int primary key,
+	id int constraint pk_tankId primary key,
 	tankTypeId int not null,
 	countryId int not null,
 	name varchar(255),
@@ -70,15 +59,16 @@ create table tank (
 	expWR float,
 	expSpot float,
 	expFrags float,
-	expDef float,
-	foreign key (tankTypeId) references tankType (id),
-	foreign key (countryId) references country (id)
+	expDef float
 );
+
+alter table tank add constraint fk_tank_tankTypeId foreign key (tankTypeId) references tankType (id);
+alter table tank add constraint fk_tank_country foreign key (countryId) references country (id);
 
 -------------------------------------------------------------------------------------------------
 
 create table playerTank (
-	id int identity(1,1) primary key,
+	id int identity(1,1) constraint pk_playerTankId primary key,
 	tankId int not null,
 	playerId int not null,
 	creationTime datetime NULL,
@@ -163,15 +153,16 @@ create table playerTank (
 	modRadioId int not null default 0,
 	modTurretId int not null default 0,
 	modGunId int not null default 0,
-	markOfMastery int not null default 0,
-	foreign key (tankId) references tank (id),
-	foreign key (playerId) references player (id)
+	markOfMastery int not null default 0
 );
+
+alter table playerTank add constraint fk_playerTank_tank foreign key (tankId) references tank (id);
+alter table playerTank add constraint fk_playerTank_player foreign key (playerId) references player (id);
 
 -------------------------------------------------------------------------------------------------
 
 CREATE TABLE battleResult (
-	id int primary key,
+	id int constraint pk_battleResult_Id primary key,
 	name varchar(50) NOT NULL,
 	color varchar(50) NOT NULL,
 	victory bit NOT NULL default 0,
@@ -182,11 +173,11 @@ CREATE TABLE battleResult (
 -------------------------------------------------------------------------------------------------
 
 CREATE TABLE battleSurvive (
-	id int primary key,
+	id int constraint pk_battleSurvive_Id primary key,
 	name varchar(50) NOT NULL,
 	color varchar(50) NOT NULL,
 	survived bit NOT NULL default 0,
-	killed bit NOT NULL default 0
+	killed bit NOT NULL default 0,
 );
 
 -------------------------------------------------------------------------------------------------
@@ -194,7 +185,7 @@ CREATE TABLE battleSurvive (
 -- Removed columns:
 
 create table battle (
-	id int IDENTITY(1,1) primary key,
+	id int IDENTITY(1,1) constraint pk_battleId primary key,
 	playerTankId int not null default 0,
 	battlesCount int not null default 0,
 	battleTime datetime not null default 0,
@@ -228,38 +219,41 @@ create table battle (
 	modeCompany int not null default 0,
 	wn8 int not null default 0,
 	eff int not null default 0,
-	wsId int,
-	foreign key (playerTankId) references playerTank (id),
-	foreign key (battleResultId) references battleResult (id),
-	foreign key (battleSurviveId) references battleSurvive (id)
+	wsId int
 );
+
+alter table battle add constraint fk_battle_playerTank foreign key (playerTankId) references playerTank (id)
+alter table battle add constraint fk_battle_battleResult foreign key (battleResultId) references battleResult (id)
+alter table battle add constraint fk_battle_battleSurvive foreign key (battleSurviveId) references battleSurvive (id)
 
 -------------------------------------------------------------------------------------------------
 
 create table playerTankFrag (
 	playerTankId int not null,
 	fraggedTankId int not null,
-	fragCount int not null,
-	primary key (playerTankId, fraggedTankId),
-	foreign key (playerTankId) references playerTank (id),
-	foreign key (fraggedTankId) references tank (id)
+	fragCount int not null
 );
+
+alter table playerTankFrag add constraint pk_playerTankFrag_playerTankId_fraggedTankId primary key (playerTankId, fraggedTankId);
+alter table playerTankFrag add constraint fk_playerTankFrag_playerTankId foreign key (playerTankId) references playerTank (id);
+alter table playerTankFrag add constraint fk_playerTankFrag_fraggedTankId foreign key (fraggedTankId) references tank (id);
 
 ------------------------------------------------------------------------------------------------
 
 create table battleFrag (
 	battleId int not null,
 	fraggedTankId int not null,
-	fragCount int not null,
-	primary key (battleId, fraggedTankId),
-	foreign key (battleId) references battle (id),
-	foreign key (fraggedTankId) references tank (id)
+	fragCount int not null
 );
+
+alter table battleFrag add constraint pk_battleFrag_battleId_fraggedTankId primary key (battleId, fraggedTankId);
+alter table battleFrag add constraint fk_battleFrag_battleId foreign key (battleId) references battle (id);
+alter table battleFrag add constraint fk_battleFrag_fraggedTankId foreign key (fraggedTankId) references tank (id);
 
 -------------------------------------------------------------------------------------------------
 
 create table ach (
-	id int identity(1,1) primary key,
+	id int identity(1,1) constraint pk_achId primary key,
 	name varchar(50) not null,
 	section varchar(50) not null,
 	options varchar(2000),
@@ -284,45 +278,48 @@ create table ach (
 create table playerTankAch (
 	playerTankId int not null,
 	achId int not null,
-	achCount int,
-	primary key (playerTankId, achId),
-	foreign key (achId) references ach (id),
-	foreign key (playerTankId) references playerTank (id)
+	achCount int
 );
+
+alter table playerTankAch add constraint pk_playerTankAch_playerTankId_achId primary key (playerTankId, achId);
+alter table playerTankAch add constraint fk_playerTankAch_playerTankId foreign key (achId) references ach (id);
+alter table playerTankAch add constraint fk_playerTankAch_achId foreign key (playerTankId) references playerTank (id);
 
 -------------------------------------------------------------------------------------------------
 
 create table battleAch (
 	battleId int not null,
 	achId int not null,
-	achCount int,
-	primary key (battleId, achId),
-	foreign key (achId) references ach (id),
-	foreign key (battleId) references battle (id)
+	achCount int
 );
+
+alter table battleAch add constraint pk_battleAch_battleId_achId primary key (battleId, achId);
+alter table battleAch add constraint fk_battleAch_achId foreign key (achId) references ach (id);
+alter table battleAch add constraint fk_battleAch_battleId foreign key (battleId) references battle (id);
 
 -------------------------------------------------------------------------------------------------
 
 -- https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankturrets/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
 
 create table modTurret (
-	id int primary key,								--moduleId
+	id int constraint pk_modTurretId primary key,	--moduleId
 	tankId int not null,							--tanks[]
 	name varchar(255),								--name_i18n
 	tier int,										--level
 	viewRange int,									--circular_vision_radius
 	armorFront int,									--armor_forehead
 	armorSides int,									--armor_board
-	armorRear int,									--armor_fedd
-	foreign key (tankId) references tank (id)
+	armorRear int									--armor_fedd
 );
+
+alter table modTurret add constraint fk_modTurret_tankId foreign key (tankId) references tank (id);
 
 -------------------------------------------------------------------------------------------------
 
 --https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankguns/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
 
 create table modGun (
-	id int primary key,								--module_id
+	id int constraint pk_modGunId primary key,		--module_id
 	name varchar(255),								--name_i18n
 	tier int,										--level
 	dmg1 int,										--damage[0]
@@ -339,27 +336,29 @@ create table modGun (
 create table modTurretGun (
 	turretId int not null,							--turrets[] (gun)
 	gunId int not null,								--module_id (gun)
-	primary key (turretId, gunId),
-	foreign key (turretId) references modTurret (id),
-	foreign key (gunId) references modGun (id)
 );
+
+alter table modTurretGun add constraint pk_modTurretGun_turretId_gunId primary key (turretId, gunId);
+alter table modTurretGun add constraint fk_modTurretGun_turretId foreign key (turretId) references modTurret (id);
+alter table modTurretGun add constraint fk_modTurretGun_gunId foreign key (gunId) references modGun (id);
 
 ------------------------------------------------------------------------------------------------
 
 create table modTankGun (
 	tankId int not null,							--tanks[] (gun)
 	gunId int not null,								--module_id (gun)
-	primary key (tankId, gunId),
-	foreign key (tankId) references tank (id),
-	foreign key (gunId) references modGun (id)
 );
+
+alter table modTankGun add constraint pk_modTankGun_tankId_gunId primary key (tankId, gunId);
+alter table modTankGun add constraint fk_modTankGun_tankId foreign key (tankId) references tank (id);
+alter table modTankGun add constraint fk_modTankGun_gunId foreign key (gunId) references modGun (id);
 
 -------------------------------------------------------------------------------------------------
 
 -- https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankradios/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
 
 create table modRadio (
-	id int primary key,								--module_id
+	id int constraint pk_modRadioId primary key,	--module_id
 	name varchar(255),								--name_i18n
 	tier int,										--level
 	signalRange int									--distance
@@ -370,23 +369,24 @@ create table modRadio (
 create table modTankRadio (
 	tankId int not null,							--tanks[] (radio)
 	radioId int not null,							--module_id (radio)
-	primary key (tankId, radioId),
-	foreign key (tankId) references tank (id),
-	foreign key (radioId) references modRadio (id)
 );
+
+alter table modTankRadio add constraint pk_modTankRadio_tankId_radioId primary key (tankId, radioId);
+alter table modTankRadio add constraint fk_modTankRadio_tankId  foreign key (tankId) references tank (id);
+alter table modTankRadio add constraint fk_modTankRadio_radioId foreign key (radioId) references modRadio (id);
+
 
 -------------------------------------------------------------------------------------------------
 
 create table json2dbMapping (
-	Id int identity(1,1) primary key,
+	Id int identity(1,1) constraint pk_json2dbMappingId primary key,
 	jsonMain varchar(255) null,
 	jsonSub varchar(255) null,
 	jsonProperty varchar(255) null,
 	dbDataType varchar(255) null,
 	dbPlayerTank varchar(255) null,
 	dbBattle varchar(255) null,
-	dbAch varchar(255) null,
-	jsonMainSubProperty varchar(255) null
+	dbAch varchar(255) null 
 );
 
 
@@ -402,7 +402,7 @@ create table wsTankId (
 -------------------------------------------------------------------------------------------------
 
 create table favList (
-	id int identity(1,1) primary key,
+	id int identity(1,1) constraint pk_favListId primary key,
 	name varchar(50) not null,
 	position int null
 );

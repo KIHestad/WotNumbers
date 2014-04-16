@@ -1,0 +1,61 @@
+﻿/*
+DROP VIEW [dbo].[tankInfoShort]
+DROP VIEW [dbo].[playerTankInfoBattleCount]
+DROP VIEW [dbo].[json2dbMappingView]
+DROP VIEW [dbo].[tankData2BattleMappingView]
+DROP VIEW [dbo].[battleResultView]
+*/
+GO
+-- Create view showing tank data short info
+
+
+CREATE VIEW [dbo].[tankInfoShort]
+AS
+SELECT        dbo.tank.Id AS TankID, dbo.tank.name AS Tank, dbo.tankType.name AS Tanktype, dbo.country.name AS Country
+FROM            dbo.country INNER JOIN
+                         dbo.tank ON dbo.country.Id = dbo.tank.countryId INNER JOIN
+                         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.ID
+
+GO
+
+-- Create view showing player tanks, short tank info and battle count
+
+CREATE VIEW [dbo].[PlayerTankStatsView]
+AS
+SELECT        dbo.player.name AS Playername, dbo.tank.name AS Tank, dbo.tank.tier AS Tier, dbo.tankType.name AS Tanktype, dbo.country.name AS Country, 
+                         dbo.playerTank.battles15 AS [Battles 15x15], dbo.playerTank.battles7 AS [Battles 7x7], dbo.playerTank.wn8 AS WN8, dbo.playerTank.eff AS Eff
+FROM            dbo.playerTank INNER JOIN
+                         dbo.player ON dbo.playerTank.playerId = dbo.player.id INNER JOIN
+                         dbo.tank ON dbo.playerTank.tankId = dbo.tank.id INNER JOIN
+                         dbo.tankType ON dbo.tank.tankTypeId = dbo.tankType.id INNER JOIN
+                         dbo.country ON dbo.tank.countryId = dbo.country.id
+GO
+
+-- Create view for simulating one PK on jsonPlayerTank table
+
+CREATE VIEW [dbo].[json2dbMappingView]
+AS
+SELECT        Concat(dbo.json2dbMapping.jsonMain, '.', dbo.json2dbMapping.jsonSub, '.', dbo.json2dbMapping.jsonProperty) as jsonMainSubProperty,  *
+FROM          dbo.json2dbMapping
+
+GO
+
+-- Create view for mapping Battle data
+
+CREATE VIEW [dbo].[tankData2BattleMappingView]
+AS
+SELECT        dbDataType, dbPlayerTank, dbBattle
+FROM            dbo.json2dbMapping
+WHERE        (dbBattle IS NOT NULL)
+GROUP BY dbDataType, dbPlayerTank, dbBattle
+
+GO
+
+-- create view for adding all achievments to all player tanks
+
+CREATE VIEW [dbo].[playerTankAchAllView]
+AS
+SELECT        dbo.playerTank.id AS playerTankId, dbo.ach.id AS achId
+FROM          dbo.ach, dbo.playerTank
+
+GO
