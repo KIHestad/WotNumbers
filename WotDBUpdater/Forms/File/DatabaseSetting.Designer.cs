@@ -84,7 +84,7 @@
 			this.DatabaseSettingsTheme.MainArea = mainAreaClass1;
 			this.DatabaseSettingsTheme.Name = "DatabaseSettingsTheme";
 			this.DatabaseSettingsTheme.Resizable = false;
-			this.DatabaseSettingsTheme.Size = new System.Drawing.Size(371, 448);
+			this.DatabaseSettingsTheme.Size = new System.Drawing.Size(371, 517);
 			this.DatabaseSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DatabaseSettingsTheme.SystemExitImage")));
 			this.DatabaseSettingsTheme.SystemMaximizeImage = null;
 			this.DatabaseSettingsTheme.SystemMinimizeImage = null;
@@ -100,16 +100,16 @@
 			this.panelSQLite.Controls.Add(this.cmdSQLiteDatabaseFile);
 			this.panelSQLite.Location = new System.Drawing.Point(33, 350);
 			this.panelSQLite.Name = "panelSQLite";
-			this.panelSQLite.Size = new System.Drawing.Size(311, 79);
+			this.panelSQLite.Size = new System.Drawing.Size(311, 140);
 			this.panelSQLite.TabIndex = 31;
 			// 
 			// txtDatabaseFile
 			// 
 			this.txtDatabaseFile.Image = null;
-			this.txtDatabaseFile.Location = new System.Drawing.Point(4, 48);
+			this.txtDatabaseFile.Location = new System.Drawing.Point(6, 48);
 			this.txtDatabaseFile.Name = "txtDatabaseFile";
 			this.txtDatabaseFile.PasswordChar = '\0';
-			this.txtDatabaseFile.Size = new System.Drawing.Size(275, 23);
+			this.txtDatabaseFile.Size = new System.Drawing.Size(296, 45);
 			this.txtDatabaseFile.TabIndex = 26;
 			// 
 			// badLabel5
@@ -128,7 +128,7 @@
 			this.badSeperator2.BackColor = System.Drawing.Color.Transparent;
 			this.badSeperator2.Direction = System.Windows.Forms.Orientation.Horizontal;
 			this.badSeperator2.Image = null;
-			this.badSeperator2.Location = new System.Drawing.Point(4, 4);
+			this.badSeperator2.Location = new System.Drawing.Point(6, 3);
 			this.badSeperator2.Name = "badSeperator2";
 			this.badSeperator2.Size = new System.Drawing.Size(302, 23);
 			this.badSeperator2.TabIndex = 9;
@@ -137,11 +137,11 @@
 			// cmdSQLiteDatabaseFile
 			// 
 			this.cmdSQLiteDatabaseFile.Image = null;
-			this.cmdSQLiteDatabaseFile.Location = new System.Drawing.Point(285, 48);
+			this.cmdSQLiteDatabaseFile.Location = new System.Drawing.Point(227, 99);
 			this.cmdSQLiteDatabaseFile.Name = "cmdSQLiteDatabaseFile";
-			this.cmdSQLiteDatabaseFile.Size = new System.Drawing.Size(21, 23);
+			this.cmdSQLiteDatabaseFile.Size = new System.Drawing.Size(75, 23);
 			this.cmdSQLiteDatabaseFile.TabIndex = 13;
-			this.cmdSQLiteDatabaseFile.Text = "...";
+			this.cmdSQLiteDatabaseFile.Text = "Select File";
 			this.cmdSQLiteDatabaseFile.Click += new System.EventHandler(this.cmdSQLiteDatabaseFile_Click);
 			// 
 			// panelMSSQL
@@ -168,6 +168,7 @@
 			this.popupDbAuth.Name = "popupDbAuth";
 			this.popupDbAuth.Size = new System.Drawing.Size(176, 23);
 			this.popupDbAuth.TabIndex = 21;
+			this.popupDbAuth.Text = null;
 			this.popupDbAuth.Click += new System.EventHandler(this.popupDbAuth_Click);
 			// 
 			// badSeperator1
@@ -188,6 +189,7 @@
 			this.popupDatabase.Name = "popupDatabase";
 			this.popupDatabase.Size = new System.Drawing.Size(176, 23);
 			this.popupDatabase.TabIndex = 15;
+			this.popupDatabase.Text = null;
 			this.popupDatabase.Click += new System.EventHandler(this.popupDatabase_Click);
 			// 
 			// badLabel1
@@ -268,6 +270,7 @@
 			this.popupDatabaseType.Name = "popupDatabaseType";
 			this.popupDatabaseType.Size = new System.Drawing.Size(176, 23);
 			this.popupDatabaseType.TabIndex = 29;
+			this.popupDatabaseType.Text = null;
 			this.popupDatabaseType.Click += new System.EventHandler(this.popupDatabaseType_Click);
 			// 
 			// badLabel6
@@ -315,7 +318,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(371, 448);
+			this.ClientSize = new System.Drawing.Size(371, 517);
 			this.Controls.Add(this.DatabaseSettingsTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;

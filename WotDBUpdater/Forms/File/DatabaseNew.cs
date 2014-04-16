@@ -115,9 +115,18 @@ namespace WotDBUpdater.Forms.File
 				{
 					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')", true, SelectedDbType);
 					Config.Settings.playerName = txtPlayerName.Text.Trim();
-					string result = "";
-					Config.SaveConfig(out result);
+					Config.Settings.playerId = 1;
 				}
+				else
+				{
+					Config.Settings.playerName = "";
+					Config.Settings.playerId = 0;
+				}
+				string result = "";
+				Config.Settings.databaseType = SelectedDbType;
+				Config.Settings.databaseServer = txtDatabasename.Text;
+				Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
+				Config.SaveConfig(out result);
 				UpdateProgressBar(ref step, maxStep);
 				// Done
 				Cursor.Current = Cursors.Default;
