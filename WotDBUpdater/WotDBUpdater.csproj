@@ -358,6 +358,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_TD.png" />
+    <Content Include="Docs\Database\createTableSQLite.txt" />
     <Content Include="Docs\Database\createView.txt" />
     <Content Include="DevDocs\Dev log\BadButton.txt" />
     <Content Include="DevDocs\Dev log\cmdrTrinity.txt" />
@@ -382,7 +383,7 @@
     <Content Include="DevDocs\WotStatistics\2.png" />
     <Content Include="DevDocs\WotStatistics\3.png" />
     <Content Include="DevDocs\WotStatistics\4.png" />
-    <Content Include="Docs\Database\createTable.txt" />
+    <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="Dossier2json\wotdc2j_8_11.py" />

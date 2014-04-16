@@ -1,0 +1,408 @@
+﻿/*
+drop table tankType
+drop table country
+drop table player
+drop table tank
+drop table playerTank
+drop table ach
+drop table playerTankAch
+drop table playerTankFrag
+drop table battle
+drop table battleResult
+drop table battleAch
+drop table battleFrag
+drop table json2dbMapping
+drop table modTurret
+drop table modGun
+drop table modTurretGun
+drop table modTankGun
+drop table modRadio
+drop table modTankRadio
+*/
+
+
+/*
+SQLite:
+
+Autoincrement
+- A column declared INTEGER PRIMARY KEY will autoincrement
+- Omitting the autoincrement column in an insert is optional
+- SQL Server syntax IDENTITY does not seem to interupt table creation
+
+*/
+
+
+-------------------------------------------------------------------------------------------------
+
+create table tankType (
+	id integer primary key,
+	name varchar(255),
+	shortName varchar(255)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table country (
+	id integer primary key,
+	name varchar(255),
+	shortName varchar(255)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table player (
+	id integer primary key,
+	name varchar(255)
+);
+
+create unique index ix_player_name_unique on player(name);
+
+-------------------------------------------------------------------------------------------------
+
+create table tank (
+	id integer primary key,
+	tankTypeId integer not null,
+	countryId integer not null,
+	name varchar(255),
+	tier integer,
+	premium integer,
+	expDmg float,
+	expWR float,
+	expSpot float,
+	expFrags float,
+	expDef float,
+	foreign key (tankTypeId) references tankType (id),
+	foreign key (countryId) references country (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table playerTank (
+	id integer primary key,
+	tankId integer not null,
+	playerId integer not null,
+	creationTime datetime NULL,
+	updatedTime datetime NULL,
+	lastBattleTime datetime NULL,
+	has15 integer not null default 0,
+	battles15 integer not null default 0,
+	battles8p15 integer not null default 0,
+	wins15 integer not null default 0,
+	losses15 integer not null default 0,
+	survived15 integer not null default 0,
+	frags15 integer not null default 0,
+	frags8p15 integer not null default 0,
+	dmg15 integer not null default 0,
+	dmgReceived15 integer not null default 0,
+	assistSpot15 integer not null default 0,
+	assistTrack15 integer not null default 0,
+	cap15 integer not null default 0,
+	def15 integer not null default 0,
+	spot15 integer not null default 0,
+	xp15 integer not null default 0,
+	xp8p15 integer not null default 0,
+	xpOriginal15 integer not null default 0,
+	shots15 integer not null default 0,
+	hits15 integer not null default 0,
+	heHits15 integer not null default 0,
+	pierced15 integer not null default 0,
+	shotsReceived15 integer not null default 0,
+	piercedReceived15 integer not null default 0,
+	heHitsReceived15 integer not null default 0,
+	noDmgShotsReceived15 integer not null default 0,
+	maxDmg15 integer not null default 0,
+	maxFrags15 integer not null default 0,
+	maxXp15 integer not null default 0,
+	has7 integer not null default 0,
+	battles7 integer not null default 0,
+	wins7 integer not null default 0,
+	losses7 integer not null default 0,
+	survived7 integer not null default 0,
+	frags7 integer not null default 0,
+	frags8p7 integer not null default 0,
+	dmg7 integer not null default 0,
+	dmgReceived7 integer not null default 0,
+	assistSpot7 integer not null default 0,
+	assistTrack7 integer not null default 0,
+	cap7 integer not null default 0,
+	def7 integer not null default 0,
+	spot7 integer not null default 0,
+	xp7 integer not null default 0,
+	xpOriginal7 integer not null default 0,
+	shots7 integer not null default 0,
+	hits7 integer not null default 0,
+	heHits7 integer not null default 0,
+	pierced7 integer not null default 0,
+	shotsReceived7 integer not null default 0,
+	piercedReceived7 integer not null default 0,
+	heHitsReceived7 integer not null default 0,
+	noDmgShotsReceived7 integer not null default 0,
+	maxDmg7 integer not null default 0,
+	maxFrags7 integer not null default 0,
+	maxXp7 integer not null default 0,
+	hasCompany integer not null default 0,
+	hasClan integer not null default 0,
+	basedOnVersion integer not null default 0,
+	battleLifeTime integer not null default 0,
+	mileage integer not null default 0,
+	treesCut integer not null default 0,
+	eqBino integer not null default 0,
+	eqCoated integer not null default 0,
+	eqCamo integer not null default 0,
+	equVent integer not null default 0,
+	skillRecon integer not null default 0,
+	skillAwareness integer not null default 0,
+	skillCamo integer not null default 0,
+	skillBia integer not null default 0,
+	premiumCons integer not null default 0,
+	vehicleCamo integer not null default 0,
+	battlesCompany integer not null default 0,
+	battlesClan integer not null default 0,
+	wn8 integer not null default 0,
+	eff integer not null default 0,
+	modRadioId integer not null default 0,
+	modTurretId integer not null default 0,
+	modGunId integer not null default 0,
+	markOfMastery integer not null default 0,
+	foreign key (tankId) references tank (id),
+	foreign key (playerId) references player (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+CREATE TABLE battleResult (
+	id integer primary key,
+	name varchar(50) NOT NULL,
+	color varchar(50) NOT NULL,
+	victory bit NOT NULL default 0,
+	draw bit NOT NULL default 0,
+	defeat bit NOT NULL default 0
+);
+
+-------------------------------------------------------------------------------------------------
+
+CREATE TABLE battleSurvive (
+	id integer primary key,
+	name varchar(50) NOT NULL,
+	color varchar(50) NOT NULL,
+	survived bit NOT NULL default 0,
+	killed bit NOT NULL default 0
+);
+
+-------------------------------------------------------------------------------------------------
+
+-- Removed columns:
+
+create table battle (
+	id integer primary key,
+	playerTankId integer not null default 0,
+	battlesCount integer not null default 0,
+	battleTime datetime not null default 0,
+	battleLifeTime integer not null default 0,
+	battleResultId integer not null,
+	victory integer not null default 0,
+	draw integer not null default 0,
+	defeat integer not null default 0,
+	battleSurviveId integer not null,
+	survived integer not null default 0,
+	killed integer not null default 0,
+	frags integer not null default 0,
+	dmg integer not null default 0,
+	dmgReceived integer not null default 0,
+	assistSpot integer not null default 0,
+	assistTrack integer not null default 0,
+	cap integer not null default 0,
+	def integer not null default 0,
+	shots integer not null default 0,
+	hits integer not null default 0,
+	shotsReceived integer not null default 0,
+	pierced integer not null default 0,
+	piercedReceived integer not null default 0,
+	spotted integer not null default 0,
+	mileage integer not null default 0,
+	treesCut integer not null default 0,
+	xp integer not null default 0,
+	mode15 integer not null default 0,
+	mode7 integer not null default 0,
+	modeClan integer not null default 0,
+	modeCompany integer not null default 0,
+	wn8 integer not null default 0,
+	eff integer not null default 0,
+	wsId integer,
+	foreign key (playerTankId) references playerTank (id),
+	foreign key (battleResultId) references battleResult (id),
+	foreign key (battleSurviveId) references battleSurvive (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table playerTankFrag (
+	playerTankId integer not null,
+	fraggedTankId integer not null,
+	fragCount integer not null,
+	primary key (playerTankId, fraggedTankId),
+	foreign key (playerTankId) references playerTank (id),
+	foreign key (fraggedTankId) references tank (id)
+);
+
+------------------------------------------------------------------------------------------------
+
+create table battleFrag (
+	battleId integer not null,
+	fraggedTankId integer not null,
+	fragCount integer not null,
+	primary key (battleId, fraggedTankId),
+	foreign key (battleId) references battle (id),
+	foreign key (fraggedTankId) references tank (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table ach (
+	id integer primary key,
+	name varchar(50) not null,
+	section varchar(50) not null,
+	options varchar(2000),
+	section_order integer not null,
+	image varchar(255),
+	name_i18n varchar(50),
+	type varchar(50),
+	ordernum integer not null,
+	description varchar(255) not null,
+	image1 varchar(255),
+	image2 varchar(255),
+	image3 varchar(255),
+	image4 varchar(255),
+	name_i18n1 varchar(50),
+	name_i18n2 varchar(50),
+	name_i18n3 varchar(50),
+	name_i18n4 varchar(50)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table playerTankAch (
+	playerTankId integer not null,
+	achId integer not null,
+	achCount integer,
+	primary key (playerTankId, achId),
+	foreign key (achId) references ach (id),
+	foreign key (playerTankId) references playerTank (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table battleAch (
+	battleId integer not null,
+	achId integer not null,
+	achCount integer,
+	primary key (battleId, achId),
+	foreign key (achId) references ach (id),
+	foreign key (battleId) references battle (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+-- https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankturrets/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
+
+create table modTurret (
+	id integer primary key,								--moduleId
+	tankId integer not null,							--tanks[]
+	name varchar(255),								--name_i18n
+	tier integer,										--level
+	viewRange integer,									--circular_vision_radius
+	armorFront integer,									--armor_forehead
+	armorSides integer,									--armor_board
+	armorRear integer,									--armor_fedd
+	foreign key (tankId) references tank (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+--https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankguns/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
+
+create table modGun (
+	id integer primary key,								--module_id
+	name varchar(255),								--name_i18n
+	tier integer,										--level
+	dmg1 integer,										--damage[0]
+	dmg2 integer,										--damage[1]
+	dmg3 integer,										--damage[2]
+	pen1 integer,										--piercing_power[0]
+	pen2 integer,										--piercing_power[1]
+	pen3 integer,										--piercing_power[2]
+	fireRate numeric								--rate (missing info on autoload)
+);
+
+------------------------------------------------------------------------------------------------
+
+create table modTurretGun (
+	turretId integer not null,							--turrets[] (gun)
+	gunId integer not null,								--module_id (gun)
+	primary key (turretId, gunId),
+	foreign key (turretId) references modTurret (id),
+	foreign key (gunId) references modGun (id)
+);
+
+------------------------------------------------------------------------------------------------
+
+create table modTankGun (
+	tankId integer not null,							--tanks[] (gun)
+	gunId integer not null,								--module_id (gun)
+	primary key (tankId, gunId),
+	foreign key (tankId) references tank (id),
+	foreign key (gunId) references modGun (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+-- https://eu.wargaming.net/developers/api_explorer/wot/encyclopedia/tankradios/?application_id=2a8bf9a1ee36d6125058bf6efd006caf&http_method=GET&run=1
+
+create table modRadio (
+	id integer primary key,								--module_id
+	name varchar(255),								--name_i18n
+	tier integer,										--level
+	signalRange int									--distance
+);
+
+------------------------------------------------------------------------------------------------
+
+create table modTankRadio (
+	tankId integer not null,							--tanks[] (radio)
+	radioId integer not null,							--module_id (radio)
+	primary key (tankId, radioId),
+	foreign key (tankId) references tank (id),
+	foreign key (radioId) references modRadio (id)
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table json2dbMapping (
+	Id integer primary key,
+	jsonMain varchar(255) null,
+	jsonSub varchar(255) null,
+	jsonProperty varchar(255) null,
+	dbDataType varchar(255) null,
+	dbPlayerTank varchar(255) null,
+	dbBattle varchar(255) null,
+	dbAch varchar(255) null,
+	jsonMainSubProperty varchar(255) null
+);
+
+
+-------------------------------------------------------------------------------------------------
+
+create table wsTankId (
+  tankId integer,
+  tankName varchar(100),
+  wsTankId integer,
+  wsCountryId int
+);
+
+-------------------------------------------------------------------------------------------------
+
+create table favList (
+	id integer primary key,
+	name varchar(50) not null,
+	position integer null
+);
