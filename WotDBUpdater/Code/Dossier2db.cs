@@ -154,9 +154,9 @@ namespace WotDBUpdater.Code
 												string dbField = foundRows[0]["dbPlayerTank"].ToString();
 												switch (dataType)
 												{
-													case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); ; break;
-													case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); ; break;
-													case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); ; break;
+													case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
+													case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+													case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
 												}
 											}
 											else // Found mapping to Achievment

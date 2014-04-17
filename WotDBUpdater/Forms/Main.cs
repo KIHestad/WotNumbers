@@ -174,11 +174,11 @@ namespace WotDBUpdater.Forms
 			// Check / show logged in player
 			if (Config.Settings.playerName == "")
 			{
-				MainTheme.Text = "WoT DBstats - NO PLAYER SELECTED";
+				MainTheme.Text = "Argus - World of Tanks Statistics - NO PLAYER SELECTED";
 			}
 			else
 			{
-				MainTheme.Text = "WoT DBstats - " + Config.Settings.playerName;
+				MainTheme.Text = "Argus - World of Tanks Statistics - " + Config.Settings.playerName;
 			}
 			Refresh();
 		}
@@ -1109,10 +1109,10 @@ namespace WotDBUpdater.Forms
 		{
 			//Form frm = new Forms.Help.About();
 			//frm.ShowDialog();
-			string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
-						 "Statistics Tool for World Of Tanks" + Environment.NewLine + Environment.NewLine +
+			string msg = "Argus - World of Tanks Statistics" + Environment.NewLine + Environment.NewLine +
+						 "version: " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
-			Code.MsgBox.Show(msg, "About WoT DBstat");
+			Code.MsgBox.Show(msg, "About Argus");
 		}
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
