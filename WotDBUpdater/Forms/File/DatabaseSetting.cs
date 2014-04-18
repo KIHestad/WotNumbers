@@ -81,7 +81,7 @@ namespace WotDBUpdater.Forms.File
 			// Do not use standard conn here, supply alternate sql conn string
 			string winAuth = "Win";
 			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
-			string connectionstring = Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text, 10, true, ConfigData.dbType.MSSQLserver);
+			string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text);
 			string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
 			try
 			{
@@ -114,24 +114,26 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
-			// Save Db Type
-			Config.Settings.databaseType = selectedDbType;
-			// Save SQLite settings
-			Config.Settings.databaseFileName = txtDatabaseFile.Text;
-			// Save SQL Server settings
-			Config.Settings.databaseServer = txtServerName.Text;
-			Config.Settings.databaseWinAuth = (popupDbAuth.Text == "Windows Authentication");
-			Config.Settings.databaseUid = txtUID.Text;
-			Config.Settings.databasePwd = txtPW.Text;
-			Config.Settings.databaseName = popupDatabase.Text;
-			// Save now
+			// Get ready to save new settings to config
 			string msg = "";
 			bool saveOk = false;
+			Config.Settings.databaseType = selectedDbType;
+			// Save Db settings settings according to dbtype
+			if (selectedDbType == ConfigData.dbType.SQLite)
+			{
+				Config.Settings.databaseFileName = txtDatabaseFile.Text;
+			}
+			else if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			{
+				Config.Settings.databaseServer = txtServerName.Text;
+				Config.Settings.databaseWinAuth = (popupDbAuth.Text == "Windows Authentication");
+				Config.Settings.databaseUid = txtUID.Text;
+				Config.Settings.databasePwd = txtPW.Text;
+				Config.Settings.databaseName = popupDatabase.Text;
+			}
 			saveOk = Config.SaveConfig(out msg);
 			// Check if Connection to DB is OK, and get base data
-			string winAuth = "Win";
-			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
-			if (Config.CheckDBConn(true, txtServerName.Text, popupDatabase.Text, winAuth, txtUID.Text, txtPW.Text)) // check db config, displays message if error
+			if (db.CheckConnection()) // check db config, displays message if error
 			{
 				// Check if current plyer exists in current database, if not remove it
 				DataTable dt = db.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerName + "'");
@@ -150,8 +152,8 @@ namespace WotDBUpdater.Forms.File
 				Config.SaveConfig(out msg);
 				// Init
 				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
+				TankData.GetJson2dbMappingFromDB();
+				TankData.GetTankData2BattleMappingFromDB();
 				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
 				this.Close();
 			}
@@ -166,7 +168,7 @@ namespace WotDBUpdater.Forms.File
 				// Do not use standard conn here, supply alternate sql conn string
 				string winAuth = "Win";
 				if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
-				string connectionstring = Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text, 10, true, ConfigData.dbType.MSSQLserver);
+				string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text);
 				string sql = "SELECT * FROM master.dbo.sysdatabases";
 				try
 				{
@@ -186,7 +188,7 @@ namespace WotDBUpdater.Forms.File
 			}
 			if (ok)
 			{
-				Form frm = new Forms.File.DatabaseNew(selectedDbType);
+				Form frm = new Forms.File.DatabaseNew();
 				frm.ShowDialog();
 				LoadConfig();
 			}
@@ -220,7 +222,6 @@ namespace WotDBUpdater.Forms.File
 			{
 				selectedDbType = ConfigData.dbType.MSSQLserver;
 			}
-
 			else if (popupDatabaseType.Text == "SQLite")
 			{
 				selectedDbType = ConfigData.dbType.SQLite;

@@ -19,7 +19,7 @@ namespace WotDBUpdater.Code
 		public static string UpdateDossierFileWatcher()
 		{
 			string logtext = "Dossier file listener stopped";
-			bool run = (Config.Settings.run == 1);
+			bool run = (Config.Settings.dossierFileWathcherRun == 1);
 			if (run)
 			{
 				try

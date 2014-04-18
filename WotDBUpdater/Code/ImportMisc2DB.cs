@@ -24,10 +24,8 @@ namespace WotDBUpdater.Code
 
 		#region importTanks
 
-		public static List<string> UpdateTanks(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
+		public static List<string> UpdateTanks()
 		{
-			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
-			if (overrideDbType) SelectedDbType = dbType;
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath);
 			string jsonfile = appPath + "/Dossier2json/tanks.json";
 			StringBuilder sb = new StringBuilder();
@@ -83,11 +81,12 @@ namespace WotDBUpdater.Code
 								case "tier" : jsonTier = (int)((JProperty)jtoken).Value; break;
 								case "premium" : jsonPremium = (int)((JProperty)jtoken).Value; break;
 								case "title" : jsonTitle = (string)((JProperty)jtoken).Value.ToString(); break;
-								case "compDescr" : jsonCompDescr = (int)((JProperty)jtoken).Value; tankExists = TankData.TankExist(jsonCompDescr); break; // Check if tank exsits
+								case "compDescr" : jsonCompDescr = (int)((JProperty)jtoken).Value; break; // Check if tank exsits
 							}
+
 						}
 					}
-
+					tankExists = TankData.TankExist(jsonCompDescr);
 					string sql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)";
 					if (!tankExists) // Only run if Tank does not exists in table
 					{
@@ -97,7 +96,7 @@ namespace WotDBUpdater.Code
 						db.AddWithValue(ref sql, "@name", jsonTitle, db.SqlDataType.VarChar);
 						db.AddWithValue(ref sql, "@tier", jsonTier, db.SqlDataType.Int);
 						db.AddWithValue(ref sql, "@premium", jsonPremium, db.SqlDataType.Int);
-						ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+						ok = db.ExecuteNonQuery(sql);
 						log.Add("  Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")");
 					}
 					else
@@ -131,10 +130,8 @@ namespace WotDBUpdater.Code
 		#region updateWN8
 
 
-		public static String UpdateWN8(bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
+		public static String UpdateWN8()
 		{
-			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
-			if (overrideDbType) SelectedDbType = dbType;
 			string sql = "";
 			string tankId = "";
 			string expFrags = "";
@@ -195,7 +192,7 @@ namespace WotDBUpdater.Code
 			// Execute update statements
 			try
 			{
-				db.ExecuteNonQuery(sql, true, SelectedDbType);
+				db.ExecuteNonQuery(sql);
 			}
 			catch (Exception ex)
 			{

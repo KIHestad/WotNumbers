@@ -13,25 +13,31 @@ namespace WotDBUpdater.Code
 {
 	public static class db
 	{
-		public static DataTable FetchData(string sql, string OverrideDbCon = "")
+		public enum SqlDataType
 		{
+			VarChar = 1,
+			Int = 2,
+			DateTime = 3
+		}
+		
+		public static DataTable FetchData(string sql)
+		{
+			ConfigData.dbType SelecteDbType = Config.Settings.databaseType;
 			DataTable dt = new DataTable();
-			string connectionstring = Config.DatabaseConnection();
-			if (OverrideDbCon != "") connectionstring = OverrideDbCon;
 			try
 			{
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				if (SelecteDbType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(connectionstring);
+					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 					con.Open();
 					SqlCommand command = new SqlCommand(sql, con);
 					SqlDataAdapter adapter = new SqlDataAdapter(command);
 					adapter.Fill(dt);
 					con.Close();
 				}
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				else if (SelecteDbType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(connectionstring);
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 					con.Open();
 					SQLiteCommand command = new SQLiteCommand(sql, con);
 					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
@@ -48,18 +54,16 @@ namespace WotDBUpdater.Code
 			return dt;
 		}
 
-		public static bool ExecuteNonQuery(string sql, bool overrideDbType = false, ConfigData.dbType dbType = ConfigData.dbType.SQLite)
+		public static bool ExecuteNonQuery(string sql)
 		{
-			ConfigData.dbType SelectedDbType = Config.Settings.databaseType;
-			if (overrideDbType) SelectedDbType = dbType;
 			string lastRunnedSQL = "";
 			bool ok = false;
 			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
 			try
 			{
-				if (SelectedDbType == ConfigData.dbType.MSSQLserver)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection("", "", "", "", "", 10, true, SelectedDbType));
+					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 					con.Open();
 					foreach (string s in sqlList)
 					{
@@ -73,9 +77,9 @@ namespace WotDBUpdater.Code
 					con.Close();
 					ok = true;
 				}
-				else if (SelectedDbType == ConfigData.dbType.SQLite)
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection("", "", "", "", "", 10, true, SelectedDbType));
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 					con.Open();
 					foreach (string s in sqlList)
 					{
@@ -166,7 +170,7 @@ namespace WotDBUpdater.Code
 					}
 					else
 					{
-						SqlConnection myConn = new SqlConnection(Config.DatabaseConnection("", "master"));
+						SqlConnection myConn = new SqlConnection(Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", "master"));
 						string sql = "CREATE DATABASE " + databaseName + " ON PRIMARY " +
 									"(NAME = " + databaseName + ", " +
 									"FILENAME = '" + fileLocation + databaseName + ".mdf', " +
@@ -220,13 +224,6 @@ namespace WotDBUpdater.Code
 			return dbOk;
 		}
 		
-		public enum SqlDataType
-		{
-			VarChar = 1,
-			Int = 2,
-			DateTime = 3
-		}
-
 		public static void AddWithValue(ref string Sql, string Parameter, object Value, db.SqlDataType DataType)
 		{
 			if (Value == DBNull.Value)
@@ -282,7 +279,66 @@ namespace WotDBUpdater.Code
 			}
 			return Sql;
 		}
-	
-	
+
+		public static bool CheckConnection(bool showErrorIfNotExists = true)
+		{
+			bool ok = false;
+			DataTable dt = new DataTable();
+			// Get database type
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			{
+				// Check data
+				if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || Config.Settings.databaseName == "")
+				{
+					if (showErrorIfNotExists) Code.MsgBox.Show("Missing database server and/or database name, check Database Settings.", "Config error");
+				}
+				else
+				{
+					try
+					{
+						SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+						con.Open();
+						SqlCommand command = new SqlCommand("SELECT * FROM player", con);
+						SqlDataAdapter adapter = new SqlDataAdapter(command);
+						adapter.Fill(dt);
+						con.Close();
+						ok = true;
+					}
+					catch (Exception)
+					{
+						if (showErrorIfNotExists) Code.MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settings.", "Config error");
+					}
+				}
+			}
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+			{
+				// Check data
+				if (Config.Settings.databaseFileName == "" )
+				{
+					if (showErrorIfNotExists) Code.MsgBox.Show("Missing database file name, check Database Settings.", "Config error");
+				}
+				else
+				{
+					try
+					{
+						SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+						con.Open();
+						SQLiteCommand command = new SQLiteCommand("SELECT * FROM player", con);
+						SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+						adapter.Fill(dt);
+						con.Close();
+						ok = true;
+					}
+					catch (Exception)
+					{
+						if (showErrorIfNotExists) Code.MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settingse", "Config error");
+					}
+				}
+			}
+			return ok;
+		}
+
+
+
 	}
 }

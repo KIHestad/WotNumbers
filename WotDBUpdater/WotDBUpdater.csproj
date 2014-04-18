@@ -102,7 +102,6 @@
   <ItemGroup>
     <Compile Include="Code\Support\db.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
-    <Compile Include="Code\ZZZ_test_import_WS2DB.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
     <Compile Include="Code\Support\MsgBox.cs" />

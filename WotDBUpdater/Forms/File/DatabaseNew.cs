@@ -17,15 +17,13 @@ namespace WotDBUpdater.Forms.File
 {
 	public partial class DatabaseNew : Form
 	{
-		private ConfigData.dbType SelectedDbType;
-		public DatabaseNew(ConfigData.dbType dbType)
+		public DatabaseNew()
 		{
 			InitializeComponent();
-			if (dbType == ConfigData.dbType.MSSQLserver)
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
-			else if (dbType == ConfigData.dbType.SQLite)
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				DatabaseNewTheme.Text = "Create New SQLite Database";
-			SelectedDbType = dbType;
 		}
 
 		private void frmDatabaseNew_Load(object sender, EventArgs e)
@@ -54,7 +52,7 @@ namespace WotDBUpdater.Forms.File
 			UpdateProgressBar(ref step, maxStep);
 			Application.DoEvents();
 			// Create db now
-			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, SelectedDbType))
+			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType))
 			{
 				bool ok = true;
 				// Fill database with default data
@@ -64,56 +62,54 @@ namespace WotDBUpdater.Forms.File
 				string sql;
 				// Create Tables
 				string filename = "";
-				if (SelectedDbType == ConfigData.dbType.MSSQLserver)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 					filename = "createTableMSSQL.txt";
-				else if (SelectedDbType == ConfigData.dbType.SQLite)
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					filename = "createTableSQLite.txt";
 				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+				ok = db.ExecuteNonQuery(sql);
 				if (!ok) return;
 				UpdateProgressBar(ref step, maxStep);
 				// Create Views
 				streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+				ok = db.ExecuteNonQuery(sql);
 				if (!ok) return;
 				UpdateProgressBar(ref step, maxStep);
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
+				ok = db.ExecuteNonQuery(sql);
 				if (!ok) return;
 				UpdateProgressBar(ref step, maxStep);
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();
-				Application.DoEvents();
-				ImportMisc2DB.UpdateTanks(true, SelectedDbType);
-				Application.DoEvents();
+				ImportMisc2DB.UpdateTanks();
 				// Init after getting tanks and other basic data import
 				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
+				TankData.GetJson2dbMappingFromDB();
+				TankData.GetTankData2BattleMappingFromDB();
 				UpdateProgressBar(ref step, maxStep);
 				// Get turret
-				ImportWotApi2DB.ImportTurrets(true, SelectedDbType);
+				ImportWotApi2DB.ImportTurrets();
 				UpdateProgressBar(ref step, maxStep);
 				// Get guns
-				ImportWotApi2DB.ImportGuns(true, SelectedDbType);
+				ImportWotApi2DB.ImportGuns();
 				UpdateProgressBar(ref step, maxStep);
 				// Get radios
-				ImportWotApi2DB.ImportRadios(true, SelectedDbType);
+				ImportWotApi2DB.ImportRadios();
 				UpdateProgressBar(ref step, maxStep);
 				// Get achievements
-				ImportWotApi2DB.ImportAchievements(true, SelectedDbType);
+				ImportWotApi2DB.ImportAchievements();
 				UpdateProgressBar(ref step, maxStep);
 				// Get WN8 ratings
-				ImportMisc2DB.UpdateWN8(true, SelectedDbType);
+				ImportMisc2DB.UpdateWN8();
 				UpdateProgressBar(ref step, maxStep);
 				// Add player
 				if (txtPlayerName.Text.Trim() != "")
 				{
-					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')", true, SelectedDbType);
+					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
 					Config.Settings.playerName = txtPlayerName.Text.Trim();
 					Config.Settings.playerId = 1;
 				}
@@ -122,10 +118,12 @@ namespace WotDBUpdater.Forms.File
 					Config.Settings.playerName = "";
 					Config.Settings.playerId = 0;
 				}
+				// Save new database to config
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+					Config.Settings.databaseName = txtDatabasename.Text;
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
 				string result = "";
-				Config.Settings.databaseType = SelectedDbType;
-				Config.Settings.databaseServer = txtDatabasename.Text;
-				Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
 				Config.SaveConfig(out result);
 				UpdateProgressBar(ref step, maxStep);
 				// Done
