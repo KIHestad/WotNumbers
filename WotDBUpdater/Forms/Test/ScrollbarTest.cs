@@ -27,15 +27,29 @@ namespace WotDBUpdater.Forms.Test
 			badScrollBar2.Width = ScrollbarTestTheme.MainArea.Width - badScrollBar1.Width;
 		}
 
+
+		private bool s1move = false;
 		private void badScrollBar1_MouseMove(object sender, MouseEventArgs e)
 		{
+			if (s1move)
+				txtY.Text = badScrollBar1.ScrollPosition.ToString();
+		}
+			
+
+		private void badScrollBar1_MouseDown(object sender, MouseEventArgs e)
+		{
+			s1move = true;
 			txtY.Text = badScrollBar1.ScrollPosition.ToString();
+		}
+
+		private void badScrollBar1_MouseUp(object sender, MouseEventArgs e)
+		{
+			s1move = false;
 		}
 
 		private void badScrollBar2_MouseMove(object sender, MouseEventArgs e)
 		{
 			txtX.Text = badScrollBar2.ScrollPosition.ToString();
 		}
-
 	}
 }

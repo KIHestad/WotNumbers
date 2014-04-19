@@ -115,6 +115,7 @@ namespace WotDBUpdater.Forms
 			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
 			// Display form and status message 
 			SetStatus2("Application started");
+			Cursor = Cursors.Default;
 		}
 
 		#endregion
@@ -1159,7 +1160,7 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Reports.DBTable();
+			Form frm = new Forms.Reports.DatabaseTable();
 			frm.Show();
 		}
 
@@ -1203,10 +1204,10 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
-        private void importDossierHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotDossier2DB.importWotDossierHistory();
-        }
+		private void importDossierHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotDossier2DB.importWotDossierHistory();
+		}
 
 
 		#endregion

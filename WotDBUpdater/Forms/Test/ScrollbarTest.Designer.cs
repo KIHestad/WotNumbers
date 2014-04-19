@@ -45,6 +45,7 @@
 			this.ScrollbarTestTheme.Controls.Add(this.txtY);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar2);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar1);
+			this.ScrollbarTestTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.ScrollbarTestTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ScrollbarTestTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ScrollbarTestTheme.FormFooter = false;
@@ -92,6 +93,8 @@
 			this.badScrollBar2.Name = "badScrollBar2";
 			this.badScrollBar2.ScrollElementsTotals = 100;
 			this.badScrollBar2.ScrollElementsVisible = 20;
+			this.badScrollBar2.ScrollHide = false;
+			this.badScrollBar2.ScrollNecessary = true;
 			this.badScrollBar2.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
 			this.badScrollBar2.ScrollPosition = 0;
 			this.badScrollBar2.Size = new System.Drawing.Size(233, 17);
@@ -107,12 +110,16 @@
 			this.badScrollBar1.Name = "badScrollBar1";
 			this.badScrollBar1.ScrollElementsTotals = 100;
 			this.badScrollBar1.ScrollElementsVisible = 20;
+			this.badScrollBar1.ScrollHide = false;
+			this.badScrollBar1.ScrollNecessary = true;
 			this.badScrollBar1.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.badScrollBar1.ScrollPosition = 0;
 			this.badScrollBar1.Size = new System.Drawing.Size(17, 188);
 			this.badScrollBar1.TabIndex = 0;
 			this.badScrollBar1.Text = "badScrollBar1";
+			this.badScrollBar1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.badScrollBar1_MouseDown);
 			this.badScrollBar1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.badScrollBar1_MouseMove);
+			this.badScrollBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.badScrollBar1_MouseUp);
 			// 
 			// ScrollbarTest
 			// 

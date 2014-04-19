@@ -185,6 +185,12 @@
     <Compile Include="Forms\PopupGrid.Designer.cs">
       <DependentUpon>PopupGrid.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Reports\DatabaseTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Reports\DatabaseTable.Designer.cs">
+      <DependentUpon>DatabaseTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Reports\DBTable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PopupGrid.resx">
       <DependentUpon>PopupGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Reports\DatabaseTable.resx">
+      <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Reports\DBTable.resx">
       <DependentUpon>DBTable.cs</DependentUpon>

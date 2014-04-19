@@ -1,33 +1,33 @@
 ﻿namespace WotDBUpdater.Forms.Reports
 {
-    partial class DBTable
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class DBTable
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBTable));
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -82,6 +82,7 @@
 			this.popupSelectTable.Name = "popupSelectTable";
 			this.popupSelectTable.Size = new System.Drawing.Size(248, 23);
 			this.popupSelectTable.TabIndex = 6;
+			this.popupSelectTable.Text = null;
 			this.popupSelectTable.Click += new System.EventHandler(this.popupSelectTable_Click);
 			// 
 			// badLabel1
@@ -115,9 +116,9 @@
 			this.dataGridViewShowTable.Location = new System.Drawing.Point(12, 78);
 			this.dataGridViewShowTable.Name = "dataGridViewShowTable";
 			this.dataGridViewShowTable.ReadOnly = true;
-			this.dataGridViewShowTable.Size = new System.Drawing.Size(410, 227);
+			this.dataGridViewShowTable.ScrollBars = System.Windows.Forms.ScrollBars.None;
+			this.dataGridViewShowTable.Size = new System.Drawing.Size(378, 191);
 			this.dataGridViewShowTable.TabIndex = 0;
-			this.dataGridViewShowTable.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridViewShowTable_MouseMove);
 			// 
 			// DBTable
 			// 
@@ -127,7 +128,9 @@
 			this.Controls.Add(this.DBTableTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MaximumSize = new System.Drawing.Size(438, 320);
 			this.Name = "DBTable";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Show Database Table";
 			this.Load += new System.EventHandler(this.frmDBTable_Load);
 			this.SizeChanged += new System.EventHandler(this.frmDBTable_SizeChanged);
@@ -135,9 +138,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).EndInit();
 			this.ResumeLayout(false);
 
-        }
+		}
 
-        #endregion
+		#endregion
 
 		private System.Windows.Forms.DataGridView dataGridViewShowTable;
 		private BadForm DBTableTheme;
@@ -145,5 +148,5 @@
 		private BadPopupBox popupSelectTable;
 		private BadLabel badLabel1;
 
-    }
+	}
 }

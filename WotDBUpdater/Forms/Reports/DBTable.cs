@@ -23,7 +23,6 @@ namespace WotDBUpdater.Forms.Reports
 		{
 			dataGridViewShowTable.Top = DBTableTheme.MainArea.Top + 45;
 			dataGridViewShowTable.Left = DBTableTheme.MainArea.Left;
-			ResizeNow();
 			// Style datagrid
 			dataGridViewShowTable.BorderStyle = BorderStyle.None;
 			dataGridViewShowTable.BackgroundColor = ColorTheme.FormBack;
@@ -48,16 +47,7 @@ namespace WotDBUpdater.Forms.Reports
 			dataGridViewShowTable.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
 
-		private void frmDBTable_SizeChanged(object sender, EventArgs e)
-		{
-			ResizeNow();	
-		}
-
-		private void ResizeNow()
-		{
-			dataGridViewShowTable.Width = DBTableTheme.MainArea.Width;
-			dataGridViewShowTable.Height = DBTableTheme.MainArea.Height - 45;
-		}
+		
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
@@ -88,10 +78,15 @@ namespace WotDBUpdater.Forms.Reports
 			}
 		}
 
-		private void dataGridViewShowTable_MouseMove(object sender, MouseEventArgs e)
+		private void frmDBTable_SizeChanged(object sender, EventArgs e)
 		{
-			DBTableTheme.Cursor = Cursors.Default;
+			ResizeNow();	
 		}
-	 
+
+		private void ResizeNow()
+		{
+			dataGridViewShowTable.Width = DBTableTheme.MainArea.Width;
+			dataGridViewShowTable.Height = DBTableTheme.MainArea.Height - 45;
+		}
 	}
 }
