@@ -94,8 +94,9 @@ namespace WotDBUpdater.Forms
 				Config.Settings.dossierFileWathcherRun = 0;
 				SetListener();
 				Form frm = new Forms.File.ApplicationSetting();
+				frm.ShowDialog();
 			}
-			else if (db.CheckConnection())
+			if (db.CheckConnection())
 			{
 				// Init
 				TankData.GetTankListFromDB();

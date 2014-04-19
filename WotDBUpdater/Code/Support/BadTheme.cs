@@ -947,7 +947,7 @@ class BadLabel : BadThemeControl
 	public bool Dimmed
 	{
 		get { return _Dimmed; }
-		set { _Dimmed = value; }
+		set { _Dimmed = value; Invalidate(); }
 	}
 	
 	Label label = new Label();

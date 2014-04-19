@@ -111,8 +111,7 @@ namespace WotDBUpdater.Forms.File
 			
 		}
 			
-
-		private void btnSave_Click_1(object sender, EventArgs e)
+		private void SaveConfig()
 		{
 			// Get ready to save new settings to config
 			string msg = "";
@@ -132,6 +131,11 @@ namespace WotDBUpdater.Forms.File
 				Config.Settings.databaseName = popupDatabase.Text;
 			}
 			saveOk = Config.SaveConfig(out msg);
+		}
+
+		private void btnSave_Click_1(object sender, EventArgs e)
+		{
+			SaveConfig();
 			// Check if Connection to DB is OK, and get base data
 			if (db.CheckConnection()) // check db config, displays message if error
 			{
@@ -149,6 +153,7 @@ namespace WotDBUpdater.Forms.File
 						playerId = Convert.ToInt32(dt.Rows[0]["id"]);
 					Config.Settings.playerId = playerId;
 				}
+				string msg = "";
 				Config.SaveConfig(out msg);
 				// Init
 				TankData.GetTankListFromDB();
@@ -165,7 +170,7 @@ namespace WotDBUpdater.Forms.File
 			bool ok = true;
 			if (selectedDbType == ConfigData.dbType.MSSQLserver)
 			{
-				// Do not use standard conn here, supply alternate sql conn string
+				// Do not use standard check / conn here, perform explicit check for SQL Server before continue creating new db
 				string winAuth = "Win";
 				if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
 				string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text);
@@ -182,12 +187,18 @@ namespace WotDBUpdater.Forms.File
 				}
 				catch (Exception ex)
 				{
-					MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message, "Database error");
+					MsgBox.Show("Error connecting to MS SQL Server, please check server name and authentication." + Environment.NewLine + Environment.NewLine + ex.Message, "Database error");
 					ok = false;
 				}
 			}
 			if (ok)
 			{
+				// Remember current settings, in case create db is not successfull, it is possible to revert
+				Config.LastWorkingSettings = Config.Settings; 
+				// Must save databasetype and db settings before entering form for creating new database
+				// All database handling uses current config settings to access correct database
+				SaveConfig();
+				// Open Create new db form
 				Form frm = new Forms.File.DatabaseNew();
 				frm.ShowDialog();
 				LoadConfig();

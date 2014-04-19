@@ -105,7 +105,6 @@
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
     <Compile Include="Code\Support\MsgBox.cs" />
-    <Compile Include="Code\Support\MessageBoxEx.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
     <Compile Include="Code\Support\BadTheme.cs">

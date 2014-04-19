@@ -79,15 +79,6 @@ namespace WotDBUpdater.Code
 		{
 			json2dbMapping.Clear();
 			json2dbMapping = db.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
-			try
-			{
-				json2dbMapping.PrimaryKey = new DataColumn[] { json2dbMapping.Columns["jsonMainSubProperty"] };
-			}
-			catch (Exception)
-			{
-				//throw;
-			}
-			
 		}
 
 		public static DataTable tankData2BattleMapping = new DataTable();
