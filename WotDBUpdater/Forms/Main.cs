@@ -1202,11 +1202,14 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
+        private void importDossierHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotDossier2DB.importWotDossierHistory();
+        }
+
+
 		#endregion
 
 		
 	}
-
-	
-
 }

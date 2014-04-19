@@ -100,6 +100,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\ImportWotDossier2DB.cs" />
     <Compile Include="Code\Support\db.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\ZZZ_test_import_WS2DB.cs" />
@@ -131,6 +132,12 @@
     </Compile>
     <Compile Include="Forms\File\FavTanks.Designer.cs">
       <DependentUpon>FavTanks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\File\ImportWotDossierData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\ImportWotDossierData.Designer.cs">
+      <DependentUpon>ImportWotDossierData.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\File\ImportWotStat.cs">
       <SubType>Form</SubType>
@@ -231,6 +238,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\FavTanks.resx">
       <DependentUpon>FavTanks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\File\ImportWotDossierData.resx">
+      <DependentUpon>ImportWotDossierData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\ImportWotStat.resx">
       <DependentUpon>ImportWotStat.cs</DependentUpon>
