@@ -103,11 +103,9 @@
     <Compile Include="Code\ImportWotDossier2DB.cs" />
     <Compile Include="Code\Support\db.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
-    <Compile Include="Code\ZZZ_test_import_WS2DB.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
     <Compile Include="Code\Support\MsgBox.cs" />
-    <Compile Include="Code\Support\MessageBoxEx.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
     <Compile Include="Code\Support\BadTheme.cs">
@@ -337,6 +335,7 @@
     <Content Include="DevDocs\Img\InfoPanel\bg4_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg5_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
+    <Content Include="DevDocs\Img\logo5.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
     <Content Include="DevDocs\DatabaseLog\createProc.txt" />

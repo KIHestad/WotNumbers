@@ -143,7 +143,7 @@ namespace WotDBUpdater.Code
 
 										// Check data by getting jsonPlayerTank Mapping
 										string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
-										DataRow[] foundRows = TankData.json2dbMappingView.Select(expression);
+										DataRow[] foundRows = TankData.json2dbMapping.Select(expression);
 
 										// IF mapping found add currentItem into NewPlayerTankRow
 										if (foundRows.Length != 0)
@@ -154,9 +154,9 @@ namespace WotDBUpdater.Code
 												string dbField = foundRows[0]["dbPlayerTank"].ToString();
 												switch (dataType)
 												{
-													case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); ; break;
-													case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); ; break;
-													case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); ; break;
+													case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
+													case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+													case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
 												}
 											}
 											else // Found mapping to Achievment
@@ -471,7 +471,7 @@ namespace WotDBUpdater.Code
 				bool modeCompany = false;
 				bool modeClan = false;
 				int battlesCount = (battlessNew15 + battlessNew7);
-				foreach (DataRow dr in TankData.tankData2BattleMappingView.Rows)
+				foreach (DataRow dr in TankData.tankData2BattleMapping.Rows)
 				{
 					if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
 					{

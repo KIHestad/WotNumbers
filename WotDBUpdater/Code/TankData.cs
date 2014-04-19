@@ -73,29 +73,20 @@ namespace WotDBUpdater.Code
 			return (lookupBattle);
 		}
 
-		public static DataTable json2dbMappingView = new DataTable();
+		public static DataTable json2dbMapping = new DataTable();
 		
-		public static void GetJson2dbMappingViewFromDB()
+		public static void GetJson2dbMappingFromDB()
 		{
-			json2dbMappingView.Clear();
-			json2dbMappingView = db.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
-			try
-			{
-				json2dbMappingView.PrimaryKey = new DataColumn[] { json2dbMappingView.Columns["jsonMainSubProperty"] };
-			}
-			catch (Exception)
-			{
-				//throw;
-			}
-			
+			json2dbMapping.Clear();
+			json2dbMapping = db.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
 		}
 
-		public static DataTable tankData2BattleMappingView = new DataTable();
+		public static DataTable tankData2BattleMapping = new DataTable();
 
-		public static void GettankData2BattleMappingViewFromDB()
+		public static void GetTankData2BattleMappingFromDB()
 		{
-			tankData2BattleMappingView.Clear();
-			tankData2BattleMappingView = db.FetchData("SELECT * FROM tankData2BattleMappingView");
+			tankData2BattleMapping.Clear();
+			tankData2BattleMapping = db.FetchData("SELECT * FROM tankData2BattleMappingView");
 		}
 
 		#endregion

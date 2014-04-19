@@ -34,7 +34,7 @@
 			this.ApplicationSettingsTheme = new BadForm();
 			this.btnSelectDossierFilePath = new BadButton();
 			this.btnRemovePlayer = new BadButton();
-			this.btmAddPlayer = new BadButton();
+			this.btnAddPlayer = new BadButton();
 			this.txtDossierFilePath = new BadTextBox();
 			this.badLabel4 = new BadLabel();
 			this.btnDbSetting = new BadButton();
@@ -42,7 +42,7 @@
 			this.badSeperator2 = new BadSeperator();
 			this.badSeperator1 = new BadSeperator();
 			this.btnSave = new BadButton();
-			this.badLabel3 = new BadLabel();
+			this.lblPlayer = new BadLabel();
 			this.lblDbSettings = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
 			this.ApplicationSettingsTheme.SuspendLayout();
@@ -52,7 +52,7 @@
 			// 
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSelectDossierFilePath);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnRemovePlayer);
-			this.ApplicationSettingsTheme.Controls.Add(this.btmAddPlayer);
+			this.ApplicationSettingsTheme.Controls.Add(this.btnAddPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.txtDossierFilePath);
 			this.ApplicationSettingsTheme.Controls.Add(this.badLabel4);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnDbSetting);
@@ -60,7 +60,7 @@
 			this.ApplicationSettingsTheme.Controls.Add(this.badSeperator2);
 			this.ApplicationSettingsTheme.Controls.Add(this.badSeperator1);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSave);
-			this.ApplicationSettingsTheme.Controls.Add(this.badLabel3);
+			this.ApplicationSettingsTheme.Controls.Add(this.lblPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.lblDbSettings);
 			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox1);
 			this.ApplicationSettingsTheme.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -102,15 +102,15 @@
 			this.btnRemovePlayer.Text = "Remove";
 			this.btnRemovePlayer.Click += new System.EventHandler(this.btnRemovePlayer_Click_1);
 			// 
-			// btmAddPlayer
+			// btnAddPlayer
 			// 
-			this.btmAddPlayer.Image = null;
-			this.btmAddPlayer.Location = new System.Drawing.Point(286, 118);
-			this.btmAddPlayer.Name = "btmAddPlayer";
-			this.btmAddPlayer.Size = new System.Drawing.Size(81, 23);
-			this.btmAddPlayer.TabIndex = 30;
-			this.btmAddPlayer.Text = "Add";
-			this.btmAddPlayer.Click += new System.EventHandler(this.btmAddPlayer_Click);
+			this.btnAddPlayer.Image = null;
+			this.btnAddPlayer.Location = new System.Drawing.Point(286, 118);
+			this.btnAddPlayer.Name = "btnAddPlayer";
+			this.btnAddPlayer.Size = new System.Drawing.Size(81, 23);
+			this.btnAddPlayer.TabIndex = 30;
+			this.btnAddPlayer.Text = "Add";
+			this.btnAddPlayer.Click += new System.EventHandler(this.btmAddPlayer_Click);
 			// 
 			// txtDossierFilePath
 			// 
@@ -182,16 +182,16 @@
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
 			// 
-			// badLabel3
+			// lblPlayer
 			// 
-			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel3.Dimmed = false;
-			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(40, 118);
-			this.badLabel3.Name = "badLabel3";
-			this.badLabel3.Size = new System.Drawing.Size(45, 23);
-			this.badLabel3.TabIndex = 29;
-			this.badLabel3.Text = "Player:";
+			this.lblPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.lblPlayer.Dimmed = false;
+			this.lblPlayer.Image = null;
+			this.lblPlayer.Location = new System.Drawing.Point(40, 118);
+			this.lblPlayer.Name = "lblPlayer";
+			this.lblPlayer.Size = new System.Drawing.Size(45, 23);
+			this.lblPlayer.TabIndex = 29;
+			this.lblPlayer.Text = "Player:";
 			// 
 			// lblDbSettings
 			// 
@@ -241,8 +241,8 @@
 		private BadGroupBox badGroupBox1;
 		private BadButton btnDbSetting;
 		private BadLabel lblDbSettings;
-		private BadLabel badLabel3;
-		private BadButton btmAddPlayer;
+		private BadLabel lblPlayer;
+		private BadButton btnAddPlayer;
 		private BadButton btnRemovePlayer;
 		private BadTextBox txtDossierFilePath;
 		private BadLabel badLabel4;

@@ -50,8 +50,11 @@ namespace WotDBUpdater.Code
 			{
 				dt = db.FetchData(DataSource);
 			}
-			Form frm = new Forms.PopupGrid(Title, dt);
-			frm.ShowDialog();
+			if (dt.Rows.Count > 0)
+			{
+				Form frm = new Forms.PopupGrid(Title, dt);
+				frm.ShowDialog();
+			}
 			return Value;
 		}
 	}

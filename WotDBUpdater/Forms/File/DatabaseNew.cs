@@ -17,103 +17,133 @@ namespace WotDBUpdater.Forms.File
 {
 	public partial class DatabaseNew : Form
 	{
-		private ConfigData.dbType SelectedDbType;
-		public DatabaseNew(ConfigData.dbType dbType)
+		public DatabaseNew()
 		{
 			InitializeComponent();
-			if (dbType == ConfigData.dbType.MSSQLserver)
-				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
-			else if (dbType == ConfigData.dbType.SQLite)
-				DatabaseNewTheme.Text = "Create New SQLite Database";
-			SelectedDbType = dbType;
 		}
 
 		private void frmDatabaseNew_Load(object sender, EventArgs e)
 		{
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				DatabaseNewTheme.Text = "Create New SQLite Database";
 			txtPlayerName.Text = Config.Settings.playerName;
 			txtFileLocation.Text = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
 		}
 
-		private void UpdateProgressBar(ref int step, int maxStep)
+		private void UpdateProgressBar()
 		{
-			step++; // count step 1 to maxValue
-			badProgressBar.Value = step;
+			badProgressBar.Value++;
 			Refresh();
 			Application.DoEvents();
 		}
 
 		private void btnCreateDB_Click(object sender, EventArgs e)
 		{
+			// Wait cursor
 			Cursor.Current = Cursors.WaitCursor;
-			int maxStep = 12;
-			badProgressBar.ValueMax = maxStep ;
+			// Create new db
+			bool OKcreated = CreateNewDb();
+			// Done
+			Cursor.Current = Cursors.Default;
+			badProgressBar.Visible = false;
+			Application.DoEvents();
+			string result = "";
+			if (OKcreated)
+			{
+				// Save new database to config
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+					Config.Settings.databaseName = txtDatabasename.Text;
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
+				Code.MsgBox.Show("Database created successfully, new database saved to settings.", "Created database");
+			}
+			else
+			{
+				// Revert to prevous settings
+				Code.MsgBox.Show("Failed to create database, revert to using previous database.", "Failed to create database");
+				Config.Settings = Config.LastWorkingSettings;
+			}
+			Config.SaveConfig(out result);
+			this.Close();		
+		}
+		
+		private bool CreateNewDb()
+		{
+			bool ok = true;
+			badProgressBar.ValueMax = 12;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
-
-			int step = 0;
-			UpdateProgressBar(ref step, maxStep);
-			Application.DoEvents();
+			UpdateProgressBar();
 			// Create db now
-			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, SelectedDbType))
+			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType))
 			{
-				bool ok = true;
 				// Fill database with default data
-				UpdateProgressBar(ref step, maxStep);
+				UpdateProgressBar();
 				// Update db by running sql scripts
 				string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
 				string sql;
+
 				// Create Tables
 				string filename = "";
-				if (SelectedDbType == ConfigData.dbType.MSSQLserver)
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 					filename = "createTableMSSQL.txt";
-				else if (SelectedDbType == ConfigData.dbType.SQLite)
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					filename = "createTableSQLite.txt";
 				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
-				if (!ok) return;
-				UpdateProgressBar(ref step, maxStep);
+				ok = db.ExecuteNonQuery(sql);
+				if (!ok) return false;
+				UpdateProgressBar();
+
 				// Create Views
 				streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
-				if (!ok) return;
-				UpdateProgressBar(ref step, maxStep);
+				ok = db.ExecuteNonQuery(sql);
+				if (!ok) return false;
+				UpdateProgressBar();
+
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql, true, SelectedDbType);
-				if (!ok) return;
-				UpdateProgressBar(ref step, maxStep);
+				ok = db.ExecuteNonQuery(sql);
+				if (!ok) return false;
+				UpdateProgressBar();
+
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();
-				Application.DoEvents();
-				ImportMisc2DB.UpdateTanks(true, SelectedDbType);
-				Application.DoEvents();
+				ImportMisc2DB.UpdateTanks();
 				// Init after getting tanks and other basic data import
 				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
-				UpdateProgressBar(ref step, maxStep);
+				TankData.GetJson2dbMappingFromDB();
+				TankData.GetTankData2BattleMappingFromDB();
+				UpdateProgressBar();
+
 				// Get turret
-				ImportWotApi2DB.ImportTurrets(true, SelectedDbType);
-				UpdateProgressBar(ref step, maxStep);
+				ImportWotApi2DB.ImportTurrets();
+				UpdateProgressBar();
+
 				// Get guns
-				ImportWotApi2DB.ImportGuns(true, SelectedDbType);
-				UpdateProgressBar(ref step, maxStep);
+				ImportWotApi2DB.ImportGuns();
+				UpdateProgressBar();
+
 				// Get radios
-				ImportWotApi2DB.ImportRadios(true, SelectedDbType);
-				UpdateProgressBar(ref step, maxStep);
+				ImportWotApi2DB.ImportRadios();
+				UpdateProgressBar();
+
 				// Get achievements
-				ImportWotApi2DB.ImportAchievements(true, SelectedDbType);
-				UpdateProgressBar(ref step, maxStep);
+				ImportWotApi2DB.ImportAchievements();
+				UpdateProgressBar();
+
 				// Get WN8 ratings
-				ImportMisc2DB.UpdateWN8(true, SelectedDbType);
-				UpdateProgressBar(ref step, maxStep);
+				ImportMisc2DB.UpdateWN8();
+				UpdateProgressBar();
+
 				// Add player
 				if (txtPlayerName.Text.Trim() != "")
 				{
-					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')", true, SelectedDbType);
+					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
 					Config.Settings.playerName = txtPlayerName.Text.Trim();
 					Config.Settings.playerId = 1;
 				}
@@ -122,20 +152,12 @@ namespace WotDBUpdater.Forms.File
 					Config.Settings.playerName = "";
 					Config.Settings.playerId = 0;
 				}
-				string result = "";
-				Config.Settings.databaseType = SelectedDbType;
-				Config.Settings.databaseServer = txtDatabasename.Text;
-				Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
-				Config.SaveConfig(out result);
-				UpdateProgressBar(ref step, maxStep);
-				// Done
-				Cursor.Current = Cursors.Default;
-				Application.DoEvents();
-				Code.MsgBox.Show("Database created successfully.", "Created database");
-				this.Close();
-			}	
+				UpdateProgressBar();
+			}
+			return ok;
 		}
-		
+
+
 		private void cmdSelectFIle_Click(object sender, EventArgs e)
 		{
 			// Select dossier file

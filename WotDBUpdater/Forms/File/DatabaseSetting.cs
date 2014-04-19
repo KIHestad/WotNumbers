@@ -81,7 +81,7 @@ namespace WotDBUpdater.Forms.File
 			// Do not use standard conn here, supply alternate sql conn string
 			string winAuth = "Win";
 			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
-			string connectionstring = Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text, 10, true, ConfigData.dbType.MSSQLserver);
+			string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text);
 			string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE dbid > 4 and [name] <> 'ReportServer' and [name] <> 'ReportServerTempDB'";
 			try
 			{
@@ -111,27 +111,33 @@ namespace WotDBUpdater.Forms.File
 			
 		}
 			
+		private void SaveConfig()
+		{
+			// Get ready to save new settings to config
+			string msg = "";
+			bool saveOk = false;
+			Config.Settings.databaseType = selectedDbType;
+			// Save Db settings settings according to dbtype
+			if (selectedDbType == ConfigData.dbType.SQLite)
+			{
+				Config.Settings.databaseFileName = txtDatabaseFile.Text;
+			}
+			else if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			{
+				Config.Settings.databaseServer = txtServerName.Text;
+				Config.Settings.databaseWinAuth = (popupDbAuth.Text == "Windows Authentication");
+				Config.Settings.databaseUid = txtUID.Text;
+				Config.Settings.databasePwd = txtPW.Text;
+				Config.Settings.databaseName = popupDatabase.Text;
+			}
+			saveOk = Config.SaveConfig(out msg);
+		}
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
-			// Save Db Type
-			Config.Settings.databaseType = selectedDbType;
-			// Save SQLite settings
-			Config.Settings.databaseFileName = txtDatabaseFile.Text;
-			// Save SQL Server settings
-			Config.Settings.databaseServer = txtServerName.Text;
-			Config.Settings.databaseWinAuth = (popupDbAuth.Text == "Windows Authentication");
-			Config.Settings.databaseUid = txtUID.Text;
-			Config.Settings.databasePwd = txtPW.Text;
-			Config.Settings.databaseName = popupDatabase.Text;
-			// Save now
-			string msg = "";
-			bool saveOk = false;
-			saveOk = Config.SaveConfig(out msg);
+			SaveConfig();
 			// Check if Connection to DB is OK, and get base data
-			string winAuth = "Win";
-			if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
-			if (Config.CheckDBConn(true, txtServerName.Text, popupDatabase.Text, winAuth, txtUID.Text, txtPW.Text)) // check db config, displays message if error
+			if (db.CheckConnection()) // check db config, displays message if error
 			{
 				// Check if current plyer exists in current database, if not remove it
 				DataTable dt = db.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerName + "'");
@@ -147,11 +153,12 @@ namespace WotDBUpdater.Forms.File
 						playerId = Convert.ToInt32(dt.Rows[0]["id"]);
 					Config.Settings.playerId = playerId;
 				}
+				string msg = "";
 				Config.SaveConfig(out msg);
 				// Init
 				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
+				TankData.GetJson2dbMappingFromDB();
+				TankData.GetTankData2BattleMappingFromDB();
 				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
 				this.Close();
 			}
@@ -163,10 +170,10 @@ namespace WotDBUpdater.Forms.File
 			bool ok = true;
 			if (selectedDbType == ConfigData.dbType.MSSQLserver)
 			{
-				// Do not use standard conn here, supply alternate sql conn string
+				// Do not use standard check / conn here, perform explicit check for SQL Server before continue creating new db
 				string winAuth = "Win";
 				if (popupDbAuth.Text == "SQL Server Authentication") winAuth = "Sql";
-				string connectionstring = Config.DatabaseConnection(txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text, 10, true, ConfigData.dbType.MSSQLserver);
+				string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", txtServerName.Text, "master", winAuth, txtUID.Text, txtPW.Text);
 				string sql = "SELECT * FROM master.dbo.sysdatabases";
 				try
 				{
@@ -180,13 +187,19 @@ namespace WotDBUpdater.Forms.File
 				}
 				catch (Exception ex)
 				{
-					MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message, "Database error");
+					MsgBox.Show("Error connecting to MS SQL Server, please check server name and authentication." + Environment.NewLine + Environment.NewLine + ex.Message, "Database error");
 					ok = false;
 				}
 			}
 			if (ok)
 			{
-				Form frm = new Forms.File.DatabaseNew(selectedDbType);
+				// Remember current settings, in case create db is not successfull, it is possible to revert
+				Config.LastWorkingSettings = Config.Settings; 
+				// Must save databasetype and db settings before entering form for creating new database
+				// All database handling uses current config settings to access correct database
+				SaveConfig();
+				// Open Create new db form
+				Form frm = new Forms.File.DatabaseNew();
 				frm.ShowDialog();
 				LoadConfig();
 			}
@@ -220,7 +233,6 @@ namespace WotDBUpdater.Forms.File
 			{
 				selectedDbType = ConfigData.dbType.MSSQLserver;
 			}
-
 			else if (popupDatabaseType.Text == "SQLite")
 			{
 				selectedDbType = ConfigData.dbType.SQLite;

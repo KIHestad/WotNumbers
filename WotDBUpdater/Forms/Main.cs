@@ -91,16 +91,17 @@ namespace WotDBUpdater.Forms
 			{
 				Code.MsgBox.Show(msg, "Could not load config data");
 				lblOverView.Text = "";
-				Config.Settings.run = 0;
+				Config.Settings.dossierFileWathcherRun = 0;
 				SetListener();
 				Form frm = new Forms.File.ApplicationSetting();
+				frm.ShowDialog();
 			}
-			else if (Config.CheckDBConn())
+			if (db.CheckConnection())
 			{
 				// Init
 				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingViewFromDB();
-				TankData.GettankData2BattleMappingViewFromDB();
+				TankData.GetJson2dbMappingFromDB();
+				TankData.GetTankData2BattleMappingFromDB();
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
 			SetFormTitle();
@@ -174,19 +175,19 @@ namespace WotDBUpdater.Forms
 			// Check / show logged in player
 			if (Config.Settings.playerName == "")
 			{
-				MainTheme.Text = "WoT DBstats - NO PLAYER SELECTED";
+				MainTheme.Text = "Argus - World of Tanks Statistics - NO PLAYER SELECTED";
 			}
 			else
 			{
-				MainTheme.Text = "WoT DBstats - " + Config.Settings.playerName;
+				MainTheme.Text = "Argus - World of Tanks Statistics - " + Config.Settings.playerName;
 			}
 			Refresh();
 		}
 
 		private void SetListener()
 		{
-			toolItemSettingsRun.Checked = (Config.Settings.run == 1);
-			if (Config.Settings.run == 1)
+			toolItemSettingsRun.Checked = (Config.Settings.dossierFileWathcherRun == 1);
+			if (Config.Settings.dossierFileWathcherRun == 1)
 			{
 				lblStatus1.Text = "Running";
 				lblStatus1.ForeColor = System.Drawing.Color.ForestGreen;
@@ -208,7 +209,7 @@ namespace WotDBUpdater.Forms
 				MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			else
 			{
-				if (Config.Settings.run == 1)
+				if (Config.Settings.dossierFileWathcherRun == 1)
 					MainTheme.FormBorderColor = ColorTheme.FormBorderBlue;
 				else
 					MainTheme.FormBorderColor = ColorTheme.FormBorderRed;
@@ -236,7 +237,7 @@ namespace WotDBUpdater.Forms
 			{
 				DateGridSelected = DataGridType.None;
 				dataGridMain.DataSource = null;
-				if (!Config.CheckDBConn()) return;
+				if (!db.CheckConnection()) return;
 				string sql =
 					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
 					"UNION " +
@@ -352,7 +353,7 @@ namespace WotDBUpdater.Forms
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
-			if (!Config.CheckDBConn()) return;
+			if (!db.CheckConnection()) return;
 			// Get Tank filter
 			string message = "";
 			string where = "";
@@ -400,7 +401,7 @@ namespace WotDBUpdater.Forms
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
-			if (!Config.CheckDBConn()) return;
+			if (!db.CheckConnection()) return;
 			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -1109,10 +1110,10 @@ namespace WotDBUpdater.Forms
 		{
 			//Form frm = new Forms.Help.About();
 			//frm.ShowDialog();
-			string msg = "WoT DBstat version " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
-						 "Statistics Tool for World Of Tanks" + Environment.NewLine + Environment.NewLine +
+			string msg = "Argus - World of Tanks Statistics" + Environment.NewLine + Environment.NewLine +
+						 "version: " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
-			Code.MsgBox.Show(msg, "About WoT DBstat");
+			Code.MsgBox.Show(msg, "About Argus");
 		}
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
@@ -1121,11 +1122,11 @@ namespace WotDBUpdater.Forms
 			// Set Start - Stop button properties
 			if (toolItemSettingsRun.Checked)
 			{
-				Config.Settings.run = 1;
+				Config.Settings.dossierFileWathcherRun = 1;
 			}
 			else
 			{
-				Config.Settings.run = 0;
+				Config.Settings.dossierFileWathcherRun = 0;
 			}
 			string msg = "";
 			Config.SaveConfig(out msg);

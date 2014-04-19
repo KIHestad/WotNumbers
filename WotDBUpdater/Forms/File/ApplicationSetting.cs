@@ -39,7 +39,16 @@ namespace WotDBUpdater.Forms.File
 			lblDbSettings.Text = databaseInfo;
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
-			Refresh();
+			PlayerPanel();
+		}
+
+		private void PlayerPanel()
+		{
+			bool ok = db.CheckConnection(false);
+			lblPlayer.Dimmed = !ok;
+			cboSelectPlayer.Enabled = ok;
+			btnAddPlayer.Enabled = ok;
+			btnRemovePlayer.Enabled = ok;
 		}
 
 		private void btmAddPlayer_Click(object sender, EventArgs e)
@@ -68,7 +77,8 @@ namespace WotDBUpdater.Forms.File
 				}
 				catch (Exception ex)
 				{
-					Code.MsgBox.Show("Cannot remove this player, probaly because data is stored for the player. Only players without any data can be removed.\n\n" + ex.Message, "Cannot remove player");
+					Code.MsgBox.Show("Cannot remove player, are you sure a player is selected? It is not possible to remove player that has saved related data, only players without any data can be removed." + 
+						Environment.NewLine + Environment.NewLine + ex.Message, "Cannot remove player");
 				}
 			}
 		}
@@ -123,6 +133,7 @@ namespace WotDBUpdater.Forms.File
 		{
 			Form frm = new Forms.File.DatabaseSetting();
 			frm.ShowDialog();
+			PlayerPanel();
 		}
 
 		private void cboSelectPlayer_Click(object sender, EventArgs e)

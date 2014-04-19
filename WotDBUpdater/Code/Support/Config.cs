@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 
 namespace WotDBUpdater.Code
 {
-	// The data class containing two properties 
 	[Serializable()]
 	public class ConfigData
 	{
@@ -22,24 +21,25 @@ namespace WotDBUpdater.Code
 			SQLite = 2
 		}
 
-		public dbType databaseType { get; set; }
-		public string databaseFileName { get; set; }
-		public string databaseServer { get; set; }
-		public bool databaseWinAuth { get; set; }
-		public string databaseUid { get; set; }
-		public string databasePwd { get; set; }
-		public string databaseName { get; set; }
-		public int playerId { get; set; }
-		public string playerName { get; set; }
-		public string dossierFilePath { get; set; }
-		public int run { get; set; }
+		public dbType databaseType { get; set; }			// SQLite or MS SQL Server
+		public string databaseFileName { get; set; }		// SQLite Filename
+		public string databaseServer { get; set; }			// MSSQL Servername
+		public bool   databaseWinAuth { get; set; }			// MSSQL Win (true) og SQL (false) authentication
+		public string databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
+		public string databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
+		public string databaseName { get; set; }			// MSSQL Databasename
+		public int    playerId { get; set; }				// Player ID selected
+		public string playerName { get; set; }				// Player Name selected
+		public string dossierFilePath { get; set; }			// Dossier file path
+		public int    dossierFileWathcherRun { get; set; }	// Dossier file listener activated
 	}
 
 	class Config
 	{
-		public static ConfigData Settings = new ConfigData();
+		public static ConfigData Settings = new ConfigData();				// Current configs
+		public static ConfigData LastWorkingSettings = new ConfigData();	// Used for reverting to last working settings if create db fails
 		
-		private const string configfile = "config.json";
+		private const string configfile = "config.json";		// File to load/save config changes
 
 		private static void SetConfigDefaults()
 		{
@@ -57,95 +57,10 @@ namespace WotDBUpdater.Code
 			Config.Settings.playerId = 0;
 			Config.Settings.playerName = "";
 			Config.Settings.dossierFilePath = "";
-			Config.Settings.run = 0;
+			Config.Settings.dossierFileWathcherRun = 0;
 		}
 
-		public static string DatabaseConnection(string databaseServerOverride = "", 
-												string databaseNameOverride = "", 
-												string databaseWinOrSql = "", 
-												string databaseUidOverride = "", 
-												string databasePwdOverride = "", 
-												int connectionTimeot = 10, 
-												bool databasetypeOverride = false, 
-												ConfigData.dbType databaseType = ConfigData.dbType.MSSQLserver)
-		{
-			string dbcon = "";
-			// Get database type
-			ConfigData.dbType dbType = Config.Settings.databaseType;
-			if (databasetypeOverride) dbType = databaseType;
-			if (dbType == ConfigData.dbType.MSSQLserver)
-			{
-				// Get databaseserver
-				string databaseServer = Config.Settings.databaseServer;
-				if (databaseServerOverride != "") databaseServer = databaseServerOverride;
-				// Get databasename
-				string databaseName = Config.Settings.databaseName;
-				if (databaseNameOverride != "") databaseName = databaseNameOverride;
-				// Get authentication type
-				string integratedSecurity = "True";
-				bool winAuth = Config.Settings.databaseWinAuth;
-				if (databaseWinOrSql == "Win") winAuth = true;
-				if (databaseWinOrSql == "Sql") winAuth = false;
-				// Get user name and password for login when sql authentication
-				string userLogin = "";
-				if (!winAuth)
-				{
-					integratedSecurity = "False";
-					string uid = Config.Settings.databaseUid;
-					string pwd = Config.Settings.databasePwd;
-					if (databaseUidOverride != "") uid = databaseUidOverride;
-					if (databasePwdOverride != "") pwd = databasePwdOverride;
-					userLogin = "User Id=" + uid + ";Password=" + pwd + ";";
-				}
-				dbcon = "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin + "; Connect Timeout=" + connectionTimeot.ToString();
-			}
-			else if (dbType == ConfigData.dbType.SQLite)
-			{
-				string databaseFileName = Config.Settings.databaseFileName;
-				if (databaseNameOverride != "") databaseFileName = databaseNameOverride + ".db";
-				dbcon = "Data Source=" + databaseFileName + ";Version=3;";
-			}
-			return dbcon;
-		}
-
-		public static bool CheckDBConn(bool showErrorIfNotExists = true, string databaseServerOverride = "", string databaseNameOverride = "", string databaseWinOrSql = "", string databaseUidOverride = "", string databasePwdOverride = "")
-		{
-			bool ok = false;
-			// Get database type
-			if (Config.Settings.databaseType ==ConfigData.dbType.MSSQLserver)
-			{
-				// get databasename
-				string databaseName = "";
-				if (Config.Settings.databaseName != null) databaseName = Config.Settings.databaseName;
-				if (databaseNameOverride != "") databaseName = databaseNameOverride;
-				// Check data
-				if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || databaseName == "")
-				{
-					Code.MsgBox.Show("Missing database server and/or database name, check Database Settings.", "Config error");
-				}
-				else
-				{
-					try
-					{
-						SqlConnection con = new SqlConnection(Config.DatabaseConnection(databaseServerOverride, databaseNameOverride, databaseWinOrSql, databaseUidOverride, databasePwdOverride));
-						con.Open();
-						ok = true;
-						con.Close();
-					}
-					catch (Exception ex)
-					{
-						if (showErrorIfNotExists) Code.MsgBox.Show("Error connectin to database, check Database Settings.\n\n" + ex.Message, "Config error");
-					}
-				}
-			}
-			else if (Config.Settings.databaseType ==ConfigData.dbType.SQLite)
-			{
-				ok = File.Exists(Config.Settings.databaseFileName);
-				if (!ok) Code.MsgBox.Show("No SQLite databasefile found", "Config error");
-			}
-			return ok;
-		}
-
+		
 		public static bool SaveConfig(out string msg)
 		{
 			bool ok = true;
@@ -197,5 +112,84 @@ namespace WotDBUpdater.Code
 			return ok;
 		}
 
+		
+		// Create standard dbconnection string based on standard config settings
+		public static string DatabaseConnection() 
+		{
+			int connectionTimeot = 10;
+			string dbcon = "";
+			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			{
+				// Calc win/sql auth login and user/pw settings
+				string integratedSecurity = "True";
+				string userLogin = "";
+				if (!Config.Settings.databaseWinAuth)
+				{
+					integratedSecurity = "False";
+					string uid = Config.Settings.databaseUid;
+					string pwd = Config.Settings.databasePwd;
+					userLogin = "User Id=" + uid + ";Password=" + pwd + ";";
+				}
+				// Create conn str now
+				dbcon = "Data Source=" + Config.Settings.databaseServer +
+						";Initial Catalog=" + Config.Settings.databaseName +
+						";Integrated Security=" + integratedSecurity + ";" +
+						userLogin +
+						"; Connect Timeout=" + connectionTimeot.ToString();
+			}
+			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+			{
+				dbcon = "Data Source=" + Config.Settings.databaseFileName + ";Version=3;";
+			}
+			return dbcon;
+		}
+
+		// Create alternative dbconnection string overriding standard config settings
+		public static string DatabaseConnection(ConfigData.dbType dbType,
+												string databaseFileOverride = "", // SQLite databasefile override
+												string databaseServerOverride = "", // MS SQL Server override
+												string databaseNameOverride = "",
+												string databaseWinOrSql = "",
+												string databaseUidOverride = "",
+												string databasePwdOverride = "",
+												int connectionTimeot = 10)
+		{
+			string dbcon = "";
+			if (dbType == ConfigData.dbType.MSSQLserver)
+			{
+				// Get databaseserver
+				string databaseServer = Config.Settings.databaseServer;
+				if (databaseServerOverride != "") databaseServer = databaseServerOverride;
+				// Get databasename
+				string databaseName = Config.Settings.databaseName;
+				if (databaseNameOverride != "") databaseName = databaseNameOverride;
+				// Get authentication type
+				string integratedSecurity = "True";
+				bool winAuth = Config.Settings.databaseWinAuth;
+				if (databaseWinOrSql == "Win") winAuth = true;
+				if (databaseWinOrSql == "Sql") winAuth = false;
+				// Get user name and password for login when sql authentication
+				string userLogin = "";
+				if (!winAuth)
+				{
+					integratedSecurity = "False";
+					string uid = Config.Settings.databaseUid;
+					string pwd = Config.Settings.databasePwd;
+					if (databaseUidOverride != "") uid = databaseUidOverride;
+					if (databasePwdOverride != "") pwd = databasePwdOverride;
+					userLogin = "User Id=" + uid + ";Password=" + pwd + ";";
+				}
+				dbcon = "Data Source=" + databaseServer + ";Initial Catalog=" + databaseName + ";Integrated Security=" + integratedSecurity + ";" + userLogin + "; Connect Timeout=" + connectionTimeot.ToString();
+			}
+			else if (dbType == ConfigData.dbType.SQLite)
+			{
+				string databaseFileName = Config.Settings.databaseFileName;
+				if (databaseFileOverride != "") databaseFileName = databaseFileOverride + ".db";
+				dbcon = "Data Source=" + databaseFileName + ";Version=3;";
+			}
+			return dbcon;
+		}
+
+		
 	}
 }
