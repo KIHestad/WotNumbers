@@ -225,12 +225,14 @@ namespace WotDBUpdater.Forms.File
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
 		{
-			dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
+			if (dataGridFavList.RowCount > 0)
+				dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
 		}
 
 		private void scrollFavList_MouseMove(object sender, MouseEventArgs e)
 		{
-			dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
+			if (dataGridFavList.RowCount > 0)
+				dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
 		}
 
 

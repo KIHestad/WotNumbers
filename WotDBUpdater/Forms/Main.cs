@@ -122,7 +122,6 @@ namespace WotDBUpdater.Forms
 			string result = dossier2json.UpdateDossierFileWatcher();
 			// Check DB Version
 			bool versionOK = DBVersion.CheckForDbUpgrade();
-
 			SetFormTitle();
 			GetFavList();
 			ShowContent();
@@ -1192,7 +1191,11 @@ namespace WotDBUpdater.Forms
 			Form frm = new Forms.File.ApplicationSetting();
 			frm.ShowDialog();
 			SetFormTitle();
+			// After settings changed, go to all tanks
+			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
+			GetFavList();
 			ShowContent();
+			SetListener();
 		}
 
 		private void toolItemSettingsDb_Click(object sender, EventArgs e)
