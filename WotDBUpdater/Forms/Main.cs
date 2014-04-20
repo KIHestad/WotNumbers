@@ -1233,7 +1233,7 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory();
 		}
 
-        private void convertDossierHistoryToBattlesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void importWsDossierHistoryToDbToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
         }
@@ -1241,6 +1241,7 @@ namespace WotDBUpdater.Forms
 
 
 		#endregion
+
 
 
 		
