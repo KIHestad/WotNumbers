@@ -1,0 +1,27 @@
+﻿
+How to create wsTankId
+
+
+Open in Excel:
+C:\Program Files (x86)\WOT Statistics 2.5\settings.xml
+
+Copy columns tankName, countryID and tankId to new sheet and create inserts:
+insert into ws (tankName, wsCountryId, wsTankId) values ('	105 leFH18B2	', 	4	,	8	)
+
+Notepad:
+- Remove tabulators
+- Replace ä with a
+- Replace â with a
+
+create table (
+  tankName varchar(100),
+  wsCountryId int,
+  wsTankId int
+)
+
+Run inserts
+
+select t.id as tankId, t.name as tankName, ws.wsCountryId, ws.wsTankId 
+into wsTankId 
+from tank t 
+inner join ws on t.name = ws.tankName

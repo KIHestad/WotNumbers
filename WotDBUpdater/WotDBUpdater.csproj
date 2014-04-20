@@ -328,6 +328,7 @@
     <Content Include="DevDocs\DatabaseLog\script backup\insert2.txt" />
     <Content Include="DevDocs\DatabaseLog\script backup\select.txt" />
     <Content Include="DevDocs\DatabaseLog\script backup\transferBattles.txt" />
+    <Content Include="DevDocs\DatabaseLog\wsTankId.txt" />
     <Content Include="DevDocs\Img\InfoPanel\bg1.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg1_large.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg2_72px.png" />
