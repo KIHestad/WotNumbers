@@ -41,13 +41,13 @@
 			this.MainTheme = new BadForm();
 			this.lblStatusRowCount = new System.Windows.Forms.Label();
 			this.panelMainArea = new System.Windows.Forms.Panel();
-			this.panelGrid = new System.Windows.Forms.Panel();
 			this.dataGridMain = new System.Windows.Forms.DataGridView();
-			this.panelScrollArea = new System.Windows.Forms.Panel();
-			this.panelScrollbar = new System.Windows.Forms.Panel();
 			this.panelInfo = new System.Windows.Forms.Panel();
 			this.lblOverView = new System.Windows.Forms.Label();
 			this.picIS7 = new System.Windows.Forms.PictureBox();
+			this.scrollY = new BadScrollBar();
+			this.scrollCorner = new BadScrollBarCorner();
+			this.scrollX = new BadScrollBar();
 			this.toolMain = new System.Windows.Forms.ToolStrip();
 			this.toolItemViewLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolItemViewOverall = new System.Windows.Forms.ToolStripButton();
@@ -130,9 +130,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
-			this.panelGrid.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).BeginInit();
-			this.panelScrollArea.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picIS7)).BeginInit();
 			this.toolMain.SuspendLayout();
@@ -191,7 +189,6 @@
 			this.MainTheme.TabIndex = 18;
 			this.MainTheme.Text = "Argus - World of Tanks Statistics";
 			this.MainTheme.TitleHeight = 53;
-			this.MainTheme.Resize += new System.EventHandler(this.MainTheme_Resize);
 			// 
 			// lblStatusRowCount
 			// 
@@ -209,21 +206,15 @@
 			// panelMainArea
 			// 
 			this.panelMainArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.panelMainArea.Controls.Add(this.panelGrid);
+			this.panelMainArea.Controls.Add(this.dataGridMain);
 			this.panelMainArea.Controls.Add(this.panelInfo);
+			this.panelMainArea.Controls.Add(this.scrollY);
+			this.panelMainArea.Controls.Add(this.scrollCorner);
+			this.panelMainArea.Controls.Add(this.scrollX);
 			this.panelMainArea.Location = new System.Drawing.Point(9, 57);
 			this.panelMainArea.Name = "panelMainArea";
 			this.panelMainArea.Size = new System.Drawing.Size(649, 336);
 			this.panelMainArea.TabIndex = 18;
-			// 
-			// panelGrid
-			// 
-			this.panelGrid.Controls.Add(this.dataGridMain);
-			this.panelGrid.Controls.Add(this.panelScrollArea);
-			this.panelGrid.Location = new System.Drawing.Point(21, 92);
-			this.panelGrid.Name = "panelGrid";
-			this.panelGrid.Size = new System.Drawing.Size(609, 224);
-			this.panelGrid.TabIndex = 19;
 			// 
 			// dataGridMain
 			// 
@@ -255,10 +246,9 @@
 			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
 			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
 			this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle2;
-			this.dataGridMain.Dock = System.Windows.Forms.DockStyle.Left;
 			this.dataGridMain.EnableHeadersVisualStyles = false;
 			this.dataGridMain.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-			this.dataGridMain.Location = new System.Drawing.Point(0, 0);
+			this.dataGridMain.Location = new System.Drawing.Point(14, 88);
 			this.dataGridMain.Name = "dataGridMain";
 			this.dataGridMain.ReadOnly = true;
 			this.dataGridMain.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -267,32 +257,10 @@
 			this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
 			this.dataGridMain.ShowEditingIcon = false;
-			this.dataGridMain.Size = new System.Drawing.Size(558, 224);
+			this.dataGridMain.Size = new System.Drawing.Size(601, 204);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
-			// 
-			// panelScrollArea
-			// 
-			this.panelScrollArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(69)))));
-			this.panelScrollArea.Controls.Add(this.panelScrollbar);
-			this.panelScrollArea.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelScrollArea.Location = new System.Drawing.Point(591, 0);
-			this.panelScrollArea.Name = "panelScrollArea";
-			this.panelScrollArea.Size = new System.Drawing.Size(18, 224);
-			this.panelScrollArea.TabIndex = 16;
-			// 
-			// panelScrollbar
-			// 
-			this.panelScrollbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(102)))), ((int)(((byte)(106)))));
-			this.panelScrollbar.Location = new System.Drawing.Point(4, 4);
-			this.panelScrollbar.Name = "panelScrollbar";
-			this.panelScrollbar.Size = new System.Drawing.Size(10, 30);
-			this.panelScrollbar.TabIndex = 12;
-			this.panelScrollbar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseDown);
-			this.panelScrollbar.MouseLeave += new System.EventHandler(this.pnlScrollbar_MouseLeave);
-			this.panelScrollbar.MouseHover += new System.EventHandler(this.pnlScrollbar_MouseHover);
-			this.panelScrollbar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseMove);
-			this.panelScrollbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlScrollbar_MouseUp);
+			this.dataGridMain.SelectionChanged += new System.EventHandler(this.dataGridMain_SelectionChanged);
 			// 
 			// panelInfo
 			// 
@@ -327,6 +295,54 @@
 			this.picIS7.TabIndex = 17;
 			this.picIS7.TabStop = false;
 			// 
+			// scrollY
+			// 
+			this.scrollY.BackColor = System.Drawing.Color.Transparent;
+			this.scrollY.Image = null;
+			this.scrollY.Location = new System.Drawing.Point(621, 88);
+			this.scrollY.Name = "scrollY";
+			this.scrollY.ScrollElementsTotals = 100;
+			this.scrollY.ScrollElementsVisible = 0;
+			this.scrollY.ScrollHide = true;
+			this.scrollY.ScrollNecessary = true;
+			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+			this.scrollY.ScrollPosition = 0;
+			this.scrollY.Size = new System.Drawing.Size(17, 204);
+			this.scrollY.TabIndex = 21;
+			this.scrollY.Text = "badScrollBar2";
+			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
+			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
+			// 
+			// scrollCorner
+			// 
+			this.scrollCorner.Image = null;
+			this.scrollCorner.Location = new System.Drawing.Point(621, 298);
+			this.scrollCorner.Name = "scrollCorner";
+			this.scrollCorner.Size = new System.Drawing.Size(17, 17);
+			this.scrollCorner.TabIndex = 19;
+			this.scrollCorner.Text = "badScrollBarCorner1";
+			this.scrollCorner.Visible = false;
+			// 
+			// scrollX
+			// 
+			this.scrollX.BackColor = System.Drawing.Color.Transparent;
+			this.scrollX.Image = null;
+			this.scrollX.Location = new System.Drawing.Point(14, 298);
+			this.scrollX.Name = "scrollX";
+			this.scrollX.ScrollElementsTotals = 100;
+			this.scrollX.ScrollElementsVisible = 0;
+			this.scrollX.ScrollHide = true;
+			this.scrollX.ScrollNecessary = true;
+			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
+			this.scrollX.ScrollPosition = 0;
+			this.scrollX.Size = new System.Drawing.Size(601, 17);
+			this.scrollX.TabIndex = 20;
+			this.scrollX.Text = "badScrollBar1";
+			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
+			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
+			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
+			// 
 			// toolMain
 			// 
 			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
@@ -348,7 +364,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(526, 25);
+			this.toolMain.Size = new System.Drawing.Size(495, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1095,13 +1111,13 @@
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.Shown += new System.EventHandler(this.Main_Shown);
+			this.ResizeEnd += new System.EventHandler(this.Main_ResizeEnd);
+			this.Resize += new System.EventHandler(this.Main_Resize);
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
 			this.MainTheme.ResumeLayout(false);
 			this.MainTheme.PerformLayout();
 			this.panelMainArea.ResumeLayout(false);
-			this.panelGrid.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).EndInit();
-			this.panelScrollArea.ResumeLayout(false);
 			this.panelInfo.ResumeLayout(false);
 			this.panelInfo.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picIS7)).EndInit();
@@ -1114,7 +1130,6 @@
 		#endregion
 
 		private System.Windows.Forms.Timer timerStatus2;
-		private System.Windows.Forms.Panel panelScrollbar;
 		private System.Windows.Forms.ToolStrip toolMain;
 		private System.Windows.Forms.ToolStripButton toolItemRefresh;
 		private System.Windows.Forms.ToolStripLabel toolItemViewLabel;
@@ -1139,14 +1154,12 @@
 		private System.Windows.Forms.Timer timerPanelSlide;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem toolItemShowDbTables;
-		private System.Windows.Forms.Panel panelScrollArea;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
 		private BadForm MainTheme;
 		private System.Windows.Forms.Label lblStatus2;
 		private System.Windows.Forms.Label lblStatus1;
-		private System.Windows.Forms.DataGridView dataGridMain;
 		private System.Windows.Forms.ToolStripDropDownButton toolItemBattles;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1d;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattles3d;
@@ -1201,12 +1214,15 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 		private System.Windows.Forms.Panel panelMainArea;
 		private System.Windows.Forms.Panel panelInfo;
-		private System.Windows.Forms.Panel panelGrid;
 		private System.Windows.Forms.ImageList imageListToolStrip;
 		private System.Windows.Forms.Label lblStatusRowCount;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 		private System.Windows.Forms.ToolStripMenuItem toolItemTest_ScrollBar;
 		private System.Windows.Forms.ToolStripMenuItem importDossierHistoryToolStripMenuItem;
+		private System.Windows.Forms.DataGridView dataGridMain;
+		private BadScrollBar scrollY;
+		private BadScrollBar scrollX;
+		private BadScrollBarCorner scrollCorner;
 	}
 }
 

@@ -1082,7 +1082,7 @@ class BadScrollBar : BadThemeControl
 	public bool ScrollHide
 	{
 		get { return _ScrollHide; }
-		set { _ScrollHide = value; }
+		set { _ScrollHide = value; Invalidate(); }
 	}
 
 	private int _ScrollPosition = 0;

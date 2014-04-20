@@ -121,7 +121,7 @@ namespace WotDBUpdater.Forms.Reports
 			scrollCorner.Top = DatabaseTableTheme.MainArea.Bottom - scrollCorner.Height;
 			scrollY.Left = DatabaseTableTheme.MainArea.Right - scrollY.Width;
 			scrollX.Top = DatabaseTableTheme.MainArea.Bottom - scrollX.Height;
-			// check if scrollbar is visible to determine widht / height
+			// check if scrollbar is visible to determine width / height
 			int scrollYWidth = 0; 
 			int scrollXHeight = 0;
 			if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
