@@ -34,7 +34,7 @@ namespace WotDBUpdater.Code
                        + "cmId int, cmTankId int, cmCountryId int, cmTankTitle varchar(100), cmFileId int, fiDate datetime, bpBattleCount int, bpDefencePoints int, "
                        + "bpFrags int, bpWinAndSurvive int, bpSpotted int, bpDamageDealt int, bpShots int, bpWins int, bpDamageReceived int, bpLosses int, bpXP int, "
                        + "bpSurvivedBattles int, bpCapturePoints int, bpDamageAssistedRadio int, bpDamageAssistedTracks int); ";
-            db.ExecuteNonQuery(sql);
+            DB.ExecuteNonQuery(sql);
 
             // Join tank/battle into datatable
             sqLiteCmd.CommandText = "SELECT t.cmId, t.cmTankId, t.cmCountryId, t.cmTankTitle, t.cmFileId, f.fiDate, b.bpBattleCount, b.bpDefencePoints, "
@@ -140,28 +140,28 @@ namespace WotDBUpdater.Code
                     + "@cmId, @cmTankId, @cmCountryId, @cmTankTitle, @cmFileId, @fiDate, @bpBattleCount, @bpDefencePoints, @bpFrags, @bpWinAndSurvive, @bpSpotted, @bpDamageDealt, "
                     + "@bpShots, @bpWins, @bpDamageReceived, @bpLosses, @bpXP, @bpSurvivedBattles, @bpCapturePoints, @bpDamageAssistedRadio, @bpDamageAssistedTracks)";
 
-                db.AddWithValue(ref sql, "@cmId", cmId, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@cmTankId", cmTankId, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@cmCountryId", cmCountryId, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@cmTankTitle", cmTankTitle, db.SqlDataType.VarChar);
-                db.AddWithValue(ref sql, "@cmFileId", cmFileId, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@fiDate", fiDate.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
-                db.AddWithValue(ref sql, "@bpBattleCount", bpBattleCount, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpDefencePoints", bpDefencePoints, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpFrags", bpFrags, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpWinAndSurvive", bpWinAndSurvive, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpSpotted", bpSpotted, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpDamageDealt", bpDamageDealt, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpShots", bpShots, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpWins", bpWins, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpDamageReceived", bpDamageReceived, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpLosses", bpLosses, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpXP", bpXP, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpSurvivedBattles", bpSurvivedBattles, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpCapturePoints", bpCapturePoints, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpDamageAssistedRadio", bpDamageAssistedRadio, db.SqlDataType.Int);
-                db.AddWithValue(ref sql, "@bpDamageAssistedTracks", bpDamageAssistedTracks, db.SqlDataType.Int);
-                db.ExecuteNonQuery(sql);
+                DB.AddWithValue(ref sql, "@cmId", cmId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@cmTankId", cmTankId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@cmCountryId", cmCountryId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@cmTankTitle", cmTankTitle, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@cmFileId", cmFileId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@fiDate", fiDate.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+                DB.AddWithValue(ref sql, "@bpBattleCount", bpBattleCount, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpDefencePoints", bpDefencePoints, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpFrags", bpFrags, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpWinAndSurvive", bpWinAndSurvive, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpSpotted", bpSpotted, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpDamageDealt", bpDamageDealt, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpShots", bpShots, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpWins", bpWins, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpDamageReceived", bpDamageReceived, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpLosses", bpLosses, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpXP", bpXP, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpSurvivedBattles", bpSurvivedBattles, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpCapturePoints", bpCapturePoints, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpDamageAssistedRadio", bpDamageAssistedRadio, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@bpDamageAssistedTracks", bpDamageAssistedTracks, DB.SqlDataType.Int);
+                DB.ExecuteNonQuery(sql);
                 
                 row++;
             }
@@ -197,7 +197,7 @@ namespace WotDBUpdater.Code
             wsTankList.Load(r);
 
             // Build supporting datatable for tankId mapping
-            DataTable wsTankId = db.FetchData("select t.wsCountryId, t.wsTankId, t.tankId, t.tankName, pt.id as playerTankId "
+            DataTable wsTankId = DB.FetchData("select t.wsCountryId, t.wsTankId, t.tankId, t.tankName, pt.id as playerTankId "
                                             + "from wsTankId t "
                                             + "left join playerTank pt on t.tankId = pt.tankId "
                                             + "order by t.wsCountryId, t.wsTankId");
@@ -209,7 +209,7 @@ namespace WotDBUpdater.Code
             battleMode.Rows.Add(7);
 
             // Delete previously imported battles  (temp. solution)
-            db.ExecuteNonQuery("delete from battle where wsId = 999999999");
+            DB.ExecuteNonQuery("delete from battle where wsId = 999999999");
 
             // Loop through each tank
             int currentTank = 0;
@@ -473,37 +473,37 @@ namespace WotDBUpdater.Code
                                         + "999999999"       // mark rows as imported
                                         + ");";
 
-                                    db.AddWithValue(ref sql, "@playerTankId", playerTankId, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpBattleCount", delta_bpBattleCount, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@cmLastBattleTime", cmLastBattleTime.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
-                                    db.AddWithValue(ref sql, "@delta_agg_battleResultId", delta_agg_battleResultId, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpWins", delta_bpWins, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_agg_draw", delta_agg_draw, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpLosses", delta_bpLosses, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_agg_battleSurviveId", delta_agg_battleSurviveId, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpSurvivedBattles", delta_bpSurvivedBattles, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_agg_killed", delta_agg_killed, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpDamageDealt", delta_bpDamageDealt, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpFrags", delta_bpFrags, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpCapturePoints", delta_bpCapturePoints, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpDefencePoints", delta_bpDefencePoints, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpDamageReceived", delta_bpDamageReceived, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpShots", delta_bpShots, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpHits", delta_bpHits, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpPierced", delta_bpPierced, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpPiercedReceived", delta_bpPiercedReceived, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpShotsReceived", delta_bpShotsReceived, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpDamageAssistedRadio", delta_bpDamageAssistedRadio, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpDamageAssistedTracks", delta_bpDamageAssistedTracks, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpSpotted", delta_bpSpotted, db.SqlDataType.Int);
-                                    db.AddWithValue(ref sql, "@delta_bpXP", delta_bpXP, db.SqlDataType.Int);
-                                    if (bpBattleMode == 15) db.AddWithValue(ref sql, "@mode15", 1, db.SqlDataType.Int);
-                                    else db.AddWithValue(ref sql, "@mode15", 0, db.SqlDataType.Int);
-                                    if (bpBattleMode == 7) db.AddWithValue(ref sql, "@mode7", 1, db.SqlDataType.Int);
-                                    else db.AddWithValue(ref sql, "@mode7", 0, db.SqlDataType.Int);
-                                    //db.AddWithValue(ref sql, "@fiDate", fiDate.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
+                                    DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpBattleCount", delta_bpBattleCount, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@cmLastBattleTime", cmLastBattleTime.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+                                    DB.AddWithValue(ref sql, "@delta_agg_battleResultId", delta_agg_battleResultId, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpWins", delta_bpWins, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_agg_draw", delta_agg_draw, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpLosses", delta_bpLosses, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_agg_battleSurviveId", delta_agg_battleSurviveId, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpSurvivedBattles", delta_bpSurvivedBattles, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_agg_killed", delta_agg_killed, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpDamageDealt", delta_bpDamageDealt, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpFrags", delta_bpFrags, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpCapturePoints", delta_bpCapturePoints, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpDefencePoints", delta_bpDefencePoints, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpDamageReceived", delta_bpDamageReceived, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpShots", delta_bpShots, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpHits", delta_bpHits, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpPierced", delta_bpPierced, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpPiercedReceived", delta_bpPiercedReceived, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpShotsReceived", delta_bpShotsReceived, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpDamageAssistedRadio", delta_bpDamageAssistedRadio, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpDamageAssistedTracks", delta_bpDamageAssistedTracks, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpSpotted", delta_bpSpotted, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref sql, "@delta_bpXP", delta_bpXP, DB.SqlDataType.Int);
+                                    if (bpBattleMode == 15) DB.AddWithValue(ref sql, "@mode15", 1, DB.SqlDataType.Int);
+                                    else DB.AddWithValue(ref sql, "@mode15", 0, DB.SqlDataType.Int);
+                                    if (bpBattleMode == 7) DB.AddWithValue(ref sql, "@mode7", 1, DB.SqlDataType.Int);
+                                    else DB.AddWithValue(ref sql, "@mode7", 0, DB.SqlDataType.Int);
+                                    //DB.AddWithValue(ref sql, "@fiDate", fiDate.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
                                 
-                                    db.ExecuteNonQuery(sql);
+                                    DB.ExecuteNonQuery(sql);
                                     imported++;
 
 
