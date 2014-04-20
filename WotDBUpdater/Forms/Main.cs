@@ -1233,10 +1233,10 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory();
 		}
 
-        private void importWsDossierHistoryToDbToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
-        }
+		private void importWsDossierHistoryToDbToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
+		}
 
 
 

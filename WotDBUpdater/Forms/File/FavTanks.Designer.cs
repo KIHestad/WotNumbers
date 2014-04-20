@@ -644,6 +644,8 @@
 			this.scrollFavList.Size = new System.Drawing.Size(17, 153);
 			this.scrollFavList.TabIndex = 11;
 			this.scrollFavList.Text = "badScrollBar1";
+			this.scrollFavList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollFavList_MouseDown);
+			this.scrollFavList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollFavList_MouseMove);
 			// 
 			// dataGridFavList
 			// 

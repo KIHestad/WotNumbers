@@ -53,6 +53,7 @@ namespace WotDBUpdater.Code
 			if (dt.Rows.Count > 0)
 			{
 				Form frm = new Forms.PopupGrid(Title, dt);
+				frm.SetDesktopLocation(Cursor.Position.X - (frm.Width / 2), Cursor.Position.Y + 20);
 				frm.ShowDialog();
 			}
 			return Value;
