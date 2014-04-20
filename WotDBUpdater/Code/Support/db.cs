@@ -245,6 +245,7 @@ namespace WotDBUpdater.Code
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
+					
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'"); // yyyy-DD-mm
 				}
 			}
@@ -253,7 +254,7 @@ namespace WotDBUpdater.Code
 		private static string ReplaceParameterWithValue(string Sql, string Parameter, string Value)
 		{
 			// Search for Parameter within SQL - must be followed by valid nextchar = " " or "," or ")"
-			string validchars = " ,)";
+			string validchars = " ,;)";
 			int pos = 0;
 			while (Sql.IndexOf(Parameter, pos) >= pos)
 			{

@@ -255,21 +255,7 @@ abstract class BadThemeContainerControl : ContainerControl
 
 	protected override void OnMouseLeave(EventArgs e)
 	{
-		if (SystemExitImageBackColor == ColorTheme.ControlBackMouseOver)
-		{
-			SystemExitImageBackColor = ColorTheme.FormBackTitle;
-			PaintSysIcons();
-		}
-		if (SystemMaximizeImageBackColor == ColorTheme.ControlBackMouseOver)
-		{
-			SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
-			PaintSysIcons();
-		}
-		if (SystemMinimizeImageBackColor == ColorTheme.ControlBackMouseOver)
-		{
-			SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
-			PaintSysIcons();
-		}
+		// Draw default cursor when leave form focus
 		Cursor = Cursors.Default;
 		base.OnMouseLeave(e);
 	}
@@ -291,6 +277,10 @@ abstract class BadThemeContainerControl : ContainerControl
 		bitmapObject = new Bitmap(Width, Height);
 		graphicObject = Graphics.FromImage(bitmapObject);
 		Invalidate();
+		// Draw resize cursor if within resize area
+		Current = GetPointer();
+		Cursor = Current.Cursor;
+		// Done
 		base.OnSizeChanged(e);
 	}
 
@@ -1043,7 +1033,7 @@ class BadPopupBox : BadThemeControl
 	}
 
 	private string _Text;
-	public override string Text
+	public override string Text 
 	{
 		get { return _Text; }
 		set { _Text = value; Invalidate(); }
@@ -1088,6 +1078,13 @@ class BadScrollBar : BadThemeControl
 		set { _ScrollNecessary = value; }
 	}
 
+	private bool _ScrollHide = true;
+	public bool ScrollHide
+	{
+		get { return _ScrollHide; }
+		set { _ScrollHide = value; Invalidate(); }
+	}
+
 	private int _ScrollPosition = 0;
 	public int ScrollPosition
 	{
@@ -1099,14 +1096,23 @@ class BadScrollBar : BadThemeControl
 	public int ScrollElementsTotals
 	{
 		get { return _ScrollElementsTotals; }
-		set { _ScrollElementsTotals = value; Invalidate(); }
+		set 
+		{ 
+			_ScrollElementsTotals = value;
+			ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+			Invalidate();
+		}
 	}
 
 	private int _ScrollElementsVisible = 20;
 	public int ScrollElementsVisible
 	{
 		get { return _ScrollElementsVisible; }
-		set { _ScrollElementsVisible = value; Invalidate(); }
+		set { 
+				_ScrollElementsVisible = value;
+				ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+				Invalidate(); 
+			}
 	}
 
 	private ScrollOrientation _ScrollOrientation = ScrollOrientation.VerticalScroll;
@@ -1125,13 +1131,21 @@ class BadScrollBar : BadThemeControl
 	protected override void OnPaint(PaintEventArgs e)
 	{
 		grapichObject.Clear(BackColor);
+		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
+		if (!ScrollHide)
+		{
+			// Background
+			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		}
 		// If no elements og fewer elements than visible area, do not whow scrollbar
 		if (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible)
 		{
 			ScrollNecessary = true;
-			// Background
-			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
-			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+			if (ScrollHide)
+			{
+				// Background
+				grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+			}
 			// Calc Scroll Handle
 			DrawScrollhandle();
 			// Arrows
@@ -1228,8 +1242,9 @@ class BadScrollBar : BadThemeControl
 	protected override void OnMouseDown(MouseEventArgs e)
 	{
 		if (!(e.Button == MouseButtons.Left)) return;
-		startPos = PointToClient(MousePosition);
+		startPos = e.Location; // PointToClient(MousePosition);
 		oldScrollPositionPixel = scrollPositionPixel;
+		NewScrollPositionPixel = scrollPositionPixel;
 		movePixels = 0;
 		int cursorPosition = 0;
 		// Check click area
@@ -1271,8 +1286,9 @@ class BadScrollBar : BadThemeControl
 			PaintControl();
 		}
 		else
+			
 			move = true;
-		//base.OnMouseDown(e);
+		base.OnMouseDown(e);
 		
 	}
 
@@ -1280,7 +1296,7 @@ class BadScrollBar : BadThemeControl
 	{
 		if (move)
 		{
-			currentPos = PointToClient(MousePosition);
+			currentPos = e.Location; // PointToClient(MousePosition);
 			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
 				movePixels = currentPos.Y - startPos.Y;
 			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
@@ -1313,4 +1329,27 @@ class BadScrollBar : BadThemeControl
 		Cursor = Cursors.Default;
 		base.OnMouseHover(e);
 	}
+}
+
+class BadScrollBarCorner : BadThemeControl
+{
+
+
+
+	public BadScrollBarCorner()
+	{
+		AllowTransparent();
+	}
+
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
+		grapichObject.Clear(BackColor);
+		if (Visible)
+		{
+			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
+			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		}
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
 }

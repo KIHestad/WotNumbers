@@ -90,6 +90,7 @@
 			this.scrollGrid.ScrollElementsTotals = 100;
 			this.scrollGrid.ScrollElementsVisible = 20;
 			this.scrollGrid.ScrollNecessary = true;
+			this.scrollGrid.ScrollHide = true;
 			this.scrollGrid.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollGrid.ScrollPosition = 0;
 			this.scrollGrid.Size = new System.Drawing.Size(17, 150);

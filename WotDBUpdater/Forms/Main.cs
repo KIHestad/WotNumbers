@@ -34,8 +34,10 @@ namespace WotDBUpdater.Forms
 
 		private void Main_Load(object sender, EventArgs e)
 		{
-			// Hide form until ready
-			MainTheme.Visible = false;
+			// Hide content until ready
+			MainTheme.Visible = true;
+			// Black Border on loading
+			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
 			toolMain.BackColor = ColorTheme.FormBackTitle;
@@ -43,6 +45,22 @@ namespace WotDBUpdater.Forms
 			toolItemBattles.Visible = false;
 			toolItemTankFilter.Visible = false;
 			toolItemRefreshSeparator.Visible = false;
+			// Mouse scrolling for datagrid
+			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
+			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
+			panelMainArea.Left = MainTheme.MainArea.Left;
+			panelMainArea.Top = MainTheme.MainArea.Top;
+			// Hide scrollbar initially, set fixed init placement
+			scrollX.ScrollElementsTotals = 0;
+			scrollY.ScrollElementsTotals = 0;
+			scrollX.Left = 0;
+			// Grid init placement
+			int gridAreaTop = panelInfo.Height; // Start below info panel
+			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+			dataGridMain.Top = gridAreaTop;
+			dataGridMain.Left = 0;
+			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
+			dataGridMain.Height = gridAreaHeight - scrollX.Height;
 			// Style datagrid
 			dataGridMain.BorderStyle = BorderStyle.None;
 			dataGridMain.BackgroundColor = ColorTheme.FormBack;
@@ -56,13 +74,11 @@ namespace WotDBUpdater.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
-
 			// Draw form 
 			lblStatus1.Text = "";
 			lblStatus2.Text = "Application init...";
 			lblStatusRowCount.Text = "";
-			RefreshFormAfterResize(true);
-			InitForm();
+			// Show content now
 			MainTheme.Visible = true;
 		}
 
@@ -115,6 +131,7 @@ namespace WotDBUpdater.Forms
 			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
 			// Display form and status message 
 			SetStatus2("Application started");
+			MainTheme.Cursor = Cursors.Default;
 		}
 
 		#endregion
@@ -254,7 +271,7 @@ namespace WotDBUpdater.Forms
 				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				// Finish
 				GridResizeOverall();
-				GridScrollShowCurPos();
+				ResizeNow();
 				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 			}
 			catch (Exception)
@@ -268,7 +285,7 @@ namespace WotDBUpdater.Forms
 		private void GridResizeOverall()
 		{
 			dataGridMain.Columns[0].Width = 100;
-			dataGridMain.Columns[1].Width = 900;
+			dataGridMain.Columns[1].Width = 500;
 		}
 
 		private void GetTankfilter(out string whereSQL, out string Status2Message)
@@ -379,7 +396,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["Country"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			// Finish
 			GridResizeTankInfo();
-			GridScrollShowCurPos();
+			ResizeNow();
 			// Add status message
 			if (statusmessage == "") statusmessage = message;
 			SetStatus2(statusmessage);
@@ -514,7 +531,7 @@ namespace WotDBUpdater.Forms
 			
 			// Finish up
 			GridResizeBattle();
-			GridScrollShowCurPos();
+			ResizeNow();
 			toolItemBattles.Visible = true;
 			if (overrideStatus2Message == "")
 				SetStatus2(toolItemBattles.Text + "   " + tankFilterMessage);
@@ -597,73 +614,144 @@ namespace WotDBUpdater.Forms
 		}
 
 		#endregion
+		
+		#region Resize
 
-		#region Scroll Grid
-
-		private bool scrolling = false;
-		private Point moveFromPoint;
-		private int scrollY;
-
-		private void GridScrollGoToPos()
+		private void Main_Resize(object sender, EventArgs e)
 		{
-			try
+			ResizeNow();
+		}
+
+		private void Main_ResizeEnd(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
+		private void ResizeNow()
+		{
+			// Set Form border color
+			SetFormBorder(); 
+			// Set Main Area Panel
+			panelMainArea.Width = MainTheme.MainArea.Width;
+			panelMainArea.Height = MainTheme.MainArea.Height;
+			// Set scrollbars, size differs according to scrollbar visibility (ScrollNecessary)
+			RefreshScrollbars();
+			// Scroll and grid size
+			int gridAreaTop = panelInfo.Height; // Start below info panel
+			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+			dataGridMain.Top = gridAreaTop;
+			scrollCorner.Left = panelMainArea.Width - scrollCorner.Width;
+			scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
+			scrollY.Top = gridAreaTop;
+			scrollY.Left = panelMainArea.Width - scrollY.Width;
+			scrollX.Top = panelMainArea.Height - scrollX.Height;
+			// check if scrollbar is visible to determine width / height
+			int scrollYWidth = 0;
+			int scrollXHeight = 0;
+			if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
+			if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
+			dataGridMain.Width = panelMainArea.Width - scrollYWidth;
+			dataGridMain.Height = gridAreaHeight - scrollXHeight; 
+			scrollY.Height = dataGridMain.Height;
+			scrollX.Width = dataGridMain.Width;
+		}
+
+		#endregion
+
+		#region Grid and Scroll Handling
+
+		// Set scrollbar properties according to grid content
+		private void RefreshScrollbars()
+		{
+			int XVisible = 0;
+			int XTotal = 0;
+			int YVisible = 0;
+			int YTotal = 0;
+			// Calc scroll boundarys
+			if (dataGridMain.RowCount > 0)
 			{
-				// Calc position
-				double scrollMax = panelScrollArea.Height - panelScrollbar.Height - 8;
-				if (scrollMax > 0)
+				YTotal = dataGridMain.RowCount;
+				YVisible = dataGridMain.DisplayedRowCount(false);
+				//XTotal = dataGridMain.ColumnCount;
+				foreach (DataGridViewColumn col in dataGridMain.Columns)
 				{
-					double scrollPos = panelScrollbar.Top - 4;
-					// Move datagrid
-					double rowcount = dataGridMain.RowCount - dataGridMain.DisplayedRowCount(false);
-					// Move to position
-					int pos = Convert.ToInt32(rowcount * (scrollPos / scrollMax));
-					dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+					if (col.Visible) XTotal++;
 				}
-				else
-				{ 
-					scrolling = false; 
-				}
+				XVisible = dataGridMain.DisplayedColumnCount(false);
 			}
-			catch (Exception ex)
-			{
-				Code.MsgBox.Show("Error when trying to scroll the grid, might be caused by empty datagrid (missing data connection)." + Environment.NewLine + Environment.NewLine + ex.Message, "Error scrolling");
-			}
-
+			// Scroll init
+			scrollX.ScrollElementsVisible = XVisible;
+			scrollX.ScrollElementsTotals = XTotal;
+			scrollY.ScrollElementsVisible = YVisible;
+			scrollY.ScrollElementsTotals = YTotal;
+			// Scroll corner
+			scrollCorner.Visible = (scrollX.ScrollNecessary && scrollY.ScrollNecessary);
 		}
 
-		private void GridScrollShowCurPos()
+		// Scrolling Y
+		private bool scrollingY = false;
+		private void scrollY_MouseDown(object sender, MouseEventArgs e)
 		{
-			// Pos in datagrid
-			double rowcount = dataGridMain.RowCount;
-			double gridrowcount = dataGridMain.DisplayedRowCount(false);
-			double gridpos = dataGridMain.FirstDisplayedScrollingRowIndex / (rowcount - gridrowcount);
-			int scrollMax = panelScrollArea.Height - 8; // Calc max height of scrollbar
-			int scrollheight = 30; // Default height - minimum size
-			// Calc scroll height
-			if (rowcount <= gridrowcount) // Visible area > content = No scrolling
-			{
-				scrollheight = scrollMax;
-			}
-			else // Visible area to small for show all - calc scrollbar height now
-			{
-				double scrollheigthfactor = rowcount / gridrowcount;
-				scrollheight = Convert.ToInt32(scrollMax / scrollheigthfactor);
-				if (scrollheight < 30) scrollheight = 30;
-			}
-			// Calc scroll pos
-			int scrollMaxArea = panelScrollArea.Height - scrollheight - 8; // Calc max height of scrollbar
-			int scrollpos = 4; // Top
-			if (rowcount > gridrowcount) // Visible area < content = scrolling)
-			{
-				scrollpos = Convert.ToInt32(gridpos * scrollMaxArea);
-				if (scrollpos < 4) scrollpos = 4;
-				if (scrollpos > scrollMaxArea + 4) scrollpos = Convert.ToInt32(scrollMaxArea + 4);
-			}
-			// Move to position and set height
-			panelScrollbar.Top = scrollpos;
-			panelScrollbar.Height = scrollheight;
+			scrollingY = true;
+			ScrollY();
 		}
 
+		private void scrollY_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (scrollingY) ScrollY();
+		}
+
+		private void ScrollY()
+		{
+			int posBefore = dataGridMain.FirstDisplayedScrollingRowIndex;
+			dataGridMain.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
+			if (posBefore != dataGridMain.FirstDisplayedScrollingRowIndex) Refresh();
+		}
+
+		private void scrollY_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingY = false;
+		}
+
+
+		// Scrolling X
+		private bool scrollingX = false;
+		private void scrollX_MouseDown(object sender, MouseEventArgs e)
+		{
+			scrollingX = true;
+			ScrollX();
+		}
+
+		private void scrollX_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingX = false;
+		}
+
+		private void scrollX_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (scrollingX) ScrollX();
+		}
+
+		private void ScrollX()
+		{
+			int posBefore = dataGridMain.FirstDisplayedScrollingColumnIndex;
+			dataGridMain.FirstDisplayedScrollingColumnIndex = scrollX.ScrollPosition;
+			if (posBefore != dataGridMain.FirstDisplayedScrollingColumnIndex) Refresh();
+		}
+
+		// Move scrollbar according to grid movements
+		private void dataGridMain_SelectionChanged(object sender, EventArgs e)
+		{
+			MoveScrollBar();
+		}
+
+		private void MoveScrollBar()
+		{
+			scrollX.ScrollPosition = dataGridMain.FirstDisplayedScrollingColumnIndex;
+			scrollY.ScrollPosition = dataGridMain.FirstDisplayedScrollingRowIndex;
+		}
+
+		// Enable mouse wheel scrolling for datagrid
 		private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
@@ -671,7 +759,6 @@ namespace WotDBUpdater.Forms
 				// scroll in grid from mouse wheel
 				int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex;
 				int scrollLines = SystemInformation.MouseWheelScrollLines;
-
 				if (e.Delta > 0)
 				{
 					this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
@@ -681,92 +768,17 @@ namespace WotDBUpdater.Forms
 					this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
 				}
 				// move scrollbar
-				GridScrollShowCurPos();                
+				MoveScrollBar();
 			}
 			catch (Exception)
 			{
 				// throw;
 			}
-			
-		}
 
-		private void pnlScrollbar_MouseHover(object sender, EventArgs e)
-		{
-			panelScrollbar.BackColor = ColorTheme.ToolGrayScrollbarHover; 
-		}
-
-		private void pnlScrollbar_MouseLeave(object sender, EventArgs e)
-		{
-			panelScrollbar.BackColor = ColorTheme.ToolGrayScrollbar;
-		}
-
-		private void pnlScrollbar_MouseDown(object sender, MouseEventArgs e)
-		{
-			panelScrollbar.BackColor = ColorTheme.ToolGrayCheckPressed;
-			scrolling = true;
-			moveFromPoint = Cursor.Position;
-			scrollY = panelScrollbar.Top;
-		}
-
-		private void pnlScrollbar_MouseUp(object sender, MouseEventArgs e)
-		{
-			panelScrollbar.BackColor = ColorTheme.ToolGrayScrollbar;
-			scrolling = false;
-		}
-
-		private void pnlScrollbar_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (scrolling)
-			{
-				Point dif = Point.Subtract(Cursor.Position, new Size(moveFromPoint));
-				int t = scrollY + dif.Y;
-				if (t >= 4 && t <= panelScrollArea.Height - panelScrollbar.Height -4)
-					panelScrollbar.Top = t;
-				GridScrollGoToPos();
-			}
 		}
 
 		#endregion
 
-		#region Form Init and Form Resize
-
-		private void InitForm()
-		{
-			panelMainArea.Left = MainTheme.MainArea.Left;
-			panelMainArea.Top = MainTheme.MainArea.Top;
-			panelGrid.Left = 0;
-			panelGrid.Top = panelInfo.Height;
-			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
-		}
-
-		private void RefreshFormAfterResize(bool notrefreshgrid = false)
-		{
-			// Set Form border color
-			SetFormBorder(); 
-			// Set Main Area Panel
-			panelMainArea.Width = MainTheme.MainArea.Width;
-			panelMainArea.Height = MainTheme.MainArea.Height;
-			// Set grid panel position and size
-			panelGrid.Width = panelMainArea.Width;
-			panelGrid.Height = panelMainArea.Height - panelInfo.Height;
-			// Set grid width
-			dataGridMain.Width = panelMainArea.Width - 20; // room for scrollbar
-			// Grid
-			if (!notrefreshgrid)
-			{
-				// Update grid scroll pos
-				GridScrollShowCurPos(); 
-			}
-		}
-
-		private void MainTheme_Resize(object sender, EventArgs e)
-		{
-			RefreshFormAfterResize();
-		}
-				
-
-		#endregion
-		
 		#region Panel Info - Slider Events
 
 		private int infoPanelSlideSpeed;
@@ -794,21 +806,34 @@ namespace WotDBUpdater.Forms
 			{
 				panelInfo.Height = 0;
 				timerPanelSlide.Enabled = false;
+				ResizeNow();
 			}
 			else if (panelInfo.Height + infoPanelSlideSpeed > panelInfoMaxSize)
 			{
 				panelInfo.Height = panelInfoMaxSize;
 				timerPanelSlide.Enabled = false;
+				ResizeNow();
 			}
 			else
 			{
 				panelInfo.Height += infoPanelSlideSpeed;
+				// Simple form resize, only focus on height
+				// Set Main Area Panel
+				panelMainArea.Height = MainTheme.MainArea.Height;
+				// Scroll and grid size
+				int gridAreaTop = panelInfo.Height; // Start below info panel
+				int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+				dataGridMain.Top = gridAreaTop;
+				scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
+				scrollY.Top = gridAreaTop;
+				scrollX.Top = panelMainArea.Height - scrollX.Height;
+				// check if scrollbar is visible to determine width / height
+				int scrollXHeight = 0;
+				if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
+				dataGridMain.Height = gridAreaHeight - scrollXHeight;
+				scrollY.Height = dataGridMain.Height;
 			}
-				
-			// Set grid panel height
-			panelGrid.Top = panelInfo.Height;
-			panelGrid.Height = panelMainArea.Height - panelInfo.Height;
-			GridScrollShowCurPos();
+			
 		}
 
 		#endregion       
@@ -1159,7 +1184,7 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Reports.DBTable();
+			Form frm = new Forms.Reports.DatabaseTable();
 			frm.Show();
 		}
 
@@ -1203,10 +1228,10 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
-        private void importDossierHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotDossier2DB.importWotDossierHistory();
-        }
+		private void importDossierHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotDossier2DB.importWotDossierHistory();
+		}
 
         private void convertDossierHistoryToBattlesToolStripMenuItem_Click(object sender, EventArgs e)
         {

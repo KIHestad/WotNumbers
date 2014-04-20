@@ -104,6 +104,7 @@
 			// 
 			// FavTanksTheme
 			// 
+			this.FavTanksTheme.BackColor = System.Drawing.Color.Fuchsia;
 			this.FavTanksTheme.Controls.Add(this.badButton8);
 			this.FavTanksTheme.Controls.Add(this.badButton7);
 			this.FavTanksTheme.Controls.Add(this.badButton6);
@@ -136,6 +137,7 @@
 			this.FavTanksTheme.Controls.Add(this.badLabel5);
 			this.FavTanksTheme.Controls.Add(this.badLabel4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox4);
+			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.FavTanksTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FavTanksTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.FavTanksTheme.FormFooter = false;
@@ -567,6 +569,7 @@
 			this.scrollSelectedTanks.Name = "scrollSelectedTanks";
 			this.scrollSelectedTanks.ScrollElementsTotals = 100;
 			this.scrollSelectedTanks.ScrollElementsVisible = 20;
+			this.scrollSelectedTanks.ScrollHide = false;
 			this.scrollSelectedTanks.ScrollNecessary = true;
 			this.scrollSelectedTanks.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollSelectedTanks.ScrollPosition = 0;
@@ -600,6 +603,7 @@
 			this.scrollAllTanks.Name = "scrollAllTanks";
 			this.scrollAllTanks.ScrollElementsTotals = 100;
 			this.scrollAllTanks.ScrollElementsVisible = 20;
+			this.scrollAllTanks.ScrollHide = false;
 			this.scrollAllTanks.ScrollNecessary = true;
 			this.scrollAllTanks.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollAllTanks.ScrollPosition = 0;
@@ -633,6 +637,7 @@
 			this.scrollFavList.Name = "scrollFavList";
 			this.scrollFavList.ScrollElementsTotals = 100;
 			this.scrollFavList.ScrollElementsVisible = 20;
+			this.scrollFavList.ScrollHide = false;
 			this.scrollFavList.ScrollNecessary = true;
 			this.scrollFavList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollFavList.ScrollPosition = 0;
@@ -788,6 +793,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.Fuchsia;
 			this.ClientSize = new System.Drawing.Size(607, 591);
 			this.Controls.Add(this.FavTanksTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -796,6 +802,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "FavTanks";
+			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.FavTanks_Load);
 			this.FavTanksTheme.ResumeLayout(false);
 			this.toolSelectedTanks.ResumeLayout(false);

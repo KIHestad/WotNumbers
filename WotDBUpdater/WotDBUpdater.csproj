@@ -185,11 +185,11 @@
     <Compile Include="Forms\PopupGrid.Designer.cs">
       <DependentUpon>PopupGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Reports\DBTable.cs">
+    <Compile Include="Forms\Reports\DatabaseTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Reports\DBTable.Designer.cs">
-      <DependentUpon>DBTable.cs</DependentUpon>
+    <Compile Include="Forms\Reports\DatabaseTable.Designer.cs">
+      <DependentUpon>DatabaseTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\ImportMisc2DB.cs" />
     <Compile Include="Code\Dossier2db.cs" />
@@ -264,8 +264,8 @@
     <EmbeddedResource Include="Forms\PopupGrid.resx">
       <DependentUpon>PopupGrid.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Reports\DBTable.resx">
-      <DependentUpon>DBTable.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Reports\DatabaseTable.resx">
+      <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ScrollbarTest.resx">
       <DependentUpon>ScrollbarTest.cs</DependentUpon>
