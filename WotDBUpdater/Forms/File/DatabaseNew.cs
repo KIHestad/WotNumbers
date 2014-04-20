@@ -72,12 +72,12 @@ namespace WotDBUpdater.Forms.File
 		private bool CreateNewDb()
 		{
 			bool ok = true;
-			badProgressBar.ValueMax = 12;
+			badProgressBar.ValueMax = 13;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 			UpdateProgressBar();
 			// Create db now
-			if (db.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType))
+			if (DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType))
 			{
 				// Fill database with default data
 				UpdateProgressBar();
@@ -93,21 +93,21 @@ namespace WotDBUpdater.Forms.File
 					filename = "createTableSQLite.txt";
 				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql);
+				ok = DB.ExecuteNonQuery(sql);
 				if (!ok) return false;
 				UpdateProgressBar();
 
 				// Create Views
 				streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql);
+				ok = DB.ExecuteNonQuery(sql);
 				if (!ok) return false;
 				UpdateProgressBar();
 
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
-				ok = db.ExecuteNonQuery(sql);
+				ok = DB.ExecuteNonQuery(sql);
 				if (!ok) return false;
 				UpdateProgressBar();
 
@@ -143,7 +143,7 @@ namespace WotDBUpdater.Forms.File
 				// Add player
 				if (txtPlayerName.Text.Trim() != "")
 				{
-					ok = db.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
+					ok = DB.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
 					Config.Settings.playerName = txtPlayerName.Text.Trim();
 					Config.Settings.playerId = 1;
 				}
@@ -152,6 +152,10 @@ namespace WotDBUpdater.Forms.File
 					Config.Settings.playerName = "";
 					Config.Settings.playerId = 0;
 				}
+				UpdateProgressBar();
+
+				// Upgrade to latest version
+				DBVersion.CheckForDbUpgrade();
 				UpdateProgressBar();
 			}
 			return ok;

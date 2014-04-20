@@ -112,7 +112,7 @@ namespace WotDBUpdater.Forms
 				Form frm = new Forms.File.ApplicationSetting();
 				frm.ShowDialog();
 			}
-			if (db.CheckConnection())
+			if (DB.CheckConnection())
 			{
 				// Init
 				TankData.GetTankListFromDB();
@@ -120,7 +120,10 @@ namespace WotDBUpdater.Forms
 				TankData.GetTankData2BattleMappingFromDB();
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
+			// Check DB Version
+			bool versionOK = DBVersion.CheckForDbUpgrade();
 			SetFormTitle();
+			GetFavList();
 			ShowContent();
 			SetListener();
 			// Battle result file watcher
@@ -201,6 +204,31 @@ namespace WotDBUpdater.Forms
 			Refresh();
 		}
 
+		private void GetFavList()
+		{
+			// Remove favlist from menu
+			toolItemTankFilter_FavSeparator.Visible = false;
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Visible = false;
+			}
+			// Add favlist to menu
+			string sql = "select * from favList where position > 0 order by position";
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				toolItemTankFilter_FavSeparator.Visible = true;
+				foreach (DataRow dr in dt.Rows)
+				{
+					ToolStripItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
+					menuItem.Text = dr["name"].ToString();
+					menuItem.Visible = true;
+				}
+			}
+		}
+
+
 		private void SetListener()
 		{
 			toolItemSettingsRun.Checked = (Config.Settings.dossierFileWathcherRun == 1);
@@ -254,15 +282,15 @@ namespace WotDBUpdater.Forms
 			{
 				DateGridSelected = DataGridType.None;
 				dataGridMain.DataSource = null;
-				if (!db.CheckConnection()) return;
+				if (!DB.CheckConnection()) return;
 				string sql =
 					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
 					"UNION " +
 					"SELECT 'Total battles' as Data, cast( SUM(battles15) + SUM(battles7) as varchar) from playerTank where playerid=@playerid " +
 					"UNION " +
 					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
-				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.VarChar);
-				dataGridMain.DataSource = db.FetchData(sql);
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
+				dataGridMain.DataSource = DB.FetchData(sql);
 				DateGridSelected = DataGridType.Overall;
 				// Text cols
 				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -298,8 +326,13 @@ namespace WotDBUpdater.Forms
 			string typeId = "";
 			string message = "";
 			string sql = "";
-			// Calc filter nad set main menu title
-			if (tankFilterItemCount == 0)
+			// Calc filter and set main menu title
+			if (tankFilterFavSelected != "")
+			{
+				toolItemTankFilter.Text = tankFilterFavSelected;
+				message = "Favourite list: " + tankFilterFavSelected;
+			}
+			else if (tankFilterItemCount == 0)
 			{
 				toolItemTankFilter.Text = "All Tanks";
 				message = "All Tanks";
@@ -370,7 +403,7 @@ namespace WotDBUpdater.Forms
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
-			if (!db.CheckConnection()) return;
+			if (!DB.CheckConnection()) return;
 			// Get Tank filter
 			string message = "";
 			string where = "";
@@ -384,8 +417,8 @@ namespace WotDBUpdater.Forms
 				"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
 				"         country ON tank.countryId = country.id " +
 				"WHERE    player.id=@playerid " + where;
-			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
-			dataGridMain.DataSource = db.FetchData(sql);
+			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			dataGridMain.DataSource = DB.FetchData(sql);
 			DateGridSelected = DataGridType.Tank;
 			// Text cols
 			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -418,7 +451,7 @@ namespace WotDBUpdater.Forms
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
-			if (!db.CheckConnection()) return;
+			if (!DB.CheckConnection()) return;
 			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -442,7 +475,7 @@ namespace WotDBUpdater.Forms
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
 				"ORDER BY battle.battleTime DESC ";
-			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DateTime dateFilter = new DateTime();
 			if (!toolItemBattlesAll.Checked)
 			{
@@ -454,10 +487,10 @@ namespace WotDBUpdater.Forms
 				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
 				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
 				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
-				db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
 			}
 			DataTable dt = new DataTable();
-			dt = db.FetchData(sql);
+			dt = DB.FetchData(sql);
 			int rowcount = dt.Rows.Count;
 			// Add footer
 			if (dt.Rows.Count > 1)
@@ -496,13 +529,13 @@ namespace WotDBUpdater.Forms
 					"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter;
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					sql = sql.Replace("+", "||"); // For SQLite support use || instead of +
-				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
-				db.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
 				if (!toolItemBattlesAll.Checked)
 				{
-					db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
+					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
 				}
-				dt.Merge(db.FetchData(sql));
+				dt.Merge(DB.FetchData(sql));
 				
 			}
 			// populate datagrid
@@ -957,9 +990,14 @@ namespace WotDBUpdater.Forms
 		}
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
+		private string tankFilterFavSelected = ""; // To keep track on fav list selected
 
-		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type)
+		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type, bool favList, bool reopenMenu = true, bool autoRefreshGrid = true)
 		{
+			if (favList)
+			{
+				toolItemTankFavList_Uncheck();
+			}
 			if (tier)
 			{
 				toolItemTankFilter_All.Checked = true;
@@ -1016,20 +1054,47 @@ namespace WotDBUpdater.Forms
 			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
-			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-			// Reopen menu item
-			this.toolItemTankFilter.ShowDropDown();
+			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0 && tankFilterFavSelected == "");
+			// Reopen menu item exept for "all tanks"
+			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
-			RefreshCurrentGrid();
+			if (autoRefreshGrid) RefreshCurrentGrid();
+			
+		}
+
+		private void toolItemTankFavList_Uncheck()
+		{
+			// Deselect all favlist
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Checked = false;
+			}
+			tankFilterFavSelected = "";
+		}
+
+		private void toolItem_Fav_Clicked(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			if (!menuItem.Checked)
+			{
+				toolItemTankFavList_Uncheck(); // Uncheck previous fav list selection
+				menuItem.Checked = true; // check fav list menu select
+				tankFilterFavSelected = menuItem.Text; // set current fav list selected
+				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter, no auto refresh grid
+				RefreshCurrentGrid();
+			}
 		}
 
 		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
-			toolItemTankFilter_Uncheck(true, true, true);
+			toolItemTankFilter_Uncheck(true, true, true, true, false);
 		}
 
 		private void toolItemTankFilterSelected(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
 		{
+			// Remove favlist
+			toolItemTankFavList_Uncheck();	
 			// Update menu tank filter checked elements
 			menuItem.Checked = !menuItem.Checked;
 			if (menuItem.Checked)
@@ -1042,6 +1107,18 @@ namespace WotDBUpdater.Forms
 			// Refresh grid
 			RefreshCurrentGrid();
 		}
+
+		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
+		{
+			// Show fal list editor
+			Form frm = new Forms.File.FavTanks();
+			frm.ShowDialog();
+			// After fav list changes reload menu
+			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
+			GetFavList(); // Reload fav list items
+
+		}
+
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
@@ -1076,7 +1153,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				toolItemTankFilter_Uncheck(false, true, false);
+				toolItemTankFilter_Uncheck(false, true, false, false);
 			}
 		}
 
@@ -1084,7 +1161,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				toolItemTankFilter_Uncheck(false, false, true);
+				toolItemTankFilter_Uncheck(false, false, true, false);
 			}
 		}
 
@@ -1092,7 +1169,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				toolItemTankFilter_Uncheck(true, false, false);
+				toolItemTankFilter_Uncheck(true, false, false, false);
 			}
 		}
 
@@ -1114,7 +1191,11 @@ namespace WotDBUpdater.Forms
 			Form frm = new Forms.File.ApplicationSetting();
 			frm.ShowDialog();
 			SetFormTitle();
+			// After settings changed, go to all tanks
+			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
+			GetFavList();
 			ShowContent();
+			SetListener();
 		}
 
 		private void toolItemSettingsDb_Click(object sender, EventArgs e)
@@ -1135,8 +1216,12 @@ namespace WotDBUpdater.Forms
 		{
 			//Form frm = new Forms.Help.About();
 			//frm.ShowDialog();
+			string dbVersionComment = " (correct version)";
+			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
+				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")"; 
 			string msg = "Argus - World of Tanks Statistics" + Environment.NewLine + Environment.NewLine +
-						 "version: " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
+						 "Application version: " + AssemblyVersion + Environment.NewLine +
+						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
 			Code.MsgBox.Show(msg, "About Argus");
 		}
@@ -1194,12 +1279,7 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
-		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.File.FavTanks();
-			frm.ShowDialog();
-		}
-
+		
 		#endregion
 
 		#region Toolstrip Events - TESTING
@@ -1233,17 +1313,14 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory();
 		}
 
-        private void importWsDossierHistoryToDbToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
-        }
+		private void importWsDossierHistoryToDbToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
+		}
 
 
 
 		#endregion
-
-
-
 		
 	}
 }

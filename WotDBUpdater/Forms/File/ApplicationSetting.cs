@@ -44,7 +44,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void PlayerPanel()
 		{
-			bool ok = db.CheckConnection(false);
+			bool ok = DB.CheckConnection(false);
 			lblPlayer.Dimmed = !ok;
 			cboSelectPlayer.Enabled = ok;
 			btnAddPlayer.Enabled = ok;
@@ -107,7 +107,7 @@ namespace WotDBUpdater.Forms.File
 		{
 			Config.Settings.dossierFilePath = txtDossierFilePath.Text;
 			Config.Settings.playerName = cboSelectPlayer.Text;
-			DataTable dt = db.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
+			DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
 			if (dt.Rows.Count > 0)
 			{
 				int playerId = 0;

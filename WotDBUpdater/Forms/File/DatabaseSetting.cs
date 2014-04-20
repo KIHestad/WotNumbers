@@ -137,10 +137,10 @@ namespace WotDBUpdater.Forms.File
 		{
 			SaveConfig();
 			// Check if Connection to DB is OK, and get base data
-			if (db.CheckConnection()) // check db config, displays message if error
+			if (DB.CheckConnection()) // check db config, displays message if error
 			{
 				// Check if current plyer exists in current database, if not remove it
-				DataTable dt = db.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerName + "'");
+				DataTable dt = DB.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerName + "'");
 				if (dt.Rows.Count == 0)
 				{
 					Config.Settings.playerId = 0;
@@ -159,6 +159,8 @@ namespace WotDBUpdater.Forms.File
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
 				TankData.GetTankData2BattleMappingFromDB();
+				// Check for upgrade
+				DBVersion.CheckForDbUpgrade();
 				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
 				this.Close();
 			}

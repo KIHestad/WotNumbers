@@ -68,7 +68,7 @@ namespace WotDBUpdater.Forms.Reports
 		{
 			// Show popup with available tables
 			string tableList = "";
-			DataTable dt = db.ListTables();
+			DataTable dt = DB.ListTables();
 			foreach (DataRow dr in dt.Rows)
 			{
 				tableList += dr["TABLE_NAME"].ToString() + ",";
@@ -93,7 +93,7 @@ namespace WotDBUpdater.Forms.Reports
 			string TableName = popupSelectTable.Text.ToString();
 			if (TableName != "")
 			{
-				dataGridViewShowTable.DataSource = db.FetchData("SELECT * FROM " + TableName);
+				dataGridViewShowTable.DataSource = DB.FetchData("SELECT * FROM " + TableName);
 			}
 			ResizeNow();			
 		}

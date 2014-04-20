@@ -17,19 +17,19 @@ namespace WotDBUpdater.Code
 		public static void GetTankListFromDB()
 		{
 			tankList.Clear();
-			tankList = db.FetchData("SELECT * FROM tank");
+			tankList = DB.FetchData("SELECT * FROM tank");
 		}
 
 		public static DataTable GetPlayerTankFromDB(int tankId)
 		{
 			string sql = "SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerId + " AND tankId=" + tankId.ToString();
-			return db.FetchData(sql);
+			return DB.FetchData(sql);
 		}
 
 		public static int GetPlayerTankCount()
 		{
 			string sql = "SELECT count(id) AS count FROM playerTank WHERE playerId = " + Config.Settings.playerId;
-			DataTable dt = db.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
 			int count = 0;
 			if (dt.Rows.Count > 0) count = Convert.ToInt32(dt.Rows[0]["count"]);
 			return count;
@@ -40,7 +40,7 @@ namespace WotDBUpdater.Code
 			string sql = "SELECT tankId " +
 						 "FROM wsTankId " +
 						 "WHERE wsTankId = " + wsTankId.ToString() + " AND wsCountryId = " + wsCountryId.ToString();
-			DataTable dt = db.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["tankId"]);
 			return lookupTankId;
@@ -52,7 +52,7 @@ namespace WotDBUpdater.Code
 			string sql = "SELECT playerTank.id AS playerTankId " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
 						 "WHERE tank.id = " + tankId;
-			DataTable dt = db.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
 			return lookupTankId;
@@ -61,13 +61,13 @@ namespace WotDBUpdater.Code
 		public static DataTable GetBattleFromDB(int battleId)
 		{
 			string sql = "SELECT * FROM battle WHERE id=" + battleId.ToString();
-			return db.FetchData(sql);
+			return DB.FetchData(sql);
 		}
 
 		public static int GetBattleIdForImportedWsBattleFromDB(int wsId)
 		{
 			string sql = "SELECT Id FROM battle WHERE wsId=" + wsId.ToString();
-			DataTable dt = db.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
 			int lookupBattle = 0;
 			if (dt.Rows.Count > 0) lookupBattle = Convert.ToInt32(dt.Rows[0]["Id"]);
 			return (lookupBattle);
@@ -78,7 +78,7 @@ namespace WotDBUpdater.Code
 		public static void GetJson2dbMappingFromDB()
 		{
 			json2dbMapping.Clear();
-			json2dbMapping = db.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
+			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
 		}
 
 		public static DataTable tankData2BattleMapping = new DataTable();
@@ -86,7 +86,7 @@ namespace WotDBUpdater.Code
 		public static void GetTankData2BattleMappingFromDB()
 		{
 			tankData2BattleMapping.Clear();
-			tankData2BattleMapping = db.FetchData("SELECT * FROM tankData2BattleMappingView");
+			tankData2BattleMapping = DB.FetchData("SELECT * FROM tankData2BattleMappingView");
 		}
 
 		#endregion
@@ -155,7 +155,7 @@ namespace WotDBUpdater.Code
 						"select playerTankAchAllView.playerTankId, playerTankAchAllView.achId, 0 from playerTankAchAllView left join " +
 						"playerTankAch on playerTankAchAllView.playerTankId = playerTankAch.playerTankId and playerTankAchAllView.achId = playerTankAch.achId " +
 						"where playerTankAch.playerTankId is null";
-			db.ExecuteNonQuery(sql);
+			DB.ExecuteNonQuery(sql);
 		}
 
 		public static void SetPlayerTankAllAch(int playerTankId)
@@ -165,7 +165,7 @@ namespace WotDBUpdater.Code
 						"select " + playerTankId.ToString() + ", ach.id, 0 from ach left join " +
 						"playerTankAch on ach.id = playerTankAch.achId and playerTankAch.playerTankId = " + playerTankId.ToString() + " " +
 						"where playerTankAch.playerTankId is null";
-			db.ExecuteNonQuery(sql);
+			DB.ExecuteNonQuery(sql);
 		}
 
 
@@ -175,7 +175,7 @@ namespace WotDBUpdater.Code
 			string sql = "SELECT ach.id " +
 							"FROM ach  " +
 							"WHERE name = '" + achName + "'";
-			DataTable dt = db.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
 			exists = (dt.Rows.Count > 0);
 			return exists;
 		}

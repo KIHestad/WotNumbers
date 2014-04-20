@@ -19,7 +19,7 @@ namespace WotDBUpdater.Forms
 			InitializeComponent();
 			PopupGridTheme.Text = title;
 			dataGridPopup.DataSource = dt;
-			scrollGrid.ScrollElementsTotals = dt.Rows.Count;
+			scrollY.ScrollElementsTotals = dt.Rows.Count;
 			dataGridPopup.MouseWheel += new MouseEventHandler(dataGridPopup_MouseWheel); // Add Mouse Wheel handle
 		}
 
@@ -35,10 +35,14 @@ namespace WotDBUpdater.Forms
 				dataGridPopup.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 				dataGridPopup.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 				dataGridPopup.DefaultCellStyle.SelectionBackColor = ColorTheme.FormBack;
+				// Position and size
 				dataGridPopup.Top = PopupGridTheme.MainArea.Top;
 				dataGridPopup.Left = PopupGridTheme.MainArea.Left;
-				scrollGrid.Top = PopupGridTheme.MainArea.Top;
-				scrollGrid.ScrollNecessary = (scrollGrid.ScrollElementsTotals > scrollGrid.ScrollElementsVisible);
+				scrollY.Top = PopupGridTheme.MainArea.Top;
+				int rowHeight = dataGridPopup.Rows[0].Height;
+				int rowCount = dataGridPopup.RowCount;
+				if (rowCount > 12) rowCount = 12;
+				this.Height = this.Height - PopupGridTheme.MainArea.Height + (rowHeight * rowCount) + 2; 
 				ResizeNow();
 			}
 			else
@@ -47,8 +51,8 @@ namespace WotDBUpdater.Forms
 
 		private void PopupGrid_Shown(object sender, EventArgs e)
 		{
-			scrollGrid.ScrollElementsVisible = dataGridPopup.DisplayedRowCount(false);
-			scrollGrid.ScrollNecessary = (scrollGrid.ScrollElementsTotals > scrollGrid.ScrollElementsVisible);
+			scrollY.ScrollElementsVisible = dataGridPopup.DisplayedRowCount(false);
+			scrollY.ScrollNecessary = (scrollY.ScrollElementsTotals > scrollY.ScrollElementsVisible);
 			ResizeNow();
 		}
 
@@ -60,35 +64,25 @@ namespace WotDBUpdater.Forms
 
 		private void ResizeNow()
 		{
-			scrollGrid.ScrollElementsVisible = dataGridPopup.DisplayedRowCount(false);
+			scrollY.ScrollElementsVisible = dataGridPopup.DisplayedRowCount(false);
 			dataGridPopup.Height = PopupGridTheme.MainArea.Height;
-			scrollGrid.Left = PopupGridTheme.MainArea.Right - scrollGrid.Width;
-			scrollGrid.Height = PopupGridTheme.MainArea.Height;
-			if (scrollGrid.ScrollNecessary)
+			scrollY.Left = PopupGridTheme.MainArea.Right - scrollY.Width;
+			scrollY.Height = PopupGridTheme.MainArea.Height;
+			if (scrollY.ScrollNecessary)
 			{
-				dataGridPopup.Width = PopupGridTheme.MainArea.Width - scrollGrid.Width;	
+				dataGridPopup.Width = PopupGridTheme.MainArea.Width - scrollY.Width;	
 			}
 			else
 			{
-				dataGridPopup.Width = PopupGridTheme.MainArea.Width - 1; // Have to show 1 pixel of scrollbar so it can be redrawn
+				dataGridPopup.Width = PopupGridTheme.MainArea.Width; // Have to show 1 pixel of scrollbar so it can be redrawn
 			}
 			dataGridPopup.Columns[0].Width = dataGridPopup.Width - 2;
 			
 		}
-
-		private void scrollGrid_MouseDown(object sender, MouseEventArgs e)
-		{
-			ScrollGrid();
-		}
-
-		private void scrollGrid_MouseMove(object sender, MouseEventArgs e)
-		{
-			ScrollGrid();
-		}
-
+				
 		private void ScrollGrid()
 		{
-			dataGridPopup.FirstDisplayedScrollingRowIndex = scrollGrid.ScrollPosition;
+			dataGridPopup.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
 		}
 
 		private void dataGridPopup_MouseWheel(object sender, MouseEventArgs e)
@@ -107,7 +101,7 @@ namespace WotDBUpdater.Forms
 					this.dataGridPopup.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
 				}
 				// move scrollbar
-				scrollGrid.ScrollPosition = dataGridPopup.FirstDisplayedScrollingRowIndex;
+				scrollY.ScrollPosition = dataGridPopup.FirstDisplayedScrollingRowIndex;
 			}
 			catch (Exception)
 			{
@@ -133,6 +127,16 @@ namespace WotDBUpdater.Forms
 			Code.PopupGrid.Value = dataGridPopup.Rows[e.RowIndex].Cells[0].Value.ToString();
 			Code.PopupGrid.ValueSelected = true;
 			this.Close();
+		}
+
+		private void scrollY_MouseMove(object sender, MouseEventArgs e)
+		{
+			ScrollGrid();
+		}
+
+		private void scrollY_MouseDown(object sender, MouseEventArgs e)
+		{
+			ScrollGrid();
 		}
 
 		

@@ -11,7 +11,7 @@ using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Code
 {
-	public static class db
+	public static class DB
 	{
 		public enum SqlDataType
 		{
@@ -224,7 +224,7 @@ namespace WotDBUpdater.Code
 			return dbOk;
 		}
 		
-		public static void AddWithValue(ref string Sql, string Parameter, object Value, db.SqlDataType DataType)
+		public static void AddWithValue(ref string Sql, string Parameter, object Value, DB.SqlDataType DataType)
 		{
 			if (Value == DBNull.Value)
 			{

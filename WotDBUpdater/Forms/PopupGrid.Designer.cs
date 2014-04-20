@@ -31,8 +31,8 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PopupGrid));
 			this.PopupGridTheme = new BadForm();
+			this.scrollY = new BadScrollBar();
 			this.dataGridPopup = new System.Windows.Forms.DataGridView();
-			this.scrollGrid = new BadScrollBar();
 			this.PopupGridTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridPopup)).BeginInit();
 			this.SuspendLayout();
@@ -40,7 +40,8 @@
 			// PopupGridTheme
 			// 
 			this.PopupGridTheme.Controls.Add(this.dataGridPopup);
-			this.PopupGridTheme.Controls.Add(this.scrollGrid);
+			this.PopupGridTheme.Controls.Add(this.scrollY);
+			this.PopupGridTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.PopupGridTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PopupGridTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.PopupGridTheme.FormFooter = false;
@@ -59,6 +60,24 @@
 			this.PopupGridTheme.TabIndex = 0;
 			this.PopupGridTheme.Text = "Popup";
 			this.PopupGridTheme.TitleHeight = 26;
+			// 
+			// scrollY
+			// 
+			this.scrollY.BackColor = System.Drawing.Color.Transparent;
+			this.scrollY.Image = null;
+			this.scrollY.Location = new System.Drawing.Point(171, 38);
+			this.scrollY.Name = "scrollY";
+			this.scrollY.ScrollElementsTotals = 100;
+			this.scrollY.ScrollElementsVisible = 20;
+			this.scrollY.ScrollHide = true;
+			this.scrollY.ScrollNecessary = true;
+			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+			this.scrollY.ScrollPosition = 0;
+			this.scrollY.Size = new System.Drawing.Size(17, 150);
+			this.scrollY.TabIndex = 1;
+			this.scrollY.Text = "badScrollBar1";
+			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
 			// 
 			// dataGridPopup
 			// 
@@ -81,24 +100,6 @@
 			this.dataGridPopup.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridPopup_CellMouseLeave);
 			this.dataGridPopup.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridPopup_CellMouseMove);
 			// 
-			// scrollGrid
-			// 
-			this.scrollGrid.BackColor = System.Drawing.Color.Transparent;
-			this.scrollGrid.Image = null;
-			this.scrollGrid.Location = new System.Drawing.Point(179, 38);
-			this.scrollGrid.Name = "scrollGrid";
-			this.scrollGrid.ScrollElementsTotals = 100;
-			this.scrollGrid.ScrollElementsVisible = 20;
-			this.scrollGrid.ScrollNecessary = true;
-			this.scrollGrid.ScrollHide = true;
-			this.scrollGrid.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.scrollGrid.ScrollPosition = 0;
-			this.scrollGrid.Size = new System.Drawing.Size(17, 150);
-			this.scrollGrid.TabIndex = 1;
-			this.scrollGrid.Text = "badScrollBar1";
-			this.scrollGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollGrid_MouseDown);
-			this.scrollGrid.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollGrid_MouseMove);
-			// 
 			// PopupGrid
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -110,7 +111,7 @@
 			this.MinimumSize = new System.Drawing.Size(200, 100);
 			this.Name = "PopupGrid";
 			this.ShowInTaskbar = false;
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "popup";
 			this.Load += new System.EventHandler(this.Popup_Load);
 			this.Shown += new System.EventHandler(this.PopupGrid_Shown);
@@ -125,6 +126,6 @@
 
 		private BadForm PopupGridTheme;
 		private System.Windows.Forms.DataGridView dataGridPopup;
-		private BadScrollBar scrollGrid;
+		private BadScrollBar scrollY;
 	}
 }
