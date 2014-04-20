@@ -11,6 +11,9 @@ namespace WotDBUpdater.Code
 {
     public static class ImportWotDossier2DB
     {
+
+        #region importWotDossierHistory
+
         public static void importWotDossierHistory()
         {
             string WSDB = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
@@ -166,6 +169,8 @@ namespace WotDBUpdater.Code
             Code.MsgBox.Show("Imported " + row.ToString() + " records.", "Import finished");
         }
 
+        #endregion
+
 
         public static void importWotDossierHistory2Battle()
         {
@@ -196,6 +201,9 @@ namespace WotDBUpdater.Code
                                             + "from wsTankId t "
                                             + "left join playerTank pt on t.tankId = pt.tankId "
                                             + "order by t.wsCountryId, t.wsTankId");
+
+            // Delete previously imported battles  (temp. solution)
+            db.ExecuteNonQuery("delete from battle where wsId = 999999999");
 
             // Loop through each tank
             int currentTank = 0;
@@ -254,7 +262,6 @@ namespace WotDBUpdater.Code
                     int bpBattleCount = 0;
                     int bpDefencePoints = 0;
                     int bpFrags = 0;
-                    int bpWinAndSurvive = 0;
                     int bpSpotted = 0;
                     int bpDamageDealt = 0;
                     int bpShots = 0;
@@ -273,7 +280,6 @@ namespace WotDBUpdater.Code
                     int prev_bpBattleCount = 0;
                     int prev_bpDefencePoints = 0;
                     int prev_bpFrags = 0;
-                    int prev_bpWinAndSurvive = 0;
                     int prev_bpSpotted = 0;
                     int prev_bpDamageDealt = 0;
                     int prev_bpShots = 0;
@@ -290,7 +296,6 @@ namespace WotDBUpdater.Code
                     int delta_bpBattleCount = 0;
                     int delta_bpDefencePoints = 0;
                     int delta_bpFrags = 0;
-                    int delta_bpWinAndSurvive = 0;
                     int delta_bpSpotted = 0;
                     int delta_bpDamageDealt = 0;
                     int delta_bpShots = 0;
@@ -304,12 +309,10 @@ namespace WotDBUpdater.Code
                     int delta_bpDamageAssistedTracks = 0;
 
                     // Init aggregated data
-                    int agg_draw = 0;
-                    int prev_agg_draw = 0;
                     int delta_agg_draw = 0;
-                    int agg_victory = 0;
-                    int prev_agg_victory = 0;
-                    int delta_agg_victory = 0;
+                    int delta_agg_battleResultId = 0;
+                    int delta_agg_killed = 0;
+                    int delta_agg_battleSurviveId = 0;
 
 
                     // Loop through dossier history for current tank
@@ -329,7 +332,6 @@ namespace WotDBUpdater.Code
                                 cmLastBattleTime = Convert.ToDateTime("1970-01-01 01:00:00").AddSeconds(Convert.ToInt32(dossierHistory.Rows[row]["cmLastBattleTime"]));
                                 bpDefencePoints = Convert.ToInt32(dossierHistory.Rows[row]["bpDefencePoints"]);
                                 bpFrags = Convert.ToInt32(dossierHistory.Rows[row]["bpFrags"]);
-                                bpWinAndSurvive = Convert.ToInt32(dossierHistory.Rows[row]["bpWinAndSurvive"]);
                                 bpSpotted = Convert.ToInt32(dossierHistory.Rows[row]["bpSpotted"]);
                                 bpDamageDealt = Convert.ToInt32(dossierHistory.Rows[row]["bpDamageDealt"]);
                                 bpShots = Convert.ToInt32(dossierHistory.Rows[row]["bpShots"]);
@@ -347,13 +349,11 @@ namespace WotDBUpdater.Code
                                 {
                                     bpDamageAssistedTracks = Convert.ToInt32(dossierHistory.Rows[row]["bpDamageAssistedTracks"]);
                                 }
-                                agg_draw = bpBattleCount - bpWins - bpLosses;
 
                                 // Calc delta values for current and previous record
                                 delta_bpBattleCount = bpBattleCount - prev_bpBattleCount;
                                 delta_bpDefencePoints = bpDefencePoints - prev_bpDefencePoints;
                                 delta_bpFrags = bpFrags - prev_bpFrags;
-                                delta_bpWinAndSurvive = bpWinAndSurvive - prev_bpWinAndSurvive;
                                 delta_bpSpotted = bpSpotted - prev_bpSpotted;
                                 delta_bpDamageDealt = bpDamageDealt - prev_bpDamageDealt;
                                 delta_bpShots = bpShots - prev_bpShots;
@@ -365,40 +365,69 @@ namespace WotDBUpdater.Code
                                 delta_bpCapturePoints = bpCapturePoints - prev_bpCapturePoints;
                                 delta_bpDamageAssistedRadio = bpDamageAssistedRadio - prev_bpDamageAssistedRadio;
                                 delta_bpDamageAssistedTracks = bpDamageAssistedTracks - prev_bpDamageAssistedTracks;
-                                delta_agg_draw = agg_draw - prev_agg_draw;
+                                
+                                delta_agg_draw = (delta_bpBattleCount - delta_bpWins - delta_bpLosses);
+                                if (delta_bpWins == delta_bpBattleCount) delta_agg_battleResultId = 1;              // only wins
+                                else if (delta_bpLosses == delta_bpBattleCount) delta_agg_battleResultId = 3;       // only defeats
+                                else if (delta_agg_draw == delta_bpBattleCount) delta_agg_battleResultId = 2;       // only draws
+                                else delta_agg_battleResultId = 4;                                                  // mixed results
+
+                                delta_agg_killed = (delta_bpBattleCount - delta_bpSurvivedBattles);
+                                if (delta_bpSurvivedBattles == delta_bpBattleCount) delta_agg_battleSurviveId = 1;     // survived all battles
+                                else if (delta_agg_killed == delta_bpBattleCount) delta_agg_battleSurviveId = 3;       // killed in all battles
+                                else delta_agg_battleSurviveId = 2;                                                    // mixed results
 
 
-                                // Write row to db  (battleResult, victory, draw, defeat, battleSurvived, survived, killed, ....)
-                                string sql = "insert into b2 ("
-                                    + "playerTankId, battlesCount, dmg, frags, dmgReceived, cap, assistSpot, assistTrack) "
+                                // Write row to db
+                                string sql = "insert into battle ("
+                                    + "playerTankId, battlesCount, battleTime, battleResultId, victory, draw, defeat, battleSurviveId, survived, killed, "
+                                    + "dmg, frags, dmgReceived, cap, def, shots, assistSpot, assistTrack, spotted, xp, wsId) "
                                     + "values ("
                                     + "@playerTankId, "
                                     + "@delta_bpBattleCount, "
+                                    + "@cmLastBattleTime, "
+                                    + "@delta_agg_battleResultId, "
+                                    + "@delta_bpWins, "
+                                    + "@delta_agg_draw, "
+                                    + "@delta_bpLosses, "
+                                    + "@delta_agg_battleSurviveId, "
+                                    + "@delta_bpSurvivedBattles, "
+                                    + "@delta_agg_killed, "
                                     + "@delta_bpDamageDealt, "
                                     + "@delta_bpFrags, "
                                     + "@delta_bpDamageReceived, "
                                     + "@delta_bpCapturePoints, "
+                                    + "@delta_bpDefencePoints, "
+                                    + "@delta_bpShots, "
                                     + "@delta_bpDamageAssistedRadio, "
-                                    + "@delta_bpDamageAssistedTracks"
+                                    + "@delta_bpDamageAssistedTracks, "
+                                    + "@delta_bpSpotted, "
+                                    + "@delta_bpXP, "
+                                    + "999999999"       // mark rows as imported
                                     + ");";
 
                                 db.AddWithValue(ref sql, "@playerTankId", playerTankId, db.SqlDataType.Int);
                                 db.AddWithValue(ref sql, "@delta_bpBattleCount", delta_bpBattleCount, db.SqlDataType.Int);
-                                db.AddWithValue(ref sql, "@delta_bpDamageDealt", delta_bpDamageDealt, db.SqlDataType.Int);
-                                //db.AddWithValue(ref sql, "@fiDate", fiDate.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
-                                db.AddWithValue(ref sql, "@delta_bpDefencePoints", delta_bpDefencePoints, db.SqlDataType.Int);
-                                db.AddWithValue(ref sql, "@delta_bpFrags", delta_bpFrags, db.SqlDataType.Int);
-                                //db.AddWithValue(ref sql, "@delta_bpWinAndSurvive", delta_bpWinAndSurvive, db.SqlDataType.Int);
-                                db.AddWithValue(ref sql, "@delta_bpSpotted", delta_bpSpotted, db.SqlDataType.Int);
-                                db.AddWithValue(ref sql, "@delta_bpShots", delta_bpShots, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@cmLastBattleTime", cmLastBattleTime.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
+                                db.AddWithValue(ref sql, "@delta_agg_battleResultId", delta_agg_battleResultId, db.SqlDataType.Int);
                                 db.AddWithValue(ref sql, "@delta_bpWins", delta_bpWins, db.SqlDataType.Int);
-                                db.AddWithValue(ref sql, "@delta_bpDamageReceived", delta_bpDamageReceived, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_agg_draw", delta_agg_draw, db.SqlDataType.Int);
                                 db.AddWithValue(ref sql, "@delta_bpLosses", delta_bpLosses, db.SqlDataType.Int);
-                                db.AddWithValue(ref sql, "@delta_bpXP", delta_bpXP, db.SqlDataType.Int);
-                                //db.AddWithValue(ref sql, "@delta_bpSurvivedBattles", delta_bpSurvivedBattles, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_agg_battleSurviveId", delta_agg_battleSurviveId, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpSurvivedBattles", delta_bpSurvivedBattles, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_agg_killed", delta_agg_killed, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpDamageDealt", delta_bpDamageDealt, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpFrags", delta_bpFrags, db.SqlDataType.Int);
                                 db.AddWithValue(ref sql, "@delta_bpCapturePoints", delta_bpCapturePoints, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpDefencePoints", delta_bpDefencePoints, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpDamageReceived", delta_bpDamageReceived, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpShots", delta_bpShots, db.SqlDataType.Int);
                                 db.AddWithValue(ref sql, "@delta_bpDamageAssistedRadio", delta_bpDamageAssistedRadio, db.SqlDataType.Int);
                                 db.AddWithValue(ref sql, "@delta_bpDamageAssistedTracks", delta_bpDamageAssistedTracks, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpSpotted", delta_bpSpotted, db.SqlDataType.Int);
+                                db.AddWithValue(ref sql, "@delta_bpXP", delta_bpXP, db.SqlDataType.Int);
+                                //db.AddWithValue(ref sql, "@fiDate", fiDate.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
+                                
                                 db.ExecuteNonQuery(sql);
                                 imported++;
 
@@ -409,7 +438,6 @@ namespace WotDBUpdater.Code
                                 prev_bpBattleCount = bpBattleCount;
                                 prev_bpDefencePoints = bpDefencePoints;
                                 prev_bpFrags = bpFrags;
-                                prev_bpWinAndSurvive = bpWinAndSurvive;
                                 prev_bpSpotted = bpSpotted;
                                 prev_bpDamageDealt = bpDamageDealt;
                                 prev_bpShots = bpShots;
@@ -421,7 +449,6 @@ namespace WotDBUpdater.Code
                                 prev_bpCapturePoints = bpCapturePoints;
                                 prev_bpDamageAssistedRadio = bpDamageAssistedRadio;
                                 prev_bpDamageAssistedTracks = bpDamageAssistedTracks;
-                                prev_agg_draw = agg_draw;
 
                             }
                         }
@@ -441,6 +468,7 @@ namespace WotDBUpdater.Code
                 currentTank++;
 
             } // End of looping tanks
+
 
             Code.MsgBox.Show("Imported " + imported.ToString() + " battles (total lines read: " + loopedRecords + ")" , "Import finished");
 
