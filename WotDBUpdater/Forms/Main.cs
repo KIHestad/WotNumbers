@@ -121,6 +121,7 @@ namespace WotDBUpdater.Forms
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
 			SetFormTitle();
+			GetFavList();
 			ShowContent();
 			SetListener();
 			// Battle result file watcher
@@ -200,6 +201,31 @@ namespace WotDBUpdater.Forms
 			}
 			Refresh();
 		}
+
+		private void GetFavList()
+		{
+			// Remove favlist from menu
+			toolItemTankFilter_FavSeparator.Visible = false;
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Visible = false;
+			}
+			// Add favlist to menu
+			string sql = "select * from favList where position > 0 order by position";
+			DataTable dt = db.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				toolItemTankFilter_FavSeparator.Visible = true;
+				foreach (DataRow dr in dt.Rows)
+				{
+					ToolStripItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
+					menuItem.Text = dr["name"].ToString();
+					menuItem.Visible = true;
+				}
+			}
+		}
+
 
 		private void SetListener()
 		{
@@ -298,8 +324,13 @@ namespace WotDBUpdater.Forms
 			string typeId = "";
 			string message = "";
 			string sql = "";
-			// Calc filter nad set main menu title
-			if (tankFilterItemCount == 0)
+			// Calc filter and set main menu title
+			if (tankFilterFavSelected != "")
+			{
+				toolItemTankFilter.Text = tankFilterFavSelected;
+				message = "Favourite list: " + tankFilterFavSelected;
+			}
+			else if (tankFilterItemCount == 0)
 			{
 				toolItemTankFilter.Text = "All Tanks";
 				message = "All Tanks";
@@ -957,9 +988,15 @@ namespace WotDBUpdater.Forms
 		}
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
+		private string tankFilterFavSelected = ""; // To keep track on fav list selected
 
-		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type)
+		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type, bool favList, bool reopenMenu = true, bool autoRefreshGrid = true)
 		{
+			if (favList)
+			{
+				tankFilterFavSelected = "";
+				toolItemTankFavList_Uncheck();
+			}
 			if (tier)
 			{
 				toolItemTankFilter_All.Checked = true;
@@ -1016,16 +1053,41 @@ namespace WotDBUpdater.Forms
 			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
-			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-			// Reopen menu item
-			this.toolItemTankFilter.ShowDropDown();
+			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0 && tankFilterFavSelected == "");
+			// Reopen menu item exept for "all tanks"
+			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
-			RefreshCurrentGrid();
+			if (autoRefreshGrid) RefreshCurrentGrid();
+			
+		}
+
+		private void toolItemTankFavList_Uncheck()
+		{
+			// Deselect all favlist
+			toolItemTankFilter_FavSeparator.Visible = false;
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Checked = false;
+			}
+			tankFilterFavSelected = "";
+		}
+
+		private void toolItem_Fav_Clicked(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			if (!menuItem.Checked)
+			{
+				tankFilterFavSelected = menuItem.Text; // set fav list selected
+				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter, no auto refresh grid
+				toolItemTankFavList_Uncheck();
+				menuItem.Checked = true;
+			}
 		}
 
 		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
-			toolItemTankFilter_Uncheck(true, true, true);
+			toolItemTankFilter_Uncheck(true, true, true, true, false);
 		}
 
 		private void toolItemTankFilterSelected(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
@@ -1076,7 +1138,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				toolItemTankFilter_Uncheck(false, true, false);
+				toolItemTankFilter_Uncheck(false, true, false, false);
 			}
 		}
 
@@ -1084,7 +1146,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				toolItemTankFilter_Uncheck(false, false, true);
+				toolItemTankFilter_Uncheck(false, false, true, false);
 			}
 		}
 
@@ -1092,7 +1154,7 @@ namespace WotDBUpdater.Forms
 		{
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				toolItemTankFilter_Uncheck(true, false, false);
+				toolItemTankFilter_Uncheck(true, false, false, false);
 			}
 		}
 
@@ -1241,9 +1303,6 @@ namespace WotDBUpdater.Forms
 
 
 		#endregion
-
-
-
 		
 	}
 }
