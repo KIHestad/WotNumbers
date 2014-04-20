@@ -191,12 +191,6 @@
     <Compile Include="Forms\Reports\DatabaseTable.Designer.cs">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Reports\DBTable.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Reports\DBTable.Designer.cs">
-      <DependentUpon>DBTable.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\ImportMisc2DB.cs" />
     <Compile Include="Code\Dossier2db.cs" />
     <Compile Include="Code\Support\Log.cs" />
@@ -272,9 +266,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Reports\DatabaseTable.resx">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Reports\DBTable.resx">
-      <DependentUpon>DBTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ScrollbarTest.resx">
       <DependentUpon>ScrollbarTest.cs</DependentUpon>

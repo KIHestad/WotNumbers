@@ -1096,14 +1096,23 @@ class BadScrollBar : BadThemeControl
 	public int ScrollElementsTotals
 	{
 		get { return _ScrollElementsTotals; }
-		set { _ScrollElementsTotals = value; Invalidate(); }
+		set 
+		{ 
+			_ScrollElementsTotals = value;
+			ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+			Invalidate();
+		}
 	}
 
 	private int _ScrollElementsVisible = 20;
 	public int ScrollElementsVisible
 	{
 		get { return _ScrollElementsVisible; }
-		set { _ScrollElementsVisible = value; Invalidate(); }
+		set { 
+				_ScrollElementsVisible = value;
+				ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+				Invalidate(); 
+			}
 	}
 
 	private ScrollOrientation _ScrollOrientation = ScrollOrientation.VerticalScroll;
@@ -1325,6 +1334,8 @@ class BadScrollBar : BadThemeControl
 class BadScrollBarCorner : BadThemeControl
 {
 
+
+
 	public BadScrollBarCorner()
 	{
 		AllowTransparent();
@@ -1332,8 +1343,12 @@ class BadScrollBarCorner : BadThemeControl
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
-		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
-		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		grapichObject.Clear(BackColor);
+		if (Visible)
+		{
+			SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
+			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		}
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 

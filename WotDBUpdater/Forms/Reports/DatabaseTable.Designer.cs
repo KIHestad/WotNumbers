@@ -46,13 +46,13 @@
 			// DatabaseTableTheme
 			// 
 			this.DatabaseTableTheme.BackColor = System.Drawing.Color.Fuchsia;
-			this.DatabaseTableTheme.Controls.Add(this.scrollX);
-			this.DatabaseTableTheme.Controls.Add(this.scrollY);
-			this.DatabaseTableTheme.Controls.Add(this.scrollCorner);
 			this.DatabaseTableTheme.Controls.Add(this.dataGridViewShowTable);
 			this.DatabaseTableTheme.Controls.Add(this.btnRefresh);
 			this.DatabaseTableTheme.Controls.Add(this.popupSelectTable);
 			this.DatabaseTableTheme.Controls.Add(this.badLabel1);
+			this.DatabaseTableTheme.Controls.Add(this.scrollY);
+			this.DatabaseTableTheme.Controls.Add(this.scrollX);
+			this.DatabaseTableTheme.Controls.Add(this.scrollCorner);
 			this.DatabaseTableTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.DatabaseTableTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseTableTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -81,7 +81,7 @@
 			this.scrollX.Name = "scrollX";
 			this.scrollX.ScrollElementsTotals = 100;
 			this.scrollX.ScrollElementsVisible = 20;
-			this.scrollX.ScrollHide = false;
+			this.scrollX.ScrollHide = true;
 			this.scrollX.ScrollNecessary = true;
 			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
 			this.scrollX.ScrollPosition = 0;
@@ -100,7 +100,7 @@
 			this.scrollY.Name = "scrollY";
 			this.scrollY.ScrollElementsTotals = 100;
 			this.scrollY.ScrollElementsVisible = 20;
-			this.scrollY.ScrollHide = false;
+			this.scrollY.ScrollHide = true;
 			this.scrollY.ScrollNecessary = true;
 			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollY.ScrollPosition = 0;

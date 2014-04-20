@@ -87,7 +87,7 @@ namespace WotDBUpdater.Forms.Reports
 			{
 				dataGridViewShowTable.DataSource = db.FetchData("SELECT * FROM " + TableName);
 			}
-			RefreshScrollbars();			
+			ResizeNow();			
 		}
 
 		private void RefreshScrollbars()
@@ -109,7 +109,8 @@ namespace WotDBUpdater.Forms.Reports
 			scrollX.ScrollElementsTotals = XTotal;
 			scrollY.ScrollElementsVisible = YVisible;
 			scrollY.ScrollElementsTotals = YTotal;
-			//Refresh();
+			// Scroll corner
+			scrollCorner.Visible = (scrollX.ScrollNecessary && scrollY.ScrollNecessary);
 		}
 
 
@@ -121,29 +122,32 @@ namespace WotDBUpdater.Forms.Reports
 
 		private void DatabaseTable_Resize(object sender, EventArgs e)
 		{
-			ResizeNow(true);
+			ResizeNow();
 		}
 
 		private void DatabaseTable_ResizeEnd(object sender, EventArgs e)
 		{
-			ResizeNow(true);
+			ResizeNow();
 		}
 
-		private void ResizeNow(bool ResizeGrid = false)
+		private void ResizeNow()
 		{
+			// First set scrollbars
+			RefreshScrollbars();
 			// Scroll and grid size
 			scrollCorner.Left = DatabaseTableTheme.MainArea.Right - scrollCorner.Width;
 			scrollCorner.Top = DatabaseTableTheme.MainArea.Bottom - scrollCorner.Height;
 			scrollY.Left = DatabaseTableTheme.MainArea.Right - scrollY.Width;
-			scrollY.Height = DatabaseTableTheme.MainArea.Height - 45 - scrollCorner.Height;
 			scrollX.Top = DatabaseTableTheme.MainArea.Bottom - scrollX.Height;
-			scrollX.Width = DatabaseTableTheme.MainArea.Width - scrollCorner.Width;
-			if (ResizeGrid)
-			{
-				dataGridViewShowTable.Width = DatabaseTableTheme.MainArea.Width - scrollY.Width;
-				dataGridViewShowTable.Height = DatabaseTableTheme.MainArea.Height - 45 - scrollX.Height;
-			}
-			RefreshScrollbars();
+			// check if scrollbar is visible to determine widht / height
+			int scrollYWidth = 0; 
+			int scrollXHeight = 0;
+			if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
+			if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
+			dataGridViewShowTable.Width = DatabaseTableTheme.MainArea.Width - scrollYWidth;
+			dataGridViewShowTable.Height = DatabaseTableTheme.MainArea.Height - 45 - scrollXHeight;
+			scrollY.Height = dataGridViewShowTable.Height;
+			scrollX.Width = dataGridViewShowTable.Width;
 		}
 
 		// Scrolling Y
