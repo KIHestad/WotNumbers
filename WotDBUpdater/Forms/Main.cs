@@ -112,7 +112,7 @@ namespace WotDBUpdater.Forms
 				Form frm = new Forms.File.ApplicationSetting();
 				frm.ShowDialog();
 			}
-			if (db.CheckConnection())
+			if (DB.CheckConnection())
 			{
 				// Init
 				TankData.GetTankListFromDB();
@@ -213,7 +213,7 @@ namespace WotDBUpdater.Forms
 			}
 			// Add favlist to menu
 			string sql = "select * from favList where position > 0 order by position";
-			DataTable dt = db.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
 				toolItemTankFilter_FavSeparator.Visible = true;
@@ -280,15 +280,15 @@ namespace WotDBUpdater.Forms
 			{
 				DateGridSelected = DataGridType.None;
 				dataGridMain.DataSource = null;
-				if (!db.CheckConnection()) return;
+				if (!DB.CheckConnection()) return;
 				string sql =
 					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
 					"UNION " +
 					"SELECT 'Total battles' as Data, cast( SUM(battles15) + SUM(battles7) as varchar) from playerTank where playerid=@playerid " +
 					"UNION " +
 					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
-				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.VarChar);
-				dataGridMain.DataSource = db.FetchData(sql);
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
+				dataGridMain.DataSource = DB.FetchData(sql);
 				DateGridSelected = DataGridType.Overall;
 				// Text cols
 				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -401,7 +401,7 @@ namespace WotDBUpdater.Forms
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
-			if (!db.CheckConnection()) return;
+			if (!DB.CheckConnection()) return;
 			// Get Tank filter
 			string message = "";
 			string where = "";
@@ -415,8 +415,8 @@ namespace WotDBUpdater.Forms
 				"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
 				"         country ON tank.countryId = country.id " +
 				"WHERE    player.id=@playerid " + where;
-			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
-			dataGridMain.DataSource = db.FetchData(sql);
+			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			dataGridMain.DataSource = DB.FetchData(sql);
 			DateGridSelected = DataGridType.Tank;
 			// Text cols
 			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -449,7 +449,7 @@ namespace WotDBUpdater.Forms
 		{
 			DateGridSelected = DataGridType.None;
 			dataGridMain.DataSource = null;
-			if (!db.CheckConnection()) return;
+			if (!DB.CheckConnection()) return;
 			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -473,7 +473,7 @@ namespace WotDBUpdater.Forms
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
 				"ORDER BY battle.battleTime DESC ";
-			db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DateTime dateFilter = new DateTime();
 			if (!toolItemBattlesAll.Checked)
 			{
@@ -485,10 +485,10 @@ namespace WotDBUpdater.Forms
 				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
 				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
 				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
-				db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
 			}
 			DataTable dt = new DataTable();
-			dt = db.FetchData(sql);
+			dt = DB.FetchData(sql);
 			int rowcount = dt.Rows.Count;
 			// Add footer
 			if (dt.Rows.Count > 1)
@@ -527,13 +527,13 @@ namespace WotDBUpdater.Forms
 					"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter;
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					sql = sql.Replace("+", "||"); // For SQLite support use || instead of +
-				db.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), db.SqlDataType.Int);
-				db.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
 				if (!toolItemBattlesAll.Checked)
 				{
-					db.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), db.SqlDataType.DateTime);
+					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
 				}
-				dt.Merge(db.FetchData(sql));
+				dt.Merge(DB.FetchData(sql));
 				
 			}
 			// populate datagrid

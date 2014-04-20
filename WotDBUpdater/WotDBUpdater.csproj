@@ -101,7 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ImportWotDossier2DB.cs" />
-    <Compile Include="Code\Support\db.cs" />
+    <Compile Include="Code\Support\DB.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
@@ -111,6 +111,7 @@
     <Compile Include="Code\Support\BadTheme.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Code\Support\Version.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Forms\File\AddPlayer.cs">

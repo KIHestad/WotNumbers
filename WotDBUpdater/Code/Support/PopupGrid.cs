@@ -48,7 +48,7 @@ namespace WotDBUpdater.Code
 			}
 			else if (DataSourceType == PopupGridType.Sql)
 			{
-				dt = db.FetchData(DataSource);
+				dt = DB.FetchData(DataSource);
 			}
 			if (dt.Rows.Count > 0)
 			{

@@ -72,7 +72,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void ShowFavList()
 		{
-			DataTable dt = db.FetchData("select position as 'Pos', name as 'Name' from favList order by COALESCE(position,99), name");
+			DataTable dt = DB.FetchData("select position as 'Pos', name as 'Name' from favList order by COALESCE(position,99), name");
 			dataGridFavList.DataSource = dt;
 			bool buttonsEnabled = (dt.Rows.Count > 0);
 			btnFavListCancel.Enabled = buttonsEnabled;
@@ -90,7 +90,7 @@ namespace WotDBUpdater.Forms.File
 			if (newFavListName.Length > 0)
 			{
 				// CheckBox if exists
-				DataTable dt = db.FetchData("select id from favList where name='" + newFavListName + "'");
+				DataTable dt = DB.FetchData("select id from favList where name='" + newFavListName + "'");
 				if (dt.Rows.Count > 0)
 				{
 					Code.MsgBox.Show("Cannot add new favourite tank list with this name, already in use.", "Cannot create favourite tank list");
@@ -109,8 +109,8 @@ namespace WotDBUpdater.Forms.File
 			if (newFavListPos == "Not Visible") newFavListPos = "NULL";
 			// Change position on existing if already used
 			string sql = "select * from favList where position = @newFavListPos";
-			db.AddWithValue(ref sql, "@newFavListPos", newFavListPos, db.SqlDataType.Int);
-			DataTable dt = db.FetchData(sql);
+			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
 			sql = "";
 			if (dt.Rows.Count == 1)
 			{
@@ -122,10 +122,10 @@ namespace WotDBUpdater.Forms.File
 			// Add new favlist
 			sql += "insert into favList (position, name) values (@newFavListPos, @newFavListName); ";
 			// Add parameters
-			db.AddWithValue(ref sql, "@newFavListPos", newFavListPos, db.SqlDataType.Int);
-			db.AddWithValue(ref sql, "@newFavListName", newFavListName, db.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
 			// Execute now
-			db.ExecuteNonQuery(sql);
+			DB.ExecuteNonQuery(sql);
 			// Refresh Grid
 			ShowFavList();
 		}
@@ -150,7 +150,7 @@ namespace WotDBUpdater.Forms.File
 			if (answer == MsgBox.Button.OKButton)
 			{
 				string sql = "delete from favList where name='" + txtFavListName.Text + "'";
-				db.ExecuteNonQuery(sql);
+				DB.ExecuteNonQuery(sql);
 				ShowFavList();
 			}
 		}
@@ -202,8 +202,8 @@ namespace WotDBUpdater.Forms.File
 			if (newFavListPos == "Not Visible") newFavListPos = "NULL";
 			// Change position on existing if already used
 			string sql = "select * from favList where position = @newFavListPos";
-			db.AddWithValue(ref sql, "@newFavListPos", newFavListPos, db.SqlDataType.Int);
-			DataTable dt = db.FetchData(sql);
+			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
 			sql = "";
 			if (dt.Rows.Count == 1)
 			{
@@ -214,11 +214,11 @@ namespace WotDBUpdater.Forms.File
 			// Add new favlist
 			sql += "update favList set position=@newFavListPos, name=@newFavListName where name =@oldFavListName; ";
 			// Add parameters
-			db.AddWithValue(ref sql, "@newFavListPos", newFavListPos, db.SqlDataType.Int);
-			db.AddWithValue(ref sql, "@newFavListName", newFavListName, db.SqlDataType.VarChar);
-			db.AddWithValue(ref sql, "@oldFavListName", oldFavListName, db.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@oldFavListName", oldFavListName, DB.SqlDataType.VarChar);
 			// Execute now
-			db.ExecuteNonQuery(sql);
+			DB.ExecuteNonQuery(sql);
 			// Refresh Grid
 			ShowFavList();
 		}

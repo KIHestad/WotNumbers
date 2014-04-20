@@ -156,36 +156,36 @@ namespace WotDBUpdater.Forms.File
 							sqlInsertBattle =
 							"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, mode15, mode7, wn8, eff) " +
 							"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @mode15, @mode7, @wn8, @eff)";
-                        db.AddWithValue(ref sqlInsertBattle, "@playerTankId", playerTankId, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@wsId", wsId, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@battlesCount", battlesCount, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@frags", frags, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@dmg", dmg, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@dmgReceived", dmgReceived, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@spotted", spotted, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@cap", cap, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@def", def, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@survived", survived, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@killed", killed, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@battleSurviveId", battleSurviveId, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@victory", victory, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@draw", draw, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@defeat", defeat, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@battleResultId", battleResultId, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime.ToString("yyyy-MM-dd HH:mm"), db.SqlDataType.DateTime);
-                        db.AddWithValue(ref sqlInsertBattle, "@shots", shots, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@hits", hits, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@xp", xp, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@mode15", mode15, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@mode7", mode7, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, db.SqlDataType.Int);
-                        db.AddWithValue(ref sqlInsertBattle, "@eff", eff, db.SqlDataType.Int);
-                        db.ExecuteNonQuery(sqlInsertBattle);
+                        DB.AddWithValue(ref sqlInsertBattle, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@wsId", wsId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@battlesCount", battlesCount, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@frags", frags, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@dmg", dmg, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@dmgReceived", dmgReceived, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@spotted", spotted, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@cap", cap, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@def", def, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@survived", survived, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@killed", killed, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@battleSurviveId", battleSurviveId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@victory", victory, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@draw", draw, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@defeat", defeat, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@battleResultId", battleResultId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+                        DB.AddWithValue(ref sqlInsertBattle, "@shots", shots, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@hits", hits, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@xp", xp, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@mode15", mode15, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@mode7", mode7, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@eff", eff, DB.SqlDataType.Int);
+                        DB.ExecuteNonQuery(sqlInsertBattle);
 						
 						// Get the last battleId if inserted
 						if (battleId == 0)
 						{
-                            DataTable dt = db.FetchData("select max(id) as battleId from battle");
+                            DataTable dt = DB.FetchData("select max(id) as battleId from battle");
                             if (dt.Rows.Count > 0)
                             {
                                 battleId = Convert.ToInt32(dt.Rows[0][0]);
@@ -232,7 +232,7 @@ namespace WotDBUpdater.Forms.File
 									"INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) VALUES (" +
 									battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + "); " + Environment.NewLine;
 							}
-                            db.ExecuteNonQuery(sqlInsertBattleFrag);
+                            DB.ExecuteNonQuery(sqlInsertBattleFrag);
 						}
 					}
 				}

@@ -90,13 +90,13 @@ namespace WotDBUpdater.Code
 					string sql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)";
 					if (!tankExists) // Only run if Tank does not exists in table
 					{
-						db.AddWithValue(ref sql, "@id", jsonCompDescr, db.SqlDataType.Int);
-						db.AddWithValue(ref sql, "@tankTypeId", jsonType, db.SqlDataType.Int);
-						db.AddWithValue(ref sql, "@countryId", jsonCountryid, db.SqlDataType.Int);
-						db.AddWithValue(ref sql, "@name", jsonTitle, db.SqlDataType.VarChar);
-						db.AddWithValue(ref sql, "@tier", jsonTier, db.SqlDataType.Int);
-						db.AddWithValue(ref sql, "@premium", jsonPremium, db.SqlDataType.Int);
-						ok = db.ExecuteNonQuery(sql);
+						DB.AddWithValue(ref sql, "@id", jsonCompDescr, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@tankTypeId", jsonType, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@countryId", jsonCountryid, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@name", jsonTitle, DB.SqlDataType.VarChar);
+						DB.AddWithValue(ref sql, "@tier", jsonTier, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@premium", jsonPremium, DB.SqlDataType.Int);
+						ok = DB.ExecuteNonQuery(sql);
 						log.Add("  Added new tank: " + jsonTitle + "(" + jsonCompDescr + ")");
 					}
 					else
@@ -192,7 +192,7 @@ namespace WotDBUpdater.Code
 			// Execute update statements
 			try
 			{
-				db.ExecuteNonQuery(sql);
+				DB.ExecuteNonQuery(sql);
 			}
 			catch (Exception ex)
 			{
