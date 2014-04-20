@@ -20,7 +20,8 @@ namespace WotDBUpdater.Forms.Reports
 
 		private void DatabaseTable_Load(object sender, EventArgs e)
 		{
-			dataGridViewShowTable.MouseWheel += new MouseEventHandler(dataGridViewShowTable_MouseWheel); // Add Mouse Wheel handle
+			// Add Mouse Wheel handle
+			dataGridViewShowTable.MouseWheel += new MouseEventHandler(dataGridViewShowTable_MouseWheel); 
 			// Scroll and grid size
 			scrollCorner.Left = DatabaseTableTheme.MainArea.Right - scrollCorner.Width;
 			scrollCorner.Top = DatabaseTableTheme.MainArea.Bottom - scrollCorner.Height;
@@ -61,6 +62,8 @@ namespace WotDBUpdater.Forms.Reports
 			RefreshScrollbars();
 		}
 
+		#region Grid
+		
 		private void popupSelectTable_Click(object sender, EventArgs e)
 		{
 			// Show popup with available tables
@@ -79,6 +82,11 @@ namespace WotDBUpdater.Forms.Reports
 			}
 		}
 
+		private void btnRefresh_Click(object sender, EventArgs e)
+		{
+			RefreshDataGrid();
+		}
+
 		private void RefreshDataGrid()
 		{
 			// Show content in grid
@@ -90,35 +98,9 @@ namespace WotDBUpdater.Forms.Reports
 			ResizeNow();			
 		}
 
-		private void RefreshScrollbars()
-		{
-			int XVisible = 0;
-			int XTotal = 0;
-			int YVisible = 0;
-			int YTotal = 0;
-			// Calc scroll boundarys
-			if (dataGridViewShowTable.RowCount > 0)
-			{
-				YTotal = dataGridViewShowTable.RowCount ;
-				YVisible = dataGridViewShowTable.DisplayedRowCount(false);
-				XTotal = dataGridViewShowTable.ColumnCount ;
-				XVisible = dataGridViewShowTable.DisplayedColumnCount(false);
-			}
-			// Scroll init
-			scrollX.ScrollElementsVisible = XVisible;
-			scrollX.ScrollElementsTotals = XTotal;
-			scrollY.ScrollElementsVisible = YVisible;
-			scrollY.ScrollElementsTotals = YTotal;
-			// Scroll corner
-			scrollCorner.Visible = (scrollX.ScrollNecessary && scrollY.ScrollNecessary);
-		}
+		#endregion
 
-
-		// Resizing
-		private void btnRefresh_Click(object sender, EventArgs e)
-		{
-			RefreshDataGrid();
-		}
+		#region Resizing
 
 		private void DatabaseTable_Resize(object sender, EventArgs e)
 		{
@@ -132,7 +114,7 @@ namespace WotDBUpdater.Forms.Reports
 
 		private void ResizeNow()
 		{
-			// First set scrollbars
+			// First set scrollbars, size differs according to scrollbar visibility (ScrollNecessary)
 			RefreshScrollbars();
 			// Scroll and grid size
 			scrollCorner.Left = DatabaseTableTheme.MainArea.Right - scrollCorner.Width;
@@ -148,6 +130,33 @@ namespace WotDBUpdater.Forms.Reports
 			dataGridViewShowTable.Height = DatabaseTableTheme.MainArea.Height - 45 - scrollXHeight;
 			scrollY.Height = dataGridViewShowTable.Height;
 			scrollX.Width = dataGridViewShowTable.Width;
+		}
+		#endregion
+
+		#region Scrolling
+
+		// Set scrollbar properties according to grid content
+		private void RefreshScrollbars()
+		{
+			int XVisible = 0;
+			int XTotal = 0;
+			int YVisible = 0;
+			int YTotal = 0;
+			// Calc scroll boundarys
+			if (dataGridViewShowTable.RowCount > 0)
+			{
+				YTotal = dataGridViewShowTable.RowCount;
+				YVisible = dataGridViewShowTable.DisplayedRowCount(false);
+				XTotal = dataGridViewShowTable.ColumnCount;
+				XVisible = dataGridViewShowTable.DisplayedColumnCount(false);
+			}
+			// Scroll init
+			scrollX.ScrollElementsVisible = XVisible;
+			scrollX.ScrollElementsTotals = XTotal;
+			scrollY.ScrollElementsVisible = YVisible;
+			scrollY.ScrollElementsTotals = YTotal;
+			// Scroll corner
+			scrollCorner.Visible = (scrollX.ScrollNecessary && scrollY.ScrollNecessary);
 		}
 
 		// Scrolling Y
@@ -202,12 +211,6 @@ namespace WotDBUpdater.Forms.Reports
 		}
 
 		// Move scrollbar according to grid movements
-
-		private void dataGridViewShowTable_RegionChanged(object sender, EventArgs e)
-		{
-			
-		}
-
 		private void dataGridViewShowTable_SelectionChanged(object sender, EventArgs e)
 		{
 			MoveScrollBar();
@@ -219,6 +222,7 @@ namespace WotDBUpdater.Forms.Reports
 			scrollY.ScrollPosition = dataGridViewShowTable.FirstDisplayedScrollingRowIndex;
 		}
 
+		// Enable mouse wheel scrolling for datagrid
 		private void dataGridViewShowTable_MouseWheel(object sender, MouseEventArgs e)
 		{
 			try
@@ -243,6 +247,8 @@ namespace WotDBUpdater.Forms.Reports
 			}
 
 		}
+
+		#endregion
 
 	}
 }

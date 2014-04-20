@@ -144,7 +144,6 @@
 			this.dataGridViewShowTable.Size = new System.Drawing.Size(387, 183);
 			this.dataGridViewShowTable.TabIndex = 11;
 			this.dataGridViewShowTable.SelectionChanged += new System.EventHandler(this.dataGridViewShowTable_SelectionChanged);
-			this.dataGridViewShowTable.RegionChanged += new System.EventHandler(this.dataGridViewShowTable_RegionChanged);
 			// 
 			// btnRefresh
 			// 
