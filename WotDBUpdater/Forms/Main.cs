@@ -994,7 +994,6 @@ namespace WotDBUpdater.Forms
 		{
 			if (favList)
 			{
-				tankFilterFavSelected = "";
 				toolItemTankFavList_Uncheck();
 			}
 			if (tier)
@@ -1064,7 +1063,6 @@ namespace WotDBUpdater.Forms
 		private void toolItemTankFavList_Uncheck()
 		{
 			// Deselect all favlist
-			toolItemTankFilter_FavSeparator.Visible = false;
 			for (int i = 1; i <= 10; i++)
 			{
 				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
@@ -1078,10 +1076,11 @@ namespace WotDBUpdater.Forms
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			if (!menuItem.Checked)
 			{
-				tankFilterFavSelected = menuItem.Text; // set fav list selected
+				toolItemTankFavList_Uncheck(); // Uncheck previous fav list selection
+				menuItem.Checked = true; // check fav list menu select
+				tankFilterFavSelected = menuItem.Text; // set current fav list selected
 				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter, no auto refresh grid
-				toolItemTankFavList_Uncheck();
-				menuItem.Checked = true;
+				RefreshCurrentGrid();
 			}
 		}
 
@@ -1092,6 +1091,8 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemTankFilterSelected(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
 		{
+			// Remove favlist
+			toolItemTankFavList_Uncheck();	
 			// Update menu tank filter checked elements
 			menuItem.Checked = !menuItem.Checked;
 			if (menuItem.Checked)
@@ -1104,6 +1105,18 @@ namespace WotDBUpdater.Forms
 			// Refresh grid
 			RefreshCurrentGrid();
 		}
+
+		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
+		{
+			// Show fal list editor
+			Form frm = new Forms.File.FavTanks();
+			frm.ShowDialog();
+			// After fav list changes reload menu
+			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
+			GetFavList(); // Reload fav list items
+
+		}
+
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
@@ -1256,12 +1269,7 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
-		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.File.FavTanks();
-			frm.ShowDialog();
-		}
-
+		
 		#endregion
 
 		#region Toolstrip Events - TESTING
