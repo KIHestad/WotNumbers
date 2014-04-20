@@ -134,6 +134,7 @@ namespace WotDBUpdater.Forms.File
 			Form frm = new Forms.File.DatabaseSetting();
 			frm.ShowDialog();
 			PlayerPanel();
+			Refresh();
 		}
 
 		private void cboSelectPlayer_Click(object sender, EventArgs e)
