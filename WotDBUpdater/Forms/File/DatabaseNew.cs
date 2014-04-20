@@ -72,7 +72,7 @@ namespace WotDBUpdater.Forms.File
 		private bool CreateNewDb()
 		{
 			bool ok = true;
-			badProgressBar.ValueMax = 12;
+			badProgressBar.ValueMax = 13;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 			UpdateProgressBar();
@@ -152,6 +152,10 @@ namespace WotDBUpdater.Forms.File
 					Config.Settings.playerName = "";
 					Config.Settings.playerId = 0;
 				}
+				UpdateProgressBar();
+
+				// Upgrade to latest version
+				DBVersion.CheckForDbUpgrade();
 				UpdateProgressBar();
 			}
 			return ok;

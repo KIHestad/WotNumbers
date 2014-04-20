@@ -159,6 +159,8 @@ namespace WotDBUpdater.Forms.File
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
 				TankData.GetTankData2BattleMappingFromDB();
+				// Check for upgrade
+				DBVersion.CheckForDbUpgrade();
 				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
 				this.Close();
 			}

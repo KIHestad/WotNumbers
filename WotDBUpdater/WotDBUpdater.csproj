@@ -111,7 +111,7 @@
     <Compile Include="Code\Support\BadTheme.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Code\Support\Version.cs" />
+    <Compile Include="Code\Support\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Forms\File\AddPlayer.cs">
@@ -143,12 +143,6 @@
     </Compile>
     <Compile Include="Forms\File\ImportWotStat.Designer.cs">
       <DependentUpon>ImportWotStat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Help\About.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Help\About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Message.cs">
       <SubType>Form</SubType>
@@ -243,9 +237,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\ImportWotStat.resx">
       <DependentUpon>ImportWotStat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Help\About.resx">
-      <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Message.resx">
       <DependentUpon>Message.cs</DependentUpon>

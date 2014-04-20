@@ -120,6 +120,9 @@ namespace WotDBUpdater.Forms
 				TankData.GetTankData2BattleMappingFromDB();
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
+			// Check DB Version
+			bool versionOK = DBVersion.CheckForDbUpgrade();
+
 			SetFormTitle();
 			GetFavList();
 			ShowContent();
@@ -1210,8 +1213,12 @@ namespace WotDBUpdater.Forms
 		{
 			//Form frm = new Forms.Help.About();
 			//frm.ShowDialog();
+			string dbVersionComment = " (correct version)";
+			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
+				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")"; 
 			string msg = "Argus - World of Tanks Statistics" + Environment.NewLine + Environment.NewLine +
-						 "version: " + AssemblyVersion + Environment.NewLine + Environment.NewLine +
+						 "Application version: " + AssemblyVersion + Environment.NewLine +
+						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
 			Code.MsgBox.Show(msg, "About Argus");
 		}
