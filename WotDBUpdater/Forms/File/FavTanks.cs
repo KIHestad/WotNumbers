@@ -434,7 +434,7 @@ namespace WotDBUpdater.Forms.File
 						// Find last selected row if several
 						foreach (DataGridViewRow dr in dataGridSelectedTanks.SelectedRows)
 						{
-							int newSort = Convert.ToInt32(dr.Cells["Sort#"]);
+							int newSort = Convert.ToInt32(dr.Cells["Sort#"].Value);
 							if (newSort > sortOrder)
 							{
 								sortOrder = newSort + 1;
