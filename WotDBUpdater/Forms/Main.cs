@@ -487,7 +487,7 @@ namespace WotDBUpdater.Forms
 				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
 				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
 				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
-				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 			}
 			DataTable dt = new DataTable();
 			dt = DB.FetchData(sql);
@@ -530,10 +530,10 @@ namespace WotDBUpdater.Forms
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					sql = sql.Replace("+", "||"); // For SQLite support use || instead of +
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 				if (!toolItemBattlesAll.Checked)
 				{
-					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd"), DB.SqlDataType.DateTime);
+					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 				}
 				dt.Merge(DB.FetchData(sql));
 				
