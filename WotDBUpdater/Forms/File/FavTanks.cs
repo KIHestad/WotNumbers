@@ -38,6 +38,7 @@ namespace WotDBUpdater.Forms.File
 			ShowAllTanks();
 			// Mouse scrolling
 			dataGridAllTanks.MouseWheel += new MouseEventHandler(dataGridAllTanks_MouseWheel);
+			dataGridSelectedTanks.MouseWheel += new MouseEventHandler(dataGridSelTanks_MouseWheel);
 		}
 
 		class StripRenderer : ToolStripProfessionalRenderer
@@ -81,22 +82,44 @@ namespace WotDBUpdater.Forms.File
 			dgv.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
 
+		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
+		{
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			if (menu.Checked)
+			{
+				if (menu.Image == null)
+				{
+					// Default checkbox
+					e.Graphics.DrawImage(imageListToolStrip.Images[0], 5, 3);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
+				}
+				else
+				{
+					// Border around picture
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
+					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+				}
+
+			}
+		}
+
 		#endregion
 
 		#region Fav List
 
-		private void ShowFavList()
+		private void ShowFavList(int FavListId = 0)
 		{
-			DataTable dt = DB.FetchData("select position as 'Pos', name as 'Name' from favList order by COALESCE(position,99), name");
+			DataTable dt = DB.FetchData("select position as 'Pos', name as 'Name', id as 'ID' from favList order by COALESCE(position,99), name");
 			dataGridFavList.DataSource = dt;
 			dataGridFavList.Columns[0].Width = 50;
 			dataGridFavList.Columns[1].Width = dataGridFavList.Width - 53;
+			dataGridFavList.Columns[2].Visible = false;
 			bool buttonsEnabled = (dt.Rows.Count > 0);
 			btnFavListCancel.Enabled = buttonsEnabled;
 			btnFavListSave.Enabled = buttonsEnabled;
 			btnFavListDelete.Enabled = buttonsEnabled;
-			
-			SelectFavList();
+			SelectFavList(FavListId);
 			// Connect to scrollbar
 			scrollFavList.ScrollElementsTotals = dt.Rows.Count;
 			scrollFavList.ScrollElementsVisible = dataGridFavList.DisplayedRowCount(false);
@@ -108,19 +131,32 @@ namespace WotDBUpdater.Forms.File
 			if (newFavListName.Length > 0)
 			{
 				// CheckBox if exists
-				DataTable dt = DB.FetchData("select id from favList where name='" + newFavListName + "'");
+				string sql = "select id from favList where name=@name;";
+				DB.AddWithValue(ref sql, "@name", newFavListName, DB.SqlDataType.VarChar);
+				DataTable dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
 					Code.MsgBox.Show("Cannot add new favourite tank list with this name, already in use.", "Cannot create favourite tank list");
 				}
 				else
 				{
-					AddFavList();
+					int copySelTanksFromFavListId = -1;
+					if (dataGridSelectedTanks.Rows.Count > 0)
+					{
+						Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to create a new Favourite Tank List based on the current selected tanks?" +
+							Environment.NewLine + Environment.NewLine +
+							"Press 'OK' to include selected tanks into the new list." +
+							Environment.NewLine + Environment.NewLine +
+							"Press 'Cancel' to create an new empty list.", "Create new Favourite Tank List", MsgBoxType.OKCancel);
+						if (answer == MsgBox.Button.OKButton) copySelTanksFromFavListId = SelectedFavListId;
+					}
+					AddFavList(copySelTanksFromFavListId);
 				}
 			}
+			
 		}
 
-		private void AddFavList()
+		private void AddFavList(int CopySelTanksFromFavListId = -1)
 		{
 			string newFavListName = txtFavListName.Text.Trim();
 			string newFavListPos = popupPosition.Text;
@@ -144,8 +180,23 @@ namespace WotDBUpdater.Forms.File
 			DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
 			// Execute now
 			DB.ExecuteNonQuery(sql);
+			// Get ID for new tank list
+			sql = "select id from favList where name=@name";
+			DB.AddWithValue(ref sql, "@name", newFavListName, DB.SqlDataType.VarChar);
+			dt = DB.FetchData(sql);
+			SelectedFavListId = Convert.ToInt32(dt.Rows[0]["id"]);
+			// Copy favListTanks if selected
+			if (CopySelTanksFromFavListId != -1)
+			{
+				sql = "insert into favListTank (favListId, tankId, sortorder) select @copyToFavListId, tankId, sortorder " +
+																			"   from favListTank " +
+																			"   where favListId=@copyFromFavListId; ";
+				DB.AddWithValue(ref sql, "@copyToFavListId", SelectedFavListId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@copyFromFavListId", CopySelTanksFromFavListId, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(sql);
+			}
 			// Refresh Grid
-			ShowFavList();
+			ShowFavList(SelectedFavListId);
 		}
 
 		private void popupPosition_Click(object sender, EventArgs e)
@@ -161,7 +212,9 @@ namespace WotDBUpdater.Forms.File
 				"Confirm deletion", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
-				string sql = "delete from favList where name='" + txtFavListName.Text + "'";
+				
+				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";
+				DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
 				DB.ExecuteNonQuery(sql);
 				ShowFavList();
 			}
@@ -172,14 +225,27 @@ namespace WotDBUpdater.Forms.File
 			SelectFavList();
 		}
 
-		private void SelectFavList()
+		private int SelectedFavListId = 0;
+		private void SelectFavList(int FavListId = 0)
 		{
 			int selectedRowCount = dataGridFavList.Rows.GetRowCount(DataGridViewElementStates.Selected);
 			if (selectedRowCount > 0)
 			{
-				txtFavListName.Text = dataGridFavList.SelectedRows[0].Cells[1].Value.ToString();
-				popupPosition.Text = dataGridFavList.SelectedRows[0].Cells[0].Value.ToString();
+				// If spesific favList is selected, find it in grid and select it
+				if (FavListId > 0)
+				{
+					int rownum = 0;
+					foreach (DataGridViewRow row in dataGridFavList.Rows)
+					{
+						if (Convert.ToInt32(row.Cells["ID"].Value) == FavListId) rownum = row.Index;
+					}
+					dataGridFavList.Rows[rownum].Selected = true;
+				}
+				SelectedFavListId = Convert.ToInt32(dataGridFavList.SelectedRows[0].Cells["id"].Value);
+				txtFavListName.Text = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
+				popupPosition.Text = dataGridFavList.SelectedRows[0].Cells["Pos"].Value.ToString();
 				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
+				GetSelectedTanksFromFavList(); // Get tanks for this fav list now
 			}
 			else
 			{
@@ -208,7 +274,6 @@ namespace WotDBUpdater.Forms.File
 
 		private void SaveFavList()
 		{
-			string oldFavListName = dataGridFavList.SelectedRows[0].Cells[1].Value.ToString();
 			string newFavListName = txtFavListName.Text.Trim();
 			string newFavListPos = popupPosition.Text;
 			if (newFavListPos == "Not Visible") newFavListPos = "NULL";
@@ -224,13 +289,26 @@ namespace WotDBUpdater.Forms.File
 				sql += "update favlist set position = NULL where position > 10; ";
 			}
 			// Add new favlist
-			sql += "update favList set position=@newFavListPos, name=@newFavListName where name =@oldFavListName; ";
+			sql += "update favList set position=@newFavListPos, name=@newFavListName where id=@id; ";
 			// Add parameters
 			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
-			DB.AddWithValue(ref sql, "@oldFavListName", oldFavListName, DB.SqlDataType.VarChar);
-			// Execute now
+			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
+			// Save Fav List
 			DB.ExecuteNonQuery(sql);
+			// Save Selected Tank List
+			sql = "delete from favListTank where favListId=@favListId; "; // Delete all old tanks
+			// Loop through datagrid and add all new tanks
+			foreach (DataGridViewRow dr in dataGridSelectedTanks.Rows)
+			{
+				string insertsql = "insert into favListTank (favListId, tankId, sortorder) values (@favListId, @tankId, @sortorder); ";
+				DB.AddWithValue(ref insertsql, "@tankId", dr.Cells["ID"].Value, DB.SqlDataType.Int);
+				DB.AddWithValue(ref insertsql, "@sortorder", dr.Cells["Sort#"].Value, DB.SqlDataType.Int);
+				sql += insertsql;
+			}
+			DB.AddWithValue(ref sql, "@favListId", SelectedFavListId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+
 			// Refresh Grid
 			ShowFavList();
 		}
@@ -250,7 +328,6 @@ namespace WotDBUpdater.Forms.File
 		#endregion
 
 		#region Resize
-
 
 		private void FavTanks_Resize(object sender, EventArgs e)
 		{
@@ -285,18 +362,374 @@ namespace WotDBUpdater.Forms.File
 			scrollSelectedTanks.Height = gridY;
 			// Move buttons
 			int buttonsY = groupTanks.Height / 2 + groupTanks.Top + 20;
-			btnSelectAll.Top = buttonsY - 60;
-			btnSelectSelected.Top = buttonsY - 30;
-			btnRemoveSelected.Top = buttonsY;
-			btnRemoveAll.Top = buttonsY + 30;
+			btnSelectSelected.Top = buttonsY - 60;
+			btnSelectAll.Top = buttonsY - 30;
+			btnRemoveAll.Top = buttonsY + 0;
+			btnRemoveSelected.Top = buttonsY + 30;
 			// Scroll 
 			scrollAllTanks.ScrollElementsVisible = dataGridAllTanks.DisplayedRowCount(false);
+			scrollSelectedTanks.ScrollElementsVisible = dataGridSelectedTanks.DisplayedRowCount(false);
 		}
 
 		private void FavTanks_ResizeEnd(object sender, EventArgs e)
 		{
 			ResizeTankAreaNow();
 		}
+
+		#endregion
+		
+		#region Selected Tanks
+
+		private DataTable dtFavListTank = new DataTable();
+		private bool selectedTanksColumnSetupDone = false;
+		private void GetSelectedTanksFromFavList()
+		{
+			string sql =
+				"SELECT tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, favListTank.sortorder AS 'Sort#', tank.id as ID " +
+				"FROM   favListTank INNER JOIN " +
+				"		tank ON favListTank.tankId = tank.id INNER JOIN " +
+				"		country ON tank.countryId = country.id INNER JOIN " +
+				"		tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
+				"		favList ON favListTank.favListId = favList.id " +
+				"WHERE  (favList.name = @favListName) " +
+				"ORDER BY sortorder ";
+			DB.AddWithValue(ref sql, "@favListName", txtFavListName.Text, DB.SqlDataType.VarChar);
+			dtFavListTank = DB.FetchData(sql);
+			ShowSelectedTanks();
+			if (!selectedTanksColumnSetupDone)
+			{
+				selectedTanksColumnSetupDone = true;
+				dataGridSelectedTanks.Columns["Tier"].Width = 40;
+				dataGridSelectedTanks.Columns["Type"].Width = 40;
+				dataGridSelectedTanks.Columns["Nation"].Width = 60;
+				dataGridSelectedTanks.Columns["Sort#"].Width = 40;
+				dataGridSelectedTanks.Columns["ID"].Visible = false;
+			}
+		}
+
+		private void ShowSelectedTanks()
+		{
+			// Display datatable containing selected tanks in grid
+			dataGridSelectedTanks.DataSource = dtFavListTank;
+			// Connect to scrollbar
+			scrollSelectedTanks.ScrollElementsTotals = dtFavListTank.Rows.Count;
+			scrollSelectedTanks.ScrollElementsVisible = dataGridSelectedTanks.DisplayedRowCount(false);
+		}
+
+		private void AddTankToFavList(bool All = false)
+		{
+			if (All) dataGridAllTanks.SelectAll(); // Select all rows in All Tank List
+			int selectedRowCount = dataGridAllTanks.SelectedRows.Count;
+			if (selectedRowCount > 0)
+			{
+				int lastTankID = 0; // Remember last tank ID to set focus at end
+				int sortOrder = 1; // Get sort order start pos
+				if (dataGridSelectedTanks.RowCount > 0)
+				{
+					int currentRowCount = dataGridSelectedTanks.SelectedRows.Count;
+					if (currentRowCount > 0) 
+					{
+						sortOrder = Convert.ToInt32(dataGridSelectedTanks.SelectedRows[0].Cells["Sort#"].Value) + 1;
+						lastTankID = Convert.ToInt32(dataGridSelectedTanks.SelectedRows[0].Cells["ID"].Value);
+						// Find last selected row if several
+						foreach (DataGridViewRow dr in dataGridSelectedTanks.SelectedRows)
+						{
+							int newSort = Convert.ToInt32(dr.Cells["Sort#"]);
+							if (newSort > sortOrder)
+							{
+								sortOrder = newSort + 1;
+								lastTankID = Convert.ToInt32(dr.Cells["ID"].Value);
+							}
+						}
+						
+					}
+				}
+				// Move existing elements sort order to make room for new ones
+				foreach (DataRow dr in dtFavListTank.Rows)
+				{
+					if (Convert.ToInt32(dr["Sort#"]) >= sortOrder) dr["Sort#"] = Convert.ToInt32(dr["Sort#"]) + selectedRowCount;
+
+				}
+				// Insert new elements now
+				for (int i = 0; i < selectedRowCount; i++)
+				{
+					// Check if this tank exist, if not add it
+					DataRow[] drFind = dtFavListTank.Select("ID=" + dataGridAllTanks.SelectedRows[i].Cells["ID"].Value);
+					if (drFind.Length == 0)
+					{
+						DataRow dr = dtFavListTank.NewRow();
+						lastTankID = Convert.ToInt32(dataGridAllTanks.SelectedRows[i].Cells["ID"].Value);
+						dr["ID"] = lastTankID;
+						dr["Tier"] = Convert.ToInt32(dataGridAllTanks.SelectedRows[i].Cells["Tier"].Value);
+						dr["Tank"] = dataGridAllTanks.SelectedRows[i].Cells["Tank"].Value;
+						dr["Type"] = dataGridAllTanks.SelectedRows[i].Cells["Type"].Value;
+						dr["Nation"] = dataGridAllTanks.SelectedRows[i].Cells["Nation"].Value;
+						dr["Sort#"] = sortOrder;
+						dtFavListTank.Rows.Add(dr);
+						sortOrder++;
+					}
+				}
+				SortFavList("Sort#");
+				// Select the last inserted tank
+				if (lastTankID !=0)
+				{
+					int rownum = 0;
+					foreach (DataGridViewRow row in dataGridSelectedTanks.Rows)
+					{
+						if (Convert.ToInt32(row.Cells["ID"].Value) == lastTankID) rownum = row.Index;
+					}
+					dataGridSelectedTanks.Rows[rownum].Selected = true;
+				}
+			}
+		}
+
+		private void RemoveTankFromFavList(bool All = false)
+		{
+			if (All)
+				dtFavListTank.Clear(); // Remove all rows in Selected Tank List
+			else
+			{
+				int selectedRowCount = dataGridSelectedTanks.SelectedRows.Count;
+				if (selectedRowCount > 0)
+				{
+					foreach (DataGridViewRow dr in dataGridSelectedTanks.SelectedRows)
+					{
+						int tankID = Convert.ToInt32(dr.Cells["ID"].Value);
+						DataRow[] tanks = dtFavListTank.Select("ID = " + tankID.ToString());
+						foreach (DataRow tank in tanks)
+						{
+							tank.Delete();
+						}
+					}
+				}
+			}
+			dtFavListTank.AcceptChanges(); // completely remove deleted rows
+			ShowSelectedTanks();
+		}
+
+		private void SortFavList(string Column, bool SortASC = true)
+		{
+			string sortDirection = " ASC";
+			if (!SortASC) sortDirection = " DESC";
+			dtFavListTank.DefaultView.Sort = Column + sortDirection;
+			dtFavListTank = dtFavListTank.DefaultView.ToTable();
+			int sortnum = 0;
+			foreach (DataRow dr in dtFavListTank.Rows)
+			{
+				sortnum++;
+				dr["Sort#"] = sortnum;
+			}
+			dtFavListTank.DefaultView.Sort = "Sort# ASC";
+			ShowSelectedTanks();
+		}
+
+		private bool sortNationASC = false;
+		private void toolSelectedTanks_SortNation_Click(object sender, EventArgs e)
+		{
+			sortNationASC = !sortNationASC;
+			SortFavList("Nation", sortNationASC);
+		}
+
+		private bool sortTypeASC = false;
+		private void toolSelectedTanks_SortType_Click(object sender, EventArgs e)
+		{
+			sortTypeASC = !sortTypeASC;
+			SortFavList("Type", sortTypeASC);
+		}
+
+		private bool sortTierASC = false;
+		private void toolSelectedTanks_SortTier_Click(object sender, EventArgs e)
+		{
+			sortTierASC = !sortTierASC;
+			SortFavList("Tier", sortTierASC);
+		}
+
+		private void btnRemoveSelected_Click(object sender, EventArgs e)
+		{
+			RemoveTankFromFavList();
+		}
+
+		private void btnRemoveAll_Click(object sender, EventArgs e)
+		{
+			RemoveTankFromFavList(true);
+		}
+
+		private void btnSelectSelected_Click(object sender, EventArgs e)
+		{
+			AddTankToFavList();
+		}
+
+		private void btnSelectAll_Click(object sender, EventArgs e)
+		{
+			AddTankToFavList(true);
+		}
+		
+
+		#endregion
+
+		#region Selected Tanks Scrolling
+
+		private bool scrollingSelTanks = false;
+		private void scrollSelTanks_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (dataGridSelectedTanks.RowCount > 0)
+			{
+				scrollingSelTanks = true;
+				dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = scrollSelectedTanks.ScrollPosition;
+			}
+
+		}
+
+		private void scrollSelTanks_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (dataGridSelectedTanks.RowCount > 0 && scrollingSelTanks)
+			{
+				int currentFirstRow = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+				dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = scrollSelectedTanks.ScrollPosition;
+				if (currentFirstRow != dataGridSelectedTanks.FirstDisplayedScrollingRowIndex) Refresh();
+			}
+
+		}
+
+		private void scrollSelTanks_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingSelTanks = false;
+		}
+
+		// Enable mouse wheel scrolling for datagrid
+		private void dataGridSelTanks_MouseWheel(object sender, MouseEventArgs e)
+		{
+			try
+			{
+				// scroll in grid from mouse wheel
+				int currentIndex = this.dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+				int scrollLines = SystemInformation.MouseWheelScrollLines;
+				if (e.Delta > 0)
+				{
+					this.dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+				}
+				else if (e.Delta < 0)
+				{
+					this.dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+				}
+				// move scrollbar
+				MoveSelTanksScrollBar();
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+		}
+
+		private void MoveSelTanksScrollBar()
+		{
+			scrollSelectedTanks.ScrollPosition = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+		}
+
+		private void dataGridSelTanks_SelectionChanged(object sender, EventArgs e)
+		{
+			MoveSelTanksScrollBar();
+		}
+
+		#endregion
+
+		#region All Tanks
+
+		private bool allTanksColumnSetupDone = false;
+		private void ShowAllTanks()
+		{
+			string sql =
+				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, playerTank.lastBattleTime AS 'Last Battle', tank.id AS ID " +
+				"FROM     country INNER JOIN " +
+				"         tank ON country.id = tank.countryId INNER JOIN " +
+				"         tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+				"         player INNER JOIN " +
+				"         playerTank ON player.id = playerTank.playerId AND player.id = @playerid ON tank.id = playerTank.tankId ";
+			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			// Check filter
+			string nationFilter = "";
+			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
+				if (menu.Checked) nationFilter += menu.Name.Substring(menu.Name.Length - 1, 1) + ",";
+			string tierFilter = "";
+			foreach (ToolStripMenuItem menu in toolAllTanks_Tier.DropDown.Items)
+				if (menu.Checked) tierFilter += menu.Name.Substring(menu.Name.Length - 2, 2) + ",";
+			string typeFilter = "";
+			foreach (ToolStripMenuItem menu in toolAllTanks_Type.DropDown.Items)
+				if (menu.Checked) typeFilter += menu.Name.Substring(menu.Name.Length - 1, 1) + ",";
+			string filter = "";
+			if (nationFilter.Length > 0)
+				filter = AddAndToWhere(filter,"tank.countryId IN (" + nationFilter.Substring(0,nationFilter.Length - 1) + ")");
+			if (tierFilter.Length > 0)
+				filter = AddAndToWhere(filter,"tank.tier IN (" + tierFilter.Substring(0,tierFilter.Length - 1) + ")"); 
+			if (typeFilter.Length > 0)
+				filter = AddAndToWhere(filter,"tank.tankTypeId IN (" + typeFilter.Substring(0,typeFilter.Length - 1) + ")");
+			if (toolAllTanks_Used.Checked)
+				filter = AddAndToWhere(filter,"playerTank.lastBattleTime is not null");
+			if (filter.Length > 0)
+				filter = " WHERE " + filter;
+			DataTable dt = DB.FetchData(sql + filter);
+			dataGridAllTanks.DataSource = dt;
+			if (!allTanksColumnSetupDone)
+			{
+				allTanksColumnSetupDone = true;
+				dataGridAllTanks.Columns["Tier"].Width = 40;
+				dataGridAllTanks.Columns["Type"].Width = 40;
+				dataGridAllTanks.Columns["Nation"].Width = 60;
+				dataGridAllTanks.Columns["ID"].Visible = false;
+			}
+			// Connect to scrollbar
+			scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
+			scrollAllTanks.ScrollElementsVisible = dataGridAllTanks.DisplayedRowCount(false);
+		}
+
+		private string AddAndToWhere(string WherePart, string AddNewAndPart)
+		{
+			string s = "";
+			if (WherePart.Length > 0) s = WherePart + " AND ";
+			return s + AddNewAndPart;
+		}
+
+		private void toolAllTanks_Nation_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			menu.Checked = !menu.Checked;
+			ShowAllTanks();
+		}
+
+		private void toolAllTanks_Type_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			menu.Checked = !menu.Checked;
+			ShowAllTanks();
+		}
+
+		private void toolAllTanks_Tier_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			menu.Checked = !menu.Checked;
+			ShowAllTanks();
+		}
+
+		private void toolAllTanks_Used_Click(object sender, EventArgs e)
+		{
+			ToolStripButton menu = (ToolStripButton)sender;
+			menu.Checked = !menu.Checked; 
+			ShowAllTanks();
+		}
+
+		private void toolAllTanks_All_Click(object sender, EventArgs e)
+		{
+			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
+				menu.Checked = false;
+			foreach (ToolStripMenuItem menu in toolAllTanks_Tier.DropDown.Items)
+				menu.Checked = false;
+			foreach (ToolStripMenuItem menu in toolAllTanks_Type.DropDown.Items)
+				menu.Checked = false;
+			toolAllTanks_Used.Checked = false;
+			ShowAllTanks();
+		}
+
+		
 
 		#endregion
 
@@ -366,125 +799,7 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
-		#region All Tanks
-
-		private bool allTanksColumnSetupDone = false;
-		private void ShowAllTanks()
-		{
-			string sql =
-				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, playerTank.lastBattleTime AS 'Last Battle' " +
-				"FROM     country INNER JOIN " +
-				"         tank ON country.id = tank.countryId INNER JOIN " +
-				"         tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
-				"         player INNER JOIN " +
-				"         playerTank ON player.id = playerTank.playerId AND player.id = @playerid ON tank.id = playerTank.tankId ";
-			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			// Check filter
-			string nationFilter = "";
-			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
-				if (menu.Checked) nationFilter += menu.Name.Substring(menu.Name.Length - 1, 1) + ",";
-			string tierFilter = "";
-			foreach (ToolStripMenuItem menu in toolAllTanks_Tier.DropDown.Items)
-				if (menu.Checked) tierFilter += menu.Name.Substring(menu.Name.Length - 2, 2) + ",";
-			string typeFilter = "";
-			foreach (ToolStripMenuItem menu in toolAllTanks_Type.DropDown.Items)
-				if (menu.Checked) typeFilter += menu.Name.Substring(menu.Name.Length - 1, 1) + ",";
-			string filter = "";
-			if (nationFilter.Length > 0)
-				filter = AddAndToWhere(filter,"tank.countryId IN (" + nationFilter.Substring(0,nationFilter.Length - 1) + ")");
-			if (tierFilter.Length > 0)
-				filter = AddAndToWhere(filter,"tank.tier IN (" + tierFilter.Substring(0,tierFilter.Length - 1) + ")"); 
-			if (typeFilter.Length > 0)
-				filter = AddAndToWhere(filter,"tank.tankTypeId IN (" + typeFilter.Substring(0,typeFilter.Length - 1) + ")");
-			if (toolAllTanks_Used.Checked)
-				filter = AddAndToWhere(filter,"playerTank.lastBattleTime is not null");
-			if (filter.Length > 0)
-				filter = " WHERE " + filter;
-			DataTable dt = DB.FetchData(sql + filter);
-			dataGridAllTanks.DataSource = dt;
-			if (!allTanksColumnSetupDone)
-			{
-				allTanksColumnSetupDone = true;
-				dataGridAllTanks.Columns["Tier"].Width = 40;
-				dataGridAllTanks.Columns["Type"].Width = 40;
-				dataGridAllTanks.Columns["Nation"].Width = 60;
-
-			}
-			// Connect to scrollbar
-			scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
-			scrollAllTanks.ScrollElementsVisible = dataGridAllTanks.DisplayedRowCount(false);
-		}
-
-		private string AddAndToWhere(string WherePart, string AddNewAndPart)
-		{
-			string s = "";
-			if (WherePart.Length > 0) s = WherePart + " AND ";
-			return s + AddNewAndPart;
-		}
-
-		private void toolAllTanks_Nation_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-			menu.Checked = !menu.Checked;
-			ShowAllTanks();
-		}
-
-		private void toolAllTanks_Type_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-			menu.Checked = !menu.Checked;
-			ShowAllTanks();
-		}
-
-		private void toolAllTanks_Tier_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-			menu.Checked = !menu.Checked;
-			ShowAllTanks();
-		}
-
-		private void toolAllTanks_Used_Click(object sender, EventArgs e)
-		{
-			ToolStripButton menu = (ToolStripButton)sender;
-			menu.Checked = !menu.Checked; 
-			ShowAllTanks();
-		}
-
-		private void toolAllTanks_All_Click(object sender, EventArgs e)
-		{
-			foreach (ToolStripMenuItem menu in toolAllTanks_Nation.DropDown.Items)
-				menu.Checked = false;
-			foreach (ToolStripMenuItem menu in toolAllTanks_Tier.DropDown.Items)
-				menu.Checked = false;
-			foreach (ToolStripMenuItem menu in toolAllTanks_Type.DropDown.Items)
-				menu.Checked = false;
-			toolAllTanks_Used.Checked = false;
-			ShowAllTanks();
-		}
-
-		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
-		{
-			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-			if (menu.Checked)
-			{
-				if (menu.Image == null)
-				{
-					// Default checkbox
-					e.Graphics.DrawImage(imageListToolStrip.Images[0], 5, 3);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
-				}
-				else
-				{
-					// Border around picture
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
-				}
-
-			}
-		}
-
-		#endregion
+		
 
 	}
 }

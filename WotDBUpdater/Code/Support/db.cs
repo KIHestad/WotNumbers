@@ -238,7 +238,6 @@ namespace WotDBUpdater.Code
 				string StringValue = Value.ToString();
 				if (DataType == SqlDataType.VarChar)
 				{
-
 					StringValue = StringValue.Replace("'", "''");
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'");
 				}
