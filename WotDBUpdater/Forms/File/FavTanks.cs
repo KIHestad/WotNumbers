@@ -641,10 +641,9 @@ namespace WotDBUpdater.Forms.File
 			string sql =
 				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, playerTank.lastBattleTime AS 'Last Battle', tank.id AS ID " +
 				"FROM     country INNER JOIN " +
-				"         tank ON country.id = tank.countryId INNER JOIN " +
-				"         tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
-				"         player INNER JOIN " +
-				"         playerTank ON player.id = playerTank.playerId AND player.id = @playerid ON tank.id = playerTank.tankId ";
+				"		tank ON country.id = tank.countryId INNER JOIN " +
+				"		tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+				"		playerTank ON tank.id = playerTank.tankId AND playerTank.playerId=@playerid";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			// Check filter
 			string nationFilter = "";
