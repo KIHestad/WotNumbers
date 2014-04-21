@@ -146,7 +146,7 @@
 			this.FavTanksTheme.Controls.Add(this.badLabel4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox1);
-			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
+			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeNESW;
 			this.FavTanksTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FavTanksTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.FavTanksTheme.FormFooter = false;
@@ -659,6 +659,7 @@
 			this.dataGridSelectedTanks.AllowUserToAddRows = false;
 			this.dataGridSelectedTanks.AllowUserToDeleteRows = false;
 			this.dataGridSelectedTanks.AllowUserToOrderColumns = true;
+			this.dataGridSelectedTanks.AllowUserToResizeRows = false;
 			this.dataGridSelectedTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridSelectedTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridSelectedTanks.Location = new System.Drawing.Point(336, 316);
@@ -697,6 +698,7 @@
 			this.dataGridAllTanks.AllowUserToAddRows = false;
 			this.dataGridAllTanks.AllowUserToDeleteRows = false;
 			this.dataGridAllTanks.AllowUserToOrderColumns = true;
+			this.dataGridAllTanks.AllowUserToResizeRows = false;
 			this.dataGridAllTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridAllTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridAllTanks.Location = new System.Drawing.Point(33, 316);
@@ -734,6 +736,7 @@
 			this.dataGridFavList.AllowUserToAddRows = false;
 			this.dataGridFavList.AllowUserToDeleteRows = false;
 			this.dataGridFavList.AllowUserToOrderColumns = true;
+			this.dataGridFavList.AllowUserToResizeRows = false;
 			this.dataGridFavList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridFavList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridFavList.Location = new System.Drawing.Point(33, 66);
