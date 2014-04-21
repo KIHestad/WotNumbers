@@ -167,6 +167,9 @@ namespace WotDBUpdater.Code
             }
 
             Code.MsgBox.Show("Imported " + row.ToString() + " records.", "Import finished");
+
+            sqliteConn.Close();
+            sqlConn.Close();
         }
 
         #endregion
@@ -243,7 +246,10 @@ namespace WotDBUpdater.Code
                         int playerTankId = Convert.ToInt32(foundRows[0]["playerTankId"]);
                 
                         // Fetch data for current tank into datatable
-                        sqLiteCmd.CommandText = "SELECT "
+
+                        if (currentMode == 15)
+                        {
+                            sqLiteCmd.CommandText = "SELECT "
                                               + "  t.cmId, "
                                               + "  t.cmTankId, "
                                               + "  t.cmCountryId, "
@@ -253,8 +259,8 @@ namespace WotDBUpdater.Code
                                               + "  b.bpBattleCount, "
                                               + "  t.cmLastBattleTime, "
                                               + "  b.bpWins, "
-                                              + "  b.bpLosses, " 
-                                              + "  b.bpSurvivedBattles, " 
+                                              + "  b.bpLosses, "
+                                              + "  b.bpSurvivedBattles, "
                                               + "  b.bpDamageDealt, "
                                               + "  b.bpFrags, "
                                               + "  b.bpDamageReceived, "
@@ -269,16 +275,90 @@ namespace WotDBUpdater.Code
                                               + "  b.bpDamageAssistedTracks, "
                                               + "  b.bpSpotted, "
                                               + "  b.bpXP, "
-                                              + "  (CASE WHEN b.bpBattleMode = 7 THEN 7 ELSE 15 end) AS bpBattleMode "
+                                              + "  b.bpBattleMode "
                                               + "FROM Files f "
                                               + "  LEFT JOIN File_TankDetails t ON f.fiId = t.cmFileId "
                                               + "  LEFT JOIN File_Battles b ON t.cmId = b.bpParentId "
                                               + "WHERE cmCountryId = " + cmCountryId + " AND cmTankId = " + cmTankId
-                                              + "  AND b.bpBattleMode = " + currentMode
-                                              + " ORDER BY t.cmFileId";
+                                              + "  AND (b.bpBattleMode != 7 OR b.bpBattleMode is null)"
+                                              + "ORDER BY t.cmFileId";
+                        }
+
+                        if (currentMode == 7)
+                        {
+                            sqLiteCmd.CommandText = "SELECT "
+                                              + "  t.cmId, "
+                                              + "  t.cmTankId, "
+                                              + "  t.cmCountryId, "
+                                              + "  t.cmTankTitle, "
+                                              + "  t.cmFileId, "
+                                              + "  f.fiDate, "
+                                              + "  b.bpBattleCount, "
+                                              + "  t.cmLastBattleTime, "
+                                              + "  b.bpWins, "
+                                              + "  b.bpLosses, "
+                                              + "  b.bpSurvivedBattles, "
+                                              + "  b.bpDamageDealt, "
+                                              + "  b.bpFrags, "
+                                              + "  b.bpDamageReceived, "
+                                              + "  b.bpCapturePoints, "
+                                              + "  b.bpDefencePoints, "
+                                              + "  b.bpShots, "
+                                              + "  b.bpHits, "
+                                              + "  b.bpShotsReceived, "
+                                              + "  b.bpPierced, "
+                                              + "  b.bpPiercedReceived, "
+                                              + "  b.bpDamageAssistedRadio, "
+                                              + "  b.bpDamageAssistedTracks, "
+                                              + "  b.bpSpotted, "
+                                              + "  b.bpXP, "
+                                              + "  b.bpBattleMode "
+                                              + "FROM Files f "
+                                              + "  LEFT JOIN File_TankDetails t ON f.fiId = t.cmFileId "
+                                              + "  LEFT JOIN File_Battles b ON t.cmId = b.bpParentId "
+                                              + "WHERE cmCountryId = " + cmCountryId + " AND cmTankId = " + cmTankId
+                                              + "  AND b.bpBattleMode = 7 "
+                                              + "ORDER BY t.cmFileId";
+                        }
+                        
                         r = sqLiteCmd.ExecuteReader();
                         DataTable dossierHistory = new DataTable();
                         dossierHistory.Load(r);
+
+                        sqLiteCmd.CommandText = "SELECT "
+                                              + "  t.cmId, "
+                                              + "  t.cmTankId, "
+                                              + "  t.cmCountryId, "
+                                              + "  t.cmTankTitle, "
+                                              + "  t.cmFileId, "
+                                              + "  f.fiDate, "
+                                              + "  b.bpBattleCount, "
+                                              + "  t.cmLastBattleTime, "
+                                              + "  b.bpWins, "
+                                              + "  b.bpLosses, "
+                                              + "  b.bpSurvivedBattles, "
+                                              + "  b.bpDamageDealt, "
+                                              + "  b.bpFrags, "
+                                              + "  b.bpDamageReceived, "
+                                              + "  b.bpCapturePoints, "
+                                              + "  b.bpDefencePoints, "
+                                              + "  b.bpShots, "
+                                              + "  b.bpHits, "
+                                              + "  b.bpShotsReceived, "
+                                              + "  b.bpPierced, "
+                                              + "  b.bpPiercedReceived, "
+                                              + "  b.bpDamageAssistedRadio, "
+                                              + "  b.bpDamageAssistedTracks, "
+                                              + "  b.bpSpotted, "
+                                              + "  b.bpXP "
+                                              + "FROM Files f "
+                                              + "  LEFT JOIN File_TankDetails t ON f.fiId = t.cmFileId "
+                                              + "  LEFT JOIN File_Battles b ON t.cmId = b.bpParentId "
+                                              + "WHERE cmCountryId = " + cmCountryId + " AND cmTankId = " + cmTankId
+                                              + " ORDER BY t.cmFileId";
+                        r = sqLiteCmd.ExecuteReader();
+                        DataTable dossierHistory_test = new DataTable();
+                        dossierHistory_test.Load(r);
 
                         // Init battle parameters
                         int cmId = 0;
@@ -438,7 +518,7 @@ namespace WotDBUpdater.Code
 
 
                                     // Write row to db
-                                    string sql = "insert into battle ("
+                                    string sql = "insert into b2 ("
                                                + "playerTankId, battlesCount, battleTime, battleResultId, victory, draw, defeat, battleSurviveId, survived, killed, "
                                                + "dmg, frags, dmgReceived, cap, def, shots, hits, shotsReceived, pierced, piercedReceived, assistSpot, assistTrack, "
                                                + "spotted, xp, mode15, mode7, wsId) "
@@ -540,10 +620,11 @@ namespace WotDBUpdater.Code
                     catch (Exception ex)
                     {
                         //Code.MsgBox.Show("Tank not found! cmCountryId: " + cmCountryId + ", cmTankId: " + cmTankId);
-                        Code.MsgBox.Show(ex.Message);
+                        //Code.MsgBox.Show(ex.Message);
+                        //return;
                     }
 
-                
+                    
                     battleModeRow++;
 
                 } // End of looping battle modes
@@ -554,6 +635,9 @@ namespace WotDBUpdater.Code
 
 
             Code.MsgBox.Show("Imported " + imported.ToString() + " battles (total lines read: " + loopedRecords + ")" , "Import finished");
+
+            sqliteConn.Close();
+            sqlConn.Close();
 
         }
     }
