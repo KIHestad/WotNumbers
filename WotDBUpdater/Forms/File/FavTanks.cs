@@ -119,6 +119,10 @@ namespace WotDBUpdater.Forms.File
 			btnFavListCancel.Enabled = buttonsEnabled;
 			btnFavListSave.Enabled = buttonsEnabled;
 			btnFavListDelete.Enabled = buttonsEnabled;
+			btnRemoveAll.Enabled = buttonsEnabled;
+			btnRemoveSelected.Enabled = buttonsEnabled;
+			btnSelectAll.Enabled = buttonsEnabled;
+			btnSelectSelected.Enabled = buttonsEnabled;
 			SelectFavList(FavListId);
 			// Connect to scrollbar
 			scrollFavList.ScrollElementsTotals = dt.Rows.Count;
@@ -251,6 +255,8 @@ namespace WotDBUpdater.Forms.File
 			{
 				txtFavListName.Text = "";
 				popupPosition.Text = "Not Visible";
+				dtFavListTank.Clear();
+				dataGridSelectedTanks.DataSource = dtFavListTank; // empty list
 			}
 		}
 
