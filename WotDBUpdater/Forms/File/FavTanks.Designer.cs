@@ -31,10 +31,10 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavTanks));
 			this.FavTanksTheme = new BadForm();
-			this.badButton8 = new BadButton();
-			this.badButton7 = new BadButton();
-			this.badButton6 = new BadButton();
-			this.badButton5 = new BadButton();
+			this.btnRemoveAll = new BadButton();
+			this.btnRemoveSelected = new BadButton();
+			this.btnSelectSelected = new BadButton();
+			this.btnSelectAll = new BadButton();
 			this.popupPosition = new BadPopupBox();
 			this.badLabel6 = new BadLabel();
 			this.badButton4 = new BadButton();
@@ -88,9 +88,9 @@
 			this.btnFavListAdd = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
-			this.badLabel3 = new BadLabel();
-			this.badLabel1 = new BadLabel();
-			this.badGroupBox3 = new BadGroupBox();
+			this.lblSelectedTanks = new BadLabel();
+			this.lblAllTanks = new BadLabel();
+			this.groupTanks = new BadGroupBox();
 			this.badLabel5 = new BadLabel();
 			this.badLabel4 = new BadLabel();
 			this.badGroupBox4 = new BadGroupBox();
@@ -105,10 +105,10 @@
 			// FavTanksTheme
 			// 
 			this.FavTanksTheme.BackColor = System.Drawing.Color.Fuchsia;
-			this.FavTanksTheme.Controls.Add(this.badButton8);
-			this.FavTanksTheme.Controls.Add(this.badButton7);
-			this.FavTanksTheme.Controls.Add(this.badButton6);
-			this.FavTanksTheme.Controls.Add(this.badButton5);
+			this.FavTanksTheme.Controls.Add(this.btnRemoveAll);
+			this.FavTanksTheme.Controls.Add(this.btnRemoveSelected);
+			this.FavTanksTheme.Controls.Add(this.btnSelectSelected);
+			this.FavTanksTheme.Controls.Add(this.btnSelectAll);
 			this.FavTanksTheme.Controls.Add(this.popupPosition);
 			this.FavTanksTheme.Controls.Add(this.badLabel6);
 			this.FavTanksTheme.Controls.Add(this.badButton4);
@@ -131,13 +131,13 @@
 			this.FavTanksTheme.Controls.Add(this.btnFavListAdd);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox1);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox2);
-			this.FavTanksTheme.Controls.Add(this.badLabel3);
-			this.FavTanksTheme.Controls.Add(this.badLabel1);
-			this.FavTanksTheme.Controls.Add(this.badGroupBox3);
+			this.FavTanksTheme.Controls.Add(this.lblSelectedTanks);
+			this.FavTanksTheme.Controls.Add(this.lblAllTanks);
+			this.FavTanksTheme.Controls.Add(this.groupTanks);
 			this.FavTanksTheme.Controls.Add(this.badLabel5);
 			this.FavTanksTheme.Controls.Add(this.badLabel4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox4);
-			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.FavTanksTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FavTanksTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.FavTanksTheme.FormFooter = false;
@@ -157,41 +157,41 @@
 			this.FavTanksTheme.Text = "Favourite Tanks";
 			this.FavTanksTheme.TitleHeight = 26;
 			// 
-			// badButton8
+			// btnRemoveAll
 			// 
-			this.badButton8.Image = null;
-			this.badButton8.Location = new System.Drawing.Point(286, 450);
-			this.badButton8.Name = "badButton8";
-			this.badButton8.Size = new System.Drawing.Size(29, 23);
-			this.badButton8.TabIndex = 35;
-			this.badButton8.Text = "<<";
+			this.btnRemoveAll.Image = null;
+			this.btnRemoveAll.Location = new System.Drawing.Point(286, 450);
+			this.btnRemoveAll.Name = "btnRemoveAll";
+			this.btnRemoveAll.Size = new System.Drawing.Size(29, 23);
+			this.btnRemoveAll.TabIndex = 35;
+			this.btnRemoveAll.Text = "<<";
 			// 
-			// badButton7
+			// btnRemoveSelected
 			// 
-			this.badButton7.Image = null;
-			this.badButton7.Location = new System.Drawing.Point(286, 421);
-			this.badButton7.Name = "badButton7";
-			this.badButton7.Size = new System.Drawing.Size(29, 23);
-			this.badButton7.TabIndex = 34;
-			this.badButton7.Text = "<";
+			this.btnRemoveSelected.Image = null;
+			this.btnRemoveSelected.Location = new System.Drawing.Point(286, 421);
+			this.btnRemoveSelected.Name = "btnRemoveSelected";
+			this.btnRemoveSelected.Size = new System.Drawing.Size(29, 23);
+			this.btnRemoveSelected.TabIndex = 34;
+			this.btnRemoveSelected.Text = "<";
 			// 
-			// badButton6
+			// btnSelectSelected
 			// 
-			this.badButton6.Image = null;
-			this.badButton6.Location = new System.Drawing.Point(286, 392);
-			this.badButton6.Name = "badButton6";
-			this.badButton6.Size = new System.Drawing.Size(29, 23);
-			this.badButton6.TabIndex = 33;
-			this.badButton6.Text = ">";
+			this.btnSelectSelected.Image = null;
+			this.btnSelectSelected.Location = new System.Drawing.Point(286, 392);
+			this.btnSelectSelected.Name = "btnSelectSelected";
+			this.btnSelectSelected.Size = new System.Drawing.Size(29, 23);
+			this.btnSelectSelected.TabIndex = 33;
+			this.btnSelectSelected.Text = ">";
 			// 
-			// badButton5
+			// btnSelectAll
 			// 
-			this.badButton5.Image = null;
-			this.badButton5.Location = new System.Drawing.Point(286, 363);
-			this.badButton5.Name = "badButton5";
-			this.badButton5.Size = new System.Drawing.Size(29, 23);
-			this.badButton5.TabIndex = 32;
-			this.badButton5.Text = ">>";
+			this.btnSelectAll.Image = null;
+			this.btnSelectAll.Location = new System.Drawing.Point(286, 363);
+			this.btnSelectAll.Name = "btnSelectAll";
+			this.btnSelectAll.Size = new System.Drawing.Size(29, 23);
+			this.btnSelectAll.TabIndex = 32;
+			this.btnSelectAll.Text = ">>";
 			// 
 			// popupPosition
 			// 
@@ -252,6 +252,7 @@
 			// 
 			// btnFavListCancel
 			// 
+			this.btnFavListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListCancel.Enabled = false;
 			this.btnFavListCancel.Image = null;
 			this.btnFavListCancel.Location = new System.Drawing.Point(422, 548);
@@ -263,6 +264,7 @@
 			// 
 			// btnFavListSave
 			// 
+			this.btnFavListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListSave.Enabled = false;
 			this.btnFavListSave.Image = null;
 			this.btnFavListSave.Location = new System.Drawing.Point(508, 548);
@@ -688,6 +690,7 @@
 			// 
 			// btnFavListDelete
 			// 
+			this.btnFavListDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListDelete.Enabled = false;
 			this.btnFavListDelete.Image = null;
 			this.btnFavListDelete.Location = new System.Drawing.Point(336, 548);
@@ -709,6 +712,8 @@
 			// 
 			// badGroupBox1
 			// 
+			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(299, 41);
@@ -727,37 +732,40 @@
 			this.badGroupBox2.TabIndex = 10;
 			this.badGroupBox2.Text = "Favourite Lists";
 			// 
-			// badLabel3
+			// lblSelectedTanks
 			// 
-			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel3.Dimmed = false;
-			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(336, 269);
-			this.badLabel3.Name = "badLabel3";
-			this.badLabel3.Size = new System.Drawing.Size(149, 23);
-			this.badLabel3.TabIndex = 18;
-			this.badLabel3.Text = "Selected Tanks:";
+			this.lblSelectedTanks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.lblSelectedTanks.Dimmed = false;
+			this.lblSelectedTanks.Image = null;
+			this.lblSelectedTanks.Location = new System.Drawing.Point(336, 269);
+			this.lblSelectedTanks.Name = "lblSelectedTanks";
+			this.lblSelectedTanks.Size = new System.Drawing.Size(149, 23);
+			this.lblSelectedTanks.TabIndex = 18;
+			this.lblSelectedTanks.Text = "Selected Tanks:";
 			// 
-			// badLabel1
+			// lblAllTanks
 			// 
-			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel1.Dimmed = false;
-			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(33, 269);
-			this.badLabel1.Name = "badLabel1";
-			this.badLabel1.Size = new System.Drawing.Size(152, 23);
-			this.badLabel1.TabIndex = 17;
-			this.badLabel1.Text = "Available Tanks:";
+			this.lblAllTanks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.lblAllTanks.Dimmed = false;
+			this.lblAllTanks.Image = null;
+			this.lblAllTanks.Location = new System.Drawing.Point(33, 269);
+			this.lblAllTanks.Name = "lblAllTanks";
+			this.lblAllTanks.Size = new System.Drawing.Size(152, 23);
+			this.lblAllTanks.TabIndex = 17;
+			this.lblAllTanks.Text = "Available Tanks:";
 			// 
-			// badGroupBox3
+			// groupTanks
 			// 
-			this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox3.Image = null;
-			this.badGroupBox3.Location = new System.Drawing.Point(16, 253);
-			this.badGroupBox3.Name = "badGroupBox3";
-			this.badGroupBox3.Size = new System.Drawing.Size(572, 282);
-			this.badGroupBox3.TabIndex = 12;
-			this.badGroupBox3.Text = "Tanks";
+			this.groupTanks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupTanks.BackColor = System.Drawing.Color.Transparent;
+			this.groupTanks.Image = null;
+			this.groupTanks.Location = new System.Drawing.Point(16, 253);
+			this.groupTanks.Name = "groupTanks";
+			this.groupTanks.Size = new System.Drawing.Size(572, 282);
+			this.groupTanks.TabIndex = 12;
+			this.groupTanks.Text = "Tanks";
 			// 
 			// badLabel5
 			// 
@@ -783,6 +791,8 @@
 			// 
 			// badGroupBox4
 			// 
+			this.badGroupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox4.Image = null;
 			this.badGroupBox4.Location = new System.Drawing.Point(299, 150);
@@ -799,13 +809,15 @@
 			this.ClientSize = new System.Drawing.Size(607, 591);
 			this.Controls.Add(this.FavTanksTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.MinimumSize = new System.Drawing.Size(350, 300);
+			this.MinimumSize = new System.Drawing.Size(607, 591);
 			this.Name = "FavTanks";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "FavTanks";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.FavTanks_Load);
+			this.ResizeEnd += new System.EventHandler(this.FavTanks_ResizeEnd);
+			this.Resize += new System.EventHandler(this.FavTanks_Resize);
 			this.FavTanksTheme.ResumeLayout(false);
 			this.toolSelectedTanks.ResumeLayout(false);
 			this.toolSelectedTanks.PerformLayout();
@@ -833,13 +845,13 @@
 		private System.Windows.Forms.DataGridView dataGridSelectedTanks;
 		private BadScrollBar scrollAllTanks;
 		private System.Windows.Forms.DataGridView dataGridAllTanks;
-		private BadLabel badLabel3;
-		private BadLabel badLabel1;
-		private BadGroupBox badGroupBox3;
-		private BadButton badButton8;
-		private BadButton badButton7;
-		private BadButton badButton6;
-		private BadButton badButton5;
+		private BadLabel lblSelectedTanks;
+		private BadLabel lblAllTanks;
+		private BadGroupBox groupTanks;
+		private BadButton btnRemoveAll;
+		private BadButton btnRemoveSelected;
+		private BadButton btnSelectSelected;
+		private BadButton btnSelectAll;
 		private BadPopupBox popupPosition;
 		private BadLabel badLabel6;
 		private BadButton badButton4;
