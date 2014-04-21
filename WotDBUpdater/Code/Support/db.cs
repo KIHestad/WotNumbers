@@ -155,7 +155,10 @@ namespace WotDBUpdater.Code
 				{
 					// Check if database exists
 					bool dbExists = false;
-					using (SqlConnection con = new SqlConnection(Config.DatabaseConnection()))
+					string winAuth = "Win";
+					if (!Config.Settings.databaseWinAuth) winAuth = "Sql";
+					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master", winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
+					using (SqlConnection con = new SqlConnection(connectionstring))
 					{
 						con.Open();
 						string sql = "SELECT [name] FROM master.dbo.sysdatabases WHERE [name] = '" + databaseName + "'";
@@ -170,7 +173,7 @@ namespace WotDBUpdater.Code
 					}
 					else
 					{
-						SqlConnection myConn = new SqlConnection(Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", "master"));
+						SqlConnection myConn = new SqlConnection(connectionstring);
 						string sql = "CREATE DATABASE " + databaseName + " ON PRIMARY " +
 									"(NAME = " + databaseName + ", " +
 									"FILENAME = '" + fileLocation + databaseName + ".mdf', " +
