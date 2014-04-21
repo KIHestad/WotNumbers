@@ -807,7 +807,6 @@ namespace WotDBUpdater.Forms
 			{
 				// throw;
 			}
-
 		}
 
 		#endregion

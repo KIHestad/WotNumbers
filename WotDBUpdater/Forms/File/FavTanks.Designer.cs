@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavTanks));
 			this.FavTanksTheme = new BadForm();
@@ -50,32 +51,33 @@
 			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
 			this.toolAllTanks = new System.Windows.Forms.ToolStrip();
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem16 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem17 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem19 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem20 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem21 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem22 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem23 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem24 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem25 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem26 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation3 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation5 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation0 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Nation6 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Type = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Type1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Type2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Type3 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Type4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Type5 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier01 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier02 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier03 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier04 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier05 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier06 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier07 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier08 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier09 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Tier10 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolAllTanks_Used = new System.Windows.Forms.ToolStripButton();
+			this.toolAllTanks_All = new System.Windows.Forms.ToolStripButton();
 			this.scrollSelectedTanks = new BadScrollBar();
 			this.dataGridSelectedTanks = new System.Windows.Forms.DataGridView();
 			this.scrollAllTanks = new BadScrollBar();
@@ -86,7 +88,6 @@
 			this.badLabel2 = new BadLabel();
 			this.btnFavListDelete = new BadButton();
 			this.btnFavListAdd = new BadButton();
-			this.badGroupBox1 = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
 			this.lblSelectedTanks = new BadLabel();
 			this.lblAllTanks = new BadLabel();
@@ -94,6 +95,8 @@
 			this.badLabel5 = new BadLabel();
 			this.badLabel4 = new BadLabel();
 			this.badGroupBox4 = new BadGroupBox();
+			this.badGroupBox1 = new BadGroupBox();
+			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.FavTanksTheme.SuspendLayout();
 			this.toolSelectedTanks.SuspendLayout();
 			this.toolAllTanks.SuspendLayout();
@@ -129,7 +132,6 @@
 			this.FavTanksTheme.Controls.Add(this.badLabel2);
 			this.FavTanksTheme.Controls.Add(this.btnFavListDelete);
 			this.FavTanksTheme.Controls.Add(this.btnFavListAdd);
-			this.FavTanksTheme.Controls.Add(this.badGroupBox1);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox2);
 			this.FavTanksTheme.Controls.Add(this.lblSelectedTanks);
 			this.FavTanksTheme.Controls.Add(this.lblAllTanks);
@@ -137,7 +139,8 @@
 			this.FavTanksTheme.Controls.Add(this.badLabel5);
 			this.FavTanksTheme.Controls.Add(this.badLabel4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox4);
-			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.Default;
+			this.FavTanksTheme.Controls.Add(this.badGroupBox1);
+			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.FavTanksTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FavTanksTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.FavTanksTheme.FormFooter = false;
@@ -196,9 +199,9 @@
 			// popupPosition
 			// 
 			this.popupPosition.Image = ((System.Drawing.Image)(resources.GetObject("popupPosition.Image")));
-			this.popupPosition.Location = new System.Drawing.Point(373, 95);
+			this.popupPosition.Location = new System.Drawing.Point(373, 92);
 			this.popupPosition.Name = "popupPosition";
-			this.popupPosition.Size = new System.Drawing.Size(99, 23);
+			this.popupPosition.Size = new System.Drawing.Size(129, 23);
 			this.popupPosition.TabIndex = 31;
 			this.popupPosition.Text = "Not Visible";
 			this.popupPosition.Click += new System.EventHandler(this.popupPosition_Click);
@@ -208,7 +211,7 @@
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel6.Dimmed = false;
 			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(313, 95);
+			this.badLabel6.Location = new System.Drawing.Point(313, 92);
 			this.badLabel6.Name = "badLabel6";
 			this.badLabel6.Size = new System.Drawing.Size(75, 23);
 			this.badLabel6.TabIndex = 30;
@@ -217,7 +220,7 @@
 			// badButton4
 			// 
 			this.badButton4.Image = null;
-			this.badButton4.Location = new System.Drawing.Point(545, 201);
+			this.badButton4.Location = new System.Drawing.Point(545, 198);
 			this.badButton4.Name = "badButton4";
 			this.badButton4.Size = new System.Drawing.Size(25, 23);
 			this.badButton4.TabIndex = 29;
@@ -226,7 +229,7 @@
 			// badButton3
 			// 
 			this.badButton3.Image = null;
-			this.badButton3.Location = new System.Drawing.Point(545, 172);
+			this.badButton3.Location = new System.Drawing.Point(545, 169);
 			this.badButton3.Name = "badButton3";
 			this.badButton3.Size = new System.Drawing.Size(25, 23);
 			this.badButton3.TabIndex = 28;
@@ -235,7 +238,7 @@
 			// badPopupBox2
 			// 
 			this.badPopupBox2.Image = ((System.Drawing.Image)(resources.GetObject("badPopupBox2.Image")));
-			this.badPopupBox2.Location = new System.Drawing.Point(382, 201);
+			this.badPopupBox2.Location = new System.Drawing.Point(382, 198);
 			this.badPopupBox2.Name = "badPopupBox2";
 			this.badPopupBox2.Size = new System.Drawing.Size(154, 23);
 			this.badPopupBox2.TabIndex = 26;
@@ -244,7 +247,7 @@
 			// badPopupBox1
 			// 
 			this.badPopupBox1.Image = ((System.Drawing.Image)(resources.GetObject("badPopupBox1.Image")));
-			this.badPopupBox1.Location = new System.Drawing.Point(382, 172);
+			this.badPopupBox1.Location = new System.Drawing.Point(382, 169);
 			this.badPopupBox1.Name = "badPopupBox1";
 			this.badPopupBox1.Size = new System.Drawing.Size(154, 23);
 			this.badPopupBox1.TabIndex = 24;
@@ -332,10 +335,11 @@
 			this.toolAllTanks.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolAllTanks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem10,
-            this.toolStripMenuItem16,
-            this.toolStripMenuItem1});
+            this.toolAllTanks_Nation,
+            this.toolAllTanks_Type,
+            this.toolAllTanks_Tier,
+            this.toolAllTanks_Used,
+            this.toolAllTanks_All});
 			this.toolAllTanks.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolAllTanks.Location = new System.Drawing.Point(33, 291);
 			this.toolAllTanks.Name = "toolAllTanks";
@@ -350,218 +354,273 @@
 			this.toolStripLabel1.Size = new System.Drawing.Size(42, 22);
 			this.toolStripLabel1.Text = "  Filter:";
 			// 
-			// toolStripMenuItem2
+			// toolAllTanks_Nation
 			// 
-			this.toolStripMenuItem2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5,
-            this.toolStripMenuItem6,
-            this.toolStripMenuItem7,
-            this.toolStripMenuItem8,
-            this.toolStripMenuItem9});
-			this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(28, 25);
-			this.toolStripMenuItem2.Text = "Nation";
+			this.toolAllTanks_Nation.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolAllTanks_Nation.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolAllTanks_Nation3,
+            this.toolAllTanks_Nation4,
+            this.toolAllTanks_Nation1,
+            this.toolAllTanks_Nation5,
+            this.toolAllTanks_Nation2,
+            this.toolAllTanks_Nation0,
+            this.toolAllTanks_Nation6});
+			this.toolAllTanks_Nation.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation.Image")));
+			this.toolAllTanks_Nation.Name = "toolAllTanks_Nation";
+			this.toolAllTanks_Nation.Size = new System.Drawing.Size(28, 25);
+			this.toolAllTanks_Nation.Text = "Nation";
 			// 
-			// toolStripMenuItem3
+			// toolAllTanks_Nation3
 			// 
-			this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
-			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem3.Text = "China";
+			this.toolAllTanks_Nation3.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation3.Image")));
+			this.toolAllTanks_Nation3.Name = "toolAllTanks_Nation3";
+			this.toolAllTanks_Nation3.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation3.Text = "China";
+			this.toolAllTanks_Nation3.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation3.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem4
+			// toolAllTanks_Nation4
 			// 
-			this.toolStripMenuItem4.BackColor = System.Drawing.SystemColors.Control;
-			this.toolStripMenuItem4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem4.Image")));
-			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem4.Text = "France";
+			this.toolAllTanks_Nation4.BackColor = System.Drawing.SystemColors.Control;
+			this.toolAllTanks_Nation4.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation4.Image")));
+			this.toolAllTanks_Nation4.Name = "toolAllTanks_Nation4";
+			this.toolAllTanks_Nation4.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation4.Text = "France";
+			this.toolAllTanks_Nation4.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation4.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem5
+			// toolAllTanks_Nation1
 			// 
-			this.toolStripMenuItem5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem5.Image")));
-			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-			this.toolStripMenuItem5.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem5.Text = "Germany";
+			this.toolAllTanks_Nation1.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation1.Image")));
+			this.toolAllTanks_Nation1.Name = "toolAllTanks_Nation1";
+			this.toolAllTanks_Nation1.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation1.Text = "Germany";
+			this.toolAllTanks_Nation1.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation1.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem6
+			// toolAllTanks_Nation5
 			// 
-			this.toolStripMenuItem6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem6.Image")));
-			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-			this.toolStripMenuItem6.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem6.Text = "U.K.";
+			this.toolAllTanks_Nation5.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation5.Image")));
+			this.toolAllTanks_Nation5.Name = "toolAllTanks_Nation5";
+			this.toolAllTanks_Nation5.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation5.Text = "U.K.";
+			this.toolAllTanks_Nation5.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation5.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem7
+			// toolAllTanks_Nation2
 			// 
-			this.toolStripMenuItem7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem7.Image")));
-			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-			this.toolStripMenuItem7.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem7.Text = "U.S.A.";
+			this.toolAllTanks_Nation2.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation2.Image")));
+			this.toolAllTanks_Nation2.Name = "toolAllTanks_Nation2";
+			this.toolAllTanks_Nation2.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation2.Text = "U.S.A.";
+			this.toolAllTanks_Nation2.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation2.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem8
+			// toolAllTanks_Nation0
 			// 
-			this.toolStripMenuItem8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem8.Image")));
-			this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-			this.toolStripMenuItem8.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem8.Text = "U.S.S.R.";
+			this.toolAllTanks_Nation0.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation0.Image")));
+			this.toolAllTanks_Nation0.Name = "toolAllTanks_Nation0";
+			this.toolAllTanks_Nation0.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation0.Text = "U.S.S.R.";
+			this.toolAllTanks_Nation0.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation0.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem9
+			// toolAllTanks_Nation6
 			// 
-			this.toolStripMenuItem9.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem9.Image")));
-			this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-			this.toolStripMenuItem9.Size = new System.Drawing.Size(122, 22);
-			this.toolStripMenuItem9.Text = "Japan";
+			this.toolAllTanks_Nation6.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation6.Image")));
+			this.toolAllTanks_Nation6.Name = "toolAllTanks_Nation6";
+			this.toolAllTanks_Nation6.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Nation6.Text = "Japan";
+			this.toolAllTanks_Nation6.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+			this.toolAllTanks_Nation6.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem10
+			// toolAllTanks_Type
 			// 
-			this.toolStripMenuItem10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripMenuItem10.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem11,
-            this.toolStripMenuItem12,
-            this.toolStripMenuItem13,
-            this.toolStripMenuItem14,
-            this.toolStripMenuItem15});
-			this.toolStripMenuItem10.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem10.Image")));
-			this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-			this.toolStripMenuItem10.Size = new System.Drawing.Size(28, 25);
-			this.toolStripMenuItem10.Text = "Tank Type";
+			this.toolAllTanks_Type.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolAllTanks_Type.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolAllTanks_Type1,
+            this.toolAllTanks_Type2,
+            this.toolAllTanks_Type3,
+            this.toolAllTanks_Type4,
+            this.toolAllTanks_Type5});
+			this.toolAllTanks_Type.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type.Image")));
+			this.toolAllTanks_Type.Name = "toolAllTanks_Type";
+			this.toolAllTanks_Type.Size = new System.Drawing.Size(28, 25);
+			this.toolAllTanks_Type.Text = "Tank Type";
 			// 
-			// toolStripMenuItem11
+			// toolAllTanks_Type1
 			// 
-			this.toolStripMenuItem11.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem11.Image")));
-			this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-			this.toolStripMenuItem11.Size = new System.Drawing.Size(158, 22);
-			this.toolStripMenuItem11.Text = "Light Tanks";
+			this.toolAllTanks_Type1.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type1.Image")));
+			this.toolAllTanks_Type1.Name = "toolAllTanks_Type1";
+			this.toolAllTanks_Type1.Size = new System.Drawing.Size(158, 22);
+			this.toolAllTanks_Type1.Text = "Light Tanks";
+			this.toolAllTanks_Type1.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
+			this.toolAllTanks_Type1.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem12
+			// toolAllTanks_Type2
 			// 
-			this.toolStripMenuItem12.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem12.Image")));
-			this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-			this.toolStripMenuItem12.Size = new System.Drawing.Size(158, 22);
-			this.toolStripMenuItem12.Text = "Medium Tanks";
+			this.toolAllTanks_Type2.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type2.Image")));
+			this.toolAllTanks_Type2.Name = "toolAllTanks_Type2";
+			this.toolAllTanks_Type2.Size = new System.Drawing.Size(158, 22);
+			this.toolAllTanks_Type2.Text = "Medium Tanks";
+			this.toolAllTanks_Type2.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
+			this.toolAllTanks_Type2.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem13
+			// toolAllTanks_Type3
 			// 
-			this.toolStripMenuItem13.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem13.Image")));
-			this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-			this.toolStripMenuItem13.Size = new System.Drawing.Size(158, 22);
-			this.toolStripMenuItem13.Text = "Heavy Tanks";
+			this.toolAllTanks_Type3.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type3.Image")));
+			this.toolAllTanks_Type3.Name = "toolAllTanks_Type3";
+			this.toolAllTanks_Type3.Size = new System.Drawing.Size(158, 22);
+			this.toolAllTanks_Type3.Text = "Heavy Tanks";
+			this.toolAllTanks_Type3.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
+			this.toolAllTanks_Type3.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem14
+			// toolAllTanks_Type4
 			// 
-			this.toolStripMenuItem14.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem14.Image")));
-			this.toolStripMenuItem14.Name = "toolStripMenuItem14";
-			this.toolStripMenuItem14.Size = new System.Drawing.Size(158, 22);
-			this.toolStripMenuItem14.Text = "Tank Destroyers";
+			this.toolAllTanks_Type4.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type4.Image")));
+			this.toolAllTanks_Type4.Name = "toolAllTanks_Type4";
+			this.toolAllTanks_Type4.Size = new System.Drawing.Size(158, 22);
+			this.toolAllTanks_Type4.Text = "Tank Destroyers";
+			this.toolAllTanks_Type4.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
+			this.toolAllTanks_Type4.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem15
+			// toolAllTanks_Type5
 			// 
-			this.toolStripMenuItem15.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem15.Image")));
-			this.toolStripMenuItem15.Name = "toolStripMenuItem15";
-			this.toolStripMenuItem15.Size = new System.Drawing.Size(158, 22);
-			this.toolStripMenuItem15.Text = "SPGs";
+			this.toolAllTanks_Type5.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type5.Image")));
+			this.toolAllTanks_Type5.Name = "toolAllTanks_Type5";
+			this.toolAllTanks_Type5.Size = new System.Drawing.Size(158, 22);
+			this.toolAllTanks_Type5.Text = "SPGs";
+			this.toolAllTanks_Type5.Click += new System.EventHandler(this.toolAllTanks_Type_Click);
+			this.toolAllTanks_Type5.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem16
+			// toolAllTanks_Tier
 			// 
-			this.toolStripMenuItem16.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripMenuItem16.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem17,
-            this.toolStripMenuItem18,
-            this.toolStripMenuItem19,
-            this.toolStripMenuItem20,
-            this.toolStripMenuItem21,
-            this.toolStripMenuItem22,
-            this.toolStripMenuItem23,
-            this.toolStripMenuItem24,
-            this.toolStripMenuItem25,
-            this.toolStripMenuItem26});
-			this.toolStripMenuItem16.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem16.Image")));
-			this.toolStripMenuItem16.Name = "toolStripMenuItem16";
-			this.toolStripMenuItem16.Size = new System.Drawing.Size(28, 25);
-			this.toolStripMenuItem16.Text = "Tier";
+			this.toolAllTanks_Tier.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolAllTanks_Tier.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolAllTanks_Tier01,
+            this.toolAllTanks_Tier02,
+            this.toolAllTanks_Tier03,
+            this.toolAllTanks_Tier04,
+            this.toolAllTanks_Tier05,
+            this.toolAllTanks_Tier06,
+            this.toolAllTanks_Tier07,
+            this.toolAllTanks_Tier08,
+            this.toolAllTanks_Tier09,
+            this.toolAllTanks_Tier10});
+			this.toolAllTanks_Tier.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier.Image")));
+			this.toolAllTanks_Tier.Name = "toolAllTanks_Tier";
+			this.toolAllTanks_Tier.Size = new System.Drawing.Size(28, 25);
+			this.toolAllTanks_Tier.Text = "Tier";
 			// 
-			// toolStripMenuItem17
+			// toolAllTanks_Tier01
 			// 
-			this.toolStripMenuItem17.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem17.Image")));
-			this.toolStripMenuItem17.Name = "toolStripMenuItem17";
-			this.toolStripMenuItem17.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem17.Text = "1";
+			this.toolAllTanks_Tier01.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier01.Image")));
+			this.toolAllTanks_Tier01.Name = "toolAllTanks_Tier01";
+			this.toolAllTanks_Tier01.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier01.Text = "1";
+			this.toolAllTanks_Tier01.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem18
+			// toolAllTanks_Tier02
 			// 
-			this.toolStripMenuItem18.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem18.Image")));
-			this.toolStripMenuItem18.Name = "toolStripMenuItem18";
-			this.toolStripMenuItem18.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem18.Text = "2";
+			this.toolAllTanks_Tier02.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier02.Image")));
+			this.toolAllTanks_Tier02.Name = "toolAllTanks_Tier02";
+			this.toolAllTanks_Tier02.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier02.Text = "2";
+			this.toolAllTanks_Tier02.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem19
+			// toolAllTanks_Tier03
 			// 
-			this.toolStripMenuItem19.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem19.Image")));
-			this.toolStripMenuItem19.Name = "toolStripMenuItem19";
-			this.toolStripMenuItem19.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem19.Text = "3";
+			this.toolAllTanks_Tier03.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier03.Image")));
+			this.toolAllTanks_Tier03.Name = "toolAllTanks_Tier03";
+			this.toolAllTanks_Tier03.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier03.Text = "3";
+			this.toolAllTanks_Tier03.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem20
+			// toolAllTanks_Tier04
 			// 
-			this.toolStripMenuItem20.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem20.Image")));
-			this.toolStripMenuItem20.Name = "toolStripMenuItem20";
-			this.toolStripMenuItem20.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem20.Text = "4";
+			this.toolAllTanks_Tier04.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier04.Image")));
+			this.toolAllTanks_Tier04.Name = "toolAllTanks_Tier04";
+			this.toolAllTanks_Tier04.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier04.Text = "4";
+			this.toolAllTanks_Tier04.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier04.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem21
+			// toolAllTanks_Tier05
 			// 
-			this.toolStripMenuItem21.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem21.Image")));
-			this.toolStripMenuItem21.Name = "toolStripMenuItem21";
-			this.toolStripMenuItem21.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem21.Text = "5";
+			this.toolAllTanks_Tier05.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier05.Image")));
+			this.toolAllTanks_Tier05.Name = "toolAllTanks_Tier05";
+			this.toolAllTanks_Tier05.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier05.Text = "5";
+			this.toolAllTanks_Tier05.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier05.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem22
+			// toolAllTanks_Tier06
 			// 
-			this.toolStripMenuItem22.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem22.Image")));
-			this.toolStripMenuItem22.Name = "toolStripMenuItem22";
-			this.toolStripMenuItem22.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem22.Text = "6";
+			this.toolAllTanks_Tier06.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier06.Image")));
+			this.toolAllTanks_Tier06.Name = "toolAllTanks_Tier06";
+			this.toolAllTanks_Tier06.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier06.Text = "6";
+			this.toolAllTanks_Tier06.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier06.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem23
+			// toolAllTanks_Tier07
 			// 
-			this.toolStripMenuItem23.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem23.Image")));
-			this.toolStripMenuItem23.Name = "toolStripMenuItem23";
-			this.toolStripMenuItem23.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem23.Text = "7";
+			this.toolAllTanks_Tier07.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier07.Image")));
+			this.toolAllTanks_Tier07.Name = "toolAllTanks_Tier07";
+			this.toolAllTanks_Tier07.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier07.Text = "7";
+			this.toolAllTanks_Tier07.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier07.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem24
+			// toolAllTanks_Tier08
 			// 
-			this.toolStripMenuItem24.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem24.Image")));
-			this.toolStripMenuItem24.Name = "toolStripMenuItem24";
-			this.toolStripMenuItem24.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem24.Text = "8";
+			this.toolAllTanks_Tier08.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier08.Image")));
+			this.toolAllTanks_Tier08.Name = "toolAllTanks_Tier08";
+			this.toolAllTanks_Tier08.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier08.Text = "8";
+			this.toolAllTanks_Tier08.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier08.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem25
+			// toolAllTanks_Tier09
 			// 
-			this.toolStripMenuItem25.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem25.Image")));
-			this.toolStripMenuItem25.Name = "toolStripMenuItem25";
-			this.toolStripMenuItem25.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem25.Text = "9";
+			this.toolAllTanks_Tier09.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier09.Image")));
+			this.toolAllTanks_Tier09.Name = "toolAllTanks_Tier09";
+			this.toolAllTanks_Tier09.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier09.Text = "9";
+			this.toolAllTanks_Tier09.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier09.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem26
+			// toolAllTanks_Tier10
 			// 
-			this.toolStripMenuItem26.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem26.Image")));
-			this.toolStripMenuItem26.Name = "toolStripMenuItem26";
-			this.toolStripMenuItem26.Size = new System.Drawing.Size(86, 22);
-			this.toolStripMenuItem26.Text = "10";
+			this.toolAllTanks_Tier10.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier10.Image")));
+			this.toolAllTanks_Tier10.Name = "toolAllTanks_Tier10";
+			this.toolAllTanks_Tier10.Size = new System.Drawing.Size(152, 22);
+			this.toolAllTanks_Tier10.Text = "10";
+			this.toolAllTanks_Tier10.Click += new System.EventHandler(this.toolAllTanks_Tier_Click);
+			this.toolAllTanks_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripMenuItem1
+			// toolAllTanks_Used
 			// 
-			this.toolStripMenuItem1.BackColor = System.Drawing.Color.Transparent;
-			this.toolStripMenuItem1.Checked = true;
-			this.toolStripMenuItem1.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(65, 25);
-			this.toolStripMenuItem1.Text = "Show All";
+			this.toolAllTanks_Used.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolAllTanks_Used.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Used.Image")));
+			this.toolAllTanks_Used.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolAllTanks_Used.Name = "toolAllTanks_Used";
+			this.toolAllTanks_Used.Size = new System.Drawing.Size(37, 22);
+			this.toolAllTanks_Used.Text = "Used";
+			this.toolAllTanks_Used.Click += new System.EventHandler(this.toolAllTanks_Used_Click);
+			// 
+			// toolAllTanks_All
+			// 
+			this.toolAllTanks_All.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolAllTanks_All.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_All.Image")));
+			this.toolAllTanks_All.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolAllTanks_All.Name = "toolAllTanks_All";
+			this.toolAllTanks_All.Size = new System.Drawing.Size(25, 22);
+			this.toolAllTanks_All.Text = "All";
+			this.toolAllTanks_All.Click += new System.EventHandler(this.toolAllTanks_All_Click);
 			// 
 			// scrollSelectedTanks
 			// 
@@ -612,6 +671,9 @@
 			this.scrollAllTanks.Size = new System.Drawing.Size(17, 202);
 			this.scrollAllTanks.TabIndex = 14;
 			this.scrollAllTanks.Text = "badScrollBar1";
+			this.scrollAllTanks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseDown);
+			this.scrollAllTanks.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseMove);
+			this.scrollAllTanks.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseUp);
 			// 
 			// dataGridAllTanks
 			// 
@@ -629,6 +691,7 @@
 			this.dataGridAllTanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridAllTanks.Size = new System.Drawing.Size(217, 202);
 			this.dataGridAllTanks.TabIndex = 13;
+			this.dataGridAllTanks.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
 			// scrollFavList
@@ -671,10 +734,10 @@
 			// txtFavListName
 			// 
 			this.txtFavListName.Image = null;
-			this.txtFavListName.Location = new System.Drawing.Point(373, 63);
+			this.txtFavListName.Location = new System.Drawing.Point(373, 64);
 			this.txtFavListName.Name = "txtFavListName";
 			this.txtFavListName.PasswordChar = '\0';
-			this.txtFavListName.Size = new System.Drawing.Size(197, 23);
+			this.txtFavListName.Size = new System.Drawing.Size(129, 23);
 			this.txtFavListName.TabIndex = 6;
 			// 
 			// badLabel2
@@ -682,7 +745,7 @@
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(313, 63);
+			this.badLabel2.Location = new System.Drawing.Point(313, 64);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(42, 23);
 			this.badLabel2.TabIndex = 5;
@@ -703,24 +766,12 @@
 			// btnFavListAdd
 			// 
 			this.btnFavListAdd.Image = null;
-			this.btnFavListAdd.Location = new System.Drawing.Point(508, 95);
+			this.btnFavListAdd.Location = new System.Drawing.Point(508, 64);
 			this.btnFavListAdd.Name = "btnFavListAdd";
 			this.btnFavListAdd.Size = new System.Drawing.Size(60, 23);
 			this.btnFavListAdd.TabIndex = 2;
 			this.btnFavListAdd.Text = "Add";
 			this.btnFavListAdd.Click += new System.EventHandler(this.btnFavListAdd_Click);
-			// 
-			// badGroupBox1
-			// 
-			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(299, 41);
-			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(289, 91);
-			this.badGroupBox1.TabIndex = 4;
-			this.badGroupBox1.Text = "Selected Favourite Tank List";
 			// 
 			// badGroupBox2
 			// 
@@ -772,7 +823,7 @@
 			this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel5.Dimmed = false;
 			this.badLabel5.Image = null;
-			this.badLabel5.Location = new System.Drawing.Point(313, 201);
+			this.badLabel5.Location = new System.Drawing.Point(313, 198);
 			this.badLabel5.Name = "badLabel5";
 			this.badLabel5.Size = new System.Drawing.Size(63, 23);
 			this.badLabel5.TabIndex = 27;
@@ -783,7 +834,7 @@
 			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel4.Dimmed = false;
 			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(313, 172);
+			this.badLabel4.Location = new System.Drawing.Point(313, 169);
 			this.badLabel4.Name = "badLabel4";
 			this.badLabel4.Size = new System.Drawing.Size(63, 23);
 			this.badLabel4.TabIndex = 25;
@@ -795,11 +846,29 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox4.Image = null;
-			this.badGroupBox4.Location = new System.Drawing.Point(299, 150);
+			this.badGroupBox4.Location = new System.Drawing.Point(299, 146);
 			this.badGroupBox4.Name = "badGroupBox4";
-			this.badGroupBox4.Size = new System.Drawing.Size(289, 86);
+			this.badGroupBox4.Size = new System.Drawing.Size(289, 90);
 			this.badGroupBox4.TabIndex = 23;
 			this.badGroupBox4.Text = "Column selection";
+			// 
+			// badGroupBox1
+			// 
+			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox1.Image = null;
+			this.badGroupBox1.Location = new System.Drawing.Point(299, 41);
+			this.badGroupBox1.Name = "badGroupBox1";
+			this.badGroupBox1.Size = new System.Drawing.Size(289, 91);
+			this.badGroupBox1.TabIndex = 4;
+			this.badGroupBox1.Text = "Selected Favourite Tank List";
+			// 
+			// imageListToolStrip
+			// 
+			this.imageListToolStrip.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolStrip.ImageStream")));
+			this.imageListToolStrip.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageListToolStrip.Images.SetKeyName(0, "check.png");
 			// 
 			// FavTanks
 			// 
@@ -862,32 +931,31 @@
 		private BadButton btnFavListSave;
 		private System.Windows.Forms.ToolStrip toolAllTanks;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem13;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem14;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem15;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem16;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem17;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem18;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem19;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem20;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem21;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem22;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem23;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem24;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem25;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem26;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation3;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation4;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation1;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation5;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation2;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation0;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation6;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Type;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Type1;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Type2;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Type3;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Type4;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Type5;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier01;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier02;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier03;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier04;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier05;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier06;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier07;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier08;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier09;
+		private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Tier10;
 		private BadLabel badLabel5;
 		private BadLabel badLabel4;
 		private BadGroupBox badGroupBox4;
@@ -896,5 +964,8 @@
 		private System.Windows.Forms.ToolStripButton toolStripButton1;
 		private System.Windows.Forms.ToolStripButton toolStripButton2;
 		private System.Windows.Forms.ToolStripButton toolStripButton3;
+		private System.Windows.Forms.ToolStripButton toolAllTanks_Used;
+		private System.Windows.Forms.ToolStripButton toolAllTanks_All;
+		private System.Windows.Forms.ImageList imageListToolStrip;
 	}
 }
