@@ -316,7 +316,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns[1].Width = 500;
 		}
 
-		private void GetTankfilter(out string whereSQL, out string Status2Message)
+		private void GetTankfilter(out string whereSQL, out string joinSQL, out string Status2Message)
 		{
 			string tier = "";
 			string tierId = "";
@@ -325,12 +325,19 @@ namespace WotDBUpdater.Forms
 			string type = "";
 			string typeId = "";
 			string message = "";
-			string sql = "";
+			string newWhereSQL = "";
+			string newJoinSQL = "";
 			// Calc filter and set main menu title
 			if (tankFilterFavSelected != "")
 			{
 				toolItemTankFilter.Text = tankFilterFavSelected;
 				message = "Favourite list: " + tankFilterFavSelected;
+				string sql = "select id from favList where name=@name;";
+				DB.AddWithValue(ref sql, "@name", tankFilterFavSelected, DB.SqlDataType.VarChar);
+				DataTable dt = DB.FetchData(sql);
+				int favListId = Convert.ToInt32(dt.Rows[0][0]);
+				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
+				DB.AddWithValue(ref newJoinSQL, "@favListId", favListId, DB.SqlDataType.Int);
 			}
 			else if (tankFilterItemCount == 0)
 			{
@@ -366,23 +373,23 @@ namespace WotDBUpdater.Forms
 				{
 					tierId = tier.Substring(0, tier.Length - 2);
 					tier = "Tier: " + tier.Substring(0, tier.Length - 2) + "   ";
-					sql = " tank.tier IN (" + tierId + ") ";
+					newWhereSQL = " tank.tier IN (" + tierId + ") ";
 				}
 				if (nation.Length > 0)
 				{
 					nation = "Nation: " + nation.Substring(0, nation.Length - 2) + "   ";
 					nationId = nationId.Substring(0, nationId.Length - 2);
-					if (sql != "") sql += " AND ";
-					sql += " tank.countryId IN (" + nationId + ") ";
+					if (newWhereSQL != "") newWhereSQL += " AND ";
+					newWhereSQL += " tank.countryId IN (" + nationId + ") ";
 				}
 				if (type.Length > 0)
 				{
 					typeId = typeId.Substring(0, typeId.Length - 2);
 					type = "Type: " + type.Substring(0, type.Length - 2) + "   ";
-					if (sql != "") sql += " AND ";
-					sql += " tank.tankTypeId IN (" + typeId + ") ";
+					if (newWhereSQL != "") newWhereSQL += " AND ";
+					newWhereSQL += " tank.tankTypeId IN (" + typeId + ") ";
 				}
-				if (sql != "") sql = " AND (" + sql + ") ";
+				if (newWhereSQL != "") newWhereSQL = " AND (" + newWhereSQL + ") ";
 				message = nation + type + tier;
 				if (message.Length > 0) message = message.Substring(0, message.Length - 3);
 				// Add correct mein menu name
@@ -395,7 +402,8 @@ namespace WotDBUpdater.Forms
 					toolItemTankFilter.Text = "Tank filter";
 				}
 			}
-			whereSQL = sql;
+			whereSQL = newWhereSQL;
+			joinSQL = newJoinSQL;
 			Status2Message = message;
 		}
 
@@ -407,16 +415,20 @@ namespace WotDBUpdater.Forms
 			// Get Tank filter
 			string message = "";
 			string where = "";
-			GetTankfilter(out where, out message);
+			string join = "";
+			GetTankfilter(out where, out join, out message);
+			string sortordercol = "0 as sortorder ";
+			if (join != "") sortordercol = "favListTank.sortorder as sortorder ";
 			string sql =
 				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.name AS Tanktype, country.name AS Country, " +
-				"         playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF " +
+				"         playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF, " + sortordercol +
 				"FROM     playerTank INNER JOIN " +
 				"         player ON playerTank.playerId = player.id INNER JOIN " +
 				"         tank ON playerTank.tankId = tank.id INNER JOIN " +
 				"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
-				"         country ON tank.countryId = country.id " +
-				"WHERE    player.id=@playerid " + where;
+				"         country ON tank.countryId = country.id " + join +
+				"WHERE    player.id=@playerid " + where + " " +
+				"ORDER BY sortorder";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			dataGridMain.DataSource = DB.FetchData(sql);
 			DateGridSelected = DataGridType.Tank;
@@ -427,6 +439,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["Tanktype"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dataGridMain.Columns["Country"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dataGridMain.Columns["Country"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridMain.Columns["sortorder"].Visible = false;
 			// Finish
 			GridResizeTankInfo();
 			ResizeNow();
@@ -461,20 +474,23 @@ namespace WotDBUpdater.Forms
 			// Get Tank filter
 			string tankFilterMessage = "";
 			string tankFilter = "";
-			GetTankfilter(out tankFilter, out tankFilterMessage);
+			string tankJoin = "";
+			GetTankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
+			string sortordercol = "0 as sortorder ";
+			if (tankJoin != "") sortordercol = "favListTank.sortorder as sortorder ";
 			string sql =
 				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
 				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
 				"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
 				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, CAST(battle.battleTime AS DATETIME) AS battleTime, battle.battleResultId, battle.battleSurviveId, " +
-				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer " +
+				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer, " + sortordercol + 
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
 				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
-				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
+				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
-				"ORDER BY battle.battleTime DESC ";
+				"ORDER BY sortorder, battle.battleTime DESC ";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DateTime dateFilter = new DateTime();
 			if (!toolItemBattlesAll.Checked)
@@ -554,6 +570,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["survivedcount"].Visible = false;
 			dataGridMain.Columns["killedcount"].Visible = false;
 			dataGridMain.Columns["footer"].Visible = false;
+			dataGridMain.Columns["sortorder"].Visible = false;
 			// Text cols
 			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dataGridMain.Columns["Result"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -1140,8 +1157,9 @@ namespace WotDBUpdater.Forms
 		private void ShowTankFilterStatus()
 		{
 			string where = "";
+			string join = "";
 			string message = "";
-			GetTankfilter(out where, out message);
+			GetTankfilter(out where, out join, out message);
 			if (toolItemViewBattles.Checked)
 				SetStatus2(toolItemBattles.Text + "   " + message);
 			else
