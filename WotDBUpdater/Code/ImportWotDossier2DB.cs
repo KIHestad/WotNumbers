@@ -518,7 +518,7 @@ namespace WotDBUpdater.Code
 
 
                                     // Write row to db
-                                    string sql = "insert into b2 ("
+                                    string sql = "insert into battle ("
                                                + "playerTankId, battlesCount, battleTime, battleResultId, victory, draw, defeat, battleSurviveId, survived, killed, "
                                                + "dmg, frags, dmgReceived, cap, def, shots, hits, shotsReceived, pierced, piercedReceived, assistSpot, assistTrack, "
                                                + "spotted, xp, mode15, mode7, wsId) "
