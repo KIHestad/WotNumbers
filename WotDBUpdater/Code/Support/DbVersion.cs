@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 1; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 2; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -23,8 +23,18 @@ namespace WotDBUpdater.Code
 				case 1: 
 					break; // First version, no script
 				case 2:                                                
-					mssql  = "";
-					sqlite = "";
+					mssql	=	"CREATE TABLE favListTank ( "+
+								" favListId int NOT NULL, tankId int NOT NULL, sortorder int NOT NULL DEFAULT 0, " +
+								" primary key (favListId, tankId), " +
+								" foreign key (favListId) references favList (id), " +
+								" foreign key (tankId) references tank (id) " +
+								") ";
+					sqlite =	"CREATE TABLE favListTank ( " +
+								" favListId integer NOT NULL, tankId integer NOT NULL, sortorder integer NOT NULL DEFAULT 0, " +
+								" primary key (favListId, tankId), " +
+								" foreign key (favListId) references favList (id), " +
+								" foreign key (tankId) references tank (id) " +
+								") ";
 					break;
 				default:
 					break;
