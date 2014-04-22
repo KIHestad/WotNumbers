@@ -45,6 +45,7 @@ namespace WotDBUpdater.Forms
 			toolItemBattles.Visible = false;
 			toolItemTankFilter.Visible = false;
 			toolItemRefreshSeparator.Visible = false;
+			toolItemColumnSelect.Visible = false;
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
@@ -954,6 +955,7 @@ namespace WotDBUpdater.Forms
 				toolItemViewTankInfo.Checked = false;
 				toolItemBattles.Visible = false;
 				toolItemTankFilter.Visible = false;
+				toolItemColumnSelect.Visible = false;
 				toolItemRefreshSeparator.Visible = true;
 				menuItem.Checked = true;
 				SetStatus2(menuItem.Text);
@@ -966,12 +968,14 @@ namespace WotDBUpdater.Forms
 				{
 					InfoPanelSlideStart(false);
 					toolItemTankFilter.Visible = true;
+					toolItemColumnSelect.Visible = true;
 				}
 				else if (toolItemViewBattles.Checked)
 				{
 					InfoPanelSlideStart(false);
 					toolItemBattles.Visible = true;
 					toolItemTankFilter.Visible = true;
+					toolItemColumnSelect.Visible = true;
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 				}
 			}
@@ -1338,6 +1342,18 @@ namespace WotDBUpdater.Forms
 
 
 		#endregion
+
+		private void toolItemColumnSelect_Click(object sender, EventArgs e)
+		{
+			toolItemColumnSelect_All.Checked = false;
+			toolItemColumnSelect_Default.Checked = false;
+			toolItemColumnSelect_Minimal.Checked = false;
+			toolItemColumnSelect_User01.Checked = false;
+			toolItemColumnSelect_User02.Checked = false;
+			toolItemColumnSelect_User03.Checked = false;
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			selectedMenu.Checked = true;
+		}
 		
 	}
 }

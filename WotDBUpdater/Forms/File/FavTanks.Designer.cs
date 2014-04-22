@@ -146,7 +146,7 @@
 			this.FavTanksTheme.Controls.Add(this.badLabel4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox4);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox1);
-			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeNESW;
+			this.FavTanksTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
 			this.FavTanksTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FavTanksTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.FavTanksTheme.FormFooter = false;
@@ -163,7 +163,7 @@
 			this.FavTanksTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("FavTanksTheme.SystemMaximizeImage")));
 			this.FavTanksTheme.SystemMinimizeImage = null;
 			this.FavTanksTheme.TabIndex = 0;
-			this.FavTanksTheme.Text = "Favourite Tanks";
+			this.FavTanksTheme.Text = "Favourite Tank List";
 			this.FavTanksTheme.TitleHeight = 26;
 			// 
 			// btnRemoveAll
@@ -802,7 +802,8 @@
 			this.badGroupBox2.Name = "badGroupBox2";
 			this.badGroupBox2.Size = new System.Drawing.Size(266, 195);
 			this.badGroupBox2.TabIndex = 10;
-			this.badGroupBox2.Text = "Favourite Lists";
+			this.badGroupBox2.Text = "Favourite Tank Lists";
+			this.badGroupBox2.UseWaitCursor = true;
 			// 
 			// lblSelectedTanks
 			// 
