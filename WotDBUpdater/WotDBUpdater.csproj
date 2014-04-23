@@ -330,8 +330,11 @@
     <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
     <Content Include="DevDocs\Img\logo5.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\arrow_down.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\arrow_up.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
     <Content Include="DevDocs\DatabaseLog\createProc.txt" />
+    <Content Include="DevDocs\Img\ToolStripIcons\col_setup.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_china.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_france.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_germany.png" />

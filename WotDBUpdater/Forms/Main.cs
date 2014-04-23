@@ -1350,7 +1350,7 @@ namespace WotDBUpdater.Forms
 			toolItemColumnSelect_Minimal.Checked = false;
 			toolItemColumnSelect_User01.Checked = false;
 			toolItemColumnSelect_User02.Checked = false;
-			toolItemColumnSelect_User03.Checked = false;
+			toolItemColumnSelect_User10.Checked = false;
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			selectedMenu.Checked = true;
 		}

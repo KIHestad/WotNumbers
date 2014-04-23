@@ -274,11 +274,11 @@ namespace WotDBUpdater.Forms.File
 			Code.MsgBox.Button answer = MsgBox.Show(message,"Save existing favourite tank list", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
-				SaveFavList();
+				SaveFavList(SelectedFavListId);
 			}
 		}
 
-		private void SaveFavList()
+		private void SaveFavList(int GoToFavList)
 		{
 			string newFavListName = txtFavListName.Text.Trim();
 			string newFavListPos = popupPosition.Text;
@@ -316,7 +316,7 @@ namespace WotDBUpdater.Forms.File
 			DB.ExecuteNonQuery(sql);
 
 			// Refresh Grid
-			ShowFavList();
+			ShowFavList(GoToFavList);
 		}
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
@@ -489,6 +489,37 @@ namespace WotDBUpdater.Forms.File
 			}
 		}
 
+		private void MoveSelectedTanks(bool MoveDown) // true = move up, false = move down
+		{
+			int selectedRowCount = dataGridSelectedTanks.SelectedRows.Count;
+			if (selectedRowCount > 0)
+			{
+				int move = -1;
+				if (MoveDown) move = 1;
+				List<int> selectedTanks = new List<int>();
+				foreach (DataGridViewRow dr in dataGridSelectedTanks.SelectedRows)
+				{
+					selectedTanks.Add(Convert.ToInt32(dr.Cells["ID"].Value));
+					int currentSortOrder = Convert.ToInt32(dr.Cells["Sort#"].Value);
+					// For each tank to be moved the above/below tank must change place with the moved one, if any exist
+					if (dr.Index + move >= 0 && dr.Index + move <= dataGridSelectedTanks.Rows.Count - 1)
+						dataGridSelectedTanks.Rows[dr.Index + move].Cells["Sort#"].Value = currentSortOrder;
+					// move tank now
+					dr.Cells["Sort#"].Value = currentSortOrder + move;
+				}
+				// Save new sorted grid to datatable
+				dtFavListTank.AcceptChanges();
+				// Sort and show
+				SortFavList("Sort#");				
+				// Set focus to the selected tanks, first remove current selected
+				foreach (DataGridViewRow dr in dataGridSelectedTanks.Rows)
+				{
+					dr.Selected = false;
+					if (selectedTanks.Contains(Convert.ToInt32(dr.Cells["ID"].Value))) dr.Selected = true;
+				}
+			}
+		}
+
 		private void RemoveTankFromFavList(bool All = false)
 		{
 			if (All)
@@ -569,7 +600,16 @@ namespace WotDBUpdater.Forms.File
 		{
 			AddTankToFavList(true);
 		}
-		
+
+		private void toolSelectedTanks_MoveUp_Click(object sender, EventArgs e)
+		{
+			MoveSelectedTanks(false);
+		}
+
+		private void toolSelectedTanks_MoveDown_Click(object sender, EventArgs e)
+		{
+			MoveSelectedTanks(true);
+		}
 
 		#endregion
 
@@ -804,7 +844,6 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
-		
 
 	}
 }
