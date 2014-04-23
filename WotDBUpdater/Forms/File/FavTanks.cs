@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -408,7 +409,7 @@ namespace WotDBUpdater.Forms.File
 				dataGridSelectedTanks.Columns["Tier"].Width = 40;
 				dataGridSelectedTanks.Columns["Type"].Width = 40;
 				dataGridSelectedTanks.Columns["Nation"].Width = 60;
-				dataGridSelectedTanks.Columns["Sort#"].Width = 40;
+				dataGridSelectedTanks.Columns["Sort#"].Visible = false;
 				dataGridSelectedTanks.Columns["ID"].Visible = false;
 			}
 		}
@@ -420,6 +421,11 @@ namespace WotDBUpdater.Forms.File
 			// Connect to scrollbar
 			scrollSelectedTanks.ScrollElementsTotals = dtFavListTank.Rows.Count;
 			scrollSelectedTanks.ScrollElementsVisible = dataGridSelectedTanks.DisplayedRowCount(false);
+			// No sorting for Selected Tanks Data Grid
+			foreach (DataGridViewColumn col in dataGridSelectedTanks.Columns)
+			{
+				col.SortMode = DataGridViewColumnSortMode.NotSortable;
+			}
 		}
 
 		private void AddTankToFavList(bool All = false)
@@ -489,33 +495,60 @@ namespace WotDBUpdater.Forms.File
 			}
 		}
 
-		private void MoveSelectedTanks(bool MoveDown) // true = move up, false = move down
+		private void MoveSelectedTanks(bool MoveDown) // true = move down, false = move up
 		{
 			int selectedRowCount = dataGridSelectedTanks.SelectedRows.Count;
 			if (selectedRowCount > 0)
 			{
-				int move = -1;
-				if (MoveDown) move = 1;
 				List<int> selectedTanks = new List<int>();
-				foreach (DataGridViewRow dr in dataGridSelectedTanks.SelectedRows)
+				int lastRow = dataGridSelectedTanks.Rows.Count - 1;
+				// Move direction up
+				int fromRow = 0;     // loop from
+				int toRow = lastRow; // loop to
+				int move = -1;       // element move direction
+				// Move direction down
+				if (MoveDown) 
 				{
-					selectedTanks.Add(Convert.ToInt32(dr.Cells["ID"].Value));
-					int currentSortOrder = Convert.ToInt32(dr.Cells["Sort#"].Value);
-					// For each tank to be moved the above/below tank must change place with the moved one, if any exist
-					if (dr.Index + move >= 0 && dr.Index + move <= dataGridSelectedTanks.Rows.Count - 1)
-						dataGridSelectedTanks.Rows[dr.Index + move].Cells["Sort#"].Value = currentSortOrder;
-					// move tank now
-					dr.Cells["Sort#"].Value = currentSortOrder + move;
+					fromRow = lastRow;
+					toRow = 0;
+					move = 1;
+				}
+				// Remember closest above/below row to change place with the moved one, -1 = not exists (yet)
+				int notSelectedRowIndex = -1;
+				// Loop through all rows in grid (oposit direction as moving elements)
+				int currentPos = fromRow;
+				while (currentPos >= 0 && currentPos <= lastRow)
+				{
+					DataGridViewRow currentRow = dataGridSelectedTanks.Rows[currentPos]; // Get current row
+					if (currentRow.Selected)
+					{
+						// Selected row - move it
+						selectedTanks.Add(Convert.ToInt32(currentRow.Cells["ID"].Value)); // remember this tank to set selected area back after moving
+						int currentRowSortPos = Convert.ToInt32(dtFavListTank.Rows[currentPos]["Sort#"]); // current sort postition 
+						// For each tank to be moved the above/below tank must change place with the moved one, if any exist
+						if (notSelectedRowIndex != -1)
+						{
+							dtFavListTank.Rows[notSelectedRowIndex]["Sort#"] = Convert.ToInt32(dtFavListTank.Rows[notSelectedRowIndex]["Sort#"]) - move;
+						}
+						// move tank row now
+						dtFavListTank.Rows[currentPos]["Sort#"] = currentRowSortPos + move;
+					}
+					else
+					{
+						// Not selected row
+						notSelectedRowIndex = currentPos;
+					}
+					currentPos -= move; // Move to next	position, in oposite direction as element movment					
 				}
 				// Save new sorted grid to datatable
 				dtFavListTank.AcceptChanges();
 				// Sort and show
-				SortFavList("Sort#");				
-				// Set focus to the selected tanks, first remove current selected
-				foreach (DataGridViewRow dr in dataGridSelectedTanks.Rows)
+				SortFavList("Sort#");
+				// Set selected rows back to correct tanks
+				dataGridSelectedTanks.ClearSelection();
+				for (int i = 0; i <= lastRow; i++)
 				{
-					dr.Selected = false;
-					if (selectedTanks.Contains(Convert.ToInt32(dr.Cells["ID"].Value))) dr.Selected = true;
+					if (selectedTanks.Contains(Convert.ToInt32(dataGridSelectedTanks.Rows[i].Cells["ID"].Value))) dataGridSelectedTanks.Rows[i].Selected = true;
 				}
 			}
 		}
@@ -556,7 +589,6 @@ namespace WotDBUpdater.Forms.File
 				sortnum++;
 				dr["Sort#"] = sortnum;
 			}
-			dtFavListTank.DefaultView.Sort = "Sort# ASC";
 			ShowSelectedTanks();
 		}
 

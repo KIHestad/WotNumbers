@@ -50,6 +50,9 @@
 			this.toolSelectedTanks_SortNation = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_SortType = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_SortTier = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
+			this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
 			this.toolAllTanks = new System.Windows.Forms.ToolStrip();
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
 			this.toolAllTanks_Nation = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,9 +100,6 @@
 			this.badLabel4 = new BadLabel();
 			this.badGroupBox4 = new BadGroupBox();
 			this.badGroupBox1 = new BadGroupBox();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
-			this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
 			this.FavTanksTheme.SuspendLayout();
 			this.toolSelectedTanks.SuspendLayout();
 			this.toolAllTanks.SuspendLayout();
@@ -346,6 +346,31 @@
 			this.toolSelectedTanks_SortTier.Size = new System.Drawing.Size(23, 22);
 			this.toolSelectedTanks_SortTier.Text = "toolStripButton3";
 			this.toolSelectedTanks_SortTier.Click += new System.EventHandler(this.toolSelectedTanks_SortTier_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolSelectedTanks_MoveUp
+			// 
+			this.toolSelectedTanks_MoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolSelectedTanks_MoveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveUp.Image")));
+			this.toolSelectedTanks_MoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolSelectedTanks_MoveUp.Name = "toolSelectedTanks_MoveUp";
+			this.toolSelectedTanks_MoveUp.Size = new System.Drawing.Size(23, 22);
+			this.toolSelectedTanks_MoveUp.Text = "toolStripButton1";
+			this.toolSelectedTanks_MoveUp.Click += new System.EventHandler(this.toolSelectedTanks_MoveUp_Click);
+			// 
+			// toolSelectedTanks_MoveDown
+			// 
+			this.toolSelectedTanks_MoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolSelectedTanks_MoveDown.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveDown.Image")));
+			this.toolSelectedTanks_MoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolSelectedTanks_MoveDown.Name = "toolSelectedTanks_MoveDown";
+			this.toolSelectedTanks_MoveDown.Size = new System.Drawing.Size(23, 22);
+			this.toolSelectedTanks_MoveDown.Text = "toolStripButton2";
+			this.toolSelectedTanks_MoveDown.Click += new System.EventHandler(this.toolSelectedTanks_MoveDown_Click);
 			// 
 			// toolAllTanks
 			// 
@@ -668,6 +693,7 @@
 			this.dataGridSelectedTanks.AllowUserToResizeRows = false;
 			this.dataGridSelectedTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridSelectedTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridSelectedTanks.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
 			this.dataGridSelectedTanks.Location = new System.Drawing.Point(336, 316);
 			this.dataGridSelectedTanks.Name = "dataGridSelectedTanks";
 			this.dataGridSelectedTanks.ReadOnly = true;
@@ -891,31 +917,6 @@
 			this.badGroupBox1.Size = new System.Drawing.Size(289, 91);
 			this.badGroupBox1.TabIndex = 4;
 			this.badGroupBox1.Text = "Selected Favourite Tank List";
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolSelectedTanks_MoveUp
-			// 
-			this.toolSelectedTanks_MoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolSelectedTanks_MoveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveUp.Image")));
-			this.toolSelectedTanks_MoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolSelectedTanks_MoveUp.Name = "toolSelectedTanks_MoveUp";
-			this.toolSelectedTanks_MoveUp.Size = new System.Drawing.Size(23, 22);
-			this.toolSelectedTanks_MoveUp.Text = "toolStripButton1";
-			this.toolSelectedTanks_MoveUp.Click += new System.EventHandler(this.toolSelectedTanks_MoveUp_Click);
-			// 
-			// toolSelectedTanks_MoveDown
-			// 
-			this.toolSelectedTanks_MoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolSelectedTanks_MoveDown.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveDown.Image")));
-			this.toolSelectedTanks_MoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolSelectedTanks_MoveDown.Name = "toolSelectedTanks_MoveDown";
-			this.toolSelectedTanks_MoveDown.Size = new System.Drawing.Size(23, 22);
-			this.toolSelectedTanks_MoveDown.Text = "toolStripButton2";
-			this.toolSelectedTanks_MoveDown.Click += new System.EventHandler(this.toolSelectedTanks_MoveDown_Click);
 			// 
 			// FavTanks
 			// 
