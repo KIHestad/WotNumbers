@@ -500,6 +500,9 @@ namespace WotDBUpdater.Forms.File
 			int selectedRowCount = dataGridSelectedTanks.SelectedRows.Count;
 			if (selectedRowCount > 0)
 			{
+				// Remember scroll pos
+				int FirstVisibleRowInGrid = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+				// Get ready
 				List<int> selectedTanks = new List<int>();
 				int lastRow = dataGridSelectedTanks.Rows.Count - 1;
 				// Move direction up
@@ -542,14 +545,32 @@ namespace WotDBUpdater.Forms.File
 				}
 				// Save new sorted grid to datatable
 				dtFavListTank.AcceptChanges();
+				
 				// Sort and show
 				SortFavList("Sort#");
 				// Set selected rows back to correct tanks
 				dataGridSelectedTanks.ClearSelection();
+				int selectedRowPos = 0;
+				bool SelectedRowPosGet = true;
 				for (int i = 0; i <= lastRow; i++)
 				{
-					if (selectedTanks.Contains(Convert.ToInt32(dataGridSelectedTanks.Rows[i].Cells["ID"].Value))) dataGridSelectedTanks.Rows[i].Selected = true;
+					if (selectedTanks.Contains(Convert.ToInt32(dataGridSelectedTanks.Rows[i].Cells["ID"].Value)))
+					{
+						dataGridSelectedTanks.Rows[i].Selected = true;
+						if (SelectedRowPosGet) selectedRowPos = i;
+						if (!MoveDown) SelectedRowPosGet = false; // Get first one if move up
+					}
 				}
+				// Return to scroll position
+				dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid;
+				// Check if outside
+				int topGridRow = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+				int bottomGridRow = topGridRow + dataGridSelectedTanks.DisplayedRowCount(false);
+				if (selectedRowPos < topGridRow)
+					dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid - 1;
+				if (selectedRowPos >= bottomGridRow)
+					dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid + 1;
+				MoveSelTanksScrollBar();
 			}
 		}
 
