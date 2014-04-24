@@ -1354,6 +1354,17 @@ namespace WotDBUpdater.Forms
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			selectedMenu.Checked = true;
 		}
+
+		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
+		{
+			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
+			if (toolItemViewBattles.Checked)
+				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
+			else if (toolItemViewTankInfo.Checked)
+				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
+			Form frm = new Forms.File.ColumnSetup(colSetupType);
+			frm.ShowDialog();
+		}
 		
 	}
 }

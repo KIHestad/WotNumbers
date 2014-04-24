@@ -120,6 +120,12 @@
     <Compile Include="Forms\File\AddPlayer.Designer.cs">
       <DependentUpon>AddPlayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\File\ColumnSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\ColumnSetup.Designer.cs">
+      <DependentUpon>ColumnSetup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\File\DatabaseNew.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +231,9 @@
     <Compile Include="Code\TankData.cs" />
     <EmbeddedResource Include="Forms\File\AddPlayer.resx">
       <DependentUpon>AddPlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\File\ColumnSetup.resx">
+      <DependentUpon>ColumnSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\DatabaseNew.resx">
       <DependentUpon>DatabaseNew.cs</DependentUpon>

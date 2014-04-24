@@ -602,6 +602,14 @@ abstract class BadThemeControl : Control
 {
 	protected Bitmap bitmapObject;
 	protected Graphics grapichObject;
+
+	private Cursor _Cursor = Cursors.Default;
+	public override Cursor Cursor
+	{
+		get { return _Cursor; }
+		set	{ _Cursor = value; Invalidate();}
+	}
+
 	public BadThemeControl()
 	{
 		SetStyle((ControlStyles)8198, true);
@@ -940,7 +948,16 @@ class BadLabel : BadThemeControl
 		get { return _Dimmed; }
 		set { _Dimmed = value; Invalidate(); }
 	}
-	
+
+
+	private Color _ForeColor = ColorTheme.ControlFont;
+	public override Color ForeColor
+	{
+		get { return _ForeColor; }
+		set { _ForeColor = value; Invalidate(); }
+	}
+
+
 	Label label = new Label();
 	public BadLabel()
 	{
@@ -958,7 +975,7 @@ class BadLabel : BadThemeControl
 		if (Dimmed)
 			label.ForeColor = ColorTheme.ControlDimmedFont;
 		else
-			label.ForeColor = ColorTheme.ControlFont;
+			label.ForeColor = ForeColor;
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 

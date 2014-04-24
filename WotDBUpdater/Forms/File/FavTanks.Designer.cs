@@ -171,6 +171,7 @@
 			// 
 			// btnRemoveAll
 			// 
+			this.btnRemoveAll.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnRemoveAll.Image = null;
 			this.btnRemoveAll.Location = new System.Drawing.Point(286, 421);
 			this.btnRemoveAll.Name = "btnRemoveAll";
@@ -181,6 +182,7 @@
 			// 
 			// btnRemoveSelected
 			// 
+			this.btnRemoveSelected.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnRemoveSelected.Image = null;
 			this.btnRemoveSelected.Location = new System.Drawing.Point(286, 450);
 			this.btnRemoveSelected.Name = "btnRemoveSelected";
@@ -191,6 +193,7 @@
 			// 
 			// btnSelectSelected
 			// 
+			this.btnSelectSelected.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnSelectSelected.Image = null;
 			this.btnSelectSelected.Location = new System.Drawing.Point(286, 363);
 			this.btnSelectSelected.Name = "btnSelectSelected";
@@ -201,6 +204,7 @@
 			// 
 			// btnSelectAll
 			// 
+			this.btnSelectAll.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnSelectAll.Image = null;
 			this.btnSelectAll.Location = new System.Drawing.Point(286, 392);
 			this.btnSelectAll.Name = "btnSelectAll";
@@ -211,6 +215,7 @@
 			// 
 			// popupPosition
 			// 
+			this.popupPosition.Cursor = System.Windows.Forms.Cursors.Default;
 			this.popupPosition.Image = ((System.Drawing.Image)(resources.GetObject("popupPosition.Image")));
 			this.popupPosition.Location = new System.Drawing.Point(373, 92);
 			this.popupPosition.Name = "popupPosition";
@@ -222,6 +227,7 @@
 			// badLabel6
 			// 
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel6.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.badLabel6.Dimmed = false;
 			this.badLabel6.Image = null;
 			this.badLabel6.Location = new System.Drawing.Point(313, 92);
@@ -232,6 +238,7 @@
 			// 
 			// badButton4
 			// 
+			this.badButton4.Cursor = System.Windows.Forms.Cursors.Default;
 			this.badButton4.Image = null;
 			this.badButton4.Location = new System.Drawing.Point(545, 198);
 			this.badButton4.Name = "badButton4";
@@ -241,6 +248,7 @@
 			// 
 			// badButton3
 			// 
+			this.badButton3.Cursor = System.Windows.Forms.Cursors.Default;
 			this.badButton3.Image = null;
 			this.badButton3.Location = new System.Drawing.Point(545, 169);
 			this.badButton3.Name = "badButton3";
@@ -250,6 +258,7 @@
 			// 
 			// badPopupBox2
 			// 
+			this.badPopupBox2.Cursor = System.Windows.Forms.Cursors.Default;
 			this.badPopupBox2.Image = ((System.Drawing.Image)(resources.GetObject("badPopupBox2.Image")));
 			this.badPopupBox2.Location = new System.Drawing.Point(382, 198);
 			this.badPopupBox2.Name = "badPopupBox2";
@@ -259,6 +268,7 @@
 			// 
 			// badPopupBox1
 			// 
+			this.badPopupBox1.Cursor = System.Windows.Forms.Cursors.Default;
 			this.badPopupBox1.Image = ((System.Drawing.Image)(resources.GetObject("badPopupBox1.Image")));
 			this.badPopupBox1.Location = new System.Drawing.Point(382, 169);
 			this.badPopupBox1.Name = "badPopupBox1";
@@ -269,6 +279,7 @@
 			// btnFavListCancel
 			// 
 			this.btnFavListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnFavListCancel.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnFavListCancel.Enabled = false;
 			this.btnFavListCancel.Image = null;
 			this.btnFavListCancel.Location = new System.Drawing.Point(422, 548);
@@ -281,6 +292,7 @@
 			// btnFavListSave
 			// 
 			this.btnFavListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnFavListSave.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnFavListSave.Enabled = false;
 			this.btnFavListSave.Image = null;
 			this.btnFavListSave.Location = new System.Drawing.Point(508, 548);
@@ -669,6 +681,7 @@
 			// scrollSelectedTanks
 			// 
 			this.scrollSelectedTanks.BackColor = System.Drawing.Color.Transparent;
+			this.scrollSelectedTanks.Cursor = System.Windows.Forms.Cursors.Default;
 			this.scrollSelectedTanks.Image = null;
 			this.scrollSelectedTanks.Location = new System.Drawing.Point(553, 316);
 			this.scrollSelectedTanks.Name = "scrollSelectedTanks";
@@ -693,6 +706,7 @@
 			this.dataGridSelectedTanks.AllowUserToResizeRows = false;
 			this.dataGridSelectedTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridSelectedTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridSelectedTanks.Cursor = System.Windows.Forms.Cursors.Default;
 			this.dataGridSelectedTanks.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
 			this.dataGridSelectedTanks.Location = new System.Drawing.Point(336, 316);
 			this.dataGridSelectedTanks.Name = "dataGridSelectedTanks";
@@ -709,6 +723,7 @@
 			// scrollAllTanks
 			// 
 			this.scrollAllTanks.BackColor = System.Drawing.Color.Transparent;
+			this.scrollAllTanks.Cursor = System.Windows.Forms.Cursors.Default;
 			this.scrollAllTanks.Image = null;
 			this.scrollAllTanks.Location = new System.Drawing.Point(250, 316);
 			this.scrollAllTanks.Name = "scrollAllTanks";
@@ -733,6 +748,7 @@
 			this.dataGridAllTanks.AllowUserToResizeRows = false;
 			this.dataGridAllTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridAllTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridAllTanks.Cursor = System.Windows.Forms.Cursors.Default;
 			this.dataGridAllTanks.Location = new System.Drawing.Point(33, 316);
 			this.dataGridAllTanks.Name = "dataGridAllTanks";
 			this.dataGridAllTanks.ReadOnly = true;
@@ -748,6 +764,7 @@
 			// scrollFavList
 			// 
 			this.scrollFavList.BackColor = System.Drawing.Color.Transparent;
+			this.scrollFavList.Cursor = System.Windows.Forms.Cursors.Default;
 			this.scrollFavList.Image = null;
 			this.scrollFavList.Location = new System.Drawing.Point(250, 66);
 			this.scrollFavList.Name = "scrollFavList";
@@ -771,6 +788,7 @@
 			this.dataGridFavList.AllowUserToResizeRows = false;
 			this.dataGridFavList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridFavList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridFavList.Cursor = System.Windows.Forms.Cursors.Default;
 			this.dataGridFavList.Location = new System.Drawing.Point(33, 66);
 			this.dataGridFavList.MultiSelect = false;
 			this.dataGridFavList.Name = "dataGridFavList";
@@ -786,6 +804,7 @@
 			// 
 			// txtFavListName
 			// 
+			this.txtFavListName.Cursor = System.Windows.Forms.Cursors.Default;
 			this.txtFavListName.Image = null;
 			this.txtFavListName.Location = new System.Drawing.Point(373, 64);
 			this.txtFavListName.Name = "txtFavListName";
@@ -796,6 +815,7 @@
 			// badLabel2
 			// 
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
 			this.badLabel2.Location = new System.Drawing.Point(313, 64);
@@ -807,6 +827,7 @@
 			// btnFavListDelete
 			// 
 			this.btnFavListDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnFavListDelete.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnFavListDelete.Enabled = false;
 			this.btnFavListDelete.Image = null;
 			this.btnFavListDelete.Location = new System.Drawing.Point(336, 548);
@@ -818,6 +839,7 @@
 			// 
 			// btnFavListAdd
 			// 
+			this.btnFavListAdd.Cursor = System.Windows.Forms.Cursors.Default;
 			this.btnFavListAdd.Image = null;
 			this.btnFavListAdd.Location = new System.Drawing.Point(508, 64);
 			this.btnFavListAdd.Name = "btnFavListAdd";
@@ -829,6 +851,7 @@
 			// badGroupBox2
 			// 
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox2.Cursor = System.Windows.Forms.Cursors.WaitCursor;
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(16, 41);
 			this.badGroupBox2.Name = "badGroupBox2";
@@ -865,6 +888,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupTanks.BackColor = System.Drawing.Color.Transparent;
+			this.groupTanks.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.groupTanks.Image = null;
 			this.groupTanks.Location = new System.Drawing.Point(16, 253);
 			this.groupTanks.Name = "groupTanks";
@@ -875,6 +899,7 @@
 			// badLabel5
 			// 
 			this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel5.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.badLabel5.Dimmed = false;
 			this.badLabel5.Image = null;
 			this.badLabel5.Location = new System.Drawing.Point(313, 198);
@@ -886,6 +911,7 @@
 			// badLabel4
 			// 
 			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.badLabel4.Dimmed = false;
 			this.badLabel4.Image = null;
 			this.badLabel4.Location = new System.Drawing.Point(313, 169);
@@ -899,6 +925,7 @@
 			this.badGroupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox4.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.badGroupBox4.Image = null;
 			this.badGroupBox4.Location = new System.Drawing.Point(299, 146);
 			this.badGroupBox4.Name = "badGroupBox4";
@@ -911,6 +938,7 @@
 			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(299, 41);
 			this.badGroupBox1.Name = "badGroupBox1";
