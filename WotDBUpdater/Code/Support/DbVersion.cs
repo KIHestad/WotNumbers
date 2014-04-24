@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 2; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 6; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -23,18 +23,81 @@ namespace WotDBUpdater.Code
 				case 1: 
 					break; // First version, no script
 				case 2:                                                
-					mssql	=	"CREATE TABLE favListTank ( "+
-								" favListId int NOT NULL, tankId int NOT NULL, sortorder int NOT NULL DEFAULT 0, " +
-								" primary key (favListId, tankId), " +
-								" foreign key (favListId) references favList (id), " +
-								" foreign key (tankId) references tank (id) " +
-								") ";
-					sqlite =	"CREATE TABLE favListTank ( " +
-								" favListId integer NOT NULL, tankId integer NOT NULL, sortorder integer NOT NULL DEFAULT 0, " +
-								" primary key (favListId, tankId), " +
-								" foreign key (favListId) references favList (id), " +
-								" foreign key (tankId) references tank (id) " +
-								") ";
+					mssql=	"CREATE TABLE favListTank ( "+
+							" favListId int NOT NULL, tankId int NOT NULL, sortorder int NOT NULL DEFAULT 0, " +
+							" primary key (favListId, tankId), " +
+							" foreign key (favListId) references favList (id), " +
+							" foreign key (tankId) references tank (id) " +
+							") ";
+					sqlite= "CREATE TABLE favListTank ( " +
+							" favListId integer NOT NULL, tankId integer NOT NULL, sortorder integer NOT NULL DEFAULT 0, " +
+							" primary key (favListId, tankId), " +
+							" foreign key (favListId) references favList (id), " +
+							" foreign key (tankId) references tank (id) " +
+							") ";
+					break;
+				case 3:
+					mssql=	"create table columnSelection ( " +
+							" id int identity(1,1) primary key, " +
+							" colType int not null, " +
+							" position int not null, " +
+							" colName varchar(255) not null, " +
+							" name varchar(50) not null, " +
+							" description varchar(2000) not null " +
+							"); ";
+					sqlite=	"create table columnSelection ( " +
+							" id integer primary key, " +
+							" colType integer not null, " +
+							" position integer not null, " +
+							" colName varchar(255) not null, " +
+							" name varchar(50) not null, " +
+							" description varchar(2000) not null " +
+							"); ";
+					break;
+				case 4:
+					mssql=	"create table columnList ( " +
+							" id int identity(1,1) primary key, " +
+							" colType int not null, " +
+							" name varchar(50) not null, " +
+							" colDefault bit not null default 0, " +
+							" position int null, " +
+							" sysCol bit not null default 0 " +
+							"); ";
+					sqlite=	"create table columnList ( " +
+							" id integer primary key, " +
+							" colType integer not null, " +
+							" name varchar(50) not null, " +
+							" colDefault bit not null default 0, " +
+							" position integer null, " +
+							" sysCol bit not null default 0 " +
+							"); ";
+					break;
+				case 5:
+					mssql =	"insert into columnList (colType,name,colDefault,position,sysCol) values (1,'Default Column Setup', 1, 1, 1); " +
+							"insert into columnList (colType,name,colDefault,position,sysCol) values (1,'Minimalistic Column Setup', 0, 2, 1); " +
+							"insert into columnList (colType,name,colDefault,position,sysCol) values (1,'All Columns', 0, 3, 1); " +
+							"insert into columnList (colType,name,colDefault,position,sysCol) values (2,'Default Column Setup', 1, 1, 1); " +
+							"insert into columnList (colType,name,colDefault,position,sysCol) values (2,'Minimalistic Column Setup', 0, 2, 1); " +
+							"insert into columnList (colType,name,colDefault,position,sysCol) values (2,'All Columns', 0, 3, 1); ";
+					sqlite = mssql;
+					break;
+				case 6:
+					mssql = "create table columnListSelection ( " +
+							" columnSelectionId int not null, " +
+							" columnListId int not null, " +
+							" sortorder int not null default 0, " +
+							" primary key (columnSelectionId, columnListId), " +
+							" foreign key (columnSelectionId) references columnSelection (id), " +
+							" foreign key (columnListId) references columnList (id) " +
+							") ";
+					sqlite= "create table columnListSelection ( " +
+							" columnSelectionId integer not null, " +
+							" columnListId integer not null, " +
+							" sortorder integer not null default 0, " +
+							" primary key (columnSelectionId, columnListId), " +
+							" foreign key (columnSelectionId) references columnSelection (id), " +
+							" foreign key (columnListId) references columnList (id) " +
+							") ";
 					break;
 				default:
 					break;

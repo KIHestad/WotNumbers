@@ -33,18 +33,19 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColumnSetupTheme = new BadForm();
+			this.badLabel1 = new BadLabel();
 			this.lblDefaultColumnSetup = new BadLabel();
-			this.btnSetAsDefaultColumnSetup = new BadButton();
+			this.btnSetAsDefaultColumnList = new BadButton();
 			this.badGroupBox3 = new BadGroupBox();
-			this.popupColumnSetupType = new BadPopupBox();
+			this.popupColumnListType = new BadPopupBox();
 			this.btnRemoveAll = new BadButton();
 			this.btnRemoveSelected = new BadButton();
 			this.btnSelectSelected = new BadButton();
 			this.btnSelectAll = new BadButton();
 			this.popupPosition = new BadPopupBox();
 			this.badLabel6 = new BadLabel();
-			this.btnFColumnSetupCancel = new BadButton();
-			this.btnColumnSetupSave = new BadButton();
+			this.btnColumnListCancel = new BadButton();
+			this.btnColumnListSave = new BadButton();
 			this.toolSelectedColumns = new System.Windows.Forms.ToolStrip();
 			this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
@@ -53,12 +54,12 @@
 			this.dataGridSelectedColumns = new System.Windows.Forms.DataGridView();
 			this.scrollAllColumns = new BadScrollBar();
 			this.dataGridAllColumns = new System.Windows.Forms.DataGridView();
-			this.scrollColumnSetup = new BadScrollBar();
-			this.dataGridColumnSetup = new System.Windows.Forms.DataGridView();
-			this.txtColumnSetupName = new BadTextBox();
+			this.scrollColumnList = new BadScrollBar();
+			this.dataGridColumnList = new System.Windows.Forms.DataGridView();
+			this.txtColumnListName = new BadTextBox();
 			this.badLabel2 = new BadLabel();
-			this.btnColumnSetupDelete = new BadButton();
-			this.btnColumnSetupAdd = new BadButton();
+			this.btnColumnListDelete = new BadButton();
+			this.btnColumnListAdd = new BadButton();
 			this.lblAllColumns = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
 			this.lblSelectedColumns = new BadLabel();
@@ -68,7 +69,7 @@
 			this.toolSelectedColumns.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridAllColumns)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridColumnSetup)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridColumnList)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// imageListToolStrip
@@ -79,36 +80,37 @@
 			// 
 			// ColumnSetupTheme
 			// 
+			this.ColumnSetupTheme.Controls.Add(this.badLabel1);
 			this.ColumnSetupTheme.Controls.Add(this.lblDefaultColumnSetup);
-			this.ColumnSetupTheme.Controls.Add(this.btnSetAsDefaultColumnSetup);
+			this.ColumnSetupTheme.Controls.Add(this.btnSetAsDefaultColumnList);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox3);
-			this.ColumnSetupTheme.Controls.Add(this.popupColumnSetupType);
+			this.ColumnSetupTheme.Controls.Add(this.popupColumnListType);
 			this.ColumnSetupTheme.Controls.Add(this.btnRemoveAll);
 			this.ColumnSetupTheme.Controls.Add(this.btnRemoveSelected);
 			this.ColumnSetupTheme.Controls.Add(this.btnSelectSelected);
 			this.ColumnSetupTheme.Controls.Add(this.btnSelectAll);
 			this.ColumnSetupTheme.Controls.Add(this.popupPosition);
 			this.ColumnSetupTheme.Controls.Add(this.badLabel6);
-			this.ColumnSetupTheme.Controls.Add(this.btnFColumnSetupCancel);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnSetupSave);
+			this.ColumnSetupTheme.Controls.Add(this.btnColumnListCancel);
+			this.ColumnSetupTheme.Controls.Add(this.btnColumnListSave);
 			this.ColumnSetupTheme.Controls.Add(this.toolSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.toolAllColumns);
 			this.ColumnSetupTheme.Controls.Add(this.scrollSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.dataGridSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.scrollAllColumns);
 			this.ColumnSetupTheme.Controls.Add(this.dataGridAllColumns);
-			this.ColumnSetupTheme.Controls.Add(this.scrollColumnSetup);
-			this.ColumnSetupTheme.Controls.Add(this.dataGridColumnSetup);
-			this.ColumnSetupTheme.Controls.Add(this.txtColumnSetupName);
+			this.ColumnSetupTheme.Controls.Add(this.scrollColumnList);
+			this.ColumnSetupTheme.Controls.Add(this.dataGridColumnList);
+			this.ColumnSetupTheme.Controls.Add(this.txtColumnListName);
 			this.ColumnSetupTheme.Controls.Add(this.badLabel2);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnSetupDelete);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnSetupAdd);
+			this.ColumnSetupTheme.Controls.Add(this.btnColumnListDelete);
+			this.ColumnSetupTheme.Controls.Add(this.btnColumnListAdd);
 			this.ColumnSetupTheme.Controls.Add(this.lblAllColumns);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox1);
 			this.ColumnSetupTheme.Controls.Add(this.lblSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.groupTanks);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox2);
-			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
 			this.ColumnSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColumnSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColumnSetupTheme.FormFooter = false;
@@ -120,7 +122,7 @@
 			this.ColumnSetupTheme.MainArea = mainAreaClass1;
 			this.ColumnSetupTheme.Name = "ColumnSetupTheme";
 			this.ColumnSetupTheme.Resizable = true;
-			this.ColumnSetupTheme.Size = new System.Drawing.Size(607, 591);
+			this.ColumnSetupTheme.Size = new System.Drawing.Size(607, 614);
 			this.ColumnSetupTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColumnSetupTheme.SystemExitImage")));
 			this.ColumnSetupTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColumnSetupTheme.SystemMaximizeImage")));
 			this.ColumnSetupTheme.SystemMinimizeImage = null;
@@ -128,25 +130,37 @@
 			this.ColumnSetupTheme.Text = "Column Setup";
 			this.ColumnSetupTheme.TitleHeight = 26;
 			// 
+			// badLabel1
+			// 
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Dimmed = false;
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(34, 61);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(39, 23);
+			this.badLabel1.TabIndex = 73;
+			this.badLabel1.Text = "Type:";
+			// 
 			// lblDefaultColumnSetup
 			// 
 			this.lblDefaultColumnSetup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblDefaultColumnSetup.Dimmed = false;
 			this.lblDefaultColumnSetup.Image = null;
-			this.lblDefaultColumnSetup.Location = new System.Drawing.Point(314, 166);
+			this.lblDefaultColumnSetup.Location = new System.Drawing.Point(316, 184);
 			this.lblDefaultColumnSetup.Name = "lblDefaultColumnSetup";
 			this.lblDefaultColumnSetup.Size = new System.Drawing.Size(255, 26);
 			this.lblDefaultColumnSetup.TabIndex = 71;
 			this.lblDefaultColumnSetup.Text = "This setup is not used as default for View";
 			// 
-			// btnSetAsDefaultColumnSetup
+			// btnSetAsDefaultColumnList
 			// 
-			this.btnSetAsDefaultColumnSetup.Image = null;
-			this.btnSetAsDefaultColumnSetup.Location = new System.Drawing.Point(466, 198);
-			this.btnSetAsDefaultColumnSetup.Name = "btnSetAsDefaultColumnSetup";
-			this.btnSetAsDefaultColumnSetup.Size = new System.Drawing.Size(103, 23);
-			this.btnSetAsDefaultColumnSetup.TabIndex = 70;
-			this.btnSetAsDefaultColumnSetup.Text = "Set as default";
+			this.btnSetAsDefaultColumnList.Image = null;
+			this.btnSetAsDefaultColumnList.Location = new System.Drawing.Point(468, 228);
+			this.btnSetAsDefaultColumnList.Name = "btnSetAsDefaultColumnList";
+			this.btnSetAsDefaultColumnList.Size = new System.Drawing.Size(103, 23);
+			this.btnSetAsDefaultColumnList.TabIndex = 70;
+			this.btnSetAsDefaultColumnList.Text = "Set as default";
+			this.btnSetAsDefaultColumnList.Click += new System.EventHandler(this.btnSetAsDefaultColumnList_Click);
 			// 
 			// badGroupBox3
 			// 
@@ -154,26 +168,26 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox3.Image = null;
-			this.badGroupBox3.Location = new System.Drawing.Point(300, 142);
+			this.badGroupBox3.Location = new System.Drawing.Point(300, 154);
 			this.badGroupBox3.Name = "badGroupBox3";
-			this.badGroupBox3.Size = new System.Drawing.Size(289, 92);
+			this.badGroupBox3.Size = new System.Drawing.Size(289, 110);
 			this.badGroupBox3.TabIndex = 69;
 			this.badGroupBox3.Text = "Default Column Setup";
 			// 
-			// popupColumnSetupType
+			// popupColumnListType
 			// 
-			this.popupColumnSetupType.Image = null;
-			this.popupColumnSetupType.Location = new System.Drawing.Point(34, 62);
-			this.popupColumnSetupType.Name = "popupColumnSetupType";
-			this.popupColumnSetupType.Size = new System.Drawing.Size(234, 23);
-			this.popupColumnSetupType.TabIndex = 68;
-			this.popupColumnSetupType.Text = null;
-			this.popupColumnSetupType.Click += new System.EventHandler(this.popupColumnSetupType_Click);
+			this.popupColumnListType.Image = ((System.Drawing.Image)(resources.GetObject("popupColumnListType.Image")));
+			this.popupColumnListType.Location = new System.Drawing.Point(79, 62);
+			this.popupColumnListType.Name = "popupColumnListType";
+			this.popupColumnListType.Size = new System.Drawing.Size(189, 23);
+			this.popupColumnListType.TabIndex = 68;
+			this.popupColumnListType.Text = null;
+			this.popupColumnListType.Click += new System.EventHandler(this.popupColumnSetupType_Click);
 			// 
 			// btnRemoveAll
 			// 
 			this.btnRemoveAll.Image = null;
-			this.btnRemoveAll.Location = new System.Drawing.Point(287, 419);
+			this.btnRemoveAll.Location = new System.Drawing.Point(287, 447);
 			this.btnRemoveAll.Name = "btnRemoveAll";
 			this.btnRemoveAll.Size = new System.Drawing.Size(29, 23);
 			this.btnRemoveAll.TabIndex = 66;
@@ -182,7 +196,7 @@
 			// btnRemoveSelected
 			// 
 			this.btnRemoveSelected.Image = null;
-			this.btnRemoveSelected.Location = new System.Drawing.Point(287, 448);
+			this.btnRemoveSelected.Location = new System.Drawing.Point(287, 476);
 			this.btnRemoveSelected.Name = "btnRemoveSelected";
 			this.btnRemoveSelected.Size = new System.Drawing.Size(29, 23);
 			this.btnRemoveSelected.TabIndex = 65;
@@ -191,7 +205,7 @@
 			// btnSelectSelected
 			// 
 			this.btnSelectSelected.Image = null;
-			this.btnSelectSelected.Location = new System.Drawing.Point(287, 361);
+			this.btnSelectSelected.Location = new System.Drawing.Point(287, 389);
 			this.btnSelectSelected.Name = "btnSelectSelected";
 			this.btnSelectSelected.Size = new System.Drawing.Size(29, 23);
 			this.btnSelectSelected.TabIndex = 64;
@@ -200,7 +214,7 @@
 			// btnSelectAll
 			// 
 			this.btnSelectAll.Image = null;
-			this.btnSelectAll.Location = new System.Drawing.Point(287, 390);
+			this.btnSelectAll.Location = new System.Drawing.Point(287, 418);
 			this.btnSelectAll.Name = "btnSelectAll";
 			this.btnSelectAll.Size = new System.Drawing.Size(29, 23);
 			this.btnSelectAll.TabIndex = 63;
@@ -209,44 +223,45 @@
 			// popupPosition
 			// 
 			this.popupPosition.Image = ((System.Drawing.Image)(resources.GetObject("popupPosition.Image")));
-			this.popupPosition.Location = new System.Drawing.Point(374, 90);
+			this.popupPosition.Location = new System.Drawing.Point(374, 93);
 			this.popupPosition.Name = "popupPosition";
 			this.popupPosition.Size = new System.Drawing.Size(129, 23);
 			this.popupPosition.TabIndex = 62;
 			this.popupPosition.Text = "Not Visible";
+			this.popupPosition.Click += new System.EventHandler(this.popupPosition_Click);
 			// 
 			// badLabel6
 			// 
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel6.Dimmed = false;
 			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(314, 90);
+			this.badLabel6.Location = new System.Drawing.Point(314, 93);
 			this.badLabel6.Name = "badLabel6";
 			this.badLabel6.Size = new System.Drawing.Size(75, 23);
 			this.badLabel6.TabIndex = 61;
 			this.badLabel6.Text = "Position:";
 			// 
-			// btnFColumnSetupCancel
+			// btnColumnListCancel
 			// 
-			this.btnFColumnSetupCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnFColumnSetupCancel.Enabled = false;
-			this.btnFColumnSetupCancel.Image = null;
-			this.btnFColumnSetupCancel.Location = new System.Drawing.Point(423, 546);
-			this.btnFColumnSetupCancel.Name = "btnFColumnSetupCancel";
-			this.btnFColumnSetupCancel.Size = new System.Drawing.Size(80, 23);
-			this.btnFColumnSetupCancel.TabIndex = 53;
-			this.btnFColumnSetupCancel.Text = "Cancel";
+			this.btnColumnListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnColumnListCancel.Enabled = false;
+			this.btnColumnListCancel.Image = null;
+			this.btnColumnListCancel.Location = new System.Drawing.Point(423, 574);
+			this.btnColumnListCancel.Name = "btnColumnListCancel";
+			this.btnColumnListCancel.Size = new System.Drawing.Size(80, 23);
+			this.btnColumnListCancel.TabIndex = 53;
+			this.btnColumnListCancel.Text = "Cancel";
 			// 
-			// btnColumnSetupSave
+			// btnColumnListSave
 			// 
-			this.btnColumnSetupSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnColumnSetupSave.Enabled = false;
-			this.btnColumnSetupSave.Image = null;
-			this.btnColumnSetupSave.Location = new System.Drawing.Point(509, 546);
-			this.btnColumnSetupSave.Name = "btnColumnSetupSave";
-			this.btnColumnSetupSave.Size = new System.Drawing.Size(80, 23);
-			this.btnColumnSetupSave.TabIndex = 52;
-			this.btnColumnSetupSave.Text = "Save";
+			this.btnColumnListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnColumnListSave.Enabled = false;
+			this.btnColumnListSave.Image = null;
+			this.btnColumnListSave.Location = new System.Drawing.Point(509, 574);
+			this.btnColumnListSave.Name = "btnColumnListSave";
+			this.btnColumnListSave.Size = new System.Drawing.Size(80, 23);
+			this.btnColumnListSave.TabIndex = 52;
+			this.btnColumnListSave.Text = "Save";
 			// 
 			// toolSelectedColumns
 			// 
@@ -257,7 +272,7 @@
             this.toolSelectedTanks_MoveUp,
             this.toolSelectedTanks_MoveDown});
 			this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolSelectedColumns.Location = new System.Drawing.Point(337, 289);
+			this.toolSelectedColumns.Location = new System.Drawing.Point(337, 317);
 			this.toolSelectedColumns.Name = "toolSelectedColumns";
 			this.toolSelectedColumns.Size = new System.Drawing.Size(234, 25);
 			this.toolSelectedColumns.Stretch = true;
@@ -288,7 +303,7 @@
 			this.toolAllColumns.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolAllColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolAllColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolAllColumns.Location = new System.Drawing.Point(34, 289);
+			this.toolAllColumns.Location = new System.Drawing.Point(34, 317);
 			this.toolAllColumns.Name = "toolAllColumns";
 			this.toolAllColumns.Size = new System.Drawing.Size(234, 25);
 			this.toolAllColumns.Stretch = true;
@@ -299,7 +314,7 @@
 			// 
 			this.scrollSelectedColumns.BackColor = System.Drawing.Color.Transparent;
 			this.scrollSelectedColumns.Image = null;
-			this.scrollSelectedColumns.Location = new System.Drawing.Point(554, 314);
+			this.scrollSelectedColumns.Location = new System.Drawing.Point(554, 342);
 			this.scrollSelectedColumns.Name = "scrollSelectedColumns";
 			this.scrollSelectedColumns.ScrollElementsTotals = 100;
 			this.scrollSelectedColumns.ScrollElementsVisible = 20;
@@ -321,7 +336,7 @@
 			this.dataGridSelectedColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridSelectedColumns.Cursor = System.Windows.Forms.Cursors.Default;
 			this.dataGridSelectedColumns.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-			this.dataGridSelectedColumns.Location = new System.Drawing.Point(337, 314);
+			this.dataGridSelectedColumns.Location = new System.Drawing.Point(337, 342);
 			this.dataGridSelectedColumns.Name = "dataGridSelectedColumns";
 			this.dataGridSelectedColumns.ReadOnly = true;
 			this.dataGridSelectedColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -335,7 +350,7 @@
 			// 
 			this.scrollAllColumns.BackColor = System.Drawing.Color.Transparent;
 			this.scrollAllColumns.Image = null;
-			this.scrollAllColumns.Location = new System.Drawing.Point(251, 314);
+			this.scrollAllColumns.Location = new System.Drawing.Point(251, 342);
 			this.scrollAllColumns.Name = "scrollAllColumns";
 			this.scrollAllColumns.ScrollElementsTotals = 100;
 			this.scrollAllColumns.ScrollElementsVisible = 20;
@@ -356,7 +371,7 @@
 			this.dataGridAllColumns.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridAllColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridAllColumns.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridAllColumns.Location = new System.Drawing.Point(34, 314);
+			this.dataGridAllColumns.Location = new System.Drawing.Point(34, 342);
 			this.dataGridAllColumns.Name = "dataGridAllColumns";
 			this.dataGridAllColumns.ReadOnly = true;
 			this.dataGridAllColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -366,50 +381,51 @@
 			this.dataGridAllColumns.Size = new System.Drawing.Size(217, 202);
 			this.dataGridAllColumns.TabIndex = 45;
 			// 
-			// scrollColumnSetup
+			// scrollColumnList
 			// 
-			this.scrollColumnSetup.BackColor = System.Drawing.Color.Transparent;
-			this.scrollColumnSetup.Image = null;
-			this.scrollColumnSetup.Location = new System.Drawing.Point(251, 91);
-			this.scrollColumnSetup.Name = "scrollColumnSetup";
-			this.scrollColumnSetup.ScrollElementsTotals = 100;
-			this.scrollColumnSetup.ScrollElementsVisible = 20;
-			this.scrollColumnSetup.ScrollHide = false;
-			this.scrollColumnSetup.ScrollNecessary = true;
-			this.scrollColumnSetup.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.scrollColumnSetup.ScrollPosition = 0;
-			this.scrollColumnSetup.Size = new System.Drawing.Size(17, 126);
-			this.scrollColumnSetup.TabIndex = 43;
-			this.scrollColumnSetup.Text = "badScrollBar1";
+			this.scrollColumnList.BackColor = System.Drawing.Color.Transparent;
+			this.scrollColumnList.Image = null;
+			this.scrollColumnList.Location = new System.Drawing.Point(251, 93);
+			this.scrollColumnList.Name = "scrollColumnList";
+			this.scrollColumnList.ScrollElementsTotals = 100;
+			this.scrollColumnList.ScrollElementsVisible = 20;
+			this.scrollColumnList.ScrollHide = false;
+			this.scrollColumnList.ScrollNecessary = true;
+			this.scrollColumnList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+			this.scrollColumnList.ScrollPosition = 0;
+			this.scrollColumnList.Size = new System.Drawing.Size(17, 158);
+			this.scrollColumnList.TabIndex = 43;
+			this.scrollColumnList.Text = "badScrollBar1";
 			// 
-			// dataGridColumnSetup
+			// dataGridColumnList
 			// 
-			this.dataGridColumnSetup.AllowUserToAddRows = false;
-			this.dataGridColumnSetup.AllowUserToDeleteRows = false;
-			this.dataGridColumnSetup.AllowUserToOrderColumns = true;
-			this.dataGridColumnSetup.AllowUserToResizeRows = false;
-			this.dataGridColumnSetup.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.dataGridColumnSetup.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridColumnSetup.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridColumnSetup.Location = new System.Drawing.Point(34, 91);
-			this.dataGridColumnSetup.MultiSelect = false;
-			this.dataGridColumnSetup.Name = "dataGridColumnSetup";
-			this.dataGridColumnSetup.ReadOnly = true;
-			this.dataGridColumnSetup.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-			this.dataGridColumnSetup.RowHeadersVisible = false;
-			this.dataGridColumnSetup.ScrollBars = System.Windows.Forms.ScrollBars.None;
-			this.dataGridColumnSetup.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridColumnSetup.Size = new System.Drawing.Size(217, 126);
-			this.dataGridColumnSetup.TabIndex = 41;
+			this.dataGridColumnList.AllowUserToAddRows = false;
+			this.dataGridColumnList.AllowUserToDeleteRows = false;
+			this.dataGridColumnList.AllowUserToOrderColumns = true;
+			this.dataGridColumnList.AllowUserToResizeRows = false;
+			this.dataGridColumnList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.dataGridColumnList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridColumnList.Cursor = System.Windows.Forms.Cursors.Default;
+			this.dataGridColumnList.Location = new System.Drawing.Point(34, 93);
+			this.dataGridColumnList.MultiSelect = false;
+			this.dataGridColumnList.Name = "dataGridColumnList";
+			this.dataGridColumnList.ReadOnly = true;
+			this.dataGridColumnList.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+			this.dataGridColumnList.RowHeadersVisible = false;
+			this.dataGridColumnList.ScrollBars = System.Windows.Forms.ScrollBars.None;
+			this.dataGridColumnList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridColumnList.Size = new System.Drawing.Size(217, 158);
+			this.dataGridColumnList.TabIndex = 41;
+			this.dataGridColumnList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridColumnList_CellClick);
 			// 
-			// txtColumnSetupName
+			// txtColumnListName
 			// 
-			this.txtColumnSetupName.Image = null;
-			this.txtColumnSetupName.Location = new System.Drawing.Point(374, 62);
-			this.txtColumnSetupName.Name = "txtColumnSetupName";
-			this.txtColumnSetupName.PasswordChar = '\0';
-			this.txtColumnSetupName.Size = new System.Drawing.Size(129, 23);
-			this.txtColumnSetupName.TabIndex = 40;
+			this.txtColumnListName.Image = null;
+			this.txtColumnListName.Location = new System.Drawing.Point(374, 62);
+			this.txtColumnListName.Name = "txtColumnListName";
+			this.txtColumnListName.PasswordChar = '\0';
+			this.txtColumnListName.Size = new System.Drawing.Size(129, 23);
+			this.txtColumnListName.TabIndex = 40;
 			// 
 			// badLabel2
 			// 
@@ -422,32 +438,33 @@
 			this.badLabel2.TabIndex = 39;
 			this.badLabel2.Text = "Name:";
 			// 
-			// btnColumnSetupDelete
+			// btnColumnListDelete
 			// 
-			this.btnColumnSetupDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnColumnSetupDelete.Enabled = false;
-			this.btnColumnSetupDelete.Image = null;
-			this.btnColumnSetupDelete.Location = new System.Drawing.Point(337, 546);
-			this.btnColumnSetupDelete.Name = "btnColumnSetupDelete";
-			this.btnColumnSetupDelete.Size = new System.Drawing.Size(80, 23);
-			this.btnColumnSetupDelete.TabIndex = 37;
-			this.btnColumnSetupDelete.Text = "Delete";
+			this.btnColumnListDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnColumnListDelete.Enabled = false;
+			this.btnColumnListDelete.Image = null;
+			this.btnColumnListDelete.Location = new System.Drawing.Point(337, 574);
+			this.btnColumnListDelete.Name = "btnColumnListDelete";
+			this.btnColumnListDelete.Size = new System.Drawing.Size(80, 23);
+			this.btnColumnListDelete.TabIndex = 37;
+			this.btnColumnListDelete.Text = "Delete";
 			// 
-			// btnColumnSetupAdd
+			// btnColumnListAdd
 			// 
-			this.btnColumnSetupAdd.Image = null;
-			this.btnColumnSetupAdd.Location = new System.Drawing.Point(509, 62);
-			this.btnColumnSetupAdd.Name = "btnColumnSetupAdd";
-			this.btnColumnSetupAdd.Size = new System.Drawing.Size(60, 23);
-			this.btnColumnSetupAdd.TabIndex = 36;
-			this.btnColumnSetupAdd.Text = "Add";
+			this.btnColumnListAdd.Image = null;
+			this.btnColumnListAdd.Location = new System.Drawing.Point(509, 62);
+			this.btnColumnListAdd.Name = "btnColumnListAdd";
+			this.btnColumnListAdd.Size = new System.Drawing.Size(60, 23);
+			this.btnColumnListAdd.TabIndex = 36;
+			this.btnColumnListAdd.Text = "Add";
+			this.btnColumnListAdd.Click += new System.EventHandler(this.btnColumnListAdd_Click);
 			// 
 			// lblAllColumns
 			// 
 			this.lblAllColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblAllColumns.Dimmed = false;
 			this.lblAllColumns.Image = null;
-			this.lblAllColumns.Location = new System.Drawing.Point(34, 267);
+			this.lblAllColumns.Location = new System.Drawing.Point(34, 295);
 			this.lblAllColumns.Name = "lblAllColumns";
 			this.lblAllColumns.Size = new System.Drawing.Size(152, 23);
 			this.lblAllColumns.TabIndex = 49;
@@ -461,7 +478,7 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(300, 39);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(289, 92);
+			this.badGroupBox1.Size = new System.Drawing.Size(289, 94);
 			this.badGroupBox1.TabIndex = 38;
 			this.badGroupBox1.Text = "Selected Column Setup List";
 			// 
@@ -470,7 +487,7 @@
 			this.lblSelectedColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblSelectedColumns.Dimmed = false;
 			this.lblSelectedColumns.Image = null;
-			this.lblSelectedColumns.Location = new System.Drawing.Point(337, 267);
+			this.lblSelectedColumns.Location = new System.Drawing.Point(337, 295);
 			this.lblSelectedColumns.Name = "lblSelectedColumns";
 			this.lblSelectedColumns.Size = new System.Drawing.Size(149, 23);
 			this.lblSelectedColumns.TabIndex = 67;
@@ -483,9 +500,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupTanks.BackColor = System.Drawing.Color.Transparent;
 			this.groupTanks.Image = null;
-			this.groupTanks.Location = new System.Drawing.Point(17, 251);
+			this.groupTanks.Location = new System.Drawing.Point(17, 275);
 			this.groupTanks.Name = "groupTanks";
-			this.groupTanks.Size = new System.Drawing.Size(572, 282);
+			this.groupTanks.Size = new System.Drawing.Size(572, 284);
 			this.groupTanks.TabIndex = 44;
 			this.groupTanks.Text = "Columns";
 			// 
@@ -495,7 +512,7 @@
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(17, 39);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(266, 195);
+			this.badGroupBox2.Size = new System.Drawing.Size(266, 225);
 			this.badGroupBox2.TabIndex = 72;
 			this.badGroupBox2.Text = "Column Setup Lists";
 			// 
@@ -503,7 +520,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(607, 591);
+			this.ClientSize = new System.Drawing.Size(607, 614);
 			this.Controls.Add(this.ColumnSetupTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(607, 591);
@@ -518,7 +535,7 @@
 			this.toolSelectedColumns.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridAllColumns)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridColumnSetup)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridColumnList)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -532,8 +549,8 @@
 		private BadButton btnSelectAll;
 		private BadPopupBox popupPosition;
 		private BadLabel badLabel6;
-		private BadButton btnFColumnSetupCancel;
-		private BadButton btnColumnSetupSave;
+		private BadButton btnColumnListCancel;
+		private BadButton btnColumnListSave;
 		private System.Windows.Forms.ToolStrip toolSelectedColumns;
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveUp;
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveDown;
@@ -542,21 +559,22 @@
 		private System.Windows.Forms.DataGridView dataGridSelectedColumns;
 		private BadScrollBar scrollAllColumns;
 		private System.Windows.Forms.DataGridView dataGridAllColumns;
-		private BadScrollBar scrollColumnSetup;
-		private System.Windows.Forms.DataGridView dataGridColumnSetup;
-		private BadTextBox txtColumnSetupName;
+		private BadScrollBar scrollColumnList;
+		private System.Windows.Forms.DataGridView dataGridColumnList;
+		private BadTextBox txtColumnListName;
 		private BadLabel badLabel2;
-		private BadButton btnColumnSetupDelete;
-		private BadButton btnColumnSetupAdd;
+		private BadButton btnColumnListDelete;
+		private BadButton btnColumnListAdd;
 		private BadLabel lblAllColumns;
 		private BadGroupBox groupTanks;
 		private BadGroupBox badGroupBox1;
 		private BadLabel lblSelectedColumns;
-		private BadPopupBox popupColumnSetupType;
+		private BadPopupBox popupColumnListType;
 		private System.Windows.Forms.ImageList imageListToolStrip;
 		private BadLabel lblDefaultColumnSetup;
-		private BadButton btnSetAsDefaultColumnSetup;
+		private BadButton btnSetAsDefaultColumnList;
 		private BadGroupBox badGroupBox3;
 		private BadGroupBox badGroupBox2;
+		private BadLabel badLabel1;
 	}
 }
