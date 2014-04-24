@@ -266,22 +266,14 @@ namespace WotDBUpdater.Forms
 		#endregion
 
 		#region Data Grid
-		
-		private enum DataGridType
-		{
-			None = 0,
-			Overall = 1,
-			Tank = 2,
-			Battle = 3
-		}
 
-		private DataGridType DateGridSelected = DataGridType.None;
-		
+		private bool mainGridFormatting = false;
+
 		private void GridShowOverall()
 		{
 			try
 			{
-				DateGridSelected = DataGridType.None;
+				mainGridFormatting = false;
 				dataGridMain.DataSource = null;
 				if (!DB.CheckConnection()) return;
 				string sql =
@@ -292,7 +284,6 @@ namespace WotDBUpdater.Forms
 					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
 				dataGridMain.DataSource = DB.FetchData(sql);
-				DateGridSelected = DataGridType.Overall;
 				// Text cols
 				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -329,12 +320,12 @@ namespace WotDBUpdater.Forms
 			string newWhereSQL = "";
 			string newJoinSQL = "";
 			// Calc filter and set main menu title
-			if (tankFilterFavSelected != "")
+			if (tankFavListSelected != "")
 			{
-				toolItemTankFilter.Text = tankFilterFavSelected;
-				message = "Favourite list: " + tankFilterFavSelected;
+				toolItemTankFilter.Text = tankFavListSelected;
+				message = "Favourite list: " + tankFavListSelected;
 				string sql = "select id from favList where name=@name;";
-				DB.AddWithValue(ref sql, "@name", tankFilterFavSelected, DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref sql, "@name", tankFavListSelected, DB.SqlDataType.VarChar);
 				DataTable dt = DB.FetchData(sql);
 				int favListId = Convert.ToInt32(dt.Rows[0][0]);
 				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
@@ -410,7 +401,7 @@ namespace WotDBUpdater.Forms
 
 		private void GridShowTankInfo(string statusmessage = "")
 		{
-			DateGridSelected = DataGridType.None;
+			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
 			if (!DB.CheckConnection()) return;
 			// Get Tank filter
@@ -432,7 +423,6 @@ namespace WotDBUpdater.Forms
 				"ORDER BY sortorder";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			dataGridMain.DataSource = DB.FetchData(sql);
-			DateGridSelected = DataGridType.Tank;
 			// Text cols
 			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dataGridMain.Columns["Tank"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -463,7 +453,7 @@ namespace WotDBUpdater.Forms
 
 		private void GridShowBattle(string overrideStatus2Message = "")
 		{
-			DateGridSelected = DataGridType.None;
+			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
 			if (!DB.CheckConnection()) return;
 			// Create Battlefiler
@@ -556,8 +546,8 @@ namespace WotDBUpdater.Forms
 				
 			}
 			// populate datagrid
+			mainGridFormatting = true;
 			dataGridMain.DataSource = dt;
-			DateGridSelected = DataGridType.Battle;
 			// Hide cols
 			dataGridMain.Columns["battleResultColor"].Visible = false;
 			dataGridMain.Columns["battleSurviveColor"].Visible = false;
@@ -604,62 +594,61 @@ namespace WotDBUpdater.Forms
 		
 		private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			if (DateGridSelected == DataGridType.Battle)
+			if (mainGridFormatting)
 			{
 				bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1);
 				string col = dataGridMain.Columns[e.ColumnIndex].Name;
 				if (col.Equals("Tank"))
 				{
-				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-					string battleTime = dataGridMain["battleTime", e.RowIndex].Value.ToString();
-					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
-					// Check if this row is normal or footer
-					if (!footer) // normal line
-				{
-						cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
-				}
-					else // footer
-				{
-						cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+						string battleTime = dataGridMain["battleTime", e.RowIndex].Value.ToString();
+						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+						// Check if this row is normal or footer
+						if (!footer) // normal line
+					{
+							cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
+					}
+						else // footer
+					{
+							cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
+							dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+						}
+					}
+					// Battle Result color color
+					else if (col.Equals("Result"))
+					{
+						DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+						string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
+						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+						if (battlesCount > 1)
+					{
+							cell.ToolTipText = "Victory: " + dataGridMain["victory", e.RowIndex].Value.ToString() + Environment.NewLine +
+								"Draw: " + dataGridMain["draw", e.RowIndex].Value.ToString() + Environment.NewLine +
+								"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString() ;
 					}
 				}
-				// Battle Result color color
-				else if (col.Equals("Result"))
-				{
-					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-					string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
-					cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
-					if (battlesCount > 1)
-				{
-						cell.ToolTipText = "Victory: " + dataGridMain["victory", e.RowIndex].Value.ToString() + Environment.NewLine +
-							"Draw: " + dataGridMain["draw", e.RowIndex].Value.ToString() + Environment.NewLine +
-							"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString() ;
-				}
-			}
-			// Survived color and formatting
+				// Survived color and formatting
 				else if (col.Equals("Survived"))
-			{
-				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-					string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
-					cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-					int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
-					if (battlesCount > 1)
-				{
-						cell.ToolTipText = "Survived: " + dataGridMain["survivedcount", e.RowIndex].Value.ToString() + Environment.NewLine +
-							"Killed: " + dataGridMain["killedcount", e.RowIndex].Value.ToString();
-					}
-				}
-				// Foter desimal
-				if (footer)
 				{
 					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
-					if (col == "Tier" || col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits" || col == "Capture Points" || col == "Defense Points")
-				{
-						cell.Style.Format = "n1";
-				}
-
+						string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
+						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+						if (battlesCount > 1)
+					{
+							cell.ToolTipText = "Survived: " + dataGridMain["survivedcount", e.RowIndex].Value.ToString() + Environment.NewLine +
+								"Killed: " + dataGridMain["killedcount", e.RowIndex].Value.ToString();
+						}
+					}
+					// Foter desimal
+					if (footer)
+					{
+						DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+						if (col == "Tier" || col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits" || col == "Capture Points" || col == "Defense Points")
+					{
+							cell.Style.Format = "n1";
+					}
 				}
 			}
 		}
@@ -912,22 +901,6 @@ namespace WotDBUpdater.Forms
 			}
 		}
 
-		private void RefreshCurrentGrid()
-		{
-			if (toolItemViewOverall.Checked)
-			{
-				GridShowOverall();
-			}
-			else if (toolItemViewTankInfo.Checked)
-			{
-				GridShowTankInfo();
-			}
-			else if (toolItemViewBattles.Checked)
-			{
-				GridShowBattle();
-			}
-		}
-
 		private void ShowContent()
 		{
 			if (toolItemViewOverall.Checked)
@@ -945,8 +918,34 @@ namespace WotDBUpdater.Forms
 			}
 		}
 
+		private void SetTankFilterCheckedElements(string FavList)
+		{
+			toolItemTankFilter_Uncheck(true, true, true, true, false, false);
+			tankFavListSelected = FavList;
+			if (FavList != "") // Selected Favlist
+			{
+				// Check current favlist
+				for (int i = 1; i <= 10; i++)
+				{
+					ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+					if (menuItem.Text == FavList) menuItem.Checked = true;
+				}
+				// Uncheck all tanks
+				toolItemTankFilter_All.Checked = false;
+			}
+		}
+
 		private void toolItemViewSelected_Click(object sender, EventArgs e)
 		{
+			// First remember current Tank Filter selection
+			if (toolItemViewTankInfo.Checked)
+			{
+				tankFavListTankView = tankFavListSelected;
+			}
+			else if (toolItemViewBattles.Checked)
+			{
+				tankFavListBattleView = tankFavListSelected;
+			}
 			ToolStripButton menuItem = (ToolStripButton)sender;
 			if (!menuItem.Checked)
 			{
@@ -967,13 +966,18 @@ namespace WotDBUpdater.Forms
 				else if (toolItemViewTankInfo.Checked)
 				{
 					InfoPanelSlideStart(false);
+					// Apply last selected Tank Filter
+					SetTankFilterCheckedElements(tankFavListTankView);
 					toolItemTankFilter.Visible = true;
 					toolItemColumnSelect.Visible = true;
+					
 				}
 				else if (toolItemViewBattles.Checked)
 				{
 					InfoPanelSlideStart(false);
 					toolItemBattles.Visible = true;
+					// Apply last selected Tank Filter
+					SetTankFilterCheckedElements(tankFavListBattleView);
 					toolItemTankFilter.Visible = true;
 					toolItemColumnSelect.Visible = true;
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
@@ -1010,8 +1014,10 @@ namespace WotDBUpdater.Forms
 		}
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
-		private string tankFilterFavSelected = ""; // To keep track on fav list selected
-
+		private string tankFavListSelected = ""; // To keep track on fav list selected for tank view
+		private string tankFavListTankView = ""; // Remember fav list for tank view, "" == All tanks
+		private string tankFavListBattleView = ""; // Remember fav list for battle view, "" == All tanks
+		
 		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type, bool favList, bool reopenMenu = true, bool autoRefreshGrid = true)
 		{
 			if (favList)
@@ -1020,7 +1026,6 @@ namespace WotDBUpdater.Forms
 			}
 			if (tier)
 			{
-				toolItemTankFilter_All.Checked = true;
 				toolItemTankFilter_Tier1.Checked = false;
 				toolItemTankFilter_Tier2.Checked = false;
 				toolItemTankFilter_Tier3.Checked = false;
@@ -1074,11 +1079,11 @@ namespace WotDBUpdater.Forms
 			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
 			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
-			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0 && tankFilterFavSelected == "");
+			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0 && tankFavListSelected == "");
 			// Reopen menu item exept for "all tanks"
 			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
-			if (autoRefreshGrid) RefreshCurrentGrid();
+			if (autoRefreshGrid) ShowContent();
 			
 		}
 
@@ -1090,7 +1095,7 @@ namespace WotDBUpdater.Forms
 				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
 				menuItem.Checked = false;
 			}
-			tankFilterFavSelected = "";
+			tankFavListSelected = "";
 		}
 
 		private void toolItem_Fav_Clicked(object sender, EventArgs e)
@@ -1100,9 +1105,9 @@ namespace WotDBUpdater.Forms
 			{
 				toolItemTankFavList_Uncheck(); // Uncheck previous fav list selection
 				menuItem.Checked = true; // check fav list menu select
-				tankFilterFavSelected = menuItem.Text; // set current fav list selected
+				tankFavListSelected = menuItem.Text; // set current fav list selected
 				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter, no auto refresh grid
-				RefreshCurrentGrid();
+				ShowContent();
 			}
 		}
 
@@ -1125,7 +1130,7 @@ namespace WotDBUpdater.Forms
 			toolItemTankFilter.ShowDropDown();
 			parentMenuItem.ShowDropDown();
 			// Refresh grid
-			RefreshCurrentGrid();
+			ShowContent();
 		}
 
 		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
@@ -1138,7 +1143,6 @@ namespace WotDBUpdater.Forms
 			GetFavList(); // Reload fav list items
 
 		}
-
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
@@ -1219,11 +1223,6 @@ namespace WotDBUpdater.Forms
 			SetListener();
 		}
 
-		private void toolItemSettingsDb_Click(object sender, EventArgs e)
-		{
-			
-		}
-
 		private string AssemblyVersion
 		{
 			get
@@ -1233,6 +1232,7 @@ namespace WotDBUpdater.Forms
 					Assembly.GetExecutingAssembly().GetName().Version.MinorRevision.ToString() + ")";
 			}
 		}
+
 		private void toolItemHelp_Click(object sender, EventArgs e)
 		{
 			//Form frm = new Forms.Help.About();

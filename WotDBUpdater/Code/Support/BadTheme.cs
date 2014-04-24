@@ -885,7 +885,8 @@ class BadProgressBar : BadThemeControl
 		Double progress = Value;
 		if (progress > ValueMax) progress = ValueMax;
 		if (progress < ValueMin) progress = ValueMin;
-		progress = (progress / (ValueMax - ValueMin)) * (Width - 8);
+		if ((ValueMax - ValueMin) != 0)
+			progress = (progress / (ValueMax - ValueMin)) * (Width - 8);
 		brushBackColor = new SolidBrush(ColorTheme.FormBorderBlue);
 		grapichObject.FillRectangle(brushBackColor, 4, 4, Convert.ToInt32(progress), Height - 8);
 		// Draw
