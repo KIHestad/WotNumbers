@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 6; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 7; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -98,6 +98,10 @@ namespace WotDBUpdater.Code
 							" foreign key (columnSelectionId) references columnSelection (id), " +
 							" foreign key (columnListId) references columnList (id) " +
 							") ";
+					break;
+				case 7:
+					mssql = "ALTER TABLE columnSelection ADD colGroup varchar(50) NULL; ";
+					sqlite = mssql;
 					break;
 				default:
 					break;
