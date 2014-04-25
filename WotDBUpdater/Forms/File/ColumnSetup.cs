@@ -119,16 +119,16 @@ namespace WotDBUpdater.Forms.File
 
 		private void popupColumnSetupType_Click(object sender, EventArgs e)
 		{
-			string colSelectedSetupType = Code.PopupGrid.Show("Select Column Setup Type", Code.PopupGrid.PopupGridType.List, "Tank View,Battle View");
-			if (colSelectedSetupType != "")
-			{
-				popupColumnListType.Text = colSelectedSetupType;
-				if (colSelectedSetupType == "Tank View")
-					colSetupType = ColumnSetupType.TankView;
-				else if (colSelectedSetupType == "Battle View")
-					colSetupType = ColumnSetupType.BattleView;
-				ShowColumnSetupList();
-			}
+			Code.DropDownGrid.Show(popupColumnListType, Code.DropDownGrid.DropDownGridType.List, "Tank View,Battle View");
+		}
+
+		private void popupColumnListType_TextChanged(object sender, EventArgs e)
+		{
+			if (popupColumnListType.Text == "Tank View")
+				colSetupType = ColumnSetupType.TankView;
+			else if (popupColumnListType.Text == "Battle View")
+				colSetupType = ColumnSetupType.BattleView;
+			ShowColumnSetupList();
 		}
 
 		private string colTypeText = "";
@@ -318,6 +318,8 @@ namespace WotDBUpdater.Forms.File
 			DB.ExecuteNonQuery(sql);
 			ShowColumnSetupList(SelectedColumnListId);
 		}
+
+		
 
 
 

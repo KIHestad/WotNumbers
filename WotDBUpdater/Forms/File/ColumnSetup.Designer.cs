@@ -33,11 +33,11 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColumnSetupTheme = new BadForm();
+			this.popupColumnListType = new BadDropDownBox();
 			this.badLabel1 = new BadLabel();
 			this.lblDefaultColumnSetup = new BadLabel();
 			this.btnSetAsDefaultColumnList = new BadButton();
 			this.badGroupBox3 = new BadGroupBox();
-			this.popupColumnListType = new BadPopupBox();
 			this.btnRemoveAll = new BadButton();
 			this.btnRemoveSelected = new BadButton();
 			this.btnSelectSelected = new BadButton();
@@ -80,11 +80,11 @@
 			// 
 			// ColumnSetupTheme
 			// 
+			this.ColumnSetupTheme.Controls.Add(this.popupColumnListType);
 			this.ColumnSetupTheme.Controls.Add(this.badLabel1);
 			this.ColumnSetupTheme.Controls.Add(this.lblDefaultColumnSetup);
 			this.ColumnSetupTheme.Controls.Add(this.btnSetAsDefaultColumnList);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox3);
-			this.ColumnSetupTheme.Controls.Add(this.popupColumnListType);
 			this.ColumnSetupTheme.Controls.Add(this.btnRemoveAll);
 			this.ColumnSetupTheme.Controls.Add(this.btnRemoveSelected);
 			this.ColumnSetupTheme.Controls.Add(this.btnSelectSelected);
@@ -110,7 +110,7 @@
 			this.ColumnSetupTheme.Controls.Add(this.lblSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.groupTanks);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox2);
-			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
+			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.ColumnSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColumnSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColumnSetupTheme.FormFooter = false;
@@ -129,6 +129,17 @@
 			this.ColumnSetupTheme.TabIndex = 0;
 			this.ColumnSetupTheme.Text = "Column Setup";
 			this.ColumnSetupTheme.TitleHeight = 26;
+			// 
+			// popupColumnListType
+			// 
+			this.popupColumnListType.Image = null;
+			this.popupColumnListType.Location = new System.Drawing.Point(80, 61);
+			this.popupColumnListType.Name = "popupColumnListType";
+			this.popupColumnListType.Size = new System.Drawing.Size(188, 23);
+			this.popupColumnListType.TabIndex = 74;
+			this.popupColumnListType.Text = "badDropDownBox1";
+			this.popupColumnListType.TextChanged += new System.EventHandler(this.popupColumnListType_TextChanged);
+			this.popupColumnListType.Click += new System.EventHandler(this.popupColumnSetupType_Click);
 			// 
 			// badLabel1
 			// 
@@ -173,16 +184,6 @@
 			this.badGroupBox3.Size = new System.Drawing.Size(289, 110);
 			this.badGroupBox3.TabIndex = 69;
 			this.badGroupBox3.Text = "Default Column Setup";
-			// 
-			// popupColumnListType
-			// 
-			this.popupColumnListType.Image = ((System.Drawing.Image)(resources.GetObject("popupColumnListType.Image")));
-			this.popupColumnListType.Location = new System.Drawing.Point(79, 62);
-			this.popupColumnListType.Name = "popupColumnListType";
-			this.popupColumnListType.Size = new System.Drawing.Size(189, 23);
-			this.popupColumnListType.TabIndex = 68;
-			this.popupColumnListType.Text = null;
-			this.popupColumnListType.Click += new System.EventHandler(this.popupColumnSetupType_Click);
 			// 
 			// btnRemoveAll
 			// 
@@ -569,12 +570,12 @@
 		private BadGroupBox groupTanks;
 		private BadGroupBox badGroupBox1;
 		private BadLabel lblSelectedColumns;
-		private BadPopupBox popupColumnListType;
 		private System.Windows.Forms.ImageList imageListToolStrip;
 		private BadLabel lblDefaultColumnSetup;
 		private BadButton btnSetAsDefaultColumnList;
 		private BadGroupBox badGroupBox3;
 		private BadGroupBox badGroupBox2;
 		private BadLabel badLabel1;
+		private BadDropDownBox popupColumnListType;
 	}
 }

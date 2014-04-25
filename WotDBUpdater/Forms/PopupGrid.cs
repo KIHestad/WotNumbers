@@ -139,6 +139,11 @@ namespace WotDBUpdater.Forms
 			ScrollGrid();
 		}
 
+		private void PopupGrid_Leave(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
 		
 	}
 }

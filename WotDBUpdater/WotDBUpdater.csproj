@@ -102,6 +102,7 @@
   <ItemGroup>
     <Compile Include="Code\ImportWotDossier2DB.cs" />
     <Compile Include="Code\Support\DB.cs" />
+    <Compile Include="Code\Support\DropDownGrid.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
@@ -114,6 +115,12 @@
     <Compile Include="Code\Support\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\ViewRange.cs" />
+    <Compile Include="Forms\DropDownGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DropDownGrid.Designer.cs">
+      <DependentUpon>DropDownGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\File\AddPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -229,6 +236,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Code\TankData.cs" />
+    <EmbeddedResource Include="Forms\DropDownGrid.resx">
+      <DependentUpon>DropDownGrid.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\AddPlayer.resx">
       <DependentUpon>AddPlayer.cs</DependentUpon>
     </EmbeddedResource>

@@ -1087,6 +1087,60 @@ class BadPopupBox : BadThemeControl
 
 }
 
+class BadDropDownBox : BadThemeControl
+{
+
+	public BadDropDownBox()
+	{
+		AllowTransparent();
+	}
+
+	protected override void OnTextChanged(EventArgs e)
+	{
+		base.OnTextChanged(e);
+		Invalidate();
+	}
+
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
+		SolidBrush brushBackColor;
+		if (MouseState == State.MouseDown)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+		else if (MouseState == State.MouseOver)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
+		else
+			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		// Text
+		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont));
+		// Overwrite text to right to avoid hiding dropdown icon
+		if (MouseState == State.MouseDown)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+		else if (MouseState == State.MouseOver)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
+		else
+			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+		// DropDows Arrow Area
+		grapichObject.FillRectangle(brushBackColor, Width - 22, 0, 22, Height);
+		// DropDown Arrow
+		brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
+		int ArrowY = (Height / 2) + 2;
+		int ArrowX = 12;
+		grapichObject.FillRectangle(brushBackColor, Width - ArrowX, ArrowY, 1, 1); // Down Arrow last pixel
+		Pen penArrow = new Pen(ColorTheme.ScrollbarArrow);
+		// grapichObject.FillRectangle(brushBackColor, 8, bottomArrowY, 1, 1); // Down Arrow last pixel
+		for (int i = 1; i <= 4; i++)
+		{
+			grapichObject.DrawLine(penArrow, Width - ArrowX - i, ArrowY - i, Width - ArrowX + i, ArrowY - i); // Bottom arrow
+		}
+		// Dropdown icon
+		DrawIcon(HorizontalAlignment.Right, 0, -2);
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
+}
+
+
 class BadScrollBar : BadThemeControl
 {
 	private bool _ScrollNecessary = true;

@@ -139,8 +139,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void cboSelectPlayer_Click(object sender, EventArgs e)
 		{
-			string newValue = Code.PopupGrid.Show("Select Player", Code.PopupGrid.PopupGridType.Sql, "SELECT name FROM player ORDER BY name");
-			if (Code.PopupGrid.ValueSelected) cboSelectPlayer.Text = newValue;
+			Code.DropDownGrid.Show(cboSelectPlayer, Code.DropDownGrid.DropDownGridType.Sql, "SELECT name FROM player ORDER BY name");
 		}
 
 		private void ApplicationSetting_Activated(object sender, EventArgs e)
