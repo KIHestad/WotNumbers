@@ -13,6 +13,8 @@ namespace WotDBUpdater.Forms.File
 {
 	public partial class ColumnSetup : Form
 	{
+
+		#region Init
 		
 		public enum ColumnSetupType
 		{
@@ -20,20 +22,21 @@ namespace WotDBUpdater.Forms.File
 			BattleView = 2
 		}
 
-		private ColumnSetupType colSetupType;
-
 		public ColumnSetup(ColumnSetupType colSelectedSetupType)
 		{
 			InitializeComponent();
 			if (colSelectedSetupType == ColumnSetupType.TankView)
+			{
 				popupColumnListType.Text = "Tank View";
-			else if (colSelectedSetupType == ColumnSetupType.BattleView)
-				popupColumnListType.Text = "Battle View";
-			colSetupType = colSelectedSetupType;
-			
-		}
+				colType = 1;
+			}
 
-		#region Load and Style
+			else if (colSelectedSetupType == ColumnSetupType.BattleView)
+			{
+				popupColumnListType.Text = "Battle View";
+				colType = 2;
+			}		
+		}
 
 		private void ColumnSetup_Load(object sender, EventArgs e)
 		{
@@ -50,8 +53,66 @@ namespace WotDBUpdater.Forms.File
 			StyleDataGrid(dataGridSelectedColumns);
 			// Show content
 			ShowColumnSetupList();
+			ShowAllColumn();
+			// Mouse scrolling
+			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
 		}
 
+		#endregion
+
+		#region Resize
+
+		private void ColumnList_Resize(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
+		private void ResizeNow()
+		{
+			// Resize elements X
+			int gridX = (groupTanks.Width - ((toolAllColumns.Left - groupTanks.Left) * 2) - 60) / 2; // total resizeble area
+			toolAllColumns.Width = gridX;
+			toolSelectedColumns.Width = gridX;
+			dataGridAllColumns.Width = gridX - scrollAllColumns.Width;
+			dataGridSelectedColumns.Width = gridX - scrollSelectedColumns.Width;
+			scrollAllColumns.Left = dataGridAllColumns.Left + dataGridAllColumns.Width;
+			// Move middle - right section X
+			int rightSectionX = toolAllColumns.Left + toolAllColumns.Width + 60;
+			int middleSectionX = toolAllColumns.Left + toolAllColumns.Width + ((60 - btnSelectAll.Width) / 2);
+			btnSelectAll.Left = middleSectionX;
+			btnSelectSelected.Left = middleSectionX;
+			btnRemoveAll.Left = middleSectionX;
+			btnRemoveSelected.Left = middleSectionX;
+			lblSelectedColumns.Left = rightSectionX;
+			toolSelectedColumns.Left = rightSectionX;
+			dataGridSelectedColumns.Left = rightSectionX;
+			scrollSelectedColumns.Left = dataGridSelectedColumns.Left + dataGridSelectedColumns.Width;
+			// Resize elements Y
+			int gridY = groupTanks.Height - (toolAllColumns.Top + toolAllColumns.Height - groupTanks.Top) - 15;
+			dataGridAllColumns.Height = gridY;
+			dataGridSelectedColumns.Height = gridY;
+			scrollAllColumns.Height = gridY;
+			scrollSelectedColumns.Height = gridY;
+			// Move buttons
+			int buttonsY = groupTanks.Height / 2 + groupTanks.Top + 20;
+			btnSelectSelected.Top = buttonsY - 60;
+			btnSelectAll.Top = buttonsY - 30;
+			btnRemoveAll.Top = buttonsY + 0;
+			btnRemoveSelected.Top = buttonsY + 30;
+			// Scroll 
+			scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
+			scrollSelectedColumns.ScrollElementsVisible = dataGridSelectedColumns.DisplayedRowCount(false);
+		}
+
+		private void ColumnList_ResizeEnd(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
+		#endregion
+		
+		#region Style
+				
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
 			public StripRenderer()
@@ -117,6 +178,8 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
+		#region ColumnList
+
 		private void popupColumnSetupType_Click(object sender, EventArgs e)
 		{
 			string colSelectedSetupType = Code.PopupGrid.Show("Select Column Setup Type", Code.PopupGrid.PopupGridType.List, "Tank View,Battle View");
@@ -124,10 +187,12 @@ namespace WotDBUpdater.Forms.File
 			{
 				popupColumnListType.Text = colSelectedSetupType;
 				if (colSelectedSetupType == "Tank View")
-					colSetupType = ColumnSetupType.TankView;
+					colType = 1;
 				else if (colSelectedSetupType == "Battle View")
-					colSetupType = ColumnSetupType.BattleView;
+					colType = 2;
+				colTypeText = popupColumnListType.Text;
 				ShowColumnSetupList();
+				ShowAllColumn();
 			}
 		}
 
@@ -136,16 +201,6 @@ namespace WotDBUpdater.Forms.File
 		private DataTable dtColumnList = new DataTable();
 		private void ShowColumnSetupList(int ColumListId = 0)
 		{
-			if (colSetupType == ColumnSetupType.TankView)
-			{
-				colType = 1;
-				colTypeText = "Tank View";
-			}
-			else if (colSetupType == ColumnSetupType.BattleView)
-			{
-				colType = 2;
-				colTypeText = "Battle View";
-			}
 			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol from columnList where colType=@colType order by position; ";
 			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
 			dtColumnList = DB.FetchData(sql);
@@ -159,10 +214,10 @@ namespace WotDBUpdater.Forms.File
 			btnColumnListCancel.Enabled = false;
 			btnColumnListSave.Enabled = false;
 			btnColumnListDelete.Enabled = false;
-			btnRemoveAll.Enabled = buttonsEnabled;
-			btnRemoveSelected.Enabled = buttonsEnabled;
-			btnSelectAll.Enabled = buttonsEnabled;
-			btnSelectSelected.Enabled = buttonsEnabled;
+			btnRemoveAll.Enabled = false;
+			btnRemoveSelected.Enabled = false;
+			btnSelectAll.Enabled = false;
+			btnSelectSelected.Enabled = false;
 			SelectColumnList(ColumListId);
 			// Connect to scrollbar
 			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
@@ -205,6 +260,10 @@ namespace WotDBUpdater.Forms.File
 				btnColumnListDelete.Enabled = !sysCol;
 				btnColumnListCancel.Enabled = !sysCol;
 				btnColumnListSave.Enabled = !sysCol;
+				btnRemoveAll.Enabled = !sysCol;
+				btnRemoveSelected.Enabled = !sysCol;
+				btnSelectAll.Enabled = !sysCol;
+				btnSelectSelected.Enabled = !sysCol;
 				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
 				popupPosition.Text = dataGridColumnList.SelectedRows[0].Cells["Pos"].Value.ToString();
 				//GetSelectedTanksFromFavList(); // Get tanks for this fav list now
@@ -306,8 +365,7 @@ namespace WotDBUpdater.Forms.File
 			// Refresh Grid
 			ShowColumnSetupList(SelectedColumnListId);
 		}
-
-
+		
 		private void btnSetAsDefaultColumnList_Click(object sender, EventArgs e)
 		{
 			// todo: check for unsaved changes first
@@ -319,7 +377,173 @@ namespace WotDBUpdater.Forms.File
 			ShowColumnSetupList(SelectedColumnListId);
 		}
 
+		private void scrollColumnList_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (dataGridColumnList.RowCount > 0)
+				dataGridColumnList.FirstDisplayedScrollingRowIndex = scrollColumnList.ScrollPosition;
+		}
 
+		private void scrollColumnList_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (dataGridColumnList.RowCount > 0)
+				dataGridColumnList.FirstDisplayedScrollingRowIndex = scrollColumnList.ScrollPosition;
+		}
+
+		#endregion
+
+		#region All Columns
+
+		private bool allTanksColumnSetupDone = false;
+		private void ShowAllColumn()
+		{
+			// Get colGroups to show in toolbar
+			string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL order by position; "; // First get all sorted by position
+			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			// Now get unique values based
+			List<string> colGroup = new List<string>();
+			foreach (DataRow dr in dt.Rows)
+			{
+				if (!colGroup.Contains(dr[0].ToString())) colGroup.Add(dr[0].ToString());
+			}
+			int colGroupRow = -1; // Start on -1, first element will be -1 = All tanks, should be ignored, second = 0 -> first group button -> element [0] from select
+			foreach (ToolStripButton button in toolAllColumns.Items)
+			{
+				if (colGroupRow >= 0 && colGroup.Count > colGroupRow)
+				{
+					button.Visible = true;
+					button.Text = colGroup[colGroupRow];
+				}
+				else
+				{
+					if (colGroupRow >= 0) button.Visible = false;
+				}
+				colGroupRow++;
+			}
+			// Select All button
+			toolAvailableCol_UnselectAll();
+			toolAvaliableCol_All.Checked = true;
+			// Show content now
+			FilterAllColumn();
+		}
+
+		private void FilterAllColumn()
+		{
+			string sql = "SELECT position as '#', name as 'Name', description as 'Description', id FROM columnSelection WHERE colType=@colType ";
+			// Check filter
+			string colGroup = "All";
+			foreach (ToolStripButton button in toolAllColumns.Items)
+			{
+				if (button.Checked) colGroup=button.Text;
+			}
+			if (colGroup != "All") sql += "AND colGroup=@colGroup ";
+			sql += "ORDER BY position; ";
+			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colGroup", colGroup, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			dataGridAllColumns.DataSource = dt;
+			if (!allTanksColumnSetupDone)
+			{
+				allTanksColumnSetupDone = true;
+				dataGridAllColumns.Columns["#"].Width = 20;
+				dataGridAllColumns.Columns["description"].Width = 300;
+				dataGridAllColumns.Columns["id"].Visible = false;
+			}
+			// Connect to scrollbar
+			scrollAllColumns.ScrollElementsTotals = dt.Rows.Count;
+			scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
+		}
+
+		private void toolAvaliableCol_All_Click(object sender, EventArgs e)
+		{
+			toolAvailableCol_UnselectAll();
+			toolAvaliableCol_All.Checked = true;
+			FilterAllColumn();
+		}
+
+		private void toolAvaliableCol_Group_Click(object sender, EventArgs e)
+		{
+			toolAvailableCol_UnselectAll();
+			ToolStripButton button = (ToolStripButton)sender;
+			button.Checked = true;
+			FilterAllColumn();
+		}
+
+		private void toolAvailableCol_UnselectAll()
+		{
+			foreach (ToolStripButton button in toolAllColumns.Items)
+			{
+				button.Checked = false;
+			}
+		}
+
+		private bool scrollingAllColumns = false;
+		private void scrollAllColumns_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (dataGridAllColumns.RowCount > 0)
+			{
+				scrollingAllColumns = true;
+				dataGridAllColumns.FirstDisplayedScrollingRowIndex = scrollAllColumns.ScrollPosition;
+			}
+
+		}
+
+		private void scrollAllColumns_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (dataGridAllColumns.RowCount > 0 && scrollingAllColumns)
+			{
+				int currentFirstRow = dataGridAllColumns.FirstDisplayedScrollingRowIndex;
+				dataGridAllColumns.FirstDisplayedScrollingRowIndex = scrollAllColumns.ScrollPosition;
+				if (currentFirstRow != dataGridAllColumns.FirstDisplayedScrollingRowIndex) Refresh();
+			}
+
+		}
+
+		private void scrollAllColumns_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingAllColumns = false;
+		}
+
+		// Enable mouse wheel scrolling for datagrid
+		private void dataGridAllColumns_MouseWheel(object sender, MouseEventArgs e)
+		{
+			try
+			{
+				// scroll in grid from mouse wheel
+				int currentIndex = this.dataGridAllColumns.FirstDisplayedScrollingRowIndex;
+				int scrollLines = SystemInformation.MouseWheelScrollLines;
+				if (e.Delta > 0)
+				{
+					this.dataGridAllColumns.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+				}
+				else if (e.Delta < 0)
+				{
+					this.dataGridAllColumns.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+				}
+				// move scrollbar
+				MoveAllColumnsScrollBar();
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+		}
+
+		private void MoveAllColumnsScrollBar()
+		{
+			scrollAllColumns.ScrollPosition = dataGridAllColumns.FirstDisplayedScrollingRowIndex;
+		}
+
+		private void dataGridAllTanks_SelectionChanged(object sender, EventArgs e)
+		{
+			MoveAllColumnsScrollBar();
+		}
+
+
+
+		#endregion
+
+		
 
 	}
 }
