@@ -102,6 +102,7 @@
   <ItemGroup>
     <Compile Include="Code\ImportWotDossier2DB.cs" />
     <Compile Include="Code\Support\DB.cs" />
+    <Compile Include="Code\Support\DropDownGrid.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
@@ -114,11 +115,23 @@
     <Compile Include="Code\Support\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\ViewRange.cs" />
+    <Compile Include="Forms\DropDownGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DropDownGrid.Designer.cs">
+      <DependentUpon>DropDownGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\File\AddPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\File\AddPlayer.Designer.cs">
       <DependentUpon>AddPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\File\ColumnSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\ColumnSetup.Designer.cs">
+      <DependentUpon>ColumnSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\File\DatabaseNew.cs">
       <SubType>Form</SubType>
@@ -223,8 +236,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Code\TankData.cs" />
+    <EmbeddedResource Include="Forms\DropDownGrid.resx">
+      <DependentUpon>DropDownGrid.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\AddPlayer.resx">
       <DependentUpon>AddPlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\File\ColumnSetup.resx">
+      <DependentUpon>ColumnSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\DatabaseNew.resx">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
@@ -329,9 +348,14 @@
     <Content Include="DevDocs\Img\InfoPanel\bg5_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
     <Content Include="DevDocs\Img\logo5.png" />
+    <Content Include="DevDocs\Img\SystemImages\dropdownarrrow.png" />
+    <Content Include="DevDocs\Img\SystemImages\popup.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\arrow_down.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\arrow_up.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
     <Content Include="DevDocs\DatabaseLog\createProc.txt" />
+    <Content Include="DevDocs\Img\ToolStripIcons\col_setup.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_china.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_france.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_germany.png" />

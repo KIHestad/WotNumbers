@@ -51,5 +51,15 @@ namespace WotDBUpdater.Forms.Test
 		{
 			txtX.Text = badScrollBar2.ScrollPosition.ToString();
 		}
+
+		private void badDropDownBox1_Click(object sender, EventArgs e)
+		{
+			Code.DropDownGrid.Show(badDropDownBox1, Code.DropDownGrid.DropDownGridType.List, "Dette,er,en,test,for,scrollbar,7,8,9,10,11,12,13");
+		}
+
+		private void badDropDownBox1_TextChanged(object sender, EventArgs e)
+		{
+			Code.MsgBox.Show("Txt changed: " + badDropDownBox1.Text);
+		}
 	}
 }

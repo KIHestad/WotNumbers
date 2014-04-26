@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -119,6 +120,10 @@ namespace WotDBUpdater.Forms.File
 			btnFavListCancel.Enabled = buttonsEnabled;
 			btnFavListSave.Enabled = buttonsEnabled;
 			btnFavListDelete.Enabled = buttonsEnabled;
+			btnRemoveAll.Enabled = buttonsEnabled;
+			btnRemoveSelected.Enabled = buttonsEnabled;
+			btnSelectAll.Enabled = buttonsEnabled;
+			btnSelectSelected.Enabled = buttonsEnabled;
 			SelectFavList(FavListId);
 			// Connect to scrollbar
 			scrollFavList.ScrollElementsTotals = dt.Rows.Count;
@@ -202,8 +207,7 @@ namespace WotDBUpdater.Forms.File
 		private void popupPosition_Click(object sender, EventArgs e)
 		{
 			string posList = "Not Visible,1,2,3,4,5,6,7,8,9,10";
-			string newval = Code.PopupGrid.Show("Select Position", Code.PopupGrid.PopupGridType.List, posList);
-			if (newval != "") popupPosition.Text = newval;
+			Code.DropDownGrid.Show(popupPosition, Code.DropDownGrid.DropDownGridType.List, posList);
 		}
 
 		private void btnFavListDelete_Click(object sender, EventArgs e)
@@ -251,6 +255,8 @@ namespace WotDBUpdater.Forms.File
 			{
 				txtFavListName.Text = "";
 				popupPosition.Text = "Not Visible";
+				dtFavListTank.Clear();
+				dataGridSelectedTanks.DataSource = dtFavListTank; // empty list
 			}
 		}
 
@@ -268,11 +274,11 @@ namespace WotDBUpdater.Forms.File
 			Code.MsgBox.Button answer = MsgBox.Show(message,"Save existing favourite tank list", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
-				SaveFavList();
+				SaveFavList(SelectedFavListId);
 			}
 		}
 
-		private void SaveFavList()
+		private void SaveFavList(int GoToFavList)
 		{
 			string newFavListName = txtFavListName.Text.Trim();
 			string newFavListPos = popupPosition.Text;
@@ -310,7 +316,7 @@ namespace WotDBUpdater.Forms.File
 			DB.ExecuteNonQuery(sql);
 
 			// Refresh Grid
-			ShowFavList();
+			ShowFavList(GoToFavList);
 		}
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
@@ -402,7 +408,7 @@ namespace WotDBUpdater.Forms.File
 				dataGridSelectedTanks.Columns["Tier"].Width = 40;
 				dataGridSelectedTanks.Columns["Type"].Width = 40;
 				dataGridSelectedTanks.Columns["Nation"].Width = 60;
-				dataGridSelectedTanks.Columns["Sort#"].Width = 40;
+				dataGridSelectedTanks.Columns["Sort#"].Visible = false;
 				dataGridSelectedTanks.Columns["ID"].Visible = false;
 			}
 		}
@@ -414,6 +420,11 @@ namespace WotDBUpdater.Forms.File
 			// Connect to scrollbar
 			scrollSelectedTanks.ScrollElementsTotals = dtFavListTank.Rows.Count;
 			scrollSelectedTanks.ScrollElementsVisible = dataGridSelectedTanks.DisplayedRowCount(false);
+			// No sorting for Selected Tanks Data Grid
+			foreach (DataGridViewColumn col in dataGridSelectedTanks.Columns)
+			{
+				col.SortMode = DataGridViewColumnSortMode.NotSortable;
+			}
 		}
 
 		private void AddTankToFavList(bool All = false)
@@ -483,6 +494,85 @@ namespace WotDBUpdater.Forms.File
 			}
 		}
 
+		private void MoveSelectedTanks(bool MoveDown) // true = move down, false = move up
+		{
+			int selectedRowCount = dataGridSelectedTanks.SelectedRows.Count;
+			if (selectedRowCount > 0)
+			{
+				// Remember scroll pos
+				int FirstVisibleRowInGrid = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+				// Get ready
+				List<int> selectedTanks = new List<int>();
+				int lastRow = dataGridSelectedTanks.Rows.Count - 1;
+				// Move direction up
+				int fromRow = 0;     // loop from
+				int toRow = lastRow; // loop to
+				int move = -1;       // element move direction
+				// Move direction down
+				if (MoveDown) 
+				{
+					fromRow = lastRow;
+					toRow = 0;
+					move = 1;
+				}
+				// Remember closest above/below row to change place with the moved one, -1 = not exists (yet)
+				int notSelectedRowIndex = -1;
+				// Loop through all rows in grid (oposit direction as moving elements)
+				int currentPos = fromRow;
+				while (currentPos >= 0 && currentPos <= lastRow)
+				{
+					DataGridViewRow currentRow = dataGridSelectedTanks.Rows[currentPos]; // Get current row
+					if (currentRow.Selected)
+					{
+						// Selected row - move it
+						selectedTanks.Add(Convert.ToInt32(currentRow.Cells["ID"].Value)); // remember this tank to set selected area back after moving
+						int currentRowSortPos = Convert.ToInt32(dtFavListTank.Rows[currentPos]["Sort#"]); // current sort postition 
+						// For each tank to be moved the above/below tank must change place with the moved one, if any exist
+						if (notSelectedRowIndex != -1)
+						{
+							dtFavListTank.Rows[notSelectedRowIndex]["Sort#"] = Convert.ToInt32(dtFavListTank.Rows[notSelectedRowIndex]["Sort#"]) - move;
+						}
+						// move tank row now
+						dtFavListTank.Rows[currentPos]["Sort#"] = currentRowSortPos + move;
+					}
+					else
+					{
+						// Not selected row
+						notSelectedRowIndex = currentPos;
+					}
+					currentPos -= move; // Move to next	position, in oposite direction as element movment					
+				}
+				// Save new sorted grid to datatable
+				dtFavListTank.AcceptChanges();
+				
+				// Sort and show
+				SortFavList("Sort#");
+				// Set selected rows back to correct tanks
+				dataGridSelectedTanks.ClearSelection();
+				int selectedRowPos = 0;
+				bool SelectedRowPosGet = true;
+				for (int i = 0; i <= lastRow; i++)
+				{
+					if (selectedTanks.Contains(Convert.ToInt32(dataGridSelectedTanks.Rows[i].Cells["ID"].Value)))
+					{
+						dataGridSelectedTanks.Rows[i].Selected = true;
+						if (SelectedRowPosGet) selectedRowPos = i;
+						if (!MoveDown) SelectedRowPosGet = false; // Get first one if move up
+					}
+				}
+				// Return to scroll position
+				dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid;
+				// Check if outside
+				int topGridRow = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
+				int bottomGridRow = topGridRow + dataGridSelectedTanks.DisplayedRowCount(false);
+				if (selectedRowPos < topGridRow)
+					dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid - 1;
+				if (selectedRowPos >= bottomGridRow)
+					dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid + 1;
+				MoveSelTanksScrollBar();
+			}
+		}
+
 		private void RemoveTankFromFavList(bool All = false)
 		{
 			if (All)
@@ -519,7 +609,6 @@ namespace WotDBUpdater.Forms.File
 				sortnum++;
 				dr["Sort#"] = sortnum;
 			}
-			dtFavListTank.DefaultView.Sort = "Sort# ASC";
 			ShowSelectedTanks();
 		}
 
@@ -563,7 +652,16 @@ namespace WotDBUpdater.Forms.File
 		{
 			AddTankToFavList(true);
 		}
-		
+
+		private void toolSelectedTanks_MoveUp_Click(object sender, EventArgs e)
+		{
+			MoveSelectedTanks(false);
+		}
+
+		private void toolSelectedTanks_MoveDown_Click(object sender, EventArgs e)
+		{
+			MoveSelectedTanks(true);
+		}
 
 		#endregion
 
@@ -798,7 +896,6 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
-		
 
 	}
 }

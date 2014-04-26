@@ -76,11 +76,11 @@ namespace WotDBUpdater.Forms.Reports
 			if (tableList.Length > 0)
 			{
 				tableList = tableList.Substring(0, tableList.Length - 1);
-				string newValue = Code.PopupGrid.Show("Select Table", Code.PopupGrid.PopupGridType.List, tableList);
-				if (Code.PopupGrid.ValueSelected) popupSelectTable.Text = newValue;
-				RefreshDataGrid();
+				Code.DropDownGrid.Show(popupSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
 			}
 		}
+
+
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
@@ -249,6 +249,11 @@ namespace WotDBUpdater.Forms.Reports
 		}
 
 		#endregion
+
+		private void popupSelectTable_TextChanged(object sender, EventArgs e)
+		{
+			RefreshDataGrid();
+		}
 
 	}
 }

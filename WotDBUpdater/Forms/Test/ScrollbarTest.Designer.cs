@@ -31,6 +31,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScrollbarTest));
 			this.ScrollbarTestTheme = new BadForm();
+			this.badDropDownBox1 = new BadDropDownBox();
 			this.txtX = new BadTextBox();
 			this.txtY = new BadTextBox();
 			this.badScrollBar2 = new BadScrollBar();
@@ -41,11 +42,12 @@
 			// ScrollbarTestTheme
 			// 
 			this.ScrollbarTestTheme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.ScrollbarTestTheme.Controls.Add(this.badDropDownBox1);
 			this.ScrollbarTestTheme.Controls.Add(this.txtX);
 			this.ScrollbarTestTheme.Controls.Add(this.txtY);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar2);
 			this.ScrollbarTestTheme.Controls.Add(this.badScrollBar1);
-			this.ScrollbarTestTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
+			this.ScrollbarTestTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.ScrollbarTestTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ScrollbarTestTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ScrollbarTestTheme.FormFooter = false;
@@ -64,6 +66,17 @@
 			this.ScrollbarTestTheme.TabIndex = 0;
 			this.ScrollbarTestTheme.Text = "Scrollbar Test";
 			this.ScrollbarTestTheme.TitleHeight = 26;
+			// 
+			// badDropDownBox1
+			// 
+			this.badDropDownBox1.Image = null;
+			this.badDropDownBox1.Location = new System.Drawing.Point(24, 72);
+			this.badDropDownBox1.Name = "badDropDownBox1";
+			this.badDropDownBox1.Size = new System.Drawing.Size(167, 24);
+			this.badDropDownBox1.TabIndex = 4;
+			this.badDropDownBox1.Text = "badDropDownBox1";
+			this.badDropDownBox1.TextChanged += new System.EventHandler(this.badDropDownBox1_TextChanged);
+			this.badDropDownBox1.Click += new System.EventHandler(this.badDropDownBox1_Click);
 			// 
 			// txtX
 			// 
@@ -146,5 +159,6 @@
 		private BadScrollBar badScrollBar2;
 		private BadTextBox txtX;
 		private BadTextBox txtY;
+		private BadDropDownBox badDropDownBox1;
 	}
 }

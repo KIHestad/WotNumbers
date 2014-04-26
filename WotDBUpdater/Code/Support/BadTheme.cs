@@ -602,6 +602,14 @@ abstract class BadThemeControl : Control
 {
 	protected Bitmap bitmapObject;
 	protected Graphics grapichObject;
+
+	private Cursor _Cursor = Cursors.Default;
+	public override Cursor Cursor
+	{
+		get { return _Cursor; }
+		set	{ _Cursor = value; Invalidate();}
+	}
+
 	public BadThemeControl()
 	{
 		SetStyle((ControlStyles)8198, true);
@@ -885,7 +893,8 @@ class BadProgressBar : BadThemeControl
 		Double progress = Value;
 		if (progress > ValueMax) progress = ValueMax;
 		if (progress < ValueMin) progress = ValueMin;
-		progress = (progress / (ValueMax - ValueMin)) * (Width - 8);
+		if ((ValueMax - ValueMin) != 0)
+			progress = (progress / (ValueMax - ValueMin)) * (Width - 8);
 		brushBackColor = new SolidBrush(ColorTheme.FormBorderBlue);
 		grapichObject.FillRectangle(brushBackColor, 4, 4, Convert.ToInt32(progress), Height - 8);
 		// Draw
@@ -939,7 +948,16 @@ class BadLabel : BadThemeControl
 		get { return _Dimmed; }
 		set { _Dimmed = value; Invalidate(); }
 	}
-	
+
+
+	private Color _ForeColor = ColorTheme.ControlFont;
+	public override Color ForeColor
+	{
+		get { return _ForeColor; }
+		set { _ForeColor = value; Invalidate(); }
+	}
+
+
 	Label label = new Label();
 	public BadLabel()
 	{
@@ -957,7 +975,7 @@ class BadLabel : BadThemeControl
 		if (Dimmed)
 			label.ForeColor = ColorTheme.ControlDimmedFont;
 		else
-			label.ForeColor = ColorTheme.ControlFont;
+			label.ForeColor = ForeColor;
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
@@ -1068,6 +1086,60 @@ class BadPopupBox : BadThemeControl
 	}
 
 }
+
+class BadDropDownBox : BadThemeControl
+{
+
+	public BadDropDownBox()
+	{
+		AllowTransparent();
+	}
+
+	protected override void OnTextChanged(EventArgs e)
+	{
+		base.OnTextChanged(e);
+		Invalidate();
+	}
+
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
+		SolidBrush brushBackColor;
+		if (MouseState == State.MouseDown)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+		else if (MouseState == State.MouseOver)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
+		else
+			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+		// Text
+		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont));
+		// Overwrite text to right to avoid hiding dropdown icon
+		if (MouseState == State.MouseDown)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+		else if (MouseState == State.MouseOver)
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
+		else
+			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+		// DropDows Arrow Area
+		grapichObject.FillRectangle(brushBackColor, Width - 22, 0, 22, Height);
+		// DropDown Arrow
+		brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
+		int ArrowY = (Height / 2) + 2;
+		int ArrowX = 12;
+		grapichObject.FillRectangle(brushBackColor, Width - ArrowX, ArrowY, 1, 1); // Down Arrow last pixel
+		Pen penArrow = new Pen(ColorTheme.ScrollbarArrow);
+		// grapichObject.FillRectangle(brushBackColor, 8, bottomArrowY, 1, 1); // Down Arrow last pixel
+		for (int i = 1; i <= 4; i++)
+		{
+			grapichObject.DrawLine(penArrow, Width - ArrowX - i, ArrowY - i, Width - ArrowX + i, ArrowY - i); // Bottom arrow
+		}
+		// Dropdown icon
+		DrawIcon(HorizontalAlignment.Right, 0, -2);
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
+}
+
 
 class BadScrollBar : BadThemeControl
 {

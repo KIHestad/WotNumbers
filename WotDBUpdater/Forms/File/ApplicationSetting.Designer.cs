@@ -38,31 +38,32 @@
 			this.txtDossierFilePath = new BadTextBox();
 			this.badLabel4 = new BadLabel();
 			this.btnDbSetting = new BadButton();
-			this.cboSelectPlayer = new BadPopupBox();
 			this.badSeperator2 = new BadSeperator();
 			this.badSeperator1 = new BadSeperator();
 			this.btnSave = new BadButton();
 			this.lblPlayer = new BadLabel();
 			this.lblDbSettings = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
+			this.cboSelectPlayer = new BadDropDownBox();
 			this.ApplicationSettingsTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ApplicationSettingsTheme
 			// 
+			this.ApplicationSettingsTheme.Controls.Add(this.cboSelectPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSelectDossierFilePath);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnRemovePlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnAddPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.txtDossierFilePath);
 			this.ApplicationSettingsTheme.Controls.Add(this.badLabel4);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnDbSetting);
-			this.ApplicationSettingsTheme.Controls.Add(this.cboSelectPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.badSeperator2);
 			this.ApplicationSettingsTheme.Controls.Add(this.badSeperator1);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSave);
 			this.ApplicationSettingsTheme.Controls.Add(this.lblPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.lblDbSettings);
 			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox1);
+			this.ApplicationSettingsTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.ApplicationSettingsTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ApplicationSettingsTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ApplicationSettingsTheme.FormFooter = false;
@@ -142,16 +143,6 @@
 			this.btnDbSetting.Text = "Settings";
 			this.btnDbSetting.Click += new System.EventHandler(this.btnDbSetting_Click);
 			// 
-			// cboSelectPlayer
-			// 
-			this.cboSelectPlayer.Image = ((System.Drawing.Image)(resources.GetObject("cboSelectPlayer.Image")));
-			this.cboSelectPlayer.Location = new System.Drawing.Point(91, 118);
-			this.cboSelectPlayer.Name = "cboSelectPlayer";
-			this.cboSelectPlayer.Size = new System.Drawing.Size(189, 23);
-			this.cboSelectPlayer.TabIndex = 38;
-			this.cboSelectPlayer.Text = "badComboBox1";
-			this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
-			// 
 			// badSeperator2
 			// 
 			this.badSeperator2.BackColor = System.Drawing.Color.Transparent;
@@ -214,6 +205,16 @@
 			this.badGroupBox1.TabIndex = 20;
 			this.badGroupBox1.Text = "Settings";
 			// 
+			// cboSelectPlayer
+			// 
+			this.cboSelectPlayer.Image = null;
+			this.cboSelectPlayer.Location = new System.Drawing.Point(92, 118);
+			this.cboSelectPlayer.Name = "cboSelectPlayer";
+			this.cboSelectPlayer.Size = new System.Drawing.Size(188, 23);
+			this.cboSelectPlayer.TabIndex = 38;
+			this.cboSelectPlayer.Text = "badDropDownBox1";
+			this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
+			// 
 			// ApplicationSetting
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -250,6 +251,6 @@
 		private BadButton btnSave;
 		private BadSeperator badSeperator2;
 		private BadSeperator badSeperator1;
-		private BadPopupBox cboSelectPlayer;
+		private BadDropDownBox cboSelectPlayer;
 	}
 }
