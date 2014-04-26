@@ -207,8 +207,7 @@ namespace WotDBUpdater.Forms.File
 		private void popupPosition_Click(object sender, EventArgs e)
 		{
 			string posList = "Not Visible,1,2,3,4,5,6,7,8,9,10";
-			string newval = Code.PopupGrid.Show("Select Position", Code.PopupGrid.PopupGridType.List, posList);
-			if (newval != "") popupPosition.Text = newval;
+			Code.DropDownGrid.Show(popupPosition, Code.DropDownGrid.DropDownGridType.List, posList);
 		}
 
 		private void btnFavListDelete_Click(object sender, EventArgs e)

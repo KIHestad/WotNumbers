@@ -32,15 +32,15 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseSetting));
 			this.openFileDialogSQLite = new System.Windows.Forms.OpenFileDialog();
 			this.DatabaseSettingsTheme = new BadForm();
+			this.popupDatabaseType = new BadDropDownBox();
 			this.panelSQLite = new System.Windows.Forms.Panel();
 			this.txtDatabaseFile = new BadTextBox();
 			this.badLabel5 = new BadLabel();
 			this.badSeperator2 = new BadSeperator();
 			this.cmdSQLiteDatabaseFile = new BadButton();
 			this.panelMSSQL = new System.Windows.Forms.Panel();
-			this.popupDbAuth = new BadPopupBox();
+			this.popupDbAuth = new BadDropDownBox();
 			this.badSeperator1 = new BadSeperator();
-			this.popupDatabase = new BadPopupBox();
 			this.badLabel1 = new BadLabel();
 			this.badLabel3 = new BadLabel();
 			this.lblUIDPW = new BadLabel();
@@ -48,11 +48,11 @@
 			this.badLabel4 = new BadLabel();
 			this.txtPW = new BadTextBox();
 			this.txtServerName = new BadTextBox();
-			this.popupDatabaseType = new BadPopupBox();
 			this.badLabel6 = new BadLabel();
 			this.btnSave = new BadButton();
 			this.btnNewDb = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
+			this.popupDatabase = new BadDropDownBox();
 			this.DatabaseSettingsTheme.SuspendLayout();
 			this.panelSQLite.SuspendLayout();
 			this.panelMSSQL.SuspendLayout();
@@ -65,13 +65,14 @@
 			// DatabaseSettingsTheme
 			// 
 			this.DatabaseSettingsTheme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.DatabaseSettingsTheme.Controls.Add(this.popupDatabaseType);
 			this.DatabaseSettingsTheme.Controls.Add(this.panelSQLite);
 			this.DatabaseSettingsTheme.Controls.Add(this.panelMSSQL);
-			this.DatabaseSettingsTheme.Controls.Add(this.popupDatabaseType);
 			this.DatabaseSettingsTheme.Controls.Add(this.badLabel6);
 			this.DatabaseSettingsTheme.Controls.Add(this.btnSave);
 			this.DatabaseSettingsTheme.Controls.Add(this.btnNewDb);
 			this.DatabaseSettingsTheme.Controls.Add(this.badGroupBox1);
+			this.DatabaseSettingsTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.DatabaseSettingsTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseSettingsTheme.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.DatabaseSettingsTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -91,6 +92,16 @@
 			this.DatabaseSettingsTheme.TabIndex = 7;
 			this.DatabaseSettingsTheme.Text = "Database Settings";
 			this.DatabaseSettingsTheme.TitleHeight = 26;
+			// 
+			// popupDatabaseType
+			// 
+			this.popupDatabaseType.Image = null;
+			this.popupDatabaseType.Location = new System.Drawing.Point(159, 69);
+			this.popupDatabaseType.Name = "popupDatabaseType";
+			this.popupDatabaseType.Size = new System.Drawing.Size(176, 23);
+			this.popupDatabaseType.TabIndex = 32;
+			this.popupDatabaseType.TextChanged += new System.EventHandler(this.popupDatabaseType_TextChanged);
+			this.popupDatabaseType.Click += new System.EventHandler(this.popupDatabaseType_Click);
 			// 
 			// panelSQLite
 			// 
@@ -146,9 +157,9 @@
 			// 
 			// panelMSSQL
 			// 
+			this.panelMSSQL.Controls.Add(this.popupDatabase);
 			this.panelMSSQL.Controls.Add(this.popupDbAuth);
 			this.panelMSSQL.Controls.Add(this.badSeperator1);
-			this.panelMSSQL.Controls.Add(this.popupDatabase);
 			this.panelMSSQL.Controls.Add(this.badLabel1);
 			this.panelMSSQL.Controls.Add(this.badLabel3);
 			this.panelMSSQL.Controls.Add(this.lblUIDPW);
@@ -163,12 +174,12 @@
 			// 
 			// popupDbAuth
 			// 
-			this.popupDbAuth.Image = ((System.Drawing.Image)(resources.GetObject("popupDbAuth.Image")));
+			this.popupDbAuth.Image = null;
 			this.popupDbAuth.Location = new System.Drawing.Point(129, 64);
 			this.popupDbAuth.Name = "popupDbAuth";
 			this.popupDbAuth.Size = new System.Drawing.Size(176, 23);
-			this.popupDbAuth.TabIndex = 21;
-			this.popupDbAuth.Text = null;
+			this.popupDbAuth.TabIndex = 25;
+			this.popupDbAuth.TextChanged += new System.EventHandler(this.popupDbAuth_TextChanged);
 			this.popupDbAuth.Click += new System.EventHandler(this.popupDbAuth_Click);
 			// 
 			// badSeperator1
@@ -181,16 +192,6 @@
 			this.badSeperator1.Size = new System.Drawing.Size(302, 26);
 			this.badSeperator1.TabIndex = 12;
 			this.badSeperator1.Text = "MS SQL Server";
-			// 
-			// popupDatabase
-			// 
-			this.popupDatabase.Image = ((System.Drawing.Image)(resources.GetObject("popupDatabase.Image")));
-			this.popupDatabase.Location = new System.Drawing.Point(129, 122);
-			this.popupDatabase.Name = "popupDatabase";
-			this.popupDatabase.Size = new System.Drawing.Size(176, 23);
-			this.popupDatabase.TabIndex = 15;
-			this.popupDatabase.Text = null;
-			this.popupDatabase.Click += new System.EventHandler(this.popupDatabase_Click);
 			// 
 			// badLabel1
 			// 
@@ -263,16 +264,6 @@
 			this.txtServerName.Size = new System.Drawing.Size(176, 23);
 			this.txtServerName.TabIndex = 23;
 			// 
-			// popupDatabaseType
-			// 
-			this.popupDatabaseType.Image = ((System.Drawing.Image)(resources.GetObject("popupDatabaseType.Image")));
-			this.popupDatabaseType.Location = new System.Drawing.Point(160, 69);
-			this.popupDatabaseType.Name = "popupDatabaseType";
-			this.popupDatabaseType.Size = new System.Drawing.Size(176, 23);
-			this.popupDatabaseType.TabIndex = 29;
-			this.popupDatabaseType.Text = null;
-			this.popupDatabaseType.Click += new System.EventHandler(this.popupDatabaseType_Click);
-			// 
 			// badLabel6
 			// 
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -314,6 +305,15 @@
 			this.badGroupBox1.TabIndex = 14;
 			this.badGroupBox1.Text = "Settings";
 			// 
+			// popupDatabase
+			// 
+			this.popupDatabase.Image = null;
+			this.popupDatabase.Location = new System.Drawing.Point(129, 123);
+			this.popupDatabase.Name = "popupDatabase";
+			this.popupDatabase.Size = new System.Drawing.Size(176, 23);
+			this.popupDatabase.TabIndex = 26;
+			this.popupDatabase.Click += new System.EventHandler(this.popupDatabase_Click);
+			// 
 			// DatabaseSetting
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,21 +344,21 @@
 		private BadButton cmdSQLiteDatabaseFile;
 		private BadSeperator badSeperator1;
 		private System.Windows.Forms.OpenFileDialog openFileDialogSQLite;
-		private BadPopupBox popupDatabase;
 		private BadGroupBox badGroupBox1;
 		private BadLabel lblUIDPW;
 		private BadTextBox txtUID;
 		private BadTextBox txtPW;
 		private BadLabel badLabel1;
 		private BadLabel badLabel4;
-		private BadPopupBox popupDbAuth;
 		private BadTextBox txtDatabaseFile;
 		private BadLabel badLabel3;
 		private BadTextBox txtServerName;
-		private BadPopupBox popupDatabaseType;
 		private BadLabel badLabel6;
 		private BadLabel badLabel5;
 		private System.Windows.Forms.Panel panelSQLite;
 		private System.Windows.Forms.Panel panelMSSQL;
+		private BadDropDownBox popupDatabaseType;
+		private BadDropDownBox popupDbAuth;
+		private BadDropDownBox popupDatabase;
 	}
 }

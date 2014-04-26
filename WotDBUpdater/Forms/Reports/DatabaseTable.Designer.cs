@@ -28,17 +28,17 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseTable));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseTable));
 			this.DatabaseTableTheme = new BadForm();
-			this.scrollX = new BadScrollBar();
-			this.scrollY = new BadScrollBar();
-			this.scrollCorner = new BadScrollBarCorner();
 			this.dataGridViewShowTable = new System.Windows.Forms.DataGridView();
 			this.btnRefresh = new BadButton();
-			this.popupSelectTable = new BadPopupBox();
 			this.badLabel1 = new BadLabel();
+			this.scrollY = new BadScrollBar();
+			this.scrollX = new BadScrollBar();
+			this.scrollCorner = new BadScrollBarCorner();
+			this.popupSelectTable = new BadDropDownBox();
 			this.DatabaseTableTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).BeginInit();
 			this.SuspendLayout();
@@ -46,9 +46,9 @@
 			// DatabaseTableTheme
 			// 
 			this.DatabaseTableTheme.BackColor = System.Drawing.Color.Fuchsia;
+			this.DatabaseTableTheme.Controls.Add(this.popupSelectTable);
 			this.DatabaseTableTheme.Controls.Add(this.dataGridViewShowTable);
 			this.DatabaseTableTheme.Controls.Add(this.btnRefresh);
-			this.DatabaseTableTheme.Controls.Add(this.popupSelectTable);
 			this.DatabaseTableTheme.Controls.Add(this.badLabel1);
 			this.DatabaseTableTheme.Controls.Add(this.scrollY);
 			this.DatabaseTableTheme.Controls.Add(this.scrollX);
@@ -72,53 +72,6 @@
 			this.DatabaseTableTheme.TabIndex = 0;
 			this.DatabaseTableTheme.Text = "Database Tables";
 			this.DatabaseTableTheme.TitleHeight = 26;
-			// 
-			// scrollX
-			// 
-			this.scrollX.BackColor = System.Drawing.Color.Transparent;
-			this.scrollX.Image = null;
-			this.scrollX.Location = new System.Drawing.Point(15, 267);
-			this.scrollX.Name = "scrollX";
-			this.scrollX.ScrollElementsTotals = 100;
-			this.scrollX.ScrollElementsVisible = 20;
-			this.scrollX.ScrollHide = true;
-			this.scrollX.ScrollNecessary = true;
-			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
-			this.scrollX.ScrollPosition = 0;
-			this.scrollX.Size = new System.Drawing.Size(387, 17);
-			this.scrollX.TabIndex = 14;
-			this.scrollX.Text = "badScrollBar2";
-			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
-			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
-			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
-			// 
-			// scrollY
-			// 
-			this.scrollY.BackColor = System.Drawing.Color.Transparent;
-			this.scrollY.Image = null;
-			this.scrollY.Location = new System.Drawing.Point(408, 78);
-			this.scrollY.Name = "scrollY";
-			this.scrollY.ScrollElementsTotals = 100;
-			this.scrollY.ScrollElementsVisible = 20;
-			this.scrollY.ScrollHide = true;
-			this.scrollY.ScrollNecessary = true;
-			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.scrollY.ScrollPosition = 0;
-			this.scrollY.Size = new System.Drawing.Size(17, 183);
-			this.scrollY.TabIndex = 13;
-			this.scrollY.Text = "badScrollBar1";
-			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
-			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
-			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseUp);
-			// 
-			// scrollCorner
-			// 
-			this.scrollCorner.Image = null;
-			this.scrollCorner.Location = new System.Drawing.Point(408, 267);
-			this.scrollCorner.Name = "scrollCorner";
-			this.scrollCorner.Size = new System.Drawing.Size(17, 17);
-			this.scrollCorner.TabIndex = 12;
-			this.scrollCorner.Text = "badScrollBarCorner1";
 			// 
 			// dataGridViewShowTable
 			// 
@@ -155,16 +108,6 @@
 			this.btnRefresh.Text = "Refresh";
 			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
 			// 
-			// popupSelectTable
-			// 
-			this.popupSelectTable.Image = ((System.Drawing.Image)(resources.GetObject("popupSelectTable.Image")));
-			this.popupSelectTable.Location = new System.Drawing.Point(96, 37);
-			this.popupSelectTable.Name = "popupSelectTable";
-			this.popupSelectTable.Size = new System.Drawing.Size(248, 23);
-			this.popupSelectTable.TabIndex = 9;
-			this.popupSelectTable.Text = null;
-			this.popupSelectTable.Click += new System.EventHandler(this.popupSelectTable_Click);
-			// 
 			// badLabel1
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -175,6 +118,63 @@
 			this.badLabel1.Size = new System.Drawing.Size(75, 23);
 			this.badLabel1.TabIndex = 8;
 			this.badLabel1.Text = "Select Table:";
+			// 
+			// scrollY
+			// 
+			this.scrollY.BackColor = System.Drawing.Color.Transparent;
+			this.scrollY.Image = null;
+			this.scrollY.Location = new System.Drawing.Point(408, 78);
+			this.scrollY.Name = "scrollY";
+			this.scrollY.ScrollElementsTotals = 100;
+			this.scrollY.ScrollElementsVisible = 20;
+			this.scrollY.ScrollHide = true;
+			this.scrollY.ScrollNecessary = true;
+			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+			this.scrollY.ScrollPosition = 0;
+			this.scrollY.Size = new System.Drawing.Size(17, 183);
+			this.scrollY.TabIndex = 13;
+			this.scrollY.Text = "badScrollBar1";
+			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
+			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseUp);
+			// 
+			// scrollX
+			// 
+			this.scrollX.BackColor = System.Drawing.Color.Transparent;
+			this.scrollX.Image = null;
+			this.scrollX.Location = new System.Drawing.Point(15, 267);
+			this.scrollX.Name = "scrollX";
+			this.scrollX.ScrollElementsTotals = 100;
+			this.scrollX.ScrollElementsVisible = 20;
+			this.scrollX.ScrollHide = true;
+			this.scrollX.ScrollNecessary = true;
+			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
+			this.scrollX.ScrollPosition = 0;
+			this.scrollX.Size = new System.Drawing.Size(387, 17);
+			this.scrollX.TabIndex = 14;
+			this.scrollX.Text = "badScrollBar2";
+			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
+			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
+			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
+			// 
+			// scrollCorner
+			// 
+			this.scrollCorner.Image = null;
+			this.scrollCorner.Location = new System.Drawing.Point(408, 267);
+			this.scrollCorner.Name = "scrollCorner";
+			this.scrollCorner.Size = new System.Drawing.Size(17, 17);
+			this.scrollCorner.TabIndex = 12;
+			this.scrollCorner.Text = "badScrollBarCorner1";
+			// 
+			// popupSelectTable
+			// 
+			this.popupSelectTable.Image = null;
+			this.popupSelectTable.Location = new System.Drawing.Point(97, 36);
+			this.popupSelectTable.Name = "popupSelectTable";
+			this.popupSelectTable.Size = new System.Drawing.Size(247, 23);
+			this.popupSelectTable.TabIndex = 15;
+			this.popupSelectTable.TextChanged += new System.EventHandler(this.popupSelectTable_TextChanged);
+			this.popupSelectTable.Click += new System.EventHandler(this.popupSelectTable_Click);
 			// 
 			// DatabaseTable
 			// 
@@ -202,11 +202,11 @@
 
 		private BadForm DatabaseTableTheme;
 		private BadButton btnRefresh;
-		private BadPopupBox popupSelectTable;
 		private BadLabel badLabel1;
 		private System.Windows.Forms.DataGridView dataGridViewShowTable;
 		private BadScrollBar scrollX;
 		private BadScrollBar scrollY;
 		private BadScrollBarCorner scrollCorner;
+		private BadDropDownBox popupSelectTable;
 	}
 }

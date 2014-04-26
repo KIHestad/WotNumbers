@@ -279,8 +279,7 @@ namespace WotDBUpdater.Forms.File
 		private void popupPosition_Click(object sender, EventArgs e)
 		{
 			string posList = "Not Visible,4,5,6,7,8,9,10,11,12,13";
-			string newval = Code.PopupGrid.Show("Select Position", Code.PopupGrid.PopupGridType.List, posList);
-			if (newval != "") popupPosition.Text = newval;
+			Code.DropDownGrid.Show(popupPosition, Code.DropDownGrid.DropDownGridType.List, posList);
 		}
 
 		private void btnColumnListAdd_Click(object sender, EventArgs e)
