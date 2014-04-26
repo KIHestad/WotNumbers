@@ -21,21 +21,23 @@ namespace WotDBUpdater.Forms.File
 			TankView = 1,
 			BattleView = 2
 		}
-
+		
+		private string colTypeText = "";
+		int colType = 0;
 		public ColumnSetup(ColumnSetupType colSelectedSetupType)
 		{
 			InitializeComponent();
 			if (colSelectedSetupType == ColumnSetupType.TankView)
 			{
-				//popupColumnListType.Text = "Tank View";
+				popupColumnListType.Text = "Tank View";
 				colType = 1;
 			}
 
 			else if (colSelectedSetupType == ColumnSetupType.BattleView)
 			{
-				//popupColumnListType.Text = "Battle View";
+				popupColumnListType.Text = "Battle View";
 				colType = 2;
-		}
+			}
 		}
 
 		private void ColumnSetup_Load(object sender, EventArgs e)
@@ -182,22 +184,19 @@ namespace WotDBUpdater.Forms.File
 
 		private void popupColumnSetupType_Click(object sender, EventArgs e)
 		{
-			//Code.DropDownGrid.Show(popupColumnListType, Code.DropDownGrid.DropDownGridType.List, "Tank View,Battle View");
+			Code.DropDownGrid.Show(popupColumnListType, Code.DropDownGrid.DropDownGridType.List, "Tank View,Battle View");
 		}
 
 		private void popupColumnListType_TextChanged(object sender, EventArgs e)
 			{
-				//popupColumnListType.Text = colSelectedSetupType;
-				//if (colSelectedSetupType == "Tank View")
-				//	colSetupType = ColumnSetupType.TankView;
-				//else if (colSelectedSetupType == "Battle View")
-				//	colSetupType = ColumnSetupType.BattleView;
+				if (popupColumnListType.Text == "Tank View")
+					colType = 1;
+				else if (popupColumnListType.Text == "Battle View")
+					colType = 2;
 				ShowColumnSetupList();
 				ShowAllColumn();
 			}
 
-		private string colTypeText = "";
-		int colType = 0;
 		private DataTable dtColumnList = new DataTable();
 		private void ShowColumnSetupList(int ColumListId = 0)
 		{
