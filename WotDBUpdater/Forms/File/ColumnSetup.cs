@@ -27,13 +27,13 @@ namespace WotDBUpdater.Forms.File
 			InitializeComponent();
 			if (colSelectedSetupType == ColumnSetupType.TankView)
 			{
-				popupColumnListType.Text = "Tank View";
+				//popupColumnListType.Text = "Tank View";
 				colType = 1;
 			}
 
 			else if (colSelectedSetupType == ColumnSetupType.BattleView)
 			{
-				popupColumnListType.Text = "Battle View";
+				//popupColumnListType.Text = "Battle View";
 				colType = 2;
 		}
 		}
@@ -182,16 +182,16 @@ namespace WotDBUpdater.Forms.File
 
 		private void popupColumnSetupType_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(popupColumnListType, Code.DropDownGrid.DropDownGridType.List, "Tank View,Battle View");
+			//Code.DropDownGrid.Show(popupColumnListType, Code.DropDownGrid.DropDownGridType.List, "Tank View,Battle View");
 		}
 
 		private void popupColumnListType_TextChanged(object sender, EventArgs e)
 			{
-				popupColumnListType.Text = colSelectedSetupType;
-				if (colSelectedSetupType == "Tank View")
-					colSetupType = ColumnSetupType.TankView;
-				else if (colSelectedSetupType == "Battle View")
-					colSetupType = ColumnSetupType.BattleView;
+				//popupColumnListType.Text = colSelectedSetupType;
+				//if (colSelectedSetupType == "Tank View")
+				//	colSetupType = ColumnSetupType.TankView;
+				//else if (colSelectedSetupType == "Battle View")
+				//	colSetupType = ColumnSetupType.BattleView;
 				ShowColumnSetupList();
 				ShowAllColumn();
 			}
@@ -422,7 +422,7 @@ namespace WotDBUpdater.Forms.File
 			}
 			// Select All button
 			toolAvailableCol_UnselectAll();
-			toolAvaliableCol_All.Checked = true;
+			//toolAvaliableCol_All.Checked = true;
 			// Show content now
 			FilterAllColumn();
 		}
@@ -457,7 +457,7 @@ namespace WotDBUpdater.Forms.File
 		private void toolAvaliableCol_All_Click(object sender, EventArgs e)
 		{
 			toolAvailableCol_UnselectAll();
-			toolAvaliableCol_All.Checked = true;
+			//toolAvaliableCol_All.Checked = true;
 			FilterAllColumn();
 		}
 

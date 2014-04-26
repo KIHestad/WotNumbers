@@ -33,8 +33,6 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColumnSetupTheme = new BadForm();
-			this.popupColumnListType = new BadDropDownBox();
-			this.badLabel1 = new BadLabel();
 			this.lblDefaultColumnSetup = new BadLabel();
 			this.btnSetAsDefaultColumnList = new BadButton();
 			this.badGroupBox3 = new BadGroupBox();
@@ -50,15 +48,6 @@
 			this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
 			this.toolAllColumns = new System.Windows.Forms.ToolStrip();
-			this.toolAvaliableCol_All = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_1 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_2 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_3 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_4 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_5 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_6 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_7 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_8 = new System.Windows.Forms.ToolStripButton();
 			this.scrollSelectedColumns = new BadScrollBar();
 			this.dataGridSelectedColumns = new System.Windows.Forms.DataGridView();
 			this.scrollAllColumns = new BadScrollBar();
@@ -74,11 +63,9 @@
 			this.lblSelectedColumns = new BadLabel();
 			this.groupTanks = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
-			this.toolAvaliableCol_10 = new System.Windows.Forms.ToolStripButton();
-			this.toolAvaliableCol_9 = new System.Windows.Forms.ToolStripButton();
+			this.badLabel1 = new BadLabel();
 			this.ColumnSetupTheme.SuspendLayout();
 			this.toolSelectedColumns.SuspendLayout();
-			this.toolAllColumns.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridAllColumns)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridColumnList)).BeginInit();
@@ -92,8 +79,6 @@
 			// 
 			// ColumnSetupTheme
 			// 
-			this.ColumnSetupTheme.Controls.Add(this.popupColumnListType);
-			this.ColumnSetupTheme.Controls.Add(this.badLabel1);
 			this.ColumnSetupTheme.Controls.Add(this.lblDefaultColumnSetup);
 			this.ColumnSetupTheme.Controls.Add(this.btnSetAsDefaultColumnList);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox3);
@@ -141,28 +126,6 @@
 			this.ColumnSetupTheme.TabIndex = 0;
 			this.ColumnSetupTheme.Text = "Column Setup";
 			this.ColumnSetupTheme.TitleHeight = 26;
-			// 
-			// popupColumnListType
-			// 
-			this.popupColumnListType.Image = null;
-			this.popupColumnListType.Location = new System.Drawing.Point(80, 61);
-			this.popupColumnListType.Name = "popupColumnListType";
-			this.popupColumnListType.Size = new System.Drawing.Size(188, 23);
-			this.popupColumnListType.TabIndex = 74;
-			this.popupColumnListType.Text = "badDropDownBox1";
-			this.popupColumnListType.TextChanged += new System.EventHandler(this.popupColumnListType_TextChanged);
-			this.popupColumnListType.Click += new System.EventHandler(this.popupColumnSetupType_Click);
-			// 
-			// badLabel1
-			// 
-			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel1.Dimmed = false;
-			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(34, 61);
-			this.badLabel1.Name = "badLabel1";
-			this.badLabel1.Size = new System.Drawing.Size(39, 23);
-			this.badLabel1.TabIndex = 73;
-			this.badLabel1.Text = "Type:";
 			// 
 			// lblDefaultColumnSetup
 			// 
@@ -315,18 +278,6 @@
 			this.toolAllColumns.AutoSize = false;
 			this.toolAllColumns.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolAllColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.toolAllColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolAvaliableCol_All,
-            this.toolAvaliableCol_1,
-            this.toolAvaliableCol_2,
-            this.toolAvaliableCol_3,
-            this.toolAvaliableCol_4,
-            this.toolAvaliableCol_5,
-            this.toolAvaliableCol_6,
-            this.toolAvaliableCol_7,
-            this.toolAvaliableCol_8,
-            this.toolAvaliableCol_9,
-            this.toolAvaliableCol_10});
 			this.toolAllColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolAllColumns.Location = new System.Drawing.Point(34, 317);
 			this.toolAllColumns.Name = "toolAllColumns";
@@ -334,107 +285,6 @@
 			this.toolAllColumns.Stretch = true;
 			this.toolAllColumns.TabIndex = 50;
 			this.toolAllColumns.Text = "toolStrip1";
-			// 
-			// toolAvaliableCol_All
-			// 
-			this.toolAvaliableCol_All.Checked = true;
-			this.toolAvaliableCol_All.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolAvaliableCol_All.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_All.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_All.Image")));
-			this.toolAvaliableCol_All.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_All.Name = "toolAvaliableCol_All";
-			this.toolAvaliableCol_All.Size = new System.Drawing.Size(25, 22);
-			this.toolAvaliableCol_All.Text = "All";
-			this.toolAvaliableCol_All.Click += new System.EventHandler(this.toolAvaliableCol_All_Click);
-			// 
-			// toolAvaliableCol_1
-			// 
-			this.toolAvaliableCol_1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_1.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_1.Image")));
-			this.toolAvaliableCol_1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_1.Name = "toolAvaliableCol_1";
-			this.toolAvaliableCol_1.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_1.Text = "1";
-			this.toolAvaliableCol_1.Visible = false;
-			this.toolAvaliableCol_1.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_2
-			// 
-			this.toolAvaliableCol_2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_2.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_2.Image")));
-			this.toolAvaliableCol_2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_2.Name = "toolAvaliableCol_2";
-			this.toolAvaliableCol_2.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_2.Text = "2";
-			this.toolAvaliableCol_2.Visible = false;
-			this.toolAvaliableCol_2.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_3
-			// 
-			this.toolAvaliableCol_3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_3.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_3.Image")));
-			this.toolAvaliableCol_3.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_3.Name = "toolAvaliableCol_3";
-			this.toolAvaliableCol_3.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_3.Text = "3";
-			this.toolAvaliableCol_3.Visible = false;
-			this.toolAvaliableCol_3.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_4
-			// 
-			this.toolAvaliableCol_4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_4.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_4.Image")));
-			this.toolAvaliableCol_4.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_4.Name = "toolAvaliableCol_4";
-			this.toolAvaliableCol_4.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_4.Text = "4";
-			this.toolAvaliableCol_4.Visible = false;
-			this.toolAvaliableCol_4.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_5
-			// 
-			this.toolAvaliableCol_5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_5.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_5.Image")));
-			this.toolAvaliableCol_5.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_5.Name = "toolAvaliableCol_5";
-			this.toolAvaliableCol_5.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_5.Text = "5";
-			this.toolAvaliableCol_5.Visible = false;
-			this.toolAvaliableCol_5.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_6
-			// 
-			this.toolAvaliableCol_6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_6.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_6.Image")));
-			this.toolAvaliableCol_6.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_6.Name = "toolAvaliableCol_6";
-			this.toolAvaliableCol_6.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_6.Text = "6";
-			this.toolAvaliableCol_6.Visible = false;
-			this.toolAvaliableCol_6.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_7
-			// 
-			this.toolAvaliableCol_7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_7.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_7.Image")));
-			this.toolAvaliableCol_7.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_7.Name = "toolAvaliableCol_7";
-			this.toolAvaliableCol_7.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_7.Text = "7";
-			this.toolAvaliableCol_7.Visible = false;
-			this.toolAvaliableCol_7.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_8
-			// 
-			this.toolAvaliableCol_8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_8.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_8.Image")));
-			this.toolAvaliableCol_8.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_8.Name = "toolAvaliableCol_8";
-			this.toolAvaliableCol_8.Size = new System.Drawing.Size(23, 22);
-			this.toolAvaliableCol_8.Text = "8";
-			this.toolAvaliableCol_8.ToolTipText = "8";
-			this.toolAvaliableCol_8.Visible = false;
-			this.toolAvaliableCol_8.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
 			// 
 			// scrollSelectedColumns
 			// 
@@ -653,29 +503,16 @@
 			this.badGroupBox2.TabIndex = 72;
 			this.badGroupBox2.Text = "Column Setup Lists";
 			// 
-			// toolAvaliableCol_10
+			// badLabel1
 			// 
-			this.toolAvaliableCol_10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_10.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_10.Image")));
-			this.toolAvaliableCol_10.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_10.Name = "toolAvaliableCol_10";
-			this.toolAvaliableCol_10.Size = new System.Drawing.Size(23, 19);
-			this.toolAvaliableCol_10.Text = "10";
-			this.toolAvaliableCol_10.ToolTipText = "10";
-			this.toolAvaliableCol_10.Visible = false;
-			this.toolAvaliableCol_10.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-			// 
-			// toolAvaliableCol_9
-			// 
-			this.toolAvaliableCol_9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolAvaliableCol_9.Image = ((System.Drawing.Image)(resources.GetObject("toolAvaliableCol_9.Image")));
-			this.toolAvaliableCol_9.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolAvaliableCol_9.Name = "toolAvaliableCol_9";
-			this.toolAvaliableCol_9.Size = new System.Drawing.Size(23, 19);
-			this.toolAvaliableCol_9.Text = "9";
-			this.toolAvaliableCol_9.ToolTipText = "9";
-			this.toolAvaliableCol_9.Visible = false;
-			this.toolAvaliableCol_9.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Dimmed = false;
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(34, 61);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(39, 23);
+			this.badLabel1.TabIndex = 73;
+			this.badLabel1.Text = "Type:";
 			// 
 			// ColumnSetup
 			// 
@@ -696,8 +533,6 @@
 			this.ColumnSetupTheme.ResumeLayout(false);
 			this.toolSelectedColumns.ResumeLayout(false);
 			this.toolSelectedColumns.PerformLayout();
-			this.toolAllColumns.ResumeLayout(false);
-			this.toolAllColumns.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridAllColumns)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridColumnList)).EndInit();
