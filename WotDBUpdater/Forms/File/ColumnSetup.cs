@@ -22,7 +22,6 @@ namespace WotDBUpdater.Forms.File
 			BattleView = 2
 		}
 		
-		private string colTypeText = "";
 		int colType = 0;
 		public ColumnSetup(ColumnSetupType colSelectedSetupType)
 		{
@@ -58,6 +57,7 @@ namespace WotDBUpdater.Forms.File
 			ShowAllColumn();
 			// Mouse scrolling
 			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
+			dataGridSelectedColumns.MouseWheel += new MouseEventHandler(dataGridSelectedColumns_MouseWheel);
 		}
 
 		#endregion
@@ -200,7 +200,7 @@ namespace WotDBUpdater.Forms.File
 		private DataTable dtColumnList = new DataTable();
 		private void ShowColumnSetupList(int ColumListId = 0)
 		{
-			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol from columnList where colType=@colType order by position; ";
+			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol from columnList where colType=@colType order by COALESCE(position,99), name; ";
 			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
 			dtColumnList = DB.FetchData(sql);
 			dataGridColumnList.DataSource = dtColumnList;
@@ -246,11 +246,11 @@ namespace WotDBUpdater.Forms.File
 				}
 				SelectedColumnListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
 				txtColumnListName.Text = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
-				string defaultText = "Not used as default colum setup for " + colTypeText;
+				string defaultText = "Not used as default colum setup for " + popupColumnListType.Text;
 				Color defaultTextColor = ColorTheme.ControlFont;
 				if (Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["colDefault"].Value))
 				{
-					defaultText = "Used as default colum setup for " + colTypeText;
+					defaultText = "Used as default colum setup for " + popupColumnListType.Text;
 					defaultTextColor = Color.ForestGreen;
 				}
 				lblDefaultColumnSetup.Text = defaultText;
@@ -263,9 +263,9 @@ namespace WotDBUpdater.Forms.File
 				btnRemoveSelected.Enabled = !sysCol;
 				btnSelectAll.Enabled = !sysCol;
 				btnSelectSelected.Enabled = !sysCol;
-				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
 				popupPosition.Text = dataGridColumnList.SelectedRows[0].Cells["Pos"].Value.ToString();
-				//GetSelectedTanksFromFavList(); // Get tanks for this fav list now
+				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
+				GetSelectedColumnsFromColumnList(); // Get tanks for this fav list now
 			}
 			else
 			{
@@ -386,6 +386,80 @@ namespace WotDBUpdater.Forms.File
 			if (dataGridColumnList.RowCount > 0)
 				dataGridColumnList.FirstDisplayedScrollingRowIndex = scrollColumnList.ScrollPosition;
 		}
+
+		private void btnSelectedColumnListDelete_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + txtColumnListName.Text,
+				"Confirm deletion", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
+			{
+
+				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
+				DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(sql);
+				SelectColumnList();
+			}
+		}
+
+		private void btnSelectedColumnListCancel_Click(object sender, EventArgs e)
+		{
+			SelectColumnList();
+		}
+
+		private void btnSelectedColumnListSave_Click(object sender, EventArgs e)
+		{
+			string oldColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
+			string message = "You are about to save column setup list: " + txtColumnListName.Text;
+			if (txtColumnListName.Text != oldColumnSetupListName)
+				message = "You are about to save and rename column setup list: " + oldColumnSetupListName + " to new name: " + txtColumnListName.Text;
+			Code.MsgBox.Button answer = MsgBox.Show(message, "Save existing column setup list", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				SaveSelectedColumnList();
+			}
+		}
+
+		private void SaveSelectedColumnList()
+		{
+			string newColumnSelectedListName = txtColumnListName.Text.Trim();
+			string newColumnSelectedListPos = popupPosition.Text;
+			if (newColumnSelectedListPos == "Not Visible") newColumnSelectedListPos = "NULL";
+			// Change position on existing if already used
+			string sql = "select * from columnList where position = @position";
+			DB.AddWithValue(ref sql, "@position", newColumnSelectedListPos, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			sql = "";
+			if (dt.Rows.Count == 1)
+			{
+				sql = "update columnList set position = position + 1 where position >= @position; ";
+				// Remove positions above 10
+				sql += "update columnList set position = NULL where position > 10; ";
+			}
+			// Add new favlist
+			sql += "update columnList set position=@position, name=@name where id=@id; ";
+			// Add parameters
+			DB.AddWithValue(ref sql, "@position", newColumnSelectedListPos, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@name", newColumnSelectedListName, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
+			// Save Fav List
+			DB.ExecuteNonQuery(sql);
+			// Save Selected Tank List
+			sql = "delete from columnListSelection where columnListId=@columnListId; "; // Delete all old tanks
+			// Loop through datagrid and add all new tanks
+			foreach (DataGridViewRow dr in dataGridSelectedColumns.Rows)
+			{
+				string insertsql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) values (@columnSelectionId, @columnListId, @sortorder); ";
+				DB.AddWithValue(ref insertsql, "@columnSelectionId", dr.Cells["columnSelectionId"].Value, DB.SqlDataType.Int);
+				DB.AddWithValue(ref insertsql, "@sortorder", dr.Cells["#"].Value, DB.SqlDataType.Int);
+				sql += insertsql;
+			}
+			DB.AddWithValue(ref sql, "@columnListId", SelectedColumnListId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+
+			// Refresh Grid
+			ShowColumnSetupList(SelectedColumnListId);
+		}
+
 
 		#endregion
 
@@ -541,8 +615,325 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
+		#region Selected Columns
 
+		private DataTable dtSelectedColumns = new DataTable();
+		private bool selectedColumnSetupDone = false;
+		private void GetSelectedColumnsFromColumnList()
+		{
+			string sql =
+				"SELECT columnListSelection.sortorder AS '#', columnSelection.name AS 'Name', columnSelectionId, columnListId " +
+				"FROM   columnListSelection INNER JOIN " +
+				"		columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
+				"		AND columnListSelection.columnListId = @columnListId " +
+				"ORDER BY sortorder ";
+			DB.AddWithValue(ref sql, "@columnListId", SelectedColumnListId, DB.SqlDataType.Int);
+			dtSelectedColumns = DB.FetchData(sql);
+			ShowSelectedColumns();
+			if (!selectedColumnSetupDone)
+			{
+				selectedColumnSetupDone = true;
+				dataGridSelectedColumns.Columns["#"].Width = 20;
+				dataGridSelectedColumns.Columns["columnSelectionId"].Visible = false;
+				dataGridSelectedColumns.Columns["columnListId"].Visible = false;
+			}
+		}
 
+		private void ShowSelectedColumns()
+		{
+			// Display datatable containing selected tanks in grid
+			dataGridSelectedColumns.DataSource = dtSelectedColumns;
+			// Connect to scrollbar
+			scrollSelectedColumns.ScrollElementsTotals = dtSelectedColumns.Rows.Count;
+			scrollSelectedColumns.ScrollElementsVisible = dataGridSelectedColumns.DisplayedRowCount(false);
+			// No sorting for Selected Tanks Data Grid
+			foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
+			{
+				col.SortMode = DataGridViewColumnSortMode.NotSortable;
+			}
+		}
+
+		private void AddSelectedColumn(bool All = false)
+		{
+			if (All) dataGridAllColumns.SelectAll(); // Select all rows in All Tank List
+			int selectedRowCount = dataGridAllColumns.SelectedRows.Count;
+			if (selectedRowCount > 0)
+			{
+				int lastcolumnSelectionId = 0; // Remember last tank ID to set focus at end
+				int sortOrder = 1; // Get sort order start pos
+				if (dataGridSelectedColumns.RowCount > 0)
+				{
+					int currentRowCount = dataGridSelectedColumns.SelectedRows.Count;
+					if (currentRowCount > 0)
+					{
+						sortOrder = Convert.ToInt32(dataGridSelectedColumns.SelectedRows[0].Cells["#"].Value) + 1;
+						lastcolumnSelectionId = Convert.ToInt32(dataGridSelectedColumns.SelectedRows[0].Cells["columnSelectionId"].Value);
+						// Find last selected row if several
+						foreach (DataGridViewRow dr in dataGridSelectedColumns.SelectedRows)
+						{
+							int newSort = Convert.ToInt32(dr.Cells["#"].Value);
+							if (newSort > sortOrder)
+							{
+								sortOrder = newSort + 1;
+								lastcolumnSelectionId = Convert.ToInt32(dr.Cells["columnSelectionId"].Value);
+							}
+						}
+
+					}
+				}
+				// Move existing elements sort order to make room for new ones
+				foreach (DataRow dr in dtSelectedColumns.Rows)
+				{
+					if (Convert.ToInt32(dr["#"]) >= sortOrder) dr["#"] = Convert.ToInt32(dr["#"]) + selectedRowCount;
+
+				}
+				// Insert new elements now
+				for (int i = 0; i < selectedRowCount; i++)
+				{
+					// Check if this tank exist, if not add it
+					DataRow[] drFind = dtSelectedColumns.Select("columnSelectionId=" + dataGridAllColumns.SelectedRows[i].Cells["id"].Value);
+					if (drFind.Length == 0)
+					{
+						DataRow dr = dtSelectedColumns.NewRow();
+						lastcolumnSelectionId = Convert.ToInt32(dataGridAllColumns.SelectedRows[i].Cells["id"].Value);
+						dr["Name"] = dataGridAllColumns.SelectedRows[i].Cells["Name"].Value; ;
+						dr["columnSelectionId"] = lastcolumnSelectionId;
+						dr["columnListId"] = SelectedColumnListId;
+						dr["#"] = sortOrder;
+						dtSelectedColumns.Rows.Add(dr);
+						sortOrder++;
+					}
+				}
+				SortSelectedColum("#");
+				// Select the last inserted tank
+				if (lastcolumnSelectionId != 0)
+				{
+					int rownum = 0;
+					dataGridSelectedColumns.ClearSelection();
+					foreach (DataGridViewRow row in dataGridSelectedColumns.Rows)
+					{
+						if (Convert.ToInt32(row.Cells["columnSelectionId"].Value) == lastcolumnSelectionId) rownum = row.Index;
+					}
+					dataGridSelectedColumns.Rows[rownum].Selected = true;
+				}
+			}
+		}
+
+		private void MoveSelectedColumn(bool MoveDown) // true = move down, false = move up
+		{
+			int selectedRowCount = dataGridSelectedColumns.SelectedRows.Count;
+			if (selectedRowCount > 0)
+			{
+				// Remember scroll pos
+				int FirstVisibleRowInGrid = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
+				// Get ready
+				List<int> selectedColumns = new List<int>();
+				int lastRow = dataGridSelectedColumns.Rows.Count - 1;
+				// Move direction up
+				int fromRow = 0;     // loop from
+				int toRow = lastRow; // loop to
+				int move = -1;       // element move direction
+				// Move direction down
+				if (MoveDown)
+				{
+					fromRow = lastRow;
+					toRow = 0;
+					move = 1;
+				}
+				// Remember closest above/below row to change place with the moved one, -1 = not exists (yet)
+				int notSelectedRowIndex = -1;
+				// Loop through all rows in grid (oposit direction as moving elements)
+				int currentPos = fromRow;
+				while (currentPos >= 0 && currentPos <= lastRow)
+				{
+					DataGridViewRow currentRow = dataGridSelectedColumns.Rows[currentPos]; // Get current row
+					if (currentRow.Selected)
+					{
+						// Selected row - move it
+						selectedColumns.Add(Convert.ToInt32(currentRow.Cells["columnSelectionId"].Value)); // remember this tank to set selected area back after moving
+						int currentRowSortPos = Convert.ToInt32(dtSelectedColumns.Rows[currentPos]["#"]); // current sort postition 
+						// For each tank to be moved the above/below tank must change place with the moved one, if any exist
+						if (notSelectedRowIndex != -1)
+						{
+							dtSelectedColumns.Rows[notSelectedRowIndex]["#"] = Convert.ToInt32(dtSelectedColumns.Rows[notSelectedRowIndex]["#"]) - move;
+						}
+						// move tank row now
+						dtSelectedColumns.Rows[currentPos]["#"] = currentRowSortPos + move;
+					}
+					else
+					{
+						// Not selected row
+						notSelectedRowIndex = currentPos;
+					}
+					currentPos -= move; // Move to next	position, in oposite direction as element movment					
+				}
+				// Save new sorted grid to datatable
+				dtSelectedColumns.AcceptChanges();
+
+				// Sort and show
+				SortSelectedColum("#");
+				// Set selected rows back to correct tanks
+				dataGridSelectedColumns.ClearSelection();
+				int selectedRowPos = 0;
+				bool SelectedRowPosGet = true;
+				for (int i = 0; i <= lastRow; i++)
+				{
+					if (selectedColumns.Contains(Convert.ToInt32(dataGridSelectedColumns.Rows[i].Cells["columnSelectionId"].Value)))
+					{
+						dataGridSelectedColumns.Rows[i].Selected = true;
+						if (SelectedRowPosGet) selectedRowPos = i;
+						if (!MoveDown) SelectedRowPosGet = false; // Get first one if move up
+					}
+				}
+				// Return to scroll position
+				dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid;
+				// Check if outside
+				int topGridRow = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
+				int bottomGridRow = topGridRow + dataGridSelectedColumns.DisplayedRowCount(false);
+				if (selectedRowPos < topGridRow)
+					dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid - 1;
+				if (selectedRowPos >= bottomGridRow)
+					dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = FirstVisibleRowInGrid + 1;
+				MoveSelectedColumnsScrollBar();
+			}
+		}
+
+		private void RemoveSelectedColumn(bool All = false)
+		{
+			if (All)
+				dtSelectedColumns.Clear(); // Remove all rows in Selected Tank List
+			else
+			{
+				int selectedRowCount = dataGridSelectedColumns.SelectedRows.Count;
+				if (selectedRowCount > 0)
+				{
+					foreach (DataGridViewRow dr in dataGridSelectedColumns.SelectedRows)
+					{
+						int tankID = Convert.ToInt32(dr.Cells["ID"].Value);
+						DataRow[] tanks = dtSelectedColumns.Select("ID = " + tankID.ToString());
+						foreach (DataRow tank in tanks)
+						{
+							tank.Delete();
+						}
+					}
+				}
+			}
+			dtSelectedColumns.AcceptChanges(); // completely remove deleted rows
+			ShowSelectedColumns();
+		}
+
+		private void SortSelectedColum(string Column, bool SortASC = true)
+		{
+			string sortDirection = " ASC";
+			if (!SortASC) sortDirection = " DESC";
+			dtSelectedColumns.DefaultView.Sort = Column + sortDirection;
+			dtSelectedColumns = dtSelectedColumns.DefaultView.ToTable();
+			int sortnum = 0;
+			foreach (DataRow dr in dtSelectedColumns.Rows)
+			{
+				sortnum++;
+				dr["#"] = sortnum;
+			}
+			ShowSelectedColumns();
+		}
+
+		private void btnRemoveSelected_Click(object sender, EventArgs e)
+		{
+			RemoveSelectedColumn();
+		}
+
+		private void btnRemoveAll_Click(object sender, EventArgs e)
+		{
+			RemoveSelectedColumn(true);
+		}
+
+		private void btnSelectSelected_Click(object sender, EventArgs e)
+		{
+			AddSelectedColumn();
+		}
+
+		private void btnSelectAll_Click(object sender, EventArgs e)
+		{
+			AddSelectedColumn(true);
+		}
+
+		private void toolSelectedColumns_MoveUp_Click(object sender, EventArgs e)
+		{
+			MoveSelectedColumn(false);
+		}
+
+		private void toolSelectedColumns_MoveDown_Click(object sender, EventArgs e)
+		{
+			MoveSelectedColumn(true);
+		}
+
+		#endregion
+
+		#region Selected Tanks Scrolling
+
+		private bool scrollingSelectedColumns = false;
+		private void scrollSelectedColumns_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (dataGridSelectedColumns.RowCount > 0)
+			{
+				scrollingSelectedColumns = true;
+				dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = scrollSelectedColumns.ScrollPosition;
+			}
+
+		}
+
+		private void scrollSelectedColumns_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (dataGridSelectedColumns.RowCount > 0 && scrollingSelectedColumns)
+			{
+				int currentFirstRow = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
+				dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = scrollSelectedColumns.ScrollPosition;
+				if (currentFirstRow != dataGridSelectedColumns.FirstDisplayedScrollingRowIndex) Refresh();
+			}
+
+		}
+
+		private void scrollSelectedColumns_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingSelectedColumns = false;
+		}
+
+		// Enable mouse wheel scrolling for datagrid
+		private void dataGridSelectedColumns_MouseWheel(object sender, MouseEventArgs e)
+		{
+			try
+			{
+				// scroll in grid from mouse wheel
+				int currentIndex = this.dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
+				int scrollLines = SystemInformation.MouseWheelScrollLines;
+				if (e.Delta > 0)
+				{
+					this.dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+				}
+				else if (e.Delta < 0)
+				{
+					this.dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+				}
+				// move scrollbar
+				MoveSelectedColumnsScrollBar();
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+		}
+
+		private void MoveSelectedColumnsScrollBar()
+		{
+			scrollSelectedColumns.ScrollPosition = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
+		}
+
+		private void dataGridSelectedColumns_SelectionChanged(object sender, EventArgs e)
+		{
+			MoveSelectedColumnsScrollBar();
+		}
+
+		#endregion
 
 
 	}

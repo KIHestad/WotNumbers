@@ -56,20 +56,19 @@
             this.toolItemRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolItemRefreshSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolItemColumnSelect = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolItemColumnSelect_Default = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_Minimal = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_All = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_Separator = new System.Windows.Forms.ToolStripSeparator();
-            this.toolItemColumnSelect_User01 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User02 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User03 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User04 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User05 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User06 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User07 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User08 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User09 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolItemColumnSelect_User10 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_01 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_02 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_03 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_04 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_05 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_06 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_07 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_08 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_09 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_10 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_11 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_12 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_13 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolItemColumnSelect_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolItemTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
@@ -143,10 +142,11 @@
             this.toolItemTest_ScrollBar = new System.Windows.Forms.ToolStripMenuItem();
             this.importDossierHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importWsDossierHistoryToDbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.testNewTurretImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelectSep = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.panelMainArea.SuspendLayout();
@@ -190,7 +190,7 @@
             this.MainTheme.Controls.Add(this.toolMain);
             this.MainTheme.Controls.Add(this.lblStatus2);
             this.MainTheme.Controls.Add(this.lblStatus1);
-            this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
+			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.MainTheme.FormFooter = true;
@@ -452,20 +452,20 @@
             // 
             this.toolItemColumnSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolItemColumnSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemColumnSelect_Default,
-            this.toolItemColumnSelect_Minimal,
-            this.toolItemColumnSelect_All,
-            this.toolItemColumnSelect_Separator,
-            this.toolItemColumnSelect_User01,
-            this.toolItemColumnSelect_User02,
-            this.toolItemColumnSelect_User03,
-            this.toolItemColumnSelect_User04,
-            this.toolItemColumnSelect_User05,
-            this.toolItemColumnSelect_User06,
-            this.toolItemColumnSelect_User07,
-            this.toolItemColumnSelect_User08,
-            this.toolItemColumnSelect_User09,
-            this.toolItemColumnSelect_User10,
+            this.toolItemColumnSelect_01,
+            this.toolItemColumnSelect_02,
+            this.toolItemColumnSelect_03,
+            this.toolItemColumnSelectSep,
+            this.toolItemColumnSelect_04,
+            this.toolItemColumnSelect_05,
+            this.toolItemColumnSelect_06,
+            this.toolItemColumnSelect_07,
+            this.toolItemColumnSelect_08,
+            this.toolItemColumnSelect_09,
+            this.toolItemColumnSelect_10,
+            this.toolItemColumnSelect_11,
+            this.toolItemColumnSelect_12,
+            this.toolItemColumnSelect_13,
             this.toolStripSeparator3,
             this.toolItemColumnSelect_Edit});
             this.toolItemColumnSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolItemColumnSelect.Image")));
@@ -475,125 +475,117 @@
             this.toolItemColumnSelect.Size = new System.Drawing.Size(20, 22);
             this.toolItemColumnSelect.Text = "toolStripDropDownButton1";
             // 
-            // toolItemColumnSelect_Default
+			// toolItemColumnSelect_01
             // 
-            this.toolItemColumnSelect_Default.Checked = true;
-            this.toolItemColumnSelect_Default.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolItemColumnSelect_Default.Name = "toolItemColumnSelect_Default";
-            this.toolItemColumnSelect_Default.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_Default.Text = "Default Column Setup";
-            this.toolItemColumnSelect_Default.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_Default.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_01.Checked = true;
+			this.toolItemColumnSelect_01.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.toolItemColumnSelect_01.Name = "toolItemColumnSelect_01";
+			this.toolItemColumnSelect_01.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_01.Text = "Pre Defined #1";
+			this.toolItemColumnSelect_01.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // toolItemColumnSelect_Minimal
+			// toolItemColumnSelect_02
             // 
-            this.toolItemColumnSelect_Minimal.Name = "toolItemColumnSelect_Minimal";
-            this.toolItemColumnSelect_Minimal.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_Minimal.Text = "Minimalistic Column Setup";
-            this.toolItemColumnSelect_Minimal.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_Minimal.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_02.Name = "toolItemColumnSelect_02";
+			this.toolItemColumnSelect_02.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_02.Text = "Pre Defined #2";
+			this.toolItemColumnSelect_02.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // toolItemColumnSelect_All
+			// toolItemColumnSelect_03
             // 
-            this.toolItemColumnSelect_All.Name = "toolItemColumnSelect_All";
-            this.toolItemColumnSelect_All.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_All.Text = "All Columns";
-            this.toolItemColumnSelect_All.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_All.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_03.Name = "toolItemColumnSelect_03";
+			this.toolItemColumnSelect_03.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_03.Text = "Pre Defined #3";
+			this.toolItemColumnSelect_03.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // toolItemColumnSelect_Separator
+			// toolItemColumnSelect_04
             // 
-            this.toolItemColumnSelect_Separator.Name = "toolItemColumnSelect_Separator";
-            this.toolItemColumnSelect_Separator.Size = new System.Drawing.Size(215, 6);
-            this.toolItemColumnSelect_Separator.Visible = false;
-            this.toolItemColumnSelect_Separator.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_Separator.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_04.Name = "toolItemColumnSelect_04";
+			this.toolItemColumnSelect_04.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_04.Text = "User Defined #4";
+			this.toolItemColumnSelect_04.Visible = false;
+			this.toolItemColumnSelect_04.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_04.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // toolItemColumnSelect_User01
+			// toolItemColumnSelect_05
             // 
-            this.toolItemColumnSelect_User01.Name = "toolItemColumnSelect_User01";
-            this.toolItemColumnSelect_User01.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User01.Text = "User Defined #1";
-            this.toolItemColumnSelect_User01.Visible = false;
-            this.toolItemColumnSelect_User01.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_User01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_05.Name = "toolItemColumnSelect_05";
+			this.toolItemColumnSelect_05.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_05.Text = "User Defined #5";
+			this.toolItemColumnSelect_05.Visible = false;
+			this.toolItemColumnSelect_05.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_05.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // toolItemColumnSelect_User02
+			// toolItemColumnSelect_06
             // 
-            this.toolItemColumnSelect_User02.Name = "toolItemColumnSelect_User02";
-            this.toolItemColumnSelect_User02.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User02.Text = "User Defined #2";
-            this.toolItemColumnSelect_User02.Visible = false;
-            this.toolItemColumnSelect_User02.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_User02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_06.Name = "toolItemColumnSelect_06";
+			this.toolItemColumnSelect_06.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_06.Text = "User Defined #6";
+			this.toolItemColumnSelect_06.Visible = false;
             // 
-            // toolItemColumnSelect_User03
+			// toolItemColumnSelect_07
             // 
-            this.toolItemColumnSelect_User03.Name = "toolItemColumnSelect_User03";
-            this.toolItemColumnSelect_User03.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User03.Text = "User Defined #3";
-            this.toolItemColumnSelect_User03.Visible = false;
+			this.toolItemColumnSelect_07.Name = "toolItemColumnSelect_07";
+			this.toolItemColumnSelect_07.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_07.Text = "User Defined #7";
+			this.toolItemColumnSelect_07.Visible = false;
             // 
-            // toolItemColumnSelect_User04
+			// toolItemColumnSelect_08
             // 
-            this.toolItemColumnSelect_User04.Name = "toolItemColumnSelect_User04";
-            this.toolItemColumnSelect_User04.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User04.Text = "User Defined #4";
-            this.toolItemColumnSelect_User04.Visible = false;
+			this.toolItemColumnSelect_08.Name = "toolItemColumnSelect_08";
+			this.toolItemColumnSelect_08.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_08.Text = "User Defined #8";
+			this.toolItemColumnSelect_08.Visible = false;
             // 
-            // toolItemColumnSelect_User05
+			// toolItemColumnSelect_09
             // 
-            this.toolItemColumnSelect_User05.Name = "toolItemColumnSelect_User05";
-            this.toolItemColumnSelect_User05.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User05.Text = "User Defined #5";
-            this.toolItemColumnSelect_User05.Visible = false;
+			this.toolItemColumnSelect_09.Name = "toolItemColumnSelect_09";
+			this.toolItemColumnSelect_09.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_09.Text = "User Defined #9";
+			this.toolItemColumnSelect_09.Visible = false;
             // 
-            // toolItemColumnSelect_User06
+			// toolItemColumnSelect_10
             // 
-            this.toolItemColumnSelect_User06.Name = "toolItemColumnSelect_User06";
-            this.toolItemColumnSelect_User06.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User06.Text = "User Defined #6";
-            this.toolItemColumnSelect_User06.Visible = false;
+			this.toolItemColumnSelect_10.Name = "toolItemColumnSelect_10";
+			this.toolItemColumnSelect_10.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_10.Text = "User Defined #10";
+			this.toolItemColumnSelect_10.Visible = false;
             // 
-            // toolItemColumnSelect_User07
+			// toolItemColumnSelect_11
             // 
-            this.toolItemColumnSelect_User07.Name = "toolItemColumnSelect_User07";
-            this.toolItemColumnSelect_User07.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User07.Text = "User Defined #7";
-            this.toolItemColumnSelect_User07.Visible = false;
+			this.toolItemColumnSelect_11.Name = "toolItemColumnSelect_11";
+			this.toolItemColumnSelect_11.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_11.Text = "User Defined #11";
+			this.toolItemColumnSelect_11.Visible = false;
             // 
-            // toolItemColumnSelect_User08
+			// toolItemColumnSelect_12
             // 
-            this.toolItemColumnSelect_User08.Name = "toolItemColumnSelect_User08";
-            this.toolItemColumnSelect_User08.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User08.Text = "User Defined #8";
-            this.toolItemColumnSelect_User08.Visible = false;
+			this.toolItemColumnSelect_12.Name = "toolItemColumnSelect_12";
+			this.toolItemColumnSelect_12.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_12.Text = "User Defined #12";
+			this.toolItemColumnSelect_12.Visible = false;
             // 
-            // toolItemColumnSelect_User09
+			// toolItemColumnSelect_13
             // 
-            this.toolItemColumnSelect_User09.Name = "toolItemColumnSelect_User09";
-            this.toolItemColumnSelect_User09.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User09.Text = "User Defined #9";
-            this.toolItemColumnSelect_User09.Visible = false;
-            // 
-            // toolItemColumnSelect_User10
-            // 
-            this.toolItemColumnSelect_User10.Name = "toolItemColumnSelect_User10";
-            this.toolItemColumnSelect_User10.Size = new System.Drawing.Size(218, 22);
-            this.toolItemColumnSelect_User10.Text = "User Defined #10";
-            this.toolItemColumnSelect_User10.Visible = false;
-            this.toolItemColumnSelect_User10.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-            this.toolItemColumnSelect_User10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemColumnSelect_13.Name = "toolItemColumnSelect_13";
+			this.toolItemColumnSelect_13.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_13.Text = "User Defined #13";
+			this.toolItemColumnSelect_13.Visible = false;
+			this.toolItemColumnSelect_13.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_13.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(215, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(179, 6);
             // 
             // toolItemColumnSelect_Edit
             // 
             this.toolItemColumnSelect_Edit.Name = "toolItemColumnSelect_Edit";
-            this.toolItemColumnSelect_Edit.Size = new System.Drawing.Size(218, 22);
+			this.toolItemColumnSelect_Edit.Size = new System.Drawing.Size(182, 22);
             this.toolItemColumnSelect_Edit.Text = "Edit Column Setup...";
             this.toolItemColumnSelect_Edit.Click += new System.EventHandler(this.toolItemColumnSelect_Edit_Click);
             // 
@@ -1262,13 +1254,13 @@
             this.importWsDossierHistoryToDbToolStripMenuItem.Text = "Import battles from ws dossier history";
             this.importWsDossierHistoryToDbToolStripMenuItem.Click += new System.EventHandler(this.importWsDossierHistoryToDbToolStripMenuItem_Click);
             // 
-            // testNewTankImportToolStripMenuItem
-            // 
-            this.testNewTankImportToolStripMenuItem.Name = "testNewTankImportToolStripMenuItem";
-            this.testNewTankImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewTankImportToolStripMenuItem.Text = "Test new tankImport";
-            this.testNewTankImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTankImportToolStripMenuItem_Click);
-            // 
+			// testNewTankImportToolStripMenuItem
+			// 
+			this.testNewTankImportToolStripMenuItem.Name = "testNewTankImportToolStripMenuItem";
+			this.testNewTankImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+			this.testNewTankImportToolStripMenuItem.Text = "Test new tankImport";
+			this.testNewTankImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTankImportToolStripMenuItem_Click);
+			// 
             // lblStatus2
             // 
             this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1297,8 +1289,13 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // testNewTurretImportToolStripMenuItem
+			// toolItemColumnSelectSep
             // 
+			this.toolItemColumnSelectSep.Name = "toolItemColumnSelectSep";
+			this.toolItemColumnSelectSep.Size = new System.Drawing.Size(179, 6);
+            //
+            // testNewTurretImportToolStripMenuItem
+            //
             this.testNewTurretImportToolStripMenuItem.Name = "testNewTurretImportToolStripMenuItem";
             this.testNewTurretImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
             this.testNewTurretImportToolStripMenuItem.Text = "Test new turretImport";
@@ -1433,24 +1430,24 @@
 		private BadScrollBarCorner scrollCorner;
 		private System.Windows.Forms.ToolStripMenuItem importWsDossierHistoryToDbToolStripMenuItem;
 		private System.Windows.Forms.ToolStripDropDownButton toolItemColumnSelect;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_Default;
-		private System.Windows.Forms.ToolStripSeparator toolItemColumnSelect_Separator;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User01;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User02;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User10;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_01;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_04;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_05;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_13;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_Edit;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_All;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_Minimal;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User03;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User04;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User05;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User06;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User07;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User08;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User09;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_03;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_02;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_06;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_07;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_08;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_09;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_10;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_11;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_12;
         private System.Windows.Forms.ToolStripMenuItem testNewTankImportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolItemColumnSelectSep;
 	}
 }
 

@@ -27,6 +27,9 @@ namespace WotDBUpdater.Forms
 {
 	public partial class Main : Form
 	{
+
+		#region Init 
+
 		public Main()
 		{
 			InitializeComponent();
@@ -82,8 +85,6 @@ namespace WotDBUpdater.Forms
 			// Show content now
 			MainTheme.Visible = true;
 		}
-
-		#region Layout
 
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
@@ -422,6 +423,7 @@ namespace WotDBUpdater.Forms
 				"WHERE    player.id=@playerid " + where + " " +
 				"ORDER BY sortorder";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			mainGridFormatting = true;
 			dataGridMain.DataSource = DB.FetchData(sql);
 			// Text cols
 			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -596,20 +598,63 @@ namespace WotDBUpdater.Forms
 		{
 			if (mainGridFormatting)
 			{
-				bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1);
 				string col = dataGridMain.Columns[e.ColumnIndex].Name;
-				if (col.Equals("Tank"))
+				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+				if (col.Equals("EFF"))
 				{
-					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					// Dynamic color by efficiency
+					//"eff": [
+					//  { "value": 610,  "color": ${"def.colorRating.very_bad" } },  //    0 - 609  - very bad   (20% of players)
+					//  { "value": 850,  "color": ${"def.colorRating.bad"      } },  //  610 - 849  - bad        (better then 20% of players)
+					//  { "value": 1145, "color": ${"def.colorRating.normal"   } },  //  850 - 1144 - normal     (better then 60% of players)
+					//  { "value": 1475, "color": ${"def.colorRating.good"     } },  // 1145 - 1474 - good       (better then 90% of players)
+					//  { "value": 1775, "color": ${"def.colorRating.very_good"} },  // 1475 - 1774 - very good  (better then 99% of players)
+					//  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
+					//]
+					int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
+					Color effRatingColor = ColorTheme.Rating_very_bad;
+					if (eff > 1774) effRatingColor = ColorTheme.Rating_uniqe;
+					else if (eff > 1474) effRatingColor = ColorTheme.Rating_very_good;
+					else if (eff > 1144) effRatingColor = ColorTheme.Rating_good;
+					else if (eff > 849) effRatingColor = ColorTheme.Rating_normal;
+					else if (eff > 609) effRatingColor = ColorTheme.Rating_bad;
+					cell.Style.ForeColor = effRatingColor;
+				}
+				else if (col.Equals("WN8"))
+				{
+					// Dynamic color by WN8 rating
+					//"wn8": [
+					//	{ "value": 310,  "color": ${"def.colorRating.very_bad" } },  //    0 - 309  - very bad   (20% of players)
+					//	{ "value": 750,  "color": ${"def.colorRating.bad"      } },  //  310 - 749  - bad        (better then 20% of players)
+					//	{ "value": 1310, "color": ${"def.colorRating.normal"   } },  //  750 - 1309 - normal     (better then 60% of players)
+					//	{ "value": 1965, "color": ${"def.colorRating.good"     } },  // 1310 - 1964 - good       (better then 90% of players)
+					//	{ "value": 2540, "color": ${"def.colorRating.very_good"} },  // 1965 - 2539 - very good  (better then 99% of players)
+					//	{ "value": 9999, "color": ${"def.colorRating.unique"   } }   // 2540 - *    - unique     (better then 99.9% of players)
+					//]
+					int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
+					Color wn8RatingColor = ColorTheme.Rating_very_bad;
+					if (wn8 > 2539) wn8RatingColor = ColorTheme.Rating_uniqe;
+					else if (wn8 > 1964) wn8RatingColor = ColorTheme.Rating_very_good;
+					else if (wn8 > 1309) wn8RatingColor = ColorTheme.Rating_good;
+					else if (wn8 > 749) wn8RatingColor = ColorTheme.Rating_normal;
+					else if (wn8 > 309) wn8RatingColor = ColorTheme.Rating_bad;
+					cell.Style.ForeColor = wn8RatingColor;
+				}
+
+				else if (toolItemViewBattles.Checked)
+				{
+					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1);
+					if (col.Equals("Tank"))
+					{
 						string battleTime = dataGridMain["battleTime", e.RowIndex].Value.ToString();
 						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
 						// Check if this row is normal or footer
 						if (!footer) // normal line
-					{
+						{
 							cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
-					}
+						}
 						else // footer
-					{
+						{
 							cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
 							dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
 						}
@@ -617,26 +662,24 @@ namespace WotDBUpdater.Forms
 					// Battle Result color color
 					else if (col.Equals("Result"))
 					{
-						DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
 						string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
 						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
 						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
 						if (battlesCount > 1)
-					{
+						{
 							cell.ToolTipText = "Victory: " + dataGridMain["victory", e.RowIndex].Value.ToString() + Environment.NewLine +
 								"Draw: " + dataGridMain["draw", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString() ;
+								"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString();
+						}
 					}
-				}
-				// Survived color and formatting
-				else if (col.Equals("Survived"))
-				{
-					DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
+					// Survived color and formatting
+					else if (col.Equals("Survived"))
+					{
 						string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
 						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
 						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
 						if (battlesCount > 1)
-					{
+						{
 							cell.ToolTipText = "Survived: " + dataGridMain["survivedcount", e.RowIndex].Value.ToString() + Environment.NewLine +
 								"Killed: " + dataGridMain["killedcount", e.RowIndex].Value.ToString();
 						}
@@ -644,12 +687,13 @@ namespace WotDBUpdater.Forms
 					// Foter desimal
 					if (footer)
 					{
-						DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
 						if (col == "Tier" || col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits" || col == "Capture Points" || col == "Defense Points")
-					{
+						{
 							cell.Style.Format = "n1";
+						}
 					}
 				}
+				
 			}
 		}
 
@@ -969,6 +1013,8 @@ namespace WotDBUpdater.Forms
 					// Apply last selected Tank Filter
 					SetTankFilterCheckedElements(tankFavListTankView);
 					toolItemTankFilter.Visible = true;
+					// Get Column Setup List
+					GetColumnSetupList();
 					toolItemColumnSelect.Visible = true;
 					
 				}
@@ -979,7 +1025,10 @@ namespace WotDBUpdater.Forms
 					// Apply last selected Tank Filter
 					SetTankFilterCheckedElements(tankFavListBattleView);
 					toolItemTankFilter.Visible = true;
+					// Get Column Setup List
+					GetColumnSetupList();
 					toolItemColumnSelect.Visible = true;
+					// Start file watcher to detect new battles
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 				}
 			}
@@ -1010,7 +1059,6 @@ namespace WotDBUpdater.Forms
 			menuItem.Checked = true;
 			toolItemBattles.Text = menuItem.Text;
 			GridShowBattle();
-
 		}
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
@@ -1084,7 +1132,6 @@ namespace WotDBUpdater.Forms
 			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
 			if (autoRefreshGrid) ShowContent();
-			
 		}
 
 		private void toolItemTankFavList_Uncheck()
@@ -1300,6 +1347,76 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
+		private int columnListcolType = 0; // To keep track on current column list type
+		private string columnListSelected = ""; // To keep track on current selected column list
+		private int columnListSelectedTankView = 0; // Remember last selected column list for tank view, 0 == Use the default one
+		private int columnListSelectedBattleView = 0; // Remember last selected column list for battle view, 0 == Use the default one
+		
+		private void GetColumnSetupList()
+		{
+			if (toolItemViewTankInfo.Checked) columnListcolType = 1;
+			if (toolItemViewBattles.Checked) columnListcolType = 2;
+			if (columnListcolType != 0)
+			{
+				// Hide all colum setup list menu items
+				for (int i = 1; i <= 13; i++)
+				{
+					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
+					menuItem.Visible = false;
+					menuItem.Checked = false;
+				}
+				bool separatorVisible = false;
+				// Add colum lists
+				string sql = "select name, position, colDefault from columnList where colType=@colType and position is not null order by position; ";
+				DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
+				DataTable dt = DB.FetchData(sql);
+				int colDefault = 1; // If no default is set, use first menu item
+				if (dt.Rows.Count > 0)
+				{
+					foreach (DataRow dr in dt.Rows)
+					{
+						if (Convert.ToInt32(dr["position"]) > 3) separatorVisible = true;
+						ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(dr["position"]).ToString("00")] as ToolStripMenuItem;
+						menuItem.Text = dr["name"].ToString();
+						menuItem.Visible = true;
+						if (Convert.ToBoolean(dr["colDefault"])) colDefault = Convert.ToInt32(dr["position"]); // Set default
+					}
+				}
+				toolItemColumnSelectSep.Visible = separatorVisible;
+				// Set checked menu item, use previus selected or use default
+				if (columnListcolType == 1)
+					if (columnListSelectedTankView != 0) colDefault = columnListSelectedTankView;
+				else if (columnListcolType == 2)
+					if (columnListSelectedBattleView != 0) colDefault = columnListSelectedBattleView;
+				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
+				checkedMenuItem.Checked = true;
+			}
+		}
+
+		private void toolItemColumnSelect_Click(object sender, EventArgs e)
+		{
+			// Hide all colum setup list menu items
+			for (int i = 1; i <= 13; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Checked = false;
+			}
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			selectedMenu.Checked = true;
+
+		}
+
+		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
+		{
+			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
+			if (toolItemViewBattles.Checked)
+				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
+			else if (toolItemViewTankInfo.Checked)
+				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
+			Form frm = new Forms.File.ColumnSetup(colSetupType);
+			frm.ShowDialog();
+		}
+
 		
 		#endregion
 
@@ -1339,10 +1456,10 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
 		}
 
-        private void testNewTankImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportTanks();
-        }
+		private void testNewTankImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportTanks();
+		}
 
         private void testNewTurretImportToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1354,28 +1471,7 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-		private void toolItemColumnSelect_Click(object sender, EventArgs e)
-		{
-			toolItemColumnSelect_All.Checked = false;
-			toolItemColumnSelect_Default.Checked = false;
-			toolItemColumnSelect_Minimal.Checked = false;
-			toolItemColumnSelect_User01.Checked = false;
-			toolItemColumnSelect_User02.Checked = false;
-			toolItemColumnSelect_User10.Checked = false;
-			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
-			selectedMenu.Checked = true;
-		}
-
-		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
-		{
-			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
-			if (toolItemViewBattles.Checked)
-				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
-			else if (toolItemViewTankInfo.Checked)
-				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
-			Form frm = new Forms.File.ColumnSetup(colSetupType);
-			frm.ShowDialog();
-		}
+		
 
 
 		
