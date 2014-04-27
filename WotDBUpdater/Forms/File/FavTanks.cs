@@ -274,11 +274,11 @@ namespace WotDBUpdater.Forms.File
 			Code.MsgBox.Button answer = MsgBox.Show(message,"Save existing favourite tank list", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
-				SaveFavList(SelectedFavListId);
+				SaveFavList();
 			}
 		}
 
-		private void SaveFavList(int GoToFavList)
+		private void SaveFavList()
 		{
 			string newFavListName = txtFavListName.Text.Trim();
 			string newFavListPos = popupPosition.Text;
@@ -316,7 +316,7 @@ namespace WotDBUpdater.Forms.File
 			DB.ExecuteNonQuery(sql);
 
 			// Refresh Grid
-			ShowFavList(GoToFavList);
+			ShowFavList(SelectedFavListId);
 		}
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
@@ -482,6 +482,7 @@ namespace WotDBUpdater.Forms.File
 				}
 				SortFavList("Sort#");
 				// Select the last inserted tank
+				dataGridSelectedTanks.ClearSelection();
 				if (lastTankID !=0)
 				{
 					int rownum = 0;

@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 7; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 8; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -100,8 +100,12 @@ namespace WotDBUpdater.Code
 							") ";
 					break;
 				case 7:
-					mssql = "ALTER TABLE columnSelection ADD colGroup varchar(50) NULL; ";
-					sqlite = mssql;
+					mssql=	"ALTER TABLE columnSelection ADD colGroup varchar(50) NULL; ";
+					sqlite=mssql;
+					break;
+				case 8:
+					mssql=	"ALTER TABLE columnSelection ADD colWidth int NOT NULL default 70; ";
+					sqlite=	"ALTER TABLE columnSelection ADD colWidth integer NOT NULL default 70; ";;
 					break;
 				default:
 					break;
