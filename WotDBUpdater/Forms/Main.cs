@@ -1504,10 +1504,10 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotApi2DB.ImportTanks();
 		}
 
-        private void testNewTurretImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportTurrets();
-        }
+		private void testNewTurretImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportTurrets();
+		}
 
 
 
