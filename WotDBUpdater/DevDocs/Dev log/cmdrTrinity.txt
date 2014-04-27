@@ -1,4 +1,21 @@
-﻿03.30.14
+﻿04.26.14
+- Reworked tankImport function 
+- Tanks are now imported from API
+
+
+04.19.14
+- Created function for dossier import from Wot Statistics
+
+
+04.16.14
+- Added SQLite support to ImportWotStat
+
+
+04.10.14
+- Started creating SQLite db
+
+
+03.30.14
 - Added frags to recentBattles import
 
 
