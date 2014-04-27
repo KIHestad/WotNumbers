@@ -1339,6 +1339,11 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
 		}
 
+        private void testNewTankImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotApi2DB.ImportTanks();
+        }
+
 
 
 		#endregion
@@ -1365,6 +1370,7 @@ namespace WotDBUpdater.Forms
 			Form frm = new Forms.File.ColumnSetup(colSetupType);
 			frm.ShowDialog();
 		}
+
 		
 	}
 }
