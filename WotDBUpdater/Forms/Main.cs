@@ -27,6 +27,9 @@ namespace WotDBUpdater.Forms
 {
 	public partial class Main : Form
 	{
+
+		#region Init 
+
 		public Main()
 		{
 			InitializeComponent();
@@ -82,8 +85,6 @@ namespace WotDBUpdater.Forms
 			// Show content now
 			MainTheme.Visible = true;
 		}
-
-		#region Layout
 
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
@@ -611,7 +612,7 @@ namespace WotDBUpdater.Forms
 					//  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
 					//]
 					int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
-				    Color effRatingColor = ColorTheme.Rating_very_bad;
+					Color effRatingColor = ColorTheme.Rating_very_bad;
 					if (eff > 1774) effRatingColor = ColorTheme.Rating_uniqe;
 					else if (eff > 1474) effRatingColor = ColorTheme.Rating_very_good;
 					else if (eff > 1144) effRatingColor = ColorTheme.Rating_good;
@@ -1012,6 +1013,8 @@ namespace WotDBUpdater.Forms
 					// Apply last selected Tank Filter
 					SetTankFilterCheckedElements(tankFavListTankView);
 					toolItemTankFilter.Visible = true;
+					// Get Column Setup List
+					GetColumnSetupList();
 					toolItemColumnSelect.Visible = true;
 					
 				}
@@ -1022,7 +1025,10 @@ namespace WotDBUpdater.Forms
 					// Apply last selected Tank Filter
 					SetTankFilterCheckedElements(tankFavListBattleView);
 					toolItemTankFilter.Visible = true;
+					// Get Column Setup List
+					GetColumnSetupList();
 					toolItemColumnSelect.Visible = true;
+					// Start file watcher to detect new battles
 					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 				}
 			}
@@ -1053,7 +1059,6 @@ namespace WotDBUpdater.Forms
 			menuItem.Checked = true;
 			toolItemBattles.Text = menuItem.Text;
 			GridShowBattle();
-
 		}
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
@@ -1127,7 +1132,6 @@ namespace WotDBUpdater.Forms
 			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
 			// Refresh grid
 			if (autoRefreshGrid) ShowContent();
-			
 		}
 
 		private void toolItemTankFavList_Uncheck()
@@ -1343,6 +1347,76 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
+		private int columnListcolType = 0; // To keep track on current column list type
+		private string columnListSelected = ""; // To keep track on current selected column list
+		private int columnListSelectedTankView = 0; // Remember last selected column list for tank view, 0 == Use the default one
+		private int columnListSelectedBattleView = 0; // Remember last selected column list for battle view, 0 == Use the default one
+		
+		private void GetColumnSetupList()
+		{
+			if (toolItemViewTankInfo.Checked) columnListcolType = 1;
+			if (toolItemViewBattles.Checked) columnListcolType = 2;
+			if (columnListcolType != 0)
+			{
+				// Hide all colum setup list menu items
+				for (int i = 1; i <= 13; i++)
+				{
+					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
+					menuItem.Visible = false;
+					menuItem.Checked = false;
+				}
+				bool separatorVisible = false;
+				// Add colum lists
+				string sql = "select name, position, colDefault from columnList where colType=@colType and position is not null order by position; ";
+				DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
+				DataTable dt = DB.FetchData(sql);
+				int colDefault = 1; // If no default is set, use first menu item
+				if (dt.Rows.Count > 0)
+				{
+					foreach (DataRow dr in dt.Rows)
+					{
+						if (Convert.ToInt32(dr["position"]) > 3) separatorVisible = true;
+						ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(dr["position"]).ToString("00")] as ToolStripMenuItem;
+						menuItem.Text = dr["name"].ToString();
+						menuItem.Visible = true;
+						if (Convert.ToBoolean(dr["colDefault"])) colDefault = Convert.ToInt32(dr["position"]); // Set default
+					}
+				}
+				toolItemColumnSelectSep.Visible = separatorVisible;
+				// Set checked menu item, use previus selected or use default
+				if (columnListcolType == 1)
+					if (columnListSelectedTankView != 0) colDefault = columnListSelectedTankView;
+				else if (columnListcolType == 2)
+					if (columnListSelectedBattleView != 0) colDefault = columnListSelectedBattleView;
+				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
+				checkedMenuItem.Checked = true;
+			}
+		}
+
+		private void toolItemColumnSelect_Click(object sender, EventArgs e)
+		{
+			// Hide all colum setup list menu items
+			for (int i = 1; i <= 13; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Checked = false;
+			}
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			selectedMenu.Checked = true;
+
+		}
+
+		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
+		{
+			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
+			if (toolItemViewBattles.Checked)
+				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
+			else if (toolItemViewTankInfo.Checked)
+				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
+			Form frm = new Forms.File.ColumnSetup(colSetupType);
+			frm.ShowDialog();
+		}
+
 		
 		#endregion
 
@@ -1382,37 +1456,16 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
 		}
 
-        private void testNewTankImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportTanks();
-        }
+		private void testNewTankImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportTanks();
+		}
 
 
 
 		#endregion
 
-		private void toolItemColumnSelect_Click(object sender, EventArgs e)
-		{
-			toolItemColumnSelect_All.Checked = false;
-			toolItemColumnSelect_Default.Checked = false;
-			toolItemColumnSelect_Minimal.Checked = false;
-			toolItemColumnSelect_User01.Checked = false;
-			toolItemColumnSelect_User02.Checked = false;
-			toolItemColumnSelect_User10.Checked = false;
-			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
-			selectedMenu.Checked = true;
-		}
-
-		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
-		{
-			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
-			if (toolItemViewBattles.Checked)
-				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
-			else if (toolItemViewTankInfo.Checked)
-				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
-			Form frm = new Forms.File.ColumnSetup(colSetupType);
-			frm.ShowDialog();
-		}
+		
 
 		
 	}
