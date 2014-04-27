@@ -121,6 +121,12 @@ namespace WotDBUpdater.Code
                 log.Add("  " + logItemExists);
             }
             Log.LogToFile(log);
+
+            log.Clear();
+            logAddedItems = null;
+            logAddedItemsCount = 0;
+            logItemExists = null;
+            logItemExistsCount = 0;
         }
 
         #endregion
@@ -238,6 +244,7 @@ namespace WotDBUpdater.Code
                         updateLog("tanks");
                     }
 
+                    MessageBox.Show("Tank import complete");
                     return ("Import Complete");
                 }
 
@@ -338,7 +345,7 @@ namespace WotDBUpdater.Code
 			}
 			else
 			{
-				log.Add("Start checking tanks (" + DateTime.Now.ToString() + ")");
+                log.Add("Start checking turrets (" + DateTime.Now.ToString() + ")");
 
                 try
                 {
@@ -419,7 +426,9 @@ namespace WotDBUpdater.Code
                         updateLog("turrets");
                     }
 
+                    MessageBox.Show("Turret import complete");
                     return ("Import Complete");
+                    
                 }
 				
                 catch (Exception ex)
