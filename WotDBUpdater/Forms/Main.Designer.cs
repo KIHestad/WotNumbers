@@ -143,9 +143,10 @@
             this.toolItemTest_ScrollBar = new System.Windows.Forms.ToolStripMenuItem();
             this.importDossierHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importWsDossierHistoryToDbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testNewTurretImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.panelMainArea.SuspendLayout();
@@ -189,7 +190,7 @@
             this.MainTheme.Controls.Add(this.toolMain);
             this.MainTheme.Controls.Add(this.lblStatus2);
             this.MainTheme.Controls.Add(this.lblStatus1);
-            this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
             this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.MainTheme.FormFooter = true;
@@ -1206,7 +1207,8 @@
             this.toolItemTest_ScrollBar,
             this.importDossierHistoryToolStripMenuItem,
             this.importWsDossierHistoryToDbToolStripMenuItem,
-            this.testNewTankImportToolStripMenuItem});
+            this.testNewTankImportToolStripMenuItem,
+            this.testNewTurretImportToolStripMenuItem});
             this.toolItemTest.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemTest.Name = "toolItemTest";
             this.toolItemTest.ShowDropDownArrow = false;
@@ -1260,6 +1262,13 @@
             this.importWsDossierHistoryToDbToolStripMenuItem.Text = "Import battles from ws dossier history";
             this.importWsDossierHistoryToDbToolStripMenuItem.Click += new System.EventHandler(this.importWsDossierHistoryToDbToolStripMenuItem_Click);
             // 
+            // testNewTankImportToolStripMenuItem
+            // 
+            this.testNewTankImportToolStripMenuItem.Name = "testNewTankImportToolStripMenuItem";
+            this.testNewTankImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testNewTankImportToolStripMenuItem.Text = "Test new tankImport";
+            this.testNewTankImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTankImportToolStripMenuItem_Click);
+            // 
             // lblStatus2
             // 
             this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1288,12 +1297,12 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // testNewTankImportToolStripMenuItem
+            // testNewTurretImportToolStripMenuItem
             // 
-            this.testNewTankImportToolStripMenuItem.Name = "testNewTankImportToolStripMenuItem";
-            this.testNewTankImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewTankImportToolStripMenuItem.Text = "Test new tankImport";
-            this.testNewTankImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTankImportToolStripMenuItem_Click);
+            this.testNewTurretImportToolStripMenuItem.Name = "testNewTurretImportToolStripMenuItem";
+            this.testNewTurretImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testNewTurretImportToolStripMenuItem.Text = "Test new turretImport";
+            this.testNewTurretImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTurretImportToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -1441,6 +1450,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User08;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_User09;
         private System.Windows.Forms.ToolStripMenuItem testNewTankImportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
 	}
 }
 

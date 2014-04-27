@@ -17,10 +17,26 @@ namespace WotDBUpdater.Code
 	class ImportWotApi2DB
 	{
 		/* 
-		 * Import functions for data from WoT API tank modules and achivements
-		 * Data is retrieved from Wargaming API
-		 * Tables are emptied before import begins
+		 * Import functions for data from WoT API (tanks, modules and achivements)
+         * New items will be added
+         * Existing items will be updated
 		 */
+
+        private static int itemCount;
+        private static JToken rootToken;
+        private static JToken itemToken;
+        private static int itemId;
+        private static string insertSql;
+        private static string updateSql;
+        private static bool ok = true;
+        private static DataTable itemsInDB;
+
+        private static List<string> log = new List<string>();
+        private static string logAddedItems;
+        private static int logAddedItemsCount;
+        private static string logItemExists;
+        private static int logItemExistsCount;
+
 
 		private enum WotApiType
 		{
@@ -37,15 +53,17 @@ namespace WotDBUpdater.Code
 		{
 			try
 			{
-				Log.LogToFile(Environment.NewLine + "Get data from WoT API: " + WotAPi.ToString());
+                Log.CheckLogFileSize();
+                Log.LogToFile(Environment.NewLine + "Get data from WoT API: " + WotAPi.ToString());
 				string url = "";
                 if (WotAPi == WotApiType.Tank)
                 {
-                    url = "https://api.worldoftanks.eu/wot/encyclopedia/tanks/?application_id=2a8bf9a1ee36d6125058bf6efd006caf";
+                    url = "https://api.worldoftanks.eu/wot/encyclopedia/tanks/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
                 }
                 if (WotAPi == WotApiType.Turret)
 				{
 					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+                    itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
 				}
 				else if (WotAPi == WotApiType.Gun)
 				{
@@ -80,6 +98,33 @@ namespace WotDBUpdater.Code
 
 		#endregion
 
+        #region update log file
+
+        private static void updateLog(string itemType)
+        {
+            // Update log after import
+            log.Add("Import complete: (" + DateTime.Now.ToString() + ")");
+            if (logAddedItems != null)
+            {
+                logAddedItems = logAddedItems.Substring(0, logAddedItems.Length - 2);
+                log.Add("  Added " + logAddedItemsCount + " new " + itemType + ":");
+                log.Add("  " + logAddedItems);
+            }
+            else
+            {
+                log.Add("  No new " + itemType + " added");
+            }
+            if (logItemExists != null)
+            {
+                logItemExists = logItemExists.Substring(0, logItemExists.Length - 2);
+                log.Add("  Updated data on " + logItemExistsCount + " existing " + itemType + ":");
+                log.Add("  " + logItemExists);
+            }
+            Log.LogToFile(log);
+        }
+
+        #endregion
+
         #region importTanks
 
         public static String ImportTanks()
@@ -91,113 +136,116 @@ namespace WotDBUpdater.Code
             }
             else
             {
-                int tankCount;
-                JToken rootToken;
-                JToken tankToken;
                 int tankTypeId = 0;
                 int countryId = 0;
                 int premium = 0;
                 bool tankExists = false;
-                bool ok = true;
-                string logAddedTanks = "";
-                int logAddedTanksCount = 0;
-                string logTankExists = "";
-                int logTankExistsCount = 0;
 
-                Log.CheckLogFileSize();
-                List<string> log = new List<string>();
                 log.Add("Start checking tanks (" + DateTime.Now.ToString() + ")");
 
-                JObject allTokens = JObject.Parse(json);
-                rootToken = allTokens.First;   // returns status token
-
-                if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                try
                 {
-                    rootToken = rootToken.Next;
-                    tankCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+                    JObject allTokens = JObject.Parse(json);
+                    rootToken = allTokens.First;   // returns status token
 
-                    rootToken = rootToken.Next;   // start reading tanks
-                    JToken tanks = rootToken.Children().First();   // read all tokens in data token
-
-                    List<string> logtext = new List<string>();
-
-                    foreach (JProperty tank in tanks)   // tank = tankId + child tokens
+                    if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
                     {
-                        tankToken = tank.First();   // First() returns only child tokens of tank
+                        rootToken = rootToken.Next;
+                        itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
 
-                        int id = Int32.Parse(((JProperty)tankToken.Parent).Name);   // step back to parent to fetch the isolated tankId
-                        string type = tankToken["type"].ToString();
-                        switch (type)
+                        rootToken = rootToken.Next;   // start reading tanks
+                        JToken tanks = rootToken.Children().First();   // read all tokens in data token
+
+                        List<string> logtext = new List<string>();
+
+                        foreach (JProperty tank in tanks)   // tank = tankId + child tokens
                         {
-                            case "lightTank": tankTypeId = 1; break;
-                            case "mediumTank": tankTypeId = 2; break;
-                            case "heavyTank": tankTypeId = 3; break;
-                            case "AT-SPG": tankTypeId = 4; break;
-                            case "SPG": tankTypeId = 5; break;
-                        }
-                        string country = tankToken["nation"].ToString();
-                        switch (country)
-                        {
-                            case "ussr": countryId = 0; break;
-                            case "germany": countryId = 1; break;
-                            case "usa": countryId = 2; break;
-                            case "china": countryId = 3; break;
-                            case "france": countryId = 4; break;
-                            case "uk": countryId = 5; break;
-                            case "japan": countryId = 6; break;
-                        }
-                        string name = tankToken["name_i18n"].ToString();
-                        int tier = Int32.Parse(tankToken["level"].ToString());
-                        string isPremium = tankToken["is_premium"].ToString();
-                        switch (isPremium)
-                        {
-                            case "true": premium = 1; break;
-                            case "false": premium = 0; break;
+                            itemToken = tank.First();   // First() returns only child tokens of tank
+
+                            itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
+                            string type = itemToken["type"].ToString();
+                            switch (type)
+                            {
+                                case "lightTank": tankTypeId = 1; break;
+                                case "mediumTank": tankTypeId = 2; break;
+                                case "heavyTank": tankTypeId = 3; break;
+                                case "AT-SPG": tankTypeId = 4; break;
+                                case "SPG": tankTypeId = 5; break;
+                            }
+                            string country = itemToken["nation"].ToString();
+                            switch (country)
+                            {
+                                case "ussr": countryId = 0; break;
+                                case "germany": countryId = 1; break;
+                                case "usa": countryId = 2; break;
+                                case "china": countryId = 3; break;
+                                case "france": countryId = 4; break;
+                                case "uk": countryId = 5; break;
+                                case "japan": countryId = 6; break;
+                            }
+                            string name = itemToken["name_i18n"].ToString();
+                            int tier = Int32.Parse(itemToken["level"].ToString());
+                            string isPremium = itemToken["is_premium"].ToString();
+                            switch (isPremium)
+                            {
+                                case "true": premium = 1; break;
+                                case "false": premium = 0; break;
+                            }
+
+                            // Write to db
+                            tankExists = TankData.TankExist(itemId);
+                            insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)";
+                            updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium where id=@id";
+
+                            // insert if tank does not exist
+                            if (!tankExists)
+                            {
+                                DB.AddWithValue(ref insertSql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@countryId", countryId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
+                                ok = DB.ExecuteNonQuery(insertSql);  
+                                logAddedItems = logAddedItems + name + ", ";
+                                logAddedItemsCount++;
+                            }
+
+                            // update if tank exists
+                            else
+                            {
+                                DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@countryId", countryId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@premium", premium, DB.SqlDataType.Int);
+                                ok = DB.ExecuteNonQuery(updateSql);  
+                                logItemExists = logItemExists + name + ", ";
+                                logItemExistsCount++;
+                            }
+
+                            if (!ok)
+                            {
+                                log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
+                                log.Add("ERROR - SQL:");
+                                log.Add(insertSql);
+                                return ("ERROR - Import incomplete!");
+                            }
                         }
 
-                        // Write to db if tank doesn't already exist
-                        tankExists = TankData.TankExist(id);
-                        string sql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)";
-                        if (!tankExists)
-                        {
-                            DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
-                            DB.AddWithValue(ref sql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
-                            DB.AddWithValue(ref sql, "@countryId", countryId, DB.SqlDataType.Int);
-                            DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
-                            DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
-                            DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
-                            ok = DB.ExecuteNonQuery(sql);
-                            logAddedTanks = logAddedTanks + name + ", ";
-                            logAddedTanksCount++;
-                            //log.Add("  Added new tank: " + name + "(" + id + ")");
-                        }
-                        else
-                        {
-                            logTankExists = logTankExists + name + ", ";
-                            logTankExistsCount++;
-                            //log.Add("  Check completed, tank exsits: " + name + "(" + id + ")");
-                        }
-                        if (!ok)
-                        {
-                            log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
-                            log.Add("ERROR - SQL:");
-                            log.Add(sql);
-                            return ("ERROR - Import incomplete!");
-                        }
+                        // Update log file after import
+                        updateLog("tanks");
                     }
 
-                    if (logAddedTanks.Length > 0) logAddedTanks = logAddedTanks.Substring(0, logAddedTanks.Length - 2);
-                    if (logTankExists.Length > 0) logTankExists = logTankExists.Substring(0, logTankExists.Length - 2);
-
-                    log.Add("Import complete: (" + DateTime.Now.ToString() + ")");
-                    log.Add("  Added " + logAddedTanksCount + " new tanks:");
-                    log.Add("  " + logAddedTanks);
-                    log.Add("  Skipped " + logTankExistsCount + " existing tanks:");
-                    log.Add("  " + logTankExists);
-                    Log.LogToFile(log);
+                    return ("Import Complete");
                 }
 
-                return ("Import Complete");
+                catch (Exception ex)
+                {
+                    log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+                    return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
+                }
             }
         }
 
@@ -290,59 +338,95 @@ namespace WotDBUpdater.Code
 			}
 			else
 			{
-				int moduleCount;
-				JToken rootToken;
-				JToken moduleToken;
-				string sql = "";
+				log.Add("Start checking tanks (" + DateTime.Now.ToString() + ")");
 
-				JObject allTokens = JObject.Parse(json);
-				rootToken = allTokens.First;   // returns status token
+                try
+                {
+                    JObject allTokens = JObject.Parse(json);
+                    rootToken = allTokens.First;   // returns status token
 
-				if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
-				{
-					rootToken = rootToken.Next;
-					moduleCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+                    if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                    {
+                        rootToken = rootToken.Next;
+                        itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
 
-					rootToken = rootToken.Next;   // start reading modules
-					JToken turrets = rootToken.Children().First();   // read all tokens in data token
+                        rootToken = rootToken.Next;   // start reading modules
+                        JToken turrets = rootToken.Children().First();   // read all tokens in data token
 
-					List<string> logtext = new List<string>();
+                        List<string> logtext = new List<string>();
 
-					foreach (JProperty turret in turrets)   // turret = turretId + child tokens
-					{
-						moduleToken = turret.First();   // First() returns only child tokens of turret
+                        //DataTable itemsInDB = DB.FetchData("select id from turret");   // Fetch id of turrets already existing in db
 
-						int id = Int32.Parse(((JProperty)moduleToken.Parent).Name);   // step back to parent to fetch the isolated turretId
-						JArray tanksArray = (JArray)moduleToken["tanks"];
-						int tankId = Int32.Parse(tanksArray[0].ToString());   // fetch only the first tank in the array for now (all turrets are related to one tank)
-						string name = moduleToken["name_i18n"].ToString();
-						int tier = Int32.Parse(moduleToken["level"].ToString());
-						int viewRange = Int32.Parse(moduleToken["circular_vision_radius"].ToString());
-						int armorFront = Int32.Parse(moduleToken["armor_forehead"].ToString());
-						int armorSides = Int32.Parse(moduleToken["armor_board"].ToString());
-						int armorRear = Int32.Parse(moduleToken["armor_fedd"].ToString());
+                        foreach (JProperty turret in turrets)   // turret = turretId + child tokens
+                        {
+                            itemToken = turret.First();   // First() returns only child tokens of turret
 
-						sql = sql + "insert into modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) values "
-								  + "(" + id + ", " + tankId + ", '" + name + "', " + tier + ", " + viewRange + ", " + armorFront
-								  + ", " + armorSides + ", " + armorRear + ");";
+                            itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated turretId
+                            JArray tanksArray = (JArray)itemToken["tanks"];
+                            int tankId = Int32.Parse(tanksArray[0].ToString());   // fetch only the first tank in the array for now (all turrets are related to one tank)
+                            string name = itemToken["name_i18n"].ToString();
+                            int tier = Int32.Parse(itemToken["level"].ToString());
+                            int viewRange = Int32.Parse(itemToken["circular_vision_radius"].ToString());
+                            int armorFront = Int32.Parse(itemToken["armor_forehead"].ToString());
+                            int armorSides = Int32.Parse(itemToken["armor_board"].ToString());
+                            int armorRear = Int32.Parse(itemToken["armor_fedd"].ToString());
 
+                            var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
+                            insertSql = "INSERT INTO modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) VALUES "
+                                      + "(@id, @tankId, @name, @tier, @viewRange, @armorFront, @armorSides, @armorRear)";
+                            updateSql = "UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear where id=@id";
 
-					}
-					logtext.Add(sql);
-					Log.CheckLogFileSize();
-					Log.LogToFile(logtext);
-					// Execute delete and insert statements
-					try
-					{
-						DB.ExecuteNonQuery("delete from modTurret");
-						DB.ExecuteNonQuery(sql);
-					}
-					catch (Exception ex)
-					{
-						Code.MsgBox.Show(ex.Message.ToString(), "Error occured");
-					}
-				}
-				return ("Import Complete");
+                            if (moduleExists.Length == 0)
+                            {
+                                DB.AddWithValue(ref insertSql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@tankId", tankId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@viewRange", viewRange, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@armorFront", armorFront, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@armorSides", armorSides, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@armorRear", armorRear, DB.SqlDataType.Int);
+                                ok = DB.ExecuteNonQuery(insertSql);
+                                logAddedItems = logAddedItems + name + ", ";
+                                logAddedItemsCount++;
+                            }
+
+                            else
+                            {
+                                DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@tankId", tankId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@viewRange", viewRange, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@armorFront", armorFront, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@armorSides", armorSides, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@armorRear", armorRear, DB.SqlDataType.Int);
+                                ok = DB.ExecuteNonQuery(updateSql);
+                                logItemExists = logItemExists + name + ", ";
+                                logItemExistsCount++;
+                            }
+
+                            if (!ok)
+                            {
+                                log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
+                                log.Add("ERROR - SQL:");
+                                log.Add(insertSql);
+                                return ("ERROR - Import incomplete!");
+                            }
+                        }
+
+                        // Update log file after import
+                        updateLog("turrets");
+                    }
+
+                    return ("Import Complete");
+                }
+				
+                catch (Exception ex)
+                {
+                    log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+                    return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
+                }
 			}
 		}
 
