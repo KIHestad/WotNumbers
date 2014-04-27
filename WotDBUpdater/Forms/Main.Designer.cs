@@ -147,6 +147,8 @@
 			this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+            this.testNewTurretImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelectSep = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -1210,7 +1212,8 @@
             this.toolItemTest_ScrollBar,
             this.importDossierHistoryToolStripMenuItem,
             this.importWsDossierHistoryToDbToolStripMenuItem,
-            this.testNewTankImportToolStripMenuItem});
+            this.testNewTankImportToolStripMenuItem,
+            this.testNewTurretImportToolStripMenuItem});
 			this.toolItemTest.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemTest.Name = "toolItemTest";
 			this.toolItemTest.ShowDropDownArrow = false;
@@ -1299,6 +1302,18 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// toolItemColumnSelectSep
+            // 
+			this.toolItemColumnSelectSep.Name = "toolItemColumnSelectSep";
+			this.toolItemColumnSelectSep.Size = new System.Drawing.Size(179, 6);
+            //
+            // testNewTurretImportToolStripMenuItem
+            //
+            this.testNewTurretImportToolStripMenuItem.Name = "testNewTurretImportToolStripMenuItem";
+            this.testNewTurretImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testNewTurretImportToolStripMenuItem.Text = "Test new turretImport";
+            this.testNewTurretImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTurretImportToolStripMenuItem_Click);
+            // 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1444,6 +1459,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_11;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_12;
         private System.Windows.Forms.ToolStripMenuItem testNewTankImportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolItemColumnSelectSep;
 	}
 }
