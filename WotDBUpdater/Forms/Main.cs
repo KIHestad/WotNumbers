@@ -1466,10 +1466,15 @@ namespace WotDBUpdater.Forms
             Code.ImportWotApi2DB.ImportTurrets();
         }
 
+        private void testNewGunImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotApi2DB.ImportGuns();
+        }
 
 
 
 		#endregion
+
 
 		
 

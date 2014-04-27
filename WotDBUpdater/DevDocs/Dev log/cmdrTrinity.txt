@@ -1,4 +1,9 @@
-﻿04.26.14
+﻿04.27.14
+- Reworked turretImport and gunImport
+- Restructured API import class
+
+
+04.26.14
 - Reworked tankImport function 
 - Tanks are now imported from API
 

@@ -16,11 +16,13 @@ namespace WotDBUpdater.Code
 {
 	class ImportWotApi2DB
 	{
-		/* 
-		 * Import functions for data from WoT API (tanks, modules and achivements)
+        /* 
+         * Import functions for data from WoT API (tanks, modules and achivements)
          * New items will be added
          * Existing items will be updated
-		 */
+         */
+
+        #region variables
 
         private static int itemCount;
         private static JToken rootToken;
@@ -37,8 +39,10 @@ namespace WotDBUpdater.Code
         private static string logItemExists;
         private static int logItemExistsCount;
 
+        #endregion
 
-		private enum WotApiType
+
+        private enum WotApiType
 		{
 			Tank = 1,
             Turret = 2,
@@ -68,6 +72,7 @@ namespace WotDBUpdater.Code
 				else if (WotAPi == WotApiType.Gun)
 				{
 					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+                    itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
 				}
 				else if (WotAPi == WotApiType.Radio)
 				{
@@ -201,7 +206,7 @@ namespace WotDBUpdater.Code
                             // Write to db
                             tankExists = TankData.TankExist(itemId);
                             insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)";
-                            updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium where id=@id";
+                            updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id";
 
                             // insert if tank does not exist
                             if (!tankExists)
@@ -360,9 +365,7 @@ namespace WotDBUpdater.Code
                         rootToken = rootToken.Next;   // start reading modules
                         JToken turrets = rootToken.Children().First();   // read all tokens in data token
 
-                        List<string> logtext = new List<string>();
-
-                        //DataTable itemsInDB = DB.FetchData("select id from turret");   // Fetch id of turrets already existing in db
+                        //List<string> logtext = new List<string>();
 
                         foreach (JProperty turret in turrets)   // turret = turretId + child tokens
                         {
@@ -381,7 +384,7 @@ namespace WotDBUpdater.Code
                             var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
                             insertSql = "INSERT INTO modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) VALUES "
                                       + "(@id, @tankId, @name, @tier, @viewRange, @armorFront, @armorSides, @armorRear)";
-                            updateSql = "UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear where id=@id";
+                            updateSql = "UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear WHERE id=@id";
 
                             if (moduleExists.Length == 0)
                             {
@@ -452,91 +455,135 @@ namespace WotDBUpdater.Code
 			}
 			else
 			{
-				int moduleCount;
-				JToken rootToken;
-				JToken moduleToken;
-				string gunSql = "";
-				string turretSql = "";
-				string tankSql = "";
+                log.Add("Start checking guns (" + DateTime.Now.ToString() + ")");
 
-				JObject allTokens = JObject.Parse(json);
-				rootToken = allTokens.First;
+                try
+                {
+                    JObject allTokens = JObject.Parse(json);
+                    rootToken = allTokens.First;
 
-				if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
-				{
-					rootToken = rootToken.Next;
-					moduleCount = (int)((JProperty)rootToken).Value;
+                    if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                    {
+                        rootToken = rootToken.Next;
+                        itemCount = (int)((JProperty)rootToken).Value;
 
-					rootToken = rootToken.Next;
-					JToken guns = rootToken.Children().First();
+                        rootToken = rootToken.Next;
+                        JToken guns = rootToken.Children().First();
 
-					foreach (JProperty gun in guns)
-					{
-						moduleToken = gun.First();
+                        // Drop relations to turret and tank before import (new relations will be added)
+                        string sql = "DELETE FROM modTankGun; DELETE FROM modTurretGun";
+                        DB.ExecuteNonQuery(sql);
 
-						int id = Int32.Parse(((JProperty)moduleToken.Parent).Name);
-						string name = moduleToken["name_i18n"].ToString();
-						int tier = Int32.Parse(moduleToken["level"].ToString());
-						JArray dmgArray = (JArray)moduleToken["damage"];
-						int dmg1 = Int32.Parse(dmgArray[0].ToString());
-						int dmg2 = 0;                                                           // guns have 1, 2 or 3 types of ammo
-						if (dmgArray.Count > 1) { dmg2 = Int32.Parse(dmgArray[1].ToString()); } // fetch damage and penetration if available
-						int dmg3 = 0;
-						if (dmgArray.Count > 2) { dmg3 = Int32.Parse(dmgArray[2].ToString()); }
-						JArray penArray = (JArray)moduleToken["piercing_power"];
-						int pen1 = Int32.Parse(penArray[0].ToString());
-						int pen2 = 0;
-						if (penArray.Count > 1) { pen2 = Int32.Parse(penArray[1].ToString()); }
-						int pen3 = 0;
-						if (penArray.Count > 2) { pen3 = Int32.Parse(penArray[2].ToString()); }
-						string fireRate = ((moduleToken["rate"].ToString())).Replace(",", ".");
+                        foreach (JProperty gun in guns)
+                        {
+                            itemToken = gun.First();
 
-						gunSql = gunSql + "insert into modGun (id, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) values "
-										+ "('" + id + "', '" + name + "', '" + tier + "', '" + dmg1 + "', '" + dmg2 + "', '" + dmg3
-										+ "', '" + pen1 + "', '" + pen2 + "', '" + pen3 + "', '" + fireRate + "'); ";
+                            itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
+                            string name = itemToken["name_i18n"].ToString();
+                            int tier = Int32.Parse(itemToken["level"].ToString());
+                            JArray dmgArray = (JArray)itemToken["damage"];
+                            int dmg1 = Int32.Parse(dmgArray[0].ToString());
+                            int dmg2 = 0;                                                           // guns have 1, 2 or 3 types of ammo
+                            if (dmgArray.Count > 1) dmg2 = Int32.Parse(dmgArray[1].ToString());     // fetch damage and penetration if available
+                            int dmg3 = 0;
+                            if (dmgArray.Count > 2) dmg3 = Int32.Parse(dmgArray[2].ToString());
+                            JArray penArray = (JArray)itemToken["piercing_power"];
+                            int pen1 = Int32.Parse(penArray[0].ToString());
+                            int pen2 = 0;
+                            if (penArray.Count > 1) pen2 = Int32.Parse(penArray[1].ToString());
+                            int pen3 = 0;
+                            if (penArray.Count > 2) pen3 = Int32.Parse(penArray[2].ToString());
+                            string fireRate = ((itemToken["rate"].ToString())).Replace(",", ".");
 
-						// Create relation to turret if possible
-						JArray turretArray = (JArray)moduleToken["turrets"];
-						if (turretArray.Count > 0)
-						{
-							for (int i = 0; i < turretArray.Count; i++)
-							{
-								turretSql = turretSql + "insert into modTurretGun (turretId, gunId) values (";
-								turretSql = turretSql + Int32.Parse(turretArray[i].ToString()) + ", " + id;
-								turretSql = turretSql + "); ";
-							}
-						}
+                            var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
 
-						// Create relation to tank
-						JArray tankArray = (JArray)moduleToken["tanks"];
-						if (tankArray.Count > 0)
-						{
-							for (int i = 0; i < tankArray.Count; i++)
-							{
-								tankSql = tankSql + "insert into modTankGun (tankId, gunId) values (";
-								tankSql = tankSql + Int32.Parse(tankArray[i].ToString()) + ", " + id;
-								tankSql = tankSql + "); ";
-							}
-						}
-					}
+                            insertSql = "INSERT INTO modGun (id, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) VALUES "
+                                      + "(@id, @name, @tier, @dmg1, @dmg2, @dmg3, @pen1, @pen2, @pen3, @fireRate)";
+                            updateSql = "UPDATE modGun SET name=@name, tier=@tier, dmg1=@dmg1, dmg2=@dmg2, dmg3=@dmg3, pen1=@pen1, pen2=@pen2, pen3=@pen3, fireRate=@fireRate WHERE id=@id";
 
-					try
-					{
-						Stopwatch sw = new Stopwatch();
-						sw.Start();
-						DB.ExecuteNonQuery("delete from modTurretGun; delete from modTankGun; delete from modGun;");
-						DB.ExecuteNonQuery(gunSql + turretSql + tankSql);
-						sw.Stop();
-						TimeSpan ts = sw.Elapsed;
-						string s = " > Time spent analyzing file: " + ts.Minutes + ":" + ts.Seconds + ":" + ts.Milliseconds.ToString("000");
-					}
-					catch (Exception ex)
-					{
-						Code.MsgBox.Show(ex.Message, "Error occured");
-					}
-				}
+                            if (moduleExists.Length == 0)
+                            {
+                                DB.AddWithValue(ref insertSql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@dmg1", dmg1, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@dmg2", dmg2, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@dmg3", dmg3, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@pen1", pen1, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@pen2", pen2, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@pen3", pen3, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@fireRate", fireRate, DB.SqlDataType.Int);
+                                ok = DB.ExecuteNonQuery(insertSql);
+                                logAddedItems = logAddedItems + name + ", ";
+                                logAddedItemsCount++;
+                            }
 
-				return ("Import Complete");
+                            else
+                            {
+                                DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@dmg1", dmg1, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@dmg2", dmg2, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@dmg3", dmg3, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@pen1", pen1, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@pen2", pen2, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@pen3", pen3, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@fireRate", fireRate, DB.SqlDataType.Int);
+                                ok = DB.ExecuteNonQuery(updateSql);
+                                logItemExists = logItemExists + name + ", ";
+                                logItemExistsCount++;
+                            }
+
+                            if (!ok)
+                            {
+                                log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
+                                log.Add("ERROR - SQL:");
+                                log.Add(insertSql);
+                                return ("ERROR - Import incomplete!");
+                            }
+
+                            // Create relation to turret if possible (not all tanks have a turret)
+                            JArray turretArray = (JArray)itemToken["turrets"];
+                            if (turretArray.Count > 0)
+                            {
+                                for (int i = 0; i < turretArray.Count; i++)
+                                {
+                                    int turretId = Int32.Parse(turretArray[i].ToString());
+                                    insertSql = "INSERT INTO modTurretGun (turretId, gunId) VALUES ( " + turretId + ", " + itemId + ");";
+                                    DB.ExecuteNonQuery(insertSql);
+                                }
+                            }
+
+                            // Create relation to tank
+                            JArray tankArray = (JArray)itemToken["tanks"];
+                            if (tankArray.Count > 0)
+                            {
+                                for (int i = 0; i < tankArray.Count; i++)
+                                {
+                                    int tankId = Int32.Parse(tankArray[i].ToString());
+                                    insertSql = "INSERT INTO modTankGun (tankId, gunId) VALUES ( " + tankId + ", " + itemId + ");";
+                                    DB.ExecuteNonQuery(insertSql);
+                                }
+                            }
+                        }
+
+                        // Update log file after import
+                        updateLog("guns");
+
+                    }
+
+                    Code.MsgBox.Show("Gun import complete");
+                    return ("Import Complete");
+                }
+
+                catch (Exception ex)
+                {
+                    log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+                    return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
+                }
+
+				
 			}
 		}
 
