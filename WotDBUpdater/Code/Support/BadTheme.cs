@@ -1320,12 +1320,12 @@ class BadScrollBar : BadThemeControl
 		}
 	}
 
-	bool move = false;
-	int movePixels;
+	protected bool move = false;
+	protected int movePixels;
 	protected int oldScrollPositionPixel;
 	protected int NewScrollPositionPixel;
-	Point startPos;
-	Point currentPos;
+	protected Point startPos;
+	protected Point currentPos;
 	protected override void OnMouseDown(MouseEventArgs e)
 	{
 		if (!(e.Button == MouseButtons.Left)) return;
@@ -1420,9 +1420,6 @@ class BadScrollBar : BadThemeControl
 
 class BadScrollBarCorner : BadThemeControl
 {
-
-
-
 	public BadScrollBarCorner()
 	{
 		AllowTransparent();

@@ -37,8 +37,6 @@ namespace WotDBUpdater.Forms
 
 		private void Main_Load(object sender, EventArgs e)
 		{
-			// Hide content until ready
-			MainTheme.Visible = true;
 			// Black Border on loading
 			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			// Style toolbar
@@ -82,8 +80,6 @@ namespace WotDBUpdater.Forms
 			lblStatus1.Text = "";
 			lblStatus2.Text = "Application init...";
 			lblStatusRowCount.Text = "";
-			// Show content now
-			MainTheme.Visible = true;
 		}
 
 		class StripRenderer : ToolStripProfessionalRenderer
@@ -1513,8 +1509,6 @@ namespace WotDBUpdater.Forms
 
 
 		#endregion
-
-		
 
 		
 		
