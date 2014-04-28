@@ -270,16 +270,19 @@ abstract class BadThemeContainerControl : ContainerControl
 	protected Rectangle Header;
 	protected override void OnSizeChanged(EventArgs e)
 	{
-		SetMainAreaSize(); 
-		Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
-		graphicObject.Dispose();
-		bitmapObject.Dispose();
-		bitmapObject = new Bitmap(Width, Height);
-		graphicObject = Graphics.FromImage(bitmapObject);
-		Invalidate();
-		// Draw resize cursor if within resize area
-		Current = GetPointer();
-		Cursor = Current.Cursor;
+		if (ParentForm != null && ParentForm.WindowState != FormWindowState.Minimized)
+		{
+			SetMainAreaSize();
+			Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
+			graphicObject.Dispose();
+			bitmapObject.Dispose();
+			bitmapObject = new Bitmap(Width, Height);
+			graphicObject = Graphics.FromImage(bitmapObject);
+			Invalidate();
+			// Draw resize cursor if within resize area
+			Current = GetPointer();
+			Cursor = Current.Cursor;
+		}
 		// Done
 		base.OnSizeChanged(e);
 	}
