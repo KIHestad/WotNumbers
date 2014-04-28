@@ -1186,7 +1186,15 @@ class BadScrollBar : BadThemeControl
 		set 
 		{ 
 			_ScrollElementsTotals = value;
-			ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+			try
+			{
+				ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+			
 			Invalidate();
 		}
 	}
@@ -1197,7 +1205,14 @@ class BadScrollBar : BadThemeControl
 		get { return _ScrollElementsVisible; }
 		set { 
 				_ScrollElementsVisible = value;
-				ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+				try
+				{
+					ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
+				}
+				catch (Exception)
+				{
+					// throw;
+				}
 				Invalidate(); 
 			}
 	}
@@ -1212,61 +1227,67 @@ class BadScrollBar : BadThemeControl
 	public BadScrollBar()
 	{
 		AllowTransparent();
-		BackColor = Color.Transparent;
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
 	{
 		grapichObject.Clear(BackColor);
 		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarBack);
-		if (!ScrollHide)
+		try
 		{
-			// Background
-			grapichObject.FillRectangle(brushBackColor, ClientRectangle);
-		}
-		// If no elements og fewer elements than visible area, do not whow scrollbar
-		if (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible)
-		{
-			ScrollNecessary = true;
-			if (ScrollHide)
+			if (!ScrollHide)
 			{
 				// Background
 				grapichObject.FillRectangle(brushBackColor, ClientRectangle);
 			}
-			// Calc Scroll Handle
-			DrawScrollhandle();
-			// Arrows
-			Pen penArrow = new Pen(ColorTheme.ScrollbarArrow);
-			brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
-			if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+			// If no elements og fewer elements than visible area, do not whow scrollbar
+			if (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible)
 			{
-				grapichObject.FillRectangle(brushBackColor, 8, 6, 1, 1); // Top arrow first pixel
-				int bottomArrowY = scrollArrowsArea + scrollAreaPixels + scrollHandleSizePixels + 10;
-				grapichObject.FillRectangle(brushBackColor, 8, bottomArrowY, 1, 1); // Bottom Arrow last pixel
-				for (int i = 1; i <= 4; i++)
+				ScrollNecessary = true;
+				if (ScrollHide)
 				{
-					grapichObject.DrawLine(penArrow, 8 - i, 6 + i, 8 + i, 6 + i); // Top arrow
-					grapichObject.DrawLine(penArrow, 8 - i, bottomArrowY - i, 8 + i, bottomArrowY - i); // Bottom arrow
+					// Background
+					grapichObject.FillRectangle(brushBackColor, ClientRectangle);
+				}
+				// Calc Scroll Handle
+				DrawScrollhandle();
+				// Arrows
+				Pen penArrow = new Pen(ColorTheme.ScrollbarArrow);
+				brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
+				if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.VerticalScroll)
+				{
+					grapichObject.FillRectangle(brushBackColor, 8, 6, 1, 1); // Top arrow first pixel
+					int bottomArrowY = scrollArrowsArea + scrollAreaPixels + scrollHandleSizePixels + 10;
+					grapichObject.FillRectangle(brushBackColor, 8, bottomArrowY, 1, 1); // Bottom Arrow last pixel
+					for (int i = 1; i <= 4; i++)
+					{
+						grapichObject.DrawLine(penArrow, 8 - i, 6 + i, 8 + i, 6 + i); // Top arrow
+						grapichObject.DrawLine(penArrow, 8 - i, bottomArrowY - i, 8 + i, bottomArrowY - i); // Bottom arrow
+					}
+				}
+				else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+				{
+					grapichObject.FillRectangle(brushBackColor, 6, 8, 1, 1); // Left arrow first pixel
+					int rightArrowX = scrollArrowsArea + scrollAreaPixels + scrollHandleSizePixels + 10;
+					grapichObject.FillRectangle(brushBackColor, rightArrowX, 8, 1, 1); // Right Arrow last pixel
+					for (int i = 1; i <= 4; i++)
+					{
+						grapichObject.DrawLine(penArrow, 6 + i, 8 - i, 6 + i, 8 + i); // Left arrow
+						grapichObject.DrawLine(penArrow, rightArrowX - i, 8 - i, rightArrowX - i, 8 + i); // Right Arrow
+					}
 				}
 			}
-			else if (ScrollOrientation == System.Windows.Forms.ScrollOrientation.HorizontalScroll)
+			else
 			{
-				grapichObject.FillRectangle(brushBackColor, 6, 8, 1, 1); // Left arrow first pixel
-				int rightArrowX = scrollArrowsArea + scrollAreaPixels + scrollHandleSizePixels + 10;
-				grapichObject.FillRectangle(brushBackColor, rightArrowX, 8, 1, 1); // Right Arrow last pixel
-				for (int i = 1; i <= 4; i++)
-				{
-					grapichObject.DrawLine(penArrow, 6 + i, 8 - i, 6 + i, 8 + i); // Left arrow
-					grapichObject.DrawLine(penArrow, rightArrowX - i, 8 - i, rightArrowX - i, 8 + i); // Right Arrow
-				}
+				ScrollNecessary = false;
 			}
+			// Draw 
+			e.Graphics.DrawImage(bitmapObject, 0, 0);
 		}
-		else
+		catch (Exception)
 		{
-			ScrollNecessary = false;
+			// throw;
 		}
-		// Draw 
-		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
 	protected int scrollMarginPixels = 4;
