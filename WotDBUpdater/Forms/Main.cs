@@ -88,7 +88,8 @@ namespace WotDBUpdater.Forms
 
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
-			public StripRenderer() : base(new Code.StripLayout())
+			public StripRenderer()
+				: base(new Code.StripLayout())
 			{
 				this.RoundedEdges = false;
 			}
@@ -339,23 +340,23 @@ namespace WotDBUpdater.Forms
 			}
 			else 
 			{
-				if (toolItemTankFilter_Tier1.Checked)	{tier += "1, ";}
-				if (toolItemTankFilter_Tier2.Checked)	{tier += "2, ";}
-				if (toolItemTankFilter_Tier3.Checked)	{tier += "3, ";}
-				if (toolItemTankFilter_Tier4.Checked)	{tier += "4, ";}
-				if (toolItemTankFilter_Tier5.Checked)	{tier += "5, ";}
-				if (toolItemTankFilter_Tier6.Checked)	{tier += "6, ";}
-				if (toolItemTankFilter_Tier7.Checked)	{tier += "7, ";}
-				if (toolItemTankFilter_Tier8.Checked)	{tier += "8, ";}
-				if (toolItemTankFilter_Tier9.Checked)	{tier += "9, ";}
-				if (toolItemTankFilter_Tier10.Checked)	{tier += "10, ";}
-				if (toolItemTankFilter_CountryChina.Checked)	{nation += "China, "; nationId +="3, "; }
-				if (toolItemTankFilter_CountryFrance.Checked)	{nation += "France, "; nationId +="4, "; }
-				if (toolItemTankFilter_CountryGermany.Checked)	{nation += "Germany, "; nationId +="1, "; }
-				if (toolItemTankFilter_CountryUK.Checked )		{nation += "UK, "; nationId +="5, "; }
-				if (toolItemTankFilter_CountryUSA.Checked)		{nation += "USA, "; nationId +="2, "; }
-				if (toolItemTankFilter_CountryUSSR.Checked )	{nation += "USSR, "; nationId +="0, "; }
-				if (toolItemTankFilter_CountryJapan.Checked)    { nation += "Japan, "; nationId +="6, "; }
+				if (toolItemTankFilter_Tier1.Checked) { tier += "1, "; }
+				if (toolItemTankFilter_Tier2.Checked) { tier += "2, "; }
+				if (toolItemTankFilter_Tier3.Checked) { tier += "3, "; }
+				if (toolItemTankFilter_Tier4.Checked) { tier += "4, "; }
+				if (toolItemTankFilter_Tier5.Checked) { tier += "5, "; }
+				if (toolItemTankFilter_Tier6.Checked) { tier += "6, "; }
+				if (toolItemTankFilter_Tier7.Checked) { tier += "7, "; }
+				if (toolItemTankFilter_Tier8.Checked) { tier += "8, "; }
+				if (toolItemTankFilter_Tier9.Checked) { tier += "9, "; }
+				if (toolItemTankFilter_Tier10.Checked) { tier += "10, "; }
+				if (toolItemTankFilter_CountryChina.Checked) { nation += "China, "; nationId += "3, "; }
+				if (toolItemTankFilter_CountryFrance.Checked) { nation += "France, "; nationId += "4, "; }
+				if (toolItemTankFilter_CountryGermany.Checked) { nation += "Germany, "; nationId += "1, "; }
+				if (toolItemTankFilter_CountryUK.Checked) { nation += "UK, "; nationId += "5, "; }
+				if (toolItemTankFilter_CountryUSA.Checked) { nation += "USA, "; nationId += "2, "; }
+				if (toolItemTankFilter_CountryUSSR.Checked) { nation += "USSR, "; nationId += "0, "; }
+				if (toolItemTankFilter_CountryJapan.Checked) { nation += "Japan, "; nationId += "6, "; }
 				if (toolItemTankFilter_TypeLT.Checked) { type += "Light, "; typeId += "1, "; }
 				if (toolItemTankFilter_TypeMT.Checked) { type += "Medium, "; typeId += "2, "; }
 				if (toolItemTankFilter_TypeHT.Checked) { type += "Heavy, "; typeId += "3, "; }
@@ -400,11 +401,42 @@ namespace WotDBUpdater.Forms
 			Status2Message = message;
 		}
 
+		private void GetSelectedColumnList(out string Select, out List<int> columnWidth)
+		{
+			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnSelection.colWidth " +
+						 "FROM   columnListSelection INNER JOIN " +
+						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
+						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
+						 "ORDER BY columnListSelection.sortorder; ";
+			DB.AddWithValue(ref sql, "@columnListId", columnListSelectedId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			Select = "";
+			List<int> selectColumnWidth = new List<int>();
+			if (dt.Rows.Count == 0)
+			{
+				Select = "'No columns defined in Column Selection List' As 'Error', ";
+				selectColumnWidth.Add(300);
+			}
+			else
+			{
+				foreach (DataRow dr in dt.Rows)
+				{
+					Select += dr["colname"].ToString() + " as '" + dr["name"].ToString() + "', ";
+					selectColumnWidth.Add(Convert.ToInt32(dr["colWidth"]));
+				}
+			}
+			columnWidth = selectColumnWidth;
+		}
+
 		private void GridShowTankInfo(string statusmessage = "")
 		{
 			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
 			if (!DB.CheckConnection()) return;
+			// Get Columns
+			string select = "";
+			List<int> columnWidth = new List<int>();
+			GetSelectedColumnList(out select, out columnWidth);
 			// Get Tank filter
 			string message = "";
 			string where = "";
@@ -412,9 +444,10 @@ namespace WotDBUpdater.Forms
 			GetTankfilter(out where, out join, out message);
 			string sortordercol = "0 as sortorder ";
 			if (join != "") sortordercol = "favListTank.sortorder as sortorder ";
+			//tank.tier AS Tier, tank.name AS Tank, tankType.name AS Tanktype, country.name AS Country, " +
+			//			 playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF, "
 			string sql =
-				"SELECT   tank.tier AS Tier, tank.name AS Tank, tankType.name AS Tanktype, country.name AS Country, " +
-				"         playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF, " + sortordercol +
+				"SELECT   " + select + sortordercol +
 				"FROM     playerTank INNER JOIN " +
 				"         player ON playerTank.playerId = player.id INNER JOIN " +
 				"         tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -426,31 +459,21 @@ namespace WotDBUpdater.Forms
 			mainGridFormatting = true;
 			dataGridMain.DataSource = DB.FetchData(sql);
 			// Text cols
-			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Tank"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Tanktype"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Tanktype"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Country"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Country"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dataGridMain.Columns["sortorder"].Visible = false;
-			// Finish
-			GridResizeTankInfo();
+			// Grid col size
+			int colnum = 0;
+			foreach (int cw in columnWidth)
+			{
+				dataGridMain.Columns[colnum].Width = cw;
+				dataGridMain.Columns[colnum].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns[colnum].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				colnum++;
+			}
 			ResizeNow();
 			// Add status message
 			if (statusmessage == "") statusmessage = message;
 			SetStatus2(statusmessage);
 			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
-		}
-
-		private void GridResizeTankInfo()
-		{
-			dataGridMain.Columns[0].Width = 35;
-			dataGridMain.Columns[1].Width = 120;
-			dataGridMain.Columns[2].Width = 100;
-			for (int i = 3; i <= 7 ; i++)
-			{
-				dataGridMain.Columns[i].Width = 70;
-			}
 		}
 
 		private void GridShowBattle(string overrideStatus2Message = "")
@@ -472,7 +495,7 @@ namespace WotDBUpdater.Forms
 			string sortordercol = "0 as sortorder ";
 			if (tankJoin != "") sortordercol = "favListTank.sortorder as sortorder ";
 			string sql =
-				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, battleResult.name as Result, battleSurvive.name as Survived, " +
+				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, CAST(battle.battleTime AS DATETIME) AS 'Battle Time', battleResult.name as Result, battleSurvive.name as Survived, " +
 				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
 				"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
 				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, CAST(battle.battleTime AS DATETIME) AS battleTime, battle.battleResultId, battle.battleSurviveId, " +
@@ -507,6 +530,7 @@ namespace WotDBUpdater.Forms
 				sql =
 					"SELECT  AVG(CAST(tank.tier AS FLOAT)) AS Tier, " +
 					"        'Average  on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
+					"        CAST(NULL AS DATETIME) as 'Battle Time', " +
 					"        CAST(ROUND(SUM(CAST(battle.victory AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Result, " +
 					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
 					"        CAST(AVG(CAST(battle.dmg AS FLOAT)) AS INT) AS [Damage Caused], " +
@@ -1348,7 +1372,7 @@ namespace WotDBUpdater.Forms
 		}
 
 		private int columnListcolType = 0; // To keep track on current column list type
-		private string columnListSelected = ""; // To keep track on current selected column list
+		private int columnListSelectedId = 0; // To keep track on current selected column list
 		private int columnListSelectedTankView = 0; // Remember last selected column list for tank view, 0 == Use the default one
 		private int columnListSelectedBattleView = 0; // Remember last selected column list for battle view, 0 == Use the default one
 		
@@ -1390,6 +1414,7 @@ namespace WotDBUpdater.Forms
 					if (columnListSelectedBattleView != 0) colDefault = columnListSelectedBattleView;
 				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
 				checkedMenuItem.Checked = true;
+				columnListSelectedId = GetSelectedColumnListId(checkedMenuItem.Text);
 			}
 		}
 
@@ -1403,7 +1428,25 @@ namespace WotDBUpdater.Forms
 			}
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			selectedMenu.Checked = true;
+			// Get and remember selected column setup list
+			columnListSelectedId = GetSelectedColumnListId(selectedMenu.Text);
+			int colSelected = Convert.ToInt32(selectedMenu.Name.Substring(selectedMenu.Name.Length - 2, 2));
+			if (columnListcolType == 1)
+				columnListSelectedTankView = colSelected;
+			else if (columnListcolType == 2)
+				columnListSelectedBattleView = colSelected;
+			ShowContent();
+		}
 
+		private int GetSelectedColumnListId(string ColumnListName)
+		{
+			string sql = "select id from columnList where colType=@colType and name=@name";
+			DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@name", ColumnListName, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			int i = 0;
+			if (dt.Rows.Count > 0) i = Convert.ToInt32(dt.Rows[0][0]);
+			return i;
 		}
 
 		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
@@ -1461,24 +1504,33 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotApi2DB.ImportTanks();
 		}
 
-        private void testNewTurretImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportTurrets();
-        }
+		private void testNewTurretImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportTurrets();
+		}
 
         private void testNewGunImportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Code.ImportWotApi2DB.ImportGuns();
         }
 
+        private void testNewRadioImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotApi2DB.ImportRadios();
+        }
 
+        private void testSaveImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotApi2DB.SaveImage();
+        }
+
+        private void testNewAchievementImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotApi2DB.ImportAchievements();
+        }
 
 		#endregion
-
-
 		
-
-
 		
 	}
 }

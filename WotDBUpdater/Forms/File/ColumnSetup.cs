@@ -809,11 +809,11 @@ namespace WotDBUpdater.Forms.File
 				{
 					foreach (DataGridViewRow dr in dataGridSelectedColumns.SelectedRows)
 					{
-						int tankID = Convert.ToInt32(dr.Cells["ID"].Value);
-						DataRow[] tanks = dtSelectedColumns.Select("ID = " + tankID.ToString());
-						foreach (DataRow tank in tanks)
+						int columnId = Convert.ToInt32(dr.Cells["columnSelectionId"].Value);
+						DataRow[] cols = dtSelectedColumns.Select("columnSelectionId = " + columnId.ToString());
+						foreach (DataRow col in cols)
 						{
-							tank.Delete();
+							col.Delete();
 						}
 					}
 				}

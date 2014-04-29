@@ -17,7 +17,8 @@ namespace WotDBUpdater.Code
 		{
 			VarChar = 1,
 			Int = 2,
-			DateTime = 3
+			DateTime = 3,
+            Image = 4
 		}
 		
 		public static DataTable FetchData(string sql)
@@ -247,9 +248,12 @@ namespace WotDBUpdater.Code
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
-					
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'"); // yyyy-DD-mm
 				}
+                else if (DataType == SqlDataType.Image)
+                {
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue);
+                }
 			}
 		}
 

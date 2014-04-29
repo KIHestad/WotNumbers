@@ -32,6 +32,7 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
@@ -145,9 +146,12 @@
             this.importWsDossierHistoryToDbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testNewTurretImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testNewGunImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testNewRadioImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testSaveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.testNewGunImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testNewAchievementImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.panelMainArea.SuspendLayout();
@@ -246,10 +250,10 @@
             this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridMain.CausesValidation = false;
             this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle1.NullValue = null;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
@@ -257,11 +261,10 @@
             this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridMain.ColumnHeadersHeight = 36;
             this.dataGridMain.Cursor = System.Windows.Forms.Cursors.Arrow;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            dataGridViewCellStyle2.Format = "N0";
             dataGridViewCellStyle2.NullValue = null;
             dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
@@ -274,6 +277,13 @@
             this.dataGridMain.Name = "dataGridMain";
             this.dataGridMain.ReadOnly = true;
             this.dataGridMain.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridMain.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridMain.RowHeadersVisible = false;
             this.dataGridMain.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
@@ -1207,7 +1217,10 @@
             this.importWsDossierHistoryToDbToolStripMenuItem,
             this.testNewTankImportToolStripMenuItem,
             this.testNewTurretImportToolStripMenuItem,
-            this.testNewGunImportToolStripMenuItem});
+            this.testNewGunImportToolStripMenuItem,
+            this.testNewRadioImportToolStripMenuItem,
+            this.testSaveImageToolStripMenuItem,
+            this.testNewAchievementImportToolStripMenuItem});
             this.toolItemTest.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemTest.Name = "toolItemTest";
             this.toolItemTest.ShowDropDownArrow = false;
@@ -1275,6 +1288,27 @@
             this.testNewTurretImportToolStripMenuItem.Text = "Test new turretImport";
             this.testNewTurretImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTurretImportToolStripMenuItem_Click);
             // 
+            // testNewGunImportToolStripMenuItem
+            // 
+            this.testNewGunImportToolStripMenuItem.Name = "testNewGunImportToolStripMenuItem";
+            this.testNewGunImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testNewGunImportToolStripMenuItem.Text = "Test new gunImport";
+            this.testNewGunImportToolStripMenuItem.Click += new System.EventHandler(this.testNewGunImportToolStripMenuItem_Click);
+            // 
+            // testNewRadioImportToolStripMenuItem
+            // 
+            this.testNewRadioImportToolStripMenuItem.Name = "testNewRadioImportToolStripMenuItem";
+            this.testNewRadioImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testNewRadioImportToolStripMenuItem.Text = "Test new radioImport";
+            this.testNewRadioImportToolStripMenuItem.Click += new System.EventHandler(this.testNewRadioImportToolStripMenuItem_Click);
+            // 
+            // testSaveImageToolStripMenuItem
+            // 
+            this.testSaveImageToolStripMenuItem.Name = "testSaveImageToolStripMenuItem";
+            this.testSaveImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testSaveImageToolStripMenuItem.Text = "Test save image";
+            this.testSaveImageToolStripMenuItem.Click += new System.EventHandler(this.testSaveImageToolStripMenuItem_Click);
+            // 
             // lblStatus2
             // 
             this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1303,12 +1337,12 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // testNewGunImportToolStripMenuItem
+            // testNewAchievementImportToolStripMenuItem
             // 
-            this.testNewGunImportToolStripMenuItem.Name = "testNewGunImportToolStripMenuItem";
-            this.testNewGunImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewGunImportToolStripMenuItem.Text = "Test new gunImport";
-            this.testNewGunImportToolStripMenuItem.Click += new System.EventHandler(this.testNewGunImportToolStripMenuItem_Click);
+            this.testNewAchievementImportToolStripMenuItem.Name = "testNewAchievementImportToolStripMenuItem";
+            this.testNewAchievementImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testNewAchievementImportToolStripMenuItem.Text = "Test new achievementImport";
+            this.testNewAchievementImportToolStripMenuItem.Click += new System.EventHandler(this.testNewAchievementImportToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -1458,6 +1492,9 @@
         private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolItemColumnSelectSep;
         private System.Windows.Forms.ToolStripMenuItem testNewGunImportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testNewRadioImportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testNewAchievementImportToolStripMenuItem;
 	}
 }
 
