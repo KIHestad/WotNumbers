@@ -391,6 +391,7 @@ namespace WotDBUpdater.Code
 							// New battle 15x15 is detected, update tankData in DB
 							UpdateBattle(NewPlayerTankRow, OldPlayerTankRow, NewPlayerTankBattle15Row, OldPlayerTankBattle15Row, "15", tankId, playerTankId, battlessNew15, battleFragList, battleAchList);
 							battleSave = true;
+							
 						}
 						if (battlessNew7 != 0)
 						{
@@ -555,10 +556,14 @@ namespace WotDBUpdater.Code
 					else
 					{
 						// new fragged tank, insert
-						playerTankFragSQL += "INSERT INTO playerTankFrag (playerTankId, fraggedTankId, fragCount) " +
-											"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); \n";
-						// Add new frag count to battle Frag
-						battleFrag.Add(newFragItem);
+						// Avoud if tank is unknown
+						if (newFragItem.tankId != 0)
+						{
+							playerTankFragSQL += "INSERT INTO playerTankFrag (playerTankId, fraggedTankId, fragCount) " +
+												"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); \n";
+							// Add new frag count to battle Frag
+							battleFrag.Add(newFragItem);
+						}
 					}
 				}
 				// Add to database

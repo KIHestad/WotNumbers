@@ -18,6 +18,18 @@ namespace WotDBUpdater.Code
 		{
 			tankList.Clear();
 			tankList = DB.FetchData("SELECT * FROM tank");
+			foreach (DataRow dr in tankList.Rows)
+			{
+				// Replace WoT API tank name with Phalynx Dossier tank name
+				string tankName = dr["name"].ToString();
+				tankName = tankName.Replace("ö", "o");
+				tankName = tankName.Replace("ä", "a");
+				tankName = tankName.Replace("â", "a");
+				tankName = tankName.Replace("ß", "ss");
+				dr["name"] = tankName;
+				dr.AcceptChanges();
+			}
+			tankList.AcceptChanges();
 		}
 
 		public static DataTable GetPlayerTankFromDB(int tankId)
