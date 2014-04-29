@@ -622,7 +622,7 @@ namespace WotDBUpdater.Forms.File
 		private void GetSelectedColumnsFromColumnList()
 		{
 			string sql =
-				"SELECT columnListSelection.sortorder AS '#', columnSelection.name AS 'Name', columnSelectionId, columnListId " +
+				"SELECT columnListSelection.sortorder AS '#', columnSelection.name AS 'Name', description as 'Description', columnSelectionId, columnListId " +
 				"FROM   columnListSelection INNER JOIN " +
 				"		columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 				"		AND columnListSelection.columnListId = @columnListId " +
@@ -634,6 +634,7 @@ namespace WotDBUpdater.Forms.File
 			{
 				selectedColumnSetupDone = true;
 				dataGridSelectedColumns.Columns["#"].Width = 20;
+				dataGridSelectedColumns.Columns["Description"].Width = 300;
 				dataGridSelectedColumns.Columns["columnSelectionId"].Visible = false;
 				dataGridSelectedColumns.Columns["columnListId"].Visible = false;
 			}
@@ -688,20 +689,24 @@ namespace WotDBUpdater.Forms.File
 
 				}
 				// Insert new elements now
-				for (int i = 0; i < selectedRowCount; i++)
+				for (int i = 0; i < dataGridAllColumns.Rows.Count; i++)
 				{
-					// Check if this tank exist, if not add it
-					DataRow[] drFind = dtSelectedColumns.Select("columnSelectionId=" + dataGridAllColumns.SelectedRows[i].Cells["id"].Value);
-					if (drFind.Length == 0)
+					if (dataGridAllColumns.Rows[i].Selected)
 					{
-						DataRow dr = dtSelectedColumns.NewRow();
-						lastcolumnSelectionId = Convert.ToInt32(dataGridAllColumns.SelectedRows[i].Cells["id"].Value);
-						dr["Name"] = dataGridAllColumns.SelectedRows[i].Cells["Name"].Value; ;
-						dr["columnSelectionId"] = lastcolumnSelectionId;
-						dr["columnListId"] = SelectedColumnListId;
-						dr["#"] = sortOrder;
-						dtSelectedColumns.Rows.Add(dr);
-						sortOrder++;
+						// Check if this tank exist, if not add it
+						DataRow[] drFind = dtSelectedColumns.Select("columnSelectionId=" + dataGridAllColumns.Rows[i].Cells["id"].Value);
+						if (drFind.Length == 0)
+						{
+							DataRow dr = dtSelectedColumns.NewRow();
+							lastcolumnSelectionId = Convert.ToInt32(dataGridAllColumns.Rows[i].Cells["id"].Value);
+							dr["Name"] = dataGridAllColumns.Rows[i].Cells["Name"].Value; ;
+							dr["Description"] = dataGridAllColumns.Rows[i].Cells["Description"].Value; ;
+							dr["columnSelectionId"] = lastcolumnSelectionId;
+							dr["columnListId"] = SelectedColumnListId;
+							dr["#"] = sortOrder;
+							dtSelectedColumns.Rows.Add(dr);
+							sortOrder++;
+						}
 					}
 				}
 				SortSelectedColum("#");

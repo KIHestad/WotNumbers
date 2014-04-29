@@ -462,22 +462,25 @@ namespace WotDBUpdater.Forms.File
 
 				}
 				// Insert new elements now
-				for (int i = 0; i < selectedRowCount; i++)
+				for (int i = 0; i < dataGridAllTanks.Rows.Count; i++)
 				{
-					// Check if this tank exist, if not add it
-					DataRow[] drFind = dtFavListTank.Select("ID=" + dataGridAllTanks.SelectedRows[i].Cells["ID"].Value);
-					if (drFind.Length == 0)
+					if (dataGridAllTanks.Rows[i].Selected)
 					{
-						DataRow dr = dtFavListTank.NewRow();
-						lastTankID = Convert.ToInt32(dataGridAllTanks.SelectedRows[i].Cells["ID"].Value);
-						dr["ID"] = lastTankID;
-						dr["Tier"] = Convert.ToInt32(dataGridAllTanks.SelectedRows[i].Cells["Tier"].Value);
-						dr["Tank"] = dataGridAllTanks.SelectedRows[i].Cells["Tank"].Value;
-						dr["Type"] = dataGridAllTanks.SelectedRows[i].Cells["Type"].Value;
-						dr["Nation"] = dataGridAllTanks.SelectedRows[i].Cells["Nation"].Value;
-						dr["Sort#"] = sortOrder;
-						dtFavListTank.Rows.Add(dr);
-						sortOrder++;
+						// Check if this tank exist, if not add it
+						DataRow[] drFind = dtFavListTank.Select("ID=" + dataGridAllTanks.Rows[i].Cells["ID"].Value);
+						if (drFind.Length == 0)
+						{
+							DataRow dr = dtFavListTank.NewRow();
+							lastTankID = Convert.ToInt32(dataGridAllTanks.Rows[i].Cells["ID"].Value);
+							dr["ID"] = lastTankID;
+							dr["Tier"] = Convert.ToInt32(dataGridAllTanks.Rows[i].Cells["Tier"].Value);
+							dr["Tank"] = dataGridAllTanks.Rows[i].Cells["Tank"].Value;
+							dr["Type"] = dataGridAllTanks.Rows[i].Cells["Type"].Value;
+							dr["Nation"] = dataGridAllTanks.Rows[i].Cells["Nation"].Value;
+							dr["Sort#"] = sortOrder;
+							dtFavListTank.Rows.Add(dr);
+							sortOrder++;
+						}
 					}
 				}
 				SortFavList("Sort#");
