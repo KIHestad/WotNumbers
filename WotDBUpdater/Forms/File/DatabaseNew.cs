@@ -117,7 +117,6 @@ namespace WotDBUpdater.Forms.File
 				// Init after getting tanks and other basic data import
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
-				TankData.GetTankData2BattleMappingFromDB();
 				UpdateProgressBar();
 
 				// Get turret

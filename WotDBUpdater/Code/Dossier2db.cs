@@ -69,7 +69,10 @@ namespace WotDBUpdater.Code
 
 			// Declare
 			DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
+			DataTable NewPlayerTankBattleTable = TankData.GetPlayerTankBattleFromDB(-1,""); // Return no data, only empty database with structure
 			DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
+			DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
+			DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
 			string tankName = "";
 			JsonMainSection mainSection = new JsonMainSection();
 			JsonItem currentItem = new JsonItem();
@@ -101,12 +104,14 @@ namespace WotDBUpdater.Code
 							// Tank data exist, save data found and log
 							if  (tankName != "") 
 							{
-								log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
-								if (SaveTankDataResult(tankName, NewPlayerTankRow, fragList, achList, ForceUpdate, saveBattleResult)) battleSave = true;
+								log.Add("  > Check for DB update - Tank: '" + tankName );
+								if (SaveTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult)) battleSave = true;
 							}
 							// Reset all values
 							NewPlayerTankTable.Clear();
 							NewPlayerTankRow = NewPlayerTankTable.NewRow();
+							NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
+							NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
 							// Get new tank name
 							currentItem.tank = reader.Value.ToString(); // add to current item
 							tankName = reader.Value.ToString(); // add to current tank
@@ -152,11 +157,35 @@ namespace WotDBUpdater.Code
 											{
 												string dataType = foundRows[0]["dbDataType"].ToString();
 												string dbField = foundRows[0]["dbPlayerTank"].ToString();
-												switch (dataType)
+												if (foundRows[0]["dbPlayerTankMode"] == DBNull.Value)
 												{
-													case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
-													case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-													case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
+													// Default playerTank value
+													switch (dataType)
+													{
+														case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
+														case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+														case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
+													}
+												}
+												else if (foundRows[0]["dbPlayerTankMode"].ToString() == "15")
+												{
+													// playerTankBattle mode 15x15
+													switch (dataType)
+													{
+														case "String": NewPlayerTankBattle15Row[dbField] = currentItem.value.ToString(); break;
+														case "DateTime": NewPlayerTankBattle15Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+														case "Int": NewPlayerTankBattle15Row[dbField] = Convert.ToInt32(currentItem.value); break;
+													}
+												}
+												else if (foundRows[0]["dbPlayerTankMode"].ToString() == "7")
+												{
+													// playerTankBattle mode 7x7
+													switch (dataType)
+													{
+														case "String": NewPlayerTankBattle7Row[dbField] = currentItem.value.ToString(); break;
+														case "DateTime": NewPlayerTankBattle7Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+														case "Int": NewPlayerTankBattle7Row[dbField] = Convert.ToInt32(currentItem.value); break;
+													}
 												}
 											}
 											else // Found mapping to Achievment
@@ -183,8 +212,8 @@ namespace WotDBUpdater.Code
 			}
 			reader.Close();
 			// Also write last tank found
-			log.Add("  > Check for DB update - Tank: '" + tankName + " | battles15:" + NewPlayerTankRow["battles15"] + " | battles7:" + NewPlayerTankRow["battles7"]);
-			if (SaveTankDataResult(tankName, NewPlayerTankRow, fragList, achList, ForceUpdate, saveBattleResult)) battleSave = true;
+			log.Add("  > Check for DB update - Tank: '" + tankName );
+			if (SaveTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult)) battleSave = true;
 			// Done
 			if (battleSave) Log.BattleResultDoneLog();
 			sw.Stop();
@@ -217,7 +246,7 @@ namespace WotDBUpdater.Code
 			}
 		}
 
-		public static bool SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, string fragList, List<AchItem> achList, bool ForceUpdate = false, bool saveBattleResult = true )
+		public static bool SaveTankDataResult(string tankName, DataRow NewPlayerTankRow, DataRow NewPlayerTankBattle15Row, DataRow NewPlayerTankBattle7Row,string fragList, List<AchItem> achList, bool ForceUpdate = false, bool saveBattleResult = true )
 		{
 			// Get Tank ID
 			bool battleSave = false;
@@ -227,26 +256,123 @@ namespace WotDBUpdater.Code
 				// Check if battle count has increased, first get existing battle count
 				DataTable OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Return Existing Player Tank Data
 				// Check if Player has this tank
+				int playerTankId = 0;
 				if (OldPlayerTankTable.Rows.Count == 0)
 				{
-					SaveNewPlayerTank(tankId);
+					// New tank detected, this parts only run when new tank is detected
+					SaveNewPlayerTank(tankId); 
 					OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Return once more now after row is added
+					playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]);
+					SaveNewPlayerTankBattle(playerTankId); 
 				}
-				// Check if battle count has increased, first get existing (old) tank data
+				// Check if battle count has increased, first get existing (old) tank data row
 				DataRow OldPlayerTankRow = OldPlayerTankTable.Rows[0];
-				int playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]);
+				playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]);
+				// Now get playerTank BattleResult
+				DataRow OldPlayerTankBattle15Row = TankData.GetPlayerTankBattleFromDB(playerTankId, "15").Rows[0];
+				DataRow OldPlayerTankBattle7Row = TankData.GetPlayerTankBattleFromDB(playerTankId, "7").Rows[0];
 				// Compare with last battle result
 				int NewPlayerTankRow_battles15 = 0;
 				int NewPlayerTankRow_battles7 = 0;
-				if (NewPlayerTankRow["battles15"] != DBNull.Value) NewPlayerTankRow_battles15 = Convert.ToInt32(NewPlayerTankRow["battles15"]);
-				if (NewPlayerTankRow["battles7"] != DBNull.Value) NewPlayerTankRow_battles7 = Convert.ToInt32(NewPlayerTankRow["battles7"]);
-				int battlessNew15 = NewPlayerTankRow_battles15 - Convert.ToInt32(OldPlayerTankRow["battles15"]);
-				int battlessNew7 = NewPlayerTankRow_battles7 - Convert.ToInt32(OldPlayerTankRow["battles7"]);
+				if (NewPlayerTankBattle15Row["battles"] != DBNull.Value) NewPlayerTankRow_battles15 = Convert.ToInt32(NewPlayerTankBattle15Row["battles"]);
+				if (NewPlayerTankBattle7Row["battles"] != DBNull.Value) NewPlayerTankRow_battles7 = Convert.ToInt32(NewPlayerTankBattle7Row["battles"]);
+				int battlessNew15 = NewPlayerTankRow_battles15 - Convert.ToInt32(OldPlayerTankBattle15Row["battles"]);
+				int battlessNew7 = NewPlayerTankRow_battles7 - Convert.ToInt32(OldPlayerTankBattle7Row["battles"]);
 				// Check if new battle on this tank then do db update, if force do it anyway
 				if (battlessNew15 != 0 || battlessNew7 != 0 || ForceUpdate)
 				{
-					// New battle detected, update tankData in DB
-					UpdatePlayerTank(NewPlayerTankRow, OldPlayerTankTable, tankId, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7);
+					// Update playerTank
+					string sqlFields = "";
+					foreach (DataColumn column in OldPlayerTankTable.Columns)
+					{
+						// Get columns and values from NewPlayerTankRow direct
+						if (column.ColumnName != "Id" && NewPlayerTankRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+						{
+							string colName = column.ColumnName;
+							string colType = column.DataType.Name;
+							sqlFields += ", " + colName + "=";
+							switch (colType)
+							{
+								case "String": sqlFields += "'" + NewPlayerTankRow[colName] + "'"; break;
+								case "DateTime": sqlFields += "'" + Convert.ToDateTime(NewPlayerTankRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+								default: sqlFields += NewPlayerTankRow[colName]; break;
+							}
+						}
+					}
+					// Update database
+					if (sqlFields.Length > 0 )
+					{
+						sqlFields = sqlFields.Substring(1); // Remove first comma
+						string sql = "UPDATE playerTank SET " + sqlFields + " WHERE Id=@Id ";
+						DB.AddWithValue(ref sql, "@Id", OldPlayerTankTable.Rows[0]["id"], DB.SqlDataType.Int);
+						DB.ExecuteNonQuery(sql);
+					}
+					// Now update playerTank battle result 15x15 and/or 7x7
+					DataTable PlayerTankBattleTable = TankData.GetPlayerTankBattleFromDB(-1, ""); // Return empty data just to get column structure
+					// Update playerTankBattle (15x15)
+					if (NewPlayerTankRow_battles15 > 0 || ForceUpdate)
+					{
+						sqlFields = "";
+						// Calculate WN8
+						sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, NewPlayerTankRow_battles15, NewPlayerTankBattle15Row);
+						// Calculate Eff
+						sqlFields += ", eff=" + Rating.CalculatePlayerTankEff(tankId, NewPlayerTankRow_battles15, NewPlayerTankBattle15Row);
+						foreach (DataColumn column in PlayerTankBattleTable.Columns)
+						{
+							// Get columns and values from NewPlayerTankRow direct
+							if (column.ColumnName != "Id" && NewPlayerTankBattle15Row[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+							{
+								string colName = column.ColumnName;
+								string colType = column.DataType.Name;
+								sqlFields += ", " + colName + "=";
+								switch (colType)
+								{
+									case "String": sqlFields += "'" + NewPlayerTankBattle15Row[colName] + "'"; break;
+									case "DateTime": sqlFields += "'" + Convert.ToDateTime(NewPlayerTankBattle15Row[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+									default: sqlFields += NewPlayerTankBattle15Row[colName]; break;
+								}
+							}
+						}
+						// Update database
+						if (sqlFields.Length > 0)
+						{
+							string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='15'; ";
+							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+							DB.ExecuteNonQuery(sql);
+						}
+					}
+					// Update playerTankBattle (7x7)
+					if (NewPlayerTankRow_battles7 > 0 || ForceUpdate)
+					{
+						sqlFields = "";
+						// Calculate WN8
+						sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, NewPlayerTankRow_battles7, NewPlayerTankBattle7Row);
+						// Calculate Eff
+						sqlFields += ", eff=" + Rating.CalculatePlayerTankEff(tankId, NewPlayerTankRow_battles7, NewPlayerTankBattle7Row);
+						foreach (DataColumn column in PlayerTankBattleTable.Columns)
+						{
+							// Get columns and values from NewPlayerTankRow direct
+							if (column.ColumnName != "Id" && NewPlayerTankBattle7Row[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
+							{
+								string colName = column.ColumnName;
+								string colType = column.DataType.Name;
+								sqlFields += ", " + colName + "=";
+								switch (colType)
+								{
+									case "String": sqlFields += "'" + NewPlayerTankBattle7Row[colName] + "'"; break;
+									case "DateTime": sqlFields += "'" + Convert.ToDateTime(NewPlayerTankBattle7Row[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+									default: sqlFields += NewPlayerTankBattle7Row[colName]; break;
+								}
+							}
+						}
+						// Update database
+						if (sqlFields.Length > 0)
+						{
+							string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='7'; ";
+							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+							DB.ExecuteNonQuery(sql);
+						}
+					}
 					// Check fraglist to update playertank frags
 					List<FragItem> battleFragList = UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 					// Check if achivment exists
@@ -254,12 +380,25 @@ namespace WotDBUpdater.Code
 					// If new battle on this tank also update battle table to store result of last battle(s)
 					if (saveBattleResult)
 					{
-						if (battlessNew15 != 0 || battlessNew7 != 0)
+						if (battlessNew15 != 0 && battlessNew7 != 0)
 						{
-							// New battle detected, update tankData in DB
-							UpdateBattle(NewPlayerTankRow, OldPlayerTankTable, tankId, battlessNew15, battlessNew7, battleFragList, battleAchList);
+							// If detected both 15x15 and 7x7 recordings, dont save fraglist and achivements to battle, as we don't know how to seperate them
+							battleFragList.Clear();
+							battleAchList.Clear();
+						}
+						if (battlessNew15 != 0)
+						{
+							// New battle 15x15 is detected, update tankData in DB
+							UpdateBattle(NewPlayerTankRow, OldPlayerTankRow, NewPlayerTankBattle15Row, OldPlayerTankBattle15Row, "15", tankId, playerTankId, battlessNew15, battleFragList, battleAchList);
 							battleSave = true;
 						}
+						if (battlessNew7 != 0)
+						{
+							// New battle 7x7 is detected, update tankData in DB
+							UpdateBattle(NewPlayerTankRow, OldPlayerTankRow, NewPlayerTankBattle7Row, OldPlayerTankBattle7Row, "7", tankId, playerTankId, battlessNew7, battleFragList, battleAchList);
+							battleSave = true;
+						}
+
 					}
 				}
 			}
@@ -275,37 +414,13 @@ namespace WotDBUpdater.Code
 			DB.ExecuteNonQuery(sql);
 		}
 
-		private static void UpdatePlayerTank(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battleCount15, int battleCount7)
+		public static void SaveNewPlayerTankBattle(int playerTankId)
 		{
-			// Get fields to update
-			string sqlFields = "";
-			// Calculate WN8
-			sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, battleCount15 , Rating.BattleMode.Random15, NewPlayerTankRow);
-			// Calculate Eff
-			sqlFields += ", eff=" + Rating.CalculatePlayerTankEff(tankId, battleCount15 , Rating.BattleMode.Random15, NewPlayerTankRow);
-			foreach (DataColumn column in OldPlayerTankTable.Columns)
-			{
-				// Get columns and values from NewPlayerTankRow direct
-				if (column.ColumnName != "Id" && NewPlayerTankRow[column.ColumnName] != DBNull.Value) // avoid the PK and if new data is NULL 
-				{
-					string colName = column.ColumnName;
-					string colType = column.DataType.Name;
-					sqlFields += ", " + colName + "=";
-					switch (colType)
-					{
-						case "String": sqlFields += "'" + NewPlayerTankRow[colName] + "'"; break;
-						case "DateTime": sqlFields += "'" + Convert.ToDateTime(NewPlayerTankRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
-						default: sqlFields += NewPlayerTankRow[colName]; break;
-					}
-				}
-			}
-			// Update database
-			if (sqlFields.Length > 0)
-			{
-				string sql = "UPDATE playerTank SET " + sqlFields + " WHERE Id=@Id ";
-				DB.AddWithValue(ref sql, "@Id", OldPlayerTankTable.Rows[0]["id"], DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-			}
+			// Add to database
+			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode) VALUES (@playerTankId, '15')" +
+						 "INSERT INTO PlayerTankBattle (playerTankId, battleMode) VALUES (@playerTankId, '7')";
+			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
 		}
 
 		private static List<AchItem> UpdatePlayerTankAch(int tankId, int playerTankId, List<AchItem> achList)
@@ -411,18 +526,19 @@ namespace WotDBUpdater.Code
 				// Now we got old and new frags, calculate update and inserts to playerTankFrag, and battleFrag
 				string playerTankFragSQL = "";
 				// Loop through new frags
-				foreach (var newFragItem in newFrag)
+				foreach (FragItem newFragItem in newFrag)
 				{
 					// Check if frags exists for this fragged tank
-					int i = -1;
+					int i = 0;
 					bool foundFraggedTank = false;
-					while (i < oldFrag.Count - 1 && !foundFraggedTank)
+					while (i < oldFrag.Count && !foundFraggedTank)
 					{
-						i++;
 						foundFraggedTank = (oldFrag[i].tankId == newFragItem.tankId);
+						i++;
 					}
 					if (foundFraggedTank)
 					{
+						i--; // return to previous found item
 						// fragged tank exsist, check if frag count has increased
 						if (newFragItem.fragCount > oldFrag[i].fragCount)
 						{
@@ -460,24 +576,20 @@ namespace WotDBUpdater.Code
 			return battleFrag;
 		}
 
-		private static void UpdateBattle(DataRow NewPlayerTankRow, DataTable OldPlayerTankTable, int tankId, int battlessNew15, int battlessNew7, List<FragItem> battleFragList, List<AchItem> battleAchList)
+		private static void UpdateBattle(DataRow NewPlayerTankRow, DataRow OldPlayerTankRow, DataRow NewPlayerTankBattleRow, DataRow OldPlayerTankBattleRow, String BattleMode, int tankId, int playerTankId, int battlesCount, List<FragItem> battleFragList, List<AchItem> battleAchList)
 		{
 			//try
 			//{
 				// Create datarow to put calculated battle data
 				DataTable NewBattleTable = TankData.GetBattleFromDB(-1); // Return no data, only empty database with structure
 				DataRow NewbattleRow = NewBattleTable.NewRow();
-				// Get fields to map playerTank data to Battle data
-				bool modeCompany = false;
-				bool modeClan = false;
-				int battlesCount = (battlessNew15 + battlessNew7);
-				foreach (DataRow dr in TankData.tankData2BattleMapping.Rows)
+				foreach (DataRow dr in TankData.GetTankData2BattleMappingFromDB(BattleMode).Rows)
 				{
-					if (dr["dbBattle"] != DBNull.Value) // Skip reading value if fields not mapped 
+					// Mapping fields
+					string battleField = dr["dbBattle"].ToString();
+					string playerTankField = dr["dbPlayerTank"].ToString();
+					if (dr["dbPlayerTankMode"] == DBNull.Value) // Default player tank data
 					{
-						// Get field to be checked
-						string battleField = dr["dbBattle"].ToString();
-						string playerTankField = dr["dbPlayerTank"].ToString();
 						// Check datatype and calculate value
 						if (dr["dbDataType"].ToString() == "DateTime") // For DateTime get the new value
 						{
@@ -490,37 +602,32 @@ namespace WotDBUpdater.Code
 							int oldvalue = 0;
 							int newvalue = 0;
 							if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
-							if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
+							if (OldPlayerTankRow[playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankRow[playerTankField]);
 							NewbattleRow[battleField] = (Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue);
 						}
 					}
-					else // Check in unmapped fields 
+					else // Battle Mode data
 					{
-						// Get field to be checked
-						string playerTankField = dr["dbPlayerTank"].ToString();
-						// Calculate clan and company battle mode
-						if (playerTankField == "battlesClan" || playerTankField == "battlesCompany") // For DateTime get the new value
+						// Check datatype and calculate value
+						if (dr["dbDataType"].ToString() == "DateTime") // For DateTime get the new value
 						{
-							// Calculate difference from old to new playertank result
+							NewbattleRow[battleField] = NewPlayerTankBattleRow[playerTankField];
+						}
+						else // For integers calculate new value as diff between new and old value
+						{
+							// Calculate difference from old to new Playertank result
+							if (NewbattleRow[battleField] == DBNull.Value) NewbattleRow[battleField] = 0;
 							int oldvalue = 0;
 							int newvalue = 0;
-							if (NewPlayerTankRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankRow[playerTankField]);
-							if (OldPlayerTankTable.Rows[0][playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankTable.Rows[0][playerTankField]);
-							if (newvalue > oldvalue)
-							{
-								modeClan = (playerTankField == "battlesClan");
-								modeCompany = (playerTankField == "battlesCompany");
-							}
+							if (NewPlayerTankBattleRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(NewPlayerTankBattleRow[playerTankField]);
+							if (OldPlayerTankBattleRow[playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(OldPlayerTankBattleRow[playerTankField]);
+							NewbattleRow[battleField] = (Convert.ToInt32(NewbattleRow[battleField]) + newvalue - oldvalue);
 						}
 					}
 				}
-				// Get value to playerTankID, FK to parent table playerTank
-				DataTable dt = TankData.GetPlayerTankFromDB(tankId);
 				// Create SQl to insert new battle row
-				// First add player id
-				int playerTankId = Convert.ToInt32(dt.Rows[0]["Id"]);
-				string sqlFields = ""; // string sqlFields = "playerTankId"; 
-				string sqlValues = ""; // string sqlValues = dt.Rows[0]["Id"].ToString();
+				string sqlFields = ""; 
+				string sqlValues = ""; 
 				// Loop through mapping table to get all generate fields, check against column names if average values must be calculted when more than one battle is detected
 				string[] avgCols = new string[] { "battleLifeTime", "killed", "frags", "dmg", "dmgReceived", "assistSpot", "assistTrack", 
 					"cap", "def", "shots", "hits", "shotsReceived", "pierced", "piercedReceived", "spotted", "mileage", "treesCut", "xp" 
@@ -553,11 +660,7 @@ namespace WotDBUpdater.Code
 				sqlFields += ", eff";
 				sqlValues += ", " + Rating.CalculateBattleEff(tankId, battlesCount, NewbattleRow);
 				// Add battle mode
-				if (battlessNew15 != 0) { sqlFields += ", mode15"; sqlValues += ", 1"; }
-				if (battlessNew7 != 0) { sqlFields += ", mode7"; sqlValues += ", 1"; }
-				if (modeCompany) { sqlFields += ", modeCompany"; sqlValues += ", 1"; }
-				if (modeClan) { sqlFields += ", modeClan"; sqlValues += ", 1"; }
-				
+				sqlFields += ", battleMode"; sqlValues += ", " + BattleMode; 
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(NewbattleRow["victory"]);
 				int defeatcount = Convert.ToInt32(NewbattleRow["defeat"]);
@@ -603,7 +706,7 @@ namespace WotDBUpdater.Code
 					// Get the last battle id
 					int battleId = 0;
 					sql = "select max(id) as battleId from battle";
-					dt = DB.FetchData(sql);
+					DataTable dt = DB.FetchData(sql);
 					if (dt.Rows.Count > 0)
 						battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
 					// Insert Battle Frags

@@ -26,6 +26,13 @@ namespace WotDBUpdater.Code
 			return DB.FetchData(sql);
 		}
 
+		public static DataTable GetPlayerTankBattleFromDB(int playerTankId, string battleMode)
+		{
+			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=" + playerTankId.ToString() + " AND battleMode='" + battleMode + "'";
+			return DB.FetchData(sql);
+		}
+
+
 		public static int GetPlayerTankCount()
 		{
 			string sql = "SELECT count(id) AS count FROM playerTank WHERE playerId = " + Config.Settings.playerId;
@@ -81,12 +88,15 @@ namespace WotDBUpdater.Code
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
 		}
 
-		public static DataTable tankData2BattleMapping = new DataTable();
-
-		public static void GetTankData2BattleMappingFromDB()
+		public static DataTable GetTankData2BattleMappingFromDB(string battleMode)
 		{
-			tankData2BattleMapping.Clear();
-			tankData2BattleMapping = DB.FetchData("SELECT * FROM tankData2BattleMappingView");
+			string sql =
+				"SELECT  dbDataType, dbPlayerTank, dbPlayerTankMode, dbBattle " +
+				"FROM    dbo.json2dbMapping " +
+				"WHERE   (dbBattle IS NOT NULL) AND (dbPlayerTankMode IS NULL OR dbPlayerTankMode=@dbPlayerTankMode) " +
+				"GROUP BY dbDataType, dbPlayerTank, dbBattle, dbPlayerTankMode ";
+			DB.AddWithValue(ref sql, "@dbPlayerTankMode", battleMode, DB.SqlDataType.VarChar);
+			return DB.FetchData(sql);
 		}
 
 		#endregion
@@ -148,25 +158,25 @@ namespace WotDBUpdater.Code
 				return null;
 		}
 
-		public static void SetPlayerTankAllAch()
-		{
-			// This makes sure all player tanks has all achievmenets - default value count=0
-			string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
-						"select playerTankAchAllView.playerTankId, playerTankAchAllView.achId, 0 from playerTankAchAllView left join " +
-						"playerTankAch on playerTankAchAllView.playerTankId = playerTankAch.playerTankId and playerTankAchAllView.achId = playerTankAch.achId " +
-						"where playerTankAch.playerTankId is null";
-			DB.ExecuteNonQuery(sql);
-		}
+		//public static void SetPlayerTankAllAch()
+		//{
+		//	// This makes sure all player tanks has all achievmenets - default value count=0
+		//	string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
+		//				"select playerTankAchAllView.playerTankId, playerTankAchAllView.achId, 0 from playerTankAchAllView left join " +
+		//				"playerTankAch on playerTankAchAllView.playerTankId = playerTankAch.playerTankId and playerTankAchAllView.achId = playerTankAch.achId " +
+		//				"where playerTankAch.playerTankId is null";
+		//	DB.ExecuteNonQuery(sql);
+		//}
 
-		public static void SetPlayerTankAllAch(int playerTankId)
-		{
-			// This makes sure this player tanks has all achievmenets - default value count=0
-			string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
-						"select " + playerTankId.ToString() + ", ach.id, 0 from ach left join " +
-						"playerTankAch on ach.id = playerTankAch.achId and playerTankAch.playerTankId = " + playerTankId.ToString() + " " +
-						"where playerTankAch.playerTankId is null";
-			DB.ExecuteNonQuery(sql);
-		}
+		//public static void SetPlayerTankAllAch(int playerTankId)
+		//{
+		//	// This makes sure this player tanks has all achievmenets - default value count=0
+		//	string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
+		//				"select " + playerTankId.ToString() + ", ach.id, 0 from ach left join " +
+		//				"playerTankAch on ach.id = playerTankAch.achId and playerTankAch.playerTankId = " + playerTankId.ToString() + " " +
+		//				"where playerTankAch.playerTankId is null";
+		//	DB.ExecuteNonQuery(sql);
+		//}
 
 
 		public static bool GetAchievmentExist(string achName)

@@ -115,7 +115,6 @@ namespace WotDBUpdater.Forms
 				// Init
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
-				TankData.GetTankData2BattleMappingFromDB();
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
 			// Check DB Version
