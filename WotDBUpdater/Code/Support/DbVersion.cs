@@ -223,12 +223,11 @@ namespace WotDBUpdater.Code
 					sqlite = "ALTER TABLE playerTankBattle ADD battleOfTotal real NOT NULL default 0; ";
 					break;
 				case 19:
-					mssql = "ALTER TABLE columnSelection ADD colDataType varchar(50) NOT NULL; ";
+					mssql = "DELETE FROM columnListSelection; DELETE FROM columnSelection; ALTER TABLE columnSelection ADD colDataType varchar(50) NOT NULL; ";
 					sqlite = mssql;
 					break;
 				case 20:
-					mssql = "DELETE FROM columnListSelection; DELETE FROM columnSelection; " +
-							"INSERT columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (1, 1, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " + 
+					mssql = "INSERT columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (1, 1, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " + 
 							"INSERT columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (10, 2, 12, 'battleResult.name', 'Result', 'The result for battle (Victory, Draw, Defeat or Several if a combination occur when recorded several battles for one row) ', 'Result', 50, 'VarChar'); " + 
 							"INSERT columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (11, 2, 16, 'battleSurvive.name', 'Survived', 'If survived in battle (Yes / No or Several if a combination occur when recorded several battles for one row)', 'Result', 50, 'VarChar'); " + 
 							"INSERT columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (12, 1, 2, 'tank.tier', 'Tier', 'Tank tier (1-10)', 'Tank', 35, 'Int'); " + 
