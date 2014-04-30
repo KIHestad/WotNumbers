@@ -310,7 +310,7 @@ namespace WotDBUpdater.Code
 					// Now update playerTank battle result 15x15 and/or 7x7
 					DataTable PlayerTankBattleTable = TankData.GetPlayerTankBattleFromDB(-1, ""); // Return empty data just to get column structure
 					// Update playerTankBattle (15x15)
-					if (NewPlayerTankRow_battles15 > 0 || ForceUpdate)
+					if (battlessNew15 > 0 || ForceUpdate)
 					{
 						sqlFields = "";
 						// Calculate WN8
@@ -333,16 +333,23 @@ namespace WotDBUpdater.Code
 								}
 							}
 						}
+						// Calculate battleOfTotal = factor of how many of battles in this battlemode out of total battles
+						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId";
+						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+						double battleOfTotal = 0;
+						if (totalBattles > 0) battleOfTotal = NewPlayerTankRow_battles15 / Convert.ToDouble(totalBattles);
+						sqlFields += ", battleOfTotal=" + battleOfTotal.ToString().Replace(",", ".");
 						// Update database
 						if (sqlFields.Length > 0)
 						{
-							string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='15'; ";
+							sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='15'; ";
 							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 							DB.ExecuteNonQuery(sql);
 						}
 					}
 					// Update playerTankBattle (7x7)
-					if (NewPlayerTankRow_battles7 > 0 || ForceUpdate)
+					if (battlessNew7 > 0 || ForceUpdate)
 					{
 						sqlFields = "";
 						// Calculate WN8
@@ -365,10 +372,17 @@ namespace WotDBUpdater.Code
 								}
 							}
 						}
+						// Calculate battleOfTotal = factor of how many of battles in this battlemode out of total battles
+						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId";
+						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+						double battleOfTotal = 0;
+						if (totalBattles > 0) battleOfTotal = NewPlayerTankRow_battles7 / Convert.ToDouble(totalBattles);
+						sqlFields += ", battleOfTotal=" + battleOfTotal.ToString().Replace(",",".");
 						// Update database
 						if (sqlFields.Length > 0)
 						{
-							string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='7'; ";
+							sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='7'; ";
 							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 							DB.ExecuteNonQuery(sql);
 						}

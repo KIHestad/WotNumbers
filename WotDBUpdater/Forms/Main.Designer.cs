@@ -145,14 +145,13 @@
 			this.importDossierHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.importWsDossierHistoryToDbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testNewTankImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testNewTurretImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testNewGunImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testNewRadioImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testSaveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testNewTurretImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testNewGunImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testNewRadioImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testSaveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testNewAchievementImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-            this.testNewAchievementImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -208,7 +207,7 @@
 			this.MainTheme.MainArea = mainAreaClass1;
 			this.MainTheme.Name = "MainTheme";
 			this.MainTheme.Resizable = true;
-			this.MainTheme.Size = new System.Drawing.Size(670, 431);
+			this.MainTheme.Size = new System.Drawing.Size(794, 431);
 			this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
 			this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
 			this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -221,7 +220,7 @@
 			this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatusRowCount.Location = new System.Drawing.Point(581, 411);
+			this.lblStatusRowCount.Location = new System.Drawing.Point(705, 411);
 			this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatusRowCount.Name = "lblStatusRowCount";
 			this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -401,7 +400,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(546, 25);
+			this.toolMain.Size = new System.Drawing.Size(515, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1282,34 +1281,41 @@
 			this.testNewTankImportToolStripMenuItem.Text = "Test new tankImport";
 			this.testNewTankImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTankImportToolStripMenuItem_Click);
 			// 
-            // testNewTurretImportToolStripMenuItem
-            // 
-            this.testNewTurretImportToolStripMenuItem.Name = "testNewTurretImportToolStripMenuItem";
-            this.testNewTurretImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewTurretImportToolStripMenuItem.Text = "Test new turretImport";
-            this.testNewTurretImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTurretImportToolStripMenuItem_Click);
-            // 
-            // testNewGunImportToolStripMenuItem
-            // 
-            this.testNewGunImportToolStripMenuItem.Name = "testNewGunImportToolStripMenuItem";
-            this.testNewGunImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewGunImportToolStripMenuItem.Text = "Test new gunImport";
-            this.testNewGunImportToolStripMenuItem.Click += new System.EventHandler(this.testNewGunImportToolStripMenuItem_Click);
-            // 
-            // testNewRadioImportToolStripMenuItem
-            // 
-            this.testNewRadioImportToolStripMenuItem.Name = "testNewRadioImportToolStripMenuItem";
-            this.testNewRadioImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewRadioImportToolStripMenuItem.Text = "Test new radioImport";
-            this.testNewRadioImportToolStripMenuItem.Click += new System.EventHandler(this.testNewRadioImportToolStripMenuItem_Click);
-            // 
-            // testSaveImageToolStripMenuItem
-            // 
-            this.testSaveImageToolStripMenuItem.Name = "testSaveImageToolStripMenuItem";
-            this.testSaveImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testSaveImageToolStripMenuItem.Text = "Test save image";
-            this.testSaveImageToolStripMenuItem.Click += new System.EventHandler(this.testSaveImageToolStripMenuItem_Click);
-            // 
+			// testNewTurretImportToolStripMenuItem
+			// 
+			this.testNewTurretImportToolStripMenuItem.Name = "testNewTurretImportToolStripMenuItem";
+			this.testNewTurretImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+			this.testNewTurretImportToolStripMenuItem.Text = "Test new turretImport";
+			this.testNewTurretImportToolStripMenuItem.Click += new System.EventHandler(this.testNewTurretImportToolStripMenuItem_Click);
+			// 
+			// testNewGunImportToolStripMenuItem
+			// 
+			this.testNewGunImportToolStripMenuItem.Name = "testNewGunImportToolStripMenuItem";
+			this.testNewGunImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+			this.testNewGunImportToolStripMenuItem.Text = "Test new gunImport";
+			this.testNewGunImportToolStripMenuItem.Click += new System.EventHandler(this.testNewGunImportToolStripMenuItem_Click);
+			// 
+			// testNewRadioImportToolStripMenuItem
+			// 
+			this.testNewRadioImportToolStripMenuItem.Name = "testNewRadioImportToolStripMenuItem";
+			this.testNewRadioImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+			this.testNewRadioImportToolStripMenuItem.Text = "Test new radioImport";
+			this.testNewRadioImportToolStripMenuItem.Click += new System.EventHandler(this.testNewRadioImportToolStripMenuItem_Click);
+			// 
+			// testSaveImageToolStripMenuItem
+			// 
+			this.testSaveImageToolStripMenuItem.Name = "testSaveImageToolStripMenuItem";
+			this.testSaveImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+			this.testSaveImageToolStripMenuItem.Text = "Test save image";
+			this.testSaveImageToolStripMenuItem.Click += new System.EventHandler(this.testSaveImageToolStripMenuItem_Click);
+			// 
+			// testNewAchievementImportToolStripMenuItem
+			// 
+			this.testNewAchievementImportToolStripMenuItem.Name = "testNewAchievementImportToolStripMenuItem";
+			this.testNewAchievementImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+			this.testNewAchievementImportToolStripMenuItem.Text = "Test new achievementImport";
+			this.testNewAchievementImportToolStripMenuItem.Click += new System.EventHandler(this.testNewAchievementImportToolStripMenuItem_Click);
+			// 
 			// lblStatus2
 			// 
 			this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1338,19 +1344,12 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-            // testNewAchievementImportToolStripMenuItem
-            // 
-            this.testNewAchievementImportToolStripMenuItem.Name = "testNewAchievementImportToolStripMenuItem";
-            this.testNewAchievementImportToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testNewAchievementImportToolStripMenuItem.Text = "Test new achievementImport";
-            this.testNewAchievementImportToolStripMenuItem.Click += new System.EventHandler(this.testNewAchievementImportToolStripMenuItem_Click);
-            // 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(670, 431);
+			this.ClientSize = new System.Drawing.Size(794, 431);
 			this.Controls.Add(this.MainTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1489,13 +1488,13 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_10;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_11;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_12;
-        private System.Windows.Forms.ToolStripMenuItem testNewTankImportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testNewTankImportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolItemColumnSelectSep;
-        private System.Windows.Forms.ToolStripMenuItem testNewGunImportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testNewRadioImportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testNewAchievementImportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testNewGunImportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testNewRadioImportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testNewAchievementImportToolStripMenuItem;
 	}
 }
 

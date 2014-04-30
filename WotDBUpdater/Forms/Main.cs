@@ -496,7 +496,12 @@ namespace WotDBUpdater.Forms
 			string join = "";
 			Tankfilter(out where, out join, out message);
 			string sortordercol = "0 as sortorder ";
-			if (join != "") sortordercol = "favListTank.sortorder as sortorder ";
+			string sortordergroupby = "";
+			if (join != "")
+			{
+				sortordercol = "favListTank.sortorder as sortorder ";
+				sortordergroupby = ", favListTank.sortorder";
+			}
 			//tank.tier AS Tier, tank.name AS Tank, tankType.name AS Tanktype, country.name AS Country, " +
 			//			 playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF, "
 			string sql =
@@ -508,6 +513,25 @@ namespace WotDBUpdater.Forms
 				"         country ON tank.countryId = country.id " + join +
 				"WHERE    player.id=@playerid " + where + " " +
 				"ORDER BY sortorder";
+			sql =
+				"SELECT   " + select + sortordercol +
+				"FROM            tank INNER JOIN " +
+				"                         playerTank ON tank.id = playerTank.tankId INNER JOIN " +
+				"                         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
+				"                         country ON tank.countryId = country.id LEFT OUTER JOIN " +
+				"                         playerTankBattle ON playerTankBattle.playerTankId = playerTank.id LEFT OUTER JOIN " +
+				"                         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " +
+				"                         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " +
+				"                         modGun ON playerTank.modGunId = modGun.id " + join +
+				"GROUP BY tank.name, tank.id, playerTank.id, playerTank.tankId, playerTank.playerId, playerTank.creationTime, playerTank.updatedTime, playerTank.lastBattleTime,  " +
+				"                         playerTank.has15, playerTank.has7, playerTank.hasCompany, playerTank.hasClan, playerTank.basedOnVersion, playerTank.battleLifeTime, playerTank.mileage,  " +
+				"                         playerTank.treesCut, playerTank.eqBino, playerTank.eqCoated, playerTank.eqCamo, playerTank.equVent, playerTank.skillRecon, playerTank.skillAwareness,  " +
+				"                         playerTank.skillCamo, playerTank.skillBia, playerTank.premiumCons, playerTank.vehicleCamo, playerTank.battlesCompany, playerTank.battlesClan,  " +
+				"                         playerTank.modRadioId, playerTank.modTurretId, playerTank.modGunId, playerTank.markOfMastery, modTurret.name, modTurret.tier, modTurret.viewRange,  " +
+				"                         modTurret.armorFront, modTurret.armorSides, modTurret.armorRear, modRadio.name, modRadio.tier, modRadio.signalRange, modGun.name, modGun.tier,  " +
+				"                         modGun.dmg1, modGun.dmg2, modGun.dmg3, modGun.pen1, modGun.pen2, modGun.pen3, modGun.fireRate, tankType.name, tankType.shortName, country.name, country.shortName, " +
+				"                         tank.tier, tank.premium " + sortordergroupby;
+
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			mainGridFormatting = true;
 			dataGridMain.DataSource = DB.FetchData(sql);
