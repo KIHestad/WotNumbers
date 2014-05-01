@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 21; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 22; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -361,6 +361,17 @@ namespace WotDBUpdater.Code
 							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (53,1,11) ;" +
 							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (48,1,12) ;" +
 							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (49,1,13) ;";
+					sqlite = mssql;
+					break;
+				case 22:
+					mssql = "UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.wins*1000/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) / 10 AS NUMERIC (10,1))' where id = 95 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.survived*1000/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) /10 AS NUMERIC (10,1))' where id = 98 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.xp/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)' where id = 140 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.hits*1000/nullif(playerTankBattle.shots,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 145 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.shots*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 146 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.hits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 147 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.heHits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 148 ; " +
+							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 149" ; 
 					sqlite = mssql;
 					break;
 				default:
