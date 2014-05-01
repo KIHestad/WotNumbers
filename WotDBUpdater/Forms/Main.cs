@@ -794,7 +794,33 @@ namespace WotDBUpdater.Forms
 						}
 					}
 				}
-				
+				else if (toolItemViewTankInfo.Checked)
+				{
+					if (col.Equals("Win Rate"))
+					{
+						//// Dynamic color by win percent
+						//"rating": [
+						//  { "value": 46.5, "color": ${"def.colorRating.very_bad" } },   //  0   - 46.5  - very bad   (20% of players)
+						//  { "value": 48.5, "color": ${"def.colorRating.bad"      } },   // 46.5 - 48.5  - bad        (better then 20% of players)
+						//  { "value": 51.5, "color": ${"def.colorRating.normal"   } },   // 48.5 - 51.5  - normal     (better then 60% of players)
+						//  { "value": 56.5, "color": ${"def.colorRating.good"     } },   // 51.5 - 56.5  - good       (better then 90% of players)
+						//  { "value": 64.5, "color": ${"def.colorRating.very_good"} },   // 56.5 - 64.5  - very good  (better then 99% of players)
+						//  { "value": 101,  "color": ${"def.colorRating.unique"   } }    // 64.5 - 100   - unique     (better then 99.9% of players)
+						//]
+						if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+						{
+							double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
+							Color weRatingColor = ColorTheme.Rating_very_bad;
+							if (wr > 64.5) weRatingColor = ColorTheme.Rating_uniqe;
+							else if (wr > 56.5) weRatingColor = ColorTheme.Rating_very_good;
+							else if (wr > 51.5) weRatingColor = ColorTheme.Rating_good;
+							else if (wr > 48.5) weRatingColor = ColorTheme.Rating_normal;
+							else if (wr > 46.5) weRatingColor = ColorTheme.Rating_bad;
+							cell.Style.ForeColor = weRatingColor;
+						}
+					}
+					
+				}
 			}
 		}
 
