@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 22; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 24; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -373,6 +373,89 @@ namespace WotDBUpdater.Code
 							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.heHits*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 148 ; " +
 							"UPDATE columnSelection SET colName='CAST(SUM(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal)  / 10 AS NUMERIC (10,1))' where id = 149" ; 
 					sqlite = mssql;
+					break;
+				case 23:
+					mssql =
+						"CREATE PROCEDURE SP_DROP_COL_CONSTRAINT @table VARCHAR(50), @col VARCHAR(50) " +
+						"AS " +
+						"BEGIN " +
+						"	SET NOCOUNT ON " +
+						"	DECLARE @table_id AS INT " +
+						"	DECLARE @name_column_id AS INT " +
+						"	DECLARE @sql nvarchar(255)  " +
+						"	SET @table_id = OBJECT_ID(@table) " +
+						"	SELECT @name_column_id = column_id " +
+						"	FROM sys.columns " +
+						"	WHERE object_id = @table_id " +
+						"	AND name = @col " +
+						"	SELECT @sql = 'ALTER TABLE ' + @table + ' DROP CONSTRAINT ' + D.name " +
+						"	FROM sys.default_constraints AS D " +
+						"	WHERE D.parent_object_id = @table_id " +
+						"	AND D.parent_column_id = @name_column_id " +
+						"	EXECUTE sp_executesql @sql " +
+						"	SELECT @sql = 'ALTER TABLE ' + @table + ' DROP COLUMN ' + @col " +
+						"	EXECUTE sp_executesql @sql " +
+						"END ;";
+					// No support for SQLite
+					break;
+				case 24:
+					mssql = "SP_DROP_COL_CONSTRAINT 'playerTank' , 'battles15' ;" +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'battles8p15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'wins15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'losses15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'survived15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'frags15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'frags8p15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'dmg15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'dmgReceived15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'assistSpot15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'assistTrack15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'cap15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'def15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'spot15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'xp15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'xp8p15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'xpOriginal15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'shots15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'hits15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'heHits15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'pierced15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'shotsReceived15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'piercedReceived15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'heHitsReceived15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'noDmgShotsReceived15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'maxDmg15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'maxFrags15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'maxXp15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'battles7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'wins7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'losses7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'survived7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'frags7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'frags8p7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'dmg7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'dmgReceived7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'assistSpot7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'assistTrack7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'cap7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'def7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'spot7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'xp7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'xpOriginal7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'shots7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'hits7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'heHits7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'pierced7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'shotsReceived7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'piercedReceived7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'heHitsReceived7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'noDmgShotsReceived7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'maxDmg7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'maxFrags7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'maxXp7' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'wn8' ; " +
+							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'eff' ; ";
+					// No support for SQLite
 					break;
 				default:
 					break;

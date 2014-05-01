@@ -425,9 +425,9 @@ namespace WotDBUpdater.Forms
 				string sql =
 					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
 					"UNION " +
-					"SELECT 'Total battles' as Data, cast( SUM(battles15) + SUM(battles7) as varchar) from playerTank where playerid=@playerid " +
+					"SELECT 'Total battles' as Data, cast(SUM(battles) as varchar) from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.Id where playerid=@playerid " +
 					"UNION " +
-					"SELECT 'Comment' as Data ,'This is an alpha version of a World of Tanks statistic tool - supposed to rule the World (of Tanks) :-)' ";
+					"SELECT 'Comment' as Data ,'Welcome to the Argus Project - Development of WoT Numbers' ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
 				dataGridMain.DataSource = DB.FetchData(sql);
 				// Text cols

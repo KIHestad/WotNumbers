@@ -139,7 +139,7 @@ namespace WotDBUpdater.Code
 			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 			{
-				dbcon = "Data Source=" + Config.Settings.databaseFileName + ";Version=3;";
+				dbcon = "Data Source=" + Config.Settings.databaseFileName + ";Version=3;PRAGMA foreign_keys = ON;";
 			}
 			return dbcon;
 		}
