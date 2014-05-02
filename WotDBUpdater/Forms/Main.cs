@@ -535,7 +535,7 @@ namespace WotDBUpdater.Forms
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			mainGridFormatting = true;
 			dataGridMain.DataSource = DB.FetchData(sql);
-			// Text cols
+			//  Hide system cols
 			dataGridMain.Columns["sortorder"].Visible = false;
 			// Grid col size
 			int colnum = 0;
@@ -558,6 +558,10 @@ namespace WotDBUpdater.Forms
 			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
 			if (!DB.CheckConnection()) return;
+			// Get Columns
+			string select = "";
+			List<int> columnWidth = new List<int>();
+			GetSelectedColumnList(out select, out columnWidth);
 			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -571,15 +575,24 @@ namespace WotDBUpdater.Forms
 			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
 			string sortordercol = "0 as sortorder ";
 			if (tankJoin != "") sortordercol = "favListTank.sortorder as sortorder ";
-			string sql =
-				"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, CAST(battle.battleTime AS DATETIME) AS 'Battle Time', battleResult.name as Result, battleSurvive.name as Survived, " +
-				"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
-				"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
-				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, CAST(battle.battleTime AS DATETIME) AS battleTime, battle.battleResultId, battle.battleSurviveId, " +
-				"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer, " + sortordercol + 
+
+				//"SELECT CAST(tank.tier AS FLOAT) AS Tier, tank.name AS Tank, CAST(battle.battleTime AS DATETIME) AS 'Battle Time', battleResult.name as Result, battleSurvive.name as Survived, " +
+				//"  battle.dmg AS [Damage Caused], battle.dmgReceived AS [Damage Received], CAST(battle.frags AS FLOAT) AS Kills, battle.xp AS XP, CAST(battle.spotted AS FLOAT) AS Detected, " +
+				//"  CAST(battle.cap AS FLOAT) AS [Capture Points], CAST(battle.def AS FLOAT) AS [Defense Points], CAST(battle.shots AS FLOAT) AS Shots, CAST(battle.hits AS FLOAT) AS Hits, battle.wn8 AS WN8, battle.eff AS EFF, " +
+				//"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, battlescount, CAST(battle.battleTime AS DATETIME) AS battleTime, battle.battleResultId, battle.battleSurviveId, " +
+				//"  battle.victory, battle.draw, battle.defeat, battle.survived as survivedcount, battle.killed as killedcount, 0 as footer, " + sortordercol + 
+			string sql = 
+				"SELECT " + select + 
+				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
+				"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
+				"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
+				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, " +
+				"  0 as footer, " + sortordercol + 
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
+				"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
+				"        country ON tank.countryId = country.Id INNER JOIN " +
 				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
@@ -602,7 +615,7 @@ namespace WotDBUpdater.Forms
 			dt = DB.FetchData(sql);
 			int rowcount = dt.Rows.Count;
 			// Add footer
-			if (dt.Rows.Count > 1)
+			if (false) // (dt.Rows.Count > 1)
 			{
 				sql =
 					"SELECT  AVG(CAST(tank.tier AS FLOAT)) AS Tier, " +
@@ -625,8 +638,6 @@ namespace WotDBUpdater.Forms
 					"		 '#F0F0F0' as battleSurviveColor, " +
 					"		 SUM(battlescount) AS battlescount, " +
 					"		 CAST(@getdate AS DATETIME) AS battleTime, " +
-					"		 4 AS battleResultId, " +
-					"		 2 AS battleSurviveId," +
 					"		 SUM (battle.victory) AS victory, " +
 					"		 SUM (battle.draw) AS draw, " +
 					"		 SUM (battle.defeat) AS defeat, " +
@@ -651,30 +662,27 @@ namespace WotDBUpdater.Forms
 			// populate datagrid
 			mainGridFormatting = true;
 			dataGridMain.DataSource = dt;
-			// Hide cols
+			// Hide sys cols
 			dataGridMain.Columns["battleResultColor"].Visible = false;
 			dataGridMain.Columns["battleSurviveColor"].Visible = false;
-			dataGridMain.Columns["battleTime"].Visible = false;
-			dataGridMain.Columns["battlescount"].Visible = false;
-			dataGridMain.Columns["battleResultId"].Visible = false;
-			dataGridMain.Columns["battleSurviveId"].Visible = false;
-			dataGridMain.Columns["victory"].Visible = false;
-			dataGridMain.Columns["draw"].Visible = false;
-			dataGridMain.Columns["defeat"].Visible = false;
-			dataGridMain.Columns["survivedcount"].Visible = false;
-			dataGridMain.Columns["killedcount"].Visible = false;
+			dataGridMain.Columns["battleTimeToolTip"].Visible = false;
+			dataGridMain.Columns["battlesCountToolTip"].Visible = false;
+			dataGridMain.Columns["victoryToolTip"].Visible = false;
+			dataGridMain.Columns["drawToolTip"].Visible = false;
+			dataGridMain.Columns["defeatToolTip"].Visible = false;
+			dataGridMain.Columns["survivedCountToolTip"].Visible = false;
+			dataGridMain.Columns["killedCountToolTip"].Visible = false;
 			dataGridMain.Columns["footer"].Visible = false;
 			dataGridMain.Columns["sortorder"].Visible = false;
-			// Text cols
-			dataGridMain.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Result"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Survived"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Tank"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Result"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridMain.Columns["Survived"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			
-			// Finish up
-			GridResizeBattle();
+			// Grid col size
+			int colnum = 0;
+			foreach (int cw in columnWidth)
+			{
+				dataGridMain.Columns[colnum].Width = cw;
+				dataGridMain.Columns[colnum].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns[colnum].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				colnum++;
+			}
 			ResizeNow();
 			toolItemBattles.Visible = true;
 			if (overrideStatus2Message == "")
@@ -684,17 +692,6 @@ namespace WotDBUpdater.Forms
 			lblStatusRowCount.Text = "Rows " + rowcount.ToString();
 		}
 
-		private void GridResizeBattle()
-		{
-			dataGridMain.Columns[0].Width = 35;
-			dataGridMain.Columns[1].Width = 120;
-			for (int i = 2; i <= 15; i++)
-			{
-				dataGridMain.Columns[i].Width = 60;
-			}
-			dataGridMain.Columns[6].Width = 50;
-		}
-		
 		private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
 			if (mainGridFormatting)
@@ -747,8 +744,8 @@ namespace WotDBUpdater.Forms
 					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1);
 					if (col.Equals("Tank"))
 					{
-						string battleTime = dataGridMain["battleTime", e.RowIndex].Value.ToString();
-						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+						string battleTime = dataGridMain["battleTimeToolTip", e.RowIndex].Value.ToString();
+						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 						// Check if this row is normal or footer
 						if (!footer) // normal line
 						{
@@ -765,12 +762,12 @@ namespace WotDBUpdater.Forms
 					{
 						string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
 						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 						if (battlesCount > 1)
 						{
-							cell.ToolTipText = "Victory: " + dataGridMain["victory", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Draw: " + dataGridMain["draw", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Defeat: " + dataGridMain["defeat", e.RowIndex].Value.ToString();
+							cell.ToolTipText = "Victory: " + dataGridMain["victoryToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
+								"Draw: " + dataGridMain["drawToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
+								"Defeat: " + dataGridMain["defeatToolTip", e.RowIndex].Value.ToString();
 						}
 					}
 					// Survived color and formatting
@@ -778,11 +775,11 @@ namespace WotDBUpdater.Forms
 					{
 						string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
 						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
-						int battlesCount = Convert.ToInt32(dataGridMain["battlescount", e.RowIndex].Value);
+						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 						if (battlesCount > 1)
 						{
-							cell.ToolTipText = "Survived: " + dataGridMain["survivedcount", e.RowIndex].Value.ToString() + Environment.NewLine +
-								"Killed: " + dataGridMain["killedcount", e.RowIndex].Value.ToString();
+							cell.ToolTipText = "Survived: " + dataGridMain["survivedCountToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
+								"Killed: " + dataGridMain["killedcountToolTip", e.RowIndex].Value.ToString();
 						}
 					}
 					// Foter desimal
@@ -1011,6 +1008,7 @@ namespace WotDBUpdater.Forms
 
 		private void GetColumnSetupList()
 		{
+			columnListcolType = 0;
 			if (toolItemViewTankInfo.Checked) columnListcolType = 1;
 			if (toolItemViewBattles.Checked) columnListcolType = 2;
 			if (columnListcolType != 0)
@@ -1037,18 +1035,24 @@ namespace WotDBUpdater.Forms
 						menuItem.Text = dr["name"].ToString();
 						menuItem.Visible = true;
 						if (Convert.ToBoolean(dr["colDefault"])) colDefault = Convert.ToInt32(dr["position"]); // Set default
+					}
 				}
-			}
 				toolItemColumnSelectSep.Visible = separatorVisible;
 				// Set checked menu item, use previus selected or use default
 				if (columnListcolType == 1)
-					if (columnListSelectedTankView != 0) colDefault = columnListSelectedTankView;
-					else if (columnListcolType == 2)
-						if (columnListSelectedBattleView != 0) colDefault = columnListSelectedBattleView;
+				{
+					if (columnListSelectedTankView != 0)
+						colDefault = columnListSelectedTankView;
+				}
+				else if (columnListcolType == 2)
+				{
+					if (columnListSelectedBattleView != 0)
+						colDefault = columnListSelectedBattleView;
+				}
 				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
 				checkedMenuItem.Checked = true;
 				columnListSelectedId = GetSelectedColumnListId(checkedMenuItem.Text);
-		}
+			}
 		}
 
 		private void toolItemColumnSelect_Click(object sender, EventArgs e)
@@ -1069,10 +1073,10 @@ namespace WotDBUpdater.Forms
 			else if (columnListcolType == 2)
 				columnListSelectedBattleView = colSelected;
 			GridShow();
-			}
+		}
 
 		private int GetSelectedColumnListId(string ColumnListName)
-			{
+		{
 			string sql = "select id from columnList where colType=@colType and name=@name";
 			DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", ColumnListName, DB.SqlDataType.VarChar);
@@ -1080,10 +1084,10 @@ namespace WotDBUpdater.Forms
 			int i = 0;
 			if (dt.Rows.Count > 0) i = Convert.ToInt32(dt.Rows[0][0]);
 			return i;
-			}
+		}
 
 		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
-			{
+		{
 			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
 			if (toolItemViewBattles.Checked)
 				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
@@ -1091,6 +1095,8 @@ namespace WotDBUpdater.Forms
 				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
 			Form frm = new Forms.File.ColumnSetup(colSetupType);
 			frm.ShowDialog();
+			GetColumnSetupList(); // Refresh column setup list now
+			GridShow(); // Refresh grid now
 		}
 
 		#endregion
@@ -1344,7 +1350,7 @@ namespace WotDBUpdater.Forms
 			// After fav list changes reload menu
 			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
 			GetFavList(); // Reload fav list items
-
+			GridShow(); // Refresh grid now
 		}
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)

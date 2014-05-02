@@ -195,7 +195,7 @@
 			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatus2);
 			this.MainTheme.Controls.Add(this.lblStatus1);
-			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.MainTheme.FormFooter = true;
@@ -400,7 +400,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(515, 25);
+			this.toolMain.Size = new System.Drawing.Size(546, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -541,6 +541,8 @@
 			this.toolItemColumnSelect_06.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_06.Text = "User Defined #6";
 			this.toolItemColumnSelect_06.Visible = false;
+			this.toolItemColumnSelect_06.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_06.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_07
 			// 
@@ -548,6 +550,8 @@
 			this.toolItemColumnSelect_07.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_07.Text = "User Defined #7";
 			this.toolItemColumnSelect_07.Visible = false;
+			this.toolItemColumnSelect_07.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_07.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_08
 			// 
@@ -555,6 +559,8 @@
 			this.toolItemColumnSelect_08.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_08.Text = "User Defined #8";
 			this.toolItemColumnSelect_08.Visible = false;
+			this.toolItemColumnSelect_08.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_08.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_09
 			// 
@@ -562,6 +568,8 @@
 			this.toolItemColumnSelect_09.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_09.Text = "User Defined #9";
 			this.toolItemColumnSelect_09.Visible = false;
+			this.toolItemColumnSelect_09.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_09.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_10
 			// 
@@ -569,6 +577,8 @@
 			this.toolItemColumnSelect_10.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_10.Text = "User Defined #10";
 			this.toolItemColumnSelect_10.Visible = false;
+			this.toolItemColumnSelect_10.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_11
 			// 
@@ -576,6 +586,8 @@
 			this.toolItemColumnSelect_11.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_11.Text = "User Defined #11";
 			this.toolItemColumnSelect_11.Visible = false;
+			this.toolItemColumnSelect_11.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_11.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_12
 			// 
@@ -583,6 +595,8 @@
 			this.toolItemColumnSelect_12.Size = new System.Drawing.Size(182, 22);
 			this.toolItemColumnSelect_12.Text = "User Defined #12";
 			this.toolItemColumnSelect_12.Visible = false;
+			this.toolItemColumnSelect_12.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_12.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemColumnSelect_13
 			// 

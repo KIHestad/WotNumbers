@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 24; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 25; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -367,7 +367,7 @@ namespace WotDBUpdater.Code
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (40, 2, 38, 'battle.eff', 'EFF', 'Calculated battle efficiency rating', 'Rating', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (41, 2, 40, 'battle.mode15', '15x15', 'Number of 15x15 battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (42, 2, 41, 'battle.mode7', '7x7', 'Number of 7x7 battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (43, 2, 42, 'battle.modeCla', 'Cla', 'Number of Clan battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (43, 2, 42, 'battle.modeClan', 'Clan', 'Number of Clan battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (44, 1, 5, 'tankType.shortName', 'Type', 'Tank type short name (LT, MT, HT, TD, SPG)', 'Tank', 50, 'VarChar'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (45, 2, 43, 'battle.modeCompany', 'Company', 'Number of Tank Company battles for this row (normally 0/1, or more if battle result is Several)', 'Mode', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (46, 1, 8, 'tank.id', 'ID', 'Wargaming ID for tank', 'Tank', 50, 'Int'); " + 
@@ -381,7 +381,7 @@ namespace WotDBUpdater.Code
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (53, 1, 15, 'playerTank.markOfMastery', 'Mastery Badge', 'Mastery Badge achived (0=None, 1=Ace Tanker, 2=I Class, 3=II Class, 4=III Class)', 'Rating', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (54, 1, 18, 'playerTank.lastBattleTime', 'Last Battle', 'Last battle time', 'Battle', 100, 'DateTime'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (55, 1, 11, 'playerTank.has15', '15x15', 'Used in 15x15 battles (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (56, 1, 14, 'playerTank.hasCla', 'Clan Wars', 'Used in clan wars (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (56, 1, 14, 'playerTank.hasClan', 'Clan Wars', 'Used in clan wars (0 = No, 1 = yes)', 'Tank', 35, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (57, 1, 7, 'country.shortName', 'Nation', 'Tank nation short name (CHI, FRA, GET, JAP, UK, USA, USR)', 'Tank', 50, 'VarChar'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (58, 2, 1, 'tank.name', 'Tank', 'Tank name', 'Tank', 120, 'VarChar'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (59, 2, 2, 'tank.tier', 'Tier', 'Tank tier (1-10)', 'Tank', 35, 'Int'); " + 
@@ -530,6 +530,36 @@ namespace WotDBUpdater.Code
 							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'wn8' ; " +
 							"SP_DROP_COL_CONSTRAINT 'playerTank' , 'eff' ; ";
 					// No support for SQLite
+					break;
+				case 25:
+					mssql =
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','battlesCountBefore8_8','Int','battles8p',NULL,NULL,'tanks.tankdata.battlesCountBefore8_8',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','damageAssistedRadio','Int','assistSpot','assistSpot',NULL,'tanks.tankdata.damageAssistedRadio',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','damageAssistedTrack','Int','assistTrack','assistTrack',NULL,'tanks.tankdata.damageAssistedTrack',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','heHitsReceived','Int','heHitsReceived',NULL,NULL,'tanks.tankdata.heHitsReceived',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','he_hits','Int','heHits',NULL,NULL,'tanks.tankdata.he_hits',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','mileage','Int','mileage',NULL,NULL,'tanks.tankdata.mileage',NULL); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','noDamageShotsReceived','Int','noDmgShotsReceived',NULL,NULL,'tanks.tankdata.noDamageShotsReceived',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','originalXP','Int','xpOriginal',NULL,NULL,'tanks.tankdata.originalXP',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','pierced','Int','pierced','pierced',NULL,'tanks.tankdata.pierced',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','piercedReceived','Int','piercedReceived','piercedReceived',NULL,'tanks.tankdata.piercedReceived',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','shotsReceived','Int','shotsReceived','shotsReceived',NULL,'tanks.tankdata.shotsReceived',15); " +
+						"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) VALUES ('tanks','tankdata','xpBefore8_8','Int','xp8p',NULL,NULL,'tanks.tankdata.xpBefore8_8',15); " +
+						"UPDATE columnSelection SET colName='battle.modeClan', name='Clan' where id = 43; " +
+						"UPDATE columnSelection SET colName='battle.hasClan' where id = 56; " +
+						"ALTER TABLE battle ADD heHitsReceived int NOT NULL default 0; " +
+						"ALTER TABLE battle ADD noDmgShotsReceived int NOT NULL default 0; " +
+						"UPDATE json2dbMapping SET dbBattle='heHitsReceived' where id IN(293,55,28); " +
+						"UPDATE json2dbMapping SET dbBattle='noDmgShotsReceived' where id IN(29,56,297); " +
+						"UPDATE columnSelection SET position=position+2 WHERE colType=2 AND position >= 32; " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (157, 2, 32, 'battle.heHitsReceived', 'HE Received', 'Number of HE shots received ', 'Shooting', 50, 'Int'); " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (158, 2, 33, 'battle.noDmgShotsReceived', 'No Dmg Shots Received', 'Number of no damaging shots received ', 'Shooting', 50, 'Int'); " +
+						"ALTER TABLE battle ADD heHits int NOT NULL default 0; " +
+						"UPDATE columnSelection SET position=position+3 WHERE colType=2 AND position >= 30; " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (159, 2, 30, 'battle.heHits', 'HE Hits', 'Number of HE hits', 'Shooting', 50, 'Int');  " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (160, 2, 31, 'battle.heHits * 100 / nullif(battle.shots,0)', 'HE Shots %', 'Percentage HE hits based on total shots (hi hits*100/shots)', 'Shooting', 50, 'Int');  " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (161, 2, 32, 'battle.heHits * 100 / nullif(battle.hits,0)', 'HE Hts %', 'Percentage HE hits based on total hits (he hits*100/hits)', 'Shooting', 50, 'Int');  ";
+					sqlite = mssql;
 					break;
 				default:
 					break;
