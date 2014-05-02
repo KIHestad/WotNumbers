@@ -21,7 +21,7 @@ namespace WotDBUpdater.Code
             Image = 4
 		}
 		
-		public static DataTable FetchData(string sql)
+		public static DataTable FetchData(string sql, bool ShowError = true)
 		{
 			ConfigData.dbType SelecteDbType = Config.Settings.databaseType;
 			DataTable dt = new DataTable();
@@ -38,6 +38,7 @@ namespace WotDBUpdater.Code
 				}
 				else if (SelecteDbType == ConfigData.dbType.SQLite)
 				{
+					
 					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 					con.Open();
 					SQLiteCommand command = new SQLiteCommand(sql, con);
@@ -48,14 +49,17 @@ namespace WotDBUpdater.Code
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Error fetching data from database. Please check your database settings." + 
-					Environment.NewLine + Environment.NewLine + sql +
-					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
+				if (ShowError)
+				{
+					Code.MsgBox.Show("Error fetching data from database. Please check your database settings." +
+						Environment.NewLine + Environment.NewLine + sql +
+						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
+				}
 			}
 			return dt;
 		}
 
-		public static bool ExecuteNonQuery(string sql)
+		public static bool ExecuteNonQuery(string sql, bool ShowError = true)
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
@@ -97,10 +101,13 @@ namespace WotDBUpdater.Code
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
-					Environment.NewLine + Environment.NewLine + lastRunnedSQL +
-					Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
-				ok = false;
+				if (ShowError)
+				{
+					Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
+						Environment.NewLine + Environment.NewLine + lastRunnedSQL +
+						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
+					ok = false;
+				}
 			}
 			return ok;
 		}
