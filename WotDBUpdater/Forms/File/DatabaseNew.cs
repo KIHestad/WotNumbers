@@ -72,7 +72,7 @@ namespace WotDBUpdater.Forms.File
 		private bool CreateNewDb()
 		{
 			bool ok = true;
-			badProgressBar.ValueMax = 13;
+			badProgressBar.ValueMax = 12;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 			UpdateProgressBar();
@@ -97,13 +97,6 @@ namespace WotDBUpdater.Forms.File
 				if (!ok) return false;
 				UpdateProgressBar();
 
-				// Create Views
-				streamReader = new StreamReader(path + "createView.txt", Encoding.UTF8);
-				sql = streamReader.ReadToEnd();
-				ok = DB.ExecuteNonQuery(sql);
-				if (!ok) return false;
-				UpdateProgressBar();
-
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
@@ -113,7 +106,7 @@ namespace WotDBUpdater.Forms.File
 
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();
-				ImportMisc2DB.UpdateTanks();
+				ImportWotApi2DB.ImportTanks();
 				// Init after getting tanks and other basic data import
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
@@ -136,7 +129,7 @@ namespace WotDBUpdater.Forms.File
 				UpdateProgressBar();
 
 				// Get WN8 ratings
-				ImportMisc2DB.UpdateWN8();
+				ImportWN8Api2DB.UpdateWN8();
 				UpdateProgressBar();
 
 				// Add player

@@ -193,11 +193,11 @@ namespace WotDBUpdater.Code
 					break;
 				case 13:
 					mssql = "ALTER TABLE playerTankBattle ADD wn8 int NOT NULL default 0, eff int NOT NULL default 0; ";
-					sqlite= "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0, eff integer NOT NULL default 0; "; ;
+					sqlite= "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
 					break;
 				case 14:
-					mssql = "DROP VIEW tankData2BattleMappingView; DROP VIEW tankInfoShort; DROP VIEW PlayerTankStatsView; DROP VIEW playerTankAchAllView; ";
-					sqlite = mssql;
+					// Removed from Create New DB - not used any more
+					//mssql = "DROP VIEW tankData2BattleMappingView; DROP VIEW tankInfoShort; DROP VIEW PlayerTankStatsView; DROP VIEW playerTankAchAllView; ";
 					break;
 				case 15:
 					mssql = "update json2dbMapping set dbBattle='modeClan' where jsonMainSubProperty='tanks.clan.battlesCount'; " +
@@ -223,7 +223,7 @@ namespace WotDBUpdater.Code
 					sqlite = "ALTER TABLE playerTankBattle ADD battleOfTotal real NOT NULL default 0; ";
 					break;
 				case 19:
-					mssql = "DELETE FROM columnListSelection; DELETE FROM columnSelection; ALTER TABLE columnSelection ADD colDataType varchar(50) NOT NULL; ";
+					mssql = "DELETE FROM columnListSelection; DELETE FROM columnSelection; ALTER TABLE columnSelection ADD colDataType varchar(50) NOT NULL default 'Int';";
 					sqlite = mssql;
 					break;
 				case 20:

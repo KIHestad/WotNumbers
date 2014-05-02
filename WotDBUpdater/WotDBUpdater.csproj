@@ -388,7 +388,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_TD.png" />
     <Content Include="Docs\Database\createTableSQLite.txt" />
-    <Content Include="Docs\Database\createView.txt" />
+    <Content Include="DevDocs\DatabaseLog\createView.txt" />
     <Content Include="DevDocs\Dev log\BadButton.txt" />
     <Content Include="DevDocs\Dev log\cmdrTrinity.txt" />
     <Content Include="DevDocs\Img\SystemImages\exit.png" />

@@ -41,18 +41,15 @@ namespace WotDBUpdater.Forms.File
             //List<string> result = importTanks2DB.importTanks();
             //Log(result);
             //importTanks2DB.fetchTanks();
-            List<string> log = ImportMisc2DB.UpdateTanks();
-            foreach (string item in log)
-            {
-                listBoxLog.Items.Add(item);
-            }
+            string log = ImportWotApi2DB.ImportTanks();
+            listBoxLog.Items.Add(log);
             TankData.GetTankListFromDB();
 
         }
 
         private void btnUpdateWN8_Click(object sender, EventArgs e)
         {
-            ImportMisc2DB.UpdateWN8();
+            ImportWN8Api2DB.UpdateWN8();
             Code.MsgBox.Show("Update complete");
         }
     }
