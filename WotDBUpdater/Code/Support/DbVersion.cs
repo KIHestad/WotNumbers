@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 25; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 27; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -271,7 +271,7 @@ namespace WotDBUpdater.Code
 					break;
 				case 14:
 					// Removed from Create New DB - not used any more
-					//mssql = "DROP VIEW tankData2BattleMappingView; DROP VIEW tankInfoShort; DROP VIEW PlayerTankStatsView; DROP VIEW playerTankAchAllView; ";
+					// mssql = "DROP VIEW tankData2BattleMappingView; DROP VIEW tankInfoShort; DROP VIEW PlayerTankStatsView; DROP VIEW playerTankAchAllView; ";
 					break;
 				case 15:
 					mssql = "update json2dbMapping set dbBattle='modeClan' where jsonMainSubProperty='tanks.clan.battlesCount'; " +
@@ -561,6 +561,15 @@ namespace WotDBUpdater.Code
 						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (161, 2, 32, 'battle.heHits * 100 / nullif(battle.hits,0)', 'HE Hts %', 'Percentage HE hits based on total hits (he hits*100/hits)', 'Shooting', 50, 'Int');  ";
 					sqlite = mssql;
 					break;
+				case 26:
+					mssql = "SP_DROP_COL_CONSTRAINT 'battle' , 'mode15' ; " +
+							"SP_DROP_COL_CONSTRAINT 'battle' , 'mode7' ; ";
+					break;
+				case 27:
+					mssql = "DELETE FROM columnListSelection WHERE columnSelectionId IN (41,42); DELETE FROM columnSelection WHERE ID IN (41,42);" +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (162, 2, 40, 'battle.battleMode', 'Battle Mode', 'Battle mode, 15 = Random Battles, Tank Company and Clan Wars, 7 = Team Battle (Historical Battles not included yet)', 'Mode', 50, 'VarChar'); ";
+					sqlite = mssql;
+					break;		
 				default:
 					break;
 			}

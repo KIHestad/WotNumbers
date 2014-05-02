@@ -692,6 +692,8 @@ namespace WotDBUpdater.Code
 				sqlValues += ", " + Rating.CalculateBattleEff(tankId, battlesCount, NewbattleRow);
 				// Add battle mode
 				sqlFields += ", battleMode"; sqlValues += ", " + BattleMode; 
+				// Add battle count
+				sqlFields += ", battleMode"; sqlValues += ", " + BattleMode; 
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(NewbattleRow["victory"]);
 				int defeatcount = Convert.ToInt32(NewbattleRow["defeat"]);
