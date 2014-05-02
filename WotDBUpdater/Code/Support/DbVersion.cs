@@ -188,9 +188,83 @@ namespace WotDBUpdater.Code
 					sqlite = mssql;
 					break;
 				case 12:
-					mssql = "";
+					mssql = "update json2dbMapping set dbPlayerTank='battlesClan', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.clan.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battlesClan', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.clan.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battlesCompany', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.company.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battlesCompany', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.company.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battles', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battles', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battles', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.battlesCount'; " +
+							"update json2dbMapping set dbPlayerTank='battles8p', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.battlesCountBefore8_8'; " +
+							"update json2dbMapping set dbPlayerTank='cap', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.capturePoints'; " +
+							"update json2dbMapping set dbPlayerTank='cap', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.capturePoints'; " +
+							"update json2dbMapping set dbPlayerTank='cap', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.capturePoints'; " +
+							"update json2dbMapping set dbPlayerTank='assistSpot', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.damageAssistedRadio'; " +
+							"update json2dbMapping set dbPlayerTank='assistSpot', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.damageAssistedRadio'; " +
+							"update json2dbMapping set dbPlayerTank='assistTrack', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.damageAssistedTrack'; " +
+							"update json2dbMapping set dbPlayerTank='assistTrack', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.damageAssistedTrack'; " +
+							"update json2dbMapping set dbPlayerTank='dmg', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.damageDealt'; " +
+							"update json2dbMapping set dbPlayerTank='dmg', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.damageDealt'; " +
+							"update json2dbMapping set dbPlayerTank='dmg', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.damageDealt'; " +
+							"update json2dbMapping set dbPlayerTank='dmgReceived', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.damageReceived'; " +
+							"update json2dbMapping set dbPlayerTank='dmgReceived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.damageReceived'; " +
+							"update json2dbMapping set dbPlayerTank='dmgReceived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.damageReceived'; " +
+							"update json2dbMapping set dbPlayerTank='def', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.droppedCapturePoints'; " +
+							"update json2dbMapping set dbPlayerTank='def', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.droppedCapturePoints'; " +
+							"update json2dbMapping set dbPlayerTank='def', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.droppedCapturePoints'; " +
+							"update json2dbMapping set dbPlayerTank='frags', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.frags'; " +
+							"update json2dbMapping set dbPlayerTank='frags', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.frags'; " +
+							"update json2dbMapping set dbPlayerTank='frags', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.frags'; " +
+							"update json2dbMapping set dbPlayerTank='frags8p', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.frags8p'; " +
+							"update json2dbMapping set dbPlayerTank='frags8p', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.frags8p'; " +
+							"update json2dbMapping set dbPlayerTank='frags8p', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.frags8p'; " +
+							"update json2dbMapping set dbPlayerTank='heHits', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.he_hits'; " +
+							"update json2dbMapping set dbPlayerTank='heHits', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.he_hits'; " +
+							"update json2dbMapping set dbPlayerTank='heHitsReceived', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.heHitsReceived'; " +
+							"update json2dbMapping set dbPlayerTank='heHitsReceived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.heHitsReceived'; " +
+							"update json2dbMapping set dbPlayerTank='hits', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.hits'; " +
+							"update json2dbMapping set dbPlayerTank='hits', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.hits'; " +
+							"update json2dbMapping set dbPlayerTank='hits', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.hits'; " +
+							"update json2dbMapping set dbPlayerTank='losses', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.losses'; " +
+							"update json2dbMapping set dbPlayerTank='losses', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.losses'; " +
+							"update json2dbMapping set dbPlayerTank='losses', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.losses'; " +
+							"update json2dbMapping set dbPlayerTank='maxDmg', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.max15x15.maxDamage'; " +
+							"update json2dbMapping set dbPlayerTank='maxDmg', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.max7x7.maxDamage'; " +
+							"update json2dbMapping set dbPlayerTank='maxFrags', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.max7x7.maxFrags'; " +
+							"update json2dbMapping set dbPlayerTank='maxFrags', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.maxFrags'; " +
+							"update json2dbMapping set dbPlayerTank='maxFrags', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.max15x15.maxFrags'; " +
+							"update json2dbMapping set dbPlayerTank='maxXp', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.max15x15.maxXP'; " +
+							"update json2dbMapping set dbPlayerTank='maxXp', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.maxXP'; " +
+							"update json2dbMapping set dbPlayerTank='maxXp', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.max7x7.maxXP'; " +
+							"update json2dbMapping set dbPlayerTank='noDmgShotsReceived', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.noDamageShotsReceived'; " +
+							"update json2dbMapping set dbPlayerTank='noDmgShotsReceived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.noDamageShotsReceived'; " +
+							"update json2dbMapping set dbPlayerTank='xpOriginal', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.originalXP'; " +
+							"update json2dbMapping set dbPlayerTank='xpOriginal', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.originalXP'; " +
+							"update json2dbMapping set dbPlayerTank='pierced', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.pierced'; " +
+							"update json2dbMapping set dbPlayerTank='pierced', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.pierced'; " +
+							"update json2dbMapping set dbPlayerTank='piercedReceived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.piercedReceived'; " +
+							"update json2dbMapping set dbPlayerTank='piercedReceived', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.piercedReceived'; " +
+							"update json2dbMapping set dbPlayerTank='shots', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.shots'; " +
+							"update json2dbMapping set dbPlayerTank='shots', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.shots'; " +
+							"update json2dbMapping set dbPlayerTank='shots', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.shots'; " +
+							"update json2dbMapping set dbPlayerTank='shotsReceived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15_2.shotsReceived'; " +
+							"update json2dbMapping set dbPlayerTank='shotsReceived', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.shotsReceived'; " +
+							"update json2dbMapping set dbPlayerTank='spot', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.spotted'; " +
+							"update json2dbMapping set dbPlayerTank='spot', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.spotted'; " +
+							"update json2dbMapping set dbPlayerTank='spot', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.spotted'; " +
+							"update json2dbMapping set dbPlayerTank='survived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.survivedBattles'; " +
+							"update json2dbMapping set dbPlayerTank='survived', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.survivedBattles'; " +
+							"update json2dbMapping set dbPlayerTank='survived', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.survivedBattles'; " +
+							"update json2dbMapping set dbPlayerTank='wins', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.wins'; " +
+							"update json2dbMapping set dbPlayerTank='wins', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.wins'; " +
+							"update json2dbMapping set dbPlayerTank='wins', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.wins'; " +
+							"update json2dbMapping set dbPlayerTank='xp', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.xp'; " +
+							"update json2dbMapping set dbPlayerTank='xp', dbPlayerTankMode='15' where jsonMainSubProperty='tanks.tankdata.xp'; " +
+							"update json2dbMapping set dbPlayerTank='xp', dbPlayerTankMode='7' where jsonMainSubProperty='tanks_v2.a7x7.xp'; " +
+							"update json2dbMapping set dbPlayerTank='xp8p', dbPlayerTankMode='15' where jsonMainSubProperty='tanks_v2.a15x15.xpBefore8_8'; ";
 					sqlite = mssql;
 					break;
+
 				case 13:
 					mssql = "ALTER TABLE playerTankBattle ADD wn8 int NOT NULL default 0, eff int NOT NULL default 0; ";
 					sqlite= "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
@@ -215,7 +289,7 @@ namespace WotDBUpdater.Code
 					DataTable dt = DB.FetchData("select * from playerTank");
 					foreach (DataRow dr in dt.Rows)
 					{
-						Dossier2db.SaveNewPlayerTankBattle(Convert.ToInt32(dr["id"])); 
+						Dossier2db.SaveNewPlayerTankBattle(Convert.ToInt32(dr["id"]),0,0); 
 					}
 					break;
 				case 18:

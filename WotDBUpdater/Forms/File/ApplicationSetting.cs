@@ -131,10 +131,19 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnDbSetting_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.DatabaseSetting();
-			frm.ShowDialog();
-			PlayerPanel();
-			Refresh();
+			// Check first for valid dossier path
+			if (Directory.Exists(txtDossierFilePath.Text))
+			{
+				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
+				Form frm = new Forms.File.DatabaseSetting();
+				frm.ShowDialog();
+				PlayerPanel();
+				Refresh();
+			}
+			else
+			{
+				Code.MsgBox.Show("No valid path to dossier file is found, please select dossier file path before selecting Database Settings.", "Incorrect Dossier File Path");
+			}
 		}
 
 		private void cboSelectPlayer_Click(object sender, EventArgs e)

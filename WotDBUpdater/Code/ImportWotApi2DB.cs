@@ -251,7 +251,7 @@ namespace WotDBUpdater.Code
                         updateLog("tanks");
                     }
 
-                    Code.MsgBox.Show("Tank import complete");
+                    //Code.MsgBox.Show("Tank import complete");
                     return ("Import Complete");
                 }
 
@@ -431,7 +431,7 @@ namespace WotDBUpdater.Code
                         updateLog("turrets");
                     }
 
-                    Code.MsgBox.Show("Turret import complete");
+                    //Code.MsgBox.Show("Turret import complete");
                     return ("Import Complete");
                     
                 }
@@ -575,7 +575,7 @@ namespace WotDBUpdater.Code
 
                     }
 
-                    Code.MsgBox.Show("Gun import complete");
+                    //Code.MsgBox.Show("Gun import complete");
                     return ("Gun import Complete");
                 }
 
@@ -679,7 +679,7 @@ namespace WotDBUpdater.Code
                         updateLog("radios");
                     }
 
-                    Code.MsgBox.Show("Radio import complete");
+                    //Code.MsgBox.Show("Radio import complete");
                     return ("Import Complete");
                 }
 
@@ -846,7 +846,7 @@ namespace WotDBUpdater.Code
                         updateLog("achievements");
                     }
 
-                    Code.MsgBox.Show("Achievement import complete");
+                    //Code.MsgBox.Show("Achievement import complete");
                 }
 
                 catch (Exception ex)

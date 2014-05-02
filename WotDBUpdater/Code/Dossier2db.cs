@@ -62,10 +62,17 @@ namespace WotDBUpdater.Code
 			// logging
 			List<string> log = new List<string>();
 			Log.CheckLogFileSize();
-			bool battleSave = false;
 
-			// Check for first run (if player tank = 0), then dont get battle result
-			bool saveBattleResult = (TankData.GetPlayerTankCount() > 0);
+			// If updating player tank detected new battle for any tank
+			bool battleSaved = false;
+			
+			// Check for first run (if player tank = 0), then dont get battle result but force update
+			bool saveBattleResult = true;
+			if (TankData.GetPlayerTankCount() == 0)
+			{
+				saveBattleResult = false;
+				ForceUpdate = true;
+			}
 
 			// Declare
 			DataTable NewPlayerTankTable = TankData.GetPlayerTankFromDB(-1); // Return no data, only empty database with structure
@@ -105,7 +112,8 @@ namespace WotDBUpdater.Code
 							if  (tankName != "") 
 							{
 								log.Add("  > Check for DB update - Tank: '" + tankName );
-								if (SaveTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult)) battleSave = true;
+								if (SaveTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult))
+									battleSaved = true; // result if battle was detected and saved
 							}
 							// Reset all values
 							NewPlayerTankTable.Clear();
@@ -213,9 +221,10 @@ namespace WotDBUpdater.Code
 			reader.Close();
 			// Also write last tank found
 			log.Add("  > Check for DB update - Tank: '" + tankName );
-			if (SaveTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult)) battleSave = true;
+			if (SaveTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult)) 
+				battleSaved = true; // result if battle was detected and saved
 			// Done
-			if (battleSave) Log.BattleResultDoneLog();
+			if (battleSaved) Log.BattleResultDoneLog();
 			sw.Stop();
 			TimeSpan ts = sw.Elapsed;
 			Log.LogToFile(log);
@@ -253,29 +262,30 @@ namespace WotDBUpdater.Code
 			int tankId = TankData.GetTankID(tankName);
 			if (tankId > 0) // when tankid=0 the tank is not found in tank table
 			{
-				// Check if battle count has increased, first get existing battle count
+				// Get tank new battle count
+				int NewPlayerTankRow_battles15 = 0;
+				int NewPlayerTankRow_battles7 = 0;
+				if (NewPlayerTankBattle15Row["battles"] != DBNull.Value) NewPlayerTankRow_battles15 = Convert.ToInt32(NewPlayerTankBattle15Row["battles"]);
+				if (NewPlayerTankBattle7Row["battles"] != DBNull.Value) NewPlayerTankRow_battles7 = Convert.ToInt32(NewPlayerTankBattle7Row["battles"]);
+				// Check if battle count has increased, get existing battle count
 				DataTable OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Return Existing Player Tank Data
 				// Check if Player has this tank
 				int playerTankId = 0;
 				if (OldPlayerTankTable.Rows.Count == 0)
 				{
 					// New tank detected, this parts only run when new tank is detected
-					SaveNewPlayerTank(tankId); 
-					OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Return once more now after row is added
-					playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]);
-					SaveNewPlayerTankBattle(playerTankId); 
+					SaveNewPlayerTank(tankId); // Save new tank
+					OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Get data into DataTable once more now after row is added
+					playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]); // Get id
+					SaveNewPlayerTankBattle(playerTankId, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7); // Save battles with battlecount
 				}
-				// Check if battle count has increased, first get existing (old) tank data row
+				// Get the get existing (old) tank data row
 				DataRow OldPlayerTankRow = OldPlayerTankTable.Rows[0];
 				playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]);
 				// Now get playerTank BattleResult
 				DataRow OldPlayerTankBattle15Row = TankData.GetPlayerTankBattleFromDB(playerTankId, "15").Rows[0];
 				DataRow OldPlayerTankBattle7Row = TankData.GetPlayerTankBattleFromDB(playerTankId, "7").Rows[0];
-				// Compare with last battle result
-				int NewPlayerTankRow_battles15 = 0;
-				int NewPlayerTankRow_battles7 = 0;
-				if (NewPlayerTankBattle15Row["battles"] != DBNull.Value) NewPlayerTankRow_battles15 = Convert.ToInt32(NewPlayerTankBattle15Row["battles"]);
-				if (NewPlayerTankBattle7Row["battles"] != DBNull.Value) NewPlayerTankRow_battles7 = Convert.ToInt32(NewPlayerTankBattle7Row["battles"]);
+				// Calculate number of new battles 
 				int battlessNew15 = NewPlayerTankRow_battles15 - Convert.ToInt32(OldPlayerTankBattle15Row["battles"]);
 				int battlessNew7 = NewPlayerTankRow_battles7 - Convert.ToInt32(OldPlayerTankBattle7Row["battles"]);
 				// Check if new battle on this tank then do db update, if force do it anyway
@@ -334,7 +344,7 @@ namespace WotDBUpdater.Code
 							}
 						}
 						// Calculate battleOfTotal = factor of how many of battles in this battlemode out of total battles
-						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId";
+						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId;";
 						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
 						double battleOfTotal = 0;
@@ -373,7 +383,7 @@ namespace WotDBUpdater.Code
 							}
 						}
 						// Calculate battleOfTotal = factor of how many of battles in this battlemode out of total battles
-						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId";
+						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId;";
 						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
 						double battleOfTotal = 0;
@@ -423,18 +433,20 @@ namespace WotDBUpdater.Code
 		private static void SaveNewPlayerTank(int TankID)
 		{
 			// Add to database
-			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId)";
+			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId); ";
 			DB.AddWithValue(ref sql, "@tankId", TankID, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 		}
 
-		public static void SaveNewPlayerTankBattle(int playerTankId)
+		public static void SaveNewPlayerTankBattle(int playerTankId, int battles15, int battles7)
 		{
 			// Add to database
-			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode) VALUES (@playerTankId, '15')" +
-						 "INSERT INTO PlayerTankBattle (playerTankId, battleMode) VALUES (@playerTankId, '7')";
+			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, '15', @battles15); " +
+						 "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, '7', @battles7); ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battles15", battles15, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battles7", battles7, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 		}
 
@@ -451,7 +463,7 @@ namespace WotDBUpdater.Code
 						// Find the current achievent
 						string sql = "SELECT achId, ach.name ,achCount " +
 									"FROM playerTankAch INNER JOIN ach ON playerTankAch.achId = ach.Id " +
-									"WHERE playerTankId=" + playerTankId + " AND ach.name='" + newAch.achName + "'";
+									"WHERE playerTankId=" + playerTankId + " AND ach.name='" + newAch.achName + "';";
 						DataTable currentAch = DB.FetchData(sql);
 						if (currentAch.Rows.Count == 0) // new achievment
 						{
@@ -483,7 +495,7 @@ namespace WotDBUpdater.Code
 							{
 								// Update achievment increased count
 								sql = "UPDATE playerTankAch SET achCount=@achCount " +
-										"WHERE playerTankId=@playerTankId AND achId=@achId";
+										"WHERE playerTankId=@playerTankId AND achId=@achId;";
 								DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
@@ -526,7 +538,7 @@ namespace WotDBUpdater.Code
 				string sql =
 					"SELECT playerTank.id AS playerTankId, playerTankFrag.* " +
 					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
-					"WHERE playerTank.tankId=@tankId";
+					"WHERE playerTank.tankId=@tankId; ";
 				DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql);
 				// If no frags exists for this tank get playerTankId separately
@@ -561,7 +573,7 @@ namespace WotDBUpdater.Code
 							playerTankFragSQL += "UPDATE playerTankFrag " +
 												"SET fragCount = " + newFragItem.fragCount.ToString() +
 												"WHERE playerTankId=" + oldFrag[i].playerTankId +
-												"  AND fraggedTankId=" + newFragItem.tankId + "; \n";
+												"  AND fraggedTankId=" + newFragItem.tankId + "; ";
 							// Add new frag count to battle Frag
 							newFragItem.fragCount = newFragItem.fragCount - oldFrag[i].fragCount;
 							battleFrag.Add(newFragItem);
@@ -574,7 +586,7 @@ namespace WotDBUpdater.Code
 						if (newFragItem.tankId != 0)
 						{
 							playerTankFragSQL += "INSERT INTO playerTankFrag (playerTankId, fraggedTankId, fragCount) " +
-												"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); \n";
+												"VALUES (" + playerTankId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
 							// Add new frag count to battle Frag
 							battleFrag.Add(newFragItem);
 						}
@@ -736,7 +748,7 @@ namespace WotDBUpdater.Code
 						foreach (var newFragItem in battleFragList)
 						{
 							battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
-													"VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); \n";
+													"VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
 						}
 						// Add to database
 						DB.ExecuteNonQuery(battleFragSQL);
@@ -749,7 +761,7 @@ namespace WotDBUpdater.Code
 						foreach (var newAchItem in battleAchList)
 						{
 							battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
-													"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); \n";
+													"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
 						}
 						// Add to database
 						DB.ExecuteNonQuery(battleAchSQL);

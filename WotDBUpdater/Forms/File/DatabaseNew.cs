@@ -32,8 +32,9 @@ namespace WotDBUpdater.Forms.File
 			txtFileLocation.Text = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
 		}
 
-		private void UpdateProgressBar()
+		private void UpdateProgressBar(string statusText)
 		{
+			lblStatusText.Text = statusText;
 			badProgressBar.Value++;
 			Refresh();
 			Application.DoEvents();
@@ -72,15 +73,15 @@ namespace WotDBUpdater.Forms.File
 		private bool CreateNewDb()
 		{
 			bool ok = true;
-			badProgressBar.ValueMax = 12;
+			badProgressBar.ValueMax = 13;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
-			UpdateProgressBar();
+			UpdateProgressBar("Creating new database");
 			// Create db now
 			if (DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType))
 			{
 				// Fill database with default data
-				UpdateProgressBar();
+				UpdateProgressBar("Creating database tables");
 				// Update db by running sql scripts
 				string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
 				string sql;
@@ -95,14 +96,14 @@ namespace WotDBUpdater.Forms.File
 				sql = streamReader.ReadToEnd();
 				ok = DB.ExecuteNonQuery(sql);
 				if (!ok) return false;
-				UpdateProgressBar();
+				UpdateProgressBar("Inserting data into database");
 
 				// Insert default data
 				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
 				ok = DB.ExecuteNonQuery(sql);
 				if (!ok) return false;
-				UpdateProgressBar();
+				UpdateProgressBar("Retrieves tanks from Wargaming API");
 
 				// Get tanks, remember to init tankList first
 				TankData.GetTankListFromDB();
@@ -110,27 +111,27 @@ namespace WotDBUpdater.Forms.File
 				// Init after getting tanks and other basic data import
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
-				UpdateProgressBar();
+				UpdateProgressBar("Retrieves tank turrets from Wargaming API");
 
 				// Get turret
 				ImportWotApi2DB.ImportTurrets();
-				UpdateProgressBar();
+				UpdateProgressBar("Retrieves tank guns from Wargaming API");
 
 				// Get guns
 				ImportWotApi2DB.ImportGuns();
-				UpdateProgressBar();
+				UpdateProgressBar("Retrieves tank radios from Wargaming API");
 
 				// Get radios
 				ImportWotApi2DB.ImportRadios();
-				UpdateProgressBar();
+				UpdateProgressBar("Retrieves achievements from Wargaming API");
 
 				// Get achievements
 				ImportWotApi2DB.ImportAchievements();
-				UpdateProgressBar();
+				UpdateProgressBar("Retrieves WN8 expected values from API");
 
 				// Get WN8 ratings
 				ImportWN8Api2DB.UpdateWN8();
-				UpdateProgressBar();
+				UpdateProgressBar("Adding selected player into database");
 
 				// Add player
 				if (txtPlayerName.Text.Trim() != "")
@@ -144,11 +145,18 @@ namespace WotDBUpdater.Forms.File
 					Config.Settings.playerName = "";
 					Config.Settings.playerId = 0;
 				}
-				UpdateProgressBar();
+				UpdateProgressBar("Upgrading database");
 
 				// Upgrade to latest version
 				DBVersion.CheckForDbUpgrade();
-				UpdateProgressBar();
+				// New Init after upgrade db
+				TankData.GetTankListFromDB();
+				TankData.GetJson2dbMappingFromDB();
+				UpdateProgressBar("Running initial dossier file check, please wait...");
+				
+				// Get initial dossier 
+				dossier2json.ManualRun(false, true);
+				UpdateProgressBar("");
 			}
 			return ok;
 		}

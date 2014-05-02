@@ -42,6 +42,7 @@
 			this.badLabel1 = new BadLabel();
 			this.btnCreateDB = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
+			this.lblStatusText = new BadLabel();
 			this.DatabaseNewTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -61,6 +62,8 @@
 			this.DatabaseNewTheme.Controls.Add(this.badLabel1);
 			this.DatabaseNewTheme.Controls.Add(this.btnCreateDB);
 			this.DatabaseNewTheme.Controls.Add(this.badGroupBox1);
+			this.DatabaseNewTheme.Controls.Add(this.lblStatusText);
+			this.DatabaseNewTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.DatabaseNewTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseNewTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.DatabaseNewTheme.FormFooter = false;
@@ -184,6 +187,16 @@
 			this.badGroupBox1.TabIndex = 24;
 			this.badGroupBox1.Text = "Database parameters";
 			// 
+			// lblStatusText
+			// 
+			this.lblStatusText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.lblStatusText.Dimmed = false;
+			this.lblStatusText.Image = null;
+			this.lblStatusText.Location = new System.Drawing.Point(21, 256);
+			this.lblStatusText.Name = "lblStatusText";
+			this.lblStatusText.Size = new System.Drawing.Size(426, 23);
+			this.lblStatusText.TabIndex = 26;
+			// 
 			// DatabaseNew
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -217,5 +230,6 @@
 		private BadLabel badLabel1;
 		private BadGroupBox badGroupBox1;
 		private BadProgressBar badProgressBar;
+		private BadLabel lblStatusText;
 	}
 }
