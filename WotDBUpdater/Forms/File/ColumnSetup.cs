@@ -217,6 +217,8 @@ namespace WotDBUpdater.Forms.File
 			btnRemoveSelected.Enabled = false;
 			btnSelectAll.Enabled = false;
 			btnSelectSelected.Enabled = false;
+			toolSelectedTanks_MoveUp.Enabled = false;
+			toolSelectedTanks_MoveDown.Enabled = false;
 			SelectColumnList(ColumListId);
 			// Connect to scrollbar
 			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
@@ -263,6 +265,9 @@ namespace WotDBUpdater.Forms.File
 				btnRemoveSelected.Enabled = !sysCol;
 				btnSelectAll.Enabled = !sysCol;
 				btnSelectSelected.Enabled = !sysCol;
+				toolSelectedTanks_MoveUp.Enabled = !sysCol;
+				toolSelectedTanks_MoveDown.Enabled = !sysCol;
+			
 				popupPosition.Text = dataGridColumnList.SelectedRows[0].Cells["Pos"].Value.ToString();
 				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
 				GetSelectedColumnsFromColumnList(); // Get tanks for this fav list now

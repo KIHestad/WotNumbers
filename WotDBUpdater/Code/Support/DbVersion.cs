@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 27; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 29; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -569,7 +569,35 @@ namespace WotDBUpdater.Code
 					mssql = "DELETE FROM columnListSelection WHERE columnSelectionId IN (41,42); DELETE FROM columnSelection WHERE ID IN (41,42);" +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (162, 2, 40, 'battle.battleMode', 'Battle Mode', 'Battle mode, 15 = Random Battles, Tank Company and Clan Wars, 7 = Team Battle (Historical Battles not included yet)', 'Mode', 50, 'VarChar'); ";
 					sqlite = mssql;
-					break;		
+					break;	
+				case 28:
+					mssql = "UPDATE columnSelection SET position=position+2 WHERE colType=2 AND position >= 11; " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (163, 2, 11, 'CAST(battle.battleTime AS DATE)', 'Battle Date', 'Battle date, the date (DD/MM/YYYY) the battle was finished', 'Battle', 70, 'DateTime'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (164, 2, 12, 'CAST(battle.battleTime AS TIME)', 'Battle Time', 'Battle time, the clock (HH:MM:SS) when the battle was finished', 'Battle', 60, 'DateTime'); " +
+							"UPDATE columnSelection SET name='Battle DateTime' WHERE id=8; " +
+							"update columnSelection set colWidth = 35 where id IN (59,18,26,27,30,159,29,31,157,158,24,25,35,37,43,45);" +
+							"update columnSelection set colWidth = 40 where id IN (28,32,33,160,161,162,36,38,40,47);";
+					sqlite = mssql;
+					break;	
+				case 29:
+					mssql=	"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (10,4,3); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (11,4,4); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (18,4,9); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (19,4,5); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (20,4,8); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (21,4,6); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (22,4,7); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (24,4,11); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (25,4,12); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (28,4,13); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (35,4,10); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (38,4,14); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (40,4,15); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (47,4,16); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (58,4,1); " +
+							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (164,4,2); "; 
+					sqlite = mssql;
+					break;	
 				default:
 					break;
 			}
