@@ -136,10 +136,7 @@ namespace WotDBUpdater.Forms.File
 						int shots = Convert.ToInt32(recentBattles.Rows[i]["rbShot"]) / 100;
 						int hits = Convert.ToInt32(recentBattles.Rows[i]["rbHits"]) / 100;
 						int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
-						int mode15 = 0;
-						if (recentBattles.Rows[i]["rbBattleMode"].ToString() == "15") mode15 = 1;
-						int mode7 = 0;
-						if (recentBattles.Rows[i]["rbBattleMode"].ToString() == "7") mode7 = 1;
+						string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
 						// Calc WN8
 						int wn8 = Rating.CalculateBattleWn8(tankId, battlesCount, dmg, spotted, frags, def);
 						// Calc EFF
@@ -150,12 +147,12 @@ namespace WotDBUpdater.Forms.File
 						if (battleId > 0)
 							sqlInsertBattle =
 							"update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, killed=@killed, " +
-							"  battleSurviveId=@battleSurviveId, victory=@victory, draw=@draw, defeat=@defeat, battleResultId=@battleResultId, battleTime=@battleTime, shots=@shots, hits=@hits, xp=@xp, mode15=@mode15, mode7=@mode7, wn8=@wn8, eff=@eff " +
+							"  battleSurviveId=@battleSurviveId, victory=@victory, draw=@draw, defeat=@defeat, battleResultId=@battleResultId, battleTime=@battleTime, shots=@shots, hits=@hits, xp=@xp, battleMode=@battleMode, wn8=@wn8, eff=@eff " +
 							"where wsId=@wsId ";
 						else
 							sqlInsertBattle =
-							"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, mode15, mode7, wn8, eff) " +
-							"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @mode15, @mode7, @wn8, @eff)";
+							"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, battleMode, wn8, eff) " +
+							"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @battleMode, @wn8, @eff)";
                         DB.AddWithValue(ref sqlInsertBattle, "@playerTankId", playerTankId, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sqlInsertBattle, "@wsId", wsId, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sqlInsertBattle, "@battlesCount", battlesCount, DB.SqlDataType.Int);
@@ -176,8 +173,7 @@ namespace WotDBUpdater.Forms.File
                         DB.AddWithValue(ref sqlInsertBattle, "@shots", shots, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sqlInsertBattle, "@hits", hits, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sqlInsertBattle, "@xp", xp, DB.SqlDataType.Int);
-                        DB.AddWithValue(ref sqlInsertBattle, "@mode15", mode15, DB.SqlDataType.Int);
-                        DB.AddWithValue(ref sqlInsertBattle, "@mode7", mode7, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sqlInsertBattle, "@battleMode", battleMode, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, DB.SqlDataType.Int);
                         DB.AddWithValue(ref sqlInsertBattle, "@eff", eff, DB.SqlDataType.Int);
                         DB.ExecuteNonQuery(sqlInsertBattle);
@@ -228,9 +224,12 @@ namespace WotDBUpdater.Forms.File
 							string sqlInsertBattleFrag = "DELETE FROM battleFrag WHERE battleId = " + battleId.ToString() + ";" + Environment.NewLine;
 							foreach (var battleFragItem in fragList)
 							{
-								sqlInsertBattleFrag += 
-									"INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) VALUES (" +
-									battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + "); " + Environment.NewLine;
+								if (battleFragItem.tankId != 0)
+								{
+									sqlInsertBattleFrag +=
+										"INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) VALUES (" +
+										battleId.ToString() + ", " + battleFragItem.tankId + ", " + battleFragItem.fragCount + "); " + Environment.NewLine;
+								}
 							}
                             DB.ExecuteNonQuery(sqlInsertBattleFrag);
 						}
