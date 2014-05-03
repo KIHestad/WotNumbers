@@ -1590,7 +1590,14 @@ namespace WotDBUpdater.Forms
             Code.ImportWotApi2DB.ImportAchievements();
         }
 
+        private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Code.ImportWotApi2DB.updateTankImage();
+        }
+
+
 		#endregion
+
 
 		
 	}

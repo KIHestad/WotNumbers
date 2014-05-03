@@ -244,6 +244,7 @@ namespace WotDBUpdater.Code
 			else
 			{
 				string StringValue = Value.ToString();
+                var byteArray = Value.ToString();
 				if (DataType == SqlDataType.VarChar)
 				{
 					StringValue = StringValue.Replace("'", "''");
@@ -259,7 +260,7 @@ namespace WotDBUpdater.Code
 				}
                 else if (DataType == SqlDataType.Image)
                 {
-                    Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue);
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
                 }
 			}
 		}

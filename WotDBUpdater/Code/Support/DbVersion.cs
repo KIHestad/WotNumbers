@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 29; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 30; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -597,7 +597,21 @@ namespace WotDBUpdater.Code
 							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (58,4,1); " +
 							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (164,4,2); "; 
 					sqlite = mssql;
-					break;	
+					break;
+                case 30:
+                    mssql = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
+                            "alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
+                            "alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
+                            "alter table tank add img image NOT NULL default 0; " +
+                            "alter table tank add smallImg image NOT NULL default 0; " +
+                            "alter table tank add contourImg image NOT NULL default 0; ";
+                    sqlite = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
+                            "alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
+                            "alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
+                            "alter table tank add img blob NOT NULL default 0; " +
+                            "alter table tank add smallImg blob NOT NULL default 0; " +
+                            "alter table tank add contourImg blob NOT NULL default 0; ";
+                    break;
 				default:
 					break;
 			}
