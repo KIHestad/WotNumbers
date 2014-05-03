@@ -123,7 +123,7 @@
 			this.ColumnSetupTheme.Controls.Add(this.lblSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.groupTanks);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox2);
-			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNESW;
+			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.ColumnSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColumnSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColumnSetupTheme.FormFooter = false;
@@ -306,6 +306,7 @@
 			this.toolSelectedTanks_MoveUp.Name = "toolSelectedTanks_MoveUp";
 			this.toolSelectedTanks_MoveUp.Size = new System.Drawing.Size(23, 22);
 			this.toolSelectedTanks_MoveUp.Text = "toolStripButton1";
+			this.toolSelectedTanks_MoveUp.ToolTipText = "Move up";
 			this.toolSelectedTanks_MoveUp.Click += new System.EventHandler(this.toolSelectedColumns_MoveUp_Click);
 			// 
 			// toolSelectedTanks_MoveDown
@@ -316,6 +317,7 @@
 			this.toolSelectedTanks_MoveDown.Name = "toolSelectedTanks_MoveDown";
 			this.toolSelectedTanks_MoveDown.Size = new System.Drawing.Size(23, 22);
 			this.toolSelectedTanks_MoveDown.Text = "toolStripButton2";
+			this.toolSelectedTanks_MoveDown.ToolTipText = "Move Down";
 			this.toolSelectedTanks_MoveDown.Click += new System.EventHandler(this.toolSelectedColumns_MoveDown_Click);
 			// 
 			// toolAllColumns

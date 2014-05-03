@@ -25,10 +25,8 @@ namespace WotDBUpdater.Forms.File
 		{
 			// Style toolbar
 			toolAllTanks.Renderer = new StripRenderer();
-			toolAllTanks.BackColor = ColorTheme.FormBackTitle;
 			toolAllTanks.ShowItemToolTips = false;
 			toolSelectedTanks.Renderer = new StripRenderer();
-			toolSelectedTanks.BackColor = ColorTheme.FormBackTitle;
 			toolSelectedTanks.ShowItemToolTips = false;
 			// Style datagrid
 			StyleDataGrid(dataGridFavList);

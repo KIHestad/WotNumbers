@@ -59,8 +59,8 @@ namespace WotDBUpdater.Code
 		public override Color ToolStripContentPanelGradientEnd		{get { return ColorTheme.ToolGrayMain; }}
 		public override Color ToolStripPanelGradientBegin			{get { return ColorTheme.ToolGrayMain; }}
 		public override Color ToolStripPanelGradientEnd				{get { return ColorTheme.ToolGrayMain; }}
-		public override Color OverflowButtonGradientBegin			{get { return ColorTheme.ToolGrayOutline; }}
-		public override Color OverflowButtonGradientMiddle			{get { return ColorTheme.ToolGrayOutline; }}
-		public override Color OverflowButtonGradientEnd				{get { return ColorTheme.ToolGrayOutline; }}
+		public override Color OverflowButtonGradientBegin			{get { return ColorTheme.ToolGrayMain; }}
+		public override Color OverflowButtonGradientMiddle			{get { return ColorTheme.ToolGrayMain; }}
+		public override Color OverflowButtonGradientEnd				{get { return ColorTheme.ToolGrayMain; }}
 	}
 }

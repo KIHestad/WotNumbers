@@ -43,10 +43,9 @@ namespace WotDBUpdater.Forms.File
 		{
 			// Style toolbar
 			toolAllColumns.Renderer = new StripRenderer();
-			toolAllColumns.BackColor = ColorTheme.FormBackTitle;
 			toolAllColumns.ShowItemToolTips = false;
 			toolSelectedColumns.Renderer = new StripRenderer();
-			toolSelectedColumns.BackColor = ColorTheme.FormBackTitle;
+			
 			toolSelectedColumns.ShowItemToolTips = false;
 			// Style datagrid
 			StyleDataGrid(dataGridColumnList);
