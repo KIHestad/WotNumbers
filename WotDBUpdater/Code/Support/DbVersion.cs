@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 30; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 31; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -611,6 +611,28 @@ namespace WotDBUpdater.Code
                             "alter table tank add img blob NOT NULL default 0; " +
                             "alter table tank add smallImg blob NOT NULL default 0; " +
                             "alter table tank add contourImg blob NOT NULL default 0; ";
+                    break;
+                case 31:
+                    mssql = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img IMAGE NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img1 IMAGE NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img2 IMAGE NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img3 IMAGE NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img4 IMAGE NOT NULL DEFAULT 0;";
+                    sqlite = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img BLOB NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img1 BLOB NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img2 BLOB NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img3 BLOB NOT NULL DEFAULT 0; " +
+                            "ALTER TABLE ach ADD img4 BLOB NOT NULL DEFAULT 0;";
                     break;
 				default:
 					break;

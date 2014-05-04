@@ -483,7 +483,110 @@ namespace WotDBUpdater.Code
 
         #endregion
 
+        #region updateAchImage
 
+        public static String updateAchImage()  // run time = 4 min
+        {
+            SqlConnection conn = new SqlConnection("Data Source=(local);Integrated Security=True;Initial Catalog=testdb7");
+            conn.Open();
+
+            itemsInDB = DB.FetchData("select name from ach");   // Fetch id of tanks in db
+            int currentAch = 0;
+            while (currentAch < itemsInDB.Rows.Count)
+            {
+                // Current ach
+                string achName = itemsInDB.Rows[currentAch]["name"].ToString();
+
+                string json = FetchFromAPI(WotApiType.Achievement, 0);
+                if (json == "")
+                {
+                    return "No data imported.";
+                }
+                else
+                {
+                    log.Add("Start checking achievements (" + DateTime.Now.ToString() + ")");
+
+                    try
+                    {
+                        JObject allTokens = JObject.Parse(json);
+                        rootToken = allTokens.First;   // returns status token
+
+                        if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                        {
+                            rootToken = rootToken.Next;
+                            itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+
+                            rootToken = rootToken.Next;   // start reading tanks
+                            JToken tanks = rootToken.Children().First();   // read all tokens in data token
+
+                            foreach (JProperty tank in tanks)   // tank = tankId + child tokens
+                            {
+                                itemToken = tank.First();   // First() returns only child tokens of tank
+
+                                itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
+
+                                if (itemToken.HasValues)  // Check if tank data exists in API (some special tanks have empty data token)
+                                {
+                                    JArray tanksArray = (JArray)itemToken["tanks"];  // fail
+
+                                    string imgPath = itemToken["image"].ToString();
+                                    string smallImgPath = itemToken["image_small"].ToString();
+                                    string contourImgPath = itemToken["contour_image"].ToString();
+                                    string tankName = itemToken["name_i18n"].ToString();
+                                    byte[] img = getImageFromAPI(imgPath);
+                                    byte[] smallImg = getImageFromAPI(smallImgPath);
+                                    byte[] contourImg = getImageFromAPI(contourImgPath);
+
+                                    updateSql = "UPDATE tank set imgPath=@imgPath, smallImgPath=@smallImgPath, contourImgPath=@contourImgPath WHERE id=@id";
+
+                                    DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int);
+                                    DB.AddWithValue(ref updateSql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref updateSql, "@smallImgPath", smallImgPath, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref updateSql, "@contourImgPath", contourImgPath, DB.SqlDataType.VarChar);
+                                    ok = DB.ExecuteNonQuery(updateSql);
+                                    logItemExists = logItemExists + tankName + ", ";
+                                    logItemExistsCount++;
+
+                                    // Temp solution (DB.AddWithValue must be adapted to data type byte[])
+                                    string sql = "UPDATE tank SET img=@img, smallImg=@smallImg, contourImg=@contourImg WHERE id=@id";
+                                    SqlCommand cmd = new SqlCommand(sql, conn);
+                                    cmd.Parameters.Add(new SqlParameter("@id", itemId));
+                                    cmd.Parameters.Add(new SqlParameter("@img", img));
+                                    cmd.Parameters.Add(new SqlParameter("@smallImg", smallImg));
+                                    cmd.Parameters.Add(new SqlParameter("@contourImg", contourImg));
+                                    cmd.ExecuteNonQuery();
+
+                                    //System.Threading.Thread.Sleep(300);
+                                }
+
+                                else
+                                {
+                                    logTanksWithoutDetails = logTanksWithoutDetails + itemId + ", ";
+                                    logItemExistsCount++;
+                                }
+
+                            }
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+                        return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
+                    }
+                }
+
+                // Fetch next tank
+                currentAch++;
+            }
+
+            conn.Close();
+            Code.MsgBox.Show("Update complete");
+            return "Update complete";
+        }
+
+        #endregion
+        
         #region importTurrets
 
         public static String ImportTurrets()
@@ -867,9 +970,9 @@ namespace WotDBUpdater.Code
                             // Check if ach already exists
                             if (!TankData.GetAchievmentExist(itemToken["name"].ToString()))
                             {
-                                string sql = "insert into ach (name, section, options, section_order, image, name_i18n, type, ordernum, description, " +
-                                            "  image1, image2, image3, image4, name_i18n1, name_i18n2, name_i18n3, name_i18n4) " +
-                                            "values (@name, @section, @options, @section_order, @image, @name_i18n, @type, @ordernum, @description, " +
+                                string sql = "INSERT INTO ACH (name, section, options, section_order, imgPath, name_i18n, type, ordernum, description, " +
+                                            "  img1Path, img2Path, img3Path, img4Path, name_i18n1, name_i18n2, name_i18n3, name_i18n4) " +
+                                            "VALUES (@name, @section, @options, @section_order, @imgPath, @name_i18n, @type, @ordernum, @description, " +
                                             "  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
                                 // Get data from json token and insert to query
                                 // string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
@@ -883,13 +986,14 @@ namespace WotDBUpdater.Code
                                 string options = itemToken["options"].ToString();
                                 if (options == "") // no options, get default medal image and name
                                 {
-                                    DB.AddWithValue(ref sql, "@image", itemToken["image"].ToString(), DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@imgPath", itemToken["image"].ToString(), DB.SqlDataType.VarChar);
+                           // insert img...
                                     DB.AddWithValue(ref sql, "@name_i18n", itemToken["name_i18n"].ToString(), DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@options", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image1", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image2", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image3", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image4", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img1Path", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img2Path", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img3Path", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img4Path", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name_i18n1", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name_i18n2", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name_i18n3", DBNull.Value, DB.SqlDataType.VarChar);
@@ -897,7 +1001,8 @@ namespace WotDBUpdater.Code
                                 }
                                 else // get medal optional images and names
                                 {
-                                    DB.AddWithValue(ref sql, "@image", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@imgPath", DBNull.Value, DB.SqlDataType.VarChar);
+                           // insert img...
                                     DB.AddWithValue(ref sql, "@name_i18n", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@options", options, DB.SqlDataType.VarChar);
                                     // Get the medal options from array
@@ -906,14 +1011,16 @@ namespace WotDBUpdater.Code
                                     if (num > 4) num = 4;
                                     for (int i = 1; i <= num; i++)
                                     {
-                                        DB.AddWithValue(ref sql, "@image" + i.ToString(), medalArray[i - 1]["image"].ToString(), DB.SqlDataType.VarChar);
+                                        DB.AddWithValue(ref sql, "@img" + i.ToString() + "Path", medalArray[i - 1]["image"].ToString(), DB.SqlDataType.VarChar);
                                         DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString(), DB.SqlDataType.VarChar);
+                           // insert img...
                                     }
                                     // If not 4, put null in rest
                                     for (int i = num + 1; i <= 4; i++)
                                     {
-                                        DB.AddWithValue(ref sql, "@image" + i.ToString(), DBNull.Value, DB.SqlDataType.VarChar);
+                                        DB.AddWithValue(ref sql, "@img" + i.ToString() +"Path", DBNull.Value, DB.SqlDataType.VarChar);
                                         DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), DBNull.Value, DB.SqlDataType.VarChar);
+                           // insert img...
                                     }
 
                                 }
@@ -926,8 +1033,8 @@ namespace WotDBUpdater.Code
                             }
                             else
                             {
-                                string sql = "UPDATE ach SET section=@section, options=@options, section_order=@section_order, image=@image, name_i18n=@name_i18n, "
-                                           + "type=@type, ordernum=@ordernum, description=@description, image1=@image1, image2=@image2, image3=@image3, image4=@image4, "
+                                string sql = "UPDATE ach SET section=@section, options=@options, section_order=@section_order, imgPath=@imgPath, name_i18n=@name_i18n, "
+                                           + "type=@type, ordernum=@ordernum, description=@description, img1Path=@img1Path, img2Path=@img2Path, img3Path=@img3Path, img4Path=@img4Path, "
                                            + "name_i18n1=@name_i18n1, name_i18n2=@name_i18n2, name_i18n3=@name_i18n3, name_i18n4=@name_i18n4 WHERE name=@name";
                                 // Get data from json token and insert to query
                                 // string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
@@ -941,13 +1048,14 @@ namespace WotDBUpdater.Code
                                 string options = itemToken["options"].ToString();
                                 if (options == "") // no options, get default medal image and name
                                 {
-                                    DB.AddWithValue(ref sql, "@image", itemToken["image"].ToString(), DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@imgPath", itemToken["image"].ToString(), DB.SqlDataType.VarChar);
+                           // insert img...
                                     DB.AddWithValue(ref sql, "@name_i18n", itemToken["name_i18n"].ToString(), DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@options", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image1", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image2", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image3", DBNull.Value, DB.SqlDataType.VarChar);
-                                    DB.AddWithValue(ref sql, "@image4", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img1Path", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img2Path", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img3Path", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@img4Path", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name_i18n1", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name_i18n2", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@name_i18n3", DBNull.Value, DB.SqlDataType.VarChar);
@@ -955,7 +1063,8 @@ namespace WotDBUpdater.Code
                                 }
                                 else // get medal optional images and names
                                 {
-                                    DB.AddWithValue(ref sql, "@image", DBNull.Value, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@imgPath", DBNull.Value, DB.SqlDataType.VarChar);
+                           // insert img...
                                     DB.AddWithValue(ref sql, "@name_i18n", DBNull.Value, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@options", options, DB.SqlDataType.VarChar);
                                     // Get the medal options from array
@@ -964,14 +1073,16 @@ namespace WotDBUpdater.Code
                                     if (num > 4) num = 4;
                                     for (int i = 1; i <= num; i++)
                                     {
-                                        DB.AddWithValue(ref sql, "@image" + i.ToString(), medalArray[i - 1]["image"].ToString(), DB.SqlDataType.VarChar);
+                                        DB.AddWithValue(ref sql, "@img" + i.ToString() + "Path", medalArray[i - 1]["image"].ToString(), DB.SqlDataType.VarChar);
                                         DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString(), DB.SqlDataType.VarChar);
+                           // insert img...
                                     }
                                     // If not 4, put null in rest
                                     for (int i = num + 1; i <= 4; i++)
                                     {
-                                        DB.AddWithValue(ref sql, "@image" + i.ToString(), DBNull.Value, DB.SqlDataType.VarChar);
+                                        DB.AddWithValue(ref sql, "@img" + i.ToString() + "Path", DBNull.Value, DB.SqlDataType.VarChar);
                                         DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), DBNull.Value, DB.SqlDataType.VarChar);
+                           // insert img...
                                     }
                                 }
 
