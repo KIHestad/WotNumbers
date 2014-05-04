@@ -1598,6 +1598,11 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
+        private void testShowImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Test.TestShowImage();
+            frm.ShowDialog();
+        }
 
 		
 	}

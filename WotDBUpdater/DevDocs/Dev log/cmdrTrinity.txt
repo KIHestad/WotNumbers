@@ -1,4 +1,9 @@
-﻿04.27.14
+﻿05.04.14
+- Created function for importing tank images to db
+- Created test form to show tank images from db
+
+
+04.27.14
 - Reworked turretImport and gunImport
 - Restructured API import class
 

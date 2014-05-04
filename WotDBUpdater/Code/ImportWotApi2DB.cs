@@ -381,15 +381,8 @@ namespace WotDBUpdater.Code
 
         #region updateTankImage
 
-        public static String updateTankImage()
+        public static String updateTankImage()  // run time = 4 min
         {
-            //alter table tank add imgPath varchar(255);
-            //alter table tank add smallImgPath varchar(255);
-            //alter table tank add contourImgPath varchar(255);
-            //alter table tank add img image;
-            //alter table tank add smallImg image;
-            //alter table tank add contourImg image;
-
             SqlConnection conn = new SqlConnection("Data Source=(local);Integrated Security=True;Initial Catalog=testdb7");
             conn.Open();
 
@@ -399,7 +392,6 @@ namespace WotDBUpdater.Code
             {
                 // Current tank
                 int tankId = Convert.ToInt32(itemsInDB.Rows[currentTank]["id"]);
-
 
                 string json = FetchFromAPI(WotApiType.TankDetails, tankId);
                 if (json == "")
@@ -412,8 +404,6 @@ namespace WotDBUpdater.Code
 
                     try
                     {
-                        
-                        
                         JObject allTokens = JObject.Parse(json);
                         rootToken = allTokens.First;   // returns status token
 
@@ -1009,6 +999,7 @@ namespace WotDBUpdater.Code
 		}
 
 		#endregion
+
 
 
         public static void SaveImage()

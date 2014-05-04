@@ -150,9 +150,10 @@
             this.testNewRadioImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testSaveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testNewAchievementImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testUpdateTankImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.testUpdateTankImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testShowImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.panelMainArea.SuspendLayout();
@@ -196,7 +197,7 @@
             this.MainTheme.Controls.Add(this.toolMain);
             this.MainTheme.Controls.Add(this.lblStatus2);
             this.MainTheme.Controls.Add(this.lblStatus1);
-            this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
+            this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.MainTheme.FormFooter = true;
@@ -1236,7 +1237,8 @@
             this.testNewRadioImportToolStripMenuItem,
             this.testSaveImageToolStripMenuItem,
             this.testNewAchievementImportToolStripMenuItem,
-            this.testUpdateTankImageToolStripMenuItem});
+            this.testUpdateTankImageToolStripMenuItem,
+            this.testShowImageToolStripMenuItem});
             this.toolItemTest.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemTest.Name = "toolItemTest";
             this.toolItemTest.ShowDropDownArrow = false;
@@ -1332,6 +1334,13 @@
             this.testNewAchievementImportToolStripMenuItem.Text = "Test new achievementImport";
             this.testNewAchievementImportToolStripMenuItem.Click += new System.EventHandler(this.testNewAchievementImportToolStripMenuItem_Click);
             // 
+            // testUpdateTankImageToolStripMenuItem
+            // 
+            this.testUpdateTankImageToolStripMenuItem.Name = "testUpdateTankImageToolStripMenuItem";
+            this.testUpdateTankImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testUpdateTankImageToolStripMenuItem.Text = "Test updateTankImage";
+            this.testUpdateTankImageToolStripMenuItem.Click += new System.EventHandler(this.testUpdateTankImageToolStripMenuItem_Click);
+            // 
             // lblStatus2
             // 
             this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1360,12 +1369,12 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // testUpdateTankImageToolStripMenuItem
+            // testShowImageToolStripMenuItem
             // 
-            this.testUpdateTankImageToolStripMenuItem.Name = "testUpdateTankImageToolStripMenuItem";
-            this.testUpdateTankImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-            this.testUpdateTankImageToolStripMenuItem.Text = "Test updateTankImage";
-            this.testUpdateTankImageToolStripMenuItem.Click += new System.EventHandler(this.testUpdateTankImageToolStripMenuItem_Click);
+            this.testShowImageToolStripMenuItem.Name = "testShowImageToolStripMenuItem";
+            this.testShowImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.testShowImageToolStripMenuItem.Text = "Test show image";
+            this.testShowImageToolStripMenuItem.Click += new System.EventHandler(this.testShowImageToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -1519,6 +1528,7 @@
 		private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem testNewAchievementImportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testUpdateTankImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testShowImageToolStripMenuItem;
 	}
 }
 
