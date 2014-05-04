@@ -383,7 +383,7 @@ namespace WotDBUpdater.Code
 
         public static String updateTankImage()  // run time = 4 min
         {
-            SqlConnection conn = new SqlConnection("Data Source=(local);Integrated Security=True;Initial Catalog=testdb7");
+            SqlConnection conn = new SqlConnection(Config.DatabaseConnection());
             conn.Open();
 
             itemsInDB = DB.FetchData("select id from tank");   // Fetch id of tanks in db

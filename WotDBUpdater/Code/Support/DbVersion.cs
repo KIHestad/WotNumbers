@@ -599,12 +599,13 @@ namespace WotDBUpdater.Code
 					sqlite = mssql;
 					break;
                 case 30:
-                    mssql = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
-                            "alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
-                            "alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
-                            "alter table tank add img image NOT NULL default 0; " +
-                            "alter table tank add smallImg image NOT NULL default 0; " +
-                            "alter table tank add contourImg image NOT NULL default 0; ";
+					// Korrigert av KI - image datatype tar ikke default 0
+                    mssql = "alter table tank add imgPath varchar(255) NULL ; " +
+                            "alter table tank add smallImgPath varchar(255)  NULL ; " +
+                            "alter table tank add contourImgPath varchar(255)  NULL; " +
+                            "alter table tank add img image  NULL ; " +
+                            "alter table tank add smallImg image NULL ; " +
+                            "alter table tank add contourImg image NULL; ";
                     sqlite = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
                             "alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
                             "alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
