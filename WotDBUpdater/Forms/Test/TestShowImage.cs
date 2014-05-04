@@ -37,21 +37,21 @@ namespace WotDBUpdater.Forms.Test
 
             pb = new PictureBox();
             pb.Image = getImage(0);
-            pb.Location = new Point(20, 20);  // position from left/top
+            pb.Location = new Point(20, 40);  // position from left/top
             pb.Size = new System.Drawing.Size(160, 100);  // width/height
-            this.Controls.Add(pb);
+            TestShowImageTheme.Controls.Add(pb);
 
             pb = new PictureBox();
             pb.Image = getImage(1);
-            pb.Location = new Point(20, 130);
+            pb.Location = new Point(20, 150);
             pb.Size = new System.Drawing.Size(124, 31);
-            this.Controls.Add(pb);
+			TestShowImageTheme.Controls.Add(pb);
 
             pb = new PictureBox();
             pb.Image = getImage(2);
-            pb.Location = new Point(20, 170);
+            pb.Location = new Point(20, 190);
             pb.Size = new System.Drawing.Size(65, 24);
-            this.Controls.Add(pb);
+			TestShowImageTheme.Controls.Add(pb);
         }
 
 
