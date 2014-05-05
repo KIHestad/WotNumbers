@@ -452,7 +452,7 @@ namespace WotDBUpdater.Code
                                     cmd.Parameters.Add(new SqlParameter("@contourImg", contourImg));
                                     cmd.ExecuteNonQuery();
 
-                                    //System.Threading.Thread.Sleep(300);
+                                    //System.Threading.Thread.Sleep(300);  // Limited to 2-4 API lookups per second. Function spends 1 sek per tank as is, so no need for delay atm.
                                 }
 
                                 else
