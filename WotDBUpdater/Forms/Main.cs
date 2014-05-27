@@ -669,7 +669,10 @@ namespace WotDBUpdater.Forms
 					{
 						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
 					}
-
+					else if (colListItem.colType == "DateTime")
+					{
+						footerRow[colListItem.colName] = DBNull.Value;
+					}
 					else
 					{
 						string s = "";
