@@ -454,9 +454,15 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns[1].Width = 500;
 		}
 
-		private void GetSelectedColumnList(out string Select, out List<int> columnWidth)
+		private class colListClass
 		{
-			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnSelection.colWidth " +
+			public string colName;
+			public int colWidth;
+			public string colType;
+		}
+		private void GetSelectedColumnList(out string Select, out List<colListClass> colList)
+		{
+			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
 						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
@@ -464,21 +470,29 @@ namespace WotDBUpdater.Forms
 			DB.AddWithValue(ref sql, "@columnListId", columnListSelectedId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			Select = "";
-			List<int> selectColumnWidth = new List<int>();
+			List<colListClass> selectColList = new List<colListClass>();
 			if (dt.Rows.Count == 0)
 			{
 				Select = "'No columns defined in Column Selection List' As 'Error', ";
-				selectColumnWidth.Add(300);
+				colListClass colListItem = new colListClass();
+				colListItem.colName = "Column name";
+				colListItem.colWidth = 300;
+				colListItem.colType = "VarChar";
+				selectColList.Add(colListItem);
 			}
 			else
 			{
 				foreach (DataRow dr in dt.Rows)
 				{
 					Select += dr["colname"].ToString() + " as '" + dr["name"].ToString() + "', ";
-					selectColumnWidth.Add(Convert.ToInt32(dr["colWidth"]));
+					colListClass colListItem = new colListClass();
+					colListItem.colName = dr["name"].ToString();
+					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
+					colListItem.colType = dr["colDataType"].ToString();
+					selectColList.Add(colListItem);
 				}
 			}
-			columnWidth = selectColumnWidth;
+			colList = selectColList;
 		}
 
 		private void GridShowTankInfo(string statusmessage = "")
@@ -488,8 +502,8 @@ namespace WotDBUpdater.Forms
 			if (!DB.CheckConnection()) return;
 			// Get Columns
 			string select = "";
-			List<int> columnWidth = new List<int>();
-			GetSelectedColumnList(out select, out columnWidth);
+			List<colListClass> colList = new List<colListClass>();
+			GetSelectedColumnList(out select, out colList);
 			// Get Tank filter
 			string message = "";
 			string where = "";
@@ -539,9 +553,9 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["sortorder"].Visible = false;
 			// Grid col size
 			int colnum = 0;
-			foreach (int cw in columnWidth)
+			foreach (colListClass colListItem in colList)
 			{
-				dataGridMain.Columns[colnum].Width = cw;
+				dataGridMain.Columns[colnum].Width = colListItem.colWidth;
 				dataGridMain.Columns[colnum].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns[colnum].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				colnum++;
@@ -560,13 +574,16 @@ namespace WotDBUpdater.Forms
 			if (!DB.CheckConnection()) return;
 			// Get Columns
 			string select = "";
-			List<int> columnWidth = new List<int>();
-			GetSelectedColumnList(out select, out columnWidth);
+			List<colListClass> colList = new List<colListClass>();
+			GetSelectedColumnList(out select, out colList);
 			// Create Battlefiler
 			string battleFilter = "";
 			if (!toolItemBattlesAll.Checked)
 			{
-				battleFilter = "AND battleTime>=@battleTime ";
+				if (toolItemBattlesYesterday.Checked)
+					battleFilter = "AND (battleTime>=@battleTime AND battleTime<=@battleFromTime)";
+				else
+					battleFilter = "AND battleTime>=@battleTime ";
 			}
 			// Get Tank filter
 			string tankFilterMessage = "";
@@ -601,63 +618,71 @@ namespace WotDBUpdater.Forms
 			DateTime dateFilter = new DateTime();
 			if (!toolItemBattlesAll.Checked)
 			{
-				DateTime basedate = DateTime.Now;
+				DateTime basedate = DateTime.Now; // current time
 				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-				dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); 
+				dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
 				// Adjust time scale according to selected filter
-				if (toolItemBattles3d.Checked) dateFilter = DateTime.Now.AddDays(-3);
-				else if (toolItemBattles1w.Checked) dateFilter = DateTime.Now.AddDays(-7);
-				else if (toolItemBattles1m.Checked) dateFilter = DateTime.Now.AddMonths(-1);
-				else if (toolItemBattles1y.Checked) dateFilter = DateTime.Now.AddYears(-1);
+				if (toolItemBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
+				else if (toolItemBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
+				else if (toolItemBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
+				else if (toolItemBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
+				else if (toolItemBattlesYesterday.Checked)
+				{
+					DateTime dateFromYesterdayFilter = dateFilter;
+					dateFilter = dateFilter.AddDays(-1);
+					DB.AddWithValue(ref sql, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+				}
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 			}
 			DataTable dt = new DataTable();
 			dt = DB.FetchData(sql);
 			int rowcount = dt.Rows.Count;
 			// Add footer
-			if (false) // (dt.Rows.Count > 1)
+			int totalBattleCount = 0;
+			int totalWinRate = 0;
+			int totalSurvivedRate = 0;
+			if (rowcount > 0)
 			{
-				sql =
-					"SELECT  AVG(CAST(tank.tier AS FLOAT)) AS Tier, " +
-					"        'Average  on ' + CAST(SUM(battle.battlesCount) AS VARCHAR) + ' battles' AS Tank, " +
-					"        CAST(NULL AS DATETIME) as 'Battle Time', " +
-					"        CAST(ROUND(SUM(CAST(battle.victory AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Result, " +
-					"        CAST(ROUND(SUM(CAST(battle.survived AS FLOAT)) / SUM(battle.battlesCount) * 100, 1) AS VARCHAR) + '%' AS Survived, " +
-					"        CAST(AVG(CAST(battle.dmg AS FLOAT)) AS INT) AS [Damage Caused], " +
-					"        CAST(AVG(CAST(battle.dmgReceived AS FLOAT)) AS INT) AS [Damage Received], " +
-					"        AVG(CAST(battle.frags AS FLOAT)) AS Kills, " +
-					"        CAST(AVG(CAST(battle.xp AS FLOAT)) AS INT) AS XP, " +
-					"        AVG(CAST(battle.spotted AS FLOAT))  AS Detected," +
-					"		 AVG(CAST(battle.cap AS FLOAT))  AS [Capture Points], " +
-					"		 AVG(CAST(battle.def AS FLOAT)) AS [Defense Points], " +
-					"		 AVG(CAST(battle.shots AS FLOAT))  AS Shots, " +
-					"		 AVG(CAST(battle.hits AS FLOAT)) AS Hits, " +
-					"		 CAST(AVG(CAST(battle.wn8 AS FLOAT)) AS INT) AS WN8, " +
-					"		 CAST(AVG(CAST(battle.eff AS FLOAT)) AS INT) AS EFF, " +
-					"		 '#F0F0F0' as battleResultColor, " +
-					"		 '#F0F0F0' as battleSurviveColor, " +
-					"		 SUM(battlescount) AS battlescount, " +
-					"		 CAST(@getdate AS DATETIME) AS battleTime, " +
-					"		 SUM (battle.victory) AS victory, " +
-					"		 SUM (battle.draw) AS draw, " +
-					"		 SUM (battle.defeat) AS defeat, " +
-					"		 SUM (battle.survived) as survivedcount, " +
-					"		 SUM (battle.killed) as killedcount, " +
-					"        1 as footer " +
-					"FROM    battle INNER JOIN " +
-					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
-					"        tank ON playerTank.tankId = tank.id " +
-					"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter;
-				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-					sql = sql.Replace("+", "||"); // For SQLite support use || instead of +
-				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@getdate", DateTime.Now.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-				if (!toolItemBattlesAll.Checked)
+				// totals
+				totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)",""));
+				totalWinRate = Convert.ToInt32(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
+				totalSurvivedRate = Convert.ToInt32(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
+				// the footer row
+				DataRow footerRow = dt.NewRow();
+				footerRow["footer"] = 1;
+				footerRow["battleResultColor"] = "";
+				footerRow["battleSurviveColor"] = "";
+				footerRow["battleTimeToolTip"] = DateTime.Now;
+				footerRow["battlesCountToolTip"] = 0;
+				footerRow["victoryToolTip"] = 0;
+				footerRow["drawToolTip"] = 0;
+				footerRow["defeatToolTip"] = 0;
+				footerRow["survivedCountToolTip"] = 0;
+				footerRow["killedCountToolTip"] = 0;
+				foreach (colListClass colListItem in colList)
 				{
-					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					if (colListItem.colType == "Int")
+					{
+						footerRow[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount ;
+					}
+					else if (colListItem.colType == "Float")
+					{
+						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
+					}
+
+					else
+					{
+						string s = "";
+						switch (colListItem.colName)
+						{
+							case "Tank": s = "Average"; break;
+							case "Result": s = totalWinRate.ToString() + "%"; break;
+							case "Survived": s = totalSurvivedRate.ToString() + "%"; break;
+						}
+						footerRow[colListItem.colName] = s;
+					}
 				}
-				dt.Merge(DB.FetchData(sql));
-				
+				dt.Rows.Add(footerRow);
 			}
 			// populate datagrid
 			mainGridFormatting = true;
@@ -674,15 +699,29 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["killedCountToolTip"].Visible = false;
 			dataGridMain.Columns["footer"].Visible = false;
 			dataGridMain.Columns["sortorder"].Visible = false;
-			// Grid col size
-			int colnum = 0;
-			foreach (int cw in columnWidth)
+			// Format grid 
+			if (rowcount > 0)
 			{
-				dataGridMain.Columns[colnum].Width = cw;
-				dataGridMain.Columns[colnum].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns[colnum].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				colnum++;
+				foreach (colListClass colListItem in colList)
+				{
+					dataGridMain.Columns[colListItem.colName].Width = colListItem.colWidth;
+					if (colListItem.colType == "Int" || colListItem.colType == "Float")
+					{
+						dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+						if (colListItem.colType == "Float")
+							dataGridMain.Rows[rowcount].Cells[colListItem.colName].Style.Format = "n1";
+					}
+					else
+					{
+						switch (colListItem.colName)
+						{
+							case "Tank": dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles"; break;
+						}
+					}
+				}
+				dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
 			}
+			// Finish up
 			ResizeNow();
 			toolItemBattles.Visible = true;
 			if (overrideStatus2Message == "")
@@ -751,11 +790,6 @@ namespace WotDBUpdater.Forms
 						{
 							cell.ToolTipText = "Battle result based on " + battlesCount.ToString() + " battle(s)" + Environment.NewLine + "Battle time: " + battleTime;
 						}
-						else // footer
-						{
-							cell.ToolTipText = "Average calculations based on " + battlesCount.ToString() + " battles";
-							dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-						}
 					}
 					// Battle Result color color
 					else if (col.Equals("Result"))
@@ -780,14 +814,6 @@ namespace WotDBUpdater.Forms
 						{
 							cell.ToolTipText = "Survived: " + dataGridMain["survivedCountToolTip", e.RowIndex].Value.ToString() + Environment.NewLine +
 								"Killed: " + dataGridMain["killedcountToolTip", e.RowIndex].Value.ToString();
-						}
-					}
-					// Foter desimal
-					if (footer)
-					{
-						if (col == "Tier" || col == "Kills" || col == "Detected" || col == "Shots" || col == "Hits" || col == "Capture Points" || col == "Defense Points")
-						{
-							cell.Style.Format = "n1";
 						}
 					}
 				}
@@ -1414,6 +1440,7 @@ namespace WotDBUpdater.Forms
 		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
 		{
 			toolItemBattles1d.Checked = false;
+			toolItemBattlesYesterday.Checked = false;
 			toolItemBattles3d.Checked = false;
 			toolItemBattles1w.Checked = false;
 			toolItemBattles1m.Checked = false;
@@ -1570,39 +1597,39 @@ namespace WotDBUpdater.Forms
 			Code.ImportWotApi2DB.ImportTurrets();
 		}
 
-        private void testNewGunImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportGuns();
-        }
+		private void testNewGunImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportGuns();
+		}
 
-        private void testNewRadioImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportRadios();
-        }
+		private void testNewRadioImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportRadios();
+		}
 
-        private void testSaveImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.SaveImage();
-        }
+		private void testSaveImageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.SaveImage();
+		}
 
-        private void testNewAchievementImportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.ImportAchievements();
-        }
+		private void testNewAchievementImportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.ImportAchievements();
+		}
 
-        private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Code.ImportWotApi2DB.updateTankImage();
-        }
+		private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Code.ImportWotApi2DB.updateTankImage();
+		}
 
 
 		#endregion
 
-        private void testShowImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form frm = new Forms.Test.TestShowImage();
-            frm.ShowDialog();
-        }
+		private void testShowImageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.Test.TestShowImage();
+			frm.ShowDialog();
+		}
 
 		
 	}

@@ -598,43 +598,43 @@ namespace WotDBUpdater.Code
 							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (164,4,2); "; 
 					sqlite = mssql;
 					break;
-                case 30:
+				case 30:
 					// Korrigert av KI - image datatype tar ikke default 0
-                    mssql = "alter table tank add imgPath varchar(255) NULL ; " +
-                            "alter table tank add smallImgPath varchar(255)  NULL ; " +
-                            "alter table tank add contourImgPath varchar(255)  NULL; " +
-                            "alter table tank add img image  NULL ; " +
-                            "alter table tank add smallImg image NULL ; " +
-                            "alter table tank add contourImg image NULL; ";
-                    sqlite = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
-                            "alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
-                            "alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
-                            "alter table tank add img blob NOT NULL default 0; " +
-                            "alter table tank add smallImg blob NOT NULL default 0; " +
-                            "alter table tank add contourImg blob NOT NULL default 0; ";
-                    break;
-                case 31:
-                    mssql = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img IMAGE NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img1 IMAGE NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img2 IMAGE NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img3 IMAGE NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img4 IMAGE NOT NULL DEFAULT 0;";
-                    sqlite = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img BLOB NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img1 BLOB NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img2 BLOB NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img3 BLOB NOT NULL DEFAULT 0; " +
-                            "ALTER TABLE ach ADD img4 BLOB NOT NULL DEFAULT 0;";
-                    break;
+					mssql = "alter table tank add imgPath varchar(255) NULL ; " +
+							"alter table tank add smallImgPath varchar(255)  NULL ; " +
+							"alter table tank add contourImgPath varchar(255)  NULL; " +
+							"alter table tank add img image  NULL ; " +
+							"alter table tank add smallImg image NULL ; " +
+							"alter table tank add contourImg image NULL; ";
+					sqlite = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
+							"alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
+							"alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
+							"alter table tank add img blob NOT NULL default 0; " +
+							"alter table tank add smallImg blob NOT NULL default 0; " +
+							"alter table tank add contourImg blob NOT NULL default 0; ";
+					break;
+				case 31:
+					mssql = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img IMAGE NULL; " +
+							"ALTER TABLE ach ADD img1 IMAGE NULL; " +
+							"ALTER TABLE ach ADD img2 IMAGE NULL; " +
+							"ALTER TABLE ach ADD img3 IMAGE NULL; " +
+							"ALTER TABLE ach ADD img4 IMAGE NULL; " ;
+					sqlite = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img BLOB NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img1 BLOB NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img2 BLOB NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img3 BLOB NOT NULL DEFAULT 0; " +
+							"ALTER TABLE ach ADD img4 BLOB NOT NULL DEFAULT 0;";
+					break;
 				default:
 					break;
 			}
