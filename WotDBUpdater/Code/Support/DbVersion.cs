@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 31; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 32; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -635,7 +635,9 @@ namespace WotDBUpdater.Code
 							"ALTER TABLE ach ADD img3 BLOB NOT NULL DEFAULT 0; " +
 							"ALTER TABLE ach ADD img4 BLOB NOT NULL DEFAULT 0;";
 					break;
-				default:
+				case 32:
+					mssql = "UPDATE columnSelection SET colDataType = 'Float' WHERE id IN (18,24,25,26,27,35,59)";
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";
