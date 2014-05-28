@@ -970,10 +970,10 @@ namespace WotDBUpdater.Code
                             // Check if ach already exists
                             if (!TankData.GetAchievmentExist(itemToken["name"].ToString()))
                             {
-                                string sql = "INSERT INTO ACH (name, section, options, section_order, imgPath, name_i18n, type, ordernum, description, " +
-                                            "  img1Path, img2Path, img3Path, img4Path, name_i18n1, name_i18n2, name_i18n3, name_i18n4) " +
-                                            "VALUES (@name, @section, @options, @section_order, @imgPath, @name_i18n, @type, @ordernum, @description, " +
-                                            "  @image1, @image2, @image3, @image4, @name_i18n1, @name_i18n2, @name_i18n3, @name_i18n4) ";
+                                string sql = "INSERT INTO ACH (name, section, section_order, name_i18n, type, ordernum, description " +
+                                            "  ) " +
+                                            "VALUES (@name, @section, 0, @name_i18n, @type, @ordernum, @description " +
+                                            "  ) ";
                                 // Get data from json token and insert to query
                                 // string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
                                 DB.AddWithValue(ref sql, "@name", itemToken["name"].ToString(), DB.SqlDataType.VarChar);
@@ -1026,16 +1026,27 @@ namespace WotDBUpdater.Code
                                 }
 
                                 // Insert to db now
-                                if (!DB.ExecuteNonQuery(sql)) return;
+                                try
+                                {
+                                    if (!DB.ExecuteNonQuery(sql)) return;
+                                    //Code.MsgBox.Show("x");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Code.MsgBox.Show(ex.Message);
+                                }
 
                                 logAddedItems = logAddedItems + itemToken["name"].ToString() + ", ";
                                 logAddedItemsCount++;
                             }
                             else
                             {
-                                string sql = "UPDATE ach SET section=@section, options=@options, section_order=@section_order, imgPath=@imgPath, name_i18n=@name_i18n, "
-                                           + "type=@type, ordernum=@ordernum, description=@description, img1Path=@img1Path, img2Path=@img2Path, img3Path=@img3Path, img4Path=@img4Path, "
-                                           + "name_i18n1=@name_i18n1, name_i18n2=@name_i18n2, name_i18n3=@name_i18n3, name_i18n4=@name_i18n4 WHERE name=@name";
+                                //string sql = "UPDATE ach SET section=@section, options=@options, section_order=@section_order, imgPath=@imgPath, name_i18n=@name_i18n, "
+                                //           + "type=@type, ordernum=@ordernum, description=@description, img1Path=@img1Path, img2Path=@img2Path, img3Path=@img3Path, img4Path=@img4Path, "
+                                //           + "name_i18n1=@name_i18n1, name_i18n2=@name_i18n2, name_i18n3=@name_i18n3, name_i18n4=@name_i18n4 WHERE name=@name";
+                                string sql = "UPDATE ach SET section=@section, name_i18n=@name_i18n, "
+                                           + "type=@type, ordernum=@ordernum, description=@description WHERE name=@name";
+
                                 // Get data from json token and insert to query
                                 // string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
                                 DB.AddWithValue(ref sql, "@name", itemToken["name"].ToString(), DB.SqlDataType.VarChar);
@@ -1104,6 +1115,7 @@ namespace WotDBUpdater.Code
                 catch (Exception ex)
                 {
                     log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+                    Code.MsgBox.Show(ex.Message);
                     //return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
                 }
 			}

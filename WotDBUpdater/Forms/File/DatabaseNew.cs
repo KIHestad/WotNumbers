@@ -98,32 +98,32 @@ namespace WotDBUpdater.Forms.File
 				if (!ok) return false;
 				UpdateProgressBar("Inserting data into database");
 
-				// Insert default data
-				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
-				sql = streamReader.ReadToEnd();
-				ok = DB.ExecuteNonQuery(sql);
-				if (!ok) return false;
-				UpdateProgressBar("Retrieves tanks from Wargaming API");
+                // Insert default data
+                streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
+                sql = streamReader.ReadToEnd();
+                ok = DB.ExecuteNonQuery(sql);
+                if (!ok) return false;
+                UpdateProgressBar("Retrieves tanks from Wargaming API");
 
-				// Get tanks, remember to init tankList first
-				TankData.GetTankListFromDB();
-				ImportWotApi2DB.ImportTanks();
-				// Init after getting tanks and other basic data import
-				TankData.GetTankListFromDB();
-				TankData.GetJson2dbMappingFromDB();
-				UpdateProgressBar("Retrieves tank turrets from Wargaming API");
+                // Get tanks, remember to init tankList first
+                TankData.GetTankListFromDB();
+                ImportWotApi2DB.ImportTanks();
+                // Init after getting tanks and other basic data import
+                TankData.GetTankListFromDB();
+                TankData.GetJson2dbMappingFromDB();
+                UpdateProgressBar("Retrieves tank turrets from Wargaming API");
 
-				// Get turret
-				ImportWotApi2DB.ImportTurrets();
-				UpdateProgressBar("Retrieves tank guns from Wargaming API");
+                // Get turret
+                ImportWotApi2DB.ImportTurrets();
+                UpdateProgressBar("Retrieves tank guns from Wargaming API");
 
-				// Get guns
-				ImportWotApi2DB.ImportGuns();
-				UpdateProgressBar("Retrieves tank radios from Wargaming API");
+                // Get guns
+                ImportWotApi2DB.ImportGuns();
+                UpdateProgressBar("Retrieves tank radios from Wargaming API");
 
-				// Get radios
-				ImportWotApi2DB.ImportRadios();
-				UpdateProgressBar("Retrieves achievements from Wargaming API");
+                // Get radios
+                ImportWotApi2DB.ImportRadios();
+                UpdateProgressBar("Retrieves achievements from Wargaming API");
 
 				// Get achievements
 				ImportWotApi2DB.ImportAchievements();
