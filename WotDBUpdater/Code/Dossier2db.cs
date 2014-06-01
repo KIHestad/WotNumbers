@@ -346,7 +346,7 @@ namespace WotDBUpdater.Code
 						// Calculate battleOfTotal = factor of how many of battles in this battlemode out of total battles
 						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId;";
 						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]) + battlessNew15;
 						double battleOfTotal = 0;
 						if (totalBattles > 0) battleOfTotal = NewPlayerTankRow_battles15 / Convert.ToDouble(totalBattles);
 						sqlFields += ", battleOfTotal=" + battleOfTotal.ToString().Replace(",", ".");
@@ -354,6 +354,12 @@ namespace WotDBUpdater.Code
 						if (sqlFields.Length > 0)
 						{
 							sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='15'; ";
+							// Also update battleOfTotal for battlemode '7'
+							if (totalBattles > 0)
+							{
+								battleOfTotal = (Convert.ToDouble(totalBattles) - NewPlayerTankRow_battles15) / Convert.ToDouble(totalBattles);
+								sql += "UPDATE playerTankBattle SET battleOfTotal=" + battleOfTotal.ToString().Replace(",", ".") + " WHERE playerTankId=@playerTankId AND battleMode='7'; ";
+							}
 							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 							DB.ExecuteNonQuery(sql);
 						}
@@ -385,7 +391,7 @@ namespace WotDBUpdater.Code
 						// Calculate battleOfTotal = factor of how many of battles in this battlemode out of total battles
 						string sql = "select SUM(battles) from playerTankBattle where playerTankId=@playerTankId;";
 						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+						int totalBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]) + battlessNew7;
 						double battleOfTotal = 0;
 						if (totalBattles > 0) battleOfTotal = NewPlayerTankRow_battles7 / Convert.ToDouble(totalBattles);
 						sqlFields += ", battleOfTotal=" + battleOfTotal.ToString().Replace(",",".");
@@ -393,8 +399,15 @@ namespace WotDBUpdater.Code
 						if (sqlFields.Length > 0)
 						{
 							sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode='7'; ";
+							// Also update battleOfTotal for battlemode '15'
+							if (totalBattles > 0)
+							{
+								battleOfTotal = (Convert.ToDouble(totalBattles) - NewPlayerTankRow_battles7) / Convert.ToDouble(totalBattles);
+								sql += "UPDATE playerTankBattle SET battleOfTotal=" + battleOfTotal.ToString().Replace(",", ".") + " WHERE playerTankId=@playerTankId AND battleMode='15'; ";
+							}
 							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 							DB.ExecuteNonQuery(sql);
+							
 						}
 					}
 					// Check fraglist to update playertank frags
