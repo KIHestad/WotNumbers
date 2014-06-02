@@ -552,13 +552,13 @@ namespace WotDBUpdater.Forms
 			//  Hide system cols
 			dataGridMain.Columns["sortorder"].Visible = false;
 			// Grid col size
-			int colnum = 0;
 			foreach (colListClass colListItem in colList)
 			{
-				dataGridMain.Columns[colnum].Width = colListItem.colWidth;
-				dataGridMain.Columns[colnum].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns[colnum].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				colnum++;
+				dataGridMain.Columns[colListItem.colName].Width = colListItem.colWidth;
+				if (colListItem.colType == "Int" || colListItem.colType == "Float")
+				{
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				}
 			}
 			ResizeNow();
 			// Add status message
