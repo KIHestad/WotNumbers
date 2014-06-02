@@ -115,6 +115,7 @@
 			this.toolItemTankFilter_EditFavList = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolItemBattles1d = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattles3d = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattles1w = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattles1m = new System.Windows.Forms.ToolStripMenuItem();
@@ -154,7 +155,6 @@
 			this.testShowImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolItemBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -198,7 +198,7 @@
 			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatus2);
 			this.MainTheme.Controls.Add(this.lblStatus1);
-			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
+			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.MainTheme.FormFooter = true;
@@ -295,6 +295,7 @@
 			this.dataGridMain.Size = new System.Drawing.Size(601, 204);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
+			this.dataGridMain.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridMain_CellMouseDown);
 			this.dataGridMain.SelectionChanged += new System.EventHandler(this.dataGridMain_SelectionChanged);
 			// 
 			// panelInfo
@@ -403,7 +404,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(546, 25);
+			this.toolMain.Size = new System.Drawing.Size(515, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1066,6 +1067,14 @@
 			this.toolItemBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.toolItemBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
+			// toolItemBattlesYesterday
+			// 
+			this.toolItemBattlesYesterday.Name = "toolItemBattlesYesterday";
+			this.toolItemBattlesYesterday.Size = new System.Drawing.Size(172, 22);
+			this.toolItemBattlesYesterday.Text = "Yesterday\'s Battles";
+			this.toolItemBattlesYesterday.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			this.toolItemBattlesYesterday.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
 			// toolItemBattles3d
 			// 
 			this.toolItemBattles3d.Name = "toolItemBattles3d";
@@ -1378,14 +1387,6 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// toolItemBattlesYesterday
-			// 
-			this.toolItemBattlesYesterday.Name = "toolItemBattlesYesterday";
-			this.toolItemBattlesYesterday.Size = new System.Drawing.Size(172, 22);
-			this.toolItemBattlesYesterday.Text = "Yesterday\'s Battles";
-			this.toolItemBattlesYesterday.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattlesYesterday.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1537,8 +1538,8 @@
 		private System.Windows.Forms.ToolStripMenuItem testNewRadioImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem testNewAchievementImportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testUpdateTankImageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testShowImageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testUpdateTankImageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testShowImageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattlesYesterday;
 	}
 }

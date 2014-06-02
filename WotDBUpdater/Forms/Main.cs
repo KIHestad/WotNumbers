@@ -81,6 +81,25 @@ namespace WotDBUpdater.Forms
 			lblStatusRowCount.Text = "";
 		}
 
+		private void CreateDataGridContextMenu()
+		{
+			// Datagrid context menu
+			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
+			dataGridMainPopup.Renderer = new StripRenderer();
+			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
+			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Tank Grinding setup");
+			ToolStripMenuItem dataGridMainPopup_Other2 = new ToolStripMenuItem("Menu #2");
+			ToolStripMenuItem dataGridMainPopup_Other3 = new ToolStripMenuItem("Menu #3");
+			//Assign event handlers
+			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
+			dataGridMainPopup_Other2.Click += new EventHandler(dataGridMainPopup_Other_Click);
+			dataGridMainPopup_Other3.Click += new EventHandler(dataGridMainPopup_Other_Click);
+			//Add to main context menu
+			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_Other2, dataGridMainPopup_Other3 });
+			//Assign to datagridview
+			dataGridMain.ContextMenuStrip = dataGridMainPopup;
+		}
+
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
 			public StripRenderer()
@@ -353,6 +372,7 @@ namespace WotDBUpdater.Forms
 			{
 				tankFavListBattleView = tankFavListSelected;
 			}
+			// Select view
 			ToolStripButton menuItem = (ToolStripButton)sender;
 			if (!menuItem.Checked)
 			{
@@ -367,7 +387,11 @@ namespace WotDBUpdater.Forms
 				SetStatus2(menuItem.Text);
 				if (toolItemViewOverall.Checked)
 				{
+					// Remove datagrid context menu
+					dataGridMain.ContextMenuStrip = null;
+					// Modify toolbar
 					toolItemRefreshSeparator.Visible = false;
+					// Start slider
 					InfoPanelSlideStart(true);
 				}
 				else if (toolItemViewTankInfo.Checked)
@@ -379,6 +403,8 @@ namespace WotDBUpdater.Forms
 					// Get Column Setup List
 					GetColumnSetupList();
 					toolItemColumnSelect.Visible = true;
+					// Add datagrid context menu
+					CreateDataGridContextMenu();
 
 				}
 				else if (toolItemViewBattles.Checked)
@@ -391,8 +417,8 @@ namespace WotDBUpdater.Forms
 					// Get Column Setup List
 					GetColumnSetupList();
 					toolItemColumnSelect.Visible = true;
-					// Start file watcher to detect new battles
-					fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+					// Add datagrid context menu
+					CreateDataGridContextMenu();
 				}
 			}
 			GridShow();
@@ -516,19 +542,8 @@ namespace WotDBUpdater.Forms
 				sortordercol = "favListTank.sortorder as sortorder ";
 				sortordergroupby = ", favListTank.sortorder";
 			}
-			//tank.tier AS Tier, tank.name AS Tank, tankType.name AS Tanktype, country.name AS Country, " +
-			//			 playerTank.battles15 AS [Battles15], playerTank.battles7 AS [Battles7], playerTank.wn8 as WN8, playerTank.eff as EFF, "
 			string sql =
-				"SELECT   " + select + sortordercol +
-				"FROM     playerTank INNER JOIN " +
-				"         player ON playerTank.playerId = player.id INNER JOIN " +
-				"         tank ON playerTank.tankId = tank.id INNER JOIN " +
-				"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
-				"         country ON tank.countryId = country.id " + join +
-				"WHERE    player.id=@playerid " + where + " " +
-				"ORDER BY sortorder";
-			sql =
-				"SELECT   " + select + sortordercol +
+				"SELECT   " + select + sortordercol + ", tank.Id as tankID " +
 				"FROM            tank INNER JOIN " +
 				"                         playerTank ON tank.id = playerTank.tankId INNER JOIN " +
 				"                         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
@@ -551,6 +566,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.DataSource = DB.FetchData(sql);
 			//  Hide system cols
 			dataGridMain.Columns["sortorder"].Visible = false;
+			dataGridMain.Columns["tankId"].Visible = false;
 			// Grid col size
 			foreach (colListClass colListItem in colList)
 			{
@@ -604,7 +620,7 @@ namespace WotDBUpdater.Forms
 				"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 				"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
 				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, " +
-				"  0 as footer, " + sortordercol + 
+				"  0 as footer, tank.Id as tankId, " + sortordercol + 
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -702,6 +718,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["killedCountToolTip"].Visible = false;
 			dataGridMain.Columns["footer"].Visible = false;
 			dataGridMain.Columns["sortorder"].Visible = false;
+			dataGridMain.Columns["tankId"].Visible = false;
 			// Format grid 
 			if (rowcount > 0)
 			{
@@ -851,7 +868,34 @@ namespace WotDBUpdater.Forms
 		}
 
 		#endregion
-		
+
+		#region Grid Right Click
+
+		private int dataGridRightClickCol = -1;
+		private int dataGridRightClickRow = -1;
+		private void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				dataGridRightClickRow = e.RowIndex;
+				dataGridRightClickCol = e.ColumnIndex;
+				dataGridMain.CurrentCell = dataGridMain.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
+			}
+
+		}
+
+		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
+		{
+			int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tankId"].Value);
+			Code.MsgBox.Show("Tank id: " + tankId.ToString(), "Grinding setup test");
+		}
+
+		private void dataGridMainPopup_Other_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.Show("No function implemented", "Test menu");
+		}
+		#endregion
+
 		#region Data Grid Scroll Handling
 
 		private bool scrollingY = false;
@@ -1634,6 +1678,5 @@ namespace WotDBUpdater.Forms
 			frm.ShowDialog();
 		}
 
-		
 	}
 }
