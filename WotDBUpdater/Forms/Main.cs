@@ -717,7 +717,7 @@ namespace WotDBUpdater.Forms
 				{
 					if (colListItem.colType == "Int" || colListItem.colType == "Float")
 					{
-						IEnumerable<string> nonTotalsCols = new List<string>{ "EFF", "WN8", "Hit Rate"};
+						IEnumerable<string> nonTotalsCols = new List<string>{ "EFF", "WN8", "Hit Rate", "Tier"};
 						if (!nonTotalsCols.Contains(colListItem.colName)) // Avoid calculate total EFF/WN8
 							// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
 							footerRow2[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", ""));
