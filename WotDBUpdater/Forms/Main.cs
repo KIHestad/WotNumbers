@@ -87,7 +87,7 @@ namespace WotDBUpdater.Forms
 			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
-			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Tank Grinding setup");
+			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Tank Grinding Setup");
 			ToolStripMenuItem dataGridMainPopup_Other2 = new ToolStripMenuItem("Menu #2");
 			ToolStripMenuItem dataGridMainPopup_Other3 = new ToolStripMenuItem("Menu #3");
 			//Assign event handlers
@@ -663,7 +663,7 @@ namespace WotDBUpdater.Forms
 				totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)",""));
 				totalWinRate = Convert.ToInt32(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
 				totalSurvivedRate = Convert.ToInt32(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
-				// the footer row
+				// the footer row - average
 				DataRow footerRow = dt.NewRow();
 				footerRow["footer"] = 1;
 				footerRow["battleResultColor"] = "";
@@ -702,6 +702,45 @@ namespace WotDBUpdater.Forms
 					}
 				}
 				dt.Rows.Add(footerRow);
+				// the footer row #2 - totals
+				footerRow = dt.NewRow();
+				footerRow["footer"] = 2;
+				footerRow["battleResultColor"] = "";
+				footerRow["battleSurviveColor"] = "";
+				footerRow["battleTimeToolTip"] = DateTime.Now;
+				footerRow["battlesCountToolTip"] = 0;
+				footerRow["victoryToolTip"] = 0;
+				footerRow["drawToolTip"] = 0;
+				footerRow["defeatToolTip"] = 0;
+				footerRow["survivedCountToolTip"] = 0;
+				footerRow["killedCountToolTip"] = 0;
+				foreach (colListClass colListItem in colList)
+				{
+					if (colListItem.colType == "Int")
+					{
+						footerRow[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) ;
+					}
+					else if (colListItem.colType == "Float")
+					{
+						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) ;
+					}
+					else if (colListItem.colType == "DateTime")
+					{
+						footerRow[colListItem.colName] = DBNull.Value;
+					}
+					else
+					{
+						string s = "";
+						switch (colListItem.colName)
+						{
+							case "Tank": s = "Totals"; break;
+							case "Result": s = ""; break;
+							case "Survived": s = ""; break;
+						}
+						footerRow[colListItem.colName] = s;
+					}
+				}
+				dt.Rows.Add(footerRow);
 			}
 			// populate datagrid
 			mainGridFormatting = true;
@@ -735,11 +774,15 @@ namespace WotDBUpdater.Forms
 					{
 						switch (colListItem.colName)
 						{
-							case "Tank": dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles"; break;
+							case "Tank": 
+								dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles"; 
+								dataGridMain.Rows[rowcount + 1].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles"; 
+								break;
 						}
 					}
 				}
 				dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+				dataGridMain.Rows[rowcount + 1].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
 			}
 			// Finish up
 			ResizeNow();
