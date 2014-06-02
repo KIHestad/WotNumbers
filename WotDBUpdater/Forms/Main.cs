@@ -664,30 +664,30 @@ namespace WotDBUpdater.Forms
 				totalWinRate = Convert.ToInt32(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
 				totalSurvivedRate = Convert.ToInt32(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
 				// the footer row #1 - average
-				DataRow footerRow = dt.NewRow();
-				footerRow["footer"] = 1;
-				footerRow["battleResultColor"] = "";
-				footerRow["battleSurviveColor"] = "";
-				footerRow["battleTimeToolTip"] = DateTime.Now;
-				footerRow["battlesCountToolTip"] = 0;
-				footerRow["victoryToolTip"] = 0;
-				footerRow["drawToolTip"] = 0;
-				footerRow["defeatToolTip"] = 0;
-				footerRow["survivedCountToolTip"] = 0;
-				footerRow["killedCountToolTip"] = 0;
+				DataRow footerRow1 = dt.NewRow();
+				footerRow1["footer"] = 2;
+				footerRow1["battleResultColor"] = "";
+				footerRow1["battleSurviveColor"] = "";
+				footerRow1["battleTimeToolTip"] = DateTime.Now;
+				footerRow1["battlesCountToolTip"] = 0;
+				footerRow1["victoryToolTip"] = 0;
+				footerRow1["drawToolTip"] = 0;
+				footerRow1["defeatToolTip"] = 0;
+				footerRow1["survivedCountToolTip"] = 0;
+				footerRow1["killedCountToolTip"] = 0;
 				foreach (colListClass colListItem in colList)
 				{
 					if (colListItem.colType == "Int")
 					{
-						footerRow[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount ;
+						footerRow1[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount ;
 					}
 					else if (colListItem.colType == "Float")
 					{
-						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
+						footerRow1[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
 					}
 					else if (colListItem.colType == "DateTime")
 					{
-						footerRow[colListItem.colName] = DBNull.Value;
+						footerRow1[colListItem.colName] = DBNull.Value;
 					}
 					else
 					{
@@ -698,38 +698,35 @@ namespace WotDBUpdater.Forms
 							case "Result": s = totalWinRate.ToString() + "%"; break;
 							case "Survived": s = totalSurvivedRate.ToString() + "%"; break;
 						}
-						footerRow[colListItem.colName] = s;
+						footerRow1[colListItem.colName] = s;
 					}
 				}
-				dt.Rows.Add(footerRow);
 				// the footer row #2 - totals
-				footerRow = dt.NewRow();
-				footerRow["footer"] = 2;
-				footerRow["battleResultColor"] = "";
-				footerRow["battleSurviveColor"] = "";
-				footerRow["battleTimeToolTip"] = DateTime.Now;
-				footerRow["battlesCountToolTip"] = 0;
-				footerRow["victoryToolTip"] = 0;
-				footerRow["drawToolTip"] = 0;
-				footerRow["defeatToolTip"] = 0;
-				footerRow["survivedCountToolTip"] = 0;
-				footerRow["killedCountToolTip"] = 0;
+				DataRow footerRow2 = dt.NewRow();
+				footerRow2["footer"] = 1;
+				footerRow2["battleResultColor"] = "";
+				footerRow2["battleSurviveColor"] = "";
+				footerRow2["battleTimeToolTip"] = DateTime.Now;
+				footerRow2["battlesCountToolTip"] = 0;
+				footerRow2["victoryToolTip"] = 0;
+				footerRow2["drawToolTip"] = 0;
+				footerRow2["defeatToolTip"] = 0;
+				footerRow2["survivedCountToolTip"] = 0;
+				footerRow2["killedCountToolTip"] = 0;
 				foreach (colListClass colListItem in colList)
 				{
-					if (colListItem.colType == "Int")
+					if (colListItem.colType == "Int" || colListItem.colType == "Float")
 					{
-						if (colListItem.colName != "EFF" && colListItem.colName != "WN8")
-							footerRow[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", ""));
+						IEnumerable<string> nonTotalsCols = new List<string>{ "EFF", "WN8", "Hit Rate"};
+						if (!nonTotalsCols.Contains(colListItem.colName)) // Avoid calculate total EFF/WN8
+							// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
+							footerRow2[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", ""));
 						else
-							footerRow[colListItem.colName] = DBNull.Value;
-					}
-					else if (colListItem.colType == "Float")
-					{
-						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", ""));
+							footerRow2[colListItem.colName] = DBNull.Value;
 					}
 					else if (colListItem.colType == "DateTime")
 					{
-						footerRow[colListItem.colName] = DBNull.Value;
+						footerRow2[colListItem.colName] = DBNull.Value;
 					}
 					else
 					{
@@ -740,10 +737,11 @@ namespace WotDBUpdater.Forms
 							case "Result": s = ""; break;
 							case "Survived": s = ""; break;
 						}
-						footerRow[colListItem.colName] = s;
+						footerRow2[colListItem.colName] = s;
 					}
 				}
-				dt.Rows.Add(footerRow);
+				dt.Rows.Add(footerRow2);
+				dt.Rows.Add(footerRow1);
 			}
 			// populate datagrid
 			mainGridFormatting = true;
@@ -772,7 +770,6 @@ namespace WotDBUpdater.Forms
 						dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						if (colListItem.colType == "Float")
 						{
-							dataGridMain.Rows[rowcount].Cells[colListItem.colName].Style.Format = "n1";
 							dataGridMain.Rows[rowcount + 1].Cells[colListItem.colName].Style.Format = "n1";
 						}
 					}
