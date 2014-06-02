@@ -32,6 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSetting));
 			this.openFileDialogDossierFile = new System.Windows.Forms.OpenFileDialog();
 			this.ApplicationSettingsTheme = new BadForm();
+			this.cboSelectPlayer = new BadDropDownBox();
 			this.btnSelectDossierFilePath = new BadButton();
 			this.btnRemovePlayer = new BadButton();
 			this.btnAddPlayer = new BadButton();
@@ -44,7 +45,7 @@
 			this.lblPlayer = new BadLabel();
 			this.lblDbSettings = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
-			this.cboSelectPlayer = new BadDropDownBox();
+			this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
 			this.ApplicationSettingsTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -82,6 +83,16 @@
 			this.ApplicationSettingsTheme.TabIndex = 11;
 			this.ApplicationSettingsTheme.Text = "Application Settings";
 			this.ApplicationSettingsTheme.TitleHeight = 26;
+			// 
+			// cboSelectPlayer
+			// 
+			this.cboSelectPlayer.Image = null;
+			this.cboSelectPlayer.Location = new System.Drawing.Point(92, 118);
+			this.cboSelectPlayer.Name = "cboSelectPlayer";
+			this.cboSelectPlayer.Size = new System.Drawing.Size(188, 23);
+			this.cboSelectPlayer.TabIndex = 38;
+			this.cboSelectPlayer.Text = "badDropDownBox1";
+			this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
 			// 
 			// btnSelectDossierFilePath
 			// 
@@ -205,16 +216,6 @@
 			this.badGroupBox1.TabIndex = 20;
 			this.badGroupBox1.Text = "Settings";
 			// 
-			// cboSelectPlayer
-			// 
-			this.cboSelectPlayer.Image = null;
-			this.cboSelectPlayer.Location = new System.Drawing.Point(92, 118);
-			this.cboSelectPlayer.Name = "cboSelectPlayer";
-			this.cboSelectPlayer.Size = new System.Drawing.Size(188, 23);
-			this.cboSelectPlayer.TabIndex = 38;
-			this.cboSelectPlayer.Text = "badDropDownBox1";
-			this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
-			// 
 			// ApplicationSetting
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,5 +253,6 @@
 		private BadSeperator badSeperator2;
 		private BadSeperator badSeperator1;
 		private BadDropDownBox cboSelectPlayer;
+		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDossier;
 	}
 }

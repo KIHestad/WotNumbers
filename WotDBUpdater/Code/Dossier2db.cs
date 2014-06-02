@@ -486,19 +486,22 @@ namespace WotDBUpdater.Code
 									"FROM ach " +
 									"WHERE name='" + newAch.achName + "'";
 							DataTable lookupAch = DB.FetchData(sql);
-							int achId = Convert.ToInt32(lookupAch.Rows[0]["id"]);
-							// Insert new acheivement
-							sql = "INSERT INTO playerTankAch (achCount, playerTankId, achId) " +
-									"VALUES (@achCount, @playerTankId, @achId)";
-							DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
-							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-							DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
-							DB.ExecuteNonQuery(sql);
-							// Add to battle achievment
-							AchItem ach = new AchItem();
-							ach.achId = achId;
-							ach.count = (newAch.count);
-							battleAchList.Add(ach);
+							if (lookupAch.Rows.Count > 0)
+							{
+								int achId = Convert.ToInt32(lookupAch.Rows[0]["id"]);
+								// Insert new acheivement
+								sql = "INSERT INTO playerTankAch (achCount, playerTankId, achId) " +
+										"VALUES (@achCount, @playerTankId, @achId)";
+								DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
+								DB.ExecuteNonQuery(sql);
+								// Add to battle achievment
+								AchItem ach = new AchItem();
+								ach.achId = achId;
+								ach.count = (newAch.count);
+								battleAchList.Add(ach);
+							}
 						}
 						else // achievent found, check count
 						{
