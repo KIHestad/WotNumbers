@@ -771,7 +771,10 @@ namespace WotDBUpdater.Forms
 					{
 						dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						if (colListItem.colType == "Float")
+						{
 							dataGridMain.Rows[rowcount].Cells[colListItem.colName].Style.Format = "n1";
+							dataGridMain.Rows[rowcount + 1].Cells[colListItem.colName].Style.Format = "n1";
+						}
 					}
 					else
 					{
