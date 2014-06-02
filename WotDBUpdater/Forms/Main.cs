@@ -663,7 +663,7 @@ namespace WotDBUpdater.Forms
 				totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)",""));
 				totalWinRate = Convert.ToInt32(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
 				totalSurvivedRate = Convert.ToInt32(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
-				// the footer row - average
+				// the footer row #1 - average
 				DataRow footerRow = dt.NewRow();
 				footerRow["footer"] = 1;
 				footerRow["battleResultColor"] = "";
@@ -718,11 +718,14 @@ namespace WotDBUpdater.Forms
 				{
 					if (colListItem.colType == "Int")
 					{
-						footerRow[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) ;
+						if (colListItem.colName != "EFF" && colListItem.colName != "WN8")
+							footerRow[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", ""));
+						else
+							footerRow[colListItem.colName] = DBNull.Value;
 					}
 					else if (colListItem.colType == "Float")
 					{
-						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) ;
+						footerRow[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", ""));
 					}
 					else if (colListItem.colType == "DateTime")
 					{
@@ -811,14 +814,17 @@ namespace WotDBUpdater.Forms
 					//  { "value": 1775, "color": ${"def.colorRating.very_good"} },  // 1475 - 1774 - very good  (better then 99% of players)
 					//  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
 					//]
-					int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
-					Color effRatingColor = ColorTheme.Rating_very_bad;
-					if (eff > 1774) effRatingColor = ColorTheme.Rating_uniqe;
-					else if (eff > 1474) effRatingColor = ColorTheme.Rating_very_good;
-					else if (eff > 1144) effRatingColor = ColorTheme.Rating_good;
-					else if (eff > 849) effRatingColor = ColorTheme.Rating_normal;
-					else if (eff > 609) effRatingColor = ColorTheme.Rating_bad;
-					cell.Style.ForeColor = effRatingColor;
+					if (dataGridMain["EFF", e.RowIndex].Value != DBNull.Value)
+					{
+						int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
+						Color effRatingColor = ColorTheme.Rating_very_bad;
+						if (eff > 1774) effRatingColor = ColorTheme.Rating_uniqe;
+						else if (eff > 1474) effRatingColor = ColorTheme.Rating_very_good;
+						else if (eff > 1144) effRatingColor = ColorTheme.Rating_good;
+						else if (eff > 849) effRatingColor = ColorTheme.Rating_normal;
+						else if (eff > 609) effRatingColor = ColorTheme.Rating_bad;
+						cell.Style.ForeColor = effRatingColor;
+					}
 				}
 				else if (col.Equals("WN8"))
 				{
@@ -831,19 +837,22 @@ namespace WotDBUpdater.Forms
 					//	{ "value": 2540, "color": ${"def.colorRating.very_good"} },  // 1965 - 2539 - very good  (better then 99% of players)
 					//	{ "value": 9999, "color": ${"def.colorRating.unique"   } }   // 2540 - *    - unique     (better then 99.9% of players)
 					//]
-					int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
-					Color wn8RatingColor = ColorTheme.Rating_very_bad;
-					if (wn8 > 2539) wn8RatingColor = ColorTheme.Rating_uniqe;
-					else if (wn8 > 1964) wn8RatingColor = ColorTheme.Rating_very_good;
-					else if (wn8 > 1309) wn8RatingColor = ColorTheme.Rating_good;
-					else if (wn8 > 749) wn8RatingColor = ColorTheme.Rating_normal;
-					else if (wn8 > 309) wn8RatingColor = ColorTheme.Rating_bad;
-					cell.Style.ForeColor = wn8RatingColor;
+					if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
+					{
+						int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
+						Color wn8RatingColor = ColorTheme.Rating_very_bad;
+						if (wn8 > 2539) wn8RatingColor = ColorTheme.Rating_uniqe;
+						else if (wn8 > 1964) wn8RatingColor = ColorTheme.Rating_very_good;
+						else if (wn8 > 1309) wn8RatingColor = ColorTheme.Rating_good;
+						else if (wn8 > 749) wn8RatingColor = ColorTheme.Rating_normal;
+						else if (wn8 > 309) wn8RatingColor = ColorTheme.Rating_bad;
+						cell.Style.ForeColor = wn8RatingColor;
+					}
 				}
 
 				else if (toolItemViewBattles.Checked)
 				{
-					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) == 1);
+					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);
 					if (col.Equals("Tank"))
 					{
 						string battleTime = dataGridMain["battleTimeToolTip", e.RowIndex].Value.ToString();
