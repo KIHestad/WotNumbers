@@ -345,9 +345,7 @@ namespace WotDBUpdater.Forms
 
 		#endregion
 
-		#region Data Grid
-
-		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
+		#region Main Navigation
 
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
@@ -441,6 +439,14 @@ namespace WotDBUpdater.Forms
 			}
 		}
 
+
+		#endregion
+
+		#region Data Grid
+
+		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
+
+		
 		private void GridShowOverall()
 		{
 			try
@@ -501,7 +507,7 @@ namespace WotDBUpdater.Forms
 			{
 				Select = "'No columns defined in Column Selection List' As 'Error', ";
 				colListClass colListItem = new colListClass();
-				colListItem.colName = "Column name";
+				colListItem.colName = "Error";
 				colListItem.colWidth = 300;
 				colListItem.colType = "VarChar";
 				selectColList.Add(colListItem);
@@ -1176,6 +1182,7 @@ namespace WotDBUpdater.Forms
 				}
 				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
 				checkedMenuItem.Checked = true;
+				toolItemColumnSelect.Text = checkedMenuItem.Text;
 				columnListSelectedId = GetSelectedColumnListId(checkedMenuItem.Text);
 			}
 		}
@@ -1190,6 +1197,7 @@ namespace WotDBUpdater.Forms
 			}
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			selectedMenu.Checked = true;
+			toolItemColumnSelect.Text = selectedMenu.Text;
 			// Get and remember selected column setup list
 			columnListSelectedId = GetSelectedColumnListId(selectedMenu.Text);
 			int colSelected = Convert.ToInt32(selectedMenu.Name.Substring(selectedMenu.Name.Length - 2, 2));

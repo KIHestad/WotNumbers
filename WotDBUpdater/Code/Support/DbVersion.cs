@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 33; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 36; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -648,6 +648,23 @@ namespace WotDBUpdater.Code
 							"UPDATE columnSelection SET name = 'Dmg Spot' WHERE id = 129; " +
 							"UPDATE columnSelection SET name = 'Dmg Track' WHERE id = 130; " +
 							"UPDATE columnSelection SET colWidth = 54 WHERE id = 20; " ;
+					sqlite = mssql;
+					break;
+				case 34:
+					mssql = "update columnList set name='Default' where id IN (1,4); " +
+							"update columnList set name='Grinding' where id = (2); " +
+							"delete from columnList where id IN (3,5,6); ";
+					sqlite = mssql;
+					break;
+				case 35:
+					mssql = "UPDATE columnSelection SET colName='playerTank.hasClan' where id = 56; ";
+					sqlite = mssql;
+					break;
+				case 36:
+					mssql = "UPDATE columnSelection SET colWidth=70, name='XP Tot' WHERE id=137;" +
+							"UPDATE columnSelection SET name='XP Max' WHERE id=156;" +
+							"UPDATE columnSelection SET name='Dmg Max' WHERE id=154;" +
+							"UPDATE columnSelection SET name='Frags Max' WHERE id=155;" ;
 					sqlite = mssql;
 					break;
 			}
