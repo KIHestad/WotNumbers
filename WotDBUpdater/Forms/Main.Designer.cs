@@ -198,7 +198,7 @@
 			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatus2);
 			this.MainTheme.Controls.Add(this.lblStatus1);
-			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNESW;
 			this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.MainTheme.FormFooter = true;
@@ -404,7 +404,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(515, 25);
+			this.toolMain.Size = new System.Drawing.Size(649, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -465,7 +465,6 @@
 			// 
 			// toolItemColumnSelect
 			// 
-			this.toolItemColumnSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolItemColumnSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemColumnSelect_01,
             this.toolItemColumnSelect_02,
@@ -487,8 +486,8 @@
 			this.toolItemColumnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemColumnSelect.Name = "toolItemColumnSelect";
 			this.toolItemColumnSelect.ShowDropDownArrow = false;
-			this.toolItemColumnSelect.Size = new System.Drawing.Size(20, 22);
-			this.toolItemColumnSelect.Text = "toolStripDropDownButton1";
+			this.toolItemColumnSelect.Size = new System.Drawing.Size(91, 22);
+			this.toolItemColumnSelect.Text = "Default Cols";
 			// 
 			// toolItemColumnSelect_01
 			// 
@@ -625,7 +624,6 @@
 			// 
 			// toolItemTankFilter
 			// 
-			this.toolItemTankFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolItemTankFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemTankFilter_All,
             this.toolItemTankFilter_Country,
@@ -648,7 +646,7 @@
 			this.toolItemTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemTankFilter.Name = "toolItemTankFilter";
 			this.toolItemTankFilter.ShowDropDownArrow = false;
-			this.toolItemTankFilter.Size = new System.Drawing.Size(59, 22);
+			this.toolItemTankFilter.Size = new System.Drawing.Size(75, 22);
 			this.toolItemTankFilter.Text = "All Tanks";
 			this.toolItemTankFilter.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_MouseDown);
 			// 
@@ -1040,7 +1038,6 @@
 			// 
 			// toolItemBattles
 			// 
-			this.toolItemBattles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolItemBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemBattles1d,
             this.toolItemBattlesYesterday,
@@ -1053,7 +1050,7 @@
 			this.toolItemBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemBattles.Name = "toolItemBattles";
 			this.toolItemBattles.ShowDropDownArrow = false;
-			this.toolItemBattles.Size = new System.Drawing.Size(90, 22);
+			this.toolItemBattles.Size = new System.Drawing.Size(106, 22);
 			this.toolItemBattles.Text = "Today\'s Battles";
 			this.toolItemBattles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemBattleFilter_MouseDown);
 			// 

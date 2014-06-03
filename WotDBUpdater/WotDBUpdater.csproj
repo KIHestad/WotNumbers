@@ -377,6 +377,9 @@
     <Content Include="DevDocs\Img\ToolStripIcons\country_uk.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_usa.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_ussr.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconBattleTime.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconCols.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconTank.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tier.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tier1.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tier2.png" />
