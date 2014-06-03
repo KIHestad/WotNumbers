@@ -667,6 +667,10 @@ namespace WotDBUpdater.Code
 							"UPDATE columnSelection SET name='Frags Max' WHERE id=155;" ;
 					sqlite = mssql;
 					break;
+				case 37:
+					mssql = "ALTER TABLE playerTank ADD grindwn8 int NOT NULL default 0, eff int NOT NULL default 0; ";
+					sqlite = "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype

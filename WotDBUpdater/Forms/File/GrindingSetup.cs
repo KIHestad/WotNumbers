@@ -46,46 +46,104 @@ namespace WotDBUpdater.Forms.File
 
 		private void txtGrindCurrentXP_TextChanged(object sender, EventArgs e)
 		{
-			if (txtGrindCurrentXP.HasFocus)
+			if (txtCurrentXP.HasFocus)
 				CalcGoalXP();
 		}
 
 		private void txtGrindGrindXP_TextChanged(object sender, EventArgs e)
 		{
-			if (txtGrindGrindXP.HasFocus)	
+			if (txtGrindXP.HasFocus)	
 				CalcGoalXP();
 		}
 
 		private void CalcGoalXP()
 		{
 			int curXP = 0;
-			if (Int32.TryParse(txtGrindCurrentXP.Text, out curXP))
+			if (Int32.TryParse(txtCurrentXP.Text, out curXP))
 			{
 				int grindXP = 0;
-				if (Int32.TryParse(txtGrindGrindXP.Text, out grindXP))
+				if (Int32.TryParse(txtGrindXP.Text, out grindXP))
 				{
-					txtGrindGoalXP.Text = (curXP + grindXP).ToString();
+					txtGoalXP.Text = (curXP + grindXP).ToString();
 				}
 			}
+			CalcProgress();
 		}
 
 		private void txtGrindGoalXP_TextChanged(object sender, EventArgs e)
 		{
-			if (txtGrindGoalXP.HasFocus)
+			if (txtGoalXP.HasFocus)
 			{
 				int curXP = 0;
-				if (Int32.TryParse(txtGrindCurrentXP.Text, out curXP))
+				if (Int32.TryParse(txtCurrentXP.Text, out curXP))
 				{
 					int goalXP = 0;
-					if (Int32.TryParse(txtGrindGoalXP.Text, out goalXP))
+					if (Int32.TryParse(txtGoalXP.Text, out goalXP))
 					{
-						txtGrindGrindXP.Text = (goalXP - curXP).ToString();
+						txtGrindXP.Text = (goalXP - curXP).ToString();
 					}
 				}
 			}
+			CalcProgress();
 		}
 
-		
+		private void btnGrindReset_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets all values, and ends grinding for this tank", "Reset and end grinding", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				txtGrindComment.Text = "";
+				txtCurrentXP.Text = "0";
+				txtGoalXP.Text = "0";
+				txtGrindXP.Text = "0";
+				txtGrind2XP.Text = "0";
+				txtProgressXP.Text = "0";
+				txtRestXP.Text = "0";
+			}
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btnProgressReset_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets the progress XP, grinding continues based on grinding values", "Reset Progress", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				txtProgressXP.Text = "0";
+			}
+		}
+
+		private void CalcProgress()
+		{
+			txtGrind2XP.Text = txtGrindXP.Text;
+			int progress = 0;
+			Int32.TryParse(txtProgressXP.Text, out progress);
+			int progresspercent = 0;
+			int grind = 0;
+			Int32.TryParse(txtGrind2XP.Text, out grind);
+			if (grind > 0)
+				progresspercent = progress * 100 / grind; 
+			if (progresspercent > 100) 
+				progresspercent = 100;
+			txtProgressPercent.Text = progresspercent.ToString() + " %";
+			int progressrest = grind - progress;
+			if (progressrest < 0)
+				progressrest = 0;
+			txtRestXP.Text = progressrest.ToString();
+		}
+
+		private void txtProgressXP_TextChanged(object sender, EventArgs e)
+		{
+			CalcProgress();
+		}
 
 		
 
