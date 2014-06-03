@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 32; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 33; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -637,6 +637,17 @@ namespace WotDBUpdater.Code
 					break;
 				case 32:
 					mssql = "UPDATE columnSelection SET colDataType = 'Float' WHERE id IN (18,24,25,26,27,35,59)";
+					sqlite = mssql;
+					break;
+				case 33:
+					mssql = "UPDATE columnSelection SET name = 'Dmg' WHERE id = 19; " +
+							"UPDATE columnSelection SET name = 'Dmg Received' WHERE id = 20; " +
+							"UPDATE columnSelection SET name = 'Dmg Spot' WHERE id = 21; " +
+							"UPDATE columnSelection SET name = 'Dmg Track' WHERE id = 22; " +
+							"UPDATE columnSelection SET name = 'Dmg' WHERE id = 128; " +
+							"UPDATE columnSelection SET name = 'Dmg Spot' WHERE id = 129; " +
+							"UPDATE columnSelection SET name = 'Dmg Track' WHERE id = 130; " +
+							"UPDATE columnSelection SET colWidth = 54 WHERE id = 20; " ;
 					sqlite = mssql;
 					break;
 			}

@@ -210,7 +210,7 @@
 			this.MainTheme.MainArea = mainAreaClass1;
 			this.MainTheme.Name = "MainTheme";
 			this.MainTheme.Resizable = true;
-			this.MainTheme.Size = new System.Drawing.Size(794, 431);
+			this.MainTheme.Size = new System.Drawing.Size(812, 431);
 			this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
 			this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
 			this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -223,7 +223,7 @@
 			this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatusRowCount.Location = new System.Drawing.Point(705, 411);
+			this.lblStatusRowCount.Location = new System.Drawing.Point(723, 411);
 			this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatusRowCount.Name = "lblStatusRowCount";
 			this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -1392,7 +1392,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(794, 431);
+			this.ClientSize = new System.Drawing.Size(812, 431);
 			this.Controls.Add(this.MainTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
