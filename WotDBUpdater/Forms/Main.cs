@@ -233,11 +233,11 @@ namespace WotDBUpdater.Forms
 			// Check / show logged in player
 			if (Config.Settings.playerName == "")
 			{
-				MainTheme.Text = "Argus - World of Tanks Statistics - NO PLAYER SELECTED";
+				MainTheme.Text = "WoT Numbers - NO PLAYER SELECTED";
 			}
 			else
 			{
-				MainTheme.Text = "Argus - World of Tanks Statistics - " + Config.Settings.playerName;
+				MainTheme.Text = "WoT Numbers - " + Config.Settings.playerName;
 			}
 			Refresh();
 		}
@@ -459,7 +459,7 @@ namespace WotDBUpdater.Forms
 					"UNION " +
 					"SELECT 'Total battles' as Data, cast(SUM(battles) as varchar) from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.Id where playerid=@playerid " +
 					"UNION " +
-					"SELECT 'Comment' as Data ,'Welcome to the Argus Project - Development of WoT Numbers' ";
+					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
 				dataGridMain.DataSource = DB.FetchData(sql);
 				// Text cols
@@ -945,13 +945,16 @@ namespace WotDBUpdater.Forms
 		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
 		{
 			int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tankId"].Value);
-			Code.MsgBox.Show("Tank id: " + tankId.ToString(), "Grinding setup test");
+			Form frm = new Forms.File.GrindingSetup(tankId);
+			frm.ShowDialog();
+			// Code.MsgBox.Show("Tank id: " + tankId.ToString(), "Grinding setup test");
 		}
 
 		private void dataGridMainPopup_Other_Click(object sender, EventArgs e)
 		{
 			Code.MsgBox.Show("No function implemented", "Test menu");
 		}
+
 		#endregion
 
 		#region Data Grid Scroll Handling
@@ -1648,12 +1651,13 @@ namespace WotDBUpdater.Forms
 			//frm.ShowDialog();
 			string dbVersionComment = " (correct version)";
 			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
-				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")"; 
-			string msg = "Argus - World of Tanks Statistics" + Environment.NewLine + Environment.NewLine +
+				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
+			string msg = "WoT Numbers" + Environment.NewLine + Environment.NewLine +
 						 "Application version: " + AssemblyVersion + Environment.NewLine +
 						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine + Environment.NewLine +
+						 "Track your World of Tanks gaming performance and progress." + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
-			Code.MsgBox.Show(msg, "About Argus");
+			Code.MsgBox.Show(msg, "About WoT Numbers");
 		}
 
 		#endregion

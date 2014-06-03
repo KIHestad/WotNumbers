@@ -1010,6 +1010,20 @@ class BadTextBox : BadThemeControl
 		set { _PasswordChar = value; }
 	}
 
+	private HorizontalAlignment _TextAlign;
+	public HorizontalAlignment TextAlign
+	{
+		get { return _TextAlign; }
+		set { _TextAlign = value; }
+	}
+
+	private bool _HasFocus;
+	public bool HasFocus
+	{
+		get { return _HasFocus; }
+		set { _HasFocus = value; }
+	}
+
 	TextBox textBox = new TextBox();
 	public BadTextBox()
 	{
@@ -1035,6 +1049,7 @@ class BadTextBox : BadThemeControl
 		Rectangle GroupBoxInner = new Rectangle(2, 2, ClientRectangle.Width - 4, ClientRectangle.Height - 4);
 		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
 		textBox.PasswordChar = PasswordChar;
+		textBox.TextAlign = TextAlign;
 		textBox.Text = Text;
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
@@ -1053,8 +1068,20 @@ class BadTextBox : BadThemeControl
 	protected override void OnTextChanged(EventArgs e)
 	{
 		textBox.Text = Text;
+		base.OnTextChanged(e);
 	}
 
+	protected override void OnEnter(EventArgs e)
+	{
+		HasFocus = true;
+		base.OnEnter(e);
+	}
+
+	protected override void OnLeave(EventArgs e)
+	{
+		HasFocus = false;
+		base.OnLeave(e);
+	}
 }
 
 class BadPopupBox : BadThemeControl
