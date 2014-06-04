@@ -31,6 +31,8 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GrindingSetup));
 			this.GrindingSetupTheme = new BadForm();
+			this.txtBattlesPerDay = new BadTextBox();
+			this.badLabel14 = new BadLabel();
 			this.btnProgressReset = new BadButton();
 			this.txtProgressPercent = new BadTextBox();
 			this.txtRestXP = new BadTextBox();
@@ -68,6 +70,8 @@
 			// 
 			// GrindingSetupTheme
 			// 
+			this.GrindingSetupTheme.Controls.Add(this.txtBattlesPerDay);
+			this.GrindingSetupTheme.Controls.Add(this.badLabel14);
 			this.GrindingSetupTheme.Controls.Add(this.btnProgressReset);
 			this.GrindingSetupTheme.Controls.Add(this.txtProgressPercent);
 			this.GrindingSetupTheme.Controls.Add(this.txtRestXP);
@@ -100,7 +104,7 @@
 			this.GrindingSetupTheme.Controls.Add(this.badGroupBox1);
 			this.GrindingSetupTheme.Controls.Add(this.btnCancel);
 			this.GrindingSetupTheme.Controls.Add(this.btnSave);
-			this.GrindingSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.GrindingSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.GrindingSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GrindingSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.GrindingSetupTheme.FormFooter = false;
@@ -119,6 +123,29 @@
 			this.GrindingSetupTheme.TabIndex = 0;
 			this.GrindingSetupTheme.Text = "Tank Grinding Setup";
 			this.GrindingSetupTheme.TitleHeight = 26;
+			// 
+			// txtBattlesPerDay
+			// 
+			this.txtBattlesPerDay.HasFocus = false;
+			this.txtBattlesPerDay.Image = null;
+			this.txtBattlesPerDay.Location = new System.Drawing.Point(124, 257);
+			this.txtBattlesPerDay.Name = "txtBattlesPerDay";
+			this.txtBattlesPerDay.PasswordChar = '\0';
+			this.txtBattlesPerDay.Size = new System.Drawing.Size(75, 23);
+			this.txtBattlesPerDay.TabIndex = 32;
+			this.txtBattlesPerDay.Text = "0";
+			this.txtBattlesPerDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// badLabel14
+			// 
+			this.badLabel14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel14.Dimmed = false;
+			this.badLabel14.Image = null;
+			this.badLabel14.Location = new System.Drawing.Point(33, 257);
+			this.badLabel14.Name = "badLabel14";
+			this.badLabel14.Size = new System.Drawing.Size(85, 23);
+			this.badLabel14.TabIndex = 31;
+			this.badLabel14.Text = "Battles per day:";
 			// 
 			// btnProgressReset
 			// 
@@ -253,7 +280,7 @@
 			// btnGrindReset
 			// 
 			this.btnGrindReset.Image = null;
-			this.btnGrindReset.Location = new System.Drawing.Point(297, 269);
+			this.btnGrindReset.Location = new System.Drawing.Point(297, 213);
 			this.btnGrindReset.Name = "btnGrindReset";
 			this.btnGrindReset.Size = new System.Drawing.Size(50, 23);
 			this.btnGrindReset.TabIndex = 19;
@@ -264,7 +291,7 @@
 			// 
 			this.txtGrindXP.HasFocus = false;
 			this.txtGrindXP.Image = null;
-			this.txtGrindXP.Location = new System.Drawing.Point(124, 269);
+			this.txtGrindXP.Location = new System.Drawing.Point(124, 213);
 			this.txtGrindXP.Name = "txtGrindXP";
 			this.txtGrindXP.PasswordChar = '\0';
 			this.txtGrindXP.Size = new System.Drawing.Size(75, 23);
@@ -277,7 +304,7 @@
 			// 
 			this.txtGoalXP.HasFocus = false;
 			this.txtGoalXP.Image = null;
-			this.txtGoalXP.Location = new System.Drawing.Point(216, 269);
+			this.txtGoalXP.Location = new System.Drawing.Point(216, 213);
 			this.txtGoalXP.Name = "txtGoalXP";
 			this.txtGoalXP.PasswordChar = '\0';
 			this.txtGoalXP.Size = new System.Drawing.Size(75, 23);
@@ -290,7 +317,7 @@
 			// 
 			this.txtCurrentXP.HasFocus = false;
 			this.txtCurrentXP.Image = null;
-			this.txtCurrentXP.Location = new System.Drawing.Point(33, 269);
+			this.txtCurrentXP.Location = new System.Drawing.Point(33, 213);
 			this.txtCurrentXP.Name = "txtCurrentXP";
 			this.txtCurrentXP.PasswordChar = '\0';
 			this.txtCurrentXP.Size = new System.Drawing.Size(75, 23);
@@ -304,7 +331,7 @@
 			this.badLabel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel9.Dimmed = false;
 			this.badLabel9.Image = null;
-			this.badLabel9.Location = new System.Drawing.Point(205, 269);
+			this.badLabel9.Location = new System.Drawing.Point(205, 213);
 			this.badLabel9.Name = "badLabel9";
 			this.badLabel9.Size = new System.Drawing.Size(15, 23);
 			this.badLabel9.TabIndex = 18;
@@ -316,7 +343,7 @@
 			this.badLabel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel8.Dimmed = false;
 			this.badLabel8.Image = null;
-			this.badLabel8.Location = new System.Drawing.Point(114, 269);
+			this.badLabel8.Location = new System.Drawing.Point(114, 213);
 			this.badLabel8.Name = "badLabel8";
 			this.badLabel8.Size = new System.Drawing.Size(16, 23);
 			this.badLabel8.TabIndex = 17;
@@ -327,10 +354,10 @@
 			// 
 			this.txtGrindComment.HasFocus = false;
 			this.txtGrindComment.Image = null;
-			this.txtGrindComment.Location = new System.Drawing.Point(33, 218);
+			this.txtGrindComment.Location = new System.Drawing.Point(124, 286);
 			this.txtGrindComment.Name = "txtGrindComment";
 			this.txtGrindComment.PasswordChar = '\0';
-			this.txtGrindComment.Size = new System.Drawing.Size(314, 23);
+			this.txtGrindComment.Size = new System.Drawing.Size(223, 23);
 			this.txtGrindComment.TabIndex = 1;
 			this.txtGrindComment.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
@@ -339,7 +366,7 @@
 			this.badLabel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel7.Dimmed = false;
 			this.badLabel7.Image = null;
-			this.badLabel7.Location = new System.Drawing.Point(124, 247);
+			this.badLabel7.Location = new System.Drawing.Point(124, 193);
 			this.badLabel7.Name = "badLabel7";
 			this.badLabel7.Size = new System.Drawing.Size(75, 23);
 			this.badLabel7.TabIndex = 16;
@@ -351,7 +378,7 @@
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel6.Dimmed = false;
 			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(216, 247);
+			this.badLabel6.Location = new System.Drawing.Point(216, 193);
 			this.badLabel6.Name = "badLabel6";
 			this.badLabel6.Size = new System.Drawing.Size(75, 23);
 			this.badLabel6.TabIndex = 15;
@@ -363,7 +390,7 @@
 			this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel5.Dimmed = false;
 			this.badLabel5.Image = null;
-			this.badLabel5.Location = new System.Drawing.Point(33, 247);
+			this.badLabel5.Location = new System.Drawing.Point(33, 193);
 			this.badLabel5.Name = "badLabel5";
 			this.badLabel5.Size = new System.Drawing.Size(75, 23);
 			this.badLabel5.TabIndex = 14;
@@ -375,7 +402,7 @@
 			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel4.Dimmed = false;
 			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(33, 196);
+			this.badLabel4.Location = new System.Drawing.Point(33, 286);
 			this.badLabel4.Name = "badLabel4";
 			this.badLabel4.Size = new System.Drawing.Size(72, 23);
 			this.badLabel4.TabIndex = 13;
@@ -387,10 +414,10 @@
 			this.txtTotalXP.Enabled = false;
 			this.txtTotalXP.HasFocus = false;
 			this.txtTotalXP.Image = null;
-			this.txtTotalXP.Location = new System.Drawing.Point(193, 119);
+			this.txtTotalXP.Location = new System.Drawing.Point(216, 119);
 			this.txtTotalXP.Name = "txtTotalXP";
 			this.txtTotalXP.PasswordChar = '\0';
-			this.txtTotalXP.Size = new System.Drawing.Size(89, 23);
+			this.txtTotalXP.Size = new System.Drawing.Size(75, 23);
 			this.txtTotalXP.TabIndex = 11;
 			this.txtTotalXP.TabStop = false;
 			this.txtTotalXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -400,10 +427,10 @@
 			this.txtMaxXp.Enabled = false;
 			this.txtMaxXp.HasFocus = false;
 			this.txtMaxXp.Image = null;
-			this.txtMaxXp.Location = new System.Drawing.Point(193, 90);
+			this.txtMaxXp.Location = new System.Drawing.Point(216, 90);
 			this.txtMaxXp.Name = "txtMaxXp";
 			this.txtMaxXp.PasswordChar = '\0';
-			this.txtMaxXp.Size = new System.Drawing.Size(89, 23);
+			this.txtMaxXp.Size = new System.Drawing.Size(75, 23);
 			this.txtMaxXp.TabIndex = 10;
 			this.txtMaxXp.TabStop = false;
 			this.txtMaxXp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -413,10 +440,10 @@
 			this.txtAvgXP.Enabled = false;
 			this.txtAvgXP.HasFocus = false;
 			this.txtAvgXP.Image = null;
-			this.txtAvgXP.Location = new System.Drawing.Point(193, 61);
+			this.txtAvgXP.Location = new System.Drawing.Point(216, 61);
 			this.txtAvgXP.Name = "txtAvgXP";
 			this.txtAvgXP.PasswordChar = '\0';
-			this.txtAvgXP.Size = new System.Drawing.Size(89, 23);
+			this.txtAvgXP.Size = new System.Drawing.Size(75, 23);
 			this.txtAvgXP.TabIndex = 9;
 			this.txtAvgXP.TabStop = false;
 			this.txtAvgXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -552,5 +579,7 @@
 		private BadLabel badLabel10;
 		private BadGroupBox badGroupBox4;
 		private BadGroupBox badGroupBox3;
+		private BadTextBox txtBattlesPerDay;
+		private BadLabel badLabel14;
 	}
 }

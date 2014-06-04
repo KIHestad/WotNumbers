@@ -99,6 +99,7 @@ namespace WotDBUpdater.Forms.File
 				txtGrind2XP.Text = "0";
 				txtProgressXP.Text = "0";
 				txtRestXP.Text = "0";
+				txtBattlesPerDay.Text = "0";
 			}
 		}
 

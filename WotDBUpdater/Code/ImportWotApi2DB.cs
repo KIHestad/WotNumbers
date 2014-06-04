@@ -40,7 +40,7 @@ namespace WotDBUpdater.Code
         private static string logItemExists;
         private static int logItemExistsCount;
         private static string logTanksWithoutDetails; // some special tanks have lacking vehicle details in API
-        private static int logTanksWithoutDetailsCount;
+        //private static int logTanksWithoutDetailsCount;
 
         #endregion
 
@@ -1132,7 +1132,7 @@ namespace WotDBUpdater.Code
 
             string sql;
             string url = "http://worldoftanks.eu/static/2.11.0/encyclopedia/tankopedia/achievement/medalcarius1.png";
-            byte[] content;
+            //byte[] content;
 
             //// Fetch image from url
             //WebRequest req = WebRequest.Create(url);

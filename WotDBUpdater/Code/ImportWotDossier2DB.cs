@@ -587,7 +587,8 @@ namespace WotDBUpdater.Code
 
                     catch (Exception ex)
                     {
-                        //Code.MsgBox.Show("Tank not found! cmCountryId: " + cmCountryId + ", cmTankId: " + cmTankId);
+						string s = ex.Message;
+						//Code.MsgBox.Show("Tank not found! cmCountryId: " + cmCountryId + ", cmTankId: " + cmTankId);
                         //Code.MsgBox.Show(ex.Message);
                         //return;
                     }
