@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 46; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 47; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -745,6 +745,58 @@ namespace WotDBUpdater.Code
 					break;
 				case 46:
 					mssql = "ALTER TABLE playerTank ADD lastVictoryTime datetime NULL; ";
+					sqlite = mssql;
+					break;
+				case 47:
+					mssql = "UPDATE columnSelection SET name='Premium' WHERE id=2 ; " +
+							"UPDATE columnSelection SET name='Tank Type' WHERE id=3 ; " +
+							"UPDATE columnSelection SET name='Type' WHERE id=4 ; " +
+							"UPDATE columnSelection SET name='Tank Nation' WHERE id=5 ; " +
+							"UPDATE columnSelection SET name='Nation' WHERE id=6 ; " +
+							"UPDATE columnSelection SET name='Battles' WHERE id=7 ; " +
+							"UPDATE columnSelection SET name='Battle DateTime' WHERE id=8 ; " +
+							"UPDATE columnSelection SET name='Life Time' WHERE id=9 ; " +
+							"UPDATE columnSelection SET name='Result' WHERE id=10 ; " +
+							"UPDATE columnSelection SET name='Survived' WHERE id=11 ; " +
+							"UPDATE columnSelection SET name='Victory' WHERE id=13 ; " +
+							"UPDATE columnSelection SET name='Draw' WHERE id=14 ; " +
+							"UPDATE columnSelection SET name='Defeat' WHERE id=15 ; " +
+							"UPDATE columnSelection SET name='Survived Count' WHERE id=16 ; " +
+							"UPDATE columnSelection SET name='Killed Count' WHERE id=17 ; " +
+							"UPDATE columnSelection SET name='Frags' WHERE id=18 ; " +
+							"UPDATE columnSelection SET name='Dmg' WHERE id=19 ; " +
+							"UPDATE columnSelection SET name='Dmg Received' WHERE id=20 ; " +
+							"UPDATE columnSelection SET name='Dmg Spot' WHERE id=21 ; " +
+							"UPDATE columnSelection SET name='Dmg Track' WHERE id=22 ; " +
+							"UPDATE columnSelection SET name='Cap' WHERE id=24 ; " +
+							"UPDATE columnSelection SET name='Def' WHERE id=25 ; " +
+							"UPDATE columnSelection SET name='Shots' WHERE id=26 ; " +
+							"UPDATE columnSelection SET name='Hits' WHERE id=27 ; " +
+							"UPDATE columnSelection SET name='Hit Rate' WHERE id=28 ; " +
+							"UPDATE columnSelection SET name='Shots Reveived' WHERE id=29 ; " +
+							"UPDATE columnSelection SET name='Pierced' WHERE id=30 ; " +
+							"UPDATE columnSelection SET name='Pierced Received' WHERE id=31 ; " +
+							"UPDATE columnSelection SET name='Pierced Shots%' WHERE id=32 ; " +
+							"UPDATE columnSelection SET name='Pierced Hts%' WHERE id=33 ; " +
+							"UPDATE columnSelection SET name='Spot' WHERE id=35 ; " +
+							"UPDATE columnSelection SET name='Mileage' WHERE id=36 ; " +
+							"UPDATE columnSelection SET name='Trees Cut' WHERE id=37 ; " +
+							"UPDATE columnSelection SET name='XP' WHERE id=38 ; " +
+							"UPDATE columnSelection SET name='ID' WHERE id=39 ; " +
+							"UPDATE columnSelection SET name='EFF' WHERE id=40 ; " +
+							"UPDATE columnSelection SET name='Clan' WHERE id=43 ; " +
+							"UPDATE columnSelection SET name='Company' WHERE id=45 ; " +
+							"UPDATE columnSelection SET name='WN8' WHERE id=47 ; " +
+							"UPDATE columnSelection SET name='Tank' WHERE id=58 ; " +
+							"UPDATE columnSelection SET name='Tier' WHERE id=59 ; " +
+							"UPDATE columnSelection SET name='HE Received' WHERE id=157 ; " +
+							"UPDATE columnSelection SET name='No Dmg Shots Received' WHERE id=158 ; " +
+							"UPDATE columnSelection SET name='HE Hits' WHERE id=159 ; " +
+							"UPDATE columnSelection SET name='HE Shots %' WHERE id=160 ; " +
+							"UPDATE columnSelection SET name='HE Hts %' WHERE id=161 ; " +
+							"UPDATE columnSelection SET name='Battle Mode' WHERE id=162 ; " +
+							"UPDATE columnSelection SET name='Battle Date' WHERE id=163 ; " +
+							"UPDATE columnSelection SET name='Battle Time' WHERE id=164 ; ";
 					sqlite = mssql;
 					break;
 			}
