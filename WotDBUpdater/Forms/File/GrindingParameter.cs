@@ -35,13 +35,21 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
+			bool ok = true;
 			GrindingData.Settings.FirstVictoryFactor = Convert.ToInt32(ddFirstBattle.Text.Substring(0,1));
 			if (ddEveryBattle.Text == "None")
 				GrindingData.Settings.EveryVictoryFactor = 0;
 			else
 				GrindingData.Settings.EveryVictoryFactor = Convert.ToInt32(ddEveryBattle.Text.Substring(0, 1));
-			GrindingData.Settings.AutoStart = chkAutoLoad.Checked;
-			this.Close();
+			if (Code.Config.Settings.grindParametersAutoStart != chkAutoLoad.Checked)
+			{
+				Code.Config.Settings.grindParametersAutoStart = chkAutoLoad.Checked;
+				string msg = "";
+				ok = Code.Config.SaveConfig(out msg);
+				if (!ok)
+					Code.MsgBox.Show(msg, "Error saving config settings");
+			}
+			if (ok) this.Close();
 		}
 
 		private void GrindingParameter_Load(object sender, EventArgs e)
@@ -51,7 +59,7 @@ namespace WotDBUpdater.Forms.File
 				ddEveryBattle.Text = "None";
 			else
 				ddEveryBattle.Text = GrindingData.Settings.EveryVictoryFactor.ToString() + "X";
-			chkAutoLoad.Checked = GrindingData.Settings.AutoStart;
+			chkAutoLoad.Checked = Code.Config.Settings.grindParametersAutoStart;
 		}
 
 		private void cmdCancel_Click(object sender, EventArgs e)

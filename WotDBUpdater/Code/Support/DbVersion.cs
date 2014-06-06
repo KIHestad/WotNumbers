@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 45; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 46; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -741,6 +741,10 @@ namespace WotDBUpdater.Code
 				case 45:
 					mssql = "UPDATE columnSelection SET colWidth = 47 WHERE colWidth = 50 and colType=2; " +
 							"UPDATE columnSelection SET colWidth = 47 WHERE id IN (38,40,47);";
+					sqlite = mssql;
+					break;
+				case 46:
+					mssql = "ALTER TABLE playerTank ADD lastVictoryTime datetime NULL; ";
 					sqlite = mssql;
 					break;
 			}

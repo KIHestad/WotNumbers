@@ -12,6 +12,7 @@ namespace WotDBUpdater.Code
 	{
 		private static string path = Path.GetDirectoryName(Application.ExecutablePath); // Log path
 		private static string filename = "/log.txt"; // Log filename
+		private static string battleResultDoneFile = "/LastBattle.txt";
 
 		public static void CheckLogFileSize()
 		{
@@ -75,8 +76,7 @@ namespace WotDBUpdater.Code
 			return s;
 		}
 
-		private static string battleResultDoneFile = "/Dossier2json/LastBattle.txt";
-
+		
 		public static void BattleResultDoneLog()
 		{
 			using (StreamWriter sw = File.CreateText(path + battleResultDoneFile))
@@ -89,10 +89,12 @@ namespace WotDBUpdater.Code
 		public static string BattleResultDoneLogFileName()
 		{
 			if (!File.Exists(path + battleResultDoneFile))
-			using (StreamWriter sw = File.CreateText(path + "/Dossier2json/LastBattle.txt"))
 			{
-				sw.WriteLine("no battles logged");
-				sw.Close();
+				using (StreamWriter sw = File.CreateText(path + battleResultDoneFile))
+				{
+					sw.WriteLine("no battles logged");
+					sw.Close();
+				}
 			}
 			return path + battleResultDoneFile;
 		}

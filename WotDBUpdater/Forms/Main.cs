@@ -147,9 +147,15 @@ namespace WotDBUpdater.Forms
 			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
 			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-			fileSystemWatcherNewBattle.EnableRaisingEvents = false;
+			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			// Ready 
 			MainTheme.Cursor = Cursors.Default;
+			// Show Grinding Param Settings
+			if (Config.Settings.grindParametersAutoStart)
+			{
+				Form frm = new Forms.File.GrindingParameter();
+				frm.ShowDialog();
+			}
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -416,7 +422,8 @@ namespace WotDBUpdater.Forms
 			if (toolItemViewOverall.Checked)
 			{
 				lblOverView.Text = "Welcome " + Config.Settings.playerName;
-				GridShowOverall("Selected overall view");
+				if (Status2Message == "") Status2Message = "Selected overall view";
+				GridShowOverall(Status2Message);
 			}
 			else if (toolItemViewTankInfo.Checked)
 			{

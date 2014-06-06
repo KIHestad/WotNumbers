@@ -32,6 +32,7 @@ namespace WotDBUpdater.Code
 		public string playerName { get; set; }				// Player Name selected
 		public string dossierFilePath { get; set; }			// Dossier file path
 		public int    dossierFileWathcherRun { get; set; }	// Dossier file listener activated
+		public bool   grindParametersAutoStart { get; set; }// Autoshow Grinding params on app startup
 	}
 
 	class Config
@@ -58,6 +59,7 @@ namespace WotDBUpdater.Code
 			Config.Settings.playerName = "";
 			Config.Settings.dossierFilePath = "";
 			Config.Settings.dossierFileWathcherRun = 0;
+			Config.Settings.grindParametersAutoStart = false;
 		}
 
 		

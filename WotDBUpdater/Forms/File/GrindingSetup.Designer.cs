@@ -31,10 +31,16 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GrindingSetup));
 			this.GrindingSetupTheme = new BadForm();
+			this.txtCalcAvgXP = new BadTextBox();
+			this.badLabel20 = new BadLabel();
+			this.txtLastVictoryTime = new BadTextBox();
+			this.badLabel19 = new BadLabel();
 			this.lblGrindingParameters = new BadLabel();
 			this.btnGrindingParameters = new BadButton();
-			this.badTextBox2 = new BadTextBox();
-			this.badTextBox3 = new BadTextBox();
+			this.txtWinRate = new BadTextBox();
+			this.badLabel16 = new BadLabel();
+			this.txtWins = new BadTextBox();
+			this.txtBattles = new BadTextBox();
 			this.badLabel17 = new BadLabel();
 			this.badLabel18 = new BadLabel();
 			this.btnAddDay = new BadButton();
@@ -74,19 +80,21 @@
 			this.badGroupBox1 = new BadGroupBox();
 			this.btnCancel = new BadButton();
 			this.btnSave = new BadButton();
-			this.badLabel16 = new BadLabel();
-			this.badTextBox1 = new BadTextBox();
 			this.GrindingSetupTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// GrindingSetupTheme
 			// 
+			this.GrindingSetupTheme.Controls.Add(this.txtCalcAvgXP);
+			this.GrindingSetupTheme.Controls.Add(this.badLabel20);
+			this.GrindingSetupTheme.Controls.Add(this.txtLastVictoryTime);
+			this.GrindingSetupTheme.Controls.Add(this.badLabel19);
 			this.GrindingSetupTheme.Controls.Add(this.lblGrindingParameters);
 			this.GrindingSetupTheme.Controls.Add(this.btnGrindingParameters);
-			this.GrindingSetupTheme.Controls.Add(this.badTextBox1);
+			this.GrindingSetupTheme.Controls.Add(this.txtWinRate);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel16);
-			this.GrindingSetupTheme.Controls.Add(this.badTextBox2);
-			this.GrindingSetupTheme.Controls.Add(this.badTextBox3);
+			this.GrindingSetupTheme.Controls.Add(this.txtWins);
+			this.GrindingSetupTheme.Controls.Add(this.txtBattles);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel17);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel18);
 			this.GrindingSetupTheme.Controls.Add(this.btnAddDay);
@@ -126,7 +134,7 @@
 			this.GrindingSetupTheme.Controls.Add(this.badGroupBox1);
 			this.GrindingSetupTheme.Controls.Add(this.btnCancel);
 			this.GrindingSetupTheme.Controls.Add(this.btnSave);
-			this.GrindingSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
+			this.GrindingSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.GrindingSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GrindingSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.GrindingSetupTheme.FormFooter = false;
@@ -145,6 +153,56 @@
 			this.GrindingSetupTheme.TabIndex = 0;
 			this.GrindingSetupTheme.Text = "Tank Grinding Setup";
 			this.GrindingSetupTheme.TitleHeight = 26;
+			// 
+			// txtCalcAvgXP
+			// 
+			this.txtCalcAvgXP.Enabled = false;
+			this.txtCalcAvgXP.HasFocus = false;
+			this.txtCalcAvgXP.Image = null;
+			this.txtCalcAvgXP.Location = new System.Drawing.Point(464, 61);
+			this.txtCalcAvgXP.Name = "txtCalcAvgXP";
+			this.txtCalcAvgXP.PasswordChar = '\0';
+			this.txtCalcAvgXP.Size = new System.Drawing.Size(85, 23);
+			this.txtCalcAvgXP.TabIndex = 51;
+			this.txtCalcAvgXP.TabStop = false;
+			this.txtCalcAvgXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+			// 
+			// badLabel20
+			// 
+			this.badLabel20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel20.Dimmed = false;
+			this.badLabel20.Image = null;
+			this.badLabel20.Location = new System.Drawing.Point(361, 61);
+			this.badLabel20.Name = "badLabel20";
+			this.badLabel20.Size = new System.Drawing.Size(106, 23);
+			this.badLabel20.TabIndex = 50;
+			this.badLabel20.TabStop = false;
+			this.badLabel20.Text = "Calc XP per battle:";
+			// 
+			// txtLastVictoryTime
+			// 
+			this.txtLastVictoryTime.Enabled = false;
+			this.txtLastVictoryTime.HasFocus = false;
+			this.txtLastVictoryTime.Image = null;
+			this.txtLastVictoryTime.Location = new System.Drawing.Point(464, 119);
+			this.txtLastVictoryTime.Name = "txtLastVictoryTime";
+			this.txtLastVictoryTime.PasswordChar = '\0';
+			this.txtLastVictoryTime.Size = new System.Drawing.Size(85, 23);
+			this.txtLastVictoryTime.TabIndex = 49;
+			this.txtLastVictoryTime.TabStop = false;
+			this.txtLastVictoryTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+			// 
+			// badLabel19
+			// 
+			this.badLabel19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel19.Dimmed = false;
+			this.badLabel19.Image = null;
+			this.badLabel19.Location = new System.Drawing.Point(361, 119);
+			this.badLabel19.Name = "badLabel19";
+			this.badLabel19.Size = new System.Drawing.Size(97, 23);
+			this.badLabel19.TabIndex = 48;
+			this.badLabel19.TabStop = false;
+			this.badLabel19.Text = "First victory time:";
 			// 
 			// lblGrindingParameters
 			// 
@@ -167,31 +225,56 @@
 			this.btnGrindingParameters.Text = "Grinding Parameters";
 			this.btnGrindingParameters.Click += new System.EventHandler(this.btnGrindingParameters_Click);
 			// 
-			// badTextBox2
+			// txtWinRate
 			// 
-			this.badTextBox2.Enabled = false;
-			this.badTextBox2.HasFocus = false;
-			this.badTextBox2.Image = null;
-			this.badTextBox2.Location = new System.Drawing.Point(301, 90);
-			this.badTextBox2.Name = "badTextBox2";
-			this.badTextBox2.PasswordChar = '\0';
-			this.badTextBox2.Size = new System.Drawing.Size(63, 23);
-			this.badTextBox2.TabIndex = 43;
-			this.badTextBox2.TabStop = false;
-			this.badTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtWinRate.Enabled = false;
+			this.txtWinRate.HasFocus = false;
+			this.txtWinRate.Image = null;
+			this.txtWinRate.Location = new System.Drawing.Point(301, 119);
+			this.txtWinRate.Name = "txtWinRate";
+			this.txtWinRate.PasswordChar = '\0';
+			this.txtWinRate.Size = new System.Drawing.Size(46, 23);
+			this.txtWinRate.TabIndex = 45;
+			this.txtWinRate.TabStop = false;
+			this.txtWinRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
-			// badTextBox3
+			// badLabel16
 			// 
-			this.badTextBox3.Enabled = false;
-			this.badTextBox3.HasFocus = false;
-			this.badTextBox3.Image = null;
-			this.badTextBox3.Location = new System.Drawing.Point(301, 61);
-			this.badTextBox3.Name = "badTextBox3";
-			this.badTextBox3.PasswordChar = '\0';
-			this.badTextBox3.Size = new System.Drawing.Size(63, 23);
-			this.badTextBox3.TabIndex = 42;
-			this.badTextBox3.TabStop = false;
-			this.badTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.badLabel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel16.Dimmed = false;
+			this.badLabel16.Image = null;
+			this.badLabel16.Location = new System.Drawing.Point(227, 119);
+			this.badLabel16.Name = "badLabel16";
+			this.badLabel16.Size = new System.Drawing.Size(64, 23);
+			this.badLabel16.TabIndex = 44;
+			this.badLabel16.TabStop = false;
+			this.badLabel16.Text = "Win rate %:";
+			// 
+			// txtWins
+			// 
+			this.txtWins.Enabled = false;
+			this.txtWins.HasFocus = false;
+			this.txtWins.Image = null;
+			this.txtWins.Location = new System.Drawing.Point(301, 90);
+			this.txtWins.Name = "txtWins";
+			this.txtWins.PasswordChar = '\0';
+			this.txtWins.Size = new System.Drawing.Size(46, 23);
+			this.txtWins.TabIndex = 43;
+			this.txtWins.TabStop = false;
+			this.txtWins.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// txtBattles
+			// 
+			this.txtBattles.Enabled = false;
+			this.txtBattles.HasFocus = false;
+			this.txtBattles.Image = null;
+			this.txtBattles.Location = new System.Drawing.Point(301, 61);
+			this.txtBattles.Name = "txtBattles";
+			this.txtBattles.PasswordChar = '\0';
+			this.txtBattles.Size = new System.Drawing.Size(46, 23);
+			this.txtBattles.TabIndex = 42;
+			this.txtBattles.TabStop = false;
+			this.txtBattles.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// badLabel17
 			// 
@@ -655,31 +738,6 @@
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
-			// badLabel16
-			// 
-			this.badLabel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel16.Dimmed = false;
-			this.badLabel16.Image = null;
-			this.badLabel16.Location = new System.Drawing.Point(227, 119);
-			this.badLabel16.Name = "badLabel16";
-			this.badLabel16.Size = new System.Drawing.Size(64, 23);
-			this.badLabel16.TabIndex = 44;
-			this.badLabel16.TabStop = false;
-			this.badLabel16.Text = "Win rate %:";
-			// 
-			// badTextBox1
-			// 
-			this.badTextBox1.Enabled = false;
-			this.badTextBox1.HasFocus = false;
-			this.badTextBox1.Image = null;
-			this.badTextBox1.Location = new System.Drawing.Point(301, 119);
-			this.badTextBox1.Name = "badTextBox1";
-			this.badTextBox1.PasswordChar = '\0';
-			this.badTextBox1.Size = new System.Drawing.Size(63, 23);
-			this.badTextBox1.TabIndex = 45;
-			this.badTextBox1.TabStop = false;
-			this.badTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
 			// GrindingSetup
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -739,13 +797,17 @@
 		private BadLabel badLabel11;
 		private BadButton btnAddDay;
 		private BadButton btnSubtrDay;
-		private BadTextBox badTextBox2;
-		private BadTextBox badTextBox3;
+		private BadTextBox txtWins;
+		private BadTextBox txtBattles;
 		private BadLabel badLabel17;
 		private BadLabel badLabel18;
 		private BadButton btnGrindingParameters;
 		private BadLabel lblGrindingParameters;
-		private BadTextBox badTextBox1;
+		private BadTextBox txtWinRate;
 		private BadLabel badLabel16;
+		private BadTextBox txtLastVictoryTime;
+		private BadLabel badLabel19;
+		private BadTextBox txtCalcAvgXP;
+		private BadLabel badLabel20;
 	}
 }

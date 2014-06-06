@@ -40,20 +40,30 @@ namespace WotDBUpdater.Forms.File
 
 		private void GetTankData()
 		{
-			string sql = "SELECT        tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, " +
-						"MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, SUM(playerTankBattle.xp / NULLIF (playerTankBattle.battles, 0) " +
-						"						 * playerTankBattle.battleOfTotal) AS avgXP " +
-						"	FROM            tank INNER JOIN " +
-						"							 playerTank ON tank.id = playerTank.tankId INNER JOIN " +
-						"							 playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-						"	WHERE        (playerTank.id = @playerTankId) " +
-						"	GROUP BY tank.name, gCurrentXP, gGrindXP,gGoalXP,gProgressXP,gBattlesDay,gComment ";
+			txtGrindComment.Focus();
+			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
+						"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
+						"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " + 
+						"        SUM(playerTankBattle.xp / NULLIF(playerTankBattle.battles, 0) * playerTankBattle.battleOfTotal) AS avgXP " +
+						"FROM    tank INNER JOIN " +
+						"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
+						"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+						"WHERE  (playerTank.id = @playerTankId) " +
+						"GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			DataRow tank = DB.FetchData(sql).Rows[0];
+			// Static data
 			GrindingSetupTheme.Text = "Tank Grinding Setup - " + tank["name"].ToString();
 			txtAvgXP.Text = Convert.ToInt32(tank["avgXP"]).ToString();
 			txtMaxXp.Text = tank["maxXP"].ToString();
 			txtTotalXP.Text = tank["totalXP"].ToString();
+			txtBattles.Text = tank["battles"].ToString();
+			txtWins.Text = tank["wins"].ToString();
+			if (tank["lastVictoryTime"] == DBNull.Value)
+				txtLastVictoryTime.Text = "not recorded";
+			else
+				txtLastVictoryTime.Text = Convert.ToDateTime(tank["lastVictoryTime"]).ToString("dd.MM HH:mm");
+			// Add grinding value
 			txtGrindComment.Text = tank["gComment"].ToString();
 			txtCurrentXP.Text = tank["gCurrentXP"].ToString();
 			txtGoalXP.Text = tank["gGoalXP"].ToString();
@@ -61,8 +71,9 @@ namespace WotDBUpdater.Forms.File
 			txtProgressXP.Text = tank["gProgressXP"].ToString();
 			txtRestXP.Text = tank["totalXP"].ToString();
 			txtBattlesPerDay.Text = tank["gBattlesDay"].ToString();
+			double winRate = Convert.ToDouble(txtWins.Text) / Convert.ToDouble(txtBattles.Text) * 100;
+			txtWinRate.Text = Math.Round(winRate, 1).ToString();
 			CalcProgress();
-			txtGrindComment.Focus();
 		}
 
 		private void txtGrindCurrentXP_TextChanged(object sender, EventArgs e)
@@ -147,6 +158,7 @@ namespace WotDBUpdater.Forms.File
 				if (answer == MsgBox.Button.OKButton)
 				{
 					SaveData();
+					this.Close();
 				}
 			}
 		}
@@ -206,8 +218,10 @@ namespace WotDBUpdater.Forms.File
 				{
 					btlPerDay = 1;
 				}
-				txtRestBattles.Text = (progressrest / Convert.ToInt32(txtAvgXP.Text)).ToString();
-				txtRestDays.Text = (progressrest / (Convert.ToInt32(txtAvgXP.Text) * btlPerDay)).ToString();
+				// Calc avg XP per day
+				txtCalcAvgXP.Text = Code.Support.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
+				txtRestBattles.Text = (progressrest / Convert.ToInt32(txtCalcAvgXP.Text)).ToString();
+				txtRestDays.Text = (progressrest / (Convert.ToInt32(txtCalcAvgXP.Text) * btlPerDay)).ToString();
 			}
 			else
 			{
@@ -218,7 +232,10 @@ namespace WotDBUpdater.Forms.File
 				{
 					btlPerDay = 1;
 				}
-				txtRestDays.Text = (Convert.ToInt32(txtRestXP.Text) / (Convert.ToInt32(txtAvgXP.Text) * btlPerDay)).ToString();
+				// Calc avg XP per day
+				txtCalcAvgXP.Text = Code.Support.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
+				txtRestBattles.Text = (Convert.ToInt32(txtRestXP.Text) / Convert.ToInt32(txtCalcAvgXP.Text)).ToString();
+				txtRestDays.Text = (Convert.ToInt32(txtRestXP.Text) / (Convert.ToInt32(txtCalcAvgXP.Text) * btlPerDay)).ToString();
 			}
 			
 			dataChanged = true;
