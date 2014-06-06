@@ -107,6 +107,7 @@
     <Compile Include="Code\ImportWotDossier2DB.cs" />
     <Compile Include="Code\Support\DB.cs" />
     <Compile Include="Code\Support\DropDownGrid.cs" />
+    <Compile Include="Code\Support\GrindingData.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />
@@ -148,6 +149,12 @@
     </Compile>
     <Compile Include="Forms\File\FavTanks.Designer.cs">
       <DependentUpon>FavTanks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\File\GrindingParameter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\File\GrindingParameter.Designer.cs">
+      <DependentUpon>GrindingParameter.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\File\GrindingSetup.cs">
       <SubType>Form</SubType>
@@ -267,6 +274,9 @@
     <EmbeddedResource Include="Forms\File\FavTanks.resx">
       <DependentUpon>FavTanks.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\File\GrindingParameter.resx">
+      <DependentUpon>GrindingParameter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\File\GrindingSetup.resx">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
     </EmbeddedResource>
@@ -370,6 +380,7 @@
     <Content Include="DevDocs\Img\InfoPanel\bg5_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
     <Content Include="DevDocs\Img\logo5.png" />
+    <Content Include="DevDocs\Img\SystemImages\checkboxcheck.png" />
     <Content Include="DevDocs\Img\SystemImages\dropdownarrrow.png" />
     <Content Include="DevDocs\Img\SystemImages\popup.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />

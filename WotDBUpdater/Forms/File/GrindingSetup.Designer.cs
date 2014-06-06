@@ -31,6 +31,12 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GrindingSetup));
 			this.GrindingSetupTheme = new BadForm();
+			this.lblGrindingParameters = new BadLabel();
+			this.btnGrindingParameters = new BadButton();
+			this.badTextBox2 = new BadTextBox();
+			this.badTextBox3 = new BadTextBox();
+			this.badLabel17 = new BadLabel();
+			this.badLabel18 = new BadLabel();
 			this.btnAddDay = new BadButton();
 			this.btnSubtrDay = new BadButton();
 			this.txtRestDays = new BadTextBox();
@@ -68,17 +74,15 @@
 			this.badGroupBox1 = new BadGroupBox();
 			this.btnCancel = new BadButton();
 			this.btnSave = new BadButton();
-			this.badTextBox2 = new BadTextBox();
-			this.badTextBox3 = new BadTextBox();
-			this.badLabel17 = new BadLabel();
-			this.badLabel18 = new BadLabel();
-			this.badTextBox1 = new BadTextBox();
 			this.badLabel16 = new BadLabel();
+			this.badTextBox1 = new BadTextBox();
 			this.GrindingSetupTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// GrindingSetupTheme
 			// 
+			this.GrindingSetupTheme.Controls.Add(this.lblGrindingParameters);
+			this.GrindingSetupTheme.Controls.Add(this.btnGrindingParameters);
 			this.GrindingSetupTheme.Controls.Add(this.badTextBox1);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel16);
 			this.GrindingSetupTheme.Controls.Add(this.badTextBox2);
@@ -122,7 +126,7 @@
 			this.GrindingSetupTheme.Controls.Add(this.badGroupBox1);
 			this.GrindingSetupTheme.Controls.Add(this.btnCancel);
 			this.GrindingSetupTheme.Controls.Add(this.btnSave);
-			this.GrindingSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
+			this.GrindingSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.GrindingSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GrindingSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.GrindingSetupTheme.FormFooter = false;
@@ -141,6 +145,77 @@
 			this.GrindingSetupTheme.TabIndex = 0;
 			this.GrindingSetupTheme.Text = "Tank Grinding Setup";
 			this.GrindingSetupTheme.TitleHeight = 26;
+			// 
+			// lblGrindingParameters
+			// 
+			this.lblGrindingParameters.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.lblGrindingParameters.Dimmed = false;
+			this.lblGrindingParameters.Image = null;
+			this.lblGrindingParameters.Location = new System.Drawing.Point(19, 349);
+			this.lblGrindingParameters.Name = "lblGrindingParameters";
+			this.lblGrindingParameters.Size = new System.Drawing.Size(234, 22);
+			this.lblGrindingParameters.TabIndex = 47;
+			this.lblGrindingParameters.Text = "Grinding params...";
+			// 
+			// btnGrindingParameters
+			// 
+			this.btnGrindingParameters.Image = null;
+			this.btnGrindingParameters.Location = new System.Drawing.Point(274, 349);
+			this.btnGrindingParameters.Name = "btnGrindingParameters";
+			this.btnGrindingParameters.Size = new System.Drawing.Size(130, 23);
+			this.btnGrindingParameters.TabIndex = 46;
+			this.btnGrindingParameters.Text = "Grinding Parameters";
+			this.btnGrindingParameters.Click += new System.EventHandler(this.btnGrindingParameters_Click);
+			// 
+			// badTextBox2
+			// 
+			this.badTextBox2.Enabled = false;
+			this.badTextBox2.HasFocus = false;
+			this.badTextBox2.Image = null;
+			this.badTextBox2.Location = new System.Drawing.Point(301, 90);
+			this.badTextBox2.Name = "badTextBox2";
+			this.badTextBox2.PasswordChar = '\0';
+			this.badTextBox2.Size = new System.Drawing.Size(63, 23);
+			this.badTextBox2.TabIndex = 43;
+			this.badTextBox2.TabStop = false;
+			this.badTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// badTextBox3
+			// 
+			this.badTextBox3.Enabled = false;
+			this.badTextBox3.HasFocus = false;
+			this.badTextBox3.Image = null;
+			this.badTextBox3.Location = new System.Drawing.Point(301, 61);
+			this.badTextBox3.Name = "badTextBox3";
+			this.badTextBox3.PasswordChar = '\0';
+			this.badTextBox3.Size = new System.Drawing.Size(63, 23);
+			this.badTextBox3.TabIndex = 42;
+			this.badTextBox3.TabStop = false;
+			this.badTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// badLabel17
+			// 
+			this.badLabel17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel17.Dimmed = false;
+			this.badLabel17.Image = null;
+			this.badLabel17.Location = new System.Drawing.Point(227, 90);
+			this.badLabel17.Name = "badLabel17";
+			this.badLabel17.Size = new System.Drawing.Size(64, 23);
+			this.badLabel17.TabIndex = 40;
+			this.badLabel17.TabStop = false;
+			this.badLabel17.Text = "Victories:";
+			// 
+			// badLabel18
+			// 
+			this.badLabel18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel18.Dimmed = false;
+			this.badLabel18.Image = null;
+			this.badLabel18.Location = new System.Drawing.Point(227, 61);
+			this.badLabel18.Name = "badLabel18";
+			this.badLabel18.Size = new System.Drawing.Size(76, 23);
+			this.badLabel18.TabIndex = 39;
+			this.badLabel18.TabStop = false;
+			this.badLabel18.Text = "Total battles:";
 			// 
 			// btnAddDay
 			// 
@@ -563,7 +638,7 @@
 			// btnCancel
 			// 
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(407, 349);
+			this.btnCancel.Location = new System.Drawing.Point(410, 349);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 5;
@@ -580,55 +655,17 @@
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
-			// badTextBox2
+			// badLabel16
 			// 
-			this.badTextBox2.Enabled = false;
-			this.badTextBox2.HasFocus = false;
-			this.badTextBox2.Image = null;
-			this.badTextBox2.Location = new System.Drawing.Point(301, 90);
-			this.badTextBox2.Name = "badTextBox2";
-			this.badTextBox2.PasswordChar = '\0';
-			this.badTextBox2.Size = new System.Drawing.Size(63, 23);
-			this.badTextBox2.TabIndex = 43;
-			this.badTextBox2.TabStop = false;
-			this.badTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// badTextBox3
-			// 
-			this.badTextBox3.Enabled = false;
-			this.badTextBox3.HasFocus = false;
-			this.badTextBox3.Image = null;
-			this.badTextBox3.Location = new System.Drawing.Point(301, 61);
-			this.badTextBox3.Name = "badTextBox3";
-			this.badTextBox3.PasswordChar = '\0';
-			this.badTextBox3.Size = new System.Drawing.Size(63, 23);
-			this.badTextBox3.TabIndex = 42;
-			this.badTextBox3.TabStop = false;
-			this.badTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// badLabel17
-			// 
-			this.badLabel17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel17.Dimmed = false;
-			this.badLabel17.Image = null;
-			this.badLabel17.Location = new System.Drawing.Point(227, 90);
-			this.badLabel17.Name = "badLabel17";
-			this.badLabel17.Size = new System.Drawing.Size(64, 23);
-			this.badLabel17.TabIndex = 40;
-			this.badLabel17.TabStop = false;
-			this.badLabel17.Text = "Victories:";
-			// 
-			// badLabel18
-			// 
-			this.badLabel18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel18.Dimmed = false;
-			this.badLabel18.Image = null;
-			this.badLabel18.Location = new System.Drawing.Point(227, 61);
-			this.badLabel18.Name = "badLabel18";
-			this.badLabel18.Size = new System.Drawing.Size(76, 23);
-			this.badLabel18.TabIndex = 39;
-			this.badLabel18.TabStop = false;
-			this.badLabel18.Text = "Total battles:";
+			this.badLabel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel16.Dimmed = false;
+			this.badLabel16.Image = null;
+			this.badLabel16.Location = new System.Drawing.Point(227, 119);
+			this.badLabel16.Name = "badLabel16";
+			this.badLabel16.Size = new System.Drawing.Size(64, 23);
+			this.badLabel16.TabIndex = 44;
+			this.badLabel16.TabStop = false;
+			this.badLabel16.Text = "Win rate %:";
 			// 
 			// badTextBox1
 			// 
@@ -642,18 +679,6 @@
 			this.badTextBox1.TabIndex = 45;
 			this.badTextBox1.TabStop = false;
 			this.badTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// badLabel16
-			// 
-			this.badLabel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel16.Dimmed = false;
-			this.badLabel16.Image = null;
-			this.badLabel16.Location = new System.Drawing.Point(227, 119);
-			this.badLabel16.Name = "badLabel16";
-			this.badLabel16.Size = new System.Drawing.Size(64, 23);
-			this.badLabel16.TabIndex = 44;
-			this.badLabel16.TabStop = false;
-			this.badLabel16.Text = "Last 2X:";
 			// 
 			// GrindingSetup
 			// 
@@ -714,11 +739,13 @@
 		private BadLabel badLabel11;
 		private BadButton btnAddDay;
 		private BadButton btnSubtrDay;
-		private BadTextBox badTextBox1;
-		private BadLabel badLabel16;
 		private BadTextBox badTextBox2;
 		private BadTextBox badTextBox3;
 		private BadLabel badLabel17;
 		private BadLabel badLabel18;
+		private BadButton btnGrindingParameters;
+		private BadLabel lblGrindingParameters;
+		private BadTextBox badTextBox1;
+		private BadLabel badLabel16;
 	}
 }

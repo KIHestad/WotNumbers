@@ -27,6 +27,15 @@ namespace WotDBUpdater.Forms.File
 		{
 			GetTankData();
 			dataChanged = false;
+			UpdateGrindParameters();
+		}
+
+		private void UpdateGrindParameters()
+		{
+			if (Code.Support.GrindingData.Settings.EveryVictoryFactor > 0)
+				lblGrindingParameters.Text = "Every victory: " + Code.Support.GrindingData.Settings.EveryVictoryFactor.ToString() + "X";
+			else
+				lblGrindingParameters.Text = "First victory each day: " + Code.Support.GrindingData.Settings.FirstVictoryFactor.ToString() + "X";
 		}
 
 		private void GetTankData()
@@ -259,6 +268,13 @@ namespace WotDBUpdater.Forms.File
 			Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
 			btlPerDay++;
 			txtBattlesPerDay.Text = btlPerDay.ToString();
+		}
+
+		private void btnGrindingParameters_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.File.GrindingParameter();
+			frm.ShowDialog();
+			UpdateGrindParameters();
 		}
 
 		

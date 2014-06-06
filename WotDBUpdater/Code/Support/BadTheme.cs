@@ -814,6 +814,50 @@ class BadButton : BadThemeControl
 	
 }
 
+class BadCheckBox : BadThemeControl
+{
+	public BadCheckBox()
+	{
+		AllowTransparent();
+		BackColor = Color.Transparent;
+	}
+
+	private bool _Checked = false;
+	public bool Checked
+	{
+		get { return _Checked; }
+		set { _Checked = value; Invalidate(); }
+	}
+
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
+		grapichObject.Clear(BackColor);
+		// Outer Border
+		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+		Rectangle GroupBoxOuter = new Rectangle(4, 3, 16, 17);
+		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
+		// Inner Area
+		BorderColor = new SolidBrush(ColorTheme.FormBack);
+		Rectangle GroupBoxInner = new Rectangle(6, 5, 12, 13);
+		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
+		// Text
+		SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
+		if (!Enabled) fontColor = new SolidBrush(ColorTheme.ControlDisabledFont);
+		DrawText(HorizontalAlignment.Left, fontColor, 18);
+		// Chk image
+		if (Image != null && Checked)
+			grapichObject.DrawImage(Image, 6, 5, 12, 12);
+		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
+	protected override void OnClick(EventArgs e)
+	{
+		Checked = !Checked;
+		base.OnClick(e);
+	}
+	
+}
+
 class BadSeperator : BadThemeControl
 {
 
@@ -983,6 +1027,11 @@ class BadLabel : BadThemeControl
 		this.Controls.Add(label);
 	}
 
+	protected override void OnTextChanged(EventArgs e)
+	{
+		label.Text = Text;
+		base.OnTextChanged(e);
+	}
 	
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
