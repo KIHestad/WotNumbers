@@ -438,6 +438,59 @@ namespace WotDBUpdater.Code
 						}
 
 					}
+					// Check if grinding
+					if (Convert.ToInt32(OldPlayerTankRow["gGrindXP"]) > 0)
+					{
+						// Yes, apply grinding progress to playerTank now
+						// Get XP for this battle
+						int oldXP = 0;
+						int newXP = 0;
+						if (OldPlayerTankBattle15Row["xp"] != DBNull.Value) oldXP = Convert.ToInt32(OldPlayerTankBattle15Row["xp"]);
+						if (NewPlayerTankBattle15Row["xp"] != DBNull.Value) newXP = Convert.ToInt32(NewPlayerTankBattle15Row["xp"]);
+						int XP = newXP - oldXP;
+						oldXP = 0;
+						newXP = 0;
+						if (OldPlayerTankBattle7Row["xp"] != DBNull.Value) oldXP = Convert.ToInt32(OldPlayerTankBattle7Row["xp"]);
+						if (NewPlayerTankBattle7Row["xp"] != DBNull.Value) newXP = Convert.ToInt32(NewPlayerTankBattle7Row["xp"]);
+						XP += newXP - oldXP;
+						// Get prev values
+						string sql = "select gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, gRestXP, gProgressPercent, gRestBattles, gRestDays " +
+									 "from playerTank where id=@id";
+						DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
+						DataRow grinding = DB.FetchData(sql).Rows[0];
+						// Calc new values
+						int progress = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
+						int grind = Convert.ToInt32(grinding["gGrindXP"]);
+						int	progresspercent = (progress * 100) / grind;
+						if (progresspercent > 100)
+							progresspercent = 100;
+						int progressrest = grind - progress;
+						if (progressrest < 0)
+							progressrest = 0;
+						int btlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
+						if (btlPerDay < 1)
+							btlPerDay = 1;
+						// Get average XP
+						sql = "SELECT  SUM(playerTankBattle.xp / NULLIF (playerTankBattle.battles, 0) * playerTankBattle.battleOfTotal) AS avgXP " +
+							  "FROM    playerTankBattle " +
+							  "WHERE   playerTankBattle.playerTankId = @playerTankId";
+						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+						DataRow avg = DB.FetchData(sql).Rows[0];
+						int avgXP = Convert.ToInt32(avg["avgXP"]);
+						int restBattles = progressrest / avgXP;
+						int restDays = progressrest / (avgXP * btlPerDay);
+						// Save to playerTank
+						sql = "UPDATE playerTank SET gProgressXP=@ProgressXP, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
+							  "					     gRestBattles=@RestBattles, gRestDays=@RestDays " +
+							  "WHERE id=@id";
+						DB.AddWithValue(ref sql, "@ProgressXP", progress, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@RestXP", progressrest, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@ProgressPercent", progresspercent, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@RestBattles", restBattles, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@RestDays", restDays, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
+						DB.ExecuteNonQuery(sql);
+					}
 				}
 			}
 			return battleSave;

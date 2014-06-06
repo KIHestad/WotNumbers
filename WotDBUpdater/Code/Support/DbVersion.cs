@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 36; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 44; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -668,8 +668,75 @@ namespace WotDBUpdater.Code
 					sqlite = mssql;
 					break;
 				case 37:
-					mssql = "ALTER TABLE playerTank ADD grindwn8 int NOT NULL default 0, eff int NOT NULL default 0; ";
-					sqlite = "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
+					mssql = "ALTER TABLE playerTank ADD gCurrentXP int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gGrindXP int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gGoalXP int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gProgressXP int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gBattlesDay int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gComment varchar(100) NOT NULL default ''; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 38:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (174, 1, 76, 'playerTank.gBattlesDay', 'Battles Day', 'Estimated battles per day when grinding', 'Grinding', 40, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (175, 1, 77, 'playerTank.gComment', 'Comment', 'Grinding comment, normally what to achive with the grinding, eg: next tank, top gun...', 'Grinding', 100, 'VarChar'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (170, 1, 78, 'playerTank.gCurrentXP', 'Current XP', 'Current XP when started to grind', 'Grinding', 55, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (171, 1, 79, 'playerTank.gGrindXP', 'Grind XP', 'The total amount of XP wanted to grind', 'Grinding', 55, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (172, 1, 80, 'playerTank.gGoalXP', 'Goal XP', 'The goal in XP wanted to achieve with the grinding', 'Grinding', 55, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (173, 1, 81, 'playerTank.gProgressXP', 'Progress XP', 'Current progress in XP for this grinding', 'Grinding', 55, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 39:
+					mssql = "ALTER TABLE playerTank ADD gRestXP int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gProgressPercent int NOT NULL default 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 40:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (177, 1, 82, 'playerTank.gProgressPercent', 'Prog %', 'Current progress in persent for this grinding', 'Grinding', 40, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (176, 1, 83, 'playerTank.gRestXP', 'Rest XP', 'Rest XP needed to reach goal', 'Grinding', 55, 'Int'); ";
+							
+					sqlite = mssql;
+					break;
+				case 41:
+					mssql = "UPDATE columnSelection SET colWidth=60, name='XP Earned' WHERE id=137;";
+					sqlite = mssql;
+					break;
+				case 42:
+					mssql = "ALTER TABLE playerTank ADD gRestBattles int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD gRestDays int NOT NULL default 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 43:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (178, 1, 84, 'playerTank.gRestBattles', 'Rest Battles', 'Rest battles needed to reach goal', 'Grinding', 40, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (179, 1, 85, 'playerTank.gRestDays', 'Rest Days', 'Rest days needed to reach goal', 'Grinding', 40, 'Int'); ";
+
+					sqlite = mssql;
+					break;
+				case 44:
+					mssql = "insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (12,2,1); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (1,2,2); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (174,2,3); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (175,2,4); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (170,2,5); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (171,2,6); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (172,2,7); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (173,2,8); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (177,2,9); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (176,2,10); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (178,2,11); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (179,2,12); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (140,2,13); " +
+							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (156,2,14); ";
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";

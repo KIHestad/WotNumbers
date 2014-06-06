@@ -549,7 +549,7 @@ namespace WotDBUpdater.Forms
 				sortordergroupby = ", favListTank.sortorder";
 			}
 			string sql =
-				"SELECT   " + select + sortordercol + ", tank.Id as tankID " +
+				"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " +
 				"FROM            tank INNER JOIN " +
 				"                         playerTank ON tank.id = playerTank.tankId INNER JOIN " +
 				"                         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
@@ -565,14 +565,15 @@ namespace WotDBUpdater.Forms
 				"                         playerTank.modRadioId, playerTank.modTurretId, playerTank.modGunId, playerTank.markOfMastery, modTurret.name, modTurret.tier, modTurret.viewRange,  " +
 				"                         modTurret.armorFront, modTurret.armorSides, modTurret.armorRear, modRadio.name, modRadio.tier, modRadio.signalRange, modGun.name, modGun.tier,  " +
 				"                         modGun.dmg1, modGun.dmg2, modGun.dmg3, modGun.pen1, modGun.pen2, modGun.pen3, modGun.fireRate, tankType.name, tankType.shortName, country.name, country.shortName, " +
-				"                         tank.tier, tank.premium " + sortordergroupby;
+				"                         tank.tier, tank.premium, playerTank.gCurrentXP, playerTank.gGrindXP, playerTank.gGoalXP, playerTank.gProgressXP, playerTank.gBattlesDay, playerTank.gComment, " +
+				"						  playerTank.gProgressPercent, playerTank.gRestXP, playerTank.gRestDays, playerTank.gRestBattles " + sortordergroupby;
 
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			mainGridFormatting = true;
 			dataGridMain.DataSource = DB.FetchData(sql);
 			//  Hide system cols
 			dataGridMain.Columns["sortorder"].Visible = false;
-			dataGridMain.Columns["tankId"].Visible = false;
+			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			// Grid col size
 			foreach (colListClass colListItem in colList)
 			{
@@ -626,7 +627,7 @@ namespace WotDBUpdater.Forms
 				"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 				"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
 				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, " +
-				"  0 as footer, tank.Id as tankId, " + sortordercol + 
+				"  0 as footer, playerTank.Id as player_Tank_Id, " + sortordercol + 
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -764,7 +765,7 @@ namespace WotDBUpdater.Forms
 			dataGridMain.Columns["killedCountToolTip"].Visible = false;
 			dataGridMain.Columns["footer"].Visible = false;
 			dataGridMain.Columns["sortorder"].Visible = false;
-			dataGridMain.Columns["tankId"].Visible = false;
+			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			// Format grid 
 			if (rowcount > 0)
 			{
@@ -944,8 +945,8 @@ namespace WotDBUpdater.Forms
 
 		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
 		{
-			int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tankId"].Value);
-			Form frm = new Forms.File.GrindingSetup(tankId);
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			Form frm = new Forms.File.GrindingSetup(playerTankId);
 			frm.ShowDialog();
 			// Code.MsgBox.Show("Tank id: " + tankId.ToString(), "Grinding setup test");
 		}
