@@ -997,6 +997,12 @@ class BadGroupBox : BadThemeControl
 		
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
+
+	protected override void OnTextChanged(EventArgs e)
+	{
+		Invalidate();
+		base.OnTextChanged(e);
+	}
 }
 
 class BadLabel : BadThemeControl

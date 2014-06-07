@@ -817,6 +817,10 @@ namespace WotDBUpdater.Forms
 			lblStatusRowCount.Text = "Rows " + rowcount.ToString();
 		}
 
+		#endregion
+
+		#region Grid Formatting
+
 		private void dataGridMain_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
 			if (mainGridFormatting)
@@ -869,7 +873,34 @@ namespace WotDBUpdater.Forms
 						cell.Style.ForeColor = wn8RatingColor;
 					}
 				}
-
+				else if (col.Contains("%"))
+				{
+					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
+					{
+						int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+						Color color = ColorTheme.Rating_very_bad;
+						if (val > 90) color = ColorTheme.Rating_uniqe;
+						else if (val > 80) color = ColorTheme.Rating_very_good;
+						else if (val > 70) color = ColorTheme.Rating_good;
+						else if (val > 50) color = ColorTheme.Rating_normal;
+						else if (val > 25) color = ColorTheme.Rating_bad;
+						cell.Style.ForeColor = color;
+					}
+				}
+				else if (col.Equals("Rest XP"))
+				{
+					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
+					{
+						int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+						Color color = ColorTheme.Rating_very_bad;
+						if (val < 10000) color = ColorTheme.Rating_uniqe;
+						else if (val < 25000) color = ColorTheme.Rating_very_good;
+						else if (val < 50000) color = ColorTheme.Rating_good;
+						else if (val < 100000) color = ColorTheme.Rating_normal;
+						else if (val < 150000) color = ColorTheme.Rating_bad;
+						cell.Style.ForeColor = color;
+					}
+				}
 				else if (toolItemViewBattles.Checked)
 				{
 					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);

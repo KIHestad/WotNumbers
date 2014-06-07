@@ -16,6 +16,7 @@ namespace WotDBUpdater.Forms.File
 	{
 		private int playerTankId;
 		private bool dataChanged = false;
+		private bool advanced = false;
 
 		public GrindingSetup(int selectedPlayerTankId)
 		{
@@ -28,6 +29,7 @@ namespace WotDBUpdater.Forms.File
 			GetTankData();
 			dataChanged = false;
 			UpdateGrindParameters();
+			GrindSetup();
 		}
 
 		private void UpdateGrindParameters()
@@ -294,6 +296,47 @@ namespace WotDBUpdater.Forms.File
 			UpdateGrindParameters();
 		}
 
+		private void btnAdvanced_Click(object sender, EventArgs e)
+		{
+			advanced = !advanced;
+			GrindSetup();
+		}
+
+		private void GrindSetup()
+		{
+			if (advanced)
+			{
+				// Advanced setup
+				btnAdvanced.Text = "Normal";
+				gbGrindingSetup.Text = "Advanced Grinding Setup";
+				lblAdd1.Visible = true;
+				lblEq1.Visible = true;
+				lblCurrentXP.Visible = true;
+				txtCurrentXP.Visible = true;
+				lblGoalXP.Visible = true;
+				txtGoalXP.Visible = true;
+				Point p = new Point(297, btnGrindReset.Location.Y);
+				btnGrindReset.Location = p;
+				p = new Point(124,189);
+				lblGrindXP.Location = p;
+			}
+			else
+			{
+				// Normal setup
+				btnAdvanced.Text = "Advanced";
+				gbGrindingSetup.Text = "Normal Grinding Setup";
+				lblAdd1.Visible = false;
+				lblEq1.Visible = false;
+				lblCurrentXP.Visible = false;
+				txtCurrentXP.Visible = false;
+				lblGoalXP.Visible = false;
+				txtGoalXP.Visible = false;
+				Point p = new Point(txtGoalXP.Location.X, btnGrindReset.Location.Y);
+				btnGrindReset.Location = p;
+				p = new Point(txtCurrentXP.Location.X, txtCurrentXP.Location.Y);
+				lblGrindXP.Location = p;
+			}
+		}
 		
 
 	}

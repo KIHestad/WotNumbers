@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 47; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 48; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -797,6 +797,13 @@ namespace WotDBUpdater.Code
 							"UPDATE columnSelection SET name='Battle Mode' WHERE id=162 ; " +
 							"UPDATE columnSelection SET name='Battle Date' WHERE id=163 ; " +
 							"UPDATE columnSelection SET name='Battle Time' WHERE id=164 ; ";
+					sqlite = mssql;
+					break;
+				case 48:
+					mssql = "UPDATE columnSelection SET name = 'Start XP' WHERE id = 170; " +
+						    "UPDATE columnSelection SET name = 'End XP' WHERE id = 172; " +
+							"DELETE FROM columnListSelection WHERE columnSelectionId=170 AND columnListId=2; " +
+							"DELETE FROM columnListSelection WHERE columnSelectionId=172 AND columnListId=2; " ;
 					sqlite = mssql;
 					break;
 			}
