@@ -498,6 +498,7 @@ namespace WotDBUpdater.Forms.File
 			}
 			// Select All button
 			toolAvailableCol_UnselectAll();
+			toolAvailableCol_All.Checked = true;
 			//toolAvaliableCol_All.Checked = true;
 			// Show content now
 			FilterAllColumn();
@@ -505,7 +506,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void FilterAllColumn()
 		{
-			string sql = "SELECT position as '#', name as 'Name', description as 'Description', id FROM columnSelection WHERE colType=@colType ";
+			string sql = "SELECT name as 'Name', description as 'Description', id FROM columnSelection WHERE colType=@colType ";
 			// Check filter
 			string colGroup = "All";
 			foreach (ToolStripButton button in toolAllColumns.Items)
@@ -521,7 +522,6 @@ namespace WotDBUpdater.Forms.File
 			if (!allTanksColumnSetupDone)
 			{
 				allTanksColumnSetupDone = true;
-				dataGridAllColumns.Columns["#"].Width = 20;
 				dataGridAllColumns.Columns["description"].Width = 300;
 				dataGridAllColumns.Columns["id"].Visible = false;
 			}
@@ -533,7 +533,7 @@ namespace WotDBUpdater.Forms.File
 		private void toolAvaliableCol_All_Click(object sender, EventArgs e)
 		{
 			toolAvailableCol_UnselectAll();
-			//toolAvaliableCol_All.Checked = true;
+			toolAvailableCol_All.Checked = true;
 			FilterAllColumn();
 		}
 
@@ -944,6 +944,15 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
+		private void ddDefaultTankFilter_Click(object sender, EventArgs e)
+		{
+			string list = "Use current,All Tanks,1,2,3";
+			string selectedTankFilter = Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, list);
+			if (selectedTankFilter != "")
+			{
+				ddDefaultTankFilter.Text = selectedTankFilter;
+			}
+		}
 
 	}
 }

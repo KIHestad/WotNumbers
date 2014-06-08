@@ -33,6 +33,8 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColumnSetupTheme = new BadForm();
+			this.ddDefaultTankFilter = new BadDropDownBox();
+			this.badLabel4 = new BadLabel();
 			this.popupPosition = new BadDropDownBox();
 			this.popupColumnListType = new BadDropDownBox();
 			this.badLabel3 = new BadLabel();
@@ -93,6 +95,8 @@
 			// 
 			// ColumnSetupTheme
 			// 
+			this.ColumnSetupTheme.Controls.Add(this.ddDefaultTankFilter);
+			this.ColumnSetupTheme.Controls.Add(this.badLabel4);
 			this.ColumnSetupTheme.Controls.Add(this.popupPosition);
 			this.ColumnSetupTheme.Controls.Add(this.popupColumnListType);
 			this.ColumnSetupTheme.Controls.Add(this.badLabel3);
@@ -143,12 +147,33 @@
 			this.ColumnSetupTheme.Text = "Column Setup";
 			this.ColumnSetupTheme.TitleHeight = 26;
 			// 
+			// ddDefaultTankFilter
+			// 
+			this.ddDefaultTankFilter.Image = null;
+			this.ddDefaultTankFilter.Location = new System.Drawing.Point(418, 221);
+			this.ddDefaultTankFilter.Name = "ddDefaultTankFilter";
+			this.ddDefaultTankFilter.Size = new System.Drawing.Size(158, 23);
+			this.ddDefaultTankFilter.TabIndex = 80;
+			this.ddDefaultTankFilter.Text = "Use current";
+			this.ddDefaultTankFilter.Click += new System.EventHandler(this.ddDefaultTankFilter_Click);
+			// 
+			// badLabel4
+			// 
+			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Dimmed = false;
+			this.badLabel4.Image = null;
+			this.badLabel4.Location = new System.Drawing.Point(314, 221);
+			this.badLabel4.Name = "badLabel4";
+			this.badLabel4.Size = new System.Drawing.Size(98, 23);
+			this.badLabel4.TabIndex = 76;
+			this.badLabel4.Text = "Default Tank Filter:";
+			// 
 			// popupPosition
 			// 
 			this.popupPosition.Image = null;
 			this.popupPosition.Location = new System.Drawing.Point(374, 93);
 			this.popupPosition.Name = "popupPosition";
-			this.popupPosition.Size = new System.Drawing.Size(129, 23);
+			this.popupPosition.Size = new System.Drawing.Size(96, 23);
 			this.popupPosition.TabIndex = 75;
 			this.popupPosition.Text = "Not Visible";
 			this.popupPosition.Click += new System.EventHandler(this.popupPosition_Click);
@@ -179,18 +204,18 @@
 			this.lblDefaultColumnSetup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblDefaultColumnSetup.Dimmed = false;
 			this.lblDefaultColumnSetup.Image = null;
-			this.lblDefaultColumnSetup.Location = new System.Drawing.Point(316, 184);
+			this.lblDefaultColumnSetup.Location = new System.Drawing.Point(314, 176);
 			this.lblDefaultColumnSetup.Name = "lblDefaultColumnSetup";
-			this.lblDefaultColumnSetup.Size = new System.Drawing.Size(255, 26);
+			this.lblDefaultColumnSetup.Size = new System.Drawing.Size(156, 35);
 			this.lblDefaultColumnSetup.TabIndex = 71;
 			this.lblDefaultColumnSetup.Text = "This setup is not used as default for View";
 			// 
 			// btnSetAsDefaultColumnList
 			// 
 			this.btnSetAsDefaultColumnList.Image = null;
-			this.btnSetAsDefaultColumnList.Location = new System.Drawing.Point(468, 228);
+			this.btnSetAsDefaultColumnList.Location = new System.Drawing.Point(476, 183);
 			this.btnSetAsDefaultColumnList.Name = "btnSetAsDefaultColumnList";
-			this.btnSetAsDefaultColumnList.Size = new System.Drawing.Size(103, 23);
+			this.btnSetAsDefaultColumnList.Size = new System.Drawing.Size(100, 23);
 			this.btnSetAsDefaultColumnList.TabIndex = 70;
 			this.btnSetAsDefaultColumnList.Text = "Set as default";
 			this.btnSetAsDefaultColumnList.Click += new System.EventHandler(this.btnSetAsDefaultColumnList_Click);
@@ -591,19 +616,21 @@
 			// 
 			// txtColumnListName
 			// 
+			this.txtColumnListName.HasFocus = false;
 			this.txtColumnListName.Image = null;
 			this.txtColumnListName.Location = new System.Drawing.Point(374, 62);
 			this.txtColumnListName.Name = "txtColumnListName";
 			this.txtColumnListName.PasswordChar = '\0';
-			this.txtColumnListName.Size = new System.Drawing.Size(129, 23);
+			this.txtColumnListName.Size = new System.Drawing.Size(202, 23);
 			this.txtColumnListName.TabIndex = 40;
+			this.txtColumnListName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel2
 			// 
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(314, 62);
+			this.badLabel2.Location = new System.Drawing.Point(314, 61);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(42, 23);
 			this.badLabel2.TabIndex = 39;
@@ -623,10 +650,11 @@
 			// 
 			// btnColumnListAdd
 			// 
+			this.btnColumnListAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListAdd.Image = null;
-			this.btnColumnListAdd.Location = new System.Drawing.Point(509, 62);
+			this.btnColumnListAdd.Location = new System.Drawing.Point(251, 574);
 			this.btnColumnListAdd.Name = "btnColumnListAdd";
-			this.btnColumnListAdd.Size = new System.Drawing.Size(60, 23);
+			this.btnColumnListAdd.Size = new System.Drawing.Size(80, 23);
 			this.btnColumnListAdd.TabIndex = 36;
 			this.btnColumnListAdd.Text = "Add";
 			this.btnColumnListAdd.Click += new System.EventHandler(this.btnColumnListAdd_Click);
@@ -775,5 +803,7 @@
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_9;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_10;
 		private BadDropDownBox popupPosition;
+		private BadDropDownBox ddDefaultTankFilter;
+		private BadLabel badLabel4;
 	}
 }

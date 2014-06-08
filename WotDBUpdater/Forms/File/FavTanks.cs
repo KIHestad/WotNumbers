@@ -14,9 +14,11 @@ namespace WotDBUpdater.Forms.File
 {
 	public partial class FavTanks : Form
 	{
-		public FavTanks()
+		private int _showFavListId;
+		public FavTanks(int showFavListId)
 		{
 			InitializeComponent();
+			_showFavListId = showFavListId;
 		}
 
 		#region Load and Style
@@ -33,7 +35,7 @@ namespace WotDBUpdater.Forms.File
 			StyleDataGrid(dataGridAllTanks);
 			StyleDataGrid(dataGridSelectedTanks);
 			// Show content
-			ShowFavList();
+			ShowFavList(_showFavListId);
 			ShowAllTanks();
 			// Mouse scrolling
 			dataGridAllTanks.MouseWheel += new MouseEventHandler(dataGridAllTanks_MouseWheel);
@@ -107,7 +109,7 @@ namespace WotDBUpdater.Forms.File
 
 		#region Fav List
 
-		private void ShowFavList(int FavListId = 0)
+		private void ShowFavList(int FavListId = 0, string FavListName = "")
 		{
 			DataTable dt = DB.FetchData("select position as 'Pos', name as 'Name', id as 'ID' from favList order by COALESCE(position,99), name");
 			dataGridFavList.DataSource = dt;
@@ -122,6 +124,7 @@ namespace WotDBUpdater.Forms.File
 			btnRemoveSelected.Enabled = buttonsEnabled;
 			btnSelectAll.Enabled = buttonsEnabled;
 			btnSelectSelected.Enabled = buttonsEnabled;
+			// Get favlist from name
 			SelectFavList(FavListId);
 			// Connect to scrollbar
 			scrollFavList.ScrollElementsTotals = dt.Rows.Count;
@@ -307,7 +310,7 @@ namespace WotDBUpdater.Forms.File
 			{
 				string insertsql = "insert into favListTank (favListId, tankId, sortorder) values (@favListId, @tankId, @sortorder); ";
 				DB.AddWithValue(ref insertsql, "@tankId", dr.Cells["ID"].Value, DB.SqlDataType.Int);
-				DB.AddWithValue(ref insertsql, "@sortorder", dr.Cells["Sort#"].Value, DB.SqlDataType.Int);
+				DB.AddWithValue(ref insertsql, "@sortorder", dr.Cells["#"].Value, DB.SqlDataType.Int);
 				sql += insertsql;
 			}
 			DB.AddWithValue(ref sql, "@favListId", SelectedFavListId, DB.SqlDataType.Int);
@@ -389,7 +392,7 @@ namespace WotDBUpdater.Forms.File
 		private void GetSelectedTanksFromFavList()
 		{
 			string sql =
-				"SELECT tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, favListTank.sortorder AS 'Sort#', tank.id as ID " +
+				"SELECT favListTank.sortorder AS '#', tank.tier AS Tier, tank.name AS Tank, tankType.shortname AS Type, country.name AS Nation, tank.id as ID " +
 				"FROM   favListTank INNER JOIN " +
 				"		tank ON favListTank.tankId = tank.id INNER JOIN " +
 				"		country ON tank.countryId = country.id INNER JOIN " +
@@ -403,10 +406,11 @@ namespace WotDBUpdater.Forms.File
 			if (!selectedTanksColumnSetupDone)
 			{
 				selectedTanksColumnSetupDone = true;
-				dataGridSelectedTanks.Columns["Tier"].Width = 40;
+				dataGridSelectedTanks.Columns["#"].Width = 20;
+				dataGridSelectedTanks.Columns["Tier"].Width = 30;
+				dataGridSelectedTanks.Columns["Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridSelectedTanks.Columns["Type"].Width = 40;
 				dataGridSelectedTanks.Columns["Nation"].Width = 60;
-				dataGridSelectedTanks.Columns["Sort#"].Visible = false;
 				dataGridSelectedTanks.Columns["ID"].Visible = false;
 			}
 		}
@@ -438,12 +442,12 @@ namespace WotDBUpdater.Forms.File
 					int currentRowCount = dataGridSelectedTanks.SelectedRows.Count;
 					if (currentRowCount > 0) 
 					{
-						sortOrder = Convert.ToInt32(dataGridSelectedTanks.SelectedRows[0].Cells["Sort#"].Value) + 1;
+						sortOrder = Convert.ToInt32(dataGridSelectedTanks.SelectedRows[0].Cells["#"].Value) + 1;
 						lastTankID = Convert.ToInt32(dataGridSelectedTanks.SelectedRows[0].Cells["ID"].Value);
 						// Find last selected row if several
 						foreach (DataGridViewRow dr in dataGridSelectedTanks.SelectedRows)
 						{
-							int newSort = Convert.ToInt32(dr.Cells["Sort#"].Value);
+							int newSort = Convert.ToInt32(dr.Cells["#"].Value);
 							if (newSort > sortOrder)
 							{
 								sortOrder = newSort + 1;
@@ -456,7 +460,7 @@ namespace WotDBUpdater.Forms.File
 				// Move existing elements sort order to make room for new ones
 				foreach (DataRow dr in dtFavListTank.Rows)
 				{
-					if (Convert.ToInt32(dr["Sort#"]) >= sortOrder) dr["Sort#"] = Convert.ToInt32(dr["Sort#"]) + selectedRowCount;
+					if (Convert.ToInt32(dr["#"]) >= sortOrder) dr["#"] = Convert.ToInt32(dr["#"]) + selectedRowCount;
 
 				}
 				// Insert new elements now
@@ -475,13 +479,13 @@ namespace WotDBUpdater.Forms.File
 							dr["Tank"] = dataGridAllTanks.Rows[i].Cells["Tank"].Value;
 							dr["Type"] = dataGridAllTanks.Rows[i].Cells["Type"].Value;
 							dr["Nation"] = dataGridAllTanks.Rows[i].Cells["Nation"].Value;
-							dr["Sort#"] = sortOrder;
+							dr["#"] = sortOrder;
 							dtFavListTank.Rows.Add(dr);
 							sortOrder++;
 						}
 					}
 				}
-				SortFavList("Sort#");
+				SortFavList("#");
 				// Select the last inserted tank
 				dataGridSelectedTanks.ClearSelection();
 				if (lastTankID !=0)
@@ -528,14 +532,14 @@ namespace WotDBUpdater.Forms.File
 					{
 						// Selected row - move it
 						selectedTanks.Add(Convert.ToInt32(currentRow.Cells["ID"].Value)); // remember this tank to set selected area back after moving
-						int currentRowSortPos = Convert.ToInt32(dtFavListTank.Rows[currentPos]["Sort#"]); // current sort postition 
+						int currentRowSortPos = Convert.ToInt32(dtFavListTank.Rows[currentPos]["#"]); // current sort postition 
 						// For each tank to be moved the above/below tank must change place with the moved one, if any exist
 						if (notSelectedRowIndex != -1)
 						{
-							dtFavListTank.Rows[notSelectedRowIndex]["Sort#"] = Convert.ToInt32(dtFavListTank.Rows[notSelectedRowIndex]["Sort#"]) - move;
+							dtFavListTank.Rows[notSelectedRowIndex]["#"] = Convert.ToInt32(dtFavListTank.Rows[notSelectedRowIndex]["#"]) - move;
 						}
 						// move tank row now
-						dtFavListTank.Rows[currentPos]["Sort#"] = currentRowSortPos + move;
+						dtFavListTank.Rows[currentPos]["#"] = currentRowSortPos + move;
 					}
 					else
 					{
@@ -548,7 +552,7 @@ namespace WotDBUpdater.Forms.File
 				dtFavListTank.AcceptChanges();
 				
 				// Sort and show
-				SortFavList("Sort#");
+				SortFavList("#");
 				// Set selected rows back to correct tanks
 				dataGridSelectedTanks.ClearSelection();
 				int selectedRowPos = 0;
@@ -609,7 +613,7 @@ namespace WotDBUpdater.Forms.File
 			foreach (DataRow dr in dtFavListTank.Rows)
 			{
 				sortnum++;
-				dr["Sort#"] = sortnum;
+				dr["#"] = sortnum;
 			}
 			ShowSelectedTanks();
 		}
@@ -771,7 +775,8 @@ namespace WotDBUpdater.Forms.File
 			if (!allTanksColumnSetupDone)
 			{
 				allTanksColumnSetupDone = true;
-				dataGridAllTanks.Columns["Tier"].Width = 40;
+				dataGridAllTanks.Columns["Tier"].Width = 30;
+				dataGridAllTanks.Columns["Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridAllTanks.Columns["Type"].Width = 40;
 				dataGridAllTanks.Columns["Nation"].Width = 60;
 				dataGridAllTanks.Columns["ID"].Visible = false;

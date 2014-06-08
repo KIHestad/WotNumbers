@@ -261,9 +261,13 @@ namespace WotDBUpdater.Forms
 				toolItemTankFilter_FavSeparator.Visible = true;
 				foreach (DataRow dr in dt.Rows)
 				{
-					ToolStripItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
+					ToolStripMenuItem menuItem = (ToolStripMenuItem)toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
 					menuItem.Text = dr["name"].ToString();
 					menuItem.Visible = true;
+					menuItem.Checked = false;
+					// check selected
+					if (tankFavListSelectedId == Convert.ToInt32(dr["id"]))
+						menuItem.Checked = true;
 				}
 			}
 		}
@@ -368,53 +372,63 @@ namespace WotDBUpdater.Forms
 			}
 			// Select view
 			ToolStripButton menuItem = (ToolStripButton)sender;
+			// Uncheck not selected menu first
+			bool showOverall = (menuItem == toolItemViewOverall);
+			bool showTank = (menuItem == toolItemViewTankInfo);
+			bool showBattle = (menuItem == toolItemViewBattles);
+			if (!showOverall) toolItemViewOverall.Checked = false;
+			if (!showTank) toolItemViewTankInfo.Checked = false;
+			if (!showBattle) toolItemViewBattles.Checked = false;
 			if (!menuItem.Checked)
 			{
-				toolItemViewOverall.Checked = false;
-				toolItemViewBattles.Checked = false;
-				toolItemViewTankInfo.Checked = false;
-				toolItemBattles.Visible = false;
-				toolItemTankFilter.Visible = false;
-				toolItemColumnSelect.Visible = false;
-				toolItemRefreshSeparator.Visible = true;
 				menuItem.Checked = true;
-				if (toolItemViewOverall.Checked)
+				if (showOverall)
 				{
+					// Show/Hide Tool Items
+					toolItemBattles.Visible = false;
+					toolItemTankFilter.Visible = false;
+					toolItemColumnSelect.Visible = false;
+					toolItemRefreshSeparator.Visible = true;
+					toolItemRefreshSeparator.Visible = false;
 					// Remove datagrid context menu
 					dataGridMain.ContextMenuStrip = null;
-					// Modify toolbar
-					toolItemRefreshSeparator.Visible = false;
 					// Start slider
 					InfoPanelSlideStart(true);
 				}
-				else if (toolItemViewTankInfo.Checked)
+				else if (showTank)
 				{
-					InfoPanelSlideStart(false);
+					// Show/Hide Tool Items
+					toolItemBattles.Visible = false;
+					toolItemTankFilter.Visible = true;
+					toolItemColumnSelect.Visible = true;
+					toolItemRefreshSeparator.Visible = true;
 					// Apply last selected Tank Filter
 					SetTankFilterCheckedElements(tankFavListTankView);
-					toolItemTankFilter.Visible = true;
 					// Get Column Setup List
 					GetColumnSetupList();
-					toolItemColumnSelect.Visible = true;
 					// Add datagrid context menu
 					CreateDataGridContextMenu();
-
-				}
-				else if (toolItemViewBattles.Checked)
-				{
+					// Info slider hide
 					InfoPanelSlideStart(false);
-					toolItemBattles.Visible = true;
+				}
+				else if (showBattle)
+				{
+					// Show/Hide Tool Items
+					toolItemBattles.Visible = false;
+					toolItemTankFilter.Visible = true;
+					toolItemColumnSelect.Visible = true;
+					toolItemRefreshSeparator.Visible = true;
 					// Apply last selected Tank Filter
 					SetTankFilterCheckedElements(tankFavListBattleView);
-					toolItemTankFilter.Visible = true;
 					// Get Column Setup List
 					GetColumnSetupList();
-					toolItemColumnSelect.Visible = true;
 					// Add datagrid context menu
 					CreateDataGridContextMenu();
+					// Info slider hide
+					InfoPanelSlideStart(false);
 				}
+				GridShow(); // Changed view, no status message applied, sets in GridShow
 			}
-			GridShow(); // Changed view, no status message applied, sets in GridShow
 		}
 
 		private void GridShow(string Status2Message = "")
@@ -878,13 +892,16 @@ namespace WotDBUpdater.Forms
 					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
 					{
 						int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-						Color color = ColorTheme.Rating_very_bad;
-						if (val > 90) color = ColorTheme.Rating_uniqe;
-						else if (val > 80) color = ColorTheme.Rating_very_good;
-						else if (val > 70) color = ColorTheme.Rating_good;
-						else if (val > 50) color = ColorTheme.Rating_normal;
-						else if (val > 25) color = ColorTheme.Rating_bad;
-						cell.Style.ForeColor = color;
+						if (val > 0)
+						{
+							Color color = ColorTheme.Rating_very_bad;
+							if (val > 90) color = ColorTheme.Rating_uniqe;
+							else if (val > 80) color = ColorTheme.Rating_very_good;
+							else if (val > 70) color = ColorTheme.Rating_good;
+							else if (val > 50) color = ColorTheme.Rating_normal;
+							else if (val > 25) color = ColorTheme.Rating_bad;
+							cell.Style.ForeColor = color;
+						}
 					}
 				}
 				else if (col.Equals("Rest XP"))
@@ -892,13 +909,16 @@ namespace WotDBUpdater.Forms
 					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
 					{
 						int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-						Color color = ColorTheme.Rating_very_bad;
-						if (val < 10000) color = ColorTheme.Rating_uniqe;
-						else if (val < 25000) color = ColorTheme.Rating_very_good;
-						else if (val < 50000) color = ColorTheme.Rating_good;
-						else if (val < 100000) color = ColorTheme.Rating_normal;
-						else if (val < 150000) color = ColorTheme.Rating_bad;
-						cell.Style.ForeColor = color;
+						if (val > 0)
+						{
+							Color color = ColorTheme.Rating_very_bad;
+							if (val < 10000) color = ColorTheme.Rating_uniqe;
+							else if (val < 25000) color = ColorTheme.Rating_very_good;
+							else if (val < 50000) color = ColorTheme.Rating_good;
+							else if (val < 100000) color = ColorTheme.Rating_normal;
+							else if (val < 150000) color = ColorTheme.Rating_bad;
+							cell.Style.ForeColor = color;
+						}
 					}
 				}
 				else if (toolItemViewBattles.Checked)
@@ -1080,6 +1100,7 @@ namespace WotDBUpdater.Forms
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
 		private string tankFavListSelected = ""; // To keep track on fav list selected for tank view
+		private int tankFavListSelectedId = 0; // To keep track on fav list selected for tank view
 		private string tankFavListTankView = ""; // Remember fav list for tank view, "" == All tanks
 		private string tankFavListBattleView = ""; // Remember fav list for battle view, "" == All tanks
 
@@ -1099,12 +1120,8 @@ namespace WotDBUpdater.Forms
 			{
 				toolItemTankFilter.Text = tankFavListSelected;
 				message = "Favourite list: " + tankFavListSelected;
-				string sql = "select id from favList where name=@name;";
-				DB.AddWithValue(ref sql, "@name", tankFavListSelected, DB.SqlDataType.VarChar);
-				DataTable dt = DB.FetchData(sql);
-				int favListId = Convert.ToInt32(dt.Rows[0][0]);
 				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
-				DB.AddWithValue(ref newJoinSQL, "@favListId", favListId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref newJoinSQL, "@favListId", tankFavListSelectedId, DB.SqlDataType.Int);
 			}
 			else if (tankFilterItemCount == 0)
 			{
@@ -1284,8 +1301,14 @@ namespace WotDBUpdater.Forms
 			{
 				toolItemTankFavList_Uncheck(); // Uncheck previous fav list selection
 				menuItem.Checked = true; // check fav list menu select
-				tankFavListSelected = menuItem.Text; // set current fav list selected
-				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter, no auto refresh grid
+				// set current fav list selected
+				tankFavListSelected = menuItem.Text; 
+				string sql = "select id from favList where name=@name;";
+				DB.AddWithValue(ref sql, "@name", tankFavListSelected, DB.SqlDataType.VarChar);
+				DataTable dt = DB.FetchData(sql);
+				tankFavListSelectedId = Convert.ToInt32(dt.Rows[0][0]);
+				// Set menu item and show grid
+				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter
 				GridShow("Selected favourite tank list: " + tankFavListSelected);
 			}
 		}
@@ -1321,10 +1344,9 @@ namespace WotDBUpdater.Forms
 		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
 		{
 			// Show fal list editor
-			Form frm = new Forms.File.FavTanks();
+			Form frm = new Forms.File.FavTanks(tankFavListSelectedId);
 			frm.ShowDialog();
 			// After fav list changes reload menu
-			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
 			GetFavList(); // Reload fav list items
 			GridShow("Refreshed grid after fovourite tank list change"); // Refresh grid now
 		}
