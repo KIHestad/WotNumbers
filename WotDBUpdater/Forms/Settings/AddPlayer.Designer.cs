@@ -1,4 +1,4 @@
-﻿namespace WotDBUpdater.Forms.File
+﻿namespace WotDBUpdater.Forms
 {
     partial class AddPlayer
     {

@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using WotDBUpdater.Code;
 
-namespace WotDBUpdater.Forms.Test
+namespace WotDBUpdater.Forms
 {
     public partial class TestShowImage : Form
     {

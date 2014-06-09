@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WotDBUpdater.Code;
 
-namespace WotDBUpdater.Forms.Test
+namespace WotDBUpdater.Forms
 {
     public partial class TestProgressBar : Form
     {

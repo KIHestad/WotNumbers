@@ -1,4 +1,4 @@
-﻿namespace WotDBUpdater.Forms.Test
+﻿namespace WotDBUpdater.Forms
 {
 	partial class test
 	{

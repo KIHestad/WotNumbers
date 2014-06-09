@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WotDBUpdater.Code;
 
-namespace WotDBUpdater.Forms.Reports
+namespace WotDBUpdater.Forms
 {
 	public partial class DatabaseTable : Form
 	{

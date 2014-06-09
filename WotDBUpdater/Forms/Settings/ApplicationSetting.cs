@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WotDBUpdater.Code;
 
-namespace WotDBUpdater.Forms.File
+namespace WotDBUpdater.Forms
 {
 	public partial class ApplicationSetting : Form
 	{
@@ -53,7 +53,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void btmAddPlayer_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.AddPlayer();
+			Form frm = new Forms.AddPlayer();
 			frm.ShowDialog();
 			cboSelectPlayer.Text = Config.Settings.playerName;
 		}
@@ -140,7 +140,7 @@ namespace WotDBUpdater.Forms.File
 			if (Directory.Exists(txtDossierFilePath.Text))
 			{
 				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
-				Form frm = new Forms.File.DatabaseSetting();
+				Form frm = new Forms.DatabaseSetting();
 				frm.ShowDialog();
 				PlayerPanel();
 				Refresh();

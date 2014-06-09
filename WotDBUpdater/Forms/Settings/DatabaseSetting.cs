@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WotDBUpdater.Code;
 
-namespace WotDBUpdater.Forms.File
+namespace WotDBUpdater.Forms
 {
 	public partial class DatabaseSetting : Form
 	{
@@ -199,7 +199,7 @@ namespace WotDBUpdater.Forms.File
 				// All database handling uses current config settings to access correct database
 				SaveConfig();
 				// Open Create new db form
-				Form frm = new Forms.File.DatabaseNew();
+				Form frm = new Forms.DatabaseNew();
 				frm.ShowDialog();
 				LoadConfig();
 			}

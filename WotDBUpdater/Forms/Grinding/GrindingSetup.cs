@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using WotDBUpdater.Code;
 
 
-namespace WotDBUpdater.Forms.File
+namespace WotDBUpdater.Forms
 {
 	public partial class GrindingSetup : Form
 	{
@@ -291,7 +291,7 @@ namespace WotDBUpdater.Forms.File
 
 		private void btnGrindingParameters_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.GrindingParameter();
+			Form frm = new Forms.GrindingParameter();
 			frm.ShowDialog();
 			UpdateGrindParameters();
 		}

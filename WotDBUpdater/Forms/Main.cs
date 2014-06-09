@@ -126,7 +126,7 @@ namespace WotDBUpdater.Forms
 				lblOverView.Text = "";
 				Config.Settings.dossierFileWathcherRun = 0;
 				SetListener();
-				Form frm = new Forms.File.ApplicationSetting();
+				Form frm = new Forms.ApplicationSetting();
 				frm.ShowDialog();
 			}
 			if (DB.CheckConnection())
@@ -154,7 +154,7 @@ namespace WotDBUpdater.Forms
 			// Show Grinding Param Settings
 			if (Config.Settings.grindParametersAutoStart)
 			{
-				Form frm = new Forms.File.GrindingParameter();
+				Form frm = new Forms.GrindingParameter();
 				frm.ShowDialog();
 			}
 		}
@@ -1140,12 +1140,12 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
 		{
-			File.ColSetup.ColumnSetupType colSetupType = new File.ColSetup.ColumnSetupType();
+			Forms.ColSetup.ColumnSetupType colSetupType = new Forms.ColSetup.ColumnSetupType();
 			if (toolItemViewBattles.Checked)
-				colSetupType = File.ColSetup.ColumnSetupType.BattleView;
+				colSetupType = Forms.ColSetup.ColumnSetupType.BattleView;
 			else if (toolItemViewTankInfo.Checked)
-				colSetupType = File.ColSetup.ColumnSetupType.TankView;
-			Form frm = new Forms.File.ColSetup(colSetupType);
+				colSetupType = Forms.ColSetup.ColumnSetupType.TankView;
+			Form frm = new Forms.ColSetup(colSetupType);
 			frm.ShowDialog();
 			GetColumnSetupList(); // Refresh column setup list now
 			GridShow("Refreshed grid after column setup change"); // Refresh grid now
@@ -1401,7 +1401,7 @@ namespace WotDBUpdater.Forms
 		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
 		{
 			// Show fal list editor
-			Form frm = new Forms.File.FavTanks(tankFavListSelectedId);
+			Form frm = new Forms.FavTanks(tankFavListSelectedId);
 			frm.ShowDialog();
 			// After fav list changes reload menu
 			GetFavList(); // Reload fav list items
@@ -1499,7 +1499,7 @@ namespace WotDBUpdater.Forms
 		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.File.GrindingSetup(playerTankId);
+			Form frm = new Forms.GrindingSetup(playerTankId);
 			frm.ShowDialog();
 			// Code.MsgBox.Show("Tank id: " + tankId.ToString(), "Grinding setup test");
 		}
@@ -1691,7 +1691,7 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.ApplicationSetting();
+			Form frm = new Forms.ApplicationSetting();
 			frm.ShowDialog();
 			SetFormTitle();
 			// After settings changed, go to all tanks
@@ -1744,13 +1744,13 @@ namespace WotDBUpdater.Forms
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Reports.DatabaseTable();
+			Form frm = new Forms.DatabaseTable();
 			frm.Show();
 		}
 
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.ImportWotStat();
+			Form frm = new Forms.ImportWotStat();
 			frm.ShowDialog();
 		}
 
@@ -1789,25 +1789,25 @@ namespace WotDBUpdater.Forms
 	
 		private void toolItemTest_ImportTankWn8_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.File.ImportTank();
+			Form frm = new Forms.ImportTank();
 			frm.ShowDialog();
 		}
 
 		private void toolItemTest_ProgressBar_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Test.TestProgressBar();
+			Form frm = new Forms.TestProgressBar();
 			frm.Show();
 		}
 
 		private void toolItemTest_ViewRange_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Test.ViewRange();
+			Form frm = new Forms.ViewRange();
 			frm.ShowDialog();
 		}
 
 		private void toolItemTest_ScrollBar_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Test.ScrollbarTest();
+			Form frm = new Forms.ScrollbarTest();
 			frm.ShowDialog();
 		}
 
@@ -1858,7 +1858,7 @@ namespace WotDBUpdater.Forms
 
 		private void testShowImageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.Test.TestShowImage();
+			Form frm = new Forms.TestShowImage();
 			frm.ShowDialog();
 		}
 

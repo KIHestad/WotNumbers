@@ -1,4 +1,4 @@
-﻿namespace WotDBUpdater.Forms.Reports
+﻿namespace WotDBUpdater.Forms
 {
 	partial class DatabaseTable
 	{

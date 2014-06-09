@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WotDBUpdater.Code.Support;
 
-namespace WotDBUpdater.Forms.File
+namespace WotDBUpdater.Forms
 {
 	public partial class GrindingParameter : Form
 	{
