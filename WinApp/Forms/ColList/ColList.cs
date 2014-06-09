@@ -11,31 +11,22 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class ColSetup : Form
+	public partial class ColList : Form
 	{
 		
 		#region Init
 		
-		public enum ColumnSetupType
-		{
-			TankView = 1,
-			BattleView = 2
-		}
-		
-		int colType = 0;
-		public ColSetup(ColumnSetupType colSelectedSetupType)
+		public ColList()
 		{
 			InitializeComponent();
-			if (colSelectedSetupType == ColumnSetupType.TankView)
+			if (MainSettings.View == GridView.Views.Tank)
 			{
-				popupColumnListType.Text = "Tank View";
-				colType = 1;
+				ColumnSetupTheme.Text = "Column Setup - Tank View";
 			}
 
-			else if (colSelectedSetupType == ColumnSetupType.BattleView)
+			else if (MainSettings.View == GridView.Views.Battle)
 			{
-				popupColumnListType.Text = "Battle View";
-				colType = 2;
+				ColumnSetupTheme.Text = "Column Setup - Battle View";
 			}
 		}
 
@@ -60,7 +51,7 @@ namespace WinApp.Forms
 			StyleDataGrid(dataGridAllColumns);
 			StyleDataGrid(dataGridSelectedColumns);
 			// Show content
-			ShowColumnSetupList();
+			ShowColumnSetupList(MainSettings.GetCurrentGridFilter().ColListId);
 			ShowAllColumn();
 			// Mouse scrolling
 			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
@@ -189,17 +180,8 @@ namespace WinApp.Forms
 
 		#region ColumnList
 
-		private void popupColumnSetupType_Click(object sender, EventArgs e)
-		{
-			Code.DropDownGrid.Show(popupColumnListType, Code.DropDownGrid.DropDownGridType.List, "Tank View,Battle View");
-		}
-
 		private void popupColumnListType_TextChanged(object sender, EventArgs e)
 			{
-				if (popupColumnListType.Text == "Tank View")
-					colType = 1;
-				else if (popupColumnListType.Text == "Battle View")
-					colType = 2;
 				ShowColumnSetupList();
 				ShowAllColumn();
 			}
@@ -208,7 +190,7 @@ namespace WinApp.Forms
 		private void ShowColumnSetupList(int ColumListId = 0)
 		{
 			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol, defaultFavListId from columnList where colType=@colType order by COALESCE(position,99), name; ";
-			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			dtColumnList = DB.FetchData(sql);
 			dataGridColumnList.DataSource = dtColumnList;
 			dataGridColumnList.Columns[0].Width = 50;
@@ -257,12 +239,12 @@ namespace WinApp.Forms
 				SelectedColumnListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
 				txtColumnListName.Text = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
 				// Set if default column list
-				string defaultText = "Not used as default colum setup for " + popupColumnListType.Text;
+				string defaultText = "Not used as default colum setup list on startup";
 				btnSetAsDefaultColumnList.Enabled = true;
 				Color defaultTextColor = ColorTheme.ControlFont;
 				if (Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["colDefault"].Value))
 				{
-					defaultText = "Used as default colum setup for " + popupColumnListType.Text;
+					defaultText = "Used as default colum setup list on startup";
 					defaultTextColor = Color.ForestGreen;
 					btnSetAsDefaultColumnList.Enabled = false;
 				}
@@ -372,7 +354,7 @@ namespace WinApp.Forms
 			// Add new favlist
 			sql += "insert into columnList (colType, position, name) values (@colType, @newColumnListPos, @newFavListName); ";
 			// Add parameters
-			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@newFavListName", newColumnListName, DB.SqlDataType.VarChar);
 			// Execute now
@@ -401,7 +383,7 @@ namespace WinApp.Forms
 			// todo: check for unsaved changes first
 			string sql = "update ColumnList set colDefault=0 where colType=@colType; " + 
 						 "update ColumnList set colDefault=1 where colType=@colType and id=@id;";
-			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 			ShowColumnSetupList(SelectedColumnListId);
@@ -502,7 +484,7 @@ namespace WinApp.Forms
 		{
 			// Get colGroups to show in toolbar
 			string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL order by position; "; // First get all sorted by position
-			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			// Now get unique values based
 			List<string> colGroup = new List<string>();
@@ -543,7 +525,7 @@ namespace WinApp.Forms
 			}
 			if (colGroup != "All") sql += "AND colGroup=@colGroup ";
 			sql += "ORDER BY position; ";
-			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@colGroup", colGroup, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			dataGridAllColumns.DataSource = dt;

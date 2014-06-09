@@ -18,11 +18,6 @@ using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using WinApp.Code;
 
-
-//using IronPython.Hosting;
-//using Microsoft.Scripting.Hosting;
-//using IronPython.Runtime;
-
 namespace WinApp.Forms
 {
 	public partial class Main : Form
@@ -88,14 +83,15 @@ namespace WinApp.Forms
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Tank Grinding Setup");
-			ToolStripMenuItem dataGridMainPopup_Other2 = new ToolStripMenuItem("Menu #2");
-			ToolStripMenuItem dataGridMainPopup_Other3 = new ToolStripMenuItem("Menu #3");
+			//ToolStripMenuItem dataGridMainPopup_Other2 = new ToolStripMenuItem("Menu #2");
+			//ToolStripMenuItem dataGridMainPopup_Other3 = new ToolStripMenuItem("Menu #3");
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
-			dataGridMainPopup_Other2.Click += new EventHandler(dataGridMainPopup_Other_Click);
-			dataGridMainPopup_Other3.Click += new EventHandler(dataGridMainPopup_Other_Click);
+			//dataGridMainPopup_Other2.Click += new EventHandler(dataGridMainPopup_Other_Click);
+			//dataGridMainPopup_Other3.Click += new EventHandler(dataGridMainPopup_Other_Click);
 			//Add to main context menu
-			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_Other2, dataGridMainPopup_Other3 });
+			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup });
+			//dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_Other2, dataGridMainPopup_Other3 });
 			//Assign to datagridview
 			dataGridMain.ContextMenuStrip = dataGridMainPopup;
 		}
@@ -139,8 +135,10 @@ namespace WinApp.Forms
 			// Check DB Version
 			bool versionOK = DBVersion.CheckForDbUpgrade();
 			// Add init items to Form
+			
+			// Init
 			SetFormTitle();
-			GetFavList();
+			SetFavListMenu();
 			GridShow("Application started");
 			SetListener();
 			// Battle result file watcher
@@ -245,35 +243,6 @@ namespace WinApp.Forms
 			Refresh();
 		}
 
-		private void GetFavList()
-		{
-			// Remove favlist from menu
-			toolItemTankFilter_FavSeparator.Visible = false;
-			for (int i = 1; i <= 10; i++)
-			{
-				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-				menuItem.Visible = false;
-			}
-			// Add favlist to menu
-			string sql = "select * from favList where position > 0 order by position";
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
-			{
-				toolItemTankFilter_FavSeparator.Visible = true;
-				foreach (DataRow dr in dt.Rows)
-				{
-					ToolStripMenuItem menuItem = (ToolStripMenuItem)toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
-					menuItem.Text = dr["name"].ToString();
-					menuItem.Visible = true;
-					menuItem.Checked = false;
-					// check selected
-					if (tankFavListSelectedId == Convert.ToInt32(dr["id"]))
-						menuItem.Checked = true;
-				}
-			}
-		}
-
-
 		private void SetListener()
 		{
 			toolItemSettingsRun.Checked = (Config.Settings.dossierFileWathcherRun == 1);
@@ -362,71 +331,77 @@ namespace WinApp.Forms
 
 		private void toolItemViewSelected_Click(object sender, EventArgs e)
 		{
-			// First remember current Tank Filter selection
-			if (toolItemViewTankInfo.Checked)
+			// Clicked on toolitem: Overall, Tank or Battle
+			ToolStripButton toolStripButton = (ToolStripButton)sender;
+			GridView.Views newGridView = new GridView.Views();
+			// Check view according to what tool button presed
+			if (toolStripButton == toolItemViewOverall)
+				newGridView = GridView.Views.Overall;
+			else if (toolStripButton == toolItemViewTankInfo)
+				newGridView = GridView.Views.Tank;
+			else if (toolStripButton == toolItemViewBattles)
+				newGridView = GridView.Views.Battle;
+			if (newGridView != MainSettings.View) // Only do action if changed view
 			{
-				tankFavListTankView = tankFavListSelected;
-			}
-			else if (toolItemViewBattles.Checked)
-			{
-				tankFavListBattleView = tankFavListSelected;
-			}
-			// Select view
-			ToolStripButton menuItem = (ToolStripButton)sender;
-			// Uncheck not selected menu first
-			bool showOverall = (menuItem == toolItemViewOverall);
-			bool showTank = (menuItem == toolItemViewTankInfo);
-			bool showBattle = (menuItem == toolItemViewBattles);
-			if (!showOverall) toolItemViewOverall.Checked = false;
-			if (!showTank) toolItemViewTankInfo.Checked = false;
-			if (!showBattle) toolItemViewBattles.Checked = false;
-			if (!menuItem.Checked)
-			{
-				menuItem.Checked = true;
-				if (showOverall)
+				// Uncheck previous selected view
+				switch (MainSettings.View)
 				{
-					// Show/Hide Tool Items
-					toolItemBattles.Visible = false;
-					toolItemTankFilter.Visible = false;
-					toolItemColumnSelect.Visible = false;
-					toolItemRefreshSeparator.Visible = true;
-					toolItemRefreshSeparator.Visible = false;
-					// Remove datagrid context menu
-					dataGridMain.ContextMenuStrip = null;
-					// Start slider
-					InfoPanelSlideStart(true);
+					case GridView.Views.Overall:
+						toolItemViewOverall.Checked = false;
+						break;
+					case GridView.Views.Tank:
+						toolItemViewTankInfo.Checked = false;
+						break;
+					case GridView.Views.Battle:
+						toolItemViewBattles.Checked = false;
+						break;
 				}
-				else if (showTank)
+				// Check new view
+				toolStripButton.Checked = true;
+				// Set new view as selected
+				MainSettings.View = newGridView;
+				// Set new values according to new selected view
+				switch (MainSettings.View)
 				{
-					// Show/Hide Tool Items
-					toolItemBattles.Visible = false;
-					toolItemTankFilter.Visible = true;
-					toolItemColumnSelect.Visible = true;
-					toolItemRefreshSeparator.Visible = true;
-					// Apply last selected Tank Filter
-					SetTankFilterCheckedElements(tankFavListTankView);
-					// Get Column Setup List
-					GetColumnSetupList();
-					// Add datagrid context menu
-					CreateDataGridContextMenu();
-					// Info slider hide
-					InfoPanelSlideStart(false);
-				}
-				else if (showBattle)
-				{
-					// Show/Hide Tool Items
-					toolItemBattles.Visible = false;
-					toolItemTankFilter.Visible = true;
-					toolItemColumnSelect.Visible = true;
-					toolItemRefreshSeparator.Visible = true;
-					// Apply last selected Tank Filter
-					SetTankFilterCheckedElements(tankFavListBattleView);
-					// Get Column Setup List
-					GetColumnSetupList();
-					// Add datagrid context menu
-					CreateDataGridContextMenu();
-					// Info slider hide
-					InfoPanelSlideStart(false);
+					case GridView.Views.Overall:
+						// Show/Hide Tool Items
+						toolItemBattles.Visible = false;
+						toolItemTankFilter.Visible = false;
+						toolItemColumnSelect.Visible = false;
+						toolItemRefreshSeparator.Visible = true;
+						toolItemRefreshSeparator.Visible = false;
+						// Remove datagrid context menu
+						dataGridMain.ContextMenuStrip = null;
+						// Start slider
+						InfoPanelSlideStart(true);
+						break;
+					case GridView.Views.Tank:
+						// Show/Hide Tool Items
+						toolItemBattles.Visible = false;
+						toolItemTankFilter.Visible = true;
+						toolItemColumnSelect.Visible = true;
+						toolItemRefreshSeparator.Visible = true;
+						// Get Column Setup List - also finds correct tank filter/fav list
+						SetColListMenu();
+						// Add datagrid context menu (right click on datagrid)
+						CreateDataGridContextMenu();
+						// Info slider hide
+						InfoPanelSlideStart(false);
+						break;
+					case GridView.Views.Battle:
+						// Show/Hide Tool Items
+						toolItemBattles.Visible = false;
+						toolItemTankFilter.Visible = true;
+						toolItemColumnSelect.Visible = true;
+						toolItemRefreshSeparator.Visible = true;
+						// Get Column Setup List  - also finds correct tank filter/fav list
+						SetColListMenu();
+						// Add datagrid context menu (right click on datagrid)
+						CreateDataGridContextMenu();
+						// Info slider hide
+						InfoPanelSlideStart(false);
+						break;
+						
 				}
 				GridShow(); // Changed view, no status message applied, sets in GridShow
 			}
@@ -434,71 +409,412 @@ namespace WinApp.Forms
 
 		private void GridShow(string Status2Message = "")
 		{
-			if (toolItemViewOverall.Checked)
+			switch (MainSettings.View)
 			{
-				lblOverView.Text = "Welcome " + Config.Settings.playerName;
-				if (Status2Message == "") Status2Message = "Selected overall view";
-				GridShowOverall(Status2Message);
-			}
-			else if (toolItemViewTankInfo.Checked)
-			{
-				if (Status2Message == "") Status2Message = "Selected tank view";
-				GridShowTank(Status2Message);
-			}
-			else if (toolItemViewBattles.Checked)
-			{
-				if (Status2Message == "") Status2Message = "Selected battle view";
-				GridShowBattle(Status2Message);
+				case GridView.Views.Overall:
+					lblOverView.Text = "Welcome " + Config.Settings.playerName;
+					if (Status2Message == "") Status2Message = "Selected overall view";
+					GridShowOverall(Status2Message);
+					break;
+				case GridView.Views.Tank:
+					if (Status2Message == "") Status2Message = "Selected tank view";
+					GridShowTank(Status2Message);
+					break;
+				case GridView.Views.Battle:
+					if (Status2Message == "") Status2Message = "Selected battle view";
+					GridShowBattle(Status2Message);
+					break;
+				default:
+					break;
 			}
 		}
-
 
 		#endregion
 
-		#region Data Grid - OVERALL VIEW *********************************************************************************************************
+		#region Menu Items: Col List
 
-		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
+		private void SetColListMenu()
+		{
+			// Hide and uncheck all colum setup list menu items
+			for (int i = 1; i <= 13; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Visible = false;
+				menuItem.Checked = false;
+			}
+			bool separatorVisible = false;
+			// Add colum lists according to database
+			string sql = "select id, name, position from columnList where colType=@colType and position is not null order by position; ";
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				foreach (DataRow dr in dt.Rows)
+				{
+					if (Convert.ToInt32(dr["position"]) > 3) separatorVisible = true;
+					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(dr["position"]).ToString("00")] as ToolStripMenuItem;
+					menuItem.Text = dr["name"].ToString();
+					menuItem.Visible = true;
+					// check if selected
+					if (MainSettings.GetCurrentGridFilter().ColListId == Convert.ToInt32(dr["id"]))
+					{
+						menuItem.Checked = true;
+						toolItemColumnSelect.Text = menuItem.Text;
+					}
+				}
+			}
+			toolItemColumnSelectSep.Visible = separatorVisible;
+			SelectFavMenuItem();
+		}
+
+		private void toolItemColumnSelect_Click(object sender, EventArgs e)
+		{
+			// Selected a colList from toolbar
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			// Get colListId for the selected colList
+			int newColListId = ColListHelper.GetId(selectedMenu.Text);
+			// Check if changed
+			if (MainSettings.GetCurrentGridFilter().ColListId != newColListId)
+			{
+				// Changed colList
+				// Uncheck colum setup list menu items
+				for (int i = 1; i <= 13; i++)
+				{
+					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
+					menuItem.Checked = false;
+				}
+				// Check and select new colList 
+				selectedMenu.Checked = true;
+				toolItemColumnSelect.Text = selectedMenu.Text;
+				// Get this colList to find what favList to show
+				GridFilter.Settings newColListSettings = ColListHelper.GetSettingsForColList(newColListId);
+				// Save selected column setup list to current
+				GridFilter.Settings currentColListSettings = MainSettings.GetCurrentGridFilter();
+				currentColListSettings.ColListId = newColListId;
+				currentColListSettings.ColListName = selectedMenu.Text;
+				if (newColListSettings.FavListShow != GridFilter.FavListShowType.UseCurrent)
+				{
+					currentColListSettings.FavListId = newColListSettings.FavListId;
+					currentColListSettings.FavListName = newColListSettings.FavListName;
+					currentColListSettings.FavListShow = newColListSettings.FavListShow;
+				}
+				MainSettings.UpdateCurrentGridFilter(currentColListSettings);
+				Refresh();
+				SelectFavMenuItem();
+				Refresh();
+				// Show grid
+				GridShow("Selected column setup: " + selectedMenu.Text);
+			}
+		}
+
+		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.ColList();
+			frm.ShowDialog();
+			SetColListMenu(); // Refresh column setup list now
+			GridShow("Refreshed grid after column setup change"); // Refresh grid now
+		}
+
+		#endregion
+
+		#region Menu Items: Tank Filter / Fav List 
+
+		private void SetFavListMenu()
+		{
+			// Hide and uncheck favlist from menu
+			toolItemTankFilter_FavSeparator.Visible = false;
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Visible = false;
+				menuItem.Checked = false;
+			}
+			// Add favlist to menu
+			string sql = "select * from favList where position > 0 order by position";
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				toolItemTankFilter_FavSeparator.Visible = true;
+				foreach (DataRow dr in dt.Rows)
+				{
+					ToolStripMenuItem menuItem = (ToolStripMenuItem)toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
+					menuItem.Text = dr["name"].ToString();
+					menuItem.Visible = true;
+				}
+			}
+		}
+
+		private void toolItem_Fav_Clicked(object sender, EventArgs e)
+		{
+			// Selected favList from toolbar
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			// Get favListId for selected favList
+			int newFavListId = FavListHelper.GetId(selectedMenu.Text);
+			// Changed FavList
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.FavListId = newFavListId;
+			gf.FavListName = selectedMenu.Text;
+			gf.FavListShow = GridFilter.FavListShowType.FavList;
+			MainSettings.UpdateCurrentGridFilter(gf);
+			// Uncheck fav list menu items
+			TankFilterMenuUncheck(true, true, true, true, false);
+			// check fav list menu select
+			selectedMenu.Checked = true;
+			toolItemTankFilter.Text = selectedMenu.Text;
+			// Set menu item and show grid
+			GridShow("Selected favourite tank list: " + selectedMenu.Text);
+		}
+
+		private void SelectFavMenuItem()
+		{
+			// Go to previous fav tank list
+			switch (MainSettings.GetCurrentGridFilter().FavListShow)
+			{
+				case GridFilter.FavListShowType.UseCurrent:
+					// No action, use previous selected tanks filter
+					break;
+				case GridFilter.FavListShowType.AllTanks:
+					// Remove all filters, select All Tanks
+					TankFilterMenuUncheck(true, true, true, true, false);
+					break;
+				case GridFilter.FavListShowType.FavList:
+					// Go to 
+					TankFilterMenuUncheck(true, true, true, true, false);
+					// Find favlist in menu and put on checkbox
+					for (int i = 1; i <= 10; i++)
+					{
+						ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+						if (menuItem.Visible == true && menuItem.Text == MainSettings.GetCurrentGridFilter().FavListName)
+						{
+							menuItem.Checked = true;
+							toolItemTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void TankFilterMenuUncheck(bool tier, bool country, bool type, bool favList, bool reopenMenu = true)
+		{
+			if (favList)
+			{
+				FavListMenuUncheck();
+			}
+			if (tier)
+			{
+				toolItemTankFilter_Tier1.Checked = false;
+				toolItemTankFilter_Tier2.Checked = false;
+				toolItemTankFilter_Tier3.Checked = false;
+				toolItemTankFilter_Tier4.Checked = false;
+				toolItemTankFilter_Tier5.Checked = false;
+				toolItemTankFilter_Tier6.Checked = false;
+				toolItemTankFilter_Tier7.Checked = false;
+				toolItemTankFilter_Tier8.Checked = false;
+				toolItemTankFilter_Tier9.Checked = false;
+				toolItemTankFilter_Tier10.Checked = false;
+			}
+			if (country)
+			{
+				toolItemTankFilter_CountryChina.Checked = false;
+				toolItemTankFilter_CountryFrance.Checked = false;
+				toolItemTankFilter_CountryGermany.Checked = false;
+				toolItemTankFilter_CountryJapan.Checked = false;
+				toolItemTankFilter_CountryUK.Checked = false;
+				toolItemTankFilter_CountryUSA.Checked = false;
+				toolItemTankFilter_CountryUSSR.Checked = false;
+			}
+			if (type)
+			{
+				toolItemTankFilter_TypeHT.Checked = false;
+				toolItemTankFilter_TypeLT.Checked = false;
+				toolItemTankFilter_TypeMT.Checked = false;
+				toolItemTankFilter_TypeSPG.Checked = false;
+				toolItemTankFilter_TypeTD.Checked = false;
+			}
+			// Count selected menu items
+			tankFilterItemCount = 0;
+			if (toolItemTankFilter_CountryChina.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryFrance.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryGermany.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryUK.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryUSA.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryUSSR.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_CountryJapan.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeLT.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeMT.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeHT.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeTD.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_TypeSPG.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier1.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier2.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier3.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier4.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier5.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier6.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier7.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
+			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
+			// Set "All Tanks" as checked if no tank filter is selected and no fav list is selected
+			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0 && MainSettings.GetCurrentGridFilter().FavListShow != GridFilter.FavListShowType.FavList);
+			// Reopen menu item exept for "all tanks"
+			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
+		}
+
+		private void FavListMenuUncheck()
+		{
+			// Deselect all favlist
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Checked = false;
+			}
+		}
+
+		private void TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem, bool checkMenuItem = true)
+		{
+			string status2message = "";
+			// Update selected tankfilter type
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.FavListShow = GridFilter.FavListShowType.AllTanks;
+			MainSettings.UpdateCurrentGridFilter(gf);
+			if (menuItem.Text == "All Tanks")
+			{
+				TankFilterMenuUncheck(true, true, true, true, false);
+				status2message = "Selected all tanks";
+			}
+			else
+			{
+				// Remove favlist
+				FavListMenuUncheck();
+				// Update menu tank filter checked elements
+				if (checkMenuItem)
+				{
+					menuItem.Checked = !menuItem.Checked;
+					if (menuItem.Checked)
+						tankFilterItemCount++;
+					else
+						tankFilterItemCount--;
+				}
+				toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
+				// Refresh grid
+				// Get Tank filter
+				string tankFilterMessage = "";
+				string tankFilter = "";
+				string tankJoin = "";
+				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
+				status2message = "Selected tank filter: " + tankFilterMessage;
+				toolItemTankFilter.ShowDropDown();
+				parentMenuItem.ShowDropDown();
+			}
+			GridShow(status2message);
+		}
 		
-		private void GridShowOverall(string Status2Message)
+		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
-			try
-			{
-				mainGridFormatting = false;
-				dataGridMain.DataSource = null;
-				if (!DB.CheckConnection()) return;
-				string sql =
-					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
-					"UNION " +
-					"SELECT 'Total battles' as Data, cast(SUM(battles) as varchar) from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.Id where playerid=@playerid " +
-					"UNION " +
-					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
-				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
-				dataGridMain.DataSource = DB.FetchData(sql);
-				// Text cols
-				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				// Finish
-				GridResizeOverall();
-				ResizeNow();
-				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
-				// Status mesage
-				SetStatus2(Status2Message);
-			}
-			catch (Exception)
-			{
-				
-				//throw;
-			}
-			
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			TankFilterMenuSelect(menuItem, toolItemTankFilter_Tier);
 		}
 
-		private void GridResizeOverall()
+		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
-			dataGridMain.Columns[0].Width = 100;
-			dataGridMain.Columns[1].Width = 500;
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			TankFilterMenuSelect(menuItem, toolItemTankFilter_Tier);
 		}
+
+		private void toolItemTankFilter_Type_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			TankFilterMenuSelect(menuItem, toolItemTankFilter_Type);
+		}
+
+		private void toolItemTankFilter_Country_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			TankFilterMenuSelect(menuItem, toolItemTankFilter_Country);
+		}
+
+		private void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				TankFilterMenuUncheck(false, true, false, false);
+				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+				TankFilterMenuSelect(menuItem, toolItemTankFilter_Country, false);
+			}
+		}
+
+		private void toolItemTankFilter_Type_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				TankFilterMenuUncheck(false, false, true, false);
+				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+				TankFilterMenuSelect(menuItem, toolItemTankFilter_Type, false);
+			}
+		}
+
+		private void toolItemTankFilter_Tier_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				TankFilterMenuUncheck(true, false, false, false);
+				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+				TankFilterMenuSelect(menuItem, toolItemTankFilter_Tier, false);
+			}
+		}
+
+		private void toolItemTankFilter_MouseDown(object sender, MouseEventArgs e)
+		{
+			// On right mouse click just display status message for current filter
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				string where = "";
+				string join = "";
+				string message = "";
+				Tankfilter(out where, out join, out message);
+				SetStatus2("Current selected tank filter: " + message);
+			}
+		}
+
+		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
+		{
+			// Show fal list editor
+			Form frm = new Forms.FavTanks(MainSettings.GetCurrentGridFilter().FavListId);
+			frm.ShowDialog();
+			// After fav list changes reload menu
+			SetFavListMenu(); // Reload fav list items
+			GridShow("Refreshed grid after fovourite tank list change"); // Refresh grid now
+		}
+
+		#endregion
+
+		#region Menu Items: Battle Time
+			
+		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
+		{
+			toolItemBattles1d.Checked = false;
+			toolItemBattlesYesterday.Checked = false;
+			toolItemBattles3d.Checked = false;
+			toolItemBattles1w.Checked = false;
+			toolItemBattles2w.Checked = false;
+			toolItemBattles1m.Checked = false;
+			toolItemBattles3m.Checked = false;
+			toolItemBattles6m.Checked = false;
+			toolItemBattles1y.Checked = false;
+			toolItemBattles2y.Checked = false;
+			toolItemBattlesAll.Checked = false;
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			menuItem.Checked = true;
+			toolItemBattles.Text = menuItem.Text;
+			GridShowBattle("Selected battle time: " + menuItem.Text);
+		}
+
+		#endregion
+
+		#region Col List Select
 
 		private class colListClass
 		{
@@ -506,6 +822,7 @@ namespace WinApp.Forms
 			public int colWidth;
 			public string colType;
 		}
+
 		private void GetSelectedColumnList(out string Select, out List<colListClass> colList)
 		{
 			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnSelection.colWidth, columnSelection.colDataType  " +
@@ -513,7 +830,7 @@ namespace WinApp.Forms
 						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
 						 "ORDER BY columnListSelection.sortorder; ";
-			DB.AddWithValue(ref sql, "@columnListId", columnListSelectedId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			Select = "";
 			List<colListClass> selectColList = new List<colListClass>();
@@ -539,6 +856,136 @@ namespace WinApp.Forms
 				}
 			}
 			colList = selectColList;
+		}
+
+		#endregion
+					
+		#region Tank Filter 
+
+		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
+		
+		private void Tankfilter(out string whereSQL, out string joinSQL, out string Status2Message)
+		{
+			string tier = "";
+			string nation = "";
+			string nationId = "";
+			string type = "";
+			string typeId = "";
+			string message = "";
+			string newWhereSQL = "";
+			string newJoinSQL = "";
+			// Calc filter and set statusbar message
+			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
+			{
+				toolItemTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
+				message = "Favourite list: " + toolItemTankFilter.Text;
+				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
+				DB.AddWithValue(ref newJoinSQL, "@favListId", MainSettings.GetCurrentGridFilter().FavListId, DB.SqlDataType.Int);
+			}
+			else if (tankFilterItemCount == 0)
+			{
+				toolItemTankFilter.Text = "All Tanks";
+				message = "All Tanks";
+			}
+			else
+			{
+				if (toolItemTankFilter_Tier1.Checked) { tier += "1,"; }
+				if (toolItemTankFilter_Tier2.Checked) { tier += "2,"; }
+				if (toolItemTankFilter_Tier3.Checked) { tier += "3,"; }
+				if (toolItemTankFilter_Tier4.Checked) { tier += "4,"; }
+				if (toolItemTankFilter_Tier5.Checked) { tier += "5,"; }
+				if (toolItemTankFilter_Tier6.Checked) { tier += "6,"; }
+				if (toolItemTankFilter_Tier7.Checked) { tier += "7,"; }
+				if (toolItemTankFilter_Tier8.Checked) { tier += "8,"; }
+				if (toolItemTankFilter_Tier9.Checked) { tier += "9,"; }
+				if (toolItemTankFilter_Tier10.Checked) { tier += "10,"; }
+				if (toolItemTankFilter_CountryChina.Checked) { nation += "China,"; nationId += "3,"; }
+				if (toolItemTankFilter_CountryFrance.Checked) { nation += "France,"; nationId += "4,"; }
+				if (toolItemTankFilter_CountryGermany.Checked) { nation += "Germany,"; nationId += "1,"; }
+				if (toolItemTankFilter_CountryUK.Checked) { nation += "UK,"; nationId += "5,"; }
+				if (toolItemTankFilter_CountryUSA.Checked) { nation += "USA,"; nationId += "2,"; }
+				if (toolItemTankFilter_CountryUSSR.Checked) { nation += "USSR,"; nationId += "0,"; }
+				if (toolItemTankFilter_CountryJapan.Checked) { nation += "Japan,"; nationId += "6,"; }
+				if (toolItemTankFilter_TypeLT.Checked) { type += "Light,"; typeId += "1,"; }
+				if (toolItemTankFilter_TypeMT.Checked) { type += "Medium,"; typeId += "2,"; }
+				if (toolItemTankFilter_TypeHT.Checked) { type += "Heavy,"; typeId += "3,"; }
+				if (toolItemTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; }
+				if (toolItemTankFilter_TypeSPG.Checked) { type += "SPG,"; typeId += "5,"; }
+				// Compose status message
+				if (tier.Length > 0)
+				{
+					string tierId = tier;
+					tier = " Tier=" + tier.Substring(0, tier.Length-1);
+					newWhereSQL = " tank.tier IN (" + tierId.Substring(0, tierId.Length - 1) + ") ";
+				}
+				if (nation.Length > 0)
+				{
+					nation = " Nation=" + nation.Substring(0, nation.Length - 1);
+					if (newWhereSQL != "") newWhereSQL += " AND ";
+					newWhereSQL += " tank.countryId IN (" + nationId.Substring(0, nationId.Length - 1) + ") ";
+				}
+				if (type.Length > 0)
+				{
+					type = " Type=" + type.Substring(0, type.Length - 1);
+					if (newWhereSQL != "") newWhereSQL += " AND ";
+					newWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
+				}
+				if (newWhereSQL != "") newWhereSQL = " AND (" + newWhereSQL + ") ";
+				message = nation + type + tier;
+				if (message.Length > 0) message = message.Substring(1);
+				// Add correct mein menu name
+				if (tankFilterItemCount == 1)
+				{
+					toolItemTankFilter.Text = message;
+				}
+				else
+				{
+					toolItemTankFilter.Text = "Tank filter";
+				}
+			}
+			whereSQL = newWhereSQL;
+			joinSQL = newJoinSQL;
+			Status2Message = message;
+		}
+
+		#endregion
+	
+		#region Data Grid - OVERALL VIEW *********************************************************************************************************
+
+		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
+		
+		private void GridShowOverall(string Status2Message)
+		{
+			try
+			{
+				mainGridFormatting = false;
+				dataGridMain.DataSource = null;
+				if (!DB.CheckConnection()) return;
+				string sql =
+					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
+					"UNION " +
+					"SELECT 'Total battles' as Data, cast(SUM(battles) as varchar) from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.Id where playerid=@playerid " +
+					"UNION " +
+					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
+				dataGridMain.DataSource = DB.FetchData(sql);
+				// Text cols
+				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				// Finish
+				dataGridMain.Columns[0].Width = 100;
+				dataGridMain.Columns[1].Width = 500; 
+				ResizeNow();
+				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
+				// Status mesage
+				SetStatus2(Status2Message);
+			}
+			catch (Exception)
+			{
+				//throw;
+			}
 		}
 
 		#endregion
@@ -638,7 +1085,6 @@ namespace WinApp.Forms
 			string tankJoin = "";
 			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
 			string sortordercol = "0 as sortorder ";
-			if (tankJoin != "") sortordercol = "favListTank.sortorder as sortorder ";
 			string sql = 
 				"SELECT " + select + 
 				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
@@ -820,11 +1266,11 @@ namespace WinApp.Forms
 				}
 			}
 			// Format grid footer
-			if (rowcount > 1)
-			{
-				dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-				dataGridMain.Rows[rowcount + 1].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-			}
+			//if (rowcount > 1)
+			//{
+			//	dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+			//	dataGridMain.Rows[rowcount + 1].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+			//}
 			// Finish up
 			ResizeNow();
 			toolItemBattles.Visible = true;
@@ -925,6 +1371,8 @@ namespace WinApp.Forms
 				else if (toolItemViewBattles.Checked)
 				{
 					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);
+					if (footer)
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
 					if (col.Equals("Tank"))
 					{
 						string battleTime = dataGridMain["battleTimeToolTip", e.RowIndex].Value.ToString();
@@ -992,495 +1440,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-	
-		#region Column List Filter
-
-		private int columnListcolType = 0; // To keep track on current column list type
-		private int columnListSelectedId = 0; // To keep track on current selected column list
-		private int columnListSelectedTankView = 0; // Remember last selected column list for tank view, 0 == Use the default one
-		private int columnListSelectedBattleView = 0; // Remember last selected column list for battle view, 0 == Use the default one
-
-		private void GetColumnSetupList()
-		{
-			columnListcolType = 0;
-			if (toolItemViewTankInfo.Checked) columnListcolType = 1;
-			if (toolItemViewBattles.Checked) columnListcolType = 2;
-			if (columnListcolType != 0)
-			{
-				// Hide all colum setup list menu items
-				for (int i = 1; i <= 13; i++)
-				{
-					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
-					menuItem.Visible = false;
-					menuItem.Checked = false;
-				}
-				bool separatorVisible = false;
-				// Add colum lists
-				string sql = "select name, position, colDefault from columnList where colType=@colType and position is not null order by position; ";
-				DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
-				int colDefault = 1; // If no default is set, use first menu item
-				if (dt.Rows.Count > 0)
-				{
-					foreach (DataRow dr in dt.Rows)
-					{
-						if (Convert.ToInt32(dr["position"]) > 3) separatorVisible = true;
-						ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(dr["position"]).ToString("00")] as ToolStripMenuItem;
-						menuItem.Text = dr["name"].ToString();
-						menuItem.Visible = true;
-						if (Convert.ToBoolean(dr["colDefault"])) colDefault = Convert.ToInt32(dr["position"]); // Set default
-					}
-				}
-				toolItemColumnSelectSep.Visible = separatorVisible;
-				// Set checked menu item, use previus selected or use default
-				if (columnListcolType == 1)
-				{
-					if (columnListSelectedTankView != 0)
-						colDefault = columnListSelectedTankView;
-				}
-				else if (columnListcolType == 2)
-				{
-					if (columnListSelectedBattleView != 0)
-						colDefault = columnListSelectedBattleView;
-				}
-				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
-				checkedMenuItem.Checked = true;
-				toolItemColumnSelect.Text = checkedMenuItem.Text;
-				ColumnListSelected columnListSelected = GetSelectedColumnListInfo(checkedMenuItem.Text);
-				columnListSelectedId = columnListSelected.id;
-			}
-		}
-
-		private class ColumnListSelected
-		{
-			public int id;
-			public int defaultFavListId;
-			public string defaultFavListName;
-		}
-
-		private void toolItemColumnSelect_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
-			SelectedColumList(selectedMenu);
-			GridShow("Selected column setup: " + selectedMenu.Text);
-		}
-
-		private void SelectedColumList(ToolStripMenuItem selectedMenu)
-		{
-			// Hide all colum setup list menu items
-			for (int i = 1; i <= 13; i++)
-			{
-				ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
-				menuItem.Checked = false;
-			}
-			selectedMenu.Checked = true;
-			toolItemColumnSelect.Text = selectedMenu.Text;
-			// Get and remember selected column setup list
-			ColumnListSelected columnListSelected = GetSelectedColumnListInfo(selectedMenu.Text);
-			columnListSelectedId = columnListSelected.id;
-			int colSelected = Convert.ToInt32(selectedMenu.Name.Substring(selectedMenu.Name.Length - 2, 2));
-			if (columnListcolType == 1)
-				columnListSelectedTankView = colSelected;
-			else if (columnListcolType == 2)
-				columnListSelectedBattleView = colSelected;
-			SelectColumnListDefaultFavList(columnListSelected);
-		}
-
-		private void SelectColumnListDefaultFavList(ColumnListSelected columnListSelected)
-		{
-			// Check columList defaultFavList
-			if (columnListSelected.defaultFavListId != -1) // Use current
-			{
-				// Set spesific column list
-				if (columnListSelected.defaultFavListId == -2) // All Tanks
-				{
-					toolItemTankFilter_Uncheck(true, true, true, true, false);
-				}
-				else // Spesific fav list
-				{
-					toolItemTankFilter_All.Checked = false; // Uncheck All Tanks
-					toolItemTankFavList_Uncheck(); // Uncheck all favlist 
-					// Select new favlist
-					for (int i = 1; i <= 10; i++)
-					{
-						ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-						if (menuItem.Text == columnListSelected.defaultFavListName)
-						{
-							menuItem.Checked = true;
-							toolItemTankFilter.Text = columnListSelected.defaultFavListName;
-							tankFavListSelected = columnListSelected.defaultFavListName;
-							tankFavListSelectedId = columnListSelected.defaultFavListId;
-							continue;
-						}
-					}
-				}
-			}
-		}
-
-		private ColumnListSelected GetSelectedColumnListInfo(string ColumnListName)
-		{
-			ColumnListSelected cls = new ColumnListSelected();
-			string sql = "select columnList.id as id, columnList.defaultFavListId as defaultFavListId, favList.name as defaultFavListName " +
-						 "from columnList left join favList on columnList.defaultFavListId = favList.id " +
-						 "where columnList.colType=@colType and columnList.name=@name";
-			DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@name", ColumnListName, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
-			{
-				cls.id = Convert.ToInt32(dt.Rows[0]["id"]);
-				cls.defaultFavListId = Convert.ToInt32(dt.Rows[0]["defaultFavListId"]);
-				if (dt.Rows[0]["defaultFavListName"] == DBNull.Value)
-					cls.defaultFavListName = "";
-				else
-					cls.defaultFavListName = dt.Rows[0]["defaultFavListName"].ToString();
-			}
-			return cls;
-		}
-
-		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
-		{
-			Forms.ColSetup.ColumnSetupType colSetupType = new Forms.ColSetup.ColumnSetupType();
-			if (toolItemViewBattles.Checked)
-				colSetupType = Forms.ColSetup.ColumnSetupType.BattleView;
-			else if (toolItemViewTankInfo.Checked)
-				colSetupType = Forms.ColSetup.ColumnSetupType.TankView;
-			Form frm = new Forms.ColSetup(colSetupType);
-			frm.ShowDialog();
-			GetColumnSetupList(); // Refresh column setup list now
-			GridShow("Refreshed grid after column setup change"); // Refresh grid now
-		}
-
-		#endregion
-			
-		#region Tank Filter
-
-		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
-		private string tankFavListSelected = ""; // To keep track on fav list selected for tank view
-		private int tankFavListSelectedId = 0; // To keep track on fav list selected for tank view
-		private string tankFavListTankView = ""; // Remember fav list for tank view, "" == All tanks
-		private string tankFavListBattleView = ""; // Remember fav list for battle view, "" == All tanks
-
-		private void Tankfilter(out string whereSQL, out string joinSQL, out string Status2Message)
-			{
-			string tier = "";
-			string tierId = "";
-			string nation = "";
-			string nationId = "";
-			string type = "";
-			string typeId = "";
-			string message = "";
-			string newWhereSQL = "";
-			string newJoinSQL = "";
-			// Calc filter and set main menu title
-			if (tankFavListSelected != "")
-			{
-				toolItemTankFilter.Text = tankFavListSelected;
-				message = "Favourite list: " + tankFavListSelected;
-				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
-				DB.AddWithValue(ref newJoinSQL, "@favListId", tankFavListSelectedId, DB.SqlDataType.Int);
-			}
-			else if (tankFilterItemCount == 0)
-			{
-				toolItemTankFilter.Text = "All Tanks";
-				message = "All Tanks";
-			}
-			else
-			{
-				if (toolItemTankFilter_Tier1.Checked) { tier += "1, "; }
-				if (toolItemTankFilter_Tier2.Checked) { tier += "2, "; }
-				if (toolItemTankFilter_Tier3.Checked) { tier += "3, "; }
-				if (toolItemTankFilter_Tier4.Checked) { tier += "4, "; }
-				if (toolItemTankFilter_Tier5.Checked) { tier += "5, "; }
-				if (toolItemTankFilter_Tier6.Checked) { tier += "6, "; }
-				if (toolItemTankFilter_Tier7.Checked) { tier += "7, "; }
-				if (toolItemTankFilter_Tier8.Checked) { tier += "8, "; }
-				if (toolItemTankFilter_Tier9.Checked) { tier += "9, "; }
-				if (toolItemTankFilter_Tier10.Checked) { tier += "10, "; }
-				if (toolItemTankFilter_CountryChina.Checked) { nation += "China, "; nationId += "3, "; }
-				if (toolItemTankFilter_CountryFrance.Checked) { nation += "France, "; nationId += "4, "; }
-				if (toolItemTankFilter_CountryGermany.Checked) { nation += "Germany, "; nationId += "1, "; }
-				if (toolItemTankFilter_CountryUK.Checked) { nation += "UK, "; nationId += "5, "; }
-				if (toolItemTankFilter_CountryUSA.Checked) { nation += "USA, "; nationId += "2, "; }
-				if (toolItemTankFilter_CountryUSSR.Checked) { nation += "USSR, "; nationId += "0, "; }
-				if (toolItemTankFilter_CountryJapan.Checked) { nation += "Japan, "; nationId += "6, "; }
-				if (toolItemTankFilter_TypeLT.Checked) { type += "Light, "; typeId += "1, "; }
-				if (toolItemTankFilter_TypeMT.Checked) { type += "Medium, "; typeId += "2, "; }
-				if (toolItemTankFilter_TypeHT.Checked) { type += "Heavy, "; typeId += "3, "; }
-				if (toolItemTankFilter_TypeTD.Checked) { type += "TD, "; typeId += "4, "; }
-				if (toolItemTankFilter_TypeSPG.Checked) { type += "SPG, "; typeId += "5, "; }
-				// Compose status message
-				if (tier.Length > 0)
-				{
-					tierId = tier.Substring(0, tier.Length - 2);
-					tier = "Tier: " + tier.Substring(0, tier.Length - 2) + "   ";
-					newWhereSQL = " tank.tier IN (" + tierId + ") ";
-				}
-				if (nation.Length > 0)
-				{
-					nation = "Nation: " + nation.Substring(0, nation.Length - 2) + "   ";
-					nationId = nationId.Substring(0, nationId.Length - 2);
-					if (newWhereSQL != "") newWhereSQL += " AND ";
-					newWhereSQL += " tank.countryId IN (" + nationId + ") ";
-				}
-				if (type.Length > 0)
-				{
-					typeId = typeId.Substring(0, typeId.Length - 2);
-					type = "Type: " + type.Substring(0, type.Length - 2) + "   ";
-					if (newWhereSQL != "") newWhereSQL += " AND ";
-					newWhereSQL += " tank.tankTypeId IN (" + typeId + ") ";
-				}
-				if (newWhereSQL != "") newWhereSQL = " AND (" + newWhereSQL + ") ";
-				message = nation + type + tier;
-				if (message.Length > 0) message = message.Substring(0, message.Length - 3);
-				// Add correct mein menu name
-				if (tankFilterItemCount == 1)
-				{
-					toolItemTankFilter.Text = message;
-				}
-				else
-				{
-					toolItemTankFilter.Text = "Tank filter";
-				}
-			}
-			whereSQL = newWhereSQL;
-			joinSQL = newJoinSQL;
-			Status2Message = message;
-		}
-
-		private void ShowTankFilterStatus()
-		{
-			string where = "";
-			string join = "";
-			string message = "";
-			Tankfilter(out where, out join, out message);
-			SetStatus2("Current selected tank filter: " + message);
-		}
-
-		private void SetTankFilterCheckedElements(string FavList)
-		{
-			toolItemTankFilter_Uncheck(true, true, true, true, false);
-			tankFavListSelected = FavList;
-			if (FavList != "") // Selected Favlist
-			{
-				// Check current favlist
-				for (int i = 1; i <= 10; i++)
-				{
-					ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-					if (menuItem.Text == FavList) menuItem.Checked = true;
-				}
-				// Uncheck all tanks
-				toolItemTankFilter_All.Checked = false;
-			}
-		}
-
-		private void toolItemTankFilter_Uncheck(bool tier, bool country, bool type, bool favList, bool reopenMenu = true)
-		{
-			if (favList)
-			{
-				toolItemTankFavList_Uncheck();
-			}
-			if (tier)
-			{
-				toolItemTankFilter_Tier1.Checked = false;
-				toolItemTankFilter_Tier2.Checked = false;
-				toolItemTankFilter_Tier3.Checked = false;
-				toolItemTankFilter_Tier4.Checked = false;
-				toolItemTankFilter_Tier5.Checked = false;
-				toolItemTankFilter_Tier6.Checked = false;
-				toolItemTankFilter_Tier7.Checked = false;
-				toolItemTankFilter_Tier8.Checked = false;
-				toolItemTankFilter_Tier9.Checked = false;
-				toolItemTankFilter_Tier10.Checked = false;
-			}
-			if (country)
-			{
-				toolItemTankFilter_CountryChina.Checked = false;
-				toolItemTankFilter_CountryFrance.Checked = false;
-				toolItemTankFilter_CountryGermany.Checked = false;
-				toolItemTankFilter_CountryJapan.Checked = false;
-				toolItemTankFilter_CountryUK.Checked = false;
-				toolItemTankFilter_CountryUSA.Checked = false;
-				toolItemTankFilter_CountryUSSR.Checked = false;
-			}
-			if (type)
-			{
-				toolItemTankFilter_TypeHT.Checked = false;
-				toolItemTankFilter_TypeLT.Checked = false;
-				toolItemTankFilter_TypeMT.Checked = false;
-				toolItemTankFilter_TypeSPG.Checked = false;
-				toolItemTankFilter_TypeTD.Checked = false;
-			}
-			// Count selected menu items
-			tankFilterItemCount = 0;
-			if (toolItemTankFilter_CountryChina.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_CountryFrance.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_CountryGermany.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_CountryUK.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_CountryUSA.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_CountryUSSR.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_CountryJapan.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_TypeLT.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_TypeMT.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_TypeHT.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_TypeTD.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_TypeSPG.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier1.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier2.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier3.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier4.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier5.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier6.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier7.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier8.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier9.Checked) tankFilterItemCount++;
-			if (toolItemTankFilter_Tier10.Checked) tankFilterItemCount++;
-			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0 && tankFavListSelected == "");
-			// Reopen menu item exept for "all tanks"
-			if (reopenMenu) this.toolItemTankFilter.ShowDropDown();
-		}
-
-		private void toolItemTankFavList_Uncheck()
-		{
-			// Deselect all favlist
-			for (int i = 1; i <= 10; i++)
-			{
-				ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-				menuItem.Checked = false;
-			}
-			tankFavListSelected = "";
-		}
-
-		private void toolItem_Fav_Clicked(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			if (!menuItem.Checked)
-			{
-				toolItemTankFavList_Uncheck(); // Uncheck previous fav list selection
-				menuItem.Checked = true; // check fav list menu select
-				// set current fav list selected
-				tankFavListSelected = menuItem.Text; 
-				string sql = "select id from favList where name=@name;";
-				DB.AddWithValue(ref sql, "@name", tankFavListSelected, DB.SqlDataType.VarChar);
-				DataTable dt = DB.FetchData(sql);
-				tankFavListSelectedId = Convert.ToInt32(dt.Rows[0][0]);
-				// Set menu item and show grid
-				toolItemTankFilter_Uncheck(true, true, true, false, false); // Unchek all other tank filter
-				GridShow("Selected favourite tank list: " + tankFavListSelected);
-			}
-		}
-
-		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
-		{
-			toolItemTankFilter_Uncheck(true, true, true, true, false);
-			GridShow("Selected all tanks");
-		}
-
-		private void toolItemTankFilterSelected(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
-		{
-			// Remove favlist
-			toolItemTankFavList_Uncheck();	
-			// Update menu tank filter checked elements
-			menuItem.Checked = !menuItem.Checked;
-			if (menuItem.Checked)
-				tankFilterItemCount++;
-			else
-				tankFilterItemCount--;
-			toolItemTankFilter_All.Checked = (tankFilterItemCount == 0);
-			toolItemTankFilter.ShowDropDown();
-			parentMenuItem.ShowDropDown();
-			// Refresh grid
-			// Get Tank filter
-			string tankFilterMessage = "";
-			string tankFilter = "";
-			string tankJoin = "";
-			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
-			GridShow("Selected tank filter: " + tankFilterMessage);
-		}
-
-		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
-		{
-			// Show fal list editor
-			Form frm = new Forms.FavTanks(tankFavListSelectedId);
-			frm.ShowDialog();
-			// After fav list changes reload menu
-			GetFavList(); // Reload fav list items
-			GridShow("Refreshed grid after fovourite tank list change"); // Refresh grid now
-		}
-
-		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			toolItemTankFilterSelected(menuItem, toolItemTankFilter_Tier);
-		}
-
-		private void toolItemTankFilter_Type_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			toolItemTankFilterSelected(menuItem, toolItemTankFilter_Type);
-		}
-
-		private void toolItemTankFilter_Country_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			toolItemTankFilterSelected(menuItem, toolItemTankFilter_Country);
-		}
-
-		private void toolItemTankFilter_Country_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == System.Windows.Forms.MouseButtons.Right)
-			{
-				toolItemTankFilter_Uncheck(false, true, false, false);
-			}
-		}
-
-		private void toolItemTankFilter_Type_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == System.Windows.Forms.MouseButtons.Right)
-			{
-				toolItemTankFilter_Uncheck(false, false, true, false);
-			}
-		}
-
-		private void toolItemTankFilter_Tier_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == System.Windows.Forms.MouseButtons.Right)
-			{
-				toolItemTankFilter_Uncheck(true, false, false, false);
-			}
-		}
-
-		private void toolItemTankFilter_MouseDown(object sender, MouseEventArgs e)
-		{
-			// On right mouse click just display status message for current filter
-			if (e.Button == System.Windows.Forms.MouseButtons.Right) ShowTankFilterStatus();
-		}
-
-		#endregion
-
-		#region Battle Time Filter
-			
-		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
-		{
-			toolItemBattles1d.Checked = false;
-			toolItemBattlesYesterday.Checked = false;
-			toolItemBattles3d.Checked = false;
-			toolItemBattles1w.Checked = false;
-			toolItemBattles2w.Checked = false;
-			toolItemBattles1m.Checked = false;
-			toolItemBattles3m.Checked = false;
-			toolItemBattles6m.Checked = false;
-			toolItemBattles1y.Checked = false;
-			toolItemBattles2y.Checked = false;
-			toolItemBattlesAll.Checked = false;
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			menuItem.Checked = true;
-			toolItemBattles.Text = menuItem.Text;
-			GridShowBattle("Selected battle time: " + menuItem.Text);
-		}
-
-		#endregion
-		
+				
 		#region Grid Right Click
 
 		private int dataGridRightClickCol = -1;
@@ -1695,8 +1655,8 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 			SetFormTitle();
 			// After settings changed, go to all tanks
-			toolItemTankFilter_Uncheck(true, true, true, true, false); // Set select All tanks
-			GetFavList();
+			TankFilterMenuUncheck(true, true, true, true, false); // Set select All tanks
+			SetFavListMenu();
 			GridShow("Refreshed grid after application setup change");
 			SetListener();
 		}

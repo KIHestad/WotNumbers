@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class ColSetup
+	partial class ColList
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,15 +29,13 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColSetup));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColList));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColumnSetupTheme = new BadForm();
 			this.ddDefaultTankFilter = new BadDropDownBox();
 			this.badLabel4 = new BadLabel();
 			this.popupPosition = new BadDropDownBox();
-			this.popupColumnListType = new BadDropDownBox();
-			this.badLabel3 = new BadLabel();
 			this.lblDefaultColumnSetup = new BadLabel();
 			this.btnSetAsDefaultColumnList = new BadButton();
 			this.badGroupBox3 = new BadGroupBox();
@@ -98,8 +96,6 @@
 			this.ColumnSetupTheme.Controls.Add(this.ddDefaultTankFilter);
 			this.ColumnSetupTheme.Controls.Add(this.badLabel4);
 			this.ColumnSetupTheme.Controls.Add(this.popupPosition);
-			this.ColumnSetupTheme.Controls.Add(this.popupColumnListType);
-			this.ColumnSetupTheme.Controls.Add(this.badLabel3);
 			this.ColumnSetupTheme.Controls.Add(this.lblDefaultColumnSetup);
 			this.ColumnSetupTheme.Controls.Add(this.btnSetAsDefaultColumnList);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox3);
@@ -127,7 +123,7 @@
 			this.ColumnSetupTheme.Controls.Add(this.lblSelectedColumns);
 			this.ColumnSetupTheme.Controls.Add(this.groupTanks);
 			this.ColumnSetupTheme.Controls.Add(this.badGroupBox2);
-			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.Default;
+			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
 			this.ColumnSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColumnSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColumnSetupTheme.FormFooter = false;
@@ -178,27 +174,6 @@
 			this.popupPosition.TabIndex = 75;
 			this.popupPosition.Text = "Not Visible";
 			this.popupPosition.Click += new System.EventHandler(this.popupPosition_Click);
-			// 
-			// popupColumnListType
-			// 
-			this.popupColumnListType.Image = null;
-			this.popupColumnListType.Location = new System.Drawing.Point(83, 62);
-			this.popupColumnListType.Name = "popupColumnListType";
-			this.popupColumnListType.Size = new System.Drawing.Size(185, 23);
-			this.popupColumnListType.TabIndex = 74;
-			this.popupColumnListType.TextChanged += new System.EventHandler(this.popupColumnListType_TextChanged);
-			this.popupColumnListType.Click += new System.EventHandler(this.popupColumnSetupType_Click);
-			// 
-			// badLabel3
-			// 
-			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel3.Dimmed = false;
-			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(34, 61);
-			this.badLabel3.Name = "badLabel3";
-			this.badLabel3.Size = new System.Drawing.Size(42, 23);
-			this.badLabel3.TabIndex = 73;
-			this.badLabel3.Text = "Type:";
 			// 
 			// lblDefaultColumnSetup
 			// 
@@ -578,7 +553,7 @@
 			// 
 			this.scrollColumnList.BackColor = System.Drawing.Color.Transparent;
 			this.scrollColumnList.Image = null;
-			this.scrollColumnList.Location = new System.Drawing.Point(251, 93);
+			this.scrollColumnList.Location = new System.Drawing.Point(251, 62);
 			this.scrollColumnList.Name = "scrollColumnList";
 			this.scrollColumnList.ScrollElementsTotals = 100;
 			this.scrollColumnList.ScrollElementsVisible = 20;
@@ -586,7 +561,7 @@
 			this.scrollColumnList.ScrollNecessary = true;
 			this.scrollColumnList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollColumnList.ScrollPosition = 0;
-			this.scrollColumnList.Size = new System.Drawing.Size(17, 158);
+			this.scrollColumnList.Size = new System.Drawing.Size(17, 189);
 			this.scrollColumnList.TabIndex = 43;
 			this.scrollColumnList.Text = "badScrollBar1";
 			this.scrollColumnList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollColumnList_MouseDown);
@@ -601,7 +576,7 @@
 			this.dataGridColumnList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridColumnList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridColumnList.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridColumnList.Location = new System.Drawing.Point(34, 93);
+			this.dataGridColumnList.Location = new System.Drawing.Point(34, 62);
 			this.dataGridColumnList.MultiSelect = false;
 			this.dataGridColumnList.Name = "dataGridColumnList";
 			this.dataGridColumnList.ReadOnly = true;
@@ -609,7 +584,7 @@
 			this.dataGridColumnList.RowHeadersVisible = false;
 			this.dataGridColumnList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridColumnList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridColumnList.Size = new System.Drawing.Size(217, 158);
+			this.dataGridColumnList.Size = new System.Drawing.Size(217, 189);
 			this.dataGridColumnList.TabIndex = 41;
 			this.dataGridColumnList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridColumnList_CellClick);
 			this.dataGridColumnList.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
@@ -728,7 +703,7 @@
 			this.badLabel1.TabIndex = 73;
 			this.badLabel1.Text = "Type:";
 			// 
-			// ColumnSetup
+			// ColList
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -736,7 +711,7 @@
 			this.Controls.Add(this.ColumnSetupTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(607, 591);
-			this.Name = "ColumnSetup";
+			this.Name = "ColList";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "ColumnSetup";
@@ -790,8 +765,6 @@
 		private BadGroupBox badGroupBox3;
 		private BadGroupBox badGroupBox2;
 		private BadLabel badLabel1;
-		private BadDropDownBox popupColumnListType;
-		private BadLabel badLabel3;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_All;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_1;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_2;
