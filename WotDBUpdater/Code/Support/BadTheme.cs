@@ -12,7 +12,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using WotDBUpdater.Code;
+using WinApp.Code;
 
 abstract class BadThemeContainerControl : ContainerControl
 {

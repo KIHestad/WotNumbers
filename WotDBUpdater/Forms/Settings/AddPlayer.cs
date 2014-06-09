@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WotDBUpdater.Code;
+using WinApp.Code;
 
-namespace WotDBUpdater.Forms
+namespace WinApp.Forms
 {
 	public partial class AddPlayer : Form
 	{

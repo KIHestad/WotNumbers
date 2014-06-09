@@ -1,4 +1,4 @@
-﻿namespace WotDBUpdater.Forms
+﻿namespace WinApp.Forms
 {
 	partial class FavTanks
 	{

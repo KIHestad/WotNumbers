@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 using System.Data.Sql;
 using System.Net;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
 	public static class ImportWN8Api2DB
 	{

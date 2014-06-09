@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WotDBUpdater.Code;
+using WinApp.Code;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
 	public static class DB
 	{

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
     public static class ImportWotDossier2DB
     {

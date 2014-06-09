@@ -9,7 +9,7 @@ using System.Text;
 using System.Linq;
 using System.Data.SqlClient;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
 	class Dossier2db
 	{

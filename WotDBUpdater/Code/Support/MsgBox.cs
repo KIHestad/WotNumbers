@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WotDBUpdater.Forms;
+using WinApp.Forms;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
 	public enum MsgBoxType
 	{

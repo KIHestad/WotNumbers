@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
 	[Serializable()]
 	public class ConfigData

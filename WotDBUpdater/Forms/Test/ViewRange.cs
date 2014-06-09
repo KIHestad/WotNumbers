@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WotDBUpdater.Forms
+namespace WinApp.Forms
 {
     public partial class ViewRange : Form
     {

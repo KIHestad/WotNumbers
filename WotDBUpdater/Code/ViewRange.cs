@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
     class ViewRange
     {

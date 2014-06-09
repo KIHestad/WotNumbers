@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using WotDBUpdater.Code;
+using WinApp.Code;
 
-namespace WotDBUpdater.Forms
+namespace WinApp.Forms
 {
     public partial class TestShowImage : Form
     {

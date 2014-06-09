@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using IronPython.Hosting;
 
-namespace WotDBUpdater.Code
+namespace WinApp.Code
 {
 	public static class dossier2json
 	{

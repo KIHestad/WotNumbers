@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections;
-using WotDBUpdater.Forms;
+using WinApp.Forms;
 using System.Net;
 using System.Reflection;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
-using WotDBUpdater.Code;
+using WinApp.Code;
 
 
 //using IronPython.Hosting;
 //using Microsoft.Scripting.Hosting;
 //using IronPython.Runtime;
 
-namespace WotDBUpdater.Forms
+namespace WinApp.Forms
 {
 	public partial class Main : Form
 	{
