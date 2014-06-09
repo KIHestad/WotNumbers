@@ -138,6 +138,7 @@ namespace WotDBUpdater.Forms
 			string result = dossier2json.UpdateDossierFileWatcher();
 			// Check DB Version
 			bool versionOK = DBVersion.CheckForDbUpgrade();
+			// Add init items to Form
 			SetFormTitle();
 			GetFavList();
 			GridShow("Application started");
@@ -1045,11 +1046,26 @@ namespace WotDBUpdater.Forms
 				ToolStripMenuItem checkedMenuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(colDefault).ToString("00")] as ToolStripMenuItem;
 				checkedMenuItem.Checked = true;
 				toolItemColumnSelect.Text = checkedMenuItem.Text;
-				columnListSelectedId = GetSelectedColumnListId(checkedMenuItem.Text);
+				ColumnListSelected columnListSelected = GetSelectedColumnListInfo(checkedMenuItem.Text);
+				columnListSelectedId = columnListSelected.id;
 			}
 		}
 
+		private class ColumnListSelected
+		{
+			public int id;
+			public int defaultFavListId;
+			public string defaultFavListName;
+		}
+
 		private void toolItemColumnSelect_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			SelectedColumList(selectedMenu);
+			GridShow("Selected column setup: " + selectedMenu.Text);
+		}
+
+		private void SelectedColumList(ToolStripMenuItem selectedMenu)
 		{
 			// Hide all colum setup list menu items
 			for (int i = 1; i <= 13; i++)
@@ -1057,38 +1073,79 @@ namespace WotDBUpdater.Forms
 				ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
 				menuItem.Checked = false;
 			}
-			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			selectedMenu.Checked = true;
 			toolItemColumnSelect.Text = selectedMenu.Text;
 			// Get and remember selected column setup list
-			columnListSelectedId = GetSelectedColumnListId(selectedMenu.Text);
+			ColumnListSelected columnListSelected = GetSelectedColumnListInfo(selectedMenu.Text);
+			columnListSelectedId = columnListSelected.id;
 			int colSelected = Convert.ToInt32(selectedMenu.Name.Substring(selectedMenu.Name.Length - 2, 2));
 			if (columnListcolType == 1)
 				columnListSelectedTankView = colSelected;
 			else if (columnListcolType == 2)
 				columnListSelectedBattleView = colSelected;
-			GridShow("Selected column setup: " + selectedMenu.Text);
+			SelectColumnListDefaultFavList(columnListSelected);
 		}
 
-		private int GetSelectedColumnListId(string ColumnListName)
+		private void SelectColumnListDefaultFavList(ColumnListSelected columnListSelected)
 		{
-			string sql = "select id from columnList where colType=@colType and name=@name";
+			// Check columList defaultFavList
+			if (columnListSelected.defaultFavListId != -1) // Use current
+			{
+				// Set spesific column list
+				if (columnListSelected.defaultFavListId == -2) // All Tanks
+				{
+					toolItemTankFilter_Uncheck(true, true, true, true, false);
+				}
+				else // Spesific fav list
+				{
+					toolItemTankFilter_All.Checked = false; // Uncheck All Tanks
+					toolItemTankFavList_Uncheck(); // Uncheck all favlist 
+					// Select new favlist
+					for (int i = 1; i <= 10; i++)
+					{
+						ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+						if (menuItem.Text == columnListSelected.defaultFavListName)
+						{
+							menuItem.Checked = true;
+							toolItemTankFilter.Text = columnListSelected.defaultFavListName;
+							tankFavListSelected = columnListSelected.defaultFavListName;
+							tankFavListSelectedId = columnListSelected.defaultFavListId;
+							continue;
+						}
+					}
+				}
+			}
+		}
+
+		private ColumnListSelected GetSelectedColumnListInfo(string ColumnListName)
+		{
+			ColumnListSelected cls = new ColumnListSelected();
+			string sql = "select columnList.id as id, columnList.defaultFavListId as defaultFavListId, favList.name as defaultFavListName " +
+						 "from columnList left join favList on columnList.defaultFavListId = favList.id " +
+						 "where columnList.colType=@colType and columnList.name=@name";
 			DB.AddWithValue(ref sql, "@colType", columnListcolType, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", ColumnListName, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
-			int i = 0;
-			if (dt.Rows.Count > 0) i = Convert.ToInt32(dt.Rows[0][0]);
-			return i;
+			if (dt.Rows.Count > 0)
+			{
+				cls.id = Convert.ToInt32(dt.Rows[0]["id"]);
+				cls.defaultFavListId = Convert.ToInt32(dt.Rows[0]["defaultFavListId"]);
+				if (dt.Rows[0]["defaultFavListName"] == DBNull.Value)
+					cls.defaultFavListName = "";
+				else
+					cls.defaultFavListName = dt.Rows[0]["defaultFavListName"].ToString();
+			}
+			return cls;
 		}
 
 		private void toolItemColumnSelect_Edit_Click(object sender, EventArgs e)
 		{
-			File.ColumnSetup.ColumnSetupType colSetupType = new File.ColumnSetup.ColumnSetupType();
+			File.ColSetup.ColumnSetupType colSetupType = new File.ColSetup.ColumnSetupType();
 			if (toolItemViewBattles.Checked)
-				colSetupType = File.ColumnSetup.ColumnSetupType.BattleView;
+				colSetupType = File.ColSetup.ColumnSetupType.BattleView;
 			else if (toolItemViewTankInfo.Checked)
-				colSetupType = File.ColumnSetup.ColumnSetupType.TankView;
-			Form frm = new Forms.File.ColumnSetup(colSetupType);
+				colSetupType = File.ColSetup.ColumnSetupType.TankView;
+			Form frm = new Forms.File.ColSetup(colSetupType);
 			frm.ShowDialog();
 			GetColumnSetupList(); // Refresh column setup list now
 			GridShow("Refreshed grid after column setup change"); // Refresh grid now
@@ -1208,7 +1265,7 @@ namespace WotDBUpdater.Forms
 			{
 				// Check current favlist
 				for (int i = 1; i <= 10; i++)
-		{
+				{
 					ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
 					if (menuItem.Text == FavList) menuItem.Checked = true;
 				}

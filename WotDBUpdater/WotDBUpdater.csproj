@@ -120,82 +120,82 @@
     <Compile Include="Code\Support\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\ViewRange.cs" />
-    <Compile Include="Forms\DropDownGrid.cs">
+    <Compile Include="Forms\BadThemeControls\DropDownGrid.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DropDownGrid.Designer.cs">
+    <Compile Include="Forms\BadThemeControls\DropDownGrid.Designer.cs">
       <DependentUpon>DropDownGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\AddPlayer.cs">
+    <Compile Include="Forms\Settings\AddPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\AddPlayer.Designer.cs">
+    <Compile Include="Forms\Settings\AddPlayer.Designer.cs">
       <DependentUpon>AddPlayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\ColumnSetup.cs">
+    <Compile Include="Forms\ColSetup\ColSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\ColumnSetup.Designer.cs">
-      <DependentUpon>ColumnSetup.cs</DependentUpon>
+    <Compile Include="Forms\ColSetup\ColSetup.Designer.cs">
+      <DependentUpon>ColSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\DatabaseNew.cs">
+    <Compile Include="Forms\Settings\DatabaseNew.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\DatabaseNew.Designer.cs">
+    <Compile Include="Forms\Settings\DatabaseNew.Designer.cs">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\FavTanks.cs">
+    <Compile Include="Forms\FavTank\FavTanks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\FavTanks.Designer.cs">
+    <Compile Include="Forms\FavTank\FavTanks.Designer.cs">
       <DependentUpon>FavTanks.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\GrindingParameter.cs">
+    <Compile Include="Forms\Grinding\GrindingParameter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\GrindingParameter.Designer.cs">
+    <Compile Include="Forms\Grinding\GrindingParameter.Designer.cs">
       <DependentUpon>GrindingParameter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\GrindingSetup.cs">
+    <Compile Include="Forms\Grinding\GrindingSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\GrindingSetup.Designer.cs">
+    <Compile Include="Forms\Grinding\GrindingSetup.Designer.cs">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\ImportWotDossierData.cs">
+    <Compile Include="Forms\Test\ImportWotDossierData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\ImportWotDossierData.Designer.cs">
+    <Compile Include="Forms\Test\ImportWotDossierData.Designer.cs">
       <DependentUpon>ImportWotDossierData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\ImportWotStat.cs">
+    <Compile Include="Forms\Settings\ImportWotStat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\ImportWotStat.Designer.cs">
+    <Compile Include="Forms\Settings\ImportWotStat.Designer.cs">
       <DependentUpon>ImportWotStat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Message.cs">
+    <Compile Include="Forms\BadThemeControls\Message.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Message.Designer.cs">
+    <Compile Include="Forms\BadThemeControls\Message.Designer.cs">
       <DependentUpon>Message.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\DatabaseSetting.cs">
+    <Compile Include="Forms\Settings\DatabaseSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\DatabaseSetting.Designer.cs">
+    <Compile Include="Forms\Settings\DatabaseSetting.Designer.cs">
       <DependentUpon>DatabaseSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\ApplicationSetting.cs">
+    <Compile Include="Forms\Settings\ApplicationSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\ApplicationSetting.Designer.cs">
+    <Compile Include="Forms\Settings\ApplicationSetting.Designer.cs">
       <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\File\ImportTank.cs">
+    <Compile Include="Forms\Test\ImportTank.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\File\ImportTank.Designer.cs">
+    <Compile Include="Forms\Test\ImportTank.Designer.cs">
       <DependentUpon>ImportTank.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Main.cs">
@@ -204,16 +204,16 @@
     <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PopupGrid.cs">
+    <Compile Include="Forms\BadThemeControls\PopupGrid.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\PopupGrid.Designer.cs">
+    <Compile Include="Forms\BadThemeControls\PopupGrid.Designer.cs">
       <DependentUpon>PopupGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Reports\DatabaseTable.cs">
+    <Compile Include="Forms\Settings\DatabaseTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Reports\DatabaseTable.Designer.cs">
+    <Compile Include="Forms\Settings\DatabaseTable.Designer.cs">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\ImportMisc2DB.cs" />
@@ -259,52 +259,52 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Code\TankData.cs" />
-    <EmbeddedResource Include="Forms\DropDownGrid.resx">
+    <EmbeddedResource Include="Forms\BadThemeControls\DropDownGrid.resx">
       <DependentUpon>DropDownGrid.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\AddPlayer.resx">
+    <EmbeddedResource Include="Forms\Settings\AddPlayer.resx">
       <DependentUpon>AddPlayer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\ColumnSetup.resx">
-      <DependentUpon>ColumnSetup.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ColSetup\ColSetup.resx">
+      <DependentUpon>ColSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\DatabaseNew.resx">
+    <EmbeddedResource Include="Forms\Settings\DatabaseNew.resx">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\FavTanks.resx">
+    <EmbeddedResource Include="Forms\FavTank\FavTanks.resx">
       <DependentUpon>FavTanks.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\GrindingParameter.resx">
+    <EmbeddedResource Include="Forms\Grinding\GrindingParameter.resx">
       <DependentUpon>GrindingParameter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\GrindingSetup.resx">
+    <EmbeddedResource Include="Forms\Grinding\GrindingSetup.resx">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\ImportWotDossierData.resx">
+    <EmbeddedResource Include="Forms\Test\ImportWotDossierData.resx">
       <DependentUpon>ImportWotDossierData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\ImportWotStat.resx">
+    <EmbeddedResource Include="Forms\Settings\ImportWotStat.resx">
       <DependentUpon>ImportWotStat.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Message.resx">
+    <EmbeddedResource Include="Forms\BadThemeControls\Message.resx">
       <DependentUpon>Message.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\DatabaseSetting.resx">
+    <EmbeddedResource Include="Forms\Settings\DatabaseSetting.resx">
       <DependentUpon>DatabaseSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\ApplicationSetting.resx">
+    <EmbeddedResource Include="Forms\Settings\ApplicationSetting.resx">
       <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\File\ImportTank.resx">
+    <EmbeddedResource Include="Forms\Test\ImportTank.resx">
       <DependentUpon>ImportTank.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PopupGrid.resx">
+    <EmbeddedResource Include="Forms\BadThemeControls\PopupGrid.resx">
       <DependentUpon>PopupGrid.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Reports\DatabaseTable.resx">
+    <EmbeddedResource Include="Forms\Settings\DatabaseTable.resx">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ScrollbarTest.resx">

@@ -10,7 +10,7 @@ namespace WotDBUpdater.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 48; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 49; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -805,6 +805,10 @@ namespace WotDBUpdater.Code
 							"DELETE FROM columnListSelection WHERE columnSelectionId=170 AND columnListId=2; " +
 							"DELETE FROM columnListSelection WHERE columnSelectionId=172 AND columnListId=2; " ;
 					sqlite = mssql;
+					break;
+				case 49:
+					mssql = "ALTER TABLE columnList ADD defaultFavListId int NOT NULL default -1; " ;
+					sqlite = mssql.Replace("int", "integer");
 					break;
 			}
 			string sql = "";

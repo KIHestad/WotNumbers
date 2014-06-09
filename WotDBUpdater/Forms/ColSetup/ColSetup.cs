@@ -11,7 +11,7 @@ using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms.File
 {
-	public partial class ColumnSetup : Form
+	public partial class ColSetup : Form
 	{
 		
 		#region Init
@@ -23,7 +23,7 @@ namespace WotDBUpdater.Forms.File
 		}
 		
 		int colType = 0;
-		public ColumnSetup(ColumnSetupType colSelectedSetupType)
+		public ColSetup(ColumnSetupType colSelectedSetupType)
 		{
 			InitializeComponent();
 			if (colSelectedSetupType == ColumnSetupType.TankView)
@@ -39,8 +39,16 @@ namespace WotDBUpdater.Forms.File
 			}
 		}
 
+		private string favList = "Use Current,All Tanks";
 		private void ColumnSetup_Load(object sender, EventArgs e)
 		{
+			// Get favList
+			string sql = "select name from favList order by COALESCE(position,99), name";
+			DataTable dt = DB.FetchData(sql);
+			foreach (DataRow row in dt.Rows)
+			{
+				favList += "," + row["name"].ToString();
+			}
 			// Style toolbar
 			toolAllColumns.Renderer = new StripRenderer();
 			toolAllColumns.ShowItemToolTips = false;
@@ -199,7 +207,7 @@ namespace WotDBUpdater.Forms.File
 		private DataTable dtColumnList = new DataTable();
 		private void ShowColumnSetupList(int ColumListId = 0)
 		{
-			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol from columnList where colType=@colType order by COALESCE(position,99), name; ";
+			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol, defaultFavListId from columnList where colType=@colType order by COALESCE(position,99), name; ";
 			DB.AddWithValue(ref sql, "@colType", colType, DB.SqlDataType.Int);
 			dtColumnList = DB.FetchData(sql);
 			dataGridColumnList.DataSource = dtColumnList;
@@ -208,6 +216,7 @@ namespace WotDBUpdater.Forms.File
 			dataGridColumnList.Columns[2].Visible = false;
 			dataGridColumnList.Columns[3].Visible = false;
 			dataGridColumnList.Columns[4].Visible = false;
+			dataGridColumnList.Columns[5].Visible = false;
 			bool buttonsEnabled = (dtColumnList.Rows.Count > 0);
 			btnColumnListCancel.Enabled = false;
 			btnColumnListSave.Enabled = false;
@@ -247,15 +256,34 @@ namespace WotDBUpdater.Forms.File
 				}
 				SelectedColumnListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
 				txtColumnListName.Text = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
+				// Set if default column list
 				string defaultText = "Not used as default colum setup for " + popupColumnListType.Text;
+				btnSetAsDefaultColumnList.Enabled = true;
 				Color defaultTextColor = ColorTheme.ControlFont;
 				if (Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["colDefault"].Value))
 				{
 					defaultText = "Used as default colum setup for " + popupColumnListType.Text;
 					defaultTextColor = Color.ForestGreen;
+					btnSetAsDefaultColumnList.Enabled = false;
 				}
 				lblDefaultColumnSetup.Text = defaultText;
 				lblDefaultColumnSetup.ForeColor = defaultTextColor;
+				// Find default fav list
+				defaultTankFilterSave = false; // avoid saving on changed value
+				int selectedDefaultFavList = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["defaultFavListId"].Value);
+				if (selectedDefaultFavList == -1)
+					ddDefaultTankFilter.Text = "Use Current";
+				else if (selectedDefaultFavList == -2)
+					ddDefaultTankFilter.Text = "All Tanks";
+				else 
+				{
+					string sql = "select name from favList where id=@id";
+					DB.AddWithValue (ref sql, "@id", selectedDefaultFavList, DB.SqlDataType.Int);
+					DataTable dt = DB.FetchData(sql);
+					if (dt.Rows.Count > 0)
+						ddDefaultTankFilter.Text = dt.Rows[0]["name"].ToString();
+				}
+				// Other values
 				bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value) ;
 				btnColumnListDelete.Enabled = !sysCol;
 				btnColumnListCancel.Enabled = !sysCol;
@@ -401,7 +429,8 @@ namespace WotDBUpdater.Forms.File
 				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
 				DB.ExecuteNonQuery(sql);
-				SelectColumnList();
+				ShowColumnSetupList();
+				//SelectColumnList();
 			}
 		}
 
@@ -439,7 +468,6 @@ namespace WotDBUpdater.Forms.File
 				// Remove positions above 10
 				sql += "update columnList set position = NULL where position > 10; ";
 			}
-			// Add new favlist
 			sql += "update columnList set position=@position, name=@name where id=@id; ";
 			// Add parameters
 			DB.AddWithValue(ref sql, "@position", newColumnSelectedListPos, DB.SqlDataType.Int);
@@ -638,6 +666,7 @@ namespace WotDBUpdater.Forms.File
 			{
 				selectedColumnSetupDone = true;
 				dataGridSelectedColumns.Columns["#"].Width = 20;
+				dataGridSelectedColumns.Columns["#"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridSelectedColumns.Columns["Description"].Width = 300;
 				dataGridSelectedColumns.Columns["columnSelectionId"].Visible = false;
 				dataGridSelectedColumns.Columns["columnListId"].Visible = false;
@@ -944,13 +973,41 @@ namespace WotDBUpdater.Forms.File
 
 		#endregion
 
+		bool defaultTankFilterSave = false;
 		private void ddDefaultTankFilter_Click(object sender, EventArgs e)
 		{
-			string list = "Use current,All Tanks,1,2,3";
-			string selectedTankFilter = Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, list);
-			if (selectedTankFilter != "")
+			defaultTankFilterSave = true;
+			string selectedTankFilter = Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favList);
+		}
+
+		private void ddDefaultTankFilter_TextChanged(object sender, EventArgs e)
+		{
+			if (defaultTankFilterSave)
 			{
-				ddDefaultTankFilter.Text = selectedTankFilter;
+				// Update favlist
+				string selectedfavListName = ddDefaultTankFilter.Text;
+				int defaultFavListId = -1; // Use current
+				if (selectedfavListName == "Use Current")
+					defaultFavListId = -1;
+				else if (selectedfavListName == "All Tanks")
+					defaultFavListId = -2;
+				else
+				{
+					// Find favListId
+					string sql = "select id from favList where name=@name";
+					DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
+					DataTable dtFavList = DB.FetchData(sql);
+					if (dtFavList.Rows.Count > 0)
+						defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
+				}
+				// Save now
+				string updateSql = "update columnList set defaultFavListId=@defaultFavListId where id=@id";
+				DB.AddWithValue(ref updateSql, "@defaultFavListId", defaultFavListId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref updateSql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(updateSql);
+				defaultTankFilterSave = false;
+				// Also update grid
+				dataGridColumnList.SelectedRows[0].Cells["defaultFavListId"].Value = defaultFavListId;
 			}
 		}
 

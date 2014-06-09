@@ -407,6 +407,7 @@ namespace WotDBUpdater.Forms.File
 			{
 				selectedTanksColumnSetupDone = true;
 				dataGridSelectedTanks.Columns["#"].Width = 20;
+				dataGridSelectedTanks.Columns["#"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridSelectedTanks.Columns["Tier"].Width = 30;
 				dataGridSelectedTanks.Columns["Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dataGridSelectedTanks.Columns["Type"].Width = 40;

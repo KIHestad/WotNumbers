@@ -1,6 +1,6 @@
 ﻿namespace WotDBUpdater.Forms.File
 {
-	partial class ColumnSetup
+	partial class ColSetup
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColumnSetup));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColSetup));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColumnSetupTheme = new BadForm();
@@ -155,6 +155,7 @@
 			this.ddDefaultTankFilter.Size = new System.Drawing.Size(158, 23);
 			this.ddDefaultTankFilter.TabIndex = 80;
 			this.ddDefaultTankFilter.Text = "Use current";
+			this.ddDefaultTankFilter.TextChanged += new System.EventHandler(this.ddDefaultTankFilter_TextChanged);
 			this.ddDefaultTankFilter.Click += new System.EventHandler(this.ddDefaultTankFilter_Click);
 			// 
 			// badLabel4
@@ -206,7 +207,7 @@
 			this.lblDefaultColumnSetup.Image = null;
 			this.lblDefaultColumnSetup.Location = new System.Drawing.Point(314, 176);
 			this.lblDefaultColumnSetup.Name = "lblDefaultColumnSetup";
-			this.lblDefaultColumnSetup.Size = new System.Drawing.Size(156, 35);
+			this.lblDefaultColumnSetup.Size = new System.Drawing.Size(138, 35);
 			this.lblDefaultColumnSetup.TabIndex = 71;
 			this.lblDefaultColumnSetup.Text = "This setup is not used as default for View";
 			// 
