@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Diagnostics;
 using System.Collections;
-using WinApp.Forms;
-using System.Net;
 using System.Reflection;
-using System.Data.SqlClient;
-using System.Runtime.InteropServices;
 using WinApp.Code;
 
 namespace WinApp.Forms
@@ -78,7 +70,7 @@ namespace WinApp.Forms
 
 		private void CreateDataGridContextMenu()
 		{
-			// Datagrid context menu
+			// Datagrid context menu (Right click on Grid)
 			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
