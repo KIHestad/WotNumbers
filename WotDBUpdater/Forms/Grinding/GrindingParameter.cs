@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WotDBUpdater.Code.Support;
+using WotDBUpdater.Code;
 
 namespace WotDBUpdater.Forms
 {

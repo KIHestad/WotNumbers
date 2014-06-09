@@ -34,10 +34,10 @@ namespace WotDBUpdater.Forms
 
 		private void UpdateGrindParameters()
 		{
-			if (Code.Support.GrindingData.Settings.EveryVictoryFactor > 0)
-				lblGrindingParameters.Text = "Every victory: " + Code.Support.GrindingData.Settings.EveryVictoryFactor.ToString() + "X";
+			if (Code.GrindingData.Settings.EveryVictoryFactor > 0)
+				lblGrindingParameters.Text = "Every victory: " + Code.GrindingData.Settings.EveryVictoryFactor.ToString() + "X";
 			else
-				lblGrindingParameters.Text = "First victory each day: " + Code.Support.GrindingData.Settings.FirstVictoryFactor.ToString() + "X";
+				lblGrindingParameters.Text = "First victory each day: " + Code.GrindingData.Settings.FirstVictoryFactor.ToString() + "X";
 		}
 
 		private void GetTankData()
@@ -221,7 +221,7 @@ namespace WotDBUpdater.Forms
 					btlPerDay = 1;
 				}
 				// Calc avg XP per day
-				txtCalcAvgXP.Text = Code.Support.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
+				txtCalcAvgXP.Text = Code.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
 				txtRestBattles.Text = (progressrest / Convert.ToInt32(txtCalcAvgXP.Text)).ToString();
 				txtRestDays.Text = (progressrest / (Convert.ToInt32(txtCalcAvgXP.Text) * btlPerDay)).ToString();
 			}
@@ -235,7 +235,7 @@ namespace WotDBUpdater.Forms
 					btlPerDay = 1;
 				}
 				// Calc avg XP per day
-				txtCalcAvgXP.Text = Code.Support.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
+				txtCalcAvgXP.Text = Code.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
 				txtRestBattles.Text = (Convert.ToInt32(txtRestXP.Text) / Convert.ToInt32(txtCalcAvgXP.Text)).ToString();
 				txtRestDays.Text = (Convert.ToInt32(txtRestXP.Text) / (Convert.ToInt32(txtCalcAvgXP.Text) * btlPerDay)).ToString();
 			}

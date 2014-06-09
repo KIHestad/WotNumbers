@@ -506,10 +506,10 @@ namespace WotDBUpdater.Code
 						if (battlesNew7 > 0) XP += Convert.ToInt32(NewPlayerTankBattle7Row["xp"]) - Convert.ToInt32(OldPlayerTankBattle7Row["xp"]);
 						if (battleVictory) // If victory, check if first victory this day, or if every victory has bonus
 						{
-							if (Support.GrindingData.Settings.EveryVictoryFactor > 0)
-								XP = XP * Support.GrindingData.Settings.EveryVictoryFactor;
+							if (Code.GrindingData.Settings.EveryVictoryFactor > 0)
+								XP = XP * Code.GrindingData.Settings.EveryVictoryFactor;
 							else if (firstVictory)
-								XP = XP * Support.GrindingData.Settings.FirstVictoryFactor;
+								XP = XP * Code.GrindingData.Settings.FirstVictoryFactor;
 						}
 						int progressXP = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
 						// Calc other values according to increased XP (progress)
@@ -523,7 +523,7 @@ namespace WotDBUpdater.Code
 						int btlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
 						if (btlPerDay < 1)
 							btlPerDay = 1;
-						int colcAvgXP = Code.Support.GrindingData.CalcAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(),
+						int colcAvgXP = Code.GrindingData.CalcAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(),
 							grinding["totalXP"].ToString(), grinding["avgXP"].ToString(), grinding["avgXP"].ToString());
 						int restBattles = restXP / colcAvgXP;
 						int restDays = restXP / (colcAvgXP * btlPerDay);
