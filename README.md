@@ -1,6 +1,7 @@
 WoT Numbers
 
 Homepage:    http://wotnumber.com
+
 Created by: BadButton and cmdrTrinity (alias: leeruude)
 
 ******************************************************
