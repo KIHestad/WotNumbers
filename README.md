@@ -1,6 +1,6 @@
 # WoT Numbers #
 
-Homepage:    http://wotnumber.com
+Homepage:    http://wotnumbers.com
 
 Created by: BadButton and cmdrTrinity (alias: leeruude)
 
