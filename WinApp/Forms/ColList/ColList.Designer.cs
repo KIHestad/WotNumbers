@@ -110,7 +110,7 @@
 			this.ColListTheme.Controls.Add(this.lblSelectedColumns);
 			this.ColListTheme.Controls.Add(this.groupTanks);
 			this.ColListTheme.Controls.Add(this.badGroupBox2);
-			this.ColListTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.ColListTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
 			this.ColListTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColListTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColListTheme.FormFooter = false;
@@ -179,6 +179,7 @@
 			this.toolColListVisible.Size = new System.Drawing.Size(36, 22);
 			this.toolColListVisible.Text = "Hide";
 			this.toolColListVisible.ToolTipText = "Hide";
+			this.toolColListVisible.Click += new System.EventHandler(this.toolColListVisible_Click);
 			// 
 			// toolColListDefault
 			// 
@@ -203,6 +204,7 @@
 			this.toolColListAdd.Name = "toolColListAdd";
 			this.toolColListAdd.Size = new System.Drawing.Size(33, 22);
 			this.toolColListAdd.Text = "Add";
+			this.toolColListAdd.Click += new System.EventHandler(this.toolColListAdd_Click);
 			// 
 			// toolColListModify
 			// 
@@ -212,6 +214,7 @@
 			this.toolColListModify.Name = "toolColListModify";
 			this.toolColListModify.Size = new System.Drawing.Size(49, 22);
 			this.toolColListModify.Text = "Modify";
+			this.toolColListModify.Click += new System.EventHandler(this.toolColListModify_Click);
 			// 
 			// toolColListDelete
 			// 

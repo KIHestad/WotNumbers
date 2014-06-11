@@ -349,12 +349,9 @@ namespace WinApp.Forms
 
 		private void SelectColumnList(int ColumnListId = 0)
 		{
-			// Other values
+			// Set enabled when not sysColumn
 			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value) ;
 			toolColListDelete.Enabled = !sysCol;
-			toolColListModify.Enabled = !sysCol;
-
-
 			btnColumnListCancel.Enabled = !sysCol;
 			btnColumnListSave.Enabled = !sysCol;
 			btnRemoveAll.Enabled = !sysCol;
@@ -363,9 +360,18 @@ namespace WinApp.Forms
 			btnSelectSelected.Enabled = !sysCol;
 			toolSelectedTanks_MoveUp.Enabled = !sysCol;
 			toolSelectedTanks_MoveDown.Enabled = !sysCol;
-			
-			GetSelectedColumnsFromColumnList(); // Get tanks for this fav list now
-			
+			// Get tanks for this fav list now
+			GetSelectedColumnsFromColumnList(); 
+			// Toggle show/hide
+			bool isHidden = (dataGridColumnList.SelectedRows[0].Cells["#"].Value == DBNull.Value);
+			string showButton = "Hide";
+			if (isHidden) showButton = "Show";
+			toolColListVisible.Text = showButton;
+			// Diable Hide if it is the default column
+			bool isDefault = (Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["colDefault"].Value) == 1);
+			toolColListVisible.Enabled = !isDefault;
+			// Disable default if already default, or if col is hidden
+			toolColListDefault.Enabled = (!isDefault && !isHidden);
 		}
 
 		private void scrollColumnList_MouseDown(object sender, MouseEventArgs e)
@@ -378,11 +384,6 @@ namespace WinApp.Forms
 		{
 			if (dataGridColumnList.RowCount > 0)
 				dataGridColumnList.FirstDisplayedScrollingRowIndex = scrollColumnList.ScrollPosition;
-		}
-
-		private void btnSelectedColumnListDelete_Click(object sender, EventArgs e)
-		{
-			
 		}
 
 		private void btnSelectedColumnListCancel_Click(object sender, EventArgs e)
@@ -899,40 +900,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
-
-
-		//private void ddDefaultTankFilter_TextChanged(object sender, EventArgs e)
-		//{
-		//	if (defaultTankFilterSave)
-		//	{
-		//		// Update favlist
-		//		string selectedfavListName = ddDefaultTankFilter.Text;
-		//		int defaultFavListId = -1; // Use current
-		//		if (selectedfavListName == "Use Current")
-		//			defaultFavListId = -1;
-		//		else if (selectedfavListName == "All Tanks")
-		//			defaultFavListId = -2;
-		//		else
-		//		{
-		//			// Find favListId
-		//			string sql = "select id from favList where name=@name";
-		//			DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
-		//			DataTable dtFavList = DB.FetchData(sql);
-		//			if (dtFavList.Rows.Count > 0)
-		//				defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
-		//		}
-		//		// Save now
-		//		string updateSql = "update columnList set defaultFavListId=@defaultFavListId where id=@id";
-		//		DB.AddWithValue(ref updateSql, "@defaultFavListId", defaultFavListId, DB.SqlDataType.Int);
-		//		DB.AddWithValue(ref updateSql, "@id", SelectedColListId, DB.SqlDataType.Int);
-		//		DB.ExecuteNonQuery(updateSql);
-		//		defaultTankFilterSave = false;
-		//		// Also update grid
-		//		dataGridColumnList.SelectedRows[0].Cells["defaultFavListId"].Value = defaultFavListId;
-		//	}
-		//}
-
+		
 		private void toolColListDelete_Click(object sender, EventArgs e)
 		{
 			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
@@ -961,40 +929,44 @@ namespace WinApp.Forms
 
 		private void ColListMoveItem(int move)
 		{
-			// Find item next to
-			string sql = "";
-			if (move == -1)
+			var ColListSelectedListPos = dataGridColumnList.SelectedRows[0].Cells["#"].Value;
+			if (ColListSelectedListPos != DBNull.Value)
 			{
-				// up, find above
-				sql = "select * from columnList where colType=@colType and position is not null and position < @position order by position desc";
+				// Find item next to
+				string sql = "";
+				if (move == -1)
+				{
+					// up, find above
+					sql = "select * from columnList where colType=@colType and position is not null and position < @position order by position desc";
+				}
+				else
+				{
+					// down, find below
+					sql = "select * from columnList where colType=@colType and position is not null and position > @position order by position ";
+				}
+
+				DB.AddWithValue(ref sql, "@position", (int)ColListSelectedListPos, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+				DataTable dt = DB.FetchData(sql);
+				if (dt.Rows.Count > 0)
+				{
+					int rowNextToPos = Convert.ToInt32(dt.Rows[0]["position"]);
+					int rowNextToId = Convert.ToInt32(dt.Rows[0]["id"]);
+					sql = "update columnList set position=@rowNextToPos where id=@id; " +
+						  "update columnList set position=@position where id=@rowNextToId;";
+					DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@position", (int)ColListSelectedListPos, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
+					DB.ExecuteNonQuery(sql);
+				}
+				ColListSort();
 			}
-			else
-			{
-				// down, find below
-				sql = "select * from columnList where colType=@colType and position is not null and position > @position order by position ";
-			}
-			int ColListSelectedListPos = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["Pos"].Value);
-			DB.AddWithValue(ref sql, "@position", ColListSelectedListPos, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
-			{
-				int rowNextToPos = Convert.ToInt32(dt.Rows[0]["position"]);
-				int rowNextToId = Convert.ToInt32(dt.Rows[0]["id"]);
-				sql = "update columnList set position=@rowNextToPos where id=@id; " +
-					  "update columnList set position=@position where id=@rowNextToId;";
-				DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@position", ColListSelectedListPos, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-			}
-			ColListSort();
 		}
 
 		private void ColListSort()
 		{
-			string sql = "select * from columnList where colType=@colType and position is not null;";
+			string sql = "select * from columnList where colType=@colType and position is not null order by position;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
@@ -1015,12 +987,39 @@ namespace WinApp.Forms
 
 		private void toolColListDefault_Click(object sender, EventArgs e)
 		{
-			string sql = "update ColumnList set colDefault=0 where colType=@colType; " +
-						 "update ColumnList set colDefault=1 where colType=@colType and id=@id;";
+			string sql = "update columnList set colDefault=0 where colType=@colType; " +
+						 "update columnList set colDefault=1 where colType=@colType and id=@id;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 			ShowColumnSetupList();
 		}
+
+		private void toolColListVisible_Click(object sender, EventArgs e)
+		{
+			string sql = "update columnList set position=99999 where id=@id";
+			if (toolColListVisible.Text == "Hide")
+				sql = "update columnList set position=NULL where id=@id";
+			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+			ColListSort();
+		}
+
+		public bool isHidden { get; set; }
+
+		private void toolColListAdd_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.ColListNewEdit(0);
+			frm.ShowDialog();
+			ColListSort();
+		}
+
+		private void toolColListModify_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.ColListNewEdit(SelectedColListId);
+			frm.ShowDialog();
+			ShowColumnSetupList();
+		}
+		
 	}
 }
