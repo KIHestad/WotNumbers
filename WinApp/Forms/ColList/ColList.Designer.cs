@@ -32,18 +32,20 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColList));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
-			this.ColumnSetupTheme = new BadForm();
-			this.ddDefaultTankFilter = new BadDropDownBox();
-			this.badLabel4 = new BadLabel();
-			this.popupPosition = new BadDropDownBox();
-			this.lblDefaultColumnSetup = new BadLabel();
-			this.btnSetAsDefaultColumnList = new BadButton();
-			this.badGroupBox3 = new BadGroupBox();
+			this.ColListTheme = new BadForm();
+			this.toolColList = new System.Windows.Forms.ToolStrip();
+			this.toolColListUp = new System.Windows.Forms.ToolStripButton();
+			this.toolColListDown = new System.Windows.Forms.ToolStripButton();
+			this.toolColListVisible = new System.Windows.Forms.ToolStripButton();
+			this.toolColListDefault = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolColListAdd = new System.Windows.Forms.ToolStripButton();
+			this.toolColListModify = new System.Windows.Forms.ToolStripButton();
+			this.toolColListDelete = new System.Windows.Forms.ToolStripButton();
 			this.btnRemoveAll = new BadButton();
 			this.btnRemoveSelected = new BadButton();
 			this.btnSelectSelected = new BadButton();
 			this.btnSelectAll = new BadButton();
-			this.badLabel6 = new BadLabel();
 			this.btnColumnListCancel = new BadButton();
 			this.btnColumnListSave = new BadButton();
 			this.toolSelectedColumns = new System.Windows.Forms.ToolStrip();
@@ -67,17 +69,13 @@
 			this.dataGridAllColumns = new System.Windows.Forms.DataGridView();
 			this.scrollColumnList = new BadScrollBar();
 			this.dataGridColumnList = new System.Windows.Forms.DataGridView();
-			this.txtColumnListName = new BadTextBox();
-			this.badLabel2 = new BadLabel();
-			this.btnColumnListDelete = new BadButton();
-			this.btnColumnListAdd = new BadButton();
 			this.lblAllColumns = new BadLabel();
-			this.badGroupBox1 = new BadGroupBox();
 			this.lblSelectedColumns = new BadLabel();
 			this.groupTanks = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
 			this.badLabel1 = new BadLabel();
-			this.ColumnSetupTheme.SuspendLayout();
+			this.ColListTheme.SuspendLayout();
+			this.toolColList.SuspendLayout();
 			this.toolSelectedColumns.SuspendLayout();
 			this.toolAllColumns.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).BeginInit();
@@ -91,122 +89,139 @@
 			this.imageListToolStrip.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageListToolStrip.Images.SetKeyName(0, "check.png");
 			// 
-			// ColumnSetupTheme
+			// ColListTheme
 			// 
-			this.ColumnSetupTheme.Controls.Add(this.ddDefaultTankFilter);
-			this.ColumnSetupTheme.Controls.Add(this.badLabel4);
-			this.ColumnSetupTheme.Controls.Add(this.popupPosition);
-			this.ColumnSetupTheme.Controls.Add(this.lblDefaultColumnSetup);
-			this.ColumnSetupTheme.Controls.Add(this.btnSetAsDefaultColumnList);
-			this.ColumnSetupTheme.Controls.Add(this.badGroupBox3);
-			this.ColumnSetupTheme.Controls.Add(this.btnRemoveAll);
-			this.ColumnSetupTheme.Controls.Add(this.btnRemoveSelected);
-			this.ColumnSetupTheme.Controls.Add(this.btnSelectSelected);
-			this.ColumnSetupTheme.Controls.Add(this.btnSelectAll);
-			this.ColumnSetupTheme.Controls.Add(this.badLabel6);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnListCancel);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnListSave);
-			this.ColumnSetupTheme.Controls.Add(this.toolSelectedColumns);
-			this.ColumnSetupTheme.Controls.Add(this.toolAllColumns);
-			this.ColumnSetupTheme.Controls.Add(this.scrollSelectedColumns);
-			this.ColumnSetupTheme.Controls.Add(this.dataGridSelectedColumns);
-			this.ColumnSetupTheme.Controls.Add(this.scrollAllColumns);
-			this.ColumnSetupTheme.Controls.Add(this.dataGridAllColumns);
-			this.ColumnSetupTheme.Controls.Add(this.scrollColumnList);
-			this.ColumnSetupTheme.Controls.Add(this.dataGridColumnList);
-			this.ColumnSetupTheme.Controls.Add(this.txtColumnListName);
-			this.ColumnSetupTheme.Controls.Add(this.badLabel2);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnListDelete);
-			this.ColumnSetupTheme.Controls.Add(this.btnColumnListAdd);
-			this.ColumnSetupTheme.Controls.Add(this.lblAllColumns);
-			this.ColumnSetupTheme.Controls.Add(this.badGroupBox1);
-			this.ColumnSetupTheme.Controls.Add(this.lblSelectedColumns);
-			this.ColumnSetupTheme.Controls.Add(this.groupTanks);
-			this.ColumnSetupTheme.Controls.Add(this.badGroupBox2);
-			this.ColumnSetupTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
-			this.ColumnSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ColumnSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-			this.ColumnSetupTheme.FormFooter = false;
-			this.ColumnSetupTheme.FormFooterHeight = 26;
-			this.ColumnSetupTheme.FormInnerBorder = 3;
-			this.ColumnSetupTheme.FormMargin = 0;
-			this.ColumnSetupTheme.Image = null;
-			this.ColumnSetupTheme.Location = new System.Drawing.Point(0, 0);
-			this.ColumnSetupTheme.MainArea = mainAreaClass1;
-			this.ColumnSetupTheme.Name = "ColumnSetupTheme";
-			this.ColumnSetupTheme.Resizable = true;
-			this.ColumnSetupTheme.Size = new System.Drawing.Size(607, 614);
-			this.ColumnSetupTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColumnSetupTheme.SystemExitImage")));
-			this.ColumnSetupTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColumnSetupTheme.SystemMaximizeImage")));
-			this.ColumnSetupTheme.SystemMinimizeImage = null;
-			this.ColumnSetupTheme.TabIndex = 0;
-			this.ColumnSetupTheme.Text = "Column Setup";
-			this.ColumnSetupTheme.TitleHeight = 26;
+			this.ColListTheme.Controls.Add(this.toolColList);
+			this.ColListTheme.Controls.Add(this.btnRemoveAll);
+			this.ColListTheme.Controls.Add(this.btnRemoveSelected);
+			this.ColListTheme.Controls.Add(this.btnSelectSelected);
+			this.ColListTheme.Controls.Add(this.btnSelectAll);
+			this.ColListTheme.Controls.Add(this.btnColumnListCancel);
+			this.ColListTheme.Controls.Add(this.btnColumnListSave);
+			this.ColListTheme.Controls.Add(this.toolSelectedColumns);
+			this.ColListTheme.Controls.Add(this.toolAllColumns);
+			this.ColListTheme.Controls.Add(this.scrollSelectedColumns);
+			this.ColListTheme.Controls.Add(this.dataGridSelectedColumns);
+			this.ColListTheme.Controls.Add(this.scrollAllColumns);
+			this.ColListTheme.Controls.Add(this.dataGridAllColumns);
+			this.ColListTheme.Controls.Add(this.scrollColumnList);
+			this.ColListTheme.Controls.Add(this.dataGridColumnList);
+			this.ColListTheme.Controls.Add(this.lblAllColumns);
+			this.ColListTheme.Controls.Add(this.lblSelectedColumns);
+			this.ColListTheme.Controls.Add(this.groupTanks);
+			this.ColListTheme.Controls.Add(this.badGroupBox2);
+			this.ColListTheme.Cursor = System.Windows.Forms.Cursors.SizeWE;
+			this.ColListTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ColListTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.ColListTheme.FormFooter = false;
+			this.ColListTheme.FormFooterHeight = 26;
+			this.ColListTheme.FormInnerBorder = 3;
+			this.ColListTheme.FormMargin = 0;
+			this.ColListTheme.Image = null;
+			this.ColListTheme.Location = new System.Drawing.Point(0, 0);
+			this.ColListTheme.MainArea = mainAreaClass1;
+			this.ColListTheme.Name = "ColListTheme";
+			this.ColListTheme.Resizable = true;
+			this.ColListTheme.Size = new System.Drawing.Size(609, 614);
+			this.ColListTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemExitImage")));
+			this.ColListTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMaximizeImage")));
+			this.ColListTheme.SystemMinimizeImage = null;
+			this.ColListTheme.TabIndex = 0;
+			this.ColListTheme.Text = "Column Setup";
+			this.ColListTheme.TitleHeight = 26;
 			// 
-			// ddDefaultTankFilter
+			// toolColList
 			// 
-			this.ddDefaultTankFilter.Image = null;
-			this.ddDefaultTankFilter.Location = new System.Drawing.Point(418, 221);
-			this.ddDefaultTankFilter.Name = "ddDefaultTankFilter";
-			this.ddDefaultTankFilter.Size = new System.Drawing.Size(158, 23);
-			this.ddDefaultTankFilter.TabIndex = 80;
-			this.ddDefaultTankFilter.Text = "Use current";
-			this.ddDefaultTankFilter.TextChanged += new System.EventHandler(this.ddDefaultTankFilter_TextChanged);
-			this.ddDefaultTankFilter.Click += new System.EventHandler(this.ddDefaultTankFilter_Click);
+			this.toolColList.AutoSize = false;
+			this.toolColList.Dock = System.Windows.Forms.DockStyle.None;
+			this.toolColList.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolColList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolColListUp,
+            this.toolColListDown,
+            this.toolColListVisible,
+            this.toolColListDefault,
+            this.toolStripSeparator1,
+            this.toolColListAdd,
+            this.toolColListModify,
+            this.toolColListDelete});
+			this.toolColList.Location = new System.Drawing.Point(34, 68);
+			this.toolColList.Name = "toolColList";
+			this.toolColList.Size = new System.Drawing.Size(537, 25);
+			this.toolColList.TabIndex = 81;
+			this.toolColList.Text = "toolStrip1";
 			// 
-			// badLabel4
+			// toolColListUp
 			// 
-			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel4.Dimmed = false;
-			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(314, 221);
-			this.badLabel4.Name = "badLabel4";
-			this.badLabel4.Size = new System.Drawing.Size(98, 23);
-			this.badLabel4.TabIndex = 76;
-			this.badLabel4.Text = "Default Tank Filter:";
+			this.toolColListUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolColListUp.Image = ((System.Drawing.Image)(resources.GetObject("toolColListUp.Image")));
+			this.toolColListUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListUp.Name = "toolColListUp";
+			this.toolColListUp.Size = new System.Drawing.Size(23, 22);
+			this.toolColListUp.Text = "toolStripButton1";
+			this.toolColListUp.Click += new System.EventHandler(this.toolColListUp_Click);
 			// 
-			// popupPosition
+			// toolColListDown
 			// 
-			this.popupPosition.Image = null;
-			this.popupPosition.Location = new System.Drawing.Point(374, 93);
-			this.popupPosition.Name = "popupPosition";
-			this.popupPosition.Size = new System.Drawing.Size(96, 23);
-			this.popupPosition.TabIndex = 75;
-			this.popupPosition.Text = "Not Visible";
-			this.popupPosition.Click += new System.EventHandler(this.popupPosition_Click);
+			this.toolColListDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolColListDown.Image = ((System.Drawing.Image)(resources.GetObject("toolColListDown.Image")));
+			this.toolColListDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListDown.Name = "toolColListDown";
+			this.toolColListDown.Size = new System.Drawing.Size(23, 22);
+			this.toolColListDown.Text = "toolStripButton2";
+			this.toolColListDown.Click += new System.EventHandler(this.toolColListDown_Click);
 			// 
-			// lblDefaultColumnSetup
+			// toolColListVisible
 			// 
-			this.lblDefaultColumnSetup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.lblDefaultColumnSetup.Dimmed = false;
-			this.lblDefaultColumnSetup.Image = null;
-			this.lblDefaultColumnSetup.Location = new System.Drawing.Point(314, 176);
-			this.lblDefaultColumnSetup.Name = "lblDefaultColumnSetup";
-			this.lblDefaultColumnSetup.Size = new System.Drawing.Size(138, 35);
-			this.lblDefaultColumnSetup.TabIndex = 71;
-			this.lblDefaultColumnSetup.Text = "This setup is not used as default for View";
+			this.toolColListVisible.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolColListVisible.Image = ((System.Drawing.Image)(resources.GetObject("toolColListVisible.Image")));
+			this.toolColListVisible.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListVisible.Name = "toolColListVisible";
+			this.toolColListVisible.Size = new System.Drawing.Size(36, 22);
+			this.toolColListVisible.Text = "Hide";
+			this.toolColListVisible.ToolTipText = "Hide";
 			// 
-			// btnSetAsDefaultColumnList
+			// toolColListDefault
 			// 
-			this.btnSetAsDefaultColumnList.Image = null;
-			this.btnSetAsDefaultColumnList.Location = new System.Drawing.Point(476, 183);
-			this.btnSetAsDefaultColumnList.Name = "btnSetAsDefaultColumnList";
-			this.btnSetAsDefaultColumnList.Size = new System.Drawing.Size(100, 23);
-			this.btnSetAsDefaultColumnList.TabIndex = 70;
-			this.btnSetAsDefaultColumnList.Text = "Set as default";
-			this.btnSetAsDefaultColumnList.Click += new System.EventHandler(this.btnSetAsDefaultColumnList_Click);
+			this.toolColListDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolColListDefault.Image = ((System.Drawing.Image)(resources.GetObject("toolColListDefault.Image")));
+			this.toolColListDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListDefault.Name = "toolColListDefault";
+			this.toolColListDefault.Size = new System.Drawing.Size(49, 22);
+			this.toolColListDefault.Text = "Default";
+			this.toolColListDefault.Click += new System.EventHandler(this.toolColListDefault_Click);
 			// 
-			// badGroupBox3
+			// toolStripSeparator1
 			// 
-			this.badGroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox3.Image = null;
-			this.badGroupBox3.Location = new System.Drawing.Point(300, 154);
-			this.badGroupBox3.Name = "badGroupBox3";
-			this.badGroupBox3.Size = new System.Drawing.Size(289, 110);
-			this.badGroupBox3.TabIndex = 69;
-			this.badGroupBox3.Text = "Default Column Setup";
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolColListAdd
+			// 
+			this.toolColListAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolColListAdd.Image = ((System.Drawing.Image)(resources.GetObject("toolColListAdd.Image")));
+			this.toolColListAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListAdd.Name = "toolColListAdd";
+			this.toolColListAdd.Size = new System.Drawing.Size(33, 22);
+			this.toolColListAdd.Text = "Add";
+			// 
+			// toolColListModify
+			// 
+			this.toolColListModify.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolColListModify.Image = ((System.Drawing.Image)(resources.GetObject("toolColListModify.Image")));
+			this.toolColListModify.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListModify.Name = "toolColListModify";
+			this.toolColListModify.Size = new System.Drawing.Size(49, 22);
+			this.toolColListModify.Text = "Modify";
+			// 
+			// toolColListDelete
+			// 
+			this.toolColListDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolColListDelete.Image = ((System.Drawing.Image)(resources.GetObject("toolColListDelete.Image")));
+			this.toolColListDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListDelete.Name = "toolColListDelete";
+			this.toolColListDelete.Size = new System.Drawing.Size(44, 22);
+			this.toolColListDelete.Text = "Delete";
+			this.toolColListDelete.Click += new System.EventHandler(this.toolColListDelete_Click);
 			// 
 			// btnRemoveAll
 			// 
@@ -248,23 +263,12 @@
 			this.btnSelectAll.Text = ">>";
 			this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
 			// 
-			// badLabel6
-			// 
-			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel6.Dimmed = false;
-			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(314, 93);
-			this.badLabel6.Name = "badLabel6";
-			this.badLabel6.Size = new System.Drawing.Size(75, 23);
-			this.badLabel6.TabIndex = 61;
-			this.badLabel6.Text = "Position:";
-			// 
 			// btnColumnListCancel
 			// 
 			this.btnColumnListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListCancel.Enabled = false;
 			this.btnColumnListCancel.Image = null;
-			this.btnColumnListCancel.Location = new System.Drawing.Point(423, 574);
+			this.btnColumnListCancel.Location = new System.Drawing.Point(425, 574);
 			this.btnColumnListCancel.Name = "btnColumnListCancel";
 			this.btnColumnListCancel.Size = new System.Drawing.Size(80, 23);
 			this.btnColumnListCancel.TabIndex = 53;
@@ -276,7 +280,7 @@
 			this.btnColumnListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListSave.Enabled = false;
 			this.btnColumnListSave.Image = null;
-			this.btnColumnListSave.Location = new System.Drawing.Point(509, 574);
+			this.btnColumnListSave.Location = new System.Drawing.Point(511, 574);
 			this.btnColumnListSave.Name = "btnColumnListSave";
 			this.btnColumnListSave.Size = new System.Drawing.Size(80, 23);
 			this.btnColumnListSave.TabIndex = 52;
@@ -553,7 +557,7 @@
 			// 
 			this.scrollColumnList.BackColor = System.Drawing.Color.Transparent;
 			this.scrollColumnList.Image = null;
-			this.scrollColumnList.Location = new System.Drawing.Point(251, 62);
+			this.scrollColumnList.Location = new System.Drawing.Point(554, 93);
 			this.scrollColumnList.Name = "scrollColumnList";
 			this.scrollColumnList.ScrollElementsTotals = 100;
 			this.scrollColumnList.ScrollElementsVisible = 20;
@@ -561,7 +565,7 @@
 			this.scrollColumnList.ScrollNecessary = true;
 			this.scrollColumnList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollColumnList.ScrollPosition = 0;
-			this.scrollColumnList.Size = new System.Drawing.Size(17, 189);
+			this.scrollColumnList.Size = new System.Drawing.Size(17, 158);
 			this.scrollColumnList.TabIndex = 43;
 			this.scrollColumnList.Text = "badScrollBar1";
 			this.scrollColumnList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollColumnList_MouseDown);
@@ -576,7 +580,7 @@
 			this.dataGridColumnList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridColumnList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridColumnList.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridColumnList.Location = new System.Drawing.Point(34, 62);
+			this.dataGridColumnList.Location = new System.Drawing.Point(34, 93);
 			this.dataGridColumnList.MultiSelect = false;
 			this.dataGridColumnList.Name = "dataGridColumnList";
 			this.dataGridColumnList.ReadOnly = true;
@@ -584,56 +588,11 @@
 			this.dataGridColumnList.RowHeadersVisible = false;
 			this.dataGridColumnList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridColumnList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridColumnList.Size = new System.Drawing.Size(217, 189);
+			this.dataGridColumnList.Size = new System.Drawing.Size(520, 158);
 			this.dataGridColumnList.TabIndex = 41;
 			this.dataGridColumnList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridColumnList_CellClick);
 			this.dataGridColumnList.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridColumnList.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
-			// 
-			// txtColumnListName
-			// 
-			this.txtColumnListName.HasFocus = false;
-			this.txtColumnListName.Image = null;
-			this.txtColumnListName.Location = new System.Drawing.Point(374, 62);
-			this.txtColumnListName.Name = "txtColumnListName";
-			this.txtColumnListName.PasswordChar = '\0';
-			this.txtColumnListName.Size = new System.Drawing.Size(202, 23);
-			this.txtColumnListName.TabIndex = 40;
-			this.txtColumnListName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(314, 61);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(42, 23);
-			this.badLabel2.TabIndex = 39;
-			this.badLabel2.Text = "Name:";
-			// 
-			// btnColumnListDelete
-			// 
-			this.btnColumnListDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnColumnListDelete.Enabled = false;
-			this.btnColumnListDelete.Image = null;
-			this.btnColumnListDelete.Location = new System.Drawing.Point(337, 574);
-			this.btnColumnListDelete.Name = "btnColumnListDelete";
-			this.btnColumnListDelete.Size = new System.Drawing.Size(80, 23);
-			this.btnColumnListDelete.TabIndex = 37;
-			this.btnColumnListDelete.Text = "Delete";
-			this.btnColumnListDelete.Click += new System.EventHandler(this.btnSelectedColumnListDelete_Click);
-			// 
-			// btnColumnListAdd
-			// 
-			this.btnColumnListAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnColumnListAdd.Image = null;
-			this.btnColumnListAdd.Location = new System.Drawing.Point(251, 574);
-			this.btnColumnListAdd.Name = "btnColumnListAdd";
-			this.btnColumnListAdd.Size = new System.Drawing.Size(80, 23);
-			this.btnColumnListAdd.TabIndex = 36;
-			this.btnColumnListAdd.Text = "Add";
-			this.btnColumnListAdd.Click += new System.EventHandler(this.btnColumnListAdd_Click);
 			// 
 			// lblAllColumns
 			// 
@@ -645,18 +604,6 @@
 			this.lblAllColumns.Size = new System.Drawing.Size(152, 23);
 			this.lblAllColumns.TabIndex = 49;
 			this.lblAllColumns.Text = "Available Columns:";
-			// 
-			// badGroupBox1
-			// 
-			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(300, 39);
-			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(289, 94);
-			this.badGroupBox1.TabIndex = 38;
-			this.badGroupBox1.Text = "Selected Column Setup List";
 			// 
 			// lblSelectedColumns
 			// 
@@ -678,17 +625,19 @@
 			this.groupTanks.Image = null;
 			this.groupTanks.Location = new System.Drawing.Point(17, 275);
 			this.groupTanks.Name = "groupTanks";
-			this.groupTanks.Size = new System.Drawing.Size(572, 284);
+			this.groupTanks.Size = new System.Drawing.Size(574, 284);
 			this.groupTanks.TabIndex = 44;
 			this.groupTanks.Text = "Columns";
 			// 
 			// badGroupBox2
 			// 
+			this.badGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(17, 39);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(266, 225);
+			this.badGroupBox2.Size = new System.Drawing.Size(573, 225);
 			this.badGroupBox2.TabIndex = 72;
 			this.badGroupBox2.Text = "Column Setup Lists";
 			// 
@@ -707,8 +656,8 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(607, 614);
-			this.Controls.Add(this.ColumnSetupTheme);
+			this.ClientSize = new System.Drawing.Size(609, 614);
+			this.Controls.Add(this.ColListTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(607, 591);
 			this.Name = "ColList";
@@ -719,7 +668,9 @@
 			this.Load += new System.EventHandler(this.ColumnSetup_Load);
 			this.ResizeEnd += new System.EventHandler(this.ColumnList_ResizeEnd);
 			this.Resize += new System.EventHandler(this.ColumnList_Resize);
-			this.ColumnSetupTheme.ResumeLayout(false);
+			this.ColListTheme.ResumeLayout(false);
+			this.toolColList.ResumeLayout(false);
+			this.toolColList.PerformLayout();
 			this.toolSelectedColumns.ResumeLayout(false);
 			this.toolSelectedColumns.PerformLayout();
 			this.toolAllColumns.ResumeLayout(false);
@@ -733,12 +684,11 @@
 
 		#endregion
 
-		private BadForm ColumnSetupTheme;
+		private BadForm ColListTheme;
 		private BadButton btnRemoveAll;
 		private BadButton btnRemoveSelected;
 		private BadButton btnSelectSelected;
 		private BadButton btnSelectAll;
-		private BadLabel badLabel6;
 		private BadButton btnColumnListCancel;
 		private BadButton btnColumnListSave;
 		private System.Windows.Forms.ToolStrip toolSelectedColumns;
@@ -751,18 +701,9 @@
 		private System.Windows.Forms.DataGridView dataGridAllColumns;
 		private BadScrollBar scrollColumnList;
 		private System.Windows.Forms.DataGridView dataGridColumnList;
-		private BadTextBox txtColumnListName;
-		private BadLabel badLabel2;
-		private BadButton btnColumnListDelete;
-		private BadButton btnColumnListAdd;
 		private BadLabel lblAllColumns;
 		private BadGroupBox groupTanks;
-		private BadGroupBox badGroupBox1;
 		private BadLabel lblSelectedColumns;
-		private System.Windows.Forms.ImageList imageListToolStrip;
-		private BadLabel lblDefaultColumnSetup;
-		private BadButton btnSetAsDefaultColumnList;
-		private BadGroupBox badGroupBox3;
 		private BadGroupBox badGroupBox2;
 		private BadLabel badLabel1;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_All;
@@ -776,8 +717,15 @@
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_8;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_9;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_10;
-		private BadDropDownBox popupPosition;
-		private BadDropDownBox ddDefaultTankFilter;
-		private BadLabel badLabel4;
+		private System.Windows.Forms.ToolStrip toolColList;
+		private System.Windows.Forms.ToolStripButton toolColListUp;
+		private System.Windows.Forms.ToolStripButton toolColListDown;
+		private System.Windows.Forms.ToolStripButton toolColListVisible;
+		private System.Windows.Forms.ToolStripButton toolColListDefault;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripButton toolColListAdd;
+		private System.Windows.Forms.ToolStripButton toolColListModify;
+		private System.Windows.Forms.ToolStripButton toolColListDelete;
+		private System.Windows.Forms.ImageList imageListToolStrip;
 	}
 }

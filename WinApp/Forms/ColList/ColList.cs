@@ -13,7 +13,9 @@ namespace WinApp.Forms
 {
 	public partial class ColList : Form
 	{
-		
+		// The current selected col list
+		private int SelectedColListId = 0;
+
 		#region Init
 		
 		public ColList()
@@ -21,37 +23,140 @@ namespace WinApp.Forms
 			InitializeComponent();
 			if (MainSettings.View == GridView.Views.Tank)
 			{
-				ColumnSetupTheme.Text = "Column Setup - Tank View";
+				ColListTheme.Text = "Column Setup - Tank View";
 			}
 
 			else if (MainSettings.View == GridView.Views.Battle)
 			{
-				ColumnSetupTheme.Text = "Column Setup - Battle View";
+				ColListTheme.Text = "Column Setup - Battle View";
 			}
 		}
 
-		private string favList = "Use Current,All Tanks";
+		//*************************************
+
+		//private string favList = "Use Current,All Tanks";
+		//private void getFavList()
+		//{
+		//	// Get favList
+		//	string sql = "select name from favList order by COALESCE(position,99), name";
+		//	DataTable dt = DB.FetchData(sql);
+		//	foreach (DataRow row in dt.Rows)
+		//	{
+		//		favList += "," + row["name"].ToString();
+		//	}
+		//}
+
+
+		//bool defaultTankFilterSave = false;
+		//private void ddDefaultTankFilter_Click(object sender, EventArgs e)
+		//{
+		//	defaultTankFilterSave = true;
+		//	string selectedTankFilter = Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favList);
+		//}
+
+		//private void ADD_BUTTON()
+		//{
+		//	string newColListName = txtColumnListName.Text.Trim();
+		//	if (newColListName.Length > 0)
+		//	{
+		//		// CheckBox if exists
+		//		if (Convert.ToInt32(popupPosition.Text) < 4)
+		//		{
+		//			Code.MsgBox.Show("Cannot add new Column Setup List with position 1, 2 or 3 - these are reserved." +
+		//				Environment.NewLine + Environment.NewLine + "Select another position.", "Cannot create Column Setup List ");
+		//		}
+		//		else
+		//		{
+		//			string sql = "select id from columnList where name=@name;";
+		//			DB.AddWithValue(ref sql, "@name", newColListName, DB.SqlDataType.VarChar);
+		//			DataTable dt = DB.FetchData(sql);
+		//			if (dt.Rows.Count > 0)
+		//			{
+		//				Code.MsgBox.Show("Cannot add new Column Setup List with this name, already in use.", "Cannot create Column Setup List ");
+		//			}
+		//			else
+		//			{
+		//				int copySelTanksFromFavListId = -1;
+		//				if (dataGridSelectedColumns.Rows.Count > 0)
+		//				{
+		//					Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to create a new Column Setup List  based on the current selected columns?" +
+		//						Environment.NewLine + Environment.NewLine +
+		//						"Press 'OK' to include selected columns into the new list." +
+		//						Environment.NewLine + Environment.NewLine +
+		//						"Press 'Cancel' to create an new empty list.", "Create new Column Setup List ", MsgBoxType.OKCancel);
+		//					if (answer == MsgBox.Button.OKButton) copySelTanksFromFavListId = SelectedColListId;
+		//				}
+		//				AddColumnList(copySelTanksFromFavListId);
+		//			}
+		//		}
+		//	}
+		//}
+
+
+		//private void AddColumnList(int CopySelColumnsFromColumnListId = -1)
+		//{
+		//	string newColumnListName = txtColumnListName.Text.Trim();
+		//	string newColumnListPos = popupPosition.Text;
+		//	if (newColumnListPos == "Not Visible") newColumnListPos = "NULL";
+		//	// Change position on existing if already used
+		//	string sql = "select * from columnList where position = @newColumnListPos";
+		//	DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
+		//	DataTable dt = DB.FetchData(sql);
+		//	sql = "";
+		//	if (dt.Rows.Count == 1)
+		//	{
+		//		// Move existing favlist on this pos or below one step
+		//		sql = "update columnList set position = position + 1 where position >= @newColumnListPos; ";
+		//		// Remove positions above 10
+		//		sql += "update columnList set position = NULL where position > 10; ";
+		//	}
+		//	// Add new favlist
+		//	sql += "insert into columnList (colType, position, name) values (@colType, @newColumnListPos, @newFavListName); ";
+		//	// Add parameters
+		//	DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+		//	DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
+		//	DB.AddWithValue(ref sql, "@newFavListName", newColumnListName, DB.SqlDataType.VarChar);
+		//	// Execute now
+		//	DB.ExecuteNonQuery(sql);
+		//	// Get ID for new tank list
+		//	sql = "select id from columnList where name=@name";
+		//	DB.AddWithValue(ref sql, "@name", newColumnListName, DB.SqlDataType.VarChar);
+		//	dt = DB.FetchData(sql);
+		//	SelectedColListId = Convert.ToInt32(dt.Rows[0]["id"]);
+		//	// Copy favListTanks if selected
+		//	if (CopySelColumnsFromColumnListId != -1)
+		//	{
+		//		sql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) select columnSelectionId, @copyToColumnListId, sortorder " +
+		//																	"   from columnListSelection " +
+		//																	"   where ColumnListId=@copyFromColumnListId; ";
+		//		DB.AddWithValue(ref sql, "@copyToColumnListId", SelectedColListId, DB.SqlDataType.Int);
+		//		DB.AddWithValue(ref sql, "@copyFromColumnListId", CopySelColumnsFromColumnListId, DB.SqlDataType.Int);
+		//		DB.ExecuteNonQuery(sql);
+		//	}
+		//	// Refresh Grid
+		//	ShowColumnSetupList();
+		//}
+
+		//*************************************
+
+
 		private void ColumnSetup_Load(object sender, EventArgs e)
 		{
-			// Get favList
-			string sql = "select name from favList order by COALESCE(position,99), name";
-			DataTable dt = DB.FetchData(sql);
-			foreach (DataRow row in dt.Rows)
-			{
-				favList += "," + row["name"].ToString();
-			}
 			// Style toolbar
 			toolAllColumns.Renderer = new StripRenderer();
-			toolAllColumns.ShowItemToolTips = false;
 			toolSelectedColumns.Renderer = new StripRenderer();
-			
+			toolColList.Renderer = new StripRenderer();
+			// No tooltip
+			toolAllColumns.ShowItemToolTips = false;
 			toolSelectedColumns.ShowItemToolTips = false;
+			toolColList.ShowItemToolTips = false;
 			// Style datagrid
 			StyleDataGrid(dataGridColumnList);
 			StyleDataGrid(dataGridAllColumns);
 			StyleDataGrid(dataGridSelectedColumns);
 			// Show content
-			ShowColumnSetupList(MainSettings.GetCurrentGridFilter().ColListId);
+			SelectedColListId = MainSettings.GetCurrentGridFilter().ColListId;
+			ShowColumnSetupList();
 			ShowAllColumn();
 			// Mouse scrolling
 			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
@@ -180,213 +285,87 @@ namespace WinApp.Forms
 
 		#region ColumnList
 
-		private void popupColumnListType_TextChanged(object sender, EventArgs e)
-			{
-				ShowColumnSetupList();
-				ShowAllColumn();
-			}
-
 		private DataTable dtColumnList = new DataTable();
-		private void ShowColumnSetupList(int ColumListId = 0)
+		private void ShowColumnSetupList()
 		{
-			string sql = "select position as 'Pos', name as 'Name', id as 'ID', colDefault, sysCol, defaultFavListId from columnList where colType=@colType order by COALESCE(position,99), name; ";
+			string sql = "select columnList.position as '#', columnList.name as 'Name', '' as 'Show', '' as 'Default', '' as 'System', " +
+				"favList.name as 'Fav Tank List', columnList.id, columnList.defaultFavListId, columnList.sysCol, columnList.colDefault " +
+				"from columnList left join favList on columnList.defaultFavListId = favList.id " +
+				"where columnList.colType=@colType " +
+				"order by COALESCE(columnList.position,99), name; ";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			dtColumnList = DB.FetchData(sql);
+			// Modify datatable by adding values to Show, Default and System columns
+			foreach (DataRow row in dtColumnList.Rows)
+			{
+				var pos = row["#"];
+				if (pos != DBNull.Value) row["Show"] = "X";
+				int def = Convert.ToInt32(row["colDefault"]);
+				if (def == 1) row["Default"] = "X";
+				int sys = Convert.ToInt32(row["sysCol"]);
+				if (sys == 1) row["System"] = "X";
+				int favList = Convert.ToInt32(row["defaultFavListId"]);
+				if (favList == -1)
+					row["Fav Tank List"] = "(Use Current)";
+				else if (favList == -2)
+					row["Fav Tank List"] = "(All Tanks)";
+				row.AcceptChanges();
+			}
+
 			dataGridColumnList.DataSource = dtColumnList;
-			dataGridColumnList.Columns[0].Width = 50;
-			dataGridColumnList.Columns[1].Width = dataGridColumnList.Width - 53;
-			dataGridColumnList.Columns[2].Visible = false;
-			dataGridColumnList.Columns[3].Visible = false;
-			dataGridColumnList.Columns[4].Visible = false;
-			dataGridColumnList.Columns[5].Visible = false;
-			bool buttonsEnabled = (dtColumnList.Rows.Count > 0);
-			btnColumnListCancel.Enabled = false;
-			btnColumnListSave.Enabled = false;
-			btnColumnListDelete.Enabled = false;
-			btnRemoveAll.Enabled = false;
-			btnRemoveSelected.Enabled = false;
-			btnSelectAll.Enabled = false;
-			btnSelectSelected.Enabled = false;
-			toolSelectedTanks_MoveUp.Enabled = false;
-			toolSelectedTanks_MoveDown.Enabled = false;
-			SelectColumnList(ColumListId);
 			// Connect to scrollbar
 			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
 			scrollColumnList.ScrollElementsVisible = dataGridColumnList.DisplayedRowCount(false);
+			// Format datagrid
+			dataGridColumnList.Columns["#"].Width = 30;
+			dataGridColumnList.Columns["Name"].Width = 120;
+			dataGridColumnList.Columns["Show"].Width = 50;
+			dataGridColumnList.Columns["Default"].Width = 50;
+			dataGridColumnList.Columns["System"].Width = 50;
+			dataGridColumnList.Columns["Show"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+			dataGridColumnList.Columns["Default"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+			dataGridColumnList.Columns["System"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+			dataGridColumnList.Columns["Fav Tank List"].Width = 120;
+			dataGridColumnList.Columns["sysCol"].Visible = false;
+			dataGridColumnList.Columns["id"].Visible = false;
+			dataGridColumnList.Columns["defaultFavListId"].Visible = false;
+			dataGridColumnList.Columns["colDefault"].Visible = false;
+			// Set selected item as selected in grid, and modify calculted values
+			int rownum = 0;
+			foreach (DataGridViewRow row in dataGridColumnList.Rows)
+			{
+				if (Convert.ToInt32(row.Cells["ID"].Value) == SelectedColListId) rownum = row.Index;
+			}
+			dataGridColumnList.Rows[rownum].Selected = true;
+			SelectColumnList(SelectedColListId);
+			
 		}
 
 		private void dataGridColumnList_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
-			SelectColumnList();
+			SelectedColListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
+			SelectColumnList(SelectedColListId);
 		}
 
-		private int SelectedColumnListId = 0;
 		private void SelectColumnList(int ColumnListId = 0)
 		{
-			int selectedRowCount = dataGridColumnList.Rows.GetRowCount(DataGridViewElementStates.Selected);
-			if (selectedRowCount > 0)
-			{
-				// If spesific favList is selected, find it in grid and select it
-				if (ColumnListId > 0)
-				{
-					int rownum = 0;
-					foreach (DataGridViewRow row in dataGridColumnList.Rows)
-					{
-						if (Convert.ToInt32(row.Cells["ID"].Value) == ColumnListId) rownum = row.Index;
-					}
-					dataGridColumnList.Rows[rownum].Selected = true;
-				}
-				SelectedColumnListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
-				txtColumnListName.Text = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
-				// Set if default column list
-				string defaultText = "Not used as default colum setup list on startup";
-				btnSetAsDefaultColumnList.Enabled = true;
-				Color defaultTextColor = ColorTheme.ControlFont;
-				if (Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["colDefault"].Value))
-				{
-					defaultText = "Used as default colum setup list on startup";
-					defaultTextColor = Color.ForestGreen;
-					btnSetAsDefaultColumnList.Enabled = false;
-				}
-				lblDefaultColumnSetup.Text = defaultText;
-				lblDefaultColumnSetup.ForeColor = defaultTextColor;
-				// Find default fav list
-				defaultTankFilterSave = false; // avoid saving on changed value
-				int selectedDefaultFavList = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["defaultFavListId"].Value);
-				if (selectedDefaultFavList == -1)
-					ddDefaultTankFilter.Text = "Use Current";
-				else if (selectedDefaultFavList == -2)
-					ddDefaultTankFilter.Text = "All Tanks";
-				else 
-				{
-					string sql = "select name from favList where id=@id";
-					DB.AddWithValue (ref sql, "@id", selectedDefaultFavList, DB.SqlDataType.Int);
-					DataTable dt = DB.FetchData(sql);
-					if (dt.Rows.Count > 0)
-						ddDefaultTankFilter.Text = dt.Rows[0]["name"].ToString();
-				}
-				// Other values
-				bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value) ;
-				btnColumnListDelete.Enabled = !sysCol;
-				btnColumnListCancel.Enabled = !sysCol;
-				btnColumnListSave.Enabled = !sysCol;
-				btnRemoveAll.Enabled = !sysCol;
-				btnRemoveSelected.Enabled = !sysCol;
-				btnSelectAll.Enabled = !sysCol;
-				btnSelectSelected.Enabled = !sysCol;
-				toolSelectedTanks_MoveUp.Enabled = !sysCol;
-				toolSelectedTanks_MoveDown.Enabled = !sysCol;
+			// Other values
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value) ;
+			toolColListDelete.Enabled = !sysCol;
+			toolColListModify.Enabled = !sysCol;
+
+
+			btnColumnListCancel.Enabled = !sysCol;
+			btnColumnListSave.Enabled = !sysCol;
+			btnRemoveAll.Enabled = !sysCol;
+			btnRemoveSelected.Enabled = !sysCol;
+			btnSelectAll.Enabled = !sysCol;
+			btnSelectSelected.Enabled = !sysCol;
+			toolSelectedTanks_MoveUp.Enabled = !sysCol;
+			toolSelectedTanks_MoveDown.Enabled = !sysCol;
 			
-				popupPosition.Text = dataGridColumnList.SelectedRows[0].Cells["Pos"].Value.ToString();
-				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
-				GetSelectedColumnsFromColumnList(); // Get tanks for this fav list now
-			}
-			else
-			{
-				txtColumnListName.Text = "";
-				popupPosition.Text = "Not Visible";
-				dtColumnList.Clear();
-				dataGridColumnList.DataSource = dtColumnList; // empty list
-			}
-		}
-
-		private void popupPosition_Click(object sender, EventArgs e)
-		{
-			string posList = "Not Visible,4,5,6,7,8,9,10,11,12,13";
-			Code.DropDownGrid.Show(popupPosition, Code.DropDownGrid.DropDownGridType.List, posList);
-		}
-
-		private void btnColumnListAdd_Click(object sender, EventArgs e)
-		{
-			string newColListName = txtColumnListName.Text.Trim();
-			if (newColListName.Length > 0)
-			{
-				// CheckBox if exists
-				if (Convert.ToInt32(popupPosition.Text) < 4)
-				{
-					Code.MsgBox.Show("Cannot add new Column Setup List with position 1, 2 or 3 - these are reserved." +
-						Environment.NewLine + Environment.NewLine + "Select another position.", "Cannot create Column Setup List ");
-				}
-				else
-				{
-					string sql = "select id from columnList where name=@name;";
-					DB.AddWithValue(ref sql, "@name", newColListName, DB.SqlDataType.VarChar);
-					DataTable dt = DB.FetchData(sql);
-					if (dt.Rows.Count > 0)
-					{
-						Code.MsgBox.Show("Cannot add new Column Setup List with this name, already in use.", "Cannot create Column Setup List ");
-					}
-					else
-					{
-						int copySelTanksFromFavListId = -1;
-						if (dataGridSelectedColumns.Rows.Count > 0)
-						{
-							Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to create a new Column Setup List  based on the current selected columns?" +
-								Environment.NewLine + Environment.NewLine +
-								"Press 'OK' to include selected columns into the new list." +
-								Environment.NewLine + Environment.NewLine +
-								"Press 'Cancel' to create an new empty list.", "Create new Column Setup List ", MsgBoxType.OKCancel);
-							if (answer == MsgBox.Button.OKButton) copySelTanksFromFavListId = SelectedColumnListId;
-						}
-						AddColumnList(copySelTanksFromFavListId);
-					}
-				}
-			}
-		}
-
-		private void AddColumnList(int CopySelColumnsFromColumnListId = -1)
-		{
-			string newColumnListName = txtColumnListName.Text.Trim();
-			string newColumnListPos = popupPosition.Text;
-			if (newColumnListPos == "Not Visible") newColumnListPos = "NULL";
-			// Change position on existing if already used
-			string sql = "select * from columnList where position = @newColumnListPos";
-			DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			sql = "";
-			if (dt.Rows.Count == 1)
-			{
-				// Move existing favlist on this pos or below one step
-				sql = "update columnList set position = position + 1 where position >= @newColumnListPos; ";
-				// Remove positions above 10
-				sql += "update columnList set position = NULL where position > 10; ";
-			}
-			// Add new favlist
-			sql += "insert into columnList (colType, position, name) values (@colType, @newColumnListPos, @newFavListName); ";
-			// Add parameters
-			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@newFavListName", newColumnListName, DB.SqlDataType.VarChar);
-			// Execute now
-			DB.ExecuteNonQuery(sql);
-			// Get ID for new tank list
-			sql = "select id from columnList where name=@name";
-			DB.AddWithValue(ref sql, "@name", newColumnListName, DB.SqlDataType.VarChar);
-			dt = DB.FetchData(sql);
-			SelectedColumnListId = Convert.ToInt32(dt.Rows[0]["id"]);
-			// Copy favListTanks if selected
-			if (CopySelColumnsFromColumnListId != -1)
-			{
-				sql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) select columnSelectionId, @copyToColumnListId, sortorder " +
-																			"   from columnListSelection " +
-																			"   where ColumnListId=@copyFromColumnListId; ";
-				DB.AddWithValue(ref sql, "@copyToColumnListId", SelectedColumnListId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@copyFromColumnListId", CopySelColumnsFromColumnListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-			}
-			// Refresh Grid
-			ShowColumnSetupList(SelectedColumnListId);
-		}
-
-		private void btnSetAsDefaultColumnList_Click(object sender, EventArgs e)
-		{
-			// todo: check for unsaved changes first
-			string sql = "update ColumnList set colDefault=0 where colType=@colType; " + 
-						 "update ColumnList set colDefault=1 where colType=@colType and id=@id;";
-			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
-			DB.ExecuteNonQuery(sql);
-			ShowColumnSetupList(SelectedColumnListId);
+			GetSelectedColumnsFromColumnList(); // Get tanks for this fav list now
+			
 		}
 
 		private void scrollColumnList_MouseDown(object sender, MouseEventArgs e)
@@ -403,17 +382,7 @@ namespace WinApp.Forms
 
 		private void btnSelectedColumnListDelete_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + txtColumnListName.Text,
-				"Confirm deletion", MsgBoxType.OKCancel);
-			if (answer == MsgBox.Button.OKButton)
-			{
-
-				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
-				DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-				ShowColumnSetupList();
-				//SelectColumnList();
-			}
+			
 		}
 
 		private void btnSelectedColumnListCancel_Click(object sender, EventArgs e)
@@ -423,11 +392,9 @@ namespace WinApp.Forms
 
 		private void btnSelectedColumnListSave_Click(object sender, EventArgs e)
 		{
-			string oldColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
-			string message = "You are about to save column setup list: " + txtColumnListName.Text;
-			if (txtColumnListName.Text != oldColumnSetupListName)
-				message = "You are about to save and rename column setup list: " + oldColumnSetupListName + " to new name: " + txtColumnListName.Text;
-			Code.MsgBox.Button answer = MsgBox.Show(message, "Save existing column setup list", MsgBoxType.OKCancel);
+			string ColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
+			string message = "You are about to save the selected tanks to column setup list: " + ColumnSetupListName;
+			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected tanks to column setup list", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				SaveSelectedColumnList();
@@ -436,29 +403,8 @@ namespace WinApp.Forms
 
 		private void SaveSelectedColumnList()
 		{
-			string newColumnSelectedListName = txtColumnListName.Text.Trim();
-			string newColumnSelectedListPos = popupPosition.Text;
-			if (newColumnSelectedListPos == "Not Visible") newColumnSelectedListPos = "NULL";
-			// Change position on existing if already used
-			string sql = "select * from columnList where position = @position";
-			DB.AddWithValue(ref sql, "@position", newColumnSelectedListPos, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			sql = "";
-			if (dt.Rows.Count == 1)
-			{
-				sql = "update columnList set position = position + 1 where position >= @position; ";
-				// Remove positions above 10
-				sql += "update columnList set position = NULL where position > 10; ";
-			}
-			sql += "update columnList set position=@position, name=@name where id=@id; ";
-			// Add parameters
-			DB.AddWithValue(ref sql, "@position", newColumnSelectedListPos, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@name", newColumnSelectedListName, DB.SqlDataType.VarChar);
-			DB.AddWithValue(ref sql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
-			// Save Fav List
-			DB.ExecuteNonQuery(sql);
 			// Save Selected Tank List
-			sql = "delete from columnListSelection where columnListId=@columnListId; "; // Delete all old tanks
+			string sql = "delete from columnListSelection where columnListId=@columnListId; "; // Delete all old tanks
 			// Loop through datagrid and add all new tanks
 			foreach (DataGridViewRow dr in dataGridSelectedColumns.Rows)
 			{
@@ -467,11 +413,10 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref insertsql, "@sortorder", dr.Cells["#"].Value, DB.SqlDataType.Int);
 				sql += insertsql;
 			}
-			DB.AddWithValue(ref sql, "@columnListId", SelectedColumnListId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@columnListId", SelectedColListId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
-
 			// Refresh Grid
-			ShowColumnSetupList(SelectedColumnListId);
+			ShowColumnSetupList();
 		}
 
 
@@ -641,7 +586,7 @@ namespace WinApp.Forms
 				"		columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 				"		AND columnListSelection.columnListId = @columnListId " +
 				"ORDER BY sortorder ";
-			DB.AddWithValue(ref sql, "@columnListId", SelectedColumnListId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@columnListId", SelectedColListId, DB.SqlDataType.Int);
 			dtSelectedColumns = DB.FetchData(sql);
 			ShowSelectedColumns();
 			if (!selectedColumnSetupDone)
@@ -717,7 +662,7 @@ namespace WinApp.Forms
 							dr["Name"] = dataGridAllColumns.Rows[i].Cells["Name"].Value; ;
 							dr["Description"] = dataGridAllColumns.Rows[i].Cells["Description"].Value; ;
 							dr["columnSelectionId"] = lastcolumnSelectionId;
-							dr["columnListId"] = SelectedColumnListId;
+							dr["columnListId"] = SelectedColListId;
 							dr["#"] = sortOrder;
 							dtSelectedColumns.Rows.Add(dr);
 							sortOrder++;
@@ -955,43 +900,127 @@ namespace WinApp.Forms
 
 		#endregion
 
-		bool defaultTankFilterSave = false;
-		private void ddDefaultTankFilter_Click(object sender, EventArgs e)
-		{
-			defaultTankFilterSave = true;
-			string selectedTankFilter = Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favList);
-		}
 
-		private void ddDefaultTankFilter_TextChanged(object sender, EventArgs e)
+
+		//private void ddDefaultTankFilter_TextChanged(object sender, EventArgs e)
+		//{
+		//	if (defaultTankFilterSave)
+		//	{
+		//		// Update favlist
+		//		string selectedfavListName = ddDefaultTankFilter.Text;
+		//		int defaultFavListId = -1; // Use current
+		//		if (selectedfavListName == "Use Current")
+		//			defaultFavListId = -1;
+		//		else if (selectedfavListName == "All Tanks")
+		//			defaultFavListId = -2;
+		//		else
+		//		{
+		//			// Find favListId
+		//			string sql = "select id from favList where name=@name";
+		//			DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
+		//			DataTable dtFavList = DB.FetchData(sql);
+		//			if (dtFavList.Rows.Count > 0)
+		//				defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
+		//		}
+		//		// Save now
+		//		string updateSql = "update columnList set defaultFavListId=@defaultFavListId where id=@id";
+		//		DB.AddWithValue(ref updateSql, "@defaultFavListId", defaultFavListId, DB.SqlDataType.Int);
+		//		DB.AddWithValue(ref updateSql, "@id", SelectedColListId, DB.SqlDataType.Int);
+		//		DB.ExecuteNonQuery(updateSql);
+		//		defaultTankFilterSave = false;
+		//		// Also update grid
+		//		dataGridColumnList.SelectedRows[0].Cells["defaultFavListId"].Value = defaultFavListId;
+		//	}
+		//}
+
+		private void toolColListDelete_Click(object sender, EventArgs e)
 		{
-			if (defaultTankFilterSave)
+			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
+			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + ColListName,
+				"Confirm deletion", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
 			{
-				// Update favlist
-				string selectedfavListName = ddDefaultTankFilter.Text;
-				int defaultFavListId = -1; // Use current
-				if (selectedfavListName == "Use Current")
-					defaultFavListId = -1;
-				else if (selectedfavListName == "All Tanks")
-					defaultFavListId = -2;
-				else
-				{
-					// Find favListId
-					string sql = "select id from favList where name=@name";
-					DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
-					DataTable dtFavList = DB.FetchData(sql);
-					if (dtFavList.Rows.Count > 0)
-						defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
-				}
-				// Save now
-				string updateSql = "update columnList set defaultFavListId=@defaultFavListId where id=@id";
-				DB.AddWithValue(ref updateSql, "@defaultFavListId", defaultFavListId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref updateSql, "@id", SelectedColumnListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(updateSql);
-				defaultTankFilterSave = false;
-				// Also update grid
-				dataGridColumnList.SelectedRows[0].Cells["defaultFavListId"].Value = defaultFavListId;
+
+				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
+				DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(sql);
+				ShowColumnSetupList();
+				//SelectColumnList();
 			}
 		}
 
+		private void toolColListUp_Click(object sender, EventArgs e)
+		{
+			ColListMoveItem(-1);
+		}
+
+		private void toolColListDown_Click(object sender, EventArgs e)
+		{
+			ColListMoveItem(1);
+		}
+
+		private void ColListMoveItem(int move)
+		{
+			// Find item next to
+			string sql = "";
+			if (move == -1)
+			{
+				// up, find above
+				sql = "select * from columnList where colType=@colType and position is not null and position < @position order by position desc";
+			}
+			else
+			{
+				// down, find below
+				sql = "select * from columnList where colType=@colType and position is not null and position > @position order by position ";
+			}
+			int ColListSelectedListPos = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["Pos"].Value);
+			DB.AddWithValue(ref sql, "@position", ColListSelectedListPos, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				int rowNextToPos = Convert.ToInt32(dt.Rows[0]["position"]);
+				int rowNextToId = Convert.ToInt32(dt.Rows[0]["id"]);
+				sql = "update columnList set position=@rowNextToPos where id=@id; " +
+					  "update columnList set position=@position where id=@rowNextToId;";
+				DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@position", ColListSelectedListPos, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(sql);
+			}
+			ColListSort();
+		}
+
+		private void ColListSort()
+		{
+			string sql = "select * from columnList where colType=@colType and position is not null;";
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				sql = "";
+				int pos = 1;
+				foreach (DataRow dr in dt.Rows)
+				{
+					sql += "update columnList set position=@pos where id=@id; ";
+					DB.AddWithValue(ref sql, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
+					pos++;
+				}
+				DB.ExecuteNonQuery(sql);
+				ShowColumnSetupList();
+			}
+		}
+
+		private void toolColListDefault_Click(object sender, EventArgs e)
+		{
+			string sql = "update ColumnList set colDefault=0 where colType=@colType; " +
+						 "update ColumnList set colDefault=1 where colType=@colType and id=@id;";
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+			ShowColumnSetupList();
+		}
 	}
 }
