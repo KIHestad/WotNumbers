@@ -1,4 +1,4 @@
-# WoT Numbe**rs #
+# WoT Numbers #
 
 Homepage:    http://wotnumber.com
 
