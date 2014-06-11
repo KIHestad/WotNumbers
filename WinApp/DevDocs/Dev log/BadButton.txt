@@ -6,3 +6,5 @@
 	Rewritten method for updating tankData, using DataTable and DataRow with lookup directly to DB instead of storing values in locally variables
 	Improved function for Importing tanks, problem with slow performance was due to huge log file - but some improvment added anyway
 	Check on Log file size, if above 2MB create new logfile
+
+-- NO LONGER IN USE, TRACK CHANGES USING BITBUCKET
