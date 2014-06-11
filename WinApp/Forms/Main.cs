@@ -1653,6 +1653,12 @@ namespace WinApp.Forms
 			SetListener();
 		}
 
+		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.UpdateFromApi();
+			frm.ShowDialog();
+		}
+
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
 		{
 			toolItemSettingsRun.Checked = !toolItemSettingsRun.Checked;
@@ -1816,5 +1822,6 @@ namespace WinApp.Forms
 
 		#endregion
 
+		
 	}
 }

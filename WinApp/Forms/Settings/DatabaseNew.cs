@@ -85,7 +85,6 @@ namespace WinApp.Forms
 				// Update db by running sql scripts
 				string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\";
 				string sql;
-
 				// Create Tables
 				string filename = "";
 				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
@@ -96,44 +95,44 @@ namespace WinApp.Forms
 				sql = streamReader.ReadToEnd();
 				ok = DB.ExecuteNonQuery(sql);
 				if (!ok) return false;
+				
+				// Insert default data
 				UpdateProgressBar("Inserting data into database");
+				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
+				sql = streamReader.ReadToEnd();
+				ok = DB.ExecuteNonQuery(sql);
+				if (!ok) return false;
 
-                // Insert default data
-                streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
-                sql = streamReader.ReadToEnd();
-                ok = DB.ExecuteNonQuery(sql);
-                if (!ok) return false;
-                UpdateProgressBar("Retrieves tanks from Wargaming API");
+				// Get tanks, remember to init tankList first
+				UpdateProgressBar("Retrieves tanks from Wargaming API");
+				TankData.GetTankListFromDB();
+				ImportWotApi2DB.ImportTanks();
+				// Init after getting tanks and other basic data import
+				TankData.GetTankListFromDB();
+				TankData.GetJson2dbMappingFromDB();
 
-                // Get tanks, remember to init tankList first
-                TankData.GetTankListFromDB();
-                ImportWotApi2DB.ImportTanks();
-                // Init after getting tanks and other basic data import
-                TankData.GetTankListFromDB();
-                TankData.GetJson2dbMappingFromDB();
-                UpdateProgressBar("Retrieves tank turrets from Wargaming API");
+				// Get turret
+				UpdateProgressBar("Retrieves tank turrets from Wargaming API");
+				ImportWotApi2DB.ImportTurrets();
 
-                // Get turret
-                ImportWotApi2DB.ImportTurrets();
-                UpdateProgressBar("Retrieves tank guns from Wargaming API");
+				// Get guns
+				UpdateProgressBar("Retrieves tank guns from Wargaming API");
+				ImportWotApi2DB.ImportGuns();
 
-                // Get guns
-                ImportWotApi2DB.ImportGuns();
-                UpdateProgressBar("Retrieves tank radios from Wargaming API");
-
-                // Get radios
-                ImportWotApi2DB.ImportRadios();
-                UpdateProgressBar("Retrieves achievements from Wargaming API");
+				// Get radios
+				UpdateProgressBar("Retrieves tank radios from Wargaming API");
+				ImportWotApi2DB.ImportRadios();
 
 				// Get achievements
+				UpdateProgressBar("Retrieves achievements from Wargaming API");
 				ImportWotApi2DB.ImportAchievements();
-				UpdateProgressBar("Retrieves WN8 expected values from API");
 
 				// Get WN8 ratings
+				UpdateProgressBar("Retrieves WN8 expected values from API");
 				ImportWN8Api2DB.UpdateWN8();
-				UpdateProgressBar("Adding selected player into database");
 
 				// Add player
+				UpdateProgressBar("Adding selected player into database");
 				if (txtPlayerName.Text.Trim() != "")
 				{
 					ok = DB.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
@@ -145,16 +144,16 @@ namespace WinApp.Forms
 					Config.Settings.playerName = "";
 					Config.Settings.playerId = 0;
 				}
-				UpdateProgressBar("Upgrading database");
 
 				// Upgrade to latest version
+				UpdateProgressBar("Upgrading database");
 				DBVersion.CheckForDbUpgrade();
 				// New Init after upgrade db
 				TankData.GetTankListFromDB();
 				TankData.GetJson2dbMappingFromDB();
-				UpdateProgressBar("Running initial dossier file check, please wait...");
 				
 				// Get initial dossier 
+				UpdateProgressBar("Running initial dossier file check, please wait...");
 				dossier2json.ManualRun(false, true);
 				UpdateProgressBar("");
 			}

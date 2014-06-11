@@ -22,10 +22,10 @@ namespace WinApp.Code
 			{
 				// Replace WoT API tank name with Phalynx Dossier tank name
 				string tankName = dr["name"].ToString();
-				tankName = tankName.Replace("ö", "o");
-				tankName = tankName.Replace("ä", "a");
-				tankName = tankName.Replace("â", "a");
-				tankName = tankName.Replace("ß", "ss");
+				tankName = tankName.Replace("ö", "?");
+				tankName = tankName.Replace("ä", "?");
+				tankName = tankName.Replace("â", "?");
+				tankName = tankName.Replace("ß", "?");
 				dr["name"] = tankName;
 				dr.AcceptChanges();
 			}

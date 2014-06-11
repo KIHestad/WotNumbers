@@ -354,7 +354,7 @@ namespace WinApp.Forms
 			// Add new favlist
 			sql += "insert into columnList (colType, position, name) values (@colType, @newColumnListPos, @newFavListName); ";
 			// Add parameters
-			DB.AddWithValue(ref sql, "@colType", MainSettings.View, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@newFavListName", newColumnListName, DB.SqlDataType.VarChar);
 			// Execute now
