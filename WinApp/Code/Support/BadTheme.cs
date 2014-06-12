@@ -25,6 +25,13 @@ abstract class BadThemeContainerControl : ContainerControl
 		graphicObject = Graphics.FromImage(bitmapObject);
 	}
 
+	private Cursor _Cursor = Cursors.Default;
+	public override Cursor Cursor
+	{
+		get { return _Cursor; }
+		set { _Cursor = value; }
+	}
+
 	private bool ParentIsForm;
 	protected override void OnHandleCreated(EventArgs e)
 	{
@@ -157,20 +164,22 @@ abstract class BadThemeContainerControl : ContainerControl
 		{
 			if (FrameLeft & FrameTop)
 				return new Pointer(Cursors.SizeNWSE, 13);
-			if (FrameLeft & FrameBottom)
+			else if (FrameLeft & FrameBottom)
 				return new Pointer(Cursors.SizeNESW, 16);
-			if (FrameRight & FrameTop)
+			else if (FrameRight & FrameTop)
 				return new Pointer(Cursors.SizeNESW, 14);
-			if (FrameRight & FrameBottom)
+			else if (FrameRight & FrameBottom)
 				return new Pointer(Cursors.SizeNWSE, 17);
-			if (FrameLeft)
+			else if (FrameLeft)
 				return new Pointer(Cursors.SizeWE, 10);
-			if (FrameRight)
+			else if (FrameRight)
 				return new Pointer(Cursors.SizeWE, 11);
-			if (FrameTop)
+			else if (FrameTop)
 				return new Pointer(Cursors.SizeNS, 12);
-			if (FrameBottom)
+			else if (FrameBottom)
 				return new Pointer(Cursors.SizeNS, 15);
+			else
+				return new Pointer(Cursors.Default, 0);
 		}
 		if (SystemExitImageBackColor == ColorTheme.ControlBackMouseOver)
 		{
@@ -1514,11 +1523,11 @@ class BadScrollBar : BadThemeControl
 		PaintControl();
 	}
 
-	protected override void OnMouseHover(EventArgs e)
-	{
-		Cursor = Cursors.Default;
-		base.OnMouseHover(e);
-	}
+	//protected override void OnMouseHover(EventArgs e)
+	//{
+	//	Cursor = Cursors.Default;
+	//	base.OnMouseHover(e);
+	//}
 }
 
 class BadScrollBarCorner : BadThemeControl

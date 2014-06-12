@@ -60,7 +60,6 @@
 			this.toolItemColumnSelect_01 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemColumnSelect_02 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemColumnSelect_03 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelectSep = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemColumnSelect_04 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemColumnSelect_05 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemColumnSelect_06 = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,6 +70,8 @@
 			this.toolItemColumnSelect_11 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemColumnSelect_12 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemColumnSelect_13 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_14 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemColumnSelect_15 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemColumnSelect_Edit = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
@@ -138,10 +139,11 @@
 			this.toolItemSettingsUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemTest = new System.Windows.Forms.ToolStripDropDownButton();
@@ -162,7 +164,6 @@
 			this.testShowImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolItemUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -206,7 +207,6 @@
 			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatus2);
 			this.MainTheme.Controls.Add(this.lblStatus1);
-			this.MainTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MainTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.MainTheme.FormFooter = true;
@@ -412,7 +412,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(623, 25);
+			this.toolMain.Size = new System.Drawing.Size(592, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -477,7 +477,6 @@
             this.toolItemColumnSelect_01,
             this.toolItemColumnSelect_02,
             this.toolItemColumnSelect_03,
-            this.toolItemColumnSelectSep,
             this.toolItemColumnSelect_04,
             this.toolItemColumnSelect_05,
             this.toolItemColumnSelect_06,
@@ -488,6 +487,8 @@
             this.toolItemColumnSelect_11,
             this.toolItemColumnSelect_12,
             this.toolItemColumnSelect_13,
+            this.toolItemColumnSelect_14,
+            this.toolItemColumnSelect_15,
             this.toolStripSeparator3,
             this.toolItemColumnSelect_Edit});
 			this.toolItemColumnSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolItemColumnSelect.Image")));
@@ -504,7 +505,7 @@
 			this.toolItemColumnSelect_01.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.toolItemColumnSelect_01.Name = "toolItemColumnSelect_01";
 			this.toolItemColumnSelect_01.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_01.Text = "Pre Defined #1";
+			this.toolItemColumnSelect_01.Text = "Col List #1";
 			this.toolItemColumnSelect_01.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -512,7 +513,7 @@
 			// 
 			this.toolItemColumnSelect_02.Name = "toolItemColumnSelect_02";
 			this.toolItemColumnSelect_02.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_02.Text = "Pre Defined #2";
+			this.toolItemColumnSelect_02.Text = "Col List #2";
 			this.toolItemColumnSelect_02.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -520,20 +521,15 @@
 			// 
 			this.toolItemColumnSelect_03.Name = "toolItemColumnSelect_03";
 			this.toolItemColumnSelect_03.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_03.Text = "Pre Defined #3";
+			this.toolItemColumnSelect_03.Text = "Col List #3";
 			this.toolItemColumnSelect_03.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelectSep
-			// 
-			this.toolItemColumnSelectSep.Name = "toolItemColumnSelectSep";
-			this.toolItemColumnSelectSep.Size = new System.Drawing.Size(179, 6);
 			// 
 			// toolItemColumnSelect_04
 			// 
 			this.toolItemColumnSelect_04.Name = "toolItemColumnSelect_04";
 			this.toolItemColumnSelect_04.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_04.Text = "User Defined #4";
+			this.toolItemColumnSelect_04.Text = "Col List #4";
 			this.toolItemColumnSelect_04.Visible = false;
 			this.toolItemColumnSelect_04.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_04.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -542,7 +538,7 @@
 			// 
 			this.toolItemColumnSelect_05.Name = "toolItemColumnSelect_05";
 			this.toolItemColumnSelect_05.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_05.Text = "User Defined #5";
+			this.toolItemColumnSelect_05.Text = "Col List #5";
 			this.toolItemColumnSelect_05.Visible = false;
 			this.toolItemColumnSelect_05.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_05.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -551,7 +547,7 @@
 			// 
 			this.toolItemColumnSelect_06.Name = "toolItemColumnSelect_06";
 			this.toolItemColumnSelect_06.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_06.Text = "User Defined #6";
+			this.toolItemColumnSelect_06.Text = "Col List #6";
 			this.toolItemColumnSelect_06.Visible = false;
 			this.toolItemColumnSelect_06.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_06.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -560,7 +556,7 @@
 			// 
 			this.toolItemColumnSelect_07.Name = "toolItemColumnSelect_07";
 			this.toolItemColumnSelect_07.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_07.Text = "User Defined #7";
+			this.toolItemColumnSelect_07.Text = "Col List #7";
 			this.toolItemColumnSelect_07.Visible = false;
 			this.toolItemColumnSelect_07.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_07.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -569,7 +565,7 @@
 			// 
 			this.toolItemColumnSelect_08.Name = "toolItemColumnSelect_08";
 			this.toolItemColumnSelect_08.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_08.Text = "User Defined #8";
+			this.toolItemColumnSelect_08.Text = "Col List #8";
 			this.toolItemColumnSelect_08.Visible = false;
 			this.toolItemColumnSelect_08.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_08.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -578,7 +574,7 @@
 			// 
 			this.toolItemColumnSelect_09.Name = "toolItemColumnSelect_09";
 			this.toolItemColumnSelect_09.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_09.Text = "User Defined #9";
+			this.toolItemColumnSelect_09.Text = "Col List #9";
 			this.toolItemColumnSelect_09.Visible = false;
 			this.toolItemColumnSelect_09.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_09.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -587,7 +583,7 @@
 			// 
 			this.toolItemColumnSelect_10.Name = "toolItemColumnSelect_10";
 			this.toolItemColumnSelect_10.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_10.Text = "User Defined #10";
+			this.toolItemColumnSelect_10.Text = "Col List #10";
 			this.toolItemColumnSelect_10.Visible = false;
 			this.toolItemColumnSelect_10.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -596,7 +592,7 @@
 			// 
 			this.toolItemColumnSelect_11.Name = "toolItemColumnSelect_11";
 			this.toolItemColumnSelect_11.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_11.Text = "User Defined #11";
+			this.toolItemColumnSelect_11.Text = "Col List #11";
 			this.toolItemColumnSelect_11.Visible = false;
 			this.toolItemColumnSelect_11.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_11.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -605,7 +601,7 @@
 			// 
 			this.toolItemColumnSelect_12.Name = "toolItemColumnSelect_12";
 			this.toolItemColumnSelect_12.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_12.Text = "User Defined #12";
+			this.toolItemColumnSelect_12.Text = "Col List #12";
 			this.toolItemColumnSelect_12.Visible = false;
 			this.toolItemColumnSelect_12.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_12.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -614,10 +610,26 @@
 			// 
 			this.toolItemColumnSelect_13.Name = "toolItemColumnSelect_13";
 			this.toolItemColumnSelect_13.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_13.Text = "User Defined #13";
+			this.toolItemColumnSelect_13.Text = "Col List #13";
 			this.toolItemColumnSelect_13.Visible = false;
 			this.toolItemColumnSelect_13.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.toolItemColumnSelect_13.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolItemColumnSelect_14
+			// 
+			this.toolItemColumnSelect_14.Name = "toolItemColumnSelect_14";
+			this.toolItemColumnSelect_14.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_14.Text = "Col List #14";
+			this.toolItemColumnSelect_14.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_14.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolItemColumnSelect_15
+			// 
+			this.toolItemColumnSelect_15.Name = "toolItemColumnSelect_15";
+			this.toolItemColumnSelect_15.Size = new System.Drawing.Size(182, 22);
+			this.toolItemColumnSelect_15.Text = "Col List #15";
+			this.toolItemColumnSelect_15.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
+			this.toolItemColumnSelect_15.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolStripSeparator3
 			// 
@@ -1253,12 +1265,19 @@
 			this.toolStripSeparator13.Name = "toolStripSeparator13";
 			this.toolStripSeparator13.Size = new System.Drawing.Size(260, 6);
 			// 
-			// toolItemSettingsApp
+			// toolItemUpdateDataFromAPI
 			// 
-			this.toolItemSettingsApp.Name = "toolItemSettingsApp";
-			this.toolItemSettingsApp.Size = new System.Drawing.Size(263, 22);
-			this.toolItemSettingsApp.Text = "&Application Settings...";
-			this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
+			this.toolItemUpdateDataFromAPI.Name = "toolItemUpdateDataFromAPI";
+			this.toolItemUpdateDataFromAPI.Size = new System.Drawing.Size(263, 22);
+			this.toolItemUpdateDataFromAPI.Text = "Update Data from API...";
+			this.toolItemUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
+			// 
+			// toolItemImportBattlesFromWotStat
+			// 
+			this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
+			this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(263, 22);
+			this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
+			this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
 			// 
 			// toolItemShowDbTables
 			// 
@@ -1272,12 +1291,12 @@
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Size = new System.Drawing.Size(260, 6);
 			// 
-			// toolItemImportBattlesFromWotStat
+			// toolItemSettingsApp
 			// 
-			this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
-			this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(263, 22);
-			this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
-			this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
+			this.toolItemSettingsApp.Name = "toolItemSettingsApp";
+			this.toolItemSettingsApp.Size = new System.Drawing.Size(263, 22);
+			this.toolItemSettingsApp.Text = "&Application Settings...";
+			this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
 			// 
 			// toolItemHelp
 			// 
@@ -1447,13 +1466,6 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// toolItemUpdateDataFromAPI
-			// 
-			this.toolItemUpdateDataFromAPI.Name = "toolItemUpdateDataFromAPI";
-			this.toolItemUpdateDataFromAPI.Size = new System.Drawing.Size(263, 22);
-			this.toolItemUpdateDataFromAPI.Text = "Update Data from API...";
-			this.toolItemUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
-			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1599,7 +1611,6 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_12;
 		private System.Windows.Forms.ToolStripMenuItem testNewTankImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem testNewTurretImportToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolItemColumnSelectSep;
 		private System.Windows.Forms.ToolStripMenuItem testNewGunImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem testNewRadioImportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
@@ -1616,6 +1627,8 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattles2y;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
 		private System.Windows.Forms.ToolStripMenuItem toolItemUpdateDataFromAPI;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_14;
+		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_15;
 	}
 }
 

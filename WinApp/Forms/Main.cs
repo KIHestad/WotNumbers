@@ -428,34 +428,38 @@ namespace WinApp.Forms
 		private void SetColListMenu()
 		{
 			// Hide and uncheck all colum setup list menu items
-			for (int i = 1; i <= 13; i++)
+			for (int i = 1; i <= 15; i++)
 			{
 				ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + i.ToString("00")] as ToolStripMenuItem;
 				menuItem.Visible = false;
 				menuItem.Checked = false;
 			}
-			bool separatorVisible = false;
 			// Add colum lists according to database
 			string sql = "select id, name, position from columnList where colType=@colType and position is not null order by position; ";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
+				int menuItemNum = 1;
 				foreach (DataRow dr in dt.Rows)
 				{
-					if (Convert.ToInt32(dr["position"]) > 3) separatorVisible = true;
-					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + Convert.ToInt32(dr["position"]).ToString("00")] as ToolStripMenuItem;
-					menuItem.Text = dr["name"].ToString();
+					ToolStripMenuItem menuItem = toolItemColumnSelect.DropDownItems["toolItemColumnSelect_" + menuItemNum.ToString("00")] as ToolStripMenuItem;
+					string menuname = "(Missing name)";
+					if (dr["name"] != DBNull.Value)
+						menuname = dr["name"].ToString();
+					menuItem.Text = menuname;
 					menuItem.Visible = true;
 					// check if selected
 					if (MainSettings.GetCurrentGridFilter().ColListId == Convert.ToInt32(dr["id"]))
 					{
 						menuItem.Checked = true;
-						toolItemColumnSelect.Text = menuItem.Text;
+						toolItemColumnSelect.Text = menuname;
 					}
+					// Stop after 15 menu items
+					menuItemNum++;
+					if (menuItemNum > 15) continue;
 				}
 			}
-			toolItemColumnSelectSep.Visible = separatorVisible;
 			SelectFavMenuItem();
 		}
 

@@ -74,6 +74,8 @@
 			this.groupTanks = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
 			this.badLabel1 = new BadLabel();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolColListRefresh = new System.Windows.Forms.ToolStripButton();
 			this.ColListTheme.SuspendLayout();
 			this.toolColList.SuspendLayout();
 			this.toolSelectedColumns.SuspendLayout();
@@ -110,7 +112,6 @@
 			this.ColListTheme.Controls.Add(this.lblSelectedColumns);
 			this.ColListTheme.Controls.Add(this.groupTanks);
 			this.ColListTheme.Controls.Add(this.badGroupBox2);
-			this.ColListTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
 			this.ColListTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColListTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColListTheme.FormFooter = false;
@@ -125,7 +126,7 @@
 			this.ColListTheme.Size = new System.Drawing.Size(609, 614);
 			this.ColListTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemExitImage")));
 			this.ColListTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMaximizeImage")));
-			this.ColListTheme.SystemMinimizeImage = null;
+			this.ColListTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMinimizeImage")));
 			this.ColListTheme.TabIndex = 0;
 			this.ColListTheme.Text = "Column Setup";
 			this.ColListTheme.TitleHeight = 26;
@@ -143,7 +144,9 @@
             this.toolStripSeparator1,
             this.toolColListAdd,
             this.toolColListModify,
-            this.toolColListDelete});
+            this.toolColListDelete,
+            this.toolStripSeparator2,
+            this.toolColListRefresh});
 			this.toolColList.Location = new System.Drawing.Point(34, 68);
 			this.toolColList.Name = "toolColList";
 			this.toolColList.Size = new System.Drawing.Size(537, 25);
@@ -655,6 +658,21 @@
 			this.badLabel1.TabIndex = 73;
 			this.badLabel1.Text = "Type:";
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolColListRefresh
+			// 
+			this.toolColListRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolColListRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolColListRefresh.Image")));
+			this.toolColListRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListRefresh.Name = "toolColListRefresh";
+			this.toolColListRefresh.Size = new System.Drawing.Size(23, 22);
+			this.toolColListRefresh.Text = "toolStripButton1";
+			this.toolColListRefresh.Click += new System.EventHandler(this.toolColListRefresh_Click);
+			// 
 			// ColList
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -688,6 +706,15 @@
 		#endregion
 
 		private BadForm ColListTheme;
+		private System.Windows.Forms.ToolStrip toolColList;
+		private System.Windows.Forms.ToolStripButton toolColListUp;
+		private System.Windows.Forms.ToolStripButton toolColListDown;
+		private System.Windows.Forms.ToolStripButton toolColListVisible;
+		private System.Windows.Forms.ToolStripButton toolColListDefault;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripButton toolColListAdd;
+		private System.Windows.Forms.ToolStripButton toolColListModify;
+		private System.Windows.Forms.ToolStripButton toolColListDelete;
 		private BadButton btnRemoveAll;
 		private BadButton btnRemoveSelected;
 		private BadButton btnSelectSelected;
@@ -698,17 +725,6 @@
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveUp;
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveDown;
 		private System.Windows.Forms.ToolStrip toolAllColumns;
-		private BadScrollBar scrollSelectedColumns;
-		private System.Windows.Forms.DataGridView dataGridSelectedColumns;
-		private BadScrollBar scrollAllColumns;
-		private System.Windows.Forms.DataGridView dataGridAllColumns;
-		private BadScrollBar scrollColumnList;
-		private System.Windows.Forms.DataGridView dataGridColumnList;
-		private BadLabel lblAllColumns;
-		private BadGroupBox groupTanks;
-		private BadLabel lblSelectedColumns;
-		private BadGroupBox badGroupBox2;
-		private BadLabel badLabel1;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_All;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_1;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_2;
@@ -720,15 +736,23 @@
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_8;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_9;
 		private System.Windows.Forms.ToolStripButton toolAvailableCol_10;
-		private System.Windows.Forms.ToolStrip toolColList;
-		private System.Windows.Forms.ToolStripButton toolColListUp;
-		private System.Windows.Forms.ToolStripButton toolColListDown;
-		private System.Windows.Forms.ToolStripButton toolColListVisible;
-		private System.Windows.Forms.ToolStripButton toolColListDefault;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-		private System.Windows.Forms.ToolStripButton toolColListAdd;
-		private System.Windows.Forms.ToolStripButton toolColListModify;
-		private System.Windows.Forms.ToolStripButton toolColListDelete;
+		private BadScrollBar scrollSelectedColumns;
+		private System.Windows.Forms.DataGridView dataGridSelectedColumns;
+		private BadScrollBar scrollAllColumns;
+		private System.Windows.Forms.DataGridView dataGridAllColumns;
+		private BadScrollBar scrollColumnList;
+		private System.Windows.Forms.DataGridView dataGridColumnList;
+		private BadLabel lblAllColumns;
+		private BadLabel lblSelectedColumns;
+		private BadGroupBox groupTanks;
+		private BadGroupBox badGroupBox2;
 		private System.Windows.Forms.ImageList imageListToolStrip;
+		private BadLabel badLabel1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripButton toolColListRefresh;
+
+
+
+
 	}
 }

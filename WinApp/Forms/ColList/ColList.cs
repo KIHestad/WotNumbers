@@ -17,7 +17,7 @@ namespace WinApp.Forms
 		private int SelectedColListId = 0;
 
 		#region Init
-		
+
 		public ColList()
 		{
 			InitializeComponent();
@@ -161,6 +161,8 @@ namespace WinApp.Forms
 			// Mouse scrolling
 			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
 			dataGridSelectedColumns.MouseWheel += new MouseEventHandler(dataGridSelectedColumns_MouseWheel);
+			// Default cursor
+			ColListTheme.Cursor = Cursors.Default;
 		}
 
 		#endregion
@@ -215,9 +217,9 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-		
+
 		#region Style
-				
+
 		class StripRenderer : ToolStripProfessionalRenderer
 		{
 			public StripRenderer()
@@ -338,7 +340,7 @@ namespace WinApp.Forms
 			}
 			dataGridColumnList.Rows[rownum].Selected = true;
 			SelectColumnList(SelectedColListId);
-			
+
 		}
 
 		private void dataGridColumnList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -350,7 +352,7 @@ namespace WinApp.Forms
 		private void SelectColumnList(int ColumnListId = 0)
 		{
 			// Set enabled when not sysColumn
-			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value) ;
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
 			toolColListDelete.Enabled = !sysCol;
 			btnColumnListCancel.Enabled = !sysCol;
 			btnColumnListSave.Enabled = !sysCol;
@@ -361,7 +363,7 @@ namespace WinApp.Forms
 			toolSelectedTanks_MoveUp.Enabled = !sysCol;
 			toolSelectedTanks_MoveDown.Enabled = !sysCol;
 			// Get tanks for this fav list now
-			GetSelectedColumnsFromColumnList(); 
+			GetSelectedColumnsFromColumnList();
 			// Toggle show/hide
 			bool isHidden = (dataGridColumnList.SelectedRows[0].Cells["#"].Value == DBNull.Value);
 			string showButton = "Hide";
@@ -467,7 +469,7 @@ namespace WinApp.Forms
 			string colGroup = "All";
 			foreach (ToolStripButton button in toolAllColumns.Items)
 			{
-				if (button.Checked) colGroup=button.Text;
+				if (button.Checked) colGroup = button.Text;
 			}
 			if (colGroup != "All") sql += "AND colGroup=@colGroup ";
 			sql += "ORDER BY position; ";
@@ -900,7 +902,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-		
+
 		private void toolColListDelete_Click(object sender, EventArgs e)
 		{
 			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
@@ -1020,6 +1022,11 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 			ShowColumnSetupList();
 		}
-		
+
+		private void toolColListRefresh_Click(object sender, EventArgs e)
+		{
+			ShowColumnSetupList();
+		}
+
 	}
 }

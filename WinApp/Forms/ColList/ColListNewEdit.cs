@@ -14,6 +14,7 @@ namespace WinApp.Forms
 	public partial class ColListNewEdit : Form
 	{
 		string favListDD = "";
+		string copyFromDD = "";
 		int colListId = 0;
 		public ColListNewEdit(int selectedColListId = 0)
 		{
@@ -21,7 +22,11 @@ namespace WinApp.Forms
 			if (selectedColListId == 0)
 				ColListNewEditTheme.Text = "Add new Column List";
 			else
+			{
 				ColListNewEditTheme.Text = "Modify Column List";
+				ddCopyFrom.Visible = false;
+				lblCopyFrom.Visible = false;
+			}
 			colListId = selectedColListId;
 		}
 
@@ -29,6 +34,7 @@ namespace WinApp.Forms
 		{
 			if (colListId > 0)
 			{
+				// Show selected colList
 				string sql = "select columnList.name as colListName, columnList.defaultFavListId, favList.name as favListname " +
 							"from columnList left join favList on columnList.defaultFavListId=favList.id " +
 							"where columnList.id=@id";
@@ -44,7 +50,6 @@ namespace WinApp.Forms
 				}
 				else
 					ddDefaultTankFilter.Text = dr["favListname"].ToString();
-
 			}
 			favListDD = "(Use Current),(All Tanks)";
 			string favListSql = "select * from favList order by position";
@@ -54,6 +59,21 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtFavList.Rows)
 				{
 					favListDD += "," + dr["name"].ToString();
+				}
+			}
+			if (colListId == 0)
+			{
+				// Populate Copy From DD
+				copyFromDD = "(None)";
+				string copyFromSql = "select * from columnList where colType=@colType order by position";
+				DB.AddWithValue(ref copyFromSql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+				DataTable dtcopyFrom = DB.FetchData(copyFromSql);
+				if (dtcopyFrom.Rows.Count > 0)
+				{
+					foreach (DataRow dr2 in dtcopyFrom.Rows)
+					{
+						copyFromDD += "," + dr2["name"].ToString();
+					}
 				}
 			}
 		}
@@ -70,37 +90,82 @@ namespace WinApp.Forms
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			if (txtName.Text.Length > 0)
+			string newName = txtName.Text.Trim();
+			if (newName.Length == 0)
 			{
-				string sql = "";
-				// Update favlist
-				string selectedfavListName = ddDefaultTankFilter.Text;
-				int defaultFavListId = -1; // Use current
-				if (selectedfavListName == "(Use Current)")
-					defaultFavListId = -1;
-				else if (selectedfavListName == "(All Tanks)")
-					defaultFavListId = -2;
+				Code.MsgBox.Show("Plese select a name for the column list","Name missing");
+			}
+			else
+			{
+				// Check if name not already exists
+				string sql = "select id from columnList where name=@name and colType=@colType; ";
+				DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+				DataTable dtExists = DB.FetchData(sql);
+				if (dtExists.Rows.Count > 0)
+				{
+					Code.MsgBox.Show("This name is already in use, select a different name for the column list", "Name already in use");
+				}
 				else
 				{
-					// Find favListId
-					sql = "select id from favList where name=@name";
-					DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
-					DataTable dtFavList = DB.FetchData(sql);
-					if (dtFavList.Rows.Count > 0)
-						defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
+					// Find favlist ID
+					string selectedfavListName = ddDefaultTankFilter.Text;
+					int defaultFavListId = -1; // Use current
+					if (selectedfavListName == "(Use Current)")
+						defaultFavListId = -1;
+					else if (selectedfavListName == "(All Tanks)")
+						defaultFavListId = -2;
+					else
+					{
+						// Find favListId
+						sql = "select id from favList where name=@name";
+						DB.AddWithValue(ref sql, "@name", selectedfavListName, DB.SqlDataType.VarChar);
+						DataTable dtFavList = DB.FetchData(sql);
+						if (dtFavList.Rows.Count > 0)
+							defaultFavListId = Convert.ToInt32(dtFavList.Rows[0][0]);
+					}
+					// Save now
+					if (colListId > 0)
+						sql = "update columnList set defaultFavListId=@defaultFavListId, name=@name where id=@id";
+					else
+						sql = "insert into columnList (defaultFavListId, name, colType, position) values (@defaultFavListId, @name, @colType, 99999)";
+					DB.AddWithValue(ref sql, "@defaultFavListId", defaultFavListId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
+					DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+					DB.ExecuteNonQuery(sql);
+					// Add tanks if new colList and seleced colList in copy to DD
+					if (colListId == 0 && ddCopyFrom.Text != "(None)")
+					{
+						// Get the id for copy from
+						sql = "select id from columnList where name=@name and colType=@colType; ";
+						DB.AddWithValue(ref sql, "@name", ddCopyFrom.Text, DB.SqlDataType.VarChar);
+						DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+						DataTable dtCopyFrom = DB.FetchData(sql);
+						int copyFromId = Convert.ToInt32(dtCopyFrom.Rows[0]["id"]);
+						// Get the id for copy to
+						sql = "select id from columnList where name=@name and colType=@colType; ";
+						DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
+						DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+						DataTable dtCopyTo = DB.FetchData(sql);
+						int copyToId = Convert.ToInt32(dtCopyTo.Rows[0]["id"]);
+						// Copy now
+						sql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) select columnSelectionId, @copyToColumnListId, sortorder " +
+																										"   from columnListSelection " +
+																										"   where ColumnListId=@copyFromColumnListId; ";
+						DB.AddWithValue(ref sql, "@copyToColumnListId", copyToId, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@copyFromColumnListId", copyFromId, DB.SqlDataType.Int);
+						DB.ExecuteNonQuery(sql);
+					
+					}
+					this.Close();
 				}
-				// Save now
-				if (colListId > 0)
-					sql = "update columnList set defaultFavListId=@defaultFavListId, name=@name where id=@id";
-				else
-					sql = "insert into columnList (defaultFavListId, name, colType, position) values (@defaultFavListId, @name, @colType, 99999)";
-				DB.AddWithValue(ref sql, "@defaultFavListId", defaultFavListId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@name", txtName.Text, DB.SqlDataType.VarChar);
-				DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-				this.Close();
 			}
+		}
+
+		private void ddCopyFrom_Click(object sender, EventArgs e)
+		{
+			Code.DropDownGrid.Show(ddCopyFrom, Code.DropDownGrid.DropDownGridType.List, copyFromDD);
 		}
 
 		
