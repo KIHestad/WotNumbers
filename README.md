@@ -11,3 +11,7 @@ Created by: BadButton and cmdrTrinity (alias: leeruude)
 * Added support for WoT 9.1
 
 * Added possibilities to update all tank-related data from API using Settings menu
+
+12.06.2014
+
+* Completed new layout and improved functionality for Column List Setup
