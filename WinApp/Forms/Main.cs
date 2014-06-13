@@ -1041,11 +1041,17 @@ namespace WinApp.Forms
 			foreach (colListClass colListItem in colList)
 			{
 				dataGridMain.Columns[colListItem.colName].Width = colListItem.colWidth;
-				if (colListItem.colType == "Int" || colListItem.colType == "Float")
+				if (colListItem.colType == "Int")
 				{
 					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N0";
 				}
+				else if (colListItem.colType == "Float")
+				{
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N1";
+				}
+				
 			}
 			ResizeNow();
 			// Add status message
@@ -1188,7 +1194,7 @@ namespace WinApp.Forms
 				{
 					if (colListItem.colType == "Int" || colListItem.colType == "Float")
 					{
-						IEnumerable<string> nonTotalsCols = new List<string>{ "EFF", "WN8", "Hit Rate", "Tier"};
+						IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
 						if (!nonTotalsCols.Contains(colListItem.colName)) // Avoid calculate total EFF/WN8
 							// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
 							footerRow2[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", ""));

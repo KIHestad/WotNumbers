@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 49; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 50; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -809,6 +809,23 @@ namespace WinApp.Code
 				case 49:
 					mssql = "ALTER TABLE columnList ADD defaultFavListId int NOT NULL default -1; " ;
 					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 50:
+					mssql = "update columnSelection set colName='modTurret.armorFront' where id=79; " +
+							"update columnSelection set colName='modTurret.armorSides' where id=80; " +
+							"update columnSelection set colName='modTurret.armorRear' where id=81; " +
+							"update columnSelection set colName='modGun.name' where id=83; " +
+							"update columnSelection set name='Turret Front Arm', colWidth=60 where id=79; " +
+							"update columnSelection set name='Turret Side Arm', colWidth=60 where id=80; " +
+							"update columnSelection set name='Turret Rear Arm', colWidth=60 where id=81; " +
+							"update columnSelection set position=70 where id=78; " +
+							"update columnSelection set colDataType='Float' where id IN(95,98,145,146,147,148,149); " +
+							"update columnSelection set colName='playerTank.skillRecon',name='Recon' where id=69; " +
+							"update columnSelection set Name='Camo Skill' where id=71;" +
+							"update columnSelection set Name='Camo eqp' where id=67;" +
+							"update columnSelection set colDataType='Int' where id=2;" +
+							"update columnSelection set name='Pierced Hits%' where name='Pierced Hts%';";
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";
