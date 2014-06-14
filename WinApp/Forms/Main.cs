@@ -74,16 +74,15 @@ namespace WinApp.Forms
 			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
-			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Tank Grinding Setup");
-			ToolStripMenuItem dataGridMainPopup_BattleProgressChart = new ToolStripMenuItem("Show Chart With Battle Count");
-			//ToolStripMenuItem dataGridMainPopup_Other3 = new ToolStripMenuItem("Menu #3");
+			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
+			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Tank Charts");
+			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
-			dataGridMainPopup_BattleProgressChart.Click += new EventHandler(dataGridMainPopup_BattleProgressChart_Click);
-			//dataGridMainPopup_Other3.Click += new EventHandler(dataGridMainPopup_Other_Click);
+			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_TankChart_Click);
+			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			//Add to main context menu
-			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_BattleProgressChart });
-			//dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_Other2, dataGridMainPopup_Other3 });
+			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_Details, dataGridMainPopup_Chart, dataGridMainPopup_GrindingSetup });
 			//Assign to datagridview
 			dataGridMain.ContextMenuStrip = dataGridMainPopup;
 		}
@@ -1465,13 +1464,22 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 		}
 
-		private void dataGridMainPopup_BattleProgressChart_Click(object sender, EventArgs e)
+		private void dataGridMainPopup_TankChart_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.ChartBattleCount(playerTankId);
+			Form frm = new Forms.PlayerTankChart(playerTankId);
 			frm.ShowDialog();
-			
 		}
+
+		private void dataGridMainPopup_TankDetails_Click(object sender, EventArgs e)
+		{
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			Form frm = new Forms.PlayerTankDetails(playerTankId);
+			frm.Show();
+		}
+
+		
+
 
 		#endregion
 

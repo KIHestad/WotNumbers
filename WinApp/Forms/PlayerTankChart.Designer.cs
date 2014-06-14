@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-    partial class ChartBattleCount
+    partial class PlayerTankChart
     {
         /// <summary>
         /// Required designer variable.
@@ -29,55 +29,46 @@
         private void InitializeComponent()
         {
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChartBattleCount));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlayerTankChart));
 			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
 			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			this.ChartBattleCountTheme = new BadForm();
+			this.PlayerTankChartTheme = new BadForm();
 			this.ddTank = new BadDropDownBox();
 			this.badLabel1 = new BadLabel();
-			this.picIcon = new System.Windows.Forms.PictureBox();
-			this.picSmall = new System.Windows.Forms.PictureBox();
-			this.picLarge = new System.Windows.Forms.PictureBox();
 			this.ChartingBattleCount = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.ChartBattleCountTheme.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSmall)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picLarge)).BeginInit();
+			this.PlayerTankChartTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ChartingBattleCount)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// ChartBattleCountTheme
+			// PlayerTankChartTheme
 			// 
-			this.ChartBattleCountTheme.BackColor = System.Drawing.Color.Fuchsia;
-			this.ChartBattleCountTheme.Controls.Add(this.ddTank);
-			this.ChartBattleCountTheme.Controls.Add(this.badLabel1);
-			this.ChartBattleCountTheme.Controls.Add(this.picIcon);
-			this.ChartBattleCountTheme.Controls.Add(this.picSmall);
-			this.ChartBattleCountTheme.Controls.Add(this.picLarge);
-			this.ChartBattleCountTheme.Controls.Add(this.ChartingBattleCount);
-			this.ChartBattleCountTheme.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChartBattleCountTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-			this.ChartBattleCountTheme.FormFooter = false;
-			this.ChartBattleCountTheme.FormFooterHeight = 26;
-			this.ChartBattleCountTheme.FormInnerBorder = 3;
-			this.ChartBattleCountTheme.FormMargin = 0;
-			this.ChartBattleCountTheme.Image = null;
-			this.ChartBattleCountTheme.Location = new System.Drawing.Point(0, 0);
-			this.ChartBattleCountTheme.MainArea = mainAreaClass1;
-			this.ChartBattleCountTheme.Name = "ChartBattleCountTheme";
-			this.ChartBattleCountTheme.Resizable = true;
-			this.ChartBattleCountTheme.Size = new System.Drawing.Size(908, 529);
-			this.ChartBattleCountTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ChartBattleCountTheme.SystemExitImage")));
-			this.ChartBattleCountTheme.SystemMaximizeImage = null;
-			this.ChartBattleCountTheme.SystemMinimizeImage = null;
-			this.ChartBattleCountTheme.TabIndex = 0;
-			this.ChartBattleCountTheme.Text = "Battle Chart - Battle Count";
-			this.ChartBattleCountTheme.TitleHeight = 26;
+			this.PlayerTankChartTheme.BackColor = System.Drawing.Color.Fuchsia;
+			this.PlayerTankChartTheme.Controls.Add(this.ddTank);
+			this.PlayerTankChartTheme.Controls.Add(this.badLabel1);
+			this.PlayerTankChartTheme.Controls.Add(this.ChartingBattleCount);
+			this.PlayerTankChartTheme.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PlayerTankChartTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.PlayerTankChartTheme.FormFooter = false;
+			this.PlayerTankChartTheme.FormFooterHeight = 26;
+			this.PlayerTankChartTheme.FormInnerBorder = 3;
+			this.PlayerTankChartTheme.FormMargin = 0;
+			this.PlayerTankChartTheme.Image = null;
+			this.PlayerTankChartTheme.Location = new System.Drawing.Point(0, 0);
+			this.PlayerTankChartTheme.MainArea = mainAreaClass1;
+			this.PlayerTankChartTheme.Name = "PlayerTankChartTheme";
+			this.PlayerTankChartTheme.Resizable = true;
+			this.PlayerTankChartTheme.Size = new System.Drawing.Size(755, 428);
+			this.PlayerTankChartTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("PlayerTankChartTheme.SystemExitImage")));
+			this.PlayerTankChartTheme.SystemMaximizeImage = null;
+			this.PlayerTankChartTheme.SystemMinimizeImage = null;
+			this.PlayerTankChartTheme.TabIndex = 0;
+			this.PlayerTankChartTheme.Text = "Tank Chart";
+			this.PlayerTankChartTheme.TitleHeight = 26;
 			// 
 			// ddTank
 			// 
 			this.ddTank.Image = null;
-			this.ddTank.Location = new System.Drawing.Point(17, 61);
+			this.ddTank.Location = new System.Drawing.Point(98, 40);
 			this.ddTank.Name = "ddTank";
 			this.ddTank.Size = new System.Drawing.Size(160, 22);
 			this.ddTank.TabIndex = 3;
@@ -94,33 +85,6 @@
 			this.badLabel1.Size = new System.Drawing.Size(75, 23);
 			this.badLabel1.TabIndex = 7;
 			this.badLabel1.Text = "Select Tank:";
-			// 
-			// picIcon
-			// 
-			this.picIcon.BackColor = System.Drawing.Color.Transparent;
-			this.picIcon.Location = new System.Drawing.Point(65, 232);
-			this.picIcon.Name = "picIcon";
-			this.picIcon.Size = new System.Drawing.Size(65, 24);
-			this.picIcon.TabIndex = 6;
-			this.picIcon.TabStop = false;
-			// 
-			// picSmall
-			// 
-			this.picSmall.BackColor = System.Drawing.Color.Transparent;
-			this.picSmall.Location = new System.Drawing.Point(52, 195);
-			this.picSmall.Name = "picSmall";
-			this.picSmall.Size = new System.Drawing.Size(124, 31);
-			this.picSmall.TabIndex = 5;
-			this.picSmall.TabStop = false;
-			// 
-			// picLarge
-			// 
-			this.picLarge.BackColor = System.Drawing.Color.Transparent;
-			this.picLarge.Location = new System.Drawing.Point(17, 89);
-			this.picLarge.Name = "picLarge";
-			this.picLarge.Size = new System.Drawing.Size(160, 100);
-			this.picLarge.TabIndex = 4;
-			this.picLarge.TabStop = false;
 			// 
 			// ChartingBattleCount
 			// 
@@ -159,29 +123,27 @@
 			legend1.ForeColor = System.Drawing.Color.Silver;
 			legend1.Name = "Legend1";
 			this.ChartingBattleCount.Legends.Add(legend1);
-			this.ChartingBattleCount.Location = new System.Drawing.Point(195, 39);
+			this.ChartingBattleCount.Location = new System.Drawing.Point(12, 72);
 			this.ChartingBattleCount.Name = "ChartingBattleCount";
-			this.ChartingBattleCount.Size = new System.Drawing.Size(696, 473);
+			this.ChartingBattleCount.Size = new System.Drawing.Size(730, 341);
 			this.ChartingBattleCount.TabIndex = 0;
 			this.ChartingBattleCount.Text = "chart1";
 			// 
-			// ChartBattleCount
+			// PlayerTankChart
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(908, 529);
-			this.Controls.Add(this.ChartBattleCountTheme);
+			this.ClientSize = new System.Drawing.Size(755, 428);
+			this.Controls.Add(this.PlayerTankChartTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.Name = "ChartBattleCount";
+			this.Name = "PlayerTankChart";
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "TestShowImage";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.TestShowImage_Load);
-			this.ChartBattleCountTheme.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSmall)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picLarge)).EndInit();
+			this.PlayerTankChartTheme.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.ChartingBattleCount)).EndInit();
 			this.ResumeLayout(false);
 
@@ -189,12 +151,9 @@
 
         #endregion
 
-		private BadForm ChartBattleCountTheme;
+		private BadForm PlayerTankChartTheme;
 		private System.Windows.Forms.DataVisualization.Charting.Chart ChartingBattleCount;
 		private BadDropDownBox ddTank;
-		private System.Windows.Forms.PictureBox picLarge;
-		private System.Windows.Forms.PictureBox picIcon;
-		private System.Windows.Forms.PictureBox picSmall;
 		private BadLabel badLabel1;
 
 

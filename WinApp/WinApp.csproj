@@ -137,6 +137,12 @@
     <Compile Include="Forms\ColList\ColListNewEdit.Designer.cs">
       <DependentUpon>ColListNewEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PlayerTankDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PlayerTankDetails.Designer.cs">
+      <DependentUpon>PlayerTankDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\AddPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -226,11 +232,11 @@
     <Compile Include="Code\Support\Log.cs" />
     <Compile Include="Code\ImportWotApi2DB.cs" />
     <Compile Include="Code\Rating.cs" />
-    <Compile Include="Forms\Chart\ChartBattleCount.cs">
+    <Compile Include="Forms\PlayerTankChart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Chart\ChartBattleCount.Designer.cs">
-      <DependentUpon>ChartBattleCount.cs</DependentUpon>
+    <Compile Include="Forms\PlayerTankChart.Designer.cs">
+      <DependentUpon>PlayerTankChart.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Test\ViewRange.cs">
       <SubType>Form</SubType>
@@ -251,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColList\ColListNewEdit.resx">
       <DependentUpon>ColListNewEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PlayerTankDetails.resx">
+      <DependentUpon>PlayerTankDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AddPlayer.resx">
       <DependentUpon>AddPlayer.cs</DependentUpon>
@@ -294,8 +303,8 @@
     <EmbeddedResource Include="Forms\Settings\DatabaseTable.resx">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Chart\ChartBattleCount.resx">
-      <DependentUpon>ChartBattleCount.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\PlayerTankChart.resx">
+      <DependentUpon>PlayerTankChart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>

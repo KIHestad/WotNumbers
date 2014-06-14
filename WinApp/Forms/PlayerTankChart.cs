@@ -15,58 +15,15 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class ChartBattleCount : Form
+	public partial class PlayerTankChart : Form
 	{
 		int initPlayerTankId = 0;
-		public ChartBattleCount(int playerTankId = 0)
+		public PlayerTankChart(int playerTankId = 0)
 		{
 			InitializeComponent();
 			initPlayerTankId = playerTankId;
 		}
 
-
-		private static Image getImage(int i, int tankId = 1)
-		{
-			DataTable dtImg = DB.FetchData("SELECT img, smallImg, contourImg FROM tank WHERE id=" + tankId);
-			Image image = null;
-			if (dtImg.Rows.Count > 0)
-			{
-				byte[] rawImg = (byte[])dtImg.Rows[0][i];
-				MemoryStream ms = new MemoryStream(rawImg);
-				image = Image.FromStream(ms);
-				ms.Close();
-			}
-			else
-			{
-				Bitmap noPicure = new Bitmap(10, 10);
-				image = noPicure;
-			}
-			return image;
-		}
-
-		private void DrawImages(int tankId)
-		{
-			PictureBox pb;
-
-			pb = new PictureBox();
-			pb.Image = getImage(0, tankId);
-			pb.Location = new Point(20, 40);  // position from left/top
-			pb.Size = new System.Drawing.Size(160, 100);  // width/height
-			ChartBattleCountTheme.Controls.Add(pb);
-
-			pb = new PictureBox();
-			pb.Image = getImage(1, tankId);
-			pb.Location = new Point(20, 150);
-			pb.Size = new System.Drawing.Size(124, 31);
-			ChartBattleCountTheme.Controls.Add(pb);
-
-			pb = new PictureBox();
-			pb.Image = getImage(2, tankId);
-			pb.Location = new Point(20, 190);
-			pb.Size = new System.Drawing.Size(65, 24);
-			ChartBattleCountTheme.Controls.Add(pb);
-
-		}
 
 		private void TestShowImage_Load(object sender, EventArgs e)
 		{
@@ -77,9 +34,7 @@ namespace WinApp.Forms
 				ddTank.Text = DB.FetchData(sql).Rows[0][0].ToString();
 			}
 		}
-
 		
-
 		private void ddTank_Click(object sender, EventArgs e)
 		{
 			string sql = "select tank.name from tank inner join playerTank on tank.id = playerTank.tankId where playerTank.playerId=@playerId order by lastBattleTime DESC";
@@ -90,9 +45,6 @@ namespace WinApp.Forms
 		private void ddTank_TextChanged(object sender, EventArgs e)
 		{
 			string tankName = ddTank.Text;
-			// get image
-			int tankId = TankData.GetTankID(tankName);
-			DrawTranparentImage(tankId);
 			// Check if already shown
 			foreach (Series serie in ChartingBattleCount.Series)
 			{
@@ -120,17 +72,6 @@ namespace WinApp.Forms
 				ChartingBattleCount.Series[tankName].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), sumBattles);
 				sumBattles -= Convert.ToInt32(dr["battlesCount"]);
 			}
-		}
-
-		public void DrawTranparentImage(int tankId)
-		{
-			Bitmap bmp = new Bitmap(getImage(0, tankId));
-			picLarge.Image = bmp;
-			bmp = new Bitmap(getImage(1, tankId));
-			picSmall.Image = bmp;
-			bmp = new Bitmap(getImage(2, tankId));
-			picIcon.Image = bmp;
-
 		}
 	}
 }

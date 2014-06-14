@@ -42,8 +42,8 @@ namespace WinApp.Code
 
 		public static DataTable GetPlayerTankBattleFromDB(int playerTankId, string battleMode)
 		{
-			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; "; 
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
+			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			return DB.FetchData(sql);
 		}

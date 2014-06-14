@@ -151,11 +151,11 @@
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.importDossierHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.importWsDossierHistoryToDbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.testSaveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testUpdateTankImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -404,7 +404,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(623, 25);
+			this.toolMain.Size = new System.Drawing.Size(592, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1345,6 +1345,11 @@
 			this.importWsDossierHistoryToDbToolStripMenuItem.Text = "Import battles from ws dossier history";
 			this.importWsDossierHistoryToDbToolStripMenuItem.Click += new System.EventHandler(this.importWsDossierHistoryToDbToolStripMenuItem_Click);
 			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(270, 6);
+			// 
 			// testSaveImageToolStripMenuItem
 			// 
 			this.testSaveImageToolStripMenuItem.Name = "testSaveImageToolStripMenuItem";
@@ -1386,11 +1391,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(270, 6);
 			// 
 			// Main
 			// 
