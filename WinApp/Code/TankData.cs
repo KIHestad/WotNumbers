@@ -34,20 +34,25 @@ namespace WinApp.Code
 
 		public static DataTable GetPlayerTankFromDB(int tankId)
 		{
-			string sql = "SELECT * FROM playerTank WHERE playerId = " + Config.Settings.playerId + " AND tankId=" + tankId.ToString();
+			string sql = "SELECT * FROM playerTank WHERE playerId=@playerId AND tankId=@tankId; ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 			return DB.FetchData(sql);
 		}
 
 		public static DataTable GetPlayerTankBattleFromDB(int playerTankId, string battleMode)
 		{
-			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=" + playerTankId.ToString() + " AND battleMode='" + battleMode + "'";
+			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; "; 
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			return DB.FetchData(sql);
 		}
 
 
 		public static int GetPlayerTankCount()
 		{
-			string sql = "SELECT count(id) AS count FROM playerTank WHERE playerId = " + Config.Settings.playerId;
+			string sql = "SELECT count(id) AS count FROM playerTank WHERE playerId=@playerId; ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			int count = 0;
 			if (dt.Rows.Count > 0) count = Convert.ToInt32(dt.Rows[0]["count"]);
@@ -56,9 +61,9 @@ namespace WinApp.Code
 
 		public static int ConvertWs2TankId(int wsTankId, int wsCountryId)
 		{
-			string sql = "SELECT tankId " +
-						 "FROM wsTankId " +
-						 "WHERE wsTankId = " + wsTankId.ToString() + " AND wsCountryId = " + wsCountryId.ToString();
+			string sql = "SELECT tankId FROM wsTankId WHERE wsTankId=@wsTankId AND wsCountryId=@wsCountryId; ";
+			DB.AddWithValue(ref sql, "@wsTankId", wsTankId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@wsCountryId", wsCountryId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["tankId"]);
@@ -68,24 +73,41 @@ namespace WinApp.Code
 
 		public static int GetPlayerTankId(int tankId)
 		{
-			string sql = "SELECT playerTank.id AS playerTankId " +
+			string sql = "SELECT playerTank.id " +
 						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
-						 "WHERE tank.id = " + tankId;
+						 "WHERE tank.id=@id and playerTank.playerId=@playerId; ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@id", tankId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
-			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
+			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
+			return lookupTankId;
+		}
+
+		public static int GetPlayerTankId(string tankName)
+		{
+			string sql = "SELECT playerTank.id " +
+						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
+						 "WHERE tank.name=@name and playerTank.playerId=@playerId; ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@name", tankName, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			int lookupTankId = 0;
+			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
 			return lookupTankId;
 		}
 
 		public static DataTable GetBattleFromDB(int battleId)
 		{
-			string sql = "SELECT * FROM battle WHERE id=" + battleId.ToString();
+			string sql = "SELECT * FROM battle WHERE id=@id; ";
+			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
 			return DB.FetchData(sql);
 		}
 
 		public static int GetBattleIdForImportedWsBattleFromDB(int wsId)
 		{
-			string sql = "SELECT Id FROM battle WHERE wsId=" + wsId.ToString();
+			string sql = "SELECT Id FROM battle WHERE wsId=@wsId; ";
+			DB.AddWithValue(ref sql, "@wsId", wsId, DB.SqlDataType.Int); 
 			DataTable dt = DB.FetchData(sql);
 			int lookupBattle = 0;
 			if (dt.Rows.Count > 0) lookupBattle = Convert.ToInt32(dt.Rows[0]["Id"]);
@@ -153,6 +175,16 @@ namespace WinApp.Code
 			return tankID;
 		}
 
+		public static bool GetAchievmentExist(string achName)
+		{
+			bool exists = false;
+			string sql = "SELECT ach.id FROM ach WHERE name=@name; ";
+			DB.AddWithValue(ref sql, "@name", achName, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			exists = (dt.Rows.Count > 0);
+			return exists;
+		}
+
 		public static bool TankExist(int tankID)
 		{
 			string expression = "id = " + tankID.ToString();
@@ -169,42 +201,8 @@ namespace WinApp.Code
 			else
 				return null;
 		}
-
-		//public static void SetPlayerTankAllAch()
-		//{
-		//	// This makes sure all player tanks has all achievmenets - default value count=0
-		//	string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
-		//				"select playerTankAchAllView.playerTankId, playerTankAchAllView.achId, 0 from playerTankAchAllView left join " +
-		//				"playerTankAch on playerTankAchAllView.playerTankId = playerTankAch.playerTankId and playerTankAchAllView.achId = playerTankAch.achId " +
-		//				"where playerTankAch.playerTankId is null";
-		//	DB.ExecuteNonQuery(sql);
-		//}
-
-		//public static void SetPlayerTankAllAch(int playerTankId)
-		//{
-		//	// This makes sure this player tanks has all achievmenets - default value count=0
-		//	string sql = "insert into playerTankAch (playerTankId, achId, achCount) " +
-		//				"select " + playerTankId.ToString() + ", ach.id, 0 from ach left join " +
-		//				"playerTankAch on ach.id = playerTankAch.achId and playerTankAch.playerTankId = " + playerTankId.ToString() + " " +
-		//				"where playerTankAch.playerTankId is null";
-		//	DB.ExecuteNonQuery(sql);
-		//}
-
-
-		public static bool GetAchievmentExist(string achName)
-		{
-			bool exists = false;
-			string sql = "SELECT ach.id " +
-							"FROM ach  " +
-							"WHERE name = '" + achName + "'";
-			DataTable dt = DB.FetchData(sql);
-			exists = (dt.Rows.Count > 0);
-			return exists;
-		}
-
 		
 		#endregion
-
 	   
 	}
 }

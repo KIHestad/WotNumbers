@@ -179,12 +179,6 @@
     <Compile Include="Forms\Settings\UpdateFromApi.Designer.cs">
       <DependentUpon>UpdateFromApi.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Test\ImportWotDossierData.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\ImportWotDossierData.Designer.cs">
-      <DependentUpon>ImportWotDossierData.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Settings\ImportWotStat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -209,12 +203,6 @@
     <Compile Include="Forms\Settings\ApplicationSetting.Designer.cs">
       <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Test\ImportTank.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\ImportTank.Designer.cs">
-      <DependentUpon>ImportTank.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,30 +225,12 @@
     <Compile Include="Code\Dossier2db.cs" />
     <Compile Include="Code\Support\Log.cs" />
     <Compile Include="Code\ImportWotApi2DB.cs" />
-    <Compile Include="Forms\Test\ScrollbarTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\ScrollbarTest.Designer.cs">
-      <DependentUpon>ScrollbarTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Test\test.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\test.Designer.cs">
-      <DependentUpon>test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Test\TestProgressBar.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\TestProgressBar.Designer.cs">
-      <DependentUpon>TestProgressBar.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Rating.cs" />
-    <Compile Include="Forms\Test\TestShowImage.cs">
+    <Compile Include="Forms\Chart\ChartBattleCount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Test\TestShowImage.Designer.cs">
-      <DependentUpon>TestShowImage.cs</DependentUpon>
+    <Compile Include="Forms\Chart\ChartBattleCount.Designer.cs">
+      <DependentUpon>ChartBattleCount.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Test\ViewRange.cs">
       <SubType>Form</SubType>
@@ -303,9 +273,6 @@
     <EmbeddedResource Include="Forms\Settings\UpdateFromApi.resx">
       <DependentUpon>UpdateFromApi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\ImportWotDossierData.resx">
-      <DependentUpon>ImportWotDossierData.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\ImportWotStat.resx">
       <DependentUpon>ImportWotStat.cs</DependentUpon>
     </EmbeddedResource>
@@ -318,9 +285,6 @@
     <EmbeddedResource Include="Forms\Settings\ApplicationSetting.resx">
       <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\ImportTank.resx">
-      <DependentUpon>ImportTank.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -330,17 +294,8 @@
     <EmbeddedResource Include="Forms\Settings\DatabaseTable.resx">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\ScrollbarTest.resx">
-      <DependentUpon>ScrollbarTest.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\test.resx">
-      <DependentUpon>test.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\TestProgressBar.resx">
-      <DependentUpon>TestProgressBar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\TestShowImage.resx">
-      <DependentUpon>TestShowImage.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Chart\ChartBattleCount.resx">
+      <DependentUpon>ChartBattleCount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>

@@ -75,14 +75,14 @@ namespace WinApp.Forms
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Tank Grinding Setup");
-			//ToolStripMenuItem dataGridMainPopup_Other2 = new ToolStripMenuItem("Menu #2");
+			ToolStripMenuItem dataGridMainPopup_BattleProgressChart = new ToolStripMenuItem("Show Chart With Battle Count");
 			//ToolStripMenuItem dataGridMainPopup_Other3 = new ToolStripMenuItem("Menu #3");
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
-			//dataGridMainPopup_Other2.Click += new EventHandler(dataGridMainPopup_Other_Click);
+			dataGridMainPopup_BattleProgressChart.Click += new EventHandler(dataGridMainPopup_BattleProgressChart_Click);
 			//dataGridMainPopup_Other3.Click += new EventHandler(dataGridMainPopup_Other_Click);
 			//Add to main context menu
-			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup });
+			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_BattleProgressChart });
 			//dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_GrindingSetup, dataGridMainPopup_Other2, dataGridMainPopup_Other3 });
 			//Assign to datagridview
 			dataGridMain.ContextMenuStrip = dataGridMainPopup;
@@ -1463,12 +1463,14 @@ namespace WinApp.Forms
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			Form frm = new Forms.GrindingSetup(playerTankId);
 			frm.ShowDialog();
-			// Code.MsgBox.Show("Tank id: " + tankId.ToString(), "Grinding setup test");
 		}
 
-		private void dataGridMainPopup_Other_Click(object sender, EventArgs e)
+		private void dataGridMainPopup_BattleProgressChart_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.Show("No function implemented", "Test menu");
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			Form frm = new Forms.ChartBattleCount(playerTankId);
+			frm.ShowDialog();
+			
 		}
 
 		#endregion
@@ -1755,27 +1757,9 @@ namespace WinApp.Forms
 
 		#region Toolstrip Testing Menu Items
 	
-		private void toolItemTest_ImportTankWn8_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.ImportTank();
-			frm.ShowDialog();
-		}
-
-		private void toolItemTest_ProgressBar_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.TestProgressBar();
-			frm.Show();
-		}
-
 		private void toolItemTest_ViewRange_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.ViewRange();
-			frm.ShowDialog();
-		}
-
-		private void toolItemTest_ScrollBar_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.ScrollbarTest();
 			frm.ShowDialog();
 		}
 
@@ -1789,45 +1773,15 @@ namespace WinApp.Forms
 			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
 		}
 
-		private void testNewTankImportToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotApi2DB.ImportTanks();
-		}
-
-		private void testNewTurretImportToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotApi2DB.ImportTurrets();
-		}
-
-		private void testNewGunImportToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotApi2DB.ImportGuns();
-		}
-
-		private void testNewRadioImportToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotApi2DB.ImportRadios();
-		}
-
+		
 		private void testSaveImageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Code.ImportWotApi2DB.SaveImage();
 		}
 
-		private void testNewAchievementImportToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotApi2DB.ImportAchievements();
-		}
-
-		private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
+				private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Code.ImportWotApi2DB.updateTankImage();
-		}
-
-		private void testShowImageToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.TestShowImage();
-			frm.ShowDialog();
 		}
 
 		#endregion
