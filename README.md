@@ -15,3 +15,9 @@ Created by: BadButton and cmdrTrinity (alias: leeruude)
 12.06.2014
 
 * Completed new layout and improved functionality for Column List Setup
+
+14.06.2014
+
+* Bugfix: incorrect column definitions for some columns in ColumnList - all tested and fixed
+* Bugfix: first battle with new tank not logged, fixed
+
