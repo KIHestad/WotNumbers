@@ -277,7 +277,7 @@ namespace WinApp.Code
 					SaveNewPlayerTank(tankId); // Save new tank
 					OldPlayerTankTable = TankData.GetPlayerTankFromDB(tankId); // Get data into DataTable once more now after row is added
 					playerTankId = Convert.ToInt32(OldPlayerTankTable.Rows[0]["id"]); // Get id
-					SaveNewPlayerTankBattle(playerTankId, NewPlayerTankRow_battles15, NewPlayerTankRow_battles7); // Save battles with battlecount
+					SaveNewPlayerTankBattle(playerTankId); // Save battles with battlecount
 				}
 				// Get the get existing (old) tank data row
 				DataRow OldPlayerTankRow = OldPlayerTankTable.Rows[0];
@@ -553,14 +553,12 @@ namespace WinApp.Code
 			DB.ExecuteNonQuery(sql);
 		}
 
-		public static void SaveNewPlayerTankBattle(int playerTankId, int battles15, int battles7)
+		public static void SaveNewPlayerTankBattle(int playerTankId)
 		{
 			// Add to database
-			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, '15', @battles15); " +
-						 "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, '7', @battles7); ";
+			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, '15', 0); " +
+						 "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, '7', 0); ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battles15", battles15, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battles7", battles7, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 		}
 

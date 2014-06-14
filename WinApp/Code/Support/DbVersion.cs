@@ -289,7 +289,7 @@ namespace WinApp.Code
 					DataTable dt = DB.FetchData("select * from playerTank");
 					foreach (DataRow dr in dt.Rows)
 					{
-						Dossier2db.SaveNewPlayerTankBattle(Convert.ToInt32(dr["id"]),0,0); 
+						Dossier2db.SaveNewPlayerTankBattle(Convert.ToInt32(dr["id"])); 
 					}
 					break;
 				case 18:

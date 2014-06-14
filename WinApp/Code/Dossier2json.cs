@@ -240,29 +240,6 @@ namespace WinApp.Code
 
 		private static string ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
-			// Convert to json format using python conversion from cPicle stream format
-			
-			// //Use ProcessStartInfo class to run python 
-			//ProcessStartInfo startInfo = new ProcessStartInfo();
-			//startInfo.CreateNoWindow = false;
-			//startInfo.UseShellExecute = false;
-			//startInfo.FileName = "c:\\python27\\python.exe";
-			//startInfo.WindowStyle = ProcessWindowStyle.Normal;
-			//startInfo.Arguments = dossier2jsonScript + " " + dossierDatFile + " -f -r";
-			//try
-			//{
-			//	// Start the process with the info we specified.
-			//	// Call WaitForExit and then the using statement will close.
-			//	using (Process exeProcess = Process.Start(startInfo))
-			//	{
-			//		exeProcess.WaitForExit();
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	return LogText(ex.Message);
-			//}
-
 			// Use IronPython
 			try
 			{
