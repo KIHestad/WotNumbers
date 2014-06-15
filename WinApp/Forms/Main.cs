@@ -1144,7 +1144,7 @@ namespace WinApp.Forms
 				footerRow1["footer"] = 2;
 				footerRow1["battleResultColor"] = "";
 				footerRow1["battleSurviveColor"] = "";
-				footerRow1["battleTimeToolTip"] = DateTime.Now;
+				footerRow1["battleTimeToolTip"] = DBNull.Value;
 				footerRow1["battlesCountToolTip"] = 0;
 				footerRow1["victoryToolTip"] = 0;
 				footerRow1["drawToolTip"] = 0;
@@ -1182,7 +1182,7 @@ namespace WinApp.Forms
 				footerRow2["footer"] = 1;
 				footerRow2["battleResultColor"] = "";
 				footerRow2["battleSurviveColor"] = "";
-				footerRow2["battleTimeToolTip"] = DateTime.Now;
+				footerRow2["battleTimeToolTip"] = DBNull.Value;
 				footerRow2["battlesCountToolTip"] = 0;
 				footerRow2["victoryToolTip"] = 0;
 				footerRow2["drawToolTip"] = 0;
@@ -1787,7 +1787,7 @@ namespace WinApp.Forms
 			Code.ImportWotApi2DB.SaveImage();
 		}
 
-				private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
+		private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Code.ImportWotApi2DB.updateTankImage();
 		}

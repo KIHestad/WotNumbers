@@ -839,7 +839,7 @@ namespace WinApp.Forms
 					sql = "select * from columnList where colType=@colType and position is not null and position > @position order by position ";
 				}
 
-				DB.AddWithValue(ref sql, "@position", (int)ColListSelectedListPos, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@position", Convert.ToInt32(ColListSelectedListPos), DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
@@ -849,7 +849,7 @@ namespace WinApp.Forms
 					sql = "update columnList set position=@rowNextToPos where id=@id; " +
 						  "update columnList set position=@position where id=@rowNextToId;";
 					DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
-					DB.AddWithValue(ref sql, "@position", (int)ColListSelectedListPos, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@position",  Convert.ToInt32(ColListSelectedListPos), DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
 					DB.ExecuteNonQuery(sql);

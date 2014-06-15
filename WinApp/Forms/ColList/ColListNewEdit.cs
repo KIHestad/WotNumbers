@@ -16,6 +16,7 @@ namespace WinApp.Forms
 		string favListDD = "";
 		string copyFromDD = "";
 		int colListId = 0;
+		string prevName = "";
 		public ColListNewEdit(int selectedColListId = 0)
 		{
 			InitializeComponent();
@@ -41,6 +42,7 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
 				DataRow dr = DB.FetchData(sql).Rows[0];
 				txtName.Text = dr["colListName"].ToString();
+				prevName = dr["colListName"].ToString();
 				if (dr["favListname"] == DBNull.Value)
 				{
 					int favListId = Convert.ToInt32(dr["defaultFavListId"]);
@@ -102,7 +104,7 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 				DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 				DataTable dtExists = DB.FetchData(sql);
-				if (dtExists.Rows.Count > 0)
+				if (dtExists.Rows.Count > 0 && newName != prevName)
 				{
 					Code.MsgBox.Show("This name is already in use, select a different name for the column list", "Name already in use");
 				}

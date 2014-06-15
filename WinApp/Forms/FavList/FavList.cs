@@ -914,7 +914,7 @@ namespace WinApp.Forms
 					sql = "select * from favList where position is not null and position > @position order by position ";
 				}
 
-				DB.AddWithValue(ref sql, "@position", (int)FavListSelectedListPos, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@position", Convert.ToInt32(FavListSelectedListPos), DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
@@ -923,7 +923,7 @@ namespace WinApp.Forms
 					sql = "update favList set position=@rowNextToPos where id=@id; " +
 						  "update favList set position=@position where id=@rowNextToId;";
 					DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-					DB.AddWithValue(ref sql, "@position", (int)FavListSelectedListPos, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@position", Convert.ToInt32(FavListSelectedListPos), DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
 					DB.ExecuteNonQuery(sql);

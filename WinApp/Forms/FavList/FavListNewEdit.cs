@@ -15,6 +15,7 @@ namespace WinApp.Forms
 	{
 		string copyFromDD = "";
 		int favListId = 0;
+		string prevName = "";
 		public FavListNewEdit(int selectedFavListId = 0)
 		{
 			InitializeComponent();
@@ -38,6 +39,7 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref sql, "@id", favListId, DB.SqlDataType.Int);
 				DataRow dr = DB.FetchData(sql).Rows[0];
 				txtName.Text = dr["name"].ToString();
+				prevName = dr["name"].ToString();
 			}
 			else 
 			{
@@ -67,17 +69,19 @@ namespace WinApp.Forms
 				string sql = "select id from favList where name=@name; ";
 				DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 				DataTable dtExists = DB.FetchData(sql);
-				if (dtExists.Rows.Count > 0)
+				if (newName != prevName && dtExists.Rows.Count > 0)
 				{
 					Code.MsgBox.Show("This name is already in use, select a different name for your Favourite Tank List", "Name already in use");
 				}
 				else
 				{
-					// Save now
 					if (favListId > 0)
 						sql = "update favList set name=@name where id=@id; ";
 					else
 						sql = "insert into favList (name, position) values (@name, 99999); ";
+					// Avoid saving if name is not changed
+					if (favListId > 0 && newName == prevName) return;
+					// Save now
 					DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 					DB.AddWithValue(ref sql, "@id", favListId, DB.SqlDataType.Int);
 					DB.ExecuteNonQuery(sql);

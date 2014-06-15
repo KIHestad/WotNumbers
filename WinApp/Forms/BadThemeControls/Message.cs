@@ -45,6 +45,7 @@ namespace WinApp.Forms
 				}
 			}
 			if (lines > 12) lines = 12; // max size
+			this.Height = txtMessage.Top + (lines * 30) + 20; // resize initial height of form to fit content
 		}
 
 		private void badForm1_Resize(object sender, EventArgs e)

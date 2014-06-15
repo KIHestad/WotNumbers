@@ -126,7 +126,7 @@ namespace WinApp.Code
 		{
 			string sql =
 				"SELECT  dbDataType, dbPlayerTank, dbPlayerTankMode, dbBattle " +
-				"FROM    dbo.json2dbMapping " +
+				"FROM    json2dbMapping " +
 				"WHERE   (dbBattle IS NOT NULL) AND (dbPlayerTankMode IS NULL OR dbPlayerTankMode=@dbPlayerTankMode) " +
 				"GROUP BY dbDataType, dbPlayerTank, dbBattle, dbPlayerTankMode ";
 			DB.AddWithValue(ref sql, "@dbPlayerTankMode", battleMode, DB.SqlDataType.VarChar);
