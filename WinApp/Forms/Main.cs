@@ -21,6 +21,8 @@ namespace WinApp.Forms
 			InitializeComponent();
 		}
 
+		private bool LoadConfigOK = true;
+		private string LoadConfigMsg = "";
 		private void Main_Load(object sender, EventArgs e)
 		{
 			// Black Border on loading
@@ -62,10 +64,33 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
+			// Get Config
+			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
+			// Get PosSize
+			ConfigData.PosSize mainFormPosSize = Config.Settings.posSize;
+			if (mainFormPosSize != null)
+			{
+				this.Top = mainFormPosSize.Top;
+				this.Left = mainFormPosSize.Left;
+				this.Width = mainFormPosSize.Widht;
+				this.Height = mainFormPosSize.Height;
+			}
 			// Draw form 
 			lblStatus1.Text = "";
 			lblStatus2.Text = "Application init...";
 			lblStatusRowCount.Text = "";
+		}
+
+		private void Main_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
+			mainFormPosSize.Top = this.Top;
+			mainFormPosSize.Left = this.Left;
+			mainFormPosSize.Widht = this.Width;
+			mainFormPosSize.Height = this.Height;
+			Config.Settings.posSize = mainFormPosSize;
+			string msg = "";
+			Config.SaveConfig(out msg);
 		}
 
 		private void CreateDataGridContextMenu()
@@ -105,11 +130,9 @@ namespace WinApp.Forms
 		private void Main_Shown(object sender, EventArgs e)
 		{
 			// Startup settings
-			string msg = "";
-			bool ok = Config.GetConfig(out msg);
-			if (!ok)
+			if (!LoadConfigOK)
 			{
-				Code.MsgBox.Show(msg, "Could not load config data");
+				Code.MsgBox.Show(LoadConfigMsg, "Could not load config data");
 				lblOverView.Text = "";
 				Config.Settings.dossierFileWathcherRun = 0;
 				SetListener();
@@ -1793,7 +1816,6 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
 	
 	}
 }

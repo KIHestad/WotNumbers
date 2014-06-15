@@ -36,11 +36,11 @@ namespace WinApp.Forms
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			bool ok = true;
-			GrindingData.Settings.FirstVictoryFactor = Convert.ToInt32(ddFirstBattle.Text.Substring(0,1));
+			GrindingHelper.Settings.FirstVictoryFactor = Convert.ToInt32(ddFirstBattle.Text.Substring(0,1));
 			if (ddEveryBattle.Text == "None")
-				GrindingData.Settings.EveryVictoryFactor = 0;
+				GrindingHelper.Settings.EveryVictoryFactor = 0;
 			else
-				GrindingData.Settings.EveryVictoryFactor = Convert.ToInt32(ddEveryBattle.Text.Substring(0, 1));
+				GrindingHelper.Settings.EveryVictoryFactor = Convert.ToInt32(ddEveryBattle.Text.Substring(0, 1));
 			if (Code.Config.Settings.grindParametersAutoStart != chkAutoLoad.Checked)
 			{
 				Code.Config.Settings.grindParametersAutoStart = chkAutoLoad.Checked;
@@ -54,11 +54,11 @@ namespace WinApp.Forms
 
 		private void GrindingParameter_Load(object sender, EventArgs e)
 		{
-			ddFirstBattle.Text = GrindingData.Settings.FirstVictoryFactor.ToString() + "X";
-			if (GrindingData.Settings.EveryVictoryFactor == 0) 
+			ddFirstBattle.Text = GrindingHelper.Settings.FirstVictoryFactor.ToString() + "X";
+			if (GrindingHelper.Settings.EveryVictoryFactor == 0) 
 				ddEveryBattle.Text = "None";
 			else
-				ddEveryBattle.Text = GrindingData.Settings.EveryVictoryFactor.ToString() + "X";
+				ddEveryBattle.Text = GrindingHelper.Settings.EveryVictoryFactor.ToString() + "X";
 			chkAutoLoad.Checked = Code.Config.Settings.grindParametersAutoStart;
 		}
 

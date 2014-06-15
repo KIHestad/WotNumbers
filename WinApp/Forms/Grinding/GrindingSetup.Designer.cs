@@ -36,7 +36,7 @@
 			this.badLabel6 = new BadLabel();
 			this.badLabel5 = new BadLabel();
 			this.btnAdvanced = new BadButton();
-			this.txtCalcAvgXP = new BadTextBox();
+			this.txtRealAvgXP = new BadTextBox();
 			this.badLabel20 = new BadLabel();
 			this.txtLastVictoryTime = new BadTextBox();
 			this.badLabel19 = new BadLabel();
@@ -93,7 +93,7 @@
 			this.GrindingSetupTheme.Controls.Add(this.badLabel6);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel5);
 			this.GrindingSetupTheme.Controls.Add(this.btnAdvanced);
-			this.GrindingSetupTheme.Controls.Add(this.txtCalcAvgXP);
+			this.GrindingSetupTheme.Controls.Add(this.txtRealAvgXP);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel20);
 			this.GrindingSetupTheme.Controls.Add(this.txtLastVictoryTime);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel19);
@@ -220,18 +220,18 @@
 			this.btnAdvanced.Text = "Advanced";
 			this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
 			// 
-			// txtCalcAvgXP
+			// txtRealAvgXP
 			// 
-			this.txtCalcAvgXP.Enabled = false;
-			this.txtCalcAvgXP.HasFocus = false;
-			this.txtCalcAvgXP.Image = null;
-			this.txtCalcAvgXP.Location = new System.Drawing.Point(475, 69);
-			this.txtCalcAvgXP.Name = "txtCalcAvgXP";
-			this.txtCalcAvgXP.PasswordChar = '\0';
-			this.txtCalcAvgXP.Size = new System.Drawing.Size(85, 23);
-			this.txtCalcAvgXP.TabIndex = 51;
-			this.txtCalcAvgXP.TabStop = false;
-			this.txtCalcAvgXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+			this.txtRealAvgXP.Enabled = false;
+			this.txtRealAvgXP.HasFocus = false;
+			this.txtRealAvgXP.Image = null;
+			this.txtRealAvgXP.Location = new System.Drawing.Point(506, 69);
+			this.txtRealAvgXP.Name = "txtRealAvgXP";
+			this.txtRealAvgXP.PasswordChar = '\0';
+			this.txtRealAvgXP.Size = new System.Drawing.Size(54, 23);
+			this.txtRealAvgXP.TabIndex = 51;
+			this.txtRealAvgXP.TabStop = false;
+			this.txtRealAvgXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel20
 			// 
@@ -240,10 +240,10 @@
 			this.badLabel20.Image = null;
 			this.badLabel20.Location = new System.Drawing.Point(372, 69);
 			this.badLabel20.Name = "badLabel20";
-			this.badLabel20.Size = new System.Drawing.Size(106, 23);
+			this.badLabel20.Size = new System.Drawing.Size(128, 23);
 			this.badLabel20.TabIndex = 50;
 			this.badLabel20.TabStop = false;
-			this.badLabel20.Text = "Calc XP per battle:";
+			this.badLabel20.Text = "Calc Real XP per battle:";
 			// 
 			// txtLastVictoryTime
 			// 
@@ -846,7 +846,7 @@
 		private BadLabel badLabel16;
 		private BadTextBox txtLastVictoryTime;
 		private BadLabel badLabel19;
-		private BadTextBox txtCalcAvgXP;
+		private BadTextBox txtRealAvgXP;
 		private BadLabel badLabel20;
 		private BadButton btnAdvanced;
 		private BadLabel badLabel6;

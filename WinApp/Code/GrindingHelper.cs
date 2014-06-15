@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
-	class GrindingData
+	class GrindingHelper
 	{
 		public static class Settings
 		{
@@ -14,7 +14,7 @@ namespace WinApp.Code
 			public static int EveryVictoryFactor = 0;
 		}
 
-		public static int CalcAvgXP(string Battles, string Wins, string TotalXP, string AvgXP, string BtlDay)
+		public static int CalcRealAvgXP(string Battles, string Wins, string TotalXP, string AvgXP, string BtlDay)
 		{
 			double winRate = Convert.ToDouble(Wins) / Convert.ToDouble(Battles);
 			if (winRate < 0.3) winRate = 0.3;
@@ -22,12 +22,44 @@ namespace WinApp.Code
 			double avgXP = Convert.ToDouble(AvgXP); // avg base XP
 			double battles = Convert.ToDouble(Battles); // total battes played
 			double btlDay = Convert.ToDouble(BtlDay); // battles per day
-			if (btlDay == 0) btlDay = 2;
+			if (btlDay == 0) btlDay = 1;
 			double totXP = Convert.ToDouble(TotalXP); // total base XP earned
 			double calc2XbattlesTotXP = avgXP * battles / btlDay * winRate; // calculated number of 2X battles played, assuming at least one victory every day played
 			double calcExtraBonusTotXP = avgXP * 0.2 * battles * winRate; // caclulated an average of 20% extra for bonuses (3x/5x/2x every wins), apply only for wins
 			double calcTotXP = totXP + calc2XbattlesTotXP + calcExtraBonusTotXP;
 			return Convert.ToInt32(calcTotXP / battles);
+		}
+
+		public static int CalcProgressPercent(int GrindXP, int ProgressXP)
+		{
+			int progressPercent = 0;
+			if (GrindXP > 0)
+				progressPercent = (ProgressXP * 100) / GrindXP;
+			if (progressPercent > 100)
+				progressPercent = 100;
+			return progressPercent;	
+		}
+
+		public static int CalcProgressRestXP(int GrindXP, int ProgressXP)
+		{
+			int progressRest = GrindXP - ProgressXP;
+			if (progressRest < 0)
+				progressRest = 0;
+			return progressRest;
+		}
+
+		public static int CalcRestBattles(int ProgressRestXp, int RealAvgXP)
+		{
+			if (RealAvgXP == 0)
+				return 0;
+			else
+				return (ProgressRestXp / RealAvgXP);
+		}
+
+		public static int CalcRestDays(int ProgressRestXp, int RealAvgXP, int BattlesPerDay)
+		{
+			if (BattlesPerDay == 0) BattlesPerDay = 1;
+			return ProgressRestXp / (RealAvgXP * BattlesPerDay);
 		}
 	}
 }

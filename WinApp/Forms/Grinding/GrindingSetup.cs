@@ -34,10 +34,10 @@ namespace WinApp.Forms
 
 		private void UpdateGrindParameters()
 		{
-			if (Code.GrindingData.Settings.EveryVictoryFactor > 0)
-				lblGrindingParameters.Text = "Every victory: " + Code.GrindingData.Settings.EveryVictoryFactor.ToString() + "X";
+			if (Code.GrindingHelper.Settings.EveryVictoryFactor > 0)
+				lblGrindingParameters.Text = "Every victory: " + Code.GrindingHelper.Settings.EveryVictoryFactor.ToString() + "X";
 			else
-				lblGrindingParameters.Text = "First victory each day: " + Code.GrindingData.Settings.FirstVictoryFactor.ToString() + "X";
+				lblGrindingParameters.Text = "First victory each day: " + Code.GrindingHelper.Settings.FirstVictoryFactor.ToString() + "X";
 		}
 
 		private void GetTankData()
@@ -197,49 +197,23 @@ namespace WinApp.Forms
 
 		private void CalcProgress(bool Complete = true)
 		{
-			if (Complete)
-			{
-				// Complete calc
-				int progress = 0;
-				Int32.TryParse(txtProgressXP.Text, out progress);
-				int progresspercent = 0;
-				int grind = 0;
-				Int32.TryParse(txtGrindXP.Text, out grind);
-				if (grind > 0)
-					progresspercent = (progress * 100) / grind;
-				if (progresspercent > 100)
-					progresspercent = 100;
-				txtProgressPercent.Text = progresspercent.ToString();
-				int progressrest = grind - progress;
-				if (progressrest < 0)
-					progressrest = 0;
-				txtRestXP.Text = progressrest.ToString();
-				int btlPerDay = 0;
-				Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-				if (btlPerDay == 0)
-				{
-					btlPerDay = 1;
-				}
-				// Calc avg XP per day
-				txtCalcAvgXP.Text = Code.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
-				txtRestBattles.Text = (progressrest / Convert.ToInt32(txtCalcAvgXP.Text)).ToString();
-				txtRestDays.Text = (progressrest / (Convert.ToInt32(txtCalcAvgXP.Text) * btlPerDay)).ToString();
-			}
-			else
-			{
-				// Only rest days
-				int btlPerDay = 0;
-				Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-				if (btlPerDay == 0)
-				{
-					btlPerDay = 1;
-				}
-				// Calc avg XP per day
-				txtCalcAvgXP.Text = Code.GrindingData.CalcAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString()).ToString();
-				txtRestBattles.Text = (Convert.ToInt32(txtRestXP.Text) / Convert.ToInt32(txtCalcAvgXP.Text)).ToString();
-				txtRestDays.Text = (Convert.ToInt32(txtRestXP.Text) / (Convert.ToInt32(txtCalcAvgXP.Text) * btlPerDay)).ToString();
-			}
-			
+			// Get parameters
+			int grind = 0;
+			Int32.TryParse(txtGrindXP.Text, out grind);
+			int progress = 0;
+			Int32.TryParse(txtProgressXP.Text, out progress);
+			int btlPerDay = 0;
+			Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
+			// Calc values 
+			txtProgressPercent.Text = GrindingHelper.CalcProgressPercent(grind, progress).ToString();
+			int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
+			txtRestXP.Text = restXP.ToString();
+			int realAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString());
+			txtRealAvgXP.Text = realAvgXP.ToString();
+			int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
+			txtRestBattles.Text = restBattles.ToString();
+			int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
+			txtRestDays.Text = restDays.ToString();
 			dataChanged = true;
 		}
 

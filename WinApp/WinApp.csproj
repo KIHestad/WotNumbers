@@ -112,7 +112,7 @@
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\Support\DB.cs" />
     <Compile Include="Code\Support\DropDownGrid.cs" />
-    <Compile Include="Code\Support\GrindingData.cs" />
+    <Compile Include="Code\GrindingHelper.cs" />
     <Compile Include="Code\Support\PopupGrid.cs" />
     <Compile Include="Code\Support\ColorTheme.cs" />
     <Compile Include="Code\Support\StripLayout.cs" />

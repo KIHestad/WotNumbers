@@ -21,18 +21,27 @@ namespace WinApp.Code
 			SQLite = 2
 		}
 
-		public dbType databaseType { get; set; }			// SQLite or MS SQL Server
-		public string databaseFileName { get; set; }		// SQLite Filename
-		public string databaseServer { get; set; }			// MSSQL Servername
-		public bool   databaseWinAuth { get; set; }			// MSSQL Win (true) og SQL (false) authentication
-		public string databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
-		public string databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
-		public string databaseName { get; set; }			// MSSQL Databasename
-		public int    playerId { get; set; }				// Player ID selected
-		public string playerName { get; set; }				// Player Name selected
-		public string dossierFilePath { get; set; }			// Dossier file path
-		public int    dossierFileWathcherRun { get; set; }	// Dossier file listener activated
-		public bool   grindParametersAutoStart { get; set; }// Autoshow Grinding params on app startup
+		public class PosSize
+		{
+			public int Top = 0;
+			public int Left = 0;
+			public int Widht = 0;
+			public int Height = 0;
+		}
+
+		public dbType  databaseType { get; set; }			// SQLite or MS SQL Server
+		public string  databaseFileName { get; set; }		// SQLite Filename
+		public string  databaseServer { get; set; }			// MSSQL Servername
+		public bool    databaseWinAuth { get; set; }			// MSSQL Win (true) og SQL (false) authentication
+		public string  databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
+		public string  databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
+		public string  databaseName { get; set; }			// MSSQL Databasename
+		public int     playerId { get; set; }				// Player ID selected
+		public string  playerName { get; set; }				// Player Name selected
+		public string  dossierFilePath { get; set; }			// Dossier file path
+		public int     dossierFileWathcherRun { get; set; }	// Dossier file listener activated
+		public bool    grindParametersAutoStart { get; set; }// Autoshow Grinding params on app startup
+		public PosSize posSize { get; set; } // Main Form Position And Size
 	}
 
 	class Config
@@ -60,6 +69,7 @@ namespace WinApp.Code
 			Config.Settings.dossierFilePath = "";
 			Config.Settings.dossierFileWathcherRun = 0;
 			Config.Settings.grindParametersAutoStart = false;
+			Config.Settings.posSize = new ConfigData.PosSize();
 		}
 
 		
@@ -94,7 +104,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				// Read from XML
+				// Read from json config file
 				try
 				{
 					ConfigData conf = new ConfigData();
@@ -191,7 +201,5 @@ namespace WinApp.Code
 			}
 			return dbcon;
 		}
-
-		
 	}
 }

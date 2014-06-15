@@ -474,19 +474,6 @@ namespace WinApp.Code
 					if (Convert.ToInt32(OldPlayerTankRow["gGrindXP"]) > 0)
 					{
 						// Yes, apply grinding progress to playerTank now
-						
-						// TODO: remove if above works
-						//int oldXP = 0;
-						//int newXP = 0;
-						//if (OldPlayerTankBattle15Row["xp"] != DBNull.Value) oldXP = Convert.ToInt32(OldPlayerTankBattle15Row["xp"]);
-						//if (NewPlayerTankBattle15Row["xp"] != DBNull.Value) newXP = Convert.ToInt32(NewPlayerTankBattle15Row["xp"]);
-						//int XP = newXP - oldXP;
-						//oldXP = 0;
-						//newXP = 0;
-						//if (OldPlayerTankBattle7Row["xp"] != DBNull.Value) oldXP = Convert.ToInt32(OldPlayerTankBattle7Row["xp"]);
-						//if (NewPlayerTankBattle7Row["xp"] != DBNull.Value) newXP = Convert.ToInt32(NewPlayerTankBattle7Row["xp"]);
-						//XP += newXP - oldXP;
-
 						// Get grinding data
 						string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
 								"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
@@ -506,32 +493,27 @@ namespace WinApp.Code
 						if (battlesNew7 > 0) XP += Convert.ToInt32(NewPlayerTankBattle7Row["xp"]) - Convert.ToInt32(OldPlayerTankBattle7Row["xp"]);
 						if (battleVictory) // If victory, check if first victory this day, or if every victory has bonus
 						{
-							if (Code.GrindingData.Settings.EveryVictoryFactor > 0)
-								XP = XP * Code.GrindingData.Settings.EveryVictoryFactor;
+							if (Code.GrindingHelper.Settings.EveryVictoryFactor > 0)
+								XP = XP * Code.GrindingHelper.Settings.EveryVictoryFactor;
 							else if (firstVictory)
-								XP = XP * Code.GrindingData.Settings.FirstVictoryFactor;
+								XP = XP * Code.GrindingHelper.Settings.FirstVictoryFactor;
 						}
-						int progressXP = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
-						// Calc other values according to increased XP (progress)
+						// Get parameters for grinding calc
+						int progress = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
 						int grind = Convert.ToInt32(grinding["gGrindXP"]);
-						int	progressPercent = (progressXP * 100) / grind;
-						if (progressPercent > 100)
-							progressPercent = 100;
-						int restXP = grind - progressXP;
-						if (restXP < 0)
-							restXP = 0;
 						int btlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
-						if (btlPerDay < 1)
-							btlPerDay = 1;
-						int colcAvgXP = Code.GrindingData.CalcAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(),
-							grinding["totalXP"].ToString(), grinding["avgXP"].ToString(), grinding["avgXP"].ToString());
-						int restBattles = restXP / colcAvgXP;
-						int restDays = restXP / (colcAvgXP * btlPerDay);
+						// Calc values according to increased XP (progress)
+						int progressPercent = GrindingHelper.CalcProgressPercent(grind, progress);
+						int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
+						int realAvgXP = GrindingHelper.CalcRealAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(), grinding["totalXP"].ToString(), 
+																	 grinding["avgXP"].ToString(), grinding["avgXP"].ToString());
+						int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
+						int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
 						// Save to playerTank
 						sql = "UPDATE playerTank SET gProgressXP=@ProgressXP, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
-							  "					     gRestBattles=@RestBattles, gRestDays=@RestDays " +
+							  "					     gRestBattles=@RestBattles, gRestDays=@RestDays  " +
 							  "WHERE id=@id";
-						DB.AddWithValue(ref sql, "@ProgressXP", progressXP, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@ProgressXP", progress, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@RestXP", restXP, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@ProgressPercent", progressPercent, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@RestBattles", restBattles, DB.SqlDataType.Int);
