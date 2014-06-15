@@ -12,30 +12,33 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class FavTanks : Form
+	public partial class FavList2 : Form
 	{
-		private int _showFavListId;
-		public FavTanks(int showFavListId)
+		private int SelectedFavListId;
+		public FavList2(int showFavListId)
 		{
 			InitializeComponent();
-			_showFavListId = showFavListId;
+			SelectedFavListId = showFavListId;
 		}
 
 		#region Load and Style
 		
-		private void FavTanks_Load(object sender, EventArgs e)
+		private void FavList_Load(object sender, EventArgs e)
 		{
 			// Style toolbar
 			toolAllTanks.Renderer = new StripRenderer();
 			toolAllTanks.ShowItemToolTips = false;
 			toolSelectedTanks.Renderer = new StripRenderer();
 			toolSelectedTanks.ShowItemToolTips = false;
+			toolColList.Renderer = new StripRenderer();
+			toolColList.ShowItemToolTips = false;
+
 			// Style datagrid
 			StyleDataGrid(dataGridFavList);
 			StyleDataGrid(dataGridAllTanks);
 			StyleDataGrid(dataGridSelectedTanks);
 			// Show content
-			ShowFavList(_showFavListId);
+			ShowFavList();
 			ShowAllTanks();
 			// Mouse scrolling
 			dataGridAllTanks.MouseWheel += new MouseEventHandler(dataGridAllTanks_MouseWheel);
@@ -109,156 +112,134 @@ namespace WinApp.Forms
 
 		#region Fav List
 
-		private void ShowFavList(int FavListId = 0, string FavListName = "")
+		private void ShowFavList()
 		{
-			DataTable dt = DB.FetchData("select position as 'Pos', name as 'Name', id as 'ID' from favList order by COALESCE(position,99), name");
+			DataTable dt = DB.FetchData("select position as '#', name as 'Name', '' as 'Show', id from favList order by COALESCE(position,99), name");
+			// Modify datatable by adding values to Show
+			foreach (DataRow row in dt.Rows)
+			{
+				var pos = row["#"];
+				if (pos != DBNull.Value) row["Show"] = "X";
+				row.AcceptChanges();
+			}
+			// Show in grid
 			dataGridFavList.DataSource = dt;
-			dataGridFavList.Columns[0].Width = 50;
-			dataGridFavList.Columns[1].Width = dataGridFavList.Width - 53;
-			dataGridFavList.Columns[2].Visible = false;
+			// Format
+			dataGridFavList.Columns["#"].Width = 50;
+			dataGridFavList.Columns["Name"].Width = 150;
+			dataGridFavList.Columns["Show"].Width = 50;
+			dataGridFavList.Columns["id"].Visible = false;
+			// Enable buttons
 			bool buttonsEnabled = (dt.Rows.Count > 0);
 			btnFavListCancel.Enabled = buttonsEnabled;
 			btnFavListSave.Enabled = buttonsEnabled;
-			btnFavListDelete.Enabled = buttonsEnabled;
 			btnRemoveAll.Enabled = buttonsEnabled;
 			btnRemoveSelected.Enabled = buttonsEnabled;
 			btnSelectAll.Enabled = buttonsEnabled;
 			btnSelectSelected.Enabled = buttonsEnabled;
-			// Get favlist from name
-			SelectFavList(FavListId);
+			// Set selected item as selected in grid, and modify calculted values
+			int rownum = 0;
+			foreach (DataGridViewRow row in dataGridFavList.Rows)
+			{
+				if (Convert.ToInt32(row.Cells["id"].Value) == SelectedFavListId) rownum = row.Index;
+			}
+			dataGridFavList.Rows[rownum].Selected = true;
+			// Get favlist 
+			SelectFavList();
 			// Connect to scrollbar
 			scrollFavList.ScrollElementsTotals = dt.Rows.Count;
 			scrollFavList.ScrollElementsVisible = dataGridFavList.DisplayedRowCount(false);
 		}
 		
-		private void btnFavListAdd_Click(object sender, EventArgs e)
-		{
-			string newFavListName = txtFavListName.Text.Trim();
-			if (newFavListName.Length > 0)
-			{
-				// CheckBox if exists
-				string sql = "select id from favList where name=@name;";
-				DB.AddWithValue(ref sql, "@name", newFavListName, DB.SqlDataType.VarChar);
-				DataTable dt = DB.FetchData(sql);
-				if (dt.Rows.Count > 0)
-				{
-					Code.MsgBox.Show("Cannot add new favourite tank list with this name, already in use.", "Cannot create favourite tank list");
-				}
-				else
-				{
-					int copySelTanksFromFavListId = -1;
-					if (dataGridSelectedTanks.Rows.Count > 0)
-					{
-						Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to create a new Favourite Tank List based on the current selected tanks?" +
-							Environment.NewLine + Environment.NewLine +
-							"Press 'OK' to include selected tanks into the new list." +
-							Environment.NewLine + Environment.NewLine +
-							"Press 'Cancel' to create an new empty list.", "Create new Favourite Tank List", MsgBoxType.OKCancel);
-						if (answer == MsgBox.Button.OKButton) copySelTanksFromFavListId = SelectedFavListId;
-					}
-					AddFavList(copySelTanksFromFavListId);
-				}
-			}
+		//private void btnFavListAdd_Click(object sender, EventArgs e)
+		//{
+		//	string newFavListName = txtFavListName.Text.Trim();
+		//	if (newFavListName.Length > 0)
+		//	{
+		//		// CheckBox if exists
+		//		string sql = "select id from favList where name=@name;";
+		//		DB.AddWithValue(ref sql, "@name", newFavListName, DB.SqlDataType.VarChar);
+		//		DataTable dt = DB.FetchData(sql);
+		//		if (dt.Rows.Count > 0)
+		//		{
+		//			Code.MsgBox.Show("Cannot add new favourite tank list with this name, already in use.", "Cannot create favourite tank list");
+		//		}
+		//		else
+		//		{
+		//			int copySelTanksFromFavListId = -1;
+		//			if (dataGridSelectedTanks.Rows.Count > 0)
+		//			{
+		//				Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to create a new Favourite Tank List based on the current selected tanks?" +
+		//					Environment.NewLine + Environment.NewLine +
+		//					"Press 'OK' to include selected tanks into the new list." +
+		//					Environment.NewLine + Environment.NewLine +
+		//					"Press 'Cancel' to create an new empty list.", "Create new Favourite Tank List", MsgBoxType.OKCancel);
+		//				if (answer == MsgBox.Button.OKButton) copySelTanksFromFavListId = SelectedFavListId;
+		//			}
+		//			AddFavList(copySelTanksFromFavListId);
+		//		}
+		//	}
 			
-		}
+		//}
 
-		private void AddFavList(int CopySelTanksFromFavListId = -1)
-		{
-			string newFavListName = txtFavListName.Text.Trim();
-			string newFavListPos = popupPosition.Text;
-			if (newFavListPos == "Not Visible") newFavListPos = "NULL";
-			// Change position on existing if already used
-			string sql = "select * from favList where position = @newFavListPos";
-			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			sql = "";
-			if (dt.Rows.Count == 1)
-			{
-				// Move existing favlist on this pos or below one step
-				sql = "update favlist set position = position + 1 where position >= @newFavListPos; ";
-				// Remove positions above 10
-				sql += "update favlist set position = NULL where position > 10; ";
-			}
-			// Add new favlist
-			sql += "insert into favList (position, name) values (@newFavListPos, @newFavListName); ";
-			// Add parameters
-			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
-			// Execute now
-			DB.ExecuteNonQuery(sql);
-			// Get ID for new tank list
-			sql = "select id from favList where name=@name";
-			DB.AddWithValue(ref sql, "@name", newFavListName, DB.SqlDataType.VarChar);
-			dt = DB.FetchData(sql);
-			SelectedFavListId = Convert.ToInt32(dt.Rows[0]["id"]);
-			// Copy favListTanks if selected
-			if (CopySelTanksFromFavListId != -1)
-			{
-				sql = "insert into favListTank (favListId, tankId, sortorder) select @copyToFavListId, tankId, sortorder " +
-																			"   from favListTank " +
-																			"   where favListId=@copyFromFavListId; ";
-				DB.AddWithValue(ref sql, "@copyToFavListId", SelectedFavListId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@copyFromFavListId", CopySelTanksFromFavListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-			}
-			// Refresh Grid
-			ShowFavList(SelectedFavListId);
-		}
-
-		private void popupPosition_Click(object sender, EventArgs e)
-		{
-			string posList = "Not Visible,1,2,3,4,5,6,7,8,9,10";
-			Code.DropDownGrid.Show(popupPosition, Code.DropDownGrid.DropDownGridType.List, posList);
-		}
-
-		private void btnFavListDelete_Click(object sender, EventArgs e)
-		{
-			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete favourite tank list: " + txtFavListName.Text,
-				"Confirm deletion", MsgBoxType.OKCancel);
-			if (answer == MsgBox.Button.OKButton)
-			{
+		//private void AddFavList(int CopySelTanksFromFavListId = -1)
+		//{
+		//	string newFavListName = txtFavListName.Text.Trim();
+		//	string newFavListPos = popupPosition.Text;
+		//	if (newFavListPos == "Not Visible") newFavListPos = "NULL";
+		//	// Change position on existing if already used
+		//	string sql = "select * from favList where position = @newFavListPos";
+		//	DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+		//	DataTable dt = DB.FetchData(sql);
+		//	sql = "";
+		//	if (dt.Rows.Count == 1)
+		//	{
+		//		// Move existing favlist on this pos or below one step
+		//		sql = "update favlist set position = position + 1 where position >= @newFavListPos; ";
+		//		// Remove positions above 10
+		//		sql += "update favlist set position = NULL where position > 10; ";
+		//	}
+		//	// Add new favlist
+		//	sql += "insert into favList (position, name) values (@newFavListPos, @newFavListName); ";
+		//	// Add parameters
+		//	DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+		//	DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
+		//	// Execute now
+		//	DB.ExecuteNonQuery(sql);
+		//	// Get ID for new tank list
+		//	sql = "select id from favList where name=@name";
+		//	DB.AddWithValue(ref sql, "@name", newFavListName, DB.SqlDataType.VarChar);
+		//	dt = DB.FetchData(sql);
+		//	SelectedFavListId = Convert.ToInt32(dt.Rows[0]["id"]);
+		//	// Copy favListTanks if selected
+		//	if (CopySelTanksFromFavListId != -1)
+		//	{
+		//		sql = "insert into favListTank (favListId, tankId, sortorder) select @copyToFavListId, tankId, sortorder " +
+		//																	"   from favListTank " +
+		//																	"   where favListId=@copyFromFavListId; ";
+		//		DB.AddWithValue(ref sql, "@copyToFavListId", SelectedFavListId, DB.SqlDataType.Int);
+		//		DB.AddWithValue(ref sql, "@copyFromFavListId", CopySelTanksFromFavListId, DB.SqlDataType.Int);
+		//		DB.ExecuteNonQuery(sql);
+		//	}
+		//	// Refresh Grid
+		//	ShowFavList(SelectedFavListId);
+		//}
 				
-				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";
-				DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(sql);
-				ShowFavList();
-			}
-		}
-
 		private void dataGridFavList_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
+			SelectedFavListId = Convert.ToInt32(dataGridFavList.SelectedRows[0].Cells["id"].Value);
 			SelectFavList();
 		}
 
-		private int SelectedFavListId = 0;
 		private void SelectFavList(int FavListId = 0)
 		{
-			int selectedRowCount = dataGridFavList.Rows.GetRowCount(DataGridViewElementStates.Selected);
-			if (selectedRowCount > 0)
-			{
-				// If spesific favList is selected, find it in grid and select it
-				if (FavListId > 0)
-				{
-					int rownum = 0;
-					foreach (DataGridViewRow row in dataGridFavList.Rows)
-					{
-						if (Convert.ToInt32(row.Cells["ID"].Value) == FavListId) rownum = row.Index;
-					}
-					dataGridFavList.Rows[rownum].Selected = true;
-				}
-				SelectedFavListId = Convert.ToInt32(dataGridFavList.SelectedRows[0].Cells["id"].Value);
-				txtFavListName.Text = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
-				popupPosition.Text = dataGridFavList.SelectedRows[0].Cells["Pos"].Value.ToString();
-				if (popupPosition.Text == "") popupPosition.Text = "Not Visible";
-				GetSelectedTanksFromFavList(); // Get tanks for this fav list now
-			}
-			else
-			{
-				txtFavListName.Text = "";
-				popupPosition.Text = "Not Visible";
-				dtFavListTank.Clear();
-				dataGridSelectedTanks.DataSource = dtFavListTank; // empty list
-			}
+			// Toggle show/hide
+			bool isHidden = (dataGridFavList.SelectedRows[0].Cells["#"].Value == DBNull.Value);
+			string showButton = "Hide";
+			if (isHidden) showButton = "Show";
+			toolFavListVisible.Text = showButton;
+			// Get tanks for this fav list now
+			GetSelectedTanksFromFavList(); 
 		}
 
 		private void btnFavListCancel_Click(object sender, EventArgs e)
@@ -268,43 +249,44 @@ namespace WinApp.Forms
 
 		private void btnFavListSave_Click(object sender, EventArgs e)
 		{
-			string oldFavListName = dataGridFavList.SelectedRows[0].Cells[1].Value.ToString();
-			string message = "You are about to save favourite tank list: " +  txtFavListName.Text;
-			if (txtFavListName.Text != oldFavListName)
-				message = "You are about to save and rename favourite tank list: " + oldFavListName + " to new name: " + txtFavListName.Text;
-			Code.MsgBox.Button answer = MsgBox.Show(message,"Save existing favourite tank list", MsgBoxType.OKCancel);
+			string FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
+			string message = "You are about to save selected tanks to favourite tank list: " + FavListName;
+			Code.MsgBox.Button answer = MsgBox.Show(message,"Save selected tanks to favourite tank list", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				SaveFavList();
 			}
 		}
 
+		//private void OLD_SAVE()
+		//{
+		//	string newFavListName = txtFavListName.Text.Trim();
+		//	if (newFavListPos == "Not Visible") newFavListPos = "NULL";
+		//	// Change position on existing if already used
+		//	string sql = "select * from favList where position = @newFavListPos";
+		//	DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+		//	DataTable dt = DB.FetchData(sql);
+		//	sql = "";
+		//	if (dt.Rows.Count == 1)
+		//	{
+		//		sql = "update favlist set position = position + 1 where position >= @newFavListPos; ";
+		//		// Remove positions above 10
+		//		sql += "update favlist set position = NULL where position > 10; ";
+		//	}
+		//	// Add new favlist
+		//	sql += "update favList set position=@newFavListPos, name=@newFavListName where id=@id; ";
+		//	// Add parameters
+		//	DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
+		//	DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
+		//	DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
+		//	// Save Fav List
+		//	DB.ExecuteNonQuery(sql);
+		//}
+
 		private void SaveFavList()
 		{
-			string newFavListName = txtFavListName.Text.Trim();
-			string newFavListPos = popupPosition.Text;
-			if (newFavListPos == "Not Visible") newFavListPos = "NULL";
-			// Change position on existing if already used
-			string sql = "select * from favList where position = @newFavListPos";
-			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			sql = "";
-			if (dt.Rows.Count == 1)
-			{
-				sql = "update favlist set position = position + 1 where position >= @newFavListPos; ";
-				// Remove positions above 10
-				sql += "update favlist set position = NULL where position > 10; ";
-			}
-			// Add new favlist
-			sql += "update favList set position=@newFavListPos, name=@newFavListName where id=@id; ";
-			// Add parameters
-			DB.AddWithValue(ref sql, "@newFavListPos", newFavListPos, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@newFavListName", newFavListName, DB.SqlDataType.VarChar);
-			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
-			// Save Fav List
-			DB.ExecuteNonQuery(sql);
 			// Save Selected Tank List
-			sql = "delete from favListTank where favListId=@favListId; "; // Delete all old tanks
+			string sql = "delete from favListTank where favListId=@favListId; "; // Delete all old tanks
 			// Loop through datagrid and add all new tanks
 			foreach (DataGridViewRow dr in dataGridSelectedTanks.Rows)
 			{
@@ -317,7 +299,7 @@ namespace WinApp.Forms
 			DB.ExecuteNonQuery(sql);
 
 			// Refresh Grid
-			ShowFavList(SelectedFavListId);
+			ShowFavList();
 		}
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
@@ -398,9 +380,9 @@ namespace WinApp.Forms
 				"		country ON tank.countryId = country.id INNER JOIN " +
 				"		tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
 				"		favList ON favListTank.favListId = favList.id " +
-				"WHERE  (favList.name = @favListName) " +
+				"WHERE  (favList.id = @id) " +
 				"ORDER BY sortorder ";
-			DB.AddWithValue(ref sql, "@favListName", txtFavListName.Text, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
 			dtFavListTank = DB.FetchData(sql);
 			ShowSelectedTanks();
 			if (!selectedTanksColumnSetupDone)
@@ -904,6 +886,115 @@ namespace WinApp.Forms
 
 		#endregion
 
+		private void toolFavListUp_Click(object sender, EventArgs e)
+		{
+			FavListMoveItem(-1);
+		}
+
+		private void toolFavListDown_Click(object sender, EventArgs e)
+		{
+			FavListMoveItem(1);
+		}
+
+		private void FavListMoveItem(int move)
+		{
+			var FavListSelectedListPos = dataGridFavList.SelectedRows[0].Cells["#"].Value;
+			if (FavListSelectedListPos != DBNull.Value)
+			{
+				// Find item next to
+				string sql = "";
+				if (move == -1)
+				{
+					// up, find above
+					sql = "select * from favList where position is not null and position < @position order by position desc";
+				}
+				else
+				{
+					// down, find below
+					sql = "select * from favList where position is not null and position > @position order by position ";
+				}
+
+				DB.AddWithValue(ref sql, "@position", (int)FavListSelectedListPos, DB.SqlDataType.Int);
+				DataTable dt = DB.FetchData(sql);
+				if (dt.Rows.Count > 0)
+				{
+					int rowNextToPos = Convert.ToInt32(dt.Rows[0]["position"]);
+					int rowNextToId = Convert.ToInt32(dt.Rows[0]["id"]);
+					sql = "update favList set position=@rowNextToPos where id=@id; " +
+						  "update favList set position=@position where id=@rowNextToId;";
+					DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@position", (int)FavListSelectedListPos, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@rowNextToId", rowNextToId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
+					DB.ExecuteNonQuery(sql);
+				}
+				FavListSort();
+			}
+		}
+
+		private void FavListSort()
+		{
+			string sql = "select * from favList where position is not null order by position;";
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				sql = "";
+				int pos = 1;
+				foreach (DataRow dr in dt.Rows)
+				{
+					sql += "update favList set position=@pos where id=@id; ";
+					DB.AddWithValue(ref sql, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
+					pos++;
+				}
+				DB.ExecuteNonQuery(sql);
+				ShowFavList();
+			}
+		}
+
+		private void toolFavListVisible_Click(object sender, EventArgs e)
+		{
+			string sql = "update favList set position=99999 where id=@id";
+			if (toolFavListVisible.Text == "Hide")
+				sql = "update favList set position=NULL where id=@id";
+			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+			FavListSort();
+		}
+
+		private void toolFavListAdd_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.FavListNewEdit(0);
+			frm.ShowDialog();
+			FavListSort();
+		}
+
+		private void toolFavListModify_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.FavListNewEdit(SelectedFavListId);
+			frm.ShowDialog();
+			FavListSort();
+		}
+
+		private void toolFavListDelete_Click(object sender, EventArgs e)
+		{
+			string FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
+			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete favourite tank list: " + FavListName,
+				"Confirm deletion", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
+			{
+
+				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";
+				DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(sql);
+				ShowFavList();
+			}
+		}
+
+		private void toolFavListRefresh_Click(object sender, EventArgs e)
+		{
+			ShowFavList();
+		}
 
 	}
 }

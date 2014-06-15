@@ -52,7 +52,7 @@ namespace WinApp.Forms
 					ddDefaultTankFilter.Text = dr["favListname"].ToString();
 			}
 			favListDD = "(Use Current),(All Tanks)";
-			string favListSql = "select * from favList order by position";
+			string favListSql = "select * from favList order by COALESCE(position,99), name";
 			DataTable dtFavList = DB.FetchData(favListSql);
 			if (dtFavList.Rows.Count > 0)
 			{
@@ -65,7 +65,7 @@ namespace WinApp.Forms
 			{
 				// Populate Copy From DD
 				copyFromDD = "(None)";
-				string copyFromSql = "select * from columnList where colType=@colType order by position";
+				string copyFromSql = "select * from columnList where colType=@colType order by COALESCE(position,99), name";
 				DB.AddWithValue(ref copyFromSql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
 				DataTable dtcopyFrom = DB.FetchData(copyFromSql);
 				if (dtcopyFrom.Rows.Count > 0)

@@ -137,6 +137,12 @@
     <Compile Include="Forms\ColList\ColListNewEdit.Designer.cs">
       <DependentUpon>ColListNewEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FavList\FavListNewEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FavList\FavListNewEdit.Designer.cs">
+      <DependentUpon>FavListNewEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PlayerTankDetails.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -161,11 +167,11 @@
     <Compile Include="Forms\Settings\DatabaseNew.Designer.cs">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FavTank\FavTanks.cs">
+    <Compile Include="Forms\FavList\FavList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FavTank\FavTanks.Designer.cs">
-      <DependentUpon>FavTanks.cs</DependentUpon>
+    <Compile Include="Forms\FavList\FavList.Designer.cs">
+      <DependentUpon>FavList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Grinding\GrindingParameter.cs">
       <SubType>Form</SubType>
@@ -258,6 +264,9 @@
     <EmbeddedResource Include="Forms\ColList\ColListNewEdit.resx">
       <DependentUpon>ColListNewEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FavList\FavListNewEdit.resx">
+      <DependentUpon>FavListNewEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\PlayerTankDetails.resx">
       <DependentUpon>PlayerTankDetails.cs</DependentUpon>
     </EmbeddedResource>
@@ -270,8 +279,8 @@
     <EmbeddedResource Include="Forms\Settings\DatabaseNew.resx">
       <DependentUpon>DatabaseNew.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FavTank\FavTanks.resx">
-      <DependentUpon>FavTanks.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FavList\FavList.resx">
+      <DependentUpon>FavList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Grinding\GrindingParameter.resx">
       <DependentUpon>GrindingParameter.cs</DependentUpon>

@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class FavTanks
+	partial class FavList2
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,18 +29,24 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavTanks));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavList2));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.FavTanksTheme = new BadForm();
-			this.badLabel1 = new BadLabel();
-			this.btnFavListAdd = new BadButton();
-			this.popupPosition = new BadDropDownBox();
+			this.toolColList = new System.Windows.Forms.ToolStrip();
+			this.toolFavListUp = new System.Windows.Forms.ToolStripButton();
+			this.toolFavListDown = new System.Windows.Forms.ToolStripButton();
+			this.toolFavListVisible = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolFavListAdd = new System.Windows.Forms.ToolStripButton();
+			this.toolFavListModify = new System.Windows.Forms.ToolStripButton();
+			this.toolFavListDelete = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolFavListRefresh = new System.Windows.Forms.ToolStripButton();
 			this.btnRemoveAll = new BadButton();
 			this.btnRemoveSelected = new BadButton();
 			this.btnSelectSelected = new BadButton();
 			this.btnSelectAll = new BadButton();
-			this.badLabel6 = new BadLabel();
 			this.btnFavListCancel = new BadButton();
 			this.btnFavListSave = new BadButton();
 			this.toolSelectedTanks = new System.Windows.Forms.ToolStrip();
@@ -86,15 +92,12 @@
 			this.dataGridAllTanks = new System.Windows.Forms.DataGridView();
 			this.scrollFavList = new BadScrollBar();
 			this.dataGridFavList = new System.Windows.Forms.DataGridView();
-			this.txtFavListName = new BadTextBox();
-			this.badLabel2 = new BadLabel();
-			this.btnFavListDelete = new BadButton();
 			this.badGroupBox2 = new BadGroupBox();
 			this.lblSelectedTanks = new BadLabel();
 			this.lblAllTanks = new BadLabel();
 			this.groupTanks = new BadGroupBox();
-			this.badGroupBox1 = new BadGroupBox();
 			this.FavTanksTheme.SuspendLayout();
+			this.toolColList.SuspendLayout();
 			this.toolSelectedTanks.SuspendLayout();
 			this.toolAllTanks.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedTanks)).BeginInit();
@@ -111,14 +114,11 @@
 			// FavTanksTheme
 			// 
 			this.FavTanksTheme.BackColor = System.Drawing.Color.Fuchsia;
-			this.FavTanksTheme.Controls.Add(this.badLabel1);
-			this.FavTanksTheme.Controls.Add(this.btnFavListAdd);
-			this.FavTanksTheme.Controls.Add(this.popupPosition);
+			this.FavTanksTheme.Controls.Add(this.toolColList);
 			this.FavTanksTheme.Controls.Add(this.btnRemoveAll);
 			this.FavTanksTheme.Controls.Add(this.btnRemoveSelected);
 			this.FavTanksTheme.Controls.Add(this.btnSelectSelected);
 			this.FavTanksTheme.Controls.Add(this.btnSelectAll);
-			this.FavTanksTheme.Controls.Add(this.badLabel6);
 			this.FavTanksTheme.Controls.Add(this.btnFavListCancel);
 			this.FavTanksTheme.Controls.Add(this.btnFavListSave);
 			this.FavTanksTheme.Controls.Add(this.toolSelectedTanks);
@@ -129,14 +129,10 @@
 			this.FavTanksTheme.Controls.Add(this.dataGridAllTanks);
 			this.FavTanksTheme.Controls.Add(this.scrollFavList);
 			this.FavTanksTheme.Controls.Add(this.dataGridFavList);
-			this.FavTanksTheme.Controls.Add(this.txtFavListName);
-			this.FavTanksTheme.Controls.Add(this.badLabel2);
-			this.FavTanksTheme.Controls.Add(this.btnFavListDelete);
 			this.FavTanksTheme.Controls.Add(this.badGroupBox2);
 			this.FavTanksTheme.Controls.Add(this.lblSelectedTanks);
 			this.FavTanksTheme.Controls.Add(this.lblAllTanks);
 			this.FavTanksTheme.Controls.Add(this.groupTanks);
-			this.FavTanksTheme.Controls.Add(this.badGroupBox1);
 			this.FavTanksTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FavTanksTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.FavTanksTheme.FormFooter = false;
@@ -156,38 +152,107 @@
 			this.FavTanksTheme.Text = "Favourite Tank List";
 			this.FavTanksTheme.TitleHeight = 26;
 			// 
-			// badLabel1
+			// toolColList
 			// 
-			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel1.Dimmed = false;
-			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(322, 129);
-			this.badLabel1.Name = "badLabel1";
-			this.badLabel1.Size = new System.Drawing.Size(257, 47);
-			this.badLabel1.TabIndex = 39;
-			this.badLabel1.Text = "Change name and position, and click the \"Add\" button to create new Favourite Tank" +
-    " List.";
+			this.toolColList.AutoSize = false;
+			this.toolColList.Dock = System.Windows.Forms.DockStyle.None;
+			this.toolColList.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolColList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolFavListUp,
+            this.toolFavListDown,
+            this.toolFavListVisible,
+            this.toolStripSeparator2,
+            this.toolFavListAdd,
+            this.toolFavListModify,
+            this.toolFavListDelete,
+            this.toolStripSeparator3,
+            this.toolFavListRefresh});
+			this.toolColList.Location = new System.Drawing.Point(42, 72);
+			this.toolColList.Name = "toolColList";
+			this.toolColList.Size = new System.Drawing.Size(537, 25);
+			this.toolColList.TabIndex = 82;
+			this.toolColList.Text = "toolStrip1";
 			// 
-			// btnFavListAdd
+			// toolFavListUp
 			// 
-			this.btnFavListAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnFavListAdd.Image = null;
-			this.btnFavListAdd.Location = new System.Drawing.Point(258, 564);
-			this.btnFavListAdd.Name = "btnFavListAdd";
-			this.btnFavListAdd.Size = new System.Drawing.Size(85, 23);
-			this.btnFavListAdd.TabIndex = 2;
-			this.btnFavListAdd.Text = "Add";
-			this.btnFavListAdd.Click += new System.EventHandler(this.btnFavListAdd_Click);
+			this.toolFavListUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolFavListUp.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListUp.Image")));
+			this.toolFavListUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListUp.Name = "toolFavListUp";
+			this.toolFavListUp.Size = new System.Drawing.Size(23, 22);
+			this.toolFavListUp.Text = "toolStripButton1";
+			this.toolFavListUp.Click += new System.EventHandler(this.toolFavListUp_Click);
 			// 
-			// popupPosition
+			// toolFavListDown
 			// 
-			this.popupPosition.Image = null;
-			this.popupPosition.Location = new System.Drawing.Point(382, 101);
-			this.popupPosition.Name = "popupPosition";
-			this.popupPosition.Size = new System.Drawing.Size(94, 23);
-			this.popupPosition.TabIndex = 38;
-			this.popupPosition.Text = "Not Visible";
-			this.popupPosition.Click += new System.EventHandler(this.popupPosition_Click);
+			this.toolFavListDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolFavListDown.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListDown.Image")));
+			this.toolFavListDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListDown.Name = "toolFavListDown";
+			this.toolFavListDown.Size = new System.Drawing.Size(23, 22);
+			this.toolFavListDown.Text = "toolStripButton2";
+			this.toolFavListDown.Click += new System.EventHandler(this.toolFavListDown_Click);
+			// 
+			// toolFavListVisible
+			// 
+			this.toolFavListVisible.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolFavListVisible.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListVisible.Image")));
+			this.toolFavListVisible.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListVisible.Name = "toolFavListVisible";
+			this.toolFavListVisible.Size = new System.Drawing.Size(36, 22);
+			this.toolFavListVisible.Text = "Hide";
+			this.toolFavListVisible.ToolTipText = "Hide";
+			this.toolFavListVisible.Click += new System.EventHandler(this.toolFavListVisible_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolFavListAdd
+			// 
+			this.toolFavListAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolFavListAdd.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListAdd.Image")));
+			this.toolFavListAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListAdd.Name = "toolFavListAdd";
+			this.toolFavListAdd.Size = new System.Drawing.Size(33, 22);
+			this.toolFavListAdd.Text = "Add";
+			this.toolFavListAdd.Click += new System.EventHandler(this.toolFavListAdd_Click);
+			// 
+			// toolFavListModify
+			// 
+			this.toolFavListModify.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolFavListModify.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListModify.Image")));
+			this.toolFavListModify.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListModify.Name = "toolFavListModify";
+			this.toolFavListModify.Size = new System.Drawing.Size(49, 22);
+			this.toolFavListModify.Text = "Modify";
+			this.toolFavListModify.Click += new System.EventHandler(this.toolFavListModify_Click);
+			// 
+			// toolFavListDelete
+			// 
+			this.toolFavListDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolFavListDelete.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListDelete.Image")));
+			this.toolFavListDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListDelete.Name = "toolFavListDelete";
+			this.toolFavListDelete.Size = new System.Drawing.Size(44, 22);
+			this.toolFavListDelete.Text = "Delete";
+			this.toolFavListDelete.Click += new System.EventHandler(this.toolFavListDelete_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolFavListRefresh
+			// 
+			this.toolFavListRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolFavListRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolFavListRefresh.Image")));
+			this.toolFavListRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolFavListRefresh.Name = "toolFavListRefresh";
+			this.toolFavListRefresh.Size = new System.Drawing.Size(23, 22);
+			this.toolFavListRefresh.Text = "toolStripButton1";
+			this.toolFavListRefresh.Click += new System.EventHandler(this.toolFavListRefresh_Click);
 			// 
 			// btnRemoveAll
 			// 
@@ -228,17 +293,6 @@
 			this.btnSelectAll.TabIndex = 32;
 			this.btnSelectAll.Text = ">>";
 			this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
-			// 
-			// badLabel6
-			// 
-			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel6.Dimmed = false;
-			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(322, 101);
-			this.badLabel6.Name = "badLabel6";
-			this.badLabel6.Size = new System.Drawing.Size(75, 23);
-			this.badLabel6.TabIndex = 30;
-			this.badLabel6.Text = "Position:";
 			// 
 			// btnFavListCancel
 			// 
@@ -725,7 +779,7 @@
 			// 
 			this.scrollFavList.BackColor = System.Drawing.Color.Transparent;
 			this.scrollFavList.Image = null;
-			this.scrollFavList.Location = new System.Drawing.Point(259, 73);
+			this.scrollFavList.Location = new System.Drawing.Point(562, 97);
 			this.scrollFavList.Name = "scrollFavList";
 			this.scrollFavList.ScrollElementsTotals = 100;
 			this.scrollFavList.ScrollElementsVisible = 20;
@@ -733,7 +787,7 @@
 			this.scrollFavList.ScrollNecessary = true;
 			this.scrollFavList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollFavList.ScrollPosition = 0;
-			this.scrollFavList.Size = new System.Drawing.Size(17, 150);
+			this.scrollFavList.Size = new System.Drawing.Size(17, 126);
 			this.scrollFavList.TabIndex = 11;
 			this.scrollFavList.Text = "badScrollBar1";
 			this.scrollFavList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollFavList_MouseDown);
@@ -748,7 +802,7 @@
 			this.dataGridFavList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridFavList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridFavList.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridFavList.Location = new System.Drawing.Point(42, 73);
+			this.dataGridFavList.Location = new System.Drawing.Point(42, 97);
 			this.dataGridFavList.MultiSelect = false;
 			this.dataGridFavList.Name = "dataGridFavList";
 			this.dataGridFavList.ReadOnly = true;
@@ -756,52 +810,20 @@
 			this.dataGridFavList.RowHeadersVisible = false;
 			this.dataGridFavList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridFavList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridFavList.Size = new System.Drawing.Size(217, 150);
+			this.dataGridFavList.Size = new System.Drawing.Size(520, 126);
 			this.dataGridFavList.TabIndex = 8;
 			this.dataGridFavList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridFavList_CellClick);
 			this.dataGridFavList.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
-			// txtFavListName
-			// 
-			this.txtFavListName.HasFocus = false;
-			this.txtFavListName.Image = null;
-			this.txtFavListName.Location = new System.Drawing.Point(382, 73);
-			this.txtFavListName.Name = "txtFavListName";
-			this.txtFavListName.PasswordChar = '\0';
-			this.txtFavListName.Size = new System.Drawing.Size(197, 23);
-			this.txtFavListName.TabIndex = 6;
-			this.txtFavListName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(322, 73);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(42, 23);
-			this.badLabel2.TabIndex = 5;
-			this.badLabel2.Text = "Name:";
-			// 
-			// btnFavListDelete
-			// 
-			this.btnFavListDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnFavListDelete.Enabled = false;
-			this.btnFavListDelete.Image = null;
-			this.btnFavListDelete.Location = new System.Drawing.Point(349, 564);
-			this.btnFavListDelete.Name = "btnFavListDelete";
-			this.btnFavListDelete.Size = new System.Drawing.Size(80, 23);
-			this.btnFavListDelete.TabIndex = 3;
-			this.btnFavListDelete.Text = "Delete";
-			this.btnFavListDelete.Click += new System.EventHandler(this.btnFavListDelete_Click);
-			// 
 			// badGroupBox2
 			// 
+			this.badGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(266, 195);
+			this.badGroupBox2.Size = new System.Drawing.Size(576, 195);
 			this.badGroupBox2.TabIndex = 10;
 			this.badGroupBox2.Text = "Favourite Tank Lists";
 			this.badGroupBox2.UseWaitCursor = true;
@@ -841,18 +863,6 @@
 			this.groupTanks.TabIndex = 12;
 			this.groupTanks.Text = "Tanks";
 			// 
-			// badGroupBox1
-			// 
-			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(308, 48);
-			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(293, 195);
-			this.badGroupBox1.TabIndex = 4;
-			this.badGroupBox1.Text = "Selected Favourite Tank List";
-			// 
 			// FavTanks
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -867,10 +877,12 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "FavTanks";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
-			this.Load += new System.EventHandler(this.FavTanks_Load);
+			this.Load += new System.EventHandler(this.FavList_Load);
 			this.ResizeEnd += new System.EventHandler(this.FavTanks_ResizeEnd);
 			this.Resize += new System.EventHandler(this.FavTanks_Resize);
 			this.FavTanksTheme.ResumeLayout(false);
+			this.toolColList.ResumeLayout(false);
+			this.toolColList.PerformLayout();
 			this.toolSelectedTanks.ResumeLayout(false);
 			this.toolSelectedTanks.PerformLayout();
 			this.toolAllTanks.ResumeLayout(false);
@@ -885,11 +897,6 @@
 		#endregion
 
 		private BadForm FavTanksTheme;
-		private BadTextBox txtFavListName;
-		private BadLabel badLabel2;
-		private BadButton btnFavListDelete;
-		private BadButton btnFavListAdd;
-		private BadGroupBox badGroupBox1;
 		private BadScrollBar scrollFavList;
 		private System.Windows.Forms.DataGridView dataGridFavList;
 		private BadGroupBox badGroupBox2;
@@ -904,7 +911,6 @@
 		private BadButton btnRemoveSelected;
 		private BadButton btnSelectSelected;
 		private BadButton btnSelectAll;
-		private BadLabel badLabel6;
 		private BadButton btnFavListCancel;
 		private BadButton btnFavListSave;
 		private System.Windows.Forms.ToolStrip toolAllTanks;
@@ -945,7 +951,15 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveUp;
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveDown;
-		private BadDropDownBox popupPosition;
-		private BadLabel badLabel1;
+		private System.Windows.Forms.ToolStrip toolColList;
+		private System.Windows.Forms.ToolStripButton toolFavListUp;
+		private System.Windows.Forms.ToolStripButton toolFavListDown;
+		private System.Windows.Forms.ToolStripButton toolFavListVisible;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripButton toolFavListAdd;
+		private System.Windows.Forms.ToolStripButton toolFavListModify;
+		private System.Windows.Forms.ToolStripButton toolFavListDelete;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripButton toolFavListRefresh;
 	}
 }

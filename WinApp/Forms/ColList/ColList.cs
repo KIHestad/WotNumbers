@@ -32,114 +32,6 @@ namespace WinApp.Forms
 			}
 		}
 
-		//*************************************
-
-		//private string favList = "Use Current,All Tanks";
-		//private void getFavList()
-		//{
-		//	// Get favList
-		//	string sql = "select name from favList order by COALESCE(position,99), name";
-		//	DataTable dt = DB.FetchData(sql);
-		//	foreach (DataRow row in dt.Rows)
-		//	{
-		//		favList += "," + row["name"].ToString();
-		//	}
-		//}
-
-
-		//bool defaultTankFilterSave = false;
-		//private void ddDefaultTankFilter_Click(object sender, EventArgs e)
-		//{
-		//	defaultTankFilterSave = true;
-		//	string selectedTankFilter = Code.DropDownGrid.Show(ddDefaultTankFilter, Code.DropDownGrid.DropDownGridType.List, favList);
-		//}
-
-		//private void ADD_BUTTON()
-		//{
-		//	string newColListName = txtColumnListName.Text.Trim();
-		//	if (newColListName.Length > 0)
-		//	{
-		//		// CheckBox if exists
-		//		if (Convert.ToInt32(popupPosition.Text) < 4)
-		//		{
-		//			Code.MsgBox.Show("Cannot add new Column Setup List with position 1, 2 or 3 - these are reserved." +
-		//				Environment.NewLine + Environment.NewLine + "Select another position.", "Cannot create Column Setup List ");
-		//		}
-		//		else
-		//		{
-		//			string sql = "select id from columnList where name=@name;";
-		//			DB.AddWithValue(ref sql, "@name", newColListName, DB.SqlDataType.VarChar);
-		//			DataTable dt = DB.FetchData(sql);
-		//			if (dt.Rows.Count > 0)
-		//			{
-		//				Code.MsgBox.Show("Cannot add new Column Setup List with this name, already in use.", "Cannot create Column Setup List ");
-		//			}
-		//			else
-		//			{
-		//				int copySelTanksFromFavListId = -1;
-		//				if (dataGridSelectedColumns.Rows.Count > 0)
-		//				{
-		//					Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to create a new Column Setup List  based on the current selected columns?" +
-		//						Environment.NewLine + Environment.NewLine +
-		//						"Press 'OK' to include selected columns into the new list." +
-		//						Environment.NewLine + Environment.NewLine +
-		//						"Press 'Cancel' to create an new empty list.", "Create new Column Setup List ", MsgBoxType.OKCancel);
-		//					if (answer == MsgBox.Button.OKButton) copySelTanksFromFavListId = SelectedColListId;
-		//				}
-		//				AddColumnList(copySelTanksFromFavListId);
-		//			}
-		//		}
-		//	}
-		//}
-
-
-		//private void AddColumnList(int CopySelColumnsFromColumnListId = -1)
-		//{
-		//	string newColumnListName = txtColumnListName.Text.Trim();
-		//	string newColumnListPos = popupPosition.Text;
-		//	if (newColumnListPos == "Not Visible") newColumnListPos = "NULL";
-		//	// Change position on existing if already used
-		//	string sql = "select * from columnList where position = @newColumnListPos";
-		//	DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
-		//	DataTable dt = DB.FetchData(sql);
-		//	sql = "";
-		//	if (dt.Rows.Count == 1)
-		//	{
-		//		// Move existing favlist on this pos or below one step
-		//		sql = "update columnList set position = position + 1 where position >= @newColumnListPos; ";
-		//		// Remove positions above 10
-		//		sql += "update columnList set position = NULL where position > 10; ";
-		//	}
-		//	// Add new favlist
-		//	sql += "insert into columnList (colType, position, name) values (@colType, @newColumnListPos, @newFavListName); ";
-		//	// Add parameters
-		//	DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-		//	DB.AddWithValue(ref sql, "@newColumnListPos", newColumnListPos, DB.SqlDataType.Int);
-		//	DB.AddWithValue(ref sql, "@newFavListName", newColumnListName, DB.SqlDataType.VarChar);
-		//	// Execute now
-		//	DB.ExecuteNonQuery(sql);
-		//	// Get ID for new tank list
-		//	sql = "select id from columnList where name=@name";
-		//	DB.AddWithValue(ref sql, "@name", newColumnListName, DB.SqlDataType.VarChar);
-		//	dt = DB.FetchData(sql);
-		//	SelectedColListId = Convert.ToInt32(dt.Rows[0]["id"]);
-		//	// Copy favListTanks if selected
-		//	if (CopySelColumnsFromColumnListId != -1)
-		//	{
-		//		sql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) select columnSelectionId, @copyToColumnListId, sortorder " +
-		//																	"   from columnListSelection " +
-		//																	"   where ColumnListId=@copyFromColumnListId; ";
-		//		DB.AddWithValue(ref sql, "@copyToColumnListId", SelectedColListId, DB.SqlDataType.Int);
-		//		DB.AddWithValue(ref sql, "@copyFromColumnListId", CopySelColumnsFromColumnListId, DB.SqlDataType.Int);
-		//		DB.ExecuteNonQuery(sql);
-		//	}
-		//	// Refresh Grid
-		//	ShowColumnSetupList();
-		//}
-
-		//*************************************
-
-
 		private void ColumnSetup_Load(object sender, EventArgs e)
 		{
 			// Style toolbar
@@ -287,7 +179,6 @@ namespace WinApp.Forms
 
 		#region ColumnList
 
-		private DataTable dtColumnList = new DataTable();
 		private void ShowColumnSetupList()
 		{
 			string sql = "select columnList.position as '#', columnList.name as 'Name', '' as 'Show', '' as 'Default', '' as 'System', " +
@@ -296,7 +187,7 @@ namespace WinApp.Forms
 				"where columnList.colType=@colType " +
 				"order by COALESCE(columnList.position,99), name; ";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			dtColumnList = DB.FetchData(sql);
+			DataTable dtColumnList = DB.FetchData(sql);
 			// Modify datatable by adding values to Show, Default and System columns
 			foreach (DataRow row in dtColumnList.Rows)
 			{
@@ -313,11 +204,8 @@ namespace WinApp.Forms
 					row["Fav Tank List"] = "(All Tanks)";
 				row.AcceptChanges();
 			}
-
+			// Show in grid
 			dataGridColumnList.DataSource = dtColumnList;
-			// Connect to scrollbar
-			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
-			scrollColumnList.ScrollElementsVisible = dataGridColumnList.DisplayedRowCount(false);
 			// Format datagrid
 			dataGridColumnList.Columns["#"].Width = 30;
 			dataGridColumnList.Columns["Name"].Width = 120;
@@ -340,7 +228,10 @@ namespace WinApp.Forms
 			}
 			dataGridColumnList.Rows[rownum].Selected = true;
 			SelectColumnList(SelectedColListId);
-
+			// Connect to scrollbar
+			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
+			scrollColumnList.ScrollElementsVisible = dataGridColumnList.DisplayedRowCount(false);
+			
 		}
 
 		private void dataGridColumnList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -362,8 +253,6 @@ namespace WinApp.Forms
 			btnSelectSelected.Enabled = !sysCol;
 			toolSelectedTanks_MoveUp.Enabled = !sysCol;
 			toolSelectedTanks_MoveDown.Enabled = !sysCol;
-			// Get tanks for this fav list now
-			GetSelectedColumnsFromColumnList();
 			// Toggle show/hide
 			bool isHidden = (dataGridColumnList.SelectedRows[0].Cells["#"].Value == DBNull.Value);
 			string showButton = "Hide";
@@ -374,6 +263,9 @@ namespace WinApp.Forms
 			toolColListVisible.Enabled = !isDefault;
 			// Disable default if already default, or if col is hidden
 			toolColListDefault.Enabled = (!isDefault && !isHidden);
+			// Get cols for this Col list now
+			GetSelectedColumnsFromColumnList();
+			
 		}
 
 		private void scrollColumnList_MouseDown(object sender, MouseEventArgs e)
@@ -396,8 +288,8 @@ namespace WinApp.Forms
 		private void btnSelectedColumnListSave_Click(object sender, EventArgs e)
 		{
 			string ColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
-			string message = "You are about to save the selected tanks to column setup list: " + ColumnSetupListName;
-			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected tanks to column setup list", MsgBoxType.OKCancel);
+			string message = "You are about to save the selected columns to column setup list: " + ColumnSetupListName;
+			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				SaveSelectedColumnList();
@@ -1027,12 +919,6 @@ namespace WinApp.Forms
 		{
 			ShowColumnSetupList();
 		}
-
-		private void ColListTheme_Click(object sender, EventArgs e)
-		{
-
-		}
-
 
 	}
 }

@@ -18,7 +18,7 @@ namespace WinApp.Code
 			VarChar = 1,
 			Int = 2,
 			DateTime = 3,
-            Image = 4
+			Image = 4
 		}
 		
 		public static DataTable FetchData(string sql, bool ShowError = true)
@@ -244,7 +244,7 @@ namespace WinApp.Code
 			else
 			{
 				string StringValue = Value.ToString();
-                var byteArray = Value.ToString();
+				var byteArray = Value.ToString();
 				if (DataType == SqlDataType.VarChar)
 				{
 					StringValue = StringValue.Replace("'", "''");
@@ -258,10 +258,10 @@ namespace WinApp.Code
 				{
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'"); // yyyy-DD-mm
 				}
-                else if (DataType == SqlDataType.Image)
-                {
-                    Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
-                }
+				else if (DataType == SqlDataType.Image)
+				{
+					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
+				}
 			}
 		}
 
