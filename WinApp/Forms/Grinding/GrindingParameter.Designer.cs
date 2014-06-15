@@ -52,7 +52,6 @@
 			this.GrindingParameterTheme.Controls.Add(this.cmdCancel);
 			this.GrindingParameterTheme.Controls.Add(this.btnSave);
 			this.GrindingParameterTheme.Controls.Add(this.badGroupBox1);
-			this.GrindingParameterTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.GrindingParameterTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GrindingParameterTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.GrindingParameterTheme.FormFooter = false;
@@ -63,8 +62,8 @@
 			this.GrindingParameterTheme.Location = new System.Drawing.Point(0, 0);
 			this.GrindingParameterTheme.MainArea = mainAreaClass1;
 			this.GrindingParameterTheme.Name = "GrindingParameterTheme";
-			this.GrindingParameterTheme.Resizable = true;
-			this.GrindingParameterTheme.Size = new System.Drawing.Size(300, 234);
+			this.GrindingParameterTheme.Resizable = false;
+			this.GrindingParameterTheme.Size = new System.Drawing.Size(316, 247);
 			this.GrindingParameterTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("GrindingParameterTheme.SystemExitImage")));
 			this.GrindingParameterTheme.SystemMaximizeImage = null;
 			this.GrindingParameterTheme.SystemMinimizeImage = null;
@@ -77,7 +76,7 @@
 			this.chkAutoLoad.BackColor = System.Drawing.Color.Transparent;
 			this.chkAutoLoad.Checked = false;
 			this.chkAutoLoad.Image = ((System.Drawing.Image)(resources.GetObject("chkAutoLoad.Image")));
-			this.chkAutoLoad.Location = new System.Drawing.Point(37, 139);
+			this.chkAutoLoad.Location = new System.Drawing.Point(45, 147);
 			this.chkAutoLoad.Name = "chkAutoLoad";
 			this.chkAutoLoad.Size = new System.Drawing.Size(176, 23);
 			this.chkAutoLoad.TabIndex = 8;
@@ -86,7 +85,7 @@
 			// ddEveryBattle
 			// 
 			this.ddEveryBattle.Image = null;
-			this.ddEveryBattle.Location = new System.Drawing.Point(194, 97);
+			this.ddEveryBattle.Location = new System.Drawing.Point(202, 105);
 			this.ddEveryBattle.Name = "ddEveryBattle";
 			this.ddEveryBattle.Size = new System.Drawing.Size(70, 23);
 			this.ddEveryBattle.TabIndex = 7;
@@ -98,7 +97,7 @@
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(37, 97);
+			this.badLabel2.Location = new System.Drawing.Point(45, 105);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(126, 23);
 			this.badLabel2.TabIndex = 6;
@@ -107,7 +106,7 @@
 			// ddFirstBattle
 			// 
 			this.ddFirstBattle.Image = null;
-			this.ddFirstBattle.Location = new System.Drawing.Point(194, 68);
+			this.ddFirstBattle.Location = new System.Drawing.Point(202, 76);
 			this.ddFirstBattle.Name = "ddFirstBattle";
 			this.ddFirstBattle.Size = new System.Drawing.Size(70, 23);
 			this.ddFirstBattle.TabIndex = 5;
@@ -119,7 +118,7 @@
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(37, 68);
+			this.badLabel1.Location = new System.Drawing.Point(45, 76);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(150, 23);
 			this.badLabel1.TabIndex = 4;
@@ -128,7 +127,7 @@
 			// cmdCancel
 			// 
 			this.cmdCancel.Image = null;
-			this.cmdCancel.Location = new System.Drawing.Point(125, 193);
+			this.cmdCancel.Location = new System.Drawing.Point(133, 204);
 			this.cmdCancel.Name = "cmdCancel";
 			this.cmdCancel.Size = new System.Drawing.Size(75, 23);
 			this.cmdCancel.TabIndex = 2;
@@ -138,7 +137,7 @@
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(206, 193);
+			this.btnSave.Location = new System.Drawing.Point(214, 204);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 1;
@@ -149,7 +148,7 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(17, 40);
+			this.badGroupBox1.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(264, 137);
 			this.badGroupBox1.TabIndex = 0;
@@ -159,7 +158,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(300, 234);
+			this.ClientSize = new System.Drawing.Size(316, 247);
 			this.Controls.Add(this.GrindingParameterTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "GrindingParameter";

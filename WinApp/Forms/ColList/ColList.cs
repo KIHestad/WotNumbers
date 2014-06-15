@@ -1028,5 +1028,11 @@ namespace WinApp.Forms
 			ShowColumnSetupList();
 		}
 
+		private void ColListTheme_Click(object sender, EventArgs e)
+		{
+
+		}
+
+
 	}
 }

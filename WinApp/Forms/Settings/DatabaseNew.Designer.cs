@@ -63,7 +63,6 @@
 			this.DatabaseNewTheme.Controls.Add(this.btnCreateDB);
 			this.DatabaseNewTheme.Controls.Add(this.badGroupBox1);
 			this.DatabaseNewTheme.Controls.Add(this.lblStatusText);
-			this.DatabaseNewTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.DatabaseNewTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseNewTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.DatabaseNewTheme.FormFooter = false;
@@ -75,7 +74,7 @@
 			this.DatabaseNewTheme.MainArea = mainAreaClass1;
 			this.DatabaseNewTheme.Name = "DatabaseNewTheme";
 			this.DatabaseNewTheme.Resizable = false;
-			this.DatabaseNewTheme.Size = new System.Drawing.Size(467, 287);
+			this.DatabaseNewTheme.Size = new System.Drawing.Size(477, 290);
 			this.DatabaseNewTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DatabaseNewTheme.SystemExitImage")));
 			this.DatabaseNewTheme.SystemMaximizeImage = null;
 			this.DatabaseNewTheme.SystemMinimizeImage = null;
@@ -87,7 +86,7 @@
 			// 
 			this.badProgressBar.BackColor = System.Drawing.Color.Transparent;
 			this.badProgressBar.Image = null;
-			this.badProgressBar.Location = new System.Drawing.Point(21, 235);
+			this.badProgressBar.Location = new System.Drawing.Point(25, 244);
 			this.badProgressBar.Name = "badProgressBar";
 			this.badProgressBar.Size = new System.Drawing.Size(314, 23);
 			this.badProgressBar.TabIndex = 25;
@@ -100,7 +99,7 @@
 			// cmdSelectFIle
 			// 
 			this.cmdSelectFIle.Image = null;
-			this.cmdSelectFIle.Location = new System.Drawing.Point(339, 184);
+			this.cmdSelectFIle.Location = new System.Drawing.Point(343, 190);
 			this.cmdSelectFIle.Name = "cmdSelectFIle";
 			this.cmdSelectFIle.Size = new System.Drawing.Size(88, 23);
 			this.cmdSelectFIle.TabIndex = 17;
@@ -109,19 +108,21 @@
 			// 
 			// txtFileLocation
 			// 
+			this.txtFileLocation.HasFocus = false;
 			this.txtFileLocation.Image = null;
-			this.txtFileLocation.Location = new System.Drawing.Point(38, 130);
+			this.txtFileLocation.Location = new System.Drawing.Point(42, 136);
 			this.txtFileLocation.Name = "txtFileLocation";
 			this.txtFileLocation.PasswordChar = '\0';
 			this.txtFileLocation.Size = new System.Drawing.Size(389, 43);
 			this.txtFileLocation.TabIndex = 23;
+			this.txtFileLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel3
 			// 
 			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel3.Dimmed = false;
 			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(35, 109);
+			this.badLabel3.Location = new System.Drawing.Point(39, 115);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(130, 23);
 			this.badLabel3.TabIndex = 22;
@@ -129,19 +130,21 @@
 			// 
 			// txtPlayerName
 			// 
+			this.txtPlayerName.HasFocus = false;
 			this.txtPlayerName.Image = null;
-			this.txtPlayerName.Location = new System.Drawing.Point(237, 81);
+			this.txtPlayerName.Location = new System.Drawing.Point(241, 87);
 			this.txtPlayerName.Name = "txtPlayerName";
 			this.txtPlayerName.PasswordChar = '\0';
 			this.txtPlayerName.Size = new System.Drawing.Size(190, 23);
 			this.txtPlayerName.TabIndex = 21;
+			this.txtPlayerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel2
 			// 
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(237, 61);
+			this.badLabel2.Location = new System.Drawing.Point(241, 67);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(130, 23);
 			this.badLabel2.TabIndex = 20;
@@ -149,19 +152,21 @@
 			// 
 			// txtDatabasename
 			// 
+			this.txtDatabasename.HasFocus = false;
 			this.txtDatabasename.Image = null;
-			this.txtDatabasename.Location = new System.Drawing.Point(38, 81);
+			this.txtDatabasename.Location = new System.Drawing.Point(42, 87);
 			this.txtDatabasename.Name = "txtDatabasename";
 			this.txtDatabasename.PasswordChar = '\0';
 			this.txtDatabasename.Size = new System.Drawing.Size(190, 23);
 			this.txtDatabasename.TabIndex = 19;
+			this.txtDatabasename.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel1
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(35, 62);
+			this.badLabel1.Location = new System.Drawing.Point(39, 68);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(119, 23);
 			this.badLabel1.TabIndex = 18;
@@ -170,7 +175,7 @@
 			// btnCreateDB
 			// 
 			this.btnCreateDB.Image = null;
-			this.btnCreateDB.Location = new System.Drawing.Point(341, 235);
+			this.btnCreateDB.Location = new System.Drawing.Point(345, 244);
 			this.btnCreateDB.Name = "btnCreateDB";
 			this.btnCreateDB.Size = new System.Drawing.Size(106, 23);
 			this.btnCreateDB.TabIndex = 0;
@@ -181,7 +186,7 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(21, 42);
+			this.badGroupBox1.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(426, 177);
 			this.badGroupBox1.TabIndex = 24;
@@ -192,7 +197,7 @@
 			this.lblStatusText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblStatusText.Dimmed = false;
 			this.lblStatusText.Image = null;
-			this.lblStatusText.Location = new System.Drawing.Point(21, 256);
+			this.lblStatusText.Location = new System.Drawing.Point(25, 262);
 			this.lblStatusText.Name = "lblStatusText";
 			this.lblStatusText.Size = new System.Drawing.Size(426, 23);
 			this.lblStatusText.TabIndex = 26;
@@ -201,7 +206,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(467, 287);
+			this.ClientSize = new System.Drawing.Size(477, 290);
 			this.Controls.Add(this.DatabaseNewTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;

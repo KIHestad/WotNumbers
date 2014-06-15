@@ -31,9 +31,9 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateFromApi));
 			this.UpdateFromApiTheme = new BadForm();
-			this.badProgressBar = new BadProgressBar();
-			this.lblProgressStatus = new BadLabel();
 			this.btnStart = new BadButton();
+			this.lblProgressStatus = new BadLabel();
+			this.badProgressBar = new BadProgressBar();
 			this.UpdateFromApiTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -42,7 +42,6 @@
 			this.UpdateFromApiTheme.Controls.Add(this.btnStart);
 			this.UpdateFromApiTheme.Controls.Add(this.lblProgressStatus);
 			this.UpdateFromApiTheme.Controls.Add(this.badProgressBar);
-			this.UpdateFromApiTheme.Cursor = System.Windows.Forms.Cursors.SizeNS;
 			this.UpdateFromApiTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UpdateFromApiTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.UpdateFromApiTheme.FormFooter = false;
@@ -53,8 +52,8 @@
 			this.UpdateFromApiTheme.Location = new System.Drawing.Point(0, 0);
 			this.UpdateFromApiTheme.MainArea = mainAreaClass1;
 			this.UpdateFromApiTheme.Name = "UpdateFromApiTheme";
-			this.UpdateFromApiTheme.Resizable = true;
-			this.UpdateFromApiTheme.Size = new System.Drawing.Size(389, 126);
+			this.UpdateFromApiTheme.Resizable = false;
+			this.UpdateFromApiTheme.Size = new System.Drawing.Size(382, 126);
 			this.UpdateFromApiTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("UpdateFromApiTheme.SystemExitImage")));
 			this.UpdateFromApiTheme.SystemMaximizeImage = null;
 			this.UpdateFromApiTheme.SystemMinimizeImage = null;
@@ -62,18 +61,15 @@
 			this.UpdateFromApiTheme.Text = "Update Tamk Data from API";
 			this.UpdateFromApiTheme.TitleHeight = 26;
 			// 
-			// badProgressBar
+			// btnStart
 			// 
-			this.badProgressBar.BackColor = System.Drawing.Color.Transparent;
-			this.badProgressBar.Image = null;
-			this.badProgressBar.Location = new System.Drawing.Point(26, 53);
-			this.badProgressBar.Name = "badProgressBar";
-			this.badProgressBar.Size = new System.Drawing.Size(338, 23);
-			this.badProgressBar.TabIndex = 0;
-			this.badProgressBar.Text = "badProgressBar1";
-			this.badProgressBar.Value = 0D;
-			this.badProgressBar.ValueMax = 100D;
-			this.badProgressBar.ValueMin = 0D;
+			this.btnStart.Image = null;
+			this.btnStart.Location = new System.Drawing.Point(281, 83);
+			this.btnStart.Name = "btnStart";
+			this.btnStart.Size = new System.Drawing.Size(75, 23);
+			this.btnStart.TabIndex = 2;
+			this.btnStart.Text = "Start";
+			this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
 			// 
 			// lblProgressStatus
 			// 
@@ -85,21 +81,24 @@
 			this.lblProgressStatus.Size = new System.Drawing.Size(249, 23);
 			this.lblProgressStatus.TabIndex = 1;
 			// 
-			// btnStart
+			// badProgressBar
 			// 
-			this.btnStart.Image = null;
-			this.btnStart.Location = new System.Drawing.Point(289, 83);
-			this.btnStart.Name = "btnStart";
-			this.btnStart.Size = new System.Drawing.Size(75, 23);
-			this.btnStart.TabIndex = 2;
-			this.btnStart.Text = "Start";
-			this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+			this.badProgressBar.BackColor = System.Drawing.Color.Transparent;
+			this.badProgressBar.Image = null;
+			this.badProgressBar.Location = new System.Drawing.Point(25, 48);
+			this.badProgressBar.Name = "badProgressBar";
+			this.badProgressBar.Size = new System.Drawing.Size(330, 23);
+			this.badProgressBar.TabIndex = 0;
+			this.badProgressBar.Text = "badProgressBar1";
+			this.badProgressBar.Value = 0D;
+			this.badProgressBar.ValueMax = 100D;
+			this.badProgressBar.ValueMin = 0D;
 			// 
 			// UpdateFromApi
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(389, 126);
+			this.ClientSize = new System.Drawing.Size(382, 126);
 			this.Controls.Add(this.UpdateFromApiTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "UpdateFromApi";

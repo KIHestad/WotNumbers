@@ -32,9 +32,9 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Message));
 			this.MessageTheme = new BadForm();
 			this.btnClose = new BadButton();
-			this.txtMessage = new System.Windows.Forms.TextBox();
-			this.btnOK = new BadButton();
 			this.btnCancel = new BadButton();
+			this.btnOK = new BadButton();
+			this.txtMessage = new System.Windows.Forms.TextBox();
 			this.MessageTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -45,7 +45,7 @@
 			this.MessageTheme.Controls.Add(this.btnOK);
 			this.MessageTheme.Controls.Add(this.txtMessage);
 			this.MessageTheme.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MessageTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.MessageTheme.FormBorderColor = System.Drawing.Color.Black;
 			this.MessageTheme.FormFooter = false;
 			this.MessageTheme.FormFooterHeight = 26;
 			this.MessageTheme.FormInnerBorder = 3;
@@ -55,7 +55,7 @@
 			this.MessageTheme.MainArea = mainAreaClass1;
 			this.MessageTheme.Name = "MessageTheme";
 			this.MessageTheme.Resizable = true;
-			this.MessageTheme.Size = new System.Drawing.Size(304, 141);
+			this.MessageTheme.Size = new System.Drawing.Size(321, 172);
 			this.MessageTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MessageTheme.SystemExitImage")));
 			this.MessageTheme.SystemMaximizeImage = null;
 			this.MessageTheme.SystemMinimizeImage = null;
@@ -68,45 +68,18 @@
 			// 
 			this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.btnClose.Image = null;
-			this.btnClose.Location = new System.Drawing.Point(117, 106);
+			this.btnClose.Location = new System.Drawing.Point(125, 128);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(75, 23);
 			this.btnClose.TabIndex = 17;
 			this.btnClose.Text = "Close";
 			this.btnClose.Click += new System.EventHandler(this.cmdClose_Click);
 			// 
-			// txtMessage
-			// 
-			this.txtMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.txtMessage.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.txtMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtMessage.ForeColor = System.Drawing.Color.Silver;
-			this.txtMessage.Location = new System.Drawing.Point(25, 43);
-			this.txtMessage.Multiline = true;
-			this.txtMessage.Name = "txtMessage";
-			this.txtMessage.ReadOnly = true;
-			this.txtMessage.Size = new System.Drawing.Size(253, 76);
-			this.txtMessage.TabIndex = 16;
-			this.txtMessage.TabStop = false;
-			// 
-			// btnOK
-			// 
-			this.btnOK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.btnOK.Image = null;
-			this.btnOK.Location = new System.Drawing.Point(69, 106);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
-			this.btnOK.TabIndex = 18;
-			this.btnOK.Text = "OK";
-			this.btnOK.Visible = false;
-			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-			// 
 			// btnCancel
 			// 
 			this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(165, 106);
+			this.btnCancel.Location = new System.Drawing.Point(173, 128);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 19;
@@ -114,12 +87,42 @@
 			this.btnCancel.Visible = false;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
+			// btnOK
+			// 
+			this.btnOK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.btnOK.Image = null;
+			this.btnOK.Location = new System.Drawing.Point(77, 128);
+			this.btnOK.Name = "btnOK";
+			this.btnOK.Size = new System.Drawing.Size(75, 23);
+			this.btnOK.TabIndex = 18;
+			this.btnOK.Text = "OK";
+			this.btnOK.Visible = false;
+			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+			// 
+			// txtMessage
+			// 
+			this.txtMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.txtMessage.Cursor = System.Windows.Forms.Cursors.IBeam;
+			this.txtMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtMessage.ForeColor = System.Drawing.Color.Silver;
+			this.txtMessage.Location = new System.Drawing.Point(23, 48);
+			this.txtMessage.Multiline = true;
+			this.txtMessage.Name = "txtMessage";
+			this.txtMessage.ReadOnly = true;
+			this.txtMessage.Size = new System.Drawing.Size(274, 74);
+			this.txtMessage.TabIndex = 16;
+			this.txtMessage.TabStop = false;
+			// 
 			// Message
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.ClientSize = new System.Drawing.Size(304, 141);
+			this.ClientSize = new System.Drawing.Size(321, 172);
 			this.Controls.Add(this.MessageTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;

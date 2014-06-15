@@ -54,7 +54,6 @@
 			this.ColListNewEditTheme.Controls.Add(this.badGroupBox1);
 			this.ColListNewEditTheme.Controls.Add(this.btnCancel);
 			this.ColListNewEditTheme.Controls.Add(this.btnSave);
-			this.ColListNewEditTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.ColListNewEditTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ColListNewEditTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ColListNewEditTheme.FormFooter = false;
@@ -65,8 +64,8 @@
 			this.ColListNewEditTheme.Location = new System.Drawing.Point(0, 0);
 			this.ColListNewEditTheme.MainArea = mainAreaClass1;
 			this.ColListNewEditTheme.Name = "ColListNewEditTheme";
-			this.ColListNewEditTheme.Resizable = true;
-			this.ColListNewEditTheme.Size = new System.Drawing.Size(370, 233);
+			this.ColListNewEditTheme.Resizable = false;
+			this.ColListNewEditTheme.Size = new System.Drawing.Size(382, 236);
 			this.ColListNewEditTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColListNewEditTheme.SystemExitImage")));
 			this.ColListNewEditTheme.SystemMaximizeImage = null;
 			this.ColListNewEditTheme.SystemMinimizeImage = null;
@@ -77,7 +76,7 @@
 			// ddCopyFrom
 			// 
 			this.ddCopyFrom.Image = null;
-			this.ddCopyFrom.Location = new System.Drawing.Point(148, 126);
+			this.ddCopyFrom.Location = new System.Drawing.Point(152, 134);
 			this.ddCopyFrom.Name = "ddCopyFrom";
 			this.ddCopyFrom.Size = new System.Drawing.Size(184, 23);
 			this.ddCopyFrom.TabIndex = 8;
@@ -89,7 +88,7 @@
 			this.lblCopyFrom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblCopyFrom.Dimmed = false;
 			this.lblCopyFrom.Image = null;
-			this.lblCopyFrom.Location = new System.Drawing.Point(36, 126);
+			this.lblCopyFrom.Location = new System.Drawing.Point(40, 134);
 			this.lblCopyFrom.Name = "lblCopyFrom";
 			this.lblCopyFrom.Size = new System.Drawing.Size(106, 23);
 			this.lblCopyFrom.TabIndex = 7;
@@ -100,7 +99,7 @@
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(36, 97);
+			this.badLabel2.Location = new System.Drawing.Point(40, 105);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(106, 23);
 			this.badLabel2.TabIndex = 3;
@@ -109,7 +108,7 @@
 			// ddDefaultTankFilter
 			// 
 			this.ddDefaultTankFilter.Image = null;
-			this.ddDefaultTankFilter.Location = new System.Drawing.Point(148, 96);
+			this.ddDefaultTankFilter.Location = new System.Drawing.Point(152, 104);
 			this.ddDefaultTankFilter.Name = "ddDefaultTankFilter";
 			this.ddDefaultTankFilter.Size = new System.Drawing.Size(184, 23);
 			this.ddDefaultTankFilter.TabIndex = 2;
@@ -120,7 +119,7 @@
 			// 
 			this.txtName.HasFocus = false;
 			this.txtName.Image = null;
-			this.txtName.Location = new System.Drawing.Point(148, 67);
+			this.txtName.Location = new System.Drawing.Point(152, 75);
 			this.txtName.Name = "txtName";
 			this.txtName.PasswordChar = '\0';
 			this.txtName.Size = new System.Drawing.Size(184, 23);
@@ -132,7 +131,7 @@
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(36, 67);
+			this.badLabel1.Location = new System.Drawing.Point(40, 75);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(106, 23);
 			this.badLabel1.TabIndex = 0;
@@ -142,7 +141,7 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(21, 41);
+			this.badGroupBox1.Location = new System.Drawing.Point(25, 49);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(331, 126);
 			this.badGroupBox1.TabIndex = 6;
@@ -151,7 +150,7 @@
 			// btnCancel
 			// 
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(196, 189);
+			this.btnCancel.Location = new System.Drawing.Point(200, 192);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 5;
@@ -161,7 +160,7 @@
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(277, 189);
+			this.btnSave.Location = new System.Drawing.Point(281, 192);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 4;
@@ -172,7 +171,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(370, 233);
+			this.ClientSize = new System.Drawing.Size(382, 236);
 			this.Controls.Add(this.ColListNewEditTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "ColListNewEdit";

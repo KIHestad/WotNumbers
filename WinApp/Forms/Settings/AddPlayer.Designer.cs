@@ -53,7 +53,7 @@
 			this.AddPlayerTheme.MainArea = mainAreaClass1;
 			this.AddPlayerTheme.Name = "AddPlayerTheme";
 			this.AddPlayerTheme.Resizable = false;
-			this.AddPlayerTheme.Size = new System.Drawing.Size(386, 81);
+			this.AddPlayerTheme.Size = new System.Drawing.Size(415, 98);
 			this.AddPlayerTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("AddPlayerTheme.SystemExitImage")));
 			this.AddPlayerTheme.SystemMaximizeImage = null;
 			this.AddPlayerTheme.SystemMinimizeImage = null;
@@ -64,7 +64,7 @@
 			// btnAddNewPlayer
 			// 
 			this.btnAddNewPlayer.Image = null;
-			this.btnAddNewPlayer.Location = new System.Drawing.Point(289, 40);
+			this.btnAddNewPlayer.Location = new System.Drawing.Point(300, 49);
 			this.btnAddNewPlayer.Name = "btnAddNewPlayer";
 			this.btnAddNewPlayer.Size = new System.Drawing.Size(75, 23);
 			this.btnAddNewPlayer.TabIndex = 5;
@@ -73,19 +73,21 @@
 			// 
 			// txtNewPlayerName
 			// 
+			this.txtNewPlayerName.HasFocus = false;
 			this.txtNewPlayerName.Image = null;
-			this.txtNewPlayerName.Location = new System.Drawing.Point(94, 40);
+			this.txtNewPlayerName.Location = new System.Drawing.Point(105, 49);
 			this.txtNewPlayerName.Name = "txtNewPlayerName";
 			this.txtNewPlayerName.PasswordChar = '\0';
 			this.txtNewPlayerName.Size = new System.Drawing.Size(189, 23);
 			this.txtNewPlayerName.TabIndex = 4;
+			this.txtNewPlayerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel1
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(13, 40);
+			this.badLabel1.Location = new System.Drawing.Point(24, 49);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(75, 23);
 			this.badLabel1.TabIndex = 3;
@@ -95,7 +97,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(386, 81);
+			this.ClientSize = new System.Drawing.Size(415, 98);
 			this.Controls.Add(this.AddPlayerTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;

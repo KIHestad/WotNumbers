@@ -591,7 +591,7 @@ class BadForm : BadThemeContainerControl
 		Pen FormBorderPenColor = new Pen(FormBorderColor);
 		DrawBorder(FormBorderPenColor, ClientRectangle, FormMargin); // Outer Border
 		// Add inner border
-		FormBorderPenColor = new Pen(ColorTheme.FormBackTitle);
+		FormBorderPenColor = new Pen(ColorTheme.FormBack); // Alternative color: FormBackTitle
 		DrawInnerBorder(FormBorderPenColor, ClientRectangle, FormMargin, FormInnerBorder); // Inner Border
 		// Draw title 
 		Rectangle rectangleTitle = new Rectangle(FormMargin + 1, FormMargin + 1, ClientRectangle.Width - (FormMargin * 2) - 2, TitleHeight);
@@ -985,7 +985,7 @@ class BadGroupBox : BadThemeControl
 		grapichObject.Clear(BackColor);
 		int Yoffset = 7;
 		// Outer Border
-		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlSeparatorGroupBoxBorder);
+		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlSeparatorGroupBoxBorder); 
 		Rectangle GroupBoxOuter = new Rectangle(0, Yoffset, ClientRectangle.Width, ClientRectangle.Height - Yoffset);
 		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
 		// Inner Area
@@ -1001,7 +1001,7 @@ class BadGroupBox : BadThemeControl
 			Size textSize = grapichObject.MeasureString(Text, Font).ToSize();
 			Rectangle rectangleTextBack = new Rectangle(4 + Xoffset, 0, textSize.Width + 2, textSize.Height);
 			grapichObject.FillRectangle(brushBackColor, rectangleTextBack);
-			DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlDarkFont), Xoffset, false);
+			DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlDarkFont), Xoffset, false); 
 		}
 		
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
@@ -1105,12 +1105,13 @@ class BadTextBox : BadThemeControl
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
 		// Outer Border
-		SolidBrush BorderColor = new SolidBrush(ColorTheme.FormBackTitle);
+		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlBorder);
 		Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height);
 		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
 		// Inner Area
 		BorderColor = new SolidBrush(ColorTheme.FormBack);
-		Rectangle GroupBoxInner = new Rectangle(2, 2, ClientRectangle.Width - 4, ClientRectangle.Height - 4);
+		int borderWidth = 1;
+		Rectangle GroupBoxInner = new Rectangle(borderWidth, borderWidth, ClientRectangle.Width - (borderWidth * 2), ClientRectangle.Height - (borderWidth*2));
 		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
 		textBox.PasswordChar = PasswordChar;
 		textBox.TextAlign = TextAlign;

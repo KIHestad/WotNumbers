@@ -42,6 +42,8 @@
 			this.toolColListAdd = new System.Windows.Forms.ToolStripButton();
 			this.toolColListModify = new System.Windows.Forms.ToolStripButton();
 			this.toolColListDelete = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolColListRefresh = new System.Windows.Forms.ToolStripButton();
 			this.btnRemoveAll = new BadButton();
 			this.btnRemoveSelected = new BadButton();
 			this.btnSelectSelected = new BadButton();
@@ -74,8 +76,6 @@
 			this.groupTanks = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
 			this.badLabel1 = new BadLabel();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolColListRefresh = new System.Windows.Forms.ToolStripButton();
 			this.ColListTheme.SuspendLayout();
 			this.toolColList.SuspendLayout();
 			this.toolSelectedColumns.SuspendLayout();
@@ -123,7 +123,7 @@
 			this.ColListTheme.MainArea = mainAreaClass1;
 			this.ColListTheme.Name = "ColListTheme";
 			this.ColListTheme.Resizable = true;
-			this.ColListTheme.Size = new System.Drawing.Size(609, 614);
+			this.ColListTheme.Size = new System.Drawing.Size(624, 633);
 			this.ColListTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemExitImage")));
 			this.ColListTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMaximizeImage")));
 			this.ColListTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMinimizeImage")));
@@ -147,7 +147,7 @@
             this.toolColListDelete,
             this.toolStripSeparator2,
             this.toolColListRefresh});
-			this.toolColList.Location = new System.Drawing.Point(34, 68);
+			this.toolColList.Location = new System.Drawing.Point(42, 77);
 			this.toolColList.Name = "toolColList";
 			this.toolColList.Size = new System.Drawing.Size(537, 25);
 			this.toolColList.TabIndex = 81;
@@ -229,10 +229,25 @@
 			this.toolColListDelete.Text = "Delete";
 			this.toolColListDelete.Click += new System.EventHandler(this.toolColListDelete_Click);
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolColListRefresh
+			// 
+			this.toolColListRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolColListRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolColListRefresh.Image")));
+			this.toolColListRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolColListRefresh.Name = "toolColListRefresh";
+			this.toolColListRefresh.Size = new System.Drawing.Size(23, 22);
+			this.toolColListRefresh.Text = "toolStripButton1";
+			this.toolColListRefresh.Click += new System.EventHandler(this.toolColListRefresh_Click);
+			// 
 			// btnRemoveAll
 			// 
 			this.btnRemoveAll.Image = null;
-			this.btnRemoveAll.Location = new System.Drawing.Point(287, 447);
+			this.btnRemoveAll.Location = new System.Drawing.Point(295, 456);
 			this.btnRemoveAll.Name = "btnRemoveAll";
 			this.btnRemoveAll.Size = new System.Drawing.Size(29, 23);
 			this.btnRemoveAll.TabIndex = 66;
@@ -242,7 +257,7 @@
 			// btnRemoveSelected
 			// 
 			this.btnRemoveSelected.Image = null;
-			this.btnRemoveSelected.Location = new System.Drawing.Point(287, 476);
+			this.btnRemoveSelected.Location = new System.Drawing.Point(295, 485);
 			this.btnRemoveSelected.Name = "btnRemoveSelected";
 			this.btnRemoveSelected.Size = new System.Drawing.Size(29, 23);
 			this.btnRemoveSelected.TabIndex = 65;
@@ -252,7 +267,7 @@
 			// btnSelectSelected
 			// 
 			this.btnSelectSelected.Image = null;
-			this.btnSelectSelected.Location = new System.Drawing.Point(287, 389);
+			this.btnSelectSelected.Location = new System.Drawing.Point(295, 398);
 			this.btnSelectSelected.Name = "btnSelectSelected";
 			this.btnSelectSelected.Size = new System.Drawing.Size(29, 23);
 			this.btnSelectSelected.TabIndex = 64;
@@ -262,7 +277,7 @@
 			// btnSelectAll
 			// 
 			this.btnSelectAll.Image = null;
-			this.btnSelectAll.Location = new System.Drawing.Point(287, 418);
+			this.btnSelectAll.Location = new System.Drawing.Point(295, 427);
 			this.btnSelectAll.Name = "btnSelectAll";
 			this.btnSelectAll.Size = new System.Drawing.Size(29, 23);
 			this.btnSelectAll.TabIndex = 63;
@@ -274,7 +289,7 @@
 			this.btnColumnListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListCancel.Enabled = false;
 			this.btnColumnListCancel.Image = null;
-			this.btnColumnListCancel.Location = new System.Drawing.Point(425, 574);
+			this.btnColumnListCancel.Location = new System.Drawing.Point(431, 590);
 			this.btnColumnListCancel.Name = "btnColumnListCancel";
 			this.btnColumnListCancel.Size = new System.Drawing.Size(80, 23);
 			this.btnColumnListCancel.TabIndex = 53;
@@ -286,7 +301,7 @@
 			this.btnColumnListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListSave.Enabled = false;
 			this.btnColumnListSave.Image = null;
-			this.btnColumnListSave.Location = new System.Drawing.Point(511, 574);
+			this.btnColumnListSave.Location = new System.Drawing.Point(517, 590);
 			this.btnColumnListSave.Name = "btnColumnListSave";
 			this.btnColumnListSave.Size = new System.Drawing.Size(80, 23);
 			this.btnColumnListSave.TabIndex = 52;
@@ -302,7 +317,7 @@
             this.toolSelectedTanks_MoveUp,
             this.toolSelectedTanks_MoveDown});
 			this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolSelectedColumns.Location = new System.Drawing.Point(337, 317);
+			this.toolSelectedColumns.Location = new System.Drawing.Point(345, 326);
 			this.toolSelectedColumns.Name = "toolSelectedColumns";
 			this.toolSelectedColumns.Size = new System.Drawing.Size(234, 25);
 			this.toolSelectedColumns.Stretch = true;
@@ -349,7 +364,7 @@
             this.toolAvailableCol_9,
             this.toolAvailableCol_10});
 			this.toolAllColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolAllColumns.Location = new System.Drawing.Point(34, 317);
+			this.toolAllColumns.Location = new System.Drawing.Point(42, 326);
 			this.toolAllColumns.Name = "toolAllColumns";
 			this.toolAllColumns.Size = new System.Drawing.Size(234, 25);
 			this.toolAllColumns.Stretch = true;
@@ -482,7 +497,7 @@
 			// 
 			this.scrollSelectedColumns.BackColor = System.Drawing.Color.Transparent;
 			this.scrollSelectedColumns.Image = null;
-			this.scrollSelectedColumns.Location = new System.Drawing.Point(554, 342);
+			this.scrollSelectedColumns.Location = new System.Drawing.Point(562, 351);
 			this.scrollSelectedColumns.Name = "scrollSelectedColumns";
 			this.scrollSelectedColumns.ScrollElementsTotals = 100;
 			this.scrollSelectedColumns.ScrollElementsVisible = 20;
@@ -507,7 +522,7 @@
 			this.dataGridSelectedColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridSelectedColumns.Cursor = System.Windows.Forms.Cursors.Default;
 			this.dataGridSelectedColumns.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-			this.dataGridSelectedColumns.Location = new System.Drawing.Point(337, 342);
+			this.dataGridSelectedColumns.Location = new System.Drawing.Point(345, 351);
 			this.dataGridSelectedColumns.Name = "dataGridSelectedColumns";
 			this.dataGridSelectedColumns.ReadOnly = true;
 			this.dataGridSelectedColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -523,7 +538,7 @@
 			// 
 			this.scrollAllColumns.BackColor = System.Drawing.Color.Transparent;
 			this.scrollAllColumns.Image = null;
-			this.scrollAllColumns.Location = new System.Drawing.Point(251, 342);
+			this.scrollAllColumns.Location = new System.Drawing.Point(259, 351);
 			this.scrollAllColumns.Name = "scrollAllColumns";
 			this.scrollAllColumns.ScrollElementsTotals = 100;
 			this.scrollAllColumns.ScrollElementsVisible = 20;
@@ -547,7 +562,7 @@
 			this.dataGridAllColumns.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridAllColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridAllColumns.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridAllColumns.Location = new System.Drawing.Point(34, 342);
+			this.dataGridAllColumns.Location = new System.Drawing.Point(42, 351);
 			this.dataGridAllColumns.Name = "dataGridAllColumns";
 			this.dataGridAllColumns.ReadOnly = true;
 			this.dataGridAllColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -563,7 +578,7 @@
 			// 
 			this.scrollColumnList.BackColor = System.Drawing.Color.Transparent;
 			this.scrollColumnList.Image = null;
-			this.scrollColumnList.Location = new System.Drawing.Point(554, 93);
+			this.scrollColumnList.Location = new System.Drawing.Point(562, 102);
 			this.scrollColumnList.Name = "scrollColumnList";
 			this.scrollColumnList.ScrollElementsTotals = 100;
 			this.scrollColumnList.ScrollElementsVisible = 20;
@@ -571,7 +586,7 @@
 			this.scrollColumnList.ScrollNecessary = true;
 			this.scrollColumnList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollColumnList.ScrollPosition = 0;
-			this.scrollColumnList.Size = new System.Drawing.Size(17, 158);
+			this.scrollColumnList.Size = new System.Drawing.Size(17, 153);
 			this.scrollColumnList.TabIndex = 43;
 			this.scrollColumnList.Text = "badScrollBar1";
 			this.scrollColumnList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollColumnList_MouseDown);
@@ -586,7 +601,7 @@
 			this.dataGridColumnList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridColumnList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridColumnList.Cursor = System.Windows.Forms.Cursors.Default;
-			this.dataGridColumnList.Location = new System.Drawing.Point(34, 93);
+			this.dataGridColumnList.Location = new System.Drawing.Point(42, 102);
 			this.dataGridColumnList.MultiSelect = false;
 			this.dataGridColumnList.Name = "dataGridColumnList";
 			this.dataGridColumnList.ReadOnly = true;
@@ -594,7 +609,7 @@
 			this.dataGridColumnList.RowHeadersVisible = false;
 			this.dataGridColumnList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridColumnList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridColumnList.Size = new System.Drawing.Size(520, 158);
+			this.dataGridColumnList.Size = new System.Drawing.Size(520, 153);
 			this.dataGridColumnList.TabIndex = 41;
 			this.dataGridColumnList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridColumnList_CellClick);
 			this.dataGridColumnList.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
@@ -605,7 +620,7 @@
 			this.lblAllColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblAllColumns.Dimmed = false;
 			this.lblAllColumns.Image = null;
-			this.lblAllColumns.Location = new System.Drawing.Point(34, 295);
+			this.lblAllColumns.Location = new System.Drawing.Point(42, 304);
 			this.lblAllColumns.Name = "lblAllColumns";
 			this.lblAllColumns.Size = new System.Drawing.Size(152, 23);
 			this.lblAllColumns.TabIndex = 49;
@@ -616,7 +631,7 @@
 			this.lblSelectedColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblSelectedColumns.Dimmed = false;
 			this.lblSelectedColumns.Image = null;
-			this.lblSelectedColumns.Location = new System.Drawing.Point(337, 295);
+			this.lblSelectedColumns.Location = new System.Drawing.Point(345, 304);
 			this.lblSelectedColumns.Name = "lblSelectedColumns";
 			this.lblSelectedColumns.Size = new System.Drawing.Size(149, 23);
 			this.lblSelectedColumns.TabIndex = 67;
@@ -629,9 +644,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupTanks.BackColor = System.Drawing.Color.Transparent;
 			this.groupTanks.Image = null;
-			this.groupTanks.Location = new System.Drawing.Point(17, 275);
+			this.groupTanks.Location = new System.Drawing.Point(25, 284);
 			this.groupTanks.Name = "groupTanks";
-			this.groupTanks.Size = new System.Drawing.Size(574, 284);
+			this.groupTanks.Size = new System.Drawing.Size(573, 289);
 			this.groupTanks.TabIndex = 44;
 			this.groupTanks.Text = "Columns";
 			// 
@@ -641,9 +656,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
-			this.badGroupBox2.Location = new System.Drawing.Point(17, 39);
+			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(573, 225);
+			this.badGroupBox2.Size = new System.Drawing.Size(572, 225);
 			this.badGroupBox2.TabIndex = 72;
 			this.badGroupBox2.Text = "Column Setup Lists";
 			// 
@@ -658,26 +673,11 @@
 			this.badLabel1.TabIndex = 73;
 			this.badLabel1.Text = "Type:";
 			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolColListRefresh
-			// 
-			this.toolColListRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolColListRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolColListRefresh.Image")));
-			this.toolColListRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolColListRefresh.Name = "toolColListRefresh";
-			this.toolColListRefresh.Size = new System.Drawing.Size(23, 22);
-			this.toolColListRefresh.Text = "toolStripButton1";
-			this.toolColListRefresh.Click += new System.EventHandler(this.toolColListRefresh_Click);
-			// 
 			// ColList
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(609, 614);
+			this.ClientSize = new System.Drawing.Size(624, 633);
 			this.Controls.Add(this.ColListTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(607, 591);

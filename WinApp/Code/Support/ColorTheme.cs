@@ -23,14 +23,15 @@ namespace WinApp.Code
 		
 		// Controls
 		public static Color ControlBack = Color.FromArgb(255, 55, 55, 59);
-		public static Color ControlBorder = Color.FromArgb(255, 105, 105, 109);
+		public static Color ControlBorder = Color.FromArgb(255, 65, 65, 69);
 		public static Color ControlBackMouseOver = Color.FromArgb(255, 68, 68, 72);
 		public static Color ControlBackMouseDown = Color.FromArgb(255, 82, 82, 86);
 		public static Color ControlFont = Color.FromArgb(255, 200, 200, 206);
-		public static Color ControlDarkFont = Color.FromArgb(255, 150, 150, 156);
+		public static Color ControlDarkFont = Color.FromArgb(255, 130, 130, 136);
 		public static Color ControlDisabledFont = Color.FromArgb(255, 100, 100, 106);
 		public static Color ControlDimmedFont = Color.FromArgb(255, 85, 85, 89);
-		public static Color ControlSeparatorGroupBoxBorder = Color.FromArgb(255, 75, 75, 79);
+		//public static Color ControlSeparatorGroupBoxBorder = Color.FromArgb(255, 75, 75, 79);
+		public static Color ControlSeparatorGroupBoxBorder = Color.FromArgb(255, 55, 55, 59);
 		
 		// ToolStrip 
 		public static Color ToolGrayMainBack = Color.FromArgb(255, 22, 22, 22);

@@ -39,6 +39,7 @@
 			this.badSeperator2 = new BadSeperator();
 			this.cmdSQLiteDatabaseFile = new BadButton();
 			this.panelMSSQL = new System.Windows.Forms.Panel();
+			this.popupDatabase = new BadDropDownBox();
 			this.popupDbAuth = new BadDropDownBox();
 			this.badSeperator1 = new BadSeperator();
 			this.badLabel1 = new BadLabel();
@@ -52,7 +53,6 @@
 			this.btnSave = new BadButton();
 			this.btnNewDb = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
-			this.popupDatabase = new BadDropDownBox();
 			this.DatabaseSettingsTheme.SuspendLayout();
 			this.panelSQLite.SuspendLayout();
 			this.panelMSSQL.SuspendLayout();
@@ -72,7 +72,6 @@
 			this.DatabaseSettingsTheme.Controls.Add(this.btnSave);
 			this.DatabaseSettingsTheme.Controls.Add(this.btnNewDb);
 			this.DatabaseSettingsTheme.Controls.Add(this.badGroupBox1);
-			this.DatabaseSettingsTheme.Cursor = System.Windows.Forms.Cursors.Default;
 			this.DatabaseSettingsTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseSettingsTheme.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.DatabaseSettingsTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -85,7 +84,7 @@
 			this.DatabaseSettingsTheme.MainArea = mainAreaClass1;
 			this.DatabaseSettingsTheme.Name = "DatabaseSettingsTheme";
 			this.DatabaseSettingsTheme.Resizable = false;
-			this.DatabaseSettingsTheme.Size = new System.Drawing.Size(371, 517);
+			this.DatabaseSettingsTheme.Size = new System.Drawing.Size(391, 517);
 			this.DatabaseSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DatabaseSettingsTheme.SystemExitImage")));
 			this.DatabaseSettingsTheme.SystemMaximizeImage = null;
 			this.DatabaseSettingsTheme.SystemMinimizeImage = null;
@@ -96,7 +95,7 @@
 			// popupDatabaseType
 			// 
 			this.popupDatabaseType.Image = null;
-			this.popupDatabaseType.Location = new System.Drawing.Point(159, 69);
+			this.popupDatabaseType.Location = new System.Drawing.Point(169, 74);
 			this.popupDatabaseType.Name = "popupDatabaseType";
 			this.popupDatabaseType.Size = new System.Drawing.Size(176, 23);
 			this.popupDatabaseType.TabIndex = 32;
@@ -116,12 +115,14 @@
 			// 
 			// txtDatabaseFile
 			// 
+			this.txtDatabaseFile.HasFocus = false;
 			this.txtDatabaseFile.Image = null;
 			this.txtDatabaseFile.Location = new System.Drawing.Point(6, 48);
 			this.txtDatabaseFile.Name = "txtDatabaseFile";
 			this.txtDatabaseFile.PasswordChar = '\0';
 			this.txtDatabaseFile.Size = new System.Drawing.Size(296, 45);
 			this.txtDatabaseFile.TabIndex = 26;
+			this.txtDatabaseFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel5
 			// 
@@ -167,10 +168,19 @@
 			this.panelMSSQL.Controls.Add(this.badLabel4);
 			this.panelMSSQL.Controls.Add(this.txtPW);
 			this.panelMSSQL.Controls.Add(this.txtServerName);
-			this.panelMSSQL.Location = new System.Drawing.Point(30, 127);
+			this.panelMSSQL.Location = new System.Drawing.Point(40, 132);
 			this.panelMSSQL.Name = "panelMSSQL";
 			this.panelMSSQL.Size = new System.Drawing.Size(311, 152);
 			this.panelMSSQL.TabIndex = 30;
+			// 
+			// popupDatabase
+			// 
+			this.popupDatabase.Image = null;
+			this.popupDatabase.Location = new System.Drawing.Point(129, 123);
+			this.popupDatabase.Name = "popupDatabase";
+			this.popupDatabase.Size = new System.Drawing.Size(176, 23);
+			this.popupDatabase.TabIndex = 26;
+			this.popupDatabase.Click += new System.EventHandler(this.popupDatabase_Click);
 			// 
 			// popupDbAuth
 			// 
@@ -228,12 +238,14 @@
 			// 
 			// txtUID
 			// 
+			this.txtUID.HasFocus = false;
 			this.txtUID.Image = null;
 			this.txtUID.Location = new System.Drawing.Point(129, 93);
 			this.txtUID.Name = "txtUID";
 			this.txtUID.PasswordChar = '\0';
 			this.txtUID.Size = new System.Drawing.Size(85, 23);
 			this.txtUID.TabIndex = 18;
+			this.txtUID.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel4
 			// 
@@ -248,28 +260,32 @@
 			// 
 			// txtPW
 			// 
+			this.txtPW.HasFocus = false;
 			this.txtPW.Image = null;
 			this.txtPW.Location = new System.Drawing.Point(220, 93);
 			this.txtPW.Name = "txtPW";
 			this.txtPW.PasswordChar = '*';
 			this.txtPW.Size = new System.Drawing.Size(85, 23);
 			this.txtPW.TabIndex = 17;
+			this.txtPW.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// txtServerName
 			// 
+			this.txtServerName.HasFocus = false;
 			this.txtServerName.Image = null;
 			this.txtServerName.Location = new System.Drawing.Point(129, 35);
 			this.txtServerName.Name = "txtServerName";
 			this.txtServerName.PasswordChar = '\0';
 			this.txtServerName.Size = new System.Drawing.Size(176, 23);
 			this.txtServerName.TabIndex = 23;
+			this.txtServerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel6
 			// 
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel6.Dimmed = false;
 			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(34, 70);
+			this.badLabel6.Location = new System.Drawing.Point(44, 75);
 			this.badLabel6.Name = "badLabel6";
 			this.badLabel6.Size = new System.Drawing.Size(96, 23);
 			this.badLabel6.TabIndex = 28;
@@ -278,7 +294,7 @@
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(279, 306);
+			this.btnSave.Location = new System.Drawing.Point(289, 311);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 10;
@@ -288,7 +304,7 @@
 			// btnNewDb
 			// 
 			this.btnNewDb.Image = null;
-			this.btnNewDb.Location = new System.Drawing.Point(251, 103);
+			this.btnNewDb.Location = new System.Drawing.Point(261, 108);
 			this.btnNewDb.Name = "btnNewDb";
 			this.btnNewDb.Size = new System.Drawing.Size(85, 23);
 			this.btnNewDb.TabIndex = 11;
@@ -299,26 +315,17 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(15, 42);
+			this.badGroupBox1.Location = new System.Drawing.Point(25, 47);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(341, 249);
 			this.badGroupBox1.TabIndex = 14;
 			this.badGroupBox1.Text = "Settings";
 			// 
-			// popupDatabase
-			// 
-			this.popupDatabase.Image = null;
-			this.popupDatabase.Location = new System.Drawing.Point(129, 123);
-			this.popupDatabase.Name = "popupDatabase";
-			this.popupDatabase.Size = new System.Drawing.Size(176, 23);
-			this.popupDatabase.TabIndex = 26;
-			this.popupDatabase.Click += new System.EventHandler(this.popupDatabase_Click);
-			// 
 			// DatabaseSetting
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(371, 517);
+			this.ClientSize = new System.Drawing.Size(391, 517);
 			this.Controls.Add(this.DatabaseSettingsTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
