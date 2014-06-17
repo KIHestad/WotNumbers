@@ -33,6 +33,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.FavTanksTheme = new BadForm();
+			this.btnClose = new BadButton();
 			this.toolColList = new System.Windows.Forms.ToolStrip();
 			this.toolFavListUp = new System.Windows.Forms.ToolStripButton();
 			this.toolFavListDown = new System.Windows.Forms.ToolStripButton();
@@ -114,6 +115,7 @@
 			// FavTanksTheme
 			// 
 			this.FavTanksTheme.BackColor = System.Drawing.Color.Fuchsia;
+			this.FavTanksTheme.Controls.Add(this.btnClose);
 			this.FavTanksTheme.Controls.Add(this.toolColList);
 			this.FavTanksTheme.Controls.Add(this.btnRemoveAll);
 			this.FavTanksTheme.Controls.Add(this.btnRemoveSelected);
@@ -152,6 +154,17 @@
 			this.FavTanksTheme.Text = "Favourite Tank List";
 			this.FavTanksTheme.TitleHeight = 26;
 			// 
+			// btnClose
+			// 
+			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnClose.Image = null;
+			this.btnClose.Location = new System.Drawing.Point(526, 563);
+			this.btnClose.Name = "btnClose";
+			this.btnClose.Size = new System.Drawing.Size(75, 23);
+			this.btnClose.TabIndex = 19;
+			this.btnClose.Text = "Close";
+			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+			// 
 			// toolColList
 			// 
 			this.toolColList.AutoSize = false;
@@ -170,7 +183,7 @@
 			this.toolColList.Location = new System.Drawing.Point(42, 72);
 			this.toolColList.Name = "toolColList";
 			this.toolColList.Size = new System.Drawing.Size(537, 25);
-			this.toolColList.TabIndex = 82;
+			this.toolColList.TabIndex = 2;
 			this.toolColList.Text = "toolStrip1";
 			// 
 			// toolFavListUp
@@ -260,7 +273,7 @@
 			this.btnRemoveAll.Location = new System.Drawing.Point(295, 428);
 			this.btnRemoveAll.Name = "btnRemoveAll";
 			this.btnRemoveAll.Size = new System.Drawing.Size(29, 23);
-			this.btnRemoveAll.TabIndex = 35;
+			this.btnRemoveAll.TabIndex = 11;
 			this.btnRemoveAll.Text = "<<";
 			this.btnRemoveAll.Click += new System.EventHandler(this.btnRemoveAll_Click);
 			// 
@@ -270,7 +283,7 @@
 			this.btnRemoveSelected.Location = new System.Drawing.Point(295, 457);
 			this.btnRemoveSelected.Name = "btnRemoveSelected";
 			this.btnRemoveSelected.Size = new System.Drawing.Size(29, 23);
-			this.btnRemoveSelected.TabIndex = 34;
+			this.btnRemoveSelected.TabIndex = 12;
 			this.btnRemoveSelected.Text = "<";
 			this.btnRemoveSelected.Click += new System.EventHandler(this.btnRemoveSelected_Click);
 			// 
@@ -280,7 +293,7 @@
 			this.btnSelectSelected.Location = new System.Drawing.Point(295, 370);
 			this.btnSelectSelected.Name = "btnSelectSelected";
 			this.btnSelectSelected.Size = new System.Drawing.Size(29, 23);
-			this.btnSelectSelected.TabIndex = 33;
+			this.btnSelectSelected.TabIndex = 9;
 			this.btnSelectSelected.Text = ">";
 			this.btnSelectSelected.Click += new System.EventHandler(this.btnSelectSelected_Click);
 			// 
@@ -290,7 +303,7 @@
 			this.btnSelectAll.Location = new System.Drawing.Point(295, 399);
 			this.btnSelectAll.Name = "btnSelectAll";
 			this.btnSelectAll.Size = new System.Drawing.Size(29, 23);
-			this.btnSelectAll.TabIndex = 32;
+			this.btnSelectAll.TabIndex = 10;
 			this.btnSelectAll.Text = ">>";
 			this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
 			// 
@@ -299,11 +312,11 @@
 			this.btnFavListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListCancel.Enabled = false;
 			this.btnFavListCancel.Image = null;
-			this.btnFavListCancel.Location = new System.Drawing.Point(435, 564);
+			this.btnFavListCancel.Location = new System.Drawing.Point(440, 563);
 			this.btnFavListCancel.Name = "btnFavListCancel";
 			this.btnFavListCancel.Size = new System.Drawing.Size(80, 23);
-			this.btnFavListCancel.TabIndex = 22;
-			this.btnFavListCancel.Text = "Cancel";
+			this.btnFavListCancel.TabIndex = 18;
+			this.btnFavListCancel.Text = "Revert";
 			this.btnFavListCancel.Click += new System.EventHandler(this.btnFavListCancel_Click);
 			// 
 			// btnFavListSave
@@ -311,10 +324,10 @@
 			this.btnFavListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListSave.Enabled = false;
 			this.btnFavListSave.Image = null;
-			this.btnFavListSave.Location = new System.Drawing.Point(521, 564);
+			this.btnFavListSave.Location = new System.Drawing.Point(354, 563);
 			this.btnFavListSave.Name = "btnFavListSave";
 			this.btnFavListSave.Size = new System.Drawing.Size(80, 23);
-			this.btnFavListSave.TabIndex = 21;
+			this.btnFavListSave.TabIndex = 17;
 			this.btnFavListSave.Text = "Save";
 			this.btnFavListSave.Click += new System.EventHandler(this.btnFavListSave_Click);
 			// 
@@ -336,7 +349,7 @@
 			this.toolSelectedTanks.Name = "toolSelectedTanks";
 			this.toolSelectedTanks.Size = new System.Drawing.Size(234, 25);
 			this.toolSelectedTanks.Stretch = true;
-			this.toolSelectedTanks.TabIndex = 20;
+			this.toolSelectedTanks.TabIndex = 14;
 			this.toolSelectedTanks.Text = "toolStrip1";
 			// 
 			// toolStripLabel2
@@ -417,7 +430,7 @@
 			this.toolAllTanks.Name = "toolAllTanks";
 			this.toolAllTanks.Size = new System.Drawing.Size(234, 25);
 			this.toolAllTanks.Stretch = true;
-			this.toolAllTanks.TabIndex = 19;
+			this.toolAllTanks.TabIndex = 6;
 			this.toolAllTanks.Text = "toolStrip1";
 			// 
 			// toolStripLabel1
@@ -708,6 +721,7 @@
 			this.scrollSelectedTanks.ScrollPosition = 0;
 			this.scrollSelectedTanks.Size = new System.Drawing.Size(17, 202);
 			this.scrollSelectedTanks.TabIndex = 16;
+			this.scrollSelectedTanks.TabStop = false;
 			this.scrollSelectedTanks.Text = "badScrollBar2";
 			this.scrollSelectedTanks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollSelTanks_MouseDown);
 			this.scrollSelectedTanks.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollSelTanks_MouseMove);
@@ -748,7 +762,8 @@
 			this.scrollAllTanks.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollAllTanks.ScrollPosition = 0;
 			this.scrollAllTanks.Size = new System.Drawing.Size(17, 202);
-			this.scrollAllTanks.TabIndex = 14;
+			this.scrollAllTanks.TabIndex = 8;
+			this.scrollAllTanks.TabStop = false;
 			this.scrollAllTanks.Text = "badScrollBar1";
 			this.scrollAllTanks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseDown);
 			this.scrollAllTanks.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseMove);
@@ -771,7 +786,7 @@
 			this.dataGridAllTanks.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridAllTanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridAllTanks.Size = new System.Drawing.Size(217, 202);
-			this.dataGridAllTanks.TabIndex = 13;
+			this.dataGridAllTanks.TabIndex = 7;
 			this.dataGridAllTanks.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
@@ -788,7 +803,7 @@
 			this.scrollFavList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollFavList.ScrollPosition = 0;
 			this.scrollFavList.Size = new System.Drawing.Size(17, 126);
-			this.scrollFavList.TabIndex = 11;
+			this.scrollFavList.TabIndex = 4;
 			this.scrollFavList.Text = "badScrollBar1";
 			this.scrollFavList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollFavList_MouseDown);
 			this.scrollFavList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollFavList_MouseMove);
@@ -811,7 +826,7 @@
 			this.dataGridFavList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridFavList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridFavList.Size = new System.Drawing.Size(520, 126);
-			this.dataGridFavList.TabIndex = 8;
+			this.dataGridFavList.TabIndex = 3;
 			this.dataGridFavList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridFavList_CellClick);
 			this.dataGridFavList.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
@@ -824,7 +839,8 @@
 			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox2.Name = "badGroupBox2";
 			this.badGroupBox2.Size = new System.Drawing.Size(576, 195);
-			this.badGroupBox2.TabIndex = 10;
+			this.badGroupBox2.TabIndex = 1;
+			this.badGroupBox2.TabStop = false;
 			this.badGroupBox2.Text = "Favourite Tank Lists";
 			this.badGroupBox2.UseWaitCursor = true;
 			// 
@@ -836,7 +852,8 @@
 			this.lblSelectedTanks.Location = new System.Drawing.Point(345, 276);
 			this.lblSelectedTanks.Name = "lblSelectedTanks";
 			this.lblSelectedTanks.Size = new System.Drawing.Size(149, 23);
-			this.lblSelectedTanks.TabIndex = 18;
+			this.lblSelectedTanks.TabIndex = 13;
+			this.lblSelectedTanks.TabStop = false;
 			this.lblSelectedTanks.Text = "Selected Tanks:";
 			// 
 			// lblAllTanks
@@ -847,7 +864,8 @@
 			this.lblAllTanks.Location = new System.Drawing.Point(42, 276);
 			this.lblAllTanks.Name = "lblAllTanks";
 			this.lblAllTanks.Size = new System.Drawing.Size(152, 23);
-			this.lblAllTanks.TabIndex = 17;
+			this.lblAllTanks.TabIndex = 5;
+			this.lblAllTanks.TabStop = false;
 			this.lblAllTanks.Text = "Available Tanks:";
 			// 
 			// groupTanks
@@ -861,9 +879,10 @@
 			this.groupTanks.Name = "groupTanks";
 			this.groupTanks.Size = new System.Drawing.Size(576, 285);
 			this.groupTanks.TabIndex = 12;
+			this.groupTanks.TabStop = false;
 			this.groupTanks.Text = "Tanks";
 			// 
-			// FavTanks
+			// FavList2
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -872,7 +891,7 @@
 			this.Controls.Add(this.FavTanksTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(607, 591);
-			this.Name = "FavTanks";
+			this.Name = "FavList2";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "FavTanks";
@@ -961,5 +980,6 @@
 		private System.Windows.Forms.ToolStripButton toolFavListDelete;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripButton toolFavListRefresh;
+		private BadButton btnClose;
 	}
 }

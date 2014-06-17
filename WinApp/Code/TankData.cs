@@ -148,6 +148,16 @@ namespace WinApp.Code
 			return s;
 		}
 
+		public static string GetTankName(int TankId)
+		{
+			string sql = "SELECT name FROM tank WHERE tank.Id=@tankId; ";
+			DB.AddWithValue(ref sql, "@tankId", TankId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			string tankName = "";
+			if (dt.Rows.Count > 0) tankName = dt.Rows[0]["name"].ToString();
+			return tankName;
+		}
+
 		public static int GetTankID(string TankName)
 		{
 			int tankID = 0;
@@ -159,7 +169,6 @@ namespace WinApp.Code
 			}
 			return tankID;
 		}
-
 
 		public static int GetTankID(string TankName, out int TankTier)
 		{
@@ -173,6 +182,19 @@ namespace WinApp.Code
 				TankTier = Convert.ToInt32(foundRows[0]["tier"]);
 			}
 			return tankID;
+		}
+
+		public static int GetTankID(int PlayerTankId)
+		{
+			string sql = "SELECT tank.id " +
+						 "FROM playerTank INNER JOIN tank ON playerTank.tankid = tank.id " +
+						 "WHERE playerTank.Id=@PlayerTankId AND playerTank.playerId=@playerId; ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@PlayerTankId", PlayerTankId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			int tankId = 0;
+			if (dt.Rows.Count > 0) tankId = Convert.ToInt32(dt.Rows[0]["id"]);
+			return tankId;
 		}
 
 		public static bool GetAchievmentExist(string achName)

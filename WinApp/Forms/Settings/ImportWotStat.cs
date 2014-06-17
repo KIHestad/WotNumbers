@@ -272,10 +272,18 @@ namespace WinApp.Forms
 			Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to remove previously imported battles from WoT Statistics?", "Remove previously imported battles", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
-				string sql = "delete from battle where wsId is not null; ";
+				string sql = 
+					"delete from battleAch where battleId IN (select id from battle where wsId is not null); " +
+					"delete from battleFrag where battleId IN (select id from battle where wsId is not null); " +
+					"delete from battle where wsId is not null; ";
 				DB.ExecuteNonQuery(sql);
 				Code.MsgBox.Show("Previously imported battles from WoT Statistics is now removed", "Removed successfully");
 			}
+		}
+
+		private void btnClose_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 
 

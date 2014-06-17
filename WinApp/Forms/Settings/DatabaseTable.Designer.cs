@@ -32,13 +32,13 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.DatabaseTableTheme = new BadForm();
+			this.popupSelectTable = new BadDropDownBox();
 			this.dataGridViewShowTable = new System.Windows.Forms.DataGridView();
 			this.btnRefresh = new BadButton();
 			this.badLabel1 = new BadLabel();
 			this.scrollY = new BadScrollBar();
 			this.scrollX = new BadScrollBar();
 			this.scrollCorner = new BadScrollBarCorner();
-			this.popupSelectTable = new BadDropDownBox();
 			this.DatabaseTableTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewShowTable)).BeginInit();
 			this.SuspendLayout();
@@ -53,7 +53,6 @@
 			this.DatabaseTableTheme.Controls.Add(this.scrollY);
 			this.DatabaseTableTheme.Controls.Add(this.scrollX);
 			this.DatabaseTableTheme.Controls.Add(this.scrollCorner);
-			this.DatabaseTableTheme.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
 			this.DatabaseTableTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseTableTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.DatabaseTableTheme.FormFooter = false;
@@ -72,6 +71,16 @@
 			this.DatabaseTableTheme.TabIndex = 0;
 			this.DatabaseTableTheme.Text = "Database Tables";
 			this.DatabaseTableTheme.TitleHeight = 26;
+			// 
+			// popupSelectTable
+			// 
+			this.popupSelectTable.Image = null;
+			this.popupSelectTable.Location = new System.Drawing.Point(97, 36);
+			this.popupSelectTable.Name = "popupSelectTable";
+			this.popupSelectTable.Size = new System.Drawing.Size(247, 23);
+			this.popupSelectTable.TabIndex = 2;
+			this.popupSelectTable.TextChanged += new System.EventHandler(this.popupSelectTable_TextChanged);
+			this.popupSelectTable.Click += new System.EventHandler(this.popupSelectTable_Click);
 			// 
 			// dataGridViewShowTable
 			// 
@@ -95,7 +104,7 @@
 			this.dataGridViewShowTable.ReadOnly = true;
 			this.dataGridViewShowTable.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridViewShowTable.Size = new System.Drawing.Size(387, 183);
-			this.dataGridViewShowTable.TabIndex = 11;
+			this.dataGridViewShowTable.TabIndex = 4;
 			this.dataGridViewShowTable.SelectionChanged += new System.EventHandler(this.dataGridViewShowTable_SelectionChanged);
 			// 
 			// btnRefresh
@@ -104,7 +113,7 @@
 			this.btnRefresh.Location = new System.Drawing.Point(350, 37);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-			this.btnRefresh.TabIndex = 10;
+			this.btnRefresh.TabIndex = 3;
 			this.btnRefresh.Text = "Refresh";
 			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
 			// 
@@ -116,7 +125,8 @@
 			this.badLabel1.Location = new System.Drawing.Point(15, 37);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(75, 23);
-			this.badLabel1.TabIndex = 8;
+			this.badLabel1.TabIndex = 1;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Select Table:";
 			// 
 			// scrollY
@@ -132,7 +142,8 @@
 			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollY.ScrollPosition = 0;
 			this.scrollY.Size = new System.Drawing.Size(17, 183);
-			this.scrollY.TabIndex = 13;
+			this.scrollY.TabIndex = 5;
+			this.scrollY.TabStop = false;
 			this.scrollY.Text = "badScrollBar1";
 			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
 			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
@@ -151,7 +162,8 @@
 			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
 			this.scrollX.ScrollPosition = 0;
 			this.scrollX.Size = new System.Drawing.Size(387, 17);
-			this.scrollX.TabIndex = 14;
+			this.scrollX.TabIndex = 6;
+			this.scrollX.TabStop = false;
 			this.scrollX.Text = "badScrollBar2";
 			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
 			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
@@ -163,18 +175,9 @@
 			this.scrollCorner.Location = new System.Drawing.Point(408, 267);
 			this.scrollCorner.Name = "scrollCorner";
 			this.scrollCorner.Size = new System.Drawing.Size(17, 17);
-			this.scrollCorner.TabIndex = 12;
+			this.scrollCorner.TabIndex = 7;
+			this.scrollCorner.TabStop = false;
 			this.scrollCorner.Text = "badScrollBarCorner1";
-			// 
-			// popupSelectTable
-			// 
-			this.popupSelectTable.Image = null;
-			this.popupSelectTable.Location = new System.Drawing.Point(97, 36);
-			this.popupSelectTable.Name = "popupSelectTable";
-			this.popupSelectTable.Size = new System.Drawing.Size(247, 23);
-			this.popupSelectTable.TabIndex = 15;
-			this.popupSelectTable.TextChanged += new System.EventHandler(this.popupSelectTable_TextChanged);
-			this.popupSelectTable.Click += new System.EventHandler(this.popupSelectTable_Click);
 			// 
 			// DatabaseTable
 			// 

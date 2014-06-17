@@ -28,9 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseNew));
-			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.DatabaseNewTheme = new BadForm();
 			this.badProgressBar = new BadProgressBar();
 			this.cmdSelectFIle = new BadButton();
@@ -43,15 +42,14 @@
 			this.btnCreateDB = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
 			this.lblStatusText = new BadLabel();
+			this.btnCancel = new BadButton();
+			this.folderBrowserDialogDBPath = new System.Windows.Forms.FolderBrowserDialog();
 			this.DatabaseNewTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// openFileDialog
-			// 
-			this.openFileDialog.FileName = "openFileDialog1";
-			// 
 			// DatabaseNewTheme
 			// 
+			this.DatabaseNewTheme.Controls.Add(this.btnCancel);
 			this.DatabaseNewTheme.Controls.Add(this.badProgressBar);
 			this.DatabaseNewTheme.Controls.Add(this.cmdSelectFIle);
 			this.DatabaseNewTheme.Controls.Add(this.txtFileLocation);
@@ -71,14 +69,14 @@
 			this.DatabaseNewTheme.FormMargin = 0;
 			this.DatabaseNewTheme.Image = null;
 			this.DatabaseNewTheme.Location = new System.Drawing.Point(0, 0);
-			this.DatabaseNewTheme.MainArea = mainAreaClass1;
+			this.DatabaseNewTheme.MainArea = mainAreaClass2;
 			this.DatabaseNewTheme.Name = "DatabaseNewTheme";
 			this.DatabaseNewTheme.Resizable = false;
 			this.DatabaseNewTheme.Size = new System.Drawing.Size(477, 290);
 			this.DatabaseNewTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DatabaseNewTheme.SystemExitImage")));
 			this.DatabaseNewTheme.SystemMaximizeImage = null;
 			this.DatabaseNewTheme.SystemMinimizeImage = null;
-			this.DatabaseNewTheme.TabIndex = 14;
+			this.DatabaseNewTheme.TabIndex = 0;
 			this.DatabaseNewTheme.Text = "Create New Database";
 			this.DatabaseNewTheme.TitleHeight = 26;
 			// 
@@ -88,8 +86,9 @@
 			this.badProgressBar.Image = null;
 			this.badProgressBar.Location = new System.Drawing.Point(25, 244);
 			this.badProgressBar.Name = "badProgressBar";
-			this.badProgressBar.Size = new System.Drawing.Size(314, 23);
-			this.badProgressBar.TabIndex = 25;
+			this.badProgressBar.Size = new System.Drawing.Size(234, 23);
+			this.badProgressBar.TabIndex = 9;
+			this.badProgressBar.TabStop = false;
 			this.badProgressBar.Text = "badProgressBar1";
 			this.badProgressBar.Value = 0D;
 			this.badProgressBar.ValueMax = 100D;
@@ -102,7 +101,7 @@
 			this.cmdSelectFIle.Location = new System.Drawing.Point(343, 190);
 			this.cmdSelectFIle.Name = "cmdSelectFIle";
 			this.cmdSelectFIle.Size = new System.Drawing.Size(88, 23);
-			this.cmdSelectFIle.TabIndex = 17;
+			this.cmdSelectFIle.TabIndex = 8;
 			this.cmdSelectFIle.Text = "Select Path";
 			this.cmdSelectFIle.Click += new System.EventHandler(this.cmdSelectFIle_Click);
 			// 
@@ -114,7 +113,7 @@
 			this.txtFileLocation.Name = "txtFileLocation";
 			this.txtFileLocation.PasswordChar = '\0';
 			this.txtFileLocation.Size = new System.Drawing.Size(389, 43);
-			this.txtFileLocation.TabIndex = 23;
+			this.txtFileLocation.TabIndex = 7;
 			this.txtFileLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel3
@@ -125,7 +124,8 @@
 			this.badLabel3.Location = new System.Drawing.Point(39, 115);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(130, 23);
-			this.badLabel3.TabIndex = 22;
+			this.badLabel3.TabIndex = 6;
+			this.badLabel3.TabStop = false;
 			this.badLabel3.Text = "Database File Location:";
 			// 
 			// txtPlayerName
@@ -136,7 +136,7 @@
 			this.txtPlayerName.Name = "txtPlayerName";
 			this.txtPlayerName.PasswordChar = '\0';
 			this.txtPlayerName.Size = new System.Drawing.Size(190, 23);
-			this.txtPlayerName.TabIndex = 21;
+			this.txtPlayerName.TabIndex = 5;
 			this.txtPlayerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel2
@@ -147,7 +147,8 @@
 			this.badLabel2.Location = new System.Drawing.Point(241, 67);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(130, 23);
-			this.badLabel2.TabIndex = 20;
+			this.badLabel2.TabIndex = 4;
+			this.badLabel2.TabStop = false;
 			this.badLabel2.Text = "Player Name:";
 			// 
 			// txtDatabasename
@@ -158,7 +159,7 @@
 			this.txtDatabasename.Name = "txtDatabasename";
 			this.txtDatabasename.PasswordChar = '\0';
 			this.txtDatabasename.Size = new System.Drawing.Size(190, 23);
-			this.txtDatabasename.TabIndex = 19;
+			this.txtDatabasename.TabIndex = 3;
 			this.txtDatabasename.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel1
@@ -169,16 +170,17 @@
 			this.badLabel1.Location = new System.Drawing.Point(39, 68);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(119, 23);
-			this.badLabel1.TabIndex = 18;
+			this.badLabel1.TabIndex = 2;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Database Name:";
 			// 
 			// btnCreateDB
 			// 
 			this.btnCreateDB.Image = null;
-			this.btnCreateDB.Location = new System.Drawing.Point(345, 244);
+			this.btnCreateDB.Location = new System.Drawing.Point(265, 244);
 			this.btnCreateDB.Name = "btnCreateDB";
 			this.btnCreateDB.Size = new System.Drawing.Size(106, 23);
-			this.btnCreateDB.TabIndex = 0;
+			this.btnCreateDB.TabIndex = 10;
 			this.btnCreateDB.Text = "Create Database";
 			this.btnCreateDB.Click += new System.EventHandler(this.btnCreateDB_Click);
 			// 
@@ -189,7 +191,8 @@
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(426, 177);
-			this.badGroupBox1.TabIndex = 24;
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Database parameters";
 			// 
 			// lblStatusText
@@ -201,6 +204,15 @@
 			this.lblStatusText.Name = "lblStatusText";
 			this.lblStatusText.Size = new System.Drawing.Size(426, 23);
 			this.lblStatusText.TabIndex = 26;
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(377, 244);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 11;
+			this.btnCancel.Text = "Cancel";
 			// 
 			// DatabaseNew
 			// 
@@ -226,7 +238,6 @@
 		private BadForm DatabaseNewTheme;
 		private BadButton btnCreateDB;
 		private BadButton cmdSelectFIle;
-		private System.Windows.Forms.OpenFileDialog openFileDialog;
 		private BadTextBox txtFileLocation;
 		private BadLabel badLabel3;
 		private BadTextBox txtPlayerName;
@@ -236,5 +247,7 @@
 		private BadGroupBox badGroupBox1;
 		private BadProgressBar badProgressBar;
 		private BadLabel lblStatusText;
+		private BadButton btnCancel;
+		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDBPath;
 	}
 }

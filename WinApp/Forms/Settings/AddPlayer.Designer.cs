@@ -31,6 +31,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddPlayer));
 			this.AddPlayerTheme = new BadForm();
+			this.btnCancel = new BadButton();
 			this.btnAddNewPlayer = new BadButton();
 			this.txtNewPlayerName = new BadTextBox();
 			this.badLabel1 = new BadLabel();
@@ -39,6 +40,7 @@
 			// 
 			// AddPlayerTheme
 			// 
+			this.AddPlayerTheme.Controls.Add(this.btnCancel);
 			this.AddPlayerTheme.Controls.Add(this.btnAddNewPlayer);
 			this.AddPlayerTheme.Controls.Add(this.txtNewPlayerName);
 			this.AddPlayerTheme.Controls.Add(this.badLabel1);
@@ -53,21 +55,31 @@
 			this.AddPlayerTheme.MainArea = mainAreaClass1;
 			this.AddPlayerTheme.Name = "AddPlayerTheme";
 			this.AddPlayerTheme.Resizable = false;
-			this.AddPlayerTheme.Size = new System.Drawing.Size(415, 98);
+			this.AddPlayerTheme.Size = new System.Drawing.Size(284, 130);
 			this.AddPlayerTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("AddPlayerTheme.SystemExitImage")));
 			this.AddPlayerTheme.SystemMaximizeImage = null;
 			this.AddPlayerTheme.SystemMinimizeImage = null;
-			this.AddPlayerTheme.TabIndex = 3;
+			this.AddPlayerTheme.TabIndex = 0;
 			this.AddPlayerTheme.Text = "Add New player";
 			this.AddPlayerTheme.TitleHeight = 26;
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(186, 88);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 4;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnAddNewPlayer
 			// 
 			this.btnAddNewPlayer.Image = null;
-			this.btnAddNewPlayer.Location = new System.Drawing.Point(300, 49);
+			this.btnAddNewPlayer.Location = new System.Drawing.Point(105, 88);
 			this.btnAddNewPlayer.Name = "btnAddNewPlayer";
 			this.btnAddNewPlayer.Size = new System.Drawing.Size(75, 23);
-			this.btnAddNewPlayer.TabIndex = 5;
+			this.btnAddNewPlayer.TabIndex = 3;
 			this.btnAddNewPlayer.Text = "Save";
 			this.btnAddNewPlayer.Click += new System.EventHandler(this.btnAddNewPlayer_Click);
 			// 
@@ -78,8 +90,8 @@
 			this.txtNewPlayerName.Location = new System.Drawing.Point(105, 49);
 			this.txtNewPlayerName.Name = "txtNewPlayerName";
 			this.txtNewPlayerName.PasswordChar = '\0';
-			this.txtNewPlayerName.Size = new System.Drawing.Size(189, 23);
-			this.txtNewPlayerName.TabIndex = 4;
+			this.txtNewPlayerName.Size = new System.Drawing.Size(156, 23);
+			this.txtNewPlayerName.TabIndex = 2;
 			this.txtNewPlayerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel1
@@ -90,14 +102,15 @@
 			this.badLabel1.Location = new System.Drawing.Point(24, 49);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(75, 23);
-			this.badLabel1.TabIndex = 3;
+			this.badLabel1.TabIndex = 1;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Player Name:";
 			// 
 			// AddPlayer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(415, 98);
+			this.ClientSize = new System.Drawing.Size(284, 130);
 			this.Controls.Add(this.AddPlayerTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
@@ -117,5 +130,6 @@
 		private BadButton btnAddNewPlayer;
 		private BadTextBox txtNewPlayerName;
 		private BadLabel badLabel1;
+		private BadButton btnCancel;
     }
 }

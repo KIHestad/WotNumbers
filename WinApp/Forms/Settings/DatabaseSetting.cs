@@ -211,7 +211,7 @@ namespace WinApp.Forms
 			openFileDialogSQLite.FileName = "*.db";
 			openFileDialogSQLite.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
 			openFileDialogSQLite.ShowDialog();
-			if (openFileDialogSQLite.FileName != "")
+			if (openFileDialogSQLite.FileName != "*.db" && openFileDialogSQLite.FileName != "")
 			{
 				txtDatabaseFile.Text = openFileDialogSQLite.FileName;
 			}
@@ -244,6 +244,11 @@ namespace WinApp.Forms
 				selectedDbType = ConfigData.dbType.SQLite;
 			}
 			UpateDbType();
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 
 		

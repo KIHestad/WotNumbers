@@ -164,12 +164,21 @@ namespace WinApp.Forms
 		private void cmdSelectFIle_Click(object sender, EventArgs e)
 		{
 			// Select dossier file
-			openFileDialog.FileName = "*.db";
-			openFileDialog.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
-			openFileDialog.ShowDialog();
-			if (openFileDialog.FileName != "*.db" && openFileDialog.FileName != "")
+			folderBrowserDialogDBPath.ShowNewFolderButton = false;
+
+			if (txtFileLocation.Text == "")
 			{
-				txtFileLocation.Text = openFileDialog.FileName;
+				folderBrowserDialogDBPath.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\wargaming.net\\WorldOfTanks\\dossier_cache";
+			}
+			else
+			{
+				folderBrowserDialogDBPath.SelectedPath = txtFileLocation.Text;
+			}
+			folderBrowserDialogDBPath.ShowDialog();
+			// If file selected save config with new values
+			if (folderBrowserDialogDBPath.SelectedPath != "")
+			{
+				txtFileLocation.Text = folderBrowserDialogDBPath.SelectedPath;
 			}
 		}
 

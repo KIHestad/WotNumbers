@@ -32,6 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportWotStat));
 			this.openFileWotStatDbFile = new System.Windows.Forms.OpenFileDialog();
 			this.ImportWotStatTheme = new BadForm();
+			this.btnRemove = new BadButton();
 			this.lblResult = new BadLabel();
 			this.txtToDate = new BadTextBox();
 			this.badLabel2 = new BadLabel();
@@ -41,7 +42,7 @@
 			this.txtWotStatDb = new BadTextBox();
 			this.badLabel1 = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
-			this.btnRemove = new BadButton();
+			this.btnClose = new BadButton();
 			this.ImportWotStatTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -51,6 +52,7 @@
 			// 
 			// ImportWotStatTheme
 			// 
+			this.ImportWotStatTheme.Controls.Add(this.btnClose);
 			this.ImportWotStatTheme.Controls.Add(this.btnRemove);
 			this.ImportWotStatTheme.Controls.Add(this.lblResult);
 			this.ImportWotStatTheme.Controls.Add(this.txtToDate);
@@ -76,19 +78,30 @@
 			this.ImportWotStatTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ImportWotStatTheme.SystemExitImage")));
 			this.ImportWotStatTheme.SystemMaximizeImage = null;
 			this.ImportWotStatTheme.SystemMinimizeImage = null;
-			this.ImportWotStatTheme.TabIndex = 5;
+			this.ImportWotStatTheme.TabIndex = 0;
 			this.ImportWotStatTheme.Text = "Import Battles From WoT Statistics";
 			this.ImportWotStatTheme.TitleHeight = 26;
+			// 
+			// btnRemove
+			// 
+			this.btnRemove.Image = null;
+			this.btnRemove.Location = new System.Drawing.Point(306, 239);
+			this.btnRemove.Name = "btnRemove";
+			this.btnRemove.Size = new System.Drawing.Size(75, 23);
+			this.btnRemove.TabIndex = 10;
+			this.btnRemove.Text = "Remove";
+			this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
 			// 
 			// lblResult
 			// 
 			this.lblResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblResult.Dimmed = false;
 			this.lblResult.Image = null;
-			this.lblResult.Location = new System.Drawing.Point(25, 245);
+			this.lblResult.Location = new System.Drawing.Point(25, 239);
 			this.lblResult.Name = "lblResult";
-			this.lblResult.Size = new System.Drawing.Size(272, 23);
-			this.lblResult.TabIndex = 12;
+			this.lblResult.Size = new System.Drawing.Size(181, 23);
+			this.lblResult.TabIndex = 8;
+			this.lblResult.TabStop = false;
 			// 
 			// txtToDate
 			// 
@@ -98,7 +111,7 @@
 			this.txtToDate.Name = "txtToDate";
 			this.txtToDate.PasswordChar = '\0';
 			this.txtToDate.Size = new System.Drawing.Size(109, 23);
-			this.txtToDate.TabIndex = 10;
+			this.txtToDate.TabIndex = 3;
 			this.txtToDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel2
@@ -109,17 +122,19 @@
 			this.badLabel2.Location = new System.Drawing.Point(42, 70);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(290, 23);
-			this.badLabel2.TabIndex = 9;
+			this.badLabel2.TabIndex = 2;
+			this.badLabel2.TabStop = false;
 			this.badLabel2.Text = "Import battles before date (dd.mm.yyyy), blank = import all:";
 			// 
 			// progressBarImport
 			// 
 			this.progressBarImport.BackColor = System.Drawing.Color.Transparent;
 			this.progressBarImport.Image = null;
-			this.progressBarImport.Location = new System.Drawing.Point(25, 212);
+			this.progressBarImport.Location = new System.Drawing.Point(25, 208);
 			this.progressBarImport.Name = "progressBarImport";
 			this.progressBarImport.Size = new System.Drawing.Size(437, 23);
-			this.progressBarImport.TabIndex = 8;
+			this.progressBarImport.TabIndex = 7;
+			this.progressBarImport.TabStop = false;
 			this.progressBarImport.Text = "badProgressBar1";
 			this.progressBarImport.Value = 0D;
 			this.progressBarImport.ValueMax = 100D;
@@ -129,11 +144,11 @@
 			// btnStartImport
 			// 
 			this.btnStartImport.Image = null;
-			this.btnStartImport.Location = new System.Drawing.Point(303, 245);
+			this.btnStartImport.Location = new System.Drawing.Point(212, 239);
 			this.btnStartImport.Name = "btnStartImport";
-			this.btnStartImport.Size = new System.Drawing.Size(75, 23);
-			this.btnStartImport.TabIndex = 7;
-			this.btnStartImport.Text = "Start";
+			this.btnStartImport.Size = new System.Drawing.Size(88, 23);
+			this.btnStartImport.TabIndex = 9;
+			this.btnStartImport.Text = "Start Import";
 			this.btnStartImport.Click += new System.EventHandler(this.btnStartImport_Click);
 			// 
 			// btnOpenWotStatDbFile
@@ -166,6 +181,7 @@
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(175, 23);
 			this.badLabel1.TabIndex = 4;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Wot Statistics Database File:";
 			// 
 			// badGroupBox1
@@ -175,18 +191,19 @@
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(437, 144);
-			this.badGroupBox1.TabIndex = 3;
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Settings";
 			// 
-			// btnRemove
+			// btnClose
 			// 
-			this.btnRemove.Image = null;
-			this.btnRemove.Location = new System.Drawing.Point(387, 245);
-			this.btnRemove.Name = "btnRemove";
-			this.btnRemove.Size = new System.Drawing.Size(75, 23);
-			this.btnRemove.TabIndex = 13;
-			this.btnRemove.Text = "Remove";
-			this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+			this.btnClose.Image = null;
+			this.btnClose.Location = new System.Drawing.Point(387, 239);
+			this.btnClose.Name = "btnClose";
+			this.btnClose.Size = new System.Drawing.Size(75, 23);
+			this.btnClose.TabIndex = 11;
+			this.btnClose.Text = "Close";
+			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
 			// 
 			// ImportWotStat
 			// 
@@ -221,5 +238,6 @@
 		private BadLabel badLabel2;
 		private BadLabel lblResult;
 		private BadButton btnRemove;
+		private BadButton btnClose;
 	}
 }

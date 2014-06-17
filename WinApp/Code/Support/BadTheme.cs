@@ -158,6 +158,14 @@ abstract class BadThemeContainerControl : ContainerControl
 				PaintSysIcons();
 				return new Pointer(Cursors.Default, 0);
 			}
+			else
+			{
+				// Draw default sys icon background
+				SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
+				SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
+				SystemExitImageBackColor = ColorTheme.FormBackTitle;
+				PaintSysIcons();
+			}
 		}
 		// Check Border position for resizing
 		if (_Resizable)
@@ -180,21 +188,6 @@ abstract class BadThemeContainerControl : ContainerControl
 				return new Pointer(Cursors.SizeNS, 15);
 			else
 				return new Pointer(Cursors.Default, 0);
-		}
-		if (SystemExitImageBackColor == ColorTheme.ControlBackMouseOver)
-		{
-			SystemExitImageBackColor = ColorTheme.FormBackTitle;
-			PaintSysIcons();
-		}
-		if (SystemMaximizeImageBackColor == ColorTheme.ControlBackMouseOver)
-		{
-			SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
-			PaintSysIcons();
-		}
-		if (SystemMinimizeImageBackColor == ColorTheme.ControlBackMouseOver)
-		{
-			SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
-			PaintSysIcons();
 		}
 		return new Pointer(Cursors.Default, 0);
 	}
@@ -266,6 +259,12 @@ abstract class BadThemeContainerControl : ContainerControl
 	{
 		// Draw default cursor when leave form focus
 		Cursor = Cursors.Default;
+		// Draw default sys icon background
+		SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
+		SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
+		SystemExitImageBackColor = ColorTheme.FormBackTitle;
+		PaintSysIcons();
+		// Continue
 		base.OnMouseLeave(e);
 	}
 
@@ -813,12 +812,28 @@ class BadButton : BadThemeControl
 		if (!Enabled) fontColor = new SolidBrush(ColorTheme.ControlDisabledFont);
 		DrawText(HorizontalAlignment.Center, fontColor);
 		DrawIcon(HorizontalAlignment.Left);
+		if (Focused)
+		{
+			grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorderFocused), 0, 0, ClientRectangle.Width - 1, ClientRectangle.Height - 1);
+		}
 
 		//Pen outerBorderPen = new Pen(Color.Black); // Button border
 		//DrawBorders(outerBorderPen, ClientRectangle);
 		//DrawCorners(BackColor, ClientRectangle); // Button corners
 
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
+	protected override void OnGotFocus(EventArgs e)
+	{
+		Invalidate();
+		base.OnGotFocus(e);
+	}
+
+	protected override void OnLostFocus(EventArgs e)
+	{
+		Invalidate();
+		base.OnLostFocus(e);
 	}
 	
 }
@@ -843,7 +858,7 @@ class BadCheckBox : BadThemeControl
 		grapichObject.Clear(BackColor);
 		// Outer Border
 		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
-		Rectangle GroupBoxOuter = new Rectangle(4, 3, 16, 17);
+		Rectangle GroupBoxOuter = new Rectangle(5, 4, 14, 15);
 		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
 		// Inner Area
 		BorderColor = new SolidBrush(ColorTheme.FormBack);
@@ -856,6 +871,10 @@ class BadCheckBox : BadThemeControl
 		// Chk image
 		if (Image != null && Checked)
 			grapichObject.DrawImage(Image, 6, 5, 12, 12);
+		if (Focused)
+		{
+			grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorderFocused), 0, 0, ClientRectangle.Width - 1, ClientRectangle.Height - 1);
+		}
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
@@ -864,7 +883,28 @@ class BadCheckBox : BadThemeControl
 		Checked = !Checked;
 		base.OnClick(e);
 	}
-	
+
+	protected override void OnGotFocus(EventArgs e)
+	{
+		Invalidate();
+		base.OnGotFocus(e);
+	}
+
+	protected override void OnLostFocus(EventArgs e)
+	{
+		Invalidate();
+		base.OnLostFocus(e);
+	}
+
+	protected override void OnKeyPress(KeyPressEventArgs e)
+	{
+		if (e.KeyChar == (char)Keys.Space)
+		{
+			Checked = !Checked;
+			base.OnClick(e);
+		}
+		base.OnKeyPress(e);
+	}
 }
 
 class BadSeperator : BadThemeControl
@@ -956,7 +996,8 @@ class BadProgressBar : BadThemeControl
 		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
 		// Inner
 		brushBackColor = new SolidBrush(ColorTheme.FormBack);
-		grapichObject.FillRectangle(brushBackColor, 2, 2, Width - 4 , Height - 4);
+		int borderWidth = 1;
+		grapichObject.FillRectangle(brushBackColor, borderWidth, borderWidth, Width - (borderWidth*2), Height - (borderWidth*2));
 		// Progress
 		Double progress = Value;
 		if (progress > ValueMax) progress = ValueMax;
@@ -1242,7 +1283,21 @@ class BadDropDownBox : BadThemeControl
 		}
 		// Dropdown icon
 		DrawIcon(HorizontalAlignment.Right, 0, -2);
+		if (Focused)
+			grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorderFocused), 0, 0, ClientRectangle.Width - 1, ClientRectangle.Height - 1);
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
+	}
+
+	protected override void OnGotFocus(EventArgs e)
+	{
+		Invalidate();
+		base.OnGotFocus(e);
+	}
+
+	protected override void OnLostFocus(EventArgs e)
+	{
+		Invalidate();
+		base.OnLostFocus(e);
 	}
 
 }

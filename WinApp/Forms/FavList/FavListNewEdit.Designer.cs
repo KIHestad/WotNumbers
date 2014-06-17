@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavListNewEdit));
 			this.FavListNewEditTheme = new BadForm();
 			this.ddCopyFrom = new BadDropDownBox();
@@ -58,7 +58,7 @@
 			this.FavListNewEditTheme.FormMargin = 0;
 			this.FavListNewEditTheme.Image = null;
 			this.FavListNewEditTheme.Location = new System.Drawing.Point(0, 0);
-			this.FavListNewEditTheme.MainArea = mainAreaClass2;
+			this.FavListNewEditTheme.MainArea = mainAreaClass1;
 			this.FavListNewEditTheme.Name = "FavListNewEditTheme";
 			this.FavListNewEditTheme.Resizable = false;
 			this.FavListNewEditTheme.Size = new System.Drawing.Size(381, 203);
@@ -75,7 +75,7 @@
 			this.ddCopyFrom.Location = new System.Drawing.Point(152, 105);
 			this.ddCopyFrom.Name = "ddCopyFrom";
 			this.ddCopyFrom.Size = new System.Drawing.Size(184, 23);
-			this.ddCopyFrom.TabIndex = 17;
+			this.ddCopyFrom.TabIndex = 5;
 			this.ddCopyFrom.Text = "(None)";
 			this.ddCopyFrom.Click += new System.EventHandler(this.ddCopyFrom_Click);
 			// 
@@ -87,7 +87,8 @@
 			this.lblCopyFrom.Location = new System.Drawing.Point(40, 105);
 			this.lblCopyFrom.Name = "lblCopyFrom";
 			this.lblCopyFrom.Size = new System.Drawing.Size(106, 23);
-			this.lblCopyFrom.TabIndex = 16;
+			this.lblCopyFrom.TabIndex = 4;
+			this.lblCopyFrom.TabStop = false;
 			this.lblCopyFrom.Text = "Copy from existing:";
 			// 
 			// txtName
@@ -98,7 +99,7 @@
 			this.txtName.Name = "txtName";
 			this.txtName.PasswordChar = '\0';
 			this.txtName.Size = new System.Drawing.Size(184, 23);
-			this.txtName.TabIndex = 10;
+			this.txtName.TabIndex = 3;
 			this.txtName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel1
@@ -109,7 +110,8 @@
 			this.badLabel1.Location = new System.Drawing.Point(40, 74);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(106, 23);
-			this.badLabel1.TabIndex = 9;
+			this.badLabel1.TabIndex = 2;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Fav Tank List Name:";
 			// 
 			// badGroupBox1
@@ -119,26 +121,27 @@
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(331, 99);
-			this.badGroupBox1.TabIndex = 15;
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Favourite Tank List Properties";
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(200, 161);
+			this.btnCancel.Location = new System.Drawing.Point(281, 161);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 14;
+			this.btnCancel.TabIndex = 7;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(281, 161);
+			this.btnSave.Location = new System.Drawing.Point(200, 161);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 13;
+			this.btnSave.TabIndex = 6;
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 

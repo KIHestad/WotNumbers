@@ -160,7 +160,6 @@ namespace WinApp.Forms
 				if (answer == MsgBox.Button.OKButton)
 				{
 					SaveData();
-					this.Close();
 				}
 			}
 		}
@@ -310,6 +309,11 @@ namespace WinApp.Forms
 				p = new Point(txtCurrentXP.Location.X, txtCurrentXP.Location.Y);
 				lblGrindXP.Location = p;
 			}
+		}
+
+		private void btnClose_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 		
 

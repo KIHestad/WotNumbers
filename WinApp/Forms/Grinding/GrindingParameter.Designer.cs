@@ -79,7 +79,7 @@
 			this.chkAutoLoad.Location = new System.Drawing.Point(45, 147);
 			this.chkAutoLoad.Name = "chkAutoLoad";
 			this.chkAutoLoad.Size = new System.Drawing.Size(176, 23);
-			this.chkAutoLoad.TabIndex = 8;
+			this.chkAutoLoad.TabIndex = 6;
 			this.chkAutoLoad.Text = "Display this form on startup";
 			// 
 			// ddEveryBattle
@@ -88,7 +88,7 @@
 			this.ddEveryBattle.Location = new System.Drawing.Point(202, 105);
 			this.ddEveryBattle.Name = "ddEveryBattle";
 			this.ddEveryBattle.Size = new System.Drawing.Size(70, 23);
-			this.ddEveryBattle.TabIndex = 7;
+			this.ddEveryBattle.TabIndex = 5;
 			this.ddEveryBattle.Text = "None";
 			this.ddEveryBattle.Click += new System.EventHandler(this.ddEveryBattle_Click);
 			// 
@@ -100,7 +100,8 @@
 			this.badLabel2.Location = new System.Drawing.Point(45, 105);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(126, 23);
-			this.badLabel2.TabIndex = 6;
+			this.badLabel2.TabIndex = 4;
+			this.badLabel2.TabStop = false;
 			this.badLabel2.Text = "Every victory bonus:";
 			// 
 			// ddFirstBattle
@@ -109,7 +110,7 @@
 			this.ddFirstBattle.Location = new System.Drawing.Point(202, 76);
 			this.ddFirstBattle.Name = "ddFirstBattle";
 			this.ddFirstBattle.Size = new System.Drawing.Size(70, 23);
-			this.ddFirstBattle.TabIndex = 5;
+			this.ddFirstBattle.TabIndex = 3;
 			this.ddFirstBattle.Text = "2X";
 			this.ddFirstBattle.Click += new System.EventHandler(this.ddFirstBattle_Click);
 			// 
@@ -121,26 +122,27 @@
 			this.badLabel1.Location = new System.Drawing.Point(45, 76);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(150, 23);
-			this.badLabel1.TabIndex = 4;
+			this.badLabel1.TabIndex = 2;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "First victory every day bonus:";
 			// 
 			// cmdCancel
 			// 
 			this.cmdCancel.Image = null;
-			this.cmdCancel.Location = new System.Drawing.Point(133, 204);
+			this.cmdCancel.Location = new System.Drawing.Point(214, 201);
 			this.cmdCancel.Name = "cmdCancel";
 			this.cmdCancel.Size = new System.Drawing.Size(75, 23);
-			this.cmdCancel.TabIndex = 2;
+			this.cmdCancel.TabIndex = 8;
 			this.cmdCancel.Text = "Cancel";
 			this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
 			// 
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(214, 204);
+			this.btnSave.Location = new System.Drawing.Point(133, 201);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 1;
+			this.btnSave.TabIndex = 7;
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
@@ -151,7 +153,8 @@
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(264, 137);
-			this.badGroupBox1.TabIndex = 0;
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Parameters";
 			// 
 			// GrindingParameter

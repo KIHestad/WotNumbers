@@ -45,7 +45,6 @@ namespace WinApp.Forms
 		private void PlayerPanel()
 		{
 			bool ok = DB.CheckConnection(false);
-			lblPlayer.Dimmed = !ok;
 			cboSelectPlayer.Enabled = ok;
 			btnAddPlayer.Enabled = ok;
 			btnRemovePlayer.Enabled = ok;
@@ -88,18 +87,14 @@ namespace WinApp.Forms
 			// Select dossier file
 			folderBrowserDialogDossier.ShowNewFolderButton = false;
 			
-			//openFileDialogDossierFile.FileName = "*.dat";
 			if (txtDossierFilePath.Text == "")
 			{
-				//openFileDialogDossierFile.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\wargaming.net\\WorldOfTanks\\dossier_cache";
 				folderBrowserDialogDossier.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\wargaming.net\\WorldOfTanks\\dossier_cache";
 			}
 			else
 			{
 				folderBrowserDialogDossier.SelectedPath = txtDossierFilePath.Text;
-				//openFileDialogDossierFile.InitialDirectory = txtDossierFilePath.Text;
 			}
-			//openFileDialogDossierFile.ShowDialog();
 			folderBrowserDialogDossier.ShowDialog();
 			// If file selected save config with new values
 			if (folderBrowserDialogDossier.SelectedPath != "")
@@ -126,7 +121,7 @@ namespace WinApp.Forms
 			if (saveOk)
 			{
 				MsgBox.Show(msg, "Application settings saved");
-				Form.ActiveForm.Close();
+				this.Close();
 			}
 			else
 			{
@@ -159,6 +154,11 @@ namespace WinApp.Forms
 		private void ApplicationSetting_Activated(object sender, EventArgs e)
 		{
 			UpdateSettings();
+		}
+
+		private void Cancel_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 
 	}

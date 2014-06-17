@@ -23,6 +23,7 @@ namespace WinApp.Code
 			public FavListShowType FavListShow = FavListShowType.UseCurrent;
 			public int FavListId = 0;
 			public string FavListName = "";
+			public int TankId = -1; // Filter on explicit tank
 		}
 
 		public static Settings SetDefault(GridView.Views gridView)

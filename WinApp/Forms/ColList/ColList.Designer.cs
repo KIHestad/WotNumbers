@@ -33,6 +33,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColListTheme = new BadForm();
+			this.btnClose = new BadButton();
 			this.toolColList = new System.Windows.Forms.ToolStrip();
 			this.toolColListUp = new System.Windows.Forms.ToolStripButton();
 			this.toolColListDown = new System.Windows.Forms.ToolStripButton();
@@ -93,6 +94,7 @@
 			// 
 			// ColListTheme
 			// 
+			this.ColListTheme.Controls.Add(this.btnClose);
 			this.ColListTheme.Controls.Add(this.toolColList);
 			this.ColListTheme.Controls.Add(this.btnRemoveAll);
 			this.ColListTheme.Controls.Add(this.btnRemoveSelected);
@@ -131,6 +133,17 @@
 			this.ColListTheme.Text = "Column Setup";
 			this.ColListTheme.TitleHeight = 26;
 			// 
+			// btnClose
+			// 
+			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnClose.Image = null;
+			this.btnClose.Location = new System.Drawing.Point(523, 590);
+			this.btnClose.Name = "btnClose";
+			this.btnClose.Size = new System.Drawing.Size(75, 23);
+			this.btnClose.TabIndex = 21;
+			this.btnClose.Text = "Close";
+			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+			// 
 			// toolColList
 			// 
 			this.toolColList.AutoSize = false;
@@ -150,7 +163,8 @@
 			this.toolColList.Location = new System.Drawing.Point(42, 77);
 			this.toolColList.Name = "toolColList";
 			this.toolColList.Size = new System.Drawing.Size(537, 25);
-			this.toolColList.TabIndex = 81;
+			this.toolColList.TabIndex = 1;
+			this.toolColList.TabStop = true;
 			this.toolColList.Text = "toolStrip1";
 			// 
 			// toolColListUp
@@ -250,7 +264,7 @@
 			this.btnRemoveAll.Location = new System.Drawing.Point(295, 456);
 			this.btnRemoveAll.Name = "btnRemoveAll";
 			this.btnRemoveAll.Size = new System.Drawing.Size(29, 23);
-			this.btnRemoveAll.TabIndex = 66;
+			this.btnRemoveAll.TabIndex = 14;
 			this.btnRemoveAll.Text = "<<";
 			this.btnRemoveAll.Click += new System.EventHandler(this.btnRemoveAll_Click);
 			// 
@@ -260,7 +274,7 @@
 			this.btnRemoveSelected.Location = new System.Drawing.Point(295, 485);
 			this.btnRemoveSelected.Name = "btnRemoveSelected";
 			this.btnRemoveSelected.Size = new System.Drawing.Size(29, 23);
-			this.btnRemoveSelected.TabIndex = 65;
+			this.btnRemoveSelected.TabIndex = 15;
 			this.btnRemoveSelected.Text = "<";
 			this.btnRemoveSelected.Click += new System.EventHandler(this.btnRemoveSelected_Click);
 			// 
@@ -270,7 +284,7 @@
 			this.btnSelectSelected.Location = new System.Drawing.Point(295, 398);
 			this.btnSelectSelected.Name = "btnSelectSelected";
 			this.btnSelectSelected.Size = new System.Drawing.Size(29, 23);
-			this.btnSelectSelected.TabIndex = 64;
+			this.btnSelectSelected.TabIndex = 12;
 			this.btnSelectSelected.Text = ">";
 			this.btnSelectSelected.Click += new System.EventHandler(this.btnSelectSelected_Click);
 			// 
@@ -280,7 +294,7 @@
 			this.btnSelectAll.Location = new System.Drawing.Point(295, 427);
 			this.btnSelectAll.Name = "btnSelectAll";
 			this.btnSelectAll.Size = new System.Drawing.Size(29, 23);
-			this.btnSelectAll.TabIndex = 63;
+			this.btnSelectAll.TabIndex = 13;
 			this.btnSelectAll.Text = ">>";
 			this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
 			// 
@@ -289,11 +303,11 @@
 			this.btnColumnListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListCancel.Enabled = false;
 			this.btnColumnListCancel.Image = null;
-			this.btnColumnListCancel.Location = new System.Drawing.Point(431, 590);
+			this.btnColumnListCancel.Location = new System.Drawing.Point(437, 590);
 			this.btnColumnListCancel.Name = "btnColumnListCancel";
 			this.btnColumnListCancel.Size = new System.Drawing.Size(80, 23);
-			this.btnColumnListCancel.TabIndex = 53;
-			this.btnColumnListCancel.Text = "Cancel";
+			this.btnColumnListCancel.TabIndex = 20;
+			this.btnColumnListCancel.Text = "Revert";
 			this.btnColumnListCancel.Click += new System.EventHandler(this.btnSelectedColumnListCancel_Click);
 			// 
 			// btnColumnListSave
@@ -301,10 +315,10 @@
 			this.btnColumnListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnColumnListSave.Enabled = false;
 			this.btnColumnListSave.Image = null;
-			this.btnColumnListSave.Location = new System.Drawing.Point(517, 590);
+			this.btnColumnListSave.Location = new System.Drawing.Point(351, 590);
 			this.btnColumnListSave.Name = "btnColumnListSave";
 			this.btnColumnListSave.Size = new System.Drawing.Size(80, 23);
-			this.btnColumnListSave.TabIndex = 52;
+			this.btnColumnListSave.TabIndex = 19;
 			this.btnColumnListSave.Text = "Save";
 			this.btnColumnListSave.Click += new System.EventHandler(this.btnSelectedColumnListSave_Click);
 			// 
@@ -321,7 +335,8 @@
 			this.toolSelectedColumns.Name = "toolSelectedColumns";
 			this.toolSelectedColumns.Size = new System.Drawing.Size(234, 25);
 			this.toolSelectedColumns.Stretch = true;
-			this.toolSelectedColumns.TabIndex = 51;
+			this.toolSelectedColumns.TabIndex = 9;
+			this.toolSelectedColumns.TabStop = true;
 			this.toolSelectedColumns.Text = "toolStrip1";
 			// 
 			// toolSelectedTanks_MoveUp
@@ -368,7 +383,8 @@
 			this.toolAllColumns.Name = "toolAllColumns";
 			this.toolAllColumns.Size = new System.Drawing.Size(234, 25);
 			this.toolAllColumns.Stretch = true;
-			this.toolAllColumns.TabIndex = 50;
+			this.toolAllColumns.TabIndex = 6;
+			this.toolAllColumns.TabStop = true;
 			this.toolAllColumns.Text = "toolStrip1";
 			// 
 			// toolAvailableCol_All
@@ -506,7 +522,8 @@
 			this.scrollSelectedColumns.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollSelectedColumns.ScrollPosition = 0;
 			this.scrollSelectedColumns.Size = new System.Drawing.Size(17, 202);
-			this.scrollSelectedColumns.TabIndex = 48;
+			this.scrollSelectedColumns.TabIndex = 18;
+			this.scrollSelectedColumns.TabStop = false;
 			this.scrollSelectedColumns.Text = "badScrollBar2";
 			this.scrollSelectedColumns.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollSelectedColumns_MouseDown);
 			this.scrollSelectedColumns.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollSelectedColumns_MouseMove);
@@ -530,7 +547,7 @@
 			this.dataGridSelectedColumns.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridSelectedColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridSelectedColumns.Size = new System.Drawing.Size(217, 202);
-			this.dataGridSelectedColumns.TabIndex = 47;
+			this.dataGridSelectedColumns.TabIndex = 17;
 			this.dataGridSelectedColumns.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridSelectedColumns.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
@@ -547,7 +564,8 @@
 			this.scrollAllColumns.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollAllColumns.ScrollPosition = 0;
 			this.scrollAllColumns.Size = new System.Drawing.Size(17, 202);
-			this.scrollAllColumns.TabIndex = 46;
+			this.scrollAllColumns.TabIndex = 11;
+			this.scrollAllColumns.TabStop = false;
 			this.scrollAllColumns.Text = "badScrollBar1";
 			this.scrollAllColumns.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollAllColumns_MouseDown);
 			this.scrollAllColumns.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollAllColumns_MouseMove);
@@ -570,7 +588,7 @@
 			this.dataGridAllColumns.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridAllColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridAllColumns.Size = new System.Drawing.Size(217, 202);
-			this.dataGridAllColumns.TabIndex = 45;
+			this.dataGridAllColumns.TabIndex = 10;
 			this.dataGridAllColumns.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllColumns.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
@@ -587,7 +605,8 @@
 			this.scrollColumnList.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollColumnList.ScrollPosition = 0;
 			this.scrollColumnList.Size = new System.Drawing.Size(17, 153);
-			this.scrollColumnList.TabIndex = 43;
+			this.scrollColumnList.TabIndex = 4;
+			this.scrollColumnList.TabStop = false;
 			this.scrollColumnList.Text = "badScrollBar1";
 			this.scrollColumnList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollColumnList_MouseDown);
 			this.scrollColumnList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollColumnList_MouseMove);
@@ -610,7 +629,7 @@
 			this.dataGridColumnList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridColumnList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridColumnList.Size = new System.Drawing.Size(520, 153);
-			this.dataGridColumnList.TabIndex = 41;
+			this.dataGridColumnList.TabIndex = 3;
 			this.dataGridColumnList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridColumnList_CellClick);
 			this.dataGridColumnList.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridColumnList.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
@@ -623,7 +642,8 @@
 			this.lblAllColumns.Location = new System.Drawing.Point(42, 304);
 			this.lblAllColumns.Name = "lblAllColumns";
 			this.lblAllColumns.Size = new System.Drawing.Size(152, 23);
-			this.lblAllColumns.TabIndex = 49;
+			this.lblAllColumns.TabIndex = 7;
+			this.lblAllColumns.TabStop = false;
 			this.lblAllColumns.Text = "Available Columns:";
 			// 
 			// lblSelectedColumns
@@ -634,7 +654,8 @@
 			this.lblSelectedColumns.Location = new System.Drawing.Point(345, 304);
 			this.lblSelectedColumns.Name = "lblSelectedColumns";
 			this.lblSelectedColumns.Size = new System.Drawing.Size(149, 23);
-			this.lblSelectedColumns.TabIndex = 67;
+			this.lblSelectedColumns.TabIndex = 8;
+			this.lblSelectedColumns.TabStop = false;
 			this.lblSelectedColumns.Text = "Selected Columns:";
 			// 
 			// groupTanks
@@ -647,7 +668,8 @@
 			this.groupTanks.Location = new System.Drawing.Point(25, 284);
 			this.groupTanks.Name = "groupTanks";
 			this.groupTanks.Size = new System.Drawing.Size(573, 289);
-			this.groupTanks.TabIndex = 44;
+			this.groupTanks.TabIndex = 5;
+			this.groupTanks.TabStop = false;
 			this.groupTanks.Text = "Columns";
 			// 
 			// badGroupBox2
@@ -659,7 +681,8 @@
 			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox2.Name = "badGroupBox2";
 			this.badGroupBox2.Size = new System.Drawing.Size(572, 225);
-			this.badGroupBox2.TabIndex = 72;
+			this.badGroupBox2.TabIndex = 1;
+			this.badGroupBox2.TabStop = false;
 			this.badGroupBox2.Text = "Column Setup Lists";
 			// 
 			// badLabel1
@@ -750,6 +773,7 @@
 		private BadLabel badLabel1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripButton toolColListRefresh;
+		private BadButton btnClose;
 
 
 

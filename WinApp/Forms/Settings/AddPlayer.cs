@@ -19,11 +19,6 @@ namespace WinApp.Forms
 			InitializeComponent();
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
-		{
-			
-		}
-
 		private void btnAddNewPlayer_Click(object sender, EventArgs e)
 		{
 			// Add to database
@@ -41,6 +36,11 @@ namespace WinApp.Forms
 					this.Close();
 				}
 			}
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 	}
 }

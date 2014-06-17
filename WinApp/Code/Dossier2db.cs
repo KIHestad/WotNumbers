@@ -505,8 +505,8 @@ namespace WinApp.Code
 						// Calc values according to increased XP (progress)
 						int progressPercent = GrindingHelper.CalcProgressPercent(grind, progress);
 						int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
-						int realAvgXP = GrindingHelper.CalcRealAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(), grinding["totalXP"].ToString(), 
-																	 grinding["avgXP"].ToString(), grinding["avgXP"].ToString());
+						int realAvgXP = GrindingHelper.CalcRealAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(), grinding["totalXP"].ToString(),
+																	 grinding["avgXP"].ToString(), btlPerDay.ToString());
 						int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
 						int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
 						// Save to playerTank

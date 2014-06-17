@@ -92,6 +92,7 @@
 			this.lblCopyFrom.Name = "lblCopyFrom";
 			this.lblCopyFrom.Size = new System.Drawing.Size(106, 23);
 			this.lblCopyFrom.TabIndex = 7;
+			this.lblCopyFrom.TabStop = false;
 			this.lblCopyFrom.Text = "Copy from existing:";
 			// 
 			// badLabel2
@@ -102,7 +103,8 @@
 			this.badLabel2.Location = new System.Drawing.Point(40, 105);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(106, 23);
-			this.badLabel2.TabIndex = 3;
+			this.badLabel2.TabIndex = 5;
+			this.badLabel2.TabStop = false;
 			this.badLabel2.Text = "Favourite Tank List:";
 			// 
 			// ddDefaultTankFilter
@@ -111,7 +113,7 @@
 			this.ddDefaultTankFilter.Location = new System.Drawing.Point(152, 104);
 			this.ddDefaultTankFilter.Name = "ddDefaultTankFilter";
 			this.ddDefaultTankFilter.Size = new System.Drawing.Size(184, 23);
-			this.ddDefaultTankFilter.TabIndex = 2;
+			this.ddDefaultTankFilter.TabIndex = 6;
 			this.ddDefaultTankFilter.Text = "(Use current)";
 			this.ddDefaultTankFilter.Click += new System.EventHandler(this.ddDefaultTankFilter_Click);
 			// 
@@ -123,7 +125,7 @@
 			this.txtName.Name = "txtName";
 			this.txtName.PasswordChar = '\0';
 			this.txtName.Size = new System.Drawing.Size(184, 23);
-			this.txtName.TabIndex = 1;
+			this.txtName.TabIndex = 4;
 			this.txtName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel1
@@ -134,7 +136,8 @@
 			this.badLabel1.Location = new System.Drawing.Point(40, 75);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(106, 23);
-			this.badLabel1.TabIndex = 0;
+			this.badLabel1.TabIndex = 3;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Column List Name:";
 			// 
 			// badGroupBox1
@@ -144,26 +147,27 @@
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 49);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(331, 126);
-			this.badGroupBox1.TabIndex = 6;
+			this.badGroupBox1.TabIndex = 2;
+			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Column List Properties";
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(200, 192);
+			this.btnCancel.Location = new System.Drawing.Point(281, 192);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 5;
+			this.btnCancel.TabIndex = 10;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(281, 192);
+			this.btnSave.Location = new System.Drawing.Point(200, 192);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 4;
+			this.btnSave.TabIndex = 9;
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 

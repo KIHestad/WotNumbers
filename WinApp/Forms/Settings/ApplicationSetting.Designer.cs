@@ -30,40 +30,37 @@
 		{
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSetting));
-			this.openFileDialogDossierFile = new System.Windows.Forms.OpenFileDialog();
+			this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
 			this.ApplicationSettingsTheme = new BadForm();
+			this.Cancel = new BadButton();
 			this.cboSelectPlayer = new BadDropDownBox();
 			this.btnSelectDossierFilePath = new BadButton();
 			this.btnRemovePlayer = new BadButton();
 			this.btnAddPlayer = new BadButton();
 			this.txtDossierFilePath = new BadTextBox();
-			this.badLabel4 = new BadLabel();
 			this.btnDbSetting = new BadButton();
-			this.badSeperator2 = new BadSeperator();
-			this.badSeperator1 = new BadSeperator();
 			this.btnSave = new BadButton();
-			this.lblPlayer = new BadLabel();
 			this.lblDbSettings = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
-			this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
+			this.badGroupBox2 = new BadGroupBox();
+			this.badGroupBox3 = new BadGroupBox();
 			this.ApplicationSettingsTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ApplicationSettingsTheme
 			// 
+			this.ApplicationSettingsTheme.Controls.Add(this.Cancel);
 			this.ApplicationSettingsTheme.Controls.Add(this.cboSelectPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSelectDossierFilePath);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnRemovePlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnAddPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.txtDossierFilePath);
-			this.ApplicationSettingsTheme.Controls.Add(this.badLabel4);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnDbSetting);
-			this.ApplicationSettingsTheme.Controls.Add(this.badSeperator2);
-			this.ApplicationSettingsTheme.Controls.Add(this.badSeperator1);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSave);
-			this.ApplicationSettingsTheme.Controls.Add(this.lblPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.lblDbSettings);
 			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox1);
+			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox2);
+			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox3);
 			this.ApplicationSettingsTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ApplicationSettingsTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.ApplicationSettingsTheme.FormFooter = false;
@@ -75,51 +72,61 @@
 			this.ApplicationSettingsTheme.MainArea = mainAreaClass1;
 			this.ApplicationSettingsTheme.Name = "ApplicationSettingsTheme";
 			this.ApplicationSettingsTheme.Resizable = false;
-			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(508, 344);
+			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(498, 364);
 			this.ApplicationSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ApplicationSettingsTheme.SystemExitImage")));
 			this.ApplicationSettingsTheme.SystemMaximizeImage = null;
 			this.ApplicationSettingsTheme.SystemMinimizeImage = null;
-			this.ApplicationSettingsTheme.TabIndex = 11;
+			this.ApplicationSettingsTheme.TabIndex = 0;
 			this.ApplicationSettingsTheme.Text = "Application Settings";
 			this.ApplicationSettingsTheme.TitleHeight = 26;
+			// 
+			// Cancel
+			// 
+			this.Cancel.Image = null;
+			this.Cancel.Location = new System.Drawing.Point(395, 319);
+			this.Cancel.Name = "Cancel";
+			this.Cancel.Size = new System.Drawing.Size(75, 23);
+			this.Cancel.TabIndex = 12;
+			this.Cancel.Text = "Cancel";
+			this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
 			// 
 			// cboSelectPlayer
 			// 
 			this.cboSelectPlayer.Image = null;
-			this.cboSelectPlayer.Location = new System.Drawing.Point(98, 126);
+			this.cboSelectPlayer.Location = new System.Drawing.Point(44, 264);
 			this.cboSelectPlayer.Name = "cboSelectPlayer";
-			this.cboSelectPlayer.Size = new System.Drawing.Size(188, 23);
-			this.cboSelectPlayer.TabIndex = 38;
+			this.cboSelectPlayer.Size = new System.Drawing.Size(243, 23);
+			this.cboSelectPlayer.TabIndex = 8;
 			this.cboSelectPlayer.Text = "badDropDownBox1";
 			this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
 			// 
 			// btnSelectDossierFilePath
 			// 
 			this.btnSelectDossierFilePath.Image = null;
-			this.btnSelectDossierFilePath.Location = new System.Drawing.Point(369, 245);
+			this.btnSelectDossierFilePath.Location = new System.Drawing.Point(377, 95);
 			this.btnSelectDossierFilePath.Name = "btnSelectDossierFilePath";
-			this.btnSelectDossierFilePath.Size = new System.Drawing.Size(88, 23);
-			this.btnSelectDossierFilePath.TabIndex = 34;
+			this.btnSelectDossierFilePath.Size = new System.Drawing.Size(78, 23);
+			this.btnSelectDossierFilePath.TabIndex = 3;
 			this.btnSelectDossierFilePath.Text = "Select Path";
 			this.btnSelectDossierFilePath.Click += new System.EventHandler(this.btnSelectDossierFilePath_Click);
 			// 
 			// btnRemovePlayer
 			// 
 			this.btnRemovePlayer.Image = null;
-			this.btnRemovePlayer.Location = new System.Drawing.Point(379, 126);
+			this.btnRemovePlayer.Location = new System.Drawing.Point(377, 264);
 			this.btnRemovePlayer.Name = "btnRemovePlayer";
 			this.btnRemovePlayer.Size = new System.Drawing.Size(78, 23);
-			this.btnRemovePlayer.TabIndex = 31;
+			this.btnRemovePlayer.TabIndex = 10;
 			this.btnRemovePlayer.Text = "Remove";
 			this.btnRemovePlayer.Click += new System.EventHandler(this.btnRemovePlayer_Click_1);
 			// 
 			// btnAddPlayer
 			// 
 			this.btnAddPlayer.Image = null;
-			this.btnAddPlayer.Location = new System.Drawing.Point(292, 126);
+			this.btnAddPlayer.Location = new System.Drawing.Point(293, 264);
 			this.btnAddPlayer.Name = "btnAddPlayer";
-			this.btnAddPlayer.Size = new System.Drawing.Size(81, 23);
-			this.btnAddPlayer.TabIndex = 30;
+			this.btnAddPlayer.Size = new System.Drawing.Size(78, 23);
+			this.btnAddPlayer.TabIndex = 9;
 			this.btnAddPlayer.Text = "Add";
 			this.btnAddPlayer.Click += new System.EventHandler(this.btmAddPlayer_Click);
 			// 
@@ -127,84 +134,43 @@
 			// 
 			this.txtDossierFilePath.HasFocus = false;
 			this.txtDossierFilePath.Image = null;
-			this.txtDossierFilePath.Location = new System.Drawing.Point(46, 189);
+			this.txtDossierFilePath.Location = new System.Drawing.Point(44, 73);
 			this.txtDossierFilePath.Name = "txtDossierFilePath";
 			this.txtDossierFilePath.PasswordChar = '\0';
-			this.txtDossierFilePath.Size = new System.Drawing.Size(411, 45);
-			this.txtDossierFilePath.TabIndex = 32;
+			this.txtDossierFilePath.Size = new System.Drawing.Size(317, 45);
+			this.txtDossierFilePath.TabIndex = 2;
 			this.txtDossierFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			// 
-			// badLabel4
-			// 
-			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel4.Dimmed = false;
-			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(46, 168);
-			this.badLabel4.Name = "badLabel4";
-			this.badLabel4.Size = new System.Drawing.Size(100, 23);
-			this.badLabel4.TabIndex = 33;
-			this.badLabel4.Text = "Dossier File Path:";
 			// 
 			// btnDbSetting
 			// 
 			this.btnDbSetting.Image = null;
-			this.btnDbSetting.Location = new System.Drawing.Point(379, 73);
+			this.btnDbSetting.Location = new System.Drawing.Point(377, 186);
 			this.btnDbSetting.Name = "btnDbSetting";
 			this.btnDbSetting.Size = new System.Drawing.Size(78, 23);
-			this.btnDbSetting.TabIndex = 24;
+			this.btnDbSetting.TabIndex = 6;
 			this.btnDbSetting.Text = "Settings";
 			this.btnDbSetting.Click += new System.EventHandler(this.btnDbSetting_Click);
-			// 
-			// badSeperator2
-			// 
-			this.badSeperator2.BackColor = System.Drawing.Color.Transparent;
-			this.badSeperator2.Direction = System.Windows.Forms.Orientation.Horizontal;
-			this.badSeperator2.Image = null;
-			this.badSeperator2.Location = new System.Drawing.Point(46, 155);
-			this.badSeperator2.Name = "badSeperator2";
-			this.badSeperator2.Size = new System.Drawing.Size(411, 18);
-			this.badSeperator2.TabIndex = 37;
-			// 
-			// badSeperator1
-			// 
-			this.badSeperator1.BackColor = System.Drawing.Color.Transparent;
-			this.badSeperator1.Direction = System.Windows.Forms.Orientation.Horizontal;
-			this.badSeperator1.Image = null;
-			this.badSeperator1.Location = new System.Drawing.Point(46, 102);
-			this.badSeperator1.Name = "badSeperator1";
-			this.badSeperator1.Size = new System.Drawing.Size(411, 18);
-			this.badSeperator1.TabIndex = 36;
 			// 
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(384, 300);
+			this.btnSave.Location = new System.Drawing.Point(312, 319);
 			this.btnSave.Name = "btnSave";
-			this.btnSave.Size = new System.Drawing.Size(88, 23);
-			this.btnSave.TabIndex = 35;
+			this.btnSave.Size = new System.Drawing.Size(77, 23);
+			this.btnSave.TabIndex = 11;
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
-			// 
-			// lblPlayer
-			// 
-			this.lblPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.lblPlayer.Dimmed = false;
-			this.lblPlayer.Image = null;
-			this.lblPlayer.Location = new System.Drawing.Point(46, 126);
-			this.lblPlayer.Name = "lblPlayer";
-			this.lblPlayer.Size = new System.Drawing.Size(45, 23);
-			this.lblPlayer.TabIndex = 29;
-			this.lblPlayer.Text = "Player:";
 			// 
 			// lblDbSettings
 			// 
 			this.lblDbSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblDbSettings.Dimmed = false;
 			this.lblDbSettings.Image = null;
-			this.lblDbSettings.Location = new System.Drawing.Point(46, 68);
+			this.lblDbSettings.Location = new System.Drawing.Point(44, 173);
 			this.lblDbSettings.Name = "lblDbSettings";
 			this.lblDbSettings.Size = new System.Drawing.Size(317, 36);
-			this.lblDbSettings.TabIndex = 28;
+			this.lblDbSettings.TabIndex = 5;
+			this.lblDbSettings.TabStop = false;
 			this.lblDbSettings.Text = "Database:";
 			// 
 			// badGroupBox1
@@ -213,15 +179,38 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 49);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(447, 234);
-			this.badGroupBox1.TabIndex = 20;
-			this.badGroupBox1.Text = "Settings";
+			this.badGroupBox1.Size = new System.Drawing.Size(447, 86);
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
+			this.badGroupBox1.Text = "Dossier File Path";
+			// 
+			// badGroupBox2
+			// 
+			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox2.Image = null;
+			this.badGroupBox2.Location = new System.Drawing.Point(25, 153);
+			this.badGroupBox2.Name = "badGroupBox2";
+			this.badGroupBox2.Size = new System.Drawing.Size(447, 71);
+			this.badGroupBox2.TabIndex = 4;
+			this.badGroupBox2.TabStop = false;
+			this.badGroupBox2.Text = "Database";
+			// 
+			// badGroupBox3
+			// 
+			this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox3.Image = null;
+			this.badGroupBox3.Location = new System.Drawing.Point(25, 240);
+			this.badGroupBox3.Name = "badGroupBox3";
+			this.badGroupBox3.Size = new System.Drawing.Size(445, 64);
+			this.badGroupBox3.TabIndex = 7;
+			this.badGroupBox3.TabStop = false;
+			this.badGroupBox3.Text = "Player";
 			// 
 			// ApplicationSetting
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(508, 344);
+			this.ClientSize = new System.Drawing.Size(498, 364);
 			this.Controls.Add(this.ApplicationSettingsTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
@@ -239,21 +228,19 @@
 
 		#endregion
 
-		private System.Windows.Forms.OpenFileDialog openFileDialogDossierFile;
 		private BadForm ApplicationSettingsTheme;
 		private BadGroupBox badGroupBox1;
 		private BadButton btnDbSetting;
 		private BadLabel lblDbSettings;
-		private BadLabel lblPlayer;
 		private BadButton btnAddPlayer;
 		private BadButton btnRemovePlayer;
 		private BadTextBox txtDossierFilePath;
-		private BadLabel badLabel4;
 		private BadButton btnSelectDossierFilePath;
 		private BadButton btnSave;
-		private BadSeperator badSeperator2;
-		private BadSeperator badSeperator1;
 		private BadDropDownBox cboSelectPlayer;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDossier;
+		private BadGroupBox badGroupBox2;
+		private BadGroupBox badGroupBox3;
+		private BadButton Cancel;
 	}
 }

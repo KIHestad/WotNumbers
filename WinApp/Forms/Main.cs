@@ -99,15 +99,49 @@ namespace WinApp.Forms
 			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
+			ToolStripSeparator dataGridMainPopup_Separator1 = new ToolStripSeparator();
+			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
 			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Tank Charts");
 			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
+			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
+			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
 			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_TankChart_Click);
 			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
+			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
+			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
 			//Add to main context menu
-			dataGridMainPopup.Items.AddRange(new ToolStripItem[] { dataGridMainPopup_Details, dataGridMainPopup_Chart, dataGridMainPopup_GrindingSetup });
+			GridView.Views view = MainSettings.View;
+			switch (view)
+			{
+				case GridView.Views.Overall:
+					break;
+				case GridView.Views.Tank:
+					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
+					{ 
+						dataGridMainPopup_Details, 
+						dataGridMainPopup_Chart, 
+						dataGridMainPopup_GrindingSetup 
+					});
+					break;
+				case GridView.Views.Battle:
+					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
+					{ 
+						dataGridMainPopup_Details, 
+						dataGridMainPopup_Chart, 
+						dataGridMainPopup_GrindingSetup,
+						dataGridMainPopup_Separator1,
+						dataGridMainPopup_FilterOnTank,
+						dataGridMainPopup_Separator2,
+						dataGridMainPopup_DeleteBattle
+					});
+					break;
+				default:
+					break;
+			}
+			
 			//Assign to datagridview
 			dataGridMain.ContextMenuStrip = dataGridMainPopup;
 		}
@@ -512,6 +546,7 @@ namespace WinApp.Forms
 				currentColListSettings.ColListName = selectedMenu.Text;
 				if (newColListSettings.FavListShow != GridFilter.FavListShowType.UseCurrent)
 				{
+					currentColListSettings.TankId = -1; // Deselect tank filter
 					currentColListSettings.FavListId = newColListSettings.FavListId;
 					currentColListSettings.FavListName = newColListSettings.FavListName;
 					currentColListSettings.FavListShow = newColListSettings.FavListShow;
@@ -570,6 +605,7 @@ namespace WinApp.Forms
 			int newFavListId = FavListHelper.GetId(selectedMenu.Text);
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.TankId = -1;
 			gf.FavListId = newFavListId;
 			gf.FavListName = selectedMenu.Text;
 			gf.FavListShow = GridFilter.FavListShowType.FavList;
@@ -585,32 +621,41 @@ namespace WinApp.Forms
 
 		private void SelectFavMenuItem()
 		{
-			// Go to previous fav tank list
-			switch (MainSettings.GetCurrentGridFilter().FavListShow)
+			// Go to previous tank filter / fav list
+			if (MainSettings.GetCurrentGridFilter().TankId != -1)
 			{
-				case GridFilter.FavListShowType.UseCurrent:
-					// No action, use previous selected tanks filter
-					break;
-				case GridFilter.FavListShowType.AllTanks:
-					// Remove all filters, select All Tanks
-					TankFilterMenuUncheck(true, true, true, true, false);
-					break;
-				case GridFilter.FavListShowType.FavList:
-					// Go to 
-					TankFilterMenuUncheck(true, true, true, true, false);
-					// Find favlist in menu and put on checkbox
-					for (int i = 1; i <= 10; i++)
-					{
-						ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-						if (menuItem.Visible == true && menuItem.Text == MainSettings.GetCurrentGridFilter().FavListName)
+				TankFilterMenuUncheck(true, true, true, true, false);
+				toolItemTankFilter_All.Checked = false;
+			}
+			else
+			{
+				switch (MainSettings.GetCurrentGridFilter().FavListShow)
+				{
+					case GridFilter.FavListShowType.UseCurrent:
+						// No action, use previous selected tanks filter
+						break;
+					case GridFilter.FavListShowType.AllTanks:
+						// Remove all filters, select All Tanks
+						TankFilterMenuUncheck(true, true, true, true, false);
+						break;
+					case GridFilter.FavListShowType.FavList:
+						// Go to 
+						TankFilterMenuUncheck(true, true, true, true, false);
+						toolItemTankFilter_All.Checked = false;
+						// Find favlist in menu and put on checkbox
+						for (int i = 1; i <= 10; i++)
 						{
-							menuItem.Checked = true;
-							toolItemTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
+							ToolStripMenuItem menuItem = toolItemTankFilter.DropDownItems["toolItemTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+							if (menuItem.Text == MainSettings.GetCurrentGridFilter().FavListName)
+							{
+								menuItem.Checked = true;
+								toolItemTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
+							}
 						}
-					}
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
+				}
 			}
 		}
 
@@ -696,6 +741,7 @@ namespace WinApp.Forms
 			string status2message = "";
 			// Update selected tankfilter type
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.TankId = -1; // Remove tank filter
 			gf.FavListShow = GridFilter.FavListShowType.AllTanks;
 			MainSettings.UpdateCurrentGridFilter(gf);
 			if (menuItem.Text == "All Tanks")
@@ -893,7 +939,16 @@ namespace WinApp.Forms
 			string newWhereSQL = "";
 			string newJoinSQL = "";
 			// Calc filter and set statusbar message
-			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
+			if (MainSettings.GetCurrentGridFilter().TankId != -1)
+			{
+				int tankId = MainSettings.GetCurrentGridFilter().TankId;
+				string tankName = TankData.GetTankName(tankId);
+				toolItemTankFilter.Text = tankName;
+				message = "Filtered on tank: " + tankName;
+				newWhereSQL = " AND tank.id=@tankId ";
+				DB.AddWithValue(ref newWhereSQL, "@tankId", tankId, DB.SqlDataType.Int);
+			}
+			else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
 			{
 				toolItemTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
 				message = "Favourite list: " + toolItemTankFilter.Text;
@@ -1114,8 +1169,8 @@ namespace WinApp.Forms
 				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
 				"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 				"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
-				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, " +
-				"  0 as footer, playerTank.Id as player_Tank_Id, " + sortordercol + 
+				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip,  " +
+				"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id, " + sortordercol + 
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -1258,6 +1313,7 @@ namespace WinApp.Forms
 			dataGridMain.Columns["footer"].Visible = false;
 			dataGridMain.Columns["sortorder"].Visible = false;
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
+			dataGridMain.Columns["battle_Id"].Visible = false;
 			// Format grid 
 			foreach (colListClass colListItem in colList)
 			{
@@ -1471,7 +1527,7 @@ namespace WinApp.Forms
 		private int dataGridRightClickRow = -1;
 		private void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Right)
+			if (e.Button == MouseButtons.Right && e.RowIndex != -1)
 			{
 				dataGridRightClickRow = e.RowIndex;
 				dataGridRightClickCol = e.ColumnIndex;
@@ -1501,7 +1557,37 @@ namespace WinApp.Forms
 			frm.Show();
 		}
 
-		
+		private void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
+		{
+			Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle?", "Delete battle", MsgBoxType.OKCancel);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
+				string sql =
+					"delete from battleAch where battleId=@battleId; " +
+					"delete from battleFrag where battleId=@battleId; " +
+					"delete from battle where id=@battleId; ";
+				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
+				DB.ExecuteNonQuery(sql);
+				GridShow("Deleted battle, grid refreshed");
+			}
+		}
+
+		private void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)
+		{
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			int tankId = TankData.GetTankID(playerTankId);
+			if (tankId != 0)
+			{
+				TankFilterMenuUncheck(true, true, true, true, false);
+				toolItemTankFilter_All.Checked = false;
+				MainSettings.GetCurrentGridFilter().TankId = tankId;
+				GridShow("Filtered on tank: " + TankData.GetTankName(tankId));
+			}
+			
+		}
+
+
 
 
 		#endregion

@@ -53,6 +53,7 @@
 			this.btnSave = new BadButton();
 			this.btnNewDb = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
+			this.btnCancel = new BadButton();
 			this.DatabaseSettingsTheme.SuspendLayout();
 			this.panelSQLite.SuspendLayout();
 			this.panelMSSQL.SuspendLayout();
@@ -65,6 +66,7 @@
 			// DatabaseSettingsTheme
 			// 
 			this.DatabaseSettingsTheme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.DatabaseSettingsTheme.Controls.Add(this.btnCancel);
 			this.DatabaseSettingsTheme.Controls.Add(this.popupDatabaseType);
 			this.DatabaseSettingsTheme.Controls.Add(this.panelSQLite);
 			this.DatabaseSettingsTheme.Controls.Add(this.panelMSSQL);
@@ -88,7 +90,7 @@
 			this.DatabaseSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DatabaseSettingsTheme.SystemExitImage")));
 			this.DatabaseSettingsTheme.SystemMaximizeImage = null;
 			this.DatabaseSettingsTheme.SystemMinimizeImage = null;
-			this.DatabaseSettingsTheme.TabIndex = 7;
+			this.DatabaseSettingsTheme.TabIndex = 0;
 			this.DatabaseSettingsTheme.Text = "Database Settings";
 			this.DatabaseSettingsTheme.TitleHeight = 26;
 			// 
@@ -98,7 +100,7 @@
 			this.popupDatabaseType.Location = new System.Drawing.Point(169, 74);
 			this.popupDatabaseType.Name = "popupDatabaseType";
 			this.popupDatabaseType.Size = new System.Drawing.Size(176, 23);
-			this.popupDatabaseType.TabIndex = 32;
+			this.popupDatabaseType.TabIndex = 3;
 			this.popupDatabaseType.TextChanged += new System.EventHandler(this.popupDatabaseType_TextChanged);
 			this.popupDatabaseType.Click += new System.EventHandler(this.popupDatabaseType_Click);
 			// 
@@ -111,7 +113,7 @@
 			this.panelSQLite.Location = new System.Drawing.Point(33, 350);
 			this.panelSQLite.Name = "panelSQLite";
 			this.panelSQLite.Size = new System.Drawing.Size(311, 140);
-			this.panelSQLite.TabIndex = 31;
+			this.panelSQLite.TabIndex = 16;
 			// 
 			// txtDatabaseFile
 			// 
@@ -121,7 +123,7 @@
 			this.txtDatabaseFile.Name = "txtDatabaseFile";
 			this.txtDatabaseFile.PasswordChar = '\0';
 			this.txtDatabaseFile.Size = new System.Drawing.Size(296, 45);
-			this.txtDatabaseFile.TabIndex = 26;
+			this.txtDatabaseFile.TabIndex = 19;
 			this.txtDatabaseFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel5
@@ -132,7 +134,8 @@
 			this.badLabel5.Location = new System.Drawing.Point(4, 28);
 			this.badLabel5.Name = "badLabel5";
 			this.badLabel5.Size = new System.Drawing.Size(75, 23);
-			this.badLabel5.TabIndex = 27;
+			this.badLabel5.TabIndex = 18;
+			this.badLabel5.TabStop = false;
 			this.badLabel5.Text = "Database File:";
 			// 
 			// badSeperator2
@@ -143,7 +146,8 @@
 			this.badSeperator2.Location = new System.Drawing.Point(6, 3);
 			this.badSeperator2.Name = "badSeperator2";
 			this.badSeperator2.Size = new System.Drawing.Size(302, 23);
-			this.badSeperator2.TabIndex = 9;
+			this.badSeperator2.TabIndex = 17;
+			this.badSeperator2.TabStop = false;
 			this.badSeperator2.Text = "SQLite";
 			// 
 			// cmdSQLiteDatabaseFile
@@ -152,7 +156,7 @@
 			this.cmdSQLiteDatabaseFile.Location = new System.Drawing.Point(227, 99);
 			this.cmdSQLiteDatabaseFile.Name = "cmdSQLiteDatabaseFile";
 			this.cmdSQLiteDatabaseFile.Size = new System.Drawing.Size(75, 23);
-			this.cmdSQLiteDatabaseFile.TabIndex = 13;
+			this.cmdSQLiteDatabaseFile.TabIndex = 20;
 			this.cmdSQLiteDatabaseFile.Text = "Select File";
 			this.cmdSQLiteDatabaseFile.Click += new System.EventHandler(this.cmdSQLiteDatabaseFile_Click);
 			// 
@@ -171,7 +175,7 @@
 			this.panelMSSQL.Location = new System.Drawing.Point(40, 132);
 			this.panelMSSQL.Name = "panelMSSQL";
 			this.panelMSSQL.Size = new System.Drawing.Size(311, 152);
-			this.panelMSSQL.TabIndex = 30;
+			this.panelMSSQL.TabIndex = 5;
 			// 
 			// popupDatabase
 			// 
@@ -179,7 +183,7 @@
 			this.popupDatabase.Location = new System.Drawing.Point(129, 123);
 			this.popupDatabase.Name = "popupDatabase";
 			this.popupDatabase.Size = new System.Drawing.Size(176, 23);
-			this.popupDatabase.TabIndex = 26;
+			this.popupDatabase.TabIndex = 15;
 			this.popupDatabase.Click += new System.EventHandler(this.popupDatabase_Click);
 			// 
 			// popupDbAuth
@@ -188,7 +192,7 @@
 			this.popupDbAuth.Location = new System.Drawing.Point(129, 64);
 			this.popupDbAuth.Name = "popupDbAuth";
 			this.popupDbAuth.Size = new System.Drawing.Size(176, 23);
-			this.popupDbAuth.TabIndex = 25;
+			this.popupDbAuth.TabIndex = 10;
 			this.popupDbAuth.TextChanged += new System.EventHandler(this.popupDbAuth_TextChanged);
 			this.popupDbAuth.Click += new System.EventHandler(this.popupDbAuth_Click);
 			// 
@@ -200,7 +204,8 @@
 			this.badSeperator1.Location = new System.Drawing.Point(3, 3);
 			this.badSeperator1.Name = "badSeperator1";
 			this.badSeperator1.Size = new System.Drawing.Size(302, 26);
-			this.badSeperator1.TabIndex = 12;
+			this.badSeperator1.TabIndex = 6;
+			this.badSeperator1.TabStop = false;
 			this.badSeperator1.Text = "MS SQL Server";
 			// 
 			// badLabel1
@@ -211,7 +216,8 @@
 			this.badLabel1.Location = new System.Drawing.Point(3, 122);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(96, 23);
-			this.badLabel1.TabIndex = 16;
+			this.badLabel1.TabIndex = 14;
+			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Select Database:";
 			// 
 			// badLabel3
@@ -222,7 +228,8 @@
 			this.badLabel3.Location = new System.Drawing.Point(3, 35);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(75, 23);
-			this.badLabel3.TabIndex = 24;
+			this.badLabel3.TabIndex = 7;
+			this.badLabel3.TabStop = false;
 			this.badLabel3.Text = "Server Name:";
 			// 
 			// lblUIDPW
@@ -233,7 +240,8 @@
 			this.lblUIDPW.Location = new System.Drawing.Point(3, 93);
 			this.lblUIDPW.Name = "lblUIDPW";
 			this.lblUIDPW.Size = new System.Drawing.Size(123, 23);
-			this.lblUIDPW.TabIndex = 19;
+			this.lblUIDPW.TabIndex = 11;
+			this.lblUIDPW.TabStop = false;
 			this.lblUIDPW.Text = "User Name / Password:";
 			// 
 			// txtUID
@@ -244,7 +252,7 @@
 			this.txtUID.Name = "txtUID";
 			this.txtUID.PasswordChar = '\0';
 			this.txtUID.Size = new System.Drawing.Size(85, 23);
-			this.txtUID.TabIndex = 18;
+			this.txtUID.TabIndex = 12;
 			this.txtUID.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel4
@@ -255,7 +263,8 @@
 			this.badLabel4.Location = new System.Drawing.Point(3, 64);
 			this.badLabel4.Name = "badLabel4";
 			this.badLabel4.Size = new System.Drawing.Size(96, 23);
-			this.badLabel4.TabIndex = 22;
+			this.badLabel4.TabIndex = 9;
+			this.badLabel4.TabStop = false;
 			this.badLabel4.Text = "Authentication:";
 			// 
 			// txtPW
@@ -266,7 +275,7 @@
 			this.txtPW.Name = "txtPW";
 			this.txtPW.PasswordChar = '*';
 			this.txtPW.Size = new System.Drawing.Size(85, 23);
-			this.txtPW.TabIndex = 17;
+			this.txtPW.TabIndex = 13;
 			this.txtPW.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// txtServerName
@@ -277,7 +286,7 @@
 			this.txtServerName.Name = "txtServerName";
 			this.txtServerName.PasswordChar = '\0';
 			this.txtServerName.Size = new System.Drawing.Size(176, 23);
-			this.txtServerName.TabIndex = 23;
+			this.txtServerName.TabIndex = 8;
 			this.txtServerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
 			// badLabel6
@@ -288,16 +297,17 @@
 			this.badLabel6.Location = new System.Drawing.Point(44, 75);
 			this.badLabel6.Name = "badLabel6";
 			this.badLabel6.Size = new System.Drawing.Size(96, 23);
-			this.badLabel6.TabIndex = 28;
+			this.badLabel6.TabIndex = 2;
+			this.badLabel6.TabStop = false;
 			this.badLabel6.Text = "Database Type:";
 			// 
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(289, 311);
+			this.btnSave.Location = new System.Drawing.Point(210, 311);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 10;
+			this.btnSave.TabIndex = 21;
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
 			// 
@@ -307,7 +317,7 @@
 			this.btnNewDb.Location = new System.Drawing.Point(261, 108);
 			this.btnNewDb.Name = "btnNewDb";
 			this.btnNewDb.Size = new System.Drawing.Size(85, 23);
-			this.btnNewDb.TabIndex = 11;
+			this.btnNewDb.TabIndex = 4;
 			this.btnNewDb.Text = "Create New";
 			this.btnNewDb.Click += new System.EventHandler(this.btnNewDb_Click);
 			// 
@@ -318,8 +328,19 @@
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 47);
 			this.badGroupBox1.Name = "badGroupBox1";
 			this.badGroupBox1.Size = new System.Drawing.Size(341, 249);
-			this.badGroupBox1.TabIndex = 14;
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Settings";
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(291, 311);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 22;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// DatabaseSetting
 			// 
@@ -367,5 +388,6 @@
 		private BadDropDownBox popupDatabaseType;
 		private BadDropDownBox popupDbAuth;
 		private BadDropDownBox popupDatabase;
+		private BadButton btnCancel;
 	}
 }
