@@ -521,11 +521,14 @@ abstract class BadThemeContainerControl : ContainerControl
 
 	public void PaintSysIcons()
 	{
-		graphicObject.Dispose();
-		bitmapObject.Dispose();
-		bitmapObject = new Bitmap(Width, Height);
-		graphicObject = Graphics.FromImage(bitmapObject);
-		Invalidate();
+		if (ParentForm.WindowState != FormWindowState.Minimized)
+		{
+			graphicObject.Dispose();
+			bitmapObject.Dispose();
+			bitmapObject = new Bitmap(Width, Height);
+			graphicObject = Graphics.FromImage(bitmapObject);
+			Invalidate();
+		}
 	}
 
 	public void AddSysIcons()

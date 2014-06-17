@@ -67,7 +67,8 @@
 			// picIcon
 			// 
 			this.picIcon.BackColor = System.Drawing.Color.Transparent;
-			this.picIcon.Location = new System.Drawing.Point(78, 215);
+			this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.picIcon.Location = new System.Drawing.Point(81, 212);
 			this.picIcon.Name = "picIcon";
 			this.picIcon.Size = new System.Drawing.Size(65, 24);
 			this.picIcon.TabIndex = 9;
@@ -76,7 +77,8 @@
 			// picSmall
 			// 
 			this.picSmall.BackColor = System.Drawing.Color.Transparent;
-			this.picSmall.Location = new System.Drawing.Point(65, 168);
+			this.picSmall.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.picSmall.Location = new System.Drawing.Point(51, 165);
 			this.picSmall.Name = "picSmall";
 			this.picSmall.Size = new System.Drawing.Size(124, 31);
 			this.picSmall.TabIndex = 8;
@@ -85,7 +87,8 @@
 			// picLarge
 			// 
 			this.picLarge.BackColor = System.Drawing.Color.Transparent;
-			this.picLarge.Location = new System.Drawing.Point(30, 52);
+			this.picLarge.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.picLarge.Location = new System.Drawing.Point(33, 50);
 			this.picLarge.Name = "picLarge";
 			this.picLarge.Size = new System.Drawing.Size(160, 100);
 			this.picLarge.TabIndex = 7;

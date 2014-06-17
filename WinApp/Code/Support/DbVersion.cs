@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 50; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 51; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -826,6 +826,17 @@ namespace WinApp.Code
 							"update columnSelection set colDataType='Int' where id=2;" +
 							"update columnSelection set name='Pierced Hits%' where name='Pierced Hts%';";
 					sqlite = mssql;
+					break;
+				case 51:
+					mssql = "UPDATE columnSelection SET position=position+100 where colGroup <> 'Tank' and colType=1; " +
+							"UPDATE columnSelection SET position=position+10 where colGroup = 'Tank' and colType=1 and position > 1;" +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (180, 1, 2, 'tank.contourImg', 'Tank Icon', 'Tank icon (contour image)', 'Tank', 65, 'Image'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (181, 1, 3, 'tank.smallImg', 'Tank Image', 'Tank image (small), suitable for grid', 'Tank', 90, 'Image'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (182, 1, 4, 'tank.img', 'Tank Image Large', 'Tank large image, will only partly show if not expanding row height in grid', 'Tank', 145, 'Image'); "; 
+					sqlite = mssql; 
 					break;
 			}
 			string sql = "";

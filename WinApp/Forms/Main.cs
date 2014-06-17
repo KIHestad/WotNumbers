@@ -83,14 +83,17 @@ namespace WinApp.Forms
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
-			mainFormPosSize.Top = this.Top;
-			mainFormPosSize.Left = this.Left;
-			mainFormPosSize.Widht = this.Width;
-			mainFormPosSize.Height = this.Height;
-			Config.Settings.posSize = mainFormPosSize;
-			string msg = "";
-			Config.SaveConfig(out msg);
+			if (this.WindowState == FormWindowState.Normal)
+			{
+				ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
+				mainFormPosSize.Top = this.Top;
+				mainFormPosSize.Left = this.Left;
+				mainFormPosSize.Widht = this.Width;
+				mainFormPosSize.Height = this.Height;
+				Config.Settings.posSize = mainFormPosSize;
+				string msg = "";
+				Config.SaveConfig(out msg);
+			}
 		}
 
 		private void CreateDataGridContextMenu()
@@ -1096,19 +1099,28 @@ namespace WinApp.Forms
 				"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " +
 				"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " +
 				"         modGun ON playerTank.modGunId = modGun.id " + join +
-				"WHERE    playerTank.playerId=@playerid " + where + " " +
-				"GROUP BY tank.name, tank.id, playerTank.id, playerTank.tankId, playerTank.playerId, playerTank.creationTime, playerTank.updatedTime, playerTank.lastBattleTime,  " +
-				"         playerTank.has15, playerTank.has7, playerTank.hasCompany, playerTank.hasClan, playerTank.basedOnVersion, playerTank.battleLifeTime, playerTank.mileage,  " +
-				"         playerTank.treesCut, playerTank.eqBino, playerTank.eqCoated, playerTank.eqCamo, playerTank.equVent, playerTank.skillRecon, playerTank.skillAwareness,  " +
-				"         playerTank.skillCamo, playerTank.skillBia, playerTank.premiumCons, playerTank.vehicleCamo, playerTank.battlesCompany, playerTank.battlesClan,  " +
-				"         playerTank.modRadioId, playerTank.modTurretId, playerTank.modGunId, playerTank.markOfMastery, modTurret.name, modTurret.tier, modTurret.viewRange,  " +
-				"         modTurret.armorFront, modTurret.armorSides, modTurret.armorRear, modRadio.name, modRadio.tier, modRadio.signalRange, modGun.name, modGun.tier,  " +
-				"         modGun.dmg1, modGun.dmg2, modGun.dmg3, modGun.pen1, modGun.pen2, modGun.pen3, modGun.fireRate, tankType.name, tankType.shortName, country.name, country.shortName, " +
-				"         tank.tier, tank.premium, playerTank.gCurrentXP, playerTank.gGrindXP, playerTank.gGoalXP, playerTank.gProgressXP, playerTank.gBattlesDay, playerTank.gComment, " +
-				"		  playerTank.gProgressPercent, playerTank.gRestXP, playerTank.gRestDays, playerTank.gRestBattles " + sortordergroupby + " " +
+				"WHERE    playerTank.playerId=@playerid and battleMode='15' " + where + " " +
+				//"GROUP BY tank.name, tank.id, playerTank.id, playerTank.tankId, playerTank.playerId, playerTank.creationTime, playerTank.updatedTime, playerTank.lastBattleTime,  " +
+				//"         playerTank.has15, playerTank.has7, playerTank.hasCompany, playerTank.hasClan, playerTank.basedOnVersion, playerTank.battleLifeTime, playerTank.mileage,  " +
+				//"         playerTank.treesCut, playerTank.eqBino, playerTank.eqCoated, playerTank.eqCamo, playerTank.equVent, playerTank.skillRecon, playerTank.skillAwareness,  " +
+				//"         playerTank.skillCamo, playerTank.skillBia, playerTank.premiumCons, playerTank.vehicleCamo, playerTank.battlesCompany, playerTank.battlesClan,  " +
+				//"         playerTank.modRadioId, playerTank.modTurretId, playerTank.modGunId, playerTank.markOfMastery, modTurret.name, modTurret.tier, modTurret.viewRange,  " +
+				//"         modTurret.armorFront, modTurret.armorSides, modTurret.armorRear, modRadio.name, modRadio.tier, modRadio.signalRange, modGun.name, modGun.tier,  " +
+				//"         modGun.dmg1, modGun.dmg2, modGun.dmg3, modGun.pen1, modGun.pen2, modGun.pen3, modGun.fireRate, tankType.name, tankType.shortName, country.name, country.shortName, " +
+				//"         tank.tier, tank.premium, playerTank.gCurrentXP, playerTank.gGrindXP, playerTank.gGoalXP, playerTank.gProgressXP, playerTank.gBattlesDay, playerTank.gComment, " +
+				//"		  playerTank.gProgressPercent, playerTank.gRestXP, playerTank.gRestDays, playerTank.gRestBattles " + sortordergroupby + " " +
 				"ORDER BY playerTank.lastBattleTime DESC"; 
 
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			// Set row height in template before rendering to fit images
+			dataGridMain.RowTemplate.Height = 23;
+			foreach (colListClass colListItem in colList)
+			{
+				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
+					if (dataGridMain.RowTemplate.Height < 31) dataGridMain.RowTemplate.Height = 31;
+				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
+					dataGridMain.RowTemplate.Height = 60;
+			}
 			mainGridFormatting = true;
 			dataGridMain.DataSource = DB.FetchData(sql);
 			//  Hide system cols
@@ -1128,7 +1140,14 @@ namespace WinApp.Forms
 					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N1";
 				}
-				
+				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
+				{
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				}
+				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
+				{
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				}
 			}
 			ResizeNow();
 			// Add status message
