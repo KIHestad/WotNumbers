@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo_org_icon3.ico</ApplicationIcon>
+    <ApplicationIcon>form_ico_6.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>WinApp.Program</StartupObject>
@@ -443,6 +443,7 @@
     <Content Include="Docs\Database\insert.txt" />
     <Content Include="Dossier2json\compile.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
+    <Content Include="form_ico_6.ico" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
