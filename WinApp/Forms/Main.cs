@@ -1083,11 +1083,9 @@ namespace WinApp.Forms
 			string join = "";
 			Tankfilter(out where, out join, out message);
 			string sortordercol = "0 as sortorder ";
-			string sortordergroupby = "";
 			if (join != "")
 			{
 				sortordercol = "favListTank.sortorder as sortorder ";
-				sortordergroupby = ", favListTank.sortorder";
 			}
 			string sql =
 				"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " +
@@ -1100,15 +1098,6 @@ namespace WinApp.Forms
 				"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " +
 				"         modGun ON playerTank.modGunId = modGun.id " + join +
 				"WHERE    playerTank.playerId=@playerid and battleMode='15' " + where + " " +
-				//"GROUP BY tank.name, tank.id, playerTank.id, playerTank.tankId, playerTank.playerId, playerTank.creationTime, playerTank.updatedTime, playerTank.lastBattleTime,  " +
-				//"         playerTank.has15, playerTank.has7, playerTank.hasCompany, playerTank.hasClan, playerTank.basedOnVersion, playerTank.battleLifeTime, playerTank.mileage,  " +
-				//"         playerTank.treesCut, playerTank.eqBino, playerTank.eqCoated, playerTank.eqCamo, playerTank.equVent, playerTank.skillRecon, playerTank.skillAwareness,  " +
-				//"         playerTank.skillCamo, playerTank.skillBia, playerTank.premiumCons, playerTank.vehicleCamo, playerTank.battlesCompany, playerTank.battlesClan,  " +
-				//"         playerTank.modRadioId, playerTank.modTurretId, playerTank.modGunId, playerTank.markOfMastery, modTurret.name, modTurret.tier, modTurret.viewRange,  " +
-				//"         modTurret.armorFront, modTurret.armorSides, modTurret.armorRear, modRadio.name, modRadio.tier, modRadio.signalRange, modGun.name, modGun.tier,  " +
-				//"         modGun.dmg1, modGun.dmg2, modGun.dmg3, modGun.pen1, modGun.pen2, modGun.pen3, modGun.fireRate, tankType.name, tankType.shortName, country.name, country.shortName, " +
-				//"         tank.tier, tank.premium, playerTank.gCurrentXP, playerTank.gGrindXP, playerTank.gGoalXP, playerTank.gProgressXP, playerTank.gBattlesDay, playerTank.gComment, " +
-				//"		  playerTank.gProgressPercent, playerTank.gRestXP, playerTank.gRestDays, playerTank.gRestBattles " + sortordergroupby + " " +
 				"ORDER BY playerTank.lastBattleTime DESC"; 
 
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
@@ -1230,8 +1219,14 @@ namespace WinApp.Forms
 			int totalBattleCount = 0;
 			double totalWinRate = 0;
 			double totalSurvivedRate = 0;
+			// Add footer now, if ant rows
 			if (rowcount > 0)
 			{
+				// Create blank image in case of image in footer
+				MemoryStream ms = new MemoryStream();
+				Image image = new Bitmap(1, 1);
+				image.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+				byte[] blankImage = ms.ToArray();
 				// totals
 				totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)",""));
 				totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
@@ -1261,6 +1256,10 @@ namespace WinApp.Forms
 					else if (colListItem.colType == "DateTime")
 					{
 						footerRow1[colListItem.colName] = DBNull.Value;
+					}
+					else if (colListItem.colType == "Image")
+					{
+						footerRow1[colListItem.colName] = blankImage;
 					}
 					else
 					{
@@ -1301,6 +1300,10 @@ namespace WinApp.Forms
 					{
 						footerRow2[colListItem.colName] = DBNull.Value;
 					}
+					else if (colListItem.colType == "Image")
+					{
+						footerRow2[colListItem.colName] = blankImage;
+					}
 					else
 					{
 						string s = "";
@@ -1315,6 +1318,15 @@ namespace WinApp.Forms
 				}
 				dt.Rows.Add(footerRow2);
 				dt.Rows.Add(footerRow1);
+			}
+			// Set row height in template before rendering to fit images
+			dataGridMain.RowTemplate.Height = 23;
+			foreach (colListClass colListItem in colList)
+			{
+				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
+					if (dataGridMain.RowTemplate.Height < 31) dataGridMain.RowTemplate.Height = 31;
+				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
+					dataGridMain.RowTemplate.Height = 60;
 			}
 			// populate datagrid
 			mainGridFormatting = true;
@@ -1348,6 +1360,14 @@ namespace WinApp.Forms
 					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N0";
 					if (rowcount > 0) // Special format in footer for floating values
 						dataGridMain.Rows[rowcount + 1].Cells[colListItem.colName].Style.Format = "N1";
+				}
+				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
+				{
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				}
+				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
+				{
+					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				}
 				else // Format datetime/Varchar 
 				{
