@@ -114,6 +114,15 @@
 			this.toolItemTankFilter_Fav10 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemTankFilter_EditFavList = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemMode = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolItemModeAll = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolItemMode15 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemMode7 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+			this.randomBattlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemModeClan = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemModeCompany = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolItemBattles1d = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
@@ -395,6 +404,7 @@
             this.toolItemRefreshSeparator,
             this.toolItemColumnSelect,
             this.toolItemTankFilter,
+            this.toolItemMode,
             this.toolItemBattles,
             this.toolStripSeparator8,
             this.toolItemSettings,
@@ -404,7 +414,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(592, 25);
+			this.toolMain.Size = new System.Drawing.Size(703, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1049,6 +1059,70 @@
 			this.toolItemTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
 			this.toolItemTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
 			// 
+			// toolItemMode
+			// 
+			this.toolItemMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemModeAll,
+            this.toolStripSeparator16,
+            this.toolItemMode15,
+            this.toolItemMode7,
+            this.toolStripSeparator15,
+            this.randomBattlesToolStripMenuItem,
+            this.toolItemModeClan,
+            this.toolItemModeCompany});
+			this.toolItemMode.Image = ((System.Drawing.Image)(resources.GetObject("toolItemMode.Image")));
+			this.toolItemMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolItemMode.Name = "toolItemMode";
+			this.toolItemMode.ShowDropDownArrow = false;
+			this.toolItemMode.Size = new System.Drawing.Size(80, 22);
+			this.toolItemMode.Text = "All modes";
+			// 
+			// toolItemModeAll
+			// 
+			this.toolItemModeAll.Name = "toolItemModeAll";
+			this.toolItemModeAll.Size = new System.Drawing.Size(266, 22);
+			this.toolItemModeAll.Text = "All modes";
+			// 
+			// toolStripSeparator16
+			// 
+			this.toolStripSeparator16.Name = "toolStripSeparator16";
+			this.toolStripSeparator16.Size = new System.Drawing.Size(263, 6);
+			// 
+			// toolItemMode15
+			// 
+			this.toolItemMode15.Name = "toolItemMode15";
+			this.toolItemMode15.Size = new System.Drawing.Size(266, 22);
+			this.toolItemMode15.Text = "Battles 15x15 (Random, Clan, Comp)";
+			// 
+			// toolItemMode7
+			// 
+			this.toolItemMode7.Name = "toolItemMode7";
+			this.toolItemMode7.Size = new System.Drawing.Size(266, 22);
+			this.toolItemMode7.Text = "Battles 7x7 (Team Battles)";
+			// 
+			// toolStripSeparator15
+			// 
+			this.toolStripSeparator15.Name = "toolStripSeparator15";
+			this.toolStripSeparator15.Size = new System.Drawing.Size(263, 6);
+			// 
+			// randomBattlesToolStripMenuItem
+			// 
+			this.randomBattlesToolStripMenuItem.Name = "randomBattlesToolStripMenuItem";
+			this.randomBattlesToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+			this.randomBattlesToolStripMenuItem.Text = "Random battles";
+			// 
+			// toolItemModeClan
+			// 
+			this.toolItemModeClan.Name = "toolItemModeClan";
+			this.toolItemModeClan.Size = new System.Drawing.Size(266, 22);
+			this.toolItemModeClan.Text = "Clan War battles";
+			// 
+			// toolItemModeCompany
+			// 
+			this.toolItemModeCompany.Name = "toolItemModeCompany";
+			this.toolItemModeCompany.Size = new System.Drawing.Size(266, 22);
+			this.toolItemModeCompany.Text = "Company battles";
+			// 
 			// toolItemBattles
 			// 
 			this.toolItemBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1548,6 +1622,15 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_14;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_15;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripDropDownButton toolItemMode;
+		private System.Windows.Forms.ToolStripMenuItem toolItemModeAll;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+		private System.Windows.Forms.ToolStripMenuItem toolItemMode15;
+		private System.Windows.Forms.ToolStripMenuItem toolItemMode7;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+		private System.Windows.Forms.ToolStripMenuItem randomBattlesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem toolItemModeClan;
+		private System.Windows.Forms.ToolStripMenuItem toolItemModeCompany;
 	}
 }
 

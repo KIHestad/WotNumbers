@@ -331,9 +331,11 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="DevDocs\Img\logo_org.pdn" />
-    <None Include="DevDocs\Img\logo_org_icon.pdn" />
-    <None Include="DevDocs\Img\logo_org_icon3.pdn" />
+    <None Include="DevDocs\Img\FormIcons\logo_org_6.pdn" />
+    <None Include="DevDocs\Img\FormIcons\OLD\logo_org.pdn" />
+    <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.pdn" />
+    <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.pdn" />
+    <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.pdn" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\README.md" />
     <None Include="Dossier2json\structures_10.json" />
@@ -366,6 +368,20 @@
     <Content Include="DevDocs\DatabaseLog\script backup\select.txt" />
     <Content Include="DevDocs\DatabaseLog\script backup\transferBattles.txt" />
     <Content Include="DevDocs\DatabaseLog\wsTankId.txt" />
+    <Content Include="DevDocs\Img\FormIcons\form_details_ico_6.ico" />
+    <Content Include="DevDocs\Img\FormIcons\form_ico_6.ico" />
+    <Content Include="DevDocs\Img\FormIcons\Mian_Form_Title_logo_6.png" />
+    <Content Include="DevDocs\Img\FormIcons\Mian_Form_Title_logo_6b.png" />
+    <Content Include="DevDocs\Img\FormIcons\Mian_Form_Title_logo_6c.png" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo.png" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.bmp" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.ico" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon2.ico" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.bmp" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.ico" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.ico" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon4_details.ico" />
+    <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon5_details.ico" />
     <Content Include="DevDocs\Img\InfoPanel\bg1.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg1_large.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg2_72px.png" />
@@ -373,7 +389,6 @@
     <Content Include="DevDocs\Img\InfoPanel\bg4_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg5_72px.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg6_72px.png" />
-    <Content Include="DevDocs\Img\logo5.png" />
     <Content Include="DevDocs\Img\SystemImages\checkboxcheck.png" />
     <Content Include="DevDocs\Img\SystemImages\dropdownarrrow.png" />
     <Content Include="DevDocs\Img\SystemImages\popup.png" />
@@ -393,6 +408,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\country_ussr.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattleTime.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconCols.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconModes.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconTank.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tier.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tier1.png" />
@@ -419,17 +435,8 @@
     <Content Include="DevDocs\Dev log\BadButton.txt" />
     <Content Include="DevDocs\Dev log\cmdrTrinity.txt" />
     <Content Include="DevDocs\Img\SystemImages\exit.png" />
-    <Content Include="DevDocs\Img\logo.png" />
-    <Content Include="DevDocs\Img\logo2.png" />
-    <Content Include="DevDocs\Img\logo3.png" />
-    <Content Include="DevDocs\Img\logo_org_icon.bmp" />
-    <Content Include="DevDocs\Img\logo_org_icon.ico" />
-    <Content Include="DevDocs\Img\logo_org_icon2.ico" />
-    <Content Include="DevDocs\Img\logo_org_icon3.bmp" />
-    <Content Include="DevDocs\Img\logo_org_icon3.ico" />
     <Content Include="DevDocs\Img\SystemImages\minimize.png" />
     <Content Include="DevDocs\Img\SystemImages\normalize.png" />
-    <Content Include="DevDocs\Img\resize3.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconHelp.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconReload.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconSettings.png" />

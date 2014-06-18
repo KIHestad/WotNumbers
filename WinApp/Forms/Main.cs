@@ -36,6 +36,7 @@ namespace WinApp.Forms
 			toolItemTankFilter.Visible = false;
 			toolItemRefreshSeparator.Visible = false;
 			toolItemColumnSelect.Visible = false;
+			toolItemMode.Visible = false;
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
@@ -422,6 +423,7 @@ namespace WinApp.Forms
 						toolItemBattles.Visible = false;
 						toolItemTankFilter.Visible = false;
 						toolItemColumnSelect.Visible = false;
+						toolItemMode.Visible = false;
 						toolItemRefreshSeparator.Visible = true;
 						toolItemRefreshSeparator.Visible = false;
 						// Remove datagrid context menu
@@ -434,6 +436,7 @@ namespace WinApp.Forms
 						toolItemBattles.Visible = false;
 						toolItemTankFilter.Visible = true;
 						toolItemColumnSelect.Visible = true;
+						toolItemMode.Visible = true;
 						toolItemRefreshSeparator.Visible = true;
 						// Get Column Setup List - also finds correct tank filter/fav list
 						SetColListMenu();
@@ -447,6 +450,7 @@ namespace WinApp.Forms
 						toolItemBattles.Visible = false;
 						toolItemTankFilter.Visible = true;
 						toolItemColumnSelect.Visible = true;
+						toolItemMode.Visible = true;
 						toolItemRefreshSeparator.Visible = true;
 						// Get Column Setup List  - also finds correct tank filter/fav list
 						SetColListMenu();
