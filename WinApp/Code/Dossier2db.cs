@@ -377,14 +377,14 @@ namespace WinApp.Code
 					// Now update playerTank battle for different battle modes
 					if (battlesNew15 > 0 || (forceUpdate && playerTankOldRow_battles15 != 0))
 					{
-						UpdatePlayerTankBattle(TankData.DossierBattleMode.Mode15, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow, 
-												playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList);
+						UpdatePlayerTankBattle(TankData.DossierBattleMode.Mode15, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
+												playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList, saveBattleResult);
 						battleSave = true;
 					}
 					if (battlesNew7 > 0 || (forceUpdate && playerTankOldRow_battles7 != 0))
 					{
-						UpdatePlayerTankBattle(TankData.DossierBattleMode.Mode7, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow, 
-												playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList);
+						UpdatePlayerTankBattle(TankData.DossierBattleMode.Mode7, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
+												playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
 						battleSave = true;
 					}
 
@@ -527,7 +527,8 @@ namespace WinApp.Code
 													int playerTankNewRow_battles,
 													int battlesNew, 
 													List<FragItem> battleFragList, 
-													List<AchItem> battleAchList)
+													List<AchItem> battleAchList,
+													bool saveBattleResult)
 		{
 			DataTable playerTankBattleTable = TankData.GetPlayerTankBattleFromDB(-1, battleMode); // Return empty data just to get column structure
 			// Update playerTankBattle
@@ -559,8 +560,9 @@ namespace WinApp.Code
 				DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 				DB.ExecuteNonQuery(sql);
 			}
-			// Update battle
-			UpdateBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
+			// Update battle, if not first run - then avoid
+			if (saveBattleResult)
+				UpdateBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
 		}
 
 		private static List<FragItem> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
@@ -751,7 +753,7 @@ namespace WinApp.Code
 				sqlFields += ", eff";
 				sqlValues += ", " + Rating.CalculateBattleEff(tankId, battlesCount, battleNewRow);
 				// Add battle mode
-				sqlFields += ", battleMode"; sqlValues += ", " + battleMode; 
+				sqlFields += ", battleMode"; sqlValues += ", " + TankData.DbBattleMode(battleMode); 
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(battleNewRow["victory"]);
 				int defeatcount = Convert.ToInt32(battleNewRow["defeat"]);
