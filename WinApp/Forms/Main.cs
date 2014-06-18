@@ -440,6 +440,8 @@ namespace WinApp.Forms
 						toolItemRefreshSeparator.Visible = true;
 						// Get Column Setup List - also finds correct tank filter/fav list
 						SetColListMenu();
+						// Get Battle mode
+						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
 						// Info slider hide
@@ -454,6 +456,8 @@ namespace WinApp.Forms
 						toolItemRefreshSeparator.Visible = true;
 						// Get Column Setup List  - also finds correct tank filter/fav list
 						SetColListMenu();
+						// Get Battle mode
+						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
 						// Info slider hide
@@ -888,6 +892,59 @@ namespace WinApp.Forms
 
 		#endregion
 
+		#region Menu Items: Battle Mode
+
+		private void toolItemMode_Click(object sender, EventArgs e)
+		{
+			// Selected battle mode from toolbar
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			// Get new battle type for selected favList
+			GridFilter.BattleModeType selectedMode = (GridFilter.BattleModeType)Enum.Parse(typeof(GridFilter.BattleModeType), selectedMenu.Tag.ToString());
+			// Changed gridFilter
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.BattleMode = selectedMode;
+			MainSettings.UpdateCurrentGridFilter(gf);
+			// Remove current menu checked
+			foreach (var dropDownItem in toolItemMode.DropDownItems)
+			{
+				if (dropDownItem is ToolStripMenuItem)
+				{
+					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
+					menuItem.Checked = false;
+				}
+			}
+			// check battle mode list menu select
+			selectedMenu.Checked = true;
+			string mainToolItemMenuText = BattleModeHelper.GetShortmenuName(selectedMenu.Text);
+			
+			toolItemMode.Text = mainToolItemMenuText;
+			// Set menu item and show grid
+			GridShow("Selected battle mode: " + selectedMenu.Text);
+		}
+
+		private void SetBattleModeMenu()
+		{
+			foreach (var dropDownItem in toolItemMode.DropDownItems)
+			{
+				string battleMode = MainSettings.GetCurrentGridFilter().BattleMode.ToString();
+				if (dropDownItem is ToolStripMenuItem)
+				{
+					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
+					if (battleMode == menuItem.Tag.ToString())
+					{
+						menuItem.Checked = true;
+						toolItemMode.Text = BattleModeHelper.GetShortmenuName(menuItem.Text);
+					}
+					else
+					{
+						menuItem.Checked = false;
+					}
+				}
+			}
+		}
+
+		#endregion
+
 		#region Col List Select
 
 		private class colListClass
@@ -1032,7 +1089,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-	
+				
 		#region Data Grid - OVERALL VIEW *********************************************************************************************************
 
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
@@ -1164,15 +1221,44 @@ namespace WinApp.Forms
 			string select = "";
 			List<colListClass> colList = new List<colListClass>();
 			GetSelectedColumnList(out select, out colList);
-			// Create Battlefiler
-			string battleFilter = "";
+			// Create Battle Time filer
+			string battleTimeFilter = "";
 			if (!toolItemBattlesAll.Checked)
 			{
 				if (toolItemBattlesYesterday.Checked)
-					battleFilter = "AND (battleTime>=@battleTime AND battleTime<=@battleFromTime)";
+					battleTimeFilter = " AND (battleTime>=@battleTime AND battleTime<=@battleFromTime) ";
 				else
-					battleFilter = "AND battleTime>=@battleTime ";
+					battleTimeFilter = " AND battleTime>=@battleTime ";
 			}
+			// Create Battle mode filter
+			string battleModeFilter = "";
+			if (MainSettings.GridFilterBattle.BattleMode != GridFilter.BattleModeType.All)
+			{
+				switch (MainSettings.GridFilterBattle.BattleMode)
+				{
+					case GridFilter.BattleModeType.Mode15:
+						battleModeFilter = " AND (battleMode = '15') ";
+						break;
+					case GridFilter.BattleModeType.Mode7:
+						battleModeFilter = " AND (battleMode = '7') ";
+						break;
+					case GridFilter.BattleModeType.Random:
+						battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
+						break;
+					case GridFilter.BattleModeType.Clan:
+						battleModeFilter = " AND (modeClan = 1) ";
+						break;
+					case GridFilter.BattleModeType.Company:
+						battleModeFilter = " AND (modeCompany = 1) ";
+						break;
+					case GridFilter.BattleModeType.Historical:
+						battleModeFilter = " AND (battleMode = 'Historical') ";
+						break;
+					default:
+						break;
+				}
+			}
+
 			// Get Tank filter
 			string tankFilterMessage = "";
 			string tankFilter = "";
@@ -1193,7 +1279,7 @@ namespace WinApp.Forms
 				"        country ON tank.countryId = country.Id INNER JOIN " +
 				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-				"WHERE   playerTank.playerId=@playerid " + battleFilter + tankFilter + 
+				"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + 
 				"ORDER BY sortorder, battle.battleTime DESC ";
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DateTime dateFilter = new DateTime();

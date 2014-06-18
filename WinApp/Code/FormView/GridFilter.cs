@@ -16,14 +16,26 @@ namespace WinApp.Code
 			FavList = 0,
 		}
 		
+		public enum BattleModeType
+		{
+			All = 1,
+			Mode15 = 2,
+			Mode7 = 3,
+			Random = 4,
+			Clan = 5,
+			Company = 6,
+			Historical = 7,
+		}
+
 		public class Settings
 		{
 			public int ColListId = 0;
 			public string ColListName = "";
-			public FavListShowType FavListShow = FavListShowType.UseCurrent;
+			public FavListShowType FavListShow = FavListShowType.AllTanks;
 			public int FavListId = 0;
 			public string FavListName = "";
 			public int TankId = -1; // Filter on explicit tank
+			public BattleModeType BattleMode = BattleModeType.All;
 		}
 
 		public static Settings SetDefault(GridView.Views gridView)
@@ -39,21 +51,10 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count == 0)
 			{
-				// No default is selected, choose first sys col
-				switch (gridView)
-				{
-					case GridView.Views.Overall:
-						break;
-					case GridView.Views.Tank:
-						defaultGridFilter.ColListId = 1; // 1-3 default col list (sys col) - for tank view
-						break;
-					case GridView.Views.Battle:
-						defaultGridFilter.ColListId = 4; // 4-6 default col list (sys col) - for battle view
-						break;
-					default:
-						break;
-				}
-				defaultGridFilter.ColListName = "Default";
+				// No default is selected, choose first colList
+				string colListName = "";
+				defaultGridFilter.ColListId = GetFirstColListId(gridView, out colListName);
+				defaultGridFilter.ColListName = colListName;
 			}
 			else
 			{
@@ -72,6 +73,26 @@ namespace WinApp.Code
 					defaultGridFilter.FavListShow = (FavListShowType)defaultFavListId;
 			}
 			return defaultGridFilter;
+		}
+
+		private static int GetFirstColListId(GridView.Views gridView, out string ColListName)
+		{
+			string sql = "SELECT columnList.id AS colListId, columnList.name AS colListName, columnList.defaultFavListId AS colListDefaultFavList, " +
+						 "       favList.id AS favListId, favList.name AS favListName " +
+						 "FROM columnList LEFT OUTER JOIN " +
+						 "     favList ON columnList.defaultFavListId = favList.id " +
+						 "WHERE (columnList.colType=@colType); ";
+			DB.AddWithValue(ref sql, "@colType", (int)gridView, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			int colListId = 0;
+			ColListName = "";
+			if (dt.Rows.Count > 0)
+			{
+				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
+				ColListName = dt.Rows[0]["colListName"].ToString();
+			}
+			return colListId;
+
 		}
 	}
 }
