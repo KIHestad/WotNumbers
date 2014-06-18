@@ -10,6 +10,28 @@ namespace WinApp.Code
 {
 	public static class TankData
 	{
+		public enum DossierBattleMode
+		{
+			Mode15 = 1,
+			Mode7 = 2,
+			ModeHistorical = 3,
+		}
+
+		public static string DbBattleMode(DossierBattleMode mode)
+		{
+			string s = "";
+			switch (mode)
+			{
+				case DossierBattleMode.Mode15:
+					s = "15"; break;
+				case DossierBattleMode.Mode7:
+					s = "7"; break;
+				case DossierBattleMode.ModeHistorical:
+					s = "Historical"; break;
+			}
+			return s;
+		}
+	
 		#region DatabaseLookup
 
 		public static DataTable tankList = new DataTable();
@@ -40,14 +62,48 @@ namespace WinApp.Code
 			return DB.FetchData(sql);
 		}
 
-		public static DataTable GetPlayerTankBattleFromDB(int playerTankId, string battleMode)
+		public static DataTable GetPlayerTankBattleFromDB(int playerTankId, DossierBattleMode dossierBattleMode)
 		{
+			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-			return DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count == 0) // No battle recorded for this tank in this mode, create now and fetch once more
+			{
+				AddPlayerTankBattle(playerTankId, battleMode);
+				dt = DB.FetchData(sql);
+			}
+			return dt;
 		}
 
+		public static int GetPlayerTankBattleCount(int playerTankId, DossierBattleMode dossierBattleMode, out int wins, out int xp)
+		{
+			string battleMode = DbBattleMode(dossierBattleMode);
+			string sql = "SELECT battles, wins, xp FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
+			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			int battles = 0;
+			xp = 0;
+			wins = 0;
+			if (dt.Rows.Count > 0) // No battle recorded for this tank in this mode, create now and fetch once more
+			{
+				battles = Convert.ToInt32(dt.Rows[0]["battles"]);
+				wins = Convert.ToInt32(dt.Rows[0]["wins"]);
+				xp = Convert.ToInt32(dt.Rows[0]["xp"]);
+			}
+			return battles;
+		}
+		
+
+		private static void AddPlayerTankBattle(int playerTankId, string battleMode)
+		{
+			string sql = "INSERT INTO PlayerTankBattle (playerTankId, battleMode, battles) VALUES (@playerTankId, @battleMode, 0); ";
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+		}
 
 		public static int GetPlayerTankCount()
 		{
@@ -122,8 +178,9 @@ namespace WinApp.Code
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
 		}
 
-		public static DataTable GetTankData2BattleMappingFromDB(string battleMode)
+		public static DataTable GetTankData2BattleMappingFromDB(DossierBattleMode dossierBattleMode)
 		{
+			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql =
 				"SELECT  dbDataType, dbPlayerTank, dbPlayerTankMode, dbBattle " +
 				"FROM    json2dbMapping " +

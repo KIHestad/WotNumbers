@@ -285,12 +285,12 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 17:
-					// Insert playerTankBattles for all tanks
-					DataTable dt = DB.FetchData("select * from playerTank");
-					foreach (DataRow dr in dt.Rows)
-					{
-						Dossier2db.SaveNewPlayerTankBattle(Convert.ToInt32(dr["id"])); 
-					}
+					// Insert playerTankBattles for all tanks - new method from version 53 - not needed anymore
+					//DataTable dt = DB.FetchData("select * from playerTank");
+					//foreach (DataRow dr in dt.Rows)
+					//{
+					//	Dossier2db.SaveNewPlayerTankBattle(Convert.ToInt32(dr["id"])); 
+					//}
 					break;
 				case 18:
 					mssql = "ALTER TABLE playerTankBattle ADD battleOfTotal float NOT NULL default 0; ";
