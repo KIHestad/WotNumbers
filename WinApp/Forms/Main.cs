@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Reflection;
 using WinApp.Code;
+using System.ComponentModel;
 
 namespace WinApp.Forms
 {
@@ -115,6 +116,8 @@ namespace WinApp.Forms
 			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
+			// Add events
+			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
 			GridView.Views view = MainSettings.View;
 			switch (view)
@@ -1566,20 +1569,40 @@ namespace WinApp.Forms
 		private int dataGridRightClickRow = -1;
 		private void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Right && e.RowIndex != -1)
+			if (e.RowIndex != -1)
 			{
 				dataGridRightClickRow = e.RowIndex;
 				dataGridRightClickCol = e.ColumnIndex;
 				dataGridMain.CurrentCell = dataGridMain.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
 			}
-
+			// Check if footer
+			if (dataGridRightClickRow != -1 && MainSettings.View == GridView.Views.Battle)
+			{
+				if (Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value) > 0)
+				{
+					dataGridRightClickCol = -1;
+					dataGridRightClickRow = -1;
+				}
+			}
 		}
+
+		private void dataGridMainPopup_Opening(object sender, CancelEventArgs e)
+		{
+			if (dataGridRightClickRow == -1)
+			{
+				e.Cancel = true; // Close if no valid cell is clicked
+			}
+				
+		}
+		
 
 		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			Form frm = new Forms.GrindingSetup(playerTankId);
 			frm.ShowDialog();
+			if (MainSettings.View == GridView.Views.Tank)
+				GridShow("Refreshed grid");
 		}
 
 		private void dataGridMainPopup_TankChart_Click(object sender, EventArgs e)
@@ -1598,17 +1621,30 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle?", "Delete battle", MsgBoxType.OKCancel);
-			if (answer == MsgBox.Button.OKButton)
+			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
+			string sql = "select battle.battleTime, tank.name " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id inner join tank on playerTank.tankId=tank.Id " +
+				"where battle.Id=@id ";
+			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
 			{
-				int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
-				string sql =
-					"delete from battleAch where battleId=@battleId; " +
-					"delete from battleFrag where battleId=@battleId; " +
-					"delete from battle where id=@battleId; ";
-				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
-				DB.ExecuteNonQuery(sql);
-				GridShow("Deleted battle, grid refreshed");
+				DateTime battleTime = Convert.ToDateTime(dt.Rows[0]["battleTime"]);
+				string tankName = dt.Rows[0]["name"].ToString();
+				Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle:" + Environment.NewLine + Environment.NewLine +
+					"  Battle: " + battleTime + Environment.NewLine +
+					"  Tank:   " + tankName, "Delete battle", MsgBoxType.OKCancel);
+				if (answer == MsgBox.Button.OKButton)
+				{
+
+					sql =
+						"delete from battleAch where battleId=@battleId; " +
+						"delete from battleFrag where battleId=@battleId; " +
+						"delete from battle where id=@battleId; ";
+					DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
+					DB.ExecuteNonQuery(sql);
+					GridShow("Deleted battle, grid refreshed");
+				}
 			}
 		}
 

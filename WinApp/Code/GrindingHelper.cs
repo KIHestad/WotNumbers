@@ -25,7 +25,7 @@ namespace WinApp.Code
 			if (btlDay == 0) btlDay = 1;
 			double totXP = Convert.ToDouble(TotalXP); // total base XP earned
 			double calc2XbattlesTotXP = avgXP * battles / btlDay * winRate; // calculated number of 2X battles played, assuming at least one victory every day played
-			double calcExtraBonusTotXP = avgXP * 0.2 * battles * winRate; // caclulated an average of 20% extra for bonuses (3x/5x/2x every wins), apply only for wins
+			double calcExtraBonusTotXP = avgXP * 0.0 * battles * winRate; // caclulated an average of 0% extra for bonuses (3x/5x/2x every wins), apply only for wins
 			double calcTotXP = totXP + calc2XbattlesTotXP + calcExtraBonusTotXP;
 			return Convert.ToInt32(calcTotXP / battles);
 		}

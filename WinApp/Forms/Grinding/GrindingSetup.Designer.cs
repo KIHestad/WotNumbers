@@ -298,7 +298,7 @@
 			// btnGrindingParameters
 			// 
 			this.btnGrindingParameters.Image = null;
-			this.btnGrindingParameters.Location = new System.Drawing.Point(263, 385);
+			this.btnGrindingParameters.Location = new System.Drawing.Point(263, 384);
 			this.btnGrindingParameters.Name = "btnGrindingParameters";
 			this.btnGrindingParameters.Size = new System.Drawing.Size(75, 23);
 			this.btnGrindingParameters.TabIndex = 50;
