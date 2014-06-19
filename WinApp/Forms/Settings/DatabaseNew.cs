@@ -126,6 +126,7 @@ namespace WinApp.Forms
 				// Get achievements
 				UpdateProgressBar("Retrieves achievements from Wargaming API");
 				ImportWotApi2DB.ImportAchievements();
+				TankData.GetAchList();
 
 				// Get WN8 ratings
 				UpdateProgressBar("Retrieves WN8 expected values from API");
@@ -149,8 +150,7 @@ namespace WinApp.Forms
 				UpdateProgressBar("Upgrading database");
 				DBVersion.CheckForDbUpgrade();
 				// New Init after upgrade db
-				TankData.GetTankList();
-				TankData.GetJson2dbMappingFromDB();
+				TankData.GetAllLists();
 				
 				// Get initial dossier 
 				UpdateProgressBar("Running initial dossier file check, please wait...");

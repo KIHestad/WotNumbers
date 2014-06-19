@@ -60,6 +60,7 @@ namespace WinApp.Forms
 			// Get achievements
 			UpdateProgressBar("Retrieves achievements from Wargaming API");
 			ImportWotApi2DB.ImportAchievements();
+			TankData.GetAchList();
 
 			// Get WN8 ratings
 			UpdateProgressBar("Retrieves WN8 expected values from API");

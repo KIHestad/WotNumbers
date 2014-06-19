@@ -377,12 +377,13 @@ namespace WinApp.Code
 						DB.AddWithValue(ref sql, "@Id", playerTankOldTable.Rows[0]["id"], DB.SqlDataType.Int);
 						DB.ExecuteNonQuery(sql);
 					}
-
+					
 					// Check fraglist to update playertank frags
 					List<FragItem> battleFragList = UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 
 					// Check if achivment exists
 					List<AchItem> battleAchList = UpdatePlayerTankAch(tankId, playerTankId, achList);
+									
 
 					// If detected several battle modes, dont save fraglist and achivements to battle, as we don't know how to seperate them
 					int severalModes = 0;
@@ -494,15 +495,19 @@ namespace WinApp.Code
 					if (newAch.count > 0) // Find the ones achieved
 					{
 						// Find ach ID
-						string sql = "SELECT id FROM ach WHERE name=@achName; ";
-						DB.AddWithValue(ref sql, "@achName", newAch.achName, DB.SqlDataType.VarChar);
-						DataTable lookupAch = DB.FetchData(sql);
-						if (lookupAch.Rows.Count > 0)
+						string expression = "name=@achName";
+						DB.AddWithValue(ref expression, "@achName", newAch.achName, DB.SqlDataType.VarChar);
+						DataRow[] lookupAch = TankData.achList.Select(expression);
+						
+						//string sql = "SELECT id FROM ach WHERE name=@achName; ";
+						//DB.AddWithValue(ref sql, "@achName", newAch.achName, DB.SqlDataType.VarChar);
+						//DataTable lookupAch = DB.FetchData(sql);
+						if (lookupAch.Length > 0)
 						{
 							// Found ach, get id now
-							int achId = Convert.ToInt32(lookupAch.Rows[0]["id"]);
+							int achId = Convert.ToInt32(lookupAch[0]["id"]);
 							// Find the current achievent
-							sql = "SELECT * FROM playerTankAch WHERE playerTankId=@playerTankId AND achId=@achId; ";
+							string sql = "SELECT * FROM playerTankAch WHERE playerTankId=@playerTankId AND achId=@achId; ";
 							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 							DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
 							DataTable currentAch = DB.FetchData(sql);

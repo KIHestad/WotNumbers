@@ -34,6 +34,22 @@ namespace WinApp.Code
 	
 		#region DatabaseLookup
 
+		public static void GetAllLists()
+		{
+			GetTankList();
+			GetJson2dbMappingFromDB();
+			GetAchList();
+		}
+
+		public static DataTable achList = new DataTable();
+
+		public static void GetAchList()
+		{
+			achList.Clear();
+			achList = DB.FetchData("SELECT id, name FROM ach");
+		}
+
+
 		public static DataTable tankList = new DataTable();
 
 		public static void GetTankList()
@@ -280,7 +296,7 @@ namespace WinApp.Code
 			else
 				return null;
 		}
-		
+
 		#endregion
 	   
 	}

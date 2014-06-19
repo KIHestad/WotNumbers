@@ -183,8 +183,7 @@ namespace WinApp.Forms
 			if (DB.CheckConnection())
 			{
 				// Init
-				TankData.GetTankList();
-				TankData.GetJson2dbMappingFromDB();
+				TankData.GetAllLists();
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
 			// Check DB Version

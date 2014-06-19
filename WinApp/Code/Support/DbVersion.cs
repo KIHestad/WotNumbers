@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 58; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 59; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1001,6 +1001,10 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 59:
+					mssql = "CREATE UNIQUE INDEX IX_ach_name ON ach (name ASC); ";
+					sqlite = mssql;
+					break;
+				case 60:
 					// damageBlockedByArmor
 					break;
 			}
