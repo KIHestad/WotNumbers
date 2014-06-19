@@ -173,7 +173,7 @@ namespace WinApp.Code
 							fragList += currentItem.value.ToString() + ";";
 						// Temp log all data
 						// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
-						log.Add(currentItem.mainSection + ";" + currentItem.subSection + ";" + currentItem.property );
+						// log.Add(currentItem.mainSection + ";" + currentItem.subSection + ";" + currentItem.property );
 					}
 				}
 				else
@@ -228,14 +228,14 @@ namespace WinApp.Code
 			}
 			reader.Close();
 			// Also write last tank found
-			log.Add("  > Check for DB update - Tank: '" + tankName );
+			// log.Add("  > Check for DB update - Tank: '" + tankName );
 			if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult)) 
 				battleSaved = true; // result if battle was detected and saved
 			// Done
 			if (battleSaved) Log.BattleResultDoneLog();
 			sw.Stop();
 			TimeSpan ts = sw.Elapsed;
-			Log.LogToFile(log);
+			// Log.LogToFile(log);
 			return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 		}
 

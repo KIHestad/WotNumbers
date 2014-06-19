@@ -28,9 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseNew));
 			this.DatabaseNewTheme = new BadForm();
+			this.btnCancel = new BadButton();
 			this.badProgressBar = new BadProgressBar();
 			this.cmdSelectFIle = new BadButton();
 			this.txtFileLocation = new BadTextBox();
@@ -42,7 +43,6 @@
 			this.btnCreateDB = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
 			this.lblStatusText = new BadLabel();
-			this.btnCancel = new BadButton();
 			this.folderBrowserDialogDBPath = new System.Windows.Forms.FolderBrowserDialog();
 			this.DatabaseNewTheme.SuspendLayout();
 			this.SuspendLayout();
@@ -69,7 +69,7 @@
 			this.DatabaseNewTheme.FormMargin = 0;
 			this.DatabaseNewTheme.Image = null;
 			this.DatabaseNewTheme.Location = new System.Drawing.Point(0, 0);
-			this.DatabaseNewTheme.MainArea = mainAreaClass2;
+			this.DatabaseNewTheme.MainArea = mainAreaClass1;
 			this.DatabaseNewTheme.Name = "DatabaseNewTheme";
 			this.DatabaseNewTheme.Resizable = false;
 			this.DatabaseNewTheme.Size = new System.Drawing.Size(477, 290);
@@ -79,6 +79,16 @@
 			this.DatabaseNewTheme.TabIndex = 0;
 			this.DatabaseNewTheme.Text = "Create New Database";
 			this.DatabaseNewTheme.TitleHeight = 26;
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(377, 244);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 11;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// badProgressBar
 			// 
@@ -204,15 +214,6 @@
 			this.lblStatusText.Name = "lblStatusText";
 			this.lblStatusText.Size = new System.Drawing.Size(426, 23);
 			this.lblStatusText.TabIndex = 26;
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(377, 244);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 11;
-			this.btnCancel.Text = "Cancel";
 			// 
 			// DatabaseNew
 			// 

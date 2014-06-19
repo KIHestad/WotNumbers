@@ -86,7 +86,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				logText.Add(LogText("Test run, using latest converted json file"));
+				logText.Add(LogText("Force update from previous converted dossier json file"));
 			}
 			if (ok)
 			{
@@ -233,7 +233,6 @@ namespace WinApp.Code
 			//	logText.Add(LogText(" > General file copy or conversion error: " + ex.Message));
 			//	returVal = "General file copy or conversion error - check log file";
 			//}
-			Log.LogToFile(logText);
 			statusResult = returVal;
 			return logText;
 		}

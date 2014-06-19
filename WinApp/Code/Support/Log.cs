@@ -19,7 +19,7 @@ namespace WinApp.Code
 			if (File.Exists(path + filename))
 			{
 				FileInfo file = new FileInfo(path + filename);
-				if (file.Length > 1024*1024*20) // max 20 MB
+				if (file.Length > 1024*1024*5) // max 5 MB
 				{
 					string movefilename = "/log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
 					file.CopyTo(path + movefilename);
