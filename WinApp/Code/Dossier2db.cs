@@ -628,14 +628,20 @@ namespace WinApp.Code
 				}
 				// Check newFrag compared to existing frags for this tank
 				List<FragItem> oldFrag = new List<FragItem>();
-				string sql =
-					"SELECT playerTank.id AS playerTankId, playerTankFrag.* " +
-					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
-					"WHERE playerTank.tankId=@tankId; ";
-				DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
+				// Get frags for this tank
+
+				string expression = "PlayerTankTankId=" + tankId.ToString();
+				DataRow[] lookupPlayerFrag = TankData.playerTankFragList.Select(expression);
+
+				//string sql =
+				//	"SELECT playerTank.id AS playerTankId, playerTankFrag.* " +
+				//	"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
+				//	"WHERE playerTank.tankId=@tankId; ";
+				//DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+				//DataTable dt = DB.FetchData(sql);
+				
 				// If no frags exists for this tank get playerTankId separately
-				foreach (DataRow reader in dt.Rows)
+				foreach (DataRow reader in lookupPlayerFrag)
 				{
 					FragItem FragItem = new FragItem();
 					FragItem.tankId = Convert.ToInt32(reader["fraggedTankId"]);

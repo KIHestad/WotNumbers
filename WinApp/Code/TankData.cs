@@ -40,6 +40,7 @@ namespace WinApp.Code
 			GetJson2dbMappingFromDB();
 			GetAchList();
 			GetPlayerTankAchList();
+			GetPlayerTankFragList();
 		}
 
 		public static DataTable achList = new DataTable();
@@ -56,6 +57,16 @@ namespace WinApp.Code
 		{
 			playerTankAchList.Clear();
 			playerTankAchList = DB.FetchData("SELECT * FROM playerTankAch");
+		}
+
+		public static DataTable playerTankFragList = new DataTable();
+
+		public static void GetPlayerTankFragList()
+		{
+			playerTankFragList.Clear();
+			string sql = "SELECT playerTank.id AS playerTankId, playerTank.tankId as PlayerTankTankId, playerTankFrag.* " +
+	  					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId; ";
+			playerTankFragList = DB.FetchData(sql);
 		}
 
 		public static DataTable tankList = new DataTable();
