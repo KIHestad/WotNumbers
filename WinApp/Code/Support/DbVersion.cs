@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 55; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 58; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -954,6 +954,50 @@ namespace WinApp.Code
 							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff " +
 							"FROM            playerTankBattle " +
 							"GROUP BY playerTankId ";
+					sqlite = mssql;
+					break;
+				case 56:
+					mssql = "ALTER TABLE playerTank ADD hasFort int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD hasHistorical int NOT NULL default 0; " +
+							"ALTER TABLE playerTank ADD hasSortie int NOT NULL default 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 57:
+					mssql = "INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) " +
+							"VALUES ('tanks_v2','common','has_fort','Int','hasFort',NULL,NULL,'tanks_v2.common.has_fort',NULL); " +
+							"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) " +
+							"VALUES ('tanks_v2','common','has_historical','Int','hasHistorical',NULL,NULL,'tanks_v2.common.has_historical',NULL); " +
+							"INSERT INTO json2dbMapping (jsonMain,jsonSub,jsonProperty,dbDataType,dbPlayerTank,dbBattle,dbAch,jsonMainSubProperty,dbPlayerTankMode) " +
+							"VALUES ('tanks_v2','common','has_sortie','Int','hasSortie',NULL,NULL,'tanks_v2.common.has_sortie',NULL); ";
+					sqlite = mssql;
+					break;
+				case 58:
+					mssql = "INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'battlesCount','Int','battles','battlesCount',NULL,'tanks_v2.historical.battlesCount','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'capturePoints','Int','cap','cap',NULL,'tanks_v2.historical.capturePoints','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'damageAssistedRadio','Int','assistSpot','assistSpot',NULL,'tanks_v2.historical.damageAssistedRadio','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'damageAssistedTrack','Int','assistTrack','assistTrack',NULL,'tanks_v2.historical.damageAssistedTrack','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'damageDealt','Int','dmg','dmg',NULL,'tanks_v2.historical.damageDealt','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'damageReceived','Int','dmgReceived','dmgReceived',NULL,'tanks_v2.historical.damageReceived','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'droppedCapturePoints','Int','def','def',NULL,'tanks_v2.historical.droppedCapturePoints','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'frags','Int','frags','frags',NULL,'tanks_v2.historical.frags','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'frags8p','Int','frags8p',NULL,NULL,'tanks_v2.historical.frags8p','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'he_hits','Int','heHits',NULL,NULL,'tanks_v2.historical.he_hits','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'heHitsReceived','Int','heHitsReceived','heHitsReceived',NULL,'tanks_v2.historical.heHitsReceived','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'hits','Int','hits','hits',NULL,'tanks_v2.historical.hits','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'losses','Int','losses','defeat',NULL,'tanks_v2.historical.losses','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxDamage','Int','maxDmg','NULL',NULL,'tanks_v2.maxHistorical.maxDamage','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxFrags','Int','maxFrags','NULL',NULL,'tanks_v2.maxHistorical.maxFrags','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxXP','Int','maxXp',NULL,NULL,'tanks_v2.maxHistorical.maxXP','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'noDamageShotsReceived','Int','noDmgShotsReceived','noDmgShotsReceived',NULL,'tanks_v2.historical.noDamageShotsReceived','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'originalXP','Int','xpOriginal',NULL,NULL,'tanks_v2.historical.originalXP','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'pierced','Int','pierced','pierced',NULL,'tanks_v2.historical.pierced','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'piercedReceived','Int','piercedReceived','piercedReceived',NULL,'tanks_v2.historical.piercedReceived','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'shots','Int','shots','shots',NULL,'tanks_v2.historical.shots','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'shotsReceived','Int','shotsReceived','shotsReceived',NULL,'tanks_v2.historical.shotsReceived','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'spotted','Int','spot','spotted',NULL,'tanks_v2.historical.spotted','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'survivedBattles','Int','survived','survived',NULL,'tanks_v2.historical.survivedBattles','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'wins','Int','wins','victory',NULL,'tanks_v2.historical.wins','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'xp','Int','xp','xp',NULL,'tanks_v2.historical.xp','Historical'); ";
 					sqlite = mssql;
 					break;
 			}

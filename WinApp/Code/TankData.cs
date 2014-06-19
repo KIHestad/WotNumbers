@@ -175,7 +175,7 @@ namespace WinApp.Code
 		public static void GetJson2dbMappingFromDB()
 		{
 			json2dbMapping.Clear();
-			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
+			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
 		}
 
 		public static DataTable GetTankData2BattleMapping(DossierBattleMode dossierBattleMode)

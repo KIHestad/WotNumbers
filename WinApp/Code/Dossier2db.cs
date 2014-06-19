@@ -13,13 +13,6 @@ namespace WinApp.Code
 {
 	class Dossier2db
 	{
-		public class JsonMainSection
-		{
-			public string header = "header";
-			//public string tanks = "tanks";
-			public string tanks_v2 = "tanks_v2";
-		}
-
 		public class JsonItem
 		{
 			public string mainSection = "";
@@ -80,8 +73,8 @@ namespace WinApp.Code
 			DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
 			DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
 			DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
+			DataRow NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
 			string tankName = "";
-			JsonMainSection mainSection = new JsonMainSection();
 			JsonItem currentItem = new JsonItem();
 			string fragList = "";
 			List<AchItem> achList = new List<AchItem>();
@@ -89,131 +82,146 @@ namespace WinApp.Code
 			// Loop through json file
 			while (reader.Read())
 			{
-				if (reader.Depth <= 1) // main level ( 0 or 1)
+				if (reader.Depth > 3) // ********************************************  found fourth level = property and value  ************************************************************
 				{
-					if (reader.Value != null) // ********************************************  found main level - get section type  ************************************************************
+					// Found property, check if new property og new value
+					if (reader.TokenType == JsonToken.PropertyName)
 					{
-						string currentSectionType = reader.Value.ToString();
+						// New Property
+						currentItem.property = reader.Value.ToString();
+					}
+					else if (reader.Value != null)
+					{
+						// Value exsists
+						currentItem.value = reader.Value;
 
-						if (currentSectionType == mainSection.header) currentItem.mainSection = mainSection.header;
-						//if (currentSectionType == mainSection.tanks) currentItem.mainSection = mainSection.tanks; OLD SECTION NO LONGER IN USE
-						if (currentSectionType == mainSection.tanks_v2) currentItem.mainSection = mainSection.tanks_v2;
-						log.Add("\nMain section: " + currentItem.mainSection + "(Line: " + reader.LineNumber + ")");
+						// Check data by getting jsonPlayerTank Mapping
+						string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
+						DataRow[] foundRows = TankData.json2dbMapping.Select(expression);
+						
+						//var result = from myRow in TankData.json2dbMapping.AsEnumerable()
+						//			 where myRow.Field<string>("jsonMainSubProperty") == (currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property).ToString()
+						//			 select myRow;
+						//DataView foundRows = result.AsDataView();
+						
+						// IF mapping found add currentItem into NewPlayerTankRow
+						if (foundRows.Length != 0)
+						{
+							if (foundRows[0]["dbPlayerTank"] != DBNull.Value) // Found mapping to PlayerTank
+							{
+								string dataType = foundRows[0]["dbDataType"].ToString();
+								string dbField = foundRows[0]["dbPlayerTank"].ToString();
+								var dbPlayerTankMode = foundRows[0]["dbPlayerTankMode"];
+								if (dbPlayerTankMode == DBNull.Value)
+								{
+									// Default playerTank value
+									switch (dataType)
+									{
+										case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
+										case "DateTime":
+											// Fix for missing date on lastBattleTime
+											if (currentItem.property == "lastBattleTime" && currentItem.value.ToString() == "0")
+												NewPlayerTankRow[dbField] = DateTime.Now;
+											else
+												NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value));
+											break;
+										case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
+									}
+								}
+								else if (dbPlayerTankMode.ToString() == "15")
+								{
+									// playerTankBattle mode 15x15
+									switch (dataType)
+									{
+										case "String": NewPlayerTankBattle15Row[dbField] = currentItem.value.ToString(); break;
+										case "DateTime": NewPlayerTankBattle15Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+										case "Int": NewPlayerTankBattle15Row[dbField] = Convert.ToInt32(currentItem.value); break;
+									}
+								}
+								else if (dbPlayerTankMode.ToString() == "7")
+								{
+									// playerTankBattle mode 7x7
+									switch (dataType)
+									{
+										case "String": NewPlayerTankBattle7Row[dbField] = currentItem.value.ToString(); break;
+										case "DateTime": NewPlayerTankBattle7Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+										case "Int": NewPlayerTankBattle7Row[dbField] = Convert.ToInt32(currentItem.value); break;
+									}
+								}
+								else if (dbPlayerTankMode.ToString() == "Historical")
+								{
+									// playerTankBattle mode Historical
+									switch (dataType)
+									{
+										case "String": NewPlayerTankBattleHistoricalRow[dbField] = currentItem.value.ToString(); break;
+										case "DateTime": NewPlayerTankBattleHistoricalRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+										case "Int": NewPlayerTankBattleHistoricalRow[dbField] = Convert.ToInt32(currentItem.value); break;
+									}
+								}
+							}
+							else // Found mapping to Achievment
+							{
+								string dbField = foundRows[0]["dbAch"].ToString();
+								AchItem ach = new AchItem();
+								ach.achName = dbField;
+								ach.count = Convert.ToInt32(currentItem.value);
+								achList.Add(ach);
+							}
+						}
+						// fraglist
+						if (currentItem.subSection == "fragslist")
+							fragList += currentItem.value.ToString() + ";";
+						// Temp log all data
+						// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+						// log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
 					}
 				}
-
-				if (currentItem.mainSection == mainSection.tanks_v2) // Only get data from tank_v2 sections, skip header and OLD section "tanks" no longer in use....
+				else
 				{
-					if (reader.Depth == 2) // ********************************************  found second level = tank level  ************************************************************
+					if (reader.Depth == 3)
 					{
-						if (reader.Value != null) // found new tank
+						if (reader.Value != null) // ***************  found third level = subsection  **************************************
 						{
-							// Tank data exist, save data found and log
-							if  (tankName != "") 
-							{
-								log.Add("  > Check for DB update - Tank: '" + tankName );
-								if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult))
-									battleSaved = true; // result if battle was detected and saved
-							}
-							// Reset all values
-							NewPlayerTankTable.Clear();
-							NewPlayerTankRow = NewPlayerTankTable.NewRow();
-							NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
-							NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
-							// Get new tank name
-							currentItem.tank = reader.Value.ToString(); // add to current item
-							tankName = reader.Value.ToString(); // add to current tank
-							// clear frags and achievments
-							fragList = "";
-							achList.Clear();
+							// Get subsection, set property blank
+							currentItem.subSection = reader.Value.ToString();
+							currentItem.property = ""; // reset property for reading next
 						}
 					}
 					else
 					{
-						if (reader.Depth == 3) // ********************************************  found third level = subsection  ************************************************************
+						if (reader.Depth == 2)
 						{
-							if (reader.Value != null)
+							if (reader.Value != null) // ****************   found second level = tank level  *****************************************
 							{
-								currentItem.subSection = reader.Value.ToString();
-								currentItem.property = ""; // reset property for reading next
+								// Tank data exist, save data found and log
+								if (tankName != "")
+								{
+									// log.Add("  > Check for DB update - Tank: '" + tankName );
+									if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult))
+										battleSaved = true; // result if battle was detected and saved
+									// Reset all values
+									NewPlayerTankTable.Clear();
+									NewPlayerTankRow = NewPlayerTankTable.NewRow();
+									NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
+									NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
+									NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
+									// clear frags and achievments
+									fragList = "";
+									achList.Clear();
+								}
+								// Get new tank name
+								if (currentItem.mainSection == "tanks_v2") // The only section containing tanks to be read
+								{
+									currentItem.tank = reader.Value.ToString(); // add to current item
+									tankName = reader.Value.ToString(); // add to current tank
+								}
 							}
 						}
-						else // ********************************************  found fourth level = property and value  ************************************************************
+						else if (reader.Value != null) // main level ( 0 or 1)
 						{
-							if (currentItem.subSection != "rawdata") // skip these subsections
-							{
-								if (reader.TokenType == JsonToken.PropertyName)
-								{
-									// Property
-									currentItem.property = reader.Value.ToString();
-								}
-								else
-								{
-									if (reader.Value != null)
-									{
-										// Value
-										currentItem.value = reader.Value;
-
-										// Check data by getting jsonPlayerTank Mapping
-										string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
-										DataRow[] foundRows = TankData.json2dbMapping.Select(expression);
-
-										// IF mapping found add currentItem into NewPlayerTankRow
-										if (foundRows.Length != 0)
-										{
-											if (foundRows[0]["dbPlayerTank"] != DBNull.Value) // Found mapping to PlayerTank
-											{
-												string dataType = foundRows[0]["dbDataType"].ToString();
-												string dbField = foundRows[0]["dbPlayerTank"].ToString();
-												if (foundRows[0]["dbPlayerTankMode"] == DBNull.Value)
-												{
-													// Default playerTank value
-													switch (dataType)
-													{
-														case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
-														case "DateTime": NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-														case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
-													}
-												}
-												else if (foundRows[0]["dbPlayerTankMode"].ToString() == "15")
-												{
-													// playerTankBattle mode 15x15
-													switch (dataType)
-													{
-														case "String": NewPlayerTankBattle15Row[dbField] = currentItem.value.ToString(); break;
-														case "DateTime": NewPlayerTankBattle15Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-														case "Int": NewPlayerTankBattle15Row[dbField] = Convert.ToInt32(currentItem.value); break;
-													}
-												}
-												else if (foundRows[0]["dbPlayerTankMode"].ToString() == "7")
-												{
-													// playerTankBattle mode 7x7
-													switch (dataType)
-													{
-														case "String": NewPlayerTankBattle7Row[dbField] = currentItem.value.ToString(); break;
-														case "DateTime": NewPlayerTankBattle7Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-														case "Int": NewPlayerTankBattle7Row[dbField] = Convert.ToInt32(currentItem.value); break;
-													}
-												}
-											}
-											else // Found mapping to Achievment
-											{
-												string dbField = foundRows[0]["dbAch"].ToString();
-												AchItem ach = new AchItem();
-												ach.achName = dbField;
-												ach.count = Convert.ToInt32(currentItem.value);
-												achList.Add(ach);
-											}
-										}
-										// fraglist
-										if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills")
-											fragList += currentItem.value.ToString() + ";";
-										// Temp log all data
-										log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
-										//log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
-									}
-								}
-							}
+							// ***************************************************************  found main level - get mainSection name  *************************************
+							currentItem.mainSection = reader.Value.ToString();
+							//log.Add("\nMain section: " + currentItem.mainSection + "(Line: " + reader.LineNumber + ")");
 						}
 					}
 				}
@@ -221,7 +229,7 @@ namespace WinApp.Code
 			reader.Close();
 			// Also write last tank found
 			log.Add("  > Check for DB update - Tank: '" + tankName );
-			if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, fragList, achList, ForceUpdate, saveBattleResult)) 
+			if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult)) 
 				battleSaved = true; // result if battle was detected and saved
 			// Done
 			if (battleSaved) Log.BattleResultDoneLog();
@@ -260,7 +268,8 @@ namespace WinApp.Code
 		public static bool CheckTankDataResult(string tankName, 
 												DataRow playerTankNewRow, 
 												DataRow playerTankBattle15NewRow, 
-												DataRow playerTankBattle7NewRow, 
+												DataRow playerTankBattle7NewRow,
+												DataRow playerTankBattleHistoricalNewRow, 
 												string fragList, 
 												List<AchItem> achList, 
 												bool forceUpdate = false, 
@@ -274,8 +283,10 @@ namespace WinApp.Code
 				// Get tank new battle count
 				int playerTankNewRow_battles15 = 0;
 				int playerTankNewRow_battles7 = 0;
+				int playerTankNewRow_battlesHistorical = 0;
 				if (playerTankBattle15NewRow["battles"] != DBNull.Value) playerTankNewRow_battles15 = Convert.ToInt32(playerTankBattle15NewRow["battles"]);
 				if (playerTankBattle7NewRow["battles"] != DBNull.Value) playerTankNewRow_battles7 = Convert.ToInt32(playerTankBattle7NewRow["battles"]);
+				if (playerTankBattleHistoricalNewRow["battles"] != DBNull.Value) playerTankNewRow_battlesHistorical = Convert.ToInt32(playerTankBattleHistoricalNewRow["battles"]);
 				// Check if battle count has increased, get existing battle count
 				DataTable playerTankOldTable = TankData.GetPlayerTank(tankId); // Return Existing Player Tank Data
 				// Check if Player has this tank
@@ -291,16 +302,21 @@ namespace WinApp.Code
 				// Get the old battle count
 				int playerTankOldRow_wins15 = 0;
 				int playerTankOldRow_wins7 = 0;
+				int playerTankOldRow_winsHistorical = 0;
 				int playerTankOldRow_xp15 = 0;
 				int playerTankOldRow_xp7 = 0;
+				int playerTankOldRow_xpHistorical = 0;
 				int playerTankOldRow_battles15 = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.Mode15, out playerTankOldRow_wins15, out playerTankOldRow_xp15);
-				int playerTankOldRow_battles7 = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.Mode7, out playerTankOldRow_wins7, out playerTankOldRow_xp7); 
+				int playerTankOldRow_battles7 = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.Mode7, out playerTankOldRow_wins7, out playerTankOldRow_xp7);
+				int playerTankOldRow_battlesHistorical = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.ModeHistorical, out playerTankOldRow_winsHistorical, out playerTankOldRow_xpHistorical); 
 				
 				// Calculate number of new battles 
 				int battlesNew15 = playerTankNewRow_battles15 - playerTankOldRow_battles15;
 				int battlesNew7 = playerTankNewRow_battles7 - playerTankOldRow_battles7;
+				int battlesNewHistorical = playerTankNewRow_battlesHistorical - playerTankOldRow_battlesHistorical;
 				// Check if new battle on this tank then do db update, if force do it anyway
-				if (battlesNew15 != 0 || battlesNew7 != 0 || (forceUpdate && (playerTankOldRow_battles15 != 0 || playerTankOldRow_battles7 != 0)))
+				if (battlesNew15 != 0 || battlesNew7 != 0 || battlesNewHistorical != 0 ||
+					(forceUpdate && (playerTankOldRow_battles15 != 0 || playerTankOldRow_battles7 != 0 || playerTankOldRow_battlesHistorical != 0)))
 				{  
 					// Update playerTank
 					string sqlFields = "";
@@ -326,7 +342,8 @@ namespace WinApp.Code
 					bool firstVictory = false;
 					int victoryNew = 0;
 					if (battlesNew15 > 0) victoryNew += Convert.ToInt32(playerTankBattle15NewRow["wins"]) - playerTankOldRow_wins15;
-					if (battlesNew7 > 0 ) victoryNew += Convert.ToInt32(playerTankBattle7NewRow["wins"]) - playerTankOldRow_wins7;
+					if (battlesNew7 > 0) victoryNew += Convert.ToInt32(playerTankBattle7NewRow["wins"]) - playerTankOldRow_wins7;
+					if (battlesNewHistorical > 0) victoryNew += Convert.ToInt32(playerTankBattleHistoricalNewRow["wins"]) - playerTankOldRow_winsHistorical;
 					if (victoryNew > 0)
 					{
 						battleVictory = true;
@@ -368,7 +385,11 @@ namespace WinApp.Code
 					List<AchItem> battleAchList = UpdatePlayerTankAch(tankId, playerTankId, achList);
 
 					// If detected several battle modes, dont save fraglist and achivements to battle, as we don't know how to seperate them
-					if (battlesNew15 != 0 && battlesNew7 != 0)
+					int severalModes = 0;
+					if (battlesNew15 != 0) severalModes++;
+					if (battlesNew7 != 0) severalModes++;
+					if (battlesNewHistorical != 0) severalModes++;
+					if (severalModes > 1)
 					{
 						battleFragList.Clear();
 						battleAchList.Clear();
@@ -387,6 +408,13 @@ namespace WinApp.Code
 												playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
 						battleSave = true;
 					}
+					if (battlesNewHistorical > 0 || (forceUpdate && playerTankOldRow_battlesHistorical != 0))
+					{
+						UpdatePlayerTankBattle(TankData.DossierBattleMode.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
+												playerTankNewRow_battlesHistorical, battlesNewHistorical, battleFragList, battleAchList, saveBattleResult);
+						battleSave = true;
+					}
+
 
 					// Check if grinding
 					if (Convert.ToInt32(playerTankOldRow["gGrindXP"]) > 0)
@@ -409,6 +437,7 @@ namespace WinApp.Code
 						int XP = 0;
 						if (battlesNew15 > 0) XP += Convert.ToInt32(playerTankBattle15NewRow["xp"]) - playerTankOldRow_xp15;
 						if (battlesNew7 > 0) XP += Convert.ToInt32(playerTankBattle7NewRow["xp"]) - playerTankOldRow_xp7;
+						if (battlesNewHistorical > 0) XP += Convert.ToInt32(playerTankBattleHistoricalNewRow["xp"]) - playerTankOldRow_xpHistorical;
 						if (battleVictory) // If victory, check if first victory this day, or if every victory has bonus
 						{
 							if (Code.GrindingHelper.Settings.EveryVictoryFactor > 0)
@@ -758,7 +787,9 @@ namespace WinApp.Code
 				sqlFields += ", eff";
 				sqlValues += ", " + Rating.CalculateBattleEff(tankId, battlesCount, battleNewRow);
 				// Add battle mode
-				sqlFields += ", battleMode"; sqlValues += ", " + TankData.DbBattleMode(battleMode); 
+				sqlFields += ", battleMode";
+				sqlValues += ", @battleMode";
+				DB.AddWithValue(ref sqlValues, "@battleMode", TankData.DbBattleMode(battleMode), DB.SqlDataType.VarChar); 
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(battleNewRow["victory"]);
 				int defeatcount = Convert.ToInt32(battleNewRow["defeat"]);
@@ -777,8 +808,10 @@ namespace WinApp.Code
 					battleResult = 2;
 				else
 					battleResult = 4;
-				sqlFields += ", battleResultId "; sqlValues += ", " + battleResult.ToString();
-				sqlFields += ", draw "; sqlValues += ", " + drawcount.ToString();
+				sqlFields += ", battleResultId "; 
+				sqlValues += ", " + battleResult.ToString();
+				sqlFields += ", draw "; 
+				sqlValues += ", " + drawcount.ToString();
 				// Calculate battle survive
 				int survivecount = Convert.ToInt32(battleNewRow["survived"]);
 				int killedcount = battlesCount - survivecount;
@@ -792,8 +825,10 @@ namespace WinApp.Code
 					battleSurvive = 1;
 				else
 					battleSurvive = 2;
-				sqlFields += ", battleSurviveId "; sqlValues += ", " + battleSurvive.ToString();
-				sqlFields += ", killed "; sqlValues += ", " + killedcount.ToString();
+				sqlFields += ", battleSurviveId "; 
+				sqlValues += ", " + battleSurvive.ToString();
+				sqlFields += ", killed "; 
+				sqlValues += ", " + killedcount.ToString();
 				// Update database
 				if (sqlFields.Length > 0)
 				{
@@ -815,7 +850,7 @@ namespace WinApp.Code
 						foreach (var newFragItem in battleFragList)
 						{
 							battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
-													"VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
+				 							 "VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
 						}
 						// Add to database
 						DB.ExecuteNonQuery(battleFragSQL);
@@ -828,7 +863,7 @@ namespace WinApp.Code
 						foreach (var newAchItem in battleAchList)
 						{
 							battleAchSQL += "INSERT INTO battleAch (battleId, achId, achCount) " +
-													"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
+											"VALUES (" + battleId + ", " + newAchItem.achId.ToString() + ", " + newAchItem.count.ToString() + "); ";
 						}
 						// Add to database
 						DB.ExecuteNonQuery(battleAchSQL);
