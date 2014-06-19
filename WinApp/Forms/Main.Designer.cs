@@ -117,13 +117,14 @@
 			this.toolItemMode = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolItemModeAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemMode15 = new System.Windows.Forms.ToolStripMenuItem();
+			this.randomBattlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemMode7 = new System.Windows.Forms.ToolStripMenuItem();
 			this.historicalBattlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
-			this.randomBattlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemModeClan = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemMode15 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemModeCompany = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemModeClan = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemModeSpecialInfo = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolItemBattles1d = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,7 +167,6 @@
 			this.testUpdateTankImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -1066,14 +1066,14 @@
 			this.toolItemMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemModeAll,
             this.toolStripSeparator16,
-            this.toolItemMode15,
+            this.randomBattlesToolStripMenuItem,
             this.toolItemMode7,
             this.historicalBattlesToolStripMenuItem,
             this.toolStripSeparator15,
+            this.toolItemMode15,
             this.toolItemModeCompany,
             this.toolItemModeClan,
-            this.toolStripSeparator17,
-            this.randomBattlesToolStripMenuItem});
+            this.toolItemModeSpecialInfo});
 			this.toolItemMode.Image = ((System.Drawing.Image)(resources.GetObject("toolItemMode.Image")));
 			this.toolItemMode.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemMode.Name = "toolItemMode";
@@ -1084,7 +1084,7 @@
 			// toolItemModeAll
 			// 
 			this.toolItemModeAll.Name = "toolItemModeAll";
-			this.toolItemModeAll.Size = new System.Drawing.Size(285, 22);
+			this.toolItemModeAll.Size = new System.Drawing.Size(227, 22);
 			this.toolItemModeAll.Tag = "All";
 			this.toolItemModeAll.Text = "All modes";
 			this.toolItemModeAll.Click += new System.EventHandler(this.toolItemMode_Click);
@@ -1093,21 +1093,21 @@
 			// toolStripSeparator16
 			// 
 			this.toolStripSeparator16.Name = "toolStripSeparator16";
-			this.toolStripSeparator16.Size = new System.Drawing.Size(282, 6);
+			this.toolStripSeparator16.Size = new System.Drawing.Size(224, 6);
 			// 
-			// toolItemMode15
+			// randomBattlesToolStripMenuItem
 			// 
-			this.toolItemMode15.Name = "toolItemMode15";
-			this.toolItemMode15.Size = new System.Drawing.Size(285, 22);
-			this.toolItemMode15.Tag = "Random";
-			this.toolItemMode15.Text = "Random Battles";
-			this.toolItemMode15.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemMode15.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.randomBattlesToolStripMenuItem.Name = "randomBattlesToolStripMenuItem";
+			this.randomBattlesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+			this.randomBattlesToolStripMenuItem.Tag = "Mode15";
+			this.randomBattlesToolStripMenuItem.Text = "Random, Company and Clan";
+			this.randomBattlesToolStripMenuItem.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.randomBattlesToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemMode7
 			// 
 			this.toolItemMode7.Name = "toolItemMode7";
-			this.toolItemMode7.Size = new System.Drawing.Size(285, 22);
+			this.toolItemMode7.Size = new System.Drawing.Size(227, 22);
 			this.toolItemMode7.Tag = "Mode7";
 			this.toolItemMode7.Text = "Team Battles";
 			this.toolItemMode7.Click += new System.EventHandler(this.toolItemMode_Click);
@@ -1116,7 +1116,7 @@
 			// historicalBattlesToolStripMenuItem
 			// 
 			this.historicalBattlesToolStripMenuItem.Name = "historicalBattlesToolStripMenuItem";
-			this.historicalBattlesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+			this.historicalBattlesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
 			this.historicalBattlesToolStripMenuItem.Tag = "Historical";
 			this.historicalBattlesToolStripMenuItem.Text = "Historical Battles";
 			this.historicalBattlesToolStripMenuItem.Click += new System.EventHandler(this.toolItemMode_Click);
@@ -1125,34 +1125,41 @@
 			// toolStripSeparator15
 			// 
 			this.toolStripSeparator15.Name = "toolStripSeparator15";
-			this.toolStripSeparator15.Size = new System.Drawing.Size(282, 6);
+			this.toolStripSeparator15.Size = new System.Drawing.Size(224, 6);
 			// 
-			// randomBattlesToolStripMenuItem
+			// toolItemMode15
 			// 
-			this.randomBattlesToolStripMenuItem.Name = "randomBattlesToolStripMenuItem";
-			this.randomBattlesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-			this.randomBattlesToolStripMenuItem.Tag = "Mode15";
-			this.randomBattlesToolStripMenuItem.Text = "Random, Tank Company and Clan Wars";
-			this.randomBattlesToolStripMenuItem.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.randomBattlesToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemModeClan
-			// 
-			this.toolItemModeClan.Name = "toolItemModeClan";
-			this.toolItemModeClan.Size = new System.Drawing.Size(285, 22);
-			this.toolItemModeClan.Tag = "Clan";
-			this.toolItemModeClan.Text = "Clan War Battles";
-			this.toolItemModeClan.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.toolItemMode15.Name = "toolItemMode15";
+			this.toolItemMode15.Size = new System.Drawing.Size(227, 22);
+			this.toolItemMode15.Tag = "Random";
+			this.toolItemMode15.Text = "Random Battles (*)";
+			this.toolItemMode15.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.toolItemMode15.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolItemModeCompany
 			// 
 			this.toolItemModeCompany.Name = "toolItemModeCompany";
-			this.toolItemModeCompany.Size = new System.Drawing.Size(285, 22);
+			this.toolItemModeCompany.Size = new System.Drawing.Size(227, 22);
 			this.toolItemModeCompany.Tag = "Company";
-			this.toolItemModeCompany.Text = "Tank Company Battles";
+			this.toolItemModeCompany.Text = "Tank Company Battles (*)";
 			this.toolItemModeCompany.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.toolItemModeCompany.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolItemModeClan
+			// 
+			this.toolItemModeClan.Name = "toolItemModeClan";
+			this.toolItemModeClan.Size = new System.Drawing.Size(227, 22);
+			this.toolItemModeClan.Tag = "Clan";
+			this.toolItemModeClan.Text = "Clan War Battles (*)";
+			this.toolItemModeClan.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.toolItemModeClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolItemModeSpecialInfo
+			// 
+			this.toolItemModeSpecialInfo.Name = "toolItemModeSpecialInfo";
+			this.toolItemModeSpecialInfo.Size = new System.Drawing.Size(227, 22);
+			this.toolItemModeSpecialInfo.Text = "* Stats Information";
+			this.toolItemModeSpecialInfo.Click += new System.EventHandler(this.toolItemModeSpecialInfo_Click);
 			// 
 			// toolItemBattles
 			// 
@@ -1497,11 +1504,6 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// toolStripSeparator17
-			// 
-			this.toolStripSeparator17.Name = "toolStripSeparator17";
-			this.toolStripSeparator17.Size = new System.Drawing.Size(282, 6);
-			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1668,7 +1670,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeClan;
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeCompany;
 		private System.Windows.Forms.ToolStripMenuItem historicalBattlesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+		private System.Windows.Forms.ToolStripMenuItem toolItemModeSpecialInfo;
 	}
 }
 

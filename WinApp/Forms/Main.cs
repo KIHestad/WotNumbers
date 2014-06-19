@@ -183,7 +183,7 @@ namespace WinApp.Forms
 			if (DB.CheckConnection())
 			{
 				// Init
-				TankData.GetTankListFromDB();
+				TankData.GetTankList();
 				TankData.GetJson2dbMappingFromDB();
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
@@ -930,7 +930,7 @@ namespace WinApp.Forms
 				if (dropDownItem is ToolStripMenuItem)
 				{
 					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
-					if (battleMode == menuItem.Tag.ToString())
+					if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
 					{
 						menuItem.Checked = true;
 						toolItemMode.Text = BattleModeHelper.GetShortmenuName(menuItem.Text);
@@ -1143,27 +1143,78 @@ namespace WinApp.Forms
 			GetSelectedColumnList(out select, out colList);
 			// Get Tank filter
 			string message = "";
-			string where = "";
+			string tankFilter = "";
 			string join = "";
-			Tankfilter(out where, out join, out message);
+			Tankfilter(out tankFilter, out join, out message);
+			// Create Battle mode filter
+			string battleModeFilter = "";
+			switch (MainSettings.GridFilterTank.BattleMode)
+			{
+				case GridFilter.BattleModeType.Mode15:
+					battleModeFilter = " AND (playerTankBattle.battleMode = '15') ";
+					break;
+				case GridFilter.BattleModeType.Mode7:
+					battleModeFilter = " AND (playerTankBattle.battleMode = '7') ";
+					break;
+				case GridFilter.BattleModeType.Random:
+					battleModeFilter = " AND (playerTankBattle.battleMode = '15' AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
+					break;
+				case GridFilter.BattleModeType.Clan:
+					battleModeFilter = " AND (playerTank.hasClan = 1) ";
+					break;
+				case GridFilter.BattleModeType.Company:
+					battleModeFilter = " AND (playerTank.hasCompany = 1) ";
+					break;
+				case GridFilter.BattleModeType.Historical:
+					battleModeFilter = " AND (playerTankBattle.battleMode = 'Historical') ";
+					break;
+				default:
+					break;
+			}
+			// Sort order
 			string sortordercol = "0 as sortorder ";
 			if (join != "")
 			{
 				sortordercol = "favListTank.sortorder as sortorder ";
 			}
-			string sql =
-				"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " +
-				"FROM     tank INNER JOIN " +
-				"         playerTank ON tank.id = playerTank.tankId INNER JOIN " +
-				"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
-				"         country ON tank.countryId = country.id LEFT OUTER JOIN " +
-				"         playerTankBattle ON playerTankBattle.playerTankId = playerTank.id LEFT OUTER JOIN " +
-				"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " +
-				"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " +
-				"         modGun ON playerTank.modGunId = modGun.id " + join +
-				"WHERE    playerTank.playerId=@playerid and battleMode='15' " + where + " " +
-				"ORDER BY playerTank.lastBattleTime DESC"; 
+			// Create the SQL
+			string sql = "";
+			if (MainSettings.GridFilterTank.BattleMode == GridFilter.BattleModeType.All)
+			{
+				// Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
+				select = select.Replace("playerTankBattle", "playerTankBattleTotalsView");
 
+				// Get SUM for playerTankBattle as several battleModes might appear
+				sql =
+					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " + Environment.NewLine +
+					"FROM     tank INNER JOIN " + Environment.NewLine +
+					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
+					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
+					"         country ON tank.countryId = country.id INNER JOIN " + Environment.NewLine +
+					"         playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
+					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
+					"WHERE    playerTank.playerId=@playerid " + tankFilter + " " + Environment.NewLine +
+					"ORDER BY playerTank.lastBattleTime DESC";
+			}
+			else
+			{
+				// Only gets one row from playerTankBattle for an explisit battleMode
+				sql =
+					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " + Environment.NewLine +
+					"FROM     tank INNER JOIN " + Environment.NewLine +
+					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
+					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
+					"         country ON tank.countryId = country.id INNER JOIN " + Environment.NewLine +
+					"         playerTankBattle ON playerTankBattle.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
+					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
+					"WHERE    playerTank.playerId=@playerid " + tankFilter + battleModeFilter + " " + Environment.NewLine +
+					"ORDER BY playerTank.lastBattleTime DESC";
+			}
+			// Code.MsgBox.Show(sql, "sql"); // FOR DEBUG
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			// Set row height in template before rendering to fit images
 			dataGridMain.RowTemplate.Height = 23;
@@ -2067,6 +2118,16 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+		private void toolItemModeSpecialInfo_Click(object sender, EventArgs e)
+		{
+			string s = "The tanks statistics are the same for Random, Company and Clan battles." +
+						Environment.NewLine + Environment.NewLine +
+						"For 'Tanks view' these filters only limit the tanks showing in grid, the stats will be the same." +
+						Environment.NewLine + Environment.NewLine +
+						"For 'battle view' the stats is calculated per battle and will be correct for any filter.";
+			Code.MsgBox.Show(s, "Special Battle Filter Information");
+		}
 	
 	}
 }

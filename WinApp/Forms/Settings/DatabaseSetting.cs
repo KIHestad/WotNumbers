@@ -155,7 +155,7 @@ namespace WinApp.Forms
 				string msg = "";
 				Config.SaveConfig(out msg);
 				// Init
-				TankData.GetTankListFromDB();
+				TankData.GetTankList();
 				TankData.GetJson2dbMappingFromDB();
 				// Check for upgrade
 				DBVersion.CheckForDbUpgrade();

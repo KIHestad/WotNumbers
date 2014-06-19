@@ -36,7 +36,7 @@ namespace WinApp.Code
 
 		public static DataTable tankList = new DataTable();
 
-		public static void GetTankListFromDB()
+		public static void GetTankList()
 		{
 			tankList.Clear();
 			tankList = DB.FetchData("SELECT * FROM tank");
@@ -54,7 +54,7 @@ namespace WinApp.Code
 			tankList.AcceptChanges();
 		}
 
-		public static DataTable GetPlayerTankFromDB(int tankId)
+		public static DataTable GetPlayerTank(int tankId)
 		{
 			string sql = "SELECT * FROM playerTank WHERE playerId=@playerId AND tankId=@tankId; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
@@ -62,14 +62,14 @@ namespace WinApp.Code
 			return DB.FetchData(sql);
 		}
 
-		public static DataTable GetPlayerTankBattleFromDB(int playerTankId, DossierBattleMode dossierBattleMode)
+		public static DataTable GetPlayerTankBattle(int playerTankId, DossierBattleMode dossierBattleMode, bool CreateNewIfNotExists)
 		{
 			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count == 0) // No battle recorded for this tank in this mode, create now and fetch once more
+			if (CreateNewIfNotExists && dt.Rows.Count == 0) // No battle recorded for this tank in this mode, create now and fetch once more
 			{
 				AddPlayerTankBattle(playerTankId, battleMode);
 				dt = DB.FetchData(sql);
@@ -153,14 +153,14 @@ namespace WinApp.Code
 			return lookupTankId;
 		}
 
-		public static DataTable GetBattleFromDB(int battleId)
+		public static DataTable GetBattle(int battleId)
 		{
 			string sql = "SELECT * FROM battle WHERE id=@id; ";
 			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
 			return DB.FetchData(sql);
 		}
 
-		public static int GetBattleIdForImportedWsBattleFromDB(int wsId)
+		public static int GetBattleIdForImportedWsBattle(int wsId)
 		{
 			string sql = "SELECT Id FROM battle WHERE wsId=@wsId; ";
 			DB.AddWithValue(ref sql, "@wsId", wsId, DB.SqlDataType.Int); 
@@ -178,7 +178,7 @@ namespace WinApp.Code
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty");
 		}
 
-		public static DataTable GetTankData2BattleMappingFromDB(DossierBattleMode dossierBattleMode)
+		public static DataTable GetTankData2BattleMapping(DossierBattleMode dossierBattleMode)
 		{
 			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql =

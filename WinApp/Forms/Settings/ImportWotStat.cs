@@ -160,7 +160,7 @@ namespace WinApp.Forms
 							int eff = Rating.CalculateBattleEff(tankId, battlesCount, dmg, spotted, frags, def, cap);
 							// Insert or update Battle table
 							string sqlInsertBattle = "";
-							int battleId = TankData.GetBattleIdForImportedWsBattleFromDB(wsId);
+							int battleId = TankData.GetBattleIdForImportedWsBattle(wsId);
 							if (battleId > 0)
 								sqlInsertBattle =
 								"update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, killed=@killed, " +

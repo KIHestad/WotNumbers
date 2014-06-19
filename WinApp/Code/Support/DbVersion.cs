@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 52; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 54; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -847,6 +847,101 @@ namespace WinApp.Code
 							"VALUES (184, 2, 3, 'tank.smallImg', 'Tank Image', 'Tank image (small), suitable for grid', 'Tank', 90, 'Image'); " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (185, 2, 4, 'tank.img', 'Tank Image Large', 'Tank large image, will only partly show if not expanding row height in grid', 'Tank', 145, 'Image'); ";
+					sqlite = mssql;
+					break;
+				case 53:
+					mssql = "UPDATE columnSelection SET colName='tank.name' WHERE id=1; " +
+							"UPDATE columnSelection SET colName='tank.tier' WHERE id=12; " +
+							"UPDATE columnSelection SET colName='tank.premium' WHERE id=23; " +
+							"UPDATE columnSelection SET colName='tankType.name' WHERE id=34; " +
+							"UPDATE columnSelection SET colName='tankType.shortName' WHERE id=44; " +
+							"UPDATE columnSelection SET colName='tank.id' WHERE id=46; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.eff' WHERE id=48; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.wn8' WHERE id=49; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.battles' WHERE id=50; " +
+							"UPDATE columnSelection SET colName='country.name' WHERE id=51; " +
+							"UPDATE columnSelection SET colName='playerTank.battleLifeTime' WHERE id=52; " +
+							"UPDATE columnSelection SET colName='playerTank.markOfMastery' WHERE id=53; " +
+							"UPDATE columnSelection SET colName='playerTank.lastBattleTime' WHERE id=54; " +
+							"UPDATE columnSelection SET colName='playerTank.has15' WHERE id=55; " +
+							"UPDATE columnSelection SET colName='playerTank.hasClan' WHERE id=56; " +
+							"UPDATE columnSelection SET colName='country.shortName' WHERE id=57; " +
+							"UPDATE columnSelection SET colName='playerTank.hasCompany' WHERE id=60; " +
+							"UPDATE columnSelection SET colName='playerTank.has7' WHERE id=61; " +
+							"UPDATE columnSelection SET colName='playerTank.mileage' WHERE id=63; " +
+							"UPDATE columnSelection SET colName='playerTank.treesCut' WHERE id=64; " +
+							"UPDATE columnSelection SET colName='playerTank.eqBino' WHERE id=65; " +
+							"UPDATE columnSelection SET colName='playerTank.eqCoated' WHERE id=66; " +
+							"UPDATE columnSelection SET colName='playerTank.eqCamo' WHERE id=67; " +
+							"UPDATE columnSelection SET colName='playerTank.equVent' WHERE id=68; " +
+							"UPDATE columnSelection SET colName='playerTank.skillRecon' WHERE id=69; " +
+							"UPDATE columnSelection SET colName='playerTank.skillAwareness' WHERE id=70; " +
+							"UPDATE columnSelection SET colName='playerTank.skillCamo' WHERE id=71; " +
+							"UPDATE columnSelection SET colName='playerTank.skillBia' WHERE id=72; " +
+							"UPDATE columnSelection SET colName='playerTank.premiumCons' WHERE id=73; " +
+							"UPDATE columnSelection SET colName='modRadio.name' WHERE id=74; " +
+							"UPDATE columnSelection SET colName='modRadio.signalRange' WHERE id=75; " +
+							"UPDATE columnSelection SET colName='modTurret.name' WHERE id=77; " +
+							"UPDATE columnSelection SET colName='modTurret.viewRange' WHERE id=78; " +
+							"UPDATE columnSelection SET colName='modTurret.armorFront' WHERE id=79; " +
+							"UPDATE columnSelection SET colName='modTurret.armorSides' WHERE id=80; " +
+							"UPDATE columnSelection SET colName='modTurret.armorRear' WHERE id=81; " +
+							"UPDATE columnSelection SET colName='modGun.name' WHERE id=83; " +
+							"UPDATE columnSelection SET colName='modGun.tier' WHERE id=84; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.battles8p' WHERE id=85; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.wins' WHERE id=86; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses' WHERE id=91; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.losses' WHERE id=92; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.wins*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10' WHERE id=95; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.survived' WHERE id=96; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.battles-playerTankBattle.survived' WHERE id=97; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.survived*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10' WHERE id=98; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.dmg' WHERE id=128; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.assistSpot' WHERE id=129; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.assistTrack' WHERE id=130; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.frags' WHERE id=131; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.dmgReceived' WHERE id=132; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.frags8p' WHERE id=133; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.cap' WHERE id=134; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.def' WHERE id=135; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.spot' WHERE id=136; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.xp' WHERE id=137; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.xp8p' WHERE id=138; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.xpOriginal' WHERE id=139; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.xp/nullif(playerTankBattle.battles,0)' WHERE id=140; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.shots' WHERE id=141; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.hits' WHERE id=142; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.heHits' WHERE id=143; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.pierced' WHERE id=144; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.hits*1000/nullif(playerTankBattle.shots,0) as FLOAT) / 10' WHERE id=145; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.shots*10/nullif(playerTankBattle.battles,0)  as FLOAT) / 10' WHERE id=146; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.hits*10/nullif(playerTankBattle.battles,0)  as FLOAT) / 10' WHERE id=147; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.heHits*10/nullif(playerTankBattle.battles,0)   as FLOAT) / 10' WHERE id=148; " +
+							"UPDATE columnSelection SET colName='CAST(playerTankBattle.pierced*10/nullif(playerTankBattle.battles,0)  as FLOAT) / 10' WHERE id=149; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.shotsReceived' WHERE id=150; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.piercedReceived' WHERE id=151; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.heHitsReceived' WHERE id=152; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.noDmgShotsReceived' WHERE id=153; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.maxDmg' WHERE id=154; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.maxFrags' WHERE id=155; " +
+							"UPDATE columnSelection SET colName='playerTankBattle.maxXp' WHERE id=156; " +
+							"UPDATE columnSelection SET colName='playerTank.gCurrentXP' WHERE id=170; " +
+							"UPDATE columnSelection SET colName='playerTank.gGrindXP' WHERE id=171; " +
+							"UPDATE columnSelection SET colName='playerTank.gGoalXP' WHERE id=172; " +
+							"UPDATE columnSelection SET colName='playerTank.gProgressXP' WHERE id=173; " +
+							"UPDATE columnSelection SET colName='playerTank.gBattlesDay' WHERE id=174; " +
+							"UPDATE columnSelection SET colName='playerTank.gComment' WHERE id=175; " +
+							"UPDATE columnSelection SET colName='playerTank.gRestXP' WHERE id=176; " +
+							"UPDATE columnSelection SET colName='playerTank.gProgressPercent' WHERE id=177; " +
+							"UPDATE columnSelection SET colName='playerTank.gRestBattles' WHERE id=178; " +
+							"UPDATE columnSelection SET colName='playerTank.gRestDays' WHERE id=179; " +
+							"UPDATE columnSelection SET colName='tank.contourImg' WHERE id=180; " +
+							"UPDATE columnSelection SET colName='tank.smallImg' WHERE id=181; " +
+							"UPDATE columnSelection SET colName='tank.img' WHERE id=182; ";
+					sqlite = mssql;
+					break;
+				case 54:
+					mssql = "DELETE FROM playerTankBattle WHERE battles=0;";
 					sqlite = mssql;
 					break;
 			}

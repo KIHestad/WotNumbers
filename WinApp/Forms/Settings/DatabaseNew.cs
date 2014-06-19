@@ -105,10 +105,10 @@ namespace WinApp.Forms
 
 				// Get tanks, remember to init tankList first
 				UpdateProgressBar("Retrieves tanks from Wargaming API");
-				TankData.GetTankListFromDB();
+				TankData.GetTankList();
 				ImportWotApi2DB.ImportTanks();
 				// Init after getting tanks and other basic data import
-				TankData.GetTankListFromDB();
+				TankData.GetTankList();
 				TankData.GetJson2dbMappingFromDB();
 
 				// Get turret
@@ -149,7 +149,7 @@ namespace WinApp.Forms
 				UpdateProgressBar("Upgrading database");
 				DBVersion.CheckForDbUpgrade();
 				// New Init after upgrade db
-				TankData.GetTankListFromDB();
+				TankData.GetTankList();
 				TankData.GetJson2dbMappingFromDB();
 				
 				// Get initial dossier 
