@@ -49,6 +49,10 @@ namespace WinApp.Code
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 			
+			// Update base data
+			TankData.GetPlayerTankAchList();
+			TankData.GetPlayerTankFragList();
+
 			// read json string
 			JsonTextReader reader = new JsonTextReader(new StringReader(json));
 						
@@ -232,6 +236,9 @@ namespace WinApp.Code
 			if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult)) 
 				battleSaved = true; // result if battle was detected and saved
 			// Done
+			TankData.ClearPlayerTankAchList();
+			TankData.ClearPlayerTankFragList();
+			
 			if (battleSaved) Log.BattleResultDoneLog();
 			sw.Stop();
 			TimeSpan ts = sw.Elapsed;

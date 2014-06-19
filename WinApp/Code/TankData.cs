@@ -55,19 +55,30 @@ namespace WinApp.Code
 
 		public static void GetPlayerTankAchList()
 		{
-			playerTankAchList.Clear();
+			playerTankAchList = new DataTable();
 			playerTankAchList = DB.FetchData("SELECT * FROM playerTankAch");
+		}
+
+		public static void ClearPlayerTankAchList()
+		{
+			playerTankAchList = new DataTable();
 		}
 
 		public static DataTable playerTankFragList = new DataTable();
 
 		public static void GetPlayerTankFragList()
 		{
-			playerTankFragList.Clear();
+			playerTankFragList = new DataTable();
 			string sql = "SELECT playerTank.id AS playerTankId, playerTank.tankId as PlayerTankTankId, playerTankFrag.* " +
 	  					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId; ";
 			playerTankFragList = DB.FetchData(sql);
 		}
+
+		public static void ClearPlayerTankFragList()
+		{
+			playerTankFragList = new DataTable();
+		}
+		
 
 		public static DataTable tankList = new DataTable();
 
