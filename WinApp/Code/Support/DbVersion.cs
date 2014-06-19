@@ -1000,6 +1000,9 @@ namespace WinApp.Code
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'xp','Int','xp','xp',NULL,'tanks_v2.historical.xp','Historical'); ";
 					sqlite = mssql;
 					break;
+				case 59:
+					// damageBlockedByArmor
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype

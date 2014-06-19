@@ -173,7 +173,7 @@ namespace WinApp.Code
 							fragList += currentItem.value.ToString() + ";";
 						// Temp log all data
 						// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
-						// log.Add("  " + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property );
+						log.Add(currentItem.mainSection + ";" + currentItem.subSection + ";" + currentItem.property );
 					}
 				}
 				else
@@ -493,25 +493,24 @@ namespace WinApp.Code
 				{
 					if (newAch.count > 0) // Find the ones achieved
 					{
-						// Find the current achievent
-						string sql = "SELECT achId, ach.name ,achCount " +
-									"FROM playerTankAch INNER JOIN ach ON playerTankAch.achId = ach.Id " +
-									"WHERE playerTankId=" + playerTankId + " AND ach.name='" + newAch.achName + "'; ";
-						DataTable currentAch = DB.FetchData(sql);
-						if (currentAch.Rows.Count == 0) // new achievment
+						// Find ach ID
+						string sql = "SELECT id FROM ach WHERE name=@achName; ";
+						DB.AddWithValue(ref sql, "@achName", newAch.achName, DB.SqlDataType.VarChar);
+						DataTable lookupAch = DB.FetchData(sql);
+						if (lookupAch.Rows.Count > 0)
 						{
-							// Get AchId 
-							// TODO : improve
-							sql = "SELECT id " +
-									"FROM ach " +
-									"WHERE name='" + newAch.achName + "'; ";
-							DataTable lookupAch = DB.FetchData(sql);
-							if (lookupAch.Rows.Count > 0)
+							// Found ach, get id now
+							int achId = Convert.ToInt32(lookupAch.Rows[0]["id"]);
+							// Find the current achievent
+							sql = "SELECT * FROM playerTankAch WHERE playerTankId=@playerTankId AND achId=@achId; ";
+							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+							DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
+							DataTable currentAch = DB.FetchData(sql);
+							if (currentAch.Rows.Count == 0) // new achievment
 							{
-								int achId = Convert.ToInt32(lookupAch.Rows[0]["id"]);
 								// Insert new acheivement
 								sql = "INSERT INTO playerTankAch (achCount, playerTankId, achId) " +
-										"VALUES (@achCount, @playerTankId, @achId); ";
+									  "VALUES (@achCount, @playerTankId, @achId); ";
 								DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
@@ -520,29 +519,28 @@ namespace WinApp.Code
 								// Add to battle achievment
 								AchItem ach = new AchItem();
 								ach.achId = achId;
-								ach.count = (newAch.count);
+								ach.count = newAch.count;
 								battleAchList.Add(ach);
 							}
-						}
-						else // achievent found, check count
-						{
-							int achId = Convert.ToInt32(currentAch.Rows[0]["achId"]);
-							int oldCount = Convert.ToInt32(currentAch.Rows[0]["achCount"]);
-							if (newAch.count > oldCount)
+							else // achievent found, check count
 							{
-								// Update achievment increased count
-								sql = "UPDATE playerTankAch SET achCount=@achCount " +
-										"WHERE playerTankId=@playerTankId AND achId=@achId; ";
-								DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
-								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
-								//DB.ExecuteNonQuery(sql);
-								sqlTotal += sql + Environment.NewLine;
-								// Add to battle achievment
-								AchItem ach = new AchItem();
-								ach.achId = achId;
-								ach.count = (newAch.count - oldCount);
-								battleAchList.Add(ach);
+								int oldCount = Convert.ToInt32(currentAch.Rows[0]["achCount"]);
+								if (newAch.count > oldCount)
+								{
+									// Update achievment increased count
+									sql = "UPDATE playerTankAch SET achCount=@achCount " +
+										  "WHERE playerTankId=@playerTankId AND achId=@achId; ";
+									DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
+									//DB.ExecuteNonQuery(sql);
+									sqlTotal += sql + Environment.NewLine;
+									// Add to battle achievment
+									AchItem ach = new AchItem();
+									ach.achId = achId;
+									ach.count = newAch.count - oldCount;
+									battleAchList.Add(ach);
+								}
 							}
 						}
 					}
