@@ -1297,10 +1297,10 @@ namespace WinApp.Forms
 						battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
 						break;
 					case GridFilter.BattleModeType.Clan:
-						battleModeFilter = " AND (modeClan = 1) ";
+						battleModeFilter = " AND (modeClan > 0) ";
 						break;
 					case GridFilter.BattleModeType.Company:
-						battleModeFilter = " AND (modeCompany = 1) ";
+						battleModeFilter = " AND (modeCompany > 0) ";
 						break;
 					case GridFilter.BattleModeType.Historical:
 						battleModeFilter = " AND (battleMode = 'Historical') ";
