@@ -59,7 +59,7 @@ namespace WinApp.Code
 			return dt;
 		}
 
-		public static bool ExecuteNonQuery(string sql, bool ShowError = true)
+		public static bool ExecuteNonQuery(string sql, bool ShowError = true, bool RunInBatch = false)
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
@@ -70,13 +70,23 @@ namespace WinApp.Code
 				{
 					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
 					con.Open();
-					foreach (string s in sqlList)
+					if (RunInBatch)
 					{
-						if (s.Trim().Length > 0)
+						lastRunnedSQL = sql;
+						sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
+						SqlCommand command = new SqlCommand(sql, con);
+						command.ExecuteNonQuery();
+					}
+					else
+					{
+						foreach (string s in sqlList)
 						{
-							lastRunnedSQL = s;
-							SqlCommand command = new SqlCommand(s, con);
-							command.ExecuteNonQuery();
+							if (s.Trim().Length > 0)
+							{
+								lastRunnedSQL = s;
+								SqlCommand command = new SqlCommand(s, con);
+								command.ExecuteNonQuery();
+							}
 						}
 					}
 					con.Close();
@@ -86,13 +96,23 @@ namespace WinApp.Code
 				{
 					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
 					con.Open();
-					foreach (string s in sqlList)
+					if (RunInBatch)
 					{
-						if (s.Trim().Length > 0)
+						lastRunnedSQL = sql;
+						sql = "BEGIN TRANSACTION; " + sql + "END TRANSACTION; ";
+						SQLiteCommand command = new SQLiteCommand(sql, con);
+						command.ExecuteNonQuery();
+					}
+					else
+					{
+						foreach (string s in sqlList)
 						{
-							lastRunnedSQL = s;
-							SQLiteCommand command = new SQLiteCommand(s, con);
-							command.ExecuteNonQuery();
+							if (s.Trim().Length > 0)
+							{
+								lastRunnedSQL = s;
+								SQLiteCommand command = new SQLiteCommand(s, con);
+								command.ExecuteNonQuery();
+							}
 						}
 					}
 					con.Close();

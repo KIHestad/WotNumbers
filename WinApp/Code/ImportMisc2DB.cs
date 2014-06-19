@@ -192,7 +192,7 @@ namespace WinApp.Code
 			// Execute update statements
 			try
 			{
-				DB.ExecuteNonQuery(sql);
+				DB.ExecuteNonQuery(sql, true, true);
 			}
 			catch (Exception ex)
 			{

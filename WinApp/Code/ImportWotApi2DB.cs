@@ -208,7 +208,7 @@ namespace WinApp.Code
 						JToken tanks = rootToken.Children().First();   // read all tokens in data token
 
 						//List<string> logtext = new List<string>();
-
+						string sqlTotal = "";
 						foreach (JProperty tank in tanks)   // tank = tankId + child tokens
 						{
 							itemToken = tank.First();   // First() returns only child tokens of tank
@@ -245,8 +245,8 @@ namespace WinApp.Code
 
 							// Write to db
 							tankExists = TankData.TankExist(itemId);
-							insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium)";
-							updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id";
+							insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
+							updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id; " ;
 
 							// insert if tank does not exist
 							if (!tankExists)
@@ -257,7 +257,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(insertSql);  
+								// ok = DB.ExecuteNonQuery(insertSql);  
+								sqlTotal += insertSql + Environment.NewLine;
 								logAddedItems = logAddedItems + name + ", ";
 								logAddedItemsCount++;
 							}
@@ -271,7 +272,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@premium", premium, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(updateSql);  
+								// ok = DB.ExecuteNonQuery(updateSql);  
+								sqlTotal += updateSql + Environment.NewLine; 
 								logItemExists = logItemExists + name + ", ";
 								logItemExistsCount++;
 							}
@@ -284,7 +286,7 @@ namespace WinApp.Code
 								return ("ERROR - Import incomplete!");
 							}
 						}
-
+						DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
 						// Update log file after import
 						updateLog("tanks");
 					}
@@ -599,7 +601,7 @@ namespace WinApp.Code
 			else
 			{
 				log.Add("Start checking turrets (" + DateTime.Now.ToString() + ")");
-
+				string sqlTotal = "";
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
@@ -629,8 +631,8 @@ namespace WinApp.Code
 
 							var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
 							insertSql = "INSERT INTO modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) VALUES "
-									  + "(@id, @tankId, @name, @tier, @viewRange, @armorFront, @armorSides, @armorRear)";
-							updateSql = "UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear WHERE id=@id";
+									  + "(@id, @tankId, @name, @tier, @viewRange, @armorFront, @armorSides, @armorRear); ";
+							updateSql = "UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear WHERE id=@id; ";
 
 							if (moduleExists.Length == 0)
 							{
@@ -642,7 +644,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@armorFront", armorFront, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@armorSides", armorSides, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@armorRear", armorRear, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(insertSql);
+								// ok = DB.ExecuteNonQuery(insertSql);
+								sqlTotal += insertSql + Environment.NewLine;
 								logAddedItems = logAddedItems + name + ", ";
 								logAddedItemsCount++;
 							}
@@ -657,7 +660,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@armorFront", armorFront, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@armorSides", armorSides, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@armorRear", armorRear, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(updateSql);
+								// ok = DB.ExecuteNonQuery(updateSql);
+								sqlTotal += updateSql + Environment.NewLine;
 								logItemExists = logItemExists + name + ", ";
 								logItemExistsCount++;
 							}
@@ -670,7 +674,7 @@ namespace WinApp.Code
 								return ("ERROR - Import incomplete!");
 							}
 						}
-
+						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
 						updateLog("turrets");
 					}
@@ -707,7 +711,7 @@ namespace WinApp.Code
 				{
 					JObject allTokens = JObject.Parse(json);
 					rootToken = allTokens.First;
-
+					string sqlTotal = "";
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
@@ -717,7 +721,7 @@ namespace WinApp.Code
 						JToken guns = rootToken.Children().First();
 
 						// Drop relations to turret and tank before import (new relations will be added)
-						string sql = "DELETE FROM modTankGun; DELETE FROM modTurretGun";
+						string sql = "DELETE FROM modTankGun; DELETE FROM modTurretGun; ";
 						DB.ExecuteNonQuery(sql);
 
 						foreach (JProperty gun in guns)
@@ -744,8 +748,8 @@ namespace WinApp.Code
 							var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
 
 							insertSql = "INSERT INTO modGun (id, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) VALUES "
-									  + "(@id, @name, @tier, @dmg1, @dmg2, @dmg3, @pen1, @pen2, @pen3, @fireRate)";
-							updateSql = "UPDATE modGun SET name=@name, tier=@tier, dmg1=@dmg1, dmg2=@dmg2, dmg3=@dmg3, pen1=@pen1, pen2=@pen2, pen3=@pen3, fireRate=@fireRate WHERE id=@id";
+									  + "(@id, @name, @tier, @dmg1, @dmg2, @dmg3, @pen1, @pen2, @pen3, @fireRate); ";
+							updateSql = "UPDATE modGun SET name=@name, tier=@tier, dmg1=@dmg1, dmg2=@dmg2, dmg3=@dmg3, pen1=@pen1, pen2=@pen2, pen3=@pen3, fireRate=@fireRate WHERE id=@id; ";
 
 							if (moduleExists.Length == 0)
 							{
@@ -759,7 +763,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@pen2", pen2, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@pen3", pen3, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@fireRate", fireRate, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(insertSql);
+								//ok = DB.ExecuteNonQuery(insertSql);
+								sqlTotal += insertSql + Environment.NewLine;
 								logAddedItems = logAddedItems + name + ", ";
 								logAddedItemsCount++;
 							}
@@ -776,7 +781,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@pen2", pen2, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@pen3", pen3, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@fireRate", fireRate, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(updateSql);
+								// ok = DB.ExecuteNonQuery(updateSql);
+								sqlTotal += updateSql + Environment.NewLine;
 								logItemExists = logItemExists + name + ", ";
 								logItemExistsCount++;
 							}
@@ -796,8 +802,9 @@ namespace WinApp.Code
 								for (int i = 0; i < turretArray.Count; i++)
 								{
 									int turretId = Int32.Parse(turretArray[i].ToString());
-									insertSql = "INSERT INTO modTurretGun (turretId, gunId) VALUES ( " + turretId + ", " + itemId + ");";
-									DB.ExecuteNonQuery(insertSql);
+									insertSql = "INSERT INTO modTurretGun (turretId, gunId) VALUES ( " + turretId + ", " + itemId + "); ";
+									//DB.ExecuteNonQuery(insertSql);
+									sqlTotal += insertSql + Environment.NewLine;
 								}
 							}
 
@@ -808,8 +815,9 @@ namespace WinApp.Code
 								for (int i = 0; i < tankArray.Count; i++)
 								{
 									int tankId = Int32.Parse(tankArray[i].ToString());
-									insertSql = "INSERT INTO modTankGun (tankId, gunId) VALUES ( " + tankId + ", " + itemId + ");";
-									DB.ExecuteNonQuery(insertSql);
+									insertSql = "INSERT INTO modTankGun (tankId, gunId) VALUES ( " + tankId + ", " + itemId + "); ";
+									//DB.ExecuteNonQuery(insertSql);
+									sqlTotal += insertSql + Environment.NewLine;
 								}
 							}
 						}
@@ -818,7 +826,7 @@ namespace WinApp.Code
 						updateLog("guns");
 
 					}
-
+					DB.ExecuteNonQuery(sqlTotal, true, true);
 					//Code.MsgBox.Show("Gun import complete");
 					return ("Gun import Complete");
 				}
@@ -850,7 +858,7 @@ namespace WinApp.Code
 				{
 					JObject allTokens = JObject.Parse(json);
 					rootToken = allTokens.First;
-
+					string sqlTotal = "";
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
@@ -873,8 +881,8 @@ namespace WinApp.Code
 							int signalRange = Int32.Parse(itemToken["distance"].ToString());
 
 							var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
-							insertSql = "INSERT INTO modRadio (id, name, tier, signalRange) VALUES (@id, @name, @tier, @signalRange)";
-							updateSql = "UPDATE modRadio SET name=@name, tier=@tier, signalRange=@signalRange WHERE id=@id";
+							insertSql = "INSERT INTO modRadio (id, name, tier, signalRange) VALUES (@id, @name, @tier, @signalRange); ";
+							updateSql = "UPDATE modRadio SET name=@name, tier=@tier, signalRange=@signalRange WHERE id=@id; ";
 
 							if (moduleExists.Length == 0)
 							{
@@ -882,7 +890,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@signalRange", signalRange, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(insertSql);
+								// ok = DB.ExecuteNonQuery(insertSql);
+								sqlTotal += insertSql + Environment.NewLine;
 								logAddedItems = logAddedItems + name + ", ";
 								logAddedItemsCount++;
 							}
@@ -893,7 +902,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@signalRange", signalRange, DB.SqlDataType.Int);
-								ok = DB.ExecuteNonQuery(updateSql);
+								// ok = DB.ExecuteNonQuery(updateSql);
+								sqlTotal += updateSql + Environment.NewLine;
 								logItemExists = logItemExists + name + ", ";
 								logItemExistsCount++;
 							}
@@ -913,8 +923,9 @@ namespace WinApp.Code
 								for (int i = 0; i < tankArray.Count; i++)
 								{
 									int tankId = Int32.Parse(tankArray[i].ToString());
-									insertSql = "INSERT INTO modTankRadio (tankId, radioId) VALUES ( " + tankId + ", " + itemId + ");";
-									DB.ExecuteNonQuery(insertSql);
+									insertSql = "INSERT INTO modTankRadio (tankId, radioId) VALUES ( " + tankId + ", " + itemId + "); ";
+									// DB.ExecuteNonQuery(insertSql);
+									sqlTotal += insertSql + Environment.NewLine;
 								}
 							}
 						}
@@ -922,7 +933,7 @@ namespace WinApp.Code
 						// Update log file after import
 						updateLog("radios");
 					}
-
+					DB.ExecuteNonQuery(sqlTotal, true, true);
 					//Code.MsgBox.Show("Radio import complete");
 					return ("Import Complete");
 				}
@@ -954,7 +965,7 @@ namespace WinApp.Code
 				{
 					JObject allTokens = JObject.Parse(json);
 					JToken rootToken = allTokens.First;
-
+					string sqlTotal = "";
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
@@ -970,10 +981,8 @@ namespace WinApp.Code
 							// Check if ach already exists
 							if (!TankData.GetAchievmentExist(itemToken["name"].ToString()))
 							{
-								string sql = "INSERT INTO ACH (name, section, section_order, name_i18n, type, ordernum, description " +
-											"  ) " +
-											"VALUES (@name, @section, 0, @name_i18n, @type, @ordernum, @description " +
-											"  ) ";
+								string sql = "INSERT INTO ACH (name, section, section_order, name_i18n, type, ordernum, description) " +
+											"VALUES (@name, @section, 0, @name_i18n, @type, @ordernum, @description); ";
 								// Get data from json token and insert to query
 								// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
 								DB.AddWithValue(ref sql, "@name", itemToken["name"].ToString(), DB.SqlDataType.VarChar);
@@ -987,7 +996,7 @@ namespace WinApp.Code
 								if (options == "") // no options, get default medal image and name
 								{
 									DB.AddWithValue(ref sql, "@imgPath", itemToken["image"].ToString(), DB.SqlDataType.VarChar);
-						   // insert img...
+									// insert img...
 									DB.AddWithValue(ref sql, "@name_i18n", itemToken["name_i18n"].ToString(), DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@options", DBNull.Value, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@img1Path", DBNull.Value, DB.SqlDataType.VarChar);
@@ -1002,7 +1011,7 @@ namespace WinApp.Code
 								else // get medal optional images and names
 								{
 									DB.AddWithValue(ref sql, "@imgPath", DBNull.Value, DB.SqlDataType.VarChar);
-						   // insert img...
+									 // insert img...
 									DB.AddWithValue(ref sql, "@name_i18n", DBNull.Value, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@options", options, DB.SqlDataType.VarChar);
 									// Get the medal options from array
@@ -1013,14 +1022,14 @@ namespace WinApp.Code
 									{
 										DB.AddWithValue(ref sql, "@img" + i.ToString() + "Path", medalArray[i - 1]["image"].ToString(), DB.SqlDataType.VarChar);
 										DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString(), DB.SqlDataType.VarChar);
-						   // insert img...
+										// insert img...
 									}
 									// If not 4, put null in rest
 									for (int i = num + 1; i <= 4; i++)
 									{
 										DB.AddWithValue(ref sql, "@img" + i.ToString() +"Path", DBNull.Value, DB.SqlDataType.VarChar);
 										DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), DBNull.Value, DB.SqlDataType.VarChar);
-						   // insert img...
+										// insert img...
 									}
 
 								}
@@ -1028,7 +1037,8 @@ namespace WinApp.Code
 								// Insert to db now
 								try
 								{
-									if (!DB.ExecuteNonQuery(sql)) return;
+									//if (!DB.ExecuteNonQuery(sql)) return;
+									sqlTotal += sql + Environment.NewLine;
 									//Code.MsgBox.Show("x");
 								}
 								catch (Exception ex)
@@ -1045,7 +1055,7 @@ namespace WinApp.Code
 								//           + "type=@type, ordernum=@ordernum, description=@description, img1Path=@img1Path, img2Path=@img2Path, img3Path=@img3Path, img4Path=@img4Path, "
 								//           + "name_i18n1=@name_i18n1, name_i18n2=@name_i18n2, name_i18n3=@name_i18n3, name_i18n4=@name_i18n4 WHERE name=@name";
 								string sql = "UPDATE ach SET section=@section, name_i18n=@name_i18n, "
-										   + "type=@type, ordernum=@ordernum, description=@description WHERE name=@name";
+										   + "type=@type, ordernum=@ordernum, description=@description WHERE name=@name; ";
 
 								// Get data from json token and insert to query
 								// string tokenName = ((JProperty)moduleToken.Parent).Name.ToString()); // Not in use
@@ -1060,7 +1070,7 @@ namespace WinApp.Code
 								if (options == "") // no options, get default medal image and name
 								{
 									DB.AddWithValue(ref sql, "@imgPath", itemToken["image"].ToString(), DB.SqlDataType.VarChar);
-						   // insert img...
+									// insert img...
 									DB.AddWithValue(ref sql, "@name_i18n", itemToken["name_i18n"].ToString(), DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@options", DBNull.Value, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@img1Path", DBNull.Value, DB.SqlDataType.VarChar);
@@ -1075,7 +1085,7 @@ namespace WinApp.Code
 								else // get medal optional images and names
 								{
 									DB.AddWithValue(ref sql, "@imgPath", DBNull.Value, DB.SqlDataType.VarChar);
-						   // insert img...
+									// insert img...
 									DB.AddWithValue(ref sql, "@name_i18n", DBNull.Value, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@options", options, DB.SqlDataType.VarChar);
 									// Get the medal options from array
@@ -1086,25 +1096,25 @@ namespace WinApp.Code
 									{
 										DB.AddWithValue(ref sql, "@img" + i.ToString() + "Path", medalArray[i - 1]["image"].ToString(), DB.SqlDataType.VarChar);
 										DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), medalArray[i - 1]["name_i18n"].ToString(), DB.SqlDataType.VarChar);
-						   // insert img...
+										// insert img...
 									}
 									// If not 4, put null in rest
 									for (int i = num + 1; i <= 4; i++)
 									{
 										DB.AddWithValue(ref sql, "@img" + i.ToString() + "Path", DBNull.Value, DB.SqlDataType.VarChar);
 										DB.AddWithValue(ref sql, "@name_i18n" + i.ToString(), DBNull.Value, DB.SqlDataType.VarChar);
-						   // insert img...
+										 // insert img...
 									}
 								}
 
 								// Update db now
-								if (!DB.ExecuteNonQuery(sql)) return;
-
+								// if (!DB.ExecuteNonQuery(sql)) return;
+								sqlTotal = sql + Environment.NewLine;
 								logItemExists = logItemExists + itemToken["name"].ToString() + ", ";
 								logItemExistsCount++;
 							}
 						}
-
+						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
 						updateLog("achievements");
 					}
