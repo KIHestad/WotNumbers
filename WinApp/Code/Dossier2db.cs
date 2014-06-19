@@ -566,9 +566,9 @@ namespace WinApp.Code
 				DB.AddWithValue(ref sql, "@battleMode", TankData.DbBattleMode(battleMode), DB.SqlDataType.VarChar);
 				DB.ExecuteNonQuery(sql);
 			}
-			// Update battle, if not first run - then avoid
-			if (saveBattleResult)
-				UpdateBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
+			// Add battle, if any and not first run - then avoid
+			if (saveBattleResult && battlesNew > 0)
+				AddBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
 		}
 
 		private static List<FragItem> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
@@ -665,7 +665,7 @@ namespace WinApp.Code
 			return battleFrag;
 		}
 
-		private static void UpdateBattle(DataRow playerTankNewRow, 
+		private static void AddBattle(DataRow playerTankNewRow, 
 									     DataRow playerTankOldRow, 
 										 DataRow playerTankBattleNewRow, 
 										 DataRow playerTankBattleOldRow,
