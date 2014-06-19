@@ -39,6 +39,7 @@ namespace WinApp.Code
 			GetTankList();
 			GetJson2dbMappingFromDB();
 			GetAchList();
+			GetPlayerTankAchList();
 		}
 
 		public static DataTable achList = new DataTable();
@@ -49,6 +50,13 @@ namespace WinApp.Code
 			achList = DB.FetchData("SELECT id, name FROM ach");
 		}
 
+		public static DataTable playerTankAchList = new DataTable();
+
+		public static void GetPlayerTankAchList()
+		{
+			playerTankAchList.Clear();
+			playerTankAchList = DB.FetchData("SELECT * FROM playerTankAch");
+		}
 
 		public static DataTable tankList = new DataTable();
 

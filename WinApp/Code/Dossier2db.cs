@@ -507,14 +507,17 @@ namespace WinApp.Code
 							// Found ach, get id now
 							int achId = Convert.ToInt32(lookupAch[0]["id"]);
 							// Find the current achievent
-							string sql = "SELECT * FROM playerTankAch WHERE playerTankId=@playerTankId AND achId=@achId; ";
-							DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-							DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
-							DataTable currentAch = DB.FetchData(sql);
-							if (currentAch.Rows.Count == 0) // new achievment
+							expression = "playerTankId=" + playerTankId.ToString() + " AND achId=" + achId.ToString();
+							DataRow[] lookupPlayerTankAch = TankData.playerTankAchList.Select(expression);
+						
+							//string sql = "SELECT * FROM playerTankAch WHERE playerTankId=@playerTankId AND achId=@achId; ";
+							//DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+							//DB.AddWithValue(ref sql, "@achId", achId, DB.SqlDataType.Int);
+							//DataTable currentAch = DB.FetchData(sql);
+							if (lookupPlayerTankAch.Length == 0) // new achievment
 							{
 								// Insert new acheivement
-								sql = "INSERT INTO playerTankAch (achCount, playerTankId, achId) " +
+								string sql = "INSERT INTO playerTankAch (achCount, playerTankId, achId) " +
 									  "VALUES (@achCount, @playerTankId, @achId); ";
 								DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
@@ -529,11 +532,11 @@ namespace WinApp.Code
 							}
 							else // achievent found, check count
 							{
-								int oldCount = Convert.ToInt32(currentAch.Rows[0]["achCount"]);
+								int oldCount = Convert.ToInt32(lookupPlayerTankAch[0]["achCount"]);
 								if (newAch.count > oldCount)
 								{
 									// Update achievment increased count
-									sql = "UPDATE playerTankAch SET achCount=@achCount " +
+									string sql = "UPDATE playerTankAch SET achCount=@achCount " +
 										  "WHERE playerTankId=@playerTankId AND achId=@achId; ";
 									DB.AddWithValue(ref sql, "@achCount", newAch.count, DB.SqlDataType.Int);
 									DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
