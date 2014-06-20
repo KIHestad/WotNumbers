@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?define ProductVersion = "0.1.1.0"?>
+<?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
+
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Wot Numbers" Language="1033" Version="0.1.0.0" Manufacturer="Numbers Team" UpgradeCode="31e0492c-bcf9-47e7-a9be-1d4ec4637d93">
+	<Product Id="*" Name="Wot Numbers" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Numbers Team" UpgradeCode="$(var.UpgradeCode)">
 		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="Installs Wot Numbers, created by BadButton and cmdrTrinity"/>
 
+		<Upgrade Id="$(var.UpgradeCode)">
+			<!-- Detect older product versions -->
+			<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>
+		</Upgrade>
+
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		
 		<MediaTemplate EmbedCab="yes"/>
 
-		<Feature Id="ProductFeature" Title="Installer" Level="1">
+		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="ProductComponents_x64" />
 			<ComponentGroupRef Id="ProductComponents_x86" />
+			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
+			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
+			<ComponentGroupRef Id="ProductComponents_Lib" />
 		</Feature>
 
 		<!--
@@ -22,6 +34,10 @@
 		<WixVariable Id="WixUILicenseRtf" Value="WotNumbersLicense.rtf" />
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 		<UIRef Id="WixUI_InstallDir" />
+		<PropertyRef Id="NETFRAMEWORK45" />
+		<Condition Message='This setup requires Microsoft .NET Framework 4.5 package to be installed for this installation to continue.'>
+			<![CDATA[Installed OR NETFRAMEWORK45]]>
+		</Condition>
 	</Product>
 
 	<Fragment>
@@ -30,36 +46,46 @@
 				<Directory Id="INSTALLFOLDER" Name="Wot Numbers">
 					<Directory Id="INSTALLFOLDER_x64" Name="x64" />
 					<Directory Id="INSTALLFOLDER_x86" Name="x86" />
+					<Directory Id="INSTALLFOLDER_Docs" Name="Docs">
+						<Directory Id="INSTALLFOLDER_Docs_Database" Name="Database" />
+					</Directory>
+					<Directory Id="INSTALLFOLDER_Dossier2json" Name="Dossier2json" />
+					<Directory Id="INSTALLFOLDER_Lib" Name="Lib" />
 				</Directory>
 			</Directory>
 		</Directory>
 	</Fragment>
 
 	<Fragment>
+
+		<!-- Application and DLL references-->
+
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			
+
+			<!-- Application -->
 			<Component Guid="{C892598C-7A0D-40A2-8E47-E2F57DC8C80A}">
 				<File Source="$(var.WinApp.TargetPath)" KeyPath="yes"></File>
 			</Component>
-			
 			<Component Guid="{9D1B48C0-1D04-4E5E-96B2-21BB75FBA9CE}">
 				<File Source="..\WinApp\bin\Debug\WotNUmbers.exe.config" KeyPath="yes"></File>
 			</Component>
 
 			<!-- References -->
-
 			<Component Guid="{1E33EE21-A9F8-4853-B929-9AA4E518F3E9}">
 				<File Source="..\WinApp\bin\Debug\IronPython.dll" KeyPath="yes"></File>
 			</Component>
-
+			<Component Guid="{2205E862-339F-4A50-82A2-3881190ED17E}">
+				<File Source="..\WinApp\bin\Debug\IronPython.Modules.dll" KeyPath="yes"></File>
+			</Component>
 			<Component Guid="{95D0624C-B924-4955-935C-7822FBA4F140}">
 				<File Source="..\WinApp\bin\Debug\Microsoft.Scripting.dll" KeyPath="yes"></File>
 			</Component>
-
+			<Component Guid="{48C1BBD2-0236-40FE-B734-402EA25BBB7B}">
+				<File Source="..\WinApp\bin\Debug\Microsoft.Dynamic.dll" KeyPath="yes"></File>
+			</Component>
 			<Component Guid="{6408B07F-1E44-4A0C-9F85-96A64E43A5FE}">
 				<File Source="..\WinApp\bin\Debug\Newtonsoft.Json.dll" KeyPath="yes"></File>
 			</Component>
-
 			<Component Guid="{ADC05E6E-5E66-4767-8CB8-4D4B21FDAD93}">
 				<File Source="..\WinApp\bin\Debug\System.Data.SQLite.dll" KeyPath="yes"></File>
 			</Component>
@@ -68,19 +94,1638 @@
 
 		<ComponentGroup Id="ProductComponents_x64" Directory="INSTALLFOLDER_x64">
 
-			<Component Id="x64_SQLite.Interop.dll" Guid="{B3E36541-BCDC-4826-A68B-210FB081AAF9}">
-				<File Id="x64_SQLite.Interop.dll" Source="..\WinApp\bin\Debug\x64\SQLite.Interop.dll"  KeyPath="yes"></File>
+			<Component Id="cmp_x64_SQLite.Interop.dll" Guid="{B3E36541-BCDC-4826-A68B-210FB081AAF9}">
+				<File Id="fil_x64_SQLite.Interop.dll" Source="..\WinApp\bin\Debug\x64\SQLite.Interop.dll"  KeyPath="yes"></File>
 			</Component>
 
 		</ComponentGroup>
 
 		<ComponentGroup Id="ProductComponents_x86" Directory="INSTALLFOLDER_x86">
 
-			<Component Id="x86_SQLite.Interop.dll" Guid="{5D860EFD-31CE-4789-865E-1DC89BCE928B}">
-				<File Id="x86_SQLite.Interop.dll" Source="..\WinApp\bin\Debug\x86\SQLite.Interop.dll"  KeyPath="yes"></File>
+			<Component Id="cmp_x86_SQLite.Interop.dll" Guid="{5D860EFD-31CE-4789-865E-1DC89BCE928B}">
+				<File Id="fil_x86_SQLite.Interop.dll" Source="..\WinApp\bin\Debug\x86\SQLite.Interop.dll"  KeyPath="yes"></File>
+			</Component>
+
+		</ComponentGroup>
+		
+		<!-- Docs Database -->
+
+		<ComponentGroup Id="ProductComponents_Docs_Database" Directory="INSTALLFOLDER_Docs_Database">
+
+			<Component Guid="{A2B13E40-47FB-46D8-83DB-E815374A9F88}">
+				<File Source="..\WinApp\Docs\Database\createTableMSSQL.txt"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{DB01F4A2-4351-43D0-8AC6-AD9C54CF399B}">
+				<File Source="..\WinApp\Docs\Database\createTableSQLite.txt"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{93BB94DA-096B-42BC-883B-2B38D08697C7}">
+				<File Source="..\WinApp\Docs\Database\insert.txt"  KeyPath="yes"></File>
+			</Component>
+
+		</ComponentGroup>
+
+		<!-- Dossier2sjon -->
+
+		<ComponentGroup Id="ProductComponents_Dossier2json" Directory="INSTALLFOLDER_Dossier2json">
+
+			<Component Guid="{89F095D6-5F24-4FFC-B00C-4DE799F5A164}">
+				<File Source="..\WinApp\Dossier2json\wotdc2j.py"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{15ED738A-E9C0-4E0D-AFD4-880804DC701E}">
+				<File Source="..\WinApp\Dossier2json\tanks.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{834AF6B6-8C97-4B9F-9182-304AAB8F7DDE}">
+				<File Source="..\WinApp\Dossier2json\maps.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{62D0B765-82DC-4CEA-B909-A61EA3854C34}">
+				<File Source="..\WinApp\Dossier2json\structures_10.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{5832DEE8-354F-450B-8DDE-A5BA03EFE43E}">
+				<File Source="..\WinApp\Dossier2json\structures_17.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{B0AE1E8B-2FD7-4600-AB93-9BD86A476927}">
+				<File Source="..\WinApp\Dossier2json\structures_18.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{C25E95A7-558F-432D-ADAE-85FCF92A4160}">
+				<File Source="..\WinApp\Dossier2json\structures_20.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{790AFCA9-2750-4718-9142-C37E5C6D9388}">
+				<File Source="..\WinApp\Dossier2json\structures_22.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{5EA127D5-49D2-4E57-A948-3129EF1517DD}">
+				<File Source="..\WinApp\Dossier2json\structures_24.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{C642C318-5D53-4BF8-8EA7-42BDEDFF423A}">
+				<File Source="..\WinApp\Dossier2json\structures_26.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{BF910323-3471-45D8-96B4-B665FEEA305F}">
+				<File Source="..\WinApp\Dossier2json\structures_27.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{29F63985-B2B2-403D-ACD7-5D62872344AB}">
+				<File Source="..\WinApp\Dossier2json\structures_28.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{DB99BDA6-1DBA-4151-A155-490380A67E69}">
+				<File Source="..\WinApp\Dossier2json\structures_29.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{229DB7ED-C767-409A-B6B2-BB96BF2B13F6}">
+				<File Source="..\WinApp\Dossier2json\structures_65.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{96843D95-4C08-445A-BCE5-8140EBA0FD34}">
+				<File Source="..\WinApp\Dossier2json\structures_69.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{EB095295-ACA2-46D1-BC37-EA246D57B829}">
+				<File Source="..\WinApp\Dossier2json\structures_77.json"  KeyPath="yes"></File>
+			</Component>
+			<Component Guid="{EAD170B7-43E1-413B-B91F-AD1E22C08F96}">
+				<File Source="..\WinApp\Dossier2json\structures_81.json"  KeyPath="yes"></File>
 			</Component>
 
 		</ComponentGroup>
 
 	</Fragment>
+	
+	<!-- Lib - Python -->
+	
+	<?define LibSource = "..\WinApp\Lib"?>
+
+	<Fragment>
+		<DirectoryRef Id="INSTALLFOLDER_Lib">
+			<Directory Id="dir2E29D7C2D68759C4DD4B5096905A5984" Name="ctypes" />
+			<Directory Id="dir2F47B6977D59F2CDA6C3DB0E42621767" Name="distutils" />
+			<Directory Id="dir8259DBAB86E2EF64A8A09F634D075A7A" Name="email" />
+			<Directory Id="dir340C7D10F3E2A174DEE3999868659D62" Name="encodings" />
+			<Directory Id="dir1AF1A9291E2C9C260D97BF22EAC1E648" Name="importlib" />
+			<Directory Id="dir123FC300B95DFE377EBF3E43D232B7E2" Name="json" />
+			<Directory Id="dirC6D1B44CFD645E605AFABD5916392A80" Name="lib2to3" />
+			<Directory Id="dirD30DF97BFCD50EDD266D6FAB6AE4689F" Name="logging" />
+			<Directory Id="dir6C881EC2066A191A9B860847D9ECC4D8" Name="pydoc_data" />
+			<Directory Id="dir36F038E43F1376045AF5BFA34545BFF6" Name="site-packages" />
+			<Directory Id="dir0523E07EA0CB6BFFF053CC193C0F9AA4" Name="sqlite3" />
+			<Directory Id="dir4D4604328E0B4610A4605B97ED0DD992" Name="unittest" />
+			<Directory Id="dir3146BF9AE96F3FA3118445787D4E6AF6" Name="wsgiref" />
+			<Directory Id="dirD70A40DB9FA23DA372D6635E9006F85F" Name="xml" />
+		</DirectoryRef>
+	</Fragment>
+	
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Lib">
+			<Component Id="cmpD0A9FD6F0927C3757F0DF8B9B9F92D8D" Directory="INSTALLFOLDER_Lib" Guid="{DC769A60-65EA-4F77-A5F1-20AD20F72D3F}">
+				<File Id="filE9FA1B0EC204931C8935D59F45933406" KeyPath="yes" Source="$(var.LibSource)\abc.py" />
+			</Component>
+			<Component Id="cmpD415318A44D4CFB23F57DF5E339227A9" Directory="INSTALLFOLDER_Lib" Guid="{95B1A048-B044-4237-9F89-E7DD97C492C2}">
+				<File Id="fil4E38EE1BDBCEDB0F394874869506F42B" KeyPath="yes" Source="$(var.LibSource)\aifc.py" />
+			</Component>
+			<Component Id="cmp58A8EFFC6A4514125EB15A9F1075D569" Directory="INSTALLFOLDER_Lib" Guid="{E13F748E-1C75-432A-BF68-C3EA1AA16FE8}">
+				<File Id="filECFA69ACAFAA576DE36E90B9D1E4A98C" KeyPath="yes" Source="$(var.LibSource)\antigravity.py" />
+			</Component>
+			<Component Id="cmp57F6E0140BC6335A51828EB506985F26" Directory="INSTALLFOLDER_Lib" Guid="{AAF9174F-02BA-4575-BB18-05FA1B2F4946}">
+				<File Id="filA7515BBFA41426DEE85EF2F8C9BAE03F" KeyPath="yes" Source="$(var.LibSource)\anydbm.py" />
+			</Component>
+			<Component Id="cmp7D61A22557E97A2BD16226AFCF8BD824" Directory="INSTALLFOLDER_Lib" Guid="{20980710-4B29-4C14-A01A-E8C7B6FB4859}">
+				<File Id="fil174407C6FB82E7DC99B41786E5D177B5" KeyPath="yes" Source="$(var.LibSource)\argparse.py" />
+			</Component>
+			<Component Id="cmp2B8B94790FF7B9E44961BBA4EB983DD6" Directory="INSTALLFOLDER_Lib" Guid="{3C5F9D48-E194-42A8-84C1-C5BBAD99B3B8}">
+				<File Id="fil7DF9B815831F8302F581DE47D5E1D6CC" KeyPath="yes" Source="$(var.LibSource)\ast.py" />
+			</Component>
+			<Component Id="cmpAD15397E9464E0CBD123B10C55E4A758" Directory="INSTALLFOLDER_Lib" Guid="{2173683F-1125-410B-B2DE-40ED1FE8B0EB}">
+				<File Id="filF9E4E0D95BAE6AA2AA86EAB92C8D694A" KeyPath="yes" Source="$(var.LibSource)\asynchat.py" />
+			</Component>
+			<Component Id="cmpE1B20D39FE29C8F982C6734D69C56921" Directory="INSTALLFOLDER_Lib" Guid="{D7B3C137-B25A-4855-98DF-81D2BCA9CFA0}">
+				<File Id="fil8BD2957EDE01C1F365927F687E1A2C6F" KeyPath="yes" Source="$(var.LibSource)\asyncore.py" />
+			</Component>
+			<Component Id="cmpA6A1AFCDD03EF589A868B14AA04339BF" Directory="INSTALLFOLDER_Lib" Guid="{9682F10D-5279-435E-8183-C087165064E9}">
+				<File Id="fil132D966ACCDE522D0D8E678BE440F82F" KeyPath="yes" Source="$(var.LibSource)\atexit.py" />
+			</Component>
+			<Component Id="cmp76C7EE845ED0CC196F99F1CCB5809E97" Directory="INSTALLFOLDER_Lib" Guid="{BCE74509-6774-4AE1-82E4-4E9E977F2CC6}">
+				<File Id="fil4EA8AC3637D273621DF209D9D2EE5E11" KeyPath="yes" Source="$(var.LibSource)\audiodev.py" />
+			</Component>
+			<Component Id="cmpA2ADEDC1912EADA35FFF924819F9C2B7" Directory="INSTALLFOLDER_Lib" Guid="{592FD9AE-B1D2-46AE-892F-7C5490E75CB1}">
+				<File Id="filCA97FC63CE0904F18BD05373E995F8E9" KeyPath="yes" Source="$(var.LibSource)\base64.py" />
+			</Component>
+			<Component Id="cmpADE8C383DD10E833BC0775B87DE0611E" Directory="INSTALLFOLDER_Lib" Guid="{425A87FC-94C1-4042-BE6F-8C3C0824C9D5}">
+				<File Id="fil464104C12149210D52F22072402B540F" KeyPath="yes" Source="$(var.LibSource)\BaseHTTPServer.py" />
+			</Component>
+			<Component Id="cmpF2D6C99CEE160C2A8F0C403126EC75FB" Directory="INSTALLFOLDER_Lib" Guid="{A3FF50C3-B57A-4A29-AD27-36592E735A2A}">
+				<File Id="fil5F268A955D6175FC8542C0E9C8BAFD16" KeyPath="yes" Source="$(var.LibSource)\Bastion.py" />
+			</Component>
+			<Component Id="cmp487E3DB47C6DF85235E4B3D0F3C2EB30" Directory="INSTALLFOLDER_Lib" Guid="{23AAF6E6-7CC8-4759-B128-D5335C6D07C7}">
+				<File Id="filA6E2C5F188B90DE680313A6A9AFC009D" KeyPath="yes" Source="$(var.LibSource)\bdb.py" />
+			</Component>
+			<Component Id="cmpF73B41371C14489B9AB1922DA9981A00" Directory="INSTALLFOLDER_Lib" Guid="{70A25DFD-5BDC-4309-AF9D-955FE8512208}">
+				<File Id="filA9F9A1A9747F860904BBBFD6E6FC36F6" KeyPath="yes" Source="$(var.LibSource)\binhex.py" />
+			</Component>
+			<Component Id="cmp8A2ECFAD870AE837C4C866CB1177E278" Directory="INSTALLFOLDER_Lib" Guid="{1FF1177E-79E4-4B0F-B4DE-768E74FBC86A}">
+				<File Id="fil6C34269F187E9D625B3297E9969EB18E" KeyPath="yes" Source="$(var.LibSource)\bisect.py" />
+			</Component>
+			<Component Id="cmpF2455A9D239BD96FD20C7C8E12ADF494" Directory="INSTALLFOLDER_Lib" Guid="{F871B6B7-58F0-4C71-9E0D-8FBD6B12FD5F}">
+				<File Id="fil415C954B596740EAFDE77796ADC46817" KeyPath="yes" Source="$(var.LibSource)\calendar.py" />
+			</Component>
+			<Component Id="cmp1E071C993047428BEEA44B1CC29BC3AC" Directory="INSTALLFOLDER_Lib" Guid="{16F584B9-9B29-40BC-9C93-0D106B0CDCAC}">
+				<File Id="fil1DEDE4386E517DA6C0D3215CABD33B21" KeyPath="yes" Source="$(var.LibSource)\cgi.py" />
+			</Component>
+			<Component Id="cmp5DCA12B5F0CEF8CB3B2589FF3F6181E8" Directory="INSTALLFOLDER_Lib" Guid="{53DF1EF2-42A3-489F-9522-EFDA08A33678}">
+				<File Id="filA6CA3C604177D35FDE0A68B977469A06" KeyPath="yes" Source="$(var.LibSource)\CGIHTTPServer.py" />
+			</Component>
+			<Component Id="cmp45AAAB3719C239D049912DD1E01036B3" Directory="INSTALLFOLDER_Lib" Guid="{9F6702CA-7BFC-4474-BFF6-554D1D66D95D}">
+				<File Id="fil93B4AA9FD4E54566CD741E8DA1050EF3" KeyPath="yes" Source="$(var.LibSource)\cgitb.py" />
+			</Component>
+			<Component Id="cmp61BE7F30E4A77C5F94F131C98E82657D" Directory="INSTALLFOLDER_Lib" Guid="{0492D7F8-1FB3-47EC-A586-3AD8671809D2}">
+				<File Id="filF8F5AC90563966BBA19E3471C4AF01B0" KeyPath="yes" Source="$(var.LibSource)\chunk.py" />
+			</Component>
+			<Component Id="cmp06A6C52DF8A6FD76A1101D642E22CB75" Directory="INSTALLFOLDER_Lib" Guid="{1602D306-1592-45A7-8335-2E0BACF79687}">
+				<File Id="filAA381E0A47AC12059757B428EAAEFAC9" KeyPath="yes" Source="$(var.LibSource)\cmd.py" />
+			</Component>
+			<Component Id="cmp98ACF2F6DD2A96FD44C7247C93D31921" Directory="INSTALLFOLDER_Lib" Guid="{D225385A-2768-4754-96B8-C77F6772E1FD}">
+				<File Id="fil0D5F934825B67FBE11D9DA2527FD4BA7" KeyPath="yes" Source="$(var.LibSource)\code.py" />
+			</Component>
+			<Component Id="cmp2B693417AD738F6BF154A9B3B7072D7E" Directory="INSTALLFOLDER_Lib" Guid="{F2DC3AF9-BC7D-49DE-A306-88268E3BEEFF}">
+				<File Id="fil9C65122FD1DBAF4123B04DBC920AEFC6" KeyPath="yes" Source="$(var.LibSource)\codecs.py" />
+			</Component>
+			<Component Id="cmpC39E38F9EAA5965582D06EDC3CC4A53E" Directory="INSTALLFOLDER_Lib" Guid="{BF743450-539D-4AD5-AC4E-2B090EE70AF7}">
+				<File Id="fil7FEF1CBCDDC37210F14E6A7AD47F31F3" KeyPath="yes" Source="$(var.LibSource)\codeop.py" />
+			</Component>
+			<Component Id="cmp316FAD2D18DEAAE755E5931F66F511CB" Directory="INSTALLFOLDER_Lib" Guid="{84F7650B-41C7-4079-8217-AD0BB638DA89}">
+				<File Id="filE41D5F4D5A00E3E1B9D87BBE1A130912" KeyPath="yes" Source="$(var.LibSource)\collections.py" />
+			</Component>
+			<Component Id="cmp046860DE705CB2D162B096D5AC2A13F4" Directory="INSTALLFOLDER_Lib" Guid="{1DCAE10F-7CA4-4CEB-95A9-0AC6C42378EA}">
+				<File Id="fil12AED3D84AA1E1DF3D53FD3455D3732E" KeyPath="yes" Source="$(var.LibSource)\colorsys.py" />
+			</Component>
+			<Component Id="cmpD3F12138D4010CBFF4E563513A94CD3B" Directory="INSTALLFOLDER_Lib" Guid="{FDDF6A31-6A45-4B5D-9965-CBAEE76B9DAF}">
+				<File Id="filD71B00B2D70C0FCA826A33CBF34AC678" KeyPath="yes" Source="$(var.LibSource)\commands.py" />
+			</Component>
+			<Component Id="cmpE344C6F3DD0C883B9837347D9F1F28F1" Directory="INSTALLFOLDER_Lib" Guid="{710EFC43-2B88-41FD-A94F-243ACFE58FA3}">
+				<File Id="fil603EC18C16DE9001B81C7ACBEC8628AA" KeyPath="yes" Source="$(var.LibSource)\compileall.py" />
+			</Component>
+			<Component Id="cmp2E0029967DC09661B4092B09759A62E9" Directory="INSTALLFOLDER_Lib" Guid="{25B5BC2F-6A14-4192-BFF6-95FD9DBBE6B7}">
+				<File Id="fil0CB908BECF395DBB4E4B7E7D09977A7C" KeyPath="yes" Source="$(var.LibSource)\ConfigParser.py" />
+			</Component>
+			<Component Id="cmp96D8E0D852FF454B1EA1A8CA30374888" Directory="INSTALLFOLDER_Lib" Guid="{C7947389-DB0A-4475-A2B0-1BC4DDE26E60}">
+				<File Id="fil1F6B40621490701A2BBC29C794D284CF" KeyPath="yes" Source="$(var.LibSource)\contextlib.py" />
+			</Component>
+			<Component Id="cmp919A7F5EA3D644359E11456BC59821A3" Directory="INSTALLFOLDER_Lib" Guid="{8343A11C-2F1E-42C0-870A-8C6B68C51D7B}">
+				<File Id="filE37F706195D7274B3394BB839A1B1DD5" KeyPath="yes" Source="$(var.LibSource)\Cookie.py" />
+			</Component>
+			<Component Id="cmp88D7F6EADA5A7165D79C82A4CEF9295D" Directory="INSTALLFOLDER_Lib" Guid="{FD04831F-2CDA-44A3-BAB3-0158D0E86865}">
+				<File Id="fil35A7B876CB993914F9AB74D4EDC37794" KeyPath="yes" Source="$(var.LibSource)\cookielib.py" />
+			</Component>
+			<Component Id="cmp1AD0D395AE646750D1351838D815B20E" Directory="INSTALLFOLDER_Lib" Guid="{3FAC4709-4769-49CA-8EB4-E8845C93F62A}">
+				<File Id="fil93BF44268C6797CED7C1C5CBD59164D7" KeyPath="yes" Source="$(var.LibSource)\copy.py" />
+			</Component>
+			<Component Id="cmp3FFAFF2D67CD82DB168662B6E66F6CA6" Directory="INSTALLFOLDER_Lib" Guid="{2F2FFFD8-BEBE-485C-9243-F36463534E6F}">
+				<File Id="fil9CF05A201E5E0CEBB2826B5CE869C75B" KeyPath="yes" Source="$(var.LibSource)\csv.py" />
+			</Component>
+			<Component Id="cmp9DDBB467FA65CFD5E7CDF1157FC65D2F" Directory="INSTALLFOLDER_Lib" Guid="{AD4743F8-1655-4A57-A9D6-A5CEF5C8D11B}">
+				<File Id="fil962C96F86756D1976E1873C12D81C797" KeyPath="yes" Source="$(var.LibSource)\decimal.py" />
+			</Component>
+			<Component Id="cmpD09A3554D09AF01B3F1BF3FB50A48126" Directory="INSTALLFOLDER_Lib" Guid="{7684BDAC-C6FC-4F97-BB50-F2EFF8BEAE48}">
+				<File Id="fil290544B86BFA3C7376477C5889964C94" KeyPath="yes" Source="$(var.LibSource)\difflib.py" />
+			</Component>
+			<Component Id="cmp742C3EEAB21336AA76A9401C61BB0035" Directory="INSTALLFOLDER_Lib" Guid="{86F0AB11-D932-473F-ABBC-5F9E1E145405}">
+				<File Id="filC448A84175F35E0C1DBB668D05176FC3" KeyPath="yes" Source="$(var.LibSource)\dircache.py" />
+			</Component>
+			<Component Id="cmpFA22A646DA068DE167CE22F98181471D" Directory="INSTALLFOLDER_Lib" Guid="{621E435F-29F9-4011-A1A3-D7C97E33B94A}">
+				<File Id="fil1F4F7D9D95C53C9D5BFA68FBDED87262" KeyPath="yes" Source="$(var.LibSource)\dis.py" />
+			</Component>
+			<Component Id="cmpF1E82C110281D71F769992EF84F14C57" Directory="INSTALLFOLDER_Lib" Guid="{282AB45E-B259-477A-8E0E-0B9735DC2518}">
+				<File Id="fil9AAAB0D390FE79EDBB2C8E2BAB46034C" KeyPath="yes" Source="$(var.LibSource)\doctest.py" />
+			</Component>
+			<Component Id="cmp4E766307202FFC8EF5BE1884674106D4" Directory="INSTALLFOLDER_Lib" Guid="{995A98CD-3203-4165-98A0-CC1F23EF0C34}">
+				<File Id="fil469574B7D24021C51EBC4A81625EC6C1" KeyPath="yes" Source="$(var.LibSource)\DocXMLRPCServer.py" />
+			</Component>
+			<Component Id="cmp281B9FD874D08B58FC2A474DEDA1504E" Directory="INSTALLFOLDER_Lib" Guid="{F9D84DAB-07E2-4BBE-8EC6-F5A14D7E167B}">
+				<File Id="fil3CBAC90592CDF4E535E933FC50DF1727" KeyPath="yes" Source="$(var.LibSource)\dumbdbm.py" />
+			</Component>
+			<Component Id="cmpA87F63E2470753D855F422895632FF4F" Directory="INSTALLFOLDER_Lib" Guid="{6EC38EBF-AA0C-4B16-821C-2D4683F1A160}">
+				<File Id="fil6EDEE3FE80550CC6B218A39C1C59B7DD" KeyPath="yes" Source="$(var.LibSource)\dummy_thread.py" />
+			</Component>
+			<Component Id="cmp53CCFAF358545F3408B23A1399867429" Directory="INSTALLFOLDER_Lib" Guid="{37A95A31-45D1-4D89-8D62-E0FD3419ED5A}">
+				<File Id="fil845FB8A4380D5E25E6C851BF6689FD8D" KeyPath="yes" Source="$(var.LibSource)\dummy_threading.py" />
+			</Component>
+			<Component Id="cmpE1F60F5398ED593B7EDFABCFBD9B67CE" Directory="INSTALLFOLDER_Lib" Guid="{45C2A8FB-5AF3-4700-9278-9B72A98F4177}">
+				<File Id="fil81B12B5337196C06A8415CD0D7111BBF" KeyPath="yes" Source="$(var.LibSource)\filecmp.py" />
+			</Component>
+			<Component Id="cmp6D5F7C381644EA1B6542FA851D66F914" Directory="INSTALLFOLDER_Lib" Guid="{C31DE579-A399-4E00-B5D0-52EB52866B38}">
+				<File Id="filEF33CA99FC97F918E6183D7DC20B5DF6" KeyPath="yes" Source="$(var.LibSource)\fileinput.py" />
+			</Component>
+			<Component Id="cmp0EE0660318D37D415CB20F7582FAD7E4" Directory="INSTALLFOLDER_Lib" Guid="{13302A9D-8872-4783-B7CB-1E5168005E2A}">
+				<File Id="fil3CFC209996AA4DCA073619937F3D8808" KeyPath="yes" Source="$(var.LibSource)\fnmatch.py" />
+			</Component>
+			<Component Id="cmp566E14F67BCC6C57DEF3E3769CBCB74C" Directory="INSTALLFOLDER_Lib" Guid="{CD42CF4A-CBB3-4553-A1E7-5B1081D7933D}">
+				<File Id="filA74FC0D8C0890E8B463724088C64DC59" KeyPath="yes" Source="$(var.LibSource)\formatter.py" />
+			</Component>
+			<Component Id="cmpEC95E21246FF0FA43864F2D575E6DAB7" Directory="INSTALLFOLDER_Lib" Guid="{69A34404-7411-48DD-BF90-89F53479D279}">
+				<File Id="fil516EF68FB3D3F0F51CCE3E7BB1B8CD42" KeyPath="yes" Source="$(var.LibSource)\fpformat.py" />
+			</Component>
+			<Component Id="cmp9410BF26C593852537526B7CBEB9F371" Directory="INSTALLFOLDER_Lib" Guid="{A8ED9790-8780-4D59-81CF-AEEE2880322A}">
+				<File Id="fil54EF33B8E9B37892BB9E96324F245C04" KeyPath="yes" Source="$(var.LibSource)\fractions.py" />
+			</Component>
+			<Component Id="cmpA54E365E10B836A86D27C108F703AF4F" Directory="INSTALLFOLDER_Lib" Guid="{15D92CD1-EAE6-46F6-8544-26EBE2A975FB}">
+				<File Id="filF682CC2452575B7BD501CAC64C15C00D" KeyPath="yes" Source="$(var.LibSource)\ftplib.py" />
+			</Component>
+			<Component Id="cmpDD0F8039739CC3EA515B987AC627CF64" Directory="INSTALLFOLDER_Lib" Guid="{BC54DB60-3169-4D21-98C6-1F5630476BD7}">
+				<File Id="filCEA44E8752D6764B613BA2E0B67E76F6" KeyPath="yes" Source="$(var.LibSource)\functools.py" />
+			</Component>
+			<Component Id="cmp6021CB00F321E03BE5681FC72A3A5577" Directory="INSTALLFOLDER_Lib" Guid="{7796E5FA-66B9-4505-844B-EC21476226B6}">
+				<File Id="filC07596C6A516AEC87B5019C1775E19E6" KeyPath="yes" Source="$(var.LibSource)\genericpath.py" />
+			</Component>
+			<Component Id="cmp0A649E2B6669D8534880FA9C68B89262" Directory="INSTALLFOLDER_Lib" Guid="{3D77D69B-F05D-4D77-BE70-FD303E6E3D71}">
+				<File Id="fil80C0EF9C6A580FBCF8E8AD2CC6A613E9" KeyPath="yes" Source="$(var.LibSource)\getopt.py" />
+			</Component>
+			<Component Id="cmp7566A8D7619F8F9E6CC01C3EDF4D794C" Directory="INSTALLFOLDER_Lib" Guid="{537C4FBF-FC21-46E7-9F11-C6B58FD9437E}">
+				<File Id="filF5EB0E5707E25045EB878191A20EDA6D" KeyPath="yes" Source="$(var.LibSource)\getopt.pyc" />
+			</Component>
+			<Component Id="cmpC84FAF993667B5D3566BF64DB69156AB" Directory="INSTALLFOLDER_Lib" Guid="{DCBA2588-623A-403B-9DE0-9B77B89932E0}">
+				<File Id="filCD0ABD19612CEF53C42AAA7AE2189F0B" KeyPath="yes" Source="$(var.LibSource)\getpass.py" />
+			</Component>
+			<Component Id="cmp47ABE5C2AB11040B0E21FB55CBEEC55A" Directory="INSTALLFOLDER_Lib" Guid="{F9A29A96-9326-48B7-B64E-F7EE8BA30862}">
+				<File Id="filB962FCBDD719E4C6E6B9D0D5D2DAE612" KeyPath="yes" Source="$(var.LibSource)\gettext.py" />
+			</Component>
+			<Component Id="cmpAC813BCFC7C506DD6646A69BA4307BCD" Directory="INSTALLFOLDER_Lib" Guid="{3DF1C8FD-992A-428B-AD19-CD1EADCA5D84}">
+				<File Id="fil5F3C42698ABE47D2CF4A8DCA7EC1BC65" KeyPath="yes" Source="$(var.LibSource)\glob.py" />
+			</Component>
+			<Component Id="cmp73D2F78F698523BF47EEA441B7D6B7E8" Directory="INSTALLFOLDER_Lib" Guid="{2B6586FC-695C-441A-BC2C-250A5FFFFA27}">
+				<File Id="filE5855040DDA7F63EDA1EB227B524BF2D" KeyPath="yes" Source="$(var.LibSource)\gzip.py" />
+			</Component>
+			<Component Id="cmpCC8BECBA51F996C45C5CDF91F31D9CAD" Directory="INSTALLFOLDER_Lib" Guid="{562C1BAF-7CD8-4EB9-A7C3-42DFFBFADC1A}">
+				<File Id="fil5ED1F7D1D7FFAD569A7668164B2AB5F7" KeyPath="yes" Source="$(var.LibSource)\hashlib.py" />
+			</Component>
+			<Component Id="cmpC9EEC7C8343AF41EA870F92C77C91E4A" Directory="INSTALLFOLDER_Lib" Guid="{A15F6C55-EDAA-4183-A80A-B93C1097793F}">
+				<File Id="fil53492A28174E7F02E7438EC8E56AD873" KeyPath="yes" Source="$(var.LibSource)\heapq.py" />
+			</Component>
+			<Component Id="cmp5D166C0CA0043505F579CC7237527D38" Directory="INSTALLFOLDER_Lib" Guid="{1FCA5A15-6084-4899-973D-DA2FD0F1F6C6}">
+				<File Id="fil3BD4B847B2B58F6957C6DDA8A737AE67" KeyPath="yes" Source="$(var.LibSource)\hmac.py" />
+			</Component>
+			<Component Id="cmp96752C4C6ED0F254F8DA0A11FC518603" Directory="INSTALLFOLDER_Lib" Guid="{406B4402-7FDE-4C4B-BF50-4B3C3A7B77FF}">
+				<File Id="fil3764CDB041905B056E6753595ABE8726" KeyPath="yes" Source="$(var.LibSource)\htmlentitydefs.py" />
+			</Component>
+			<Component Id="cmp31AA5F20BEEA09A865C34AD00BAE7AE9" Directory="INSTALLFOLDER_Lib" Guid="{1216E451-9EEF-4EBF-9948-2A8D840E136A}">
+				<File Id="filE00140B35E88AEA1416C98C0928FDEA3" KeyPath="yes" Source="$(var.LibSource)\htmllib.py" />
+			</Component>
+			<Component Id="cmp5438F4BC32F8FE47A9D5EF9464C2309C" Directory="INSTALLFOLDER_Lib" Guid="{403CD193-C408-4389-8255-851CAF914D84}">
+				<File Id="filDC60A84DF500FBB7521A2129264B490C" KeyPath="yes" Source="$(var.LibSource)\HTMLParser.py" />
+			</Component>
+			<Component Id="cmp7AABFBCF392375E641BA1A48085B44DD" Directory="INSTALLFOLDER_Lib" Guid="{61665A36-86AC-4347-9FEA-CF333AE8B1C4}">
+				<File Id="filCDA562F14B61CEE1C0775E3EAA1F680D" KeyPath="yes" Source="$(var.LibSource)\httplib.py" />
+			</Component>
+			<Component Id="cmp90174750820FF2CF63B221435D6C257E" Directory="INSTALLFOLDER_Lib" Guid="{F0F337C0-C1D5-41C8-A5BF-DB666102A6AE}">
+				<File Id="filDA3B7C1704AF22C642DC8BD33C342CD1" KeyPath="yes" Source="$(var.LibSource)\ihooks.py" />
+			</Component>
+			<Component Id="cmpD14DC3E044C1ACD90365AB23332587DC" Directory="INSTALLFOLDER_Lib" Guid="{170564F4-96A0-433F-905F-A2D264844611}">
+				<File Id="fil249A74A55A1DDDBD3DC6135E7FAACB3B" KeyPath="yes" Source="$(var.LibSource)\imaplib.py" />
+			</Component>
+			<Component Id="cmpDC4B7FB1EB66E6EAB41A624C7351063F" Directory="INSTALLFOLDER_Lib" Guid="{02C80121-947A-471E-8BA8-AFB987E7ABA8}">
+				<File Id="fil59E52E55A26363FF6E632493B499558C" KeyPath="yes" Source="$(var.LibSource)\imghdr.py" />
+			</Component>
+			<Component Id="cmp0DDC4CD365FE8B4C6782FB4F9C34D75E" Directory="INSTALLFOLDER_Lib" Guid="{17F39244-4274-4483-895D-F05A17953A66}">
+				<File Id="fil10DF4FF12AD4D27B7571BD2EE6ECE118" KeyPath="yes" Source="$(var.LibSource)\imputil.py" />
+			</Component>
+			<Component Id="cmp1D4975343786C971A1DE3479D67AADC7" Directory="INSTALLFOLDER_Lib" Guid="{098C2139-D181-4A0B-A5CD-924F03282C3B}">
+				<File Id="fil656C2D17FBA3251B146FD03BD027BD35" KeyPath="yes" Source="$(var.LibSource)\inspect.py" />
+			</Component>
+			<Component Id="cmpD5BA6D535FC8DB721C8C434B146E7365" Directory="INSTALLFOLDER_Lib" Guid="{E0D3A5BA-6B61-4C08-A450-EFC27098C9EF}">
+				<File Id="fil47D30CD0F98A89E2D886D3F100E8CF88" KeyPath="yes" Source="$(var.LibSource)\io.py" />
+			</Component>
+			<Component Id="cmpC5257F6DEC671AB908255860F6AFB090" Directory="INSTALLFOLDER_Lib" Guid="{7619FE95-2F6F-4DAB-B28D-013CAD928268}">
+				<File Id="fil0050016C5153B38CCE8BC5A6C896BBA1" KeyPath="yes" Source="$(var.LibSource)\keyword.py" />
+			</Component>
+			<Component Id="cmp8EBCB5948D0DEE111BA9D86637962290" Directory="INSTALLFOLDER_Lib" Guid="{9667D4EE-15B2-4474-B26E-776A9DF21587}">
+				<File Id="fil9F768905854DAE5942300642198010FA" KeyPath="yes" Source="$(var.LibSource)\linecache.py" />
+			</Component>
+			<Component Id="cmpEF2891DA57ECCDE2334823FAC259154A" Directory="INSTALLFOLDER_Lib" Guid="{6A9A65EC-66AF-4A2A-9139-5AD265B0D585}">
+				<File Id="fil535D9EF597F682B4F1511DD888E610D2" KeyPath="yes" Source="$(var.LibSource)\locale.py" />
+			</Component>
+			<Component Id="cmpB7861554703427124400AF3C28982855" Directory="INSTALLFOLDER_Lib" Guid="{BFC673C8-0A97-43F6-8AD4-B5B92F9BD49C}">
+				<File Id="fil62E322CE4B2983822D963DC6A35B6D20" KeyPath="yes" Source="$(var.LibSource)\macpath.py" />
+			</Component>
+			<Component Id="cmpCA9F09E3D98559AF9497291CA2B38C07" Directory="INSTALLFOLDER_Lib" Guid="{62943458-CA54-492E-892A-300FD131B2AD}">
+				<File Id="filD6D19C3E7D3F8FBDF2E55C5E1F0D8EA3" KeyPath="yes" Source="$(var.LibSource)\macurl2path.py" />
+			</Component>
+			<Component Id="cmp25E323E77A23F4649D3522A434D9372B" Directory="INSTALLFOLDER_Lib" Guid="{B7553008-0431-4BE5-A4F7-026DCD18AE05}">
+				<File Id="fil4AC5530F119A78A5DFB8998AC86DB7F0" KeyPath="yes" Source="$(var.LibSource)\mailbox.py" />
+			</Component>
+			<Component Id="cmp740D065976986E4AB1F42387C3693BD8" Directory="INSTALLFOLDER_Lib" Guid="{EEE626FB-29D7-412C-8F73-09E172FA08C2}">
+				<File Id="fil1A808278F5BF1FC7DB5D3788683E79C4" KeyPath="yes" Source="$(var.LibSource)\mailcap.py" />
+			</Component>
+			<Component Id="cmpB40E9A8E9B8F2C5BC576BF21B8FF01E3" Directory="INSTALLFOLDER_Lib" Guid="{334E57AC-BBD4-4D1F-9071-2E6ED3CA2CFB}">
+				<File Id="fil1A65DF4B9E8F37D31267CBAA1C2AABE6" KeyPath="yes" Source="$(var.LibSource)\markupbase.py" />
+			</Component>
+			<Component Id="cmpE20446C6582E62A701777A0406F10FC9" Directory="INSTALLFOLDER_Lib" Guid="{FA334595-D264-4791-BD80-82E49BEAF9E9}">
+				<File Id="fil2765C92C88D5F783440EACAAA1CC6BE5" KeyPath="yes" Source="$(var.LibSource)\md5.py" />
+			</Component>
+			<Component Id="cmpE762616851CCDE4BF372C8E0D0CF8254" Directory="INSTALLFOLDER_Lib" Guid="{33DFBC7C-3CFE-4F61-8217-10C20676D07F}">
+				<File Id="filB308368A6B5BCDE52D9A7C35167FC5E9" KeyPath="yes" Source="$(var.LibSource)\mhlib.py" />
+			</Component>
+			<Component Id="cmp5C832F3FCAFA41442E9442184D1B168A" Directory="INSTALLFOLDER_Lib" Guid="{ADB55D74-1F52-442C-962F-D500E96DAF08}">
+				<File Id="fil033DD1F66C9E775069D219E6C2445C54" KeyPath="yes" Source="$(var.LibSource)\mimetools.py" />
+			</Component>
+			<Component Id="cmp7C9360A456B16C7ECCEABBD20AF5DFAE" Directory="INSTALLFOLDER_Lib" Guid="{36F851A2-E1F8-469B-837A-B8182A712DDC}">
+				<File Id="filCF5891CD260CD30C8E0BB25E576CA7F6" KeyPath="yes" Source="$(var.LibSource)\mimetypes.py" />
+			</Component>
+			<Component Id="cmp99468BED8287421E241F6D408428F43C" Directory="INSTALLFOLDER_Lib" Guid="{16040BB2-7273-4BBF-9DA5-2E26E7F4738C}">
+				<File Id="filFA55B352AF0EEFDE7222CEFE4F4601D0" KeyPath="yes" Source="$(var.LibSource)\MimeWriter.py" />
+			</Component>
+			<Component Id="cmpD93F90224E0964D0039B33C10275303C" Directory="INSTALLFOLDER_Lib" Guid="{2BE106B8-B116-4566-A435-9A9A2C8E877B}">
+				<File Id="fil7AD8AEAD945939027654AFC17F413F3C" KeyPath="yes" Source="$(var.LibSource)\mimify.py" />
+			</Component>
+			<Component Id="cmp5CCF3C5810C7E9255339EEC6D08AB4D6" Directory="INSTALLFOLDER_Lib" Guid="{C2021997-2F60-4BB6-8C93-1245BF11F4DE}">
+				<File Id="fil44E154CF77BD3A653CB9A40F07428FE6" KeyPath="yes" Source="$(var.LibSource)\modulefinder.py" />
+			</Component>
+			<Component Id="cmp88C0D39CD8E454FE98BF47129B81E930" Directory="INSTALLFOLDER_Lib" Guid="{21A15D1B-26A8-4776-98B5-9B88F326F22E}">
+				<File Id="filEDDCF746DA7DB9768C1E8CE2156FFA90" KeyPath="yes" Source="$(var.LibSource)\multifile.py" />
+			</Component>
+			<Component Id="cmp5706094972617DA64AE69BC28D6FB7A7" Directory="INSTALLFOLDER_Lib" Guid="{39873EB0-7F50-4859-BA2E-D02B6C1AA064}">
+				<File Id="fil46FAB709D3FE8C9C7502DE3E3DA62F01" KeyPath="yes" Source="$(var.LibSource)\mutex.py" />
+			</Component>
+			<Component Id="cmpF49FF40223139A0F8FF763E2D9010727" Directory="INSTALLFOLDER_Lib" Guid="{CF9348F0-2F37-48A0-A269-EC760A9BC725}">
+				<File Id="fil479784F7E9BDE3347EC7D28695357B51" KeyPath="yes" Source="$(var.LibSource)\netrc.py" />
+			</Component>
+			<Component Id="cmpD4785538C395101F78E0A25A65559D0C" Directory="INSTALLFOLDER_Lib" Guid="{BA374C52-8EA7-410E-8669-09D16C22DFFE}">
+				<File Id="filA8022FD8BB2554D966DBDF2F4B74F5E1" KeyPath="yes" Source="$(var.LibSource)\new.py" />
+			</Component>
+			<Component Id="cmp17CBE6C3A465755519FF8C43F3B4E688" Directory="INSTALLFOLDER_Lib" Guid="{F38E693D-2A90-4D93-B51B-AC0298DD07D2}">
+				<File Id="filF9443F606D9EF66EA17321246EBC7F2A" KeyPath="yes" Source="$(var.LibSource)\nntplib.py" />
+			</Component>
+			<Component Id="cmpA6A5235227026171BE5276D4CFA4B6F0" Directory="INSTALLFOLDER_Lib" Guid="{207921DA-25BC-4579-B50E-7BB1ABA9E83E}">
+				<File Id="fil75E1D0BB94AA6382C3BDD608FDA80C6E" KeyPath="yes" Source="$(var.LibSource)\ntpath.py" />
+			</Component>
+			<Component Id="cmp8C5DC4212AA1BDAFB6798A6B2A23661E" Directory="INSTALLFOLDER_Lib" Guid="{B1728131-00A7-4211-A1FF-83F358369FDA}">
+				<File Id="filB9D199CAE6627D29FDEFDD953209F6F5" KeyPath="yes" Source="$(var.LibSource)\nturl2path.py" />
+			</Component>
+			<Component Id="cmpE33056EF2C5C9729DCDD6A05C9B48DD0" Directory="INSTALLFOLDER_Lib" Guid="{CFD584DE-7990-4B5D-BF29-75A44387E965}">
+				<File Id="fil58ED8356A0004BB88D907830C44F74B3" KeyPath="yes" Source="$(var.LibSource)\numbers.py" />
+			</Component>
+			<Component Id="cmp10EBA976FD2429AB0F9A1D5A9FA66C28" Directory="INSTALLFOLDER_Lib" Guid="{1B9ED4BB-17A0-445D-944C-F9673B161F47}">
+				<File Id="fil3D78A1AEA025A8BBBC72B20E87CB2C4D" KeyPath="yes" Source="$(var.LibSource)\opcode.py" />
+			</Component>
+			<Component Id="cmpB686F62420B635042F72C31076F421D0" Directory="INSTALLFOLDER_Lib" Guid="{2E6455C5-1700-4C2B-99B5-A2AFB95D6B3D}">
+				<File Id="filB2550008CC1CCBF03DA2C4666D0200DC" KeyPath="yes" Source="$(var.LibSource)\optparse.py" />
+			</Component>
+			<Component Id="cmp459D3FE5BEBCA2AE11040F04E03063D7" Directory="INSTALLFOLDER_Lib" Guid="{8DD599F3-334F-435A-A33C-BDAA7B7F996E}">
+				<File Id="fil6BED1DAFF5E7B76D12682AC31E3F8656" KeyPath="yes" Source="$(var.LibSource)\os.py" />
+			</Component>
+			<Component Id="cmp68D1C92B3E856299F72BE52F0661F6A7" Directory="INSTALLFOLDER_Lib" Guid="{1C35E8B5-189D-4784-AA54-07F3B76BE899}">
+				<File Id="filFFEAE21612BAA3835E8DF629BEC8B62E" KeyPath="yes" Source="$(var.LibSource)\os2emxpath.py" />
+			</Component>
+			<Component Id="cmp4A8F57028A3FBBA6F78B23DFF4B6D95F" Directory="INSTALLFOLDER_Lib" Guid="{5584E589-8981-463A-967E-6723A0E7EB32}">
+				<File Id="filACE5750AFFDF0203C2CFC7FB9006CB77" KeyPath="yes" Source="$(var.LibSource)\pdb.py" />
+			</Component>
+			<Component Id="cmpC74E2B0B262E85FD8B2605A49BE6C913" Directory="INSTALLFOLDER_Lib" Guid="{EC917CF9-22AA-4B77-B69E-C66D1D20EC09}">
+				<File Id="fil2477201929803078E2AC1ABAB138F433" KeyPath="yes" Source="$(var.LibSource)\pickle.py" />
+			</Component>
+			<Component Id="cmpF4D970401A5615B451B1DDA4282FD12A" Directory="INSTALLFOLDER_Lib" Guid="{B069FD47-09FF-4221-84EE-8DE6354E8E4B}">
+				<File Id="fil7C26DDCCBE86580E044F2FB34BC7E663" KeyPath="yes" Source="$(var.LibSource)\pickletools.py" />
+			</Component>
+			<Component Id="cmpA80849EB801FBF603379D3E911DC445B" Directory="INSTALLFOLDER_Lib" Guid="{E62D9CCC-A629-4244-984E-8A2269B8100C}">
+				<File Id="fil8F207889963208A316A9FDDFB10C17B4" KeyPath="yes" Source="$(var.LibSource)\pipes.py" />
+			</Component>
+			<Component Id="cmp37ED74D284A3F64DC073FD485F161878" Directory="INSTALLFOLDER_Lib" Guid="{EB0F9682-E299-45E1-9A20-E7B24AB59F3E}">
+				<File Id="fil76805534C71AA9A0836DF2034EAFA4E4" KeyPath="yes" Source="$(var.LibSource)\pkgutil.py" />
+			</Component>
+			<Component Id="cmpB131ACBDA567E97DC472F844D41721D4" Directory="INSTALLFOLDER_Lib" Guid="{22ED6AEC-3C07-496E-A9D0-B3C137BC8FDB}">
+				<File Id="fil7442DBE47722AD37E3A91870D743927D" KeyPath="yes" Source="$(var.LibSource)\platform.py" />
+			</Component>
+			<Component Id="cmp28D168CDE3D665D935F3E5085D01AEB0" Directory="INSTALLFOLDER_Lib" Guid="{A8518320-FA90-4068-AC6C-460DB6852219}">
+				<File Id="filD5566F4E2546A4EF6D821E507018AD8A" KeyPath="yes" Source="$(var.LibSource)\plistlib.py" />
+			</Component>
+			<Component Id="cmpCBEB7E4C8809C17CC92A242BCA301732" Directory="INSTALLFOLDER_Lib" Guid="{0DF658C5-FAF7-4080-BE24-F5C5E34D3CF3}">
+				<File Id="fil4DEF24F520677E2E5D8F37520D54DA27" KeyPath="yes" Source="$(var.LibSource)\popen2.py" />
+			</Component>
+			<Component Id="cmpAAF064E32ACB4D1E8580D8EDC6875296" Directory="INSTALLFOLDER_Lib" Guid="{62D1856B-C2BE-4802-8C30-604F96BE9689}">
+				<File Id="fil3D502AC3A28319E80BFC0B378455E099" KeyPath="yes" Source="$(var.LibSource)\poplib.py" />
+			</Component>
+			<Component Id="cmpE4EAA2129E0BBB0E52851B0C9D2F0E1B" Directory="INSTALLFOLDER_Lib" Guid="{194E5BF0-6591-412B-BA65-5E60E87431B4}">
+				<File Id="filDC57387C54E83CD1DC8DC3B80BC73DDF" KeyPath="yes" Source="$(var.LibSource)\posixfile.py" />
+			</Component>
+			<Component Id="cmpEAEA20697B07E0A715210FBDD5787333" Directory="INSTALLFOLDER_Lib" Guid="{00B68CF9-B7DA-4A43-9F06-71772E5DE8D4}">
+				<File Id="fil6BADF189B78086BDEAFF94FBF697A882" KeyPath="yes" Source="$(var.LibSource)\posixpath.py" />
+			</Component>
+			<Component Id="cmp2D48E50D70DFFD034145253AA6E94CC0" Directory="INSTALLFOLDER_Lib" Guid="{797AA65B-B428-471B-B8E2-D9817C8C7F82}">
+				<File Id="fil0AD8CA415A6EBAD2A9CA1126568AEE28" KeyPath="yes" Source="$(var.LibSource)\pprint.py" />
+			</Component>
+			<Component Id="cmpD7F4251DB1F6B81718EEF79480093800" Directory="INSTALLFOLDER_Lib" Guid="{0BD98AFD-752E-43AC-B52C-A672609E167C}">
+				<File Id="fil9995782813022E95FBC77E912A737E22" KeyPath="yes" Source="$(var.LibSource)\profile.py" />
+			</Component>
+			<Component Id="cmp61ADDB620C5890A497ABC3E630BB1D7A" Directory="INSTALLFOLDER_Lib" Guid="{5BF531F3-48D2-4A59-9B99-AED7D481E033}">
+				<File Id="filB94AAD5DAC8E0192FD3185B5443CF6A8" KeyPath="yes" Source="$(var.LibSource)\pstats.py" />
+			</Component>
+			<Component Id="cmpA7782B3CB050EC4224C426FEDF89A4BC" Directory="INSTALLFOLDER_Lib" Guid="{F3A49307-1461-4F97-8B7A-2ABB7E06377B}">
+				<File Id="fil4ABEF8F4F21BCB763B65AAA321CB3392" KeyPath="yes" Source="$(var.LibSource)\pyclbr.py" />
+			</Component>
+			<Component Id="cmp3BE0A79FA5275AE2F7F731D9C8090733" Directory="INSTALLFOLDER_Lib" Guid="{09677107-5196-4CBD-995E-CCD25236F69F}">
+				<File Id="filDCFCA0C5D4FE5DC028F334D57EFBAEBE" KeyPath="yes" Source="$(var.LibSource)\pydoc.py" />
+			</Component>
+			<Component Id="cmp676D3B2F45C11B654A1B672E44068313" Directory="INSTALLFOLDER_Lib" Guid="{A1B15222-4822-40ED-B8EB-E9434ECDF792}">
+				<File Id="fil658DC2F8F04354A735AC894DFBF2F274" KeyPath="yes" Source="$(var.LibSource)\py_compile.py" />
+			</Component>
+			<Component Id="cmpA7D5DE2E5D9198FC2B3850EC2FA6FC7B" Directory="INSTALLFOLDER_Lib" Guid="{7CCFC339-EA7B-4C69-9126-1C67AD4761C7}">
+				<File Id="filBF2AF9EF663A9ECEA481D4EAEAA4CEFD" KeyPath="yes" Source="$(var.LibSource)\Queue.py" />
+			</Component>
+			<Component Id="cmp7417B368C47108CA7DD17BAA681F1452" Directory="INSTALLFOLDER_Lib" Guid="{528CE03F-10D9-47B0-89CF-84800BBC1C56}">
+				<File Id="filEE65BB45E11BE330CCAC5F9D193585E8" KeyPath="yes" Source="$(var.LibSource)\quopri.py" />
+			</Component>
+			<Component Id="cmpBFC7F5E1EFCB4D30183918B0DB62C600" Directory="INSTALLFOLDER_Lib" Guid="{616AD84E-B126-44BC-AB9E-F12FBBAC3861}">
+				<File Id="fil09625F59CB69FD8B49852F457FBEC190" KeyPath="yes" Source="$(var.LibSource)\random.py" />
+			</Component>
+			<Component Id="cmp6604CAD0B10B96FD4AC09B0CC6F5A642" Directory="INSTALLFOLDER_Lib" Guid="{08F7F05C-B35D-41CD-B941-235FFA4C36B9}">
+				<File Id="fil3914A65A7EF3D9765AB3C4189454CA43" KeyPath="yes" Source="$(var.LibSource)\repr.py" />
+			</Component>
+			<Component Id="cmp556BFBD386F1CE5329677F1068A9149C" Directory="INSTALLFOLDER_Lib" Guid="{0BF32632-D3AE-479D-90F3-5D92B25022EB}">
+				<File Id="filB1851A784504029BE75E221E97B08584" KeyPath="yes" Source="$(var.LibSource)\rexec.py" />
+			</Component>
+			<Component Id="cmpC7922B6B0B7993CC8EE77EB2F6479D39" Directory="INSTALLFOLDER_Lib" Guid="{1B93CF0F-0156-4F39-AF13-10BDCCB2DC88}">
+				<File Id="fil1D4019B43A5C5E9A7D66C88202B2945B" KeyPath="yes" Source="$(var.LibSource)\rfc822.py" />
+			</Component>
+			<Component Id="cmp967425B98B851353B61D475E9F6CDC95" Directory="INSTALLFOLDER_Lib" Guid="{C84EEFE2-6C04-4D6D-AABD-78561C5E0F44}">
+				<File Id="fil179C1182B72E5CAB4C4DA6E667214F85" KeyPath="yes" Source="$(var.LibSource)\rlcompleter.py" />
+			</Component>
+			<Component Id="cmp49AD905D0DA1045F3B41D83C8C71B12B" Directory="INSTALLFOLDER_Lib" Guid="{7694954E-EFE4-44E5-8189-407165E9C97F}">
+				<File Id="fil6B750172531A38B5CEE7102ABB3C6271" KeyPath="yes" Source="$(var.LibSource)\robotparser.py" />
+			</Component>
+			<Component Id="cmpF46550858C3F52CC18E7D35A284B4F2A" Directory="INSTALLFOLDER_Lib" Guid="{2F1F4F1B-EFF1-4ACB-A330-F5C232C70DB9}">
+				<File Id="filC90613539AF74F50C659B94D0AB037E7" KeyPath="yes" Source="$(var.LibSource)\runpy.py" />
+			</Component>
+			<Component Id="cmpC09D0B7F6EAB90BC3A8686C567FAC18C" Directory="INSTALLFOLDER_Lib" Guid="{9B32B8E8-4063-4897-9CED-3C8771436FEE}">
+				<File Id="fil907D2B5BEFF6B7F73E0C5EAC79F11D8D" KeyPath="yes" Source="$(var.LibSource)\sched.py" />
+			</Component>
+			<Component Id="cmpC357852657B0B11E85D226E061FF5A11" Directory="INSTALLFOLDER_Lib" Guid="{9134D4EC-459C-44ED-9EEC-051C34364813}">
+				<File Id="fil4CC0598881D977D78400B03BA1BD8EAD" KeyPath="yes" Source="$(var.LibSource)\sets.py" />
+			</Component>
+			<Component Id="cmp38F1062997CFC453292BBF1C7DD47F0A" Directory="INSTALLFOLDER_Lib" Guid="{AC487801-7888-4B1D-AAAB-3326B01D68E0}">
+				<File Id="fil6C65850AB417671C1F8304946FD0823C" KeyPath="yes" Source="$(var.LibSource)\sgmllib.py" />
+			</Component>
+			<Component Id="cmp2AD1EE8E74E25CBF7681AEA7218207D0" Directory="INSTALLFOLDER_Lib" Guid="{CCCFD253-DE7C-4F38-AFF2-6B42D2ED7A27}">
+				<File Id="fil510D1008B0BC7E57913AA3E53D76732D" KeyPath="yes" Source="$(var.LibSource)\sha.py" />
+			</Component>
+			<Component Id="cmp10259360B433980883B483DEB19B4518" Directory="INSTALLFOLDER_Lib" Guid="{65A6989C-2B65-4710-AD70-4A32602E8E34}">
+				<File Id="fil22CC4895C223D79720A236F733A32902" KeyPath="yes" Source="$(var.LibSource)\shelve.py" />
+			</Component>
+			<Component Id="cmpA2291D340A21AA4415BB94B97E6774F3" Directory="INSTALLFOLDER_Lib" Guid="{F7F5C235-8EB5-47BD-B205-BB85CD06253D}">
+				<File Id="fil21830CDF03B9C1FB0EF74FA59DDA14DD" KeyPath="yes" Source="$(var.LibSource)\shlex.py" />
+			</Component>
+			<Component Id="cmpFEA07CDAA789904F83AD507471FA9E0A" Directory="INSTALLFOLDER_Lib" Guid="{CF1F8379-68B7-465F-B590-E6072185703A}">
+				<File Id="fil4CEFF27EE76E62436128DE968F1B741F" KeyPath="yes" Source="$(var.LibSource)\shutil.py" />
+			</Component>
+			<Component Id="cmp26C9AA96877B318497B659FBE1386E15" Directory="INSTALLFOLDER_Lib" Guid="{BC248549-5EA4-42B1-8E52-0C7EDCD22A51}">
+				<File Id="filB0B6E498E4444F9BD2BC1861E868B2FB" KeyPath="yes" Source="$(var.LibSource)\SimpleHTTPServer.py" />
+			</Component>
+			<Component Id="cmp9D223B21694B87BF0120597EB4842466" Directory="INSTALLFOLDER_Lib" Guid="{7F6CF4B3-00F6-4E38-90E3-1529779C6FF3}">
+				<File Id="filEFC8A51ACCAE7DAFF7546472DFFEDEFA" KeyPath="yes" Source="$(var.LibSource)\SimpleXMLRPCServer.py" />
+			</Component>
+			<Component Id="cmp0B95BA6D52EC426FB6A3019FB51754E7" Directory="INSTALLFOLDER_Lib" Guid="{78649505-CAF4-4EA4-80EE-24CEA69C3B62}">
+				<File Id="filD1CBD20A0B704930915FCD8409207572" KeyPath="yes" Source="$(var.LibSource)\site.py" />
+			</Component>
+			<Component Id="cmp4CDBE53D04353D4B1F2CAA3DC8294E98" Directory="INSTALLFOLDER_Lib" Guid="{FE1A1CAF-EEC2-4388-8FEE-90B26B8B7153}">
+				<File Id="fil4603E5535C398E64AD267D367D83B074" KeyPath="yes" Source="$(var.LibSource)\smtpd.py" />
+			</Component>
+			<Component Id="cmp3FBF8651022D2DAE6683D50FE8C5715B" Directory="INSTALLFOLDER_Lib" Guid="{14855973-8DF4-445D-86C4-C748B180D72F}">
+				<File Id="filF2196776ED7075FE68CA0F667AFDC9EA" KeyPath="yes" Source="$(var.LibSource)\smtplib.py" />
+			</Component>
+			<Component Id="cmpB6F4417F0A497189963A72A1DC23917C" Directory="INSTALLFOLDER_Lib" Guid="{74430FB5-F2E1-4D87-9D0B-27E9811D68EF}">
+				<File Id="fil0AA25EFFA8B9EED0A87CBF2FC8409E5F" KeyPath="yes" Source="$(var.LibSource)\sndhdr.py" />
+			</Component>
+			<Component Id="cmp85E2383F0700D25C2FAD9F4D39A97230" Directory="INSTALLFOLDER_Lib" Guid="{2ECAC599-25BA-4545-947A-2D2904A0E4A6}">
+				<File Id="filDEE130C4540E245A991B6154D4EB1E3E" KeyPath="yes" Source="$(var.LibSource)\SocketServer.py" />
+			</Component>
+			<Component Id="cmp2D6F90095901E02A81A98B7C014CD173" Directory="INSTALLFOLDER_Lib" Guid="{48133E80-55F1-4998-8884-BE041D3D8193}">
+				<File Id="filD61F01EB26849BDA4BD72DCDE6EF2C0B" KeyPath="yes" Source="$(var.LibSource)\sre_compile.py" />
+			</Component>
+			<Component Id="cmp4199FDA4BA3C9DFE5BAD788FE05375A2" Directory="INSTALLFOLDER_Lib" Guid="{48468821-4D7A-4A96-B7B9-6E9A8181968C}">
+				<File Id="filA2DC3A54DC731405D4C15FFDF9234A17" KeyPath="yes" Source="$(var.LibSource)\sre_constants.py" />
+			</Component>
+			<Component Id="cmpD8B07457B493803C3899906D7FEE525B" Directory="INSTALLFOLDER_Lib" Guid="{0433A3CE-D812-42BC-BBAB-8C83354531DC}">
+				<File Id="filCC2E07486EC4F0AC4630BFEFB8074936" KeyPath="yes" Source="$(var.LibSource)\sre_parse.py" />
+			</Component>
+			<Component Id="cmp5D7314D1B6ADC659119217E354C5C53A" Directory="INSTALLFOLDER_Lib" Guid="{62E11D9A-41BB-4EB6-B1F6-2712993AB5A1}">
+				<File Id="fil7D6211F0F2C8EAE41A2502102D8C127F" KeyPath="yes" Source="$(var.LibSource)\ssl.py" />
+			</Component>
+			<Component Id="cmpD284EFC7FA3C7A086390BC7721FCCC48" Directory="INSTALLFOLDER_Lib" Guid="{72A5335A-6B7B-4759-9B36-235D59CD361B}">
+				<File Id="fil8E1AB999C048F9563FC8B77D21262D9C" KeyPath="yes" Source="$(var.LibSource)\stat.py" />
+			</Component>
+			<Component Id="cmp4AAA0FFB5309D1D6590702778F6D4184" Directory="INSTALLFOLDER_Lib" Guid="{8092E892-0EA0-430A-B948-5BD8F96829D2}">
+				<File Id="fil74E2B4161851BE841986B09EA38AC869" KeyPath="yes" Source="$(var.LibSource)\statvfs.py" />
+			</Component>
+			<Component Id="cmp8F7AF8CB8F3918E55870C3FCC4741146" Directory="INSTALLFOLDER_Lib" Guid="{D9100F93-C6E8-4E75-8FC5-18B4072D2C97}">
+				<File Id="fil80D26ACAC8AC969270FECB2316509DB0" KeyPath="yes" Source="$(var.LibSource)\string.py" />
+			</Component>
+			<Component Id="cmp49A079893207B767C71D23E399AC03B8" Directory="INSTALLFOLDER_Lib" Guid="{D3969AB3-8AA8-435F-81B8-72BE14CDFBD1}">
+				<File Id="filB864251A18A0046074C208BF2C06263B" KeyPath="yes" Source="$(var.LibSource)\StringIO.py" />
+			</Component>
+			<Component Id="cmp651C993EE7BFBD2CCD5403AD4928EC24" Directory="INSTALLFOLDER_Lib" Guid="{9508D55E-2C75-4559-B9DC-06CC58E49044}">
+				<File Id="filC47B2AB148CAD888047AB83EC005DA48" KeyPath="yes" Source="$(var.LibSource)\stringold.py" />
+			</Component>
+			<Component Id="cmp64CA028DC905C7C0A1ACA390748B5FC4" Directory="INSTALLFOLDER_Lib" Guid="{4AE348FB-A64A-4401-89E1-D89FBBA29291}">
+				<File Id="filFD55DD264479EF9673E231B1DBF663AC" KeyPath="yes" Source="$(var.LibSource)\struct.py" />
+			</Component>
+			<Component Id="cmpA75309EB331EF114679A96F86FAB6DCD" Directory="INSTALLFOLDER_Lib" Guid="{F6908A93-BDC4-448C-9204-54E81A7516D4}">
+				<File Id="filDFBB787ACB6E99D799BD586362E436BE" KeyPath="yes" Source="$(var.LibSource)\subprocess.py" />
+			</Component>
+			<Component Id="cmp728522E474EE2FBF5DDD2E8CFF4DA411" Directory="INSTALLFOLDER_Lib" Guid="{5D0174DB-03AC-40DC-BED0-6C05A711D91F}">
+				<File Id="filB8C87DE43A2BE56DDF039DB2DFF02D83" KeyPath="yes" Source="$(var.LibSource)\sunau.py" />
+			</Component>
+			<Component Id="cmpB6E5FA0D6031A2128AD973572A7E2A3F" Directory="INSTALLFOLDER_Lib" Guid="{47BD5D2D-F8A0-49ED-B9EE-53F942C7657B}">
+				<File Id="fil42041B6CCC1734EF614DE892C3703335" KeyPath="yes" Source="$(var.LibSource)\sunaudio.py" />
+			</Component>
+			<Component Id="cmpB05B6FA0E198E0F21066C18D127C6B75" Directory="INSTALLFOLDER_Lib" Guid="{CB2FB785-3CE2-4388-A911-89DCA8AFD47C}">
+				<File Id="filB6278B89E5383D5B1469D2BBCC4A489D" KeyPath="yes" Source="$(var.LibSource)\symbol.py" />
+			</Component>
+			<Component Id="cmp89F21E3CA371C063DDDC529E45CC9538" Directory="INSTALLFOLDER_Lib" Guid="{D1FF1279-E2C2-481F-832F-60FF49FE9EA6}">
+				<File Id="fil10E5BC64B822F65274341EF08AE6690F" KeyPath="yes" Source="$(var.LibSource)\sysconfig.py" />
+			</Component>
+			<Component Id="cmp52B7F45646E45ED97E3076A571037CCD" Directory="INSTALLFOLDER_Lib" Guid="{C1D9AB0D-5B22-40CF-BC88-418C85FF2020}">
+				<File Id="filCF2D88566BA6B07648741918F1720307" KeyPath="yes" Source="$(var.LibSource)\tabnanny.py" />
+			</Component>
+			<Component Id="cmp85BEB3E8A0FBB5257BAA83CBFC8AEEAC" Directory="INSTALLFOLDER_Lib" Guid="{48E9DBF7-9EFA-4B49-8677-0EFA75743995}">
+				<File Id="filB838F5F2B1669E8B53129AF1EBFDF329" KeyPath="yes" Source="$(var.LibSource)\tarfile.py" />
+			</Component>
+			<Component Id="cmpA3AD5717181D73A5A1290A86A832600C" Directory="INSTALLFOLDER_Lib" Guid="{AC017571-C04D-4A4E-AC25-BE75BA0FCA80}">
+				<File Id="fil964D12667E71E74739BCDAEBC30462BB" KeyPath="yes" Source="$(var.LibSource)\telnetlib.py" />
+			</Component>
+			<Component Id="cmpD47B7C1FC41B1E13FF1F0BC53E60E600" Directory="INSTALLFOLDER_Lib" Guid="{B03228AC-C6A0-4545-88DD-1770E9969194}">
+				<File Id="fil59FA7E650C74D4AB0DF32FBEACD97D17" KeyPath="yes" Source="$(var.LibSource)\tempfile.py" />
+			</Component>
+			<Component Id="cmpFCA62004CD6BB03EEB9D8B324344031D" Directory="INSTALLFOLDER_Lib" Guid="{BC4EA6E1-B334-458B-BAFB-DFDA76B5CABA}">
+				<File Id="fil64C829C2A9CA27761533AC9779832FDB" KeyPath="yes" Source="$(var.LibSource)\textwrap.py" />
+			</Component>
+			<Component Id="cmp57FF841A42AC78C8F0CAAE780F48B11E" Directory="INSTALLFOLDER_Lib" Guid="{9ED64100-8C7E-423A-9608-3DE30C5A3020}">
+				<File Id="fil3B33C15FB57ECCEF04C921EAECDBE56C" KeyPath="yes" Source="$(var.LibSource)\this.py" />
+			</Component>
+			<Component Id="cmp11E03A19904E0956442F4C48049CD394" Directory="INSTALLFOLDER_Lib" Guid="{1B64BAFC-1221-40EC-928C-8B49F64E5030}">
+				<File Id="fil739E5A111912F72CCCA5CBE36402B159" KeyPath="yes" Source="$(var.LibSource)\threading.py" />
+			</Component>
+			<Component Id="cmpBCD36F3120DBA7198713959BCA8F8778" Directory="INSTALLFOLDER_Lib" Guid="{7C1AD4D0-3CE0-46A6-8A84-6551EFA23E35}">
+				<File Id="fil8174B7ED3199666A6807B31B53E55724" KeyPath="yes" Source="$(var.LibSource)\timeit.py" />
+			</Component>
+			<Component Id="cmpDE708F24DFA01332D5A39ACAC076A9F0" Directory="INSTALLFOLDER_Lib" Guid="{06D07CCF-EE6C-47FF-9BD3-4ED6706C12C1}">
+				<File Id="filAA08372DBC8E547859939DFA7121232B" KeyPath="yes" Source="$(var.LibSource)\toaiff.py" />
+			</Component>
+			<Component Id="cmpD5426B6D6BA8A795005EE98E09885736" Directory="INSTALLFOLDER_Lib" Guid="{5D569A4D-B000-46E0-9741-2FC2C7EB3CDA}">
+				<File Id="filEBD402855780D40B3AABF54F6E116CBC" KeyPath="yes" Source="$(var.LibSource)\token.py" />
+			</Component>
+			<Component Id="cmpA76A13054B36204024DBAF33CFC0C6B1" Directory="INSTALLFOLDER_Lib" Guid="{0E2E9051-8AC8-4BC4-ABC6-02647170FF2D}">
+				<File Id="fil4426024577F1360D620CF6EFEC559947" KeyPath="yes" Source="$(var.LibSource)\tokenize.py" />
+			</Component>
+			<Component Id="cmp0691A57FBCFCC2E95569E1DE6BB5D427" Directory="INSTALLFOLDER_Lib" Guid="{12C55B0E-8D63-4D26-A0E4-49000D433606}">
+				<File Id="filA866FA15A7474E4CF2AA5067EC9E05E1" KeyPath="yes" Source="$(var.LibSource)\trace.py" />
+			</Component>
+			<Component Id="cmpCA4CD0CCDC7373ABF3FA9BE0071742CB" Directory="INSTALLFOLDER_Lib" Guid="{DCDD5A81-61B3-40CE-801E-3ECF8AB33EFE}">
+				<File Id="fil22BBACAA0EC53DF0FD6753D9C434F6BC" KeyPath="yes" Source="$(var.LibSource)\traceback.py" />
+			</Component>
+			<Component Id="cmp612D7B1E1C220593D5A8B1E00DB0500F" Directory="INSTALLFOLDER_Lib" Guid="{0A0D6755-97C5-4AE1-BE7F-C052EECA1163}">
+				<File Id="fil9C0B632D3C7E1CD342D2CB4EC5612673" KeyPath="yes" Source="$(var.LibSource)\types.py" />
+			</Component>
+			<Component Id="cmpDC5C1B0F1CA8FD16E7FC414D71882989" Directory="INSTALLFOLDER_Lib" Guid="{07B8272E-D167-4C21-A6F3-1A13B4345533}">
+				<File Id="fil7628D5D7F78C5DEC9ADBFBAD6419DA55" KeyPath="yes" Source="$(var.LibSource)\urllib.py" />
+			</Component>
+			<Component Id="cmp4A622A0E451BA77B237CE7790AEFF76F" Directory="INSTALLFOLDER_Lib" Guid="{C5611C32-6AE8-4283-BBB1-F2CCD6178A1B}">
+				<File Id="fil4C9F4EECB97F9626650AE8F8D6F061E2" KeyPath="yes" Source="$(var.LibSource)\urllib2.py" />
+			</Component>
+			<Component Id="cmpF447AD07F65755D79B38433DBB2D49C7" Directory="INSTALLFOLDER_Lib" Guid="{1443A3C4-3256-40EB-B9DB-2718AD16FDF2}">
+				<File Id="fil6CB4804AB4154B0E8C7AE4A7CED8F65F" KeyPath="yes" Source="$(var.LibSource)\urlparse.py" />
+			</Component>
+			<Component Id="cmpFA9313969028395BA39838F196587750" Directory="INSTALLFOLDER_Lib" Guid="{07FDC829-B0B7-484D-A228-F9CE6F5DBA33}">
+				<File Id="filAF9958F74BFA2482F09AA1E68D29B92E" KeyPath="yes" Source="$(var.LibSource)\user.py" />
+			</Component>
+			<Component Id="cmp6AECF244C88B3B309BB44EB120D3B29C" Directory="INSTALLFOLDER_Lib" Guid="{B33393ED-D324-4F10-AF1C-364A1CAE3F2D}">
+				<File Id="filF252C6CA99FC0043F4A1E5775E7042D0" KeyPath="yes" Source="$(var.LibSource)\UserDict.py" />
+			</Component>
+			<Component Id="cmp5554BDDE9B3FADDD22142157C46052E9" Directory="INSTALLFOLDER_Lib" Guid="{F8C0C57F-7079-4EEC-B0EF-B86A5DDE39BB}">
+				<File Id="filE23F56A890E931E1678D50CFF940A004" KeyPath="yes" Source="$(var.LibSource)\UserList.py" />
+			</Component>
+			<Component Id="cmp1054AAC4CE4F6729F33E95DA67547FE5" Directory="INSTALLFOLDER_Lib" Guid="{69CAD17F-07C0-43CF-9A89-BDE97A90515C}">
+				<File Id="filBD2FDEA2B8B471C895DAC46A8E06E4A7" KeyPath="yes" Source="$(var.LibSource)\UserString.py" />
+			</Component>
+			<Component Id="cmp49757FBD81C980F5FA27308A9A67117F" Directory="INSTALLFOLDER_Lib" Guid="{7D0745BB-397D-4D61-89B5-872B8AF0BDC5}">
+				<File Id="filEEA388EA4D4D23A66E18A8BC41081142" KeyPath="yes" Source="$(var.LibSource)\uu.py" />
+			</Component>
+			<Component Id="cmpE5ABBD76EE62433D50F15153547FC0E9" Directory="INSTALLFOLDER_Lib" Guid="{E04407B3-1648-459E-A3AF-EEB8A532333D}">
+				<File Id="filB8E16EB5EB664BEBA9B8E6E363115BC8" KeyPath="yes" Source="$(var.LibSource)\uuid.py" />
+			</Component>
+			<Component Id="cmp7A285C538A03FB5B2CDDBA6340DE9F0A" Directory="INSTALLFOLDER_Lib" Guid="{3ED08E9C-1E85-476F-8209-F30E34CF75D3}">
+				<File Id="fil9D06633ADF0A799BF53F335A24E91147" KeyPath="yes" Source="$(var.LibSource)\warnings.py" />
+			</Component>
+			<Component Id="cmp68969BD662F38FB1982173DDB2FD8066" Directory="INSTALLFOLDER_Lib" Guid="{4B1089B1-012A-4F96-A253-07665F94F274}">
+				<File Id="filCB60837EF7674EB3E383A36E5C440665" KeyPath="yes" Source="$(var.LibSource)\wave.py" />
+			</Component>
+			<Component Id="cmp910378290F3D621F37BB6E0E69072AE4" Directory="INSTALLFOLDER_Lib" Guid="{AAA2CB39-0B28-4943-B336-B35E84B45CE5}">
+				<File Id="filAE49CCFFD6E5862290145C1B48AF9D17" KeyPath="yes" Source="$(var.LibSource)\weakref.py" />
+			</Component>
+			<Component Id="cmp6136641ACD4AC4018E2A4E7FFE37F873" Directory="INSTALLFOLDER_Lib" Guid="{AE09FDD8-7B20-4D07-9612-6BB7BE5FCD86}">
+				<File Id="filE2B52882DF76389B560BA719412A8FBB" KeyPath="yes" Source="$(var.LibSource)\webbrowser.py" />
+			</Component>
+			<Component Id="cmpD3799475655B9196BE368D3D753C43B7" Directory="INSTALLFOLDER_Lib" Guid="{246288E3-6C8A-40CD-9426-CC2E616E8598}">
+				<File Id="fil25E64441196657B3A68A898DED68AB42" KeyPath="yes" Source="$(var.LibSource)\whichdb.py" />
+			</Component>
+			<Component Id="cmp54A374EAF610DFD1EFEC7D589C0E871B" Directory="INSTALLFOLDER_Lib" Guid="{A9752C8F-CD5D-414A-AFBA-299BDE4BD41A}">
+				<File Id="filB50974FE723C0D1DCF745A0D9F425D3E" KeyPath="yes" Source="$(var.LibSource)\xdrlib.py" />
+			</Component>
+			<Component Id="cmpA61EDAE6B3E30CC659D5F6930D9836C4" Directory="INSTALLFOLDER_Lib" Guid="{0C384843-81FE-4A28-AAF8-EBAE7A2D615A}">
+				<File Id="filFA464BD39D15AE6EC10A0992FA8DAAC4" KeyPath="yes" Source="$(var.LibSource)\xmllib.py" />
+			</Component>
+			<Component Id="cmp3E82A439FF75D8C793D1A9076BF95DA5" Directory="INSTALLFOLDER_Lib" Guid="{23332EE9-00C5-4325-A3E2-BCE9211A0F54}">
+				<File Id="filD6D571C489145817329DC368810D1E8B" KeyPath="yes" Source="$(var.LibSource)\xmlrpclib.py" />
+			</Component>
+			<Component Id="cmp307AC99E5F1ACD6730AAAFD3C28557C3" Directory="INSTALLFOLDER_Lib" Guid="{9A1E05FE-642A-4FDA-918E-7CD504672ED2}">
+				<File Id="fil68E021D652659DB27759AD21DB51C9CE" KeyPath="yes" Source="$(var.LibSource)\zipfile.py" />
+			</Component>
+			<Component Id="cmp44772524DA9C53AA7E9CE3D8344DC293" Directory="INSTALLFOLDER_Lib" Guid="{E3F39B6D-293C-4379-91F1-1535C3E2CF72}">
+				<File Id="fil3945705CD951C5B04596C7384F4278DF" KeyPath="yes" Source="$(var.LibSource)\_abcoll.py" />
+			</Component>
+			<Component Id="cmpFC64A9F1596F2FAC67A31B6C231B3B8D" Directory="INSTALLFOLDER_Lib" Guid="{EA8E3512-784C-4C25-A2CB-B53C995D694F}">
+				<File Id="fil4F3AF28121EDEE52B9BD45853C831615" KeyPath="yes" Source="$(var.LibSource)\_LWPCookieJar.py" />
+			</Component>
+			<Component Id="cmp40188BFA6187F1FC87AA6ABAF00E64D4" Directory="INSTALLFOLDER_Lib" Guid="{87222DBB-4DD1-45B2-8B6B-8C96D2143B72}">
+				<File Id="fil0A486E1ECB9B4712403574327BC00B12" KeyPath="yes" Source="$(var.LibSource)\_MozillaCookieJar.py" />
+			</Component>
+			<Component Id="cmpEBC04556FC7D858B8594D4C849692584" Directory="INSTALLFOLDER_Lib" Guid="{0CE40623-E36E-4966-917B-F5BB213E03B9}">
+				<File Id="filBA4DCD39843C6B155C7AFC35F91D3E2E" KeyPath="yes" Source="$(var.LibSource)\_pyio.py" />
+			</Component>
+			<Component Id="cmp3DBA6CEBE9672C7657570CB231F10F13" Directory="INSTALLFOLDER_Lib" Guid="{EDE03443-1D3E-4AE8-B4BF-D6DD693F1037}">
+				<File Id="fil69EAAE143EB73BC2A3447756AC6E343B" KeyPath="yes" Source="$(var.LibSource)\_strptime.py" />
+			</Component>
+			<Component Id="cmpA5F7FAA03EE07992B6BD4DC3FE9A12F4" Directory="INSTALLFOLDER_Lib" Guid="{FD7EBCBB-E149-43E7-BE0A-2A0E0D755841}">
+				<File Id="fil522C992074092EAE7169D5A666321F05" KeyPath="yes" Source="$(var.LibSource)\_threading_local.py" />
+			</Component>
+			<Component Id="cmpBC7B97CB08E19570F504F23CAD3A28CB" Directory="INSTALLFOLDER_Lib" Guid="{38335121-0B68-4D87-89EE-B8D1AFACE946}">
+				<File Id="fil5F8D6BD5C36D238FC19DB5826A6B3515" KeyPath="yes" Source="$(var.LibSource)\_weakrefset.py" />
+			</Component>
+			<Component Id="cmp82AAEE4A68A0B2CE2734B3C3B84F2F76" Directory="INSTALLFOLDER_Lib" Guid="{B2358E6B-991D-46A1-9A32-10353BC02F4B}">
+				<File Id="fil88AA324B2C7ECFC6E99C850A90673834" KeyPath="yes" Source="$(var.LibSource)\__future__.py" />
+			</Component>
+			<Component Id="cmp43D5E81A3953FFF108468E81E25ACB98" Directory="INSTALLFOLDER_Lib" Guid="{2AA1F4C7-D6EF-43D6-B2F2-01365BA2E6A3}">
+				<File Id="fil9BF93D564405AD45CE76D3411A000EF1" KeyPath="yes" Source="$(var.LibSource)\__phello__.foo.py" />
+			</Component>
+			<Component Id="cmp8E8F51EDEF80087C6626D0F4D685276B" Directory="dir2E29D7C2D68759C4DD4B5096905A5984" Guid="{BF4AD39E-B495-4EBF-9D12-2397A7972BC0}">
+				<File Id="filF972C87DEA11239798603857AEE189A9" KeyPath="yes" Source="$(var.LibSource)\ctypes\util.py" />
+			</Component>
+			<Component Id="cmpD1870FE758307546C10DF187EBD24C3E" Directory="dir2E29D7C2D68759C4DD4B5096905A5984" Guid="{55D20D35-72F5-4029-8B15-FE2912281FEE}">
+				<File Id="fil0899047E7ABABC18B61BF4C6EE4713FD" KeyPath="yes" Source="$(var.LibSource)\ctypes\wintypes.py" />
+			</Component>
+			<Component Id="cmp17F9A70A17171423CB74BCB715EA77E9" Directory="dir2E29D7C2D68759C4DD4B5096905A5984" Guid="{2B2A9B75-BDBD-4201-A910-9E3C9C137FE2}">
+				<File Id="fil26D4BD07F1ED2F13EB8B0D4CCB436F4C" KeyPath="yes" Source="$(var.LibSource)\ctypes\_endian.py" />
+			</Component>
+			<Component Id="cmpB3DFB467636719EF4535E657B0009316" Directory="dir2E29D7C2D68759C4DD4B5096905A5984" Guid="{32331D4E-79BF-4CBD-8F39-AE13E33506FA}">
+				<File Id="fil1F10950E9D05FCC93F4A93F993EBBDB7" KeyPath="yes" Source="$(var.LibSource)\ctypes\__init__.py" />
+			</Component>
+			<Component Id="cmp2821EEAB56DAF4CBBDF54E6FB57F4FA5" Directory="dirA3DA302BDA92437FFF37FEACA7E64D96" Guid="{F43C8AE0-FDB0-44D8-94EA-07ECE437AB7A}">
+				<File Id="fil5004167545A6E1810117C314B1E0D4C0" KeyPath="yes" Source="$(var.LibSource)\ctypes\macholib\dyld.py" />
+			</Component>
+			<Component Id="cmp0E1A248828D214BDFC3BBE4F2F6CB412" Directory="dirA3DA302BDA92437FFF37FEACA7E64D96" Guid="{7D0D461C-B362-4930-B2A1-B5C07DB84427}">
+				<File Id="fil042725E498028CBA21C94C10D759424D" KeyPath="yes" Source="$(var.LibSource)\ctypes\macholib\dylib.py" />
+			</Component>
+			<Component Id="cmp1F1A160A20F41A8A40600B86FAC94309" Directory="dirA3DA302BDA92437FFF37FEACA7E64D96" Guid="{0391AA70-F050-42DE-B915-24CD9D6CD5E4}">
+				<File Id="fil6C890756CB6DC1EF57195242F270CCFF" KeyPath="yes" Source="$(var.LibSource)\ctypes\macholib\framework.py" />
+			</Component>
+			<Component Id="cmpDBF9C9F05E68A64FAEACF0A445A034E0" Directory="dirA3DA302BDA92437FFF37FEACA7E64D96" Guid="{1FE875EE-C11D-4CB8-877C-3A0BC10ABCB8}">
+				<File Id="filE60183EF99A5BD09531294F1B11998E7" KeyPath="yes" Source="$(var.LibSource)\ctypes\macholib\__init__.py" />
+			</Component>
+			<Component Id="cmp06686A31204358598F15EDE950383F72" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{7F004E8E-7C63-4E38-8050-E2257244276A}">
+				<File Id="fil2AB564157DB09AC24C6DA9F8190FA746" KeyPath="yes" Source="$(var.LibSource)\distutils\archive_util.py" />
+			</Component>
+			<Component Id="cmpA6682EEB95ED89953DB6A767782B2BE4" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{90298BAB-6E37-471D-8F73-7BDA1FE85E02}">
+				<File Id="fil7853FB5A409AB4909CB8E4E2A479D4E9" KeyPath="yes" Source="$(var.LibSource)\distutils\bcppcompiler.py" />
+			</Component>
+			<Component Id="cmp77E19A821B2A27E8DFDB26B00378B9CB" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{63F64D1C-45F3-4C00-9267-38FFAF9AAA5B}">
+				<File Id="filD40C55F7E631E188FA233AA6C5AD2C94" KeyPath="yes" Source="$(var.LibSource)\distutils\ccompiler.py" />
+			</Component>
+			<Component Id="cmpD44981475FB266DA6D5625357A57C130" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{EA659868-6887-4B3F-9DCD-1B49EB14D8F2}">
+				<File Id="fil0958614AF2BB7766248D2BD3925E2B07" KeyPath="yes" Source="$(var.LibSource)\distutils\cmd.py" />
+			</Component>
+			<Component Id="cmp21AB15CFC9FF287C76337888177E098B" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{047A1B22-4500-4B11-AC96-83024F373EC3}">
+				<File Id="fil3BD861ED2136D6BEAA3D4D872F19923B" KeyPath="yes" Source="$(var.LibSource)\distutils\config.py" />
+			</Component>
+			<Component Id="cmp06FFE86EF97D44BB1A08679548C035C3" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{F14B44F9-4FF9-4915-9748-26C715E0BB50}">
+				<File Id="fil3107773A0E18AD082F8EF8EECA704E8A" KeyPath="yes" Source="$(var.LibSource)\distutils\core.py" />
+			</Component>
+			<Component Id="cmp4B6BDC0947DD576AC5B79A9C3F020ECA" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{5B62626D-DB46-474E-8A84-33AE5CAB48A7}">
+				<File Id="fil7F3375186FBF501D876158000D12ABF9" KeyPath="yes" Source="$(var.LibSource)\distutils\cygwinccompiler.py" />
+			</Component>
+			<Component Id="cmp14E7BC5E7EC3D9EBF47A1ED4B9092899" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{3AE25A8C-92FC-4D0A-8ACD-E72EFB5AE277}">
+				<File Id="fil70E6689C5DE3A6B7A708BC6DA5AEB7F3" KeyPath="yes" Source="$(var.LibSource)\distutils\debug.py" />
+			</Component>
+			<Component Id="cmp2A45E0B2828A818FCB3B366078E9D907" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{BF461DFD-DD86-4B39-930D-ACB4F6C574B0}">
+				<File Id="filB29BE90A9AB27A86606F8D078F011C34" KeyPath="yes" Source="$(var.LibSource)\distutils\dep_util.py" />
+			</Component>
+			<Component Id="cmp6DDE1E742E6E456E40D484B788306953" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{2C10E969-1DB6-4477-8757-017DD06B83A6}">
+				<File Id="filA87086A6212303815EFFE894FADCB197" KeyPath="yes" Source="$(var.LibSource)\distutils\dir_util.py" />
+			</Component>
+			<Component Id="cmp891F6B7484972D641B5910002DC5AC6C" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{8AEDDC81-A7B4-4E15-854F-4107856D452B}">
+				<File Id="fil612C75D761BC2864DFE0FBE9684F4449" KeyPath="yes" Source="$(var.LibSource)\distutils\dist.py" />
+			</Component>
+			<Component Id="cmp66E16DC0AB97CCB47DA197D90204708E" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{8C9B5966-9B10-4008-A89C-1CDDE5F81397}">
+				<File Id="filB78FC3F2AE168BBA7FC79BE32D9175C4" KeyPath="yes" Source="$(var.LibSource)\distutils\emxccompiler.py" />
+			</Component>
+			<Component Id="cmp8F354C0C681986606FBD04BCACD706A0" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{BBABD768-4EED-4FBC-9BE5-8160B78B7D4C}">
+				<File Id="fil1C4F8C9E92410036AA5CD8875341CA84" KeyPath="yes" Source="$(var.LibSource)\distutils\errors.py" />
+			</Component>
+			<Component Id="cmp761DA465123FA2F3EE4A19E0DF6DDF16" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{C1CBB967-1493-494C-975C-5E489DCFF5F5}">
+				<File Id="filA7FC130640588D25E19BC106DCE27A1B" KeyPath="yes" Source="$(var.LibSource)\distutils\extension.py" />
+			</Component>
+			<Component Id="cmp01F573CEE97D4642FA3EB59AEF73E2C2" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{94AF06D2-77C8-4A1D-A7C4-82BB92987741}">
+				<File Id="filD7264D9AEC61AD041CC5ED357C66F15B" KeyPath="yes" Source="$(var.LibSource)\distutils\fancy_getopt.py" />
+			</Component>
+			<Component Id="cmp06B376766C585D4064A06CBAF9323AA0" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{D276FF9A-06C9-46C4-885F-745429246784}">
+				<File Id="fil5ADE2C8D8C111D1C0AA5A85896741248" KeyPath="yes" Source="$(var.LibSource)\distutils\filelist.py" />
+			</Component>
+			<Component Id="cmpE5BE383F2B747ADC3AF1BFE335848B02" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{9A012D15-87F7-44C0-8A38-7CBD9A432EE8}">
+				<File Id="filC56F0E804FCBFD71EA35AA6269A73BE3" KeyPath="yes" Source="$(var.LibSource)\distutils\file_util.py" />
+			</Component>
+			<Component Id="cmp5CC0806D802FE8DBC2B59F4E0820C1E5" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{6C55FB71-A2EC-43D9-8F93-D98A64356F6D}">
+				<File Id="fil6B2A54A8735B76786A9BCF00B8C9B15D" KeyPath="yes" Source="$(var.LibSource)\distutils\log.py" />
+			</Component>
+			<Component Id="cmp30AA78F1F92E05B5245EF5D8B2873650" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{9029AF29-CA68-4BB2-BD25-0B5F85BE6D24}">
+				<File Id="fil0BD070307ACAB68B554FC267B314DDB8" KeyPath="yes" Source="$(var.LibSource)\distutils\msvccompiler.py" />
+			</Component>
+			<Component Id="cmp11EE3B5C803BD4C39A1B7FCD0A70FBAD" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{B9313B3E-FC6F-402B-B4A5-DF90B24D91F5}">
+				<File Id="fil704CDAAC50FC13C59A5125D1A06E04C8" KeyPath="yes" Source="$(var.LibSource)\distutils\spawn.py" />
+			</Component>
+			<Component Id="cmp57D1109896FB2D54066369708B5456D4" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{ED5CC14B-1FF1-42C6-B159-09BB72ABA15F}">
+				<File Id="fil4A496251CC50DECCBC47CAD84FF97B84" KeyPath="yes" Source="$(var.LibSource)\distutils\sysconfig.py" />
+			</Component>
+			<Component Id="cmp82692B664FC1D382EE3BD49CD3E91ABA" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{A70167AA-B7BF-456C-BB7F-6F514BFD21AE}">
+				<File Id="fil9161AFA3EE5AA80619783A7E75ED0E21" KeyPath="yes" Source="$(var.LibSource)\distutils\text_file.py" />
+			</Component>
+			<Component Id="cmpE7D5224CACAA3347DB2A6B585A1A23DD" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{A76208B1-BC07-4979-942F-F5CEBFF0292B}">
+				<File Id="fil2F1238A406613D828EA2832BAF9CDEDD" KeyPath="yes" Source="$(var.LibSource)\distutils\unixccompiler.py" />
+			</Component>
+			<Component Id="cmp557F2B78054C837DC8C00BA1FCE149CC" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{B04CD03A-D8BA-4FFD-AE37-502C59864B5D}">
+				<File Id="filAA282276E611942BA2F140A7B0598642" KeyPath="yes" Source="$(var.LibSource)\distutils\util.py" />
+			</Component>
+			<Component Id="cmp6B4D989C8C4D737B977609B63A027FD7" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{A60100B8-96E1-404F-9659-EA02FE27C53F}">
+				<File Id="fil82F05A2B58D28094371E7853873D4AFB" KeyPath="yes" Source="$(var.LibSource)\distutils\version.py" />
+			</Component>
+			<Component Id="cmp899A0017130D3D2B11C275F0C99F26BD" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{F27E15C4-64C9-41D7-B39A-6F85DC0F1861}">
+				<File Id="fil7A762305B3AD1C1C6CC45E34F18B1CD9" KeyPath="yes" Source="$(var.LibSource)\distutils\versionpredicate.py" />
+			</Component>
+			<Component Id="cmp67EB40D72A8CBB0FB8CC3B617F21EAB0" Directory="dir2F47B6977D59F2CDA6C3DB0E42621767" Guid="{06ADF659-C1FC-435B-A178-702340E20484}">
+				<File Id="fil5A20191665B6E230C2A1D7FF76673E98" KeyPath="yes" Source="$(var.LibSource)\distutils\__init__.py" />
+			</Component>
+			<Component Id="cmpB179057543681BAD68960744432152CE" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{1D434795-F66A-4F0E-BBFC-15DE7CA94ED0}">
+				<File Id="fil44CA5265AA4B676545BABA5DE3B70CBB" KeyPath="yes" Source="$(var.LibSource)\distutils\command\bdist.py" />
+			</Component>
+			<Component Id="cmp95277F8BFF423D856ED8E2B9641BBA11" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{01D79950-FDF0-4212-86DB-B1F427537260}">
+				<File Id="fil5C6178364B841EBA008AF636642A61AF" KeyPath="yes" Source="$(var.LibSource)\distutils\command\bdist_dumb.py" />
+			</Component>
+			<Component Id="cmpBF371BEA055C5C33821B64D420583A10" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{D82D204C-BF73-4BE9-96A8-0BABC7BF7BB9}">
+				<File Id="fil21768BB9FD29E3D4111CED365D204D65" KeyPath="yes" Source="$(var.LibSource)\distutils\command\bdist_rpm.py" />
+			</Component>
+			<Component Id="cmpD3CC4AC87AAE97A5158898E495FC584C" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{F848D5F5-BA59-47E9-98C8-2C18E633D4BF}">
+				<File Id="filEF993F0C9D8753B8D8CE80BB19387556" KeyPath="yes" Source="$(var.LibSource)\distutils\command\bdist_wininst.py" />
+			</Component>
+			<Component Id="cmp1B364AA9F992EE8265CF924342AE6F6C" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{28D0FF72-B9F3-44B4-855D-0045A1DBFF6D}">
+				<File Id="fil16A47AE2E41096E457B83DBB4B698781" KeyPath="yes" Source="$(var.LibSource)\distutils\command\build.py" />
+			</Component>
+			<Component Id="cmp974F347AE0DF771EA11112B41E167A63" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{E13F04F9-1232-4CBC-8143-74C1B1D69A91}">
+				<File Id="fil635EE6A04AD4071B22577672C634494F" KeyPath="yes" Source="$(var.LibSource)\distutils\command\build_clib.py" />
+			</Component>
+			<Component Id="cmp43BF3D6D0C37D06AAB459C6D69E1ABD3" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{821601D4-78BD-47B6-A698-79FE6D7D38C7}">
+				<File Id="filE386EAA079595373301FBA4C8C293F35" KeyPath="yes" Source="$(var.LibSource)\distutils\command\build_ext.py" />
+			</Component>
+			<Component Id="cmpFE6A52549EBABCB79C69DFC11E997F41" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{428670C0-3262-4F17-9941-A8260BC4B0C6}">
+				<File Id="filF847F2B29676F5D214FBE56CEF09BD3F" KeyPath="yes" Source="$(var.LibSource)\distutils\command\build_py.py" />
+			</Component>
+			<Component Id="cmp01C8F9F5D353C9AFA7CEE6B49DE4B5A3" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{3E964F8E-7C00-47AE-927E-386324D923D4}">
+				<File Id="fil1BEFD5E6C83C3DAE8409B05F9175A8CA" KeyPath="yes" Source="$(var.LibSource)\distutils\command\build_scripts.py" />
+			</Component>
+			<Component Id="cmp2FBDDEF772DDDA5A8FF99043ECF7F8F8" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{AAC425F2-CEE2-4055-9BF1-A5D49D96868A}">
+				<File Id="fil59BEB1A930BDB5E5BBB38A64190A151B" KeyPath="yes" Source="$(var.LibSource)\distutils\command\check.py" />
+			</Component>
+			<Component Id="cmpF017FC328F5C331B91822AACD87850D7" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{C189062A-996F-4FBF-AA5A-77A80480DE33}">
+				<File Id="fil870ABC9371F96386697A06D3F3178258" KeyPath="yes" Source="$(var.LibSource)\distutils\command\clean.py" />
+			</Component>
+			<Component Id="cmpBD2087E3E5EE4CAE030BE513A9E7F797" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{00307ECB-2726-47F1-8593-F573BBE3EA16}">
+				<File Id="filB1A35F6875EF58E0344C532CABFA7B82" KeyPath="yes" Source="$(var.LibSource)\distutils\command\config.py" />
+			</Component>
+			<Component Id="cmp6EF3AF88759815A8AE4D2013E53A51C9" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{AB79D041-A892-4365-BCB4-3D5C137D65C7}">
+				<File Id="filB99B5BAA50F93A2059FBD1C1D728A1D2" KeyPath="yes" Source="$(var.LibSource)\distutils\command\install.py" />
+			</Component>
+			<Component Id="cmpCBC7895FA69B0AA573843212DB157402" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{506717BC-146F-40DA-B851-AC2277F2CD12}">
+				<File Id="fil45B0984A4D7163BDFAA5AE5B4D175AC4" KeyPath="yes" Source="$(var.LibSource)\distutils\command\install_data.py" />
+			</Component>
+			<Component Id="cmp944ED90F40EB93E80A6DDEBBC5C3A624" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{DFAF2F61-5373-477D-8441-2B8465BDED2B}">
+				<File Id="fil5D5C5C2A6B1F78BCF0D76CDE2FA54AE0" KeyPath="yes" Source="$(var.LibSource)\distutils\command\install_egg_info.py" />
+			</Component>
+			<Component Id="cmpAE73AAAB07655249881605864D7EB1F9" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{D99EFB94-1D04-44E8-AE6C-495261483879}">
+				<File Id="fil1B391C38F4AF7B4D5C1B1EE23428BF44" KeyPath="yes" Source="$(var.LibSource)\distutils\command\install_headers.py" />
+			</Component>
+			<Component Id="cmp67105A3B096D3FAC5F2AADA00FA7A89F" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{5C3FFBED-930C-42C2-9E30-4A7092AA97DC}">
+				<File Id="filB775AF4C68F9D9266B5993166E170898" KeyPath="yes" Source="$(var.LibSource)\distutils\command\install_lib.py" />
+			</Component>
+			<Component Id="cmpAE06105F0E0AFBDB5CC5C97CD5C4BD1C" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{7D1D19F9-2645-48E7-8F32-C6D279B429E3}">
+				<File Id="filA2B67911C525F261CCB9372D345524F4" KeyPath="yes" Source="$(var.LibSource)\distutils\command\install_scripts.py" />
+			</Component>
+			<Component Id="cmp4A2180BAFDFF871306A439F7C31D2820" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{340B9BB2-18D6-4AEE-82E3-D9B99D6FE3B6}">
+				<File Id="fil0B91641FC728CC8B56786FB55EB4263D" KeyPath="yes" Source="$(var.LibSource)\distutils\command\register.py" />
+			</Component>
+			<Component Id="cmp7AC4756874E0EC520D3060285B0B2ADE" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{29E82C6C-ECC0-458B-8934-CC42D6FFDB39}">
+				<File Id="fil46EE501FF1E23B9F9DE9B6FEA6DA25DF" KeyPath="yes" Source="$(var.LibSource)\distutils\command\sdist.py" />
+			</Component>
+			<Component Id="cmpD51B6A7D83BF2EA4202BFF3D98A20B26" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{4972D176-FF14-44DF-A28F-FD2AF7B3900D}">
+				<File Id="fil199E65CC44D31DE774C1E8AA7947158D" KeyPath="yes" Source="$(var.LibSource)\distutils\command\upload.py" />
+			</Component>
+			<Component Id="cmp1EEBE2A0FBFBB40F56915F222763EF08" Directory="dir3C73704F8BC2D3DD304154834B012764" Guid="{0C9D7F14-53C9-4ED8-9469-63E8DBE80AFC}">
+				<File Id="fil7D91625E781569EFAC844F916266DCF7" KeyPath="yes" Source="$(var.LibSource)\distutils\command\__init__.py" />
+			</Component>
+			<Component Id="cmpACF3A2DF3187E8FEA10012EAC4DFE17D" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{B12EDCBA-0E10-4735-9963-3A5ED81416E4}">
+				<File Id="fil162A26F23527BBF1498905E82F1F1420" KeyPath="yes" Source="$(var.LibSource)\email\base64mime.py" />
+			</Component>
+			<Component Id="cmpA6A051930D22C96B055926CB69B1F88A" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{93C7981C-0FE8-418C-9D84-796758748B73}">
+				<File Id="fil2325A0560646B66B3034C00B2C35EBA4" KeyPath="yes" Source="$(var.LibSource)\email\charset.py" />
+			</Component>
+			<Component Id="cmpC90DAC11171E63344FA8C47896F09216" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{C6A16C6F-E352-40D8-B672-56DAB78C925F}">
+				<File Id="fil808BBF65E4DEB0ABA1444B17CB637799" KeyPath="yes" Source="$(var.LibSource)\email\encoders.py" />
+			</Component>
+			<Component Id="cmpF2B95695D6232DD3CF34B25E1A0A1EEB" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{F10F3B88-8FA7-4E58-9498-0C37FF8395B3}">
+				<File Id="fil8C3AB033F0AB5706E6B6977C8530EBCA" KeyPath="yes" Source="$(var.LibSource)\email\errors.py" />
+			</Component>
+			<Component Id="cmp76135F02059C8426FBC8014002E469D1" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{C7EC5E38-4FAB-41EA-937D-FFB8D520F473}">
+				<File Id="fil9272CA1B3B9FF2ABF809E1E08BA6B898" KeyPath="yes" Source="$(var.LibSource)\email\feedparser.py" />
+			</Component>
+			<Component Id="cmpDF2105C6C2087C269F935D158D0B9EF8" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{E1151C05-F1FC-436F-8287-5D8799C64A5F}">
+				<File Id="fil7F7FC82767BA5A4099D66837FC2B77F2" KeyPath="yes" Source="$(var.LibSource)\email\generator.py" />
+			</Component>
+			<Component Id="cmp6032A30E0EE035C12B8634E3E37C0501" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{E64C2700-AFBF-4E7E-B52C-7C48DE994B4E}">
+				<File Id="fil10172F5031A57B563251D1A6ECCE0E0E" KeyPath="yes" Source="$(var.LibSource)\email\header.py" />
+			</Component>
+			<Component Id="cmp46BA073DF16582A0D85E97F3860262AE" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{F04E25E8-A72E-4644-A8CF-3F4DFB5E99E4}">
+				<File Id="fil4A50F47BA3F169588050E1E5EDABB572" KeyPath="yes" Source="$(var.LibSource)\email\iterators.py" />
+			</Component>
+			<Component Id="cmp55CFF8E4A03AC13CEC110A4CE22C8AC1" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{5BBB9BAB-7AEA-4EAE-AEEC-A49B1DC6308E}">
+				<File Id="fil6DA913C5B75025FF43B5CBED98E88CA1" KeyPath="yes" Source="$(var.LibSource)\email\message.py" />
+			</Component>
+			<Component Id="cmp181A9BB9B572DE3DF8F72FA7CE91AE15" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{C7419A6C-1DC7-4EC2-8A75-45C171EF39D2}">
+				<File Id="fil9E679A431FCAD9FE0E78CE61CDA911DC" KeyPath="yes" Source="$(var.LibSource)\email\parser.py" />
+			</Component>
+			<Component Id="cmp9F83205661AB6CEC24A48F956AAA83B6" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{8F8D0B1A-535F-4F11-8DCA-AA3C4FF18202}">
+				<File Id="fil7671CB73E6D26F792A86CDE553D20C82" KeyPath="yes" Source="$(var.LibSource)\email\quoprimime.py" />
+			</Component>
+			<Component Id="cmp4DCFF8FD4DA4C331F083143E92F383D6" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{4B1402F1-6AC5-4DAB-A042-CC292B63D16E}">
+				<File Id="fil9DF958599DCA595B173FBDC818C5EF48" KeyPath="yes" Source="$(var.LibSource)\email\utils.py" />
+			</Component>
+			<Component Id="cmp12F311C0722100A6EFE609CF2E518EF4" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{AFFCC219-A8FB-48D6-8F3C-2E49F45A9209}">
+				<File Id="filE627E1E8ABE54AB2BE43402E9AA7DA43" KeyPath="yes" Source="$(var.LibSource)\email\_parseaddr.py" />
+			</Component>
+			<Component Id="cmpC08E324A352F155FFE8A9B97B66F4B87" Directory="dir8259DBAB86E2EF64A8A09F634D075A7A" Guid="{B4E9E6F6-011A-47E0-8F22-AE8F28C21D7B}">
+				<File Id="fil494CCB6C1E016D93DEFE272670E04131" KeyPath="yes" Source="$(var.LibSource)\email\__init__.py" />
+			</Component>
+			<Component Id="cmpDA5299CA4C78D078138A18BEE684CDD7" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{485265CE-F33F-4993-B7D1-5CA16CA8663A}">
+				<File Id="filA8E9D478E09AB3F2B872ADA55E2F0978" KeyPath="yes" Source="$(var.LibSource)\email\mime\application.py" />
+			</Component>
+			<Component Id="cmp094E230ED6C569B59B0A3E595AB22029" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{0342F7FA-72FB-489A-9EE5-476F6C36010E}">
+				<File Id="filFA0630A47D258C1F2A401A5E7AF4DBF3" KeyPath="yes" Source="$(var.LibSource)\email\mime\audio.py" />
+			</Component>
+			<Component Id="cmp2743FB2AD4BC8C01B8A715892BF74D7B" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{1E5BCC3E-04B2-4E57-8123-CF27DFC9E562}">
+				<File Id="fil8D02CF6EC611774FA3A10EA26E1E48B7" KeyPath="yes" Source="$(var.LibSource)\email\mime\base.py" />
+			</Component>
+			<Component Id="cmpD8DAA5A998F1543F489157D04FE66195" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{380279D5-89BA-4D82-AE74-576B76DBF23A}">
+				<File Id="filDDBC02962FE2150B6857B476183EC05E" KeyPath="yes" Source="$(var.LibSource)\email\mime\image.py" />
+			</Component>
+			<Component Id="cmp8199D7D6503F622AD3D7F5516782FBE5" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{276AD4D4-B832-438F-94C6-1ACF42D31085}">
+				<File Id="fil54EF3072C582A90B9B8E93BA59BCE7ED" KeyPath="yes" Source="$(var.LibSource)\email\mime\message.py" />
+			</Component>
+			<Component Id="cmpF92F0F52D734521921E9CC9B7C1E209C" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{F677B834-9FA7-48FD-B208-675C227623C5}">
+				<File Id="fil63A6F4DD91A86BB88FB604AF44DFCFA4" KeyPath="yes" Source="$(var.LibSource)\email\mime\multipart.py" />
+			</Component>
+			<Component Id="cmpF48EEECB43CA083CD9DFB2A585F4C3B0" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{AED8A85A-E0B0-427A-B4FF-E87FFDB148FC}">
+				<File Id="filD72663CD0F3EF712DAB423DB5720910E" KeyPath="yes" Source="$(var.LibSource)\email\mime\nonmultipart.py" />
+			</Component>
+			<Component Id="cmpA2F8A0A5FD0B1AC69B4BEDCAFE6FD139" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{6286800E-5A42-4354-9EB9-B23BEED3E2AA}">
+				<File Id="fil81364B9503C648A53DCCCC026D9C2C24" KeyPath="yes" Source="$(var.LibSource)\email\mime\text.py" />
+			</Component>
+			<Component Id="cmpFC9ECFD8C95C5238148C57A873D59E0A" Directory="dir9C5ECB48D7A2F4F0090415D2A3462752" Guid="{457AF17B-B505-47C7-A570-755A3C030250}">
+				<File Id="fil1351FE9D62A947C1A3FB36A676DE6220" KeyPath="yes" Source="$(var.LibSource)\email\mime\__init__.py" />
+			</Component>
+			<Component Id="cmpDC8CA881C45562C848E01FAF6DBFFCB2" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{DB985B4C-52CF-4AE7-87FF-6F4DC12F2672}">
+				<File Id="filBE243F604F19770BD71427518928BC77" KeyPath="yes" Source="$(var.LibSource)\encodings\aliases.py" />
+			</Component>
+			<Component Id="cmpB053CD67299BF845E44FA3CEC6F97565" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{BE4E37A9-DF6D-4E28-A52F-E249E51DBBB0}">
+				<File Id="fil23B450819FDE3538E6C557ED3909B3EF" KeyPath="yes" Source="$(var.LibSource)\encodings\ascii.py" />
+			</Component>
+			<Component Id="cmp2DD6B92B2B4DF571F2523AC5E20D2E90" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{64AD3294-1171-4F56-A7E1-BA78F72530B4}">
+				<File Id="fil293A5EC335F2EC4CFBC0BFD085CB5220" KeyPath="yes" Source="$(var.LibSource)\encodings\base64_codec.py" />
+			</Component>
+			<Component Id="cmp515039568C12632820469FAFA8B91F84" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{38372B71-9C97-4FB9-8BAA-919944E636E0}">
+				<File Id="fil18FAD4BC2B326E7AA79B74DC95BFE261" KeyPath="yes" Source="$(var.LibSource)\encodings\charmap.py" />
+			</Component>
+			<Component Id="cmp41D3EA645D8B20F6FCD5E41EC335CD7B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2B8AF436-457E-48A5-BC68-BA5BF9C471B6}">
+				<File Id="fil365E956A08F3F5EFBAA068479D01B2BA" KeyPath="yes" Source="$(var.LibSource)\encodings\cp037.py" />
+			</Component>
+			<Component Id="cmp486D25A673492CAEAF8D95E796BBAD8B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{B4326DBA-C4E8-4FFF-994E-A505A2B81D16}">
+				<File Id="fil21C2601FE95D45DF5D64F5E53BAA2897" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1006.py" />
+			</Component>
+			<Component Id="cmpE9959BD52028826AAAE458FD3A20DAE5" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{13C6ED6E-EFD3-4E86-ADB5-1934DCE71598}">
+				<File Id="fil904FB7083FAF88B9ACD684D8F00EA02A" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1026.py" />
+			</Component>
+			<Component Id="cmpE527D0F0DA7BE00F9C28EB193906836B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{B8B620F2-1AA3-4312-BED6-DFAC31C4442A}">
+				<File Id="fil14D3E2C4C01A9FF21B3D8BAC708A2FC9" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1140.py" />
+			</Component>
+			<Component Id="cmpFA586D4E3B53A5F40019BC09FC726302" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{929FD91C-01A2-4519-A29C-B3BBE578693D}">
+				<File Id="filE44BAD1DF5CEC30A7FF9D0A0167C7DCF" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1250.py" />
+			</Component>
+			<Component Id="cmpB2EF75FB84CAF266D1C00893FC850ECE" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{98B26475-3F61-4328-9768-37BA8E171A21}">
+				<File Id="fil9CB00561A08AB98177E79EE9998EEADD" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1251.py" />
+			</Component>
+			<Component Id="cmpD0AFF54959B56DC5236B2A66C29A3E23" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{A16014B4-B537-4584-9443-1D92D02DD65B}">
+				<File Id="filF6213BFC7F2658CE5ABB1A3911752EA6" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1252.py" />
+			</Component>
+			<Component Id="cmp265092BF69B63F5D7B447AE701A7B564" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{5A79A6BF-7E4C-4D58-8F33-F8AE2594969B}">
+				<File Id="fil183D08A5FD9DE2B35324EBA953F9612C" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1253.py" />
+			</Component>
+			<Component Id="cmp479349E87CD2AA5B6DCD2DE6F67CF21F" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{4A378C76-0B5D-4DCA-BE66-170A6F6BB2B3}">
+				<File Id="fil13B80B33E71964BAA82143D1CB31A48B" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1254.py" />
+			</Component>
+			<Component Id="cmp5F6E5A0BCCD69196278835A5453A8F6C" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{914269F0-EDAC-4977-9870-313EBBA55327}">
+				<File Id="filAA955F6E5DA596AEE65F97FD84FCEE4E" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1255.py" />
+			</Component>
+			<Component Id="cmpA0A09E3B05F45B652A3F9AE16F01ABAA" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2ACA3AA0-B66C-423F-A58F-D4ADEBEC2C8E}">
+				<File Id="filD161E8B964ECDB4CB59EAE910893C29E" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1256.py" />
+			</Component>
+			<Component Id="cmp0652705D14119E43B2CE9B9C0765E04C" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{DD672E82-46FB-4545-8024-2C7C9798F904}">
+				<File Id="filA3B4D00A86C325809DCEF6A104E714E1" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1257.py" />
+			</Component>
+			<Component Id="cmpD47870F3B38ED1211070EF502CCF8A63" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{B6C1FC0A-51B8-42BA-8376-AC68B26DD088}">
+				<File Id="fil1AF996813BDC425BE54C8D583F404041" KeyPath="yes" Source="$(var.LibSource)\encodings\cp1258.py" />
+			</Component>
+			<Component Id="cmp342438DB70C9158255B2EDDFB3C7A718" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{6B8F6EAC-982A-4C45-8DD6-6489CBE6BFAD}">
+				<File Id="fil9F3338E9901BF199920A018E0D71E53F" KeyPath="yes" Source="$(var.LibSource)\encodings\cp424.py" />
+			</Component>
+			<Component Id="cmpEAC1C67D19E8237BD5440F62E07A9BB4" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2CE67AFD-A09A-4FA4-A5CC-CAC7DDD6B7E9}">
+				<File Id="fil0CCF0B5C0B8D5B24A8EAD560D3184173" KeyPath="yes" Source="$(var.LibSource)\encodings\cp437.py" />
+			</Component>
+			<Component Id="cmp2B8C42A0FD9C124D4E5F94368F847390" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{056CD666-D1E3-4C19-BC9F-2D1F73905530}">
+				<File Id="fil2529619ECB85F0D948F3B46F3CA0FBBE" KeyPath="yes" Source="$(var.LibSource)\encodings\cp500.py" />
+			</Component>
+			<Component Id="cmp4D9E6EF331C5EA99078D5E3A3ACB7C42" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{D391A141-439E-40C8-8586-C72D5F796DA0}">
+				<File Id="fil4D8D1CCC0947DF83A2F34986D67310C4" KeyPath="yes" Source="$(var.LibSource)\encodings\cp720.py" />
+			</Component>
+			<Component Id="cmpC0782E2AB272D23EEAA1FF6162AA4C7E" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{8DFCB55C-EB5F-431F-B4DA-7D78BCCF43D6}">
+				<File Id="filDECA3969AAAF9D30B9C0DD9742D9C52A" KeyPath="yes" Source="$(var.LibSource)\encodings\cp737.py" />
+			</Component>
+			<Component Id="cmp0F4EF8E3FE83F106B2524AADF5513A96" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{B660C2B3-0A85-4929-B13B-CF505BF2795D}">
+				<File Id="fil651FF17147713739A9CA6042E9B1B9BD" KeyPath="yes" Source="$(var.LibSource)\encodings\cp775.py" />
+			</Component>
+			<Component Id="cmpFA91C5D6CDAFDB6F009F9643407D71B2" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{7FAC8825-49C4-4B1A-B4E5-58D46646E333}">
+				<File Id="fil36B22C3F9CF175D4A0852A5EBD6933C1" KeyPath="yes" Source="$(var.LibSource)\encodings\cp850.py" />
+			</Component>
+			<Component Id="cmpC880BD00AAF9D31255B8214B6E032DA5" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2F83F812-2C8F-48EA-ACD8-21145445736D}">
+				<File Id="filD809B8F8B8EC407600B8605F3E993D07" KeyPath="yes" Source="$(var.LibSource)\encodings\cp852.py" />
+			</Component>
+			<Component Id="cmp6C8FD756EAA33A9132F0406EECA3A8E2" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{CD9463B0-B9FB-4E0F-B821-67BB26596AA8}">
+				<File Id="fil5D1C4B7C2BD3AF578CD07EFEA2E10DA9" KeyPath="yes" Source="$(var.LibSource)\encodings\cp855.py" />
+			</Component>
+			<Component Id="cmpE02FBC4D88DF9E299A0E37F00B32FE0B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{22FF149B-D5E9-4E64-BEE6-5391841D3FC9}">
+				<File Id="filE7183AE82B6E171CDBBB8B0263308FDC" KeyPath="yes" Source="$(var.LibSource)\encodings\cp856.py" />
+			</Component>
+			<Component Id="cmpD5B20E0B120203C17B8579B10BE3314E" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{F91A24E1-B3A0-4CE5-9F59-86A41283D829}">
+				<File Id="fil20A16893EE3042A9DD3409C536977C2B" KeyPath="yes" Source="$(var.LibSource)\encodings\cp857.py" />
+			</Component>
+			<Component Id="cmpD3560FC6FED28360113EDCE1AE4044D3" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{637735E8-97FB-4801-A02E-99A9CD8FC621}">
+				<File Id="fil17648B9015AE2373076E1843FBD3626F" KeyPath="yes" Source="$(var.LibSource)\encodings\cp858.py" />
+			</Component>
+			<Component Id="cmpFC19736E1F4DF79F679AFC1EA0593779" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{9EB36740-342E-4493-BE32-ABACAE327288}">
+				<File Id="filF87D3F16E7831B774A743307100CD0F1" KeyPath="yes" Source="$(var.LibSource)\encodings\cp860.py" />
+			</Component>
+			<Component Id="cmp39E71260880D6887033B314D180EB3A3" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{5FB84A5F-1E23-4717-B9A5-23B090EABBF7}">
+				<File Id="fil93F5F4C74E7EBE3CC066697501DA1AFC" KeyPath="yes" Source="$(var.LibSource)\encodings\cp861.py" />
+			</Component>
+			<Component Id="cmpCBA2DE9F4A9D78446571D354BD3CE65B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{1A3E9B79-3890-4DDD-8220-910B09051884}">
+				<File Id="fil277A6F8E2CCB34FA631B749D8BD5D50E" KeyPath="yes" Source="$(var.LibSource)\encodings\cp862.py" />
+			</Component>
+			<Component Id="cmp58CCFBD0500C7506260F3111FE9F7CE3" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{C4EB1E7F-4640-4954-BDAF-91982AEA2150}">
+				<File Id="fil244973769C308667B1CEFFA3D0C4A836" KeyPath="yes" Source="$(var.LibSource)\encodings\cp863.py" />
+			</Component>
+			<Component Id="cmp5E625BD680A9BC672B0296208DB54F43" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{DFAF9064-F7E9-44B4-947D-623B3B66A94D}">
+				<File Id="fil5D29B6BEE41BDBB63292DE02948655FE" KeyPath="yes" Source="$(var.LibSource)\encodings\cp864.py" />
+			</Component>
+			<Component Id="cmp7B4BB38D3BE4CB5899D8AC7566875898" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{5F193480-50C2-490B-B6E3-1413641B02A7}">
+				<File Id="filAC0E90E8F46E9460E7FDE404C0614A2D" KeyPath="yes" Source="$(var.LibSource)\encodings\cp865.py" />
+			</Component>
+			<Component Id="cmpEFEF09A758F87F1DA4B6288282CB8F7B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{99376586-2500-405C-83D8-65E0AEB87641}">
+				<File Id="filE314111BDC85E3FAC205D5B62A5614EE" KeyPath="yes" Source="$(var.LibSource)\encodings\cp866.py" />
+			</Component>
+			<Component Id="cmp780D042AF6C9232890D29F09D5331A5A" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{9D19BF74-4701-440C-B0F1-DA137C58A102}">
+				<File Id="fil67C677E67A7CABA878168F230710853F" KeyPath="yes" Source="$(var.LibSource)\encodings\cp869.py" />
+			</Component>
+			<Component Id="cmpC585EAC99D9D795B4CBD598A053B0850" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{A2AB8394-50DA-459C-AB66-8A3A86A94BFA}">
+				<File Id="fil515B168B833C51CB459DEE7BE07B9EA6" KeyPath="yes" Source="$(var.LibSource)\encodings\cp874.py" />
+			</Component>
+			<Component Id="cmp9D0AC8EFAF54CB69BD149E583C9975AB" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{BB963F8E-B07B-4C19-A25C-A2B82CB8D0AD}">
+				<File Id="fil27C1DD4FC740CA389083E78993B3A626" KeyPath="yes" Source="$(var.LibSource)\encodings\cp875.py" />
+			</Component>
+			<Component Id="cmp639ACF334B0B79805E06D1D63AB995DE" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{A4608482-3D60-42D1-BC26-BF6386D70CA9}">
+				<File Id="filA115CE570B112893562BF510C5CAB2C6" KeyPath="yes" Source="$(var.LibSource)\encodings\hex_codec.py" />
+			</Component>
+			<Component Id="cmp9FC990D35188F12EB6512F71E65DEDAE" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{BDD10B1F-6F9F-4DC4-89A8-A51837A41CA7}">
+				<File Id="fil94B37BAAE45CB9EC4ECAD02A4DF6BD3B" KeyPath="yes" Source="$(var.LibSource)\encodings\hp_roman8.py" />
+			</Component>
+			<Component Id="cmpE6606331544BDCC1FBA0C7FA83CD0C88" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2244B243-6A78-48B2-B90A-B96A09841E35}">
+				<File Id="fil4C3EF9763116DDD5024A496C8AB0728B" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_1.py" />
+			</Component>
+			<Component Id="cmp4EC8C120134A1979F4E03D726AC9AF47" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{05924FD9-89D1-4ECE-A762-BF24FE7E83EF}">
+				<File Id="filD2B54B678FACBE52E79A8CFB4DAA65B5" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_10.py" />
+			</Component>
+			<Component Id="cmpCA46B755D26458FEB99D315F7774EA6C" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{36C5E45F-1F20-43D3-B9BB-EC9078006848}">
+				<File Id="fil01465C939BA5811EDB3494141BBEE8EC" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_11.py" />
+			</Component>
+			<Component Id="cmp0F22C8A87E60447391A0C68A24D7787D" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{CF7794E7-1D7E-49EC-8414-51B086D36DB9}">
+				<File Id="fil5A647495E0277034C2CF1280BF0D4D91" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_13.py" />
+			</Component>
+			<Component Id="cmpFE6448DC64F14C9096E5250E99D8433A" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{CD641025-4D16-4B5C-91D1-622AC6C6FC70}">
+				<File Id="fil80BB6AFAC71CC1097AC2D5974A6FBE53" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_14.py" />
+			</Component>
+			<Component Id="cmp95E18D0CDBEC88BBB87FEC0B7429401A" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{40B9E4EF-68E3-437A-950C-A08F5D81CE78}">
+				<File Id="fil8357A10DBE232FEE74B0C34300525BF8" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_15.py" />
+			</Component>
+			<Component Id="cmp1374CB80DA46E09A19D6DF7B786D34BF" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{19DACAEC-BD2B-404E-9E4F-6FA4D1E7D65C}">
+				<File Id="fil287D816CA4276B52D2AA2A591738FF07" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_16.py" />
+			</Component>
+			<Component Id="cmp75AB6703EF9532E0ACB2C9E920F64404" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{C803E3C3-5416-460E-8B36-384928137AB6}">
+				<File Id="fil5096F49182674B469F46B0AE62DB491E" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_2.py" />
+			</Component>
+			<Component Id="cmp61A550B719E81775964302F34FEF339B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{FC52F0C4-7304-4CDF-8EE9-574711AC0E41}">
+				<File Id="filE0F6FD86B6D522B2C813F7E0CEBF5B77" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_3.py" />
+			</Component>
+			<Component Id="cmp5D4241CA288A4020942EB2CEADE82D0F" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{817B25EB-9293-4104-843B-45BC58219916}">
+				<File Id="filC3017C9E140B1F566BF42A95A882184A" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_4.py" />
+			</Component>
+			<Component Id="cmpFE39B456333D4CFE0553E84186ED882E" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{DE6F865E-988E-4B10-94D9-6D03804E1AF0}">
+				<File Id="fil021612FBC75AC081B41A0BE8519D783A" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_5.py" />
+			</Component>
+			<Component Id="cmp62D9CCFBD97F66F62CF891B7658810EF" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{BC890950-6FB5-4992-8781-8D69027C78A0}">
+				<File Id="fil1D926EA2C718B91AD9DBBCC35755D4FD" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_6.py" />
+			</Component>
+			<Component Id="cmp7973B4A9B76A6AE59FF61995B1DD6213" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{6C464BE9-FC4A-452B-B096-0EAFBD70F8D5}">
+				<File Id="filC7192D460750257491AE27A05CA1EAF4" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_7.py" />
+			</Component>
+			<Component Id="cmp0DC26760E7ECE12BFD3998BB1F944FDE" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{493C9C2C-210F-480F-90D2-F589C9C0359D}">
+				<File Id="filB709EAE71F0E230CFCE21B865CEA3525" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_8.py" />
+			</Component>
+			<Component Id="cmpEF70CA0903B35B7B54FEE6E64947B1BF" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{BACE7F6E-7326-4017-B596-4C4C3B740F61}">
+				<File Id="filAE61CB8F6F5A887B00D086863F6D81C8" KeyPath="yes" Source="$(var.LibSource)\encodings\iso8859_9.py" />
+			</Component>
+			<Component Id="cmp1A4B937BA47F534B650200B8D8BEA534" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{EF0B3E6D-D032-4C1D-9283-0CBCDEF76515}">
+				<File Id="fil63A4A215C6A699ABA1AC4E5ED6EAEE7D" KeyPath="yes" Source="$(var.LibSource)\encodings\koi8_r.py" />
+			</Component>
+			<Component Id="cmp841EFB573FE5873A93B8DBFA5F807AF8" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{117C790D-F9A3-49BC-8574-968532BCFEF1}">
+				<File Id="fil18746989C8CD9612D549E3E92955ED43" KeyPath="yes" Source="$(var.LibSource)\encodings\koi8_u.py" />
+			</Component>
+			<Component Id="cmpADB1BB26A4651BA0A132034EA7289223" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{64E7E567-0515-491D-8F66-871D713D3019}">
+				<File Id="fil98D3C825CA3B45C0D06506CDE2FBA631" KeyPath="yes" Source="$(var.LibSource)\encodings\latin_1.py" />
+			</Component>
+			<Component Id="cmpA72C6D8035B7CFBB8BD9F55369EDFB51" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{1EC7A048-E2C6-4182-9CB6-9860F5ACF79E}">
+				<File Id="fil8DDCA7159A0ED0EFC9D63464305B48AA" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_arabic.py" />
+			</Component>
+			<Component Id="cmp9581EAB3BE7A097D7C07661E489528FF" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{130954B7-5A99-4D96-9457-4BF2793969AF}">
+				<File Id="fil8B4AF49C035D5248583EC37320044045" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_centeuro.py" />
+			</Component>
+			<Component Id="cmp5708C791DD97BE109938B4554AE6F747" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{F44D41DC-2EA8-464C-8492-723F241872B5}">
+				<File Id="fil99A23F37D8F766AD29FAC5EDC7C15F27" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_croatian.py" />
+			</Component>
+			<Component Id="cmp3F52B92BB13A05B128A3AE10251A6E07" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{B0ED3A0A-81C7-443E-B2D4-B9B557DB24F9}">
+				<File Id="fil66DBE2FC8D204469D845A4C6327BDD1E" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_cyrillic.py" />
+			</Component>
+			<Component Id="cmp5EDD3607264B578E47CD1921EFC7060D" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{57C9A122-C82E-4602-BA3C-061D375575A8}">
+				<File Id="fil7EEE20AAE9607CBD4456C2C72759A6C7" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_farsi.py" />
+			</Component>
+			<Component Id="cmp0625767C8B5BA8F39E5580CBE1AD600E" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{FDEF9628-0901-4224-A49D-ACE6A9FDF78C}">
+				<File Id="fil4A295E31C3EEF2E07C9844D3D990C346" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_greek.py" />
+			</Component>
+			<Component Id="cmp7E0F81E94B55B5A8EF89A11F10EB1AE8" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{3304262B-6C65-4AE8-98A4-DBE62A2DB447}">
+				<File Id="fil0E95EB81FB0F48BEA9EAC4C61397C15D" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_iceland.py" />
+			</Component>
+			<Component Id="cmp32FF7DDADDCF1F56622F039B455E7EBD" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{883FEBEC-8250-4E5F-AC68-9BC334ED8F1F}">
+				<File Id="fil25E276BBFC1727D43699394DE5386CFA" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_latin2.py" />
+			</Component>
+			<Component Id="cmpAAF80B246092111C4424360A0A5EE8EC" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{F2C174CB-7E21-45B5-BC2C-EF93199871CF}">
+				<File Id="fil818F385C9D696592910655FB0176D722" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_roman.py" />
+			</Component>
+			<Component Id="cmp8623A7F579A642B8001E10399005AB16" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{A0F98023-DD07-42B5-9799-7C5AA278AF0B}">
+				<File Id="fil6819CC860860E6BB45A146092732B617" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_romanian.py" />
+			</Component>
+			<Component Id="cmpB6F07936889C67648CF7E067BC2814E0" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{4C3C6633-F1D8-47AD-8B22-AFE7A2506A88}">
+				<File Id="filB17AD3C33D3F03A2EFBD7A3F204AA264" KeyPath="yes" Source="$(var.LibSource)\encodings\mac_turkish.py" />
+			</Component>
+			<Component Id="cmp8D16DE6BA7775BFD598EB5106353F254" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{6DEA0D1D-CC8B-41CA-923E-CC086B030D73}">
+				<File Id="fil7B7F9E3AD21EC554AD56805D2205C054" KeyPath="yes" Source="$(var.LibSource)\encodings\mbcs.py" />
+			</Component>
+			<Component Id="cmp14A16EB9D92FF945F7BA41D2C2AC520B" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{D242BBAD-DFC3-4494-B4DD-67BDE89329E3}">
+				<File Id="fil56C999C4A473C18929874495C9629821" KeyPath="yes" Source="$(var.LibSource)\encodings\palmos.py" />
+			</Component>
+			<Component Id="cmp4F6BB6D51E60FFF9875CAFDB495F0F48" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2D4C356C-5885-44A3-A4DB-34406DB3F910}">
+				<File Id="fil0E4FB5B3856779330340FA18853FAF82" KeyPath="yes" Source="$(var.LibSource)\encodings\ptcp154.py" />
+			</Component>
+			<Component Id="cmp6E04E3D7F08B96379FC00309177E3BF3" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{18267AC4-0C59-4C4A-A0AD-8481420D0D1B}">
+				<File Id="filE446984415A90DD7170FED94F4F4E4E3" KeyPath="yes" Source="$(var.LibSource)\encodings\punycode.py" />
+			</Component>
+			<Component Id="cmpEA9D6B7D95F0750D20BAF46248FE5EBC" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{2EA42F0C-36CB-444E-9574-35D5761B3872}">
+				<File Id="fil6ACE452F61EE237DE325E855CD9ED40B" KeyPath="yes" Source="$(var.LibSource)\encodings\quopri_codec.py" />
+			</Component>
+			<Component Id="cmp937F9337E399629E6D8872013A241EAA" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{700ABE77-E832-43CE-AF77-AD9ED427E86B}">
+				<File Id="fil76B5628932BC93910707248376BDCEAE" KeyPath="yes" Source="$(var.LibSource)\encodings\raw_unicode_escape.py" />
+			</Component>
+			<Component Id="cmp1E506FF8037138B87C10ACEDD3977C8C" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{75EEB20C-0F9B-4CE5-BCC6-7A0AB32F2313}">
+				<File Id="filF5960AD3F11C624B41FDC4058D741304" KeyPath="yes" Source="$(var.LibSource)\encodings\rot_13.py" />
+			</Component>
+			<Component Id="cmp4DD79086CA9AA414E31BDFA3AD9A72CF" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{B13B0D57-3A3D-4AE2-A87F-0D79124CAECC}">
+				<File Id="fil0C49DB732C726CE1D6097256730493BF" KeyPath="yes" Source="$(var.LibSource)\encodings\string_escape.py" />
+			</Component>
+			<Component Id="cmp26891669441FF4379A4C342873AF8086" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{604E2810-AE77-4B5A-96A0-ACD92C94FBDA}">
+				<File Id="filEEAFD69BE216E0EFC6F5ED97DE3302B0" KeyPath="yes" Source="$(var.LibSource)\encodings\tis_620.py" />
+			</Component>
+			<Component Id="cmp0CC10E439D3769668E96A09E5C8449B4" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{944D5382-409F-470B-A1F7-2F22320E24E6}">
+				<File Id="filFF20AE98C126D96D23055468B21857A5" KeyPath="yes" Source="$(var.LibSource)\encodings\undefined.py" />
+			</Component>
+			<Component Id="cmpE5A4C2E8E86A09DFFD64202C379A8F99" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{E6832C53-07D7-4F79-8F60-3524B9BF2F36}">
+				<File Id="fil18F3BBF32F5353BD7C91B944EE296A35" KeyPath="yes" Source="$(var.LibSource)\encodings\unicode_escape.py" />
+			</Component>
+			<Component Id="cmp809B48BBA7036DEF802306245C4DB727" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{0D218364-9814-4CBD-BF3A-139FED34D8F6}">
+				<File Id="fil64E113FE45F0D9B0458EECD59AEA4E64" KeyPath="yes" Source="$(var.LibSource)\encodings\unicode_internal.py" />
+			</Component>
+			<Component Id="cmpBBE747D948D1B94A62687E872FFA3410" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{EAD5039D-5E2A-49C1-AFA5-81A0291D209B}">
+				<File Id="filCD63A69F2732D19FF0C1204BF7DC2F9B" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_16.py" />
+			</Component>
+			<Component Id="cmp7A0FCBAB84D053DD0E78BCB8833F1982" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{4DAC5789-1C63-4BBB-88FD-DA659B7C435E}">
+				<File Id="fil9294FF602B9EBC5C6069E196D510CC7B" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_16_be.py" />
+			</Component>
+			<Component Id="cmp472BB262EC2B4FF6331321FAE99E4155" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{0892FE35-A866-4AED-9F8F-858CE9923109}">
+				<File Id="filC9A3469E190FB9E6234D96C7A81127D9" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_16_le.py" />
+			</Component>
+			<Component Id="cmp8D094D571D5644FB60A0CB0BDB07864D" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{D0C5193F-7DA1-4B4C-B246-8FB25E0C50F2}">
+				<File Id="fil0C304E9DAB489BD7FEEFC44952A2C0CD" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_32.py" />
+			</Component>
+			<Component Id="cmpAAFE14EB610241198F3083D55833094A" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{45DDAA42-6005-40BA-A15A-F964B1DE3573}">
+				<File Id="fil92ACBC1BBA1F676B85AEF2F99561BB85" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_32_le.py" />
+			</Component>
+			<Component Id="cmp4286F6A43FDE8E2DB6CB92B8C2F81069" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{9B19A445-13B3-42B0-822F-E3226E737D1F}">
+				<File Id="filA1F1821165478D71B309B06776A44913" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_7.py" />
+			</Component>
+			<Component Id="cmpD94FB57B7A1ABB7E3CDDCBDF77E86AB4" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{888F05DB-5C54-45BD-BBA0-8301CF1FB2B2}">
+				<File Id="filC3A858B2C889ADD179370C1C758C4BC3" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_8.py" />
+			</Component>
+			<Component Id="cmp01C285B14FD4B7341A7F2B1B834F50A1" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{169DA2D3-A342-43E7-8722-29377AF9068A}">
+				<File Id="fil46B61E4345CD6821D4C808D9EDD43239" KeyPath="yes" Source="$(var.LibSource)\encodings\utf_8_sig.py" />
+			</Component>
+			<Component Id="cmp5B1B2398735F2E05A6A7AF604350F9DE" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{8555F154-634C-4163-8583-4D5F6787EC91}">
+				<File Id="filB2E538531DF8EAC359CD176C5FD1FE16" KeyPath="yes" Source="$(var.LibSource)\encodings\uu_codec.py" />
+			</Component>
+			<Component Id="cmp690E6C65EBB5BCED4E53B148E3F6593F" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{3C8C1ADB-C965-44F7-B7F8-18EC482F635A}">
+				<File Id="fil33E9D62F20B6244F14CC036CAF8AF693" KeyPath="yes" Source="$(var.LibSource)\encodings\zlib_codec.py" />
+			</Component>
+			<Component Id="cmp75AA26601B21588DF695D0CAB5B4165D" Directory="dir340C7D10F3E2A174DEE3999868659D62" Guid="{F99C4B65-5769-47DA-983B-C0A85F905CC1}">
+				<File Id="filD3C40590CCA8B018791B8E6AE0663066" KeyPath="yes" Source="$(var.LibSource)\encodings\__init__.py" />
+			</Component>
+			<Component Id="cmp6A4F5D0D9049F8BE7FC1711861F4D8B4" Directory="dir1AF1A9291E2C9C260D97BF22EAC1E648" Guid="{4D2D252E-9367-40C3-B8AB-72F3A0F8BACE}">
+				<File Id="fil7010E2F892346ED2311A72799BDCC9F1" KeyPath="yes" Source="$(var.LibSource)\importlib\__init__.py" />
+			</Component>
+			<Component Id="cmpB20DAB89CAB0EBF08847C869670B3C62" Directory="dir123FC300B95DFE377EBF3E43D232B7E2" Guid="{39175E82-517A-41AE-8611-CEB20620F26E}">
+				<File Id="fil20E2DF1931C7A3414FD11DB728DF7CBF" KeyPath="yes" Source="$(var.LibSource)\json\decoder.py" />
+			</Component>
+			<Component Id="cmp65E00F3DA72100C0DCE1B4499B0CCA2F" Directory="dir123FC300B95DFE377EBF3E43D232B7E2" Guid="{9ED48CB1-C6CD-46A7-913A-90E719C3848D}">
+				<File Id="fil1B74DB3DC6DD6F2627F2F881CD4FC1EB" KeyPath="yes" Source="$(var.LibSource)\json\encoder.py" />
+			</Component>
+			<Component Id="cmp376AF44462AB683D0EDF3FC5E3A159A8" Directory="dir123FC300B95DFE377EBF3E43D232B7E2" Guid="{FEBA3DBF-7AF3-42A3-B983-BE03FA8BF489}">
+				<File Id="fil2AE0EA9F7D20C0494281FBBA0DBF0A26" KeyPath="yes" Source="$(var.LibSource)\json\scanner.py" />
+			</Component>
+			<Component Id="cmp2E4C0FD5B65F342B78F7EB251E3ED00C" Directory="dir123FC300B95DFE377EBF3E43D232B7E2" Guid="{C4A97704-F8F5-48FC-A4F0-90573DD37F8C}">
+				<File Id="fil0B4E6A5604AE3F6FDEB501FE54828946" KeyPath="yes" Source="$(var.LibSource)\json\tool.py" />
+			</Component>
+			<Component Id="cmp07484846DB15D8CC049B2E7BDEDFCE34" Directory="dir123FC300B95DFE377EBF3E43D232B7E2" Guid="{A992612A-8C45-4A8F-9CBE-C71247B9D50C}">
+				<File Id="filB65CCC39A6A371E3EFFB1136240D133F" KeyPath="yes" Source="$(var.LibSource)\json\__init__.py" />
+			</Component>
+			<Component Id="cmp049C51F38642CA9C28F64504FBFFBE1B" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{FC4C4491-8C9F-4875-A042-BD93B2A273E6}">
+				<File Id="filC991D25EBEB4612EDBDBF814723FAB6C" KeyPath="yes" Source="$(var.LibSource)\lib2to3\btm_matcher.py" />
+			</Component>
+			<Component Id="cmpE93E0E76194803E565E0DF7640EDCD6F" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{8380BDF5-F083-48B5-BC35-5AAAAA73EE26}">
+				<File Id="fil7468E747FABD6B8703927AB3CA5635B5" KeyPath="yes" Source="$(var.LibSource)\lib2to3\btm_utils.py" />
+			</Component>
+			<Component Id="cmp74D60896D65650611EC58A8D006A82BB" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{452B4D2E-A420-4A76-8680-29DB2E7D5AEA}">
+				<File Id="fil94D992E74572FA8AC4C542952A3373E8" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixer_base.py" />
+			</Component>
+			<Component Id="cmpAEE13465776A81F201A098558F37FC46" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{5991B33A-B265-499B-A088-B18931381A6A}">
+				<File Id="fil6D62E1878932622AC296A072A5BD8032" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixer_util.py" />
+			</Component>
+			<Component Id="cmpCAEB5C13C623085E3038AAAE2D864755" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{9552D1D0-0D8D-4B92-97DA-75D3D87F9A9F}">
+				<File Id="fil4E90170B55428153E125530C54F57D16" KeyPath="yes" Source="$(var.LibSource)\lib2to3\main.py" />
+			</Component>
+			<Component Id="cmp28E13C204CEFBD75842FFCE70947A823" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{67EB0B5E-F5A0-45E6-BC30-A607EF57C5F3}">
+				<File Id="filBAB07A7D4F616311862117AE2E2A0F38" KeyPath="yes" Source="$(var.LibSource)\lib2to3\patcomp.py" />
+			</Component>
+			<Component Id="cmpEAD8A244288FCB60ECB8275E7538AF40" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{471BA2C4-2196-4BA9-BBAE-805539CCFD58}">
+				<File Id="fil389DE8F4D86741D8279C9182F076E98B" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pygram.py" />
+			</Component>
+			<Component Id="cmp2B1F936ABD1DEE855B2F39DA0962025C" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{5DEBD4E6-BE6B-44BB-8431-B80A27AFC805}">
+				<File Id="fil4AE717B889B75A5D8360A6C9622B8484" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pytree.py" />
+			</Component>
+			<Component Id="cmp41CFB25AAAAA73772D8331EEBE7EAD0C" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{CFAB9A73-97E5-4818-BCF9-13C3A0A92E0B}">
+				<File Id="fil5405DA26529C676074CA06828F7B17AB" KeyPath="yes" Source="$(var.LibSource)\lib2to3\refactor.py" />
+			</Component>
+			<Component Id="cmp6A574533DFA515B3F2DA1BF7B3C40766" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{AC39E887-EA66-4A5B-92C1-AFAB2784B5EE}">
+				<File Id="fil5FC3057A8D853304267BBCBAEA77C2B5" KeyPath="yes" Source="$(var.LibSource)\lib2to3\__init__.py" />
+			</Component>
+			<Component Id="cmp1DC672C62BCD304217F4ACD28BD8E3E0" Directory="dirC6D1B44CFD645E605AFABD5916392A80" Guid="{A594356C-C20D-4263-8A4B-F445603798E1}">
+				<File Id="filB86C241C356BBC3705ECDD3D6DD55735" KeyPath="yes" Source="$(var.LibSource)\lib2to3\__main__.py" />
+			</Component>
+			<Component Id="cmp3E23211230BC5BD2D4CDA197565FD432" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{E1F65643-D6C7-4967-B192-05A66D463919}">
+				<File Id="filE794A2370A51EA9C55221DF2065AF029" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_apply.py" />
+			</Component>
+			<Component Id="cmpCCDF96D52DE4F6AF4E88A1C4B3A6CAF6" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{D8AFAF13-7333-4689-A4B8-51518CB84AFF}">
+				<File Id="filC4F77FF82A3CA6A8387AD8CD58150D49" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_basestring.py" />
+			</Component>
+			<Component Id="cmpEC74E4D5E43366992D437D06B998DC9B" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{9B0F7ECC-017F-47CA-829E-D420E09301E2}">
+				<File Id="fil02F5DE39966B53D95768B102753F7D65" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_buffer.py" />
+			</Component>
+			<Component Id="cmp54D762CC74D4A07CEFEC3013B1F0D6A3" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{D27C37E5-0AC2-444C-91CB-27815564B382}">
+				<File Id="fil26A0F825A98CB984C4767358BC567604" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_callable.py" />
+			</Component>
+			<Component Id="cmp6BF46202A05B6CAD5E137F8B08330A72" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{20D24329-0A7D-4423-B10D-0FBC4B2C77C4}">
+				<File Id="fil20EA707C69E75994CEC2B8CBC8AD9762" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_dict.py" />
+			</Component>
+			<Component Id="cmp222209049BD41B09E1D30FFFA14CE45A" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{46489FAF-6C39-4781-89B4-6E4B3467AAE1}">
+				<File Id="fil7FE4A61D28FA94705DA44390401A3F07" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_except.py" />
+			</Component>
+			<Component Id="cmp066171804FEB822E652A71B62B4E6F31" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{5F87942F-015C-4414-B6BF-60CA56C1042B}">
+				<File Id="filD99475ADD9A9CD873CD92E0CE0208FE0" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_exec.py" />
+			</Component>
+			<Component Id="cmpF54AB44479EC7B758E038E3F84A51FCA" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{1D0C7F48-2631-4C8D-9A2A-28A137D3F9F3}">
+				<File Id="fil85907A99CD295674E9641748195F4EB9" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_execfile.py" />
+			</Component>
+			<Component Id="cmp18DCA3D664AACB7D3E924CAD4593151B" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{6551406B-6892-4604-B6D2-8D4F377FD23F}">
+				<File Id="filF524637A22113830EB83D6C24145EDDB" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_exitfunc.py" />
+			</Component>
+			<Component Id="cmp5BB7633B33F795F216E65D73F08E41F8" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{CD925259-8430-44A0-8F26-CFF45026440A}">
+				<File Id="filACE6B4E4A501F01A8BC3F1E944E274FB" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_filter.py" />
+			</Component>
+			<Component Id="cmpBDF9969673D7C779465C0469FACAFE65" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{D73E7D74-E4E9-42E3-9A66-EBBE00940BB6}">
+				<File Id="filE7D3CE087CFF26866F42C7B74B5D692C" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_funcattrs.py" />
+			</Component>
+			<Component Id="cmp6FD176F537935BFE7EC6F81B517C8B1E" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{6D6B755C-93EE-4691-9866-9B3246ECB3FA}">
+				<File Id="fil8C3E30DF77B2732A6E9601E596858AB7" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_future.py" />
+			</Component>
+			<Component Id="cmpB48F009D6C2780D06AC78DCDEEF240D3" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{33C21317-0E13-455D-871F-0809E29DD2C1}">
+				<File Id="filF49453DBF644338D1CCD8AA4E62E142D" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_getcwdu.py" />
+			</Component>
+			<Component Id="cmpAE7B01B31FE482596444363D6597901D" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{13C70C7C-5B21-4E12-A3D3-7699B7181F89}">
+				<File Id="fil8FFBD8F8891B5D4032516D10E4D9D574" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_has_key.py" />
+			</Component>
+			<Component Id="cmpD560646054F21A6AE67B9DF7DAC099D7" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{AA5D4769-783D-44AC-A2F5-FAE1F56704EB}">
+				<File Id="filF16FB237902ABA359BBE87ACB74BB431" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_idioms.py" />
+			</Component>
+			<Component Id="cmp22B8F1395266015FE3BE07244E885CF8" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{9B32EB22-86A5-4E84-A9CC-01BBA89BBCF7}">
+				<File Id="fil1902420F822980D8B7DFCA7B645C052E" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_import.py" />
+			</Component>
+			<Component Id="cmp846C2BCBF85210DF525C25EA3EA34B33" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{044318FE-1054-441D-B5C6-C89AB2D7A32E}">
+				<File Id="filA8CB2F99009D25F04932C15E1486F0FF" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_imports.py" />
+			</Component>
+			<Component Id="cmp71D0D9D7DC9040C5D81E51D1836620FD" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{4ED071C7-8196-406F-937D-F9B0B0B4C1CD}">
+				<File Id="fil2AF487C989DCB5ABA26F660860DC1BFB" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_imports2.py" />
+			</Component>
+			<Component Id="cmpA0A5D6A484CBE7AC0D227EBE6F0BC95B" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{1DC49244-8364-4A04-AE95-1D526B62B970}">
+				<File Id="filC550CC53B874B09AA85082ED8DBEAF74" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_input.py" />
+			</Component>
+			<Component Id="cmp43BBC2EDDFB93CB694E91C519DCC98D3" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{0D72C874-EC05-422E-9475-DE8CED85070F}">
+				<File Id="filA7868EB5F9819F9910E6726FFD12D060" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_intern.py" />
+			</Component>
+			<Component Id="cmp57E1619EF40D33A6A9588CBB4839F5A8" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{C13DA548-D7FF-4A75-B700-4881480A00B7}">
+				<File Id="fil393CB42B631FE328D7A578C559D4ED7B" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_isinstance.py" />
+			</Component>
+			<Component Id="cmp9A66F846C08BEB03218F3A42FBE10122" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{FDC2AD86-2803-494E-99CB-5D2AC82FD08F}">
+				<File Id="fil83A866989E864B27EB21AF4F0E502146" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_itertools.py" />
+			</Component>
+			<Component Id="cmp8F58AEA8FB27A77B7FAFEADEDBEFA09C" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{D7DEF4ED-2999-404F-8D64-D8F3E631FB4D}">
+				<File Id="filB4B8BA2A7385832B339FA58DDAFF0702" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_itertools_imports.py" />
+			</Component>
+			<Component Id="cmpE8EE4BE7F0F4444CD98E10407840F576" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{DDECDE9A-345F-43F5-ABDF-FAD6F1BA712D}">
+				<File Id="filA5A7EEFB19D117931B463654A1C88DE4" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_long.py" />
+			</Component>
+			<Component Id="cmp0119C5218AAE1F187C651FBFDB329D7B" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{08976CC3-6673-4EC4-9E2E-BA77F00938E5}">
+				<File Id="fil9830969EED74835633D69661A6746329" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_map.py" />
+			</Component>
+			<Component Id="cmp97C4C8326751CE3E37B1BF44A3BBA9B0" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{BF5C02F5-A193-4A63-B912-DAD4C08EAA00}">
+				<File Id="fil9257CE87FA185C7BE2982A0FA9DE1DD0" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_metaclass.py" />
+			</Component>
+			<Component Id="cmpCF0CC81B82EBA01EBA337B7F29F1122B" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{B06837E1-EF0A-46F4-B0E4-7435A24033CA}">
+				<File Id="fil70DA26B3292FAB2D785E4EB5885A2E65" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_methodattrs.py" />
+			</Component>
+			<Component Id="cmpBFF8DF21E7973B7D5F7F112650E638AE" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{2091298E-5CC9-4527-8EA0-1F89C5BFBA01}">
+				<File Id="filDA2A4CEBB105F276E86165CCAB713C52" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_ne.py" />
+			</Component>
+			<Component Id="cmpF135653D2431B7CF4C7DA6A73645EFB9" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{E5F433EA-CEC9-4D53-83B2-FD1E9E904184}">
+				<File Id="filBFD4CFE64C38F12A471C27D298B5480D" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_next.py" />
+			</Component>
+			<Component Id="cmp4D7E56CC6742ABA276D10AF9F2CA5861" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{B80A0F83-788F-44BE-8126-00E5DBE48E3C}">
+				<File Id="filB91D8B3F8B390BB022A053060B9C49B0" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_nonzero.py" />
+			</Component>
+			<Component Id="cmp655E01985CB9B4D3BBC99E10212023C3" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{1B1F8952-CAA8-43D8-A20E-6BE26B3C6C44}">
+				<File Id="filDA178EF48376A3A61E03F35CF2079388" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_numliterals.py" />
+			</Component>
+			<Component Id="cmp22019AEC802B3DE372C36F7D0C40ABB3" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{D05CA2AB-3350-4D98-8DDF-B62D5FE898A3}">
+				<File Id="fil26CE49221065D4677804748BB02C2376" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_operator.py" />
+			</Component>
+			<Component Id="cmp95887D6577A480ED25B8D697EFCC08D4" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{19C81A3E-BB36-463B-8C9A-6D566970BCE5}">
+				<File Id="fil7EBDC985D0CEE6C37B945831231D9605" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_paren.py" />
+			</Component>
+			<Component Id="cmp2D42362411F74C6090565A530CCF1907" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{9C9E3AA1-B10E-477C-B685-676F2076D286}">
+				<File Id="fil6067ABBF9C5AE19D9EF42CA7B7B8E6F5" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_print.py" />
+			</Component>
+			<Component Id="cmpDE24B2D22C42D915CCEC430336D6AE4A" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{4D48C804-6A7A-45E6-9FB8-7E3FB21344A3}">
+				<File Id="fil3D4773FCC65A6FB56A7A32B049676C13" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_raise.py" />
+			</Component>
+			<Component Id="cmpBEB17E5D3B588F3BE8406C8AC2A808D4" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{F4CD02AB-7F8A-4EEB-B89F-9FFEA604723C}">
+				<File Id="filA065A36152605B606C4FEA53A60E7DD4" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_raw_input.py" />
+			</Component>
+			<Component Id="cmp7F0F3CACF42A2167F9D6E8B8EAB7715B" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{C152C378-70A3-44FF-B797-8DE411F897CC}">
+				<File Id="filE6D547E3C39828B381DC31F13CAA2B7A" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_reduce.py" />
+			</Component>
+			<Component Id="cmp02E60104B34367B11A78776859ECD602" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{FAAF621B-69F0-4F87-84B0-30E1FB6EF246}">
+				<File Id="fil00DF9CC056EA68C709114076CE43E8B5" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_renames.py" />
+			</Component>
+			<Component Id="cmp4D23000589B3F68C02E1B3B0BF5F4C72" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{87DF932E-C93C-4DAA-B816-FCAD781018B9}">
+				<File Id="fil72A11A97FD6D8068874CD016B2F21518" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_repr.py" />
+			</Component>
+			<Component Id="cmp6DB74D332795621C5BED541E421CF46F" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{482B64FE-C008-4AAA-9C88-D80B8A690525}">
+				<File Id="filC3E98D6CC2ED0E90E1A6422619D5F8AD" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_set_literal.py" />
+			</Component>
+			<Component Id="cmpDE81621DBF439945FED4E83151DFA8EF" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{339D5A61-70F2-4F50-8EAC-B2BBB402DBC8}">
+				<File Id="filD03BA0A4724B27B56ED9CA7ED201B1AF" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_standarderror.py" />
+			</Component>
+			<Component Id="cmpA449E1E3F2493800D950F077AF2A9FFF" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{5C10030A-BBC5-48F6-848E-A35F60855DBD}">
+				<File Id="filFE8F74B4ED275FBEBF875804D2AF43B3" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_sys_exc.py" />
+			</Component>
+			<Component Id="cmp6560FB82D1B6C670FC8C0F8DEA703780" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{9C60D614-4B8D-4C9A-B4AA-649CC8CF64E1}">
+				<File Id="fil376913807D68DC90B1F84164A10005EF" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_throw.py" />
+			</Component>
+			<Component Id="cmp50C7A35F5F7381FED2F91DBC24C9A6D1" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{F13DC68E-FA30-48D6-A0AA-68FB11A10AE6}">
+				<File Id="filE5EB8E49B2DBC7825590F5A449F688AE" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_tuple_params.py" />
+			</Component>
+			<Component Id="cmp70F5562EBEB3642B7D1416788F1C14E6" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{A12C55D8-E4A9-40E2-B066-F504AC6FBA29}">
+				<File Id="filCB6F22FAD58D882E5DBABE9E77C5A9CC" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_types.py" />
+			</Component>
+			<Component Id="cmp244BB367112B9516E18C38C37859D133" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{9A423313-D5FD-40B0-A6DD-69F0C68547C5}">
+				<File Id="fil5E21B6C8614210E25C7EC21ABC6FD22D" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_unicode.py" />
+			</Component>
+			<Component Id="cmp221F2B108D9D1F6B126182812ED264C0" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{0761A3B6-217C-461C-82EE-2E8AFFC0F6F4}">
+				<File Id="filE82A7D61940BB169B3960A6E0CCDDC9D" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_urllib.py" />
+			</Component>
+			<Component Id="cmp34E1A0E36A0D9CE77B9A67DC2F782561" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{07D6E8E1-2D4D-47B9-A7E8-DA2463B827EA}">
+				<File Id="fil8F65DAA317869956C142F22603406DBF" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_ws_comma.py" />
+			</Component>
+			<Component Id="cmp0B7248A4A08207FCDD4F017421D6D2EC" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{A8561DD1-6FE6-49F4-948F-7A930AC0358E}">
+				<File Id="fil891124E26F2D7A3C8432EB7BA1144E18" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_xrange.py" />
+			</Component>
+			<Component Id="cmpC4069B1F5748238A713472EB3104E73A" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{BF9F77CF-688D-47AB-BB68-36A892C13569}">
+				<File Id="filC0AFDA5197ED13ACF4F6F7303B4DC071" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_xreadlines.py" />
+			</Component>
+			<Component Id="cmpB57EF59BFE7C0ABE8304784444BB820A" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{8BECD123-2455-4022-8E1F-E5D1DCB12A0B}">
+				<File Id="filB3A5DF746A49C039ECDBC8476EA4FC8D" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\fix_zip.py" />
+			</Component>
+			<Component Id="cmpCE61B51F26556459B02BFE3577EA96EC" Directory="dirD4C69E737CC009D9649064A130BCDE1E" Guid="{B227FE47-B4B2-4CB5-B466-3A972A676E27}">
+				<File Id="fil5BF11A0B6CCC0426F68E52A5043608A8" KeyPath="yes" Source="$(var.LibSource)\lib2to3\fixes\__init__.py" />
+			</Component>
+			<Component Id="cmp88EA89A09822D54BDBE4DC9C5F129A1F" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{3AD7A693-16B9-4CED-B0B9-853003CAAECF}">
+				<File Id="fil4F9C8339FB49667D24805EE6B438EC65" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\conv.py" />
+			</Component>
+			<Component Id="cmp5DE4233B8F815658A796F1E4752406FD" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{7ED8A469-7967-4702-8632-23B05C586779}">
+				<File Id="fil4C54153BCD0AA8E88D3705E940484F55" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\driver.py" />
+			</Component>
+			<Component Id="cmpF0BDB3D58459B82B8F36B6B0AF55D48C" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{7FCCFFFE-5D73-4110-ACB9-C69722D08DCA}">
+				<File Id="filC851F07B5F0C326DF8F3B2DDB0FAEDC7" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\grammar.py" />
+			</Component>
+			<Component Id="cmp700BC8F7B894277AF5615C9C9A3226CA" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{1633CF84-67E0-4798-881D-BEE7BB6AB0B5}">
+				<File Id="fil9750AA626F97CE536FB0A47EBFEA25CA" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\literals.py" />
+			</Component>
+			<Component Id="cmpD9F4AAB0A45A70BACD9915ED43421291" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{4F8DBC5C-3AF9-4280-A01B-32CE7D034F3F}">
+				<File Id="filDE2BF8A540D14F0E05DBB5502E729B35" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\parse.py" />
+			</Component>
+			<Component Id="cmp110D3C92366FA7D3CD2DE4DC639BE492" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{91E9096A-76F4-4717-A8D6-8D224248254F}">
+				<File Id="filC1CAD3DB7698601AC4450CD917E879D8" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\pgen.py" />
+			</Component>
+			<Component Id="cmp66BB4BE28EFA639EB17A3E749B3737BF" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{D80072A2-D53E-4EFF-93DE-833959A0B561}">
+				<File Id="fil3772950F1D5A18E07110E814D1F2ABAB" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\token.py" />
+			</Component>
+			<Component Id="cmpFA66CDC10865A098D71F37F29791BB02" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{34DB15F8-3EB8-4688-8ED2-63BBA676DBA9}">
+				<File Id="fil801D1CDD71B2B7DA0FF4B97BE5558C95" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\tokenize.py" />
+			</Component>
+			<Component Id="cmp1DC4C2B867898031CF6DE4BD2CC6F0B6" Directory="dir7962A64F9FB355B1A2077C59235F978D" Guid="{6411FE02-035E-43FD-8EE4-C3A7FECBC948}">
+				<File Id="filD5F13D9793E224378E2F0144B2A602DC" KeyPath="yes" Source="$(var.LibSource)\lib2to3\pgen2\__init__.py" />
+			</Component>
+			<Component Id="cmp1BC3A7E1A8EFFBDA7F3C73867425D3C0" Directory="dirD30DF97BFCD50EDD266D6FAB6AE4689F" Guid="{47317905-D209-4F39-83F2-573FA57783B4}">
+				<File Id="fil9F9DB498F0D750B8848634D1859AE7E0" KeyPath="yes" Source="$(var.LibSource)\logging\config.py" />
+			</Component>
+			<Component Id="cmp620CB8534423070A3860BB1F31673086" Directory="dirD30DF97BFCD50EDD266D6FAB6AE4689F" Guid="{7AB993EF-A6A9-4E4B-98F3-4655D0569379}">
+				<File Id="fil66FBE096218832BB5069C854399E6D1E" KeyPath="yes" Source="$(var.LibSource)\logging\handlers.py" />
+			</Component>
+			<Component Id="cmp6F8F54E04A5969AFF4897B46C117835D" Directory="dirD30DF97BFCD50EDD266D6FAB6AE4689F" Guid="{CEF8FA20-051E-47F9-9119-CA952EFFE658}">
+				<File Id="fil4B4C3681F7C5915E09D61FB7823B017F" KeyPath="yes" Source="$(var.LibSource)\logging\__init__.py" />
+			</Component>
+			<Component Id="cmpB1A3F56C8A6AD14B7C6426A4B5AA9D1F" Directory="dir6C881EC2066A191A9B860847D9ECC4D8" Guid="{EE055E63-C870-40B4-9963-64F8F18E8623}">
+				<File Id="fil2EDEAE9A73D0793A0E03655460F53F6B" KeyPath="yes" Source="$(var.LibSource)\pydoc_data\topics.py" />
+			</Component>
+			<Component Id="cmp6B6C8184ADEDC6FC0C8932341B2293AE" Directory="dir6C881EC2066A191A9B860847D9ECC4D8" Guid="{AA8656CA-6DC5-437B-908F-49B15B25DCE8}">
+				<File Id="filA70CEE6CC76B4413CE18834D02895389" KeyPath="yes" Source="$(var.LibSource)\pydoc_data\__init__.py" />
+			</Component>
+			<Component Id="cmpD4CE5F0B3BA2DE911D1E33A985A10E8E" Directory="dir36F038E43F1376045AF5BFA34545BFF6" Guid="{6F0FBF1C-8CDB-4B69-9B44-BDD4D20F55CD}">
+				<File Id="filB14A2891BA14BF61C6CAF884BF3E491B" KeyPath="yes" Source="$(var.LibSource)\site-packages\README.txt" />
+			</Component>
+			<Component Id="cmp94F5FCC9A68D8FF789B5484477EB9A4E" Directory="dir0523E07EA0CB6BFFF053CC193C0F9AA4" Guid="{8E19DCB1-0D21-4879-B51F-956AE92D54E4}">
+				<File Id="fil14E3975A0F54BD68A95525A177077DE9" KeyPath="yes" Source="$(var.LibSource)\sqlite3\dbapi2.py" />
+			</Component>
+			<Component Id="cmpD1346029C63C3F7C24BC7A58E22EF12E" Directory="dir0523E07EA0CB6BFFF053CC193C0F9AA4" Guid="{CD206A4B-4A8F-4379-BD1B-D5DEDB52DCC9}">
+				<File Id="fil15A334C62E7425C0AA0DF9B74D7629A7" KeyPath="yes" Source="$(var.LibSource)\sqlite3\dump.py" />
+			</Component>
+			<Component Id="cmpC93B204B24494398AF3C674A9857FC8A" Directory="dir0523E07EA0CB6BFFF053CC193C0F9AA4" Guid="{A6CF9480-28FC-4009-8DDB-68E23074D2B7}">
+				<File Id="fil2F3F942B88F7E28217E02C05F2F00A0C" KeyPath="yes" Source="$(var.LibSource)\sqlite3\__init__.py" />
+			</Component>
+			<Component Id="cmpF1F8727D314E777DB1FDBED622E92AAD" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{84ABE924-D5A7-408C-A6F9-F4E0AB498453}">
+				<File Id="fil916AA77E7F046631943B5F57DDB4C1DC" KeyPath="yes" Source="$(var.LibSource)\unittest\case.py" />
+			</Component>
+			<Component Id="cmp332E27BDC31DD7F2A0CD47A3DA217576" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{615F839F-69F7-490D-881E-834ABEAE6D13}">
+				<File Id="fil9C82BA0322339C2625F5C6CBB2E80332" KeyPath="yes" Source="$(var.LibSource)\unittest\loader.py" />
+			</Component>
+			<Component Id="cmp26A9ED0DA79F0BFBFE673170B63CA304" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{B5C34DD0-8AE2-4785-B9C8-E444B9C8E358}">
+				<File Id="fil3007E9F215EB6E3029AD0F57865756F2" KeyPath="yes" Source="$(var.LibSource)\unittest\main.py" />
+			</Component>
+			<Component Id="cmp4D15D6EAEB5B7CF279EEF12DE6060A01" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{F2C0E6C3-D34D-4C73-9DE9-892EC5272207}">
+				<File Id="filF212632FAFFC0C4D5E525369805C5BE8" KeyPath="yes" Source="$(var.LibSource)\unittest\result.py" />
+			</Component>
+			<Component Id="cmp44125C5567CABD16CCB3C3FF2ED32227" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{A18ED262-F547-43E7-B55A-4EF35BC7AB1D}">
+				<File Id="fil423DFA7BB2C3A5C3AFA2EECD5C37F924" KeyPath="yes" Source="$(var.LibSource)\unittest\runner.py" />
+			</Component>
+			<Component Id="cmp197F243833200E94F870D00A0C402E82" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{E253CEAD-962B-44D6-8A2B-65EB41EA3D7E}">
+				<File Id="fil4597D1E09B14CAA9412F4C443FAF9C7C" KeyPath="yes" Source="$(var.LibSource)\unittest\signals.py" />
+			</Component>
+			<Component Id="cmpA5880FB2F9C979DCFEE24B9C7059D364" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{47A1628B-380E-4BF8-A364-1C25453BC5A1}">
+				<File Id="fil3903D63549E686EB28A103ADFE2452EB" KeyPath="yes" Source="$(var.LibSource)\unittest\suite.py" />
+			</Component>
+			<Component Id="cmpF578AD29DA8C9D79371FA3EF77D2E02B" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{4CCB0261-D8CF-47AB-A783-12ACF06F31E5}">
+				<File Id="fil3A27DAC80EB49A313E4FCED457AAB8C5" KeyPath="yes" Source="$(var.LibSource)\unittest\util.py" />
+			</Component>
+			<Component Id="cmpFF58F25E451B1364A005A62579733CD5" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{930BEDE3-3204-4A80-8673-C0B0E36FF098}">
+				<File Id="filFABCA096636DCBA64B254FDC350B35E9" KeyPath="yes" Source="$(var.LibSource)\unittest\__init__.py" />
+			</Component>
+			<Component Id="cmp3F7C2E813B544E86E068A5A46CF809EE" Directory="dir4D4604328E0B4610A4605B97ED0DD992" Guid="{F1D493BF-2D6D-4DBF-BA8F-7CDF24D29F17}">
+				<File Id="fil15AF85352364439DD46C2ABAFB253478" KeyPath="yes" Source="$(var.LibSource)\unittest\__main__.py" />
+			</Component>
+			<Component Id="cmp65FAA2DDB1FD545305BCDF5CCDB84D12" Directory="dir3146BF9AE96F3FA3118445787D4E6AF6" Guid="{974DAB3A-A7EE-407A-A816-04F0B0721102}">
+				<File Id="filF8E7C3E7F47E92622F90C141DDA68990" KeyPath="yes" Source="$(var.LibSource)\wsgiref\handlers.py" />
+			</Component>
+			<Component Id="cmpFF587B5B1AD2DD11DC7278357C58226C" Directory="dir3146BF9AE96F3FA3118445787D4E6AF6" Guid="{BD190E76-1927-45EA-89D3-D9BC8F304129}">
+				<File Id="filABF8D97534282E025284132D58596F7C" KeyPath="yes" Source="$(var.LibSource)\wsgiref\headers.py" />
+			</Component>
+			<Component Id="cmpA2053E7E71FD69B849482562186D548D" Directory="dir3146BF9AE96F3FA3118445787D4E6AF6" Guid="{FBF29AB2-D5A5-48C2-9FB2-6365EA44102F}">
+				<File Id="filABA09319EFE1587B31E42B27E1283B2F" KeyPath="yes" Source="$(var.LibSource)\wsgiref\simple_server.py" />
+			</Component>
+			<Component Id="cmpCB6F382B6654E00DD56E929C0E241698" Directory="dir3146BF9AE96F3FA3118445787D4E6AF6" Guid="{EA0667F3-221A-4064-829C-36636F9C58BB}">
+				<File Id="filF74D5308F0E2E2A88E010C141E1D92BD" KeyPath="yes" Source="$(var.LibSource)\wsgiref\util.py" />
+			</Component>
+			<Component Id="cmpB7CE77727EB0800ACC4AD1B67EE1B3F5" Directory="dir3146BF9AE96F3FA3118445787D4E6AF6" Guid="{CC2BD627-8586-4253-8417-B1316FA97E3A}">
+				<File Id="fil2CA2C62005310601B4D9AF34CEA71D99" KeyPath="yes" Source="$(var.LibSource)\wsgiref\validate.py" />
+			</Component>
+			<Component Id="cmp54D968D4CA219BB9B97DD1F672A56251" Directory="dir3146BF9AE96F3FA3118445787D4E6AF6" Guid="{FD68D804-42D5-4A6E-A2C2-D422E29683F2}">
+				<File Id="filC14BAB7FA2ACE505F5412535A26EDCC0" KeyPath="yes" Source="$(var.LibSource)\wsgiref\__init__.py" />
+			</Component>
+			<Component Id="cmp293D9274D7656CB008A6D13B25088807" Directory="dirD70A40DB9FA23DA372D6635E9006F85F" Guid="{978EA598-2C6C-43A5-A102-71AFA3BAE2E5}">
+				<File Id="filD2B7EB05F361EFC34310164BBA5078CF" KeyPath="yes" Source="$(var.LibSource)\xml\__init__.py" />
+			</Component>
+			<Component Id="cmp29FEAAC3913263DAC6714B42B75D6172" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{AA094A9C-2EAD-4139-AB67-D85EAD7BED09}">
+				<File Id="fil0900C22DC51973A1A24EDEE2E7CFBE16" KeyPath="yes" Source="$(var.LibSource)\xml\dom\domreg.py" />
+			</Component>
+			<Component Id="cmpFFDD297128BE2F66806352CEC158EA1E" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{D2E85FBF-0314-4CF1-B64C-ABAE24647FC5}">
+				<File Id="fil968882DC580F354A9637155C7C8F3781" KeyPath="yes" Source="$(var.LibSource)\xml\dom\minicompat.py" />
+			</Component>
+			<Component Id="cmpCE780F3E92D48D66DEBC39744E605678" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{9EEE21E6-8E93-4062-80AB-835A1D6E14BB}">
+				<File Id="fil5ED852808169BF028185F4353E153AD7" KeyPath="yes" Source="$(var.LibSource)\xml\dom\minidom.py" />
+			</Component>
+			<Component Id="cmp3F4EA51441928DF5728BB937B2ED3E76" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{C25AE630-0C1F-4643-ACE0-46DB379C3B2A}">
+				<File Id="filE17B969330FDDAD306668C6485EB36D9" KeyPath="yes" Source="$(var.LibSource)\xml\dom\NodeFilter.py" />
+			</Component>
+			<Component Id="cmpBAB471802F5180A4BCA4F080755EAA6A" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{817E6E04-7B2C-42BD-939E-B701635C9F5F}">
+				<File Id="filDA1C21113DCB2EC04FBA62C7CC93C63F" KeyPath="yes" Source="$(var.LibSource)\xml\dom\pulldom.py" />
+			</Component>
+			<Component Id="cmp49D04F8B6192BEECE00EEAB0DE4662A5" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{DB92C729-C83B-462B-812A-17857DF621A6}">
+				<File Id="fil3F55EC68638A076B45D7339F70B1FF08" KeyPath="yes" Source="$(var.LibSource)\xml\dom\xmlbuilder.py" />
+			</Component>
+			<Component Id="cmpE6A21450A4993E7B62CB74AC292F2F2C" Directory="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Guid="{73DFB7F3-210D-41F4-8910-B2A02A001E7C}">
+				<File Id="fil72C06A3FC8C4A6045122AB0B014F6923" KeyPath="yes" Source="$(var.LibSource)\xml\dom\__init__.py" />
+			</Component>
+			<Component Id="cmp72E09E662F57197E03DE75740201A084" Directory="dirC3F404681E1BA8313FEE2918D9572CB8" Guid="{98A928A0-52F0-4AAF-92B4-0E84BFEF5A9D}">
+				<File Id="fil2BF1CDEAB34BB7725453E8DF0037A90A" KeyPath="yes" Source="$(var.LibSource)\xml\etree\ElementInclude.py" />
+			</Component>
+			<Component Id="cmpD02E58FEED3265B3102EBE6D7D15F8FB" Directory="dirC3F404681E1BA8313FEE2918D9572CB8" Guid="{035918B7-4D47-4A9A-9A72-DB974B35CAD9}">
+				<File Id="fil77239592F3727C418B7058E97F95E290" KeyPath="yes" Source="$(var.LibSource)\xml\etree\ElementPath.py" />
+			</Component>
+			<Component Id="cmp0CD058A8768B90E26C935B402226FA3C" Directory="dirC3F404681E1BA8313FEE2918D9572CB8" Guid="{A0C93913-387D-4531-8A9E-49053989DB38}">
+				<File Id="filFDC35B932B2F8870BC602D14C8BA0E11" KeyPath="yes" Source="$(var.LibSource)\xml\etree\ElementTree.py" />
+			</Component>
+			<Component Id="cmpC051FE1E9CB453B9ADE5A372BA11DBDA" Directory="dirC3F404681E1BA8313FEE2918D9572CB8" Guid="{A8BA4254-533C-41D2-99A6-A787254722E4}">
+				<File Id="fil7F22643A1E994549827A3DB9DB42610C" KeyPath="yes" Source="$(var.LibSource)\xml\etree\SimpleXMLTreeBuilder.py" />
+			</Component>
+			<Component Id="cmp539BAC09E3E7E6C2ECAA7229A5E69DA7" Directory="dirC3F404681E1BA8313FEE2918D9572CB8" Guid="{0598A0D5-3BBE-4FF0-A54F-FF7701497EAB}">
+				<File Id="filE5F3DB0D0F80A9E9A8E95BC2441410FD" KeyPath="yes" Source="$(var.LibSource)\xml\etree\__init__.py" />
+			</Component>
+			<Component Id="cmpC90A314C72EAD90061DD08FEA829CF9C" Directory="dir88A60EE9DA4C429412A1FC6CE67DEEF4" Guid="{797D0A1B-D8A6-4DA5-AA70-60B9E25180F7}">
+				<File Id="filFA9F59243C05226854305AE4BAC764D9" KeyPath="yes" Source="$(var.LibSource)\xml\parsers\__init__.py" />
+			</Component>
+			<Component Id="cmp7C90E4DDE16F72E9273727D279C512BF" Directory="dir9112B441FAC8C69878B25A5EA7533EC0" Guid="{EA8866E0-F26C-4BB1-8907-0D9BBE42F194}">
+				<File Id="filB8B38B01CB308E3554C08BAF97154CA2" KeyPath="yes" Source="$(var.LibSource)\xml\sax\handler.py" />
+			</Component>
+			<Component Id="cmpCE5BF50EF4658B439EDF5383F6B8806A" Directory="dir9112B441FAC8C69878B25A5EA7533EC0" Guid="{31A0FD27-A10D-495C-95C4-AB31468B30A5}">
+				<File Id="fil50D0EA3F958C65B127AB179580E28E7A" KeyPath="yes" Source="$(var.LibSource)\xml\sax\saxutils.py" />
+			</Component>
+			<Component Id="cmp477E8BD09C7B2586CA59BF3B2007E324" Directory="dir9112B441FAC8C69878B25A5EA7533EC0" Guid="{AFBF1981-097D-4904-AA50-677452B6C1CE}">
+				<File Id="filDA7DC9090B4EC7DB98EB8810F6B6DD30" KeyPath="yes" Source="$(var.LibSource)\xml\sax\xmlreader.py" />
+			</Component>
+			<Component Id="cmp221506E74F656866963AD33E99BF3576" Directory="dir9112B441FAC8C69878B25A5EA7533EC0" Guid="{8B01B266-3CE6-47BB-A533-AFC1C1B34FCD}">
+				<File Id="filE2D477995CD40EE3D4FFD9E50B789F9C" KeyPath="yes" Source="$(var.LibSource)\xml\sax\_exceptions.py" />
+			</Component>
+			<Component Id="cmpAA3AEAD8787801188571224405CA4CD1" Directory="dir9112B441FAC8C69878B25A5EA7533EC0" Guid="{906140D5-1760-43CA-A27F-00195B664F90}">
+				<File Id="fil32D256304E41966946DD06F8DEA46B6C" KeyPath="yes" Source="$(var.LibSource)\xml\sax\__init__.py" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dir2F47B6977D59F2CDA6C3DB0E42621767">
+			<Directory Id="dir3C73704F8BC2D3DD304154834B012764" Name="command" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dirD70A40DB9FA23DA372D6635E9006F85F">
+			<Directory Id="dir6F2A380ADF2A21FDDEF0327A8919BF7A" Name="dom" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dirC6D1B44CFD645E605AFABD5916392A80">
+			<Directory Id="dir7962A64F9FB355B1A2077C59235F978D" Name="pgen2" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dirD70A40DB9FA23DA372D6635E9006F85F">
+			<Directory Id="dir88A60EE9DA4C429412A1FC6CE67DEEF4" Name="parsers" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dirD70A40DB9FA23DA372D6635E9006F85F">
+			<Directory Id="dir9112B441FAC8C69878B25A5EA7533EC0" Name="sax" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dir8259DBAB86E2EF64A8A09F634D075A7A">
+			<Directory Id="dir9C5ECB48D7A2F4F0090415D2A3462752" Name="mime" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dir2E29D7C2D68759C4DD4B5096905A5984">
+			<Directory Id="dirA3DA302BDA92437FFF37FEACA7E64D96" Name="macholib" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dirD70A40DB9FA23DA372D6635E9006F85F">
+			<Directory Id="dirC3F404681E1BA8313FEE2918D9572CB8" Name="etree" />
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<DirectoryRef Id="dirC6D1B44CFD645E605AFABD5916392A80">
+			<Directory Id="dirD4C69E737CC009D9649064A130BCDE1E" Name="fixes" />
+		</DirectoryRef>
+	</Fragment>
+		
+		
 </Wix>

@@ -63,11 +63,11 @@ namespace WinApp.Forms
 			else
 			{
 				// Revert to prevous settings
-				Code.MsgBox.Show("Failed to create database, revert to using previous database.", "Failed to create database");
+				Code.MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database");
 				Config.Settings = Config.LastWorkingSettings;
 			}
 			Config.SaveConfig(out result);
-			this.Close();		
+			this.Close();					
 		}
 		
 		private bool CreateNewDb()
@@ -78,7 +78,8 @@ namespace WinApp.Forms
 			badProgressBar.Visible = true;
 			UpdateProgressBar("Creating new database");
 			// Create db now
-			if (DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType))
+			ok = DB.CreateDatabase(txtDatabasename.Text, txtFileLocation.Text, Config.Settings.databaseType);
+			if (ok)
 			{
 				// Fill database with default data
 				UpdateProgressBar("Creating database tables");

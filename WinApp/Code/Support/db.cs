@@ -27,9 +27,10 @@ namespace WinApp.Code
 			DataTable dt = new DataTable();
 			try
 			{
+				string dbcon = Config.DatabaseConnection();
 				if (SelecteDbType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+					SqlConnection con = new SqlConnection(dbcon);
 					con.Open();
 					SqlCommand command = new SqlCommand(sql, con);
 					SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -39,7 +40,7 @@ namespace WinApp.Code
 				else if (SelecteDbType == ConfigData.dbType.SQLite)
 				{
 					
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					SQLiteConnection con = new SQLiteConnection(dbcon);
 					con.Open();
 					SQLiteCommand command = new SQLiteCommand(sql, con);
 					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
@@ -135,19 +136,27 @@ namespace WinApp.Code
 		public static DataTable ListTables()
 		{
 			DataTable dt = new DataTable();
-			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			try
 			{
-				string sql = "SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
-				dt = FetchData(sql);
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				{
+					string sql = "SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
+					dt = FetchData(sql);
+				}
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				{
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					con.Open();
+					DataTable TableList = new DataTable();
+					TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
+					con.Clone();
+					dt = TableList;
+				}
+
 			}
-			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+			catch (Exception)
 			{
-				SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
-				con.Open();
-				DataTable TableList = new DataTable();
-				TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
-				con.Clone();
-				dt = TableList;
+				//throw;
 			}
 			return dt;
 		}
@@ -158,8 +167,6 @@ namespace WinApp.Code
 			// Check database file location
 			bool fileLocationExsits = true;
 			fileLocation = fileLocation.Trim();
-			if (fileLocation.Substring(fileLocation.Length - 1, 1) != "\\" && fileLocation.Substring(fileLocation.Length - 1, 1) != "/")
-				fileLocation += "\\";
 			if (!Directory.Exists(fileLocation))
 			{
 				DirectoryInfo prevPath = Directory.GetParent(fileLocation);
@@ -168,7 +175,7 @@ namespace WinApp.Code
 					if (!Directory.GetParent(prevPath.FullName).Exists)
 					{
 						fileLocationExsits = false;
-						Code.MsgBox.Show("Error createing database, file parh does not exist", "Error creating database");
+						Code.MsgBox.Show("Error creating database, file path does not exist", "Error creating database");
 					}
 					else
 					{
@@ -197,7 +204,7 @@ namespace WinApp.Code
 					}
 					if (dbExists)
 					{
-						Code.MsgBox.Show("Database with this name alreade exsits, choose another database name.", "Cannot create database");
+						Code.MsgBox.Show("Database with this name alreade exists, choose another database name.", "Cannot create database");
 					}
 					else
 					{

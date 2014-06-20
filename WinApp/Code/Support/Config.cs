@@ -82,7 +82,7 @@ namespace WinApp.Code
 		{
 			get
 			{
-				return AppDataBaseFolder + "\\Log\\";
+				return AppDataBaseFolder + "Log\\";
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace WinApp.Code
 		{
 			get
 			{
-				return AppDataBaseFolder + "\\Database\\";
+				return AppDataBaseFolder + "Database\\";
 			}
 		}
 

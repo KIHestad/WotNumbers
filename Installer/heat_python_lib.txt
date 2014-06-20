@@ -1,0 +1,15 @@
+﻿
+Run heat.exe from: C:\Program Files (x86)\WiX Toolset v3.8\bin
+
+Command line arg:
+
+heat dir C:\dev\WotNumbers\WinApp\Lib -gg -srd -dr INSTALLFOLDER_Lib -var var.LibSource -cg ProductComponents_Lib -o c:\temp\pythonlib.wxs
+
+	dir			Files to be harvested (read)
+	-gg			Generate GUID
+	-srd		Also harvest the root folder
+	-dr <name>  Directory Red Id
+	-var <name>	Variable name containing file source location
+	-cg			Component Group Id
+	-o <name>	Output filename and path
+

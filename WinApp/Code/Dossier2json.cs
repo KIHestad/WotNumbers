@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using IronPython.Hosting;
+using Microsoft.Scripting;
+using Microsoft.Scripting.Hosting;
 
 namespace WinApp.Code
 {
@@ -242,13 +244,21 @@ namespace WinApp.Code
 			// Use IronPython
 			try
 			{
-				var ipy = Python.CreateRuntime();
-				dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
-				ipyrun.main();
+				//var ipy = Python.CreateRuntime();
+				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
+				//ipyrun.main();
+
+				Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
+				Microsoft.Scripting.Hosting.ScriptScope scope = py.ExecuteFile(dossier2jsonScript); // this is your python program
+				dynamic result = scope.GetVariable("main")();
+
+
+
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message, "Error converting dossier file to json");
+				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
+				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
 				return "Error converting dossier file to json";
 			}
 			return "";
