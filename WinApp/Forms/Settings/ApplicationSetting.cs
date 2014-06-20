@@ -105,7 +105,11 @@ namespace WinApp.Forms
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
-			Config.Settings.dossierFilePath = txtDossierFilePath.Text;
+			if (Directory.Exists(txtDossierFilePath.Text))
+			{
+				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
+				Config.Settings.dossierFileWathcherRun = 1;
+			}
 			Config.Settings.playerName = cboSelectPlayer.Text;
 			DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
 			if (dt.Rows.Count > 0)

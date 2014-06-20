@@ -23,10 +23,10 @@ namespace WinApp.Code
 
 		public class PosSize
 		{
-			public int Top = 0;
-			public int Left = 0;
-			public int Widht = 0;
-			public int Height = 0;
+			public int Top = 10;
+			public int Left = 10;
+			public int Width = 780;
+			public int Height = 480;
 		}
 
 		public dbType  databaseType { get; set; }			// SQLite or MS SQL Server
@@ -78,7 +78,7 @@ namespace WinApp.Code
 			}
 		}
 
-		public static string AppDataBaseLogFolder
+		public static string AppDataLogFolder
 		{
 			get
 			{
@@ -86,7 +86,7 @@ namespace WinApp.Code
 			}
 		}
 
-		public static string AppDataBaseDBFolder
+		public static string AppDataDBFolder
 		{
 			get
 			{
@@ -124,7 +124,7 @@ namespace WinApp.Code
 			try
 			{
 				string json = JsonConvert.SerializeObject(Config.Settings);
-				File.WriteAllText(configfile, json);
+				File.WriteAllText(Config.AppDataBaseFolder + configfile, json);
 			}
 			catch (Exception ex)
 			{
@@ -139,7 +139,7 @@ namespace WinApp.Code
 			bool ok = true;
 			string returMsg = "Application settings succsessfully read.";
 			// Does config file exist?
-			if (!File.Exists(configfile))
+			if (!File.Exists(Config.AppDataBaseFolder + configfile))
 			{
 				SetConfigDefaults();
 				returMsg = "Config file is missing, please configure application settings.";
@@ -151,13 +151,13 @@ namespace WinApp.Code
 				try
 				{
 					ConfigData conf = new ConfigData();
-					string json = File.ReadAllText(configfile);
+					string json = File.ReadAllText(Config.AppDataBaseFolder + configfile);
 					conf = JsonConvert.DeserializeObject<ConfigData>(json);
 					Config.Settings = conf;
 				}
 				catch (Exception ex)
 				{
-					File.Delete(configfile);
+					File.Delete(Config.AppDataBaseFolder + configfile);
 					SetConfigDefaults();
 					returMsg = "Error reading config file, please configure application settings." + Environment.NewLine + Environment.NewLine + ex.Message;
 					ok = false;

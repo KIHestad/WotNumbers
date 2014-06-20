@@ -74,7 +74,7 @@ namespace WinApp.Forms
 			{
 				this.Top = mainFormPosSize.Top;
 				this.Left = mainFormPosSize.Left;
-				this.Width = mainFormPosSize.Widht;
+				this.Width = mainFormPosSize.Width;
 				this.Height = mainFormPosSize.Height;
 			}
 			// Draw form 
@@ -90,7 +90,7 @@ namespace WinApp.Forms
 				ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
 				mainFormPosSize.Top = this.Top;
 				mainFormPosSize.Left = this.Left;
-				mainFormPosSize.Widht = this.Width;
+				mainFormPosSize.Width = this.Width;
 				mainFormPosSize.Height = this.Height;
 				Config.Settings.posSize = mainFormPosSize;
 				string msg = "";

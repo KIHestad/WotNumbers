@@ -15,13 +15,13 @@ namespace WinApp.Code
 
 		public static void CheckLogFileSize()
 		{
-			if (File.Exists(Config.AppDataBaseLogFolder + filename))
+			if (File.Exists(Config.AppDataLogFolder + filename))
 			{
-				FileInfo file = new FileInfo(Config.AppDataBaseLogFolder + filename);
+				FileInfo file = new FileInfo(Config.AppDataLogFolder + filename);
 				if (file.Length > 1024*1024*5) // max 5 MB
 				{
 					string movefilename = "Log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
-					file.CopyTo(Config.AppDataBaseLogFolder + movefilename);
+					file.CopyTo(Config.AppDataLogFolder + movefilename);
 					file.Delete();
 					CreateFileIfNotExist();
 				}
@@ -32,7 +32,7 @@ namespace WinApp.Code
 		{
 			// Add list og Strings
 			CreateFileIfNotExist();
-			using (StreamWriter sw = File.AppendText(Config.AppDataBaseLogFolder + filename))
+			using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 			{
 				sw.WriteLine(logtext);
 			}
@@ -42,7 +42,7 @@ namespace WinApp.Code
 		{
 			// Add list og Strings
 			CreateFileIfNotExist();
-			using (StreamWriter sw = File.AppendText(Config.AppDataBaseLogFolder + filename))
+			using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 			{
 				sw.WriteLine("");
 				foreach (var s in logtext)
@@ -55,10 +55,10 @@ namespace WinApp.Code
 		private static void CreateFileIfNotExist()
 		{
 			// This text is added only once to the file. 
-			if (!File.Exists(Config.AppDataBaseLogFolder + filename))
+			if (!File.Exists(Config.AppDataLogFolder + filename))
 			{
 				// Create a file to write to. 
-				using (StreamWriter sw = File.CreateText(Config.AppDataBaseLogFolder + filename))
+				using (StreamWriter sw = File.CreateText(Config.AppDataLogFolder + filename))
 				{
 					sw.WriteLine("**************************************************");
 					sw.WriteLine("Start logging: " + DateTime.Now.ToString());

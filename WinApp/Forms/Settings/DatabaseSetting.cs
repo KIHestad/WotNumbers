@@ -209,7 +209,7 @@ namespace WinApp.Forms
 		{
 			// Select dossier file
 			openFileDialogSQLite.FileName = "*.db";
-			openFileDialogSQLite.InitialDirectory = Config.AppDataBaseDBFolder;
+			openFileDialogSQLite.InitialDirectory = Config.AppDataDBFolder;
 			openFileDialogSQLite.ShowDialog();
 			if (openFileDialogSQLite.FileName != "*.db" && openFileDialogSQLite.FileName != "")
 			{
