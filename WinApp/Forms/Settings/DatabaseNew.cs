@@ -29,7 +29,7 @@ namespace WinApp.Forms
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				DatabaseNewTheme.Text = "Create New SQLite Database";
 			txtPlayerName.Text = Config.Settings.playerName;
-			txtFileLocation.Text = Path.GetDirectoryName(Application.ExecutablePath) + "\\Database\\";
+			txtFileLocation.Text = Config.AppDataBaseDBFolder;
 		}
 
 		private void UpdateProgressBar(string statusText)

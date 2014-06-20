@@ -28,7 +28,8 @@ def main():
 	global option_server, option_raw, option_format, option_frags, option_tanks
 	
 	# IRONPYTHON MODIFIED: added manually input dossier filename
-	filename_source = "dossier.dat"
+	# filename_source = "dossier.dat"
+	filename_source = '%s\\Wot Numbers\\dossier.dat' %  os.environ['APPDATA']
 	# IRONPYTHON MODIFIED: 
 	# -s - option_server - By setting s the JSON will not include tank info and outputs to console
 	# -r - option_raw    - By setting r the JSON will contain all fields with their values and recognized names

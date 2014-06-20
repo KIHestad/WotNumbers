@@ -169,9 +169,9 @@ namespace WinApp.Code
 			List<string> logText = new List<string>();
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
-			string dossierDatNewFile = appPath + "/dossier2json/dossier.dat"; // new dossier file
-			string dossierDatPrevFile = appPath + "/dossier2json/dossier_prev.dat"; // previous dossier file
-			string dossierJsonFile = appPath + "/dossier2json/dossier.json"; // output file
+			string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
+			string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
+			string dossierJsonFile = Config.AppDataBaseFolder + "/dossier.json"; // output file
 			string returVal = "Starting file handling...";
 			//try
 			//{

@@ -10,19 +10,18 @@ namespace WinApp.Code
 {
 	public class Log
 	{
-		private static string path = Path.GetDirectoryName(Application.ExecutablePath); // Log path
-		private static string filename = "/log.txt"; // Log filename
-		private static string battleResultDoneFile = "/LastBattle.txt";
+		private static string filename = "Log.txt"; // Log filename
+		private static string battleResultDoneFile = "LastBattle.txt";
 
 		public static void CheckLogFileSize()
 		{
-			if (File.Exists(path + filename))
+			if (File.Exists(Config.AppDataBaseLogFolder + filename))
 			{
-				FileInfo file = new FileInfo(path + filename);
+				FileInfo file = new FileInfo(Config.AppDataBaseLogFolder + filename);
 				if (file.Length > 1024*1024*5) // max 5 MB
 				{
-					string movefilename = "/log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
-					file.CopyTo(path + movefilename);
+					string movefilename = "Log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
+					file.CopyTo(Config.AppDataBaseLogFolder + movefilename);
 					file.Delete();
 					CreateFileIfNotExist();
 				}
@@ -33,7 +32,7 @@ namespace WinApp.Code
 		{
 			// Add list og Strings
 			CreateFileIfNotExist();
-			using (StreamWriter sw = File.AppendText(path + filename))
+			using (StreamWriter sw = File.AppendText(Config.AppDataBaseLogFolder + filename))
 			{
 				sw.WriteLine(logtext);
 			}
@@ -43,7 +42,7 @@ namespace WinApp.Code
 		{
 			// Add list og Strings
 			CreateFileIfNotExist();
-			using (StreamWriter sw = File.AppendText(path + filename))
+			using (StreamWriter sw = File.AppendText(Config.AppDataBaseLogFolder + filename))
 			{
 				sw.WriteLine("");
 				foreach (var s in logtext)
@@ -56,10 +55,10 @@ namespace WinApp.Code
 		private static void CreateFileIfNotExist()
 		{
 			// This text is added only once to the file. 
-			if (!File.Exists(path + filename))
+			if (!File.Exists(Config.AppDataBaseLogFolder + filename))
 			{
 				// Create a file to write to. 
-				using (StreamWriter sw = File.CreateText(path + filename))
+				using (StreamWriter sw = File.CreateText(Config.AppDataBaseLogFolder + filename))
 				{
 					sw.WriteLine("**************************************************");
 					sw.WriteLine("Start logging: " + DateTime.Now.ToString());
@@ -79,7 +78,7 @@ namespace WinApp.Code
 		
 		public static void BattleResultDoneLog()
 		{
-			using (StreamWriter sw = File.CreateText(path + battleResultDoneFile))
+			using (StreamWriter sw = File.CreateText(Config.AppDataBaseFolder + battleResultDoneFile))
 			{
 				sw.WriteLine("last battle: " + DateTime.Now.ToString());
 				sw.Close();
@@ -88,15 +87,15 @@ namespace WinApp.Code
 
 		public static string BattleResultDoneLogFileName()
 		{
-			if (!File.Exists(path + battleResultDoneFile))
+			if (!File.Exists(Config.AppDataBaseFolder + battleResultDoneFile))
 			{
-				using (StreamWriter sw = File.CreateText(path + battleResultDoneFile))
+				using (StreamWriter sw = File.CreateText(Config.AppDataBaseFolder + battleResultDoneFile))
 				{
 					sw.WriteLine("no battles logged");
 					sw.Close();
 				}
 			}
-			return path + battleResultDoneFile;
+			return Config.AppDataBaseFolder + battleResultDoneFile;
 		}
 
 

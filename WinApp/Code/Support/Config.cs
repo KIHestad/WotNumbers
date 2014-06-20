@@ -50,6 +50,49 @@ namespace WinApp.Code
 		public static ConfigData LastWorkingSettings = new ConfigData();	// Used for reverting to last working settings if create db fails
 		
 		private const string configfile = "config.json";		// File to load/save config changes
+		
+		private static bool _appDataFolderOK = false;
+		public static string AppDataBaseFolder
+		{
+			get 
+			{
+				string appdataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData); // = %appdata% 
+				string wotnumFolder = "\\Wot Numbers";
+				if (!_appDataFolderOK)
+				{
+					if (!Directory.Exists(appdataFolder))
+					{
+						Directory.CreateDirectory(appdataFolder);
+					}
+					if (!Directory.Exists(appdataFolder + wotnumFolder))
+					{
+						Directory.CreateDirectory(appdataFolder + wotnumFolder);
+					}
+					if (!Directory.Exists(appdataFolder + wotnumFolder + "\\Log"))
+					{
+						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\Log");
+					}
+					_appDataFolderOK = true;
+				}
+				return appdataFolder + wotnumFolder + "\\";
+			}
+		}
+
+		public static string AppDataBaseLogFolder
+		{
+			get
+			{
+				return AppDataBaseFolder + "\\Log\\";
+			}
+		}
+
+		public static string AppDataBaseDBFolder
+		{
+			get
+			{
+				return AppDataBaseFolder + "\\Database\\";
+			}
+		}
 
 		private static void SetConfigDefaults()
 		{
