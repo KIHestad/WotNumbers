@@ -8,6 +8,8 @@
 
 		<Feature Id="ProductFeature" Title="Installer" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="ProductComponents_x64" />
+			<ComponentGroupRef Id="ProductComponents_x86" />
 		</Feature>
 
 		<!--
@@ -25,7 +27,10 @@
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="Wot Numbers" />
+				<Directory Id="INSTALLFOLDER" Name="Wot Numbers">
+					<Directory Id="INSTALLFOLDER_x64" Name="x64" />
+					<Directory Id="INSTALLFOLDER_x86" Name="x86" />
+				</Directory>
 			</Directory>
 		</Directory>
 	</Fragment>
@@ -41,6 +46,41 @@
 				<File Source="..\WinApp\bin\Debug\WotNUmbers.exe.config" KeyPath="yes"></File>
 			</Component>
 
+			<!-- References -->
+
+			<Component Guid="{1E33EE21-A9F8-4853-B929-9AA4E518F3E9}">
+				<File Source="..\WinApp\bin\Debug\IronPython.dll" KeyPath="yes"></File>
+			</Component>
+
+			<Component Guid="{95D0624C-B924-4955-935C-7822FBA4F140}">
+				<File Source="..\WinApp\bin\Debug\Microsoft.Scripting.dll" KeyPath="yes"></File>
+			</Component>
+
+			<Component Guid="{6408B07F-1E44-4A0C-9F85-96A64E43A5FE}">
+				<File Source="..\WinApp\bin\Debug\Newtonsoft.Json.dll" KeyPath="yes"></File>
+			</Component>
+
+			<Component Guid="{ADC05E6E-5E66-4767-8CB8-4D4B21FDAD93}">
+				<File Source="..\WinApp\bin\Debug\System.Data.SQLite.dll" KeyPath="yes"></File>
+			</Component>
+			
 		</ComponentGroup>
+
+		<ComponentGroup Id="ProductComponents_x64" Directory="INSTALLFOLDER_x64">
+
+			<Component Id="x64_SQLite.Interop.dll" Guid="{B3E36541-BCDC-4826-A68B-210FB081AAF9}">
+				<File Id="x64_SQLite.Interop.dll" Source="..\WinApp\bin\Debug\x64\SQLite.Interop.dll"  KeyPath="yes"></File>
+			</Component>
+
+		</ComponentGroup>
+
+		<ComponentGroup Id="ProductComponents_x86" Directory="INSTALLFOLDER_x86">
+
+			<Component Id="x86_SQLite.Interop.dll" Guid="{5D860EFD-31CE-4789-865E-1DC89BCE928B}">
+				<File Id="x86_SQLite.Interop.dll" Source="..\WinApp\bin\Debug\x86\SQLite.Interop.dll"  KeyPath="yes"></File>
+			</Component>
+
+		</ComponentGroup>
+
 	</Fragment>
 </Wix>
