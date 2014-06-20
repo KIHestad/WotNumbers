@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Wot Numbers" Language="1033" Version="0.1.0.0" Manufacturer="Numbers Team" UpgradeCode="31e0492c-bcf9-47e7-a9be-1d4ec4637d93">
+		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="Installs Wot Numbers, created by BadButton and cmdrTrinity"/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+
+		<Feature Id="ProductFeature" Title="Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+
+		<!--
+		WixUI_Advanced
+		WixUI_FeatureTree
+		WixUI_InstallDir
+		WixUI_Minimal
+		WixUI_Mondo = Everything, where to install, features to install ...
+		-->
+		<WixVariable Id="WixUILicenseRtf" Value="WotNumbersLicense.rtf" />
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+		<UIRef Id="WixUI_InstallDir" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Wot Numbers" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			
+			<Component Guid="{C892598C-7A0D-40A2-8E47-E2F57DC8C80A}">
+				<File Source="$(var.WinApp.TargetPath)" KeyPath="yes"></File>
+			</Component>
+			
+			<Component Guid="{9D1B48C0-1D04-4E5E-96B2-21BB75FBA9CE}">
+				<File Source="..\WinApp\bin\Debug\WotNUmbers.exe.config" KeyPath="yes"></File>
+			</Component>
+
+		</ComponentGroup>
+	</Fragment>
+</Wix>
