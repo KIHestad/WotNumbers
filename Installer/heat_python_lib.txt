@@ -1,9 +1,21 @@
 ﻿
-Run heat.exe from: C:\Program Files (x86)\WiX Toolset v3.8\bin
+Run the command lines below from Wot Numbers: "Installer" folder (C:\dev\WotNumbers\Installer), or run the autoheat.bat batch file from same location.
 
 Command line arg:
 
-heat dir C:\dev\WotNumbers\WinApp\Lib -gg -srd -dr INSTALLFOLDER_Lib -var var.LibSource -cg ProductComponents_Lib -o c:\temp\pythonlib.wxs
+-- Bin folder, from this result only use top level, also remove app files
+
+"C:\Program Files (x86)\WiX Toolset v3.8\bin\heat.exe" dir ..\WinApp\Bin\Debug -gg -srd -dr INSTALLFOLDER_Bin -var var.BinSource -cg ProductComponents_Bin -o _Bin.wxs
+
+-- Lib folder
+
+"C:\Program Files (x86)\WiX Toolset v3.8\bin\heat.exe" dir ..\WinApp\Lib -gg -srd -dr INSTALLFOLDER_Lib -var var.LibSource -cg ProductComponents_Lib -o _Lib.wxs
+
+-- Dossier2json folder
+
+"C:\Program Files (x86)\WiX Toolset v3.8\bin\heat.exe" dir ..\WinApp\Bin\Debug\Dossier2json -gg -srd -dr INSTALLFOLDER_Dossier2json -var var.D2jSource -cg ProductComponents_Dossier2json -o _D2j.wxs
+
+**** PARAMS *****
 
 	dir			Files to be harvested (read)
 	-gg			Generate GUID

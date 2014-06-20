@@ -46,6 +46,7 @@
   <ItemGroup>
     <Content Include="heat_python_lib.txt" />
     <Content Include="WotNumbersLicense.rtf" />
+    <Content Include="_Run.bat" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
