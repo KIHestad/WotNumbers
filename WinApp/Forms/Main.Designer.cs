@@ -156,17 +156,17 @@
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemTest = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolItemTest_ViewRange = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-			this.importDossierHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.importWsDossierHistoryToDbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.testSaveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.testUpdateTankImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolItemAdmin = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemTest_ViewRange2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+			this.importDossierHistoryToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.importWsDossierHistoryToDbToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+			this.testSaveImageToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.testUpdateTankImageToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -226,7 +226,7 @@
 			this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
 			this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
 			this.MainTheme.TabIndex = 18;
-			this.MainTheme.Text = "WoT Numbers";
+			this.MainTheme.Text = "Wot Numbers";
 			this.MainTheme.TitleHeight = 53;
 			// 
 			// lblStatusRowCount
@@ -410,13 +410,11 @@
             this.toolItemBattles,
             this.toolStripSeparator8,
             this.toolItemSettings,
-            this.toolItemHelp,
-            this.toolStripSeparator5,
-            this.toolItemTest});
+            this.toolItemHelp});
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(703, 25);
+			this.toolMain.Size = new System.Drawing.Size(621, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1312,7 +1310,9 @@
             this.toolItemImportBattlesFromWotStat,
             this.toolItemShowDbTables,
             this.toolStripSeparator2,
-            this.toolItemSettingsApp});
+            this.toolItemSettingsApp,
+            this.toolStripSeparator5,
+            this.toolItemAdmin});
 			this.toolItemSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolItemSettings.Image")));
 			this.toolItemSettings.Name = "toolItemSettings";
 			this.toolItemSettings.ShowDropDownArrow = false;
@@ -1409,73 +1409,6 @@
 			this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
 			this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
 			// 
-			// toolStripSeparator5
-			// 
-			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolItemTest
-			// 
-			this.toolItemTest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolItemTest.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemTest_ViewRange,
-            this.toolStripSeparator6,
-            this.importDossierHistoryToolStripMenuItem,
-            this.importWsDossierHistoryToDbToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.testSaveImageToolStripMenuItem,
-            this.testUpdateTankImageToolStripMenuItem});
-			this.toolItemTest.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemTest.Name = "toolItemTest";
-			this.toolItemTest.ShowDropDownArrow = false;
-			this.toolItemTest.Size = new System.Drawing.Size(76, 22);
-			this.toolItemTest.Text = "Admin tools";
-			// 
-			// toolItemTest_ViewRange
-			// 
-			this.toolItemTest_ViewRange.Name = "toolItemTest_ViewRange";
-			this.toolItemTest_ViewRange.Size = new System.Drawing.Size(273, 22);
-			this.toolItemTest_ViewRange.Text = "View Range...";
-			this.toolItemTest_ViewRange.Click += new System.EventHandler(this.toolItemTest_ViewRange_Click);
-			// 
-			// toolStripSeparator6
-			// 
-			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(270, 6);
-			// 
-			// importDossierHistoryToolStripMenuItem
-			// 
-			this.importDossierHistoryToolStripMenuItem.Name = "importDossierHistoryToolStripMenuItem";
-			this.importDossierHistoryToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-			this.importDossierHistoryToolStripMenuItem.Text = "Import dossier history";
-			this.importDossierHistoryToolStripMenuItem.Click += new System.EventHandler(this.importDossierHistoryToolStripMenuItem_Click);
-			// 
-			// importWsDossierHistoryToDbToolStripMenuItem
-			// 
-			this.importWsDossierHistoryToDbToolStripMenuItem.Name = "importWsDossierHistoryToDbToolStripMenuItem";
-			this.importWsDossierHistoryToDbToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-			this.importWsDossierHistoryToDbToolStripMenuItem.Text = "Import battles from ws dossier history";
-			this.importWsDossierHistoryToDbToolStripMenuItem.Click += new System.EventHandler(this.importWsDossierHistoryToDbToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(270, 6);
-			// 
-			// testSaveImageToolStripMenuItem
-			// 
-			this.testSaveImageToolStripMenuItem.Name = "testSaveImageToolStripMenuItem";
-			this.testSaveImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-			this.testSaveImageToolStripMenuItem.Text = "Test save image";
-			this.testSaveImageToolStripMenuItem.Click += new System.EventHandler(this.testSaveImageToolStripMenuItem_Click);
-			// 
-			// testUpdateTankImageToolStripMenuItem
-			// 
-			this.testUpdateTankImageToolStripMenuItem.Name = "testUpdateTankImageToolStripMenuItem";
-			this.testUpdateTankImageToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
-			this.testUpdateTankImageToolStripMenuItem.Text = "Test updateTankImage";
-			this.testUpdateTankImageToolStripMenuItem.Click += new System.EventHandler(this.testUpdateTankImageToolStripMenuItem_Click);
-			// 
 			// lblStatus2
 			// 
 			this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1503,6 +1436,70 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// toolStripSeparator5
+			// 
+			this.toolStripSeparator5.Name = "toolStripSeparator5";
+			this.toolStripSeparator5.Size = new System.Drawing.Size(260, 6);
+			// 
+			// toolItemAdmin
+			// 
+			this.toolItemAdmin.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemTest_ViewRange2,
+            this.toolStripSeparator17,
+            this.importDossierHistoryToolStripMenuItem2,
+            this.importWsDossierHistoryToDbToolStripMenuItem2,
+            this.toolStripSeparator18,
+            this.testSaveImageToolStripMenuItem2,
+            this.testUpdateTankImageToolStripMenuItem2});
+			this.toolItemAdmin.Name = "toolItemAdmin";
+			this.toolItemAdmin.Size = new System.Drawing.Size(263, 22);
+			this.toolItemAdmin.Text = "Admin Tools";
+			// 
+			// toolItemTest_ViewRange2
+			// 
+			this.toolItemTest_ViewRange2.Name = "toolItemTest_ViewRange2";
+			this.toolItemTest_ViewRange2.Size = new System.Drawing.Size(273, 22);
+			this.toolItemTest_ViewRange2.Text = "View Range...";
+			this.toolItemTest_ViewRange2.Click += new System.EventHandler(this.toolItemTest_ViewRange_Click);
+			// 
+			// toolStripSeparator17
+			// 
+			this.toolStripSeparator17.Name = "toolStripSeparator17";
+			this.toolStripSeparator17.Size = new System.Drawing.Size(270, 6);
+			// 
+			// importDossierHistoryToolStripMenuItem2
+			// 
+			this.importDossierHistoryToolStripMenuItem2.Name = "importDossierHistoryToolStripMenuItem2";
+			this.importDossierHistoryToolStripMenuItem2.Size = new System.Drawing.Size(273, 22);
+			this.importDossierHistoryToolStripMenuItem2.Text = "Import dossier history";
+			this.importDossierHistoryToolStripMenuItem2.Click += new System.EventHandler(this.importDossierHistoryToolStripMenuItem_Click);
+			// 
+			// importWsDossierHistoryToDbToolStripMenuItem2
+			// 
+			this.importWsDossierHistoryToDbToolStripMenuItem2.Name = "importWsDossierHistoryToDbToolStripMenuItem2";
+			this.importWsDossierHistoryToDbToolStripMenuItem2.Size = new System.Drawing.Size(273, 22);
+			this.importWsDossierHistoryToDbToolStripMenuItem2.Text = "Import battles from ws dossier history";
+			this.importWsDossierHistoryToDbToolStripMenuItem2.Click += new System.EventHandler(this.importWsDossierHistoryToDbToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator18
+			// 
+			this.toolStripSeparator18.Name = "toolStripSeparator18";
+			this.toolStripSeparator18.Size = new System.Drawing.Size(270, 6);
+			// 
+			// testSaveImageToolStripMenuItem2
+			// 
+			this.testSaveImageToolStripMenuItem2.Name = "testSaveImageToolStripMenuItem2";
+			this.testSaveImageToolStripMenuItem2.Size = new System.Drawing.Size(273, 22);
+			this.testSaveImageToolStripMenuItem2.Text = "Test save image";
+			this.testSaveImageToolStripMenuItem2.Click += new System.EventHandler(this.testSaveImageToolStripMenuItem_Click);
+			// 
+			// testUpdateTankImageToolStripMenuItem2
+			// 
+			this.testUpdateTankImageToolStripMenuItem2.Name = "testUpdateTankImageToolStripMenuItem2";
+			this.testUpdateTankImageToolStripMenuItem2.Size = new System.Drawing.Size(273, 22);
+			this.testUpdateTankImageToolStripMenuItem2.Text = "Test updateTankImage";
+			this.testUpdateTankImageToolStripMenuItem2.Click += new System.EventHandler(this.testUpdateTankImageToolStripMenuItem_Click);
 			// 
 			// Main
 			// 
@@ -1575,8 +1572,6 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1m;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1y;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattlesAll;
-		private System.Windows.Forms.ToolStripDropDownButton toolItemTest;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTest_ViewRange;
 		private System.Windows.Forms.ToolStripDropDownButton toolItemTankFilter;
 		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_All;
 		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier;
@@ -1617,18 +1612,14 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav10;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_EditFavList;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 		private System.Windows.Forms.Panel panelMainArea;
 		private System.Windows.Forms.Panel panelInfo;
 		private System.Windows.Forms.ImageList imageListToolStrip;
 		private System.Windows.Forms.Label lblStatusRowCount;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-		private System.Windows.Forms.ToolStripMenuItem importDossierHistoryToolStripMenuItem;
 		private System.Windows.Forms.DataGridView dataGridMain;
 		private BadScrollBar scrollY;
 		private BadScrollBar scrollX;
 		private BadScrollBarCorner scrollCorner;
-		private System.Windows.Forms.ToolStripMenuItem importWsDossierHistoryToDbToolStripMenuItem;
 		private System.Windows.Forms.ToolStripDropDownButton toolItemColumnSelect;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_01;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_04;
@@ -1645,8 +1636,6 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_10;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_11;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_12;
-		private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem testUpdateTankImageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattlesYesterday;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
 		private System.Windows.Forms.ToolStripMenuItem toolItemBattles2w;
@@ -1659,7 +1648,6 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemUpdateDataFromAPI;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_14;
 		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_15;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripDropDownButton toolItemMode;
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeAll;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
@@ -1671,6 +1659,15 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeCompany;
 		private System.Windows.Forms.ToolStripMenuItem historicalBattlesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeSpecialInfo;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+		private System.Windows.Forms.ToolStripMenuItem toolItemAdmin;
+		private System.Windows.Forms.ToolStripMenuItem toolItemTest_ViewRange2;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+		private System.Windows.Forms.ToolStripMenuItem importDossierHistoryToolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem importWsDossierHistoryToDbToolStripMenuItem2;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+		private System.Windows.Forms.ToolStripMenuItem testSaveImageToolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem testUpdateTankImageToolStripMenuItem2;
 	}
 }
 

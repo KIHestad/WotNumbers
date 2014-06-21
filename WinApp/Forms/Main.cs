@@ -288,11 +288,11 @@ namespace WinApp.Forms
 			// Check / show logged in player
 			if (Config.Settings.playerName == "")
 			{
-				MainTheme.Text = "WoT Numbers - NO PLAYER SELECTED";
+				MainTheme.Text = "Wot Numbers - NO PLAYER SELECTED";
 			}
 			else
 			{
-				MainTheme.Text = "WoT Numbers - " + Config.Settings.playerName;
+				MainTheme.Text = "Wot Numbers - " + Config.Settings.playerName;
 			}
 			Refresh();
 		}
@@ -2077,7 +2077,7 @@ namespace WinApp.Forms
 			string dbVersionComment = " (correct version)";
 			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
 				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
-			string msg = "WoT Numbers" + Environment.NewLine + Environment.NewLine +
+			string msg = "Wot Numbers" + Environment.NewLine + Environment.NewLine +
 						 "Application version: " + AssemblyVersion + Environment.NewLine +
 						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine + Environment.NewLine +
 						 "Track your World of Tanks gaming performance and progress." + Environment.NewLine + Environment.NewLine +
