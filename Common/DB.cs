@@ -29,15 +29,15 @@ namespace Common
 			public string lastSQL = "";
 		}
 
-		public static DataTable FetchData(string sql, out DBResult result)
+		public static DataTable FetchData(string sql, ConfigData config, out DBResult result)
 		{
 			result = new DBResult();
 			result.lastSQL = sql;
-			ConfigData.dbType SelecteDbType = Config.Settings.databaseType;
+			ConfigData.dbType SelecteDbType = config.databaseType;
 			DataTable dt = new DataTable();
 			try
 			{
-				string dbcon = Config.DatabaseConnection();
+				string dbcon = Config.DatabaseConnection(config);
 				if (SelecteDbType == ConfigData.dbType.MSSQLserver)
 				{
 					SqlConnection con = new SqlConnection(dbcon);
@@ -70,15 +70,15 @@ namespace Common
 			return dt;
 		}
 
-		public static void ExecuteNonQuery(string sql, bool runInBatch, out DBResult result)
+		public static void ExecuteNonQuery(string sql, bool runInBatch, ConfigData config, out DBResult result)
 		{
 			result = new DBResult();
 			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
 			try
 			{
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				if (config.databaseType == ConfigData.dbType.MSSQLserver)
 				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+					SqlConnection con = new SqlConnection(Config.DatabaseConnection(config));
 					con.Open();
 					if (runInBatch)
 					{
@@ -101,9 +101,9 @@ namespace Common
 					}
 					con.Close();
 				}
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				else if (config.databaseType == ConfigData.dbType.SQLite)
 				{
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection(config));
 					con.Open();
 					if (runInBatch)
 					{
@@ -136,18 +136,18 @@ namespace Common
 			}
 		}
 
-		public static DataTable ListTables(out DBResult result)
+		public static DataTable ListTables(ConfigData config, out DBResult result)
 		{
 			result = new DBResult();
 			DataTable dt = new DataTable();
 			try
 			{
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+				if (config.databaseType == ConfigData.dbType.MSSQLserver)
 				{
 					DBResult fetchTableList = new DBResult();
 					string sql = "SELECT TABLE_NAME AS TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME";
 					result.lastSQL = sql;
-					dt = FetchData(sql, out fetchTableList);
+					dt = FetchData(sql, config, out fetchTableList);
 					if (fetchTableList.Error)
 					{
 						result.Error = true;
@@ -156,10 +156,10 @@ namespace Common
 						result.Text = "Error execute query to for MSSQL for listing tables in database. Please check your database connection.";
 					}
 				}
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+				else if (config.databaseType == ConfigData.dbType.SQLite)
 				{
 					result.lastSQL = "con.GetSchema('tables')";
-					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+					SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection(config));
 					con.Open();
 					DataTable TableList = new DataTable();
 					TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
@@ -178,7 +178,7 @@ namespace Common
 			return dt;
 		}
 
-		public static void CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType, out DBResult result)
+		public static void CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType, ref ConfigData config, out DBResult result)
 		{
 			result = new DBResult();
 			// Check database file location
@@ -211,8 +211,8 @@ namespace Common
 					// Check if database exists
 					bool dbExists = false;
 					string winAuth = "Win";
-					if (!Config.Settings.databaseWinAuth) winAuth = "Sql";
-					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master", winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
+					if (!config.databaseWinAuth) winAuth = "Sql";
+					string connectionstring = Config.DatabaseConnection(config, ConfigData.dbType.MSSQLserver, "", config.databaseServer, "master", winAuth, config.databaseUid, config.databasePwd);
 					using (SqlConnection con = new SqlConnection(connectionstring))
 					{
 						con.Open();
@@ -249,9 +249,9 @@ namespace Common
 							myCommand.ExecuteNonQuery();
 							myConn.Close();
 							// Save new db into settings
-							Config.Settings.databaseName = databaseName;
+							config.databaseName = databaseName;
 							string msg = "";
-							Config.SaveConfig(out msg);
+							Config.SaveConfig(config, out msg);
 						}
 						catch (System.Exception ex)
 						{
@@ -278,15 +278,15 @@ namespace Common
 						string db = fileLocation + databaseName + ".db";
 						SQLiteConnection.CreateFile(db);
 						// Save new db file into settings
-						Config.Settings.databaseFileName = fileLocation + databaseName + ".db";
+						config.databaseFileName = fileLocation + databaseName + ".db";
 						string msg = "";
-						Config.SaveConfig(out msg);
+						Config.SaveConfig(config, out msg);
 					}
 				}
 			}
 		}
-		
-		public static void AddWithValue(ref string Sql, string Parameter, object Value, DB.SqlDataType DataType)
+
+		public static void AddWithValue(ref string Sql, string Parameter, object Value, ConfigData config, DB.SqlDataType DataType)
 		{
 			if (Value == DBNull.Value)
 			{
@@ -346,15 +346,15 @@ namespace Common
 			return Sql;
 		}
 
-		public static void CheckConnection(out DBResult result)
+		public static void CheckConnection(ConfigData config, out DBResult result)
 		{
 			result = new DBResult();
 			DataTable dt = new DataTable();
 			// Get database type
-			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			if (config.databaseType == ConfigData.dbType.MSSQLserver)
 			{
 				// Check data
-				if (Config.Settings.databaseServer == null || Config.Settings.databaseServer == "" || Config.Settings.databaseName == "")
+				if (config.databaseServer == null || config.databaseServer == "" || config.databaseName == "")
 				{
 					result.Error = true;
 					result.ErrorMsg = "Missing database server and/or database name";
@@ -365,7 +365,7 @@ namespace Common
 				{
 					try
 					{
-						SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+						SqlConnection con = new SqlConnection(Config.DatabaseConnection(config));
 						con.Open();
 						SqlCommand command = new SqlCommand("SELECT * FROM player", con);
 						SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -381,10 +381,10 @@ namespace Common
 					}
 				}
 			}
-			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+			else if (config.databaseType == ConfigData.dbType.SQLite)
 			{
 				// Check data
-				if (Config.Settings.databaseFileName == "" )
+				if (config.databaseFileName == "")
 				{
 					result.Error = true;
 					result.ErrorMsg = "Missing database server and/or database name";
@@ -395,7 +395,7 @@ namespace Common
 				{
 					try
 					{
-						SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+						SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection(config));
 						con.Open();
 						SQLiteCommand command = new SQLiteCommand("SELECT * FROM player", con);
 						SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
