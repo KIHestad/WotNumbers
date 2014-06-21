@@ -163,17 +163,30 @@ namespace WinApp.Code
 									}
 								}
 							}
-							else // Found mapping to Achievment
+							else if (foundRows[0]["dbAch"] != DBNull.Value) // Found mapped achievement
 							{
-								string dbField = foundRows[0]["dbAch"].ToString();
+								int count = Convert.ToInt32(currentItem.value);
+								if (count > 0)
+								{
+									AchItem ach = new AchItem();
+									ach.achName = currentItem.property.ToString();
+									ach.count = count;
+									achList.Add(ach);
+								}
+							}
+						}
+						else if ( currentItem.subSection == "achievements7x7" || currentItem.subSection == "achievements") //  Found unmapped achievent in dedicated subsections
+						{
+							int count = Convert.ToInt32(currentItem.value);
+							if (count > 0)
+							{
 								AchItem ach = new AchItem();
-								ach.achName = dbField;
-								ach.count = Convert.ToInt32(currentItem.value);
+								ach.achName = currentItem.property.ToString();
+								ach.count = count;
 								achList.Add(ach);
 							}
 						}
-						// fraglist
-						if (currentItem.subSection == "fragslist")
+						else if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills") // Check frags
 							fragList += currentItem.value.ToString() + ";";
 						// Temp log all data
 						// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
@@ -214,7 +227,7 @@ namespace WinApp.Code
 									achList.Clear();
 								}
 								// Get new tank name
-								if (currentItem.mainSection == "tanks_v2") // The only section containing tanks to be read
+								if (currentItem.mainSection == "tanks_v2" || currentItem.mainSection == "tanks") // The only section containing tanks to be read
 								{
 									currentItem.tank = reader.Value.ToString(); // add to current item
 									tankName = reader.Value.ToString(); // add to current tank
@@ -678,8 +691,8 @@ namespace WinApp.Code
 							// new frag on existing fragged tank, update
 							playerTankFragSQL += "UPDATE playerTankFrag " +
 												"SET fragCount = " + newFragItem.fragCount.ToString() +
-												"WHERE playerTankId=" + oldFrag[i].playerTankId +
-												"  AND fraggedTankId=" + newFragItem.tankId + "; ";
+												" WHERE playerTankId=" + oldFrag[i].playerTankId +
+												" AND fraggedTankId=" + newFragItem.tankId + "; ";
 							// Add new frag count to battle Frag
 							newFragItem.fragCount = newFragItem.fragCount - oldFrag[i].fragCount;
 							battleFrag.Add(newFragItem);
