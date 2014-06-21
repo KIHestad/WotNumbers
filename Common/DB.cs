@@ -178,7 +178,7 @@ namespace Common
 			return dt;
 		}
 
-		public static void CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType, ref ConfigData config, out DBResult result)
+		public static void CreateDatabase(string databaseName, string fileLocation, ConfigData.dbType dbType, ref ConfigData config, string configfile, out DBResult result)
 		{
 			result = new DBResult();
 			// Check database file location
@@ -251,7 +251,7 @@ namespace Common
 							// Save new db into settings
 							config.databaseName = databaseName;
 							string msg = "";
-							Config.SaveConfig(config, out msg);
+							Config.SaveConfig(config, configfile, out msg);
 						}
 						catch (System.Exception ex)
 						{
@@ -280,7 +280,7 @@ namespace Common
 						// Save new db file into settings
 						config.databaseFileName = fileLocation + databaseName + ".db";
 						string msg = "";
-						Config.SaveConfig(config, out msg);
+						Config.SaveConfig(config, configfile, out msg);
 					}
 				}
 			}

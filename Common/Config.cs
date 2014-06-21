@@ -21,25 +21,23 @@ namespace Common
 			public int Height = 480;
 		}
 
-		public dbType  databaseType { get; set; }			// SQLite or MS SQL Server
-		public string  databaseFileName { get; set; }		// SQLite Filename
-		public string  databaseServer { get; set; }			// MSSQL Servername
+		public dbType  databaseType { get; set; }				// SQLite or MS SQL Server
+		public string  databaseFileName { get; set; }			// SQLite Filename
+		public string  databaseServer { get; set; }				// MSSQL Servername
 		public bool    databaseWinAuth { get; set; }			// MSSQL Win (true) og SQL (false) authentication
 		public string  databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
 		public string  databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
-		public string  databaseName { get; set; }			// MSSQL Databasename
-		public int     playerId { get; set; }				// Player ID selected
-		public string  playerName { get; set; }				// Player Name selected
+		public string  databaseName { get; set; }				// MSSQL Databasename
+		public int     playerId { get; set; }					// Player ID selected
+		public string  playerName { get; set; }					// Player Name selected
 		public string  dossierFilePath { get; set; }			// Dossier file path
-		public int     dossierFileWathcherRun { get; set; }	// Dossier file listener activated
-		public bool    grindParametersAutoStart { get; set; }// Autoshow Grinding params on app startup
-		public PosSize posSize { get; set; } // Main Form Position And Size
+		public int     dossierFileWathcherRun { get; set; }		// Dossier file listener activated
+		public bool    grindParametersAutoStart { get; set; }	// Autoshow Grinding params on app startup
+		public PosSize posSize { get; set; }					// Main Form Position And Size
 	}
 
-	class Config
+	public class Config
 	{
-		private const string configfile = "config.json";		// File to load/save config changes
-		
 		private static bool _appDataFolderOK = false;
 		public static string AppDataBaseFolder
 		{
@@ -83,32 +81,41 @@ namespace Common
 			}
 		}
 
+		public static string AppDataAdminFolder
+		{
+			get
+			{
+				return AppDataBaseFolder + "Admin\\";
+			}
+		}
+
+
 		private static ConfigData SetConfigDefaults()
 		{
-			ConfigData configData = new ConfigData();
+			ConfigData config = new ConfigData();
 			// Insert default values as settings
-			configData.databaseType = ConfigData.dbType.SQLite;
+			config.databaseType = ConfigData.dbType.SQLite;
 			// Params for SQLite
-			configData.databaseFileName = "";
+			config.databaseFileName = "";
 			// Params for MS SQL Server
-			configData.databaseServer = ".";
-			configData.databaseWinAuth = true;
-			configData.databaseUid = "";
-			configData.databasePwd = "";
-			configData.databaseName = "";
+			config.databaseServer = ".";
+			config.databaseWinAuth = true;
+			config.databaseUid = "";
+			config.databasePwd = "";
+			config.databaseName = "";
 			// Common param
-			configData.playerId = 0;
-			configData.playerName = "";
-			configData.dossierFilePath = "";
-			configData.dossierFileWathcherRun = 0;
-			configData.grindParametersAutoStart = false;
-			configData.posSize = new ConfigData.PosSize();
+			config.playerId = 0;
+			config.playerName = "";
+			config.dossierFilePath = "";
+			config.dossierFileWathcherRun = 0;
+			config.grindParametersAutoStart = false;
+			config.posSize = new ConfigData.PosSize();
 			// done
-			return configData;
+			return config;
 		}
 
 		
-		public static bool SaveConfig(ConfigData config, out string msg)
+		public static bool SaveConfig(ConfigData config, string configfile, out string msg)
 		{
 			bool ok = true;
 			string returnMsg = "Application settings succsessfully saved.";
@@ -126,7 +133,7 @@ namespace Common
 			return ok;
 		}
 
-		public static bool GetConfig(ref ConfigData config, out string msg)
+		public static bool GetConfig(ref ConfigData config, string configfile, out string msg)
 		{
 			bool ok = true;
 			string returMsg = "Application settings succsessfully read.";
