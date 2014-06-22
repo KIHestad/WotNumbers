@@ -33,10 +33,10 @@
 			this.roolItemFile = new System.Windows.Forms.ToolStripDropDownButton();
 			this.roolItemFileExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.txtAdminSQLiteDB = new System.Windows.Forms.TextBox();
-			this.btnSelect = new System.Windows.Forms.Button();
 			this.btnCreate = new System.Windows.Forms.Button();
+			this.btnSelect = new System.Windows.Forms.Button();
+			this.txtAdminSQLiteDB = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.openFileDialogDQLiteADminDB = new System.Windows.Forms.OpenFileDialog();
 			this.toolStripMain.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -68,7 +68,7 @@
 			// roolItemFileExit
 			// 
 			this.roolItemFileExit.Name = "roolItemFileExit";
-			this.roolItemFileExit.Size = new System.Drawing.Size(152, 22);
+			this.roolItemFileExit.Size = new System.Drawing.Size(92, 22);
 			this.roolItemFileExit.Text = "&Exit";
 			this.roolItemFileExit.Click += new System.EventHandler(this.roolItemFileExit_Click);
 			// 
@@ -85,24 +85,15 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Connection to Admin SQLite database";
 			// 
-			// label1
+			// btnCreate
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(16, 29);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(52, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Filename:";
-			// 
-			// txtAdminSQLiteDB
-			// 
-			this.txtAdminSQLiteDB.Enabled = false;
-			this.txtAdminSQLiteDB.Location = new System.Drawing.Point(19, 45);
-			this.txtAdminSQLiteDB.Multiline = true;
-			this.txtAdminSQLiteDB.Name = "txtAdminSQLiteDB";
-			this.txtAdminSQLiteDB.Size = new System.Drawing.Size(357, 56);
-			this.txtAdminSQLiteDB.TabIndex = 1;
-			this.txtAdminSQLiteDB.TabStop = false;
+			this.btnCreate.Location = new System.Drawing.Point(220, 114);
+			this.btnCreate.Name = "btnCreate";
+			this.btnCreate.Size = new System.Drawing.Size(75, 23);
+			this.btnCreate.TabIndex = 3;
+			this.btnCreate.Text = "Create new";
+			this.btnCreate.UseVisualStyleBackColor = true;
+			this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
 			// 
 			// btnSelect
 			// 
@@ -114,15 +105,24 @@
 			this.btnSelect.UseVisualStyleBackColor = true;
 			this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
 			// 
-			// btnCreate
+			// txtAdminSQLiteDB
 			// 
-			this.btnCreate.Location = new System.Drawing.Point(220, 114);
-			this.btnCreate.Name = "btnCreate";
-			this.btnCreate.Size = new System.Drawing.Size(75, 23);
-			this.btnCreate.TabIndex = 3;
-			this.btnCreate.Text = "Create new";
-			this.btnCreate.UseVisualStyleBackColor = true;
-			this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
+			this.txtAdminSQLiteDB.Enabled = false;
+			this.txtAdminSQLiteDB.Location = new System.Drawing.Point(19, 45);
+			this.txtAdminSQLiteDB.Multiline = true;
+			this.txtAdminSQLiteDB.Name = "txtAdminSQLiteDB";
+			this.txtAdminSQLiteDB.Size = new System.Drawing.Size(357, 56);
+			this.txtAdminSQLiteDB.TabIndex = 1;
+			this.txtAdminSQLiteDB.TabStop = false;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(16, 29);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(52, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "Filename:";
 			// 
 			// openFileDialogDQLiteADminDB
 			// 
@@ -135,6 +135,7 @@
 			this.ClientSize = new System.Drawing.Size(441, 222);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.toolStripMain);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Main";
 			this.Text = "Wot Number Admin";
 			this.Load += new System.EventHandler(this.Main_Load);
