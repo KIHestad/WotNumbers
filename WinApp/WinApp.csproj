@@ -133,7 +133,7 @@
     <Compile Include="Code\FormControl\MsgBox.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
-    <Compile Include="Code\FormLayout\BadTheme.cs">
+    <Compile Include="Code\FormControl\BadTheme.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Code\DbVersion.cs" />

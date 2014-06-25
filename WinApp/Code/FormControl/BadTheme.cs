@@ -740,7 +740,7 @@ abstract class BadThemeControl : Control
 				grapichObject.DrawString(Text, Font, brush, Width - 5 - TextSize.Width - offset, yPos);
 				break;
 			case HorizontalAlignment.Center:
-				grapichObject.DrawString(Text, Font, brush, Width / 2 - TextSize.Width / 2, yPos);
+				grapichObject.DrawString(Text, Font, brush, (Width / 2 - TextSize.Width / 2) + offset, yPos);
 				break;
 		}
 	}
@@ -813,7 +813,7 @@ class BadButton : BadThemeControl
 		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
 		SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
 		if (!Enabled) fontColor = new SolidBrush(ColorTheme.ControlDisabledFont);
-		DrawText(HorizontalAlignment.Center, fontColor);
+		DrawText(HorizontalAlignment.Center, fontColor, 0);
 		DrawIcon(HorizontalAlignment.Left);
 		if (Focused)
 		{
@@ -964,6 +964,36 @@ class BadSeperator : BadThemeControl
 
 class BadProgressBar : BadThemeControl
 {
+
+	private bool _ProgressBarColorMode = false;
+	public bool ProgressBarColorMode
+	{
+		get { return _ProgressBarColorMode; }
+		set { _ProgressBarColorMode = value; Invalidate(); }
+	}
+
+	private int _ProgressBarMargins = 2;
+	public int ProgressBarMargins
+	{
+		get { return _ProgressBarMargins; }
+		set 
+		{
+			int i = value;
+			if (i < 0) i = 0;
+			if (i > 4) i = 4;
+			_ProgressBarMargins = i;
+			Invalidate(); 
+		}
+	}
+
+	private bool _ProgressBarShowPercentage = false;
+	public bool ProgressBarShowPercentage
+	{
+		get { return _ProgressBarShowPercentage; }
+		set { _ProgressBarShowPercentage = value; Invalidate(); }
+	}
+
+
 	private double _ValueMax = 100;
 	public double ValueMax
 	{
@@ -995,20 +1025,53 @@ class BadProgressBar : BadThemeControl
 	{
 		grapichObject.Clear(BackColor);
 		// Background
-		SolidBrush brushBackColor = new SolidBrush(ColorTheme.FormBackTitle);
+		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ControlBorder);
 		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
 		// Inner
 		brushBackColor = new SolidBrush(ColorTheme.FormBack);
 		int borderWidth = 1;
 		grapichObject.FillRectangle(brushBackColor, borderWidth, borderWidth, Width - (borderWidth*2), Height - (borderWidth*2));
 		// Progress
+		int progressBarOffset = borderWidth + ProgressBarMargins;
 		Double progress = Value;
 		if (progress > ValueMax) progress = ValueMax;
 		if (progress < ValueMin) progress = ValueMin;
 		if ((ValueMax - ValueMin) != 0)
-			progress = (progress / (ValueMax - ValueMin)) * (Width - 8);
-		brushBackColor = new SolidBrush(ColorTheme.FormBorderBlue);
-		grapichObject.FillRectangle(brushBackColor, 4, 4, Convert.ToInt32(progress), Height - 8);
+			progress = (progress / (ValueMax - ValueMin)) * (Width - (progressBarOffset*2));
+		int percentage = Convert.ToInt32(Value * 100 / (ValueMax - ValueMin));
+		// Colormode
+		Color color = ColorTheme.FormBorderBlue; // Default if not color mode is selected
+		if (ProgressBarColorMode)
+		{
+			
+			color = ColorTheme.Rating_very_bad;
+			if (percentage > 90) color = ColorTheme.Rating_uniqe;
+			else if (percentage > 80) color = ColorTheme.Rating_very_good;
+			else if (percentage > 70) color = ColorTheme.Rating_good;
+			else if (percentage > 50) color = ColorTheme.Rating_normal;
+			else if (percentage > 25) color = ColorTheme.Rating_bad;
+		}
+		brushBackColor = new SolidBrush(color);
+		grapichObject.FillRectangle(brushBackColor, progressBarOffset, progressBarOffset, Convert.ToInt32(progress), Height - (progressBarOffset*2));
+		// Percentage text
+		if (ProgressBarShowPercentage)
+		{
+			Text = percentage.ToString() + "%";
+			SolidBrush brushFontColor = new SolidBrush(ColorTheme.ControlFont);
+			if (ProgressBarColorMode)
+			{
+				int offset = 0;
+				if (percentage > 50) brushFontColor = new SolidBrush(Color.Black);
+				if (percentage > 40 && percentage <= 50) offset = (int)((percentage - 40) * 1.5);
+				if (percentage > 50 && percentage < 60) offset = (int)((percentage - 60) * 1.5);
+				DrawText(HorizontalAlignment.Center, brushFontColor, offset);
+			}
+			else
+			{
+				DrawText(HorizontalAlignment.Center, brushFontColor, 0);
+			}
+		
+		}
 		// Draw
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}

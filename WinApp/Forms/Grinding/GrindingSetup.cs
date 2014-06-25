@@ -16,7 +16,6 @@ namespace WinApp.Forms
 	{
 		private int playerTankId;
 		private bool dataChanged = false;
-		private bool advanced = false;
 
 		public GrindingSetup(int selectedPlayerTankId)
 		{
@@ -29,7 +28,6 @@ namespace WinApp.Forms
 			GetTankData();
 			dataChanged = false;
 			UpdateGrindParameters();
-			GrindSetup();
 		}
 
 		private void UpdateGrindParameters()
@@ -67,8 +65,6 @@ namespace WinApp.Forms
 				txtLastVictoryTime.Text = Convert.ToDateTime(tank["lastVictoryTime"]).ToString("dd.MM HH:mm");
 			// Add grinding value
 			txtGrindComment.Text = tank["gComment"].ToString();
-			txtCurrentXP.Text = tank["gCurrentXP"].ToString();
-			txtGoalXP.Text = tank["gGoalXP"].ToString();
 			txtGrindXP.Text = tank["gGrindXP"].ToString();
 			txtProgressXP.Text = tank["gProgressXP"].ToString();
 			txtRestXP.Text = tank["totalXP"].ToString();
@@ -78,57 +74,19 @@ namespace WinApp.Forms
 			CalcProgress();
 		}
 
-		private void txtGrindCurrentXP_TextChanged(object sender, EventArgs e)
-		{
-			if (txtCurrentXP.HasFocus)
-				CalcGoalXP();
-		}
-
+		
 		private void txtGrindGrindXP_TextChanged(object sender, EventArgs e)
 		{
-			if (txtGrindXP.HasFocus)	
-				CalcGoalXP();
+			if (txtGrindXP.HasFocus)
+				CalcProgress();
 		}
-
-		private void CalcGoalXP()
-		{
-			int curXP = 0;
-			if (Int32.TryParse(txtCurrentXP.Text, out curXP))
-			{
-				int grindXP = 0;
-				if (Int32.TryParse(txtGrindXP.Text, out grindXP))
-				{
-					txtGoalXP.Text = (curXP + grindXP).ToString();
-				}
-			}
-			CalcProgress();
-		}
-
-		private void txtGrindGoalXP_TextChanged(object sender, EventArgs e)
-		{
-			if (txtGoalXP.HasFocus)
-			{
-				int curXP = 0;
-				if (Int32.TryParse(txtCurrentXP.Text, out curXP))
-				{
-					int goalXP = 0;
-					if (Int32.TryParse(txtGoalXP.Text, out goalXP))
-					{
-						txtGrindXP.Text = (goalXP - curXP).ToString();
-					}
-				}
-			}
-			CalcProgress();
-		}
-
+				
 		private void btnGrindReset_Click(object sender, EventArgs e)
 		{
 			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets all values, and ends grinding for this tank", "Reset and end grinding?", MsgBoxType.OKCancel);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				txtGrindComment.Text = "";
-				txtCurrentXP.Text = "0";
-				txtGoalXP.Text = "0";
 				txtGrindXP.Text = "0";
 				txtProgressXP.Text = "0";
 				txtRestXP.Text = "0";
@@ -166,15 +124,13 @@ namespace WinApp.Forms
 
 		private void SaveData()
 		{
-			string sql = "UPDATE playerTank SET gCurrentXP=@CurrentXP, gGrindXP=@GrindXP, gGoalXP=@GoalXP, gProgressXP=@ProgressXP, " +
+			string sql = "UPDATE playerTank SET gGrindXP=@GrindXP, gProgressXP=@ProgressXP, " +
 						 "                      gBattlesDay=@BattlesDay, gComment=@Comment, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
 						 "					    gRestBattles=@RestBattles, gRestDays=@RestDays " +
 						 "WHERE id=@id";
-			DB.AddWithValue(ref sql, "@CurrentXP", txtCurrentXP.Text, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@GrindXP", txtGrindXP.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@GoalXP", txtGoalXP.Text, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@ProgressXP", txtProgressXP.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@ProgressPercent", txtProgressPercent.Text, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@ProgressPercent", pbProgressPercent.Value, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@RestXP", txtRestXP.Text, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@RestBattles", txtRestBattles.Text, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@RestDays", txtRestDays.Text, DB.SqlDataType.Int);
@@ -187,11 +143,7 @@ namespace WinApp.Forms
 
 		private void btnProgressReset_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets the progress XP, grinding continues based on grinding values", "Reset Progress", MsgBoxType.OKCancel);
-			if (answer == MsgBox.Button.OKButton)
-			{
-				txtProgressXP.Text = "0";
-			}
+
 		}
 
 		private void CalcProgress(bool Complete = true)
@@ -204,7 +156,7 @@ namespace WinApp.Forms
 			int btlPerDay = 0;
 			Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
 			// Calc values 
-			txtProgressPercent.Text = GrindingHelper.CalcProgressPercent(grind, progress).ToString();
+			pbProgressPercent.Value = GrindingHelper.CalcProgressPercent(grind, progress);
 			int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
 			txtRestXP.Text = restXP.ToString();
 			int realAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString());
@@ -269,47 +221,6 @@ namespace WinApp.Forms
 			UpdateGrindParameters();
 		}
 
-		private void btnAdvanced_Click(object sender, EventArgs e)
-		{
-			advanced = !advanced;
-			GrindSetup();
-		}
-
-		private void GrindSetup()
-		{
-			if (advanced)
-			{
-				// Advanced setup
-				btnAdvanced.Text = "Normal";
-				gbGrindingSetup.Text = "Advanced Grinding Setup";
-				lblAdd1.Visible = true;
-				lblEq1.Visible = true;
-				lblCurrentXP.Visible = true;
-				txtCurrentXP.Visible = true;
-				lblGoalXP.Visible = true;
-				txtGoalXP.Visible = true;
-				Point p = new Point(297, btnGrindReset.Location.Y);
-				btnGrindReset.Location = p;
-				p = new Point(124,189);
-				lblGrindXP.Location = p;
-			}
-			else
-			{
-				// Normal setup
-				btnAdvanced.Text = "Advanced";
-				gbGrindingSetup.Text = "Normal Grinding Setup";
-				lblAdd1.Visible = false;
-				lblEq1.Visible = false;
-				lblCurrentXP.Visible = false;
-				txtCurrentXP.Visible = false;
-				lblGoalXP.Visible = false;
-				txtGoalXP.Visible = false;
-				Point p = new Point(txtGoalXP.Location.X, btnGrindReset.Location.Y);
-				btnGrindReset.Location = p;
-				p = new Point(txtCurrentXP.Location.X, txtCurrentXP.Location.Y);
-				lblGrindXP.Location = p;
-			}
-		}
 
 		private void btnClose_Click(object sender, EventArgs e)
 		{

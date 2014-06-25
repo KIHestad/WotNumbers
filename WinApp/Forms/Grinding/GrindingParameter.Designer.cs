@@ -85,9 +85,9 @@
 			// ddEveryBattle
 			// 
 			this.ddEveryBattle.Image = null;
-			this.ddEveryBattle.Location = new System.Drawing.Point(202, 105);
+			this.ddEveryBattle.Location = new System.Drawing.Point(214, 105);
 			this.ddEveryBattle.Name = "ddEveryBattle";
-			this.ddEveryBattle.Size = new System.Drawing.Size(70, 23);
+			this.ddEveryBattle.Size = new System.Drawing.Size(58, 23);
 			this.ddEveryBattle.TabIndex = 5;
 			this.ddEveryBattle.Text = "None";
 			this.ddEveryBattle.Click += new System.EventHandler(this.ddEveryBattle_Click);
@@ -102,14 +102,14 @@
 			this.badLabel2.Size = new System.Drawing.Size(126, 23);
 			this.badLabel2.TabIndex = 4;
 			this.badLabel2.TabStop = false;
-			this.badLabel2.Text = "Every victory bonus:";
+			this.badLabel2.Text = "Bonus per victory:";
 			// 
 			// ddFirstBattle
 			// 
 			this.ddFirstBattle.Image = null;
-			this.ddFirstBattle.Location = new System.Drawing.Point(202, 76);
+			this.ddFirstBattle.Location = new System.Drawing.Point(214, 76);
 			this.ddFirstBattle.Name = "ddFirstBattle";
-			this.ddFirstBattle.Size = new System.Drawing.Size(70, 23);
+			this.ddFirstBattle.Size = new System.Drawing.Size(58, 23);
 			this.ddFirstBattle.TabIndex = 3;
 			this.ddFirstBattle.Text = "2X";
 			this.ddFirstBattle.Click += new System.EventHandler(this.ddFirstBattle_Click);
@@ -121,10 +121,10 @@
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(45, 76);
 			this.badLabel1.Name = "badLabel1";
-			this.badLabel1.Size = new System.Drawing.Size(150, 23);
+			this.badLabel1.Size = new System.Drawing.Size(163, 23);
 			this.badLabel1.TabIndex = 2;
 			this.badLabel1.TabStop = false;
-			this.badLabel1.Text = "First victory every day bonus:";
+			this.badLabel1.Text = "Bonus on first victory every day:";
 			// 
 			// cmdCancel
 			// 
