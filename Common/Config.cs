@@ -34,6 +34,7 @@ namespace Common
 		public int     dossierFileWathcherRun { get; set; }		// Dossier file listener activated
 		public bool    grindParametersAutoStart { get; set; }	// Autoshow Grinding params on app startup
 		public PosSize posSize { get; set; }					// Main Form Position And Size
+		public int     timeZoneAdjust { get; set; }				// Adjust battle time read from dossier according to time zone
 	}
 
 	public class Config
@@ -110,6 +111,7 @@ namespace Common
 			config.dossierFileWathcherRun = 0;
 			config.grindParametersAutoStart = false;
 			config.posSize = new ConfigData.PosSize();
+			config.timeZoneAdjust = 0;
 			// done
 			return config;
 		}

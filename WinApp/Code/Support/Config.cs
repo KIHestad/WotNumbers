@@ -29,19 +29,20 @@ namespace WinApp.Code
 			public int Height = 480;
 		}
 
-		public dbType  databaseType { get; set; }			// SQLite or MS SQL Server
-		public string  databaseFileName { get; set; }		// SQLite Filename
-		public string  databaseServer { get; set; }			// MSSQL Servername
+		public dbType  databaseType { get; set; }				// SQLite or MS SQL Server
+		public string  databaseFileName { get; set; }			// SQLite Filename
+		public string  databaseServer { get; set; }				// MSSQL Servername
 		public bool    databaseWinAuth { get; set; }			// MSSQL Win (true) og SQL (false) authentication
 		public string  databaseUid { get; set; }				// MSSQL Username (if SQL authentication)
 		public string  databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
-		public string  databaseName { get; set; }			// MSSQL Databasename
-		public int     playerId { get; set; }				// Player ID selected
-		public string  playerName { get; set; }				// Player Name selected
+		public string  databaseName { get; set; }				// MSSQL Databasename
+		public int     playerId { get; set; }					// Player ID selected
+		public string  playerName { get; set; }					// Player Name selected
 		public string  dossierFilePath { get; set; }			// Dossier file path
-		public int     dossierFileWathcherRun { get; set; }	// Dossier file listener activated
-		public bool    grindParametersAutoStart { get; set; }// Autoshow Grinding params on app startup
-		public PosSize posSize { get; set; } // Main Form Position And Size
+		public int     dossierFileWathcherRun { get; set; }		// Dossier file listener activated
+		public bool    grindParametersAutoStart { get; set; }	// Autoshow Grinding params on app startup
+		public PosSize posSize { get; set; }					// Main Form Position And Size
+		public int     timeZoneAdjust { get; set; }				// Adjust battle time read from dossier according to time zone
 	}
 
 	class Config

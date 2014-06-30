@@ -285,6 +285,18 @@ namespace WinApp.Code
 		//	//}
 		//}
 
+		private static DataRow AdjustForTimeZone(DataRow playerTankRow)
+		{
+			if (playerTankRow["creationTime"] != DBNull.Value)
+				playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(Config.Settings.timeZoneAdjust);
+			if (playerTankRow["updatedTime"] != DBNull.Value)
+				playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(Config.Settings.timeZoneAdjust);
+			if (playerTankRow["lastBattleTime"] != DBNull.Value)
+				playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(Config.Settings.timeZoneAdjust);
+
+			return playerTankRow;
+		}
+
 		public static bool CheckTankDataResult(string tankName, 
 												DataRow playerTankNewRow, 
 												DataRow playerTankBattle15NewRow, 
@@ -338,6 +350,9 @@ namespace WinApp.Code
 				if (battlesNew15 != 0 || battlesNew7 != 0 || battlesNewHistorical != 0 ||
 					(forceUpdate && (playerTankOldRow_battles15 != 0 || playerTankOldRow_battles7 != 0 || playerTankOldRow_battlesHistorical != 0)))
 				{  
+					// Adjust for time zone
+					playerTankNewRow = AdjustForTimeZone(playerTankNewRow);
+					
 					// Update playerTank
 					string sqlFields = "";
 					foreach (DataColumn column in playerTankOldTable.Columns)
@@ -368,12 +383,12 @@ namespace WinApp.Code
 					{
 						battleVictory = true;
 						// Check if this is first victory by comparing to current value
-						if (playerTankNewRow["lastVictoryTime"] == DBNull.Value)
+						if (playerTankOldRow["lastVictoryTime"] == DBNull.Value)
 							firstVictory = true; // first time last victory is recorded, assume first victory
 						else
 						{
 							// Check if this victory is first one this day, first find date for last victory
-							DateTime lastVictoryTime = Convert.ToDateTime(playerTankNewRow["lastVictoryTime"]);
+							DateTime lastVictoryTime = Convert.ToDateTime(playerTankOldRow["lastVictoryTime"]);
 							if (lastVictoryTime.Hour < 5) lastVictoryTime = lastVictoryTime.AddDays(-1); // correct date according to server reset 05:00
 							lastVictoryTime = new DateTime(lastVictoryTime.Year, lastVictoryTime.Month, lastVictoryTime.Day, 0, 0, 0); // Remove time - just focus on date
 							// Find date for this victory

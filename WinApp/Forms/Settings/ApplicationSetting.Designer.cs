@@ -32,6 +32,9 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSetting));
 			this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
 			this.ApplicationSettingsTheme = new BadForm();
+			this.badLabel1 = new BadLabel();
+			this.ddTimeZone = new BadDropDownBox();
+			this.badGroupBox4 = new BadGroupBox();
 			this.Cancel = new BadButton();
 			this.cboSelectPlayer = new BadDropDownBox();
 			this.btnSelectDossierFilePath = new BadButton();
@@ -49,6 +52,9 @@
 			// 
 			// ApplicationSettingsTheme
 			// 
+			this.ApplicationSettingsTheme.Controls.Add(this.badLabel1);
+			this.ApplicationSettingsTheme.Controls.Add(this.ddTimeZone);
+			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox4);
 			this.ApplicationSettingsTheme.Controls.Add(this.Cancel);
 			this.ApplicationSettingsTheme.Controls.Add(this.cboSelectPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSelectDossierFilePath);
@@ -72,7 +78,7 @@
 			this.ApplicationSettingsTheme.MainArea = mainAreaClass1;
 			this.ApplicationSettingsTheme.Name = "ApplicationSettingsTheme";
 			this.ApplicationSettingsTheme.Resizable = false;
-			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(498, 364);
+			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(498, 454);
 			this.ApplicationSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ApplicationSettingsTheme.SystemExitImage")));
 			this.ApplicationSettingsTheme.SystemMaximizeImage = null;
 			this.ApplicationSettingsTheme.SystemMinimizeImage = null;
@@ -80,10 +86,41 @@
 			this.ApplicationSettingsTheme.Text = "Application Settings";
 			this.ApplicationSettingsTheme.TitleHeight = 26;
 			// 
+			// badLabel1
+			// 
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Dimmed = false;
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(44, 347);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(229, 23);
+			this.badLabel1.TabIndex = 15;
+			this.badLabel1.Text = "Add or subtract hours to adjust battle time:";
+			// 
+			// ddTimeZone
+			// 
+			this.ddTimeZone.Image = null;
+			this.ddTimeZone.Location = new System.Drawing.Point(293, 347);
+			this.ddTimeZone.Name = "ddTimeZone";
+			this.ddTimeZone.Size = new System.Drawing.Size(162, 23);
+			this.ddTimeZone.TabIndex = 14;
+			this.ddTimeZone.Text = "0 (Server Time)";
+			this.ddTimeZone.Click += new System.EventHandler(this.ddTimeZone_Click);
+			// 
+			// badGroupBox4
+			// 
+			this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox4.Image = null;
+			this.badGroupBox4.Location = new System.Drawing.Point(25, 322);
+			this.badGroupBox4.Name = "badGroupBox4";
+			this.badGroupBox4.Size = new System.Drawing.Size(447, 65);
+			this.badGroupBox4.TabIndex = 13;
+			this.badGroupBox4.Text = "Time Zone";
+			// 
 			// Cancel
 			// 
 			this.Cancel.Image = null;
-			this.Cancel.Location = new System.Drawing.Point(395, 319);
+			this.Cancel.Location = new System.Drawing.Point(395, 408);
 			this.Cancel.Name = "Cancel";
 			this.Cancel.Size = new System.Drawing.Size(75, 23);
 			this.Cancel.TabIndex = 12;
@@ -154,7 +191,7 @@
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(312, 319);
+			this.btnSave.Location = new System.Drawing.Point(312, 408);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(77, 23);
 			this.btnSave.TabIndex = 11;
@@ -210,7 +247,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(498, 364);
+			this.ClientSize = new System.Drawing.Size(498, 454);
 			this.Controls.Add(this.ApplicationSettingsTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
@@ -242,5 +279,8 @@
 		private BadGroupBox badGroupBox2;
 		private BadGroupBox badGroupBox3;
 		private BadButton Cancel;
+		private BadGroupBox badGroupBox4;
+		private BadDropDownBox ddTimeZone;
+		private BadLabel badLabel1;
 	}
 }

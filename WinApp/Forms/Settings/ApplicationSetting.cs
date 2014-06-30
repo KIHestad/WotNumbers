@@ -40,6 +40,14 @@ namespace WinApp.Forms
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
 			PlayerPanel();
+			// Time Zone
+			int timeZone = Config.Settings.timeZoneAdjust;
+			string timeZoneSelected = timeZone.ToString();
+			if (timeZone == 0)
+				timeZoneSelected = "0 (Server Time)";
+			else if (timeZone > 0)
+				timeZoneSelected = "+" + timeZone.ToString();
+			ddTimeZone.Text = timeZoneSelected;
 		}
 
 		private void PlayerPanel()
@@ -105,11 +113,13 @@ namespace WinApp.Forms
 
 		private void btnSave_Click_1(object sender, EventArgs e)
 		{
+			// Dossier File path
 			if (Directory.Exists(txtDossierFilePath.Text))
 			{
 				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
 				Config.Settings.dossierFileWathcherRun = 1;
 			}
+			// Player
 			Config.Settings.playerName = cboSelectPlayer.Text;
 			DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
 			if (dt.Rows.Count > 0)
@@ -119,6 +129,17 @@ namespace WinApp.Forms
 					playerId = Convert.ToInt32(dt.Rows[0][0]);
 				Config.Settings.playerId = playerId;
 			}
+			// Time Zone
+			string timeZone = ddTimeZone.Text.ToString();
+			int newTimeZone = 0;
+			if (timeZone != "0 (Server Time)")
+			{
+				if (timeZone.Substring(0, 1) == "+")
+					timeZone = timeZone.Substring(1);
+				Int32.TryParse(timeZone, out newTimeZone);
+			}
+			Config.Settings.timeZoneAdjust = newTimeZone;
+			// Save
 			string msg = "";
 			bool saveOk = false;
 			saveOk = Config.SaveConfig(out msg);
@@ -163,6 +184,23 @@ namespace WinApp.Forms
 		private void Cancel_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void ddTimeZone_Click(object sender, EventArgs e)
+		{
+			string timeZones = "";
+			for (int i = -12; i <= 12; i++)
+			{
+				if (i > 0)
+					timeZones += "+" + i.ToString();
+				else if (i == 0)
+					timeZones += "0 (Server Time)";
+				else
+					timeZones += i.ToString();
+				if (i < 12)
+					timeZones += ",";
+			}
+			Code.DropDownGrid.Show(ddTimeZone, Code.DropDownGrid.DropDownGridType.List, timeZones);
 		}
 
 	}
