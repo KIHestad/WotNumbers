@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 59; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 61; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1007,6 +1007,12 @@ namespace WinApp.Code
 				case 60:
 					// damageBlockedByArmor
 					break;
+                case 61:
+                    mssql = "ALTER TABLE _version_ ADD description varchar(255) NULL; " +
+                            "UPDATE _version_ SET description = 'DB version' WHERE id = 1; " +
+                            "INSERT INTO _version_ (id, version, description) VALUES (2, 0, 'WN8 version'); ";
+                    sqlite = mssql;
+                    break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -1039,7 +1045,7 @@ namespace WinApp.Code
 					// Update db _version_ if success
 					if (continueNext)
 					{
-						sql = "update _version_ set version=" + DBVersionCurrentNumber.ToString();
+						sql = "update _version_ set version=" + DBVersionCurrentNumber.ToString() + " where id=1";
 						continueNext = DB.ExecuteNonQuery(sql);
 					}
 				}
@@ -1057,39 +1063,44 @@ namespace WinApp.Code
 		{
 			int version = 0;
 			string sql = "";
-			bool versionTableFound = false;
+            //bool versionTableFound = false;
 			// List tables
 			DataTable dt = DB.ListTables();
 			if (dt.Rows.Count > 0)
 			{
-				// Check if _version_ table containing db version number exists
-				foreach (DataRow dr in dt.Rows)
-				{
-					if (dr["TABLE_NAME"].ToString() == "_version_")
-					{
-						versionTableFound = true;
-						break;
-					}
-				}
-				// if _version_ table not exist create it
-				if (!versionTableFound)
-				{
-					if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-						sql = "create table _version_ (id integer primary key, version integer not null); ";
-					else if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
-						sql = "create table _version_ (id int primary key, version int not null); ";
-					bool createTableOK = DB.ExecuteNonQuery(sql); // Create _version_ table now
-					if (!createTableOK)
-						return 0; // Error occured creating _version_ table
-					else
-					{
-						// Add initial version
-						sql = "insert into _version_ (id, version) values (1,1); ";
-						bool insertVersionOK = DB.ExecuteNonQuery(sql);
-						if (!insertVersionOK)
-							return 0; // Error occured inserting version number in _version_ table
-					}
-				}
+                //// Check if _version_ table containing db version number exists
+                //foreach (DataRow dr in dt.Rows)
+                //{
+                //    if (dr["TABLE_NAME"].ToString() == "_version_")
+                //    {
+                //        versionTableFound = true;
+                //        break;
+                //    }
+                //}
+                //// if _version_ table not exist create it
+                //if (!versionTableFound)
+                //{
+                //    if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+                //        sql = "create table _version_ (id integer primary key, version integer not null, description varchar(255)); ";
+                //    else if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+                //        sql = "create table _version_ (id int primary key, version int not null, description varchar(255)); ";
+                //    bool createTableOK = DB.ExecuteNonQuery(sql); // Create _version_ table now
+                //    if (!createTableOK)
+                //        return 0; // Error occured creating _version_ table
+                //    else
+                //    {
+                //        // Add initial db version
+                //        sql = "insert into _version_ (id, version, description) values (1, 1, 'DB version'); ";
+                //        bool insertVersionOK = DB.ExecuteNonQuery(sql);
+                //        if (!insertVersionOK)
+                //            return 0; // Error occured inserting version number in _version_ table
+                //        // Add initial WN8 version
+                //        sql = "insert into _version_ (id, version, description) values (2, 0, 'WN8 version'); ";
+                //        insertVersionOK = DB.ExecuteNonQuery(sql);
+                //        if (!insertVersionOK)
+                //            return 0; // Error occured inserting version number in _version_ table
+                //    }
+                //}
 				// Get version now
 				sql = "select version from _version_ where id=1; ";
 				dt.Dispose();
@@ -1101,5 +1112,18 @@ namespace WinApp.Code
 			}
 			return version;
 		}
+
+        public static int WN8Version()
+        {
+            int version = 0;
+            string sql = "select version from _version_ where id=2; ";
+            DataTable dt = DB.FetchData(sql);
+            if (dt.Rows.Count > 0)
+            {
+                version = Convert.ToInt32(dt.Rows[0][0]);
+            }
+            else version = 0;
+            return version;
+        }
 	}
 }

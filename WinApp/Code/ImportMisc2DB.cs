@@ -152,6 +152,11 @@ namespace WinApp.Code
 
 			// Get ready to parse through WN8 exp values
 			JObject allTokens = JObject.Parse(json);
+            
+            JToken headerToken = allTokens.First;
+            JToken versionToken = headerToken.First;
+            int WN8Version = (int)versionToken.First;
+
 			JArray items = (JArray)allTokens["data"];
 			JObject item;
 			JToken jtoken;
@@ -189,10 +194,14 @@ namespace WinApp.Code
 										+ "; ";
 			}
 
+            
+
 			// Execute update statements
 			try
 			{
 				DB.ExecuteNonQuery(sql, true, true);
+                sql = "update _version_ set version=" + WN8Version + " where id=2;";
+                DB.ExecuteNonQuery(sql, true, true);
 			}
 			catch (Exception ex)
 			{

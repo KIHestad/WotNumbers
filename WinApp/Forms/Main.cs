@@ -2079,7 +2079,8 @@ namespace WinApp.Forms
 				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
 			string msg = "Wot Numbers" + Environment.NewLine + Environment.NewLine +
 						 "Application version: " + AssemblyVersion + Environment.NewLine +
-						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine + Environment.NewLine +
+						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine +
+                         "WN8 version: " + DBVersion.WN8Version().ToString() + Environment.NewLine + Environment.NewLine +
 						 "Track your World of Tanks gaming performance and progress." + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
 			Code.MsgBox.Show(msg, "About WoT Numbers");

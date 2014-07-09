@@ -361,3 +361,12 @@ create table favList (
 	name varchar(50) not null,
 	position integer null
 );
+
+-------------------------------------------------------------------------------------------------
+
+create table _version_ (
+	id integer primary key,
+	version integer not null
+);
+
+INSERT INTO _version_ (id, version) VALUES (1, 1);
