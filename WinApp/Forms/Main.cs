@@ -2025,23 +2025,17 @@ namespace WinApp.Forms
 			// Dossier file manual handling
 			SetStatus2("Starting manual dossier check...");
 			string result = dossier2json.ManualRun();
-			SetStatus2(result);
-		}
-
-		private void toolItemSettingsUpdateFromPrev_Click(object sender, EventArgs e)
-		{
-			// Test running previous dossier file
-			SetStatus2("Starting check on previous dossier file...");
-			string result = dossier2json.ManualRun(true);
-			SetStatus2(result);
+			SetFormTitle();
+			GridShow(result);
 		}
 
 		private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
 		{
 			// Test running previous dossier file, force update - even if no more battles is detected
 			SetStatus2("Starting check on previous dossier file with force update...");
-			string result = dossier2json.ManualRun(true, true);
-			SetStatus2(result);
+			string result = dossier2json.ManualRun(true);
+			SetFormTitle();
+			GridShow(result);
 		}
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
@@ -2080,7 +2074,7 @@ namespace WinApp.Forms
 			string msg = "Wot Numbers" + Environment.NewLine + Environment.NewLine +
 						 "Application version: " + AssemblyVersion + Environment.NewLine +
 						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine +
-                         "WN8 version: " + DBVersion.WN8Version().ToString() + Environment.NewLine + Environment.NewLine +
+						 "WN8 version: " + DBVersion.WN8Version().ToString() + Environment.NewLine + Environment.NewLine +
 						 "Track your World of Tanks gaming performance and progress." + Environment.NewLine + Environment.NewLine +
 						 "Created by: BadButton and cmdrTrinity";
 			Code.MsgBox.Show(msg, "About WoT Numbers");

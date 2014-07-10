@@ -32,14 +32,13 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSetting));
 			this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
 			this.ApplicationSettingsTheme = new BadForm();
+			this.badLabel2 = new BadLabel();
 			this.badLabel1 = new BadLabel();
 			this.ddTimeZone = new BadDropDownBox();
 			this.badGroupBox4 = new BadGroupBox();
 			this.Cancel = new BadButton();
 			this.cboSelectPlayer = new BadDropDownBox();
 			this.btnSelectDossierFilePath = new BadButton();
-			this.btnRemovePlayer = new BadButton();
-			this.btnAddPlayer = new BadButton();
 			this.txtDossierFilePath = new BadTextBox();
 			this.btnDbSetting = new BadButton();
 			this.btnSave = new BadButton();
@@ -52,14 +51,13 @@
 			// 
 			// ApplicationSettingsTheme
 			// 
+			this.ApplicationSettingsTheme.Controls.Add(this.badLabel2);
 			this.ApplicationSettingsTheme.Controls.Add(this.badLabel1);
 			this.ApplicationSettingsTheme.Controls.Add(this.ddTimeZone);
 			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox4);
 			this.ApplicationSettingsTheme.Controls.Add(this.Cancel);
 			this.ApplicationSettingsTheme.Controls.Add(this.cboSelectPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSelectDossierFilePath);
-			this.ApplicationSettingsTheme.Controls.Add(this.btnRemovePlayer);
-			this.ApplicationSettingsTheme.Controls.Add(this.btnAddPlayer);
 			this.ApplicationSettingsTheme.Controls.Add(this.txtDossierFilePath);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnDbSetting);
 			this.ApplicationSettingsTheme.Controls.Add(this.btnSave);
@@ -86,6 +84,17 @@
 			this.ApplicationSettingsTheme.Text = "Application Settings";
 			this.ApplicationSettingsTheme.TitleHeight = 26;
 			// 
+			// badLabel2
+			// 
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(44, 265);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(250, 23);
+			this.badLabel2.TabIndex = 16;
+			this.badLabel2.Text = "Select player if several players dossier files is read:";
+			// 
 			// badLabel1
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -100,9 +109,9 @@
 			// ddTimeZone
 			// 
 			this.ddTimeZone.Image = null;
-			this.ddTimeZone.Location = new System.Drawing.Point(293, 347);
+			this.ddTimeZone.Location = new System.Drawing.Point(300, 347);
 			this.ddTimeZone.Name = "ddTimeZone";
-			this.ddTimeZone.Size = new System.Drawing.Size(162, 23);
+			this.ddTimeZone.Size = new System.Drawing.Size(155, 23);
 			this.ddTimeZone.TabIndex = 14;
 			this.ddTimeZone.Text = "0 (Server Time)";
 			this.ddTimeZone.Click += new System.EventHandler(this.ddTimeZone_Click);
@@ -130,11 +139,10 @@
 			// cboSelectPlayer
 			// 
 			this.cboSelectPlayer.Image = null;
-			this.cboSelectPlayer.Location = new System.Drawing.Point(44, 264);
+			this.cboSelectPlayer.Location = new System.Drawing.Point(300, 265);
 			this.cboSelectPlayer.Name = "cboSelectPlayer";
-			this.cboSelectPlayer.Size = new System.Drawing.Size(243, 23);
+			this.cboSelectPlayer.Size = new System.Drawing.Size(155, 23);
 			this.cboSelectPlayer.TabIndex = 8;
-			this.cboSelectPlayer.Text = "badDropDownBox1";
 			this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
 			// 
 			// btnSelectDossierFilePath
@@ -146,26 +154,6 @@
 			this.btnSelectDossierFilePath.TabIndex = 3;
 			this.btnSelectDossierFilePath.Text = "Select Path";
 			this.btnSelectDossierFilePath.Click += new System.EventHandler(this.btnSelectDossierFilePath_Click);
-			// 
-			// btnRemovePlayer
-			// 
-			this.btnRemovePlayer.Image = null;
-			this.btnRemovePlayer.Location = new System.Drawing.Point(377, 264);
-			this.btnRemovePlayer.Name = "btnRemovePlayer";
-			this.btnRemovePlayer.Size = new System.Drawing.Size(78, 23);
-			this.btnRemovePlayer.TabIndex = 10;
-			this.btnRemovePlayer.Text = "Remove";
-			this.btnRemovePlayer.Click += new System.EventHandler(this.btnRemovePlayer_Click_1);
-			// 
-			// btnAddPlayer
-			// 
-			this.btnAddPlayer.Image = null;
-			this.btnAddPlayer.Location = new System.Drawing.Point(293, 264);
-			this.btnAddPlayer.Name = "btnAddPlayer";
-			this.btnAddPlayer.Size = new System.Drawing.Size(78, 23);
-			this.btnAddPlayer.TabIndex = 9;
-			this.btnAddPlayer.Text = "Add";
-			this.btnAddPlayer.Click += new System.EventHandler(this.btmAddPlayer_Click);
 			// 
 			// txtDossierFilePath
 			// 
@@ -269,8 +257,6 @@
 		private BadGroupBox badGroupBox1;
 		private BadButton btnDbSetting;
 		private BadLabel lblDbSettings;
-		private BadButton btnAddPlayer;
-		private BadButton btnRemovePlayer;
 		private BadTextBox txtDossierFilePath;
 		private BadButton btnSelectDossierFilePath;
 		private BadButton btnSave;
@@ -282,5 +268,6 @@
 		private BadGroupBox badGroupBox4;
 		private BadDropDownBox ddTimeZone;
 		private BadLabel badLabel1;
+		private BadLabel badLabel2;
 	}
 }

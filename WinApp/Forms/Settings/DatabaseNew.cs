@@ -28,7 +28,6 @@ namespace WinApp.Forms
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 				DatabaseNewTheme.Text = "Create New SQLite Database";
-			txtPlayerName.Text = Config.Settings.playerName;
 			txtFileLocation.Text = Config.AppDataDBFolder;
 		}
 
@@ -133,20 +132,10 @@ namespace WinApp.Forms
 				UpdateProgressBar("Retrieves WN8 expected values from API");
 				ImportWN8Api2DB.UpdateWN8();
 
-				// Add player
-				UpdateProgressBar("Adding selected player into database");
-				if (txtPlayerName.Text.Trim() != "")
-				{
-					ok = DB.ExecuteNonQuery("INSERT INTO player (name) VALUES ('" + txtPlayerName.Text.Trim() + "')");
-					Config.Settings.playerName = txtPlayerName.Text.Trim();
-					Config.Settings.playerId = 1;
-				}
-				else
-				{
-					Config.Settings.playerName = "";
-					Config.Settings.playerId = 0;
-				}
-
+				// Reset player
+				Config.Settings.playerName = "";
+				Config.Settings.playerId = 0;
+				
 				// Upgrade to latest version
 				UpdateProgressBar("Upgrading database");
 				DBVersion.CheckForDbUpgrade();
@@ -155,7 +144,7 @@ namespace WinApp.Forms
 				
 				// Get initial dossier 
 				UpdateProgressBar("Running initial dossier file check, please wait...");
-				dossier2json.ManualRun(false, true);
+				dossier2json.ManualRun();
 				UpdateProgressBar("");
 			}
 			return ok;

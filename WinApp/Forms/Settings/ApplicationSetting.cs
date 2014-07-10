@@ -54,8 +54,6 @@ namespace WinApp.Forms
 		{
 			bool ok = DB.CheckConnection(false);
 			cboSelectPlayer.Enabled = ok;
-			btnAddPlayer.Enabled = ok;
-			btnRemovePlayer.Enabled = ok;
 		}
 
 		private void btmAddPlayer_Click(object sender, EventArgs e)
@@ -65,30 +63,31 @@ namespace WinApp.Forms
 			cboSelectPlayer.Text = Config.Settings.playerName;
 		}
 
-		private void btnRemovePlayer_Click_1(object sender, EventArgs e)
-		{
-			Code.MsgBox.Button result = Code.MsgBox.Show("Are you sure you want to remove player: " + cboSelectPlayer.Text + " ?", "Remove player", Code.MsgBoxType.OKCancel);
-			if (result == Code.MsgBox.Button.OKButton)
-			{
-				try
-				{
-					SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-					con.Open();
-					SqlCommand cmd = new SqlCommand("DELETE FROM player WHERE name=@name", con);
-					cmd.Parameters.AddWithValue("@name", cboSelectPlayer.Text);
-					cmd.ExecuteNonQuery();
-					con.Close();
-					Code.MsgBox.Show("Player successfully removed.", "Player removed");
-					cboSelectPlayer.Text = "";
-					Refresh();
-				}
-				catch (Exception ex)
-				{
-					Code.MsgBox.Show("Cannot remove player, are you sure a player is selected? It is not possible to remove player that has saved related data, only players without any data can be removed." + 
-						Environment.NewLine + Environment.NewLine + ex.Message, "Cannot remove player");
-				}
-			}
-		}
+		// Remove player is deactivated
+		//private void btnRemovePlayer_Click_1(object sender, EventArgs e)
+		//{
+		//	Code.MsgBox.Button result = Code.MsgBox.Show("Are you sure you want to remove player: " + cboSelectPlayer.Text + " ?", "Remove player", Code.MsgBoxType.OKCancel);
+		//	if (result == Code.MsgBox.Button.OKButton)
+		//	{
+		//		try
+		//		{
+		//			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+		//			con.Open();
+		//			SqlCommand cmd = new SqlCommand("DELETE FROM player WHERE name=@name", con);
+		//			cmd.Parameters.AddWithValue("@name", cboSelectPlayer.Text);
+		//			cmd.ExecuteNonQuery();
+		//			con.Close();
+		//			Code.MsgBox.Show("Player successfully removed.", "Player removed");
+		//			cboSelectPlayer.Text = "";
+		//			Refresh();
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			Code.MsgBox.Show("Cannot remove player, are you sure a player is selected? It is not possible to remove player that has saved related data, only players without any data can be removed." + 
+		//				Environment.NewLine + Environment.NewLine + ex.Message, "Cannot remove player");
+		//		}
+		//	}
+		//}
 
 		private void btnSelectDossierFilePath_Click(object sender, EventArgs e)
 		{

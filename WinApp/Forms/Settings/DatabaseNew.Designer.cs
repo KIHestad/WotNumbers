@@ -36,8 +36,6 @@
 			this.cmdSelectFIle = new BadButton();
 			this.txtFileLocation = new BadTextBox();
 			this.badLabel3 = new BadLabel();
-			this.txtPlayerName = new BadTextBox();
-			this.badLabel2 = new BadLabel();
 			this.txtDatabasename = new BadTextBox();
 			this.badLabel1 = new BadLabel();
 			this.btnCreateDB = new BadButton();
@@ -54,8 +52,6 @@
 			this.DatabaseNewTheme.Controls.Add(this.cmdSelectFIle);
 			this.DatabaseNewTheme.Controls.Add(this.txtFileLocation);
 			this.DatabaseNewTheme.Controls.Add(this.badLabel3);
-			this.DatabaseNewTheme.Controls.Add(this.txtPlayerName);
-			this.DatabaseNewTheme.Controls.Add(this.badLabel2);
 			this.DatabaseNewTheme.Controls.Add(this.txtDatabasename);
 			this.DatabaseNewTheme.Controls.Add(this.badLabel1);
 			this.DatabaseNewTheme.Controls.Add(this.btnCreateDB);
@@ -96,6 +92,9 @@
 			this.badProgressBar.Image = null;
 			this.badProgressBar.Location = new System.Drawing.Point(25, 244);
 			this.badProgressBar.Name = "badProgressBar";
+			this.badProgressBar.ProgressBarColorMode = false;
+			this.badProgressBar.ProgressBarMargins = 2;
+			this.badProgressBar.ProgressBarShowPercentage = false;
 			this.badProgressBar.Size = new System.Drawing.Size(234, 23);
 			this.badProgressBar.TabIndex = 9;
 			this.badProgressBar.TabStop = false;
@@ -138,29 +137,6 @@
 			this.badLabel3.TabStop = false;
 			this.badLabel3.Text = "Database File Location:";
 			// 
-			// txtPlayerName
-			// 
-			this.txtPlayerName.HasFocus = false;
-			this.txtPlayerName.Image = null;
-			this.txtPlayerName.Location = new System.Drawing.Point(241, 87);
-			this.txtPlayerName.Name = "txtPlayerName";
-			this.txtPlayerName.PasswordChar = '\0';
-			this.txtPlayerName.Size = new System.Drawing.Size(190, 23);
-			this.txtPlayerName.TabIndex = 5;
-			this.txtPlayerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(241, 67);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(130, 23);
-			this.badLabel2.TabIndex = 4;
-			this.badLabel2.TabStop = false;
-			this.badLabel2.Text = "Player Name:";
-			// 
 			// txtDatabasename
 			// 
 			this.txtDatabasename.HasFocus = false;
@@ -168,7 +144,7 @@
 			this.txtDatabasename.Location = new System.Drawing.Point(42, 87);
 			this.txtDatabasename.Name = "txtDatabasename";
 			this.txtDatabasename.PasswordChar = '\0';
-			this.txtDatabasename.Size = new System.Drawing.Size(190, 23);
+			this.txtDatabasename.Size = new System.Drawing.Size(389, 23);
 			this.txtDatabasename.TabIndex = 3;
 			this.txtDatabasename.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			// 
@@ -241,8 +217,6 @@
 		private BadButton cmdSelectFIle;
 		private BadTextBox txtFileLocation;
 		private BadLabel badLabel3;
-		private BadTextBox txtPlayerName;
-		private BadLabel badLabel2;
 		private BadTextBox txtDatabasename;
 		private BadLabel badLabel1;
 		private BadGroupBox badGroupBox1;

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using Microsoft.Scripting;
@@ -44,55 +46,48 @@ namespace WinApp.Code
 			return logtext;
 		}
 
-		public static string ManualRun(bool TestRunPrevJsonFile = false, bool ForceUpdate = false)
+		public static string ManualRun(bool ForceUpdate = false)
 		{
 			string returVal = "Manual dossier file check started...";
 			Log.CheckLogFileSize();
 			List<string> logText = new List<string>();
 			bool ok = true;
 			String dossierFile = "";
-			if (!TestRunPrevJsonFile)
+			// Dossier file manual handling - get all dossier files
+			logText.Add(LogText("Manual run, looking for new dossier file"));
+			if (Directory.Exists(Config.Settings.dossierFilePath))
 			{
-				// Dossier file manual handling - get all dossier files
-				logText.Add(LogText("Manual run, looking for new dossier file"));
-				if (Directory.Exists(Config.Settings.dossierFilePath))
+				string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
+				DateTime dossierFileDate = new DateTime(1970, 1, 1);
+				foreach (string file in files)
 				{
-					string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
-					DateTime dossierFileDate = new DateTime(1970, 1, 1);
-					foreach (string file in files)
+					FileInfo checkFile = new FileInfo(file);
+					if (checkFile.LastWriteTime > dossierFileDate)
 					{
-						FileInfo checkFile = new FileInfo(file);
-						if (checkFile.LastWriteTime > dossierFileDate)
-						{
-							dossierFile = checkFile.FullName;
-							dossierFileDate = checkFile.LastWriteTime;
-						}
+						dossierFile = checkFile.FullName;
+						dossierFileDate = checkFile.LastWriteTime;
 					}
-					if (dossierFile == "")
-					{
-						logText.Add(LogText(" > No dossier file found"));
-						returVal = "No dossier file found - check Application Settings";
-						ok = false;
-					}
-					else
-					{
-						logText.Add(LogText(" > Dossier file found"));
-					}
+				}
+				if (dossierFile == "")
+				{
+					logText.Add(LogText(" > No dossier file found"));
+					returVal = "No dossier file found - check Application Settings";
+					ok = false;
 				}
 				else
 				{
-					logText.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
-					returVal = "Inncorrect path to dossier file - check Application Settings";
-					ok = false;
+					logText.Add(LogText(" > Dossier file found"));
 				}
 			}
 			else
 			{
-				logText.Add(LogText("Force update from previous converted dossier json file"));
+				logText.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
+				returVal = "Inncorrect path to dossier file - check Application Settings";
+				ok = false;
 			}
 			if (ok)
 			{
-				List<string> newLogText = CopyAndConvertFile(out returVal, dossierFile, TestRunPrevJsonFile, ForceUpdate);
+				List<string> newLogText = CopyAndConvertFile(out returVal, dossierFile, ForceUpdate);
 				foreach (string s in newLogText)
 				{
 					logText.Add(s);
@@ -165,56 +160,74 @@ namespace WinApp.Code
 			return logtext;
 		}
 
-		private static List<string> CopyAndConvertFile(out string statusResult, string dossierFile, bool testRunPrevJsonFile = false, bool forceUpdate = false)
+		private static List<string> CopyAndConvertFile(out string statusResult, string dossierFile, bool forceUpdate = false)
 		{
-			// Copy dossier file and perform file conversion til json format
+			bool ok = true;
 			List<string> logText = new List<string>();
-			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-			string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
-			string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
-			string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
-			string dossierJsonFile = Config.AppDataBaseFolder + "/dossier.json"; // output file
 			string returVal = "Starting file handling...";
-			//try
-			//{
-				bool ok = true;
-				if (!testRunPrevJsonFile)
+			// Get player name from dossier
+			FileInfo fi = new FileInfo(dossierFile);
+			string playerName = GetPlayerName(fi);
+			// Get player ID
+			int playerId = 0;
+			string sql = "select id from player where name=@name";
+			DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+				playerId = Convert.ToInt32(dt.Rows[0][0]);
+			// If no player found, create now
+			if (playerId == 0)
+			{
+				sql = "INSERT INTO player (name) VALUES (@name)";
+				DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
+				DB.ExecuteNonQuery(sql);
+				sql = "select id from player where name=@name";
+				DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
+				dt = DB.FetchData(sql);
+				if (dt.Rows.Count > 0)
+					playerId = Convert.ToInt32(dt.Rows[0][0]);
+			}
+			// If still not identified player break with error
+			if (playerId == 0)
+			{
+				ok = false;
+				logText.Add(LogText(" > Error identifying player"));
+				returVal = "Error identifying player";
+			}
+			// If dossier player is not current player change
+			if (ok && (Config.Settings.playerId != playerId || Config.Settings.playerName != playerName))
+			{
+				Config.Settings.playerId = playerId;
+				Config.Settings.playerName = playerName;
+				string msg = "";
+				Config.SaveConfig(out msg);
+			}
+			if (ok)
+			{
+				// Copy dossier file and perform file conversion til json format
+				string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
+				string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
+				string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
+				string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
+				string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
+				FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
+				fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
+				string result = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
+				if (result != "") // error occured
 				{
-					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
-					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
-					if (File.Exists(dossierDatPrevFile)) // check if previous file exist, and new one is different (skip if testrun)
-					{
-						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-						FileInfo fileInfoprev = new FileInfo(dossierDatPrevFile); // the previous dossier file
-						if (dossier2json.FilesContentsAreEqual(fileInfonew, fileInfoprev))
-						{
-							// Files are identical, skip convert
-							logText.Add(LogText(" > File skipped, same content as previos"));
-							returVal = "Manual dossier file check skipped - same content as previous";
-							fileInfonew.Delete();
-							ok = false;
-						}
-					}
+					logText.Add(result);
+					returVal = "Error converting dossier file to json - check log file";
+					ok = false;
 				}
-				if (!testRunPrevJsonFile && ok) // Convert file to json (skip if testrun)
+				else
 				{
-					string result = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
-					if (result != "") // error occured
-					{
-						logText.Add(result);
-						returVal = "Error converting dossier file to json - check log file";
-						ok = false;
-					}
-					else
-					{
-						logText.Add(LogText(" > Successfully convertet dossier file to json"));
-						// Move new file as previos (copy and delete)
-						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-						fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-						fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
-						fileInfonew.Delete();
-						logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
-					}
+					logText.Add(LogText(" > Successfully convertet dossier file to json"));
+					// Move new file as previos (copy and delete)
+					FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+					fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+					fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
+					fileInfonew.Delete();
+					logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
 				}
 				if (ok) // Analyze json file and add to db
 				{
@@ -229,12 +242,7 @@ namespace WinApp.Code
 						returVal = "No previous dossier file found - run manual check";
 					}
 				}
-			//}
-			//catch (Exception ex)
-			//{
-			//	logText.Add(LogText(" > General file copy or conversion error: " + ex.Message));
-			//	returVal = "General file copy or conversion error - check log file";
-			//}
+			}
 			statusResult = returVal;
 			return logText;
 		}
@@ -315,6 +323,35 @@ namespace WinApp.Code
 				}
 			}
 		}
-	
+
+		private const char separator = ';';
+
+		// Get playername and server
+		private static string GetPlayerNameAndServer(FileInfo cacheFile)
+		{
+			string decodFileName = DecodFileName(cacheFile);
+			string playerName = decodFileName.Split(separator)[1];
+			string serverName = decodFileName.Split(separator)[0];
+			return playerName + " (" + serverName + ")";
+		}
+
+		// Gets the names of the player from name of dossier file
+		public static string GetPlayerName(FileInfo cacheFile)
+		{
+			var decodedFileName = DecodFileName(cacheFile);
+			return decodedFileName.Split(separator)[1];
+		}
+
+		// Decods the name of the file.
+		public static string DecodFileName(FileInfo cacheFile)
+		{
+			string str = cacheFile.Name.Replace(cacheFile.Extension, string.Empty);
+			byte[] decodedFileNameBytes = Base32.Base32Encoder.Decode(str.ToLowerInvariant());
+			string decodedFileName = Encoding.UTF8.GetString(decodedFileNameBytes);
+			return decodedFileName;
+		}
+
+
+
 	}
 }

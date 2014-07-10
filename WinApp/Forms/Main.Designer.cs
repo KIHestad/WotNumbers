@@ -146,8 +146,6 @@
 			this.toolItemSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemSettingsDossierOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemSettingsRunManual = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemSettingsUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
@@ -155,9 +153,6 @@
 			this.toolItemShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
-			this.lblStatus2 = new System.Windows.Forms.Label();
-			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemAdmin = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemTest_ViewRange2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -167,6 +162,9 @@
 			this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
 			this.testSaveImageToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.testUpdateTankImageToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
+			this.lblStatus2 = new System.Windows.Forms.Label();
+			this.lblStatus1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
@@ -1331,8 +1329,6 @@
 			// 
 			this.toolItemSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemSettingsRunManual,
-            this.toolStripSeparator12,
-            this.toolItemSettingsUpdateFromPrev,
             this.toolItemSettingsForceUpdateFromPrev});
 			this.toolItemSettingsDossierOptions.Name = "toolItemSettingsDossierOptions";
 			this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
@@ -1341,27 +1337,15 @@
 			// toolItemSettingsRunManual
 			// 
 			this.toolItemSettingsRunManual.Name = "toolItemSettingsRunManual";
-			this.toolItemSettingsRunManual.Size = new System.Drawing.Size(285, 22);
-			this.toolItemSettingsRunManual.Text = "Manual Dossier File Check";
+			this.toolItemSettingsRunManual.Size = new System.Drawing.Size(286, 22);
+			this.toolItemSettingsRunManual.Text = "Normal Dossier File Check";
 			this.toolItemSettingsRunManual.Click += new System.EventHandler(this.toolItemSettingsRunManual_Click);
-			// 
-			// toolStripSeparator12
-			// 
-			this.toolStripSeparator12.Name = "toolStripSeparator12";
-			this.toolStripSeparator12.Size = new System.Drawing.Size(282, 6);
-			// 
-			// toolItemSettingsUpdateFromPrev
-			// 
-			this.toolItemSettingsUpdateFromPrev.Name = "toolItemSettingsUpdateFromPrev";
-			this.toolItemSettingsUpdateFromPrev.Size = new System.Drawing.Size(285, 22);
-			this.toolItemSettingsUpdateFromPrev.Text = "Normal Check Previous Dossier File";
-			this.toolItemSettingsUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsUpdateFromPrev_Click);
 			// 
 			// toolItemSettingsForceUpdateFromPrev
 			// 
 			this.toolItemSettingsForceUpdateFromPrev.Name = "toolItemSettingsForceUpdateFromPrev";
-			this.toolItemSettingsForceUpdateFromPrev.Size = new System.Drawing.Size(285, 22);
-			this.toolItemSettingsForceUpdateFromPrev.Text = "Force Update From Previous Dossier File";
+			this.toolItemSettingsForceUpdateFromPrev.Size = new System.Drawing.Size(286, 22);
+			this.toolItemSettingsForceUpdateFromPrev.Text = "Force Update All Data Dossier File Check";
 			this.toolItemSettingsForceUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsForceUpdateFromPrev_Click);
 			// 
 			// toolStripSeparator13
@@ -1401,41 +1385,6 @@
 			this.toolItemSettingsApp.Size = new System.Drawing.Size(263, 22);
 			this.toolItemSettingsApp.Text = "&Application Settings...";
 			this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
-			// 
-			// toolItemHelp
-			// 
-			this.toolItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolItemHelp.Image")));
-			this.toolItemHelp.Name = "toolItemHelp";
-			this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
-			this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
-			// 
-			// lblStatus2
-			// 
-			this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.lblStatus2.AutoSize = true;
-			this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
-			this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatus2.Location = new System.Drawing.Point(69, 411);
-			this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
-			this.lblStatus2.Name = "lblStatus2";
-			this.lblStatus2.Size = new System.Drawing.Size(82, 13);
-			this.lblStatus2.TabIndex = 16;
-			this.lblStatus2.Text = "Action message";
-			this.lblStatus2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// lblStatus1
-			// 
-			this.lblStatus1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.lblStatus1.AutoSize = true;
-			this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
-			this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.lblStatus1.Location = new System.Drawing.Point(13, 411);
-			this.lblStatus1.Margin = new System.Windows.Forms.Padding(0);
-			this.lblStatus1.Name = "lblStatus1";
-			this.lblStatus1.Size = new System.Drawing.Size(37, 13);
-			this.lblStatus1.TabIndex = 14;
-			this.lblStatus1.Text = "Status";
-			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
 			// toolStripSeparator5
 			// 
@@ -1501,6 +1450,41 @@
 			this.testUpdateTankImageToolStripMenuItem2.Text = "Test updateTankImage";
 			this.testUpdateTankImageToolStripMenuItem2.Click += new System.EventHandler(this.testUpdateTankImageToolStripMenuItem_Click);
 			// 
+			// toolItemHelp
+			// 
+			this.toolItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolItemHelp.Image")));
+			this.toolItemHelp.Name = "toolItemHelp";
+			this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
+			this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
+			// 
+			// lblStatus2
+			// 
+			this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblStatus2.AutoSize = true;
+			this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
+			this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
+			this.lblStatus2.Location = new System.Drawing.Point(69, 411);
+			this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
+			this.lblStatus2.Name = "lblStatus2";
+			this.lblStatus2.Size = new System.Drawing.Size(82, 13);
+			this.lblStatus2.TabIndex = 16;
+			this.lblStatus2.Text = "Action message";
+			this.lblStatus2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// lblStatus1
+			// 
+			this.lblStatus1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblStatus1.AutoSize = true;
+			this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
+			this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.lblStatus1.Location = new System.Drawing.Point(13, 411);
+			this.lblStatus1.Margin = new System.Windows.Forms.Padding(0);
+			this.lblStatus1.Name = "lblStatus1";
+			this.lblStatus1.Size = new System.Drawing.Size(37, 13);
+			this.lblStatus1.TabIndex = 14;
+			this.lblStatus1.Text = "Status";
+			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1552,8 +1536,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsApp;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRunManual;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsUpdateFromPrev;
 		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsForceUpdateFromPrev;
 		private System.Windows.Forms.Label lblOverView;
 		private System.Windows.Forms.PictureBox picIS7;
