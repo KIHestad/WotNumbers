@@ -9,14 +9,30 @@ namespace WinApp.Code
 {
 	class ColListHelper
 	{
-		public static int GetId(string ColListName)
+		public static int GetColListId(string colListName)
 		{
 			int colListId = 0;
 			string sql = "select columnList.id as id " +
 						 "from columnList  " +
 						 "where columnList.colType=@colType and columnList.name=@name";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@name", ColListName, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@name", colListName, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
+			}
+			return colListId;
+		}
+
+		public static int GetColSelectionId(string colName)
+		{
+			int colListId = 0;
+			string sql = "select columnSelection.id as id " +
+						 "from columnSelection " +
+						 "where colType=@colType and name=@colName";
+			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@colName", colName, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
@@ -53,5 +69,17 @@ namespace WinApp.Code
 			}
 			return dfl;
 		}
+
+		public static void SaveColWidth(string colName, int colWidht)
+		{
+			int colListId = MainSettings.GetCurrentGridFilter().ColListId;
+			int colSelectionId = GetColSelectionId(colName);
+			string sql = "UPDATE columnListSelection SET colWidth=@colWidth WHERE columnSelectionId=@columnSelectionId AND columnListId=@columnListId ;";
+			DB.AddWithValue(ref sql, "@colWidth", colWidht, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@columnSelectionId", colSelectionId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@columnListId", colListId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+		}
+
 	}
 }

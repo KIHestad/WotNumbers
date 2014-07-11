@@ -472,6 +472,7 @@ namespace WinApp.Forms
 						InfoPanelSlideStart(false);
 						break;
 				}
+				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 				GridShow(); // Changed view, no status message applied, sets in GridShow
 			}
 		}
@@ -545,7 +546,7 @@ namespace WinApp.Forms
 			// Selected a colList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			// Get colListId for the selected colList
-			int newColListId = ColListHelper.GetId(selectedMenu.Text);
+			int newColListId = ColListHelper.GetColListId(selectedMenu.Text);
 			// Check if changed
 			if (MainSettings.GetCurrentGridFilter().ColListId != newColListId)
 			{
@@ -950,6 +951,17 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void toolItemModeSpecialInfo_Click(object sender, EventArgs e)
+		{
+			string s = "The tanks statistics are the same for Random, Company and Clan battles." +
+						Environment.NewLine + Environment.NewLine +
+						"For 'Tanks view' these filters only limit the tanks showing in grid, the stats will be the same." +
+						Environment.NewLine + Environment.NewLine +
+						"For 'battle view' the stats is calculated per battle and will be correct for any filter.";
+			Code.MsgBox.Show(s, "Special Battle Filter Information");
+		}
+
+
 		#endregion
 
 		#region Col List Select
@@ -963,7 +975,7 @@ namespace WinApp.Forms
 
 		private void GetSelectedColumnList(out string Select, out List<colListClass> colList)
 		{
-			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnSelection.colWidth, columnSelection.colDataType  " +
+			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
 						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
@@ -1100,7 +1112,8 @@ namespace WinApp.Forms
 		#region Data Grid - OVERALL VIEW *********************************************************************************************************
 
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
-		
+		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
+
 		private void GridShowOverall(string Status2Message)
 		{
 			try
@@ -1261,6 +1274,7 @@ namespace WinApp.Forms
 				}
 			}
 			ResizeNow();
+			mainGridSaveColWidth = true;
 			// Add status message
 			SetStatus2(Status2Message);
 			lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
@@ -1543,6 +1557,7 @@ namespace WinApp.Forms
 			//}
 			// Finish up
 			ResizeNow();
+			mainGridSaveColWidth = true;
 			toolItemBattles.Visible = true;
 			SetStatus2(Status2Message);
 			lblStatusRowCount.Text = "Rows " + rowcount.ToString();
@@ -1812,6 +1827,16 @@ namespace WinApp.Forms
 
 
 
+
+		#endregion
+
+		#region Grid Col Widht Changed
+
+		private void dataGridMain_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+		{
+			if (MainSettings.View != GridView.Views.Overall && mainGridSaveColWidth) 
+				ColListHelper.SaveColWidth(e.Column.HeaderText, e.Column.Width);
+		}
 
 		#endregion
 
@@ -2120,15 +2145,8 @@ namespace WinApp.Forms
 
 		#endregion
 
-		private void toolItemModeSpecialInfo_Click(object sender, EventArgs e)
-		{
-			string s = "The tanks statistics are the same for Random, Company and Clan battles." +
-						Environment.NewLine + Environment.NewLine +
-						"For 'Tanks view' these filters only limit the tanks showing in grid, the stats will be the same." +
-						Environment.NewLine + Environment.NewLine +
-						"For 'battle view' the stats is calculated per battle and will be correct for any filter.";
-			Code.MsgBox.Show(s, "Special Battle Filter Information");
-		}
+
+		
 
 		
 	

@@ -303,9 +303,11 @@ namespace WinApp.Forms
 			// Loop through datagrid and add all new tanks
 			foreach (DataGridViewRow dr in dataGridSelectedColumns.Rows)
 			{
-				string insertsql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) values (@columnSelectionId, @columnListId, @sortorder); ";
+				string insertsql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) " +
+									"values (@columnSelectionId, @columnListId, @sortorder, @colWidth); ";
 				DB.AddWithValue(ref insertsql, "@columnSelectionId", dr.Cells["columnSelectionId"].Value, DB.SqlDataType.Int);
 				DB.AddWithValue(ref insertsql, "@sortorder", dr.Cells["#"].Value, DB.SqlDataType.Int);
+				DB.AddWithValue(ref insertsql, "@colWidth", dr.Cells["colWidth"].Value, DB.SqlDataType.Int);
 				sql += insertsql;
 			}
 			DB.AddWithValue(ref sql, "@columnListId", SelectedColListId, DB.SqlDataType.Int);
@@ -356,7 +358,7 @@ namespace WinApp.Forms
 
 		private void FilterAllColumn()
 		{
-			string sql = "SELECT name as 'Name', description as 'Description', id FROM columnSelection WHERE colType=@colType ";
+			string sql = "SELECT name as 'Name', description as 'Description', id, colWidth FROM columnSelection WHERE colType=@colType ";
 			// Check filter
 			string colGroup = "All";
 			foreach (ToolStripButton button in toolAllColumns.Items)
@@ -374,6 +376,7 @@ namespace WinApp.Forms
 				allTanksColumnSetupDone = true;
 				dataGridAllColumns.Columns["description"].Width = 300;
 				dataGridAllColumns.Columns["id"].Visible = false;
+				dataGridAllColumns.Columns["colWidth"].Visible = false;
 			}
 			// Connect to scrollbar
 			scrollAllColumns.ScrollElementsTotals = dt.Rows.Count;
@@ -476,7 +479,7 @@ namespace WinApp.Forms
 		private void GetSelectedColumnsFromColumnList()
 		{
 			string sql =
-				"SELECT columnListSelection.sortorder AS '#', columnSelection.name AS 'Name', description as 'Description', columnSelectionId, columnListId " +
+				"SELECT columnListSelection.sortorder AS '#', columnSelection.name AS 'Name', description as 'Description', columnSelectionId, columnListId, columnListSelection.colWidth " +
 				"FROM   columnListSelection INNER JOIN " +
 				"		columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 				"		AND columnListSelection.columnListId = @columnListId " +
@@ -492,6 +495,7 @@ namespace WinApp.Forms
 				dataGridSelectedColumns.Columns["Description"].Width = 300;
 				dataGridSelectedColumns.Columns["columnSelectionId"].Visible = false;
 				dataGridSelectedColumns.Columns["columnListId"].Visible = false;
+				dataGridSelectedColumns.Columns["colWidth"].Visible = false;
 			}
 		}
 
@@ -555,7 +559,8 @@ namespace WinApp.Forms
 							DataRow dr = dtSelectedColumns.NewRow();
 							lastcolumnSelectionId = Convert.ToInt32(dataGridAllColumns.Rows[i].Cells["id"].Value);
 							dr["Name"] = dataGridAllColumns.Rows[i].Cells["Name"].Value; ;
-							dr["Description"] = dataGridAllColumns.Rows[i].Cells["Description"].Value; ;
+							dr["Description"] = dataGridAllColumns.Rows[i].Cells["Description"].Value;
+							dr["colWidth"] = dataGridAllColumns.Rows[i].Cells["colWidth"].Value;
 							dr["columnSelectionId"] = lastcolumnSelectionId;
 							dr["columnListId"] = SelectedColListId;
 							dr["#"] = sortOrder;
