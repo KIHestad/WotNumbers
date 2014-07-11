@@ -1020,7 +1020,8 @@ namespace WinApp.Code
 				case 63:
 					mssql = "UPDATE columnListSelection SET columnListSelection.colWidth = CS.colWidth " + 
 							"FROM columnListSelection CLS INNER JOIN columnSelection CS ON CLS.columnSelectionId = CS.id ;";
-					sqlite = mssql;
+					sqlite = "UPDATE columnListSelection SET " +
+							 "colWidth = (SELECT colWidth FROM columnSelection WHERE id = columnListSelection.columnSelectionId)";
 					break;
 			}
 			string sql = "";
