@@ -434,7 +434,7 @@
 			this.toolItemViewOverall.Size = new System.Drawing.Size(60, 22);
 			this.toolItemViewOverall.Text = "&Overview";
 			this.toolItemViewOverall.ToolTipText = " ";
-			this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewSelected_Click);
+			this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
 			// 
 			// toolItemViewTankInfo
 			// 
@@ -444,7 +444,7 @@
 			this.toolItemViewTankInfo.Name = "toolItemViewTankInfo";
 			this.toolItemViewTankInfo.Size = new System.Drawing.Size(42, 22);
 			this.toolItemViewTankInfo.Text = "&Tanks";
-			this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewSelected_Click);
+			this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
 			// 
 			// toolItemViewBattles
 			// 
@@ -454,7 +454,7 @@
 			this.toolItemViewBattles.Name = "toolItemViewBattles";
 			this.toolItemViewBattles.Size = new System.Drawing.Size(46, 22);
 			this.toolItemViewBattles.Text = "&Battles";
-			this.toolItemViewBattles.Click += new System.EventHandler(this.toolItemViewSelected_Click);
+			this.toolItemViewBattles.Click += new System.EventHandler(this.toolItemViewBattles_Click);
 			// 
 			// toolItemRefresh
 			// 

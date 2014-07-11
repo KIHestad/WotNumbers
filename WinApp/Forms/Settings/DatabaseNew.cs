@@ -141,6 +141,10 @@ namespace WinApp.Forms
 				DBVersion.CheckForDbUpgrade();
 				// New Init after upgrade db
 				TankData.GetAllLists();
+
+				// Startup with default settings
+				MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
+				MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
 				
 				// Get initial dossier 
 				UpdateProgressBar("Running initial dossier file check, please wait...");

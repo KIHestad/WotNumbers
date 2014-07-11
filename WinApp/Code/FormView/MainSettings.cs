@@ -9,8 +9,8 @@ namespace WinApp.Code
 	public static class MainSettings
 	{
 		public static GridView.Views View = GridView.Views.Overall;
-		public static GridFilter.Settings GridFilterTank = GridFilter.SetDefault(GridView.Views.Tank);
-		public static GridFilter.Settings GridFilterBattle = GridFilter.SetDefault(GridView.Views.Battle);
+		public static GridFilter.Settings GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
+		public static GridFilter.Settings GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
 
 		public static GridFilter.Settings GetCurrentGridFilter()
 		{

@@ -383,19 +383,24 @@ namespace WinApp.Forms
 			GridShow("Grid refreshed");
 		}
 
-		private void toolItemViewSelected_Click(object sender, EventArgs e)
+		private void toolItemViewOverall_Click(object sender, EventArgs e)
 		{
-			// Clicked on toolitem: Overall, Tank or Battle
-			ToolStripButton toolStripButton = (ToolStripButton)sender;
-			GridView.Views newGridView = new GridView.Views();
-			// Check view according to what tool button presed
-			if (toolStripButton == toolItemViewOverall)
-				newGridView = GridView.Views.Overall;
-			else if (toolStripButton == toolItemViewTankInfo)
-				newGridView = GridView.Views.Tank;
-			else if (toolStripButton == toolItemViewBattles)
-				newGridView = GridView.Views.Battle;
-			if (newGridView != MainSettings.View) // Only do action if changed view
+			ChangeView(GridView.Views.Overall);
+		}
+
+		private void toolItemViewTankInfo_Click(object sender, EventArgs e)
+		{
+			ChangeView(GridView.Views.Tank);
+		}
+
+		private void toolItemViewBattles_Click(object sender, EventArgs e)
+		{
+			ChangeView(GridView.Views.Battle);
+		}
+
+		private void ChangeView(GridView.Views newGridView, bool forceUpdate = false)
+		{
+			if (newGridView != MainSettings.View || forceUpdate) // Only do action if changed view or selected force update
 			{
 				// Uncheck previous selected view
 				switch (MainSettings.View)
@@ -410,14 +415,14 @@ namespace WinApp.Forms
 						toolItemViewBattles.Checked = false;
 						break;
 				}
-				// Check new view
-				toolStripButton.Checked = true;
 				// Set new view as selected
 				MainSettings.View = newGridView;
 				// Set new values according to new selected view
 				switch (MainSettings.View)
 				{
 					case GridView.Views.Overall:
+						// Select view
+						toolItemViewOverall.Checked = true;
 						// Show/Hide Tool Items
 						toolItemBattles.Visible = false;
 						toolItemTankFilter.Visible = false;
@@ -431,6 +436,8 @@ namespace WinApp.Forms
 						InfoPanelSlideStart(true);
 						break;
 					case GridView.Views.Tank:
+						// Select view
+						toolItemViewTankInfo.Checked = true;
 						// Show/Hide Tool Items
 						toolItemBattles.Visible = false;
 						toolItemTankFilter.Visible = true;
@@ -447,6 +454,8 @@ namespace WinApp.Forms
 						InfoPanelSlideStart(false);
 						break;
 					case GridView.Views.Battle:
+						// Select view
+						toolItemViewBattles.Checked = true;
 						// Show/Hide Tool Items
 						toolItemBattles.Visible = false;
 						toolItemTankFilter.Visible = true;
@@ -462,7 +471,6 @@ namespace WinApp.Forms
 						// Info slider hide
 						InfoPanelSlideStart(false);
 						break;
-						
 				}
 				GridShow(); // Changed view, no status message applied, sets in GridShow
 			}
@@ -792,7 +800,7 @@ namespace WinApp.Forms
 		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			TankFilterMenuSelect(menuItem, toolItemTankFilter_Tier);
+			TankFilterMenuSelect(menuItem, menuItem); // For all tanks, second param is not relevant - no parent menu item
 		}
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
@@ -1990,10 +1998,9 @@ namespace WinApp.Forms
 			Form frm = new Forms.ApplicationSetting();
 			frm.ShowDialog();
 			SetFormTitle();
-			// After settings changed, go to all tanks
-			TankFilterMenuUncheck(true, true, true, true, false); // Set select All tanks
-			SetFavListMenu();
-			GridShow("Refreshed grid after application setup change");
+			// After settings changed, go to overview
+			ChangeView(GridView.Views.Overall, true);
+			SetStatus2("Returned from Application Setup");
 			SetListener();
 		}
 
@@ -2122,6 +2129,8 @@ namespace WinApp.Forms
 						"For 'battle view' the stats is calculated per battle and will be correct for any filter.";
 			Code.MsgBox.Show(s, "Special Battle Filter Information");
 		}
+
+		
 	
 	}
 }

@@ -38,7 +38,7 @@ namespace WinApp.Code
 			public BattleModeType BattleMode = BattleModeType.All;
 		}
 
-		public static Settings SetDefault(GridView.Views gridView)
+		public static Settings GetDefault(GridView.Views gridView)
 		{
 			// Gets default settings for tank and battle filter
 			Settings defaultGridFilter = new Settings();

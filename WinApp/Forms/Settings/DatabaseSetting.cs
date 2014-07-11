@@ -155,10 +155,13 @@ namespace WinApp.Forms
 				string msg = "";
 				Config.SaveConfig(out msg);
 				// Init
-				TankData.GetTankList();
-				TankData.GetJson2dbMappingFromDB();
+				TankData.GetAllLists();
 				// Check for upgrade
 				DBVersion.CheckForDbUpgrade();
+				// Startup with default settings
+				MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
+				MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+				// Done
 				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
 				this.Close();
 			}
