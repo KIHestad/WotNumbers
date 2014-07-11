@@ -28,6 +28,17 @@ namespace WinApp.Forms
 		{
 			// Black Border on loading
 			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
+			// Resize Form Theme Title Area to fit 125% or 150% font size in Win
+			System.Drawing.Graphics graphics = this.CreateGraphics(); 
+			Double dpiFactor = graphics.DpiX / 96;
+			if (dpiFactor != 1)
+			{
+				// Scale form according to scale factor
+				MainTheme.TitleHeight = MainTheme.SystemExitImage.Height + toolMain.Height;
+				// Move main toolbar to bottom of title height
+				toolMain.Top = MainTheme.TitleHeight - toolMain.Height + MainTheme.FormMargin + 2;
+			}
+
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
 			toolMain.BackColor = ColorTheme.FormBackTitle;

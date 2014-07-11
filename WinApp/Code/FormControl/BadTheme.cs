@@ -1220,6 +1220,9 @@ class BadTextBox : BadThemeControl
 		int borderWidth = 1;
 		Rectangle GroupBoxInner = new Rectangle(borderWidth, borderWidth, ClientRectangle.Width - (borderWidth * 2), ClientRectangle.Height - (borderWidth*2));
 		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
+		//textBox.Font = new Font(textBox.Font.FontFamily, 12, GraphicsUnit.Pixel);
+		textBox.Height = Height - 7;
+		textBox.Width = Width - 12;
 		textBox.PasswordChar = PasswordChar;
 		textBox.TextAlign = TextAlign;
 		textBox.Text = Text;
