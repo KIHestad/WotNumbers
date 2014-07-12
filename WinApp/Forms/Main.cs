@@ -988,7 +988,7 @@ namespace WinApp.Forms
 
 		private void GetSelectedColumnList(out string Select, out List<colListClass> colList)
 		{
-			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
+			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
 						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
@@ -1010,7 +1010,13 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dt.Rows)
 				{
-					Select += dr["colname"].ToString() + " as '" + dr["name"].ToString() + "', ";
+					string colName = dr["colName"].ToString(); // Get default colName
+					// Check for alternative colName for SQLite
+					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
+					{
+						colName = dr["colNameSQLite"].ToString();
+					}
+					Select += colName + " as '" + dr["name"].ToString() + "', ";
 					colListClass colListItem = new colListClass();
 					colListItem.colName = dr["name"].ToString();
 					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
@@ -1555,8 +1561,8 @@ namespace WinApp.Forms
 						switch (colListItem.colName)
 						{
 							case "Tank":
-								dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
-								dataGridMain.Rows[rowcount + 1].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
+								dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
+								dataGridMain.Rows[rowcount + 1].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
 								break;
 						}
 					}

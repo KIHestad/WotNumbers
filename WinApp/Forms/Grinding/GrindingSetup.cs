@@ -62,7 +62,7 @@ namespace WinApp.Forms
 			if (tank["lastVictoryTime"] == DBNull.Value)
 				txtLastVictoryTime.Text = "not recorded";
 			else
-				txtLastVictoryTime.Text = Convert.ToDateTime(tank["lastVictoryTime"]).ToString("dd.MM HH:mm");
+				txtLastVictoryTime.Text = Convert.ToDateTime(tank["lastVictoryTime"]).ToString("dd.MM.yyyy HH:mm");
 			// Add grinding value
 			txtGrindComment.Text = tank["gComment"].ToString();
 			txtGrindXP.Text = tank["gGrindXP"].ToString();

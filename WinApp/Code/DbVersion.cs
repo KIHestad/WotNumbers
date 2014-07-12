@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 63; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 66; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1023,6 +1023,16 @@ namespace WinApp.Code
 					sqlite = "UPDATE columnListSelection SET " +
 							 "colWidth = (SELECT colWidth FROM columnSelection WHERE id = columnListSelection.columnSelectionId)";
 					break;
+				case 64: 
+					mssql = "ALTER TABLE columnSelection ADD colNameSQLite VARCHAR(255) NULL; ";
+					sqlite = mssql;
+					break;
+				case 66:
+					mssql = "UPDATE columnSelection SET colNameSQLite = 'strftime(''%H:%M'', battleTime)' where id=164;" +
+							"UPDATE columnSelection SET colNameSQLite = 'strftime(''%d.%m.%Y'', battleTime)' where id=163;";
+					sqlite = mssql;
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype
