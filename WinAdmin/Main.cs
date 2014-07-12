@@ -31,13 +31,14 @@ namespace WinAdmin
 			}
 		}
 
-
-		private void roolItemFileExit_Click(object sender, EventArgs e)
+		private void menuNewDB_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Form frm = new NewAdminDB();
+			frm.ShowDialog();
+			txtAdminSQLiteDB.Text = Settings.Config.databaseFileName;
 		}
 
-		private void btnSelect_Click(object sender, EventArgs e)
+		private void menuSelectDB_Click(object sender, EventArgs e)
 		{
 			openFileDialogDQLiteADminDB.FileName = "*.db";
 			openFileDialogDQLiteADminDB.ShowDialog();
@@ -52,11 +53,43 @@ namespace WinAdmin
 			}
 		}
 
-		private void btnCreate_Click(object sender, EventArgs e)
+		private void MenuExit_Click(object sender, EventArgs e)
 		{
-			Form frm = new NewAdminDB();
+			this.Close();
+		}
+
+		private void menuDataCreateTableStruct_Click(object sender, EventArgs e)
+		{
+			string sql = "";
+			DB.DBResult result = new DB.DBResult();
+			// Trunc first
+			sql = "drop table tank;";
+			DB.ExecuteNonQuery(sql, Settings.Config, out result);
+
+			// Create tables
+			sql =	"create table tank ( " +
+					"	id integer primary key, " +
+					"	name varchar(255), " +
+					"   imgPath varchar(255), " +
+					"   smallImgPath varchar(255), " +
+					"   contourImgPath varchar(255), " +
+					"	img blob, " +
+					"	smallImg blob, " +
+					"	contourImg blob " +
+					")";
+
+			DB.ExecuteNonQuery(sql, Settings.Config, out result);
+			FormHelper.ShowError(result);
+			if (result.Error) return;
+
+			// Done
+			MessageBox.Show("Table structure created", "Done");
+		}
+
+		private void menuDataGetTankDataFromAPI_Click(object sender, EventArgs e)
+		{
+			Form frm = new GetTankDataFromAPI();
 			frm.ShowDialog();
-			txtAdminSQLiteDB.Text = Settings.Config.databaseFileName;
 		}
 
 		

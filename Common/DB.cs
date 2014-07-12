@@ -17,7 +17,7 @@ namespace Common
 			VarChar = 1,
 			Int = 2,
 			DateTime = 3,
-			Image = 4
+			Image = 4,
 		}
 		
 		public class DBResult
@@ -70,7 +70,7 @@ namespace Common
 			return dt;
 		}
 
-		public static void ExecuteNonQuery(string sql, bool runInBatch, ConfigData config, out DBResult result)
+		public static void ExecuteNonQuery(string sql, ConfigData config, out DBResult result, bool runInBatch = false)
 		{
 			result = new DBResult();
 			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
@@ -135,7 +135,7 @@ namespace Common
 				result.Text = "Error execute query to database. Please check your input parameters.";
 			}
 		}
-
+		
 		public static DataTable ListTables(ConfigData config, out DBResult result)
 		{
 			result = new DBResult();
@@ -286,7 +286,7 @@ namespace Common
 			}
 		}
 
-		public static void AddWithValue(ref string Sql, string Parameter, object Value, ConfigData config, DB.SqlDataType DataType)
+		public static void AddWithValue(ref string Sql, string Parameter, object Value, DB.SqlDataType DataType, ConfigData config)
 		{
 			if (Value == DBNull.Value)
 			{

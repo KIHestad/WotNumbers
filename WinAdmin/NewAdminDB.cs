@@ -47,6 +47,7 @@ namespace WinAdmin
 				Settings.Config.databaseFileName = fileLocation + databaseName + ".db";
 				string msg = "";
 				Config.SaveConfig(Settings.Config, Settings.ConfigFileName,	out msg);
+				// Done
 				this.Close();
 			}
 		}

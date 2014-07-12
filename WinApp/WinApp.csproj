@@ -356,6 +356,7 @@
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.pdn" />
+    <None Include="Docs\Database\Admin.db" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\README.md" />
     <None Include="Dossier2json\structures_10.json" />

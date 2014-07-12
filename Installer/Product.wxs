@@ -106,6 +106,9 @@
 			<Component Id="cmpinsert" Guid="{93BB94DA-096B-42BC-883B-2B38D08697C7}">
 				<File Id="filinsert" Source="..\WinApp\Docs\Database\insert.txt"  KeyPath="yes"></File>
 			</Component>
+			<Component Id="cmpAdminDB" Guid="{E3A9263F-EC63-4E01-B68B-24D2F010CE42}">
+				<File Id="filAdminDB" Source="..\WinApp\Docs\Database\Admin.db"  KeyPath="yes"></File>
+			</Component>
 		</ComponentGroup>
 	</Fragment>
 	
@@ -121,6 +124,9 @@
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Bin">
+			<Component Id="cmpBase32" Directory="INSTALLFOLDER" Guid="{0038F450-31E8-459B-B435-3C6E363B10E6}">
+				<File Id="filBase32" KeyPath="yes" Source="$(var.BinSource)\Base32.dll" />
+			</Component>
 			<Component Id="cmp39029DA5C28B02EA89473DB34C487883" Directory="INSTALLFOLDER" Guid="{2CC00E41-0F73-465E-A201-6527532C3FE5}">
 				<File Id="fil026FA8F9463E0F87A33F6935627A0225" KeyPath="yes" Source="$(var.BinSource)\EntityFramework.dll" />
 			</Component>

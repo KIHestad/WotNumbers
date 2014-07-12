@@ -58,7 +58,7 @@
 			this.UpdateFromApiTheme.SystemMaximizeImage = null;
 			this.UpdateFromApiTheme.SystemMinimizeImage = null;
 			this.UpdateFromApiTheme.TabIndex = 0;
-			this.UpdateFromApiTheme.Text = "Update Tamk Data from API";
+			this.UpdateFromApiTheme.Text = "Update Tank Data from API";
 			this.UpdateFromApiTheme.TitleHeight = 26;
 			// 
 			// btnStart
