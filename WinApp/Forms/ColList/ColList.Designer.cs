@@ -128,7 +128,7 @@
 			this.ColListTheme.Size = new System.Drawing.Size(624, 633);
 			this.ColListTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemExitImage")));
 			this.ColListTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMaximizeImage")));
-			this.ColListTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMinimizeImage")));
+			this.ColListTheme.SystemMinimizeImage = null;
 			this.ColListTheme.TabIndex = 0;
 			this.ColListTheme.Text = "Column Setup";
 			this.ColListTheme.TitleHeight = 26;

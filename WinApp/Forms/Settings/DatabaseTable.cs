@@ -20,6 +20,8 @@ namespace WinApp.Forms
 
 		private void DatabaseTable_Load(object sender, EventArgs e)
 		{
+			// Make sure borderless form do not cover task bar when maximized
+			this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
 			// Add Mouse Wheel handle
 			dataGridViewShowTable.MouseWheel += new MouseEventHandler(dataGridViewShowTable_MouseWheel); 
 			// Scroll and grid size

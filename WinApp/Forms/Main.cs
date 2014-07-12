@@ -26,6 +26,8 @@ namespace WinApp.Forms
 		private string LoadConfigMsg = "";
 		private void Main_Load(object sender, EventArgs e)
 		{
+			// Make sure borderless form do not cover task bar when maximized
+			this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
 			// Black Border on loading
 			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			// Resize Form Theme Title Area to fit 125% or 150% font size in Win
