@@ -208,6 +208,7 @@ namespace WinApp.Forms
 			SetFavListMenu();
 			GridShow("Application started");
 			SetListener();
+			ImageHelper.LoadTankImages();
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
