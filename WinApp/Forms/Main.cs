@@ -997,9 +997,9 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			Select = "";
-			img = 0;
-			smallimg = 0;
-			contourimg = 0;
+			img = -1;
+			smallimg = -1;
+			contourimg = -1;
 			List<colListClass> selectColList = new List<colListClass>();
 			if (dt.Rows.Count == 0)
 			{
@@ -1285,23 +1285,23 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			// Set row height in template before rendering to fit images
 			dataGridMain.RowTemplate.Height = 23;
-			if (smallimg > 0)
+			if (smallimg >= 0)
 				dataGridMain.RowTemplate.Height = 31;
-			if (img > 0)
+			if (img >= 0)
 				dataGridMain.RowTemplate.Height = 60;
 			DataSet ds = new DataSet("DataSet");
 			DataTable dtTankData = new DataTable("TankData");
 			dtTankData = DB.FetchData(sql);
 			// If images add cols in datatable containing the image
-			if (contourimg + smallimg + img > 0)
+			if (contourimg + smallimg + img > -3)
 			{
 				// Use ImageHelper to add columns in use
 				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-				if (contourimg > 0)
+				if (contourimg >= 0)
 					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
-				if (smallimg > 0)
+				if (smallimg >= 0)
 					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
-				if (img > 0)
+				if (img >= 0)
 					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
 				// Sort images to get right position
 				imgPosition.Sort();
@@ -1314,11 +1314,11 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtTankData.Rows)
 				{
 					int tankId = Convert.ToInt32(dr["tank_id"]);
-					if (contourimg > 0)
+					if (contourimg >= 0)
 						dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
-					if (smallimg > 0)
+					if (smallimg >= 0)
 						dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
-					if (img > 0)
+					if (img >= 0)
 						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
 				}
 			}
@@ -1462,15 +1462,15 @@ namespace WinApp.Forms
 			DataTable dt = new DataTable();
 			dt = DB.FetchData(sql);
 			// If images add cols in datatable containing the image
-			if (contourimg + smallimg + img > 0)
+			if (contourimg + smallimg + img > -3)
 			{
 				// Use ImageHelper to add columns in use
 				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-				if (contourimg > 0)
+				if (contourimg >= 0)
 					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
-				if (smallimg > 0)
+				if (smallimg >= 0)
 					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
-				if (img > 0)
+				if (img >= 0)
 					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
 				// Sort images to get right position
 				imgPosition.Sort();
@@ -1483,11 +1483,11 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dt.Rows)
 				{
 					int tankId = Convert.ToInt32(dr["tank_id"]);
-					if (contourimg > 0)
+					if (contourimg >= 0)
 						dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
-					if (smallimg > 0)
+					if (smallimg >= 0)
 						dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
-					if (img > 0)
+					if (img >= 0)
 						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
 				}
 			}
@@ -1595,13 +1595,10 @@ namespace WinApp.Forms
 			}
 			// Set row height in template before rendering to fit images
 			dataGridMain.RowTemplate.Height = 23;
-			foreach (colListClass colListItem in colList)
-			{
-				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
-					if (dataGridMain.RowTemplate.Height < 31) dataGridMain.RowTemplate.Height = 31;
-				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
-					dataGridMain.RowTemplate.Height = 60;
-			}
+			if (smallimg >= 0)
+				dataGridMain.RowTemplate.Height = 31;
+			if (img >= 0)
+				dataGridMain.RowTemplate.Height = 60;
 			// populate datagrid
 			mainGridFormatting = true;
 			dataGridMain.DataSource = dt;
