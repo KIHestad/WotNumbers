@@ -43,8 +43,8 @@ namespace WinApp.Forms
 			txtGrindComment.Focus();
 			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
 						"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
-						"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " + 
-						"        SUM(playerTankBattle.xp / NULLIF(playerTankBattle.battles, 0) * playerTankBattle.battleOfTotal) AS avgXP " +
+						"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
+						"        SUM(playerTankBattle.xp) / SUM (playerTankBattle.battles) AS avgXP " +
 						"FROM    tank INNER JOIN " +
 						"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
 						"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +

@@ -32,8 +32,8 @@ namespace WinAdmin
 		//private static string logAddedItems;
 		//private static int logAddedItemsCount;
 		//private static string logItemExists;
-		private static int logItemExistsCount;
-		private static string logTanksWithoutDetails; // some special tanks have lacking vehicle details in API
+		// private static int logItemExistsCount;
+		//private static string logTanksWithoutDetails; // some special tanks have lacking vehicle details in API
 
 		private enum WotApiType
 		{

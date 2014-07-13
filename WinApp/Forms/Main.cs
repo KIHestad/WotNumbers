@@ -987,7 +987,7 @@ namespace WinApp.Forms
 			public string colType;
 		}
 
-		private void GetSelectedColumnList(out string Select, out List<colListClass> colList)
+		private void GetSelectedColumnList(out string Select, out List<colListClass> colList, out int img, out int smallimg, out int contourimg)
 		{
 			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
@@ -997,6 +997,9 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			Select = "";
+			img = 0;
+			smallimg = 0;
+			contourimg = 0;
 			List<colListClass> selectColList = new List<colListClass>();
 			if (dt.Rows.Count == 0)
 			{
@@ -1009,20 +1012,38 @@ namespace WinApp.Forms
 			}
 			else
 			{
+				int colNum = 0;
 				foreach (DataRow dr in dt.Rows)
 				{
 					string colName = dr["colName"].ToString(); // Get default colName
-					// Check for alternative colName for SQLite
-					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
-					{
-						colName = dr["colNameSQLite"].ToString();
-					}
-					Select += colName + " as '" + dr["name"].ToString() + "', ";
 					colListClass colListItem = new colListClass();
 					colListItem.colName = dr["name"].ToString();
 					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
 					colListItem.colType = dr["colDataType"].ToString();
 					selectColList.Add(colListItem);
+					// Check for alternative colName for SQLite
+					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
+					{
+						colName = dr["colNameSQLite"].ToString();
+					}
+					// Check for images
+					if (dr["colDataType"].ToString() == "Image")
+					{
+						// Image, get from separate datatable
+						string imgColName = dr["name"].ToString();
+						switch (imgColName)
+						{
+							case "Tank Icon": contourimg = colNum; break;
+							case "Tank Image": smallimg = colNum; break;
+							case "Tank Image Large": img = colNum; break;
+						}
+					}
+					else
+					{
+						// Normal select from db
+						Select += colName + " as '" + dr["name"].ToString() + "', ";
+					}
+					colNum++;
 				}
 			}
 			colList = selectColList;
@@ -1170,7 +1191,10 @@ namespace WinApp.Forms
 
 		#endregion
 
+		
 		#region Data Grid - TANK VIEW ****************************************************************************************************
+
+		
 
 		private void GridShowTank(string Status2Message)
 		{
@@ -1180,7 +1204,10 @@ namespace WinApp.Forms
 			// Get Columns
 			string select = "";
 			List<colListClass> colList = new List<colListClass>();
-			GetSelectedColumnList(out select, out colList);
+			int img;
+			int smallimg;
+			int contourimg;
+			GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
 			// Get Tank filter
 			string message = "";
 			string tankFilter = "";
@@ -1226,7 +1253,7 @@ namespace WinApp.Forms
 
 				// Get SUM for playerTankBattle as several battleModes might appear
 				sql =
-					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " + Environment.NewLine +
+					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -1242,7 +1269,7 @@ namespace WinApp.Forms
 			{
 				// Only gets one row from playerTankBattle for an explisit battleMode
 				sql =
-					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id " + Environment.NewLine +
+					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -1258,18 +1285,50 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			// Set row height in template before rendering to fit images
 			dataGridMain.RowTemplate.Height = 23;
-			foreach (colListClass colListItem in colList)
+			if (smallimg > 0)
+				dataGridMain.RowTemplate.Height = 31;
+			if (img > 0)
+				dataGridMain.RowTemplate.Height = 60;
+			DataSet ds = new DataSet("DataSet");
+			DataTable dtTankData = new DataTable("TankData");
+			dtTankData = DB.FetchData(sql);
+			// If images add cols in datatable containing the image
+			if (contourimg + smallimg + img > 0)
 			{
-				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
-					if (dataGridMain.RowTemplate.Height < 31) dataGridMain.RowTemplate.Height = 31;
-				if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
-					dataGridMain.RowTemplate.Height = 60;
+				// Use ImageHelper to add columns in use
+				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
+				if (contourimg > 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
+				if (smallimg > 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
+				if (img > 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
+				// Sort images to get right position
+				imgPosition.Sort();
+				// Add columns
+				foreach (ImageHelper.ImgColumns imgItem in imgPosition)
+				{
+					dtTankData.Columns.Add(imgItem.colName, typeof(Image)).SetOrdinal(imgItem.colPosition);
+				}
+				// Fill with images
+				foreach (DataRow dr in dtTankData.Rows)
+				{
+					int tankId = Convert.ToInt32(dr["tank_id"]);
+					if (contourimg > 0)
+						dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
+					if (smallimg > 0)
+						dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
+					if (img > 0)
+						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
+				}
 			}
+			// Assign datatable to grid
 			mainGridFormatting = true;
-			dataGridMain.DataSource = DB.FetchData(sql);
+			dataGridMain.DataSource = dtTankData;
 			//  Hide system cols
 			dataGridMain.Columns["sortorder"].Visible = false;
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
+			dataGridMain.Columns["tank_Id"].Visible = false;
 			// Grid col size
 			foreach (colListClass colListItem in colList)
 			{
@@ -1312,7 +1371,10 @@ namespace WinApp.Forms
 			// Get Columns
 			string select = "";
 			List<colListClass> colList = new List<colListClass>();
-			GetSelectedColumnList(out select, out colList);
+			int img;
+			int smallimg;
+			int contourimg;
+			GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
 			// Create Battle Time filer
 			string battleTimeFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -1362,7 +1424,7 @@ namespace WinApp.Forms
 				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
 				"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 				"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
-				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip,  " +
+				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, " +
 				"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id, " + sortordercol + 
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
@@ -1399,6 +1461,36 @@ namespace WinApp.Forms
 			}
 			DataTable dt = new DataTable();
 			dt = DB.FetchData(sql);
+			// If images add cols in datatable containing the image
+			if (contourimg + smallimg + img > 0)
+			{
+				// Use ImageHelper to add columns in use
+				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
+				if (contourimg > 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
+				if (smallimg > 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
+				if (img > 0)
+					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
+				// Sort images to get right position
+				imgPosition.Sort();
+				// Add columns
+				foreach (ImageHelper.ImgColumns imgItem in imgPosition)
+				{
+					dt.Columns.Add(imgItem.colName, typeof(Image)).SetOrdinal(imgItem.colPosition);
+				}
+				// Fill with images
+				foreach (DataRow dr in dt.Rows)
+				{
+					int tankId = Convert.ToInt32(dr["tank_id"]);
+					if (contourimg > 0)
+						dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
+					if (smallimg > 0)
+						dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
+					if (img > 0)
+						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
+				}
+			}
 			int rowcount = dt.Rows.Count;
 			// Add footer
 			int totalBattleCount = 0;
@@ -1408,10 +1500,7 @@ namespace WinApp.Forms
 			if (rowcount > 0)
 			{
 				// Create blank image in case of image in footer
-				MemoryStream ms = new MemoryStream();
-				Image image = new Bitmap(1, 1);
-				image.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
-				byte[] blankImage = ms.ToArray();
+				Image blankImage = new Bitmap(1, 1);
 				// totals
 				totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)",""));
 				totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
@@ -1530,6 +1619,7 @@ namespace WinApp.Forms
 			dataGridMain.Columns["sortorder"].Visible = false;
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			dataGridMain.Columns["battle_Id"].Visible = false;
+			dataGridMain.Columns["tank_Id"].Visible = false;
 			// Format grid 
 			foreach (colListClass colListItem in colList)
 			{

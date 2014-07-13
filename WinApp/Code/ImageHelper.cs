@@ -12,7 +12,24 @@ namespace WinApp.Code
 {
 	class ImageHelper
 	{
-		public static DataTable tankImg;
+		public static DataTable TankImage;
+
+		public class ImgColumns : IComparable<ImgColumns>
+		{
+			public string colName { get; set; }
+			public int colPosition { get; set; }
+
+			public ImgColumns(string colName, int colPosition)
+			{
+				this.colName = colName;
+				this.colPosition = colPosition;
+			}
+
+			public int CompareTo(ImgColumns other)
+			{
+				return this.colPosition.CompareTo(other.colPosition);
+			}
+		}
 		
 		public static void LoadTankImages()
 		{
@@ -54,7 +71,7 @@ namespace WinApp.Code
 				tankImgNew.Rows.Add(tankImgNewDataRow);
 			}
 			// Set public static tank img datatable to this
-			tankImg = tankImgNew;
+			TankImage = tankImgNew;
 		}
 
 		private static DataTable CreateTankImg()
@@ -66,6 +83,12 @@ namespace WinApp.Code
 			dt.Columns.Add("smallimg", typeof(Image));
 			dt.Columns.Add("contourimg", typeof(Image));
 			return dt;
+		}
+
+		public static Image GetTankImage(int tankId, string imageCol)
+		{
+			DataRow[] dr = TankImage.Select("id = " + tankId.ToString());
+			return (Image)dr[0][imageCol];
 		}
 
 	}
