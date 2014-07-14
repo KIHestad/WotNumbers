@@ -48,7 +48,7 @@ namespace WinApp.Code
 						 "     favList ON columnList.defaultFavListId = favList.id " +
 						 "WHERE (columnList.colDefault=1) AND (columnList.colType=@colType); ";
 			DB.AddWithValue(ref sql, "@colType", (int)gridView, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, false);
 			if (dt.Rows.Count == 0)
 			{
 				// No default is selected, choose first colList
@@ -83,7 +83,7 @@ namespace WinApp.Code
 						 "     favList ON columnList.defaultFavListId = favList.id " +
 						 "WHERE (columnList.colType=@colType); ";
 			DB.AddWithValue(ref sql, "@colType", (int)gridView, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, false);
 			int colListId = 0;
 			ColListName = "";
 			if (dt.Rows.Count > 0)

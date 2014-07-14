@@ -48,6 +48,8 @@ namespace WinApp.Forms
 			else if (timeZone > 0)
 				timeZoneSelected = "+" + timeZone.ToString();
 			ddTimeZone.Text = timeZoneSelected;
+			// Show DB Errors (debug mode)
+			chkShowDBError.Checked = Config.Settings.showDBErrors;
 		}
 
 		private void PlayerPanel()
@@ -138,6 +140,8 @@ namespace WinApp.Forms
 				Int32.TryParse(timeZone, out newTimeZone);
 			}
 			Config.Settings.timeZoneAdjust = newTimeZone;
+			// Show DB errors (debug mode)
+			Config.Settings.showDBErrors = chkShowDBError.Checked;
 			// Save
 			string msg = "";
 			bool saveOk = false;
@@ -201,6 +205,5 @@ namespace WinApp.Forms
 			}
 			Code.DropDownGrid.Show(ddTimeZone, Code.DropDownGrid.DropDownGridType.List, timeZones);
 		}
-
 	}
 }

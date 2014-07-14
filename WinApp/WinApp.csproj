@@ -129,6 +129,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\AutoSetupHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
     <Compile Include="Code\FormView\ColListHelper.cs" />
     <Compile Include="Code\FormView\FavListHelper.cs" />

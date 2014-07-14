@@ -43,6 +43,7 @@ namespace WinApp.Code
 		public bool    grindParametersAutoStart { get; set; }	// Autoshow Grinding params on app startup
 		public PosSize posSize { get; set; }					// Main Form Position And Size
 		public int     timeZoneAdjust { get; set; }				// Adjust battle time read from dossier according to time zone
+		public bool    showDBErrors { get; set; }				// To show all DB errors  
 	}
 
 	class Config
@@ -112,6 +113,7 @@ namespace WinApp.Code
 			Config.Settings.playerName = "";
 			Config.Settings.dossierFilePath = "";
 			Config.Settings.dossierFileWathcherRun = 0;
+			Config.Settings.showDBErrors = false;
 			Config.Settings.grindParametersAutoStart = false;
 			Config.Settings.posSize = new ConfigData.PosSize();
 		}

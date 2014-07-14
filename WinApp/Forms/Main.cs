@@ -181,17 +181,52 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void AutoSetup()
+		{
+			// TODO:
+			// Autodetect dossier file from default location, save to config
+			string dossierFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\wargaming.net\\WorldOfTanks\\dossier_cache";
+			if (Directory.Exists(dossierFolder))
+			{
+				Config.Settings.dossierFilePath = dossierFolder;
+				Form frm = new Forms.DatabaseNew(true);
+				frm.ShowDialog();
+				LoadConfigOK = AutoSetupHelper.AutoSetupCompleteOK;
+				if (LoadConfigOK)
+				{
+					Config.Settings.dossierFileWathcherRun = 1;
+					string msg = "";
+					Config.SaveConfig(out msg);
+				}
+			}
+			else
+			{
+				LoadConfigMsg = "Could not locate dossier file path, please select manually from Application Settings.";
+			}
+		}
+
 		private void Main_Shown(object sender, EventArgs e)
 		{
 			// Startup settings
 			if (!LoadConfigOK)
 			{
-				Code.MsgBox.Show(LoadConfigMsg, "Could not load config data");
-				lblOverView.Text = "";
-				Config.Settings.dossierFileWathcherRun = 0;
-				SetListener();
-				Form frm = new Forms.ApplicationSetting();
-				frm.ShowDialog();
+				MsgBox.Button answer = Code.MsgBox.Show(
+					"Press 'OK' to create new SQLite database." +
+					Environment.NewLine + Environment.NewLine +
+					"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
+					Environment.NewLine + Environment.NewLine,
+					"Welcome to Wot Numbers", MsgBoxType.OKCancel);
+				if (answer == MsgBox.Button.OKButton)
+					AutoSetup();
+				if (!LoadConfigOK)
+				{
+					Code.MsgBox.Show(LoadConfigMsg, "Could not load config data");
+					lblOverView.Text = "";
+					Config.Settings.dossierFileWathcherRun = 0;
+					SetListener();
+					Form frm = new Forms.ApplicationSetting();
+					frm.ShowDialog();
+				}
 			}
 			if (DB.CheckConnection())
 			{
@@ -538,7 +573,7 @@ namespace WinApp.Forms
 			// Add colum lists according to database
 			string sql = "select id, name, position from columnList where colType=@colType and position is not null order by position; ";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				int menuItemNum = 1;
@@ -629,7 +664,7 @@ namespace WinApp.Forms
 			}
 			// Add favlist to menu
 			string sql = "select * from favList where position > 0 order by position";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				toolItemTankFilter_FavSeparator.Visible = true;
@@ -1004,7 +1039,7 @@ namespace WinApp.Forms
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
 						 "ORDER BY columnListSelection.sortorder; ";
 			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			Select = "";
 			img = -1;
 			smallimg = -1;
@@ -1170,7 +1205,7 @@ namespace WinApp.Forms
 			{
 				mainGridFormatting = false;
 				dataGridMain.DataSource = null;
-				if (!DB.CheckConnection()) return;
+				if (!DB.CheckConnection(false)) return;
 				string sql =
 					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
 					"UNION " +
@@ -1178,7 +1213,7 @@ namespace WinApp.Forms
 					"UNION " +
 					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
-				dataGridMain.DataSource = DB.FetchData(sql);
+				dataGridMain.DataSource = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// Text cols
 				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -1209,7 +1244,7 @@ namespace WinApp.Forms
 		{
 			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
-			if (!DB.CheckConnection()) return;
+			if (!DB.CheckConnection(false)) return;
 			// Get Columns
 			string select = "";
 			List<colListClass> colList = new List<colListClass>();
@@ -1300,7 +1335,7 @@ namespace WinApp.Forms
 				dataGridMain.RowTemplate.Height = 60;
 			DataSet ds = new DataSet("DataSet");
 			DataTable dtTankData = new DataTable("TankData");
-			dtTankData = DB.FetchData(sql);
+			dtTankData = DB.FetchData(sql, Config.Settings.showDBErrors);
 			// If images add cols in datatable containing the image
 			if (contourimg + smallimg + img > -3)
 			{
@@ -1376,7 +1411,7 @@ namespace WinApp.Forms
 		{
 			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
-			if (!DB.CheckConnection()) return;
+			if (!DB.CheckConnection(false)) return;
 			// Get Columns
 			string select = "";
 			List<colListClass> colList = new List<colListClass>();
@@ -1469,7 +1504,7 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 			}
 			DataTable dt = new DataTable();
-			dt = DB.FetchData(sql);
+			dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			// If images add cols in datatable containing the image
 			if (contourimg + smallimg + img > -3)
 			{
@@ -1905,7 +1940,7 @@ namespace WinApp.Forms
 				"from battle inner join playerTank on battle.playerTankId=playerTank.id inner join tank on playerTank.tankId=tank.Id " +
 				"where battle.Id=@id ";
 			DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				DateTime battleTime = Convert.ToDateTime(dt.Rows[0]["battleTime"]);

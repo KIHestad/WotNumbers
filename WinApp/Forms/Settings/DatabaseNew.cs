@@ -19,40 +19,74 @@ namespace WinApp.Forms
 {
 	public partial class DatabaseNew : Form
 	{
-		public DatabaseNew()
+		private bool _autoSetup = false;
+		public DatabaseNew(bool autoSetup = false)
 		{
 			InitializeComponent();
+			_autoSetup = autoSetup;
 		}
 
 		private void frmDatabaseNew_Load(object sender, EventArgs e)
 		{
+			if (_autoSetup)
+			{
+				Config.Settings.databaseType = ConfigData.dbType.SQLite;
+				string databaseFileName = "WotNumbers";
+				string databaseFileNameSubFix = "";
+				int dbNum = 0;
+				while (File.Exists(Config.AppDataDBFolder + databaseFileName + databaseFileNameSubFix + ".db"))
+				{
+					dbNum++;
+					databaseFileNameSubFix = dbNum.ToString();
+				}
+				txtDatabasename.Text = databaseFileName + databaseFileNameSubFix;
+				btnCancel.Enabled = false;
+				btnCreateDB.Enabled = false;
+				cmdSelectFIle.Enabled = false;
+			}
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
-				try
-				{
-					string winAuth = "Sql";
-					if (Config.Settings.databaseWinAuth) winAuth = "Win";
-					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master",
-																		winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
-					using (var connection = new SqlConnection(connectionstring))
-					{
-						ServerConnection serverConnection = new ServerConnection(connection);
-						Server server = new Server(serverConnection);
-						string defaultDataPath = string.IsNullOrEmpty(server.Settings.DefaultFile) ? server.MasterDBPath : server.Settings.DefaultFile;
-						txtFileLocation.Text = defaultDataPath;
-					}
-				}
-				catch (Exception)
-				{
-					// throw;
-				}
+				txtFileLocation.Text = GetMSSQLDefualtFileLocation();
 			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 			{
 				DatabaseNewTheme.Text = "Create New SQLite Database";
 				txtFileLocation.Text = Config.AppDataDBFolder;
 			}
+		}
+
+		private void DatabaseNew_Shown(object sender, EventArgs e)
+		{
+			if (_autoSetup)
+			{
+				CreateNewDb();
+				AutoSetupHelper.AutoSetupCompleteOK = true;
+			}
+		}
+
+		private string GetMSSQLDefualtFileLocation()
+		{
+			string folder = "";
+			try
+			{
+				string winAuth = "Sql";
+				if (Config.Settings.databaseWinAuth) winAuth = "Win";
+				string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master",
+																	winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
+				using (var connection = new SqlConnection(connectionstring))
+				{
+					ServerConnection serverConnection = new ServerConnection(connection);
+					Server server = new Server(serverConnection);
+					string defaultDataPath = string.IsNullOrEmpty(server.Settings.DefaultFile) ? server.MasterDBPath : server.Settings.DefaultFile;
+					folder = defaultDataPath;
+				}
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+			return folder;
 		}
 
 		private void UpdateProgressBar(string statusText)
@@ -65,36 +99,14 @@ namespace WinApp.Forms
 
 		private void btnCreateDB_Click(object sender, EventArgs e)
 		{
+			CreateNewDb();
+		}
+		
+		private void CreateNewDb()
+		{
 			// Wait cursor
 			Cursor.Current = Cursors.WaitCursor;
 			// Create new db
-			bool OKcreated = CreateNewDb();
-			// Done
-			Cursor.Current = Cursors.Default;
-			badProgressBar.Visible = false;
-			Application.DoEvents();
-			string result = "";
-			if (OKcreated)
-			{
-				// Save new database to config
-				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
-					Config.Settings.databaseName = txtDatabasename.Text;
-				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
-				Code.MsgBox.Show("Database created successfully, new database saved to settings.", "Created database");
-			}
-			else
-			{
-				// Revert to prevous settings
-				Code.MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database");
-				Config.Settings = Config.LastWorkingSettings;
-			}
-			Config.SaveConfig(out result);
-			this.Close();					
-		}
-		
-		private bool CreateNewDb()
-		{
 			bool ok = true;
 			badProgressBar.ValueMax = 13;
 			badProgressBar.Value = 0;
@@ -118,64 +130,87 @@ namespace WinApp.Forms
 				StreamReader streamReader = new StreamReader(path + filename, Encoding.UTF8);
 				sql = streamReader.ReadToEnd();
 				ok = DB.ExecuteNonQuery(sql);
-				if (!ok) return false;
-				
-				// Insert default data
-				UpdateProgressBar("Inserting data into database");
-				streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
-				sql = streamReader.ReadToEnd();
-				ok = DB.ExecuteNonQuery(sql);
-				if (!ok) return false;
+				if (ok)
+				{
+					// Insert default data
+					UpdateProgressBar("Inserting data into database");
+					streamReader = new StreamReader(path + "insert.txt", Encoding.UTF8);
+					sql = streamReader.ReadToEnd();
+					ok = DB.ExecuteNonQuery(sql);
+					if (ok)
+					{
+						// Get tanks, remember to init tankList first
+						UpdateProgressBar("Retrieves tanks from Wargaming API");
+						TankData.GetTankList();
+						ImportWotApi2DB.ImportTanks();
+						// Init after getting tanks and other basic data import
+						TankData.GetTankList();
+						TankData.GetJson2dbMappingFromDB();
 
-				// Get tanks, remember to init tankList first
-				UpdateProgressBar("Retrieves tanks from Wargaming API");
-				TankData.GetTankList();
-				ImportWotApi2DB.ImportTanks();
-				// Init after getting tanks and other basic data import
-				TankData.GetTankList();
-				TankData.GetJson2dbMappingFromDB();
+						// Get turret
+						UpdateProgressBar("Retrieves tank turrets from Wargaming API");
+						ImportWotApi2DB.ImportTurrets();
 
-				// Get turret
-				UpdateProgressBar("Retrieves tank turrets from Wargaming API");
-				ImportWotApi2DB.ImportTurrets();
+						// Get guns
+						UpdateProgressBar("Retrieves tank guns from Wargaming API");
+						ImportWotApi2DB.ImportGuns();
 
-				// Get guns
-				UpdateProgressBar("Retrieves tank guns from Wargaming API");
-				ImportWotApi2DB.ImportGuns();
+						// Get radios
+						UpdateProgressBar("Retrieves tank radios from Wargaming API");
+						ImportWotApi2DB.ImportRadios();
 
-				// Get radios
-				UpdateProgressBar("Retrieves tank radios from Wargaming API");
-				ImportWotApi2DB.ImportRadios();
+						// Get achievements
+						UpdateProgressBar("Retrieves achievements from Wargaming API");
+						ImportWotApi2DB.ImportAchievements();
+						TankData.GetAchList();
 
-				// Get achievements
-				UpdateProgressBar("Retrieves achievements from Wargaming API");
-				ImportWotApi2DB.ImportAchievements();
-				TankData.GetAchList();
+						// Get WN8 ratings
+						UpdateProgressBar("Retrieves WN8 expected values from API");
+						ImportWN8Api2DB.UpdateWN8();
 
-				// Get WN8 ratings
-				UpdateProgressBar("Retrieves WN8 expected values from API");
-				ImportWN8Api2DB.UpdateWN8();
+						// Reset player
+						Config.Settings.playerName = "";
+						Config.Settings.playerId = 0;
 
-				// Reset player
-				Config.Settings.playerName = "";
-				Config.Settings.playerId = 0;
-				
-				// Upgrade to latest version
-				UpdateProgressBar("Upgrading database");
-				DBVersion.CheckForDbUpgrade();
-				// New Init after upgrade db
-				TankData.GetAllLists();
+						// Upgrade to latest version
+						UpdateProgressBar("Upgrading database");
+						DBVersion.CheckForDbUpgrade();
+						// New Init after upgrade db
+						TankData.GetAllLists();
 
-				// Startup with default settings
-				MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
-				MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
-				
-				// Get initial dossier 
-				UpdateProgressBar("Running initial dossier file check, please wait...");
-				dossier2json.ManualRun();
-				UpdateProgressBar("");
+						// Startup with default settings
+						MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
+						MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+
+						// Get initial dossier 
+						UpdateProgressBar("Running initial dossier file check, please wait...");
+						dossier2json.ManualRun();
+						UpdateProgressBar("");
+					}
+				}
 			}
-			return ok;
+			// Done
+			Cursor.Current = Cursors.Default;
+			badProgressBar.Visible = false;
+			Application.DoEvents();
+			string result = "";
+			if (ok)
+			{
+				// Save new database to config
+				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+					Config.Settings.databaseName = txtDatabasename.Text;
+				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
+				Code.MsgBox.Show("Database created successfully, new database saved to settings.", "Created database");
+			}
+			else
+			{
+				// Revert to prevous settings
+				Code.MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database");
+				Config.Settings = Config.LastWorkingSettings;
+			}
+			Config.SaveConfig(out result);
+			this.Close();	
 		}
 
 
@@ -186,7 +221,10 @@ namespace WinApp.Forms
 
 			if (txtFileLocation.Text == "")
 			{
-				folderBrowserDialogDBPath.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\wargaming.net\\WorldOfTanks\\dossier_cache";
+				if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+					folderBrowserDialogDBPath.SelectedPath = Config.AppDataDBFolder;
+				else if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+					folderBrowserDialogDBPath.SelectedPath = GetMSSQLDefualtFileLocation();
 			}
 			else
 			{
@@ -204,6 +242,8 @@ namespace WinApp.Forms
 		{
 			this.Close();
 		}
+
+		
 
 
 	}

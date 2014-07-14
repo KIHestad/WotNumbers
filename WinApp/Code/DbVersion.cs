@@ -1082,7 +1082,7 @@ namespace WinApp.Code
 		{
 			int version = 0;
 			string sql = "select version from _version_ where id=2; ";
-			DataTable dt = DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
 				version = Convert.ToInt32(dt.Rows[0][0]);

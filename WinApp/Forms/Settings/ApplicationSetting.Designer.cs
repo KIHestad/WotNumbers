@@ -32,6 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSetting));
 			this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
 			this.ApplicationSettingsTheme = new BadForm();
+			this.chkShowDBError = new BadCheckBox();
 			this.badLabel2 = new BadLabel();
 			this.badLabel1 = new BadLabel();
 			this.ddTimeZone = new BadDropDownBox();
@@ -51,6 +52,7 @@
 			// 
 			// ApplicationSettingsTheme
 			// 
+			this.ApplicationSettingsTheme.Controls.Add(this.chkShowDBError);
 			this.ApplicationSettingsTheme.Controls.Add(this.badLabel2);
 			this.ApplicationSettingsTheme.Controls.Add(this.badLabel1);
 			this.ApplicationSettingsTheme.Controls.Add(this.ddTimeZone);
@@ -84,10 +86,23 @@
 			this.ApplicationSettingsTheme.Text = "Application Settings";
 			this.ApplicationSettingsTheme.TitleHeight = 26;
 			// 
+			// chkShowDBError
+			// 
+			this.chkShowDBError.BackColor = System.Drawing.Color.Transparent;
+			this.chkShowDBError.Checked = false;
+			this.chkShowDBError.Image = ((System.Drawing.Image)(resources.GetObject("chkShowDBError.Image")));
+			this.chkShowDBError.Location = new System.Drawing.Point(25, 408);
+			this.chkShowDBError.Name = "chkShowDBError";
+			this.chkShowDBError.Size = new System.Drawing.Size(235, 23);
+			this.chkShowDBError.TabIndex = 17;
+			this.chkShowDBError.Text = "Show all database errors (debug mode)";
+			// 
 			// badLabel2
 			// 
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
+			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.Image = null;
 			this.badLabel2.Location = new System.Drawing.Point(44, 265);
 			this.badLabel2.Name = "badLabel2";
@@ -99,6 +114,8 @@
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
+			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(44, 347);
 			this.badLabel1.Name = "badLabel1";
@@ -190,6 +207,8 @@
 			// 
 			this.lblDbSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblDbSettings.Dimmed = false;
+			this.lblDbSettings.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblDbSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblDbSettings.Image = null;
 			this.lblDbSettings.Location = new System.Drawing.Point(44, 173);
 			this.lblDbSettings.Name = "lblDbSettings";
@@ -269,5 +288,6 @@
 		private BadDropDownBox ddTimeZone;
 		private BadLabel badLabel1;
 		private BadLabel badLabel2;
+		private BadCheckBox chkShowDBError;
 	}
 }

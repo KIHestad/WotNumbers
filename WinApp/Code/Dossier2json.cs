@@ -46,15 +46,10 @@ namespace WinApp.Code
 			return logtext;
 		}
 
-		public static string ManualRun(bool ForceUpdate = false)
+		public static string GetLatestUpdatedDossierFile()
 		{
-			string returVal = "Manual dossier file check started...";
-			Log.CheckLogFileSize();
-			List<string> logText = new List<string>();
-			bool ok = true;
-			String dossierFile = "";
-			// Dossier file manual handling - get all dossier files
-			logText.Add(LogText("Manual run, looking for new dossier file"));
+			// Get all dossier files, find latest
+			string dossierFile = "";
 			if (Directory.Exists(Config.Settings.dossierFilePath))
 			{
 				string[] files = Directory.GetFiles(Config.Settings.dossierFilePath, "*.dat");
@@ -68,22 +63,27 @@ namespace WinApp.Code
 						dossierFileDate = checkFile.LastWriteTime;
 					}
 				}
-				if (dossierFile == "")
-				{
-					logText.Add(LogText(" > No dossier file found"));
-					returVal = "No dossier file found - check Application Settings";
-					ok = false;
-				}
-				else
-				{
-					logText.Add(LogText(" > Dossier file found"));
-				}
+			}
+			return dossierFile;
+		}
+
+		public static string ManualRun(bool ForceUpdate = false)
+		{
+			string returVal = "Manual dossier file check started...";
+			Log.CheckLogFileSize();
+			List<string> logText = new List<string>();
+			bool ok = true;
+			logText.Add(LogText("Manual run, looking for new dossier file"));
+			string dossierFile = GetLatestUpdatedDossierFile();
+			if (dossierFile == "")
+			{
+				logText.Add(LogText(" > No dossier file found"));
+				returVal = "No dossier file found - check Application Settings";
+				ok = false;
 			}
 			else
 			{
-				logText.Add(LogText(" > Inncorrect path to dossier file, check Application Settings."));
-				returVal = "Inncorrect path to dossier file - check Application Settings";
-				ok = false;
+				logText.Add(LogText(" > Dossier file found"));
 			}
 			if (ok)
 			{
@@ -166,8 +166,7 @@ namespace WinApp.Code
 			List<string> logText = new List<string>();
 			string returVal = "Starting file handling...";
 			// Get player name from dossier
-			FileInfo fi = new FileInfo(dossierFile);
-			string playerName = GetPlayerName(fi);
+			string playerName = GetPlayerName(dossierFile);
 			// Get player ID
 			int playerId = 0;
 			string sql = "select id from player where name=@name";
@@ -336,16 +335,17 @@ namespace WinApp.Code
 		}
 
 		// Gets the names of the player from name of dossier file
-		public static string GetPlayerName(FileInfo cacheFile)
+		public static string GetPlayerName(string dossierFile)
 		{
-			var decodedFileName = DecodFileName(cacheFile);
+			FileInfo fi = new FileInfo(dossierFile);
+			var decodedFileName = DecodFileName(fi);
 			return decodedFileName.Split(separator)[1];
 		}
 
 		// Decods the name of the file.
-		public static string DecodFileName(FileInfo cacheFile)
+		public static string DecodFileName(FileInfo fi)
 		{
-			string str = cacheFile.Name.Replace(cacheFile.Extension, string.Empty);
+			string str = fi.Name.Replace(fi.Extension, string.Empty);
 			byte[] decodedFileNameBytes = Base32.Base32Encoder.Decode(str.ToLowerInvariant());
 			string decodedFileName = Encoding.UTF8.GetString(decodedFileNameBytes);
 			return decodedFileName;
