@@ -638,6 +638,8 @@
 			// 
 			this.lblAllColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblAllColumns.Dimmed = false;
+			this.lblAllColumns.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblAllColumns.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblAllColumns.Image = null;
 			this.lblAllColumns.Location = new System.Drawing.Point(42, 304);
 			this.lblAllColumns.Name = "lblAllColumns";
@@ -650,6 +652,8 @@
 			// 
 			this.lblSelectedColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblSelectedColumns.Dimmed = false;
+			this.lblSelectedColumns.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblSelectedColumns.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblSelectedColumns.Image = null;
 			this.lblSelectedColumns.Location = new System.Drawing.Point(345, 304);
 			this.lblSelectedColumns.Name = "lblSelectedColumns";
@@ -689,6 +693,7 @@
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
+			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(34, 61);
 			this.badLabel1.Name = "badLabel1";
@@ -711,6 +716,7 @@
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.ColumnSetup_Load);
 			this.ResizeEnd += new System.EventHandler(this.ColumnList_ResizeEnd);
+			this.LocationChanged += new System.EventHandler(this.ColList_LocationChanged);
 			this.Resize += new System.EventHandler(this.ColumnList_Resize);
 			this.ColListTheme.ResumeLayout(false);
 			this.toolColList.ResumeLayout(false);

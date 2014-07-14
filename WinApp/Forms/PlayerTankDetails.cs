@@ -37,12 +37,7 @@ namespace WinApp.Forms
 				// Show name
 				PlayerTankDetailsTheme.Text += " - " + tankName;
 				// Show pictures
-				Bitmap bmp = new Bitmap(GetImage(0, tankId));
-				picLarge.Image = bmp;
-				bmp = new Bitmap(GetImage(1, tankId));
-				picSmall.Image = bmp;
-				bmp = new Bitmap(GetImage(2, tankId));
-				picIcon.Image = bmp;
+				picLarge.Image = ImageHelper.GetTankImage(tankId,"img");
 			}
 		}
 

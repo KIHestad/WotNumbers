@@ -35,7 +35,8 @@ namespace WinApp.Forms
 		private void ColumnSetup_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
-			this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
 			// Style toolbar
 			toolAllColumns.Renderer = new StripRenderer();
 			toolSelectedColumns.Renderer = new StripRenderer();
@@ -961,6 +962,13 @@ namespace WinApp.Forms
 		private void btnClose_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void ColList_LocationChanged(object sender, EventArgs e)
+		{
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
+
 		}
 
 	}

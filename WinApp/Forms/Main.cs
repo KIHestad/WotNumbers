@@ -27,7 +27,8 @@ namespace WinApp.Forms
 		private void Main_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
-			this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
 			// Black Border on loading
 			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			// Resize Form Theme Title Area to fit 125% or 150% font size in Win
@@ -2266,15 +2267,21 @@ namespace WinApp.Forms
 		
 		private void testSaveImageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Code.ImportWotApi2DB.SaveImage();
+			
 		}
 
 		private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Code.ImportWotApi2DB.updateTankImage();
+
 		}
 
 		#endregion
+
+		private void Main_LocationChanged(object sender, EventArgs e)
+		{
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
+		}
 
 
 		

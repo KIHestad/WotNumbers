@@ -26,7 +26,8 @@ namespace WinApp.Forms
 		private void FavList_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
-			this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
 			// Style toolbar
 			toolAllTanks.Renderer = new StripRenderer();
 			toolAllTanks.ShowItemToolTips = false;
@@ -1001,6 +1002,13 @@ namespace WinApp.Forms
 		private void btnClose_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void FavList2_LocationChanged(object sender, EventArgs e)
+		{
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
+
 		}
 
 	}

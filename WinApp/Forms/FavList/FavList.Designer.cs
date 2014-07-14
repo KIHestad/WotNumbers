@@ -848,6 +848,8 @@
 			// 
 			this.lblSelectedTanks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblSelectedTanks.Dimmed = false;
+			this.lblSelectedTanks.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblSelectedTanks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblSelectedTanks.Image = null;
 			this.lblSelectedTanks.Location = new System.Drawing.Point(345, 276);
 			this.lblSelectedTanks.Name = "lblSelectedTanks";
@@ -860,6 +862,8 @@
 			// 
 			this.lblAllTanks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblAllTanks.Dimmed = false;
+			this.lblAllTanks.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblAllTanks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblAllTanks.Image = null;
 			this.lblAllTanks.Location = new System.Drawing.Point(42, 276);
 			this.lblAllTanks.Name = "lblAllTanks";
@@ -898,6 +902,7 @@
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.FavList_Load);
 			this.ResizeEnd += new System.EventHandler(this.FavTanks_ResizeEnd);
+			this.LocationChanged += new System.EventHandler(this.FavList2_LocationChanged);
 			this.Resize += new System.EventHandler(this.FavTanks_Resize);
 			this.FavTanksTheme.ResumeLayout(false);
 			this.toolColList.ResumeLayout(false);

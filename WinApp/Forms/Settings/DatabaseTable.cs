@@ -21,7 +21,8 @@ namespace WinApp.Forms
 		private void DatabaseTable_Load(object sender, EventArgs e)
 		{
 			// Make sure borderless form do not cover task bar when maximized
-			this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
 			// Add Mouse Wheel handle
 			dataGridViewShowTable.MouseWheel += new MouseEventHandler(dataGridViewShowTable_MouseWheel); 
 			// Scroll and grid size
@@ -255,6 +256,13 @@ namespace WinApp.Forms
 		private void popupSelectTable_TextChanged(object sender, EventArgs e)
 		{
 			RefreshDataGrid();
+		}
+
+		private void DatabaseTable_LocationChanged(object sender, EventArgs e)
+		{
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
+
 		}
 
 	}
