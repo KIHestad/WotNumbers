@@ -120,16 +120,6 @@ namespace WinApp.Forms
 				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
 				Config.Settings.dossierFileWathcherRun = 1;
 			}
-			// Player
-			Config.Settings.playerName = cboSelectPlayer.Text;
-			DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'");
-			if (dt.Rows.Count > 0)
-			{
-				int playerId = 0;
-				if (dt.Rows[0][0] != DBNull.Value)
-					playerId = Convert.ToInt32(dt.Rows[0][0]);
-				Config.Settings.playerId = playerId;
-			}
 			// Time Zone
 			string timeZone = ddTimeZone.Text.ToString();
 			int newTimeZone = 0;
@@ -142,6 +132,17 @@ namespace WinApp.Forms
 			Config.Settings.timeZoneAdjust = newTimeZone;
 			// Show DB errors (debug mode)
 			Config.Settings.showDBErrors = chkShowDBError.Checked;
+			// Player
+			Config.Settings.playerName = cboSelectPlayer.Text;
+			DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'", Config.Settings.showDBErrors);
+			if (dt.Rows.Count > 0)
+			{
+				int playerId = 0;
+				if (dt.Rows[0][0] != DBNull.Value)
+					playerId = Convert.ToInt32(dt.Rows[0][0]);
+				Config.Settings.playerId = playerId;
+			}
+			
 			// Save
 			string msg = "";
 			bool saveOk = false;
