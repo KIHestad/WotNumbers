@@ -183,7 +183,7 @@ namespace WinApp.Forms
 
 		private void ShowColumnSetupList()
 		{
-			string sql = "select columnList.position as '#', columnList.name as 'Name', '' as 'Show', '' as 'Default', '' as 'System', " +
+			string sql = "select columnList.position as '#', columnList.name as 'Name', '' as 'Show', '' as 'Startup', '' as 'System', " +
 				"favList.name as 'Fav Tank List', columnList.id, columnList.defaultFavListId, columnList.sysCol, columnList.colDefault " +
 				"from columnList left join favList on columnList.defaultFavListId = favList.id " +
 				"where columnList.colType=@colType " +
@@ -196,7 +196,7 @@ namespace WinApp.Forms
 				var pos = row["#"];
 				if (pos != DBNull.Value) row["Show"] = "X";
 				int def = Convert.ToInt32(row["colDefault"]);
-				if (def == 1) row["Default"] = "X";
+				if (def == 1) row["Startup"] = "X";
 				int sys = Convert.ToInt32(row["sysCol"]);
 				if (sys == 1) row["System"] = "X";
 				int favList = Convert.ToInt32(row["defaultFavListId"]);
@@ -212,10 +212,10 @@ namespace WinApp.Forms
 			dataGridColumnList.Columns["#"].Width = 30;
 			dataGridColumnList.Columns["Name"].Width = 120;
 			dataGridColumnList.Columns["Show"].Width = 50;
-			dataGridColumnList.Columns["Default"].Width = 50;
+			dataGridColumnList.Columns["Startup"].Width = 50;
 			dataGridColumnList.Columns["System"].Width = 50;
 			dataGridColumnList.Columns["Show"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-			dataGridColumnList.Columns["Default"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+			dataGridColumnList.Columns["Startup"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 			dataGridColumnList.Columns["System"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 			dataGridColumnList.Columns["Fav Tank List"].Width = 120;
 			dataGridColumnList.Columns["sysCol"].Visible = false;
@@ -249,12 +249,14 @@ namespace WinApp.Forms
 			toolColListDelete.Enabled = !sysCol;
 			btnColumnListCancel.Enabled = !sysCol;
 			btnColumnListSave.Enabled = !sysCol;
-			btnRemoveAll.Enabled = !sysCol;
-			btnRemoveSelected.Enabled = !sysCol;
-			btnSelectAll.Enabled = !sysCol;
-			btnSelectSelected.Enabled = !sysCol;
-			toolSelectedTanks_MoveUp.Enabled = !sysCol;
-			toolSelectedTanks_MoveDown.Enabled = !sysCol;
+			// Move up/down
+			//toolSelectedTanks_MoveUp.Enabled = !sysCol;
+			//toolSelectedTanks_MoveDown.Enabled = !sysCol;
+			// Add/remove buttons
+			//btnRemoveAll.Enabled = !sysCol;
+			//btnRemoveSelected.Enabled = !sysCol;
+			//btnSelectAll.Enabled = !sysCol;
+			//btnSelectSelected.Enabled = !sysCol;
 			// Toggle show/hide
 			bool isHidden = (dataGridColumnList.SelectedRows[0].Cells["#"].Value == DBNull.Value);
 			string showButton = "Hide";
@@ -706,32 +708,61 @@ namespace WinApp.Forms
 
 		private void btnRemoveSelected_Click(object sender, EventArgs e)
 		{
-			RemoveSelectedColumn();
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				RemoveSelectedColumn();
 		}
 
 		private void btnRemoveAll_Click(object sender, EventArgs e)
 		{
-			RemoveSelectedColumn(true);
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				RemoveSelectedColumn(true);
 		}
 
 		private void btnSelectSelected_Click(object sender, EventArgs e)
 		{
-			AddSelectedColumn();
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				AddSelectedColumn();
 		}
 
 		private void btnSelectAll_Click(object sender, EventArgs e)
 		{
-			AddSelectedColumn(true);
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				AddSelectedColumn(true);
 		}
 
 		private void toolSelectedColumns_MoveUp_Click(object sender, EventArgs e)
 		{
-			MoveSelectedColumn(false);
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				MoveSelectedColumn(false);
 		}
 
 		private void toolSelectedColumns_MoveDown_Click(object sender, EventArgs e)
 		{
-			MoveSelectedColumn(true);
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				MoveSelectedColumn(true);
+		}
+
+		private void ShowSystemColListMessage()
+		{
+			Code.MsgBox.Show("Cannot alter system list, add new list to modify columns.", "Cannot alter system list");
 		}
 
 		#endregion

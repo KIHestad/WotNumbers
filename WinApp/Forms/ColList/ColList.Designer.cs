@@ -205,7 +205,7 @@
 			this.toolColListDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolColListDefault.Name = "toolColListDefault";
 			this.toolColListDefault.Size = new System.Drawing.Size(49, 22);
-			this.toolColListDefault.Text = "Default";
+			this.toolColListDefault.Text = "Startup";
 			this.toolColListDefault.Click += new System.EventHandler(this.toolColListDefault_Click);
 			// 
 			// toolStripSeparator1

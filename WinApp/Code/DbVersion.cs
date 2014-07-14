@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 66; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 68; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -71,15 +71,6 @@ namespace WinApp.Code
 							" position integer null, " +
 							" sysCol bit not null default 0 " +
 							"); ";
-					break;
-				case 5:
-					mssql =	"insert into columnList (colType,name,colDefault,position,sysCol) values (1,'Default Column Setup', 1, 1, 1); " +
-							"insert into columnList (colType,name,colDefault,position,sysCol) values (1,'Minimalistic Column Setup', 0, 2, 1); " +
-							"insert into columnList (colType,name,colDefault,position,sysCol) values (1,'All Columns', 0, 3, 1); " +
-							"insert into columnList (colType,name,colDefault,position,sysCol) values (2,'Default Column Setup', 1, 1, 1); " +
-							"insert into columnList (colType,name,colDefault,position,sysCol) values (2,'Minimalistic Column Setup', 0, 2, 1); " +
-							"insert into columnList (colType,name,colDefault,position,sysCol) values (2,'All Columns', 0, 3, 1); ";
-					sqlite = mssql;
 					break;
 				case 6:
 					mssql = "create table columnListSelection ( " +
@@ -297,7 +288,7 @@ namespace WinApp.Code
 					sqlite = "ALTER TABLE playerTankBattle ADD battleOfTotal real NOT NULL default 0; ";
 					break;
 				case 19:
-					mssql = "DELETE FROM columnListSelection; DELETE FROM columnSelection; ALTER TABLE columnSelection ADD colDataType varchar(50) NOT NULL default 'Int';";
+					mssql = "DELETE FROM columnSelection; ALTER TABLE columnSelection ADD colDataType varchar(50) NOT NULL default 'Int';";
 					sqlite = mssql;
 					break;
 				case 20:
@@ -419,22 +410,6 @@ namespace WinApp.Code
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (96, 1, 26, 'SUM(playerTankBattle.survived)', 'Survived', 'Survived count', 'Battle', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (97, 1, 27, 'SUM(playerTankBattle.battles-playerTankBattle.survived)', 'Killed', 'Killed count (not survived)', 'Battle', 50, 'Int'); " + 
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (98, 1, 28, 'CAST(SUM(playerTankBattle.survived*100/nullif(playerTankBattle.battles,0)*playerTankBattle.battleOfTotal) AS INT)', 'Survived Rate', 'Survived in percent of tank total battles', 'Battle', 50, 'Int'); " ;
-					sqlite = mssql;
-					break;
-				case 21:
-					mssql = "INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (12,1,1) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (1,1,2) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (44,1,3) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (57,1,4) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (54,1,5) ; " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (50,1,6) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (95,1,7) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (154,1,8) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (155,1,9) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (156,1,10) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (53,1,11) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (48,1,12) ;" +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (49,1,13) ;";
 					sqlite = mssql;
 					break;
 				case 22:
@@ -566,8 +541,7 @@ namespace WinApp.Code
 							"SP_DROP_COL_CONSTRAINT 'battle' , 'mode7' ; ";
 					break;
 				case 27:
-					mssql = "DELETE FROM columnListSelection WHERE columnSelectionId IN (41,42); DELETE FROM columnSelection WHERE ID IN (41,42);" +
-							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (162, 2, 40, 'battle.battleMode', 'Battle Mode', 'Battle mode, 15 = Random Battles, Tank Company and Clan Wars, 7 = Team Battle (Historical Battles not included yet)', 'Mode', 50, 'VarChar'); ";
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) VALUES (162, 2, 40, 'battle.battleMode', 'Battle Mode', 'Battle mode, 15 = Random Battles, Tank Company and Clan Wars, 7 = Team Battle (Historical Battles not included yet)', 'Mode', 50, 'VarChar'); ";
 					sqlite = mssql;
 					break;	
 				case 28:
@@ -579,25 +553,6 @@ namespace WinApp.Code
 							"update columnSelection set colWidth = 40 where id IN (28,32,33,160,161,162,36,38,40,47);";
 					sqlite = mssql;
 					break;	
-				case 29:
-					mssql=	"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (10,4,3); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (11,4,4); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (18,4,9); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (19,4,5); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (20,4,8); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (21,4,6); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (22,4,7); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (24,4,11); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (25,4,12); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (28,4,13); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (35,4,10); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (38,4,14); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (40,4,15); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (47,4,16); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (58,4,1); " +
-							"INSERT INTO columnListSelection (columnSelectionId,columnListId,sortorder) VALUES (164,4,2); "; 
-					sqlite = mssql;
-					break;
 				case 30:
 					// Korrigert av KI - image datatype tar ikke default 0
 					mssql = "alter table tank add imgPath varchar(255) NULL ; " +
@@ -648,12 +603,6 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET name = 'Dmg Spot' WHERE id = 129; " +
 							"UPDATE columnSelection SET name = 'Dmg Track' WHERE id = 130; " +
 							"UPDATE columnSelection SET colWidth = 54 WHERE id = 20; " ;
-					sqlite = mssql;
-					break;
-				case 34:
-					mssql = "update columnList set name='Default' where id IN (1,4); " +
-							"update columnList set name='Grinding' where id = (2); " +
-							"delete from columnList where id IN (3,5,6); ";
 					sqlite = mssql;
 					break;
 				case 35:
@@ -721,23 +670,6 @@ namespace WinApp.Code
 
 					sqlite = mssql;
 					break;
-				case 44:
-					mssql = "insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (12,2,1); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (1,2,2); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (174,2,3); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (175,2,4); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (170,2,5); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (171,2,6); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (172,2,7); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (173,2,8); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (177,2,9); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (176,2,10); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (178,2,11); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (179,2,12); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (140,2,13); " +
-							"insert into columnListSelection (columnSelectionId,columnListId,sortorder) values (156,2,14); ";
-					sqlite = mssql;
-					break;
 				case 45:
 					mssql = "UPDATE columnSelection SET colWidth = 47 WHERE colWidth = 50 and colType=2; " +
 							"UPDATE columnSelection SET colWidth = 47 WHERE id IN (38,40,47);";
@@ -801,9 +733,7 @@ namespace WinApp.Code
 					break;
 				case 48:
 					mssql = "UPDATE columnSelection SET name = 'Start XP' WHERE id = 170; " +
-							"UPDATE columnSelection SET name = 'End XP' WHERE id = 172; " +
-							"DELETE FROM columnListSelection WHERE columnSelectionId=170 AND columnListId=2; " +
-							"DELETE FROM columnListSelection WHERE columnSelectionId=172 AND columnListId=2; " ;
+							"UPDATE columnSelection SET name = 'End XP' WHERE id = 172; ";
 					sqlite = mssql;
 					break;
 				case 49:
@@ -1032,7 +962,22 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colNameSQLite = 'strftime(''%d.%m.%Y'', battleTime)' where id=163;";
 					sqlite = mssql;
 					break;
-
+				case 67:
+					NewSystemTankColList();
+					NewSystemBattleColList();
+					break;
+				case 68:
+					mssql = "UPDATE columnSelection SET name='Remaining XP' WHERE id=176; " +
+							"UPDATE columnSelection SET description='Remaining XP needed to reach target XP' WHERE id=176; " +
+							"UPDATE columnSelection SET name='Remaining Days' WHERE id=179; " +
+							"UPDATE columnSelection SET description='Remaining days needed to reach target XP' WHERE id=179; " +
+							"UPDATE columnSelection SET name='Remaining Battles' WHERE id=178; " +
+							"UPDATE columnSelection SET description='Remaining battles needed to reach target XP' WHERE id=178; " +
+							"UPDATE columnSelection SET name='Target XP' WHERE id=171; " +
+							"UPDATE columnSelection SET description='The total amount of XP that is the target for the grinding' WHERE id=171; " +
+							"UPDATE columnSelection SET description='Current progress in percent for this grinding' WHERE id=177; ";
+					sqlite = mssql;
+					break;		
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -1145,5 +1090,106 @@ namespace WinApp.Code
 			else version = 0;
 			return version;
 		}
+
+		//
+		// *** SQL TO GENERATE INSERT FOR columnListSelection BASED ON EXISTING COLLIST **
+		//
+		// SELECT '"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values ('+cast(columnSelectionId as varchar)+',"+id+",'+cast(sortorder as varchar)+','+cast(colWidth as varchar)+');" +'
+		// FROM [WotNumbers].[dbo].[columnListSelection]
+		// WHERE columnListId=28
+		// ORDER BY sortorder
+
+		private static void NewSystemTankColList()
+		{
+			// First remove all other system colList for Tank
+			string sql = 
+				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=1); " +
+				"delete from columnList where sysCol=1 and colType=1; ";
+			DB.ExecuteNonQuery(sql);
+			// Then remove current startup, and create new default colList
+			sql =	
+				"update columnList set colDefault=0 where colType=1; " +
+				"insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 1, 1, 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=1;";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,120);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (44," + id + ",4,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (57," + id + ",5,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (54," + id + ",6,100);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",7,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",8,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (154," + id + ",9,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (155," + id + ",10,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (156," + id + ",11,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (53," + id + ",12,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",13,50);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",14,50);";
+			DB.ExecuteNonQuery(sql);
+			// Then create grinding colList
+			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Grinding', 0, 2, 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=1;";
+			id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,106);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (175," + id + ",4,140);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (171," + id + ",5,70);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (173," + id + ",6,67);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (177," + id + ",7,40);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (176," + id + ",8,66);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (178," + id + ",9,40);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (174," + id + ",10,40);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (179," + id + ",11,40);";
+			DB.ExecuteNonQuery(sql);
+		}
+
+		private static void NewSystemBattleColList()
+		{
+			// First remove all other system colList for Battle
+			string sql =
+				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2); " +
+				"delete from columnList where sysCol=1 and colType=2; ";
+			DB.ExecuteNonQuery(sql);
+			// Then remove current startup, and create new default colList
+			sql =
+				"update columnList set colDefault=0 where colType=2; " +
+				"insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Default', 1, 1, 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=2;";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,109);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (164," + id + ",6,62);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",7,60);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",8,52);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",9,47);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (21," + id + ",10,47);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (22," + id + ",11,47);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (20," + id + ",12,54);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",13,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",14,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (24," + id + ",15,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",16,35);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (28," + id + ",17,40);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (38," + id + ",18,47);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (40," + id + ",19,47);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",20,47);";
+			DB.ExecuteNonQuery(sql);
+		}
+
 	}
 }

@@ -88,7 +88,7 @@ namespace WinApp.Code
 			ColListName = "";
 			if (dt.Rows.Count > 0)
 			{
-				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
+				colListId = Convert.ToInt32(dt.Rows[0]["colListId"]);
 				ColListName = dt.Rows[0]["colListName"].ToString();
 			}
 			return colListId;

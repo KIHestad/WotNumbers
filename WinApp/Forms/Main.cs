@@ -493,24 +493,33 @@ namespace WinApp.Forms
 
 		private void GridShow(string Status2Message = "")
 		{
-			switch (MainSettings.View)
+			try
 			{
-				case GridView.Views.Overall:
-					lblOverView.Text = "Welcome " + Config.Settings.playerName;
-					if (Status2Message == "") Status2Message = "Selected overall view";
-					GridShowOverall(Status2Message);
-					break;
-				case GridView.Views.Tank:
-					if (Status2Message == "") Status2Message = "Selected tank view";
-					GridShowTank(Status2Message);
-					break;
-				case GridView.Views.Battle:
-					if (Status2Message == "") Status2Message = "Selected battle view";
-					GridShowBattle(Status2Message);
-					break;
-				default:
-					break;
+				switch (MainSettings.View)
+				{
+					case GridView.Views.Overall:
+						lblOverView.Text = "Welcome " + Config.Settings.playerName;
+						if (Status2Message == "") Status2Message = "Selected overall view";
+						GridShowOverall(Status2Message);
+						break;
+					case GridView.Views.Tank:
+						if (Status2Message == "") Status2Message = "Selected tank view";
+						GridShowTank(Status2Message);
+						break;
+					case GridView.Views.Battle:
+						if (Status2Message == "") Status2Message = "Selected battle view";
+						GridShowBattle(Status2Message);
+						break;
+					default:
+						break;
+				}
 			}
+			catch (Exception ex)
+			{
+				MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initialising view");
+				throw;
+			}
+			
 		}
 
 		#endregion

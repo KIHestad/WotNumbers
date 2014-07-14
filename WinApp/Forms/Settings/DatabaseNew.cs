@@ -29,16 +29,23 @@ namespace WinApp.Forms
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
-				string winAuth = "Sql";
-				if (Config.Settings.databaseWinAuth) winAuth = "Win";
-				string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master",
-																	winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
-				using (var connection = new SqlConnection(connectionstring))
+				try
 				{
-					ServerConnection serverConnection = new ServerConnection(connection);
-					Server server = new Server(serverConnection);
-					string defaultDataPath = string.IsNullOrEmpty(server.Settings.DefaultFile) ? server.MasterDBPath : server.Settings.DefaultFile;
-					txtFileLocation.Text = defaultDataPath;
+					string winAuth = "Sql";
+					if (Config.Settings.databaseWinAuth) winAuth = "Win";
+					string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master",
+																		winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
+					using (var connection = new SqlConnection(connectionstring))
+					{
+						ServerConnection serverConnection = new ServerConnection(connection);
+						Server server = new Server(serverConnection);
+						string defaultDataPath = string.IsNullOrEmpty(server.Settings.DefaultFile) ? server.MasterDBPath : server.Settings.DefaultFile;
+						txtFileLocation.Text = defaultDataPath;
+					}
+				}
+				catch (Exception)
+				{
+					// throw;
 				}
 			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
