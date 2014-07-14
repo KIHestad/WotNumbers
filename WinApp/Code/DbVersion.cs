@@ -969,9 +969,9 @@ namespace WinApp.Code
 				case 68:
 					mssql = "UPDATE columnSelection SET name='Remaining XP' WHERE id=176; " +
 							"UPDATE columnSelection SET description='Remaining XP needed to reach target XP' WHERE id=176; " +
-							"UPDATE columnSelection SET name='Remaining Days' WHERE id=179; " +
+							"UPDATE columnSelection SET name='Days To Go' WHERE id=179; " +
 							"UPDATE columnSelection SET description='Remaining days needed to reach target XP' WHERE id=179; " +
-							"UPDATE columnSelection SET name='Remaining Battles' WHERE id=178; " +
+							"UPDATE columnSelection SET name='Battles To Go' WHERE id=178; " +
 							"UPDATE columnSelection SET description='Remaining battles needed to reach target XP' WHERE id=178; " +
 							"UPDATE columnSelection SET name='Target XP' WHERE id=171; " +
 							"UPDATE columnSelection SET description='The total amount of XP that is the target for the grinding' WHERE id=171; " +
