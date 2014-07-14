@@ -46,6 +46,19 @@ namespace WinApp.Forms
 			}
 			if (lines > 12) lines = 12; // max size
 			this.Height = txtMessage.Top + (lines * 25) + 20; // resize initial height of form to fit content
+			if (this.Top == 0)
+			{
+				Form lastForm = null;
+				Form parentForm = null; 
+				foreach (Form form in Application.OpenForms)
+				{
+					parentForm = lastForm;
+					lastForm = form;
+				}
+				string s = parentForm.Text;
+				this.Top = parentForm.Top + 40;
+				this.Left = parentForm.Left + (parentForm.Width / 2) - (this.Width / 2);
+			}
 		}
 
 		private void badForm1_Resize(object sender, EventArgs e)
