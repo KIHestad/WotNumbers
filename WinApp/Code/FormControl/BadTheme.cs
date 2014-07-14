@@ -627,7 +627,7 @@ abstract class BadThemeControl : Control
 		get { return _Cursor; }
 		set	{ _Cursor = value; Invalidate();}
 	}
-
+		
 	public BadThemeControl()
 	{
 		SetStyle((ControlStyles)8198, true);
@@ -1131,13 +1131,12 @@ class BadLabel : BadThemeControl
 	}
 
 
-	private Color _ForeColor = ColorTheme.ControlFont;
-	public override Color ForeColor
+	private Color _FontColor = ColorTheme.ControlFont;
+	public Color FontColor
 	{
-		get { return _ForeColor; }
-		set { _ForeColor = value; Invalidate(); }
+		get { return _FontColor; }
+		set { _FontColor = value; Invalidate(); }
 	}
-
 
 	Label label = new Label();
 	public BadLabel()
@@ -1145,6 +1144,7 @@ class BadLabel : BadThemeControl
 		AllowTransparent();
 		BackColor = ColorTheme.FormBack;
 		label.BackColor = ColorTheme.FormBack;
+		//label.ForeColor = ColorTheme.ControlFont;
 		label.Top = 5;
 		this.Controls.Add(label);
 	}
@@ -1158,6 +1158,7 @@ class BadLabel : BadThemeControl
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
 		label.Text = Text;
+		ForeColor = FontColor;
 		if (Dimmed)
 			label.ForeColor = ColorTheme.ControlDimmedFont;
 		else

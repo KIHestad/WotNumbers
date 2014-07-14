@@ -2202,30 +2202,10 @@ namespace WinApp.Forms
 		
 		#region Help - About
 
-		private string AssemblyVersion
-		{
-			get
-			{
-				return Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
-					Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + " (" +
-					Assembly.GetExecutingAssembly().GetName().Version.MinorRevision.ToString() + ")";
-		}
-		}
-
 		private void toolItemHelp_Click(object sender, EventArgs e)
 		{
-			//Form frm = new Forms.Help.About();
-			//frm.ShowDialog();
-			string dbVersionComment = " (correct version)";
-			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
-				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
-			string msg = "Wot Numbers" + Environment.NewLine + Environment.NewLine +
-						 "Application version: " + AssemblyVersion + Environment.NewLine +
-						 "Database version: " + DBVersion.CurrentNumber().ToString("0000") + dbVersionComment + Environment.NewLine +
-						 "WN8 version: " + DBVersion.WN8Version().ToString() + Environment.NewLine + Environment.NewLine +
-						 "Track your World of Tanks gaming performance and progress." + Environment.NewLine + Environment.NewLine +
-						 "Created by: BadButton and cmdrTrinity";
-			Code.MsgBox.Show(msg, "About WoT Numbers");
+			Form frm = new Forms.About();
+			frm.ShowDialog();
 		}
 
 		#endregion
