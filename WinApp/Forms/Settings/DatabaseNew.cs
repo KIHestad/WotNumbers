@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.SqlServer.Management.Common;
 
 namespace WinApp.Forms
 {
@@ -25,10 +27,25 @@ namespace WinApp.Forms
 		private void frmDatabaseNew_Load(object sender, EventArgs e)
 		{
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+			{
 				DatabaseNewTheme.Text = "Create New MS SQL Server Database";
+				string winAuth = "Sql";
+				if (Config.Settings.databaseWinAuth) winAuth = "Win";
+				string connectionstring = Config.DatabaseConnection(ConfigData.dbType.MSSQLserver, "", Config.Settings.databaseServer, "master",
+																	winAuth, Config.Settings.databaseUid, Config.Settings.databasePwd);
+				using (var connection = new SqlConnection(connectionstring))
+				{
+					ServerConnection serverConnection = new ServerConnection(connection);
+					Server server = new Server(serverConnection);
+					string defaultDataPath = string.IsNullOrEmpty(server.Settings.DefaultFile) ? server.MasterDBPath : server.Settings.DefaultFile;
+					txtFileLocation.Text = defaultDataPath;
+				}
+			}
 			else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+			{
 				DatabaseNewTheme.Text = "Create New SQLite Database";
-			txtFileLocation.Text = Config.AppDataDBFolder;
+				txtFileLocation.Text = Config.AppDataDBFolder;
+			}
 		}
 
 		private void UpdateProgressBar(string statusText)
