@@ -152,9 +152,10 @@ namespace WinApp.Forms
 						DataTable dtCopyTo = DB.FetchData(sql);
 						int copyToId = Convert.ToInt32(dtCopyTo.Rows[0]["id"]);
 						// Copy now
-						sql = "insert into columnListSelection (columnSelectionId, columnListId, sortorder) select columnSelectionId, @copyToColumnListId, sortorder " +
-																										"   from columnListSelection " +
-																										"   where ColumnListId=@copyFromColumnListId; ";
+						sql =	"insert into columnListSelection (columnSelectionId, columnListId, sortorder, colWidth) " +
+								"   select columnSelectionId, @copyToColumnListId, sortorder, colWidth " +
+								"   from columnListSelection " +
+								"   where ColumnListId=@copyFromColumnListId; ";
 						DB.AddWithValue(ref sql, "@copyToColumnListId", copyToId, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@copyFromColumnListId", copyFromId, DB.SqlDataType.Int);
 						DB.ExecuteNonQuery(sql);
