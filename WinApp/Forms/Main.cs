@@ -1029,12 +1029,12 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Col List Select
+		#region Col List
 
 		
 		#endregion
 					
-		#region Tank Filter 
+		#region Fav List and Tank Filter 
 
 		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
 		
@@ -1133,7 +1133,7 @@ namespace WinApp.Forms
 
 		#endregion
 				
-		#region Data Grid - OVERALL VIEW *********************************************************************************************************
+		#region Data Grid - OVERALL VIEW                                   ***********************************************************************
 
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
 		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
@@ -1189,7 +1189,7 @@ namespace WinApp.Forms
 
 		#endregion
 		
-		#region Data Grid - TANK VIEW ****************************************************************************************************
+		#region Data Grid - TANK VIEW                                      ***********************************************************************
 
 		private void GridShowTank(string Status2Message)
 		{
@@ -1358,7 +1358,7 @@ namespace WinApp.Forms
 
 		#endregion
 		
-		#region Data Grid - BATTLE VIEW ****************************************************************************************************
+		#region Data Grid - BATTLE VIEW                                    ***********************************************************************
 
 		private void GridShowBattle(string Status2Message)
 		{
@@ -1946,7 +1946,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Data Grid Scroll Handling
+		#region Grid Scroll Handling
 
 		private bool scrollingY = false;
 		private bool scrollingX = false;
