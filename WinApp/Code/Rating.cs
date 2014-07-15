@@ -21,7 +21,7 @@ namespace WinApp.Code
 			return value;
 		}
 
-		private static double ConvertDbVal2Double(object dbValue)
+		public static double ConvertDbVal2Double(object dbValue)
 		{
 			double value = 0;
 			if (dbValue != DBNull.Value)
@@ -33,15 +33,15 @@ namespace WinApp.Code
 		
 		public static double CalculatePlayerTotalWn8()
 		{
-            string sql = "SELECT sum(ptb.battles * ptb.wn8) / sum(ptb.battles) " +
-                         "FROM playerTankBattle ptb " +
-                         "join playerTank pt on pt.id = ptb.playerTankId " +
-                         "join tank t on t.id = pt.tankId";
-            DataTable dtTotalWN8 = new DataTable();
-            dtTotalWN8 = DB.FetchData(sql);
-            int totalWN8 = (int)dtTotalWN8.Rows[0][0];
+			string sql = "SELECT sum(ptb.battles * ptb.wn8) / sum(ptb.battles) " +
+						 "FROM playerTankBattle ptb " +
+						 "join playerTank pt on pt.id = ptb.playerTankId " +
+						 "join tank t on t.id = pt.tankId";
+			DataTable dtTotalWN8 = new DataTable();
+			dtTotalWN8 = DB.FetchData(sql);
+			int totalWN8 = (int)dtTotalWN8.Rows[0][0];
 
-            return totalWN8;
+			return totalWN8;
 		}
 
 		public static double CalculatePlayerTankWn8(int tankId, int totalBattleCount, DataRow playerTankBattle)
@@ -88,15 +88,45 @@ namespace WinApp.Code
 
 		public static double CalculatePlayerTotalEFF()
 		{
-            string sql = "SELECT sum(ptb.battles * ptb.eff) / sum(ptb.battles) " +
-                         "FROM playerTankBattle ptb " +
-                         "join playerTank pt on pt.id = ptb.playerTankId " +
-                         "join tank t on t.id = pt.tankId";
-            DataTable dtTotalEff = new DataTable();
-            dtTotalEff = DB.FetchData(sql);
-            int totalEff = (int)dtTotalEff.Rows[0][0];
+			string sql = "SELECT sum(ptb.battles * ptb.eff) / sum(ptb.battles) " +
+						 "FROM playerTankBattle ptb " +
+						 "join playerTank pt on pt.id = ptb.playerTankId " +
+						 "join tank t on t.id = pt.tankId";
+			DataTable dtTotalEff = new DataTable();
+			dtTotalEff = DB.FetchData(sql);
+			int totalEff = (int)dtTotalEff.Rows[0][0];
 
-            return totalEff;
+			return totalEff;
+		}
+
+		public static double CalculatePlayerEFFforChart(double sumBattleCount, double sumDAMAGE, double sumSPOT, double sumFRAGS, double sumDEF, double sumCAP, double TIER = 0)
+		{
+			Double EFF = 0;
+			if (sumBattleCount > 0)
+			{
+				double DAMAGE = sumDAMAGE / sumBattleCount;
+				double SPOT = sumSPOT / sumBattleCount;
+				double FRAGS = sumFRAGS / sumBattleCount;
+				double DEF = sumDEF / sumBattleCount;
+				double CAP = sumCAP / sumBattleCount;
+				// CALC
+				if (TIER == 0)
+					EFF =
+						DAMAGE + 
+						FRAGS * 250 +
+						SPOT * 150 +
+						Math.Log(CAP + 1, 1.732) * 150 +
+						DEF * 150;
+				else
+					EFF =
+						DAMAGE * (10 / (TIER + 2)) * (0.23 + 2 * TIER / 100) +
+						FRAGS * 250 +
+						SPOT * 150 +
+						Math.Log(CAP + 1, 1.732) * 150 +
+						DEF * 150;
+			}
+			// Return value
+			return Convert.ToInt32(EFF);
 		}
 
 		public static double CalculatePlayerTankEff(int tankId, int totalBattleCount, DataRow playerTankData)
@@ -105,7 +135,7 @@ namespace WinApp.Code
 			// get tankdata for current tank
 			DataRow tankInfo = TankData.TankInfo(tankId);
 			int tankTier = Convert.ToInt32(tankInfo["tier"]);
-			if (tankInfo != null && totalBattleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
+			if (tankInfo != null && totalBattleCount > 0)
 			{
 				double TIER = tankTier;
 				double DAMAGE = 0;
