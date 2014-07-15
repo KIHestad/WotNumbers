@@ -33,14 +33,10 @@ namespace WinApp.Code
 		
 		public static double CalculatePlayerTotalWn8()
 		{
-            string sql = "SELECT sum(ptb.battles * ptb.wn8) / sum(ptb.battles) " +
-                         "FROM playerTankBattle ptb " +
-                         "join playerTank pt on pt.id = ptb.playerTankId " +
-                         "join tank t on t.id = pt.tankId";
+            string sql = "SELECT sum(battles * wn8) / sum(battles) FROM playerTankBattle";
             DataTable dtTotalWN8 = new DataTable();
             dtTotalWN8 = DB.FetchData(sql);
             int totalWN8 = (int)dtTotalWN8.Rows[0][0];
-
             return totalWN8;
 		}
 
@@ -88,14 +84,10 @@ namespace WinApp.Code
 
 		public static double CalculatePlayerTotalEFF()
 		{
-            string sql = "SELECT sum(ptb.battles * ptb.eff) / sum(ptb.battles) " +
-                         "FROM playerTankBattle ptb " +
-                         "join playerTank pt on pt.id = ptb.playerTankId " +
-                         "join tank t on t.id = pt.tankId";
+            string sql = "SELECT sum(battles * eff) / sum(battles) FROM playerTankBattle";
             DataTable dtTotalEff = new DataTable();
             dtTotalEff = DB.FetchData(sql);
             int totalEff = (int)dtTotalEff.Rows[0][0];
-
             return totalEff;
 		}
 
