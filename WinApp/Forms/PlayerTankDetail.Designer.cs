@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class PlayerTankDetails
+	partial class PlayerTankDetail
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlayerTankDetails));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlayerTankDetail));
 			this.PlayerTankDetailsTheme = new BadForm();
 			this.lblFooter = new System.Windows.Forms.Label();
 			this.scrollTankDetails = new BadScrollBar();

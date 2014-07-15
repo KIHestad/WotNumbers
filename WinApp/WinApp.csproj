@@ -177,11 +177,11 @@
     <Compile Include="Forms\FavList\FavListNewEdit.Designer.cs">
       <DependentUpon>FavListNewEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PlayerTankDetails.cs">
+    <Compile Include="Forms\PlayerTankDetail.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\PlayerTankDetails.Designer.cs">
-      <DependentUpon>PlayerTankDetails.cs</DependentUpon>
+    <Compile Include="Forms\PlayerTankDetail.Designer.cs">
+      <DependentUpon>PlayerTankDetail.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\_todelete_AddPlayer.cs">
       <SubType>Form</SubType>
@@ -272,11 +272,11 @@
     <Compile Include="Code\Log.cs" />
     <Compile Include="Code\ImportWotApi2DB.cs" />
     <Compile Include="Code\Rating.cs" />
-    <Compile Include="Forms\PlayerTankChart.cs">
+    <Compile Include="Forms\BattleChart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\PlayerTankChart.Designer.cs">
-      <DependentUpon>PlayerTankChart.cs</DependentUpon>
+    <Compile Include="Forms\BattleChart.Designer.cs">
+      <DependentUpon>BattleChart.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Test\ViewRange.cs">
       <SubType>Form</SubType>
@@ -304,8 +304,8 @@
     <EmbeddedResource Include="Forms\FavList\FavListNewEdit.resx">
       <DependentUpon>FavListNewEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PlayerTankDetails.resx">
-      <DependentUpon>PlayerTankDetails.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\PlayerTankDetail.resx">
+      <DependentUpon>PlayerTankDetail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\_todelete_AddPlayer.resx">
       <DependentUpon>_todelete_AddPlayer.cs</DependentUpon>
@@ -349,8 +349,8 @@
     <EmbeddedResource Include="Forms\Settings\DatabaseTable.resx">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PlayerTankChart.resx">
-      <DependentUpon>PlayerTankChart.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\BattleChart.resx">
+      <DependentUpon>BattleChart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
@@ -369,6 +369,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="DevDocs\Img\FormIcons\logo_org_6.pdn" />
+    <None Include="DevDocs\Img\FormIcons\logo_org_800.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.pdn" />
@@ -409,6 +410,8 @@
     <Content Include="DevDocs\Img\FormIcons\formadmin_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_details_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_ico_6.ico" />
+    <Content Include="DevDocs\Img\FormIcons\logo_about.png" />
+    <Content Include="DevDocs\Img\FormIcons\logo_about_colorback.png" />
     <Content Include="DevDocs\Img\FormIcons\Mian_Form_Title_logo_6.png" />
     <Content Include="DevDocs\Img\FormIcons\Mian_Form_Title_logo_6b.png" />
     <Content Include="DevDocs\Img\FormIcons\Mian_Form_Title_logo_6c.png" />
@@ -421,6 +424,8 @@
     <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.ico" />
     <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon4_details.ico" />
     <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon5_details.ico" />
+    <Content Include="DevDocs\Img\FormIcons\wontum_admin.ico" />
+    <Content Include="DevDocs\Img\FormIcons\wontum_master.ico" />
     <Content Include="DevDocs\Img\InfoPanel\bg1.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg1_large.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg2_72px.png" />
@@ -446,6 +451,9 @@
     <Content Include="DevDocs\Img\ToolStripIcons\country_usa.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\country_ussr.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattleTime.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconCharts.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconCharts_v2.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconCharts_v3.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconCols.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconModes.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconTank.png" />

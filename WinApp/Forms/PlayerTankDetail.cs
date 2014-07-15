@@ -15,10 +15,10 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class PlayerTankDetails : Form
+	public partial class PlayerTankDetail : Form
 	{
 		int initPlayerTankId = 0;
-		public PlayerTankDetails(int playerTankId = 0)
+		public PlayerTankDetail(int playerTankId = 0)
 		{
 			InitializeComponent();
 			initPlayerTankId = playerTankId;

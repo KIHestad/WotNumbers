@@ -121,13 +121,13 @@ namespace WinApp.Forms
 			ToolStripSeparator dataGridMainPopup_Separator1 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
-			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Tank Charts");
+			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Battle Chart");
 			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
 			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
-			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_TankChart_Click);
+			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
 			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
@@ -1874,17 +1874,17 @@ namespace WinApp.Forms
 				GridShow("Refreshed grid");
 		}
 
-		private void dataGridMainPopup_TankChart_Click(object sender, EventArgs e)
+		private void dataGridMainPopup_BattleChart_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.PlayerTankChart(playerTankId);
+			Form frm = new Forms.BattleChart(playerTankId);
 			frm.ShowDialog();
 		}
 
 		private void dataGridMainPopup_TankDetails_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.PlayerTankDetails(playerTankId);
+			Form frm = new Forms.PlayerTankDetail(playerTankId);
 			frm.Show();
 		}
 
@@ -2137,8 +2137,14 @@ namespace WinApp.Forms
 
 		#endregion       
 		
-		#region App, DB and other Settings + Help/About
+		#region App, DB and other Settings + Help/About + Chart
 
+		private void toolItemViewChart_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.BattleChart(0);
+			frm.ShowDialog();
+		}
+	
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.ApplicationSetting();
@@ -2216,6 +2222,6 @@ namespace WinApp.Forms
 			Form frm = new Forms.ViewRange();
 			frm.ShowDialog();
 		}
-	
+		
 	}
 }
