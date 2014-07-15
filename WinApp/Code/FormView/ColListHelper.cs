@@ -81,5 +81,109 @@ namespace WinApp.Code
 			DB.ExecuteNonQuery(sql);
 		}
 
+		public class ColListClass
+		{
+			public string name = "";
+			public string description = "";
+			public int width = 0;
+			public string type = "";
+			public string group = "";
+		}
+
+		public static void GetSelectedColumnList(out string Select, out List<ColListClass> colList, out int img, out int smallimg, out int contourimg)
+		{
+			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
+						 "FROM   columnListSelection INNER JOIN " +
+						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
+						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
+						 "ORDER BY columnListSelection.sortorder; ";
+			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			Select = "";
+			img = -1;
+			smallimg = -1;
+			contourimg = -1;
+			List<ColListClass> selectColList = new List<ColListClass>();
+			if (dt.Rows.Count == 0)
+			{
+				Select = "'No columns defined in Column Selection List' As 'Error', ";
+				ColListClass colListItem = new ColListClass();
+				colListItem.name = "Error";
+				colListItem.width = 300;
+				colListItem.type = "VarChar";
+				selectColList.Add(colListItem);
+			}
+			else
+			{
+				int colNum = 0;
+				foreach (DataRow dr in dt.Rows)
+				{
+					string colName = dr["colName"].ToString(); // Get default colName
+					ColListClass colListItem = new ColListClass();
+					colListItem.name = dr["name"].ToString();
+					colListItem.width = Convert.ToInt32(dr["colWidth"]);
+					colListItem.type = dr["colDataType"].ToString();
+					selectColList.Add(colListItem);
+					// Check for alternative colName for SQLite
+					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
+					{
+						colName = dr["colNameSQLite"].ToString();
+					}
+					// Check for images
+					if (dr["colDataType"].ToString() == "Image")
+					{
+						// Image, get from separate datatable
+						string imgColName = dr["name"].ToString();
+						switch (imgColName)
+						{
+							case "Tank Icon": contourimg = colNum; break;
+							case "Tank Image": smallimg = colNum; break;
+							case "Tank Image Large": img = colNum; break;
+						}
+					}
+					else
+					{
+						// Normal select from db
+						Select += colName + " as '" + dr["name"].ToString() + "', ";
+					}
+					colNum++;
+				}
+			}
+			colList = selectColList;
+		}
+
+		public static void GetAllTankDataColumn(out string select, out List<ColListClass> colList)
+		{
+			string sql = "SELECT * " +
+						 "FROM  columnSelection " +
+						 "WHERE colDataType<>'Image' AND colType=1 " +
+						 "ORDER BY position; ";
+			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+			select = "";
+			List<ColListClass> selectColList = new List<ColListClass>();
+			int colNum = 0;
+			foreach (DataRow dr in dt.Rows)
+			{
+				string colName = dr["colName"].ToString(); // Get default colName
+				ColListClass colListItem = new ColListClass();
+				colListItem.name = dr["name"].ToString();
+				colListItem.description = dr["description"].ToString();
+				colListItem.width = Convert.ToInt32(dr["colWidth"]);
+				colListItem.group = dr["colGroup"].ToString();
+				colListItem.type = dr["colDataType"].ToString();
+				selectColList.Add(colListItem);
+				// Check for alternative colName for SQLite
+				if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
+				{
+					colName = dr["colNameSQLite"].ToString();
+				}
+				// Normal select from db
+				select += colName + " as '" + dr["name"].ToString() + "', ";
+				colNum++;
+			}
+			select = select.Substring(0, select.Length - 2); // Remove latest comma
+			colList = selectColList;
+		}
+
 	}
 }

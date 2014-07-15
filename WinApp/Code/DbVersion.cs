@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 69; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 70; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -980,6 +980,13 @@ namespace WinApp.Code
 					break;	
 				case 69:
 					mssql = "UPDATE columnSelection SET colName='coalesce(battle.hits * 100 / nullif(battle.shots,0),0)' WHERE id=28; ";
+					sqlite = mssql;
+					break;	
+				case 70:
+					mssql = "UPDATE columnSelection SET colName='coalesce(battle.pierced * 100 / nullif(battle.shots,0),0)' WHERE id=32; " +
+							"UPDATE columnSelection SET colName='coalesce(battle.pierced * 100 / nullif(battle.hits,0),0)' WHERE id=33; " +
+							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.shots, 0),0)' WHERE id=160; " +
+							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.hits, 0),0)' WHERE id=161; " ;
 					sqlite = mssql;
 					break;	
 			}

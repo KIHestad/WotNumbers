@@ -558,8 +558,8 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initialising view");
-				throw;
+				if (Config.Settings.showDBErrors)
+					MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initializing view");
 			}
 			
 		}
@@ -1031,75 +1031,7 @@ namespace WinApp.Forms
 
 		#region Col List Select
 
-		private class colListClass
-		{
-			public string colName;
-			public int colWidth;
-			public string colType;
-		}
-
-		private void GetSelectedColumnList(out string Select, out List<colListClass> colList, out int img, out int smallimg, out int contourimg)
-		{
-			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
-						 "FROM   columnListSelection INNER JOIN " +
-						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
-						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
-						 "ORDER BY columnListSelection.sortorder; ";
-			DB.AddWithValue(ref sql, "@columnListId", MainSettings.GetCurrentGridFilter().ColListId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-			Select = "";
-			img = -1;
-			smallimg = -1;
-			contourimg = -1;
-			List<colListClass> selectColList = new List<colListClass>();
-			if (dt.Rows.Count == 0)
-			{
-				Select = "'No columns defined in Column Selection List' As 'Error', ";
-				colListClass colListItem = new colListClass();
-				colListItem.colName = "Error";
-				colListItem.colWidth = 300;
-				colListItem.colType = "VarChar";
-				selectColList.Add(colListItem);
-			}
-			else
-			{
-				int colNum = 0;
-				foreach (DataRow dr in dt.Rows)
-				{
-					string colName = dr["colName"].ToString(); // Get default colName
-					colListClass colListItem = new colListClass();
-					colListItem.colName = dr["name"].ToString();
-					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
-					colListItem.colType = dr["colDataType"].ToString();
-					selectColList.Add(colListItem);
-					// Check for alternative colName for SQLite
-					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
-					{
-						colName = dr["colNameSQLite"].ToString();
-					}
-					// Check for images
-					if (dr["colDataType"].ToString() == "Image")
-					{
-						// Image, get from separate datatable
-						string imgColName = dr["name"].ToString();
-						switch (imgColName)
-						{
-							case "Tank Icon": contourimg = colNum; break;
-							case "Tank Image": smallimg = colNum; break;
-							case "Tank Image Large": img = colNum; break;
-						}
-					}
-					else
-					{
-						// Normal select from db
-						Select += colName + " as '" + dr["name"].ToString() + "', ";
-					}
-					colNum++;
-				}
-			}
-			colList = selectColList;
-		}
-
+		
 		#endregion
 					
 		#region Tank Filter 
@@ -1221,6 +1153,8 @@ namespace WinApp.Forms
 					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
 				dataGridMain.DataSource = DB.FetchData(sql, Config.Settings.showDBErrors);
+				// Unfocus
+				dataGridMain.ClearSelection();
 				// Text cols
 				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -1244,8 +1178,6 @@ namespace WinApp.Forms
 		
 		#region Data Grid - TANK VIEW ****************************************************************************************************
 
-		
-
 		private void GridShowTank(string Status2Message)
 		{
 			mainGridFormatting = false;
@@ -1253,11 +1185,11 @@ namespace WinApp.Forms
 			if (!DB.CheckConnection(false)) return;
 			// Get Columns
 			string select = "";
-			List<colListClass> colList = new List<colListClass>();
+			List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
 			int img;
 			int smallimg;
 			int contourimg;
-			GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
+			ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
 			// Get Tank filter
 			string message = "";
 			string tankFilter = "";
@@ -1375,31 +1307,33 @@ namespace WinApp.Forms
 			// Assign datatable to grid
 			mainGridFormatting = true;
 			dataGridMain.DataSource = dtTankData;
+			// Unfocus
+			dataGridMain.ClearSelection();
 			//  Hide system cols
 			dataGridMain.Columns["sortorder"].Visible = false;
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			dataGridMain.Columns["tank_Id"].Visible = false;
 			// Grid col size
-			foreach (colListClass colListItem in colList)
+			foreach (ColListHelper.ColListClass colListItem in colList)
 			{
-				dataGridMain.Columns[colListItem.colName].Width = colListItem.colWidth;
-				if (colListItem.colType == "Int")
+				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+				if (colListItem.type == "Int")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N0";
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 				}
-				else if (colListItem.colType == "Float")
+				else if (colListItem.type == "Float")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N1";
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
 				}
-				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
+				else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				}
-				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
+				else if (colListItem.type == "Image" && colListItem.name == "Tank Image Large")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				}
 			}
 			ResizeNow();
@@ -1420,11 +1354,11 @@ namespace WinApp.Forms
 			if (!DB.CheckConnection(false)) return;
 			// Get Columns
 			string select = "";
-			List<colListClass> colList = new List<colListClass>();
+			List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
 			int img;
 			int smallimg;
 			int contourimg;
-			GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
+			ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
 			// Create Battle Time filer
 			string battleTimeFilter = "";
 			if (!toolItemBattlesAll.Checked)
@@ -1567,34 +1501,34 @@ namespace WinApp.Forms
 				footerRow1["defeatToolTip"] = 0;
 				footerRow1["survivedCountToolTip"] = 0;
 				footerRow1["killedCountToolTip"] = 0;
-				foreach (colListClass colListItem in colList)
+				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
-					if (colListItem.colType == "Int")
+					if (colListItem.type == "Int")
 					{
-						footerRow1[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
+						footerRow1[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
 					}
-					else if (colListItem.colType == "Float")
+					else if (colListItem.type == "Float")
 					{
-						footerRow1[colListItem.colName] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
+						footerRow1[colListItem.name] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
 					}
-					else if (colListItem.colType == "DateTime")
+					else if (colListItem.type == "DateTime")
 					{
-						footerRow1[colListItem.colName] = DBNull.Value;
+						footerRow1[colListItem.name] = DBNull.Value;
 					}
-					else if (colListItem.colType == "Image")
+					else if (colListItem.type == "Image")
 					{
-						footerRow1[colListItem.colName] = blankImage;
+						footerRow1[colListItem.name] = blankImage;
 					}
 					else
 					{
 						string s = "";
-						switch (colListItem.colName)
+						switch (colListItem.name)
 						{
 							case "Tank": s = "Average"; break;
 							case "Result": s = Math.Round(totalWinRate,1).ToString() + "%"; break;
 							case "Survived": s = Math.Round(totalSurvivedRate,1).ToString() + "%"; break;
 						}
-						footerRow1[colListItem.colName] = s;
+						footerRow1[colListItem.name] = s;
 					}
 				}
 				// the footer row #2 - totals
@@ -1609,35 +1543,35 @@ namespace WinApp.Forms
 				footerRow2["defeatToolTip"] = 0;
 				footerRow2["survivedCountToolTip"] = 0;
 				footerRow2["killedCountToolTip"] = 0;
-				foreach (colListClass colListItem in colList)
+				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
-					if (colListItem.colType == "Int" || colListItem.colType == "Float")
+					if (colListItem.type == "Int" || colListItem.type == "Float")
 					{
 						IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
-						if (!nonTotalsCols.Contains(colListItem.colName)) // Avoid calculate total EFF/WN8
+						if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
-							footerRow2[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", ""));
+							footerRow2[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
 						else
-							footerRow2[colListItem.colName] = DBNull.Value;
+							footerRow2[colListItem.name] = DBNull.Value;
 					}
-					else if (colListItem.colType == "DateTime")
+					else if (colListItem.type == "DateTime")
 					{
-						footerRow2[colListItem.colName] = DBNull.Value;
+						footerRow2[colListItem.name] = DBNull.Value;
 					}
-					else if (colListItem.colType == "Image")
+					else if (colListItem.type == "Image")
 					{
-						footerRow2[colListItem.colName] = blankImage;
+						footerRow2[colListItem.name] = blankImage;
 					}
 					else
 					{
 						string s = "";
-						switch (colListItem.colName)
+						switch (colListItem.name)
 						{
 							case "Tank": s = "Totals"; break;
 							case "Result": s = ""; break;
 							case "Survived": s = ""; break;
 						}
-						footerRow2[colListItem.colName] = s;
+						footerRow2[colListItem.name] = s;
 					}
 				}
 				dt.Rows.Add(footerRow2);
@@ -1652,6 +1586,8 @@ namespace WinApp.Forms
 			// populate datagrid
 			mainGridFormatting = true;
 			dataGridMain.DataSource = dt;
+			// Unfocus
+			dataGridMain.ClearSelection();
 			// Hide sys cols
 			dataGridMain.Columns["battleResultColor"].Visible = false;
 			dataGridMain.Columns["battleSurviveColor"].Visible = false;
@@ -1668,35 +1604,35 @@ namespace WinApp.Forms
 			dataGridMain.Columns["battle_Id"].Visible = false;
 			dataGridMain.Columns["tank_Id"].Visible = false;
 			// Format grid 
-			foreach (colListClass colListItem in colList)
+			foreach (ColListHelper.ColListClass colListItem in colList)
 			{
-				dataGridMain.Columns[colListItem.colName].Width = colListItem.colWidth;
-				if (colListItem.colType == "Int")
+				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+				if (colListItem.type == "Int")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N0";
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 				}
-				else if (colListItem.colType == "Float")
+				else if (colListItem.type == "Float")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Format = "N0";
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 					if (rowcount > 0) // Special format in footer for floating values
-						dataGridMain.Rows[rowcount + 1].Cells[colListItem.colName].Style.Format = "N1";
+						dataGridMain.Rows[rowcount + 1].Cells[colListItem.name].Style.Format = "N1";
 				}
-				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image")
+				else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				}
-				else if (colListItem.colType == "Image" && colListItem.colName == "Tank Image Large")
+				else if (colListItem.type == "Image" && colListItem.name == "Tank Image Large")
 				{
-					dataGridMain.Columns[colListItem.colName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				}
 				else // Format datetime/Varchar 
 				{
 					// Footer
 					if (rowcount > 1)
 					{
-						switch (colListItem.colName)
+						switch (colListItem.name)
 						{
 							case "Tank":
 								dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
