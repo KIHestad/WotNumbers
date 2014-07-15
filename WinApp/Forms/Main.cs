@@ -1992,9 +1992,17 @@ namespace WinApp.Forms
 
 		private void ScrollY()
 		{
-			int posBefore = dataGridMain.FirstDisplayedScrollingRowIndex;
-			dataGridMain.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
-			if (posBefore != dataGridMain.FirstDisplayedScrollingRowIndex) Refresh();
+			try
+			{
+				int posBefore = dataGridMain.FirstDisplayedScrollingRowIndex;
+				dataGridMain.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
+				if (posBefore != dataGridMain.FirstDisplayedScrollingRowIndex) Refresh();
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
+			
 		}
 
 		private void scrollY_MouseUp(object sender, MouseEventArgs e)
@@ -2020,9 +2028,16 @@ namespace WinApp.Forms
 
 		private void ScrollX()
 		{
-			int posBefore = dataGridMain.FirstDisplayedScrollingColumnIndex;
-			dataGridMain.FirstDisplayedScrollingColumnIndex = scrollX.ScrollPosition;
-			if (posBefore != dataGridMain.FirstDisplayedScrollingColumnIndex) Refresh();
+			try
+			{
+				int posBefore = dataGridMain.FirstDisplayedScrollingColumnIndex;
+				dataGridMain.FirstDisplayedScrollingColumnIndex = scrollX.ScrollPosition;
+				if (posBefore != dataGridMain.FirstDisplayedScrollingColumnIndex) Refresh();
+			}
+			catch (Exception)
+			{
+				// throw;
+			}
 		}
 
 		private void dataGridMain_SelectionChanged(object sender, EventArgs e)
