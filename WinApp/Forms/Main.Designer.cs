@@ -142,6 +142,7 @@
 			this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolItemBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolItemViewChart = new System.Windows.Forms.ToolStripButton();
 			this.toolItemSettings = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolItemSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolItemSettingsDossierOptions = new System.Windows.Forms.ToolStripMenuItem();
@@ -399,12 +400,13 @@
             this.toolItemMode,
             this.toolItemBattles,
             this.toolStripSeparator8,
+            this.toolItemViewChart,
             this.toolItemSettings,
             this.toolItemHelp});
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(621, 25);
+			this.toolMain.Size = new System.Drawing.Size(644, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -1289,6 +1291,16 @@
 			this.toolStripSeparator8.Name = "toolStripSeparator8";
 			this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
 			// 
+			// toolItemViewChart
+			// 
+			this.toolItemViewChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolItemViewChart.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewChart.Image")));
+			this.toolItemViewChart.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolItemViewChart.Name = "toolItemViewChart";
+			this.toolItemViewChart.Size = new System.Drawing.Size(23, 22);
+			this.toolItemViewChart.Text = "toolStripButton1";
+			this.toolItemViewChart.Click += new System.EventHandler(this.toolItemViewChart_Click);
+			// 
 			// toolItemSettings
 			// 
 			this.toolItemSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1568,6 +1580,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeCompany;
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeHistorical;
 		private System.Windows.Forms.ToolStripMenuItem toolItemModeSpecialInfo;
+		private System.Windows.Forms.ToolStripButton toolItemViewChart;
 	}
 }
 
