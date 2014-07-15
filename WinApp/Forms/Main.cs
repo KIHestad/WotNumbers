@@ -1152,7 +1152,20 @@ namespace WinApp.Forms
 					"UNION " +
 					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
-				dataGridMain.DataSource = DB.FetchData(sql, Config.Settings.showDBErrors);
+				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+				// Add WN8
+				DataRow dr = dt.NewRow();
+				dr["Data"] = "WN8";
+				dr["Value"] = Code.Rating.CalculatePlayerTotalWn8().ToString();
+				dt.Rows.Add(dr);
+				// Add EFF
+				dr = dt.NewRow();
+				dr["Data"] = "EFF";
+				dr["Value"] = Code.Rating.CalculatePlayerTotalEFF().ToString();
+				dt.Rows.Add(dr);
+				
+
+				dataGridMain.DataSource = dt;
 				// Unfocus
 				dataGridMain.ClearSelection();
 				// Text cols

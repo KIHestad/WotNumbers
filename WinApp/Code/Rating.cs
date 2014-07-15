@@ -30,6 +30,11 @@ namespace WinApp.Code
 			return value;
 		}
 		
+		public static double CalculatePlayerTotalWn8()
+		{
+			return 0;
+		}
+
 		public static double CalculatePlayerTankWn8(int tankId, int totalBattleCount, DataRow playerTankBattle)
 		{
 			Double WN8 = 0;
@@ -70,6 +75,11 @@ namespace WinApp.Code
 				// Return value
 			}
 			return Convert.ToInt32(WN8);
+		}
+
+		public static double CalculatePlayerTotalEFF()
+		{
+			return 0;
 		}
 
 		public static double CalculatePlayerTankEff(int tankId, int totalBattleCount, DataRow playerTankData)
