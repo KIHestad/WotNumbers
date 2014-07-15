@@ -1011,5 +1011,14 @@ namespace WinApp.Forms
 
 		}
 
+		private void FavList2_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.FavListId = SelectedFavListId;
+			gf.FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
+			gf.FavListShow = GridFilter.FavListShowType.FavList;
+			MainSettings.UpdateCurrentGridFilter(gf);
+		}
+
 	}
 }

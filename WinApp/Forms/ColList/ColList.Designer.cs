@@ -714,6 +714,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "ColumnSetup";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ColList_FormClosing);
 			this.Load += new System.EventHandler(this.ColumnSetup_Load);
 			this.ResizeEnd += new System.EventHandler(this.ColumnList_ResizeEnd);
 			this.LocationChanged += new System.EventHandler(this.ColList_LocationChanged);

@@ -971,5 +971,12 @@ namespace WinApp.Forms
 
 		}
 
+		private void ColList_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.ColListId = SelectedColListId;
+			gf.ColListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
+			MainSettings.UpdateCurrentGridFilter(gf);
+		}
 	}
 }

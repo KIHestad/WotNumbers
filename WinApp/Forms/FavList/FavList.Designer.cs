@@ -900,6 +900,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "FavTanks";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FavList2_FormClosing);
 			this.Load += new System.EventHandler(this.FavList_Load);
 			this.ResizeEnd += new System.EventHandler(this.FavTanks_ResizeEnd);
 			this.LocationChanged += new System.EventHandler(this.FavList2_LocationChanged);
