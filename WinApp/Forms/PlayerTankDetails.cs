@@ -24,20 +24,63 @@ namespace WinApp.Forms
 			initPlayerTankId = playerTankId;
 		}
 
+		private void StyleDataGrid(DataGridView dgv)
+		{
+			dgv.BackgroundColor = ColorTheme.FormBack;
+			dgv.GridColor = ColorTheme.GridBorders;
+			dgv.EnableHeadersVisualStyles = false;
+			dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+			dgv.ColumnHeadersHeight = 26;
+			dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+			dgv.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
+			dgv.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
+			dgv.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+			dgv.DefaultCellStyle.BackColor = ColorTheme.FormBack;
+			dgv.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
+			dgv.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
+			dgv.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
+		}
+
 		private void PlayerTankDetails_Load(object sender, EventArgs e)
 		{
+			// Style datagrid
+			StyleDataGrid(dataGridTankDetail);
+			ResizeNow();
 			if (initPlayerTankId != 0)
 			{
 				// Get tank id and name
-				string sql = "select tank.id, tank.name from tank inner join playerTank on tank.id=playerTank.tankId where playerTank.id=@id; ";
+				string sql = 
+					"SELECT tank.*, tankType.name as typeName, country.name as countryName  " +
+					"FROM     tank INNER JOIN " + Environment.NewLine +
+					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
+					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
+					"         country ON tank.countryId = country.id INNER JOIN " + Environment.NewLine +
+					"         playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
+					"         modGun ON playerTank.modGunId = modGun.id " +
+					"WHERE playerTank.id=@id; ";
+				
 				DB.AddWithValue(ref sql, "@id", initPlayerTankId, DB.SqlDataType.Int);
 				DataRow dr = DB.FetchData(sql).Rows[0];
 				string tankName = dr["name"].ToString();
 				int tankId = Convert.ToInt32(dr["id"]);
-				// Show name
+				// Show name in title bar
 				PlayerTankDetailsTheme.Text += " - " + tankName;
-				// Show pictures
+				// Show picture
 				picLarge.Image = ImageHelper.GetTankImage(tankId,"img");
+				// Show tank name and info in lables
+				//lblTankName.Text = tankName;
+				//lblTankInfo1.Text = "Tier: " + dr["tier"].ToString();
+				//lblTankInfo2.Text = "Type: " + dr["typeName"].ToString();
+				//lblTankInfo3.Text = "Nation: " + dr["countryName"].ToString();
+				// Grid
+				sql = "select name as'Data', NULL as 'Value' from columnSelection where colType=1 and colDataType <> 'Image' ORDER BY position";
+				DataTable dtGrid = DB.FetchData(sql);
+				dataGridTankDetail.DataSource = dtGrid;
+
 			}
 		}
 
@@ -60,6 +103,23 @@ namespace WinApp.Forms
 			return image;
 		}
 
-		
+		private void ResizeNow()
+		{
+			dataGridTankDetail.Width = PlayerTankDetailsTheme.MainArea.Width - scrollTankDetails.Width - 1;
+			dataGridTankDetail.Height = PlayerTankDetailsTheme.MainArea.Top + PlayerTankDetailsTheme.MainArea.Height - dataGridTankDetail.Top;
+			scrollTankDetails.Left = PlayerTankDetailsTheme.MainArea.Right - scrollTankDetails.Width -1;
+			scrollTankDetails.Height = dataGridTankDetail.Height;
+		}
+
+		private void PlayerTankDetails_Resize(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
+		private void PlayerTankDetails_ResizeEnd(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
 	}
 }

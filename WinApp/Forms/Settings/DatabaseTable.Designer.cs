@@ -57,7 +57,7 @@
 			this.DatabaseTableTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.DatabaseTableTheme.FormFooter = false;
 			this.DatabaseTableTheme.FormFooterHeight = 26;
-			this.DatabaseTableTheme.FormInnerBorder = 3;
+			this.DatabaseTableTheme.FormInnerBorder = 0;
 			this.DatabaseTableTheme.FormMargin = 0;
 			this.DatabaseTableTheme.Image = ((System.Drawing.Image)(resources.GetObject("DatabaseTableTheme.Image")));
 			this.DatabaseTableTheme.Location = new System.Drawing.Point(0, 0);

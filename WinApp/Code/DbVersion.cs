@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 68; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 69; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -977,7 +977,11 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET description='The total amount of XP that is the target for the grinding' WHERE id=171; " +
 							"UPDATE columnSelection SET description='Current progress in percent for this grinding' WHERE id=177; ";
 					sqlite = mssql;
-					break;		
+					break;	
+				case 69:
+					mssql = "UPDATE columnSelection SET colName='coalesce(battle.hits * 100 / nullif(battle.shots,0),0)' WHERE id=28; ";
+					sqlite = mssql;
+					break;	
 			}
 			string sql = "";
 			// get sql for correct dbtype

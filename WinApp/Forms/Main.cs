@@ -382,7 +382,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Resize
+		#region Resize and move
 
 		private void Main_Resize(object sender, EventArgs e)
 		{
@@ -421,6 +421,12 @@ namespace WinApp.Forms
 			dataGridMain.Height = gridAreaHeight - scrollXHeight;
 			scrollY.Height = dataGridMain.Height;
 			scrollX.Width = dataGridMain.Width;
+		}
+
+		private void Main_LocationChanged(object sender, EventArgs e)
+		{
+			Screen screen = Screen.FromControl(this);
+			this.MaximumSize = screen.WorkingArea.Size;
 		}
 
 		#endregion
@@ -1235,7 +1241,6 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
 		
 		#region Data Grid - TANK VIEW ****************************************************************************************************
 
@@ -1552,7 +1557,7 @@ namespace WinApp.Forms
 				totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
 				// the footer row #1 - average
 				DataRow footerRow1 = dt.NewRow();
-				footerRow1["footer"] = 2;
+				footerRow1["footer"] = 1;
 				footerRow1["battleResultColor"] = "";
 				footerRow1["battleSurviveColor"] = "";
 				footerRow1["battleTimeToolTip"] = DBNull.Value;
@@ -1566,7 +1571,7 @@ namespace WinApp.Forms
 				{
 					if (colListItem.colType == "Int")
 					{
-						footerRow1[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount ;
+						footerRow1[colListItem.colName] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.colName + "])", "")) / rowcount;
 					}
 					else if (colListItem.colType == "Float")
 					{
@@ -1594,7 +1599,7 @@ namespace WinApp.Forms
 				}
 				// the footer row #2 - totals
 				DataRow footerRow2 = dt.NewRow();
-				footerRow2["footer"] = 1;
+				footerRow2["footer"] = 2;
 				footerRow2["battleResultColor"] = "";
 				footerRow2["battleSurviveColor"] = "";
 				footerRow2["battleTimeToolTip"] = DBNull.Value;
@@ -1788,7 +1793,7 @@ namespace WinApp.Forms
 						}
 					}
 				}
-				else if (col.Equals("Rest XP"))
+				else if (col.Equals("Remaining XP"))
 				{
 					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
 					{
@@ -2168,7 +2173,7 @@ namespace WinApp.Forms
 
 		#endregion       
 		
-		#region App, DB and other Settings
+		#region App, DB and other Settings + Help/About
 
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
@@ -2234,10 +2239,6 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 		}
 
-		#endregion
-		
-		#region Help - About
-
 		private void toolItemHelp_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.About();
@@ -2246,47 +2247,11 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Toolstrip Testing Menu Items
-	
-		private void toolItemTest_ViewRange_Click(object sender, EventArgs e)
+		private void ViewRangeTesting()
 		{
 			Form frm = new Forms.ViewRange();
 			frm.ShowDialog();
 		}
-
-		private void importDossierHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotDossier2DB.importWotDossierHistory();
-		}
-
-		private void importWsDossierHistoryToDbToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Code.ImportWotDossier2DB.importWotDossierHistory2Battle();
-		}
-
-		
-		private void testSaveImageToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			
-		}
-
-		private void testUpdateTankImageToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		#endregion
-
-		private void Main_LocationChanged(object sender, EventArgs e)
-		{
-			Screen screen = Screen.FromControl(this);
-			this.MaximumSize = screen.WorkingArea.Size;
-		}
-
-
-		
-
-		
 	
 	}
 }
