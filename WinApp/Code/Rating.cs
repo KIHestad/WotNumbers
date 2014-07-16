@@ -33,7 +33,6 @@ namespace WinApp.Code
 		
 		public static double CalculatePlayerTotalWn8()
 		{
-<<<<<<< HEAD
 			string sql = "SELECT sum(ptb.battles * ptb.wn8) / sum(ptb.battles) " +
 						 "FROM playerTankBattle ptb " +
 						 "join playerTank pt on pt.id = ptb.playerTankId " +
@@ -41,15 +40,13 @@ namespace WinApp.Code
 			DataTable dtTotalWN8 = new DataTable();
 			dtTotalWN8 = DB.FetchData(sql);
 			int totalWN8 = (int)dtTotalWN8.Rows[0][0];
-
 			return totalWN8;
-=======
-            string sql = "SELECT sum(battles * wn8) / sum(battles) FROM playerTankBattle";
-            DataTable dtTotalWN8 = new DataTable();
-            dtTotalWN8 = DB.FetchData(sql);
-            int totalWN8 = (int)dtTotalWN8.Rows[0][0];
-            return totalWN8;
->>>>>>> 5e59b28775c68799368df20cf861fbdc48724a0d
+
+			//string sql = "SELECT sum(battles * wn8) / sum(battles) FROM playerTankBattle";
+			//DataTable dtTotalWN8 = new DataTable();
+			//dtTotalWN8 = DB.FetchData(sql);
+			//int totalWN8 = (int)dtTotalWN8.Rows[0][0];
+			//return totalWN8;
 		}
 
 		public static double CalculatePlayerTankWn8(int tankId, int totalBattleCount, DataRow playerTankBattle)
@@ -96,7 +93,6 @@ namespace WinApp.Code
 
 		public static double CalculatePlayerTotalEFF()
 		{
-<<<<<<< HEAD
 			string sql = "SELECT sum(ptb.battles * ptb.eff) / sum(ptb.battles) " +
 						 "FROM playerTankBattle ptb " +
 						 "join playerTank pt on pt.id = ptb.playerTankId " +
@@ -136,13 +132,6 @@ namespace WinApp.Code
 			}
 			// Return value
 			return EFF;
-=======
-            string sql = "SELECT sum(battles * eff) / sum(battles) FROM playerTankBattle";
-            DataTable dtTotalEff = new DataTable();
-            dtTotalEff = DB.FetchData(sql);
-            int totalEff = (int)dtTotalEff.Rows[0][0];
-            return totalEff;
->>>>>>> 5e59b28775c68799368df20cf861fbdc48724a0d
 		}
 
 		public static double CalculatePlayerTankEff(int tankId, int totalBattleCount, DataRow playerTankData)
