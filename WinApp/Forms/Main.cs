@@ -1158,14 +1158,14 @@ namespace WinApp.Forms
 				dr["Data"] = "WN8";
 				dr["Value"] = Code.Rating.CalculatePlayerTotalWn8().ToString();
 				dt.Rows.Add(dr);
-				// Add EFF
-				dr = dt.NewRow();
-				dr["Data"] = "EFF";
-				dr["Value"] = Code.Rating.CalculatePlayerTotalEFF().ToString();
-				dt.Rows.Add(dr);
+				//// Add EFF
+				//dr = dt.NewRow();
+				//dr["Data"] = "EFF";
+				//dr["Value"] = Code.Rating.CalculatePlayerTotalEFF().ToString();
+				//dt.Rows.Add(dr);
 				// Add EFF2
 				dr = dt.NewRow();
-				dr["Data"] = "EFF (alternative)";
+				dr["Data"] = "EFF";
 				sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier " +
@@ -1181,7 +1181,7 @@ namespace WinApp.Forms
 				double DEF = Rating.ConvertDbVal2Double(playerTankData["def"]);
 				double CAP = Rating.ConvertDbVal2Double(playerTankData["cap"]);
 				double TIER = Rating.ConvertDbVal2Double(playerTankData["tier"]) / BATTLES;
-				dr["Value"] = Code.Rating.CalculatePlayerEFFforChart(BATTLES,DAMAGE,SPOT,FRAGS,DEF,CAP,TIER).ToString();
+				dr["Value"] = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES,DAMAGE,SPOT,FRAGS,DEF,CAP,TIER),2).ToString();
 				dt.Rows.Add(dr);
 
 				dataGridMain.DataSource = dt;

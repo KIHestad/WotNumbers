@@ -181,7 +181,7 @@ namespace WinApp.Forms
 				newSerie.MarkerStyle = MarkerStyle.Circle;
 				chartOrder = "DESC";
 			}
-			else if (ddXaxis.Text == "Battles")
+			else if (ddXaxis.Text == "Battle")
 			{
 				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
 				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -210,8 +210,8 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref where, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			}
 			sql = "select SUM(" + chartValue.ptbCol + ") from playerTankBattle " + where;
-			currentValue = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
-			if (ddXaxis.Text == "Battles")
+			currentValue = Convert.ToDouble(DB.FetchData(sql).Rows[0][0]);
+			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value bu sutracting sum of recorded values
 				sql = "select sum(" + chartValue.bCol + ") from battle " + where;
@@ -227,12 +227,12 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), currentValue); // Use battle date
+					ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue,2)); // Use battle date
 					currentValue -= Convert.ToDouble(dr[chartValue.bCol]); //  Move backwards
 					if (currentValue < axisYminimum) axisYminimum = Convert.ToInt32(currentValue);
 				}
 			}
-			else if (ddXaxis.Text == "Battles")
+			else if (ddXaxis.Text == "Battle")
 			{
 				double battleCount = 0;
 				foreach (DataRow dr in dtChart.Rows)
@@ -240,7 +240,7 @@ namespace WinApp.Forms
 					battleCount += Convert.ToDouble(dr["battlesCount"]); // Use battle count
 					firstValue += Convert.ToDouble(dr[chartValue.bCol]); // Move forwards
 					if (currentValue < axisYminimum) axisYminimum = Convert.ToInt32(currentValue);
-					ChartingMain.Series[chartSerie].Points.AddXY(battleCount, firstValue);
+					ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue,2));
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = axisYminimum;
@@ -263,7 +263,7 @@ namespace WinApp.Forms
 			double currentBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][1]);
 			double firstWins = 0;
 			double firstBattles = 0;
-			if (ddXaxis.Text == "Battles")
+			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
 				sql = "select sum(victory), sum(battlescount) from battle " + where;
@@ -284,14 +284,14 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					winRate = currentWins * 100 / currentBattles;
+					winRate = Math.Round(currentWins * 100 / currentBattles,2);
 					if (winRate < axisYminimum) axisYminimum = Convert.ToInt32(winRate);
 					ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), winRate); // Use battle date
 					currentWins -= Convert.ToDouble(dr["victory"]); //  Move backwards
 					currentBattles -= Convert.ToDouble(dr["battlesCount"]);
 				}
 			}
-			else if (ddXaxis.Text == "Battles")
+			else if (ddXaxis.Text == "Battle")
 			{
 				double battleCount = 0;
 				foreach (DataRow dr in dtChart.Rows)
@@ -299,7 +299,7 @@ namespace WinApp.Forms
 					battleCount += Convert.ToDouble(dr["battlesCount"]); // Use battle count
 					firstWins += Convert.ToDouble(dr["victory"]); // Move forwards
 					firstBattles += Convert.ToDouble(dr["battlesCount"]);
-					winRate = firstWins * 100 / firstBattles;
+					winRate = Math.Round(firstWins * 100 / firstBattles,2);
 					if (winRate < axisYminimum) axisYminimum = Convert.ToInt32(winRate);
 					ChartingMain.Series[chartSerie].Points.AddXY(battleCount, winRate);
 				}
@@ -335,7 +335,7 @@ namespace WinApp.Forms
 			double DEF = Convert.ToDouble(ptbRow["def"]);
 			double CAP = Convert.ToDouble(ptbRow["cap"]);
 			double TIER = Convert.ToDouble(ptbRow["tier"]);
-			if (ddXaxis.Text == "Battles")
+			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
 				sql = 
@@ -371,7 +371,7 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					EFF = Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER);
+					EFF = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
 					if (EFF < axisYminimum) axisYminimum = Convert.ToInt32(EFF);
 					ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), EFF); // Use battle date
 					BATTLES -= Convert.ToDouble(dr["battlesCount"]);
@@ -382,7 +382,7 @@ namespace WinApp.Forms
 					CAP -= Convert.ToDouble(dr["cap"]);
 				}
 			}
-			else if (ddXaxis.Text == "Battles")
+			else if (ddXaxis.Text == "Battle")
 			{
 				double battleCount = 0;
 				foreach (DataRow dr in dtChart.Rows)
@@ -394,7 +394,7 @@ namespace WinApp.Forms
 					FRAGS += Convert.ToDouble(dr["frags"]);
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
-					EFF = Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER);
+					EFF = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
 					if (EFF < axisYminimum) axisYminimum = Convert.ToInt32(EFF);
 					ChartingMain.Series[chartSerie].Points.AddXY(battleCount, EFF); // Use battle date
 				}
@@ -407,7 +407,7 @@ namespace WinApp.Forms
 		private void ddXaxis_Click(object sender, EventArgs e)
 		{
 			selectedXaxis = ddXaxis.Text;						
-			Code.DropDownGrid.Show(ddXaxis, Code.DropDownGrid.DropDownGridType.List, "Date,Battles");
+			Code.DropDownGrid.Show(ddXaxis, Code.DropDownGrid.DropDownGridType.List, "Date,Battle");
 		}
 
 		private void ddXaxis_TextChanged(object sender, EventArgs e)
@@ -484,9 +484,11 @@ namespace WinApp.Forms
 						if (Math.Abs(pos.X - pointXPixel) < 2 &&
 							Math.Abs(pos.Y - pointYPixel) < 2)
 						{
-							var YValue = prop.YValues[0];
-
-							tooltip.Show(XLabel + prop.XValue + Environment.NewLine + "Value: " + YValue, this.ChartingMain, pos.X + 10, pos.Y);
+							string YValue = prop.YValues[0].ToString();
+							string XValue = prop.XValue.ToString();
+							if (ddXaxis.Text == "Date")
+								XValue = DateTime.FromOADate((double)prop.XValue).ToString("dd.MM.yyyy");
+							tooltip.Show(XLabel + XValue + Environment.NewLine + "Value: " + YValue, this.ChartingMain, pos.X + 10, pos.Y);
 						}
 					}
 				}
