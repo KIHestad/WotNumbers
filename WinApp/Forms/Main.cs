@@ -1156,7 +1156,12 @@ namespace WinApp.Forms
 				// Add WN8
 				DataRow dr = dt.NewRow();
 				dr["Data"] = "WN8";
-				dr["Value"] = Code.Rating.CalculatePlayerTankWn8ForAll();
+				dr["Value"] = Code.Rating.CalculatePlayerTotalWn8();
+				dt.Rows.Add(dr);
+				// Add WN8 2
+				dr = dt.NewRow();
+				dr["Data"] = "WN8 (2)";
+				dr["Value"] = Code.Rating.CalculatePlayerTotalWn8_2();
 				dt.Rows.Add(dr);
 				// Add EFF
 				dr = dt.NewRow();
