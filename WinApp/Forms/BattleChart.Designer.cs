@@ -209,6 +209,7 @@
 			this.ChartingMain.Size = new System.Drawing.Size(730, 305);
 			this.ChartingMain.TabIndex = 0;
 			this.ChartingMain.Text = "chart1";
+			this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
 			// 
 			// badGroupBox1
 			// 
