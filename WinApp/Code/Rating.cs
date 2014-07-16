@@ -126,7 +126,7 @@ namespace WinApp.Code
 						DEF * 150;
 			}
 			// Return value
-			return Convert.ToInt32(EFF);
+			return EFF;
 		}
 
 		public static double CalculatePlayerTankEff(int tankId, int totalBattleCount, DataRow playerTankData)
