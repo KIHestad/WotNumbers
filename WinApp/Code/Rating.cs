@@ -31,41 +31,37 @@ namespace WinApp.Code
 			return value;
 		}
 		
-		public static double CalculatePlayerTotalWn8()
-		{
-			string sql = "SELECT sum(ptb.battles * ptb.wn8) / sum(ptb.battles) " +
-						 "FROM playerTankBattle ptb " +
-						 "join playerTank pt on pt.id = ptb.playerTankId " +
-						 "join tank t on t.id = pt.tankId";
-			DataTable dtTotalWN8 = new DataTable();
-			dtTotalWN8 = DB.FetchData(sql);
-			int totalWN8 = (int)dtTotalWN8.Rows[0][0];
-			return totalWN8;
+		//public static double CalculatePlayerTotalWn8()
+		//{
+		//	string sql = "SELECT sum(ptb.battles * ptb.wn8) / sum(ptb.battles) " +
+		//				 "FROM playerTankBattle ptb " +
+		//				 "join playerTank pt on pt.id = ptb.playerTankId " +
+		//				 "join tank t on t.id = pt.tankId";
+		//	DataTable dtTotalWN8 = new DataTable();
+		//	dtTotalWN8 = DB.FetchData(sql);
+		//	int totalWN8 = (int)dtTotalWN8.Rows[0][0];
+		//	return totalWN8;
 
-			//string sql = "SELECT sum(battles * wn8) / sum(battles) FROM playerTankBattle";
-			//DataTable dtTotalWN8 = new DataTable();
-			//dtTotalWN8 = DB.FetchData(sql);
-			//int totalWN8 = (int)dtTotalWN8.Rows[0][0];
-			//return totalWN8;
-		}
+		//	//string sql = "SELECT sum(battles * wn8) / sum(battles) FROM playerTankBattle";
+		//	//DataTable dtTotalWN8 = new DataTable();
+		//	//dtTotalWN8 = DB.FetchData(sql);
+		//	//int totalWN8 = (int)dtTotalWN8.Rows[0][0];
+		//	//return totalWN8;
+		//}
 
-		public static double CalculatePlayerTankWn8(int tankId, int totalBattleCount, DataRow playerTankBattle)
+		public static double CalculatePlayerTankWn8(int tankId, int tankBattleCount, DataRow playerTankBattle)
 		{
 			Double WN8 = 0;
 			// get tankdata for current tank
 			DataRow tankInfo = TankData.TankInfo(tankId);
-			if (tankInfo != null && totalBattleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
+			if (tankInfo != null && tankBattleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
 			{
-				double avgDmg = 0;
-				double avgSpot = 0;
-				double avgFrag = 0;
-				double avgDef = 0;
-				double avgWinRate = 0;
-				avgDmg = ConvertDbVal2Double(playerTankBattle["dmg"]) / totalBattleCount;
-				avgSpot = ConvertDbVal2Double(playerTankBattle["spot"]) / totalBattleCount;
-				avgFrag = ConvertDbVal2Double(playerTankBattle["frags"]) / totalBattleCount;
-				avgDef = ConvertDbVal2Double(playerTankBattle["def"]) / totalBattleCount;
-				avgWinRate = ConvertDbVal2Double(playerTankBattle["wins"]) / totalBattleCount * 100;
+				// get tank average values per battle
+				double avgDmg = ConvertDbVal2Double(playerTankBattle["dmg"]) / tankBattleCount;
+				double avgSpot = ConvertDbVal2Double(playerTankBattle["spot"]) / tankBattleCount;
+				double avgFrag = ConvertDbVal2Double(playerTankBattle["frags"]) / tankBattleCount;
+				double avgDef = ConvertDbVal2Double(playerTankBattle["def"]) / tankBattleCount;
+				double avgWinRate = ConvertDbVal2Double(playerTankBattle["wins"]) / tankBattleCount * 100;
 				// get wn8 exp values for tank
 				double expDmg = Convert.ToDouble(tankInfo["expDmg"]);
 				double expSpot = Convert.ToDouble(tankInfo["expSpot"]);
@@ -91,18 +87,74 @@ namespace WinApp.Code
 			return Convert.ToInt32(WN8);
 		}
 
-		public static double CalculatePlayerTotalEFF()
+		public static double CalculatePlayerTankWn8ForAll()
 		{
-			string sql = "SELECT sum(ptb.battles * ptb.eff) / sum(ptb.battles) " +
-						 "FROM playerTankBattle ptb " +
-						 "join playerTank pt on pt.id = ptb.playerTankId " +
-						 "join tank t on t.id = pt.tankId";
-			DataTable dtTotalEff = new DataTable();
-			dtTotalEff = DB.FetchData(sql);
-			int totalEff = (int)dtTotalEff.Rows[0][0];
-
-			return totalEff;
+			Double WN8 = 0;
+			string sql = "select sum(battles) from playerTankBattle";
+			double totalBattles = Convert.ToDouble(DB.FetchData(sql).Rows[0][0]);
+			sql =
+				"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum(ptb.wins) as wins, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+				"  sum (ptb.def) as def, sum (cap) as cap, t.id, t.expDmg, t.expWR, t.expSpot, t.expFrags, t.expDef " +
+				"from playerTankBattle ptb left join " +
+				"  playerTank pt on ptb.playerTankId=pt.id left join " +
+				"  tank t on pt.tankId = t.id " +
+				"group by t.id, t.expDmg, t.expWR, t.expSpot, t.expFrags, t.expDef ";
+			DataTable tankInfoTable = DB.FetchData(sql);
+			double rDAMAGE = 0;
+			double rSPOT = 0;
+			double rFRAG = 0;
+			double rDEF = 0;
+			double rWIN = 0;
+			foreach (DataRow tankInfo in tankInfoTable.Rows)
+			{
+				// get tank values
+				double battlecount = Convert.ToDouble(tankInfo["battles"]);
+				if (battlecount > 0)
+				{
+					// get tank values
+					double avgDmg = Convert.ToDouble(tankInfo["dmg"]) / battlecount;
+					double avgSpot = Convert.ToDouble(tankInfo["spot"]) / battlecount;
+					double avgFrag = Convert.ToDouble(tankInfo["frags"]) / battlecount;
+					double avgDef = Convert.ToDouble(tankInfo["def"]) / battlecount;
+					double avgWinRate = Convert.ToDouble(tankInfo["wins"]) * 100 / battlecount;
+					// get wn8 exp values for tank
+					double expDmg = Convert.ToDouble(tankInfo["expDmg"]) ;
+					double expSpot = Convert.ToDouble(tankInfo["expSpot"]) ;
+					double expFrag = Convert.ToDouble(tankInfo["expFrags"]) ;
+					double expDef = Convert.ToDouble(tankInfo["expDef"]) ;
+					double expWinRate = Convert.ToDouble(tankInfo["expWR"]) ;
+					// Step 1
+					rDAMAGE += (avgDmg / expDmg) * (battlecount / totalBattles);
+					rSPOT += (avgSpot / expSpot) * (battlecount / totalBattles);
+					rFRAG += (avgFrag / expFrag) * (battlecount / totalBattles);
+					rDEF += (avgDef / expDef) * (battlecount / totalBattles);
+					rWIN += (avgWinRate / expWinRate) * (battlecount / totalBattles);
+				}
+			}
+			// Step 2
+			double rWINc = Math.Max(0, (rWIN - 0.71) / (1 - 0.71));
+			double rDAMAGEc = Math.Max(0, (rDAMAGE - 0.22) / (1 - 0.22));
+			double rFRAGc = Math.Max(0, Math.Min(rDAMAGEc + 0.2, (rFRAG - 0.12) / (1 - 0.12)));
+			double rSPOTc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rSPOT - 0.38) / (1 - 0.38)));
+			double rDEFc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rDEF - 0.10) / (1 - 0.10)));
+			// Step 3
+			WN8 = (980 * rDAMAGEc) + (210 * rDAMAGEc * rFRAGc) + (155 * rFRAGc * rSPOTc) + (75 * rDEFc * rFRAGc) + (145 * Math.Min(1.8, rWINc));
+			// Return value
+			return WN8;
 		}
+
+		//public static double CalculatePlayerTotalEFF()
+		//{
+		//	string sql = "SELECT sum(ptb.battles * ptb.eff) / sum(ptb.battles) " +
+		//				 "FROM playerTankBattle ptb " +
+		//				 "join playerTank pt on pt.id = ptb.playerTankId " +
+		//				 "join tank t on t.id = pt.tankId";
+		//	DataTable dtTotalEff = new DataTable();
+		//	dtTotalEff = DB.FetchData(sql);
+		//	int totalEff = (int)dtTotalEff.Rows[0][0];
+
+		//	return totalEff;
+		//}
 
 		public static double CalculatePlayerEFFforChart(double sumBattleCount, double sumDAMAGE, double sumSPOT, double sumFRAGS, double sumDEF, double sumCAP, double TIER = 0)
 		{

@@ -1156,14 +1156,9 @@ namespace WinApp.Forms
 				// Add WN8
 				DataRow dr = dt.NewRow();
 				dr["Data"] = "WN8";
-				dr["Value"] = Code.Rating.CalculatePlayerTotalWn8().ToString();
+				dr["Value"] = Code.Rating.CalculatePlayerTankWn8ForAll();
 				dt.Rows.Add(dr);
-				//// Add EFF
-				//dr = dt.NewRow();
-				//dr["Data"] = "EFF";
-				//dr["Value"] = Code.Rating.CalculatePlayerTotalEFF().ToString();
-				//dt.Rows.Add(dr);
-				// Add EFF2
+				// Add EFF
 				dr = dt.NewRow();
 				dr["Data"] = "EFF";
 				sql =
@@ -1200,8 +1195,9 @@ namespace WinApp.Forms
 				// Status mesage
 				SetStatus2(Status2Message);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				string s = ex.Message;
 				//throw;
 			}
 		}
