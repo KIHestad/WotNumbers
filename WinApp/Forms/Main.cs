@@ -1166,7 +1166,9 @@ namespace WinApp.Forms
 					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier " +
 					"from playerTankBattle ptb left join " +
 					"  playerTank pt on ptb.playerTankId=pt.id left join " +
-					"  tank t on pt.tankId = t.id ";
+					"  tank t on pt.tankId = t.id " +
+					"where pt.playerId=@playerId ";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtEff2 = DB.FetchData(sql);
 				DataRow playerTankData = dtEff2.Rows[0];
 				double BATTLES = Rating.ConvertDbVal2Double(playerTankData["battles"]);

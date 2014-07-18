@@ -77,7 +77,8 @@ namespace WinApp.Code
 				"from playerTankBattle ptb left join " +
 				"  playerTank pt on ptb.playerTankId=pt.id left join " +
 				"  tank t on pt.tankId = t.id " +
-				"where t.expDmg is not null";
+				"where t.expDmg is not null and pt.playerId=@playerId ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable playerTotalsTable = DB.FetchData(sql);
 			if (playerTotalsTable.Rows.Count > 0)
 			{
@@ -96,8 +97,9 @@ namespace WinApp.Code
 					"from playerTankBattle ptb left join " +
 					"  playerTank pt on ptb.playerTankId=pt.id left join " +
 					"  tank t on pt.tankId = t.id " +
-					"where t.expDmg is not null " +
+					"where t.expDmg is not null and pt.playerId=@playerId " +
 					"group by t.id, t.expDmg, t.expSpot, t.expFrags, t.expDef, t.expWR  ";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable expectedTable = DB.FetchData(sql);
 				double expDmg = 0;
 				double expSpot = 0;

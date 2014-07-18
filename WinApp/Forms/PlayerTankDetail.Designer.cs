@@ -121,7 +121,7 @@
 			this.picLarge.TabIndex = 7;
 			this.picLarge.TabStop = false;
 			// 
-			// PlayerTankDetails
+			// PlayerTankDetail
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -131,7 +131,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(200, 300);
-			this.Name = "PlayerTankDetails";
+			this.Name = "PlayerTankDetail";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Tank Details";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;

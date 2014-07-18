@@ -251,13 +251,13 @@ namespace WinApp.Code
 			// Use IronPython
 			try
 			{
-				//var ipy = Python.CreateRuntime();
-				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
-				//ipyrun.main();
+				var ipy = Python.CreateRuntime();
+				dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
+				ipyrun.main();
 
-				Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
-				Microsoft.Scripting.Hosting.ScriptScope scope = py.ExecuteFile(dossier2jsonScript); // this is your python program
-				dynamic result = scope.GetVariable("main")();
+				//Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
+				//Microsoft.Scripting.Hosting.ScriptScope scope = py.ExecuteFile(dossier2jsonScript); // this is your python program
+				//dynamic result = scope.GetVariable("main")();
 
 
 

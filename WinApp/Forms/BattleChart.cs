@@ -231,19 +231,32 @@ namespace WinApp.Forms
 				where = " where playerTankId=@playerTankId ";
 				DB.AddWithValue(ref where, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			}
-			sql = "select SUM(" + chartValue.ptbCol + ") from playerTankBattle " + where;
+			sql = 
+				"select SUM(" + chartValue.ptbCol + ") " +
+				"from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +
+				where;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			currentValue = Convert.ToDouble(DB.FetchData(sql).Rows[0][0]);
 			if (ddXaxis.Text == "Battle")
 			{
-				// Find first value bu sutracting sum of recorded values
-				sql = "select sum(" + chartValue.bCol + ") from battle " + where;
+				// Find first value bu subtracting sum of recorded values
+				sql = 
+					"select sum(" + chartValue.bCol + ") " +
+					"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
+					where;
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtSum = DB.FetchData(sql);
 				if (dtSum.Rows.Count > 0)
 					if (dtSum.Rows[0][0] != DBNull.Value)
 						firstValue = currentValue - Convert.ToDouble(dtSum.Rows[0][0]);
 			}
 			// Find battles
-			sql = "select * from battle " + where + " order by battleTime " + chartOrder;
+			sql = 
+				"select * " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
+				where + " " +
+				"order by battleTime " + chartOrder;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
 			if (ddXaxis.Text == "Date")
 			{
@@ -305,7 +318,11 @@ namespace WinApp.Forms
 				where = " where playerTankId=@playerTankId ";
 				DB.AddWithValue(ref where, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			}
-			string sql = "select SUM(wins), SUM(battles) from playerTankBattle " + where;
+			string sql = 
+				"select SUM(wins), SUM(battles) " +
+				"from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +
+				where;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			double currentWins = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
 			double currentBattles = Convert.ToInt32(DB.FetchData(sql).Rows[0][1]);
 			double firstWins = 0;
@@ -313,7 +330,11 @@ namespace WinApp.Forms
 			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
-				sql = "select sum(victory), sum(battlescount) from battle " + where;
+				sql = 
+					"select sum(victory), sum(battlescount) " +
+					"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
+					where;
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtSum = DB.FetchData(sql);
 				if (dtSum.Rows.Count > 0)
 				{
@@ -324,7 +345,12 @@ namespace WinApp.Forms
 				}
 			}
 			// Find battles
-			sql = "select * from battle " + where + " order by battleTime " + chartOrder;
+			sql = 
+				"select * " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
+				where + " " +
+				"order by battleTime " + chartOrder;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
 			double winRate = 0;
 			if (ddXaxis.Text == "Date")
@@ -370,10 +396,11 @@ namespace WinApp.Forms
 			string sql = 
 				"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 				"  sum (ptb.def) as def, sum (ptb.cap) as cap, sum(t.tier * ptb.battles) as tier " +
-				"from playerTankBattle ptb left join " +
-				"  playerTank pt on ptb.playerTankId=pt.id left join " +
+				"from playerTankBattle ptb inner join " +
+				"  playerTank pt on ptb.playerTankId=pt.id  and pt.playerId=@playerId  inner join " +
 				"  tank t on pt.tankId = t.id " +
 				ptWhere;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataRow ptbRow = DB.FetchData(sql).Rows[0];
 			double BATTLES = Convert.ToDouble(ptbRow["battles"]);
 			double DAMAGE = Convert.ToDouble(ptbRow["dmg"]);
@@ -388,10 +415,11 @@ namespace WinApp.Forms
 				sql = 
 					"select sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
 					"  sum (b.def) as def, sum (cap) as cap, sum(t.tier * b.battlesCount) as tier " +
-					"from battle b left join " +
-					"  playerTank pt on b.playerTankId=pt.id left join " +
+					"from battle b inner join " +
+					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId inner join " +
 					"  tank t on pt.tankId = t.id " +
 				ptWhere;
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtBattleSum = DB.FetchData(sql);
 				if (dtBattleSum.Rows.Count > 0)
 				{
@@ -406,7 +434,12 @@ namespace WinApp.Forms
 				}
 			}
 			// Find battles
-			sql = "select * from battle " + bWhere + " order by battleTime " + chartOrder;
+			sql = 
+				"select * " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +  
+				bWhere + " " +
+				"order by battleTime " + chartOrder;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
 			double EFF = 0;
 			double defaultTIER = 0;
@@ -470,10 +503,11 @@ namespace WinApp.Forms
 				"select t.id as tankId, sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 				"  sum (ptb.def) as def, sum (ptb.cap) as cap, sum(wins) as wins " +
 				"from playerTankBattle ptb left join " +
-				"  playerTank pt on ptb.playerTankId=pt.id left join " +
+				"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId left join " +
 				"  tank t on pt.tankId = t.id " +
 				"where t.expDmg is not null " + ptWhere + " " +
 				"group by t.id, t.expDmg, t.expSpot, t.expFrags, t.expDef, t.expWR  ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable ptb = DB.FetchData(sql);
 			if (ddXaxis.Text == "Battle")
 			{
@@ -482,10 +516,11 @@ namespace WinApp.Forms
 					"select t.id as tankId, sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
 					"  sum (b.def) as def, sum (cap) as cap, sum(victory) as wins " +
 					"from battle b left join " +
-					"  playerTank pt on b.playerTankId=pt.id left join " +
+					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId left join " +
 					"  tank t on pt.tankId = t.id " +
 					"where t.expDmg is not null " + bSumWhere + " " +
 					"group by t.id ";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtBattleSum = DB.FetchData(sql);
 				if (dtBattleSum.Rows.Count > 0)
 				{
@@ -510,9 +545,10 @@ namespace WinApp.Forms
 			sql = 
 				"select battle.*, playerTank.tankId as tankId " +
 				"from battle inner join " +
-				"  playerTank on battle.playerTankId = playerTank.id " +
+				"  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId " +
 				bWhere + " " + 
 				"order by battleTime " + chartOrder;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
 			double WN8 = 0;
 			if (ddXaxis.Text == "Date")

@@ -3,7 +3,7 @@
 # Initial version by Phalynx www.vbaddict.net/wot #
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2014-03-26       #
+# Edited version by BadButton -> 2014-06-18       #
 ###################################################
 
 import struct, json, time, sys, os
@@ -21,7 +21,7 @@ def main():
 	
 	import struct, json, time, sys, os, shutil, datetime, base64, cPickle
 
-	parserversion = "0.9.1.0"
+	parserversion = "0.9.2.0"
 	
 	global rawdata, tupledata, data, structures, numoffrags, working_directory
 	global filename_source, filename_target
@@ -165,9 +165,9 @@ def main():
 	structures = structures + get_json_data("structures_69.json")
 	structures = structures + get_json_data("structures_77.json")
 	structures = structures + get_json_data("structures_81.json")
-
+	structures = structures + get_json_data("structures_85.json")
 	min_supported = 10
-	max_supported = 81
+	max_supported = 85
 		
 		
 	tanks = dict()
@@ -197,13 +197,17 @@ def main():
 		tupledata = struct.unpack(tankstruct, data)
 		tankversion = getdata("tankversion", 0, 1)
 		
+	#if tankversion != 85:
+		#write_to_log("Tankversion " + str(tankversion))
+			#continue
+	
 		if tankversion < min_supported or tankversion > max_supported:
 				try:
-					write_to_log(get_tank_data(tanksdata, countryid, tankid, "title") + ", unsupported tankversion " + str(tankversion))
-					printmessage('unsupported tankversion')
+					# write_to_log('unsupported tankversion ' + str(tankversion))
+					printmessage('unsupported tankversion ' + str(tankversion))
 					continue				
 				except Exception, e:
-					printmessage('unsupported tankversion' + e.message)
+					printmessage('unsupported tankversion ' + str(tankversion) + ' (' + e.message + ')')
 					continue
 
 		if not isinstance(tankitem[0][1], (int)):
@@ -255,7 +259,9 @@ def main():
 			if tankversion == 81:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFort', 'fortSorties', 'maxSorties', 'fortAchievements')
 
-				
+			if tankversion == 85:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFort', 'fortSorties', 'maxSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
+
 			blockcount = len(list(blocks))+1
 			#print blockcount
 			newbaseoffset = (blockcount * 2)
@@ -549,6 +555,7 @@ def printmessage(message):
 	
 	if option_server == 0:
 		print message
+		write_to_log(message)
 
 
 def exitwitherror(message):
@@ -595,16 +602,17 @@ def write_to_log(logtext):
 	global working_directory, option_server
 	import datetime, os
 	
-	printmessage(logtext)
+	# printmessage(logtext)
 	now = datetime.datetime.now()
 	
 	if option_server == 1:
 		try:
-			logFile = open("/var/log/wotdc2j/wotdc2j.log", "a+b")
+			logFile = open("wotdc2j.log", "a+b")
 			logFile.write(str(now.strftime("%Y-%m-%d %H:%M:%S")) + " # " + str(logtext) + " # " + str(filename_source) + "\r\n")
 			logFile.close()
 		except:
-			printmessage("Cannot write to wotdc2j.log")
+			now = now
+			# printmessage("Cannot write to wotdc2j.log")
 		
 
 def getstructureddata(category, tankversion, baseoffset):

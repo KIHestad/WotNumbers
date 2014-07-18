@@ -391,6 +391,7 @@
     <None Include="Dossier2json\structures_69.json" />
     <None Include="Dossier2json\structures_77.json" />
     <None Include="Dossier2json\structures_81.json" />
+    <None Include="Dossier2json\structures_85.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
