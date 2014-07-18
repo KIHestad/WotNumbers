@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 70; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 71; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -989,6 +989,9 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.hits, 0),0)' WHERE id=161; " ;
 					sqlite = mssql;
 					break;	
+				case 71:
+					NewSystemBattleColList();
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -1184,13 +1187,13 @@ namespace WinApp.Code
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,109);" +
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (164," + id + ",6,62);" +
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",7,60);" +
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",8,52);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",6,104);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",7,54);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",8,54);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",9,47);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (21," + id + ",10,47);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (22," + id + ",11,47);" +
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (20," + id + ",12,54);" +
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (20," + id + ",12,47);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",13,35);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",14,35);" +
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (24," + id + ",15,35);" +

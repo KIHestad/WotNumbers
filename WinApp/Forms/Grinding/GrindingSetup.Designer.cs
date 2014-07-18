@@ -161,7 +161,7 @@
 			this.btnClose.Location = new System.Drawing.Point(506, 355);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(75, 23);
-			this.btnClose.TabIndex = 53;
+			this.btnClose.TabIndex = 42;
 			this.btnClose.Text = "Close";
 			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
 			// 
@@ -170,6 +170,7 @@
 			this.txtProgressXP.HasFocus = false;
 			this.txtProgressXP.Image = null;
 			this.txtProgressXP.Location = new System.Drawing.Point(141, 266);
+			this.txtProgressXP.MultilineAllow = false;
 			this.txtProgressXP.Name = "txtProgressXP";
 			this.txtProgressXP.PasswordChar = '\0';
 			this.txtProgressXP.Size = new System.Drawing.Size(75, 23);
@@ -185,6 +186,7 @@
 			this.txtRestXP.HasFocus = false;
 			this.txtRestXP.Image = null;
 			this.txtRestXP.Location = new System.Drawing.Point(141, 294);
+			this.txtRestXP.MultilineAllow = false;
 			this.txtRestXP.Name = "txtRestXP";
 			this.txtRestXP.PasswordChar = '\0';
 			this.txtRestXP.Size = new System.Drawing.Size(76, 23);
@@ -199,6 +201,7 @@
 			this.txtRealAvgXP.HasFocus = false;
 			this.txtRealAvgXP.Image = null;
 			this.txtRealAvgXP.Location = new System.Drawing.Point(506, 69);
+			this.txtRealAvgXP.MultilineAllow = false;
 			this.txtRealAvgXP.Name = "txtRealAvgXP";
 			this.txtRealAvgXP.PasswordChar = '\0';
 			this.txtRealAvgXP.Size = new System.Drawing.Size(54, 23);
@@ -226,6 +229,7 @@
 			this.txtLastVictoryTime.HasFocus = false;
 			this.txtLastVictoryTime.Image = null;
 			this.txtLastVictoryTime.Location = new System.Drawing.Point(390, 127);
+			this.txtLastVictoryTime.MultilineAllow = false;
 			this.txtLastVictoryTime.Name = "txtLastVictoryTime";
 			this.txtLastVictoryTime.PasswordChar = '\0';
 			this.txtLastVictoryTime.Size = new System.Drawing.Size(172, 23);
@@ -257,7 +261,7 @@
 			this.lblGrindingParameters.Location = new System.Drawing.Point(26, 355);
 			this.lblGrindingParameters.Name = "lblGrindingParameters";
 			this.lblGrindingParameters.Size = new System.Drawing.Size(184, 22);
-			this.lblGrindingParameters.TabIndex = 49;
+			this.lblGrindingParameters.TabIndex = 38;
 			this.lblGrindingParameters.TabStop = false;
 			this.lblGrindingParameters.Text = "Grinding params...";
 			// 
@@ -267,7 +271,7 @@
 			this.btnGrindingParameters.Location = new System.Drawing.Point(263, 355);
 			this.btnGrindingParameters.Name = "btnGrindingParameters";
 			this.btnGrindingParameters.Size = new System.Drawing.Size(75, 23);
-			this.btnGrindingParameters.TabIndex = 50;
+			this.btnGrindingParameters.TabIndex = 39;
 			this.btnGrindingParameters.Text = "Parameters";
 			this.btnGrindingParameters.Click += new System.EventHandler(this.btnGrindingParameters_Click);
 			// 
@@ -277,6 +281,7 @@
 			this.txtWinRate.HasFocus = false;
 			this.txtWinRate.Image = null;
 			this.txtWinRate.Location = new System.Drawing.Point(312, 127);
+			this.txtWinRate.MultilineAllow = false;
 			this.txtWinRate.Name = "txtWinRate";
 			this.txtWinRate.PasswordChar = '\0';
 			this.txtWinRate.Size = new System.Drawing.Size(46, 23);
@@ -304,6 +309,7 @@
 			this.txtWins.HasFocus = false;
 			this.txtWins.Image = null;
 			this.txtWins.Location = new System.Drawing.Point(312, 98);
+			this.txtWins.MultilineAllow = false;
 			this.txtWins.Name = "txtWins";
 			this.txtWins.PasswordChar = '\0';
 			this.txtWins.Size = new System.Drawing.Size(46, 23);
@@ -317,6 +323,7 @@
 			this.txtBattles.HasFocus = false;
 			this.txtBattles.Image = null;
 			this.txtBattles.Location = new System.Drawing.Point(312, 69);
+			this.txtBattles.MultilineAllow = false;
 			this.txtBattles.Name = "txtBattles";
 			this.txtBattles.PasswordChar = '\0';
 			this.txtBattles.Size = new System.Drawing.Size(46, 23);
@@ -378,6 +385,7 @@
 			this.txtRestDays.HasFocus = false;
 			this.txtRestDays.Image = null;
 			this.txtRestDays.Location = new System.Drawing.Point(492, 266);
+			this.txtRestDays.MultilineAllow = false;
 			this.txtRestDays.Name = "txtRestDays";
 			this.txtRestDays.PasswordChar = '\0';
 			this.txtRestDays.Size = new System.Drawing.Size(70, 23);
@@ -406,6 +414,7 @@
 			this.txtRestBattles.HasFocus = false;
 			this.txtRestBattles.Image = null;
 			this.txtRestBattles.Location = new System.Drawing.Point(492, 238);
+			this.txtRestBattles.MultilineAllow = false;
 			this.txtRestBattles.Name = "txtRestBattles";
 			this.txtRestBattles.PasswordChar = '\0';
 			this.txtRestBattles.Size = new System.Drawing.Size(70, 23);
@@ -433,6 +442,7 @@
 			this.txtBattlesPerDay.HasFocus = false;
 			this.txtBattlesPerDay.Image = null;
 			this.txtBattlesPerDay.Location = new System.Drawing.Point(492, 209);
+			this.txtBattlesPerDay.MultilineAllow = false;
 			this.txtBattlesPerDay.Name = "txtBattlesPerDay";
 			this.txtBattlesPerDay.PasswordChar = '\0';
 			this.txtBattlesPerDay.Size = new System.Drawing.Size(26, 23);
@@ -498,6 +508,7 @@
 			this.txtGrindXP.HasFocus = false;
 			this.txtGrindXP.Image = null;
 			this.txtGrindXP.Location = new System.Drawing.Point(141, 238);
+			this.txtGrindXP.MultilineAllow = false;
 			this.txtGrindXP.Name = "txtGrindXP";
 			this.txtGrindXP.PasswordChar = '\0';
 			this.txtGrindXP.Size = new System.Drawing.Size(75, 23);
@@ -511,6 +522,7 @@
 			this.txtGrindComment.HasFocus = false;
 			this.txtGrindComment.Image = null;
 			this.txtGrindComment.Location = new System.Drawing.Point(141, 209);
+			this.txtGrindComment.MultilineAllow = false;
 			this.txtGrindComment.Name = "txtGrindComment";
 			this.txtGrindComment.PasswordChar = '\0';
 			this.txtGrindComment.Size = new System.Drawing.Size(217, 23);
@@ -552,6 +564,7 @@
 			this.txtTotalXP.HasFocus = false;
 			this.txtTotalXP.Image = null;
 			this.txtTotalXP.Location = new System.Drawing.Point(141, 127);
+			this.txtTotalXP.MultilineAllow = false;
 			this.txtTotalXP.Name = "txtTotalXP";
 			this.txtTotalXP.PasswordChar = '\0';
 			this.txtTotalXP.Size = new System.Drawing.Size(75, 23);
@@ -565,6 +578,7 @@
 			this.txtMaxXp.HasFocus = false;
 			this.txtMaxXp.Image = null;
 			this.txtMaxXp.Location = new System.Drawing.Point(141, 98);
+			this.txtMaxXp.MultilineAllow = false;
 			this.txtMaxXp.Name = "txtMaxXp";
 			this.txtMaxXp.PasswordChar = '\0';
 			this.txtMaxXp.Size = new System.Drawing.Size(75, 23);
@@ -578,6 +592,7 @@
 			this.txtAvgXP.HasFocus = false;
 			this.txtAvgXP.Image = null;
 			this.txtAvgXP.Location = new System.Drawing.Point(141, 69);
+			this.txtAvgXP.MultilineAllow = false;
 			this.txtAvgXP.Name = "txtAvgXP";
 			this.txtAvgXP.PasswordChar = '\0';
 			this.txtAvgXP.Size = new System.Drawing.Size(75, 23);
@@ -644,7 +659,7 @@
 			this.btnRevert.Location = new System.Drawing.Point(425, 355);
 			this.btnRevert.Name = "btnRevert";
 			this.btnRevert.Size = new System.Drawing.Size(75, 23);
-			this.btnRevert.TabIndex = 52;
+			this.btnRevert.TabIndex = 41;
 			this.btnRevert.Text = "Revert";
 			this.btnRevert.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
@@ -654,7 +669,7 @@
 			this.btnSave.Location = new System.Drawing.Point(344, 355);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
-			this.btnSave.TabIndex = 51;
+			this.btnSave.TabIndex = 40;
 			this.btnSave.Text = "Save";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
@@ -676,7 +691,7 @@
 			this.badGroupBox4.Location = new System.Drawing.Point(390, 180);
 			this.badGroupBox4.Name = "badGroupBox4";
 			this.badGroupBox4.Size = new System.Drawing.Size(191, 156);
-			this.badGroupBox4.TabIndex = 38;
+			this.badGroupBox4.TabIndex = 37;
 			this.badGroupBox4.TabStop = false;
 			this.badGroupBox4.Text = "Grinding Progress";
 			// 
