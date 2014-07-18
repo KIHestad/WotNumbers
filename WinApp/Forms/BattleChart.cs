@@ -421,7 +421,7 @@ namespace WinApp.Forms
 				ptWhere;
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtBattleSum = DB.FetchData(sql);
-				if (dtBattleSum.Rows.Count > 0)
+				if (dtBattleSum.Rows.Count > 0 && dtBattleSum.Rows[0]["battles"] != DBNull.Value)
 				{
 					DataRow bRow = dtBattleSum.Rows[0];
 					BATTLES = BATTLES - Convert.ToDouble(bRow["battles"]);
