@@ -119,6 +119,7 @@
 			this.txtFileLocation.HasFocus = false;
 			this.txtFileLocation.Image = null;
 			this.txtFileLocation.Location = new System.Drawing.Point(42, 136);
+			this.txtFileLocation.MultilineAllow = true;
 			this.txtFileLocation.Name = "txtFileLocation";
 			this.txtFileLocation.PasswordChar = '\0';
 			this.txtFileLocation.Size = new System.Drawing.Size(389, 43);
@@ -144,6 +145,7 @@
 			this.txtDatabasename.HasFocus = false;
 			this.txtDatabasename.Image = null;
 			this.txtDatabasename.Location = new System.Drawing.Point(42, 87);
+			this.txtDatabasename.MultilineAllow = false;
 			this.txtDatabasename.Name = "txtDatabasename";
 			this.txtDatabasename.PasswordChar = '\0';
 			this.txtDatabasename.Size = new System.Drawing.Size(389, 23);

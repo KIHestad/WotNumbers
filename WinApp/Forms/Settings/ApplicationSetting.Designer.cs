@@ -177,6 +177,7 @@
 			this.txtDossierFilePath.HasFocus = false;
 			this.txtDossierFilePath.Image = null;
 			this.txtDossierFilePath.Location = new System.Drawing.Point(44, 73);
+			this.txtDossierFilePath.MultilineAllow = true;
 			this.txtDossierFilePath.Name = "txtDossierFilePath";
 			this.txtDossierFilePath.PasswordChar = '\0';
 			this.txtDossierFilePath.Size = new System.Drawing.Size(317, 45);

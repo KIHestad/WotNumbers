@@ -32,6 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportWotStat));
 			this.openFileWotStatDbFile = new System.Windows.Forms.OpenFileDialog();
 			this.ImportWotStatTheme = new BadForm();
+			this.btnClose = new BadButton();
 			this.btnRemove = new BadButton();
 			this.lblResult = new BadLabel();
 			this.txtToDate = new BadTextBox();
@@ -42,7 +43,6 @@
 			this.txtWotStatDb = new BadTextBox();
 			this.badLabel1 = new BadLabel();
 			this.badGroupBox1 = new BadGroupBox();
-			this.btnClose = new BadButton();
 			this.ImportWotStatTheme.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -82,6 +82,16 @@
 			this.ImportWotStatTheme.Text = "Import Battles From WoT Statistics";
 			this.ImportWotStatTheme.TitleHeight = 26;
 			// 
+			// btnClose
+			// 
+			this.btnClose.Image = null;
+			this.btnClose.Location = new System.Drawing.Point(387, 239);
+			this.btnClose.Name = "btnClose";
+			this.btnClose.Size = new System.Drawing.Size(75, 23);
+			this.btnClose.TabIndex = 11;
+			this.btnClose.Text = "Close";
+			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+			// 
 			// btnRemove
 			// 
 			this.btnRemove.Image = null;
@@ -96,6 +106,8 @@
 			// 
 			this.lblResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblResult.Dimmed = false;
+			this.lblResult.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblResult.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblResult.Image = null;
 			this.lblResult.Location = new System.Drawing.Point(25, 239);
 			this.lblResult.Name = "lblResult";
@@ -108,6 +120,7 @@
 			this.txtToDate.HasFocus = false;
 			this.txtToDate.Image = null;
 			this.txtToDate.Location = new System.Drawing.Point(338, 70);
+			this.txtToDate.MultilineAllow = false;
 			this.txtToDate.Name = "txtToDate";
 			this.txtToDate.PasswordChar = '\0';
 			this.txtToDate.Size = new System.Drawing.Size(109, 23);
@@ -118,6 +131,8 @@
 			// 
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
+			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.Image = null;
 			this.badLabel2.Location = new System.Drawing.Point(42, 70);
 			this.badLabel2.Name = "badLabel2";
@@ -132,6 +147,9 @@
 			this.progressBarImport.Image = null;
 			this.progressBarImport.Location = new System.Drawing.Point(25, 208);
 			this.progressBarImport.Name = "progressBarImport";
+			this.progressBarImport.ProgressBarColorMode = false;
+			this.progressBarImport.ProgressBarMargins = 2;
+			this.progressBarImport.ProgressBarShowPercentage = false;
 			this.progressBarImport.Size = new System.Drawing.Size(437, 23);
 			this.progressBarImport.TabIndex = 7;
 			this.progressBarImport.TabStop = false;
@@ -166,6 +184,7 @@
 			this.txtWotStatDb.HasFocus = false;
 			this.txtWotStatDb.Image = null;
 			this.txtWotStatDb.Location = new System.Drawing.Point(42, 114);
+			this.txtWotStatDb.MultilineAllow = true;
 			this.txtWotStatDb.Name = "txtWotStatDb";
 			this.txtWotStatDb.PasswordChar = '\0';
 			this.txtWotStatDb.Size = new System.Drawing.Size(405, 39);
@@ -176,6 +195,8 @@
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
+			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(42, 94);
 			this.badLabel1.Name = "badLabel1";
@@ -194,16 +215,6 @@
 			this.badGroupBox1.TabIndex = 1;
 			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Settings";
-			// 
-			// btnClose
-			// 
-			this.btnClose.Image = null;
-			this.btnClose.Location = new System.Drawing.Point(387, 239);
-			this.btnClose.Name = "btnClose";
-			this.btnClose.Size = new System.Drawing.Size(75, 23);
-			this.btnClose.TabIndex = 11;
-			this.btnClose.Text = "Close";
-			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
 			// 
 			// ImportWotStat
 			// 

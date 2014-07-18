@@ -1189,6 +1189,13 @@ class BadTextBox : BadThemeControl
 		set { _TextAlign = value; }
 	}
 
+	private bool _MultilineAllow = false;
+	public bool MultilineAllow
+	{
+		get { return _MultilineAllow; }
+		set { _MultilineAllow = value; Invalidate(); }
+	}
+
 	private bool _HasFocus;
 	public bool HasFocus
 	{
@@ -1203,7 +1210,6 @@ class BadTextBox : BadThemeControl
 		textBox.BackColor = ColorTheme.FormBack;
 		textBox.ForeColor = ColorTheme.ControlFont;
 		textBox.BorderStyle = BorderStyle.None;
-		textBox.Multiline = true;
 		textBox.Top = 5;
 		textBox.Left = 6;
 		this.Controls.Add(textBox);
@@ -1222,6 +1228,7 @@ class BadTextBox : BadThemeControl
 		Rectangle GroupBoxInner = new Rectangle(borderWidth, borderWidth, ClientRectangle.Width - (borderWidth * 2), ClientRectangle.Height - (borderWidth*2));
 		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
 		//textBox.Font = new Font(textBox.Font.FontFamily, 12, GraphicsUnit.Pixel);
+		textBox.Multiline = MultilineAllow;
 		textBox.Height = Height - 7;
 		textBox.Width = Width - 12;
 		textBox.PasswordChar = PasswordChar;

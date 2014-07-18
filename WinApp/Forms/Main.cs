@@ -1200,6 +1200,9 @@ namespace WinApp.Forms
 					dt.Rows.Add(dr);
 					applyColors = true;
 				}
+				// Set row height in template 
+				dataGridMain.RowTemplate.Height = 23;
+				// Populate grid
 				dataGridMain.DataSource = dt;
 				// Unfocus
 				dataGridMain.ClearSelection();
@@ -1208,8 +1211,6 @@ namespace WinApp.Forms
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				// Set row height in template 
-				dataGridMain.RowTemplate.Height = 23;
 				// Colors
 				if (applyColors)
 				{

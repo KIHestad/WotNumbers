@@ -32,6 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseSetting));
 			this.openFileDialogSQLite = new System.Windows.Forms.OpenFileDialog();
 			this.DatabaseSettingsTheme = new BadForm();
+			this.btnCancel = new BadButton();
 			this.popupDatabaseType = new BadDropDownBox();
 			this.panelSQLite = new System.Windows.Forms.Panel();
 			this.txtDatabaseFile = new BadTextBox();
@@ -53,7 +54,6 @@
 			this.btnSave = new BadButton();
 			this.btnNewDb = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
-			this.btnCancel = new BadButton();
 			this.DatabaseSettingsTheme.SuspendLayout();
 			this.panelSQLite.SuspendLayout();
 			this.panelMSSQL.SuspendLayout();
@@ -94,6 +94,16 @@
 			this.DatabaseSettingsTheme.Text = "Database Settings";
 			this.DatabaseSettingsTheme.TitleHeight = 26;
 			// 
+			// btnCancel
+			// 
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(291, 311);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.TabIndex = 22;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			// 
 			// popupDatabaseType
 			// 
 			this.popupDatabaseType.Image = null;
@@ -120,6 +130,7 @@
 			this.txtDatabaseFile.HasFocus = false;
 			this.txtDatabaseFile.Image = null;
 			this.txtDatabaseFile.Location = new System.Drawing.Point(6, 48);
+			this.txtDatabaseFile.MultilineAllow = true;
 			this.txtDatabaseFile.Name = "txtDatabaseFile";
 			this.txtDatabaseFile.PasswordChar = '\0';
 			this.txtDatabaseFile.Size = new System.Drawing.Size(296, 45);
@@ -130,6 +141,8 @@
 			// 
 			this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel5.Dimmed = false;
+			this.badLabel5.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel5.Image = null;
 			this.badLabel5.Location = new System.Drawing.Point(4, 28);
 			this.badLabel5.Name = "badLabel5";
@@ -212,6 +225,8 @@
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
+			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(3, 122);
 			this.badLabel1.Name = "badLabel1";
@@ -224,6 +239,8 @@
 			// 
 			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel3.Dimmed = false;
+			this.badLabel3.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.Image = null;
 			this.badLabel3.Location = new System.Drawing.Point(3, 35);
 			this.badLabel3.Name = "badLabel3";
@@ -236,6 +253,8 @@
 			// 
 			this.lblUIDPW.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblUIDPW.Dimmed = true;
+			this.lblUIDPW.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblUIDPW.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblUIDPW.Image = null;
 			this.lblUIDPW.Location = new System.Drawing.Point(3, 93);
 			this.lblUIDPW.Name = "lblUIDPW";
@@ -249,6 +268,7 @@
 			this.txtUID.HasFocus = false;
 			this.txtUID.Image = null;
 			this.txtUID.Location = new System.Drawing.Point(129, 93);
+			this.txtUID.MultilineAllow = false;
 			this.txtUID.Name = "txtUID";
 			this.txtUID.PasswordChar = '\0';
 			this.txtUID.Size = new System.Drawing.Size(85, 23);
@@ -259,6 +279,8 @@
 			// 
 			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel4.Dimmed = false;
+			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel4.Image = null;
 			this.badLabel4.Location = new System.Drawing.Point(3, 64);
 			this.badLabel4.Name = "badLabel4";
@@ -272,6 +294,7 @@
 			this.txtPW.HasFocus = false;
 			this.txtPW.Image = null;
 			this.txtPW.Location = new System.Drawing.Point(220, 93);
+			this.txtPW.MultilineAllow = false;
 			this.txtPW.Name = "txtPW";
 			this.txtPW.PasswordChar = '*';
 			this.txtPW.Size = new System.Drawing.Size(85, 23);
@@ -283,6 +306,7 @@
 			this.txtServerName.HasFocus = false;
 			this.txtServerName.Image = null;
 			this.txtServerName.Location = new System.Drawing.Point(129, 35);
+			this.txtServerName.MultilineAllow = false;
 			this.txtServerName.Name = "txtServerName";
 			this.txtServerName.PasswordChar = '\0';
 			this.txtServerName.Size = new System.Drawing.Size(176, 23);
@@ -293,6 +317,8 @@
 			// 
 			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel6.Dimmed = false;
+			this.badLabel6.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel6.Image = null;
 			this.badLabel6.Location = new System.Drawing.Point(44, 75);
 			this.badLabel6.Name = "badLabel6";
@@ -331,16 +357,6 @@
 			this.badGroupBox1.TabIndex = 1;
 			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Settings";
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(291, 311);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 22;
-			this.btnCancel.Text = "Cancel";
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// DatabaseSetting
 			// 
