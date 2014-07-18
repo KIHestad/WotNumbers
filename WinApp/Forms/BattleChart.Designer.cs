@@ -71,7 +71,7 @@
 			this.BattleChartTheme.MainArea = mainAreaClass1;
 			this.BattleChartTheme.Name = "BattleChartTheme";
 			this.BattleChartTheme.Resizable = true;
-			this.BattleChartTheme.Size = new System.Drawing.Size(755, 428);
+			this.BattleChartTheme.Size = new System.Drawing.Size(745, 516);
 			this.BattleChartTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemExitImage")));
 			this.BattleChartTheme.SystemMaximizeImage = null;
 			this.BattleChartTheme.SystemMinimizeImage = null;
@@ -204,9 +204,9 @@
 			legend1.ForeColor = System.Drawing.Color.Silver;
 			legend1.Name = "Legend1";
 			this.ChartingMain.Legends.Add(legend1);
-			this.ChartingMain.Location = new System.Drawing.Point(9, 108);
+			this.ChartingMain.Location = new System.Drawing.Point(6, 103);
 			this.ChartingMain.Name = "ChartingMain";
-			this.ChartingMain.Size = new System.Drawing.Size(730, 305);
+			this.ChartingMain.Size = new System.Drawing.Size(733, 407);
 			this.ChartingMain.TabIndex = 0;
 			this.ChartingMain.Text = "chart1";
 			this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
@@ -219,7 +219,7 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(17, 40);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(713, 62);
+			this.badGroupBox1.Size = new System.Drawing.Size(715, 62);
 			this.badGroupBox1.TabIndex = 9;
 			this.badGroupBox1.Text = "Add Chart line";
 			// 
@@ -228,7 +228,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(755, 428);
+			this.ClientSize = new System.Drawing.Size(745, 516);
 			this.Controls.Add(this.BattleChartTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(400, 300);
