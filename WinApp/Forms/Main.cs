@@ -1146,41 +1146,60 @@ namespace WinApp.Forms
 				dataGridMain.DataSource = null;
 				if (!DB.CheckConnection(false)) return;
 				string sql =
-					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid " +
-					"UNION " +
-					"SELECT 'Total battles' as Data, cast(SUM(battles) as varchar) from playerTankBattle inner join playerTank on playerTankBattle.playerTankId=playerTank.Id where playerid=@playerid " +
-					"UNION " +
-					"SELECT 'Comment' as Data ,'Welcome to WoT Numbers' ";
+					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-				// Add WN8
-				DataRow dr = dt.NewRow();
-				dr["Data"] = "WN8";
-				dr["Value"] = Math.Round(Code.Rating.CalculatePlayerTotalWn8(), 2).ToString();
-				dt.Rows.Add(dr);
-				// Add EFF
-				dr = dt.NewRow();
-				dr["Data"] = "EFF";
+				// Overall stats
 				sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier " +
+					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
 					"from playerTankBattle ptb left join " +
 					"  playerTank pt on ptb.playerTankId=pt.id left join " +
 					"  tank t on pt.tankId = t.id " +
 					"where pt.playerId=@playerId ";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dtEff2 = DB.FetchData(sql);
-				DataRow playerTankData = dtEff2.Rows[0];
-				double BATTLES = Rating.ConvertDbVal2Double(playerTankData["battles"]);
-				double DAMAGE = Rating.ConvertDbVal2Double(playerTankData["dmg"]);
-				double SPOT = Rating.ConvertDbVal2Double(playerTankData["spot"]);
-				double FRAGS = Rating.ConvertDbVal2Double(playerTankData["frags"]);
-				double DEF = Rating.ConvertDbVal2Double(playerTankData["def"]);
-				double CAP = Rating.ConvertDbVal2Double(playerTankData["cap"]);
-				double TIER = Rating.ConvertDbVal2Double(playerTankData["tier"]) / BATTLES;
-				dr["Value"] = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES,DAMAGE,SPOT,FRAGS,DEF,CAP,TIER),2).ToString();
-				dt.Rows.Add(dr);
-
+				DataTable dtStats = DB.FetchData(sql);
+				int battleCount = 0;
+				double wr = 0;
+				double wn8 = 0;
+				double eff = 0;
+				bool applyColors = false;
+				if (dtStats.Rows.Count > 0 && dtStats.Rows[0]["battles"] != DBNull.Value)
+				{
+					DataRow stats = dtStats.Rows[0];
+					// Add Battle Count
+					DataRow dr = dt.NewRow();
+					dr["Data"] = "Total Battles";
+					battleCount = Convert.ToInt32(stats["battles"]);
+					dr["Value"] = battleCount.ToString();
+					dt.Rows.Add(dr);
+					// Add Winrate
+					dr = dt.NewRow();
+					dr["Data"] = "Win Rate";
+					wr = (Convert.ToDouble(stats["wins"])/Convert.ToDouble(stats["battles"])*100);
+					dr["Value"] = Math.Round(wr, 2).ToString() + " %";
+					dt.Rows.Add(dr);
+					// Add WN8
+					dr = dt.NewRow();
+					dr["Data"] = "WN8 Total Rating";
+					wn8 = Code.Rating.CalculatePlayerTotalWn8();
+					dr["Value"] = Math.Round(wn8, 2).ToString();
+					dt.Rows.Add(dr);
+					// Add EFF
+					dr = dt.NewRow();
+					dr["Data"] = "EFF Total Rating";
+					double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+					double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+					double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+					double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+					double DEF = Rating.ConvertDbVal2Double(stats["def"]);
+					double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+					double TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+					eff = Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+					dr["Value"] = Math.Round(eff, 2).ToString();
+					dt.Rows.Add(dr);
+					applyColors = true;
+				}
 				dataGridMain.DataSource = dt;
 				// Unfocus
 				dataGridMain.ClearSelection();
@@ -1189,9 +1208,19 @@ namespace WinApp.Forms
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				// Set row height in template 
+				dataGridMain.RowTemplate.Height = 23;
+				// Colors
+				if (applyColors)
+				{
+					dataGridMain.Rows[1].Cells[1].Style.ForeColor = Rating.BattleCountColor(battleCount);
+					dataGridMain.Rows[2].Cells[1].Style.ForeColor = Rating.WinRateColor(wr);
+					dataGridMain.Rows[3].Cells[1].Style.ForeColor = Rating.WN8color(wn8);
+					dataGridMain.Rows[4].Cells[1].Style.ForeColor = Rating.EffColor(eff);
+				}
 				// Finish
 				dataGridMain.Columns[0].Width = 100;
-				dataGridMain.Columns[1].Width = 500; 
+				dataGridMain.Columns[1].Width = 500;
 				ResizeNow();
 				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 				// Status mesage
@@ -1200,6 +1229,8 @@ namespace WinApp.Forms
 			catch (Exception ex)
 			{
 				string s = ex.Message;
+				if (Config.Settings.showDBErrors)
+					Code.MsgBox.Show(ex.Message, "Error showing overall stats");
 				//throw;
 			}
 		}
@@ -1698,48 +1729,18 @@ namespace WinApp.Forms
 				DataGridViewCell cell = dataGridMain[e.ColumnIndex, e.RowIndex];
 				if (col.Equals("EFF"))
 				{
-					// Dynamic color by efficiency
-					//"eff": [
-					//  { "value": 610,  "color": ${"def.colorRating.very_bad" } },  //    0 - 609  - very bad   (20% of players)
-					//  { "value": 850,  "color": ${"def.colorRating.bad"      } },  //  610 - 849  - bad        (better then 20% of players)
-					//  { "value": 1145, "color": ${"def.colorRating.normal"   } },  //  850 - 1144 - normal     (better then 60% of players)
-					//  { "value": 1475, "color": ${"def.colorRating.good"     } },  // 1145 - 1474 - good       (better then 90% of players)
-					//  { "value": 1775, "color": ${"def.colorRating.very_good"} },  // 1475 - 1774 - very good  (better then 99% of players)
-					//  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
-					//]
 					if (dataGridMain["EFF", e.RowIndex].Value != DBNull.Value)
 					{
 						int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
-						Color effRatingColor = ColorTheme.Rating_very_bad;
-						if (eff > 1774) effRatingColor = ColorTheme.Rating_uniqe;
-						else if (eff > 1474) effRatingColor = ColorTheme.Rating_very_good;
-						else if (eff > 1144) effRatingColor = ColorTheme.Rating_good;
-						else if (eff > 849) effRatingColor = ColorTheme.Rating_normal;
-						else if (eff > 609) effRatingColor = ColorTheme.Rating_bad;
-						cell.Style.ForeColor = effRatingColor;
+						cell.Style.ForeColor = Rating.EffColor(eff);
 					}
 				}
 				else if (col.Equals("WN8"))
 				{
-					// Dynamic color by WN8 rating
-					//"wn8": [
-					//	{ "value": 310,  "color": ${"def.colorRating.very_bad" } },  //    0 - 309  - very bad   (20% of players)
-					//	{ "value": 750,  "color": ${"def.colorRating.bad"      } },  //  310 - 749  - bad        (better then 20% of players)
-					//	{ "value": 1310, "color": ${"def.colorRating.normal"   } },  //  750 - 1309 - normal     (better then 60% of players)
-					//	{ "value": 1965, "color": ${"def.colorRating.good"     } },  // 1310 - 1964 - good       (better then 90% of players)
-					//	{ "value": 2540, "color": ${"def.colorRating.very_good"} },  // 1965 - 2539 - very good  (better then 99% of players)
-					//	{ "value": 9999, "color": ${"def.colorRating.unique"   } }   // 2540 - *    - unique     (better then 99.9% of players)
-					//]
 					if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
 					{
 						int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
-						Color wn8RatingColor = ColorTheme.Rating_very_bad;
-						if (wn8 > 2539) wn8RatingColor = ColorTheme.Rating_uniqe;
-						else if (wn8 > 1964) wn8RatingColor = ColorTheme.Rating_very_good;
-						else if (wn8 > 1309) wn8RatingColor = ColorTheme.Rating_good;
-						else if (wn8 > 749) wn8RatingColor = ColorTheme.Rating_normal;
-						else if (wn8 > 309) wn8RatingColor = ColorTheme.Rating_bad;
-						cell.Style.ForeColor = wn8RatingColor;
+						cell.Style.ForeColor = Rating.WN8color(wn8);
 					}
 				}
 				else if (col.Contains("%"))
@@ -1821,25 +1822,10 @@ namespace WinApp.Forms
 				{
 					if (col.Equals("Win Rate"))
 					{
-						//// Dynamic color by win percent
-						//"rating": [
-						//  { "value": 46.5, "color": ${"def.colorRating.very_bad" } },   //  0   - 46.5  - very bad   (20% of players)
-						//  { "value": 48.5, "color": ${"def.colorRating.bad"      } },   // 46.5 - 48.5  - bad        (better then 20% of players)
-						//  { "value": 51.5, "color": ${"def.colorRating.normal"   } },   // 48.5 - 51.5  - normal     (better then 60% of players)
-						//  { "value": 56.5, "color": ${"def.colorRating.good"     } },   // 51.5 - 56.5  - good       (better then 90% of players)
-						//  { "value": 64.5, "color": ${"def.colorRating.very_good"} },   // 56.5 - 64.5  - very good  (better then 99% of players)
-						//  { "value": 101,  "color": ${"def.colorRating.unique"   } }    // 64.5 - 100   - unique     (better then 99.9% of players)
-						//]
 						if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
 						{
 							double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
-							Color weRatingColor = ColorTheme.Rating_very_bad;
-							if (wr > 64.5) weRatingColor = ColorTheme.Rating_uniqe;
-							else if (wr > 56.5) weRatingColor = ColorTheme.Rating_very_good;
-							else if (wr > 51.5) weRatingColor = ColorTheme.Rating_good;
-							else if (wr > 48.5) weRatingColor = ColorTheme.Rating_normal;
-							else if (wr > 46.5) weRatingColor = ColorTheme.Rating_bad;
-							cell.Style.ForeColor = weRatingColor;
+							cell.Style.ForeColor = Rating.WinRateColor(wr);
 						}
 					}
 					
