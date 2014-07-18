@@ -973,10 +973,21 @@ namespace WinApp.Forms
 
 		private void ColList_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
-			gf.ColListId = SelectedColListId;
-			gf.ColListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
-			MainSettings.UpdateCurrentGridFilter(gf);
+			try
+			{
+				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+				gf.ColListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
+				gf.ColListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
+				MainSettings.UpdateCurrentGridFilter(gf);
+			}
+			catch (Exception)
+			{
+				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+				gf.ColListId = Convert.ToInt32(dataGridColumnList.Rows[0].Cells["id"].Value);
+				gf.ColListName = dataGridColumnList.Rows[0].Cells[1].Value.ToString();
+				MainSettings.UpdateCurrentGridFilter(gf);
+			}
+			
 		}
 	}
 }
