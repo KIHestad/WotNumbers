@@ -69,7 +69,7 @@ namespace WinApp.Code
 			return Convert.ToInt32(WN8);
 		}
 
-		public static double CalculatePlayerTotalWn8_2()
+		public static double CalculatePlayerTotalWn8()
 		{
 			double WN8 = 0;
 			// Get player totals from db
@@ -136,6 +136,61 @@ namespace WinApp.Code
 			return WN8;
 		}
 
+		public static double CalculatePlayerTotalWn8(DataTable playerTankBattle)
+		{
+			double WN8 = 0;
+			// Get player totals from datatable
+			if (playerTankBattle.Rows.Count > 0)
+			{
+				// Get player totals
+				double totalBattles = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])",""));
+				double Dmg = Convert.ToDouble(playerTankBattle.Compute("SUM([dmg])",""));
+				double Spot = Convert.ToDouble(playerTankBattle.Compute("SUM([spot])",""));
+				double Frag = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])",""));
+				double Def = Convert.ToDouble(playerTankBattle.Compute("SUM([def])",""));
+				double Wins = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])",""));
+				double WinRate = Wins / totalBattles * 100;
+				// Get tanks with battle count per tank and expected values from db
+				double expDmg = 0;
+				double expSpot = 0;
+				double expFrag = 0;
+				double expDef = 0;
+				double expWinRate = 0;
+				foreach (DataRow ptbRow in playerTankBattle.Rows)
+				{
+					// Get tanks with battle count per tank and expected values
+					int tankId = Convert.ToInt32(ptbRow["tankId"]);
+					double battlecount = Convert.ToDouble(ptbRow["battles"]);
+					DataRow expected = TankData.TankInfo(tankId);
+					if (battlecount > 0)
+					{
+						expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
+						expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
+						expFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
+						expDef += Convert.ToDouble(expected["expDef"]) * battlecount;
+						expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
+					}
+				}
+				// Step 1
+				double rDAMAGE = Dmg / expDmg;
+				double rSPOT = Spot / expSpot;
+				double rFRAG = Frag / expFrag;
+				double rDEF = Def / expDef;
+				double rWIN = WinRate / (expWinRate / totalBattles);
+				// Step 2
+				double rWINc = Math.Max(0, (rWIN - 0.71) / (1 - 0.71));
+				double rDAMAGEc = Math.Max(0, (rDAMAGE - 0.22) / (1 - 0.22));
+				double rFRAGc = Math.Max(0, Math.Min(rDAMAGEc + 0.2, (rFRAG - 0.12) / (1 - 0.12)));
+				double rSPOTc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rSPOT - 0.38) / (1 - 0.38)));
+				double rDEFc = Math.Max(0, Math.Min(rDAMAGEc + 0.1, (rDEF - 0.10) / (1 - 0.10)));
+				// Step 3
+				WN8 = ((980 * rDAMAGEc) + (210 * rDAMAGEc * rFRAGc) + (155 * rFRAGc * rSPOTc) + (75 * rDEFc * rFRAGc) + (145 * Math.Min(1.8, rWINc)));
+				// Return value
+			}
+			return WN8;
+		}
+
+
 		public static double CalculatePlayerEFFforChart(double sumBattleCount, double sumDAMAGE, double sumSPOT, double sumFRAGS, double sumDEF, double sumCAP, double TIER = 0)
 		{
 			Double EFF = 0;
@@ -192,14 +247,7 @@ namespace WinApp.Code
 						SPOT * 150 +
 						Math.Log(CAP + 1, 1.732) * 150 +
 						DEF * 150;
-
-					//EFF = FRAGS * (350.0 - TIER * 20.0)
-					//    + DAMAGE * (0.2 + 1.5 / TIER)
-					//    + 200.0 * SPOT
-					//    + 15.0 * CAP
-					//    + 15.0 * DEF;
 			}
-			// Return value
 			return Convert.ToInt32(EFF);
 		}
 
