@@ -406,7 +406,7 @@
 			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(644, 25);
+			this.toolMain.Size = new System.Drawing.Size(676, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 13;
 			this.toolMain.Text = "7";
@@ -421,32 +421,29 @@
 			// 
 			this.toolItemViewOverall.Checked = true;
 			this.toolItemViewOverall.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolItemViewOverall.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolItemViewOverall.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewOverall.Image")));
 			this.toolItemViewOverall.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemViewOverall.Name = "toolItemViewOverall";
 			this.toolItemViewOverall.Size = new System.Drawing.Size(60, 22);
-			this.toolItemViewOverall.Text = "&Overview";
+			this.toolItemViewOverall.Text = "&Home";
 			this.toolItemViewOverall.ToolTipText = " ";
 			this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
 			// 
 			// toolItemViewTankInfo
 			// 
-			this.toolItemViewTankInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolItemViewTankInfo.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewTankInfo.Image")));
 			this.toolItemViewTankInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemViewTankInfo.Name = "toolItemViewTankInfo";
-			this.toolItemViewTankInfo.Size = new System.Drawing.Size(42, 22);
+			this.toolItemViewTankInfo.Size = new System.Drawing.Size(58, 22);
 			this.toolItemViewTankInfo.Text = "&Tanks";
 			this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
 			// 
 			// toolItemViewBattles
 			// 
-			this.toolItemViewBattles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolItemViewBattles.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewBattles.Image")));
 			this.toolItemViewBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolItemViewBattles.Name = "toolItemViewBattles";
-			this.toolItemViewBattles.Size = new System.Drawing.Size(46, 22);
+			this.toolItemViewBattles.Size = new System.Drawing.Size(62, 22);
 			this.toolItemViewBattles.Text = "&Battles";
 			this.toolItemViewBattles.Click += new System.EventHandler(this.toolItemViewBattles_Click);
 			// 

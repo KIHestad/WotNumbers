@@ -39,6 +39,7 @@ namespace WinApp.Forms
 			lblDbSettings.Text = databaseInfo;
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
+			chkShowDBError.Checked = Config.Settings.showDBErrors;
 			PlayerPanel();
 		}
 

@@ -1146,8 +1146,10 @@ namespace WinApp.Forms
 				dataGridMain.DataSource = null;
 				if (!DB.CheckConnection(false)) return;
 				string sql =
-					"Select 'Tanks count' as Data, cast(count(id) as varchar) as Value from playerTank where playerid=@playerid ";
-				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.VarChar);
+					"Select 'Tanks count' as Data, cast(count(playerTank.tankId) as varchar) as Value " +
+					"from playerTank " +
+					"where playerid=@playerid and tankid in (select pt.tankId from playerTank pt inner join playerTankBattle ptb on pt.id = ptb.playerTankId) ";
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// Overall stats
 				sql =
