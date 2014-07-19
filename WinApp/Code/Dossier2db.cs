@@ -265,37 +265,17 @@ namespace WinApp.Code
 			return origin.AddSeconds(timestamp);
 		}
 
-		// TODO: NOT IN USE - remove if OK (18.6.2014)
-		//private static void UpdateNewPlayerTankRow(ref DataRow NewPlayerTankRow, JsonItem currentItem)
-		//{
-		//	JsonMainSection mainSection = new JsonMainSection(); 
-		//	// OLD SECTION NO LONGER IN USE
-		//	//if (currentItem.mainSection == mainSection.tanks)
-		//	//{
-		//	//	if (currentItem.subSection == "tankdata" && currentItem.property == "battlesCount") NewPlayerTankRow["battles15"] = Convert.ToInt32(currentItem.value);
-		//	//	if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewPlayerTankRow["wins15"] = Convert.ToInt32(currentItem.value);
-		//	//	if (currentItem.subSection == "tankdata" && currentItem.property == "wins") NewPlayerTankRow["wins15"] = Convert.ToInt32(currentItem.value);
-		//	//}
-		//	//else if (currentItem.mainSection == mainSection.tanks_v2)
-		//	//{
-		//		if (currentItem.subSection == "a15x15" && currentItem.property == "battlesCount") NewPlayerTankRow["battles15"] = Convert.ToInt32(currentItem.value);
-		//		if (currentItem.subSection == "a15x15" && currentItem.property == "wins") NewPlayerTankRow["wins15"] = Convert.ToInt32(currentItem.value);
-		//		if (currentItem.subSection == "a7x7" && currentItem.property == "battlesCount") NewPlayerTankRow["battles7"] = Convert.ToInt32(currentItem.value);
-		//		if (currentItem.subSection == "a7x7" && currentItem.property == "wins") NewPlayerTankRow["wins7"] = Convert.ToInt32(currentItem.value);
-		//	//}
-		//}
-
 		private static DataRow AdjustForTimeZone(DataRow playerTankRow)
 		{
-            TimeZone currentTimeZone = TimeZone.CurrentTimeZone;
-            TimeSpan offset = currentTimeZone.GetUtcOffset(DateTime.Now);
+			TimeZone currentTimeZone = TimeZone.CurrentTimeZone;
+			TimeSpan offset = currentTimeZone.GetUtcOffset(DateTime.Now);
 
-            if (playerTankRow["creationTime"] != DBNull.Value)
-                playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(offset.Hours);
+			if (playerTankRow["creationTime"] != DBNull.Value)
+				playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(offset.Hours);
 			if (playerTankRow["updatedTime"] != DBNull.Value)
-                playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(offset.Hours);
+				playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(offset.Hours);
 			if (playerTankRow["lastBattleTime"] != DBNull.Value)
-                playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(offset.Hours);
+				playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(offset.Hours);
 
 			return playerTankRow;
 		}
@@ -350,8 +330,8 @@ namespace WinApp.Code
 				int battlesNew7 = playerTankNewRow_battles7 - playerTankOldRow_battles7;
 				int battlesNewHistorical = playerTankNewRow_battlesHistorical - playerTankOldRow_battlesHistorical;
 				// Check if new battle on this tank then do db update, if force do it anyway
-				if (battlesNew15 != 0 || battlesNew7 != 0 || battlesNewHistorical != 0 ||
-					(forceUpdate && (playerTankOldRow_battles15 != 0 || playerTankOldRow_battles7 != 0 || playerTankOldRow_battlesHistorical != 0)))
+				if (battlesNew15 > 0 || battlesNew7 > 0 || battlesNewHistorical > 0 ||
+					(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0)))
 				{  
 					// Adjust for time zone
 					playerTankNewRow = AdjustForTimeZone(playerTankNewRow);
@@ -425,9 +405,9 @@ namespace WinApp.Code
 
 					// If detected several battle modes, dont save fraglist and achivements to battle, as we don't know how to seperate them
 					int severalModes = 0;
-					if (battlesNew15 != 0) severalModes++;
-					if (battlesNew7 != 0) severalModes++;
-					if (battlesNewHistorical != 0) severalModes++;
+					if (battlesNew15 > 0) severalModes++;
+					if (battlesNew7 > 0) severalModes++;
+					if (battlesNewHistorical > 0) severalModes++;
 					if (severalModes > 1)
 					{
 						battleFragList.Clear();
@@ -745,7 +725,7 @@ namespace WinApp.Code
 		}
 
 		private static void AddBattle(DataRow playerTankNewRow, 
-									     DataRow playerTankOldRow, 
+										 DataRow playerTankOldRow, 
 										 DataRow playerTankBattleNewRow, 
 										 DataRow playerTankBattleOldRow,
 										 TankData.DossierBattleMode battleMode, 
@@ -900,7 +880,7 @@ namespace WinApp.Code
 						foreach (var newFragItem in battleFragList)
 						{
 							battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
-				 							 "VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
+											 "VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
 						}
 						// Add to database
 						DB.ExecuteNonQuery(battleFragSQL);
