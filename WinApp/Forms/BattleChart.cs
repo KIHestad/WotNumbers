@@ -137,7 +137,7 @@ namespace WinApp.Forms
 			string sql = "";
 			if (initPlayerTankId != 0)
 			{
-				sql = "select name from tank inner join playerTank on tank.id=playerTank.tankId where playerTank.id=@id; ";
+				sql = "select name from tank inner join playerTank on tank.id=playerTank.tankId where playerTank.id=@id order by tank.name; ";
 				DB.AddWithValue(ref sql, "@id", initPlayerTankId, DB.SqlDataType.Int);
 				ddTank.Text = DB.FetchData(sql).Rows[0][0].ToString();
 			}
@@ -148,7 +148,7 @@ namespace WinApp.Forms
 			// Available charts
 			AddChartValues();
 			// DropDown Tank List
-			sql = "select tank.name from tank inner join playerTank on tank.id = playerTank.tankId where playerTank.playerId=@playerId order by lastBattleTime DESC";
+			sql = "select tank.name from tank inner join playerTank on tank.id = playerTank.tankId where playerTank.playerId=@playerId order by tank.name";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			ddTankList = "( All Tanks )";
@@ -168,7 +168,8 @@ namespace WinApp.Forms
 
 		private void DrawChart()
 		{
-			// Init
+            
+            // Init
 			string tankName = ddTank.Text;
 			if (tankName == "( All Tanks )") tankName = "All Tanks";
 			string selectedChartValue = ddValue.Text;
@@ -192,7 +193,7 @@ namespace WinApp.Forms
 			Series newSerie = new Series(chartSerie);
 			//newSerie.AxisLabel = tankName;
 			if (chartValue.totals)
-				newSerie.ChartType = SeriesChartType.Line;
+				newSerie.ChartType = SeriesChartType.FastLine;
 			else
 				newSerie.ChartType = SeriesChartType.Point;
 			if (ddXaxis.Text == "Date")
@@ -592,7 +593,8 @@ namespace WinApp.Forms
 					}
 					WN8 = Math.Round(Code.Rating.CalculatePlayerTotalWn8(ptb), 2);
 					if (WN8 < axisYminimum) axisYminimum = Convert.ToInt32(WN8);
-					ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN8); // Use battle count
+					
+                    ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN8); // Use battle count
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = axisYminimum;
