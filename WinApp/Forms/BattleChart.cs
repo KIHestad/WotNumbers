@@ -21,6 +21,7 @@ namespace WinApp.Forms
 		string ddChartList = "";
 		int initPlayerTankId = 0;
 		int numPoints = 100; // Max num of points in chart, exept for battle values (ChatValues.totals = false)
+		private double axisYminimum = 999999999;
 
 		public BattleChart(int playerTankId = 0)
 		{
@@ -165,7 +166,53 @@ namespace WinApp.Forms
 			ddChartList = ddChartList.Substring(0, ddChartList.Length - 1); // Remove last comma
 		}
 
-		private int axisYminimum = 10000;
+
+		private void ddPeriod_Click(object sender, EventArgs e)
+		{
+			Code.DropDownGrid.Show(ddPeriod, Code.DropDownGrid.DropDownGridType.List, "( All ),1 Year,6 Month,3 Month,1 Month,2 Weeks,1 Week");
+		}
+
+
+		private string FilterPeriod(string where)
+		{
+			string newWhere = "";
+			string period = ddPeriod.Text;
+			if (period == "( All )")
+				newWhere = where;
+			else
+			{
+				DateTime afterDate = DateTime.Now;
+				switch (period)
+				{
+					case "1 Year": afterDate = DateTime.Now.AddYears(-1); break;
+					case "6 Month": afterDate = DateTime.Now.AddMonths(-6); break;
+					case "3 Month": afterDate = DateTime.Now.AddMonths(-3); break;
+					case "1 Month": afterDate = DateTime.Now.AddMonths(-1); break;
+					case "2 Weeks": afterDate = DateTime.Now.AddDays(-14); break;
+					case "1 Week": afterDate = DateTime.Now.AddDays(-7); break;
+				}
+				newWhere = " battleTime >= '" + afterDate.ToString("yyyy-MM-dd") + "' ";
+				if (where == "")
+					newWhere = " where " + newWhere;
+				else
+					newWhere = where + " and " + newWhere;
+
+			}
+			return newWhere;
+		}
+
+		private double SetYaxisLowestValue(double newValue)
+		{
+			if (newValue < axisYminimum)
+			{
+				if (newValue <= 100)
+					return Convert.ToDouble(Convert.ToInt32(newValue *10)) / 10;
+				else
+					return newValue.RoundDown(1);
+			}
+			else
+				return axisYminimum;
+		}
 
 		private void DrawChart()
 		{
@@ -244,7 +291,7 @@ namespace WinApp.Forms
 				sql = 
 					"select sum(" + chartValue.bCol + ") " +
 					"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
-					where;
+					FilterPeriod(where);
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtSum = DB.FetchData(sql);
 				if (dtSum.Rows.Count > 0)
@@ -254,8 +301,8 @@ namespace WinApp.Forms
 			// Find battles
 			sql = 
 				"select * " +
-				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
-				where + " " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +
+				FilterPeriod(where) + " " +
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
@@ -272,7 +319,7 @@ namespace WinApp.Forms
 						if (step % stepMod == 0)
 							ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, 2)); // Use battle date
 						currentValue -= Convert.ToDouble(dr[chartValue.bCol]); //  Move backwards
-						if (currentValue < axisYminimum) axisYminimum = Convert.ToInt32(currentValue);
+						axisYminimum = SetYaxisLowestValue(currentValue);
 					}
 				}
 				else
@@ -281,7 +328,7 @@ namespace WinApp.Forms
 					{
 						currentValue = Convert.ToDouble(dr[chartValue.bCol]); //  Move backwards
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, 2)); // Use battle date
-						if (currentValue < axisYminimum) axisYminimum = Convert.ToInt32(currentValue);
+						axisYminimum = SetYaxisLowestValue(currentValue);
 					}
 				}
 			}
@@ -294,6 +341,7 @@ namespace WinApp.Forms
 					{
 						battleCount += Convert.ToDouble(dr["battlesCount"]); // Use battle count
 						firstValue += Convert.ToDouble(dr[chartValue.bCol]); // Move forwards
+						axisYminimum = SetYaxisLowestValue(firstValue);
 						if (firstValue < axisYminimum) axisYminimum = Convert.ToInt32(firstValue);
 						step++;
 						if (step % stepMod == 0)
@@ -306,7 +354,7 @@ namespace WinApp.Forms
 					{
 						battleCount += Convert.ToDouble(dr["battlesCount"]); // Use battle count
 						firstValue = Convert.ToDouble(dr[chartValue.bCol]); // Move forwards
-						if (firstValue < axisYminimum) axisYminimum = Convert.ToInt32(firstValue);
+						axisYminimum = SetYaxisLowestValue(firstValue);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue, 2));
 					}
 				}
@@ -341,7 +389,7 @@ namespace WinApp.Forms
 				sql = 
 					"select sum(victory), sum(battlescount) " +
 					"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
-					where;
+					FilterPeriod(where);
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtSum = DB.FetchData(sql);
 				if (dtSum.Rows.Count > 0)
@@ -355,8 +403,8 @@ namespace WinApp.Forms
 			// Find battles
 			sql = 
 				"select * " +
-				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " + 
-				where + " " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +
+				FilterPeriod(where) + " " +
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
@@ -369,7 +417,7 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtChart.Rows)
 				{
 					winRate = Math.Round(currentWins * 100 / currentBattles,2);
-					if (winRate < axisYminimum) axisYminimum = Convert.ToInt32(winRate);
+					axisYminimum = SetYaxisLowestValue(winRate);
 					step++;
 					if (step % stepMod == 0)
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), winRate); // Use battle date
@@ -386,7 +434,7 @@ namespace WinApp.Forms
 					firstWins += Convert.ToDouble(dr["victory"]); // Move forwards
 					firstBattles += Convert.ToDouble(dr["battlesCount"]);
 					winRate = Math.Round(firstWins * 100 / firstBattles,2);
-					if (winRate < axisYminimum) axisYminimum = Convert.ToInt32(winRate);
+					axisYminimum = SetYaxisLowestValue(winRate);
 					step++;
 					if (step % stepMod == 0)
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, winRate);
@@ -433,7 +481,7 @@ namespace WinApp.Forms
 					"from battle b inner join " +
 					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId inner join " +
 					"  tank t on pt.tankId = t.id " +
-				ptWhere;
+					FilterPeriod(ptWhere);
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtBattleSum = DB.FetchData(sql);
 				if (dtBattleSum.Rows.Count > 0 && dtBattleSum.Rows[0]["battles"] != DBNull.Value)
@@ -451,8 +499,8 @@ namespace WinApp.Forms
 			// Find battles
 			sql = 
 				"select * " +
-				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +  
-				bWhere + " " +
+				"from battle inner join playerTank on battle.playerTankId=playerTank.id and playerTank.playerId=@playerId " +
+				FilterPeriod(bWhere) + " " +
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
@@ -470,7 +518,7 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtChart.Rows)
 				{
 					EFF = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
-					if (EFF < axisYminimum) axisYminimum = Convert.ToInt32(EFF);
+					axisYminimum = SetYaxisLowestValue(EFF);
 					step++;
 					if (step % stepMod == 0)
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), EFF); // Use battle date
@@ -495,7 +543,7 @@ namespace WinApp.Forms
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
 					EFF = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
-					if (EFF < axisYminimum) axisYminimum = Convert.ToInt32(EFF);
+					axisYminimum = SetYaxisLowestValue(EFF);
 					step++;
 					if (step % stepMod == 0)
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, EFF); // Use battle date
@@ -534,13 +582,14 @@ namespace WinApp.Forms
 			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
+				bSumWhere = "where t.expDmg is not null" + bSumWhere;
 				sql =
 					"select t.id as tankId, sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
 					"  sum (b.def) as def, sum (cap) as cap, sum(victory) as wins " +
 					"from battle b left join " +
 					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId left join " +
 					"  tank t on pt.tankId = t.id " +
-					"where t.expDmg is not null " + bSumWhere + " " +
+					FilterPeriod(bSumWhere) + " " +
 					"group by t.id ";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtBattleSum = DB.FetchData(sql);
@@ -568,7 +617,7 @@ namespace WinApp.Forms
 				"select battle.*, playerTank.tankId as tankId " +
 				"from battle inner join " +
 				"  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId " +
-				bWhere + " " + 
+				FilterPeriod(bWhere) + " " + 
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
@@ -581,7 +630,7 @@ namespace WinApp.Forms
 				foreach (DataRow bRow in dtChart.Rows)
 				{
 					WN8 = Math.Round(Code.Rating.CalculatePlayerTotalWn8(ptb), 2);
-					if (WN8 < axisYminimum) axisYminimum = Convert.ToInt32(WN8);
+					axisYminimum = SetYaxisLowestValue(WN8);
 					step++;
 					if (step % stepMod == 0) 
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(bRow["battleTime"]), WN8); // Use battle date
@@ -618,7 +667,7 @@ namespace WinApp.Forms
 						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(bRow["victory"]);
 					}
 					WN8 = Math.Round(Code.Rating.CalculatePlayerTotalWn8(ptb), 2);
-					if (WN8 < axisYminimum) axisYminimum = Convert.ToInt32(WN8);
+					axisYminimum = SetYaxisLowestValue(WN8);
 					step++;
 					if (step % stepMod == 0)
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN8); // Use battle count
@@ -680,7 +729,7 @@ namespace WinApp.Forms
 		{
 			ChartingMain.Series.Clear();
 			ChartingMain.ResetAutoValues();
-			axisYminimum = 10000;
+			axisYminimum = 999999999;
 		}
 
 		Point? prevPosition = null;
@@ -688,38 +737,44 @@ namespace WinApp.Forms
 
 		private void ChartingMain_MouseMove(object sender, MouseEventArgs e)
 		{
-			string XLabel = ddXaxis.Text + ": ";
-			var pos = e.Location;
-			if (prevPosition.HasValue && pos == prevPosition.Value)
-				return;
-			tooltip.RemoveAll();
-			prevPosition = pos;
-			var results = ChartingMain.HitTest(pos.X, pos.Y, false,
-											ChartElementType.DataPoint);
-			foreach (var result in results)
+			try
 			{
-				if (result.ChartElementType == ChartElementType.DataPoint)
+				string XLabel = ddXaxis.Text + ": ";
+				var pos = e.Location;
+				if (prevPosition.HasValue && pos == prevPosition.Value)
+					return;
+				tooltip.RemoveAll();
+				prevPosition = pos;
+				var results = ChartingMain.HitTest(pos.X, pos.Y, false,
+												ChartElementType.DataPoint);
+				foreach (var result in results)
 				{
-					var prop = result.Object as DataPoint;
-					if (prop != null)
+					if (result.ChartElementType == ChartElementType.DataPoint)
 					{
-						var pointXPixel = result.ChartArea.AxisX.ValueToPixelPosition(prop.XValue);
-						var pointYPixel = result.ChartArea.AxisY.ValueToPixelPosition(prop.YValues[0]);
-
-						// check if the cursor is really close to the point (2 pixels around the point)
-						if (Math.Abs(pos.X - pointXPixel) < 2 &&
-							Math.Abs(pos.Y - pointYPixel) < 2)
+						var prop = result.Object as DataPoint;
+						if (prop != null)
 						{
-							string YValue = prop.YValues[0].ToString();
-							string XValue = prop.XValue.ToString();
-							if (ddXaxis.Text == "Date")
-								XValue = DateTime.FromOADate((double)prop.XValue).ToString("dd.MM.yyyy");
-							tooltip.Show(XLabel + XValue + Environment.NewLine + "Value: " + YValue, this.ChartingMain, pos.X + 10, pos.Y);
+							var pointXPixel = result.ChartArea.AxisX.ValueToPixelPosition(prop.XValue);
+							var pointYPixel = result.ChartArea.AxisY.ValueToPixelPosition(prop.YValues[0]);
+
+							// check if the cursor is really close to the point (2 pixels around the point)
+							if (Math.Abs(pos.X - pointXPixel) < 2 &&
+								Math.Abs(pos.Y - pointYPixel) < 2)
+							{
+								string YValue = prop.YValues[0].ToString();
+								string XValue = prop.XValue.ToString();
+								if (ddXaxis.Text == "Date")
+									XValue = DateTime.FromOADate((double)prop.XValue).ToString("dd.MM.yyyy");
+								tooltip.Show(XLabel + XValue + Environment.NewLine + "Value: " + YValue, this.ChartingMain, pos.X + 10, pos.Y);
+							}
 						}
 					}
 				}
 			}
+			catch (Exception)
+			{
+				//throw;
+			}
 		}
-		
 	}
 }

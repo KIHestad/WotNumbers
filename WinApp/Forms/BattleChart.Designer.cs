@@ -43,6 +43,8 @@
 			this.badLabel1 = new BadLabel();
 			this.ChartingMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.badGroupBox1 = new BadGroupBox();
+			this.badLabel4 = new BadLabel();
+			this.ddPeriod = new BadDropDownBox();
 			this.BattleChartTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).BeginInit();
 			this.SuspendLayout();
@@ -50,6 +52,8 @@
 			// BattleChartTheme
 			// 
 			this.BattleChartTheme.BackColor = System.Drawing.Color.Fuchsia;
+			this.BattleChartTheme.Controls.Add(this.ddPeriod);
+			this.BattleChartTheme.Controls.Add(this.badLabel4);
 			this.BattleChartTheme.Controls.Add(this.btnClearChart);
 			this.BattleChartTheme.Controls.Add(this.ddXaxis);
 			this.BattleChartTheme.Controls.Add(this.badLabel3);
@@ -71,7 +75,7 @@
 			this.BattleChartTheme.MainArea = mainAreaClass1;
 			this.BattleChartTheme.Name = "BattleChartTheme";
 			this.BattleChartTheme.Resizable = true;
-			this.BattleChartTheme.Size = new System.Drawing.Size(745, 516);
+			this.BattleChartTheme.Size = new System.Drawing.Size(792, 516);
 			this.BattleChartTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemExitImage")));
 			this.BattleChartTheme.SystemMaximizeImage = null;
 			this.BattleChartTheme.SystemMinimizeImage = null;
@@ -82,7 +86,7 @@
 			// btnClearChart
 			// 
 			this.btnClearChart.Image = null;
-			this.btnClearChart.Location = new System.Drawing.Point(660, 65);
+			this.btnClearChart.Location = new System.Drawing.Point(706, 65);
 			this.btnClearChart.Name = "btnClearChart";
 			this.btnClearChart.Size = new System.Drawing.Size(56, 23);
 			this.btnClearChart.TabIndex = 14;
@@ -92,7 +96,7 @@
 			// ddXaxis
 			// 
 			this.ddXaxis.Image = null;
-			this.ddXaxis.Location = new System.Drawing.Point(497, 65);
+			this.ddXaxis.Location = new System.Drawing.Point(424, 65);
 			this.ddXaxis.Name = "ddXaxis";
 			this.ddXaxis.Size = new System.Drawing.Size(80, 23);
 			this.ddXaxis.TabIndex = 13;
@@ -107,7 +111,7 @@
 			this.badLabel3.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(454, 65);
+			this.badLabel3.Location = new System.Drawing.Point(383, 65);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(47, 23);
 			this.badLabel3.TabIndex = 12;
@@ -116,9 +120,9 @@
 			// ddValue
 			// 
 			this.ddValue.Image = null;
-			this.ddValue.Location = new System.Drawing.Point(280, 65);
+			this.ddValue.Location = new System.Drawing.Point(267, 65);
 			this.ddValue.Name = "ddValue";
-			this.ddValue.Size = new System.Drawing.Size(160, 23);
+			this.ddValue.Size = new System.Drawing.Size(102, 23);
 			this.ddValue.TabIndex = 11;
 			this.ddValue.Click += new System.EventHandler(this.ddValue_Click);
 			// 
@@ -129,7 +133,7 @@
 			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(240, 65);
+			this.badLabel2.Location = new System.Drawing.Point(229, 65);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(49, 23);
 			this.badLabel2.TabIndex = 10;
@@ -138,7 +142,7 @@
 			// btnAddChart
 			// 
 			this.btnAddChart.Image = null;
-			this.btnAddChart.Location = new System.Drawing.Point(598, 65);
+			this.btnAddChart.Location = new System.Drawing.Point(644, 65);
 			this.btnAddChart.Name = "btnAddChart";
 			this.btnAddChart.Size = new System.Drawing.Size(56, 23);
 			this.btnAddChart.TabIndex = 8;
@@ -148,9 +152,9 @@
 			// ddTank
 			// 
 			this.ddTank.Image = null;
-			this.ddTank.Location = new System.Drawing.Point(69, 65);
+			this.ddTank.Location = new System.Drawing.Point(67, 65);
 			this.ddTank.Name = "ddTank";
-			this.ddTank.Size = new System.Drawing.Size(160, 23);
+			this.ddTank.Size = new System.Drawing.Size(149, 23);
 			this.ddTank.TabIndex = 3;
 			this.ddTank.Click += new System.EventHandler(this.ddTank_Click);
 			// 
@@ -206,7 +210,7 @@
 			this.ChartingMain.Legends.Add(legend1);
 			this.ChartingMain.Location = new System.Drawing.Point(6, 103);
 			this.ChartingMain.Name = "ChartingMain";
-			this.ChartingMain.Size = new System.Drawing.Size(733, 407);
+			this.ChartingMain.Size = new System.Drawing.Size(780, 407);
 			this.ChartingMain.TabIndex = 0;
 			this.ChartingMain.Text = "chart1";
 			this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
@@ -219,16 +223,39 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(17, 40);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(715, 62);
+			this.badGroupBox1.Size = new System.Drawing.Size(762, 62);
 			this.badGroupBox1.TabIndex = 9;
 			this.badGroupBox1.Text = "Add Chart line";
+			// 
+			// badLabel4
+			// 
+			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Dimmed = false;
+			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.Image = null;
+			this.badLabel4.Location = new System.Drawing.Point(517, 65);
+			this.badLabel4.Name = "badLabel4";
+			this.badLabel4.Size = new System.Drawing.Size(47, 23);
+			this.badLabel4.TabIndex = 15;
+			this.badLabel4.Text = "Period:";
+			// 
+			// ddPeriod
+			// 
+			this.ddPeriod.Image = null;
+			this.ddPeriod.Location = new System.Drawing.Point(558, 65);
+			this.ddPeriod.Name = "ddPeriod";
+			this.ddPeriod.Size = new System.Drawing.Size(75, 23);
+			this.ddPeriod.TabIndex = 16;
+			this.ddPeriod.Text = "( All )";
+			this.ddPeriod.Click += new System.EventHandler(this.ddPeriod_Click);
 			// 
 			// BattleChart
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(745, 516);
+			this.ClientSize = new System.Drawing.Size(792, 516);
 			this.Controls.Add(this.BattleChartTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(400, 300);
@@ -257,6 +284,8 @@
 		private BadButton btnAddChart;
 		private BadGroupBox badGroupBox1;
 		private BadButton btnClearChart;
+		private BadDropDownBox ddPeriod;
+		private BadLabel badLabel4;
 
 
 
