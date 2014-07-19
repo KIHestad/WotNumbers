@@ -40,16 +40,6 @@ namespace WinApp.Forms
 			// Player
 			cboSelectPlayer.Text = Config.Settings.playerName;
 			PlayerPanel();
-			// Time Zone
-			int timeZone = Config.Settings.timeZoneAdjust;
-			string timeZoneSelected = timeZone.ToString();
-			if (timeZone == 0)
-				timeZoneSelected = "0 (Server Time)";
-			else if (timeZone > 0)
-				timeZoneSelected = "+" + timeZone.ToString();
-			ddTimeZone.Text = timeZoneSelected;
-			// Show DB Errors (debug mode)
-			chkShowDBError.Checked = Config.Settings.showDBErrors;
 		}
 
 		private void PlayerPanel()
@@ -120,16 +110,6 @@ namespace WinApp.Forms
 				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
 				Config.Settings.dossierFileWathcherRun = 1;
 			}
-			// Time Zone
-			string timeZone = ddTimeZone.Text.ToString();
-			int newTimeZone = 0;
-			if (timeZone != "0 (Server Time)")
-			{
-				if (timeZone.Substring(0, 1) == "+")
-					timeZone = timeZone.Substring(1);
-				Int32.TryParse(timeZone, out newTimeZone);
-			}
-			Config.Settings.timeZoneAdjust = newTimeZone;
 			// Show DB errors (debug mode)
 			Config.Settings.showDBErrors = chkShowDBError.Checked;
 			// Player
@@ -188,23 +168,6 @@ namespace WinApp.Forms
 		private void Cancel_Click(object sender, EventArgs e)
 		{
 			this.Close();
-		}
-
-		private void ddTimeZone_Click(object sender, EventArgs e)
-		{
-			string timeZones = "";
-			for (int i = -12; i <= 12; i++)
-			{
-				if (i > 0)
-					timeZones += "+" + i.ToString();
-				else if (i == 0)
-					timeZones += "0 (Server Time)";
-				else
-					timeZones += i.ToString();
-				if (i < 12)
-					timeZones += ",";
-			}
-			Code.DropDownGrid.Show(ddTimeZone, Code.DropDownGrid.DropDownGridType.List, timeZones);
 		}
 	}
 }

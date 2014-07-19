@@ -287,12 +287,15 @@ namespace WinApp.Code
 
 		private static DataRow AdjustForTimeZone(DataRow playerTankRow)
 		{
-			if (playerTankRow["creationTime"] != DBNull.Value)
-				playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(Config.Settings.timeZoneAdjust);
+            TimeZone currentTimeZone = TimeZone.CurrentTimeZone;
+            TimeSpan offset = currentTimeZone.GetUtcOffset(DateTime.Now);
+
+            if (playerTankRow["creationTime"] != DBNull.Value)
+                playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(offset.Hours);
 			if (playerTankRow["updatedTime"] != DBNull.Value)
-				playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(Config.Settings.timeZoneAdjust);
+                playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(offset.Hours);
 			if (playerTankRow["lastBattleTime"] != DBNull.Value)
-				playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(Config.Settings.timeZoneAdjust);
+                playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(offset.Hours);
 
 			return playerTankRow;
 		}
