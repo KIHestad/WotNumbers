@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "2.0.0.0"?>
+<?define ProductVersion = "0.2.0.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -279,6 +279,9 @@
 			</Component>
 			<Component Id="cmp8DB446119A3BC32F2FF4D0FC54F0F51A" Directory="INSTALLFOLDER_Dossier2json" Guid="{C922F1E5-131F-474B-AEA0-61E8055944E0}">
 				<File Id="fil16B05629FF023AA4E53B479AD85706F2" KeyPath="yes" Source="$(var.D2jSource)\structures_81.json" />
+			</Component>
+			<Component Id="cmpstructures85" Directory="INSTALLFOLDER_Dossier2json" Guid="{5ADC5A31-F916-4D6A-B45A-0C0360B3B727}">
+				<File Id="filstructures85" KeyPath="yes" Source="$(var.D2jSource)\structures_85.json" />
 			</Component>
 			<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
 				<File Id="fil658CC5357D27167A6EB1467EAE4317BF" KeyPath="yes" Source="$(var.D2jSource)\tanks.json" />
