@@ -93,7 +93,8 @@ namespace WinApp.Code
 				}
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = 10000;     // 10 secs
-				httpRequest.UserAgent = "Code Sample Web Client";
+				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
+				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
 				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 				string s = responseStream.ReadToEnd();
@@ -104,7 +105,8 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				Code.MsgBox.Show("Could not connect to WoT API, please check your Internet access." + Environment.NewLine + Environment.NewLine +
-					ex.Message, "Problem connecting to WoT API");
+					ex.Message + Environment.NewLine +
+					ex.InnerException + Environment.NewLine + Environment.NewLine, "Problem connecting to WoT API");
 				return "";
 			}
 			
@@ -321,7 +323,8 @@ namespace WinApp.Code
 			string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
 			HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 			httpRequest.Timeout = 10000;     // 10 secs
-			httpRequest.UserAgent = "Code Sample Web Client";
+			httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
+			httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 			HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
 			StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 			string json = responseStream.ReadToEnd();

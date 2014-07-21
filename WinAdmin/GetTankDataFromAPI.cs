@@ -101,7 +101,8 @@ namespace WinAdmin
 				}
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = 10000;     // 10 secs
-				httpRequest.UserAgent = "Code Sample Web Client";
+				httpRequest.UserAgent = "Wot Numbers Admin";
+				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
 				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 				string s = responseStream.ReadToEnd();

@@ -139,6 +139,10 @@ namespace WinApp.Forms
 					ok = DB.ExecuteNonQuery(sql);
 					if (ok)
 					{
+						// Upgrade to latest version
+						UpdateProgressBar("Upgrading database");
+						DBVersion.CheckForDbUpgrade();
+						
 						// Get tanks, remember to init tankList first
 						UpdateProgressBar("Retrieves tanks from Wargaming API");
 						TankData.GetTankList();
@@ -172,9 +176,6 @@ namespace WinApp.Forms
 						Config.Settings.playerName = "";
 						Config.Settings.playerId = 0;
 
-						// Upgrade to latest version
-						UpdateProgressBar("Upgrading database");
-						DBVersion.CheckForDbUpgrade();
 						// New Init after upgrade db
 						TankData.GetAllLists();
 
