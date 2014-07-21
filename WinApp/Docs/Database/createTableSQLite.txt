@@ -71,12 +71,6 @@ create table tank (
 	expSpot float,
 	expFrags float,
 	expDef float,
-	--imgPath varchar(255) NOT NULL default 0,
-	--smallImgPath varchar(255) NOT NULL default 0,
-	--contourImgPath varchar(255) NOT NULL default 0,
-	--img blob NOT NULL default 0,
-	--smallImg blob NOT NULL default 0,
-	--contourImg blob NOT NULL default 0,
 	foreign key (tankTypeId) references tankType (id),
 	foreign key (countryId) references country (id)
 );
@@ -223,15 +217,6 @@ create table ach (
 	name_i18n2 varchar(50),
 	name_i18n3 varchar(50),
 	name_i18n4 varchar(50)
-	--img1Path VARCHAR(255) NOT NULL DEFAULT 0,
-	--img2Path VARCHAR(255) NOT NULL DEFAULT 0,
-	--img3Path VARCHAR(255) NOT NULL DEFAULT 0,
-	--img4Path VARCHAR(255) NOT NULL DEFAULT 0,
-	--img BLOB NOT NULL DEFAULT 0,
-	--img1 BLOB NOT NULL DEFAULT 0,
-	--img2 BLOB NOT NULL DEFAULT 0,
-	--img3 BLOB NOT NULL DEFAULT 0,
-	--img4 BLOB NOT NULL DEFAULT 0
 );
 
 -------------------------------------------------------------------------------------------------

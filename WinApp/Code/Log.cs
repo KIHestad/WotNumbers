@@ -34,6 +34,7 @@ namespace WinApp.Code
 			CreateFileIfNotExist();
 			using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 			{
+				if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
 				sw.WriteLine(logtext);
 			}
 		}

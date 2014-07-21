@@ -123,7 +123,7 @@
 			this.badLabel8.Name = "badLabel8";
 			this.badLabel8.Size = new System.Drawing.Size(237, 23);
 			this.badLabel8.TabIndex = 10;
-			this.badLabel8.Text = "Using Phalynx: \"Dossier2json\" from vbAddict";
+			this.badLabel8.Text = "Using Phalynx: \"Dossier2json\" from vBAddict";
 			// 
 			// badLabel5
 			// 

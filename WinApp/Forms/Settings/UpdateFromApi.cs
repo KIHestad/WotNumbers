@@ -35,10 +35,9 @@ namespace WinApp.Forms
 			badProgressBar.ValueMax = 6;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
-			
-			UpdateProgressBar("Retrieves tanks from Wargaming API");
 
 			// Get tanks, remember to init tankList first
+			UpdateProgressBar("Retrieves tanks from Wargaming API");
 			TankData.GetTankList();
 			ImportWotApi2DB.ImportTanks();
 			// Init after getting tanks and other basic data import

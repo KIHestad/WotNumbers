@@ -18,22 +18,12 @@ namespace WinApp.Forms
 			InitializeComponent();
 		}
 
-		private string AssemblyVersion
-		{
-			get
-			{
-				return Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
-					Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + " (" +
-					Assembly.GetExecutingAssembly().GetName().Version.MinorRevision.ToString() + ")";
-			}
-		}
-
 		private void About_Load(object sender, EventArgs e)
 		{
 			string dbVersionComment = " (correct version)";
 			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
 				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
-			lblAppVer.Text = AssemblyVersion;
+			lblAppVer.Text = AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion;
 			lblDBver.Text = DBVersion.CurrentNumber().ToString("0000");
 			lblWN8ver.Text = DBVersion.WN8Version().ToString();
 		}
