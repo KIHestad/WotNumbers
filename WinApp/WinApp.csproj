@@ -137,6 +137,7 @@
     <Compile Include="Code\FormView\FavListHelper.cs" />
     <Compile Include="Code\FormView\GridFilter.cs" />
     <Compile Include="Code\FormView\MainSettings.cs" />
+    <Compile Include="Code\FormView\StatusBarHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
     <Compile Include="Code\ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />

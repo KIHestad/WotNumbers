@@ -70,9 +70,11 @@ namespace WinApp.Code
 		}
 
 		private static bool _ForceUpdate;
-		public void ManualRunInBackground(bool ForceUpdate = false)
+		public void ManualRunInBackground(string Status2Message, bool ForceUpdate = false)
 		{
 			_ForceUpdate = ForceUpdate;
+			StatusBarHelper.ClearAfterNextShow = false;
+			StatusBarHelper.Message = Status2Message;
 			bwDossierProcess = new BackgroundWorker();
 			bwDossierProcess.WorkerSupportsCancellation = false;
 			bwDossierProcess.WorkerReportsProgress = false;
@@ -86,10 +88,13 @@ namespace WinApp.Code
 		private void bwDossierProcess_DoWork(object sender, DoWorkEventArgs e)
 		{
 			ManualRun(_ForceUpdate);
+			StatusBarHelper.ClearAfterNextShow = true;
+			StatusBarHelper.Message = "Dossier file successfully read";
 		}
 
 		public static string ManualRun(bool ForceUpdate = false)
 		{
+			
 			string returVal = "Manual dossier file check started...";
 			Log.CheckLogFileSize();
 			List<string> logText = new List<string>();

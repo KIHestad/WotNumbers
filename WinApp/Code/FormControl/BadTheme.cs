@@ -28,8 +28,18 @@ abstract class BadThemeContainerControl : ContainerControl
 	private Cursor _Cursor = Cursors.Default;
 	public override Cursor Cursor
 	{
-		get { return _Cursor; }
-		set { _Cursor = value; }
+		get 
+		{ 
+			return _Cursor; 
+		}
+		set 
+		{
+			//if (Cursor != Cursors.WaitCursor)
+			//{
+				_Cursor = value;
+				Invalidate();
+			//}
+		}
 	}
 
 	private bool ParentIsForm;
@@ -156,7 +166,7 @@ abstract class BadThemeContainerControl : ContainerControl
 						SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
 				}
 				PaintSysIcons();
-				return new Pointer(Cursors.Default, 0);
+				return new Pointer(Cursor, 0);
 			}
 			else
 			{
@@ -187,9 +197,9 @@ abstract class BadThemeContainerControl : ContainerControl
 			else if (FrameBottom)
 				return new Pointer(Cursors.SizeNS, 15);
 			else
-				return new Pointer(Cursors.Default, 0);
+				return new Pointer(Cursor, 0);
 		}
-		return new Pointer(Cursors.Default, 0);
+		return new Pointer(Cursor, 0);
 	}
 
 	private Pointer Current;
@@ -258,7 +268,7 @@ abstract class BadThemeContainerControl : ContainerControl
 	protected override void OnMouseLeave(EventArgs e)
 	{
 		// Draw default cursor when leave form focus
-		Cursor = Cursors.Default;
+		// Cursor = Cursors.Default;
 		// Draw default sys icon background
 		SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
 		SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
@@ -624,8 +634,25 @@ abstract class BadThemeControl : Control
 	private Cursor _Cursor = Cursors.Default;
 	public override Cursor Cursor
 	{
-		get { return _Cursor; }
-		set	{ _Cursor = value; Invalidate();}
+		get 
+		{ 
+			Form frm = Parent.FindForm();
+			if (frm.Cursor == Cursors.WaitCursor)
+				return Cursors.WaitCursor;
+			else
+				return _Cursor; 
+		}
+		set	
+		{
+			Form frm = Parent.FindForm();
+			if (frm.Cursor != Cursors.WaitCursor)
+			{
+				_Cursor = value;
+				Invalidate();
+			}
+			else
+				_Cursor = Cursors.WaitCursor;
+		}
 	}
 		
 	public BadThemeControl()

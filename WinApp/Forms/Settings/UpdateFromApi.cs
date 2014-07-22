@@ -32,6 +32,7 @@ namespace WinApp.Forms
 		private void btnStart_Click(object sender, EventArgs e)
 		{
 			this.Cursor = Cursors.WaitCursor;
+			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
 			btnStart.Enabled = false;
 			badProgressBar.ValueMax = 6;
 			badProgressBar.Value = 0;

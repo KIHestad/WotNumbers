@@ -108,6 +108,7 @@ namespace WinApp.Forms
 		{
 			// Wait cursor
 			this.Cursor = Cursors.WaitCursor;
+			DatabaseNewTheme.Cursor = Cursors.WaitCursor;
 			btnCancel.Enabled = false;
 			btnCreateDB.Enabled = false;
 			btnSelectFile.Enabled = false;
@@ -193,7 +194,7 @@ namespace WinApp.Forms
 						// Get initial dossier 
 						UpdateProgressBar("Running initial dossier file check");
 						dossier2json d2j = new dossier2json();
-						d2j.ManualRunInBackground(false);
+						d2j.ManualRunInBackground("Initial dossier file check in progress, please wait...", false);
 						UpdateProgressBar("");
 					}
 				}

@@ -315,7 +315,7 @@ namespace WinApp.Forms
 
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
-			GridShow("New battle result detected, grid refreshed");
+			GridShow("Dossier file check finished successfully, grid refreshed");
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -339,21 +339,30 @@ namespace WinApp.Forms
 					timerStatus2.Enabled = false;
 					lblStatus2.Text = "";
 					Application.DoEvents();
+					if (StatusBarHelper.MessageExists)
+					{
+						SetStatus2();
+						StatusBarHelper.CheckForClear();
+					}
 				}
 			}
 		}
 
-		private void SetStatus2(string txt)
+		private void SetStatus2(string txt = "")
 		{
 			timerStatus2.Enabled = false;
 			Application.DoEvents();
-			Thread.Sleep(20);
-			timerStatus2.Interval = 6000;
+			timerStatus2.Interval = 3000;
 			lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor); // White color, not faded
-			lblStatus2.Text = txt;
+			string msg = txt; 
+			if (StatusBarHelper.MessageExists && txt != "")
+				msg += "   -   ";
+			msg += StatusBarHelper.Message;
+			lblStatus2.Text = msg;
 			Application.DoEvents();
-			Thread.Sleep(20);
 			timerStatus2.Enabled = true;
+			if (StatusBarHelper.MessageExists)
+				StatusBarHelper.CheckForClear();
 		}
 
 		private void SetFormTitle()
@@ -370,7 +379,7 @@ namespace WinApp.Forms
 			Refresh();
 		}
 
-		private void SetListener()
+		private void SetListener(bool showStatus2Message = true)
 		{
 			toolItemSettingsRun.Checked = (Config.Settings.dossierFileWathcherRun == 1);
 			if (Config.Settings.dossierFileWathcherRun == 1)
@@ -2183,8 +2192,8 @@ namespace WinApp.Forms
 			SetFormTitle();
 			// After settings changed, go to overview
 			ChangeView(GridView.Views.Overall, true);
-			SetStatus2("Returned from Application Setup");
-			SetListener();
+			SetListener(false);
+			SetStatus2("Refreshed grid");
 		}
 
 		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)
@@ -2215,7 +2224,7 @@ namespace WinApp.Forms
 			// Dossier file manual handling
 			SetStatus2("Starting manual dossier check...");
 			dossier2json d2j = new dossier2json();
-			d2j.ManualRunInBackground(false);
+			d2j.ManualRunInBackground("Running manual dossier file check...", false);
 			//SetFormTitle();
 			//GridShow(result);
 		}
@@ -2225,7 +2234,7 @@ namespace WinApp.Forms
 			// Test running previous dossier file, force update - even if no more battles is detected
 			SetStatus2("Starting dossier file check with force update...");
 			dossier2json d2j = new dossier2json();
-			d2j.ManualRunInBackground(true);
+			d2j.ManualRunInBackground("Running dossier file check with force update...", true);
 			//SetFormTitle();
 			//GridShow(result);
 		}
