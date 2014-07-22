@@ -551,7 +551,6 @@ namespace WinApp.Forms
 						InfoPanelSlideStart(false);
 						break;
 				}
-				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 				GridShow(); // Changed view, no status message applied, sets in GridShow
 			}
 		}
@@ -1165,6 +1164,7 @@ namespace WinApp.Forms
 		{
 			try
 			{
+				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 				mainGridFormatting = false;
 				dataGridMain.DataSource = null;
 				if (!DB.CheckConnection(false)) return;
@@ -1267,6 +1267,7 @@ namespace WinApp.Forms
 
 		private void GridShowTank(string Status2Message)
 		{
+			mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
 			if (!DB.CheckConnection(false)) return;
@@ -1436,6 +1437,7 @@ namespace WinApp.Forms
 
 		private void GridShowBattle(string Status2Message)
 		{
+			mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 			mainGridFormatting = false;
 			dataGridMain.DataSource = null;
 			if (!DB.CheckConnection(false)) return;
@@ -1969,7 +1971,7 @@ namespace WinApp.Forms
 
 		private void dataGridMain_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
-			if (MainSettings.View != GridView.Views.Overall && mainGridSaveColWidth) 
+			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall) 
 				ColListHelper.SaveColWidth(e.Column.HeaderText, e.Column.Width);
 		}
 
@@ -2212,18 +2214,20 @@ namespace WinApp.Forms
 		{
 			// Dossier file manual handling
 			SetStatus2("Starting manual dossier check...");
-			string result = dossier2json.ManualRun();
-			SetFormTitle();
-			GridShow(result);
+			dossier2json d2j = new dossier2json();
+			d2j.ManualRunInBackground(false);
+			//SetFormTitle();
+			//GridShow(result);
 		}
 
 		private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
 		{
 			// Test running previous dossier file, force update - even if no more battles is detected
-			SetStatus2("Starting check on previous dossier file with force update...");
-			string result = dossier2json.ManualRun(true);
-			SetFormTitle();
-			GridShow(result);
+			SetStatus2("Starting dossier file check with force update...");
+			dossier2json d2j = new dossier2json();
+			d2j.ManualRunInBackground(true);
+			//SetFormTitle();
+			//GridShow(result);
 		}
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
@@ -2251,6 +2255,8 @@ namespace WinApp.Forms
 			Form frm = new Forms.ViewRange();
 			frm.ShowDialog();
 		}
+
+		
 		
 	}
 }

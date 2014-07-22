@@ -53,13 +53,17 @@ namespace WinApp.Code
 			if (RealAvgXP == 0)
 				return 0;
 			else
-				return (ProgressRestXp / RealAvgXP);
+			{
+				double d = Convert.ToDouble(ProgressRestXp) / RealAvgXP;
+				return Convert.ToInt32(Math.Round(d.RoundUp(0), 0));
+			}
 		}
 
 		public static int CalcRestDays(int ProgressRestXp, int RealAvgXP, int BattlesPerDay)
 		{
 			if (BattlesPerDay == 0) BattlesPerDay = 1;
-			return ProgressRestXp / (RealAvgXP * BattlesPerDay);
+			double d = Convert.ToDouble(ProgressRestXp) / (RealAvgXP * BattlesPerDay);
+			return Convert.ToInt32(Math.Round(d.RoundUp(0), 0)); 
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -11,8 +12,9 @@ using Microsoft.Scripting.Hosting;
 
 namespace WinApp.Code
 {
-	public static class dossier2json
+	public class dossier2json
 	{
+		public BackgroundWorker bwDossierProcess;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
 
 		private static string LogText(string logtext)
@@ -65,6 +67,25 @@ namespace WinApp.Code
 				}
 			}
 			return dossierFile;
+		}
+
+		private static bool _ForceUpdate;
+		public void ManualRunInBackground(bool ForceUpdate = false)
+		{
+			_ForceUpdate = ForceUpdate;
+			bwDossierProcess = new BackgroundWorker();
+			bwDossierProcess.WorkerSupportsCancellation = false;
+			bwDossierProcess.WorkerReportsProgress = false;
+			bwDossierProcess.DoWork += new DoWorkEventHandler(bwDossierProcess_DoWork);
+			if (bwDossierProcess.IsBusy != true)
+			{
+				bwDossierProcess.RunWorkerAsync();
+			}
+		}
+
+		private void bwDossierProcess_DoWork(object sender, DoWorkEventArgs e)
+		{
+			ManualRun(_ForceUpdate);
 		}
 
 		public static string ManualRun(bool ForceUpdate = false)

@@ -91,12 +91,15 @@ namespace WinApp.Code
 				{
 					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530&tank_id=" + tankId;
 				}
+				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = 10000;     // 10 secs
 				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
 				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				string s = responseStream.ReadToEnd();
 				responseStream.Close();
 				webResponse.Close();
@@ -114,36 +117,36 @@ namespace WinApp.Code
 
 		#endregion
 
-		#region getImageFromAPI
+		//#region getImageFromAPI
 
-		public static byte[] getImageFromAPI(string url)
-		{
-			byte[] imgArray;
+		//public static byte[] getImageFromAPI(string url)
+		//{
+		//	byte[] imgArray;
 
-			// Fetch image from url
-			WebRequest req = WebRequest.Create(url);
-			WebResponse response = req.GetResponse();
-			Stream stream = response.GetResponseStream();
+		//	// Fetch image from url
+		//	WebRequest req = WebRequest.Create(url);
+		//	WebResponse response = req.GetResponse();
+		//	Stream stream = response.GetResponseStream();
 
-			// Read into memoryStream
-			int dataLength = (int)response.ContentLength;
-			byte[] buffer = new byte[1024];
-			MemoryStream memStream = new MemoryStream();
-			while (true)
-			{
-				int bytesRead = stream.Read(buffer, 0, buffer.Length);  //Try to read the data
-				if (bytesRead == 0) break;
-				memStream.Write(buffer, 0, bytesRead);  //Write the downloaded data
-			}
+		//	// Read into memoryStream
+		//	int dataLength = (int)response.ContentLength;
+		//	byte[] buffer = new byte[1024];
+		//	MemoryStream memStream = new MemoryStream();
+		//	while (true)
+		//	{
+		//		int bytesRead = stream.Read(buffer, 0, buffer.Length);  //Try to read the data
+		//		if (bytesRead == 0) break;
+		//		memStream.Write(buffer, 0, bytesRead);  //Write the downloaded data
+		//	}
 
-			// Read into byte array
-			Image image = Image.FromStream(memStream);
-			imgArray = memStream.ToArray();
+		//	// Read into byte array
+		//	Image image = Image.FromStream(memStream);
+		//	imgArray = memStream.ToArray();
 
-			return imgArray;
-		}
+		//	return imgArray;
+		//}
 
-		#endregion
+		//#endregion
 
 		#region update log file
 
@@ -213,6 +216,7 @@ namespace WinApp.Code
 						string sqlTotal = "";
 						foreach (JProperty tank in tanks)   // tank = tankId + child tokens
 						{
+							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							itemToken = tank.First();   // First() returns only child tokens of tank
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
@@ -337,11 +341,13 @@ namespace WinApp.Code
 			JToken jtoken;
 			for (int i = 0; i < items.Count; i++) //loop through tanks
 			{
+				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				item = (JObject)items[i];
 				jtoken = item.First;
 				string tokenValue;
 				while (jtoken != null) //loop through values for each tank
 				{
+					Application.DoEvents(); // TODO: testing freeze-problem running API requests
 					tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
 
 					if (jtoken != null)
@@ -412,6 +418,7 @@ namespace WinApp.Code
 
 						foreach (JProperty turret in turrets)   // turret = turretId + child tokens
 						{
+							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							itemToken = turret.First();   // First() returns only child tokens of turret
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated turretId
@@ -521,6 +528,7 @@ namespace WinApp.Code
 
 						foreach (JProperty gun in guns)
 						{
+							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							itemToken = gun.First();
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
@@ -668,6 +676,7 @@ namespace WinApp.Code
 
 						foreach (JProperty radio in radios)
 						{
+							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							itemToken = radio.First();
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
@@ -771,6 +780,7 @@ namespace WinApp.Code
 
 						foreach (JProperty ach in achList)
 						{
+							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							itemToken = ach.First();
 
 							// Check if ach already exists

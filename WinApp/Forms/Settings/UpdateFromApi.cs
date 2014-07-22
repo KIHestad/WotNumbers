@@ -31,6 +31,7 @@ namespace WinApp.Forms
 
 		private void btnStart_Click(object sender, EventArgs e)
 		{
+			this.Cursor = Cursors.WaitCursor;
 			btnStart.Enabled = false;
 			badProgressBar.ValueMax = 6;
 			badProgressBar.Value = 0;
@@ -69,6 +70,9 @@ namespace WinApp.Forms
 			UpdateProgressBar("");
 			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
 			btnStart.Enabled = true;
+
+			this.Cursor = Cursors.Default;
+			this.Close();
 		}
 	}
 }

@@ -13,6 +13,8 @@ namespace WinApp.Forms
 {
 	public partial class DatabaseTable : Form
 	{
+		private string tableList = "";
+		
 		public DatabaseTable()
 		{
 			InitializeComponent();
@@ -60,30 +62,26 @@ namespace WinApp.Forms
 			dataGridViewShowTable.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridViewShowTable.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridViewShowTable.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
-			// Refresh grid - when no data also hide scrollbar handles
-			popupSelectTable.Text = ""; // Avoid NULL as default value
-			RefreshScrollbars();
-		}
-
-		#region Grid
-		
-		private void popupSelectTable_Click(object sender, EventArgs e)
-		{
-			// Show popup with available tables
-			string tableList = "";
+			// dropdown tables
 			DataTable dt = DB.ListTables();
 			foreach (DataRow dr in dt.Rows)
 			{
 				tableList += dr["TABLE_NAME"].ToString() + ",";
 			}
 			if (tableList.Length > 0)
-			{
-				tableList = tableList.Substring(0, tableList.Length - 1);
-				Code.DropDownGrid.Show(popupSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
-			}
+				tableList = tableList.Substring(0, tableList.Length - 1); // remove last comma
+			popupSelectTable.Text = ""; // Avoid NULL as default value
+			RefreshScrollbars();
+		}
+
+		private void popupSelectTable_Click(object sender, EventArgs e)
+		{
+			// Show popup with available tables
+			Code.DropDownGrid.Show(popupSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
 		}
 
 
+		#region Grid
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{

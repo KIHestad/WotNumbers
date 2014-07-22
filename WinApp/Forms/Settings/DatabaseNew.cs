@@ -42,7 +42,7 @@ namespace WinApp.Forms
 				txtDatabasename.Text = databaseFileName + databaseFileNameSubFix;
 				btnCancel.Enabled = false;
 				btnCreateDB.Enabled = false;
-				cmdSelectFIle.Enabled = false;
+				btnSelectFile.Enabled = false;
 			}
 			if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
 			{
@@ -62,6 +62,7 @@ namespace WinApp.Forms
 			{
 				CreateNewDb();
 				AutoSetupHelper.AutoSetupCompleteOK = true;
+				this.Close();
 			}
 		}
 
@@ -100,12 +101,18 @@ namespace WinApp.Forms
 		private void btnCreateDB_Click(object sender, EventArgs e)
 		{
 			CreateNewDb();
+			this.Close();
 		}
 		
 		private void CreateNewDb()
 		{
 			// Wait cursor
-			Cursor.Current = Cursors.WaitCursor;
+			this.Cursor = Cursors.WaitCursor;
+			btnCancel.Enabled = false;
+			btnCreateDB.Enabled = false;
+			btnSelectFile.Enabled = false;
+			txtDatabasename.Enabled = false;
+			txtFileLocation.Enabled = false;
 			// Create new db
 			bool ok = true;
 			badProgressBar.ValueMax = 13;
@@ -184,8 +191,9 @@ namespace WinApp.Forms
 						MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
 
 						// Get initial dossier 
-						UpdateProgressBar("Running initial dossier file check, please wait...");
-						dossier2json.ManualRun();
+						UpdateProgressBar("Running initial dossier file check");
+						dossier2json d2j = new dossier2json();
+						d2j.ManualRunInBackground(false);
 						UpdateProgressBar("");
 					}
 				}
@@ -211,11 +219,10 @@ namespace WinApp.Forms
 				Config.Settings = Config.LastWorkingSettings;
 			}
 			Config.SaveConfig(out result);
-			this.Close();	
 		}
 
 
-		private void cmdSelectFIle_Click(object sender, EventArgs e)
+		private void cmdSelectFile_Click(object sender, EventArgs e)
 		{
 			// Select dossier file
 			folderBrowserDialogDBPath.ShowNewFolderButton = false;

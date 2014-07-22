@@ -8,10 +8,11 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace WinApp.Code
 {
-	class Dossier2db
+	public class Dossier2db
 	{
 		public class JsonItem
 		{

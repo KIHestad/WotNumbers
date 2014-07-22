@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WinApp.Code;
 
 namespace WinApp.Code
@@ -77,6 +78,7 @@ namespace WinApp.Code
 						sql = "BEGIN TRANSACTION; " + sql + "COMMIT TRANSACTION; ";
 						SqlCommand command = new SqlCommand(sql, con);
 						command.ExecuteNonQuery();
+						Application.DoEvents(); // TODO: testing freeze-problem running long querys
 					}
 					else
 					{
@@ -87,6 +89,7 @@ namespace WinApp.Code
 								lastRunnedSQL = s;
 								SqlCommand command = new SqlCommand(s, con);
 								command.ExecuteNonQuery();
+								Application.DoEvents(); // TODO: testing freeze-problem running long querys
 							}
 						}
 					}
@@ -103,6 +106,7 @@ namespace WinApp.Code
 						sql = "BEGIN TRANSACTION; " + sql + "END TRANSACTION; ";
 						SQLiteCommand command = new SQLiteCommand(sql, con);
 						command.ExecuteNonQuery();
+						Application.DoEvents(); // TODO: testing freeze-problem running long querys
 					}
 					else
 					{
@@ -113,6 +117,7 @@ namespace WinApp.Code
 								lastRunnedSQL = s;
 								SQLiteCommand command = new SQLiteCommand(s, con);
 								command.ExecuteNonQuery();
+								Application.DoEvents(); // TODO: testing freeze-problem running long querys
 							}
 						}
 					}
@@ -150,7 +155,8 @@ namespace WinApp.Code
 					DataTable TableList = new DataTable();
 					TableList = con.GetSchema("tables"); // Returns list of tables in column "TABLE_NAME"
 					con.Clone();
-					dt = TableList;
+					TableList.DefaultView.Sort = "TABLE_NAME";
+					dt = TableList.DefaultView.ToTable();
 				}
 
 			}
