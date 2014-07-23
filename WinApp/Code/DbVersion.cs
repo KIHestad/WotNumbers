@@ -10,7 +10,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 72; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 73; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -915,8 +915,8 @@ namespace WinApp.Code
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'heHitsReceived','Int','heHitsReceived','heHitsReceived',NULL,'tanks_v2.historical.heHitsReceived','Historical'); " +
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'hits','Int','hits','hits',NULL,'tanks_v2.historical.hits','Historical'); " +
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'losses','Int','losses','defeat',NULL,'tanks_v2.historical.losses','Historical'); " +
-							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxDamage','Int','maxDmg','NULL',NULL,'tanks_v2.maxHistorical.maxDamage','Historical'); " +
-							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxFrags','Int','maxFrags','NULL',NULL,'tanks_v2.maxHistorical.maxFrags','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxDamage','Int','maxDmg',NULL,NULL,'tanks_v2.maxHistorical.maxDamage','Historical'); " +
+							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxFrags','Int','maxFrags',NULL,NULL,'tanks_v2.maxHistorical.maxFrags','Historical'); " +
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','maxHistorical', 'maxXP','Int','maxXp',NULL,NULL,'tanks_v2.maxHistorical.maxXP','Historical'); " +
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'noDamageShotsReceived','Int','noDmgShotsReceived','noDmgShotsReceived',NULL,'tanks_v2.historical.noDamageShotsReceived','Historical'); " +
 							"INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) VALUES ('tanks_v2','historical', 'originalXP','Int','xpOriginal',NULL,NULL,'tanks_v2.historical.originalXP','Historical'); " +
@@ -992,12 +992,17 @@ namespace WinApp.Code
 				case 71:
 					NewSystemBattleColList();
 					break;
-                case 72:
-                    mssql = "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (54289, 'Lowe', 1, 212); " +
-                            "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (57857, 'T-62A SPORT', 0, 226); " +
-                            "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (59921, 'Karl', 1, 234);" ;
-                    sqlite = mssql;
-                    break;
+				case 72:
+					mssql = "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (54289, 'Lowe', 1, 212); " +
+							"insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (57857, 'T-62A SPORT', 0, 226); " +
+							"insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (59921, 'Karl', 1, 234);" ;
+					sqlite = mssql;
+					break;
+				case 73:
+					mssql = "UPDATE json2dbMapping SET dbBattle=NULL where jsonMainSubProperty='tanks_v2.maxHistorical.maxDamage'; " +
+							"UPDATE json2dbMapping SET dbBattle=NULL where jsonMainSubProperty='tanks_v2.maxHistorical.maxFrags'; ";
+					sqlite = mssql;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
