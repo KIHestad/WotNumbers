@@ -39,6 +39,10 @@ namespace WinApp.Forms
 				this.Width = mainFormPosSize.Width;
 				this.Height = mainFormPosSize.Height;
 			}
+			// Statusbar text
+			lblStatus1.Text = "";
+			lblStatus2.Text = "Application starting...";
+			lblStatusRowCount.Text = "";
 			// Log startup
 			Code.Log.LogToFile("Application startup", true);
 			// Make sure borderless form do not cover task bar when maximized
@@ -94,10 +98,6 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
-			// Draw form 
-			lblStatus1.Text = "";
-			lblStatus2.Text = "Application init...";
-			lblStatusRowCount.Text = "";
 		}
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -239,16 +239,16 @@ namespace WinApp.Forms
 			{
 				TankData.GetAllLists();
 			}
+			// Show grid
+			GridShow("", false);
+			// Update dossier file watcher
 			string result = dossier2json.UpdateDossierFileWatcher();
 			// Check DB Version
 			bool versionOK = DBVersion.CheckForDbUpgrade();
 			// Add init items to Form
-			
-			// Init
 			SetFormTitle();
 			SetFavListMenu();
-			GridShow("Application started");
-			SetListener();
+			SetListener(false);
 			ImageHelper.LoadTankImages();
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
@@ -258,6 +258,8 @@ namespace WinApp.Forms
 			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			// Ready 
 			MainTheme.Cursor = Cursors.Default;
+			// Show status message
+			SetStatus2("Application started");
 			// Show Grinding Param Settings
 			if (Config.Settings.grindParametersAutoStart)
 			{
@@ -332,19 +334,22 @@ namespace WinApp.Forms
 
 		private void SetStatus2(string txt = "")
 		{
-			timerStatus2.Enabled = false;
-			Application.DoEvents();
-			timerStatus2.Interval = 3000;
-			lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor); // White color, not faded
 			string msg = txt; 
 			if (StatusBarHelper.MessageExists && txt != "")
 				msg += "   -   ";
 			msg += StatusBarHelper.Message;
-			lblStatus2.Text = msg;
-			Application.DoEvents();
-			timerStatus2.Enabled = true;
-			if (StatusBarHelper.MessageExists)
-				StatusBarHelper.CheckForClear();
+			if (msg != "")
+			{
+				timerStatus2.Enabled = false;
+				Application.DoEvents();
+				timerStatus2.Interval = 3000;
+				lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor); // White color, not faded
+				lblStatus2.Text = msg;
+				Application.DoEvents();
+				timerStatus2.Enabled = true;
+				if (StatusBarHelper.MessageExists)
+					StatusBarHelper.CheckForClear();
+			}
 		}
 
 		private void SetFormTitle()
@@ -377,7 +382,8 @@ namespace WinApp.Forms
 			}
 			string result = dossier2json.UpdateDossierFileWatcher();
 			SetFormBorder();
-			SetStatus2(result);
+			if (showStatus2Message)
+				SetStatus2(result);
 		}
 
 		private void SetFormBorder()
@@ -549,7 +555,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void GridShow(string Status2Message = "")
+		private void GridShow(string Status2Message = "", bool ShowDefaultStatus2Message = true)
 		{
 			try
 			{
@@ -557,15 +563,15 @@ namespace WinApp.Forms
 				{
 					case GridView.Views.Overall:
 						lblOverView.Text = "Welcome " + Config.Settings.playerName;
-						if (Status2Message == "") Status2Message = "Home view selected";
+						if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
 						GridShowOverall(Status2Message);
 						break;
 					case GridView.Views.Tank:
-						if (Status2Message == "") Status2Message = "Tank view selected";
+						if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Tank view selected";
 						GridShowTank(Status2Message);
 						break;
 					case GridView.Views.Battle:
-						if (Status2Message == "") Status2Message = "Battle view selected";
+						if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
 						GridShowBattle(Status2Message);
 						break;
 					default:
