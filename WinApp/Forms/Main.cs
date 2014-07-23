@@ -222,12 +222,12 @@ namespace WinApp.Forms
 					Environment.NewLine + Environment.NewLine +
 					"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
 					Environment.NewLine + Environment.NewLine,
-					"Welcome to Wot Numbers", MsgBoxType.OKCancel);
+					"Welcome to Wot Numbers", MsgBoxType.OKCancel, this);
 				if (answer == MsgBox.Button.OKButton)
 					AutoSetup();
 				if (!LoadConfigOK)
 				{
-					Code.MsgBox.Show(LoadConfigMsg, "Could not load config data");
+					Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
 					lblOverView.Text = "";
 					Config.Settings.dossierFileWathcherRun = 0;
 					SetListener();
@@ -242,9 +242,9 @@ namespace WinApp.Forms
 			// Show grid
 			GridShow("", false);
 			// Update dossier file watcher
-			string result = dossier2json.UpdateDossierFileWatcher();
+			string result = dossier2json.UpdateDossierFileWatcher(this);
 			// Check DB Version
-			bool versionOK = DBVersion.CheckForDbUpgrade();
+			bool versionOK = DBVersion.CheckForDbUpgrade(this);
 			// Add init items to Form
 			SetFormTitle();
 			SetFavListMenu();
@@ -380,7 +380,7 @@ namespace WinApp.Forms
 				lblStatus1.ForeColor = System.Drawing.Color.DarkRed;
 				
 			}
-			string result = dossier2json.UpdateDossierFileWatcher();
+			string result = dossier2json.UpdateDossierFileWatcher(this);
 			SetFormBorder();
 			if (showStatus2Message)
 				SetStatus2(result);
@@ -581,7 +581,7 @@ namespace WinApp.Forms
 			catch (Exception ex)
 			{
 				if (Config.Settings.showDBErrors)
-					MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initializing view");
+					MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initializing view", this);
 			}
 			
 		}
@@ -1045,7 +1045,7 @@ namespace WinApp.Forms
 						"For 'Tanks view' these filters only limit the tanks showing in grid, the stats will be the same." +
 						Environment.NewLine + Environment.NewLine +
 						"For 'battle view' the stats is calculated per battle and will be correct for any filter.";
-			Code.MsgBox.Show(s, "Special Battle Filter Information");
+			Code.MsgBox.Show(s, "Special Battle Filter Information", this);
 		}
 
 
@@ -1256,7 +1256,7 @@ namespace WinApp.Forms
 			{
 				string s = ex.Message;
 				if (Config.Settings.showDBErrors)
-					Code.MsgBox.Show(ex.Message, "Error showing overall stats");
+					Code.MsgBox.Show(ex.Message, "Error showing overall stats", this);
 				//throw;
 			}
 		}
@@ -1933,7 +1933,7 @@ namespace WinApp.Forms
 				string tankName = dt.Rows[0]["name"].ToString();
 				Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle:" + Environment.NewLine + Environment.NewLine +
 					"  Battle: " + battleTime + Environment.NewLine +
-					"  Tank:   " + tankName, "Delete battle", MsgBoxType.OKCancel);
+					"  Tank:   " + tankName, "Delete battle", MsgBoxType.OKCancel, this);
 				if (answer == MsgBox.Button.OKButton)
 				{
 

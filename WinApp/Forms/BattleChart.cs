@@ -225,7 +225,7 @@ namespace WinApp.Forms
 			// Check if value selected
 			if (ddValue.Text == "")
 			{
-				Code.MsgBox.Show("Please select a chart value, this is the data that shows up in the chart.", "Missing Chart Value");
+				Code.MsgBox.Show("Please select a chart value, this is the data that shows up in the chart.", "Missing Chart Value", this);
 				return;
 			}
 			// Check if already shown
@@ -691,7 +691,7 @@ namespace WinApp.Forms
 			{
 				if (selectedXaxis != ddXaxis.Text)
 				{
-					Code.MsgBox.Button answer = MsgBox.Show("Changing x-axis require chart to be cleared", "Clear Chart?", MsgBoxType.OKCancel);
+					Code.MsgBox.Button answer = MsgBox.Show("Changing x-axis require chart to be cleared", "Clear Chart?", MsgBoxType.OKCancel, this);
 					if (answer == MsgBox.Button.OKButton)
 					{
 						ResetChart();

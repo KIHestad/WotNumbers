@@ -139,7 +139,7 @@
     <Compile Include="Code\FormView\MainSettings.cs" />
     <Compile Include="Code\FormView\StatusBarHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
-    <Compile Include="Code\ImportWotDossier2DB.cs" />
+    <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\Support\DB.cs" />
     <Compile Include="Code\FormControl\DropDownGrid.cs" />
@@ -185,12 +185,6 @@
     </Compile>
     <Compile Include="Forms\PlayerTankDetail.Designer.cs">
       <DependentUpon>PlayerTankDetail.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Settings\_todelete_AddPlayer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Settings\_todelete_AddPlayer.Designer.cs">
-      <DependentUpon>_todelete_AddPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ColList\ColList.cs">
       <SubType>Form</SubType>
@@ -270,7 +264,7 @@
     <Compile Include="Forms\Settings\DatabaseTable.Designer.cs">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\ImportMisc2DB.cs" />
+    <Compile Include="Code\ImportWN8Api2DB.cs" />
     <Compile Include="Code\Dossier2db.cs" />
     <Compile Include="Code\Log.cs" />
     <Compile Include="Code\ImportWotApi2DB.cs" />
@@ -309,9 +303,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PlayerTankDetail.resx">
       <DependentUpon>PlayerTankDetail.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings\_todelete_AddPlayer.resx">
-      <DependentUpon>_todelete_AddPlayer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColList\ColList.resx">
       <DependentUpon>ColList.cs</DependentUpon>

@@ -105,7 +105,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message,"Database error");
+				MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message,"Database error", this);
 			}
 			
 		}
@@ -157,12 +157,12 @@ namespace WinApp.Forms
 				// Init
 				TankData.GetAllLists();
 				// Check for upgrade
-				DBVersion.CheckForDbUpgrade();
+				DBVersion.CheckForDbUpgrade(this);
 				// Startup with default settings
 				MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
 				MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
 				// Done
-				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings");
+				Code.MsgBox.Show("Database settings successfully saved", "Saved Database Settings", this);
 				this.Close();
 			}
 		}
@@ -190,7 +190,7 @@ namespace WinApp.Forms
 				}
 				catch (Exception ex)
 				{
-					MsgBox.Show("Error connecting to MS SQL Server, please check server name and authentication." + Environment.NewLine + Environment.NewLine + ex.Message, "Database error");
+					MsgBox.Show("Error connecting to MS SQL Server, please check server name and authentication." + Environment.NewLine + Environment.NewLine + ex.Message, "Database error", this);
 					ok = false;
 				}
 			}

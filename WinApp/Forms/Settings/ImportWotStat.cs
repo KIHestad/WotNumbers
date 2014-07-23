@@ -41,7 +41,7 @@ namespace WinApp.Forms
 				bool dateOK = DateTime.TryParse(txtToDate.Text, out toDate);
 				if (!dateOK)
 				{
-					Code.MsgBox.Show("No valid date is entered", "Error in date textbox");
+					Code.MsgBox.Show("No valid date is entered", "Error in date textbox", this);
 					return;
 				}
 			}
@@ -70,7 +70,7 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				Code.MsgBox.Show("Select a file u noob...", "Noob message");
+				Code.MsgBox.Show("Pleas select a WOT Statistics database file", "Missing file", this);
 			}
 		}
 
@@ -272,7 +272,7 @@ namespace WinApp.Forms
 				this.Cursor = Cursors.Default;
 				ImportWotStatTheme.Cursor = Cursors.Default;
 				lblResult.Text = "All battles read";
-				Code.MsgBox.Show("Imported " + i.ToString() + " battles.", "Import completed");
+				Code.MsgBox.Show("Imported " + i.ToString() + " battles.", "Import completed", this);
 				this.Close();
 			}
 			else
@@ -281,7 +281,7 @@ namespace WinApp.Forms
 				this.Cursor = Cursors.Default;
 				ImportWotStatTheme.Cursor = Cursors.Default;
 				lblResult.Text = "No battles found";
-				Code.MsgBox.Show("The selected database contained no battles.", "Import completed");
+				Code.MsgBox.Show("The selected database contained no battles.", "Import completed", this);
 			}
 			this.Close();
 
@@ -295,7 +295,7 @@ namespace WinApp.Forms
 
 		private void btnRemove_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to remove previously imported battles from WoT Statistics?", "Remove previously imported battles", MsgBoxType.OKCancel);
+			Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to remove previously imported battles from WoT Statistics?", "Remove previously imported battles", MsgBoxType.OKCancel, this);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				string sql = 
@@ -303,7 +303,7 @@ namespace WinApp.Forms
 					"delete from battleFrag where battleId IN (select id from battle where wsId is not null); " +
 					"delete from battle where wsId is not null; ";
 				DB.ExecuteNonQuery(sql);
-				Code.MsgBox.Show("Previously imported battles from WoT Statistics is now removed", "Removed successfully");
+				Code.MsgBox.Show("Previously imported battles from WoT Statistics is now removed", "Removed successfully", this);
 			}
 		}
 

@@ -31,12 +31,36 @@ namespace WinApp.Code
 			set { _SelectedButton = value; }
 		}
 
-		public static Button Show(string Message, string Title = "Message", MsgBoxType MessageType = MsgBoxType.Close)
+		public static Button Show(string Message, string Title, MsgBoxType MessageType, Form owner)
+		{
+			return ShowNow(Message, Title, MessageType, owner);
+		}
+
+		public static Button Show(string Message, string Title, MsgBoxType MessageType)
+		{
+			return ShowNow(Message, Title, MessageType, null);
+		}
+
+		public static Button Show(string Message, string Title, Form owner)
+		{
+			return ShowNow(Message, Title, MsgBoxType.Close, null);
+		}
+
+		public static Button Show(string Message, string Title)
+		{
+			return ShowNow(Message, Title, MsgBoxType.Close, null);
+		}
+
+		private static Button ShowNow(string Message, string Title, MsgBoxType MessageType, Form owner)
 		{
 			Form frm = new Forms.Message(Title, Message, MessageType);
 			frm.FormBorderStyle = FormBorderStyle.None;
-			frm.ShowDialog();
+			if (owner == null)
+				frm.ShowDialog();
+			else
+				frm.ShowDialog(owner);
 			return SelectedButton;
 		}
+
 	}
 }

@@ -83,7 +83,7 @@ namespace WinApp.Forms
 				
 		private void btnGrindReset_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets all values, and ends grinding for this tank", "Reset and end grinding?", MsgBoxType.OKCancel);
+			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets all values, and ends grinding for this tank", "Reset and end grinding?", MsgBoxType.OKCancel, this);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				txtGrindComment.Text = "";
@@ -100,7 +100,7 @@ namespace WinApp.Forms
 		{
 			if (dataChanged)
 			{
-				MsgBox.Button answer = MsgBox.Show("Do you want to cancel your changes and revert to last saved values?", "Cancel and revert data?", MsgBoxType.OKCancel);
+				MsgBox.Button answer = MsgBox.Show("Do you want to cancel your changes and revert to last saved values?", "Cancel and revert data?", MsgBoxType.OKCancel, this);
 				if (answer == MsgBox.Button.OKButton)
 				{
 					GetTankData();
@@ -114,7 +114,7 @@ namespace WinApp.Forms
 		{
 			if (dataChanged)
 			{
-				MsgBox.Button answer = MsgBox.Show("Do you want to save your changes?", "Save Data?", MsgBoxType.OKCancel);
+				MsgBox.Button answer = MsgBox.Show("Do you want to save your changes?", "Save Data?", MsgBoxType.OKCancel, this);
 				if (answer == MsgBox.Button.OKButton)
 				{
 					SaveData();
@@ -188,7 +188,7 @@ namespace WinApp.Forms
 		{
 			if (dataChanged)
 			{
-				MsgBox.Button answer = MsgBox.Show("Data is changed, but not saved. Do you want to save your changes now?", "Save data on closing?", MsgBoxType.OKCancel);
+				MsgBox.Button answer = MsgBox.Show("Data is changed, but not saved. Do you want to save your changes now?", "Save data on closing?", MsgBoxType.OKCancel, this);
 				if (answer == MsgBox.Button.OKButton)
 				{
 					SaveData();

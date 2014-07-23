@@ -294,7 +294,7 @@ namespace WinApp.Forms
 		{
 			string ColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
 			string message = "You are about to save the selected columns to column setup list: " + ColumnSetupListName;
-			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBoxType.OKCancel);
+			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBoxType.OKCancel, this);
 			if (answer == MsgBox.Button.OKButton)
 			{
 				SaveSelectedColumnList();
@@ -763,7 +763,7 @@ namespace WinApp.Forms
 
 		private void ShowSystemColListMessage()
 		{
-			Code.MsgBox.Show("Cannot alter system list, add new list to modify columns.", "Cannot alter system list");
+			Code.MsgBox.Show("Cannot alter system list, add new list to modify columns.", "Cannot alter system list", this);
 		}
 
 		#endregion
@@ -838,7 +838,7 @@ namespace WinApp.Forms
 		{
 			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
 			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + ColListName,
-				"Confirm deletion", MsgBoxType.OKCancel);
+				"Confirm deletion", MsgBoxType.OKCancel, this);
 			if (answer == MsgBox.Button.OKButton)
 			{
 

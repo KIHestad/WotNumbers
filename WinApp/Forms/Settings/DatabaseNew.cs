@@ -149,36 +149,36 @@ namespace WinApp.Forms
 					{
 						// Upgrade to latest version
 						UpdateProgressBar("Upgrading database");
-						DBVersion.CheckForDbUpgrade();
+						DBVersion.CheckForDbUpgrade(this);
 						
 						// Get tanks, remember to init tankList first
 						UpdateProgressBar("Retrieves tanks from Wargaming API");
 						TankData.GetTankList();
-						ImportWotApi2DB.ImportTanks();
+						ImportWotApi2DB.ImportTanks(this);
 						// Init after getting tanks and other basic data import
 						TankData.GetTankList();
 						TankData.GetJson2dbMappingFromDB();
 
 						// Get turret
 						UpdateProgressBar("Retrieves tank turrets from Wargaming API");
-						ImportWotApi2DB.ImportTurrets();
+						ImportWotApi2DB.ImportTurrets(this);
 
 						// Get guns
 						UpdateProgressBar("Retrieves tank guns from Wargaming API");
-						ImportWotApi2DB.ImportGuns();
+						ImportWotApi2DB.ImportGuns(this);
 
 						// Get radios
 						UpdateProgressBar("Retrieves tank radios from Wargaming API");
-						ImportWotApi2DB.ImportRadios();
+						ImportWotApi2DB.ImportRadios(this);
 
 						// Get achievements
 						UpdateProgressBar("Retrieves achievements from Wargaming API");
-						ImportWotApi2DB.ImportAchievements();
+						ImportWotApi2DB.ImportAchievements(this);
 						TankData.GetAchList();
 
 						// Get WN8 ratings
 						UpdateProgressBar("Retrieves WN8 expected values from API");
-						ImportWN8Api2DB.UpdateWN8();
+						ImportWN8Api2DB.UpdateWN8(this);
 
 						// Reset player
 						Config.Settings.playerName = "";
@@ -211,12 +211,12 @@ namespace WinApp.Forms
 					Config.Settings.databaseName = txtDatabasename.Text;
 				else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
 					Config.Settings.databaseFileName = txtFileLocation.Text + txtDatabasename.Text + ".db";
-				Code.MsgBox.Show("Database created successfully, new database saved to settings.", "Created database");
+				Code.MsgBox.Show("Database created successfully, new database saved to settings.", "Created database", this);
 			}
 			else
 			{
 				// Revert to prevous settings
-				Code.MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database");
+				Code.MsgBox.Show("Failed to create database, revert to using previous settings.", "Failed to create database", this);
 				Config.Settings = Config.LastWorkingSettings;
 			}
 			Config.SaveConfig(out result);

@@ -95,7 +95,7 @@ namespace WinApp.Forms
 			string newName = txtName.Text.Trim();
 			if (newName.Length == 0)
 			{
-				Code.MsgBox.Show("Plese select a name for the column list","Name missing");
+				Code.MsgBox.Show("Plese select a name for the column list", "Name missing", this);
 			}
 			else
 			{
@@ -106,7 +106,7 @@ namespace WinApp.Forms
 				DataTable dtExists = DB.FetchData(sql);
 				if (dtExists.Rows.Count > 0 && newName != prevName)
 				{
-					Code.MsgBox.Show("This name is already in use, select a different name for the column list", "Name already in use");
+					Code.MsgBox.Show("This name is already in use, select a different name for the column list", "Name already in use", this);
 				}
 				else
 				{

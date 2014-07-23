@@ -31,7 +31,6 @@ namespace WinApp.Code
 		private static int itemId;
 		private static string insertSql;
 		private static string updateSql;
-		private static bool ok = true;
 		private static DataTable itemsInDB;
 
 		private static List<string> log = new List<string>();
@@ -57,7 +56,7 @@ namespace WinApp.Code
 
 		#region fetchFromAPI
 
-		private static string FetchFromAPI(WotApiType WotAPi, int tankId)
+		private static string FetchFromAPI(WotApiType WotAPi, int tankId, Form parentForm)
 		{
 			try
 			{
@@ -107,46 +106,17 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Could not connect to WoT API, please check your Internet access." + Environment.NewLine + Environment.NewLine +
+				string msg = 
+					"Could not connect to WoT API, please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
-					ex.InnerException + Environment.NewLine + Environment.NewLine, "Problem connecting to WoT API");
+					ex.InnerException + Environment.NewLine + Environment.NewLine;
+				Code.MsgBox.Show(msg, "Problem connecting to WoT API", parentForm);
 				return "";
 			}
 			
 		}
 
 		#endregion
-
-		//#region getImageFromAPI
-
-		//public static byte[] getImageFromAPI(string url)
-		//{
-		//	byte[] imgArray;
-
-		//	// Fetch image from url
-		//	WebRequest req = WebRequest.Create(url);
-		//	WebResponse response = req.GetResponse();
-		//	Stream stream = response.GetResponseStream();
-
-		//	// Read into memoryStream
-		//	int dataLength = (int)response.ContentLength;
-		//	byte[] buffer = new byte[1024];
-		//	MemoryStream memStream = new MemoryStream();
-		//	while (true)
-		//	{
-		//		int bytesRead = stream.Read(buffer, 0, buffer.Length);  //Try to read the data
-		//		if (bytesRead == 0) break;
-		//		memStream.Write(buffer, 0, bytesRead);  //Write the downloaded data
-		//	}
-
-		//	// Read into byte array
-		//	Image image = Image.FromStream(memStream);
-		//	imgArray = memStream.ToArray();
-
-		//	return imgArray;
-		//}
-
-		//#endregion
 
 		#region update log file
 
@@ -183,9 +153,9 @@ namespace WinApp.Code
 
 		#region importTanks
 
-		public static String ImportTanks()
+		public static String ImportTanks(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Tank, 0);
+			string json = FetchFromAPI(WotApiType.Tank, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -283,14 +253,6 @@ namespace WinApp.Code
 								logItemExists = logItemExists + name + ", ";
 								logItemExistsCount++;
 							}
-
-							if (!ok)
-							{
-								log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
-								log.Add("ERROR - SQL:");
-								log.Add(insertSql);
-								return ("ERROR - Import incomplete!");
-							}
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
 						// Update log file after import
@@ -304,6 +266,7 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+					Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
@@ -311,90 +274,90 @@ namespace WinApp.Code
 
 		#endregion
 
-		#region updateWN8
+		//#region updateWN8
 
-		public static String UpdateWN8()
-		{
-			string sql = "";
-			string tankId = "";
-			string expFrags = "";
-			string expDmg = "";
-			string expSpot = "";
-			string expDef = "";
-			string expWR = "";
+		//public static String UpdateWN8()
+		//{
+		//	string sql = "";
+		//	string tankId = "";
+		//	string expFrags = "";
+		//	string expDmg = "";
+		//	string expSpot = "";
+		//	string expDef = "";
+		//	string expWR = "";
 
-			// Get WN8 from API
-			string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
-			HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-			httpRequest.Timeout = 10000;     // 10 secs
-			httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
-			httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-			HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-			StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-			string json = responseStream.ReadToEnd();
-			responseStream.Close();
+		//	// Get WN8 from API
+		//	string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
+		//	HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+		//	httpRequest.Timeout = 10000;     // 10 secs
+		//	httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
+		//	httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
+		//	HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+		//	StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+		//	string json = responseStream.ReadToEnd();
+		//	responseStream.Close();
 
-			// Get ready to parse through WN8 exp values
-			JObject allTokens = JObject.Parse(json);
-			JArray items = (JArray)allTokens["data"];
-			JObject item;
-			JToken jtoken;
-			for (int i = 0; i < items.Count; i++) //loop through tanks
-			{
-				Application.DoEvents(); // TODO: testing freeze-problem running API requests
-				item = (JObject)items[i];
-				jtoken = item.First;
-				string tokenValue;
-				while (jtoken != null) //loop through values for each tank
-				{
-					Application.DoEvents(); // TODO: testing freeze-problem running API requests
-					tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
+		//	// Get ready to parse through WN8 exp values
+		//	JObject allTokens = JObject.Parse(json);
+		//	JArray items = (JArray)allTokens["data"];
+		//	JObject item;
+		//	JToken jtoken;
+		//	for (int i = 0; i < items.Count; i++) //loop through tanks
+		//	{
+		//		Application.DoEvents(); // TODO: testing freeze-problem running API requests
+		//		item = (JObject)items[i];
+		//		jtoken = item.First;
+		//		string tokenValue;
+		//		while (jtoken != null) //loop through values for each tank
+		//		{
+		//			Application.DoEvents(); // TODO: testing freeze-problem running API requests
+		//			tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
 
-					if (jtoken != null)
-					{
-						string tokenName = (string)((JProperty)jtoken).Name.ToString();
-						switch (tokenName)
-						{
-							case "IDNum": tankId = (string)((JProperty)jtoken).Value.ToString(); break;
-							case "expFrag": expFrags = (string)((JProperty)jtoken).Value.ToString(); break;
-							case "expDamage": expDmg = (string)((JProperty)jtoken).Value.ToString(); break;
-							case "expSpot": expSpot = (string)((JProperty)jtoken).Value.ToString(); break;
-							case "expDef": expDef = (string)((JProperty)jtoken).Value.ToString(); break;
-							case "expWinRate": expWR = (string)((JProperty)jtoken).Value.ToString(); break;
-						}
-					}
-					jtoken = jtoken.Next;
-				}
+		//			if (jtoken != null)
+		//			{
+		//				string tokenName = (string)((JProperty)jtoken).Name.ToString();
+		//				switch (tokenName)
+		//				{
+		//					case "IDNum": tankId = (string)((JProperty)jtoken).Value.ToString(); break;
+		//					case "expFrag": expFrags = (string)((JProperty)jtoken).Value.ToString(); break;
+		//					case "expDamage": expDmg = (string)((JProperty)jtoken).Value.ToString(); break;
+		//					case "expSpot": expSpot = (string)((JProperty)jtoken).Value.ToString(); break;
+		//					case "expDef": expDef = (string)((JProperty)jtoken).Value.ToString(); break;
+		//					case "expWinRate": expWR = (string)((JProperty)jtoken).Value.ToString(); break;
+		//				}
+		//			}
+		//			jtoken = jtoken.Next;
+		//		}
 
-				sql = sql + "update tank set expDmg = " + expDmg
-										+ ", expWR = " + expWR
-										+ ", expSpot = " + expSpot
-										+ ", expFrags = " + expFrags
-										+ ", expDef = " + expDef
-										+ " where id = " + tankId
-										+ "; ";
-			}
+		//		sql = sql + "update tank set expDmg = " + expDmg
+		//								+ ", expWR = " + expWR
+		//								+ ", expSpot = " + expSpot
+		//								+ ", expFrags = " + expFrags
+		//								+ ", expDef = " + expDef
+		//								+ " where id = " + tankId
+		//								+ "; ";
+		//	}
 
-			// Execute update statements
-			try
-			{
-				DB.ExecuteNonQuery(sql);
-			}
-			catch (Exception ex)
-			{
-				Code.MsgBox.Show(ex.Message, "Error occured");
-			}
+		//	// Execute update statements
+		//	try
+		//	{
+		//		DB.ExecuteNonQuery(sql);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Code.MsgBox.Show(ex.Message, "Error occured");
+		//	}
 
-			return ("Import Complete");
-		}
+		//	return ("Import Complete");
+		//}
 
-		#endregion
+		//#endregion
 
 		#region importTurrets
 
-		public static String ImportTurrets()
+		public static String ImportTurrets(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Turret, 0);
+			string json = FetchFromAPI(WotApiType.Turret, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -467,14 +430,6 @@ namespace WinApp.Code
 								logItemExists = logItemExists + name + ", ";
 								logItemExistsCount++;
 							}
-
-							if (!ok)
-							{
-								log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
-								log.Add("ERROR - SQL:");
-								log.Add(insertSql);
-								return ("ERROR - Import incomplete!");
-							}
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
@@ -489,6 +444,7 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+					Code.MsgBox.Show(ex.Message, "Error fetching turrets from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
@@ -498,9 +454,9 @@ namespace WinApp.Code
 
 		#region importGuns
 
-		public static String ImportGuns()
+		public static String ImportGuns(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Gun, 0);
+			string json = FetchFromAPI(WotApiType.Gun, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -590,14 +546,6 @@ namespace WinApp.Code
 								logItemExistsCount++;
 							}
 
-							if (!ok)
-							{
-								log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
-								log.Add("ERROR - SQL:");
-								log.Add(insertSql);
-								return ("ERROR - Import incomplete!");
-							}
-
 							// Create relation to turret if possible (not all tanks have a turret)
 							JArray turretArray = (JArray)itemToken["turrets"];
 							if (turretArray.Count > 0)
@@ -637,6 +585,7 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+					Code.MsgBox.Show(ex.Message, "Error fetching guns from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
@@ -646,9 +595,9 @@ namespace WinApp.Code
 
 		#region importRadios
 
-		public static String ImportRadios()
+		public static String ImportRadios(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Radio, 0);
+			string json = FetchFromAPI(WotApiType.Radio, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -712,14 +661,6 @@ namespace WinApp.Code
 								logItemExistsCount++;
 							}
 
-							if (!ok)
-							{
-								log.Add("ERROR - Import incomplete! (" + DateTime.Now.ToString() + ")");
-								log.Add("ERROR - SQL:");
-								log.Add(insertSql);
-								return ("ERROR - Import incomplete!");
-							}
-
 							// Create relation to tank
 							JArray tankArray = (JArray)itemToken["tanks"];
 							if (tankArray.Count > 0)
@@ -745,6 +686,7 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+					Code.MsgBox.Show(ex.Message, "Error fetching radios from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
@@ -754,9 +696,9 @@ namespace WinApp.Code
 
 		#region importAchievements
 
-		public static void ImportAchievements()
+		public static void ImportAchievements(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Achievement, 0);
+			string json = FetchFromAPI(WotApiType.Achievement, 0, parentForm);
 			if (json == "")
 			{
 				// no action, no data found
@@ -838,19 +780,8 @@ namespace WinApp.Code
 									}
 
 								}
-
 								// Insert to db now
-								try
-								{
-									//if (!DB.ExecuteNonQuery(sql)) return;
-									sqlTotal += sql + Environment.NewLine;
-									//Code.MsgBox.Show("x");
-								}
-								catch (Exception ex)
-								{
-									Code.MsgBox.Show(ex.Message);
-								}
-
+								sqlTotal += sql + Environment.NewLine;
 								logAddedItems = logAddedItems + itemToken["name"].ToString() + ", ";
 								logAddedItemsCount++;
 							}
@@ -930,7 +861,7 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
-					Code.MsgBox.Show(ex.Message);
+					Code.MsgBox.Show(ex.Message, "Error fetching acheivments from WoT API", parentForm);
 					//return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}

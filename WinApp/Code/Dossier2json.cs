@@ -22,7 +22,7 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
-		public static string UpdateDossierFileWatcher()
+		public static string UpdateDossierFileWatcher(Form parentForm)
 		{
 			string logtext = "Dossier file listener stopped";
 			bool run = (Config.Settings.dossierFileWathcherRun == 1);
@@ -39,7 +39,7 @@ namespace WinApp.Code
 				}
 				catch (Exception)
 				{
-					Code.MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path");
+					Code.MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path", parentForm);
 					run = false;
 				}
 			}

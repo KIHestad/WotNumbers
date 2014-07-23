@@ -47,7 +47,7 @@ namespace WinApp.Forms
 				string msg = "";
 				ok = Code.Config.SaveConfig(out msg);
 				if (!ok)
-					Code.MsgBox.Show(msg, "Error saving config settings");
+					Code.MsgBox.Show(msg, "Error saving config settings", this);
 			}
 			if (ok) this.Close();
 		}

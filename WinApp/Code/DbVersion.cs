@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WinApp.Code
 {
@@ -1015,7 +1016,7 @@ namespace WinApp.Code
 		}
 
 		// Procedure upgrading DB to latest version
-		public static bool CheckForDbUpgrade()
+		public static bool CheckForDbUpgrade(Form parentForm)
 		{
 			bool upgradeOK = true;
 			int DBVersionCurrentNumber = CurrentNumber(); // Get current DB version
@@ -1041,7 +1042,7 @@ namespace WinApp.Code
 				}
 				// If anything went wrong (continueNext == false), supply error notification here
 				if (!continueNext)
-					Code.MsgBox.Show("Error occured during database upgrade, failed running SQL script for version: " + DBVersionCurrentNumber.ToString("0000"), "Error Upgrading Database");
+					Code.MsgBox.Show("Error occured during database upgrade, failed running SQL script for version: " + DBVersionCurrentNumber.ToString("0000"), "Error Upgrading Database", parentForm);
 				upgradeOK = continueNext;
 				
 			}

@@ -61,7 +61,7 @@ namespace WinApp.Forms
 			string newName = txtName.Text.Trim();
 			if (newName.Length == 0)
 			{
-				Code.MsgBox.Show("Plese select a name for your Favourite Tank List", "Name missing");
+				Code.MsgBox.Show("Plese select a name for your Favourite Tank List", "Name missing", this);
 			}
 			else
 			{
@@ -71,7 +71,7 @@ namespace WinApp.Forms
 				DataTable dtExists = DB.FetchData(sql);
 				if (newName != prevName && dtExists.Rows.Count > 0)
 				{
-					Code.MsgBox.Show("This name is already in use, select a different name for your Favourite Tank List", "Name already in use");
+					Code.MsgBox.Show("This name is already in use, select a different name for your Favourite Tank List", "Name already in use", this);
 				}
 				else
 				{

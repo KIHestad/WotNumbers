@@ -49,13 +49,6 @@ namespace WinApp.Forms
 			cboSelectPlayer.Enabled = ok;
 		}
 
-		private void btmAddPlayer_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.AddPlayer();
-			frm.ShowDialog();
-			cboSelectPlayer.Text = Config.Settings.playerName;
-		}
-
 		// Remove player is deactivated
 		//private void btnRemovePlayer_Click_1(object sender, EventArgs e)
 		//{
@@ -130,12 +123,12 @@ namespace WinApp.Forms
 			saveOk = Config.SaveConfig(out msg);
 			if (saveOk)
 			{
-				MsgBox.Show(msg, "Application settings saved");
+				MsgBox.Show(msg, "Application settings saved", this);
 				this.Close();
 			}
 			else
 			{
-				MsgBox.Show(msg, "Error saving application settings");
+				MsgBox.Show(msg, "Error saving application settings", this);
 			}
 		}
 
@@ -152,7 +145,7 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				Code.MsgBox.Show("No valid path to dossier file is found, please select dossier file path before selecting Database Settings.", "Incorrect Dossier File Path");
+				Code.MsgBox.Show("No valid path to dossier file is found, please select dossier file path before selecting Database Settings.", "Incorrect Dossier File Path", this);
 			}
 		}
 
