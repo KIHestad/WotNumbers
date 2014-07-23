@@ -166,7 +166,7 @@ abstract class BadThemeContainerControl : ContainerControl
 						SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
 				}
 				PaintSysIcons();
-				return new Pointer(Cursor, 0);
+				return new Pointer(Cursors.Default, 0);
 			}
 			else
 			{
@@ -197,20 +197,21 @@ abstract class BadThemeContainerControl : ContainerControl
 			else if (FrameBottom)
 				return new Pointer(Cursors.SizeNS, 15);
 			else
-				return new Pointer(Cursor, 0);
+				return new Pointer(Cursors.Default, 0);
 		}
-		return new Pointer(Cursor, 0);
+		return new Pointer(Cursors.Default, 0);
 	}
 
 	private Pointer Current;
-	private Pointer Pending;
+	//private Pointer Pending;
 	private void SetCurrent()
 	{
-		Pending = GetPointer();
+		//Pending = GetPointer();
 		//if (Current.Position == Pending.Position)
 		//	return;
 		Current = GetPointer();
-		Cursor = Current.Cursor;
+		if (Cursor != Cursors.WaitCursor)
+			Cursor = Current.Cursor;
 	}
 
 	protected override void OnMouseUp(MouseEventArgs e)
@@ -298,8 +299,8 @@ abstract class BadThemeContainerControl : ContainerControl
 			graphicObject = Graphics.FromImage(bitmapObject);
 			Invalidate();
 			// Draw resize cursor if within resize area
-			Current = GetPointer();
-			Cursor = Current.Cursor;
+			// Current = GetPointer();
+			// Cursor = Current.Cursor;
 		}
 		catch (Exception)
 		{
