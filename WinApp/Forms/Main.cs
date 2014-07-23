@@ -557,15 +557,15 @@ namespace WinApp.Forms
 				{
 					case GridView.Views.Overall:
 						lblOverView.Text = "Welcome " + Config.Settings.playerName;
-						if (Status2Message == "") Status2Message = "Selected home View";
+						if (Status2Message == "") Status2Message = "Home view selected";
 						GridShowOverall(Status2Message);
 						break;
 					case GridView.Views.Tank:
-						if (Status2Message == "") Status2Message = "Selected tank view";
+						if (Status2Message == "") Status2Message = "Tank view selected";
 						GridShowTank(Status2Message);
 						break;
 					case GridView.Views.Battle:
-						if (Status2Message == "") Status2Message = "Selected battle view";
+						if (Status2Message == "") Status2Message = "Battle view selected";
 						GridShowBattle(Status2Message);
 						break;
 					default:
