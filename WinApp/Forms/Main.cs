@@ -17,22 +17,31 @@ namespace WinApp.Forms
 	{
 		#region Init Content and Layout
 
-		public Main()
-		{
-			Code.Log.LogToFile("*********************************************");
-			Code.Log.LogToFile("Start Init",true);
-			Code.Log.LogToFile("*********************************************");
-			Code.Log.LogToFile("Main() started", true);
-			InitializeComponent();
-		}
-
+		private bool Init = true;
 		private bool LoadConfigOK = true;
 		private string LoadConfigMsg = "";
+		private ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
+		public Main()
+		{
+			InitializeComponent();
+			// Get Config
+			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
+			mainFormPosSize = Config.Settings.posSize;
+		}
+
 		private void Main_Load(object sender, EventArgs e)
 		{
-			Code.Log.LogToFile("Main_Load() started", true);
+			// Get PosSize
+			if (mainFormPosSize != null)
+			{
+				this.Top = mainFormPosSize.Top;
+				this.Left = mainFormPosSize.Left;
+				this.Width = mainFormPosSize.Width;
+				this.Height = mainFormPosSize.Height;
+			}
+			// Log startup
+			Code.Log.LogToFile("Application startup", true);
 			// Make sure borderless form do not cover task bar when maximized
-			Code.Log.LogToFile("> Screen and Form init", true);
 			Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
 			// Black Border on loading
@@ -47,9 +56,7 @@ namespace WinApp.Forms
 				// Move main toolbar to bottom of title height
 				toolMain.Top = MainTheme.TitleHeight - toolMain.Height + MainTheme.FormMargin + 2;
 			}
-			
 			// Style toolbar
-			Code.Log.LogToFile("> Toolbar init", true);
 			toolMain.Renderer = new StripRenderer();
 			toolMain.BackColor = ColorTheme.FormBackTitle;
 			toolMain.ShowItemToolTips = false;
@@ -58,7 +65,6 @@ namespace WinApp.Forms
 			toolItemRefreshSeparator.Visible = false;
 			toolItemColumnSelect.Visible = false;
 			toolItemMode.Visible = false;
-			Code.Log.LogToFile("> Grid init", true);
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
@@ -88,18 +94,6 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
-			// Get Config
-			Code.Log.LogToFile("> Get json config", true);
-			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
-			// Get PosSize
-			ConfigData.PosSize mainFormPosSize = Config.Settings.posSize;
-			if (mainFormPosSize != null)
-			{
-				this.Top = mainFormPosSize.Top;
-				this.Left = mainFormPosSize.Left;
-				this.Width = mainFormPosSize.Width;
-				this.Height = mainFormPosSize.Height;
-			}
 			// Draw form 
 			lblStatus1.Text = "";
 			lblStatus2.Text = "Application init...";
@@ -217,8 +211,9 @@ namespace WinApp.Forms
 
 		private void Main_Shown(object sender, EventArgs e)
 		{
+			// Ready to draw form
+			Init = false;
 			// Startup settings
-			Code.Log.LogToFile("Main_Shown() started", true);
 			if (!LoadConfigOK)
 			{
 				Code.Log.LogToFile("> No config MsgBox", true);
@@ -240,17 +235,12 @@ namespace WinApp.Forms
 					frm.ShowDialog();
 				}
 			}
-			Code.Log.LogToFile("> DB.CheckConnection", true);
 			if (DB.CheckConnection())
 			{
-				// Init
-				Code.Log.LogToFile("> TankData.GetAllLists()", true);
 				TankData.GetAllLists();
 			}
-			Code.Log.LogToFile("> dossier2json.UpdateDossierFileWatcher()", true);
 			string result = dossier2json.UpdateDossierFileWatcher();
 			// Check DB Version
-			Code.Log.LogToFile("> DBVersion.CheckForDbUpgrade()", true);
 			bool versionOK = DBVersion.CheckForDbUpgrade();
 			// Add init items to Form
 			
@@ -259,29 +249,21 @@ namespace WinApp.Forms
 			SetFavListMenu();
 			GridShow("Application started");
 			SetListener();
-			Code.Log.LogToFile("> ImageHelper.LoadTankImages()", true);
 			ImageHelper.LoadTankImages();
 			// Battle result file watcher
-			Code.Log.LogToFile("> Dossier file system watcher", true);
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
 			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
 			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			// Ready 
-			Code.Log.LogToFile("> Setting MainTheme cursor", true);
 			MainTheme.Cursor = Cursors.Default;
 			// Show Grinding Param Settings
 			if (Config.Settings.grindParametersAutoStart)
 			{
-				Code.Log.LogToFile("> Forms.GrindingParameter()", true);
 				Form frm = new Forms.GrindingParameter();
 				frm.ShowDialog();
 			}
-			Code.Log.LogToFile("*********************************************");
-			Code.Log.LogToFile("Done Init", true);
-			Code.Log.LogToFile("*********************************************");
-			
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -418,12 +400,12 @@ namespace WinApp.Forms
 
 		private void Main_Resize(object sender, EventArgs e)
 		{
-			ResizeNow();
+			if (!Init) ResizeNow();
 		}
 
 		private void Main_ResizeEnd(object sender, EventArgs e)
 		{
-			ResizeNow();
+			if (!Init) ResizeNow();
 		}
 
 		private void ResizeNow()
@@ -457,8 +439,11 @@ namespace WinApp.Forms
 
 		private void Main_LocationChanged(object sender, EventArgs e)
 		{
-			Screen screen = Screen.FromControl(this);
-			this.MaximumSize = screen.WorkingArea.Size;
+			if (!Init)
+			{
+				Screen screen = Screen.FromControl(this);
+				this.MaximumSize = screen.WorkingArea.Size;
+			}
 		}
 
 		#endregion
@@ -572,7 +557,7 @@ namespace WinApp.Forms
 				{
 					case GridView.Views.Overall:
 						lblOverView.Text = "Welcome " + Config.Settings.playerName;
-						if (Status2Message == "") Status2Message = "Selected overall view";
+						if (Status2Message == "") Status2Message = "Selected home View";
 						GridShowOverall(Status2Message);
 						break;
 					case GridView.Views.Tank:
