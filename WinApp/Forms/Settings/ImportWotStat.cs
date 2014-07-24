@@ -166,22 +166,24 @@ namespace WinApp.Forms
 								int hits = Convert.ToInt32(recentBattles.Rows[i]["rbHits"]) / 100;
 								int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
 								string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
+								// Calc WN7
+								int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, victory, 0, true), 0));
 								// Calc WN8
-								int wn8 = Rating.CalculateBattleWn8(tankId, battlesCount, dmg, spotted, frags, def);
+								int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0));
 								// Calc EFF
-								int eff = Rating.CalculateBattleEff(tankId, battlesCount, dmg, spotted, frags, def, cap);
+								int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEff(tankId, battlesCount, dmg, spotted, frags, def, cap),0));
 								// Insert or update Battle table
 								string sqlInsertBattle = "";
 								int battleId = TankData.GetBattleIdForImportedWsBattle(wsId);
 								if (battleId > 0)
 									sqlInsertBattle =
 									"update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, killed=@killed, " +
-									"  battleSurviveId=@battleSurviveId, victory=@victory, draw=@draw, defeat=@defeat, battleResultId=@battleResultId, battleTime=@battleTime, shots=@shots, hits=@hits, xp=@xp, battleMode=@battleMode, wn8=@wn8, eff=@eff " +
+									"  battleSurviveId=@battleSurviveId, victory=@victory, draw=@draw, defeat=@defeat, battleResultId=@battleResultId, battleTime=@battleTime, shots=@shots, hits=@hits, xp=@xp, battleMode=@battleMode, wn8=@wn8, eff=@eff, wn7=@wn7 " +
 									"where wsId=@wsId ";
 								else
 									sqlInsertBattle =
-									"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, battleMode, wn8, eff) " +
-									"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @battleMode, @wn8, @eff)";
+									"insert into battle (playerTankId, wsId, battlesCount, frags, dmg, dmgReceived, spotted, cap, def, survived, killed, battleSurviveId, victory, draw, defeat, battleResultId, battleTime, shots, hits, xp, battleMode, wn8, eff, wn7) " +
+									"values (@playerTankId, @wsId, @battlesCount, @frags, @dmg, @dmgReceived, @spotted, @cap, @def, @survived, @killed,  @battleSurviveId, @victory, @draw, @defeat, @battleResultId, @battleTime, @shots, @hits, @xp, @battleMode, @wn8, @eff, @wn7)";
 								DB.AddWithValue(ref sqlInsertBattle, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@wsId", wsId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@battlesCount", battlesCount, DB.SqlDataType.Int);
@@ -203,6 +205,7 @@ namespace WinApp.Forms
 								DB.AddWithValue(ref sqlInsertBattle, "@hits", hits, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@xp", xp, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@battleMode", battleMode, DB.SqlDataType.Int);
+								DB.AddWithValue(ref sqlInsertBattle, "@wn7", wn7, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@wn8", wn8, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@eff", eff, DB.SqlDataType.Int);
 								DB.ExecuteNonQuery(sqlInsertBattle);

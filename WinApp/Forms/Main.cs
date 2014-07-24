@@ -1187,6 +1187,7 @@ namespace WinApp.Forms
 				int battleCount = 0;
 				double wr = 0;
 				double wn8 = 0;
+				double wn7 = 0;
 				double eff = 0;
 				bool applyColors = false;
 				if (dtStats.Rows.Count > 0 && dtStats.Rows[0]["battles"] != DBNull.Value)
@@ -1204,26 +1205,42 @@ namespace WinApp.Forms
 					wr = (Convert.ToDouble(stats["wins"])/Convert.ToDouble(stats["battles"])*100);
 					dr["Value"] = Math.Round(wr, 2).ToString() + " %";
 					dt.Rows.Add(dr);
-					// Add WN8
-					dr = dt.NewRow();
-					dr["Data"] = "WN8 Total Rating";
-					wn8 = Code.Rating.CalculatePlayerTotalWn8();
-					dr["Value"] = Math.Round(wn8, 2).ToString();
-					dt.Rows.Add(dr);
-					// Add EFF
-					dr = dt.NewRow();
-					dr["Data"] = "EFF Total Rating";
+					// Rating parameters
 					double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
 					double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
 					double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
 					double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
 					double DEF = Rating.ConvertDbVal2Double(stats["def"]);
 					double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-					double TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-					eff = Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+					double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+					double TIER = 0;
+					if (BATTLES > 0)
+						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+					
+					// Add EFF
+					dr = dt.NewRow();
+					dr["Data"] = "EFF Total Rating";
+					eff = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
 					dr["Value"] = Math.Round(eff, 2).ToString();
 					dt.Rows.Add(dr);
+
+					// Add WN7
+					dr = dt.NewRow();
+					dr["Data"] = "WN7 Total Rating";
+					wn7 = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS);
+					dr["Value"] = Math.Round(wn7, 2).ToString();
+					dt.Rows.Add(dr);
+
+					// Add WN8
+					dr = dt.NewRow();
+					dr["Data"] = "WN8 Total Rating";
+					wn8 = Code.Rating.CalculatePlayerTotalWN8();
+					dr["Value"] = Math.Round(wn8, 2).ToString();
+					dt.Rows.Add(dr);
+
+					// Ready to set colors
 					applyColors = true;
+
 				}
 				// Set row height in template 
 				dataGridMain.RowTemplate.Height = 23;
@@ -1241,8 +1258,10 @@ namespace WinApp.Forms
 				{
 					dataGridMain.Rows[1].Cells[1].Style.ForeColor = Rating.BattleCountColor(battleCount);
 					dataGridMain.Rows[2].Cells[1].Style.ForeColor = Rating.WinRateColor(wr);
-					dataGridMain.Rows[3].Cells[1].Style.ForeColor = Rating.WN8color(wn8);
-					dataGridMain.Rows[4].Cells[1].Style.ForeColor = Rating.EffColor(eff);
+					dataGridMain.Rows[3].Cells[1].Style.ForeColor = Rating.EffColor(eff);
+					dataGridMain.Rows[4].Cells[1].Style.ForeColor = Rating.WN7color(wn7);
+					dataGridMain.Rows[5].Cells[1].Style.ForeColor = Rating.WN8color(wn8);
+					
 				}
 				// Finish
 				dataGridMain.Columns[0].Width = 100;
@@ -1636,7 +1655,7 @@ namespace WinApp.Forms
 				{
 					if (colListItem.type == "Int" || colListItem.type == "Float")
 					{
-						IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
+						IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
 						if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
 							footerRow2[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
@@ -1771,19 +1790,31 @@ namespace WinApp.Forms
 						cell.Style.ForeColor = Rating.WN8color(wn8);
 					}
 				}
+				else if (col.Equals("WN7"))
+				{
+					if (dataGridMain["WN7", e.RowIndex].Value != DBNull.Value)
+					{
+						int wn7 = Convert.ToInt32(dataGridMain["WN7", e.RowIndex].Value);
+						cell.Style.ForeColor = Rating.WN7color(wn7);
+					}
+				}
 				else if (col.Contains("%"))
 				{
 					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
 					{
-						int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-						if (val > 0)
+						int percentage = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+						if (percentage > 0)
 						{
 							Color color = ColorTheme.Rating_very_bad;
-							if (val > 90) color = ColorTheme.Rating_uniqe;
-							else if (val > 80) color = ColorTheme.Rating_very_good;
-							else if (val > 70) color = ColorTheme.Rating_good;
-							else if (val > 50) color = ColorTheme.Rating_normal;
-							else if (val > 25) color = ColorTheme.Rating_bad;
+							color = ColorTheme.Rating_very_bad;
+							if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
+							else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
+							else if (percentage >= 90) color = ColorTheme.Rating_great;
+							else if (percentage >= 80) color = ColorTheme.Rating_very_good;
+							else if (percentage >= 65) color = ColorTheme.Rating_good;
+							else if (percentage >= 50) color = ColorTheme.Rating_average;
+							else if (percentage >= 35) color = ColorTheme.Rating_below_average;
+							else if (percentage >= 20) color = ColorTheme.Rating_bad;
 							cell.Style.ForeColor = color;
 						}
 					}
@@ -1796,11 +1827,14 @@ namespace WinApp.Forms
 						if (val > 0)
 						{
 							Color color = ColorTheme.Rating_very_bad;
-							if (val < 10000) color = ColorTheme.Rating_uniqe;
-							else if (val < 25000) color = ColorTheme.Rating_very_good;
-							else if (val < 50000) color = ColorTheme.Rating_good;
-							else if (val < 100000) color = ColorTheme.Rating_normal;
-							else if (val < 150000) color = ColorTheme.Rating_bad;
+							if (val <= 5000) color = ColorTheme.Rating_super_uniqum;
+							else if (val <= 10000) color = ColorTheme.Rating_uniqum;
+							else if (val <= 25000) color = ColorTheme.Rating_great;
+							else if (val <= 50000) color = ColorTheme.Rating_very_good;
+							else if (val <= 75000) color = ColorTheme.Rating_good;
+							else if (val <= 100000) color = ColorTheme.Rating_average;
+							else if (val <= 125000) color = ColorTheme.Rating_below_average;
+							else if (val <= 150000) color = ColorTheme.Rating_bad;
 							cell.Style.ForeColor = color;
 						}
 					}

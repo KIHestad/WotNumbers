@@ -592,10 +592,19 @@ namespace WinApp.Code
 			DataTable playerTankBattleOld = TankData.GetPlayerTankBattle(playerTankId, battleMode, true); 
 			// Update playerTankBattle
 			string sqlFields = "";
+			// Get rating parameters
+			double dmg = Rating.ConvertDbVal2Double(playerTankBattleNewRow["dmg"]);
+			double spotted = Rating.ConvertDbVal2Double(playerTankBattleNewRow["spot"]);
+			double frags = Rating.ConvertDbVal2Double(playerTankBattleNewRow["frags"]);
+			double def = Rating.ConvertDbVal2Double(playerTankBattleNewRow["def"]);
+			double wins = Rating.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
+			double cap = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
+			// Calculate WN7
+			sqlFields += "wn7=" + Math.Round(Rating.CalculateWN7(playerTankNewRow_battles, dmg, spotted, frags, def, cap, wins, tankId), 0).ToString();
 			// Calculate WN8
-			sqlFields += "wn8=" + Rating.CalculatePlayerTankWn8(tankId, playerTankNewRow_battles, playerTankBattleNewRow);
+			sqlFields += ", wn8=" + Math.Round(Rating.CalculateTankWN8(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, wins),0).ToString();
 			// Calculate Eff
-			sqlFields += ", eff=" + Rating.CalculatePlayerTankEff(tankId, playerTankNewRow_battles, playerTankBattleNewRow);
+			sqlFields += ", eff=" + Math.Round(Rating.CalculateTankEff(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, cap), 0).ToString();
 			foreach (DataColumn column in playerTankBattleOld.Columns)
 			{
 				// Get columns and values from NewPlayerTankRow direct
@@ -811,12 +820,22 @@ namespace WinApp.Code
 						}
 					}
 				}
+				// Get rating parameters
+				double dmg = Rating.ConvertDbVal2Double(battleNewRow["dmg"]);
+				double spotted = Rating.ConvertDbVal2Double(battleNewRow["spotted"]);
+				double frags = Rating.ConvertDbVal2Double(battleNewRow["frags"]);
+				double def = Rating.ConvertDbVal2Double(battleNewRow["def"]);
+				double cap = Rating.ConvertDbVal2Double(battleNewRow["cap"]);
+				double wins = Rating.ConvertDbVal2Double(battleNewRow["wins"]);
+				// Calculate WN7
+				sqlFields += ", wn7";
+				sqlValues += ", " + Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, wins, 0, true), 0).ToString();
 				// Calculate WN8
 				sqlFields += ", wn8";
-				sqlValues += ", " + Rating.CalculateBattleWn8(tankId, battlesCount, battleNewRow);
+				sqlValues += ", " + Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
 				// Calc Eff
 				sqlFields += ", eff";
-				sqlValues += ", " + Rating.CalculateBattleEff(tankId, battlesCount, battleNewRow);
+				sqlValues += ", " + Math.Round(Rating.CalculateTankEff(tankId, battlesCount, dmg, spotted, frags, def, cap),0).ToString();
 				// Add battle mode
 				sqlFields += ", battleMode";
 				sqlValues += ", @battleMode";

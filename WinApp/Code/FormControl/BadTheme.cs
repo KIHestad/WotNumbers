@@ -1071,13 +1071,16 @@ class BadProgressBar : BadThemeControl
 		Color color = ColorTheme.FormBorderBlue; // Default if not color mode is selected
 		if (ProgressBarColorMode)
 		{
-			
 			color = ColorTheme.Rating_very_bad;
-			if (percentage > 90) color = ColorTheme.Rating_uniqe;
-			else if (percentage > 80) color = ColorTheme.Rating_very_good;
-			else if (percentage > 70) color = ColorTheme.Rating_good;
-			else if (percentage > 50) color = ColorTheme.Rating_normal;
-			else if (percentage > 25) color = ColorTheme.Rating_bad;
+			if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
+			else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
+			else if (percentage >= 90) color = ColorTheme.Rating_great;
+			else if (percentage >= 80) color = ColorTheme.Rating_very_good;
+			else if (percentage >= 65) color = ColorTheme.Rating_good;
+			else if (percentage >= 50) color = ColorTheme.Rating_average;
+			else if (percentage >= 35) color = ColorTheme.Rating_below_average;
+			else if (percentage >= 20) color = ColorTheme.Rating_bad;
+			
 		}
 		brushBackColor = new SolidBrush(color);
 		grapichObject.FillRectangle(brushBackColor, progressBarOffset, progressBarOffset, Convert.ToInt32(progress), Height - (progressBarOffset*2));

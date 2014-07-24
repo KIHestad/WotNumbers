@@ -283,6 +283,16 @@ namespace WinApp.Code
 			return tankTier;
 		}
 
+		public static int GetTankTier(int TankId)
+		{
+			int tankTier = 0;
+			string sql = "SELECT tier FROM tank WHERE id=@id; ";
+			DB.AddWithValue(ref sql, "@id", TankId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0) tankTier = Convert.ToInt32(dt.Rows[0]["tier"]);
+			return tankTier;
+		}
+
 		public static int GetTankID(string TankName, out int TankTier)
 		{
 			int tankID = 0;

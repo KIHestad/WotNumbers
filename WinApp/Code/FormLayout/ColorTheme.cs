@@ -61,22 +61,17 @@ namespace WinApp.Code
 		public static Color ScrollbarFront = Color.FromArgb(255, 102, 102, 106);
 		public static Color ScrollbarArrow = Color.FromArgb(255, 152, 152, 156);
 
-		// Player rating colors
-		// Dynamic color by various statistical parameters.
-		//"colorRating": {
-		//  "very_bad":     "0xFE0E00",   // very bad   / очень плохо
-		//  "bad":          "0xFE7903",   // bad        / плохо
-		//  "normal":       "0xF8F400",   // normal     / средне
-		//  "good":         "0x60FF00",   // good       / хорошо
-		//  "very_good":    "0x02C9B3",   // very good  / очень хорошо
-		//  "unique":       "0xD042F3"    // unique     / уникально
-		//}
-		public static Color Rating_very_bad = ColorTranslator.FromHtml("#FE0E00");
-		public static Color Rating_bad = ColorTranslator.FromHtml("#FE7903");
-		public static Color Rating_normal = ColorTranslator.FromHtml("#F8F400");
-		public static Color Rating_good = ColorTranslator.FromHtml("#60FF00");
-		public static Color Rating_very_good = ColorTranslator.FromHtml("#02C9B3");
-		public static Color Rating_uniqe = ColorTranslator.FromHtml("#D042F3");
-		
+		// Colorful mode
+		// Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
+		public static Color Rating_very_bad = ColorTranslator.FromHtml("#CE0000");		// dark red
+		public static Color Rating_bad = ColorTranslator.FromHtml("#FF0000");			// red
+		public static Color Rating_below_average = ColorTranslator.FromHtml("#FF8400");	// orange
+		public static Color Rating_average = ColorTranslator.FromHtml("#FFFF00");		// yellow
+		public static Color Rating_good = ColorTranslator.FromHtml("#4CFF00");			// green
+		public static Color Rating_very_good = ColorTranslator.FromHtml("#2F9E00");		// dark green
+		public static Color Rating_great = ColorTranslator.FromHtml("#30A8FF");			// blue
+		public static Color Rating_uniqum = ColorTranslator.FromHtml("#CC5EFF");		// purple
+		public static Color Rating_super_uniqum = ColorTranslator.FromHtml("#B200FF");	// deep purple
+
 	}
 }

@@ -11,7 +11,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		// The current databaseversion
-		public static int ExpectedNumber = 73; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 78; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1004,6 +1004,45 @@ namespace WinApp.Code
 							"UPDATE json2dbMapping SET dbBattle=NULL where jsonMainSubProperty='tanks_v2.maxHistorical.maxFrags'; ";
 					sqlite = mssql;
 					break;
+				case 74:
+					mssql = "ALTER TABLE playerTankBattle ADD wn7 int NOT NULL default 0; " +
+							"ALTER TABLE battle ADD wn7 int NOT NULL default 0; ";
+					sqlite = mssql.Replace("int", "integer");
+					break;
+				case 75:
+					mssql = "UPDATE battleResult SET color = '#4CFF00' where id = 1; " + // GREEN  victory color
+							"UPDATE battleResult SET color = '#FFFF00' where id = 2; " + // YELLOW draw color
+							"UPDATE battleResult SET color = '#FF0000' where id = 3; " + // RED    defeat color
+							"UPDATE battleResult SET color = '#30A8FF' where id = 4; " + // BLUE   several color
+							"UPDATE battleSurvive SET color = '#4CFF00' where id = 1; " + // GREEN Yes - survived color
+							"UPDATE battleSurvive SET color = '#30A8FF' where id = 2; " + // BLUE  Some - survived color
+							"UPDATE battleSurvive SET color = '#FF0000' where id = 3; " ; // RED   No - survived color
+					sqlite = mssql;
+					break;
+				case 76:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (186, 2, 146, 'battle.wn7', 'WN7', 'Calculated battle WN7 rating (according to formula from vBAddict)', 'Rating', 47, 'Int'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (187, 1, 117, 'playerTankBattle.wn7', 'WN7', 'Calculated battle WN7 rating (according to formula from vBAddict)', 'Rating', 50, 'Int'); " +
+							"UPDATE columnSelection SET description = 'Calculated battle WN8 rating (according to formula from vbAddict)' where id=49";
+					sqlite = mssql;
+					break;
+				case 77:
+					mssql = "ALTER VIEW playerTankBattleTotalsView AS " +
+							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
+							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
+							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7 " +
+							"FROM            playerTankBattle " +
+							"GROUP BY playerTankId ";
+					sqlite = mssql;
+					break;
+				case 78:
+					Rating.RecalcBattlesWN7();
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype

@@ -517,7 +517,7 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					EFF = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
+					EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
 					axisYminimum = SetYaxisLowestValue(EFF);
 					step++;
 					if (step % stepMod == 0)
@@ -542,7 +542,7 @@ namespace WinApp.Forms
 					FRAGS += Convert.ToDouble(dr["frags"]);
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
-					EFF = Math.Round(Code.Rating.CalculatePlayerEFFforChart(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
+					EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
 					axisYminimum = SetYaxisLowestValue(EFF);
 					step++;
 					if (step % stepMod == 0)
@@ -629,7 +629,7 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow bRow in dtChart.Rows)
 				{
-					WN8 = Math.Round(Code.Rating.CalculatePlayerTotalWn8(ptb), 2);
+					WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
 					axisYminimum = SetYaxisLowestValue(WN8);
 					step++;
 					if (step % stepMod == 0) 
@@ -666,7 +666,7 @@ namespace WinApp.Forms
 						ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(bRow["cap"]);
 						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(bRow["victory"]);
 					}
-					WN8 = Math.Round(Code.Rating.CalculatePlayerTotalWn8(ptb), 2);
+					WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
 					axisYminimum = SetYaxisLowestValue(WN8);
 					step++;
 					if (step % stepMod == 0)
