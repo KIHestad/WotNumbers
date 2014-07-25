@@ -10,8 +10,10 @@ namespace WinApp.Code
 {
 	class DBVersion
 	{
+		public static bool RunDossierFileCheckWithForceUpdate = false;
+	
 		// The current databaseversion
-		public static int ExpectedNumber = 78; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 79; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1041,6 +1043,9 @@ namespace WinApp.Code
 					break;
 				case 78:
 					Rating.RecalcBattlesWN7();
+					break;
+				case 79:
+					RunDossierFileCheckWithForceUpdate = true;
 					break;
 
 			}

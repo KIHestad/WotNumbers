@@ -266,6 +266,9 @@ namespace WinApp.Forms
 				Form frm = new Forms.GrindingParameter();
 				frm.ShowDialog();
 			}
+			// Check for dossier update
+			if (DBVersion.RunDossierFileCheckWithForceUpdate)
+				RunDossierFileCheckWithForceUpdate();
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -2256,12 +2259,15 @@ namespace WinApp.Forms
 
 		private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
 		{
-			// Test running previous dossier file, force update - even if no more battles is detected
+			RunDossierFileCheckWithForceUpdate();
+		}
+
+		private void RunDossierFileCheckWithForceUpdate()
+		{
 			SetStatus2("Starting dossier file check with force update...");
 			dossier2json d2j = new dossier2json();
 			d2j.ManualRunInBackground("Running dossier file check with force update...", true);
-			//SetFormTitle();
-			//GridShow(result);
+		
 		}
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)

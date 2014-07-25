@@ -305,8 +305,7 @@ namespace WinApp.Code
 			else if (wn7 >= 500) wn7RatingColor = ColorTheme.Rating_bad;
 			return wn7RatingColor;
 		}
-
-
+		
 		public static Color WN8color(double wn8)
 		{
 			// http://wiki.wnefficiency.net/pages/Color_Scale
