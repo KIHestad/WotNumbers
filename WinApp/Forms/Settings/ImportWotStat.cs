@@ -167,7 +167,7 @@ namespace WinApp.Forms
 								int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
 								string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
 								// Calc WN7
-								int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, victory, 0, true), 0));
+								int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, victory, Rating.GetAverageBattleTier(), true), 0));
 								// Calc WN8
 								int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0));
 								// Calc EFF

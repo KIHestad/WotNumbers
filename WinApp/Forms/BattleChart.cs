@@ -583,11 +583,18 @@ namespace WinApp.Forms
 			Cursor = Cursors.WaitCursor;
 			string ptWhere = "";
 			string bWhere = "";
-			int tankId = 0;
-			if (tankName != "All Tanks")
+			double TIER = 0;
+			if (tankName == "All Tanks")
 			{
-				int playerTankId = TankData.GetPlayerTankId(tankName);
-				tankId = TankData.GetTankID(playerTankId);
+				// Show chart values all tanks
+				TIER = Rating.GetAverageBattleTier();
+			}
+			else 
+			{
+				// Show chart values for spesific tank
+				int tankId = TankData.GetTankID(tankName);
+				TIER = TankData.GetTankTier(tankId);
+				int playerTankId = TankData.GetPlayerTankId(tankId);
 				ptWhere = " where pt.id=@playerTankId ";
 				bWhere = " where playerTankId=@playerTankId ";
 				DB.AddWithValue(ref ptWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
@@ -595,7 +602,7 @@ namespace WinApp.Forms
 			}
 			string sql =
 				"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-				"  sum (ptb.def) as def, sum (ptb.cap) as cap, sum(t.tier * ptb.battles) as tier, sum(wins) as wins " +
+				"  sum (ptb.def) as def, sum (ptb.cap) as cap, sum(wins) as wins " +
 				"from playerTankBattle ptb inner join " +
 				"  playerTank pt on ptb.playerTankId=pt.id  and pt.playerId=@playerId  inner join " +
 				"  tank t on pt.tankId = t.id " +
@@ -608,14 +615,13 @@ namespace WinApp.Forms
 			double FRAGS = Convert.ToDouble(ptbRow["frags"]);
 			double DEF = Convert.ToDouble(ptbRow["def"]);
 			double CAP = Convert.ToDouble(ptbRow["cap"]);
-			double TIER = Convert.ToDouble(ptbRow["tier"]);
 			double WINS = Convert.ToDouble(ptbRow["wins"]);
 			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
 				sql =
 					"select sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
-					"  sum (b.def) as def, sum (cap) as cap, sum(t.tier * b.battlesCount) as tier, sum(victory) as victory " +
+					"  sum (b.def) as def, sum (cap) as cap, sum(victory) as victory " +
 					"from battle b inner join " +
 					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId inner join " +
 					"  tank t on pt.tankId = t.id " +
@@ -631,7 +637,6 @@ namespace WinApp.Forms
 					FRAGS = FRAGS - Convert.ToDouble(bRow["frags"]);
 					DEF = DEF - Convert.ToDouble(bRow["def"]);
 					CAP = CAP - Convert.ToDouble(bRow["cap"]);
-					TIER = TIER - Convert.ToDouble(bRow["tier"]);
 					WINS = WINS - Convert.ToDouble(bRow["victory"]);
 				}
 			}
@@ -656,7 +661,7 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, tankId), 2);
+					WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
 					axisYminimum = SetYaxisLowestValue(WN7);
 					step++;
 					if (step % stepMod == 0)
@@ -683,7 +688,7 @@ namespace WinApp.Forms
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
 					WINS += Convert.ToDouble(dr["victory"]);
-					WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, tankId), 2);
+					WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
 					axisYminimum = SetYaxisLowestValue(WN7);
 					step++;
 					if (step % stepMod == 0)

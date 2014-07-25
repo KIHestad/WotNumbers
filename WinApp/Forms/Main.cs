@@ -1230,7 +1230,7 @@ namespace WinApp.Forms
 					// Add WN7
 					dr = dt.NewRow();
 					dr["Data"] = "WN7 Total Rating";
-					wn7 = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS);
+					wn7 = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
 					dr["Value"] = Math.Round(wn7, 2).ToString();
 					dt.Rows.Add(dr);
 

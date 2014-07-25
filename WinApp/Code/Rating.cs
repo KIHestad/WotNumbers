@@ -174,37 +174,11 @@ namespace WinApp.Code
 
 		#region WN7
 
-		public static double CalculateWN7(double battleCount, double dmg, double spotted, double frags, double def, double cap, double wins, int calcForTankId = 0, bool calcForBattle = false)
+		public static double CalculateWN7(double battleCount, double dmg, double spotted, double frags, double def, double cap, double wins, double TIER, bool calcForBattle = false)
 		{
 			double WN7 = 0;
 			if (battleCount > 0)
 			{
-				double TIER = 0;
-				if (calcForTankId != 0)
-				{
-					// Use explicit tank tier, used for calculating WN7 for tank
-					TIER = TankData.GetTankTier(calcForTankId);
-				}
-				else
-				{
-					// Get average battle tier, used for total player WN7 and battle WN7
-					string sql =
-						"select sum(ptb.battles) as battles, sum(t.tier * ptb.battles) as tier " +
-						"from playerTankBattle ptb left join " +
-						"  playerTank pt on ptb.playerTankId=pt.id left join " +
-						"  tank t on pt.tankId = t.id " +
-						"where pt.playerId=@playerId ";
-					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					DataTable dt = DB.FetchData(sql);
-					if (dt.Rows.Count > 0)
-					{
-						double totalBattles = Convert.ToDouble(dt.Rows[0][0]);
-						if (totalBattles > 0)
-						{
-							TIER = Convert.ToDouble(dt.Rows[0][1]) / totalBattles;
-						}
-					}
-				}
 				// Calc average values
 				double DAMAGE = dmg / battleCount;
 				double SPOT = spotted / battleCount;
@@ -375,13 +349,36 @@ namespace WinApp.Code
 				double wins = Rating.ConvertDbVal2Double(battle["victory"]);
 				double battlesCount = Rating.ConvertDbVal2Double(battle["battlesCount"]);
 				// Calculate WN7
-				string wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, wins, 0, true), 0)).ToString();
+				string wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, wins, Rating.GetAverageBattleTier(), true), 0)).ToString();
 				// Generate SQL to update WN7
 				sql = "UPDATE battle SET wn7=" + wn7 + " WHERE id = " + battleId;
 				DB.ExecuteNonQuery(sql);
 			}
 			dtBattles.Dispose();
 			dtBattles = new DataTable();
+		}
+
+		public static double GetAverageBattleTier()
+		{
+			double tier = 0;
+			// Get average battle tier, used for total player WN7 and battle WN7
+			string sql =
+				"select sum(ptb.battles) as battles, sum(t.tier * ptb.battles) as tier " +
+				"from playerTankBattle ptb left join " +
+				"  playerTank pt on ptb.playerTankId=pt.id left join " +
+				"  tank t on pt.tankId = t.id " +
+				"where pt.playerId=@playerId ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				double totalBattles = Convert.ToDouble(dt.Rows[0][0]);
+				if (totalBattles > 0)
+				{
+					tier = Convert.ToDouble(dt.Rows[0][1]) / totalBattles;
+				}
+			}
+			return tier;
 		}
 
 		#endregion
