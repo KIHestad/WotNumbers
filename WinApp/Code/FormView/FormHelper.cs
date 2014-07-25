@@ -17,38 +17,51 @@ namespace WinApp.Code
 
 		public static void OpenForm(Form parentForm, Form openForm)
 		{
-			// Check if parent form has moved or resized width
-			Point pos = parentForm.PointToScreen(new Point(0, 0));
-			if (pos.X != lastX || pos.Y != lastY || parentForm.Width != lastW)
-			{
-				// Yes, moved or resized width- remember as last position
-				skewCount = 0;
-				lastX = pos.X;
-				lastY = pos.Y;
-				lastW = parentForm.Width;
-			}
-			// Find if enough space to left to open new form
-			Screen screen = Screen.FromControl(parentForm);
-			int parentFormX = parentForm.Location.X - screen.Bounds.Left; // x position on active screen for parent form
-			int parentFormY = parentForm.Location.Y - screen.Bounds.Top; // x position on active screen for parent form
-			int spaceToRight = screen.WorkingArea.Width - parentFormX - parentForm.Width; // Space to right for parent form
 			int newX = 0;
 			int newY = 0;
-			if (spaceToRight < openForm.Width)
+			if (parentForm.WindowState == FormWindowState.Normal)
+			{
+				// Check if parent form has moved or resized width
+				Point pos = parentForm.PointToScreen(new Point(0, 0));
+				if (pos.X != lastX || pos.Y != lastY || parentForm.Width != lastW)
+				{
+					// Yes, moved or resized width- remember as last position
+					skewCount = 0;
+					lastX = pos.X;
+					lastY = pos.Y;
+					lastW = parentForm.Width;
+				}
+				// Find if enough space to left to open new form
+				Screen screen = Screen.FromControl(parentForm);
+				int parentFormX = parentForm.Location.X - screen.Bounds.Left; // x position on active screen for parent form
+				int parentFormY = parentForm.Location.Y - screen.Bounds.Top; // x position on active screen for parent form
+				int spaceToRight = screen.WorkingArea.Width - parentFormX - parentForm.Width; // Space to right for parent form
+				
+				if (spaceToRight < openForm.Width)
+				{
+					// Center location for new form
+					newX = parentForm.Location.X + 50 + (skewCount * offset);
+					newY = parentForm.Location.Y + 100 + (skewCount * offset);
+				}
+				else
+				{
+					// Right location for new form
+					newX = (lastX + lastW) + (skewCount * offset);
+					newY = (lastY) + (skewCount * offset);
+				}
+				// Show
+				openForm.SetDesktopLocation(newX, newY);
+				openForm.Height = parentForm.Height;
+				openForm.Show();
+			}
+			else
 			{
 				// Center location for new form
 				newX = parentForm.Location.X + 50 + (skewCount * offset);
 				newY = parentForm.Location.Y + 100 + (skewCount * offset);
+				openForm.SetDesktopLocation(newX, newY);
+				openForm.Show();
 			}
-			else
-			{
-				// Right location for new form
-				newX = (lastX + lastW) + (skewCount * offset);
-				newY = (lastY) + (skewCount * offset);
-			}
-			// Show
-			openForm.SetDesktopLocation(newX, newY);
-			openForm.Show();
 			// Make ready for next open form
 			skewCount++;
 			if (skewCount > 5)
