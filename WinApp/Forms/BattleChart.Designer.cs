@@ -33,6 +33,8 @@
 			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
 			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			this.BattleChartTheme = new BadForm();
+			this.ddPeriod = new BadDropDownBox();
+			this.badLabel4 = new BadLabel();
 			this.btnClearChart = new BadButton();
 			this.ddXaxis = new BadDropDownBox();
 			this.badLabel3 = new BadLabel();
@@ -43,8 +45,6 @@
 			this.badLabel1 = new BadLabel();
 			this.ChartingMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.badGroupBox1 = new BadGroupBox();
-			this.badLabel4 = new BadLabel();
-			this.ddPeriod = new BadDropDownBox();
 			this.BattleChartTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).BeginInit();
 			this.SuspendLayout();
@@ -82,6 +82,29 @@
 			this.BattleChartTheme.TabIndex = 0;
 			this.BattleChartTheme.Text = "Battle Chart";
 			this.BattleChartTheme.TitleHeight = 26;
+			// 
+			// ddPeriod
+			// 
+			this.ddPeriod.Image = null;
+			this.ddPeriod.Location = new System.Drawing.Point(558, 65);
+			this.ddPeriod.Name = "ddPeriod";
+			this.ddPeriod.Size = new System.Drawing.Size(75, 23);
+			this.ddPeriod.TabIndex = 16;
+			this.ddPeriod.Text = "( All )";
+			this.ddPeriod.Click += new System.EventHandler(this.ddPeriod_Click);
+			// 
+			// badLabel4
+			// 
+			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Dimmed = false;
+			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.Image = null;
+			this.badLabel4.Location = new System.Drawing.Point(517, 65);
+			this.badLabel4.Name = "badLabel4";
+			this.badLabel4.Size = new System.Drawing.Size(47, 23);
+			this.badLabel4.TabIndex = 15;
+			this.badLabel4.Text = "Period:";
 			// 
 			// btnClearChart
 			// 
@@ -227,29 +250,6 @@
 			this.badGroupBox1.TabIndex = 9;
 			this.badGroupBox1.Text = "Add Chart line";
 			// 
-			// badLabel4
-			// 
-			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel4.Dimmed = false;
-			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(517, 65);
-			this.badLabel4.Name = "badLabel4";
-			this.badLabel4.Size = new System.Drawing.Size(47, 23);
-			this.badLabel4.TabIndex = 15;
-			this.badLabel4.Text = "Period:";
-			// 
-			// ddPeriod
-			// 
-			this.ddPeriod.Image = null;
-			this.ddPeriod.Location = new System.Drawing.Point(558, 65);
-			this.ddPeriod.Name = "ddPeriod";
-			this.ddPeriod.Size = new System.Drawing.Size(75, 23);
-			this.ddPeriod.TabIndex = 16;
-			this.ddPeriod.Text = "( All )";
-			this.ddPeriod.Click += new System.EventHandler(this.ddPeriod_Click);
-			// 
 			// BattleChart
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,9 +258,9 @@
 			this.ClientSize = new System.Drawing.Size(792, 516);
 			this.Controls.Add(this.BattleChartTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(400, 300);
 			this.Name = "BattleChart";
-			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "TestShowImage";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;

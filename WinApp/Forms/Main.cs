@@ -2210,7 +2210,7 @@ namespace WinApp.Forms
 		private void toolItemViewChart_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.BattleChart(0);
-			frm.ShowDialog();
+			frm.Show();
 		}
 	
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
