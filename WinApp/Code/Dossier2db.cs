@@ -826,7 +826,7 @@ namespace WinApp.Code
 				double frags = Rating.ConvertDbVal2Double(battleNewRow["frags"]);
 				double def = Rating.ConvertDbVal2Double(battleNewRow["def"]);
 				double cap = Rating.ConvertDbVal2Double(battleNewRow["cap"]);
-				double wins = Rating.ConvertDbVal2Double(battleNewRow["wins"]);
+				double wins = Rating.ConvertDbVal2Double(battleNewRow["victory"]);
 				// Calculate WN7
 				sqlFields += ", wn7";
 				sqlValues += ", " + Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, wins, Rating.GetAverageBattleTier(), true), 0).ToString();
