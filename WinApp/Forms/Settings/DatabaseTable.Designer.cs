@@ -192,6 +192,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(448, 302);
 			this.Name = "DatabaseTable";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "DatabaseTable";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.DatabaseTable_Load);

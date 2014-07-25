@@ -132,6 +132,7 @@
     <Compile Include="Code\AppVersion.cs" />
     <Compile Include="Code\AutoSetupHelper.cs" />
     <Compile Include="Code\ExtensionMethods.cs" />
+    <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
     <Compile Include="Code\FormView\ColListHelper.cs" />
     <Compile Include="Code\FormView\FavListHelper.cs" />
@@ -403,6 +404,7 @@
     <Content Include="DevDocs\DatabaseLog\script backup\transferBattles.txt" />
     <Content Include="DevDocs\DatabaseLog\wsTankId.txt" />
     <Content Include="DevDocs\Img\FormIcons\formadmin_ico_6.ico" />
+    <Content Include="DevDocs\Img\FormIcons\form_charts_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_details_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\logo_about.png" />

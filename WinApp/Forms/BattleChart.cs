@@ -238,6 +238,8 @@ namespace WinApp.Forms
 
 		private void DrawChart()
 		{
+			// Change to refresh mode
+			btnAddChart.Text = "Refresh";
 			// Init
 			string tankName = ddTank.Text;
 			if (tankName == "( All Tanks )") tankName = "All Tanks";
@@ -251,11 +253,15 @@ namespace WinApp.Forms
 				return;
 			}
 			// Check if already shown
+			Series removeSerie = null;
 			foreach (Series serie in ChartingMain.Series)
 			{
-				if (serie.Name == chartSerie) 
-					return;
+				if (serie.Name == chartSerie)
+					removeSerie = serie;
 			}
+			// Remove if shown, to add / refresh
+			if (removeSerie != null)
+				ChartingMain.Series.Remove(removeSerie);
 			// Get Chart Value selected
 			ChartValue chartValue = chartValues.Find(c => c.name == selectedChartValue);
 			// Add series
@@ -868,6 +874,25 @@ namespace WinApp.Forms
 			Code.DropDownGrid.Show(ddValue, Code.DropDownGrid.DropDownGridType.List, ddChartList);
 		}
 
+		private void CheckAddButton()
+		{
+			string tankName = ddTank.Text;
+			if (tankName == "( All Tanks )") tankName = "All Tanks";
+			string selectedChartValue = ddValue.Text; 
+			string chartSerie = tankName + " - " + selectedChartValue;
+			// Check if already shown
+			string buttonText = "Add";
+			foreach (Series serie in ChartingMain.Series)
+			{
+				if (serie.Name == chartSerie)
+				{
+					buttonText = "Refresh";
+				}
+			}
+			if (btnAddChart.Text != buttonText)
+				btnAddChart.Text = buttonText;
+		}
+
 		private void btnClearChart_Click(object sender, EventArgs e)
 		{
 			ResetChart();
@@ -923,6 +948,16 @@ namespace WinApp.Forms
 			{
 				//throw;
 			}
+		}
+
+		private void ddTank_TextChanged(object sender, EventArgs e)
+		{
+			CheckAddButton();
+		}
+
+		private void ddValue_TextChanged(object sender, EventArgs e)
+		{
+			CheckAddButton();
 		}
 	}
 }

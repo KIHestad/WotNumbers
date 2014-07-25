@@ -269,7 +269,8 @@ abstract class BadThemeContainerControl : ContainerControl
 	protected override void OnMouseLeave(EventArgs e)
 	{
 		// Draw default cursor when leave form focus
-		// Cursor = Cursors.Default;
+		if (Cursor != Cursors.WaitCursor)
+			Cursor = Cursors.Default;
 		// Draw default sys icon background
 		SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
 		SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
@@ -641,7 +642,7 @@ abstract class BadThemeControl : Control
 			if (frm.Cursor == Cursors.WaitCursor)
 				return Cursors.WaitCursor;
 			else
-				return _Cursor; 
+				return _Cursor;
 		}
 		set	
 		{
@@ -649,10 +650,10 @@ abstract class BadThemeControl : Control
 			if (frm.Cursor != Cursors.WaitCursor)
 			{
 				_Cursor = value;
-				Invalidate();
 			}
 			else
 				_Cursor = Cursors.WaitCursor;
+			Invalidate();
 		}
 	}
 		
@@ -865,6 +866,12 @@ class BadButton : BadThemeControl
 	{
 		Invalidate();
 		base.OnLostFocus(e);
+	}
+
+	protected override void OnTextChanged(EventArgs e)
+	{
+		Invalidate();
+		base.OnTextChanged(e);
 	}
 	
 }

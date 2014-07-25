@@ -147,6 +147,7 @@
 			this.ddValue.Name = "ddValue";
 			this.ddValue.Size = new System.Drawing.Size(102, 23);
 			this.ddValue.TabIndex = 11;
+			this.ddValue.TextChanged += new System.EventHandler(this.ddValue_TextChanged);
 			this.ddValue.Click += new System.EventHandler(this.ddValue_Click);
 			// 
 			// badLabel2
@@ -179,6 +180,7 @@
 			this.ddTank.Name = "ddTank";
 			this.ddTank.Size = new System.Drawing.Size(149, 23);
 			this.ddTank.TabIndex = 3;
+			this.ddTank.TextChanged += new System.EventHandler(this.ddTank_TextChanged);
 			this.ddTank.Click += new System.EventHandler(this.ddTank_Click);
 			// 
 			// badLabel1
@@ -261,7 +263,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(400, 300);
 			this.Name = "BattleChart";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "TestShowImage";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.BattleChart_Load);
