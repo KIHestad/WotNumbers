@@ -274,7 +274,7 @@ namespace WinApp.Forms
 			Series newSerie = new Series(chartSerie);
 			//newSerie.AxisLabel = tankName;
 			if (chartValue.totals)
-				newSerie.ChartType = SeriesChartType.Line; //.FastLine;
+				newSerie.ChartType = SeriesChartType.FastLine; //.FastLine;
 			else
 				newSerie.ChartType = SeriesChartType.Point;
 			if (ddXaxis.Text == "Date")
