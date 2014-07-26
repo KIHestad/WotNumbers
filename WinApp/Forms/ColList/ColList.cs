@@ -182,7 +182,7 @@ namespace WinApp.Forms
 
 		#region ColumnList
 
-		private void ShowColumnSetupList()
+		private void ShowColumnSetupList(bool selectNewestColList = false)
 		{
 			string sql = "select columnList.position as '#', columnList.name as 'Name', '' as 'Show', '' as 'Startup', '' as 'System', " +
 				"favList.name as 'Fav Tank List', columnList.id, columnList.defaultFavListId, columnList.sysCol, columnList.colDefault " +
@@ -225,25 +225,39 @@ namespace WinApp.Forms
 			dataGridColumnList.Columns["colDefault"].Visible = false;
 			// Set selected item as selected in grid, and modify calculted values
 			int rownum = 0;
+			int highestId = 0;
 			foreach (DataGridViewRow row in dataGridColumnList.Rows)
 			{
-				if (Convert.ToInt32(row.Cells["ID"].Value) == SelectedColListId) rownum = row.Index;
+				if (selectNewestColList)
+				{
+					if (Convert.ToInt32(row.Cells["ID"].Value) > highestId)
+					{
+						highestId = Convert.ToInt32(row.Cells["ID"].Value);
+						SelectedColListId = highestId;
+						rownum = row.Index;
+					}
+				}
+				else
+				{
+					if (Convert.ToInt32(row.Cells["ID"].Value) == SelectedColListId) 
+						rownum = row.Index;
+				}
 			}
-			dataGridColumnList.Rows[rownum].Selected = true;
-			SelectColumnList(SelectedColListId);
+			if (dataGridColumnList.Rows.Count > 0)
+				dataGridColumnList.Rows[rownum].Selected = true;
+			SelectColumnList();
 			// Connect to scrollbar
 			scrollColumnList.ScrollElementsTotals = dtColumnList.Rows.Count;
 			scrollColumnList.ScrollElementsVisible = dataGridColumnList.DisplayedRowCount(false);
-			
 		}
 
 		private void dataGridColumnList_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
 			SelectedColListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
-			SelectColumnList(SelectedColListId);
+			SelectColumnList();
 		}
 
-		private void SelectColumnList(int ColumnListId = 0)
+		private void SelectColumnList()
 		{
 			// Set enabled when not sysColumn
 			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
@@ -845,8 +859,10 @@ namespace WinApp.Forms
 				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedColListId, DB.SqlDataType.Int);
 				DB.ExecuteNonQuery(sql);
+				SelectedColListId = 0;
+				if (dataGridColumnList.RowCount > 0)
+					SelectedColListId = Convert.ToInt32(dataGridColumnList.Rows[0].Cells["id"].Value);
 				ShowColumnSetupList();
-				//SelectColumnList();
 			}
 		}
 
@@ -897,7 +913,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void ColListSort()
+		private void ColListSort(bool selectNewestColList = false)
 		{
 			string sql = "select * from columnList where colType=@colType and position is not null order by position;";
 			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
@@ -914,7 +930,7 @@ namespace WinApp.Forms
 					pos++;
 				}
 				DB.ExecuteNonQuery(sql);
-				ShowColumnSetupList();
+				ShowColumnSetupList(selectNewestColList);
 			}
 		}
 
@@ -944,7 +960,7 @@ namespace WinApp.Forms
 		{
 			Form frm = new Forms.ColListNewEdit(0);
 			frm.ShowDialog();
-			ColListSort();
+			ColListSort(true);
 		}
 
 		private void toolColListModify_Click(object sender, EventArgs e)
