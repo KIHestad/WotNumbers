@@ -135,6 +135,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Tank Details";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PlayerTankDetail_FormClosed);
 			this.Load += new System.EventHandler(this.PlayerTankDetails_Load);
 			this.ResizeEnd += new System.EventHandler(this.PlayerTankDetails_ResizeEnd);
 			this.Resize += new System.EventHandler(this.PlayerTankDetails_Resize);

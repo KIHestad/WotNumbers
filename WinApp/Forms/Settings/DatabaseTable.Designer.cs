@@ -195,6 +195,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "DatabaseTable";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DatabaseTable_FormClosed);
 			this.Load += new System.EventHandler(this.DatabaseTable_Load);
 			this.ResizeEnd += new System.EventHandler(this.DatabaseTable_ResizeEnd);
 			this.LocationChanged += new System.EventHandler(this.DatabaseTable_LocationChanged);

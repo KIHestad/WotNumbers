@@ -9,6 +9,7 @@ namespace WinApp.Code
 {
 	class FormHelper
 	{
+		private static int openCount = 0;
 		private static int skewCount = 0;
 		private static int lastX = 0;
 		private static int lastY = 0;
@@ -17,6 +18,8 @@ namespace WinApp.Code
 
 		public static void OpenForm(Form parentForm, Form openForm)
 		{
+			if (openCount == 0)
+				skewCount = 0;
 			int newX = 0;
 			int newY = 0;
 			int newH = 0;
@@ -27,6 +30,7 @@ namespace WinApp.Code
 				if (pos.X != lastX || pos.Y != lastY || parentForm.Width != lastW)
 				{
 					// Yes, moved or resized width- remember as last position
+					openCount = 0;
 					skewCount = 0;
 					lastX = pos.X;
 					lastY = pos.Y;
@@ -64,6 +68,7 @@ namespace WinApp.Code
 			openForm.SetDesktopLocation(newX, newY);
 			openForm.Height = newH;
 			openForm.Show();
+			openCount++;
 			// Make ready for next open form
 			skewCount++;
 			if (skewCount > 5)
@@ -83,5 +88,9 @@ namespace WinApp.Code
 			return null;
 		}
 
+		public static void ClosedOne()
+		{
+			if (openCount > 0) openCount--;
+		}
 	}
 }

@@ -263,5 +263,10 @@ namespace WinApp.Forms
 
 		}
 
+		private void DatabaseTable_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			FormHelper.ClosedOne();
+		}
+
 	}
 }

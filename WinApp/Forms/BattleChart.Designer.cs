@@ -281,6 +281,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "TestShowImage";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BattleChart_FormClosed);
 			this.Load += new System.EventHandler(this.BattleChart_Load);
 			this.BattleChartTheme.ResumeLayout(false);
 			this.BattleChartTheme.PerformLayout();

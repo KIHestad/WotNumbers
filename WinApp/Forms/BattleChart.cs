@@ -967,5 +967,10 @@ namespace WinApp.Forms
 		{
 			CheckAddButton();
 		}
+
+		private void BattleChart_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			FormHelper.ClosedOne();
+		}
 	}
 }

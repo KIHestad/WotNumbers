@@ -216,6 +216,11 @@ namespace WinApp.Forms
 
 		#endregion
 
+		private void PlayerTankDetail_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			FormHelper.ClosedOne();
+		}
+
 		
 
 	}
