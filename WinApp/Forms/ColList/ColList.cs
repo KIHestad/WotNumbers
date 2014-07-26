@@ -694,6 +694,7 @@ namespace WinApp.Forms
 
 		private void RemoveSelectedColumn(bool All = false)
 		{
+			int rownum = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
 			if (All)
 				dtSelectedColumns.Clear(); // Remove all rows in Selected Tank List
 			else
@@ -713,7 +714,9 @@ namespace WinApp.Forms
 				}
 			}
 			dtSelectedColumns.AcceptChanges(); // completely remove deleted rows
-			ShowSelectedColumns();			
+			ShowSelectedColumns();
+			if (dataGridSelectedColumns.RowCount > 0)
+				dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = rownum;
 		}
 
 		private void SortSelectedColum(string Column, bool SortASC = true)

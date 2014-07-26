@@ -497,6 +497,7 @@ namespace WinApp.Forms
 
 		private void RemoveTankFromFavList(bool All = false)
 		{
+			int rownum = dataGridSelectedTanks.FirstDisplayedScrollingRowIndex;
 			if (All)
 				dtFavListTank.Clear(); // Remove all rows in Selected Tank List
 			else
@@ -517,6 +518,8 @@ namespace WinApp.Forms
 			}
 			dtFavListTank.AcceptChanges(); // completely remove deleted rows
 			ShowSelectedTanks();
+			if (dataGridSelectedTanks.RowCount > 0)
+				dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = rownum;
 		}
 
 		private void SortFavList(string Column, bool SortASC = true)
