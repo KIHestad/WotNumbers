@@ -33,6 +33,7 @@
 			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
 			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			this.BattleChartTheme = new BadForm();
+			this.lblFooter = new System.Windows.Forms.Label();
 			this.ddPeriod = new BadDropDownBox();
 			this.badLabel4 = new BadLabel();
 			this.btnClearChart = new BadButton();
@@ -52,6 +53,7 @@
 			// BattleChartTheme
 			// 
 			this.BattleChartTheme.BackColor = System.Drawing.Color.Fuchsia;
+			this.BattleChartTheme.Controls.Add(this.lblFooter);
 			this.BattleChartTheme.Controls.Add(this.ddPeriod);
 			this.BattleChartTheme.Controls.Add(this.badLabel4);
 			this.BattleChartTheme.Controls.Add(this.btnClearChart);
@@ -66,9 +68,9 @@
 			this.BattleChartTheme.Controls.Add(this.badGroupBox1);
 			this.BattleChartTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BattleChartTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-			this.BattleChartTheme.FormFooter = false;
+			this.BattleChartTheme.FormFooter = true;
 			this.BattleChartTheme.FormFooterHeight = 26;
-			this.BattleChartTheme.FormInnerBorder = 3;
+			this.BattleChartTheme.FormInnerBorder = 0;
 			this.BattleChartTheme.FormMargin = 0;
 			this.BattleChartTheme.Image = null;
 			this.BattleChartTheme.Location = new System.Drawing.Point(0, 0);
@@ -77,11 +79,24 @@
 			this.BattleChartTheme.Resizable = true;
 			this.BattleChartTheme.Size = new System.Drawing.Size(792, 516);
 			this.BattleChartTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemExitImage")));
-			this.BattleChartTheme.SystemMaximizeImage = null;
-			this.BattleChartTheme.SystemMinimizeImage = null;
+			this.BattleChartTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemMaximizeImage")));
+			this.BattleChartTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemMinimizeImage")));
 			this.BattleChartTheme.TabIndex = 0;
 			this.BattleChartTheme.Text = "Battle Chart";
 			this.BattleChartTheme.TitleHeight = 26;
+			// 
+			// lblFooter
+			// 
+			this.lblFooter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblFooter.AutoSize = true;
+			this.lblFooter.BackColor = System.Drawing.Color.Transparent;
+			this.lblFooter.ForeColor = System.Drawing.Color.DarkGray;
+			this.lblFooter.Location = new System.Drawing.Point(8, 496);
+			this.lblFooter.Name = "lblFooter";
+			this.lblFooter.Size = new System.Drawing.Size(204, 13);
+			this.lblFooter.TabIndex = 17;
+			this.lblFooter.Text = "No chart selected, please add a chart line";
 			// 
 			// ddPeriod
 			// 
@@ -235,7 +250,7 @@
 			this.ChartingMain.Legends.Add(legend1);
 			this.ChartingMain.Location = new System.Drawing.Point(6, 103);
 			this.ChartingMain.Name = "ChartingMain";
-			this.ChartingMain.Size = new System.Drawing.Size(780, 407);
+			this.ChartingMain.Size = new System.Drawing.Size(780, 379);
 			this.ChartingMain.TabIndex = 0;
 			this.ChartingMain.Text = "chart1";
 			this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
@@ -268,6 +283,7 @@
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.BattleChart_Load);
 			this.BattleChartTheme.ResumeLayout(false);
+			this.BattleChartTheme.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).EndInit();
 			this.ResumeLayout(false);
 
@@ -288,6 +304,7 @@
 		private BadButton btnClearChart;
 		private BadDropDownBox ddPeriod;
 		private BadLabel badLabel4;
+		private System.Windows.Forms.Label lblFooter;
 
 
 

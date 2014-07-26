@@ -2296,10 +2296,6 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 		}
 
-		private void toolMain_MouseMove(object sender, MouseEventArgs e)
-		{
-			toolMain.Focus();
-		}
 
 	}
 }

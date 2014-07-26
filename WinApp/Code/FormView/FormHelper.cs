@@ -19,6 +19,7 @@ namespace WinApp.Code
 		{
 			int newX = 0;
 			int newY = 0;
+			int newH = 0;
 			if (parentForm.WindowState == FormWindowState.Normal)
 			{
 				// Check if parent form has moved or resized width
@@ -39,29 +40,30 @@ namespace WinApp.Code
 				
 				if (spaceToRight < openForm.Width)
 				{
-					// Center location for new form
+					// Windowstate = normal -> Center location for new form
 					newX = parentForm.Location.X + 50 + (skewCount * offset);
 					newY = parentForm.Location.Y + 100 + (skewCount * offset);
+					newH = (parentForm.Height - 50) + (skewCount * offset);
 				}
 				else
 				{
-					// Right location for new form
+					// Windowstate = normal -> Right location for new form
 					newX = (lastX + lastW) + (skewCount * offset);
 					newY = (lastY) + (skewCount * offset);
+					newH = parentForm.Height;
 				}
-				// Show
-				openForm.SetDesktopLocation(newX, newY);
-				openForm.Height = parentForm.Height;
-				openForm.Show();
 			}
 			else
 			{
-				// Center location for new form
+				// Windowstate = maximized -> Center location for new form
 				newX = parentForm.Location.X + 50 + (skewCount * offset);
 				newY = parentForm.Location.Y + 100 + (skewCount * offset);
-				openForm.SetDesktopLocation(newX, newY);
-				openForm.Show();
+				newH = (parentForm.Height - 250) + (skewCount * offset);
 			}
+			// Show
+			openForm.SetDesktopLocation(newX, newY);
+			openForm.Height = newH;
+			openForm.Show();
 			// Make ready for next open form
 			skewCount++;
 			if (skewCount > 5)

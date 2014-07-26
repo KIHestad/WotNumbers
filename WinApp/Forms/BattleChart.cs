@@ -238,8 +238,6 @@ namespace WinApp.Forms
 
 		private void DrawChart()
 		{
-			// Change to refresh mode
-			btnAddChart.Text = "Refresh";
 			// Init
 			string tankName = ddTank.Text;
 			if (tankName == "( All Tanks )") tankName = "All Tanks";
@@ -252,6 +250,14 @@ namespace WinApp.Forms
 				Code.MsgBox.Show("Please select a chart value, this is the data that shows up in the chart.", "Missing Chart Value", this);
 				return;
 			}
+			// Update toolbar
+			string footerTxt = "Refreshed ";
+			if (btnAddChart.Text == "Add")
+				footerTxt = "Added ";
+			footerTxt += "chart line: " + chartSerie;
+			lblFooter.Text = footerTxt;
+			// Change to refresh mode
+			btnAddChart.Text = "Refresh";
 			// Check if already shown
 			Series removeSerie = null;
 			foreach (Series serie in ChartingMain.Series)
@@ -896,6 +902,8 @@ namespace WinApp.Forms
 		private void btnClearChart_Click(object sender, EventArgs e)
 		{
 			ResetChart();
+			btnAddChart.Text = "Add";
+			lblFooter.Text = "Chart cleared. No chart selected, please add a chart line";
 		}
 
 		private void ResetChart()
