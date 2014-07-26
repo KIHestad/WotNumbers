@@ -530,6 +530,8 @@ namespace WinApp.Forms
 			{
 				col.SortMode = DataGridViewColumnSortMode.NotSortable;
 			}
+			// Update scrollbar
+			MoveSelectedColumnsScrollBar();
 		}
 
 		private void AddSelectedColumn(bool All = false)
@@ -599,7 +601,15 @@ namespace WinApp.Forms
 						if (Convert.ToInt32(row.Cells["columnSelectionId"].Value) == lastcolumnSelectionId) rownum = row.Index;
 					}
 					dataGridSelectedColumns.Rows[rownum].Selected = true;
+					// scroll down to show it
+					if (rownum > 3)
+						dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = rownum - 3;
+					else
+						dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = 0;
+					// Acjust scrollbar
+					MoveSelectedColumnsScrollBar();
 				}
+				
 			}
 		}
 
@@ -703,7 +713,7 @@ namespace WinApp.Forms
 				}
 			}
 			dtSelectedColumns.AcceptChanges(); // completely remove deleted rows
-			ShowSelectedColumns();
+			ShowSelectedColumns();			
 		}
 
 		private void SortSelectedColum(string Column, bool SortASC = true)

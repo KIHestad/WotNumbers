@@ -333,6 +333,8 @@ namespace WinApp.Forms
 			{
 				col.SortMode = DataGridViewColumnSortMode.NotSortable;
 			}
+			// Update scrollbar
+			MoveSelTanksScrollBar();
 		}
 
 		private void AddTankToFavList(bool All = false)
@@ -397,11 +399,19 @@ namespace WinApp.Forms
 				if (lastTankID !=0)
 				{
 					int rownum = 0;
+					dataGridSelectedTanks.ClearSelection();
 					foreach (DataGridViewRow row in dataGridSelectedTanks.Rows)
 					{
 						if (Convert.ToInt32(row.Cells["ID"].Value) == lastTankID) rownum = row.Index;
 					}
 					dataGridSelectedTanks.Rows[rownum].Selected = true;
+					// scroll down to show it
+					if (rownum > 3)
+						dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = rownum - 3;
+					else
+						dataGridSelectedTanks.FirstDisplayedScrollingRowIndex = 0;
+					// Acjust scrollbar
+					MoveSelTanksScrollBar();
 				}
 			}
 		}
