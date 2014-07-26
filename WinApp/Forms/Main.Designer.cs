@@ -874,6 +874,7 @@
 			this.mTankFilter_EditFavList.Name = "mTankFilter_EditFavList";
 			this.mTankFilter_EditFavList.Size = new System.Drawing.Size(205, 22);
 			this.mTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
+			this.mTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
 			// 
 			// mMode
 			// 

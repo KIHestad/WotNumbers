@@ -115,7 +115,7 @@ namespace WinApp.Forms
 
 		#region Fav List
 
-		private void ShowFavList()
+		private void ShowFavList(bool selectNewestFavList = false)
 		{
 			DataTable dt = DB.FetchData("select position as '#', name as 'Name', '' as 'Show', id from favList order by COALESCE(position,99), name");
 			// Modify datatable by adding values to Show
@@ -142,13 +142,26 @@ namespace WinApp.Forms
 			btnSelectSelected.Enabled = buttonsEnabled;
 			// Set selected item as selected in grid, and modify calculted values
 			int rownum = 0;
+			int highestId = 0;
 			foreach (DataGridViewRow row in dataGridFavList.Rows)
 			{
-				if (Convert.ToInt32(row.Cells["id"].Value) == SelectedFavListId) rownum = row.Index;
+				if (selectNewestFavList)
+				{
+					if (Convert.ToInt32(row.Cells["ID"].Value) > highestId)
+					{
+						highestId = Convert.ToInt32(row.Cells["ID"].Value);
+						SelectedFavListId = highestId;
+						rownum = row.Index;
+					}
+				}
+				else
+				{
+					if (Convert.ToInt32(row.Cells["id"].Value) == SelectedFavListId)
+						rownum = row.Index;
+				}
 			}
 			if (dataGridFavList.Rows.Count > 0)
 				dataGridFavList.Rows[rownum].Selected = true;
-			// Get favlist 
 			SelectFavList();
 			// Connect to scrollbar
 			scrollFavList.ScrollElementsTotals = dt.Rows.Count;
@@ -842,7 +855,7 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void FavListSort()
+		private void FavListSort(bool selectNewestFavList = false)
 		{
 			string sql = "select * from favList where position is not null order by position;";
 			DataTable dt = DB.FetchData(sql);
@@ -858,7 +871,7 @@ namespace WinApp.Forms
 					pos++;
 				}
 				DB.ExecuteNonQuery(sql);
-				ShowFavList();
+				ShowFavList(selectNewestFavList);
 			}
 		}
 
@@ -876,7 +889,7 @@ namespace WinApp.Forms
 		{
 			Form frm = new Forms.FavListNewEdit(0);
 			frm.ShowDialog();
-			FavListSort();
+			FavListSort(true);
 		}
 
 		private void toolFavListModify_Click(object sender, EventArgs e)
@@ -897,6 +910,9 @@ namespace WinApp.Forms
 				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";
 				DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
 				DB.ExecuteNonQuery(sql);
+				SelectedFavListId = 0;
+				if (dataGridFavList.RowCount > 0)
+					SelectedFavListId = Convert.ToInt32(dataGridFavList.Rows[0].Cells["id"].Value);
 				ShowFavList();
 			}
 		}
