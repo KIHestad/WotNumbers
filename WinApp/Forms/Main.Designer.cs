@@ -40,13 +40,13 @@
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.MainTheme = new BadForm();
-			this.toolStripEx1 = new WinApp.Code.ToolStripEx();
-			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+			this.toolMain = new WinApp.Code.ToolStripEx();
+			this.mViewLabel = new System.Windows.Forms.ToolStripLabel();
 			this.mViewOverall = new System.Windows.Forms.ToolStripButton();
 			this.mViewTankInfo = new System.Windows.Forms.ToolStripButton();
 			this.mViewBattles = new System.Windows.Forms.ToolStripButton();
 			this.mRefresh = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.mRefreshSeparator = new System.Windows.Forms.ToolStripSeparator();
 			this.mColumnSelect = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mColumnSelect_01 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mColumnSelect_02 = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,8 +73,8 @@
 			this.mTankFilter_CountryGermany = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_CountryUK = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_CountryUSA = new System.Windows.Forms.ToolStripMenuItem();
-			this.mTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_CountryJapan = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Type = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_TypeLT = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_TypeMT = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,7 +92,7 @@
 			this.mTankFilter_Tier8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Tier9 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Tier10 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+			this.mTankFilter_FavSeparator = new System.Windows.Forms.ToolStripSeparator();
 			this.mTankFilter_Fav01 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Fav02 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Fav03 = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,7 +117,7 @@
 			this.mModeClan = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeSpecialInfo = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolStripMenuItem62 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mBattles1d = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles3d = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
@@ -155,122 +155,15 @@
 			this.scrollY = new BadScrollBar();
 			this.scrollCorner = new BadScrollBarCorner();
 			this.scrollX = new BadScrollBar();
-			this.toolMain = new System.Windows.Forms.ToolStrip();
-			this.toolItemViewLabel = new System.Windows.Forms.ToolStripLabel();
-			this.toolItemViewOverall = new System.Windows.Forms.ToolStripButton();
-			this.toolItemViewTankInfo = new System.Windows.Forms.ToolStripButton();
-			this.toolItemViewBattles = new System.Windows.Forms.ToolStripButton();
-			this.toolItemRefresh = new System.Windows.Forms.ToolStripButton();
-			this.toolItemRefreshSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemColumnSelect = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolItemColumnSelect_01 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_02 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_03 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_04 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_05 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_06 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_07 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_08 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_09 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_10 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_11 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_12 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_13 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_14 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemColumnSelect_15 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemColumnSelect_Edit = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolItemTankFilter_All = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Country = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryChina = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryFrance = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryGermany = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryUK = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryUSA = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_CountryJapan = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Type = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_TypeLT = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_TypeMT = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_TypeHT = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_TypeTD = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_TypeSPG = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier3 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier4 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier5 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier6 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier7 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier8 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier9 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Tier10 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_FavSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemTankFilter_Fav01 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav02 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav03 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav04 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav05 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav06 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav07 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav08 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav09 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemTankFilter_Fav10 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemTankFilter_EditFavList = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemMode = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolItemModeAll = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemModeRandomCompanyClan = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemModeTeam = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemModeRandom = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemModeCompany = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemModeClan = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemModeSpecialInfo = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattles = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolItemBattles1d = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattles3d = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemBattles1w = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattles2w = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemBattles1m = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattles3m = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattles6m = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemBattles1y = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemBattles2y = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemSettings = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolItemSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemSettingsDossierOptions = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemSettingsRunManual = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolItemSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolItemViewChart = new System.Windows.Forms.ToolStripButton();
-			this.toolItemHelp = new System.Windows.Forms.ToolStripButton();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
-			this.toolStripEx1.SuspendLayout();
+			this.toolMain.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).BeginInit();
 			this.panelInfo.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picIS7)).BeginInit();
-			this.toolMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// timerStatus2
@@ -302,10 +195,9 @@
 			// MainTheme
 			// 
 			this.MainTheme.BackColor = System.Drawing.Color.Fuchsia;
-			this.MainTheme.Controls.Add(this.toolStripEx1);
+			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatusRowCount);
 			this.MainTheme.Controls.Add(this.panelMainArea);
-			this.MainTheme.Controls.Add(this.toolMain);
 			this.MainTheme.Controls.Add(this.lblStatus2);
 			this.MainTheme.Controls.Add(this.lblStatus1);
 			this.MainTheme.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -327,17 +219,17 @@
 			this.MainTheme.Text = "Wot Numbers";
 			this.MainTheme.TitleHeight = 53;
 			// 
-			// toolStripEx1
+			// toolMain
 			// 
-			this.toolStripEx1.Dock = System.Windows.Forms.DockStyle.None;
-			this.toolStripEx1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.toolStripEx1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
+			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
+			this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mViewLabel,
             this.mViewOverall,
             this.mViewTankInfo,
             this.mViewBattles,
             this.mRefresh,
-            this.toolStripSeparator1,
+            this.mRefreshSeparator,
             this.mColumnSelect,
             this.mTankFilter,
             this.mMode,
@@ -346,18 +238,18 @@
             this.mSettings,
             this.mViewChart,
             this.mHelp});
-			this.toolStripEx1.Location = new System.Drawing.Point(47, 4);
-			this.toolStripEx1.Name = "toolStripEx1";
-			this.toolStripEx1.Size = new System.Drawing.Size(676, 25);
-			this.toolStripEx1.Stretch = true;
-			this.toolStripEx1.TabIndex = 18;
-			this.toolStripEx1.Text = "toolStripEx1";
+			this.toolMain.Location = new System.Drawing.Point(9, 29);
+			this.toolMain.Name = "toolMain";
+			this.toolMain.Size = new System.Drawing.Size(676, 25);
+			this.toolMain.Stretch = true;
+			this.toolMain.TabIndex = 18;
+			this.toolMain.Text = "toolStripEx1";
 			// 
-			// toolStripLabel1
+			// mViewLabel
 			// 
-			this.toolStripLabel1.Name = "toolStripLabel1";
-			this.toolStripLabel1.Size = new System.Drawing.Size(35, 22);
-			this.toolStripLabel1.Text = "View:";
+			this.mViewLabel.Name = "mViewLabel";
+			this.mViewLabel.Size = new System.Drawing.Size(35, 22);
+			this.mViewLabel.Text = "View:";
 			// 
 			// mViewOverall
 			// 
@@ -399,10 +291,10 @@
 			this.mRefresh.Text = "Refresh grid";
 			this.mRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
 			// 
-			// toolStripSeparator1
+			// mRefreshSeparator
 			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+			this.mRefreshSeparator.Name = "mRefreshSeparator";
+			this.mRefreshSeparator.Size = new System.Drawing.Size(6, 25);
 			// 
 			// mColumnSelect
 			// 
@@ -583,7 +475,7 @@
             this.mTankFilter_Country,
             this.mTankFilter_Type,
             this.mTankFilter_Tier,
-            this.toolStripSeparator6,
+            this.mTankFilter_FavSeparator,
             this.mTankFilter_Fav01,
             this.mTankFilter_Fav02,
             this.mTankFilter_Fav03,
@@ -634,7 +526,7 @@
 			// 
 			this.mTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryChina.Image")));
 			this.mTankFilter_CountryChina.Name = "mTankFilter_CountryChina";
-			this.mTankFilter_CountryChina.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_CountryChina.Size = new System.Drawing.Size(122, 22);
 			this.mTankFilter_CountryChina.Text = "China";
 			this.mTankFilter_CountryChina.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryChina.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -645,7 +537,7 @@
 			this.mTankFilter_CountryFrance.BackColor = System.Drawing.SystemColors.Control;
 			this.mTankFilter_CountryFrance.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryFrance.Image")));
 			this.mTankFilter_CountryFrance.Name = "mTankFilter_CountryFrance";
-			this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(122, 22);
 			this.mTankFilter_CountryFrance.Text = "France";
 			this.mTankFilter_CountryFrance.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryFrance.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -654,7 +546,7 @@
 			// 
 			this.mTankFilter_CountryGermany.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryGermany.Image")));
 			this.mTankFilter_CountryGermany.Name = "mTankFilter_CountryGermany";
-			this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(122, 22);
 			this.mTankFilter_CountryGermany.Text = "Germany";
 			this.mTankFilter_CountryGermany.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryGermany.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -663,7 +555,7 @@
 			// 
 			this.mTankFilter_CountryUK.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUK.Image")));
 			this.mTankFilter_CountryUK.Name = "mTankFilter_CountryUK";
-			this.mTankFilter_CountryUK.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_CountryUK.Size = new System.Drawing.Size(122, 22);
 			this.mTankFilter_CountryUK.Text = "U.K.";
 			this.mTankFilter_CountryUK.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryUK.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -672,28 +564,28 @@
 			// 
 			this.mTankFilter_CountryUSA.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSA.Image")));
 			this.mTankFilter_CountryUSA.Name = "mTankFilter_CountryUSA";
-			this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(122, 22);
 			this.mTankFilter_CountryUSA.Text = "U.S.A.";
 			this.mTankFilter_CountryUSA.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryUSA.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// mTankFilter_CountryUSSR
-			// 
-			this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
-			this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
-			this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(152, 22);
-			this.mTankFilter_CountryUSSR.Text = "U.S.S.R.";
-			this.mTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.mTankFilter_CountryUSSR.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mTankFilter_CountryJapan
 			// 
 			this.mTankFilter_CountryJapan.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryJapan.Image")));
 			this.mTankFilter_CountryJapan.Name = "mTankFilter_CountryJapan";
-			this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(122, 22);
 			this.mTankFilter_CountryJapan.Text = "Japan";
 			this.mTankFilter_CountryJapan.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryJapan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// mTankFilter_CountryUSSR
+			// 
+			this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
+			this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
+			this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryUSSR.Text = "U.S.S.R.";
+			this.mTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
+			this.mTankFilter_CountryUSSR.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mTankFilter_Type
 			// 
@@ -780,7 +672,7 @@
 			// 
 			this.mTankFilter_Tier1.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier1.Image")));
 			this.mTankFilter_Tier1.Name = "mTankFilter_Tier1";
-			this.mTankFilter_Tier1.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier1.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier1.Text = "1";
 			this.mTankFilter_Tier1.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -790,7 +682,7 @@
 			// 
 			this.mTankFilter_Tier2.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier2.Image")));
 			this.mTankFilter_Tier2.Name = "mTankFilter_Tier2";
-			this.mTankFilter_Tier2.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier2.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier2.Text = "2";
 			this.mTankFilter_Tier2.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -800,7 +692,7 @@
 			// 
 			this.mTankFilter_Tier3.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier3.Image")));
 			this.mTankFilter_Tier3.Name = "mTankFilter_Tier3";
-			this.mTankFilter_Tier3.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier3.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier3.Text = "3";
 			this.mTankFilter_Tier3.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -810,7 +702,7 @@
 			// 
 			this.mTankFilter_Tier4.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier4.Image")));
 			this.mTankFilter_Tier4.Name = "mTankFilter_Tier4";
-			this.mTankFilter_Tier4.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier4.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier4.Text = "4";
 			this.mTankFilter_Tier4.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -820,7 +712,7 @@
 			// 
 			this.mTankFilter_Tier5.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier5.Image")));
 			this.mTankFilter_Tier5.Name = "mTankFilter_Tier5";
-			this.mTankFilter_Tier5.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier5.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier5.Text = "5";
 			this.mTankFilter_Tier5.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -830,7 +722,7 @@
 			// 
 			this.mTankFilter_Tier6.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier6.Image")));
 			this.mTankFilter_Tier6.Name = "mTankFilter_Tier6";
-			this.mTankFilter_Tier6.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier6.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier6.Text = "6";
 			this.mTankFilter_Tier6.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -840,7 +732,7 @@
 			// 
 			this.mTankFilter_Tier7.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier7.Image")));
 			this.mTankFilter_Tier7.Name = "mTankFilter_Tier7";
-			this.mTankFilter_Tier7.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier7.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier7.Text = "7";
 			this.mTankFilter_Tier7.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier7.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -850,7 +742,7 @@
 			// 
 			this.mTankFilter_Tier8.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier8.Image")));
 			this.mTankFilter_Tier8.Name = "mTankFilter_Tier8";
-			this.mTankFilter_Tier8.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier8.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier8.Text = "8";
 			this.mTankFilter_Tier8.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier8.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -860,7 +752,7 @@
 			// 
 			this.mTankFilter_Tier9.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier9.Image")));
 			this.mTankFilter_Tier9.Name = "mTankFilter_Tier9";
-			this.mTankFilter_Tier9.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier9.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier9.Text = "9";
 			this.mTankFilter_Tier9.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier9.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
@@ -870,17 +762,17 @@
 			// 
 			this.mTankFilter_Tier10.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier10.Image")));
 			this.mTankFilter_Tier10.Name = "mTankFilter_Tier10";
-			this.mTankFilter_Tier10.Size = new System.Drawing.Size(152, 22);
+			this.mTankFilter_Tier10.Size = new System.Drawing.Size(86, 22);
 			this.mTankFilter_Tier10.Text = "10";
 			this.mTankFilter_Tier10.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
 			this.mTankFilter_Tier10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
 			this.mTankFilter_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// toolStripSeparator6
+			// mTankFilter_FavSeparator
 			// 
-			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(202, 6);
-			this.toolStripSeparator6.Visible = false;
+			this.mTankFilter_FavSeparator.Name = "mTankFilter_FavSeparator";
+			this.mTankFilter_FavSeparator.Size = new System.Drawing.Size(202, 6);
+			this.mTankFilter_FavSeparator.Visible = false;
 			// 
 			// mTankFilter_Fav01
 			// 
@@ -1086,7 +978,7 @@
 			// mBattles
 			// 
 			this.mBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem62,
+            this.mBattles1d,
             this.mBattlesYesterday,
             this.mBattles3d,
             this.toolStripSeparator19,
@@ -1108,15 +1000,15 @@
 			this.mBattles.Size = new System.Drawing.Size(106, 22);
 			this.mBattles.Text = "Today\'s Battles";
 			// 
-			// toolStripMenuItem62
+			// mBattles1d
 			// 
-			this.toolStripMenuItem62.Checked = true;
-			this.toolStripMenuItem62.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolStripMenuItem62.Name = "toolStripMenuItem62";
-			this.toolStripMenuItem62.Size = new System.Drawing.Size(181, 22);
-			this.toolStripMenuItem62.Text = "Today\'s Battles";
-			this.toolStripMenuItem62.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolStripMenuItem62.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.mBattles1d.Checked = true;
+			this.mBattles1d.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.mBattles1d.Name = "mBattles1d";
+			this.mBattles1d.Size = new System.Drawing.Size(181, 22);
+			this.mBattles1d.Text = "Today\'s Battles";
+			this.mBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			this.mBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mBattlesYesterday
 			// 
@@ -1491,1014 +1383,6 @@
 			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
 			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
 			// 
-			// toolMain
-			// 
-			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
-			this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemViewLabel,
-            this.toolItemViewOverall,
-            this.toolItemViewTankInfo,
-            this.toolItemViewBattles,
-            this.toolItemRefresh,
-            this.toolItemRefreshSeparator,
-            this.toolItemColumnSelect,
-            this.toolItemTankFilter,
-            this.toolItemMode,
-            this.toolItemBattles,
-            this.toolStripSeparator8,
-            this.toolItemSettings,
-            this.toolItemViewChart,
-            this.toolItemHelp});
-			this.toolMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolMain.Location = new System.Drawing.Point(9, 29);
-			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(645, 25);
-			this.toolMain.Stretch = true;
-			this.toolMain.TabIndex = 13;
-			this.toolMain.Text = "7";
-			// 
-			// toolItemViewLabel
-			// 
-			this.toolItemViewLabel.Name = "toolItemViewLabel";
-			this.toolItemViewLabel.Size = new System.Drawing.Size(35, 22);
-			this.toolItemViewLabel.Text = "View:";
-			// 
-			// toolItemViewOverall
-			// 
-			this.toolItemViewOverall.Checked = true;
-			this.toolItemViewOverall.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolItemViewOverall.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewOverall.Image")));
-			this.toolItemViewOverall.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemViewOverall.Name = "toolItemViewOverall";
-			this.toolItemViewOverall.Size = new System.Drawing.Size(60, 22);
-			this.toolItemViewOverall.Text = "&Home";
-			this.toolItemViewOverall.ToolTipText = " ";
-			this.toolItemViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
-			// 
-			// toolItemViewTankInfo
-			// 
-			this.toolItemViewTankInfo.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewTankInfo.Image")));
-			this.toolItemViewTankInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemViewTankInfo.Name = "toolItemViewTankInfo";
-			this.toolItemViewTankInfo.Size = new System.Drawing.Size(58, 22);
-			this.toolItemViewTankInfo.Text = "&Tanks";
-			this.toolItemViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
-			// 
-			// toolItemViewBattles
-			// 
-			this.toolItemViewBattles.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewBattles.Image")));
-			this.toolItemViewBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemViewBattles.Name = "toolItemViewBattles";
-			this.toolItemViewBattles.Size = new System.Drawing.Size(62, 22);
-			this.toolItemViewBattles.Text = "&Battles";
-			this.toolItemViewBattles.Click += new System.EventHandler(this.toolItemViewBattles_Click);
-			// 
-			// toolItemRefresh
-			// 
-			this.toolItemRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolItemRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolItemRefresh.Image")));
-			this.toolItemRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemRefresh.Name = "toolItemRefresh";
-			this.toolItemRefresh.Size = new System.Drawing.Size(23, 22);
-			this.toolItemRefresh.Text = "Refresh grid";
-			this.toolItemRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
-			// 
-			// toolItemRefreshSeparator
-			// 
-			this.toolItemRefreshSeparator.Name = "toolItemRefreshSeparator";
-			this.toolItemRefreshSeparator.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolItemColumnSelect
-			// 
-			this.toolItemColumnSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemColumnSelect_01,
-            this.toolItemColumnSelect_02,
-            this.toolItemColumnSelect_03,
-            this.toolItemColumnSelect_04,
-            this.toolItemColumnSelect_05,
-            this.toolItemColumnSelect_06,
-            this.toolItemColumnSelect_07,
-            this.toolItemColumnSelect_08,
-            this.toolItemColumnSelect_09,
-            this.toolItemColumnSelect_10,
-            this.toolItemColumnSelect_11,
-            this.toolItemColumnSelect_12,
-            this.toolItemColumnSelect_13,
-            this.toolItemColumnSelect_14,
-            this.toolItemColumnSelect_15,
-            this.toolStripSeparator3,
-            this.toolItemColumnSelect_Edit});
-			this.toolItemColumnSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolItemColumnSelect.Image")));
-			this.toolItemColumnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemColumnSelect.Name = "toolItemColumnSelect";
-			this.toolItemColumnSelect.ShowDropDownArrow = false;
-			this.toolItemColumnSelect.Size = new System.Drawing.Size(65, 22);
-			this.toolItemColumnSelect.Text = "Default";
-			this.toolItemColumnSelect.ToolTipText = "Default";
-			// 
-			// toolItemColumnSelect_01
-			// 
-			this.toolItemColumnSelect_01.Checked = true;
-			this.toolItemColumnSelect_01.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolItemColumnSelect_01.Name = "toolItemColumnSelect_01";
-			this.toolItemColumnSelect_01.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_01.Text = "Col List #1";
-			this.toolItemColumnSelect_01.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_02
-			// 
-			this.toolItemColumnSelect_02.Name = "toolItemColumnSelect_02";
-			this.toolItemColumnSelect_02.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_02.Text = "Col List #2";
-			this.toolItemColumnSelect_02.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_03
-			// 
-			this.toolItemColumnSelect_03.Name = "toolItemColumnSelect_03";
-			this.toolItemColumnSelect_03.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_03.Text = "Col List #3";
-			this.toolItemColumnSelect_03.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_04
-			// 
-			this.toolItemColumnSelect_04.Name = "toolItemColumnSelect_04";
-			this.toolItemColumnSelect_04.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_04.Text = "Col List #4";
-			this.toolItemColumnSelect_04.Visible = false;
-			this.toolItemColumnSelect_04.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_04.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_05
-			// 
-			this.toolItemColumnSelect_05.Name = "toolItemColumnSelect_05";
-			this.toolItemColumnSelect_05.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_05.Text = "Col List #5";
-			this.toolItemColumnSelect_05.Visible = false;
-			this.toolItemColumnSelect_05.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_05.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_06
-			// 
-			this.toolItemColumnSelect_06.Name = "toolItemColumnSelect_06";
-			this.toolItemColumnSelect_06.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_06.Text = "Col List #6";
-			this.toolItemColumnSelect_06.Visible = false;
-			this.toolItemColumnSelect_06.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_06.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_07
-			// 
-			this.toolItemColumnSelect_07.Name = "toolItemColumnSelect_07";
-			this.toolItemColumnSelect_07.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_07.Text = "Col List #7";
-			this.toolItemColumnSelect_07.Visible = false;
-			this.toolItemColumnSelect_07.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_07.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_08
-			// 
-			this.toolItemColumnSelect_08.Name = "toolItemColumnSelect_08";
-			this.toolItemColumnSelect_08.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_08.Text = "Col List #8";
-			this.toolItemColumnSelect_08.Visible = false;
-			this.toolItemColumnSelect_08.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_08.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_09
-			// 
-			this.toolItemColumnSelect_09.Name = "toolItemColumnSelect_09";
-			this.toolItemColumnSelect_09.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_09.Text = "Col List #9";
-			this.toolItemColumnSelect_09.Visible = false;
-			this.toolItemColumnSelect_09.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_09.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_10
-			// 
-			this.toolItemColumnSelect_10.Name = "toolItemColumnSelect_10";
-			this.toolItemColumnSelect_10.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_10.Text = "Col List #10";
-			this.toolItemColumnSelect_10.Visible = false;
-			this.toolItemColumnSelect_10.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_11
-			// 
-			this.toolItemColumnSelect_11.Name = "toolItemColumnSelect_11";
-			this.toolItemColumnSelect_11.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_11.Text = "Col List #11";
-			this.toolItemColumnSelect_11.Visible = false;
-			this.toolItemColumnSelect_11.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_11.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_12
-			// 
-			this.toolItemColumnSelect_12.Name = "toolItemColumnSelect_12";
-			this.toolItemColumnSelect_12.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_12.Text = "Col List #12";
-			this.toolItemColumnSelect_12.Visible = false;
-			this.toolItemColumnSelect_12.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_12.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_13
-			// 
-			this.toolItemColumnSelect_13.Name = "toolItemColumnSelect_13";
-			this.toolItemColumnSelect_13.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_13.Text = "Col List #13";
-			this.toolItemColumnSelect_13.Visible = false;
-			this.toolItemColumnSelect_13.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_13.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_14
-			// 
-			this.toolItemColumnSelect_14.Name = "toolItemColumnSelect_14";
-			this.toolItemColumnSelect_14.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_14.Text = "Col List #14";
-			this.toolItemColumnSelect_14.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_14.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemColumnSelect_15
-			// 
-			this.toolItemColumnSelect_15.Name = "toolItemColumnSelect_15";
-			this.toolItemColumnSelect_15.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_15.Text = "Col List #15";
-			this.toolItemColumnSelect_15.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
-			this.toolItemColumnSelect_15.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(179, 6);
-			// 
-			// toolItemColumnSelect_Edit
-			// 
-			this.toolItemColumnSelect_Edit.Name = "toolItemColumnSelect_Edit";
-			this.toolItemColumnSelect_Edit.Size = new System.Drawing.Size(182, 22);
-			this.toolItemColumnSelect_Edit.Text = "Edit Column Setup...";
-			this.toolItemColumnSelect_Edit.Click += new System.EventHandler(this.toolItemColumnSelect_Edit_Click);
-			// 
-			// toolItemTankFilter
-			// 
-			this.toolItemTankFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemTankFilter_All,
-            this.toolItemTankFilter_Country,
-            this.toolItemTankFilter_Type,
-            this.toolItemTankFilter_Tier,
-            this.toolItemTankFilter_FavSeparator,
-            this.toolItemTankFilter_Fav01,
-            this.toolItemTankFilter_Fav02,
-            this.toolItemTankFilter_Fav03,
-            this.toolItemTankFilter_Fav04,
-            this.toolItemTankFilter_Fav05,
-            this.toolItemTankFilter_Fav06,
-            this.toolItemTankFilter_Fav07,
-            this.toolItemTankFilter_Fav08,
-            this.toolItemTankFilter_Fav09,
-            this.toolItemTankFilter_Fav10,
-            this.toolStripSeparator4,
-            this.toolItemTankFilter_EditFavList});
-			this.toolItemTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter.Image")));
-			this.toolItemTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemTankFilter.Name = "toolItemTankFilter";
-			this.toolItemTankFilter.ShowDropDownArrow = false;
-			this.toolItemTankFilter.Size = new System.Drawing.Size(75, 22);
-			this.toolItemTankFilter.Text = "All Tanks";
-			this.toolItemTankFilter.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_MouseDown);
-			// 
-			// toolItemTankFilter_All
-			// 
-			this.toolItemTankFilter_All.BackColor = System.Drawing.Color.Transparent;
-			this.toolItemTankFilter_All.Checked = true;
-			this.toolItemTankFilter_All.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolItemTankFilter_All.Name = "toolItemTankFilter_All";
-			this.toolItemTankFilter_All.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_All.Text = "All Tanks";
-			this.toolItemTankFilter_All.Click += new System.EventHandler(this.toolItemTankFilter_All_Click);
-			this.toolItemTankFilter_All.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Country
-			// 
-			this.toolItemTankFilter_Country.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemTankFilter_CountryChina,
-            this.toolItemTankFilter_CountryFrance,
-            this.toolItemTankFilter_CountryGermany,
-            this.toolItemTankFilter_CountryUK,
-            this.toolItemTankFilter_CountryUSA,
-            this.toolItemTankFilter_CountryUSSR,
-            this.toolItemTankFilter_CountryJapan});
-			this.toolItemTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Country.Image")));
-			this.toolItemTankFilter_Country.Name = "toolItemTankFilter_Country";
-			this.toolItemTankFilter_Country.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Country.Text = "Nation";
-			// 
-			// toolItemTankFilter_CountryChina
-			// 
-			this.toolItemTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryChina.Image")));
-			this.toolItemTankFilter_CountryChina.Name = "toolItemTankFilter_CountryChina";
-			this.toolItemTankFilter_CountryChina.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryChina.Text = "China";
-			this.toolItemTankFilter_CountryChina.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryChina.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryChina.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_CountryFrance
-			// 
-			this.toolItemTankFilter_CountryFrance.BackColor = System.Drawing.SystemColors.Control;
-			this.toolItemTankFilter_CountryFrance.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryFrance.Image")));
-			this.toolItemTankFilter_CountryFrance.Name = "toolItemTankFilter_CountryFrance";
-			this.toolItemTankFilter_CountryFrance.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryFrance.Text = "France";
-			this.toolItemTankFilter_CountryFrance.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryFrance.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryFrance.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_CountryGermany
-			// 
-			this.toolItemTankFilter_CountryGermany.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryGermany.Image")));
-			this.toolItemTankFilter_CountryGermany.Name = "toolItemTankFilter_CountryGermany";
-			this.toolItemTankFilter_CountryGermany.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryGermany.Text = "Germany";
-			this.toolItemTankFilter_CountryGermany.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryGermany.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryGermany.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_CountryUK
-			// 
-			this.toolItemTankFilter_CountryUK.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryUK.Image")));
-			this.toolItemTankFilter_CountryUK.Name = "toolItemTankFilter_CountryUK";
-			this.toolItemTankFilter_CountryUK.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryUK.Text = "U.K.";
-			this.toolItemTankFilter_CountryUK.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryUK.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryUK.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_CountryUSA
-			// 
-			this.toolItemTankFilter_CountryUSA.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryUSA.Image")));
-			this.toolItemTankFilter_CountryUSA.Name = "toolItemTankFilter_CountryUSA";
-			this.toolItemTankFilter_CountryUSA.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryUSA.Text = "U.S.A.";
-			this.toolItemTankFilter_CountryUSA.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryUSA.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryUSA.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_CountryUSSR
-			// 
-			this.toolItemTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryUSSR.Image")));
-			this.toolItemTankFilter_CountryUSSR.Name = "toolItemTankFilter_CountryUSSR";
-			this.toolItemTankFilter_CountryUSSR.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryUSSR.Text = "U.S.S.R.";
-			this.toolItemTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryUSSR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryUSSR.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_CountryJapan
-			// 
-			this.toolItemTankFilter_CountryJapan.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_CountryJapan.Image")));
-			this.toolItemTankFilter_CountryJapan.Name = "toolItemTankFilter_CountryJapan";
-			this.toolItemTankFilter_CountryJapan.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_CountryJapan.Text = "Japan";
-			this.toolItemTankFilter_CountryJapan.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-			this.toolItemTankFilter_CountryJapan.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-			this.toolItemTankFilter_CountryJapan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Type
-			// 
-			this.toolItemTankFilter_Type.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemTankFilter_TypeLT,
-            this.toolItemTankFilter_TypeMT,
-            this.toolItemTankFilter_TypeHT,
-            this.toolItemTankFilter_TypeTD,
-            this.toolItemTankFilter_TypeSPG});
-			this.toolItemTankFilter_Type.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Type.Image")));
-			this.toolItemTankFilter_Type.Name = "toolItemTankFilter_Type";
-			this.toolItemTankFilter_Type.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Type.Text = "Tank Type";
-			// 
-			// toolItemTankFilter_TypeLT
-			// 
-			this.toolItemTankFilter_TypeLT.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_TypeLT.Image")));
-			this.toolItemTankFilter_TypeLT.Name = "toolItemTankFilter_TypeLT";
-			this.toolItemTankFilter_TypeLT.Size = new System.Drawing.Size(158, 22);
-			this.toolItemTankFilter_TypeLT.Text = "Light Tanks";
-			this.toolItemTankFilter_TypeLT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
-			this.toolItemTankFilter_TypeLT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
-			this.toolItemTankFilter_TypeLT.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_TypeMT
-			// 
-			this.toolItemTankFilter_TypeMT.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_TypeMT.Image")));
-			this.toolItemTankFilter_TypeMT.Name = "toolItemTankFilter_TypeMT";
-			this.toolItemTankFilter_TypeMT.Size = new System.Drawing.Size(158, 22);
-			this.toolItemTankFilter_TypeMT.Text = "Medium Tanks";
-			this.toolItemTankFilter_TypeMT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
-			this.toolItemTankFilter_TypeMT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
-			this.toolItemTankFilter_TypeMT.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_TypeHT
-			// 
-			this.toolItemTankFilter_TypeHT.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_TypeHT.Image")));
-			this.toolItemTankFilter_TypeHT.Name = "toolItemTankFilter_TypeHT";
-			this.toolItemTankFilter_TypeHT.Size = new System.Drawing.Size(158, 22);
-			this.toolItemTankFilter_TypeHT.Text = "Heavy Tanks";
-			this.toolItemTankFilter_TypeHT.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
-			this.toolItemTankFilter_TypeHT.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
-			this.toolItemTankFilter_TypeHT.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_TypeTD
-			// 
-			this.toolItemTankFilter_TypeTD.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_TypeTD.Image")));
-			this.toolItemTankFilter_TypeTD.Name = "toolItemTankFilter_TypeTD";
-			this.toolItemTankFilter_TypeTD.Size = new System.Drawing.Size(158, 22);
-			this.toolItemTankFilter_TypeTD.Text = "Tank Destroyers";
-			this.toolItemTankFilter_TypeTD.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
-			this.toolItemTankFilter_TypeTD.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
-			this.toolItemTankFilter_TypeTD.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_TypeSPG
-			// 
-			this.toolItemTankFilter_TypeSPG.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_TypeSPG.Image")));
-			this.toolItemTankFilter_TypeSPG.Name = "toolItemTankFilter_TypeSPG";
-			this.toolItemTankFilter_TypeSPG.Size = new System.Drawing.Size(158, 22);
-			this.toolItemTankFilter_TypeSPG.Text = "SPGs";
-			this.toolItemTankFilter_TypeSPG.Click += new System.EventHandler(this.toolItemTankFilter_Type_Click);
-			this.toolItemTankFilter_TypeSPG.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Type_MouseDown);
-			this.toolItemTankFilter_TypeSPG.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier
-			// 
-			this.toolItemTankFilter_Tier.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemTankFilter_Tier1,
-            this.toolItemTankFilter_Tier2,
-            this.toolItemTankFilter_Tier3,
-            this.toolItemTankFilter_Tier4,
-            this.toolItemTankFilter_Tier5,
-            this.toolItemTankFilter_Tier6,
-            this.toolItemTankFilter_Tier7,
-            this.toolItemTankFilter_Tier8,
-            this.toolItemTankFilter_Tier9,
-            this.toolItemTankFilter_Tier10});
-			this.toolItemTankFilter_Tier.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier.Image")));
-			this.toolItemTankFilter_Tier.Name = "toolItemTankFilter_Tier";
-			this.toolItemTankFilter_Tier.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Tier.Text = "Tier";
-			// 
-			// toolItemTankFilter_Tier1
-			// 
-			this.toolItemTankFilter_Tier1.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier1.Image")));
-			this.toolItemTankFilter_Tier1.Name = "toolItemTankFilter_Tier1";
-			this.toolItemTankFilter_Tier1.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier1.Text = "1";
-			this.toolItemTankFilter_Tier1.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier1.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier2
-			// 
-			this.toolItemTankFilter_Tier2.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier2.Image")));
-			this.toolItemTankFilter_Tier2.Name = "toolItemTankFilter_Tier2";
-			this.toolItemTankFilter_Tier2.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier2.Text = "2";
-			this.toolItemTankFilter_Tier2.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier2.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier3
-			// 
-			this.toolItemTankFilter_Tier3.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier3.Image")));
-			this.toolItemTankFilter_Tier3.Name = "toolItemTankFilter_Tier3";
-			this.toolItemTankFilter_Tier3.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier3.Text = "3";
-			this.toolItemTankFilter_Tier3.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier3.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier4
-			// 
-			this.toolItemTankFilter_Tier4.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier4.Image")));
-			this.toolItemTankFilter_Tier4.Name = "toolItemTankFilter_Tier4";
-			this.toolItemTankFilter_Tier4.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier4.Text = "4";
-			this.toolItemTankFilter_Tier4.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier4.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier5
-			// 
-			this.toolItemTankFilter_Tier5.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier5.Image")));
-			this.toolItemTankFilter_Tier5.Name = "toolItemTankFilter_Tier5";
-			this.toolItemTankFilter_Tier5.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier5.Text = "5";
-			this.toolItemTankFilter_Tier5.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier5.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier6
-			// 
-			this.toolItemTankFilter_Tier6.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier6.Image")));
-			this.toolItemTankFilter_Tier6.Name = "toolItemTankFilter_Tier6";
-			this.toolItemTankFilter_Tier6.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier6.Text = "6";
-			this.toolItemTankFilter_Tier6.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier6.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier7
-			// 
-			this.toolItemTankFilter_Tier7.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier7.Image")));
-			this.toolItemTankFilter_Tier7.Name = "toolItemTankFilter_Tier7";
-			this.toolItemTankFilter_Tier7.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier7.Text = "7";
-			this.toolItemTankFilter_Tier7.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier7.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier7.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier8
-			// 
-			this.toolItemTankFilter_Tier8.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier8.Image")));
-			this.toolItemTankFilter_Tier8.Name = "toolItemTankFilter_Tier8";
-			this.toolItemTankFilter_Tier8.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier8.Text = "8";
-			this.toolItemTankFilter_Tier8.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier8.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier8.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier9
-			// 
-			this.toolItemTankFilter_Tier9.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier9.Image")));
-			this.toolItemTankFilter_Tier9.Name = "toolItemTankFilter_Tier9";
-			this.toolItemTankFilter_Tier9.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier9.Text = "9";
-			this.toolItemTankFilter_Tier9.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier9.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier9.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Tier10
-			// 
-			this.toolItemTankFilter_Tier10.Image = ((System.Drawing.Image)(resources.GetObject("toolItemTankFilter_Tier10.Image")));
-			this.toolItemTankFilter_Tier10.Name = "toolItemTankFilter_Tier10";
-			this.toolItemTankFilter_Tier10.Size = new System.Drawing.Size(152, 22);
-			this.toolItemTankFilter_Tier10.Text = "10";
-			this.toolItemTankFilter_Tier10.Click += new System.EventHandler(this.toolItemTankFilter_Tier_Click);
-			this.toolItemTankFilter_Tier10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
-			this.toolItemTankFilter_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_FavSeparator
-			// 
-			this.toolItemTankFilter_FavSeparator.Name = "toolItemTankFilter_FavSeparator";
-			this.toolItemTankFilter_FavSeparator.Size = new System.Drawing.Size(202, 6);
-			this.toolItemTankFilter_FavSeparator.Visible = false;
-			// 
-			// toolItemTankFilter_Fav01
-			// 
-			this.toolItemTankFilter_Fav01.Name = "toolItemTankFilter_Fav01";
-			this.toolItemTankFilter_Fav01.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav01.Text = "Favourite item #1";
-			this.toolItemTankFilter_Fav01.Visible = false;
-			this.toolItemTankFilter_Fav01.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav02
-			// 
-			this.toolItemTankFilter_Fav02.Name = "toolItemTankFilter_Fav02";
-			this.toolItemTankFilter_Fav02.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav02.Text = "Favourite item #2";
-			this.toolItemTankFilter_Fav02.Visible = false;
-			this.toolItemTankFilter_Fav02.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav03
-			// 
-			this.toolItemTankFilter_Fav03.Name = "toolItemTankFilter_Fav03";
-			this.toolItemTankFilter_Fav03.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav03.Text = "Favourite item #3";
-			this.toolItemTankFilter_Fav03.Visible = false;
-			this.toolItemTankFilter_Fav03.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav04
-			// 
-			this.toolItemTankFilter_Fav04.Name = "toolItemTankFilter_Fav04";
-			this.toolItemTankFilter_Fav04.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav04.Text = "Favourite item #4";
-			this.toolItemTankFilter_Fav04.Visible = false;
-			this.toolItemTankFilter_Fav04.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav04.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav05
-			// 
-			this.toolItemTankFilter_Fav05.Name = "toolItemTankFilter_Fav05";
-			this.toolItemTankFilter_Fav05.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav05.Text = "Favourite item #5";
-			this.toolItemTankFilter_Fav05.Visible = false;
-			this.toolItemTankFilter_Fav05.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav05.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav06
-			// 
-			this.toolItemTankFilter_Fav06.Name = "toolItemTankFilter_Fav06";
-			this.toolItemTankFilter_Fav06.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav06.Text = "Favourite item #6";
-			this.toolItemTankFilter_Fav06.Visible = false;
-			this.toolItemTankFilter_Fav06.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav06.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav07
-			// 
-			this.toolItemTankFilter_Fav07.Name = "toolItemTankFilter_Fav07";
-			this.toolItemTankFilter_Fav07.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav07.Text = "Favourite item #7";
-			this.toolItemTankFilter_Fav07.Visible = false;
-			this.toolItemTankFilter_Fav07.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav07.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav08
-			// 
-			this.toolItemTankFilter_Fav08.Name = "toolItemTankFilter_Fav08";
-			this.toolItemTankFilter_Fav08.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav08.Text = "Favourite item #8";
-			this.toolItemTankFilter_Fav08.Visible = false;
-			this.toolItemTankFilter_Fav08.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav08.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav09
-			// 
-			this.toolItemTankFilter_Fav09.Name = "toolItemTankFilter_Fav09";
-			this.toolItemTankFilter_Fav09.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav09.Text = "Favourite item #9";
-			this.toolItemTankFilter_Fav09.Visible = false;
-			this.toolItemTankFilter_Fav09.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav09.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemTankFilter_Fav10
-			// 
-			this.toolItemTankFilter_Fav10.Name = "toolItemTankFilter_Fav10";
-			this.toolItemTankFilter_Fav10.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_Fav10.Text = "Favourite item #10";
-			this.toolItemTankFilter_Fav10.Visible = false;
-			this.toolItemTankFilter_Fav10.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
-			this.toolItemTankFilter_Fav10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator4
-			// 
-			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(202, 6);
-			// 
-			// toolItemTankFilter_EditFavList
-			// 
-			this.toolItemTankFilter_EditFavList.Name = "toolItemTankFilter_EditFavList";
-			this.toolItemTankFilter_EditFavList.Size = new System.Drawing.Size(205, 22);
-			this.toolItemTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
-			this.toolItemTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
-			// 
-			// toolItemMode
-			// 
-			this.toolItemMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemModeAll,
-            this.toolStripSeparator16,
-            this.toolItemModeRandomCompanyClan,
-            this.toolItemModeTeam,
-            this.toolItemModeHistorical,
-            this.toolStripSeparator15,
-            this.toolItemModeRandom,
-            this.toolItemModeCompany,
-            this.toolItemModeClan,
-            this.toolItemModeSpecialInfo});
-			this.toolItemMode.Image = ((System.Drawing.Image)(resources.GetObject("toolItemMode.Image")));
-			this.toolItemMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemMode.Name = "toolItemMode";
-			this.toolItemMode.ShowDropDownArrow = false;
-			this.toolItemMode.Size = new System.Drawing.Size(80, 22);
-			this.toolItemMode.Text = "All modes";
-			// 
-			// toolItemModeAll
-			// 
-			this.toolItemModeAll.Name = "toolItemModeAll";
-			this.toolItemModeAll.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeAll.Tag = "All";
-			this.toolItemModeAll.Text = "All modes";
-			this.toolItemModeAll.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeAll.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator16
-			// 
-			this.toolStripSeparator16.Name = "toolStripSeparator16";
-			this.toolStripSeparator16.Size = new System.Drawing.Size(224, 6);
-			// 
-			// toolItemModeRandomCompanyClan
-			// 
-			this.toolItemModeRandomCompanyClan.Name = "toolItemModeRandomCompanyClan";
-			this.toolItemModeRandomCompanyClan.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeRandomCompanyClan.Tag = "Mode15";
-			this.toolItemModeRandomCompanyClan.Text = "Random, Company and Clan";
-			this.toolItemModeRandomCompanyClan.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeRandomCompanyClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemModeTeam
-			// 
-			this.toolItemModeTeam.Name = "toolItemModeTeam";
-			this.toolItemModeTeam.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeTeam.Tag = "Mode7";
-			this.toolItemModeTeam.Text = "Team Battles";
-			this.toolItemModeTeam.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeTeam.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemModeHistorical
-			// 
-			this.toolItemModeHistorical.Name = "toolItemModeHistorical";
-			this.toolItemModeHistorical.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeHistorical.Tag = "Historical";
-			this.toolItemModeHistorical.Text = "Historical Battles";
-			this.toolItemModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator15
-			// 
-			this.toolStripSeparator15.Name = "toolStripSeparator15";
-			this.toolStripSeparator15.Size = new System.Drawing.Size(224, 6);
-			// 
-			// toolItemModeRandom
-			// 
-			this.toolItemModeRandom.Name = "toolItemModeRandom";
-			this.toolItemModeRandom.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeRandom.Tag = "Random";
-			this.toolItemModeRandom.Text = "Random Battles (*)";
-			this.toolItemModeRandom.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeRandom.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemModeCompany
-			// 
-			this.toolItemModeCompany.Name = "toolItemModeCompany";
-			this.toolItemModeCompany.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeCompany.Tag = "Company";
-			this.toolItemModeCompany.Text = "Tank Company Battles (*)";
-			this.toolItemModeCompany.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeCompany.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemModeClan
-			// 
-			this.toolItemModeClan.Name = "toolItemModeClan";
-			this.toolItemModeClan.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeClan.Tag = "Clan";
-			this.toolItemModeClan.Text = "Clan War Battles (*)";
-			this.toolItemModeClan.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.toolItemModeClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemModeSpecialInfo
-			// 
-			this.toolItemModeSpecialInfo.Name = "toolItemModeSpecialInfo";
-			this.toolItemModeSpecialInfo.Size = new System.Drawing.Size(227, 22);
-			this.toolItemModeSpecialInfo.Text = "* Stats Information";
-			this.toolItemModeSpecialInfo.Click += new System.EventHandler(this.toolItemModeSpecialInfo_Click);
-			// 
-			// toolItemBattles
-			// 
-			this.toolItemBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemBattles1d,
-            this.toolItemBattlesYesterday,
-            this.toolItemBattles3d,
-            this.toolStripSeparator10,
-            this.toolItemBattles1w,
-            this.toolItemBattles2w,
-            this.toolStripSeparator7,
-            this.toolItemBattles1m,
-            this.toolItemBattles3m,
-            this.toolItemBattles6m,
-            this.toolStripSeparator9,
-            this.toolItemBattles1y,
-            this.toolItemBattles2y,
-            this.toolStripSeparator14,
-            this.toolItemBattlesAll});
-			this.toolItemBattles.Image = ((System.Drawing.Image)(resources.GetObject("toolItemBattles.Image")));
-			this.toolItemBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemBattles.Name = "toolItemBattles";
-			this.toolItemBattles.ShowDropDownArrow = false;
-			this.toolItemBattles.Size = new System.Drawing.Size(106, 22);
-			this.toolItemBattles.Text = "Today\'s Battles";
-			// 
-			// toolItemBattles1d
-			// 
-			this.toolItemBattles1d.Checked = true;
-			this.toolItemBattles1d.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.toolItemBattles1d.Name = "toolItemBattles1d";
-			this.toolItemBattles1d.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles1d.Text = "Today\'s Battles";
-			this.toolItemBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemBattlesYesterday
-			// 
-			this.toolItemBattlesYesterday.Name = "toolItemBattlesYesterday";
-			this.toolItemBattlesYesterday.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattlesYesterday.Text = "Yesterday\'s Battles";
-			this.toolItemBattlesYesterday.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattlesYesterday.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemBattles3d
-			// 
-			this.toolItemBattles3d.Name = "toolItemBattles3d";
-			this.toolItemBattles3d.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles3d.Text = "Battles Last 3 Days";
-			this.toolItemBattles3d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles3d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator10
-			// 
-			this.toolStripSeparator10.Name = "toolStripSeparator10";
-			this.toolStripSeparator10.Size = new System.Drawing.Size(178, 6);
-			// 
-			// toolItemBattles1w
-			// 
-			this.toolItemBattles1w.Name = "toolItemBattles1w";
-			this.toolItemBattles1w.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles1w.Text = "Battles Last Week";
-			this.toolItemBattles1w.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles1w.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemBattles2w
-			// 
-			this.toolItemBattles2w.Name = "toolItemBattles2w";
-			this.toolItemBattles2w.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles2w.Text = "Battles Last 2 Weeks";
-			this.toolItemBattles2w.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles2w.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator7
-			// 
-			this.toolStripSeparator7.Name = "toolStripSeparator7";
-			this.toolStripSeparator7.Size = new System.Drawing.Size(178, 6);
-			// 
-			// toolItemBattles1m
-			// 
-			this.toolItemBattles1m.Name = "toolItemBattles1m";
-			this.toolItemBattles1m.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles1m.Text = "Battles Last Month";
-			this.toolItemBattles1m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles1m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemBattles3m
-			// 
-			this.toolItemBattles3m.Name = "toolItemBattles3m";
-			this.toolItemBattles3m.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles3m.Text = "Battles Last 3 Month";
-			this.toolItemBattles3m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles3m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemBattles6m
-			// 
-			this.toolItemBattles6m.Name = "toolItemBattles6m";
-			this.toolItemBattles6m.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles6m.Text = "Battles Last 6 Month";
-			this.toolItemBattles6m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles6m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator9
-			// 
-			this.toolStripSeparator9.Name = "toolStripSeparator9";
-			this.toolStripSeparator9.Size = new System.Drawing.Size(178, 6);
-			// 
-			// toolItemBattles1y
-			// 
-			this.toolItemBattles1y.Name = "toolItemBattles1y";
-			this.toolItemBattles1y.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles1y.Text = "Battles Last Year";
-			this.toolItemBattles1y.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles1y.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemBattles2y
-			// 
-			this.toolItemBattles2y.Name = "toolItemBattles2y";
-			this.toolItemBattles2y.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattles2y.Text = "Battles Last 2 Years";
-			this.toolItemBattles2y.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattles2y.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator14
-			// 
-			this.toolStripSeparator14.Name = "toolStripSeparator14";
-			this.toolStripSeparator14.Size = new System.Drawing.Size(178, 6);
-			// 
-			// toolItemBattlesAll
-			// 
-			this.toolItemBattlesAll.Name = "toolItemBattlesAll";
-			this.toolItemBattlesAll.Size = new System.Drawing.Size(181, 22);
-			this.toolItemBattlesAll.Text = "All Battles";
-			this.toolItemBattlesAll.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.toolItemBattlesAll.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolStripSeparator8
-			// 
-			this.toolStripSeparator8.Name = "toolStripSeparator8";
-			this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolItemSettings
-			// 
-			this.toolItemSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolItemSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemSettingsRun,
-            this.toolItemSettingsDossierOptions,
-            this.toolStripSeparator13,
-            this.toolItemUpdateDataFromAPI,
-            this.toolItemImportBattlesFromWotStat,
-            this.toolItemShowDbTables,
-            this.toolStripSeparator2,
-            this.toolItemSettingsApp});
-			this.toolItemSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolItemSettings.Image")));
-			this.toolItemSettings.Name = "toolItemSettings";
-			this.toolItemSettings.ShowDropDownArrow = false;
-			this.toolItemSettings.Size = new System.Drawing.Size(20, 22);
-			this.toolItemSettings.Text = "Settings";
-			// 
-			// toolItemSettingsRun
-			// 
-			this.toolItemSettingsRun.Name = "toolItemSettingsRun";
-			this.toolItemSettingsRun.Size = new System.Drawing.Size(263, 22);
-			this.toolItemSettingsRun.Text = "Listen To Dossier File";
-			this.toolItemSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
-			this.toolItemSettingsRun.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
-			// toolItemSettingsDossierOptions
-			// 
-			this.toolItemSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemSettingsRunManual,
-            this.toolItemSettingsForceUpdateFromPrev});
-			this.toolItemSettingsDossierOptions.Name = "toolItemSettingsDossierOptions";
-			this.toolItemSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
-			this.toolItemSettingsDossierOptions.Text = "Dossier File Options";
-			// 
-			// toolItemSettingsRunManual
-			// 
-			this.toolItemSettingsRunManual.Name = "toolItemSettingsRunManual";
-			this.toolItemSettingsRunManual.Size = new System.Drawing.Size(286, 22);
-			this.toolItemSettingsRunManual.Text = "Normal Dossier File Check";
-			this.toolItemSettingsRunManual.Click += new System.EventHandler(this.toolItemSettingsRunManual_Click);
-			// 
-			// toolItemSettingsForceUpdateFromPrev
-			// 
-			this.toolItemSettingsForceUpdateFromPrev.Name = "toolItemSettingsForceUpdateFromPrev";
-			this.toolItemSettingsForceUpdateFromPrev.Size = new System.Drawing.Size(286, 22);
-			this.toolItemSettingsForceUpdateFromPrev.Text = "Force Update All Data Dossier File Check";
-			this.toolItemSettingsForceUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsForceUpdateFromPrev_Click);
-			// 
-			// toolStripSeparator13
-			// 
-			this.toolStripSeparator13.Name = "toolStripSeparator13";
-			this.toolStripSeparator13.Size = new System.Drawing.Size(260, 6);
-			// 
-			// toolItemUpdateDataFromAPI
-			// 
-			this.toolItemUpdateDataFromAPI.Name = "toolItemUpdateDataFromAPI";
-			this.toolItemUpdateDataFromAPI.Size = new System.Drawing.Size(263, 22);
-			this.toolItemUpdateDataFromAPI.Text = "Update Data from API...";
-			this.toolItemUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
-			// 
-			// toolItemImportBattlesFromWotStat
-			// 
-			this.toolItemImportBattlesFromWotStat.Name = "toolItemImportBattlesFromWotStat";
-			this.toolItemImportBattlesFromWotStat.Size = new System.Drawing.Size(263, 22);
-			this.toolItemImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
-			this.toolItemImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
-			// 
-			// toolItemShowDbTables
-			// 
-			this.toolItemShowDbTables.Name = "toolItemShowDbTables";
-			this.toolItemShowDbTables.Size = new System.Drawing.Size(263, 22);
-			this.toolItemShowDbTables.Text = "Show Database Tables...";
-			this.toolItemShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
-			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(260, 6);
-			// 
-			// toolItemSettingsApp
-			// 
-			this.toolItemSettingsApp.Name = "toolItemSettingsApp";
-			this.toolItemSettingsApp.Size = new System.Drawing.Size(263, 22);
-			this.toolItemSettingsApp.Text = "&Application Settings...";
-			this.toolItemSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
-			// 
-			// toolItemViewChart
-			// 
-			this.toolItemViewChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolItemViewChart.Image = ((System.Drawing.Image)(resources.GetObject("toolItemViewChart.Image")));
-			this.toolItemViewChart.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolItemViewChart.Name = "toolItemViewChart";
-			this.toolItemViewChart.Size = new System.Drawing.Size(23, 22);
-			this.toolItemViewChart.Text = "toolStripButton1";
-			this.toolItemViewChart.Click += new System.EventHandler(this.toolItemViewChart_Click);
-			// 
-			// toolItemHelp
-			// 
-			this.toolItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolItemHelp.Image")));
-			this.toolItemHelp.Name = "toolItemHelp";
-			this.toolItemHelp.Size = new System.Drawing.Size(23, 22);
-			this.toolItemHelp.Click += new System.EventHandler(this.toolItemHelp_Click);
-			// 
 			// lblStatus2
 			// 
 			this.lblStatus2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -2549,15 +1433,13 @@
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).EndInit();
 			this.MainTheme.ResumeLayout(false);
 			this.MainTheme.PerformLayout();
-			this.toolStripEx1.ResumeLayout(false);
-			this.toolStripEx1.PerformLayout();
+			this.toolMain.ResumeLayout(false);
+			this.toolMain.PerformLayout();
 			this.panelMainArea.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).EndInit();
 			this.panelInfo.ResumeLayout(false);
 			this.panelInfo.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picIS7)).EndInit();
-			this.toolMain.ResumeLayout(false);
-			this.toolMain.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -2565,80 +1447,14 @@
 		#endregion
 
 		private System.Windows.Forms.Timer timerStatus2;
-		private System.Windows.Forms.ToolStrip toolMain;
-		private System.Windows.Forms.ToolStripButton toolItemRefresh;
-		private System.Windows.Forms.ToolStripLabel toolItemViewLabel;
-		private System.Windows.Forms.ToolStripButton toolItemViewOverall;
-		private System.Windows.Forms.ToolStripButton toolItemViewTankInfo;
-		private System.Windows.Forms.ToolStripButton toolItemViewBattles;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-		private System.Windows.Forms.ToolStripSeparator toolItemRefreshSeparator;
-		private System.Windows.Forms.ToolStripDropDownButton toolItemSettings;
-		private System.Windows.Forms.ToolStripButton toolItemHelp;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRun;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsDossierOptions;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsApp;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsRunManual;
-		private System.Windows.Forms.ToolStripMenuItem toolItemSettingsForceUpdateFromPrev;
 		private System.Windows.Forms.Label lblOverView;
 		private System.Windows.Forms.PictureBox picIS7;
 		private System.Windows.Forms.Timer timerPanelSlide;
-		private System.Windows.Forms.ToolStripMenuItem toolItemShowDbTables;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-		private System.Windows.Forms.ToolStripMenuItem toolItemImportBattlesFromWotStat;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
 		private BadForm MainTheme;
 		private System.Windows.Forms.Label lblStatus2;
 		private System.Windows.Forms.Label lblStatus1;
-		private System.Windows.Forms.ToolStripDropDownButton toolItemBattles;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1d;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles3d;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1w;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1m;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles1y;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattlesAll;
-		private System.Windows.Forms.ToolStripDropDownButton toolItemTankFilter;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_All;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier1;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier2;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier3;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier4;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier5;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier6;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier7;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier8;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier9;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Tier10;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Country;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryChina;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryFrance;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryGermany;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryUK;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryUSA;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryUSSR;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_CountryJapan;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Type;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_TypeLT;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_TypeMT;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_TypeHT;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_TypeTD;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_TypeSPG;
-		private System.Windows.Forms.ToolStripSeparator toolItemTankFilter_FavSeparator;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav01;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav02;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav03;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav04;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav05;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav06;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav07;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav08;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav09;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_Fav10;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-		private System.Windows.Forms.ToolStripMenuItem toolItemTankFilter_EditFavList;
 		private System.Windows.Forms.Panel panelMainArea;
 		private System.Windows.Forms.Panel panelInfo;
 		private System.Windows.Forms.ImageList imageListToolStrip;
@@ -2647,53 +1463,13 @@
 		private BadScrollBar scrollY;
 		private BadScrollBar scrollX;
 		private BadScrollBarCorner scrollCorner;
-		private System.Windows.Forms.ToolStripDropDownButton toolItemColumnSelect;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_01;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_04;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_05;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_13;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_Edit;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_03;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_02;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_06;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_07;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_08;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_09;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_10;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_11;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_12;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattlesYesterday;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles2w;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles3m;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles6m;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-		private System.Windows.Forms.ToolStripMenuItem toolItemBattles2y;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
-		private System.Windows.Forms.ToolStripMenuItem toolItemUpdateDataFromAPI;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_14;
-		private System.Windows.Forms.ToolStripMenuItem toolItemColumnSelect_15;
-		private System.Windows.Forms.ToolStripDropDownButton toolItemMode;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeAll;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeRandom;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeTeam;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeRandomCompanyClan;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeClan;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeCompany;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeHistorical;
-		private System.Windows.Forms.ToolStripMenuItem toolItemModeSpecialInfo;
-		private System.Windows.Forms.ToolStripButton toolItemViewChart;
-		private Code.ToolStripEx toolStripEx1;
-		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+		private Code.ToolStripEx toolMain;
+		private System.Windows.Forms.ToolStripLabel mViewLabel;
 		private System.Windows.Forms.ToolStripButton mViewOverall;
 		private System.Windows.Forms.ToolStripButton mViewTankInfo;
 		private System.Windows.Forms.ToolStripButton mViewBattles;
 		private System.Windows.Forms.ToolStripButton mRefresh;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripSeparator mRefreshSeparator;
 		private System.Windows.Forms.ToolStripDropDownButton mColumnSelect;
 		private System.Windows.Forms.ToolStripMenuItem mColumnSelect_01;
 		private System.Windows.Forms.ToolStripMenuItem mColumnSelect_02;
@@ -2739,7 +1515,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Tier8;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Tier9;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Tier10;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+		private System.Windows.Forms.ToolStripSeparator mTankFilter_FavSeparator;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Fav01;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Fav02;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Fav03;
@@ -2764,7 +1540,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mModeClan;
 		private System.Windows.Forms.ToolStripMenuItem mModeSpecialInfo;
 		private System.Windows.Forms.ToolStripDropDownButton mBattles;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem62;
+		private System.Windows.Forms.ToolStripMenuItem mBattles1d;
 		private System.Windows.Forms.ToolStripMenuItem mBattlesYesterday;
 		private System.Windows.Forms.ToolStripMenuItem mBattles3d;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
