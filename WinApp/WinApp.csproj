@@ -474,6 +474,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_TD.png" />
+    <Content Include="Docs\battle_result\json.txt" />
     <Content Include="Docs\Database\createTableSQLite.txt" />
     <Content Include="DevDocs\DatabaseLog\createView.txt" />
     <Content Include="DevDocs\Dev log\BadButton.txt" />
