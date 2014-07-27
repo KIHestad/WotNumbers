@@ -21,7 +21,7 @@ namespace WinApp.Forms
 		string ddTankList = "";
 		string ddChartList = "";
 		int initPlayerTankId = 0;
-		int numPoints = 100; // Max num of points in chart, exept for battle values (ChatValues.totals = false)
+		int numPoints = 500; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
 		private double axisYminimum = 999999999;
 
 		public BattleChart(int playerTankId = 0)
@@ -789,11 +789,13 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow bRow in dtChart.Rows)
 				{
-					WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
-					axisYminimum = SetYaxisLowestValue(WN8);
 					step++;
-					if (step % stepMod == 0) 
+					if (step % stepMod == 0)
+					{
+						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
+						axisYminimum = SetYaxisLowestValue(WN8);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(bRow["battleTime"]), WN8); // Use battle date
+					}
 					string tankId = bRow["tankId"].ToString();
 					DataRow[] ptbRow = ptb.Select("tankId = " + tankId);
 					if (ptbRow.Length > 0)
@@ -826,11 +828,13 @@ namespace WinApp.Forms
 						ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(bRow["cap"]);
 						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(bRow["victory"]);
 					}
-					WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
-					axisYminimum = SetYaxisLowestValue(WN8);
 					step++;
 					if (step % stepMod == 0)
+					{
+						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
+						axisYminimum = SetYaxisLowestValue(WN8);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN8); // Use battle count
+					}
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
@@ -855,6 +859,7 @@ namespace WinApp.Forms
 					if (answer == MsgBox.Button.OKButton)
 					{
 						ResetChart();
+						btnAddChart.Text = "Add";
 					}
 					else
 					{
