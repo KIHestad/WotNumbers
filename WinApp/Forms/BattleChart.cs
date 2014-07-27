@@ -451,11 +451,13 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					winRate = Math.Round(currentWins * 100 / currentBattles,2);
-					axisYminimum = SetYaxisLowestValue(winRate);
 					step++;
 					if (step % stepMod == 0)
+					{
+						winRate = Math.Round(currentWins * 100 / currentBattles, 2);
+						axisYminimum = SetYaxisLowestValue(winRate);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), winRate); // Use battle date
+					}
 					currentWins -= Convert.ToDouble(dr["victory"]); //  Move backwards
 					currentBattles -= Convert.ToDouble(dr["battlesCount"]);
 				}
@@ -468,11 +470,14 @@ namespace WinApp.Forms
 					battleCount += Convert.ToDouble(dr["battlesCount"]); // Use battle count
 					firstWins += Convert.ToDouble(dr["victory"]); // Move forwards
 					firstBattles += Convert.ToDouble(dr["battlesCount"]);
-					winRate = Math.Round(firstWins * 100 / firstBattles,2);
-					axisYminimum = SetYaxisLowestValue(winRate);
 					step++;
 					if (step % stepMod == 0)
+					{
+						winRate = Math.Round(firstWins * 100 / firstBattles, 2);
+						axisYminimum = SetYaxisLowestValue(winRate);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, winRate);
+					}
+						
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
@@ -553,11 +558,14 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
-					axisYminimum = SetYaxisLowestValue(EFF);
 					step++;
 					if (step % stepMod == 0)
+					{
+						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), 2);
+						axisYminimum = SetYaxisLowestValue(EFF);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), EFF); // Use battle date
+					}
+						
 					BATTLES -= Convert.ToDouble(dr["battlesCount"]);
 					DAMAGE -= Convert.ToDouble(dr["dmg"]);
 					SPOT -= Convert.ToDouble(dr["spotted"]);
@@ -578,11 +586,13 @@ namespace WinApp.Forms
 					FRAGS += Convert.ToDouble(dr["frags"]);
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
-					EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER),2);
-					axisYminimum = SetYaxisLowestValue(EFF);
 					step++;
 					if (step % stepMod == 0)
+					{
+						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), 2);
+						axisYminimum = SetYaxisLowestValue(EFF);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, EFF); // Use battle date
+					}
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
@@ -673,11 +683,14 @@ namespace WinApp.Forms
 			{
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
-					axisYminimum = SetYaxisLowestValue(WN7);
 					step++;
 					if (step % stepMod == 0)
+					{
+						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
+						axisYminimum = SetYaxisLowestValue(WN7);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), WN7); // Use battle date
+					}
+						
 					BATTLES -= Convert.ToDouble(dr["battlesCount"]);
 					DAMAGE -= Convert.ToDouble(dr["dmg"]);
 					SPOT -= Convert.ToDouble(dr["spotted"]);
@@ -700,11 +713,13 @@ namespace WinApp.Forms
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
 					WINS += Convert.ToDouble(dr["victory"]);
-					WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
-					axisYminimum = SetYaxisLowestValue(WN7);
 					step++;
 					if (step % stepMod == 0)
+					{
+						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
+						axisYminimum = SetYaxisLowestValue(WN7);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN7); // Use battle date
+					}
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);

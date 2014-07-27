@@ -39,6 +39,17 @@ namespace WinApp.Code
 		public int     playerId { get; set; }					// Player ID selected
 		public string  playerName { get; set; }					// Player Name selected
 		public string  dossierFilePath { get; set; }			// Dossier file path
+		public string  battleFilePath 
+		{
+			get
+			{
+				DirectoryInfo di = Directory.GetParent(dossierFilePath);
+				if (di.Exists)
+					return di.FullName + "/battle_results/";
+				else
+					return "";
+			}
+		}
 		public int     dossierFileWathcherRun { get; set; }		// Dossier file listener activated
 		public bool    grindParametersAutoStart { get; set; }	// Autoshow Grinding params on app startup
 		public PosSize posSize { get; set; }					// Main Form Position And Size
@@ -74,6 +85,10 @@ namespace WinApp.Code
 					{
 						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\Log");
 					}
+					if (!Directory.Exists(appdataFolder + wotnumFolder + "\\BattleResult"))
+					{
+						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\BattleResult");
+					}
 					_appDataFolderOK = true;
 				}
 				return appdataFolder + wotnumFolder + "\\";
@@ -93,6 +108,14 @@ namespace WinApp.Code
 			get
 			{
 				return AppDataBaseFolder + "Database\\";
+			}
+		}
+
+		public static string AppDataBattleResultFolder
+		{
+			get
+			{
+				return AppDataBaseFolder + "BattleResult\\";
 			}
 		}
 

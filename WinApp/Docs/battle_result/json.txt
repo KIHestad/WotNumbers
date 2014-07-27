@@ -54,22 +54,22 @@
             38
         ], 
         "aogasFactor10": 10, 
-        "autoEquipCost": [								// Consumables? (oil, gas, etc)
-            0, 
+        "autoEquipCost": [						// Credits cost - Consumables? (oil, gas, etc)
+            0,	
             0
         ], 
-        "autoLoadCost": [								// Ammo resupply
+        "autoLoadCost": [						// Credits cost - Ammo resupply
             9080, 
             0
         ], 
-        "autoRepairCost": 26936,						// repair
-        "capturePoints": 0, 
+        "autoRepairCost": 26936,				// Credit costs - Repair
+        "capturePoints": 0,		
         "countryID": 1,									// vbaddict countryId  ( + tankID)
-        "credits": 34564,								// Credits
-        "creditsContributionIn": 0, 
-        "creditsContributionOut": 0, 
-        "creditsPenalty": 0, 
-        "creditsToDraw": 0, 
+        "credits": 34564,						// Credits received (with premium) = total income without cost
+        "creditsContributionIn": 0,				// Credits ????
+        "creditsContributionOut": 0,			// Credits ????
+        "creditsPenalty": 0,					// Credits cost - penalty (???)		
+        "creditsToDraw": 0,						// Credits ????
         "dailyXPFactor10": 10,							// Whether this battle had a multiplier value attached to it
 															10	x1 Experience (regular battle)
 															20	x2 Experience
@@ -245,7 +245,7 @@
         "typeCompDescr": 9489,							// Wargaming TankID
         "vehTypeLockTime": 0, 
         "won": true, 
-        "xp": 1024, 
+        "xp": 1024,										// Netto XP this battle (earned after premium/bonus/first victory per day)
         "xpPenalty": 0
     }, 
     "players": {
