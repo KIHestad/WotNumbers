@@ -27,6 +27,7 @@ namespace WinApp.Code
 			public int Left = 10;
 			public int Width = 780;
 			public int Height = 480;
+			public FormWindowState WindowState = FormWindowState.Normal;
 		}
 
 		public dbType  databaseType { get; set; }				// SQLite or MS SQL Server

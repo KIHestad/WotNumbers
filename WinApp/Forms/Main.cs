@@ -100,21 +100,7 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
 
-		private void Main_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			if (this.WindowState == FormWindowState.Normal)
-			{
-				ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
-				mainFormPosSize.Top = this.Top;
-				mainFormPosSize.Left = this.Left;
-				mainFormPosSize.Width = this.Width;
-				mainFormPosSize.Height = this.Height;
-				Config.Settings.posSize = mainFormPosSize;
-				string msg = "";
-				Config.SaveConfig(out msg);
-			}
-		}
-
+		
 		private void CreateDataGridContextMenu()
 		{
 			// Datagrid context menu (Right click on Grid)
@@ -213,6 +199,11 @@ namespace WinApp.Forms
 		{
 			// Ready to draw form
 			Init = false;
+			// Maximize now if last settings
+			if (mainFormPosSize.WindowState == FormWindowState.Maximized)
+			{
+				this.WindowState = FormWindowState.Maximized;
+			}
 			// Startup settings
 			if (!LoadConfigOK)
 			{
@@ -405,11 +396,28 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Resize and move
+		#region Resize, Move or Close Form
+
+		private void Main_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			// Save config to save current screen pos and size
+			Config.Settings.posSize.WindowState = this.WindowState;
+			string msg = "";
+			Config.SaveConfig(out msg);
+		}
 
 		private void Main_Resize(object sender, EventArgs e)
 		{
-			if (!Init) ResizeNow();
+			if (!Init)
+			{
+				ResizeNow();
+				// Remember new size for saving on form close
+				if (this.WindowState == FormWindowState.Normal)
+				{
+					Config.Settings.posSize.Width = this.Width;
+					Config.Settings.posSize.Height = this.Height;
+				}
+			}
 		}
 
 		private void Main_ResizeEnd(object sender, EventArgs e)
@@ -452,6 +460,12 @@ namespace WinApp.Forms
 			{
 				Screen screen = Screen.FromControl(this);
 				this.MaximumSize = screen.WorkingArea.Size;
+				// Remember new pos for saving on form close
+				if (this.WindowState == FormWindowState.Normal)
+				{
+					Config.Settings.posSize.Top = this.Top;
+					Config.Settings.posSize.Left = this.Left;
+				}
 			}
 		}
 
