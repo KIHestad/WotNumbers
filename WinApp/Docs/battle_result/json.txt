@@ -66,9 +66,9 @@
         "capturePoints": 0,		
         "countryID": 1,									// vbaddict countryId  ( + tankID)
         "credits": 34564,						// Credits received (with premium) = total income without cost
-        "creditsContributionIn": 0,				// Credits ????
-        "creditsContributionOut": 0,			// Credits ????
-        "creditsPenalty": 0,					// Credits cost - penalty (???)		
+        "creditsContributionIn": 0,				// The total amount of compensation received in the event a team member did damage to you
+        "creditsContributionOut": 0,			// The total amount of compensation the members of your team you've damaged received
+        "creditsPenalty": 0,					// Credit penalty amount for damaging team members
         "creditsToDraw": 0,						// Credits ????
         "dailyXPFactor10": 10,							// Whether this battle had a multiplier value attached to it
 															10	x1 Experience (regular battle)
@@ -151,7 +151,7 @@
         "directHits": 4, 
         "directHitsReceived": 11, 
         "directTeamHits": 0, 
-        "dossierPopUps": [								// http://wiki.vbaddict.net/pages/DossierPopups
+        "dossierPopUps": [								// http://wiki.vbaddict.net/pages/DossierPopups  http://wotdossier.googlecode.com/svn/trunk/Sources/WotDossier.Applications/MedalHelper.cs (medals?)
             [
                 38, 
                 269
@@ -176,7 +176,7 @@
             0
         ], 
         "hits": 4, 
-        "igrXPFactor10": 10,							// Introduced in WoT 0.8.8  ( = dailyXPFactor10)
+        "igrXPFactor10": 10,							// Introduced in WoT 0.8.8  (bonus for each battle?)
         "isPrematureLeave": false, 
         "isPremium": true, 
         "isTeamKiller": false, 

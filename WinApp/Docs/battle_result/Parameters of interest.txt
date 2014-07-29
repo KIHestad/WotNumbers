@@ -1,0 +1,116 @@
+﻿
+
+POSSIBLE MAPPINGS BETWEEN BATTLE_RESULT / DOSSIER:
+	"arenaCreateTime": 1406420297		// map start  (2014-07-27 02:18:17.000)
+	"duration": 382.20000000001164		// combined with duration = end time: 1406420679.2  (2014-07-27 02:24:39.000)
+	"parsertime": 1406421694.0			// Parse time  (2014-07-27 02:41:34.000)
+		>> Battle time in Wot Numbers: 02:25 (arenaCreateTime + duration)
+
+	"typeCompDescr": 9489				// Wargaming tankID (E 100)
+	"tankID": 37						// vbaddict tankID
+	"countryID": 1						// vbaddict countryID
+
+	"vehicleid": 20270096				// Generated ID for your player/tank for this match. Used in the players/vehicles lists. Also existing in dossier file?
+
+
+MAP:
+	"arenaTypeName": "Cliff"			// Map name
+	"arenaTypeIcon": "18_cliff"			// Map name / id
+
+
+CREDITS:
+	"credits": 34564					// Net income
+	"autoRepairCost": 26936				// Credits cost - Repair
+	"autoLoadCost": [					// Credits cost - Ammo resupply
+		9080,								// Credits
+		0									// Gold ?
+	]
+	"creditsPenalty": 0					// Credits cost - Team dmg
+	"creditsContributionIn": 0			// Credits received - team dmg
+	"creditsContributionOut": 0			// Credits cost - Team dmg (same as creditsPenalty?)
+	"originalCredits": 23043			// Income before premium bonus
+	"premiumCreditsFactor10": 15		// Devide factor by 10 (can be used to check if player uses premium account)
+
+
+
+DAILY XP FACTOR:
+	"dailyXPFactor10": 10				// Devide factor by 10
+											10	x1 Experience (regular battle)
+											20	x2 Experience
+											30	x3 Experience
+											50	x5 Experience
+
+
+
+XP FACTOR FOR EACH BATTLE (?)
+	"igrXPFactor10": 10					// Devide factor by 10
+
+
+
+XP RECEIVED BY EACH CREWMAN
+	"tmenXP": 2048						// Future use: Combine with crew skills to determine actual crew progress
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+MEDIUM INTERESTING PARAMETERS UP FOR DISCUSSION:
+
+
+
+HOW THE BATTLE ENDED:
+	"finishReason": 1
+			0	Unknown (not used)
+			1	Extermination, all enemy vehicles were destroyed
+			2	Base capture, the enemy base was captured
+			3	Timeout, the battle time has elapsed
+			4	Failure, the arena did not initialize or had an internal failure
+			5	Technical, the match was interrupted by a server restart or was otherwise cancelled by the server
+
+
+
+BATTLE TYPE:
+	"gameplayID": 0
+
+		0	CTF			Capture the Flag
+		256	Domination	Encounter
+		512	Assault		Assault
+
+
+
+STATE OF YOUR VEHICLE AT BATTLE END:
+	"deathReason": -1
+			-1	Alive
+			0	Destroyed by a shot
+			1	Destroyed by fire
+			2	Destroyed by ramming
+			3	Crashed
+			4	Destroyed by a death zone
+			5	Vehicle drowned
+
+
+
+FREE XP
+	"freeXP": 51
+
+
+
+KILLED BY (wargaming player id)
+	"killerID": 0
+
+
+
+MARKS ON GUN (check if this value exits in dossier file. If so, read from dossier.)
+	"marksOnGun": 0
+
+
+
+XP PENALTY FOR TEAM DMG
+	"xpPenalty": 0
+
+
+
+LIST OF PLAYERS (possible use: keep track of which players/clans you have met)
+	"players": {
