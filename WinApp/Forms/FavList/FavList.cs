@@ -558,6 +558,11 @@ namespace WinApp.Forms
 			SortFavList("Tier", sortTierASC);
 		}
 
+		private void dataGridSelectedTanks_DoubleClick(object sender, EventArgs e)
+		{
+			RemoveTankFromFavList();
+		}
+
 		private void btnRemoveSelected_Click(object sender, EventArgs e)
 		{
 			RemoveTankFromFavList();
@@ -576,6 +581,11 @@ namespace WinApp.Forms
 		private void btnSelectAll_Click(object sender, EventArgs e)
 		{
 			AddTankToFavList(true);
+		}
+
+		private void dataGridAllTanks_DoubleClick(object sender, EventArgs e)
+		{
+			AddTankToFavList();
 		}
 
 		private void toolSelectedTanks_MoveUp_Click(object sender, EventArgs e)
@@ -968,5 +978,33 @@ namespace WinApp.Forms
 			
 		}
 
+		private void dataGridAllTanks_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			string key = Convert.ToString(e.KeyChar);
+			int rownum = dataGridAllTanks.SelectedCells[0].RowIndex;
+			if (!FindTank(key, rownum))
+			{
+				rownum = 0;
+				FindTank(key, rownum);
+			}
+		}
+
+		private bool FindTank(string key, int rownum)
+		{
+			bool found = false;
+			while (rownum < dataGridAllTanks.RowCount - 1 && !found)
+			{
+				rownum++;
+				found = dataGridAllTanks.Rows[rownum].Cells["Tank"].Value.ToString().Substring(0, 1).ToUpper() == key.ToUpper();
+			}
+			if (found)
+			{
+				dataGridAllTanks.ClearSelection();
+				dataGridAllTanks.Rows[rownum].Selected = true;
+				dataGridAllTanks.FirstDisplayedScrollingRowIndex = rownum - 3;
+			}
+			return found;
+		}
+				
 	}
 }

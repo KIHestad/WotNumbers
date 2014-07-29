@@ -550,6 +550,7 @@
 			this.dataGridSelectedColumns.TabIndex = 17;
 			this.dataGridSelectedColumns.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridSelectedColumns.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
+			this.dataGridSelectedColumns.DoubleClick += new System.EventHandler(this.dataGridSelectedColumns_DoubleClick);
 			// 
 			// scrollAllColumns
 			// 
@@ -591,6 +592,7 @@
 			this.dataGridAllColumns.TabIndex = 10;
 			this.dataGridAllColumns.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllColumns.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
+			this.dataGridAllColumns.DoubleClick += new System.EventHandler(this.dataGridAllColumns_DoubleClick);
 			// 
 			// scrollColumnList
 			// 
