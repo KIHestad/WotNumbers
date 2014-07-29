@@ -2314,7 +2314,5 @@ namespace WinApp.Forms
 		{
 			Battle2json.CheckBattleResultNewFiles();
 		}
-
-
 	}
 }

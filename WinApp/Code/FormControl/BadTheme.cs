@@ -42,16 +42,6 @@ abstract class BadThemeContainerControl : ContainerControl
 		}
 	}
 
-	private bool ParentIsForm;
-	protected override void OnHandleCreated(EventArgs e)
-	{
-		Dock = DockStyle.Fill;
-		ParentIsForm = Parent is Form;
-		if (ParentIsForm)
-			ParentForm.FormBorderStyle = FormBorderStyle.None;
-		base.OnHandleCreated(e);
-	}
-
 	private bool _Resizable = true;
 	public bool Resizable
 	{
@@ -81,28 +71,6 @@ abstract class BadThemeContainerControl : ContainerControl
 			if (SystemMinimizeImage != null) _TitleWidht -= SystemMinimizeImage.Width;
 			return _TitleWidht;
 		}
-	}
-
-	private IntPtr Flag;
-	protected override void OnMouseDown(MouseEventArgs e)
-	{
-		if (!(e.Button == MouseButtons.Left))
-			return;
-		if (ParentIsForm)
-			if (ParentForm.WindowState == FormWindowState.Maximized)
-				return;
-
-		if (Header.Contains(e.Location))
-			Flag = new IntPtr(2);
-		else if (Current.Position == 0 | !_Resizable)
-			return;
-		else
-			Flag = new IntPtr(Current.Position);
-
-		Capture = false;
-		Message msg = Message.Create(Parent.Handle, 161, Flag, IntPtr.Zero);
-		DefWndProc(ref msg);
-		base.OnMouseDown(e);
 	}
 
 	private struct Pointer
@@ -214,6 +182,69 @@ abstract class BadThemeContainerControl : ContainerControl
 			Cursor = Current.Cursor;
 	}
 
+	public void SetMainAreaSize()
+	{
+		MainAreaClass calcMainArea = new MainAreaClass();
+		calcMainArea.Top = FormMargin + TitleHeight + 1;
+		calcMainArea.Left = FormMargin + 1 + FormInnerBorder;
+		calcMainArea.Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1;
+		calcMainArea.Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2;
+		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight;
+		calcMainArea.Bottom = ClientRectangle.Height - FormMargin - FormInnerBorder - 1;
+		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
+		MainArea = calcMainArea;
+	}
+
+	protected override void OnDoubleClick(EventArgs e)
+	{
+		//Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
+		Point PTC = PointToClient(MousePosition);
+		if (Resizable && Header.Contains(PTC))
+		{
+			if (ParentForm.WindowState == FormWindowState.Normal)
+				ParentForm.WindowState = FormWindowState.Maximized;
+			else
+				ParentForm.WindowState = FormWindowState.Normal;
+		}
+		base.OnDoubleClick(e);
+	}
+
+	private bool ParentIsForm;
+	protected override void OnHandleCreated(EventArgs e)
+	{
+		Dock = DockStyle.Fill;
+		ParentIsForm = Parent is Form;
+		if (ParentIsForm)
+			ParentForm.FormBorderStyle = FormBorderStyle.None;
+		base.OnHandleCreated(e);
+	}
+
+	private IntPtr Flag;
+	protected override void OnMouseDown(MouseEventArgs e)
+	{
+		if (e.Clicks == 2)
+			return;
+		if (!(e.Button == MouseButtons.Left))
+			return;
+		if (ParentIsForm)
+			if (ParentForm.WindowState == FormWindowState.Maximized)
+				return;
+		if (Header.Contains(e.Location))
+		{
+			Flag = new IntPtr(2);
+		}
+		else if (Current.Position == 0 | !_Resizable)
+			return;
+		else
+			Flag = new IntPtr(Current.Position);
+
+		Capture = false;
+		Message msg = Message.Create(Parent.Handle, 161, Flag, IntPtr.Zero);
+		DefWndProc(ref msg);
+		base.OnMouseDown(e);
+	}
+
+
 	protected override void OnMouseUp(MouseEventArgs e)
 	{
 		Point PTC = PointToClient(MousePosition);
@@ -251,19 +282,7 @@ abstract class BadThemeContainerControl : ContainerControl
 		}
 		// Set Main area values
 		SetMainAreaSize();
-	}
-
-	public void SetMainAreaSize()
-	{
-		MainAreaClass calcMainArea = new MainAreaClass();
-		calcMainArea.Top = FormMargin + TitleHeight + 1;
-		calcMainArea.Left = FormMargin + 1 + FormInnerBorder;
-		calcMainArea.Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1;
-		calcMainArea.Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2;
-		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight;
-		calcMainArea.Bottom = ClientRectangle.Height - FormMargin - FormInnerBorder - 1;
-		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
-		MainArea = calcMainArea;
+		base.OnMouseUp(e);
 	}
 
 	protected override void OnMouseLeave(EventArgs e)
@@ -310,8 +329,6 @@ abstract class BadThemeContainerControl : ContainerControl
 		// Done
 		base.OnSizeChanged(e);
 	}
-
-
 
 	public void SetTransparent(Color c)
 	{
@@ -617,7 +634,6 @@ class BadForm : BadThemeContainerControl
 		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.FormBackTitleFont)); // Add title text
 		DrawIcon(HorizontalAlignment.Left); // Add title icon
 
-
 		// Set Main area values
 		SetMainAreaSize();
 
@@ -625,7 +641,7 @@ class BadForm : BadThemeContainerControl
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
-
+	
 }
 
 abstract class BadThemeControl : Control
