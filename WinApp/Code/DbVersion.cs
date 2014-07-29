@@ -13,7 +13,7 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 79; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 81; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1046,6 +1046,21 @@ namespace WinApp.Code
 					break;
 				case 79:
 					RunDossierFileCheckWithForceUpdate = true;
+					break;
+				case 80:
+					mssql = "UPDATE columnSelection SET position = position + 3 where position >= 132; " +
+							"UPDATE columnSelection SET description = 'Damage to enemy tanks done by others after you spotted them' where id = 129; " +
+							"UPDATE columnSelection SET description = 'Damage to enemy tanks done by others after you tracked them' where id = 130; " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (188, 1, 132, 'CAST(playerTankBattle.dmg*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg', 'Average damge per battle made on enemy tanks', 'Damage', 50, 'Float'); ";
+					sqlite = mssql;
+					break;
+				case 81:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (189, 1, 133, 'CAST(playerTankBattle.assistSpot*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Spot', 'Average damage per battle to enemy tanks done by others after you spotted them per battle', 'Damage', 50, 'Float'); " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (190, 1, 134, 'CAST(playerTankBattle.assistTrack*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Track', 'Average damge per battle to enemy tanks done by others after you tracked them', 'Damage', 50, 'Float'); ";
+					sqlite = mssql;
 					break;
 
 			}

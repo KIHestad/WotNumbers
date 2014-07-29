@@ -133,7 +133,7 @@ class BufferedSubFile(object):
         return line
 
 
-
+
 class FeedParser:
     """A feed-style parser of email."""
 

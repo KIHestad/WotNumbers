@@ -30,7 +30,7 @@ class CharsetError(MessageError):
     """An illegal charset was given."""
 
 
-
+
 # These are parsing defects which the parser was able to work around.
 class MessageDefect:
     """Base class for a message defect."""

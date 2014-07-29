@@ -30,7 +30,7 @@ def walk(self):
                 yield subsubpart
 
 
-
+
 # These two functions are imported into the Iterators.py interface module.
 def body_line_iterator(msg, decode=False):
     """Iterate over the parts, returning string payloads line-by-line.
@@ -57,7 +57,7 @@ def typed_subpart_iterator(msg, maintype='text', subtype=None):
                 yield subpart
 
 
-
+
 def _structure(msg, fp=None, level=0, include_default=False):
     """A handy debugging aid"""
     if fp is None:

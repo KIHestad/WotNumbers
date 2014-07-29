@@ -157,6 +157,8 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.mSettingsTestAddBattleResult = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1145,7 +1147,9 @@
 			// 
 			this.mSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mSettingsRunManual,
-            this.mSettingsForceUpdateFromPrev});
+            this.mSettingsForceUpdateFromPrev,
+            this.toolStripSeparator1,
+            this.mSettingsTestAddBattleResult});
 			this.mSettingsDossierOptions.Name = "mSettingsDossierOptions";
 			this.mSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
 			this.mSettingsDossierOptions.Text = "Dossier File Options";
@@ -1412,6 +1416,18 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(283, 6);
+			// 
+			// mSettingsTestAddBattleResult
+			// 
+			this.mSettingsTestAddBattleResult.Name = "mSettingsTestAddBattleResult";
+			this.mSettingsTestAddBattleResult.Size = new System.Drawing.Size(286, 22);
+			this.mSettingsTestAddBattleResult.Text = "Test add battle result";
+			this.mSettingsTestAddBattleResult.Click += new System.EventHandler(this.mSettingsTestAddBattleResult_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1570,6 +1586,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mSettingsApp;
 		private System.Windows.Forms.ToolStripButton mViewChart;
 		private System.Windows.Forms.ToolStripButton mHelp;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripMenuItem mSettingsTestAddBattleResult;
 	}
 }
 

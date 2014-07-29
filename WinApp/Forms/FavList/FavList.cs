@@ -250,22 +250,22 @@ namespace WinApp.Forms
 		{
 			// Resize elements X
 			int gridX = (groupTanks.Width - ((toolAllTanks.Left - groupTanks.Left) * 2) - 60) / 2; // total resizeble area
-			toolAllTanks.Width = gridX;
-			toolSelectedTanks.Width = gridX;
-			dataGridAllTanks.Width = gridX - scrollAllTanks.Width;
-			dataGridSelectedTanks.Width = gridX - scrollSelectedTanks.Width;
-			scrollAllTanks.Left = dataGridAllTanks.Left + dataGridAllTanks.Width;
-			// Move middle - right section X
-			int rightSectionX = toolAllTanks.Left + toolAllTanks.Width + 60;
-			int middleSectionX = toolAllTanks.Left + toolAllTanks.Width + ((60 - btnSelectAll.Width) / 2);
-			btnSelectAll.Left = middleSectionX;
-			btnSelectSelected.Left = middleSectionX;
-			btnRemoveAll.Left = middleSectionX;
-			btnRemoveSelected.Left = middleSectionX;
-			lblSelectedTanks.Left = rightSectionX;
-			toolSelectedTanks.Left = rightSectionX;
-			dataGridSelectedTanks.Left = rightSectionX;
-			scrollSelectedTanks.Left = dataGridSelectedTanks.Left + dataGridSelectedTanks.Width;
+			//toolAllTanks.Width = gridX;
+			//toolSelectedTanks.Width = gridX;
+			//dataGridAllTanks.Width = gridX - scrollAllTanks.Width;
+			//dataGridSelectedTanks.Width = gridX - scrollSelectedTanks.Width;
+			//scrollAllTanks.Left = dataGridAllTanks.Left + dataGridAllTanks.Width;
+			//// Move middle - right section X
+			//int rightSectionX = toolAllTanks.Left + toolAllTanks.Width + 60;
+			//int middleSectionX = toolAllTanks.Left + toolAllTanks.Width + ((60 - btnSelectAll.Width) / 2);
+			//btnSelectAll.Left = middleSectionX;
+			//btnSelectSelected.Left = middleSectionX;
+			//btnRemoveAll.Left = middleSectionX;
+			//btnRemoveSelected.Left = middleSectionX;
+			//lblSelectedTanks.Left = rightSectionX;
+			//toolSelectedTanks.Left = rightSectionX;
+			//dataGridSelectedTanks.Left = rightSectionX;
+			//scrollSelectedTanks.Left = dataGridSelectedTanks.Left + dataGridSelectedTanks.Width;
 			// Resize elements Y
 			int gridY = groupTanks.Height - (toolAllTanks.Top + toolAllTanks.Height - groupTanks.Top) - 15;
 			dataGridAllTanks.Height = gridY;

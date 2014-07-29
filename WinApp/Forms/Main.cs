@@ -2296,6 +2296,11 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 		}
 
+		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
+		{
+			Battle2json.CheckBattleResultNewFiles();
+		}
+
 
 	}
 }

@@ -146,7 +146,7 @@
 			this.FavTanksTheme.MainArea = mainAreaClass1;
 			this.FavTanksTheme.Name = "FavTanksTheme";
 			this.FavTanksTheme.Resizable = true;
-			this.FavTanksTheme.Size = new System.Drawing.Size(627, 610);
+			this.FavTanksTheme.Size = new System.Drawing.Size(766, 610);
 			this.FavTanksTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("FavTanksTheme.SystemExitImage")));
 			this.FavTanksTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("FavTanksTheme.SystemMaximizeImage")));
 			this.FavTanksTheme.SystemMinimizeImage = null;
@@ -158,7 +158,7 @@
 			// 
 			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnClose.Image = null;
-			this.btnClose.Location = new System.Drawing.Point(526, 563);
+			this.btnClose.Location = new System.Drawing.Point(665, 563);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(75, 23);
 			this.btnClose.TabIndex = 19;
@@ -167,6 +167,8 @@
 			// 
 			// toolColList
 			// 
+			this.toolColList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.toolColList.AutoSize = false;
 			this.toolColList.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolColList.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -182,7 +184,7 @@
             this.toolFavListRefresh});
 			this.toolColList.Location = new System.Drawing.Point(42, 72);
 			this.toolColList.Name = "toolColList";
-			this.toolColList.Size = new System.Drawing.Size(537, 25);
+			this.toolColList.Size = new System.Drawing.Size(678, 25);
 			this.toolColList.TabIndex = 2;
 			this.toolColList.Text = "toolStrip1";
 			// 
@@ -270,7 +272,7 @@
 			// btnRemoveAll
 			// 
 			this.btnRemoveAll.Image = null;
-			this.btnRemoveAll.Location = new System.Drawing.Point(295, 428);
+			this.btnRemoveAll.Location = new System.Drawing.Point(410, 417);
 			this.btnRemoveAll.Name = "btnRemoveAll";
 			this.btnRemoveAll.Size = new System.Drawing.Size(29, 23);
 			this.btnRemoveAll.TabIndex = 11;
@@ -280,7 +282,7 @@
 			// btnRemoveSelected
 			// 
 			this.btnRemoveSelected.Image = null;
-			this.btnRemoveSelected.Location = new System.Drawing.Point(295, 457);
+			this.btnRemoveSelected.Location = new System.Drawing.Point(410, 446);
 			this.btnRemoveSelected.Name = "btnRemoveSelected";
 			this.btnRemoveSelected.Size = new System.Drawing.Size(29, 23);
 			this.btnRemoveSelected.TabIndex = 12;
@@ -290,7 +292,7 @@
 			// btnSelectSelected
 			// 
 			this.btnSelectSelected.Image = null;
-			this.btnSelectSelected.Location = new System.Drawing.Point(295, 370);
+			this.btnSelectSelected.Location = new System.Drawing.Point(410, 359);
 			this.btnSelectSelected.Name = "btnSelectSelected";
 			this.btnSelectSelected.Size = new System.Drawing.Size(29, 23);
 			this.btnSelectSelected.TabIndex = 9;
@@ -300,7 +302,7 @@
 			// btnSelectAll
 			// 
 			this.btnSelectAll.Image = null;
-			this.btnSelectAll.Location = new System.Drawing.Point(295, 399);
+			this.btnSelectAll.Location = new System.Drawing.Point(410, 388);
 			this.btnSelectAll.Name = "btnSelectAll";
 			this.btnSelectAll.Size = new System.Drawing.Size(29, 23);
 			this.btnSelectAll.TabIndex = 10;
@@ -312,7 +314,7 @@
 			this.btnFavListCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListCancel.Enabled = false;
 			this.btnFavListCancel.Image = null;
-			this.btnFavListCancel.Location = new System.Drawing.Point(440, 563);
+			this.btnFavListCancel.Location = new System.Drawing.Point(579, 563);
 			this.btnFavListCancel.Name = "btnFavListCancel";
 			this.btnFavListCancel.Size = new System.Drawing.Size(80, 23);
 			this.btnFavListCancel.TabIndex = 18;
@@ -324,7 +326,7 @@
 			this.btnFavListSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnFavListSave.Enabled = false;
 			this.btnFavListSave.Image = null;
-			this.btnFavListSave.Location = new System.Drawing.Point(354, 563);
+			this.btnFavListSave.Location = new System.Drawing.Point(493, 563);
 			this.btnFavListSave.Name = "btnFavListSave";
 			this.btnFavListSave.Size = new System.Drawing.Size(80, 23);
 			this.btnFavListSave.TabIndex = 17;
@@ -333,6 +335,8 @@
 			// 
 			// toolSelectedTanks
 			// 
+			this.toolSelectedTanks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.toolSelectedTanks.AutoSize = false;
 			this.toolSelectedTanks.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolSelectedTanks.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -345,9 +349,9 @@
             this.toolSelectedTanks_MoveUp,
             this.toolSelectedTanks_MoveDown});
 			this.toolSelectedTanks.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolSelectedTanks.Location = new System.Drawing.Point(345, 298);
+			this.toolSelectedTanks.Location = new System.Drawing.Point(453, 298);
 			this.toolSelectedTanks.Name = "toolSelectedTanks";
-			this.toolSelectedTanks.Size = new System.Drawing.Size(234, 25);
+			this.toolSelectedTanks.Size = new System.Drawing.Size(267, 25);
 			this.toolSelectedTanks.Stretch = true;
 			this.toolSelectedTanks.TabIndex = 14;
 			this.toolSelectedTanks.Text = "toolStrip1";
@@ -428,7 +432,7 @@
 			this.toolAllTanks.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolAllTanks.Location = new System.Drawing.Point(42, 298);
 			this.toolAllTanks.Name = "toolAllTanks";
-			this.toolAllTanks.Size = new System.Drawing.Size(234, 25);
+			this.toolAllTanks.Size = new System.Drawing.Size(352, 25);
 			this.toolAllTanks.Stretch = true;
 			this.toolAllTanks.TabIndex = 6;
 			this.toolAllTanks.Text = "toolStrip1";
@@ -709,9 +713,10 @@
 			// 
 			// scrollSelectedTanks
 			// 
+			this.scrollSelectedTanks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.scrollSelectedTanks.BackColor = System.Drawing.Color.Transparent;
 			this.scrollSelectedTanks.Image = null;
-			this.scrollSelectedTanks.Location = new System.Drawing.Point(562, 323);
+			this.scrollSelectedTanks.Location = new System.Drawing.Point(703, 323);
 			this.scrollSelectedTanks.Name = "scrollSelectedTanks";
 			this.scrollSelectedTanks.ScrollElementsTotals = 100;
 			this.scrollSelectedTanks.ScrollElementsVisible = 20;
@@ -733,18 +738,20 @@
 			this.dataGridSelectedTanks.AllowUserToDeleteRows = false;
 			this.dataGridSelectedTanks.AllowUserToOrderColumns = true;
 			this.dataGridSelectedTanks.AllowUserToResizeRows = false;
+			this.dataGridSelectedTanks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridSelectedTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridSelectedTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridSelectedTanks.Cursor = System.Windows.Forms.Cursors.Default;
 			this.dataGridSelectedTanks.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-			this.dataGridSelectedTanks.Location = new System.Drawing.Point(345, 323);
+			this.dataGridSelectedTanks.Location = new System.Drawing.Point(453, 323);
 			this.dataGridSelectedTanks.Name = "dataGridSelectedTanks";
 			this.dataGridSelectedTanks.ReadOnly = true;
 			this.dataGridSelectedTanks.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
 			this.dataGridSelectedTanks.RowHeadersVisible = false;
 			this.dataGridSelectedTanks.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridSelectedTanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridSelectedTanks.Size = new System.Drawing.Size(217, 202);
+			this.dataGridSelectedTanks.Size = new System.Drawing.Size(250, 202);
 			this.dataGridSelectedTanks.TabIndex = 15;
 			this.dataGridSelectedTanks.SelectionChanged += new System.EventHandler(this.dataGridSelTanks_SelectionChanged);
 			this.dataGridSelectedTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
@@ -753,7 +760,7 @@
 			// 
 			this.scrollAllTanks.BackColor = System.Drawing.Color.Transparent;
 			this.scrollAllTanks.Image = null;
-			this.scrollAllTanks.Location = new System.Drawing.Point(259, 323);
+			this.scrollAllTanks.Location = new System.Drawing.Point(377, 323);
 			this.scrollAllTanks.Name = "scrollAllTanks";
 			this.scrollAllTanks.ScrollElementsTotals = 100;
 			this.scrollAllTanks.ScrollElementsVisible = 20;
@@ -785,16 +792,17 @@
 			this.dataGridAllTanks.RowHeadersVisible = false;
 			this.dataGridAllTanks.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridAllTanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridAllTanks.Size = new System.Drawing.Size(217, 202);
+			this.dataGridAllTanks.Size = new System.Drawing.Size(335, 202);
 			this.dataGridAllTanks.TabIndex = 7;
 			this.dataGridAllTanks.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
 			// 
 			// scrollFavList
 			// 
+			this.scrollFavList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.scrollFavList.BackColor = System.Drawing.Color.Transparent;
 			this.scrollFavList.Image = null;
-			this.scrollFavList.Location = new System.Drawing.Point(562, 97);
+			this.scrollFavList.Location = new System.Drawing.Point(703, 97);
 			this.scrollFavList.Name = "scrollFavList";
 			this.scrollFavList.ScrollElementsTotals = 100;
 			this.scrollFavList.ScrollElementsVisible = 20;
@@ -814,6 +822,8 @@
 			this.dataGridFavList.AllowUserToDeleteRows = false;
 			this.dataGridFavList.AllowUserToOrderColumns = true;
 			this.dataGridFavList.AllowUserToResizeRows = false;
+			this.dataGridFavList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridFavList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridFavList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridFavList.Cursor = System.Windows.Forms.Cursors.Default;
@@ -825,7 +835,7 @@
 			this.dataGridFavList.RowHeadersVisible = false;
 			this.dataGridFavList.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridFavList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridFavList.Size = new System.Drawing.Size(520, 126);
+			this.dataGridFavList.Size = new System.Drawing.Size(661, 126);
 			this.dataGridFavList.TabIndex = 3;
 			this.dataGridFavList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridFavList_CellClick);
 			this.dataGridFavList.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
@@ -838,7 +848,7 @@
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(576, 195);
+			this.badGroupBox2.Size = new System.Drawing.Size(715, 195);
 			this.badGroupBox2.TabIndex = 1;
 			this.badGroupBox2.TabStop = false;
 			this.badGroupBox2.Text = "Favourite Tank Lists";
@@ -851,9 +861,9 @@
 			this.lblSelectedTanks.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblSelectedTanks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblSelectedTanks.Image = null;
-			this.lblSelectedTanks.Location = new System.Drawing.Point(345, 276);
+			this.lblSelectedTanks.Location = new System.Drawing.Point(453, 276);
 			this.lblSelectedTanks.Name = "lblSelectedTanks";
-			this.lblSelectedTanks.Size = new System.Drawing.Size(149, 23);
+			this.lblSelectedTanks.Size = new System.Drawing.Size(182, 23);
 			this.lblSelectedTanks.TabIndex = 13;
 			this.lblSelectedTanks.TabStop = false;
 			this.lblSelectedTanks.Text = "Selected Tanks:";
@@ -881,7 +891,7 @@
 			this.groupTanks.Image = null;
 			this.groupTanks.Location = new System.Drawing.Point(25, 260);
 			this.groupTanks.Name = "groupTanks";
-			this.groupTanks.Size = new System.Drawing.Size(576, 285);
+			this.groupTanks.Size = new System.Drawing.Size(715, 285);
 			this.groupTanks.TabIndex = 12;
 			this.groupTanks.TabStop = false;
 			this.groupTanks.Text = "Tanks";
@@ -891,7 +901,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(627, 610);
+			this.ClientSize = new System.Drawing.Size(766, 610);
 			this.Controls.Add(this.FavTanksTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(607, 591);

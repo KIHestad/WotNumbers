@@ -66,7 +66,7 @@ def message_from_file(fp, *args, **kws):
     return Parser(*args, **kws).parse(fp)
 
 
-
+
 # Lazy loading to provide name mapping from new-style names (PEP 8 compatible
 # email 4.0 module names), to old-style names (email 3.0 module names).
 import sys

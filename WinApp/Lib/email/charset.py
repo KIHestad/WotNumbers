@@ -152,7 +152,7 @@ def add_codec(charset, codecname):
     CODEC_MAP[charset] = codecname
 
 
-
+
 class Charset:
     """Map character sets to their email properties.
 

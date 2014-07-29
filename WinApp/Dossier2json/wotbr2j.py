@@ -1,6 +1,9 @@
 ################################################### 
 # World of Tanks Battle Result to JSON            # 
 # by Phalynx www.vbaddict.net                     # 
+#                                                 #
+# Modified to run from c# using IronPhyton        #
+# Edited version by BadButton -> 2014-07-28       #
 ################################################### 
 import struct, json, time, sys, os 
 from itertools import izip 
@@ -54,13 +57,13 @@ def usage():
 
 
 def main(): 
-		import struct, json, time, sys, os, shutil, datetime 
+		import struct, json, time, sys, os, shutil, datetime, cPickle
 		  
 		parserversion = "0.9.1.0"
 		
 		  
 		
-		global numofkills, filename_source, filename_target, option_server, option_format 
+		global numofkills, filename_source, filename_target, option_server, option_format, working_directory
 		option_raw = 0
 		option_format = 0
 		option_server = 0
@@ -79,10 +82,19 @@ def main():
 			elif argument == "-s": 
 				option_server = 1
 		
-		filename_source = str(sys.argv[1]) 
+		#filename_source = str(sys.argv[1]) 
+
+		# IRONPYTHON MODIFIED: added manually input dossier filename
+		# filename_source = "battle.dat"
+		filename_source = '%s\\Wot Numbers\\battle.dat' %  os.environ['APPDATA']
 		
 		printmessage('###### WoTBR2J ' + parserversion) 
 		
+		working_directory = os.path.dirname(os.path.realpath(__file__))
+	
+		# IRONPYTHON MODIFIED: select current path as working directory
+		os.chdir(working_directory)
+
 		printmessage('Processing ' + filename_source) 
 		  
 		if option_server == 0: 
@@ -99,13 +111,18 @@ def main():
 		
 		cachefile = open(filename_source, 'rb') 
 				  
-		try: 
-			from SafeUnpickler import SafeUnpickler
-			battleresultversion, battleResults = SafeUnpickler.load(cachefile) 
-		except Exception, e: 
-			exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
-			sys.exit(1) 
+		#try: 
+		#	from SafeUnpickler import SafeUnpickler
+		#	battleresultversion, battleResults = SafeUnpickler.load(cachefile) 
+		#except Exception, e: 
+		#	exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
+		#	sys.exit(1) 
 		
+		try:
+			battleresultversion, battleResults = cPickle.load(cachefile)
+		except Exception, e:
+			exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
+
 		if not 'battleResults' in locals(): 
 			exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 			sys.exit(1) 
@@ -257,10 +274,13 @@ def main():
 		  
 		dumpjson(bresult) 
 		
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
 		
 		printmessage('###### Done!') 
 		printmessage('') 
-		sys.exit(0) 
+		# IRONPYTHON MODIFIED: no need for exit, throws error when calling sys.exit
+		#sys.exit(0)
 
 def exitwitherror(message): 
 	catch_fatal(message) 
@@ -283,6 +303,9 @@ def dumpjson(bresult):
 			finalfile.write(json.dumps(bresult, sort_keys=True, indent=4)) 
 		else: 
 			finalfile.write(json.dumps(bresult)) 
+
+		# IRONPYTHON MODIFIED: close dossier input file
+		finalfile.close()
 
 
 def dictToList(indices, d): 
@@ -604,8 +627,10 @@ def write_to_log(logtext):
 		  
 def get_json_data(filename): 
 	import json, time, sys, os 
-	  
-	os.chdir(sys.path[0]) 
+	
+	# IRONPYTHON MODIFIED: removed setting path, use working directory (set in main)
+	
+	#os.chdir(sys.path[0]) 
 
 	if not os.path.exists(filename) or not os.path.isfile(filename) or not os.access(filename, os.R_OK): 
 		catch_fatal(filename + " does not exists!") 
