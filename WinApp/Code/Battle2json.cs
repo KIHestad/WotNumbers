@@ -50,7 +50,8 @@ namespace WinApp.Code
 		private static bool ConvertBattleUsingPython(string filename)
 		{
 			// Change filename to fixed name
-			File.Move(filename, Path.GetDirectoryName(filename) + "/battle.dat");
+			if (!File.Exists(Path.GetDirectoryName(filename) + "/battle.dat"))
+				File.Move(filename, Path.GetDirectoryName(filename) + "/battle.dat");
 			// Locate Python script
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file

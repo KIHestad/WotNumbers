@@ -1026,7 +1026,7 @@ namespace WinApp.Code
 							"VALUES (186, 2, 146, 'battle.wn7', 'WN7', 'Calculated battle WN7 rating (according to formula from vBAddict)', 'Rating', 47, 'Int'); " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (187, 1, 117, 'playerTankBattle.wn7', 'WN7', 'Calculated battle WN7 rating (according to formula from vBAddict)', 'Rating', 50, 'Int'); " +
-							"UPDATE columnSelection SET description = 'Calculated battle WN8 rating (according to formula from vbAddict)' where id=49";
+							"UPDATE columnSelection SET description = 'Calculated battle WN8 rating (according to formula from vbAddict)' where id=49;";
 					sqlite = mssql;
 					break;
 				case 77:
@@ -1038,8 +1038,17 @@ namespace WinApp.Code
 							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
 							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7 " +
 							"FROM            playerTankBattle " +
-							"GROUP BY playerTankId ";
-					sqlite = mssql;
+							"GROUP BY playerTankId; ";
+					sqlite ="DROP VIEW playerTankBattleTotalsView;"+
+							"CREATE VIEW playerTankBattleTotalsView AS " +
+							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
+							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
+							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7 " +
+							"FROM            playerTankBattle " +
+							"GROUP BY playerTankId; ";
 					break;
 				case 78:
 					Rating.RecalcBattlesWN7();
