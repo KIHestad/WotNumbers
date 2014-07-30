@@ -755,7 +755,6 @@
 			this.dataGridSelectedTanks.TabIndex = 15;
 			this.dataGridSelectedTanks.SelectionChanged += new System.EventHandler(this.dataGridSelTanks_SelectionChanged);
 			this.dataGridSelectedTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
-			this.dataGridSelectedTanks.DoubleClick += new System.EventHandler(this.dataGridSelectedTanks_DoubleClick);
 			// 
 			// scrollAllTanks
 			// 
@@ -797,8 +796,6 @@
 			this.dataGridAllTanks.TabIndex = 7;
 			this.dataGridAllTanks.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
-			this.dataGridAllTanks.DoubleClick += new System.EventHandler(this.dataGridAllTanks_DoubleClick);
-			this.dataGridAllTanks.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dataGridAllTanks_KeyPress);
 			// 
 			// scrollFavList
 			// 

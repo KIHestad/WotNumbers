@@ -734,53 +734,40 @@ namespace WinApp.Forms
 			ShowSelectedColumns();
 		}
 
-
-		private void dataGridSelectedColumns_DoubleClick(object sender, EventArgs e)
-		{
-			RemoveButton_Click();
-		}
-
 		private void btnRemoveSelected_Click(object sender, EventArgs e)
 		{
-			RemoveButton_Click();
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				RemoveSelectedColumn();
 		}
 
 		private void btnRemoveAll_Click(object sender, EventArgs e)
 		{
-			RemoveButton_Click(true);
-		}
-
-		private void RemoveButton_Click(bool selectAll = false)
-		{
 			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
 			if (sysCol)
 				ShowSystemColListMessage();
 			else
-				RemoveSelectedColumn(selectAll);
-		}
-
-		private void dataGridAllColumns_DoubleClick(object sender, EventArgs e)
-		{
-			AddButton_Click();
+				RemoveSelectedColumn(true);
 		}
 
 		private void btnSelectSelected_Click(object sender, EventArgs e)
 		{
-			AddButton_Click();
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				AddSelectedColumn();
 		}
 
 		private void btnSelectAll_Click(object sender, EventArgs e)
-		{
-			AddButton_Click(true);
-		}
-
-		private void AddButton_Click(bool selectAll = false)
 		{
 			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
 			if (sysCol)
 				ShowSystemColListMessage();
 			else
-				AddSelectedColumn(selectAll);
+				AddSelectedColumn(true);
 		}
 
 		private void toolSelectedColumns_MoveUp_Click(object sender, EventArgs e)
@@ -1031,7 +1018,5 @@ namespace WinApp.Forms
 			}
 			
 		}
-
-
 	}
 }

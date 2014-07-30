@@ -2022,16 +2022,8 @@ namespace WinApp.Forms
 
 		private void dataGridMain_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
-			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
-			{
-				int newWidth = e.Column.Width;
-				if (newWidth < 25)
-				{
-					newWidth = 25;
-					dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
-				}
-				ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
-			}
+			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall) 
+				ColListHelper.SaveColWidth(e.Column.HeaderText, e.Column.Width);
 		}
 
 		#endregion
