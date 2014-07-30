@@ -229,9 +229,6 @@
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Dossier2json">
-			<Component Id="cmpB64696AA79A66B50D0E58276C8F73F5C" Directory="INSTALLFOLDER_Dossier2json" Guid="{89F3CDF3-E9F1-423A-892C-3E09E73DF13C}">
-				<File Id="fil2F46BFD5725106B73EB8089C02B8910D" KeyPath="yes" Source="$(var.D2jSource)\compile.py" />
-			</Component>
 			<Component Id="cmp8540176488F077374645127C6834BCA8" Directory="INSTALLFOLDER_Dossier2json" Guid="{474FF12A-5345-4182-BEA0-A42716B74A4F}">
 				<File Id="fil43C93A51802E58A2266566EE76D87EF7" KeyPath="yes" Source="$(var.D2jSource)\maps.json" />
 			</Component>
@@ -288,6 +285,9 @@
 			</Component>
 			<Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">
 				<File Id="fil65135394BD3BB3D345ACBA402F678618" KeyPath="yes" Source="$(var.D2jSource)\wotdc2j.py" />
+			</Component>
+			<Component Id="cmpwotbr2j" Directory="INSTALLFOLDER_Dossier2json" Guid="{07EF3C67-0722-46A1-9405-7FB2ED97576F}">
+				<File Id="filwotbr2j" KeyPath="yes" Source="$(var.D2jSource)\wotbr2j.py" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
