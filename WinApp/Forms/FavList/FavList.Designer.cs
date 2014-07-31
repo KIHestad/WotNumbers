@@ -753,9 +753,9 @@
 			this.dataGridSelectedTanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridSelectedTanks.Size = new System.Drawing.Size(250, 202);
 			this.dataGridSelectedTanks.TabIndex = 15;
+			this.dataGridSelectedTanks.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridSelectedTanks_CellContentDoubleClick);
 			this.dataGridSelectedTanks.SelectionChanged += new System.EventHandler(this.dataGridSelTanks_SelectionChanged);
 			this.dataGridSelectedTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
-			this.dataGridSelectedTanks.DoubleClick += new System.EventHandler(this.dataGridSelectedTanks_DoubleClick);
 			// 
 			// scrollAllTanks
 			// 
@@ -795,10 +795,11 @@
 			this.dataGridAllTanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridAllTanks.Size = new System.Drawing.Size(335, 202);
 			this.dataGridAllTanks.TabIndex = 7;
+			this.dataGridAllTanks.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridAllTanks_CellContentDoubleClick);
 			this.dataGridAllTanks.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
 			this.dataGridAllTanks.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrid_Paint);
-			this.dataGridAllTanks.DoubleClick += new System.EventHandler(this.dataGridAllTanks_DoubleClick);
 			this.dataGridAllTanks.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dataGridAllTanks_KeyPress);
+			this.dataGridAllTanks.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.dataGridAllTanks_PreviewKeyDown);
 			// 
 			// scrollFavList
 			// 

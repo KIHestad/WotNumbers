@@ -46,6 +46,8 @@ namespace WinApp.Forms
 			// Mouse scrolling
 			dataGridAllTanks.MouseWheel += new MouseEventHandler(dataGridAllTanks_MouseWheel);
 			dataGridSelectedTanks.MouseWheel += new MouseEventHandler(dataGridSelTanks_MouseWheel);
+			// Default focus
+			dataGridAllTanks.Focus();
 		}
 
 		class StripRenderer : ToolStripProfessionalRenderer
@@ -173,6 +175,7 @@ namespace WinApp.Forms
 		{
 			SelectedFavListId = Convert.ToInt32(dataGridFavList.SelectedRows[0].Cells["id"].Value);
 			SelectFavList();
+			dataGridAllTanks.Focus();
 		}
 
 		private void SelectFavList(int FavListId = 0)
@@ -286,6 +289,7 @@ namespace WinApp.Forms
 		private void FavTanks_ResizeEnd(object sender, EventArgs e)
 		{
 			ResizeTankAreaNow();
+			dataGridAllTanks.Focus();
 		}
 
 		#endregion
@@ -558,9 +562,10 @@ namespace WinApp.Forms
 			SortFavList("Tier", sortTierASC);
 		}
 
-		private void dataGridSelectedTanks_DoubleClick(object sender, EventArgs e)
+		private void dataGridSelectedTanks_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			RemoveTankFromFavList();
+			if (e.RowIndex > 0)
+				RemoveTankFromFavList();
 		}
 
 		private void btnRemoveSelected_Click(object sender, EventArgs e)
@@ -583,9 +588,10 @@ namespace WinApp.Forms
 			AddTankToFavList(true);
 		}
 
-		private void dataGridAllTanks_DoubleClick(object sender, EventArgs e)
+		private void dataGridAllTanks_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			AddTankToFavList();
+			if (e.RowIndex > 0)
+				AddTankToFavList();
 		}
 
 		private void toolSelectedTanks_MoveUp_Click(object sender, EventArgs e)
@@ -713,6 +719,7 @@ namespace WinApp.Forms
 			// Connect to scrollbar
 			scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
 			scrollAllTanks.ScrollElementsVisible = dataGridAllTanks.DisplayedRowCount(false);
+			dataGridAllTanks.Focus();
 		}
 
 		private string AddAndToWhere(string WherePart, string AddNewAndPart)
@@ -968,7 +975,7 @@ namespace WinApp.Forms
 			int rownum = dataGridAllTanks.SelectedCells[0].RowIndex;
 			if (!FindTank(key, rownum))
 			{
-				rownum = 0;
+				rownum = -1;
 				FindTank(key, rownum);
 			}
 		}
@@ -985,10 +992,22 @@ namespace WinApp.Forms
 			{
 				dataGridAllTanks.ClearSelection();
 				dataGridAllTanks.Rows[rownum].Selected = true;
-				dataGridAllTanks.FirstDisplayedScrollingRowIndex = rownum - 3;
+				dataGridAllTanks.CurrentCell = dataGridAllTanks.Rows[rownum].Cells["Tank"];
+				if (rownum >= 3)
+					dataGridAllTanks.FirstDisplayedScrollingRowIndex = rownum - 3;
+				else
+					dataGridAllTanks.FirstDisplayedScrollingRowIndex = 0;
 			}
 			return found;
 		}
-				
+
+		private void dataGridAllTanks_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				AddTankToFavList();				
+			}
+		}
+
 	}
 }

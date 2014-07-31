@@ -53,6 +53,8 @@
 			this.dataGridDropDown.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridDropDown_CellClick);
 			this.dataGridDropDown.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridDropDown_CellMouseLeave);
 			this.dataGridDropDown.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridDropDown_CellMouseMove);
+			this.dataGridDropDown.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dataGridDropDown_KeyPress);
+			this.dataGridDropDown.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.dataGridDropDown_PreviewKeyDown);
 			// 
 			// scrollY
 			// 

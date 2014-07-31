@@ -34,7 +34,7 @@ namespace WinApp.Forms
 				dataGridDropDown.DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
 				dataGridDropDown.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 				dataGridDropDown.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-				dataGridDropDown.DefaultCellStyle.SelectionBackColor = ColorTheme.ToolGrayMainBack;
+				dataGridDropDown.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 				// Form Height
 				int rowHeight = dataGridDropDown.Rows[0].Height;
 				int rowCount = dataGridDropDown.RowCount;
@@ -61,6 +61,7 @@ namespace WinApp.Forms
 					dataGridDropDown.Width = this.Width - 4; 
 				}
 				dataGridDropDown.Columns[0].Width = dataGridDropDown.Width;
+				dataGridDropDown.Focus();
 			}
 			else
 				this.Close();
@@ -110,7 +111,12 @@ namespace WinApp.Forms
 
 		private void dataGridDropDown_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
-			Code.PopupGrid.Value = dataGridDropDown.Rows[e.RowIndex].Cells[0].Value.ToString();
+			Cell_Click();
+		}
+
+		private void Cell_Click()
+		{
+			Code.PopupGrid.Value = dataGridDropDown.CurrentCell.Value.ToString();
 			Code.PopupGrid.ValueSelected = true;
 			this.Close();
 			SourceDropDown.Text = Code.PopupGrid.Value;
@@ -141,6 +147,46 @@ namespace WinApp.Forms
 		{
 			Code.DropDownGrid.Shown = false;
 			this.Close();
+		}
+
+		private void dataGridDropDown_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			string key = Convert.ToString(e.KeyChar);
+			int rownum = dataGridDropDown.SelectedCells[0].RowIndex;
+			if (!FindItem(key, rownum))
+			{
+				rownum = -1;
+				FindItem(key, rownum);
+			}
+		}
+
+		private bool FindItem(string key, int rownum)
+		{
+			bool found = false;
+			while (rownum < dataGridDropDown.RowCount - 1 && !found)
+			{
+				rownum++;
+				found = dataGridDropDown.Rows[rownum].Cells[0].Value.ToString().Substring(0, 1).ToUpper() == key.ToUpper();
+			}
+			if (found)
+			{
+				dataGridDropDown.ClearSelection();
+				dataGridDropDown.Rows[rownum].Selected = true;
+				dataGridDropDown.CurrentCell = dataGridDropDown.Rows[rownum].Cells[0];
+				if (rownum >= 3)
+					dataGridDropDown.FirstDisplayedScrollingRowIndex = rownum - 3;
+				else
+					dataGridDropDown.FirstDisplayedScrollingRowIndex = 0;
+			}
+			return found;
+		}
+
+		private void dataGridDropDown_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				Cell_Click();
+			}
 		}
 
 	}

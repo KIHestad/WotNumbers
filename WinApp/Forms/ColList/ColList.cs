@@ -734,10 +734,10 @@ namespace WinApp.Forms
 			ShowSelectedColumns();
 		}
 
-
-		private void dataGridSelectedColumns_DoubleClick(object sender, EventArgs e)
+		private void dataGridSelectedColumns_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			RemoveButton_Click();
+			if (e.RowIndex > 0)
+				RemoveButton_Click();
 		}
 
 		private void btnRemoveSelected_Click(object sender, EventArgs e)
@@ -759,10 +759,12 @@ namespace WinApp.Forms
 				RemoveSelectedColumn(selectAll);
 		}
 
-		private void dataGridAllColumns_DoubleClick(object sender, EventArgs e)
+		private void dataGridAllColumns_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			AddButton_Click();
+			if (e.RowIndex > 0)
+				AddButton_Click();
 		}
+
 
 		private void btnSelectSelected_Click(object sender, EventArgs e)
 		{
@@ -1031,7 +1033,6 @@ namespace WinApp.Forms
 			}
 			
 		}
-
 
 	}
 }

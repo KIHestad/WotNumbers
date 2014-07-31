@@ -141,7 +141,8 @@ namespace WinApp.Forms
 						int sortOrder = 0;
 						DataTable lastSortOrder = DB.FetchData(sql);
 						if (lastSortOrder.Rows.Count > 0)
-							sortOrder = Convert.ToInt32(lastSortOrder.Rows[0][0]);
+							if (lastSortOrder.Rows[0][0] != DBNull.Value)
+								sortOrder = Convert.ToInt32(lastSortOrder.Rows[0][0]);
 						// Update now
 						sql = "";
 						foreach (int tankId in delTank)

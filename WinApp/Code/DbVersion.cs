@@ -13,7 +13,7 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 81; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 83; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1069,6 +1069,17 @@ namespace WinApp.Code
 							"VALUES (189, 1, 133, 'CAST(playerTankBattle.assistSpot*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Spot', 'Average damage per battle to enemy tanks done by others after you spotted them per battle', 'Damage', 50, 'Float'); " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (190, 1, 134, 'CAST(playerTankBattle.assistTrack*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Track', 'Average damge per battle to enemy tanks done by others after you tracked them', 'Damage', 50, 'Float'); ";
+					sqlite = mssql;
+					break;
+				case 82:
+					mssql = "UPDATE columnSelection SET name='Survival Count', description='Number of battles survived for this battle (could be for several battles recorded in one row)' WHERE id=16; " +
+							"UPDATE columnSelection SET name='Survival Rate', description='Survival rate in percent of tank total battles' WHERE id=98; ";
+					sqlite = mssql;
+					break;
+				case 83:
+					mssql = "UPDATE columnSelection SET position = position + 1 where position >= 140; " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (191, 1, 140, 'CAST(playerTankBattle.frags*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Frags Avg', 'Average frags (enemy tanks killed) per battle ', 'Result', 50, 'Float'); ";
 					sqlite = mssql;
 					break;
 

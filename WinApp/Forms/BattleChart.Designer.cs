@@ -28,10 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleChart));
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			this.BattleChartTheme = new BadForm();
 			this.lblFooter = new System.Windows.Forms.Label();
 			this.ddPeriod = new BadDropDownBox();
@@ -45,7 +45,7 @@
 			this.ddTank = new BadDropDownBox();
 			this.badLabel1 = new BadLabel();
 			this.ChartingMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.badGroupBox1 = new BadGroupBox();
+			this.chkBullet = new BadCheckBox();
 			this.BattleChartTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).BeginInit();
 			this.SuspendLayout();
@@ -53,6 +53,7 @@
 			// BattleChartTheme
 			// 
 			this.BattleChartTheme.BackColor = System.Drawing.Color.Fuchsia;
+			this.BattleChartTheme.Controls.Add(this.chkBullet);
 			this.BattleChartTheme.Controls.Add(this.lblFooter);
 			this.BattleChartTheme.Controls.Add(this.ddPeriod);
 			this.BattleChartTheme.Controls.Add(this.badLabel4);
@@ -65,7 +66,6 @@
 			this.BattleChartTheme.Controls.Add(this.ddTank);
 			this.BattleChartTheme.Controls.Add(this.badLabel1);
 			this.BattleChartTheme.Controls.Add(this.ChartingMain);
-			this.BattleChartTheme.Controls.Add(this.badGroupBox1);
 			this.BattleChartTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BattleChartTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.BattleChartTheme.FormFooter = true;
@@ -74,7 +74,7 @@
 			this.BattleChartTheme.FormMargin = 0;
 			this.BattleChartTheme.Image = null;
 			this.BattleChartTheme.Location = new System.Drawing.Point(0, 0);
-			this.BattleChartTheme.MainArea = mainAreaClass2;
+			this.BattleChartTheme.MainArea = mainAreaClass1;
 			this.BattleChartTheme.Name = "BattleChartTheme";
 			this.BattleChartTheme.Resizable = true;
 			this.BattleChartTheme.Size = new System.Drawing.Size(792, 496);
@@ -101,7 +101,7 @@
 			// ddPeriod
 			// 
 			this.ddPeriod.Image = null;
-			this.ddPeriod.Location = new System.Drawing.Point(558, 65);
+			this.ddPeriod.Location = new System.Drawing.Point(536, 38);
 			this.ddPeriod.Name = "ddPeriod";
 			this.ddPeriod.Size = new System.Drawing.Size(75, 23);
 			this.ddPeriod.TabIndex = 16;
@@ -115,7 +115,7 @@
 			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(517, 65);
+			this.badLabel4.Location = new System.Drawing.Point(495, 38);
 			this.badLabel4.Name = "badLabel4";
 			this.badLabel4.Size = new System.Drawing.Size(47, 23);
 			this.badLabel4.TabIndex = 15;
@@ -124,9 +124,9 @@
 			// btnClearChart
 			// 
 			this.btnClearChart.Image = null;
-			this.btnClearChart.Location = new System.Drawing.Point(706, 65);
+			this.btnClearChart.Location = new System.Drawing.Point(730, 38);
 			this.btnClearChart.Name = "btnClearChart";
-			this.btnClearChart.Size = new System.Drawing.Size(56, 23);
+			this.btnClearChart.Size = new System.Drawing.Size(47, 23);
 			this.btnClearChart.TabIndex = 14;
 			this.btnClearChart.Text = "Clear";
 			this.btnClearChart.Click += new System.EventHandler(this.btnClearChart_Click);
@@ -134,7 +134,7 @@
 			// ddXaxis
 			// 
 			this.ddXaxis.Image = null;
-			this.ddXaxis.Location = new System.Drawing.Point(424, 65);
+			this.ddXaxis.Location = new System.Drawing.Point(402, 38);
 			this.ddXaxis.Name = "ddXaxis";
 			this.ddXaxis.Size = new System.Drawing.Size(80, 23);
 			this.ddXaxis.TabIndex = 13;
@@ -149,7 +149,7 @@
 			this.badLabel3.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(383, 65);
+			this.badLabel3.Location = new System.Drawing.Point(361, 38);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(47, 23);
 			this.badLabel3.TabIndex = 12;
@@ -158,7 +158,7 @@
 			// ddValue
 			// 
 			this.ddValue.Image = null;
-			this.ddValue.Location = new System.Drawing.Point(267, 65);
+			this.ddValue.Location = new System.Drawing.Point(245, 38);
 			this.ddValue.Name = "ddValue";
 			this.ddValue.Size = new System.Drawing.Size(102, 23);
 			this.ddValue.TabIndex = 11;
@@ -172,7 +172,7 @@
 			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(229, 65);
+			this.badLabel2.Location = new System.Drawing.Point(207, 38);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(49, 23);
 			this.badLabel2.TabIndex = 10;
@@ -181,9 +181,9 @@
 			// btnAddChart
 			// 
 			this.btnAddChart.Image = null;
-			this.btnAddChart.Location = new System.Drawing.Point(644, 65);
+			this.btnAddChart.Location = new System.Drawing.Point(677, 38);
 			this.btnAddChart.Name = "btnAddChart";
-			this.btnAddChart.Size = new System.Drawing.Size(56, 23);
+			this.btnAddChart.Size = new System.Drawing.Size(47, 23);
 			this.btnAddChart.TabIndex = 8;
 			this.btnAddChart.Text = "Add";
 			this.btnAddChart.Click += new System.EventHandler(this.btnAddChart_Click);
@@ -191,7 +191,7 @@
 			// ddTank
 			// 
 			this.ddTank.Image = null;
-			this.ddTank.Location = new System.Drawing.Point(67, 65);
+			this.ddTank.Location = new System.Drawing.Point(45, 38);
 			this.ddTank.Name = "ddTank";
 			this.ddTank.Size = new System.Drawing.Size(149, 23);
 			this.ddTank.TabIndex = 3;
@@ -205,7 +205,7 @@
 			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(32, 65);
+			this.badLabel1.Location = new System.Drawing.Point(10, 38);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(41, 23);
 			this.badLabel1.TabIndex = 7;
@@ -217,55 +217,54 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.ChartingMain.BackColor = System.Drawing.Color.Transparent;
-			chartArea2.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
-			chartArea2.AxisX.LabelStyle.ForeColor = System.Drawing.Color.Silver;
-			chartArea2.AxisX.LineColor = System.Drawing.Color.Silver;
-			chartArea2.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisX.TitleForeColor = System.Drawing.Color.Silver;
-			chartArea2.AxisY.LabelStyle.ForeColor = System.Drawing.Color.Silver;
-			chartArea2.AxisY.LineColor = System.Drawing.Color.Silver;
-			chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY.MajorTickMark.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY.MinorGrid.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY.MinorTickMark.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY.TitleForeColor = System.Drawing.Color.Silver;
-			chartArea2.AxisY2.LabelStyle.ForeColor = System.Drawing.Color.Silver;
-			chartArea2.AxisY2.MajorGrid.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY2.MajorTickMark.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY2.MinorGrid.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY2.MinorTickMark.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY2.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
-			chartArea2.AxisY2.ScaleBreakStyle.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.NotSet;
-			chartArea2.AxisY2.TitleForeColor = System.Drawing.Color.Silver;
-			chartArea2.BackColor = System.Drawing.Color.Transparent;
-			chartArea2.BackSecondaryColor = System.Drawing.Color.Transparent;
-			chartArea2.BorderColor = System.Drawing.Color.White;
-			chartArea2.Name = "ChartArea1";
-			chartArea2.ShadowColor = System.Drawing.Color.Transparent;
-			this.ChartingMain.ChartAreas.Add(chartArea2);
-			legend2.BackColor = System.Drawing.Color.Transparent;
-			legend2.ForeColor = System.Drawing.Color.Silver;
-			legend2.Name = "Legend1";
-			this.ChartingMain.Legends.Add(legend2);
-			this.ChartingMain.Location = new System.Drawing.Point(6, 103);
+			chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
+			chartArea1.AxisX.LabelStyle.ForeColor = System.Drawing.Color.Silver;
+			chartArea1.AxisX.LineColor = System.Drawing.Color.Silver;
+			chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisX.TitleForeColor = System.Drawing.Color.Silver;
+			chartArea1.AxisY.LabelStyle.ForeColor = System.Drawing.Color.Silver;
+			chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
+			chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY.MinorGrid.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY.MinorTickMark.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY.TitleForeColor = System.Drawing.Color.Silver;
+			chartArea1.AxisY2.LabelStyle.ForeColor = System.Drawing.Color.Silver;
+			chartArea1.AxisY2.MajorGrid.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY2.MajorTickMark.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY2.MinorGrid.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY2.MinorTickMark.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY2.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
+			chartArea1.AxisY2.ScaleBreakStyle.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.NotSet;
+			chartArea1.AxisY2.TitleForeColor = System.Drawing.Color.Silver;
+			chartArea1.BackColor = System.Drawing.Color.Transparent;
+			chartArea1.BackSecondaryColor = System.Drawing.Color.Transparent;
+			chartArea1.BorderColor = System.Drawing.Color.White;
+			chartArea1.Name = "ChartArea1";
+			chartArea1.ShadowColor = System.Drawing.Color.Transparent;
+			this.ChartingMain.ChartAreas.Add(chartArea1);
+			legend1.BackColor = System.Drawing.Color.Transparent;
+			legend1.ForeColor = System.Drawing.Color.Silver;
+			legend1.Name = "Legend1";
+			this.ChartingMain.Legends.Add(legend1);
+			this.ChartingMain.Location = new System.Drawing.Point(5, 67);
 			this.ChartingMain.Name = "ChartingMain";
-			this.ChartingMain.Size = new System.Drawing.Size(780, 359);
+			this.ChartingMain.Size = new System.Drawing.Size(780, 397);
 			this.ChartingMain.TabIndex = 0;
 			this.ChartingMain.Text = "chart1";
 			this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
 			// 
-			// badGroupBox1
+			// chkBullet
 			// 
-			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(17, 40);
-			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(762, 62);
-			this.badGroupBox1.TabIndex = 9;
-			this.badGroupBox1.Text = "Add Chart line";
+			this.chkBullet.BackColor = System.Drawing.Color.Transparent;
+			this.chkBullet.Checked = false;
+			this.chkBullet.Image = ((System.Drawing.Image)(resources.GetObject("chkBullet.Image")));
+			this.chkBullet.Location = new System.Drawing.Point(616, 38);
+			this.chkBullet.Name = "chkBullet";
+			this.chkBullet.Size = new System.Drawing.Size(62, 23);
+			this.chkBullet.TabIndex = 18;
+			this.chkBullet.Text = "Bullet";
 			// 
 			// BattleChart
 			// 
@@ -301,11 +300,11 @@
 		private BadDropDownBox ddValue;
 		private BadLabel badLabel2;
 		private BadButton btnAddChart;
-		private BadGroupBox badGroupBox1;
 		private BadButton btnClearChart;
 		private BadDropDownBox ddPeriod;
 		private BadLabel badLabel4;
 		private System.Windows.Forms.Label lblFooter;
+		private BadCheckBox chkBullet;
 
 
 
