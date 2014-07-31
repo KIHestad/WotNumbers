@@ -874,29 +874,12 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@rowNextToPos", rowNextToPos, DB.SqlDataType.Int);
 					DB.ExecuteNonQuery(sql);
 				}
-				FavListSort();
+				FavListHelper.FavListSort();
+				ShowFavList();
 			}
 		}
 
-		private void FavListSort(bool selectNewestFavList = false)
-		{
-			string sql = "select * from favList where position is not null order by position;";
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
-			{
-				sql = "";
-				int pos = 1;
-				foreach (DataRow dr in dt.Rows)
-				{
-					sql += "update favList set position=@pos where id=@id; ";
-					DB.AddWithValue(ref sql, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);
-					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
-					pos++;
-				}
-				DB.ExecuteNonQuery(sql);
-				ShowFavList(selectNewestFavList);
-			}
-		}
+		
 
 		private void toolFavListVisible_Click(object sender, EventArgs e)
 		{
@@ -905,21 +888,22 @@ namespace WinApp.Forms
 				sql = "update favList set position=NULL where id=@id";
 			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
-			FavListSort();
+			FavListHelper.FavListSort();
+			ShowFavList();
 		}
 
 		private void toolFavListAdd_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.FavListNewEdit(0);
 			frm.ShowDialog();
-			FavListSort(true);
+			ShowFavList(true);
 		}
 
 		private void toolFavListModify_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.FavListNewEdit(SelectedFavListId);
 			frm.ShowDialog();
-			FavListSort();
+			ShowFavList();
 		}
 
 		private void toolFavListDelete_Click(object sender, EventArgs e)

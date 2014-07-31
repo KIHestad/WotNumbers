@@ -709,7 +709,7 @@ namespace WinApp.Forms
 				menuItem.Checked = false;
 			}
 			// Add favlist to menu
-			string sql = "select * from favList where position > 0 order by position";
+			string sql = "select * from favList where position > 0 and name is not null order by position";
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
@@ -717,8 +717,11 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dt.Rows)
 				{
 					ToolStripMenuItem menuItem = (ToolStripMenuItem)mTankFilter.DropDownItems["mTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];
-					menuItem.Text = dr["name"].ToString();
-					menuItem.Visible = true;
+					if (menuItem != null)
+					{
+						menuItem.Text = dr["name"].ToString();
+						menuItem.Visible = true;
+					}
 				}
 			}
 		}
@@ -2321,6 +2324,18 @@ namespace WinApp.Forms
 		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
 		{
 			Battle2json.CheckBattleResultNewFiles();
+		}
+
+		private void mTankFilter_GetInGarage_Click(object sender, EventArgs e)
+		{
+			InGarageApiResult.status = "";
+			Form frm = new Forms.InGarageApi();
+			frm.ShowDialog();
+			if (InGarageApiResult.status == "ok")
+			{
+				frm = new Forms.InGarageProcessData();
+				frm.ShowDialog();
+			}
 		}
 	}
 }

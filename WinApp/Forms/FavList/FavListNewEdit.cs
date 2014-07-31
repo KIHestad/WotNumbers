@@ -16,11 +16,14 @@ namespace WinApp.Forms
 		string copyFromDD = "";
 		int favListId = 0;
 		string prevName = "";
-		public FavListNewEdit(int selectedFavListId = 0)
+		public FavListNewEdit(int selectedFavListId = 0, string newFavListName = "")
 		{
 			InitializeComponent();
 			if (selectedFavListId == 0)
+			{
 				FavListNewEditTheme.Text = "Add new Favourite Tank List";
+				txtName.Text = newFavListName;
+			}
 			else
 			{
 				FavListNewEditTheme.Text = "Modify Favourite Tank List";
@@ -107,6 +110,7 @@ namespace WinApp.Forms
 						DB.ExecuteNonQuery(sql);
 					}
 					this.Close();
+					FavListHelper.FavListSort();
 				}
 			}
 		}

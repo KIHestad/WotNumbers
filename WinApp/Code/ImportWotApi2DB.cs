@@ -51,7 +51,8 @@ namespace WinApp.Code
 			Gun = 3,
 			Radio = 4,
 			Achievement = 5,
-			TankDetails = 6
+			TankDetails = 6,
+			PlayersInGarageVehicles = 7,
 		}
 
 		#region fetchFromAPI
@@ -89,6 +90,10 @@ namespace WinApp.Code
 				else if (WotAPi == WotApiType.TankDetails)
 				{
 					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530&tank_id=" + tankId;
+				}
+				else if (WotAPi == WotApiType.PlayersInGarageVehicles)
+				{
+					url = "https://api.worldoftanks.eu/wot/tanks/stats/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&access_token=" + Forms.InGarageApiResult.access_token + "&account_id=" + Forms.InGarageApiResult.account_id + "&in_garage=1";
 				}
 				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -273,85 +278,6 @@ namespace WinApp.Code
 		}
 
 		#endregion
-
-		//#region updateWN8
-
-		//public static String UpdateWN8()
-		//{
-		//	string sql = "";
-		//	string tankId = "";
-		//	string expFrags = "";
-		//	string expDmg = "";
-		//	string expSpot = "";
-		//	string expDef = "";
-		//	string expWR = "";
-
-		//	// Get WN8 from API
-		//	string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
-		//	HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-		//	httpRequest.Timeout = 10000;     // 10 secs
-		//	httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
-		//	httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-		//	HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
-		//	StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
-		//	string json = responseStream.ReadToEnd();
-		//	responseStream.Close();
-
-		//	// Get ready to parse through WN8 exp values
-		//	JObject allTokens = JObject.Parse(json);
-		//	JArray items = (JArray)allTokens["data"];
-		//	JObject item;
-		//	JToken jtoken;
-		//	for (int i = 0; i < items.Count; i++) //loop through tanks
-		//	{
-		//		Application.DoEvents(); // TODO: testing freeze-problem running API requests
-		//		item = (JObject)items[i];
-		//		jtoken = item.First;
-		//		string tokenValue;
-		//		while (jtoken != null) //loop through values for each tank
-		//		{
-		//			Application.DoEvents(); // TODO: testing freeze-problem running API requests
-		//			tokenValue = (((JProperty)jtoken).Name.ToString() + " : " + ((JProperty)jtoken).Value.ToString() + "<br />");
-
-		//			if (jtoken != null)
-		//			{
-		//				string tokenName = (string)((JProperty)jtoken).Name.ToString();
-		//				switch (tokenName)
-		//				{
-		//					case "IDNum": tankId = (string)((JProperty)jtoken).Value.ToString(); break;
-		//					case "expFrag": expFrags = (string)((JProperty)jtoken).Value.ToString(); break;
-		//					case "expDamage": expDmg = (string)((JProperty)jtoken).Value.ToString(); break;
-		//					case "expSpot": expSpot = (string)((JProperty)jtoken).Value.ToString(); break;
-		//					case "expDef": expDef = (string)((JProperty)jtoken).Value.ToString(); break;
-		//					case "expWinRate": expWR = (string)((JProperty)jtoken).Value.ToString(); break;
-		//				}
-		//			}
-		//			jtoken = jtoken.Next;
-		//		}
-
-		//		sql = sql + "update tank set expDmg = " + expDmg
-		//								+ ", expWR = " + expWR
-		//								+ ", expSpot = " + expSpot
-		//								+ ", expFrags = " + expFrags
-		//								+ ", expDef = " + expDef
-		//								+ " where id = " + tankId
-		//								+ "; ";
-		//	}
-
-		//	// Execute update statements
-		//	try
-		//	{
-		//		DB.ExecuteNonQuery(sql);
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Code.MsgBox.Show(ex.Message, "Error occured");
-		//	}
-
-		//	return ("Import Complete");
-		//}
-
-		//#endregion
 
 		#region importTurrets
 
@@ -869,7 +795,48 @@ namespace WinApp.Code
 
 		#endregion
 
+		#region importPlayersInGarageVehicles
 
+		public static List<int> ImportPlayersInGarageVehicles(Form parentForm)
+		{
+			List<int> tanksInGarage = new List<int>();
+			string json = FetchFromAPI(WotApiType.PlayersInGarageVehicles, 0, parentForm);
+			if (json != "")
+			{
+				log.Add("Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");
+				try
+				{
+					JObject allTokens = JObject.Parse(json);
+					JToken rootToken = allTokens.First;   // returns status token
+
+					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+					{
+						rootToken = rootToken.Next;
+						itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						rootToken = rootToken.Next;   // set root to data element
+						JToken player = rootToken.Children().First();   // get player element
+						string jsonPlayerTanks = player.ToString();
+						JObject o = JObject.Parse(jsonPlayerTanks);
+						JArray arr = (JArray) o.SelectToken(Forms.InGarageApiResult.account_id);
+						foreach (JToken tank in arr)
+						{
+							int tankId = Convert.ToInt32(tank["tank_id"]);
+							tanksInGarage.Add(tankId);
+						}
+						updateLog("Found " + tanksInGarage.Count + " tanks in garage");
+					}
+				}
+
+				catch (Exception ex)
+				{
+					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+					Code.MsgBox.Show(ex.Message, "Error fetching tanks in garage from WoT API", parentForm);
+				}
+			}
+			return tanksInGarage;
+		}
+
+		#endregion
 
 		
 		

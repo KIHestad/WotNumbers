@@ -21,5 +21,24 @@ namespace WinApp.Code
 			}
 			return favListId;
 		}
+
+		public static void FavListSort()
+		{
+			string sql = "select * from favList where position is not null order by position;";
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				sql = "";
+				int pos = 1;
+				foreach (DataRow dr in dt.Rows)
+				{
+					sql += "update favList set position=@pos where id=@id; ";
+					DB.AddWithValue(ref sql, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@pos", pos, DB.SqlDataType.Int);
+					pos++;
+				}
+				DB.ExecuteNonQuery(sql);
+			}
+		}
 	}
 }

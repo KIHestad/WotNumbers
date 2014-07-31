@@ -148,7 +148,9 @@
     <Compile Include="Code\GrindingHelper.cs" />
     <Compile Include="Code\FormControl\PopupGrid.cs" />
     <Compile Include="Code\FormLayout\ColorTheme.cs" />
-    <Compile Include="Code\FormLayout\StripLayout.cs" />
+    <Compile Include="Code\FormLayout\StripLayout.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Code\FormControl\MsgBox.cs" />
     <Compile Include="Code\Support\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
@@ -182,6 +184,19 @@
     <Compile Include="Forms\FavList\FavListNewEdit.Designer.cs">
       <DependentUpon>FavListNewEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FavList\InGarageApi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FavList\InGarageApi.Designer.cs">
+      <DependentUpon>InGarageApi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FavList\InGarageProcessData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FavList\InGarageProcessData.Designer.cs">
+      <DependentUpon>InGarageProcessData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FavList\InGarageApiResult.cs" />
     <Compile Include="Forms\PlayerTankDetail.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -302,6 +317,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FavList\FavListNewEdit.resx">
       <DependentUpon>FavListNewEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FavList\InGarageApi.resx">
+      <DependentUpon>InGarageApi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FavList\InGarageProcessData.resx">
+      <DependentUpon>InGarageProcessData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PlayerTankDetail.resx">
       <DependentUpon>PlayerTankDetail.cs</DependentUpon>
