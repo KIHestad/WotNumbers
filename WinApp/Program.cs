@@ -18,7 +18,7 @@ namespace WinApp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Form mainForm = new Forms.Main();
-			mainForm.FormBorderStyle = FormBorderStyle.None;
+			// mainForm.FormBorderStyle = FormBorderStyle.None;
 			mainForm.Visible = false;
             Application.Run(mainForm);
         }

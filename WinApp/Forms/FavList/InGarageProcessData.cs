@@ -35,6 +35,7 @@ namespace WinApp.Forms
 				ddFavList.Text = "In Garage";
 			tanksInGarage = Code.ImportWotApi2DB.ImportPlayersInGarageVehicles(this);
 			txtTanksInGarage.Text = tanksInGarage.Count().ToString();
+			btnSaveTanksToFavList.Enabled = true;
 			this.Cursor = Cursors.Default;
 		}
 
@@ -84,6 +85,7 @@ namespace WinApp.Forms
 
 		private void btnSaveTanksToFavList_Click(object sender, EventArgs e)
 		{
+			InGarageApiResult.changeFavList = false;
 			if (ddFavList.Text == "")
 			{
 				Code.MsgBox.Show("Please select a Favourite Tank List before saving, if you don't have a Favourite Tank List for 'In Garage' tanks, please create one.",
@@ -93,6 +95,91 @@ namespace WinApp.Forms
 			else
 			{
 				// Check how many to be delted and how many added
+				List<int> newTank = new List<int>();
+				List<int> delTank = new List<int>();
+				int favListId = FavListHelper.GetId(ddFavList.Text);
+				if (favListId > 0)
+				{
+					// Find new tanks
+					string sql = "select * from favListTank where favListId=@favListId";
+					DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
+					DataTable currentTanks = DB.FetchData(sql);
+					foreach (int tankInGarage in tanksInGarage)
+					{
+						DataRow[] exists = currentTanks.Select("tankId = " + tankInGarage.ToString());
+						if (exists.Length == 0)
+							newTank.Add(tankInGarage);
+					}
+					// Find tanks to remove
+					foreach (DataRow currentTank in currentTanks.Rows)
+					{
+						List<int> foundTank = new List<int>();
+						int tankId = Convert.ToInt32(currentTank["tankId"]);
+						if (!tanksInGarage.Contains(tankId))
+						{
+							delTank.Add(tankId);
+						}
+					}
+				}
+				int newTankCount = newTank.Count;
+				int delTankCount = delTank.Count;
+				if (newTankCount > 0 || delTankCount > 0)
+				{
+					Code.MsgBox.Button answer = Code.MsgBox.Show(
+						"Found " + newTankCount.ToString() + " tanks to add." + Environment.NewLine + 
+						"Found " + delTankCount.ToString() + " tanks to remove." + 
+						Environment.NewLine + Environment.NewLine + 
+						"Press 'OK' to update tank list: " + ddFavList.Text +
+						Environment.NewLine + Environment.NewLine,
+						"Save 'In Garage' tanks", 
+						MsgBoxType.OKCancel, this);
+					if (answer == MsgBox.Button.OKButton)
+					{
+						// Find latest sort order
+						string sql = "select max(sortorder) from favListTank where favListId=@favListId;";
+						DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
+						int sortOrder = 0;
+						DataTable lastSortOrder = DB.FetchData(sql);
+						if (lastSortOrder.Rows.Count > 0)
+							sortOrder = Convert.ToInt32(lastSortOrder.Rows[0][0]);
+						// Update now
+						sql = "";
+						foreach (int tankId in delTank)
+						{
+							string delsql = "DELETE FROM favListTank WHERE favListId=@favListId AND tankId=@tankId; ";
+							DB.AddWithValue(ref delsql, "@tankId", tankId, DB.SqlDataType.Int);
+							sql += delsql;
+						}
+						foreach (int tankId in newTank)
+						{
+							sortOrder++;
+							string newsql = "INSERT INTO favListTank (favListId, tankId, sortorder) VALUES (@favListId, @tankId, @sortorder); ";
+							DB.AddWithValue(ref newsql, "@tankId", tankId, DB.SqlDataType.Int);
+							DB.AddWithValue(ref newsql, "@sortorder", sortOrder, DB.SqlDataType.Int);
+							sql += newsql;
+						}
+						DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
+						DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+						// Select this list
+						GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+						gf.TankId = -1;
+						gf.FavListId = favListId;
+						gf.FavListName = ddFavList.Text;
+						gf.FavListShow = GridFilter.FavListShowType.FavList;
+						MainSettings.UpdateCurrentGridFilter(gf);
+						InGarageApiResult.changeFavList = true;
+
+						// Done, close now
+						this.Close();
+					}
+					
+				}
+				else
+				{
+					Code.MsgBox.Show("Current 'In Garage' tank list is complete. No new tanks to add or sold tanks to remove", "No changes found", this);
+					this.Close();
+				}
+				
 			}
 		}
 	}

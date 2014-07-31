@@ -19,9 +19,9 @@ namespace WinApp.Forms
 		private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
 		{
 			// Look for:
-			// http://wotnum.hestad.no/Api/WotAuthenticate.aspx?authenticationresult=1&status=ok&access_token=ba1ca887d157e6842507b715ba3f0eaee69f1789&nickname=BadButton&account_id=500700596&expires_at=1407971037
+			// http://wotnumbers.com/Api/WotAuthenticate.aspx?authenticationresult=1&status=ok&access_token=ba1ca887d157e6842507b715ba3f0eaee69f1789&nickname=BadButton&account_id=500700596&expires_at=1407971037
 			string result = e.Url.AbsoluteUri.ToString();
-			string resultOk = "http://wotnum.hestad.no/Api/WotAuthenticate.aspx?authenticationresult=1&";
+			string resultOk = "http://wotnumbers.com/Api/WotAuthenticate.aspx?authenticationresult=1&";
 			if (result.Length > resultOk.Length && result.Substring(0, resultOk.Length) == resultOk)
 			{
 				// Get Values

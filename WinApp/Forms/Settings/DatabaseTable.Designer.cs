@@ -193,7 +193,7 @@
 			this.MinimumSize = new System.Drawing.Size(448, 302);
 			this.Name = "DatabaseTable";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "DatabaseTable";
+			this.Text = "DatabaseTables";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DatabaseTable_FormClosed);
 			this.Load += new System.EventHandler(this.DatabaseTable_Load);

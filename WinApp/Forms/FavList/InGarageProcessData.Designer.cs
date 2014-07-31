@@ -121,6 +121,7 @@
 			// 
 			// btnSaveTanksToFavList
 			// 
+			this.btnSaveTanksToFavList.Enabled = false;
 			this.btnSaveTanksToFavList.Image = null;
 			this.btnSaveTanksToFavList.Location = new System.Drawing.Point(113, 277);
 			this.btnSaveTanksToFavList.Name = "btnSaveTanksToFavList";

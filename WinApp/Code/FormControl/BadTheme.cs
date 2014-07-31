@@ -73,6 +73,278 @@ abstract class BadThemeContainerControl : ContainerControl
 		}
 	}
 
+	private Color _FormBorderColor = ColorTheme.FormBorderBlack;
+	public Color FormBorderColor
+	{
+		get
+		{
+			if (_FormBorderColor == Color.FromArgb(0, 0, 0, 0)) _FormBorderColor = ColorTheme.FormBorderBlack;
+			return _FormBorderColor;
+		}
+		set
+		{
+			_FormBorderColor = value;
+		}
+	}
+
+	private bool _FormFooter = false;
+	public bool FormFooter
+	{
+		get
+		{
+			return _FormFooter;
+		}
+		set
+		{
+			_FormFooter = value;
+		}
+	}
+
+	private int _FormFooterHeight = 26;
+	public int FormFooterHeight
+	{
+		get
+		{
+			return _FormFooterHeight;
+		}
+		set
+		{
+			_FormFooterHeight = value;
+		}
+	}
+
+	private int _FormMargin = 0;
+	public int FormMargin
+	{
+		get
+		{
+			return _FormMargin;
+		}
+		set
+		{
+			_FormMargin = value;
+		}
+	}
+
+	private int _FormInnerBorder = 3;
+	public int FormInnerBorder
+	{
+		get
+		{
+			return _FormInnerBorder;
+		}
+		set
+		{
+			_FormInnerBorder = value;
+		}
+	}
+
+	public int ImageWidth
+	{
+		get
+		{
+			if (_Image == null)
+				return 0;
+			return _Image.Width;
+		}
+	}
+
+	private Image _Image;
+	public Image Image
+	{
+		get { return _Image; }
+		set
+		{
+			_Image = value;
+			Invalidate();
+		}
+	}
+
+
+	public Color SystemExitImageBackColor = ColorTheme.FormBackTitle;
+	private Image _SystemExitImage;
+	public Image SystemExitImage
+	{
+		get { return _SystemExitImage; }
+		set
+		{
+			_SystemExitImage = value;
+			Invalidate();
+		}
+	}
+
+	public Color SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
+	private Image _SystemMaximizeImage;
+	public Image SystemMaximizeImage
+	{
+		get { return _SystemMaximizeImage; }
+		set
+		{
+			_SystemMaximizeImage = value;
+			Invalidate();
+		}
+	}
+
+	public Color SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
+	private Image _SystemMinimizeImage;
+	public Image SystemMinimizeImage
+	{
+		get { return _SystemMinimizeImage; }
+		set
+		{
+			_SystemMinimizeImage = value;
+			Invalidate();
+		}
+	}
+	
+	public void SetTransparent(Color c)
+	{
+		if (ParentIsForm)
+			ParentForm.TransparencyKey = c;
+	}
+
+	public class MainAreaClass
+	{
+		public int Top;
+		public int Left;
+		public int Right;
+		public int Width;
+		public int Height;
+		public int Bottom;
+	}
+	private MainAreaClass _MainArea;
+	public MainAreaClass MainArea
+	{
+		get { return _MainArea; }
+		set { _MainArea = value; }
+	}
+
+	public void SetMainAreaSize()
+	{
+		MainAreaClass calcMainArea = new MainAreaClass();
+		calcMainArea.Top = FormMargin + TitleHeight + 1;
+		calcMainArea.Left = FormMargin + 1 + FormInnerBorder;
+		calcMainArea.Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1;
+		calcMainArea.Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2;
+		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight;
+		calcMainArea.Bottom = ClientRectangle.Height - FormMargin - FormInnerBorder - 1;
+		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
+		MainArea = calcMainArea;
+	}
+
+	public void DrawCorners(Color c, Rectangle rect)
+	{
+		bitmapObject.SetPixel(rect.X, rect.Y, c);
+		bitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y, c);
+		bitmapObject.SetPixel(rect.X, rect.Y + (rect.Height - 1), c);
+		bitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y + (rect.Height - 1), c);
+	}
+
+	public void DrawBorder(Pen outerPen, Rectangle rect, int BorderSize)
+	{
+		graphicObject.DrawRectangle(outerPen, rect.X + BorderSize, rect.Y + BorderSize, rect.Width - (BorderSize * 2) - 1, rect.Height - (BorderSize * 2) - 1);
+	}
+
+	public void DrawInnerBorder(Pen outerPen, Rectangle rect, int BorderSize, int InnerBorderWidth = 2)
+	{
+		for (int i = 1; i <= InnerBorderWidth; i++)
+		{
+			graphicObject.DrawRectangle(outerPen, rect.X + BorderSize + i, rect.Y + BorderSize + i, rect.Width - (BorderSize * 2) - (i * 2) - 1, rect.Height - (i * 2) - (BorderSize * 2) - 1);
+		}
+	}
+
+	private Size TextSize;
+	public void DrawText(HorizontalAlignment alignment, Brush brush) // Form text
+	{
+		int topPadding = FormMargin + 7;
+		if (string.IsNullOrEmpty(Text))
+			return;
+		TextSize = graphicObject.MeasureString(Text, Font).ToSize();
+		int imgPaddingAndWidth = 0;
+		if (_Image != null)
+		{
+			imgPaddingAndWidth = Image.Width + 7;
+			topPadding += 2;
+		}
+		switch (alignment)
+		{
+			case HorizontalAlignment.Left:
+				graphicObject.DrawString(Text, Font, brush, 8 + imgPaddingAndWidth + FormMargin, topPadding);
+				break;
+			case HorizontalAlignment.Right:
+				graphicObject.DrawString(Text, Font, brush, Width - 5 - TextSize.Width - Image.Width - imgPaddingAndWidth - FormMargin, topPadding);
+				break;
+			case HorizontalAlignment.Center:
+				graphicObject.DrawString(Text, Font, brush, Width / 2 - TextSize.Width / 2, topPadding);
+				break;
+		}
+	}
+
+	public void DrawIcon(HorizontalAlignment a)
+	{
+		int topPadding = FormMargin + 5;
+		if (_Image == null)
+			return;
+		switch (a)
+		{
+			case HorizontalAlignment.Left:
+				graphicObject.DrawImage(_Image, 9 + FormMargin, topPadding);
+				break;
+			case HorizontalAlignment.Right:
+				graphicObject.DrawImage(_Image, Width - 9 - TextSize.Width, topPadding);
+				break;
+			case HorizontalAlignment.Center:
+				graphicObject.DrawImage(_Image, Width / 2 - TextSize.Width / 2, topPadding);
+				break;
+		}
+	}
+
+	public void PaintSysIcons()
+	{
+		if (ParentForm.WindowState != FormWindowState.Minimized)
+		{
+			graphicObject.Dispose();
+			bitmapObject.Dispose();
+			bitmapObject = new Bitmap(Width, Height);
+			graphicObject = Graphics.FromImage(bitmapObject);
+			Invalidate();
+		}
+	}
+
+	public void AddSysIcons()
+	{
+		SolidBrush brush;
+		// Add exit button
+		int sysImgX = ClientRectangle.Width - FormMargin - 1;
+		if (SystemExitImage != null)
+		{
+			sysImgX = sysImgX - SystemExitImage.Width;
+			Rectangle rectangleSystemExit = new Rectangle(sysImgX, FormMargin + 1, SystemExitImage.Width, SystemExitImage.Height);
+			brush = new SolidBrush(SystemExitImageBackColor);
+			graphicObject.FillRectangle(brush, rectangleSystemExit);
+			graphicObject.DrawImage(SystemExitImage, sysImgX, FormMargin + 1);
+
+		}
+		// Add max/normal button
+		if (SystemMaximizeImage != null)
+		{
+			sysImgX = sysImgX - SystemMaximizeImage.Width;
+			Rectangle rectangleSystemMaximize = new Rectangle(sysImgX, FormMargin + 1, SystemMaximizeImage.Width, SystemMaximizeImage.Height);
+			brush = new SolidBrush(SystemMaximizeImageBackColor);
+			graphicObject.FillRectangle(brush, rectangleSystemMaximize);
+			graphicObject.DrawImage(SystemMaximizeImage, sysImgX, FormMargin + 1);
+		}
+		// Add min button
+		if (SystemMinimizeImage != null)
+		{
+			sysImgX = sysImgX - SystemMinimizeImage.Width;
+			Rectangle rectangleSystemMinimize = new Rectangle(sysImgX, FormMargin + 1, SystemMinimizeImage.Width, SystemMinimizeImage.Height);
+			brush = new SolidBrush(SystemMinimizeImageBackColor);
+			graphicObject.FillRectangle(brush, rectangleSystemMinimize);
+			graphicObject.DrawImage(SystemMinimizeImage, sysImgX, FormMargin + 1);
+		}
+	}
+
 	private struct Pointer
 	{
 		public readonly Cursor Cursor;
@@ -182,32 +454,7 @@ abstract class BadThemeContainerControl : ContainerControl
 			Cursor = Current.Cursor;
 	}
 
-	public void SetMainAreaSize()
-	{
-		MainAreaClass calcMainArea = new MainAreaClass();
-		calcMainArea.Top = FormMargin + TitleHeight + 1;
-		calcMainArea.Left = FormMargin + 1 + FormInnerBorder;
-		calcMainArea.Right = ClientRectangle.Width - FormMargin - FormInnerBorder - 1;
-		calcMainArea.Width = ClientRectangle.Width - (FormMargin * 2) - (FormInnerBorder * 2) - 2;
-		calcMainArea.Height = ClientRectangle.Height - (FormMargin * 2) - FormInnerBorder - 2 - TitleHeight;
-		calcMainArea.Bottom = ClientRectangle.Height - FormMargin - FormInnerBorder - 1;
-		if (FormFooter) calcMainArea.Height -= FormFooterHeight;
-		MainArea = calcMainArea;
-	}
-
-	protected override void OnDoubleClick(EventArgs e)
-	{
-		//Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
-		Point PTC = PointToClient(MousePosition);
-		if (Resizable && Header.Contains(PTC))
-		{
-			if (ParentForm.WindowState == FormWindowState.Normal)
-				ParentForm.WindowState = FormWindowState.Maximized;
-			else
-				ParentForm.WindowState = FormWindowState.Normal;
-		}
-		base.OnDoubleClick(e);
-	}
+	protected override abstract void OnPaint(PaintEventArgs e);
 
 	private bool ParentIsForm;
 	protected override void OnHandleCreated(EventArgs e)
@@ -215,16 +462,41 @@ abstract class BadThemeContainerControl : ContainerControl
 		Dock = DockStyle.Fill;
 		ParentIsForm = Parent is Form;
 		if (ParentIsForm)
-			ParentForm.FormBorderStyle = FormBorderStyle.None;
+			ParentForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+
 		base.OnHandleCreated(e);
+	}
+
+	protected Rectangle Header;
+	protected override void OnSizeChanged(EventArgs e)
+	{
+		try
+		{
+			SetMainAreaSize();
+			Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
+			graphicObject.Dispose();
+			bitmapObject.Dispose();
+			bitmapObject = new Bitmap(Width, Height);
+			graphicObject = Graphics.FromImage(bitmapObject);
+			Invalidate();
+			// Draw resize cursor if within resize area
+			// Current = GetPointer();
+			// Cursor = Current.Cursor;
+		}
+		catch (Exception)
+		{
+			//throw;
+		}
+		// Done
+		base.OnSizeChanged(e);
 	}
 
 	private IntPtr Flag;
 	protected override void OnMouseDown(MouseEventArgs e)
 	{
-		if (e.Clicks == 2)
-			return;
 		if (!(e.Button == MouseButtons.Left))
+			return;
+		if (e.Clicks == 2)
 			return;
 		if (ParentIsForm)
 			if (ParentForm.WindowState == FormWindowState.Maximized)
@@ -243,7 +515,20 @@ abstract class BadThemeContainerControl : ContainerControl
 		DefWndProc(ref msg);
 		base.OnMouseDown(e);
 	}
-
+		
+	protected override void OnDoubleClick(EventArgs e)
+	{
+		//Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
+		Point PTC = PointToClient(MousePosition);
+		if (Resizable && Header.Contains(PTC))
+		{
+			if (ParentForm.WindowState == FormWindowState.Normal)
+				ParentForm.WindowState = FormWindowState.Maximized;
+			else
+				ParentForm.WindowState = FormWindowState.Normal;
+		}
+		base.OnDoubleClick(e);
+	}
 
 	protected override void OnMouseUp(MouseEventArgs e)
 	{
@@ -299,301 +584,13 @@ abstract class BadThemeContainerControl : ContainerControl
 		base.OnMouseLeave(e);
 	}
 
-
 	protected override void OnMouseMove(MouseEventArgs e)
 	{
 		SetCurrent();
 		base.OnMouseMove(e);
 	}
 
-	protected Rectangle Header;
-	protected override void OnSizeChanged(EventArgs e)
-	{
-		try
-		{
-			SetMainAreaSize();
-			Header = new Rectangle(7 + FormMargin, 7, TitleWidht, _TitleHeight - FormMargin - 7);
-			graphicObject.Dispose();
-			bitmapObject.Dispose();
-			bitmapObject = new Bitmap(Width, Height);
-			graphicObject = Graphics.FromImage(bitmapObject);
-			Invalidate();
-			// Draw resize cursor if within resize area
-			// Current = GetPointer();
-			// Cursor = Current.Cursor;
-		}
-		catch (Exception)
-		{
-			//throw;
-		}
-		// Done
-		base.OnSizeChanged(e);
-	}
-
-	public void SetTransparent(Color c)
-	{
-		if (ParentIsForm)
-			ParentForm.TransparencyKey = c;
-	}
-
-	protected override abstract void OnPaint(PaintEventArgs e);
-
-	public void DrawCorners(Color c, Rectangle rect)
-	{
-		bitmapObject.SetPixel(rect.X, rect.Y, c);
-		bitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y, c);
-		bitmapObject.SetPixel(rect.X, rect.Y + (rect.Height - 1), c);
-		bitmapObject.SetPixel(rect.X + (rect.Width - 1), rect.Y + (rect.Height - 1), c);
-	}
-
-	public void DrawBorder(Pen outerPen, Rectangle rect, int BorderSize)
-	{
-		graphicObject.DrawRectangle(outerPen, rect.X + BorderSize, rect.Y + BorderSize, rect.Width - (BorderSize * 2) - 1, rect.Height - (BorderSize * 2) - 1);
-	}
-
-	public void DrawInnerBorder(Pen outerPen, Rectangle rect, int BorderSize, int InnerBorderWidth = 2)
-	{
-		for (int i = 1; i <=  InnerBorderWidth; i++)
-		{
-			graphicObject.DrawRectangle(outerPen, rect.X + BorderSize + i, rect.Y + BorderSize + i, rect.Width - (BorderSize * 2) - (i * 2) - 1, rect.Height - (i * 2) - (BorderSize * 2) - 1);	
-		}
-	}
-
-
-	private Size TextSize;
-	public void DrawText(HorizontalAlignment alignment, Brush brush) // Form text
-	{
-		int topPadding = FormMargin + 7;
-		if (string.IsNullOrEmpty(Text))
-			return;
-		TextSize = graphicObject.MeasureString(Text, Font).ToSize();
-		int imgPaddingAndWidth = 0;
-		if (_Image != null)
-		{
-			imgPaddingAndWidth = Image.Width + 7;
-			topPadding += 2;
-		}
-		switch (alignment)
-		{
-			case HorizontalAlignment.Left:
-				graphicObject.DrawString(Text, Font, brush, 8 + imgPaddingAndWidth + FormMargin, topPadding);
-				break;
-			case HorizontalAlignment.Right:
-				graphicObject.DrawString(Text, Font, brush, Width - 5 - TextSize.Width - Image.Width - imgPaddingAndWidth - FormMargin, topPadding);
-				break;
-			case HorizontalAlignment.Center:
-				graphicObject.DrawString(Text, Font, brush, Width / 2 - TextSize.Width / 2, topPadding);
-				break;
-		}
-	}
-
-	public int ImageWidth
-	{
-		get
-		{
-			if (_Image == null)
-				return 0;
-			return _Image.Width;
-		}
-	}
-
-	private Image _Image;
-	public Image Image
-	{
-		get { return _Image; }
-		set
-		{
-			_Image = value;
-			Invalidate();
-		}
-	}
-
-
-	public Color SystemExitImageBackColor = ColorTheme.FormBackTitle;
-	private Image _SystemExitImage;
-	public Image SystemExitImage
-	{
-		get { return _SystemExitImage; }
-		set
-		{
-			_SystemExitImage = value;
-			Invalidate();
-		}
-	}
-
-	public Color SystemMaximizeImageBackColor = ColorTheme.FormBackTitle;
-	private Image _SystemMaximizeImage;
-	public Image SystemMaximizeImage
-	{
-		get { return _SystemMaximizeImage; }
-		set
-		{
-			_SystemMaximizeImage = value;
-			Invalidate();
-		}
-	}
-
-	public Color SystemMinimizeImageBackColor = ColorTheme.FormBackTitle;
-	private Image _SystemMinimizeImage;
-	public Image SystemMinimizeImage
-	{
-		get { return _SystemMinimizeImage; }
-		set
-		{
-			_SystemMinimizeImage = value;
-			Invalidate();
-		}
-	}
-
-	public void DrawIcon(HorizontalAlignment a)
-	{
-		int topPadding = FormMargin + 5;
-		if (_Image == null)
-			return;
-		switch (a)
-		{
-			case HorizontalAlignment.Left:
-				graphicObject.DrawImage(_Image, 9 + FormMargin, topPadding);
-				break;
-			case HorizontalAlignment.Right:
-				graphicObject.DrawImage(_Image, Width - 9 - TextSize.Width, topPadding);
-				break;
-			case HorizontalAlignment.Center:
-				graphicObject.DrawImage(_Image, Width / 2 - TextSize.Width / 2, topPadding);
-				break;
-		}
-	}
-
-	private Color _FormBorderColor = ColorTheme.FormBorderBlack;
-	public Color FormBorderColor
-	{
-		get 
-		{
-			if (_FormBorderColor == Color.FromArgb(0, 0, 0, 0)) _FormBorderColor = ColorTheme.FormBorderBlack;
-			return _FormBorderColor; 
-		}
-		set 
-		{
-			_FormBorderColor = value; 
-		}
-	}
-
-	private bool _FormFooter = false;
-	public bool FormFooter
-	{
-		get
-		{
-			return _FormFooter;
-		}
-		set
-		{
-			_FormFooter = value;
-		}
-	}
-
-	private int _FormFooterHeight = 26;
-	public int FormFooterHeight
-	{
-		get
-		{
-			return _FormFooterHeight;
-		}
-		set
-		{
-			_FormFooterHeight = value;
-		}
-	}
-
-	private int _FormMargin = 0;
-	public int FormMargin
-	{
-		get
-		{
-			return _FormMargin;
-		}
-		set
-		{
-			_FormMargin = value;
-		}
-	}
-
-	private int _FormInnerBorder = 3;
-	public int FormInnerBorder
-	{
-		get
-		{
-			return _FormInnerBorder;
-		}
-		set
-		{
-			_FormInnerBorder = value;
-		}
-	}
-
-
-	public class MainAreaClass
-	{
-		public int Top;
-		public int Left;
-		public int Right;
-		public int Width;
-		public int Height;
-		public int Bottom;
-	}
-
-	private MainAreaClass _MainArea;
-	public MainAreaClass MainArea 
-	{
-		get { return _MainArea; }
-		set { _MainArea = value; }
-	}
-
-	public void PaintSysIcons()
-	{
-		if (ParentForm.WindowState != FormWindowState.Minimized)
-		{
-			graphicObject.Dispose();
-			bitmapObject.Dispose();
-			bitmapObject = new Bitmap(Width, Height);
-			graphicObject = Graphics.FromImage(bitmapObject);
-			Invalidate();
-		}
-	}
-
-	public void AddSysIcons()
-	{
-		SolidBrush brush;
-		// Add exit button
-		int sysImgX = ClientRectangle.Width - FormMargin - 1;
-		if (SystemExitImage != null)
-		{
-			sysImgX = sysImgX - SystemExitImage.Width;
-			Rectangle rectangleSystemExit = new Rectangle(sysImgX, FormMargin + 1, SystemExitImage.Width, SystemExitImage.Height);
-			brush = new SolidBrush(SystemExitImageBackColor);
-			graphicObject.FillRectangle(brush, rectangleSystemExit);
-			graphicObject.DrawImage(SystemExitImage, sysImgX, FormMargin + 1);
-
-		}
-		// Add max/normal button
-		if (SystemMaximizeImage != null)
-		{
-			sysImgX = sysImgX - SystemMaximizeImage.Width;
-			Rectangle rectangleSystemMaximize = new Rectangle(sysImgX, FormMargin + 1, SystemMaximizeImage.Width, SystemMaximizeImage.Height);
-			brush = new SolidBrush(SystemMaximizeImageBackColor);
-			graphicObject.FillRectangle(brush, rectangleSystemMaximize);
-			graphicObject.DrawImage(SystemMaximizeImage, sysImgX, FormMargin + 1);
-		}
-		// Add min button
-		if (SystemMinimizeImage != null)
-		{
-			sysImgX = sysImgX - SystemMinimizeImage.Width;
-			Rectangle rectangleSystemMinimize = new Rectangle(sysImgX, FormMargin + 1, SystemMinimizeImage.Width, SystemMinimizeImage.Height);
-			brush = new SolidBrush(SystemMinimizeImageBackColor);
-			graphicObject.FillRectangle(brush, rectangleSystemMinimize);
-			graphicObject.DrawImage(SystemMinimizeImage, sysImgX, FormMargin + 1);
-		}
-	}
-
+	
 }
 
 class BadForm : BadThemeContainerControl

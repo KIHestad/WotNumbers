@@ -67,7 +67,7 @@
 			this.webBrowser1.Name = "webBrowser1";
 			this.webBrowser1.Size = new System.Drawing.Size(512, 812);
 			this.webBrowser1.TabIndex = 0;
-			this.webBrowser1.Url = new System.Uri("http://wotnum.hestad.no/Api/WotAuthenticate.aspx?uid=1", System.UriKind.Absolute);
+			this.webBrowser1.Url = new System.Uri("http://wotnumbers.com/Api/WotAuthenticate.aspx?uid=1", System.UriKind.Absolute);
 			this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
 			// 
 			// InGarageApi

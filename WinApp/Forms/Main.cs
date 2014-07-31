@@ -21,12 +21,27 @@ namespace WinApp.Forms
 		private bool LoadConfigOK = true;
 		private string LoadConfigMsg = "";
 		private ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
+		
 		public Main()
 		{
 			InitializeComponent();
 			// Get Config
 			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
 			mainFormPosSize = Config.Settings.posSize;
+		}
+
+		// To be able to minimize from task bar
+		const int WS_MINIMIZEBOX = 0x20000;
+		const int CS_DBLCLKS = 0x8;
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.Style |= WS_MINIMIZEBOX;
+				cp.ClassStyle |= CS_DBLCLKS;
+				return cp;
+			}
 		}
 
 		private void Main_Load(object sender, EventArgs e)
@@ -721,6 +736,12 @@ namespace WinApp.Forms
 					{
 						menuItem.Text = dr["name"].ToString();
 						menuItem.Visible = true;
+						// check if selected
+						if (MainSettings.GetCurrentGridFilter().FavListId == Convert.ToInt32(dr["id"]))
+						{
+							menuItem.Checked = true;
+							mTankFilter.Text = menuItem.Text;
+						}
 					}
 				}
 			}
@@ -2028,9 +2049,9 @@ namespace WinApp.Forms
 			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
 			{
 				int newWidth = e.Column.Width;
-				if (newWidth < 25)
+				if (newWidth < 35)
 				{
-					newWidth = 25;
+					newWidth = 35;
 					dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
 				}
 				ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
@@ -2335,6 +2356,12 @@ namespace WinApp.Forms
 			{
 				frm = new Forms.InGarageProcessData();
 				frm.ShowDialog();
+				if (InGarageApiResult.changeFavList)
+				{
+					// After fav list changes reload menu
+					SetFavListMenu(); // Reload fav list items
+					GridShow("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
+				}
 			}
 		}
 	}

@@ -13,5 +13,6 @@ namespace WinApp.Forms
 		public static string account_id = "";
 		public static string expires_at = "";
 		public static string message = "";
+		public static bool changeFavList = false;
 	}
 }
