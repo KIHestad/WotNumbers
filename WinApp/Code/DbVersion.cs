@@ -13,7 +13,7 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 83; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 84; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1080,6 +1080,16 @@ namespace WinApp.Code
 					mssql = "UPDATE columnSelection SET position = position + 1 where position >= 140; " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (191, 1, 140, 'CAST(playerTankBattle.frags*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Frags Avg', 'Average frags (enemy tanks killed) per battle ', 'Result', 50, 'Float'); ";
+					sqlite = mssql;
+					break;
+				case 84:
+					mssql = "UPDATE columnSelection SET colName='CAST(battle.frags AS FLOAT)' WHERE id=18; " +
+							"UPDATE columnSelection SET colName='CAST(battle.cap AS FLOAT)' WHERE id=24; " +
+							"UPDATE columnSelection SET colName='CAST(battle.def AS FLOAT)' WHERE id=25; " +
+							"UPDATE columnSelection SET colName='CAST(battle.shots AS FLOAT)' WHERE id=26; " +
+							"UPDATE columnSelection SET colName='CAST(battle.hits AS FLOAT)' WHERE id=27; " +
+							"UPDATE columnSelection SET colName='CAST(battle.spotted AS FLOAT)' WHERE id=35; " +
+							"UPDATE columnSelection SET colName='CAST(tank.tier AS FLOAT)' WHERE id=59; ";
 					sqlite = mssql;
 					break;
 
