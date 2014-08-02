@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -88,7 +89,14 @@ namespace WinApp.Code
 		public static Image GetTankImage(int tankId, string imageCol)
 		{
 			DataRow[] dr = TankImage.Select("id = " + tankId.ToString());
-			return (Image)dr[0][imageCol];
+			if (dr.Length > 0)
+				return (Image)dr[0][imageCol];
+			else
+			{
+				Bitmap img = new Bitmap(1, 1);
+				return img;
+			}
+				
 		}
 
 	}

@@ -11,9 +11,10 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		public static bool RunDossierFileCheckWithForceUpdate = false;
+		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 84; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 85; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1091,6 +1092,9 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colName='CAST(battle.spotted AS FLOAT)' WHERE id=35; " +
 							"UPDATE columnSelection SET colName='CAST(tank.tier AS FLOAT)' WHERE id=59; ";
 					sqlite = mssql;
+					break;
+				case 85:
+					RunWotApi = true;
 					break;
 
 			}

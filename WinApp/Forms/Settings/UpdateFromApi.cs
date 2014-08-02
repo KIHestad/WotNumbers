@@ -13,9 +13,17 @@ namespace WinApp.Forms
 {
 	public partial class UpdateFromApi : Form
 	{
-		public UpdateFromApi()
+		private static bool _autoRun = false;
+		public UpdateFromApi(bool autoRun = false)
 		{
 			InitializeComponent();
+			_autoRun = autoRun; 
+		}
+
+		private void UpdateFromApi_Shown(object sender, EventArgs e)
+		{
+			if (_autoRun)
+				RunNow();
 		}
 
 		private void UpdateProgressBar(string statusText)
@@ -29,7 +37,7 @@ namespace WinApp.Forms
 			Application.DoEvents();
 		}
 
-		private void btnStart_Click(object sender, EventArgs e)
+		private void RunNow()
 		{
 			this.Cursor = Cursors.WaitCursor;
 			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
@@ -49,7 +57,7 @@ namespace WinApp.Forms
 			// Get turret
 			UpdateProgressBar("Retrieves tank turrets from Wargaming API");
 			ImportWotApi2DB.ImportTurrets(this);
-			
+
 			// Get guns
 			UpdateProgressBar("Retrieves tank guns from Wargaming API");
 			ImportWotApi2DB.ImportGuns(this);
@@ -75,5 +83,12 @@ namespace WinApp.Forms
 			this.Cursor = Cursors.Default;
 			this.Close();
 		}
+
+		private void btnStart_Click(object sender, EventArgs e)
+		{
+			RunNow();
+		}
+
+		
 	}
 }

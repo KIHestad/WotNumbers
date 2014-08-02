@@ -38,7 +38,33 @@ namespace WinApp.Code
 		public string  databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
 		public string  databaseName { get; set; }				// MSSQL Databasename
 		public int     playerId { get; set; }					// Player ID selected
-		public string  playerName { get; set; }					// Player Name selected
+		public string  playerName { get; set; }				    // Player Name selected
+		public string  playerServer { get; set; }				// Player Server selected
+		public string  playerNameAndServer						// Construct playername with servername as name used in player-table as unique playername
+		{
+			get
+			{
+				return playerName + " (" + playerServer + ")";
+			}
+			set
+			{
+				if (value.Contains(" ("))
+				{
+					// Set playerIdName as substring from playerName - the part in front of " (SERVER)"
+					playerName = value.Substring(0, value.IndexOf(" ("));
+					// Set playerIdServer as substring from playerName - the " (SERVER)" part removinc spave and pharanthesis
+					string server = value.Substring(playerName.Length +2);
+					playerServer = server.Substring(0, server.Length - 1);
+				}
+				else
+				{
+					playerName = "";
+					playerServer = "";
+				}
+				
+				
+			}
+		}
 		public string  dossierFilePath { get; set; }			// Dossier file path
 		public string  battleFilePath 
 		{
@@ -135,6 +161,7 @@ namespace WinApp.Code
 			// Common param
 			Config.Settings.playerId = 0;
 			Config.Settings.playerName = "";
+			Config.Settings.playerServer = "";
 			Config.Settings.dossierFilePath = "";
 			Config.Settings.dossierFileWathcherRun = 0;
 			Config.Settings.showDBErrors = false;

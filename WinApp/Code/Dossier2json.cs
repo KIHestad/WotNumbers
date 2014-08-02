@@ -191,26 +191,49 @@ namespace WinApp.Code
 			bool ok = true;
 			List<string> logText = new List<string>();
 			string returVal = "Starting file handling...";
-			// Get player name from dossier
+			// Get player name and server from dossier
 			string playerName = GetPlayerName(dossierFile);
+			string playerServer = GetPlayerServer(dossierFile);
+			string playerNameAndServer = playerName + " (" + playerServer + ")";
 			// Get player ID
 			int playerId = 0;
 			string sql = "select id from player where name=@name";
-			DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 				playerId = Convert.ToInt32(dt.Rows[0][0]);
 			// If no player found, create now
 			if (playerId == 0)
 			{
-				sql = "INSERT INTO player (name) VALUES (@name)";
-				DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
-				DB.ExecuteNonQuery(sql);
+				// Check first if playername exists as player - from old method when server was not used
 				sql = "select id from player where name=@name";
 				DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
 				dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
+				{
+					// Yes, player exist, missing server name
+					// Update player table
 					playerId = Convert.ToInt32(dt.Rows[0][0]);
+					sql = "UPDATE player SET name=@name";
+					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+					DB.ExecuteNonQuery(sql);
+					// SaveFileDialog to settings
+					Config.Settings.playerServer = playerServer;
+					string msg = "";
+					Config.SaveConfig(out msg);
+				}
+				else
+				{
+					// Create new player now
+					sql = "INSERT INTO player (name) VALUES (@name)";
+					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+					DB.ExecuteNonQuery(sql);
+					sql = "select id from player where name=@name";
+					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+					dt = DB.FetchData(sql);
+					if (dt.Rows.Count > 0)
+						playerId = Convert.ToInt32(dt.Rows[0][0]);
+				}
 			}
 			// If still not identified player break with error
 			if (playerId == 0)
@@ -220,10 +243,11 @@ namespace WinApp.Code
 				returVal = "Error identifying player";
 			}
 			// If dossier player is not current player change
-			if (ok && (Config.Settings.playerId != playerId || Config.Settings.playerName != playerName))
+			if (ok && (Config.Settings.playerId != playerId || Config.Settings.playerNameAndServer != playerNameAndServer))
 			{
 				Config.Settings.playerId = playerId;
 				Config.Settings.playerName = playerName;
+				Config.Settings.playerServer = playerServer;
 				string msg = "";
 				Config.SaveConfig(out msg);
 			}
@@ -347,23 +371,27 @@ namespace WinApp.Code
 			}
 		}
 
-		private const char separator = ';';
-
-		// Get playername and server
-		private static string GetPlayerNameAndServer(FileInfo cacheFile)
-		{
-			string decodFileName = DecodFileName(cacheFile);
-			string playerName = decodFileName.Split(separator)[1];
-			string serverName = decodFileName.Split(separator)[0];
-			return playerName + " (" + serverName + ")";
-		}
+		
 
 		// Gets the names of the player from name of dossier file
-		public static string GetPlayerName(string dossierFile)
+		public static string GetPlayerName(string dossierFileName)
 		{
-			FileInfo fi = new FileInfo(dossierFile);
+			FileInfo fi = new FileInfo(dossierFileName);
 			var decodedFileName = DecodFileName(fi);
+			const char separator = ';';
 			return decodedFileName.Split(separator)[1];
+		}
+
+		public static string GetPlayerServer(string dossierFileName)
+		{
+			FileInfo fi = new FileInfo(dossierFileName);
+			var decodedFileName = DecodFileName(fi);
+			if (decodedFileName.Contains("worldoftanks"))
+				decodedFileName = decodedFileName.Substring(decodedFileName.IndexOf("worldoftanks"));
+			if (dossierFileName.Contains(":"))
+				decodedFileName = decodedFileName.Substring(0, decodedFileName.IndexOf(":"));
+			const char separator = '.';
+			return decodedFileName.Split(separator)[1].ToUpper();
 		}
 
 		// Decods the name of the file.

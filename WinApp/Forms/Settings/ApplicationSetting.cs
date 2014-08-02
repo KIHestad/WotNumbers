@@ -38,7 +38,7 @@ namespace WinApp.Forms
 				databaseInfo = "Database Type: SQLite\nDatabase File: " + Path.GetFileName(Config.Settings.databaseFileName);
 			lblDbSettings.Text = databaseInfo;
 			// Player
-			cboSelectPlayer.Text = Config.Settings.playerName;
+			cboSelectPlayer.Text = Config.Settings.playerNameAndServer;
 			chkShowDBError.Checked = Config.Settings.showDBErrors;
 			PlayerPanel();
 		}

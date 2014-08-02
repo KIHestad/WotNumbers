@@ -147,6 +147,7 @@ namespace WinAdmin
 						
 						rootToken = rootToken.Next;
 						itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						pbStatus.Value = 0;
 						pbStatus.Maximum = itemCount * 3; // Tree part impot, first tanks, them link to img, then download img
 						rootToken = rootToken.Next;   // start reading tanks
 						JToken tanks = rootToken.Children().First();   // read all tokens in data token
@@ -154,8 +155,10 @@ namespace WinAdmin
 						//List<string> logtext = new List<string>();
 						string sqlTotal = "";
 						DB.DBResult result = new DB.DBResult();
+						int actualcount = 0;
 						foreach (JProperty tank in tanks)   // tank = tankId + child tokens
 						{
+							actualcount++;
 							itemToken = tank.First();   // First() returns only child tokens of tank
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
@@ -192,6 +195,7 @@ namespace WinAdmin
 								sqlTotal += updateSql + Environment.NewLine;
 							}
 						}
+						pbStatus.Maximum = actualcount * 3; // Tree part impot, first tanks, them link to img, then download img
 						lblStatus.Text = "Saving to DB";
 						Application.DoEvents();
 						DB.ExecuteNonQuery(sqlTotal, Settings.Config, out result, true); // Run all SQL in batch
@@ -216,9 +220,9 @@ namespace WinAdmin
 		{
 			lblStatus.Text = "Getting json data from Wot API (" + DateTime.Now.ToString() + ")";
 			Application.DoEvents();
-			
 			DB.DBResult result = new DB.DBResult();
 			DataTable dtTanks = DB.FetchData("select id from tank", Settings.Config, out result);   // Fetch id of tanks in db
+			pbStatus.Maximum = dtTanks.Rows.Count * 3; // Tree part impot, first tanks, them link to img, then download img
 			int currentTank = 0;
 			while (currentTank < dtTanks.Rows.Count)
 			{

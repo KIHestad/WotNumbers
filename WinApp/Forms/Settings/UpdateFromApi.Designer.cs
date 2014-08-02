@@ -75,6 +75,8 @@
 			// 
 			this.lblProgressStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblProgressStatus.Dimmed = false;
+			this.lblProgressStatus.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.lblProgressStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblProgressStatus.Image = null;
 			this.lblProgressStatus.Location = new System.Drawing.Point(26, 83);
 			this.lblProgressStatus.Name = "lblProgressStatus";
@@ -87,6 +89,9 @@
 			this.badProgressBar.Image = null;
 			this.badProgressBar.Location = new System.Drawing.Point(25, 48);
 			this.badProgressBar.Name = "badProgressBar";
+			this.badProgressBar.ProgressBarColorMode = false;
+			this.badProgressBar.ProgressBarMargins = 2;
+			this.badProgressBar.ProgressBarShowPercentage = false;
 			this.badProgressBar.Size = new System.Drawing.Size(330, 23);
 			this.badProgressBar.TabIndex = 0;
 			this.badProgressBar.Text = "badProgressBar1";
@@ -106,6 +111,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "UpdateFromApi";
+			this.Shown += new System.EventHandler(this.UpdateFromApi_Shown);
 			this.UpdateFromApiTheme.ResumeLayout(false);
 			this.ResumeLayout(false);
 

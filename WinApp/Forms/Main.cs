@@ -272,9 +272,15 @@ namespace WinApp.Forms
 				Form frm = new Forms.GrindingParameter();
 				frm.ShowDialog();
 			}
+			// Update Wot API
+			if (DBVersion.RunWotApi)
+				RunWotApi(true);
 			// Check for dossier update
 			if (DBVersion.RunDossierFileCheckWithForceUpdate)
 				RunDossierFileCheckWithForceUpdate();
+			else
+				RunDossierFileCheck();
+			
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -370,7 +376,7 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				MainTheme.Text = "Wot Numbers - " + Config.Settings.playerName;
+				MainTheme.Text = "Wot Numbers - " + Config.Settings.playerNameAndServer;
 			}
 			Refresh();
 		}
@@ -1497,312 +1503,321 @@ namespace WinApp.Forms
 
 		private void GridShowBattle(string Status2Message)
 		{
-			mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
-			mainGridFormatting = false;
-			dataGridMain.DataSource = null;
-			if (!DB.CheckConnection(false)) return;
-			// Get Columns
-			string select = "";
-			List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
-			int img;
-			int smallimg;
-			int contourimg;
-			ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
-			// Create Battle Time filer
-			string battleTimeFilter = "";
-			if (!mBattlesAll.Checked)
+			try
 			{
-				if (mBattlesYesterday.Checked)
-					battleTimeFilter = " AND (battleTime>=@battleTime AND battleTime<=@battleFromTime) ";
-				else
-					battleTimeFilter = " AND battleTime>=@battleTime ";
-			}
-			// Create Battle mode filter
-			string battleModeFilter = "";
-			if (MainSettings.GridFilterBattle.BattleMode != GridFilter.BattleModeType.All)
-			{
-				switch (MainSettings.GridFilterBattle.BattleMode)
+				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
+				mainGridFormatting = false;
+				dataGridMain.DataSource = null;
+				if (!DB.CheckConnection(false)) return;
+				// Get Columns
+				string select = "";
+				List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
+				int img;
+				int smallimg;
+				int contourimg;
+				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
+				// Create Battle Time filer
+				string battleTimeFilter = "";
+				if (!mBattlesAll.Checked)
 				{
-					case GridFilter.BattleModeType.Mode15:
-						battleModeFilter = " AND (battleMode = '15') ";
-						break;
-					case GridFilter.BattleModeType.Mode7:
-						battleModeFilter = " AND (battleMode = '7') ";
-						break;
-					case GridFilter.BattleModeType.Random:
-						battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
-						break;
-					case GridFilter.BattleModeType.Clan:
-						battleModeFilter = " AND (modeClan > 0) ";
-						break;
-					case GridFilter.BattleModeType.Company:
-						battleModeFilter = " AND (modeCompany > 0) ";
-						break;
-					case GridFilter.BattleModeType.Historical:
-						battleModeFilter = " AND (battleMode = 'Historical') ";
-						break;
-					default:
-						break;
+					if (mBattlesYesterday.Checked)
+						battleTimeFilter = " AND (battleTime>=@battleTime AND battleTime<=@battleFromTime) ";
+					else
+						battleTimeFilter = " AND battleTime>=@battleTime ";
 				}
-			}
+				// Create Battle mode filter
+				string battleModeFilter = "";
+				if (MainSettings.GridFilterBattle.BattleMode != GridFilter.BattleModeType.All)
+				{
+					switch (MainSettings.GridFilterBattle.BattleMode)
+					{
+						case GridFilter.BattleModeType.Mode15:
+							battleModeFilter = " AND (battleMode = '15') ";
+							break;
+						case GridFilter.BattleModeType.Mode7:
+							battleModeFilter = " AND (battleMode = '7') ";
+							break;
+						case GridFilter.BattleModeType.Random:
+							battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
+							break;
+						case GridFilter.BattleModeType.Clan:
+							battleModeFilter = " AND (modeClan > 0) ";
+							break;
+						case GridFilter.BattleModeType.Company:
+							battleModeFilter = " AND (modeCompany > 0) ";
+							break;
+						case GridFilter.BattleModeType.Historical:
+							battleModeFilter = " AND (battleMode = 'Historical') ";
+							break;
+						default:
+							break;
+					}
+				}
 
-			// Get Tank filter
-			string tankFilterMessage = "";
-			string tankFilter = "";
-			string tankJoin = "";
-			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
-			string sortordercol = "0 as sortorder ";
-			string sql = 
-				"SELECT " + select + 
-				"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
-				"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
-				"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
-				"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, " +
-				"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id, " + sortordercol + 
-				"FROM    battle INNER JOIN " +
-				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
-				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
-				"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
-				"        country ON tank.countryId = country.Id INNER JOIN " +
-				"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
-				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-				"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + 
-				"ORDER BY sortorder, battle.battleTime DESC ";
-			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			DateTime dateFilter = new DateTime();
-			if (!mBattlesAll.Checked)
-			{
-				DateTime basedate = DateTime.Now; // current time
-				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-				dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
-				// Adjust time scale according to selected filter
-				if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
-				else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
-				else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
-				else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
-				else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
-				else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
-				else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
-				else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
-				else if (mBattlesYesterday.Checked)
+				// Get Tank filter
+				string tankFilterMessage = "";
+				string tankFilter = "";
+				string tankJoin = "";
+				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
+				string sortordercol = "0 as sortorder ";
+				string sql =
+					"SELECT " + select +
+					"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
+					"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
+					"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
+					"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, " +
+					"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id, " + sortordercol +
+					"FROM    battle INNER JOIN " +
+					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+					"        tank ON playerTank.tankId = tank.id INNER JOIN " +
+					"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
+					"        country ON tank.countryId = country.Id INNER JOIN " +
+					"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
+					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
+					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter +
+					"ORDER BY sortorder, battle.battleTime DESC ";
+				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				DateTime dateFilter = new DateTime();
+				if (!mBattlesAll.Checked)
 				{
-					DateTime dateFromYesterdayFilter = dateFilter;
-					dateFilter = dateFilter.AddDays(-1);
-					DB.AddWithValue(ref sql, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					DateTime basedate = DateTime.Now; // current time
+					if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+					dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
+					// Adjust time scale according to selected filter
+					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
+					else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
+					else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
+					else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
+					else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
+					else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
+					else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
+					else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
+					else if (mBattlesYesterday.Checked)
+					{
+						DateTime dateFromYesterdayFilter = dateFilter;
+						dateFilter = dateFilter.AddDays(-1);
+						DB.AddWithValue(ref sql, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					}
+					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 				}
-				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-			}
-			DataTable dt = new DataTable();
-			dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-			// If images add cols in datatable containing the image
-			if (contourimg + smallimg + img > -3)
-			{
-				// Use ImageHelper to add columns in use
-				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
-				if (contourimg >= 0)
-					imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
-				if (smallimg >= 0)
-					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
-				if (img >= 0)
-					imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
-				// Sort images to get right position
-				imgPosition.Sort();
-				// Add columns
-				foreach (ImageHelper.ImgColumns imgItem in imgPosition)
+				DataTable dt = new DataTable();
+				dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+				// If images add cols in datatable containing the image
+				if (contourimg + smallimg + img > -3)
 				{
-					dt.Columns.Add(imgItem.colName, typeof(Image)).SetOrdinal(imgItem.colPosition);
-				}
-				// Fill with images
-				foreach (DataRow dr in dt.Rows)
-				{
-					int tankId = Convert.ToInt32(dr["tank_id"]);
+					// Use ImageHelper to add columns in use
+					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
 					if (contourimg >= 0)
-						dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
+						imgPosition.Add(new ImageHelper.ImgColumns("Tank Icon", contourimg));
 					if (smallimg >= 0)
-						dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
+						imgPosition.Add(new ImageHelper.ImgColumns("Tank Image", smallimg));
 					if (img >= 0)
-						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
+						imgPosition.Add(new ImageHelper.ImgColumns("Tank Image Large", img));
+					// Sort images to get right position
+					imgPosition.Sort();
+					// Add columns
+					foreach (ImageHelper.ImgColumns imgItem in imgPosition)
+					{
+						dt.Columns.Add(imgItem.colName, typeof(Image)).SetOrdinal(imgItem.colPosition);
+					}
+					// Fill with images
+					foreach (DataRow dr in dt.Rows)
+					{
+						int tankId = Convert.ToInt32(dr["tank_id"]);
+						if (contourimg >= 0)
+							dr["Tank Icon"] = ImageHelper.GetTankImage(tankId, "contourimg");
+						if (smallimg >= 0)
+							dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
+						if (img >= 0)
+							dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
+					}
 				}
-			}
-			int rowcount = dt.Rows.Count;
-			// Add footer
-			int totalBattleCount = 0;
-			double totalWinRate = 0;
-			double totalSurvivedRate = 0;
-			// Add footer now, if ant rows
-			if (rowcount > 0)
-			{
-				// Create blank image in case of image in footer
-				Image blankImage = new Bitmap(1, 1);
-				// totals
-				totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)",""));
-				totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
-				totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
-				// the footer row #1 - average
-				DataRow footerRow1 = dt.NewRow();
-				footerRow1["footer"] = 1;
-				footerRow1["battleResultColor"] = "";
-				footerRow1["battleSurviveColor"] = "";
-				footerRow1["battleTimeToolTip"] = DBNull.Value;
-				footerRow1["battlesCountToolTip"] = 0;
-				footerRow1["victoryToolTip"] = 0;
-				footerRow1["drawToolTip"] = 0;
-				footerRow1["defeatToolTip"] = 0;
-				footerRow1["survivedCountToolTip"] = 0;
-				footerRow1["killedCountToolTip"] = 0;
+				int rowcount = dt.Rows.Count;
+				// Add footer
+				int totalBattleCount = 0;
+				double totalWinRate = 0;
+				double totalSurvivedRate = 0;
+				// Add footer now, if ant rows
+				if (rowcount > 0)
+				{
+					// Create blank image in case of image in footer
+					Image blankImage = new Bitmap(1, 1);
+					// totals
+					totalBattleCount = Convert.ToInt32(dt.Compute("Sum(battlesCountToolTip)", ""));
+					totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
+					totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
+					// the footer row #1 - average
+					DataRow footerRow1 = dt.NewRow();
+					footerRow1["footer"] = 1;
+					footerRow1["battleResultColor"] = "";
+					footerRow1["battleSurviveColor"] = "";
+					footerRow1["battleTimeToolTip"] = DBNull.Value;
+					footerRow1["battlesCountToolTip"] = 0;
+					footerRow1["victoryToolTip"] = 0;
+					footerRow1["drawToolTip"] = 0;
+					footerRow1["defeatToolTip"] = 0;
+					footerRow1["survivedCountToolTip"] = 0;
+					footerRow1["killedCountToolTip"] = 0;
+					foreach (ColListHelper.ColListClass colListItem in colList)
+					{
+						if (colListItem.type == "Int")
+						{
+							footerRow1[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+						}
+						else if (colListItem.type == "Float")
+						{
+							footerRow1[colListItem.name] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+						}
+						else if (colListItem.type == "DateTime")
+						{
+							footerRow1[colListItem.name] = DBNull.Value;
+						}
+						else if (colListItem.type == "Image")
+						{
+							footerRow1[colListItem.name] = blankImage;
+						}
+						else
+						{
+							string s = "";
+							switch (colListItem.name)
+							{
+								case "Tank": s = "Average"; break;
+								case "Result": s = Math.Round(totalWinRate, 1).ToString() + "%"; break;
+								case "Survived": s = Math.Round(totalSurvivedRate, 1).ToString() + "%"; break;
+							}
+							footerRow1[colListItem.name] = s;
+						}
+					}
+					// the footer row #2 - totals
+					DataRow footerRow2 = dt.NewRow();
+					footerRow2["footer"] = 2;
+					footerRow2["battleResultColor"] = "";
+					footerRow2["battleSurviveColor"] = "";
+					footerRow2["battleTimeToolTip"] = DBNull.Value;
+					footerRow2["battlesCountToolTip"] = 0;
+					footerRow2["victoryToolTip"] = 0;
+					footerRow2["drawToolTip"] = 0;
+					footerRow2["defeatToolTip"] = 0;
+					footerRow2["survivedCountToolTip"] = 0;
+					footerRow2["killedCountToolTip"] = 0;
+					foreach (ColListHelper.ColListClass colListItem in colList)
+					{
+						if (colListItem.type == "Int" || colListItem.type == "Float")
+						{
+							IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
+							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
+								// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
+								footerRow2[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
+							else
+								footerRow2[colListItem.name] = DBNull.Value;
+						}
+						else if (colListItem.type == "DateTime")
+						{
+							footerRow2[colListItem.name] = DBNull.Value;
+						}
+						else if (colListItem.type == "Image")
+						{
+							footerRow2[colListItem.name] = blankImage;
+						}
+						else
+						{
+							string s = "";
+							switch (colListItem.name)
+							{
+								case "Tank": s = "Totals"; break;
+								case "Result": s = ""; break;
+								case "Survived": s = ""; break;
+							}
+							footerRow2[colListItem.name] = s;
+						}
+					}
+					dt.Rows.Add(footerRow2);
+					dt.Rows.Add(footerRow1);
+				}
+				// Set row height in template before rendering to fit images
+				dataGridMain.RowTemplate.Height = 23;
+				if (smallimg >= 0)
+					dataGridMain.RowTemplate.Height = 31;
+				if (img >= 0)
+					dataGridMain.RowTemplate.Height = 60;
+				// populate datagrid
+				mainGridFormatting = true;
+				dataGridMain.DataSource = dt;
+				// Unfocus
+				dataGridMain.ClearSelection();
+				// Hide sys cols
+				dataGridMain.Columns["battleResultColor"].Visible = false;
+				dataGridMain.Columns["battleSurviveColor"].Visible = false;
+				dataGridMain.Columns["battleTimeToolTip"].Visible = false;
+				dataGridMain.Columns["battlesCountToolTip"].Visible = false;
+				dataGridMain.Columns["victoryToolTip"].Visible = false;
+				dataGridMain.Columns["drawToolTip"].Visible = false;
+				dataGridMain.Columns["defeatToolTip"].Visible = false;
+				dataGridMain.Columns["survivedCountToolTip"].Visible = false;
+				dataGridMain.Columns["killedCountToolTip"].Visible = false;
+				dataGridMain.Columns["footer"].Visible = false;
+				dataGridMain.Columns["sortorder"].Visible = false;
+				dataGridMain.Columns["player_Tank_Id"].Visible = false;
+				dataGridMain.Columns["battle_Id"].Visible = false;
+				dataGridMain.Columns["tank_Id"].Visible = false;
+				// Format grid 
 				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
+					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 					if (colListItem.type == "Int")
 					{
-						footerRow1[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 					}
 					else if (colListItem.type == "Float")
 					{
-						footerRow1[colListItem.name] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
+						if (rowcount > 0) // Special format in footer for floating values
+							dataGridMain.Rows[rowcount + 1].Cells[colListItem.name].Style.Format = "N1";
 					}
-					else if (colListItem.type == "DateTime")
+					else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
 					{
-						footerRow1[colListItem.name] = DBNull.Value;
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 					}
-					else if (colListItem.type == "Image")
+					else if (colListItem.type == "Image" && colListItem.name == "Tank Image Large")
 					{
-						footerRow1[colListItem.name] = blankImage;
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					}
-					else
+					else // Format datetime/Varchar 
 					{
-						string s = "";
-						switch (colListItem.name)
+						// Footer
+						if (rowcount > 1)
 						{
-							case "Tank": s = "Average"; break;
-							case "Result": s = Math.Round(totalWinRate,1).ToString() + "%"; break;
-							case "Survived": s = Math.Round(totalSurvivedRate,1).ToString() + "%"; break;
+							switch (colListItem.name)
+							{
+								case "Tank":
+									dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[rowcount + 1].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
+									break;
+							}
 						}
-						footerRow1[colListItem.name] = s;
 					}
 				}
-				// the footer row #2 - totals
-				DataRow footerRow2 = dt.NewRow();
-				footerRow2["footer"] = 2;
-				footerRow2["battleResultColor"] = "";
-				footerRow2["battleSurviveColor"] = "";
-				footerRow2["battleTimeToolTip"] = DBNull.Value;
-				footerRow2["battlesCountToolTip"] = 0;
-				footerRow2["victoryToolTip"] = 0;
-				footerRow2["drawToolTip"] = 0;
-				footerRow2["defeatToolTip"] = 0;
-				footerRow2["survivedCountToolTip"] = 0;
-				footerRow2["killedCountToolTip"] = 0;
-				foreach (ColListHelper.ColListClass colListItem in colList)
-				{
-					if (colListItem.type == "Int" || colListItem.type == "Float")
-					{
-						IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
-						if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
-							// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
-							footerRow2[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
-						else
-							footerRow2[colListItem.name] = DBNull.Value;
-					}
-					else if (colListItem.type == "DateTime")
-					{
-						footerRow2[colListItem.name] = DBNull.Value;
-					}
-					else if (colListItem.type == "Image")
-					{
-						footerRow2[colListItem.name] = blankImage;
-					}
-					else
-					{
-						string s = "";
-						switch (colListItem.name)
-						{
-							case "Tank": s = "Totals"; break;
-							case "Result": s = ""; break;
-							case "Survived": s = ""; break;
-						}
-						footerRow2[colListItem.name] = s;
-					}
-				}
-				dt.Rows.Add(footerRow2);
-				dt.Rows.Add(footerRow1);
+				// Format grid footer
+				//if (rowcount > 1)
+				//{
+				//	dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+				//	dataGridMain.Rows[rowcount + 1].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+				//}
+				// Finish up
+				ResizeNow();
+				mainGridSaveColWidth = true;
+				mBattles.Visible = true;
+				SetStatus2(Status2Message);
+				lblStatusRowCount.Text = "Rows " + rowcount.ToString();
 			}
-			// Set row height in template before rendering to fit images
-			dataGridMain.RowTemplate.Height = 23;
-			if (smallimg >= 0)
-				dataGridMain.RowTemplate.Height = 31;
-			if (img >= 0)
-				dataGridMain.RowTemplate.Height = 60;
-			// populate datagrid
-			mainGridFormatting = true;
-			dataGridMain.DataSource = dt;
-			// Unfocus
-			dataGridMain.ClearSelection();
-			// Hide sys cols
-			dataGridMain.Columns["battleResultColor"].Visible = false;
-			dataGridMain.Columns["battleSurviveColor"].Visible = false;
-			dataGridMain.Columns["battleTimeToolTip"].Visible = false;
-			dataGridMain.Columns["battlesCountToolTip"].Visible = false;
-			dataGridMain.Columns["victoryToolTip"].Visible = false;
-			dataGridMain.Columns["drawToolTip"].Visible = false;
-			dataGridMain.Columns["defeatToolTip"].Visible = false;
-			dataGridMain.Columns["survivedCountToolTip"].Visible = false;
-			dataGridMain.Columns["killedCountToolTip"].Visible = false;
-			dataGridMain.Columns["footer"].Visible = false;
-			dataGridMain.Columns["sortorder"].Visible = false;
-			dataGridMain.Columns["player_Tank_Id"].Visible = false;
-			dataGridMain.Columns["battle_Id"].Visible = false;
-			dataGridMain.Columns["tank_Id"].Visible = false;
-			// Format grid 
-			foreach (ColListHelper.ColListClass colListItem in colList)
+			catch (Exception)
 			{
-				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
-				if (colListItem.type == "Int")
-				{
-					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-				}
-				else if (colListItem.type == "Float")
-				{
-					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-					if (rowcount > 0) // Special format in footer for floating values
-						dataGridMain.Rows[rowcount + 1].Cells[colListItem.name].Style.Format = "N1";
-				}
-				else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
-				{
-					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				}
-				else if (colListItem.type == "Image" && colListItem.name == "Tank Image Large")
-				{
-					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-				}
-				else // Format datetime/Varchar 
-				{
-					// Footer
-					if (rowcount > 1)
-					{
-						switch (colListItem.name)
-						{
-							case "Tank":
-								dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
-								dataGridMain.Rows[rowcount + 1].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
-								break;
-						}
-					}
-				}
+				
+				throw;
 			}
-			// Format grid footer
-			//if (rowcount > 1)
-			//{
-			//	dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-			//	dataGridMain.Rows[rowcount + 1].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-			//}
-			// Finish up
-			ResizeNow();
-			mainGridSaveColWidth = true;
-			mBattles.Visible = true;
-			SetStatus2(Status2Message);
-			lblStatusRowCount.Text = "Rows " + rowcount.ToString();
+			
 		}
 
 		#endregion
@@ -2272,7 +2287,12 @@ namespace WinApp.Forms
 
 		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.UpdateFromApi();
+			RunWotApi();
+		}
+
+		private void RunWotApi(bool autoRun = false)
+		{
+			Form frm = new Forms.UpdateFromApi(autoRun);
 			frm.ShowDialog();
 		}
 
@@ -2294,6 +2314,11 @@ namespace WinApp.Forms
 		}
 
 		private void toolItemSettingsRunManual_Click(object sender, EventArgs e)
+		{
+			RunDossierFileCheck();
+		}
+
+		private void RunDossierFileCheck()
 		{
 			// Dossier file manual handling
 			SetStatus2("Starting manual dossier check...");
