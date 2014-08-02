@@ -80,6 +80,12 @@ namespace WinApp.Forms
 			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
 			btnStart.Enabled = true;
 
+			// Save to settings
+			Config.Settings.doneRunWotApi = DateTime.Now;
+			string msg = "";
+			Config.SaveConfig(out msg);
+
+			// Done
 			this.Cursor = Cursors.Default;
 			this.Close();
 		}

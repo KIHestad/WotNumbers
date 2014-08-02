@@ -44,7 +44,10 @@ namespace WinApp.Code
 		{
 			get
 			{
-				return playerName + " (" + playerServer + ")";
+				if (playerServer == "")
+					return playerName;
+				else
+					return playerName + " (" + playerServer + ")";
 			}
 			set
 			{
@@ -58,7 +61,7 @@ namespace WinApp.Code
 				}
 				else
 				{
-					playerName = "";
+					playerName = value;
 					playerServer = "";
 				}
 				
@@ -77,11 +80,14 @@ namespace WinApp.Code
 					return "";
 			}
 		}
-		public int     dossierFileWathcherRun { get; set; }		// Dossier file listener activated
-		public bool    grindParametersAutoStart { get; set; }	// Autoshow Grinding params on app startup
-		public PosSize posSize { get; set; }					// Main Form Position And Size
-		public int     timeZoneAdjust { get; set; }				// Adjust battle time read from dossier according to time zone
-		public bool    showDBErrors { get; set; }				// To show all DB errors  
+		public int      dossierFileWathcherRun { get; set; }		// Dossier file listener activated
+		public bool     grindParametersAutoStart { get; set; }		// Autoshow Grinding params on app startup
+		public PosSize  posSize { get; set; }						// Main Form Position And Size
+		public int      timeZoneAdjust { get; set; }				// Adjust battle time read from dossier according to time zone
+		public bool     showDBErrors { get; set; }					// To show all DB errors  
+		public DateTime readMessage { get; set; }					// Timestamp for last message read from Wot Numbers API
+		public DateTime doneRunWotApi { get; set; }				// done executed force run wot api triggered from Wot Numbers API
+		public DateTime doneRunForceDossierFileCheck { get; set; }	// done executed force run full force dossier file check triggered from Wot Numbers API
 	}
 
 	class Config
@@ -116,6 +122,10 @@ namespace WinApp.Code
 					{
 						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\BattleResult");
 					}
+					if (!Directory.Exists(appdataFolder + wotnumFolder + "\\Download"))
+					{
+						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\Download");
+					}
 					_appDataFolderOK = true;
 				}
 				return appdataFolder + wotnumFolder + "\\";
@@ -146,6 +156,14 @@ namespace WinApp.Code
 			}
 		}
 
+		public static string AppDataDownloadFolder
+		{
+			get
+			{
+				return AppDataBaseFolder + "Download\\";
+			}
+		}
+
 		private static void SetConfigDefaults()
 		{
 			// Insert default values as settings
@@ -167,6 +185,9 @@ namespace WinApp.Code
 			Config.Settings.showDBErrors = false;
 			Config.Settings.grindParametersAutoStart = false;
 			Config.Settings.posSize = new ConfigData.PosSize();
+			Config.Settings.readMessage = new DateTime(2014,8,1);
+			Config.Settings.doneRunForceDossierFileCheck = new DateTime(2014, 8, 1);
+			Config.Settings.doneRunWotApi = new DateTime(2014, 8, 1);
 		}
 
 		

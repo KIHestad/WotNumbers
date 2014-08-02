@@ -15,6 +15,7 @@ namespace WinApp.Code
 	public class dossier2json
 	{
 		public BackgroundWorker bwDossierProcess;
+		public static bool dossierRunning = false;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
 
 		private static string LogText(string logtext)
@@ -90,6 +91,13 @@ namespace WinApp.Code
 			ManualRun(_ForceUpdate);
 			StatusBarHelper.ClearAfterNextShow = true;
 			StatusBarHelper.Message = "Dossier file successfully read";
+			// Update config if force update is run
+			if (_ForceUpdate)
+			{
+				Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
+				string msg = "";
+				Config.SaveConfig(out msg);
+			}
 		}
 
 		public static string ManualRun(bool ForceUpdate = false)
@@ -113,7 +121,7 @@ namespace WinApp.Code
 			}
 			if (ok)
 			{
-				List<string> newLogText = CopyAndConvertFile(out returVal, dossierFile, ForceUpdate);
+				List<string> newLogText = RunDossierRead(out returVal, dossierFile, ForceUpdate);
 				foreach (string s in newLogText)
 				{
 					logText.Add(s);
@@ -139,7 +147,7 @@ namespace WinApp.Code
 			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierFile, 4000);
 			// Perform file conversion from picle til json
 			string statusResult;
-			List<string> logTextNew2 = CopyAndConvertFile(out statusResult, dossierFile);
+			List<string> logTextNew2 = RunDossierRead(out statusResult, dossierFile);
 			// Add logtext
 			foreach (string s in logtextnew1)
 			{
@@ -186,111 +194,131 @@ namespace WinApp.Code
 			return logtext;
 		}
 
-		private static List<string> CopyAndConvertFile(out string statusResult, string dossierFile, bool forceUpdate = false)
+		private static List<string> RunDossierRead(out string statusResult, string dossierFile, bool forceUpdate = false)
 		{
-			bool ok = true;
 			List<string> logText = new List<string>();
-			string returVal = "Starting file handling...";
-			// Get player name and server from dossier
-			string playerName = GetPlayerName(dossierFile);
-			string playerServer = GetPlayerServer(dossierFile);
-			string playerNameAndServer = playerName + " (" + playerServer + ")";
-			// Get player ID
-			int playerId = 0;
-			string sql = "select id from player where name=@name";
-			DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
-				playerId = Convert.ToInt32(dt.Rows[0][0]);
-			// If no player found, create now
-			if (playerId == 0)
+			string returVal = "";
+			if (!dossierRunning)
 			{
-				// Check first if playername exists as player - from old method when server was not used
-				sql = "select id from player where name=@name";
-				DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
-				dt = DB.FetchData(sql);
+				dossierRunning = true;
+				bool ok = true;
+				returVal = "Starting file handling...";
+				// Get player name and server from dossier
+				string playerName = GetPlayerName(dossierFile);
+				string playerServer = GetPlayerServer(dossierFile);
+				string playerNameAndServer = playerName + " (" + playerServer + ")";
+				// Get player ID
+				int playerId = 0;
+				string sql = "select id from player where name=@name";
+				DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+				DataTable dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
-				{
-					// Yes, player exist, missing server name
-					// Update player table
 					playerId = Convert.ToInt32(dt.Rows[0][0]);
-					sql = "UPDATE player SET name=@name";
-					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-					DB.ExecuteNonQuery(sql);
-					// SaveFileDialog to settings
+				// If no player found, create now
+				if (playerId == 0)
+				{
+					// Check first if playername exists as player - from old method when server was not used
+					sql = "select id from player where name=@name";
+					DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
+					dt = DB.FetchData(sql);
+					if (dt.Rows.Count > 0)
+					{
+						// Yes, player exist, missing server name
+						// Update player table
+						playerId = Convert.ToInt32(dt.Rows[0][0]);
+						sql = "UPDATE player SET name=@name WHERE id=@id";
+						DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+						DB.AddWithValue(ref sql, "@id", playerId, DB.SqlDataType.Int);
+						DB.ExecuteNonQuery(sql);
+						// SaveFileDialog to settings
+						Config.Settings.playerServer = playerServer;
+						string msg = "";
+						Config.SaveConfig(out msg);
+					}
+					else
+					{
+						// Create new player now
+						sql = "INSERT INTO player (name) VALUES (@name)";
+						DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+						DB.ExecuteNonQuery(sql);
+						sql = "select id from player where name=@name";
+						DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+						dt = DB.FetchData(sql);
+						if (dt.Rows.Count > 0)
+							playerId = Convert.ToInt32(dt.Rows[0][0]);
+					}
+				}
+				// If still not identified player break with error
+				if (playerId == 0)
+				{
+					ok = false;
+					logText.Add(LogText(" > Error identifying player"));
+					returVal = "Error identifying player";
+				}
+				// If dossier player is not current player change
+				if (ok && (Config.Settings.playerId != playerId || Config.Settings.playerNameAndServer != playerNameAndServer))
+				{
+					Config.Settings.playerId = playerId;
+					Config.Settings.playerName = playerName;
 					Config.Settings.playerServer = playerServer;
 					string msg = "";
 					Config.SaveConfig(out msg);
 				}
-				else
+				if (ok)
 				{
-					// Create new player now
-					sql = "INSERT INTO player (name) VALUES (@name)";
-					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-					DB.ExecuteNonQuery(sql);
-					sql = "select id from player where name=@name";
-					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-					dt = DB.FetchData(sql);
-					if (dt.Rows.Count > 0)
-						playerId = Convert.ToInt32(dt.Rows[0][0]);
-				}
-			}
-			// If still not identified player break with error
-			if (playerId == 0)
-			{
-				ok = false;
-				logText.Add(LogText(" > Error identifying player"));
-				returVal = "Error identifying player";
-			}
-			// If dossier player is not current player change
-			if (ok && (Config.Settings.playerId != playerId || Config.Settings.playerNameAndServer != playerNameAndServer))
-			{
-				Config.Settings.playerId = playerId;
-				Config.Settings.playerName = playerName;
-				Config.Settings.playerServer = playerServer;
-				string msg = "";
-				Config.SaveConfig(out msg);
-			}
-			if (ok)
-			{
-				// Copy dossier file and perform file conversion til json format
-				string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-				string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
-				string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
-				string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
-				string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
-				FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
-				fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
-				string result = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
-				if (result != "") // error occured
-				{
-					logText.Add(result);
-					returVal = "Error converting dossier file to json - check log file";
-					ok = false;
-				}
-				else
-				{
-					logText.Add(LogText(" > Successfully convertet dossier file to json"));
-					// Move new file as previos (copy and delete)
-					FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-					fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
-					fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
-					fileInfonew.Delete();
-					logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
-				}
-				if (ok) // Analyze json file and add to db
-				{
-					if (File.Exists(dossierJsonFile))
+					// Copy dossier file and perform file conversion til json format
+					string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
+					string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
+					string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
+					string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
+					string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
+					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
+					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
+					string result = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
+					if (result != "") // error occured
 					{
-						returVal = Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
-						logText.Add(LogText(" > " + returVal));
+						logText.Add(result);
+						returVal = "Error converting dossier file to json - check log file";
+						ok = false;
 					}
 					else
 					{
-						logText.Add(LogText(" > No json file found"));
-						returVal = "No previous dossier file found - run manual check";
+						logText.Add(LogText(" > Successfully convertet dossier file to json"));
+						// Move new file as previos (copy and delete)
+						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+						fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
+						fileInfonew.CopyTo(dossierDatPrevFile, true); // copy and rename dossier file
+						try
+						{
+							fileInfonew.Delete();
+							logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
+						}
+						catch (Exception)
+						{
+							// throw;
+							logText.Add(LogText(" > Could not copy dossierfile, probably in use"));
+						}
+
+					}
+					if (ok) // Analyze json file and add to db
+					{
+						if (File.Exists(dossierJsonFile))
+						{
+							returVal = Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
+							logText.Add(LogText(" > " + returVal));
+						}
+						else
+						{
+							logText.Add(LogText(" > No json file found"));
+							returVal = "No previous dossier file found - run manual check";
+						}
 					}
 				}
+				dossierRunning = false;
+			}
+			else
+			{
+				returVal = "Process already running...";
 			}
 			statusResult = returVal;
 			return logText;

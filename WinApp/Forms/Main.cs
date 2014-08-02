@@ -10,6 +10,8 @@ using System.Collections;
 using System.Reflection;
 using WinApp.Code;
 using System.ComponentModel;
+using System.Net;
+using System.Diagnostics;
 
 namespace WinApp.Forms
 {
@@ -266,21 +268,20 @@ namespace WinApp.Forms
 			MainTheme.Cursor = Cursors.Default;
 			// Show status message
 			SetStatus2("Application started");
-			// Show Grinding Param Settings
-			if (Config.Settings.grindParametersAutoStart)
-			{
-				Form frm = new Forms.GrindingParameter();
-				frm.ShowDialog();
-			}
+			// Check for new version
+			RunCheckForNewVersion();
 			// Update Wot API
 			if (DBVersion.RunWotApi)
 				RunWotApi(true);
 			// Check for dossier update
 			if (DBVersion.RunDossierFileCheckWithForceUpdate)
 				RunDossierFileCheckWithForceUpdate();
-			else
-				RunDossierFileCheck();
-			
+			// Show Grinding Param Settings
+			if (Config.Settings.grindParametersAutoStart)
+			{
+				Form frm = new Forms.GrindingParameter();
+				frm.ShowDialog();
+			}
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -496,6 +497,7 @@ namespace WinApp.Forms
 
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
+			SetFormTitle();
 			SetStatus2("Refreshing grid...");
 			GridShow("Grid refreshed");
 		}
@@ -2316,6 +2318,121 @@ namespace WinApp.Forms
 		private void toolItemSettingsRunManual_Click(object sender, EventArgs e)
 		{
 			RunDossierFileCheck();
+		}
+
+		private BackgroundWorker bwCheckForNewVersion;
+		private void RunCheckForNewVersion()
+		{
+			bwCheckForNewVersion = new BackgroundWorker();
+			bwCheckForNewVersion.WorkerSupportsCancellation = false;
+			bwCheckForNewVersion.WorkerReportsProgress = false;
+			bwCheckForNewVersion.DoWork += new DoWorkEventHandler(CheckForNewVersion.GetVersion);
+			bwCheckForNewVersion.RunWorkerCompleted += new RunWorkerCompletedEventHandler(PerformCheckForNewVersion);
+			//bwCheckForNewVersion.RunWorkerCompleted += 
+			if (bwCheckForNewVersion.IsBusy != true)
+			{
+				bwCheckForNewVersion.RunWorkerAsync();
+			}
+		}
+
+		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
+		{
+			VersionInfo vi = CheckForNewVersion.versionInfo;
+			if (vi.error && Config.Settings.showDBErrors)
+			{
+				// Could not check for new version, run normal dossier file check
+				RunDossierFileCheck();
+				// Message if debug mode
+				Code.MsgBox.Show("Could not check for new version, could be that you have no Internet access." + Environment.NewLine + Environment.NewLine +
+					vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+					"Version check failed",
+					this);
+			}
+			else if (vi.maintenanceMode)
+			{
+				// Web is currently in maintance mode, just skip version check - perform normal startup
+				RunDossierFileCheck();
+			}
+			else
+			{
+				// version foound, check result
+				double currentVersion = CheckForNewVersion.MakeVersionToDouble(AppVersion.AssemblyVersion);
+				double newVersion = CheckForNewVersion.MakeVersionToDouble(vi.version);
+				if (currentVersion >= newVersion)
+				{
+					SetStatus2("You are running the lastest version (Wot Numbers " + vi.version + ")");
+					// Message
+					if (vi.message != "" && vi.messageDate <= DateTime.Now)
+					{
+						if (Config.Settings.readMessage == null || Config.Settings.readMessage < vi.messageDate)
+						{
+							// Display message from Wot Numbers API
+							MsgBox.Show(vi.message + Environment.NewLine + Environment.NewLine, "Message published " + vi.messageDate.ToString("dd.MM.yyyy"), this);
+							// Save read message
+							Config.Settings.readMessage = DateTime.Now;
+							string msg = "";
+							Config.SaveConfig(out msg);
+						}
+					}
+					// Force dossier file check
+					if (vi.runWotApi <= DateTime.Now)
+						if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < vi.runWotApi)
+							RunWotApi(true);
+					// Force dossier file check or just normal
+					if (vi.runForceDossierFileCheck <= DateTime.Now)
+						if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < vi.runForceDossierFileCheck)
+							RunDossierFileCheckWithForceUpdate();
+						else
+							RunDossierFileCheck();
+				}
+				else
+				{
+					RunDossierFileCheck();
+					// New version avaliable
+					string msg = "Wot Numbers version " + vi.version + " is available for download." + Environment.NewLine + Environment.NewLine +
+						"You are currently running version: " + AppVersion.AssemblyVersion + "." + Environment.NewLine + Environment.NewLine +
+						"Press 'OK' to download the new version now." + Environment.NewLine + Environment.NewLine;
+					Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "New version avaliable for download", MsgBoxType.OKCancel, this);
+					if (answer == MsgBox.Button.OKButton)
+					{
+						// Start download now
+						IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
+						defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
+						WebClient webClient = new WebClient();
+						webClient.Proxy = defaultWebProxy;
+						webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadNewVersionDone);
+						webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadNewVersionInProgress);
+						string filename = Config.AppDataDownloadFolder + vi.downloadFile;
+						if (File.Exists(filename))
+							File.Delete(filename);
+						webClient.DownloadFileAsync(new Uri(vi.downloadURL), filename);
+					}
+				}
+			}
+		}
+
+		private void DownloadNewVersionInProgress(object sender, DownloadProgressChangedEventArgs e)
+		{
+			SetStatus2("File downloading, progress: " + e.ProgressPercentage + "%");
+			if (e.ProgressPercentage == 100)
+				SetStatus2("File download complete");
+		}
+
+		private void DownloadNewVersionDone(object sender, AsyncCompletedEventArgs e)
+		{
+			SetStatus2("File download complete");
+			Application.DoEvents();
+			VersionInfo vi = CheckForNewVersion.versionInfo;
+			string filename = Config.AppDataDownloadFolder + vi.downloadFile;
+			string msg = "Wot Numbers version " + vi.version + " is downloaded. The downloaded file is located here:" + Environment.NewLine + Environment.NewLine +
+				filename + Environment.NewLine + Environment.NewLine +
+				"Press 'OK' to close Wot Numbers and start the installation." + Environment.NewLine + Environment.NewLine;
+			Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "Start installation now", MsgBoxType.OKCancel, this);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				Process.Start(filename);
+				this.Close();
+			}					
 		}
 
 		private void RunDossierFileCheck()

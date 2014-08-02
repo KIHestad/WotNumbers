@@ -225,7 +225,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Application settings";
-            this.Activated += new System.EventHandler(this.ApplicationSetting_Activated);
             this.Load += new System.EventHandler(this.frmDossierFileSelect_Load);
             this.ApplicationSettingsTheme.ResumeLayout(false);
             this.ResumeLayout(false);

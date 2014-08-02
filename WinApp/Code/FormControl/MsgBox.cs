@@ -43,7 +43,7 @@ namespace WinApp.Code
 
 		public static Button Show(string Message, string Title, Form owner)
 		{
-			return ShowNow(Message, Title, MsgBoxType.Close, null);
+			return ShowNow(Message, Title, MsgBoxType.Close, owner);
 		}
 
 		public static Button Show(string Message, string Title)

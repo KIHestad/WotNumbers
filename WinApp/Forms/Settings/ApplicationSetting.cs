@@ -49,32 +49,6 @@ namespace WinApp.Forms
 			cboSelectPlayer.Enabled = ok;
 		}
 
-		// Remove player is deactivated
-		//private void btnRemovePlayer_Click_1(object sender, EventArgs e)
-		//{
-		//	Code.MsgBox.Button result = Code.MsgBox.Show("Are you sure you want to remove player: " + cboSelectPlayer.Text + " ?", "Remove player", Code.MsgBoxType.OKCancel);
-		//	if (result == Code.MsgBox.Button.OKButton)
-		//	{
-		//		try
-		//		{
-		//			SqlConnection con = new SqlConnection(Config.DatabaseConnection());
-		//			con.Open();
-		//			SqlCommand cmd = new SqlCommand("DELETE FROM player WHERE name=@name", con);
-		//			cmd.Parameters.AddWithValue("@name", cboSelectPlayer.Text);
-		//			cmd.ExecuteNonQuery();
-		//			con.Close();
-		//			Code.MsgBox.Show("Player successfully removed.", "Player removed");
-		//			cboSelectPlayer.Text = "";
-		//			Refresh();
-		//		}
-		//		catch (Exception ex)
-		//		{
-		//			Code.MsgBox.Show("Cannot remove player, are you sure a player is selected? It is not possible to remove player that has saved related data, only players without any data can be removed." + 
-		//				Environment.NewLine + Environment.NewLine + ex.Message, "Cannot remove player");
-		//		}
-		//	}
-		//}
-
 		private void btnSelectDossierFilePath_Click(object sender, EventArgs e)
 		{
 			// Select dossier file
@@ -107,7 +81,7 @@ namespace WinApp.Forms
 			// Show DB errors (debug mode)
 			Config.Settings.showDBErrors = chkShowDBError.Checked;
 			// Player
-			Config.Settings.playerName = cboSelectPlayer.Text;
+			Config.Settings.playerNameAndServer = cboSelectPlayer.Text;
 			DataTable dt = DB.FetchData("SELECT id FROM player WHERE name='" + cboSelectPlayer.Text + "'", Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
@@ -154,11 +128,7 @@ namespace WinApp.Forms
 			Code.DropDownGrid.Show(cboSelectPlayer, Code.DropDownGrid.DropDownGridType.Sql, "SELECT name FROM player ORDER BY name");
 		}
 
-		private void ApplicationSetting_Activated(object sender, EventArgs e)
-		{
-			UpdateSettings();
-		}
-
+		
 		private void Cancel_Click(object sender, EventArgs e)
 		{
 			this.Close();
