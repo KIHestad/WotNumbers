@@ -68,13 +68,16 @@ namespace WinApp.Code
 		public static double MakeVersionToDouble(string version)
 		{
 			double intVersion = 0;
-			const char separator = '.';
-			string[] versionParts = version.Split(separator);
-			double exp = Math.Pow(1000, versionParts.Length - 1);
-			foreach (string versionPart in versionParts)
+			if (version != null)
 			{
-				intVersion += Convert.ToInt32(versionPart) * exp;
-				exp = exp / 1000;
+				const char separator = '.';
+				string[] versionParts = version.Split(separator);
+				double exp = Math.Pow(1000, versionParts.Length - 1);
+				foreach (string versionPart in versionParts)
+				{
+					intVersion += Convert.ToInt32(versionPart) * exp;
+					exp = exp / 1000;
+				}
 			}
 			return intVersion;
 		}

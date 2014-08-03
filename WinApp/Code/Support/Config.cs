@@ -73,9 +73,14 @@ namespace WinApp.Code
 		{
 			get
 			{
-				DirectoryInfo di = Directory.GetParent(dossierFilePath);
-				if (di.Exists)
-					return di.FullName + "/battle_results/";
+				if (Directory.Exists(dossierFilePath))
+				{
+					DirectoryInfo di = Directory.GetParent(dossierFilePath);
+					if (di.Exists)
+						return di.FullName + "/battle_results/";
+					else
+						return "";
+				}
 				else
 					return "";
 			}

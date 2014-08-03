@@ -270,12 +270,6 @@ namespace WinApp.Forms
 			SetStatus2("Application started");
 			// Check for new version
 			RunCheckForNewVersion();
-			// Update Wot API
-			if (DBVersion.RunWotApi)
-				RunWotApi(true);
-			// Check for dossier update
-			if (DBVersion.RunDossierFileCheckWithForceUpdate)
-				RunDossierFileCheckWithForceUpdate();
 			// Show Grinding Param Settings
 			if (Config.Settings.grindParametersAutoStart)
 			{
@@ -2338,26 +2332,34 @@ namespace WinApp.Forms
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
 		{
 			VersionInfo vi = CheckForNewVersion.versionInfo;
-			if (vi.error && Config.Settings.showDBErrors)
+			if (vi.error)
 			{
 				// Could not check for new version, run normal dossier file check
 				RunDossierFileCheck();
 				// Message if debug mode
-				Code.MsgBox.Show("Could not check for new version, could be that you have no Internet access." + Environment.NewLine + Environment.NewLine +
-					vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
-					"Version check failed",
-					this);
+				if (Config.Settings.showDBErrors)
+					Code.MsgBox.Show("Could not check for new version, could be that you have no Internet access." + Environment.NewLine + Environment.NewLine +
+										vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+										"Version check failed",
+										this);
 			}
 			else if (vi.maintenanceMode)
 			{
 				// Web is currently in maintance mode, just skip version check - perform normal startup
-				RunDossierFileCheck();
+				// Update Wot API
+				if (DBVersion.RunWotApi)
+					RunWotApi(true);
+				// Check for dossier update
+				if (DBVersion.RunDossierFileCheckWithForceUpdate)
+					RunDossierFileCheckWithForceUpdate();
+				else
+					RunDossierFileCheck();
 			}
 			else
 			{
 				// version foound, check result
 				double currentVersion = CheckForNewVersion.MakeVersionToDouble(AppVersion.AssemblyVersion);
-				double newVersion = CheckForNewVersion.MakeVersionToDouble(vi.version);
+				double newVersion = newVersion = CheckForNewVersion.MakeVersionToDouble(vi.version);
 				if (currentVersion >= newVersion)
 				{
 					SetStatus2("You are running the lastest version (Wot Numbers " + vi.version + ")");
@@ -2376,10 +2378,17 @@ namespace WinApp.Forms
 					}
 					// Force dossier file check
 					if (vi.runWotApi <= DateTime.Now)
+					{
 						if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < vi.runWotApi)
 							RunWotApi(true);
+					}
+					else
+					{
+						if (DBVersion.RunWotApi)
+							RunWotApi(true);				   
+					}
 					// Force dossier file check or just normal
-					if (vi.runForceDossierFileCheck <= DateTime.Now)
+					if (vi.runForceDossierFileCheck <= DateTime.Now || DBVersion.RunDossierFileCheckWithForceUpdate)
 						if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < vi.runForceDossierFileCheck)
 							RunDossierFileCheckWithForceUpdate();
 						else
@@ -2387,7 +2396,6 @@ namespace WinApp.Forms
 				}
 				else
 				{
-					RunDossierFileCheck();
 					// New version avaliable
 					string msg = "Wot Numbers version " + vi.version + " is available for download." + Environment.NewLine + Environment.NewLine +
 						"You are currently running version: " + AppVersion.AssemblyVersion + "." + Environment.NewLine + Environment.NewLine +
@@ -2406,6 +2414,10 @@ namespace WinApp.Forms
 						if (File.Exists(filename))
 							File.Delete(filename);
 						webClient.DownloadFileAsync(new Uri(vi.downloadURL), filename);
+					}
+					else
+					{
+						RunDossierFileCheck();
 					}
 				}
 			}
@@ -2432,7 +2444,11 @@ namespace WinApp.Forms
 			{
 				Process.Start(filename);
 				this.Close();
-			}					
+			}
+			else
+			{
+				RunDossierFileCheck();
+			}
 		}
 
 		private void RunDossierFileCheck()
