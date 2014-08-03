@@ -100,7 +100,6 @@ namespace WinApp.Forms
 			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
 			dataGridMain.Top = gridAreaTop;
 			dataGridMain.Left = 0;
-			dataGridMainFooter.Left = 0;
 			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
 			dataGridMain.Height = gridAreaHeight - scrollX.Height;
 			// Style datagrid
@@ -466,16 +465,7 @@ namespace WinApp.Forms
 			if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
 			if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
 			dataGridMain.Width = panelMainArea.Width - scrollYWidth;
-			if (!dataGridMainFooter.Visible)
-			{
-				dataGridMain.Height = gridAreaHeight - scrollXHeight;
-			}
-			else
-			{
-				dataGridMain.Height = gridAreaHeight - scrollXHeight - dataGridMainFooter.Height;
-				dataGridMainFooter.Width = panelMainArea.Width;
-				dataGridMainFooter.Top = dataGridMain.Top + dataGridMain.Height;
-			}
+			dataGridMain.Height = gridAreaHeight - scrollXHeight;
 			scrollY.Height = dataGridMain.Height;
 			scrollX.Width = dataGridMain.Width;
 		}
@@ -555,8 +545,6 @@ namespace WinApp.Forms
 						mRefreshSeparator.Visible = false;
 						// Remove datagrid context menu
 						dataGridMain.ContextMenuStrip = null;
-						// Remove footer
-						dataGridMainFooter.Visible = false;
 						// Start slider
 						InfoPanelSlideStart(true);
 						break;
@@ -575,8 +563,6 @@ namespace WinApp.Forms
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
-						// Remove footer
-						dataGridMainFooter.Visible = false;
 						// Info slider hide
 						InfoPanelSlideStart(false);
 						break;
@@ -595,8 +581,6 @@ namespace WinApp.Forms
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
-						// Show footer
-						dataGridMainFooter.Visible = true;
 						// Info slider hide
 						InfoPanelSlideStart(false);
 						break;
@@ -1305,6 +1289,7 @@ namespace WinApp.Forms
 				dataGridMain.RowTemplate.Height = 23;
 				// Populate grid
 				dataGridMain.DataSource = dt;
+				frozenRows = 0;
 				// Unfocus
 				dataGridMain.ClearSelection();
 				// Text cols
@@ -1473,6 +1458,7 @@ namespace WinApp.Forms
 			// Assign datatable to grid
 			mainGridFormatting = true;
 			dataGridMain.DataSource = dtTankData;
+			frozenRows = 0;
 			// Unfocus
 			dataGridMain.ClearSelection();
 			//  Hide system cols
@@ -1650,7 +1636,6 @@ namespace WinApp.Forms
 				double totalWinRate = 0;
 				double totalSurvivedRate = 0;
 				// Add footer now, if ant rows
-				DataTable dtFooter = dt.Clone();
 				if (rowcount > 0)
 				{
 					// Create blank image in case of image in footer
@@ -1660,7 +1645,7 @@ namespace WinApp.Forms
 					totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
 					totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
 					// the footer row #1 - average
-					DataRow footerRow1 = dtFooter.NewRow();
+					DataRow footerRow1 = dt.NewRow();
 					footerRow1["footer"] = 1;
 					footerRow1["battleResultColor"] = "";
 					footerRow1["battleSurviveColor"] = "";
@@ -1702,7 +1687,7 @@ namespace WinApp.Forms
 						}
 					}
 					// the footer row #2 - totals
-					DataRow footerRow2 = dtFooter.NewRow();
+					DataRow footerRow2 = dt.NewRow();
 					footerRow2["footer"] = 2;
 					footerRow2["battleResultColor"] = "";
 					footerRow2["battleSurviveColor"] = "";
@@ -1744,8 +1729,8 @@ namespace WinApp.Forms
 							footerRow2[colListItem.name] = s;
 						}
 					}
-					dtFooter.Rows.Add(footerRow2);
-					dtFooter.Rows.Add(footerRow1);
+					dt.Rows.InsertAt(footerRow2,0);
+					dt.Rows.InsertAt(footerRow1,0);
 				}
 				// Set row height in template before rendering to fit images
 				dataGridMain.RowTemplate.Height = 23;
@@ -1756,10 +1741,16 @@ namespace WinApp.Forms
 				// populate datagrid
 				mainGridFormatting = true;
 				dataGridMain.DataSource = dt;
-				dataGridMainFooter.DataSource = dtFooter;
+				frozenRows = 0;
+				// Freeze top rows
+				if (rowcount > 0)
+				{
+					dataGridMain.Rows[0].Frozen = true;
+					dataGridMain.Rows[1].Frozen = true;
+					frozenRows = 2;
+				}
 				// Unfocus
 				dataGridMain.ClearSelection();
-				dataGridMainFooter.ClearSelection();
 				// Hide sys cols
 				dataGridMain.Columns["battleResultColor"].Visible = false;
 				dataGridMain.Columns["battleSurviveColor"].Visible = false;
@@ -1775,42 +1766,22 @@ namespace WinApp.Forms
 				dataGridMain.Columns["player_Tank_Id"].Visible = false;
 				dataGridMain.Columns["battle_Id"].Visible = false;
 				dataGridMain.Columns["tank_Id"].Visible = false;
-				dataGridMainFooter.Columns["battleResultColor"].Visible = false;
-				dataGridMainFooter.Columns["battleSurviveColor"].Visible = false;
-				dataGridMainFooter.Columns["battleTimeToolTip"].Visible = false;
-				dataGridMainFooter.Columns["battlesCountToolTip"].Visible = false;
-				dataGridMainFooter.Columns["victoryToolTip"].Visible = false;
-				dataGridMainFooter.Columns["drawToolTip"].Visible = false;
-				dataGridMainFooter.Columns["defeatToolTip"].Visible = false;
-				dataGridMainFooter.Columns["survivedCountToolTip"].Visible = false;
-				dataGridMainFooter.Columns["killedCountToolTip"].Visible = false;
-				dataGridMainFooter.Columns["footer"].Visible = false;
-				dataGridMainFooter.Columns["sortorder"].Visible = false;
-				dataGridMainFooter.Columns["player_Tank_Id"].Visible = false;
-				dataGridMainFooter.Columns["battle_Id"].Visible = false;
-				dataGridMainFooter.Columns["tank_Id"].Visible = false;
-				
 				// Format grid 
 
 				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
 					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
-					dataGridMainFooter.Columns[colListItem.name].Width = colListItem.width;
 					if (colListItem.type == "Int")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-
 					}
 					else if (colListItem.type == "Float")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
-						
+						if (rowcount > 0) // Special format in footer for floating values
+							dataGridMain.Rows[0].Cells[colListItem.name].Style.Format = "N1";
 					}
 					else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
 					{
@@ -1828,8 +1799,8 @@ namespace WinApp.Forms
 							switch (colListItem.name)
 							{
 								case "Tank":
-									dataGridMain.Rows[0].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
-									dataGridMain.Rows[1].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[0].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[1].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
 									break;
 							}
 						}
@@ -2110,6 +2081,7 @@ namespace WinApp.Forms
 		private bool scrollingY = false;
 		private bool scrollingX = false;
 
+		private int frozenRows = 0;
 		private void RefreshScrollbars()
 		{
 			// Set scrollbar properties according to grid content
@@ -2122,7 +2094,6 @@ namespace WinApp.Forms
 			{
 				YTotal = dataGridMain.RowCount;
 				YVisible = dataGridMain.DisplayedRowCount(false);
-				//XTotal = dataGridMain.ColumnCount;
 				foreach (DataGridViewColumn col in dataGridMain.Columns)
 				{
 					if (col.Visible) XTotal++;
@@ -2149,24 +2120,49 @@ namespace WinApp.Forms
 			if (scrollingY) ScrollY();
 		}
 
+		private void scrollY_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingY = false;
+		}
+
 		private void ScrollY()
 		{
 			try
 			{
-				int posBefore = dataGridMain.FirstDisplayedScrollingRowIndex;
-				dataGridMain.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
+				int posBefore = dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
+				dataGridMain.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition + frozenRows;
 				if (posBefore != dataGridMain.FirstDisplayedScrollingRowIndex) Refresh();
 			}
 			catch (Exception)
 			{
-				// throw;
+				throw;
 			}
 			
 		}
 
-		private void scrollY_MouseUp(object sender, MouseEventArgs e)
+		private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
 		{
-			scrollingY = false;
+			// Enable mouse wheel scrolling for datagrid
+			try
+			{
+				// scroll in grid from mouse wheel
+				int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
+				int scrollLines = SystemInformation.MouseWheelScrollLines;
+				if (e.Delta > 0)
+				{
+					this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines) + frozenRows;
+				}
+				else if (e.Delta < 0)
+				{
+					this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines + frozenRows;
+				}
+				// move scrollbar
+				MoveScrollBar();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 		private void scrollX_MouseDown(object sender, MouseEventArgs e)
@@ -2207,32 +2203,7 @@ namespace WinApp.Forms
 		private void MoveScrollBar()
 		{
 			scrollX.ScrollPosition = dataGridMain.FirstDisplayedScrollingColumnIndex;
-			scrollY.ScrollPosition = dataGridMain.FirstDisplayedScrollingRowIndex;
-		}
-
-		private void dataGridMain_MouseWheel(object sender, MouseEventArgs e)
-		{
-			// Enable mouse wheel scrolling for datagrid
-			try
-			{
-				// scroll in grid from mouse wheel
-				int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex;
-				int scrollLines = SystemInformation.MouseWheelScrollLines;
-				if (e.Delta > 0)
-				{
-					this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
-				}
-				else if (e.Delta < 0)
-				{
-					this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
-				}
-				// move scrollbar
-				MoveScrollBar();
-			}
-			catch (Exception)
-			{
-				// throw;
-			}
+			scrollY.ScrollPosition = dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
 		}
 
 		#endregion
