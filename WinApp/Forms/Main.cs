@@ -100,6 +100,7 @@ namespace WinApp.Forms
 			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
 			dataGridMain.Top = gridAreaTop;
 			dataGridMain.Left = 0;
+			dataGridMainFooter.Left = 0;
 			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
 			dataGridMain.Height = gridAreaHeight - scrollX.Height;
 			// Style datagrid
@@ -465,7 +466,16 @@ namespace WinApp.Forms
 			if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
 			if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
 			dataGridMain.Width = panelMainArea.Width - scrollYWidth;
-			dataGridMain.Height = gridAreaHeight - scrollXHeight;
+			if (!dataGridMainFooter.Visible)
+			{
+				dataGridMain.Height = gridAreaHeight - scrollXHeight;
+			}
+			else
+			{
+				dataGridMain.Height = gridAreaHeight - scrollXHeight - dataGridMainFooter.Height;
+				dataGridMainFooter.Width = panelMainArea.Width;
+				dataGridMainFooter.Top = dataGridMain.Top + dataGridMain.Height;
+			}
 			scrollY.Height = dataGridMain.Height;
 			scrollX.Width = dataGridMain.Width;
 		}
@@ -545,6 +555,8 @@ namespace WinApp.Forms
 						mRefreshSeparator.Visible = false;
 						// Remove datagrid context menu
 						dataGridMain.ContextMenuStrip = null;
+						// Remove footer
+						dataGridMainFooter.Visible = false;
 						// Start slider
 						InfoPanelSlideStart(true);
 						break;
@@ -563,6 +575,8 @@ namespace WinApp.Forms
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
+						// Remove footer
+						dataGridMainFooter.Visible = false;
 						// Info slider hide
 						InfoPanelSlideStart(false);
 						break;
@@ -581,6 +595,8 @@ namespace WinApp.Forms
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
+						// Show footer
+						dataGridMainFooter.Visible = true;
 						// Info slider hide
 						InfoPanelSlideStart(false);
 						break;
@@ -1634,6 +1650,7 @@ namespace WinApp.Forms
 				double totalWinRate = 0;
 				double totalSurvivedRate = 0;
 				// Add footer now, if ant rows
+				DataTable dtFooter = dt.Clone();
 				if (rowcount > 0)
 				{
 					// Create blank image in case of image in footer
@@ -1643,7 +1660,7 @@ namespace WinApp.Forms
 					totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
 					totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
 					// the footer row #1 - average
-					DataRow footerRow1 = dt.NewRow();
+					DataRow footerRow1 = dtFooter.NewRow();
 					footerRow1["footer"] = 1;
 					footerRow1["battleResultColor"] = "";
 					footerRow1["battleSurviveColor"] = "";
@@ -1685,7 +1702,7 @@ namespace WinApp.Forms
 						}
 					}
 					// the footer row #2 - totals
-					DataRow footerRow2 = dt.NewRow();
+					DataRow footerRow2 = dtFooter.NewRow();
 					footerRow2["footer"] = 2;
 					footerRow2["battleResultColor"] = "";
 					footerRow2["battleSurviveColor"] = "";
@@ -1727,8 +1744,8 @@ namespace WinApp.Forms
 							footerRow2[colListItem.name] = s;
 						}
 					}
-					dt.Rows.Add(footerRow2);
-					dt.Rows.Add(footerRow1);
+					dtFooter.Rows.Add(footerRow2);
+					dtFooter.Rows.Add(footerRow1);
 				}
 				// Set row height in template before rendering to fit images
 				dataGridMain.RowTemplate.Height = 23;
@@ -1739,8 +1756,10 @@ namespace WinApp.Forms
 				// populate datagrid
 				mainGridFormatting = true;
 				dataGridMain.DataSource = dt;
+				dataGridMainFooter.DataSource = dtFooter;
 				// Unfocus
 				dataGridMain.ClearSelection();
+				dataGridMainFooter.ClearSelection();
 				// Hide sys cols
 				dataGridMain.Columns["battleResultColor"].Visible = false;
 				dataGridMain.Columns["battleSurviveColor"].Visible = false;
@@ -1756,21 +1775,42 @@ namespace WinApp.Forms
 				dataGridMain.Columns["player_Tank_Id"].Visible = false;
 				dataGridMain.Columns["battle_Id"].Visible = false;
 				dataGridMain.Columns["tank_Id"].Visible = false;
+				dataGridMainFooter.Columns["battleResultColor"].Visible = false;
+				dataGridMainFooter.Columns["battleSurviveColor"].Visible = false;
+				dataGridMainFooter.Columns["battleTimeToolTip"].Visible = false;
+				dataGridMainFooter.Columns["battlesCountToolTip"].Visible = false;
+				dataGridMainFooter.Columns["victoryToolTip"].Visible = false;
+				dataGridMainFooter.Columns["drawToolTip"].Visible = false;
+				dataGridMainFooter.Columns["defeatToolTip"].Visible = false;
+				dataGridMainFooter.Columns["survivedCountToolTip"].Visible = false;
+				dataGridMainFooter.Columns["killedCountToolTip"].Visible = false;
+				dataGridMainFooter.Columns["footer"].Visible = false;
+				dataGridMainFooter.Columns["sortorder"].Visible = false;
+				dataGridMainFooter.Columns["player_Tank_Id"].Visible = false;
+				dataGridMainFooter.Columns["battle_Id"].Visible = false;
+				dataGridMainFooter.Columns["tank_Id"].Visible = false;
+				
 				// Format grid 
+
 				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
 					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+					dataGridMainFooter.Columns[colListItem.name].Width = colListItem.width;
 					if (colListItem.type == "Int")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
+						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
+
 					}
 					else if (colListItem.type == "Float")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-						if (rowcount > 0) // Special format in footer for floating values
-							dataGridMain.Rows[rowcount + 1].Cells[colListItem.name].Style.Format = "N1";
+						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+						dataGridMainFooter.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
+						
 					}
 					else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
 					{
@@ -1788,19 +1828,13 @@ namespace WinApp.Forms
 							switch (colListItem.name)
 							{
 								case "Tank":
-									dataGridMain.Rows[rowcount].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
-									dataGridMain.Rows[rowcount + 1].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[0].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[1].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
 									break;
 							}
 						}
 					}
 				}
-				// Format grid footer
-				//if (rowcount > 1)
-				//{
-				//	dataGridMain.Rows[rowcount].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-				//	dataGridMain.Rows[rowcount + 1].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
-				//}
 				// Finish up
 				ResizeNow();
 				mainGridSaveColWidth = true;
@@ -2245,17 +2279,25 @@ namespace WinApp.Forms
 				// Set Main Area Panel
 				panelMainArea.Height = MainTheme.MainArea.Height;
 				// Scroll and grid size
-				int gridAreaTop = panelInfo.Height; // Start below info panel
-				int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
-				dataGridMain.Top = gridAreaTop;
-				scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
-				scrollY.Top = gridAreaTop;
-				scrollX.Top = panelMainArea.Height - scrollX.Height;
-				// check if scrollbar is visible to determine width / height
-				int scrollXHeight = 0;
-				if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
-				dataGridMain.Height = gridAreaHeight - scrollXHeight;
-				scrollY.Height = dataGridMain.Height;
+				try
+				{
+					int gridAreaTop = panelInfo.Height; // Start below info panel
+					int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+					dataGridMain.Top = gridAreaTop;
+					scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
+					scrollY.Top = gridAreaTop;
+					scrollX.Top = panelMainArea.Height - scrollX.Height;
+					// check if scrollbar is visible to determine width / height
+					int scrollXHeight = 0;
+					if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
+					dataGridMain.Height = gridAreaHeight - scrollXHeight;
+					scrollY.Height = dataGridMain.Height;
+				}
+				catch (Exception)
+				{
+					// throw;
+				}
+				
 			}
 			
 		}
@@ -2315,8 +2357,10 @@ namespace WinApp.Forms
 		}
 
 		private BackgroundWorker bwCheckForNewVersion;
-		private void RunCheckForNewVersion()
+		private bool _onlyCheckVersionWithMessage = false;
+		private void RunCheckForNewVersion(bool onlyCheckVersionWithMessage = false)
 		{
+			_onlyCheckVersionWithMessage = onlyCheckVersionWithMessage;
 			bwCheckForNewVersion = new BackgroundWorker();
 			bwCheckForNewVersion.WorkerSupportsCancellation = false;
 			bwCheckForNewVersion.WorkerReportsProgress = false;
@@ -2335,9 +2379,10 @@ namespace WinApp.Forms
 			if (vi.error)
 			{
 				// Could not check for new version, run normal dossier file check
-				RunDossierFileCheck();
+				if (!_onlyCheckVersionWithMessage)
+					RunDossierFileCheck();
 				// Message if debug mode
-				if (Config.Settings.showDBErrors)
+				if (Config.Settings.showDBErrors || _onlyCheckVersionWithMessage)
 					Code.MsgBox.Show("Could not check for new version, could be that you have no Internet access." + Environment.NewLine + Environment.NewLine +
 										vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
 										"Version check failed",
@@ -2347,13 +2392,21 @@ namespace WinApp.Forms
 			{
 				// Web is currently in maintance mode, just skip version check - perform normal startup
 				// Update Wot API
-				if (DBVersion.RunWotApi)
-					RunWotApi(true);
-				// Check for dossier update
-				if (DBVersion.RunDossierFileCheckWithForceUpdate)
-					RunDossierFileCheckWithForceUpdate();
+				if (!_onlyCheckVersionWithMessage)
+				{
+					if (DBVersion.RunWotApi)
+						RunWotApi(true);
+					// Check for dossier update
+					if (DBVersion.RunDossierFileCheckWithForceUpdate)
+						RunDossierFileCheckWithForceUpdate();
+					else
+						RunDossierFileCheck();
+				}
 				else
-					RunDossierFileCheck();
+				{
+					Code.MsgBox.Show("Could not check for new version, Wot Numbers API server is currently in maintenance mode." + Environment.NewLine + Environment.NewLine,
+										"Version check terminated",this);
+				}
 			}
 			else
 			{
@@ -2362,37 +2415,46 @@ namespace WinApp.Forms
 				double newVersion = newVersion = CheckForNewVersion.MakeVersionToDouble(vi.version);
 				if (currentVersion >= newVersion)
 				{
-					SetStatus2("You are running the lastest version (Wot Numbers " + vi.version + ")");
-					// Message
-					if (vi.message != "" && vi.messageDate <= DateTime.Now)
+					if (_onlyCheckVersionWithMessage)
 					{
-						if (Config.Settings.readMessage == null || Config.Settings.readMessage < vi.messageDate)
-						{
-							// Display message from Wot Numbers API
-							MsgBox.Show(vi.message + Environment.NewLine + Environment.NewLine, "Message published " + vi.messageDate.ToString("dd.MM.yyyy"), this);
-							// Save read message
-							Config.Settings.readMessage = DateTime.Now;
-							string msg = "";
-							Config.SaveConfig(out msg);
-						}
-					}
-					// Force dossier file check
-					if (vi.runWotApi <= DateTime.Now)
-					{
-						if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < vi.runWotApi)
-							RunWotApi(true);
+						Code.MsgBox.Show("You are running the lastest version: " + Environment.NewLine + Environment.NewLine +
+										"Wot Numbers " + vi.version + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+										"Version checked", this);
 					}
 					else
 					{
-						if (DBVersion.RunWotApi)
-							RunWotApi(true);				   
-					}
-					// Force dossier file check or just normal
-					if (vi.runForceDossierFileCheck <= DateTime.Now || DBVersion.RunDossierFileCheckWithForceUpdate)
-						if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < vi.runForceDossierFileCheck)
-							RunDossierFileCheckWithForceUpdate();
+						SetStatus2("You are running the lastest version (Wot Numbers " + vi.version + ")");
+						// Message
+						if (vi.message != "" && vi.messageDate <= DateTime.Now)
+						{
+							if (Config.Settings.readMessage == null || Config.Settings.readMessage < vi.messageDate)
+							{
+								// Display message from Wot Numbers API
+								MsgBox.Show(vi.message + Environment.NewLine + Environment.NewLine, "Message published " + vi.messageDate.ToString("dd.MM.yyyy"), this);
+								// Save read message
+								Config.Settings.readMessage = DateTime.Now;
+								string msg = "";
+								Config.SaveConfig(out msg);
+							}
+						}
+						// Force dossier file check
+						if (vi.runWotApi <= DateTime.Now)
+						{
+							if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < vi.runWotApi)
+								RunWotApi(true);
+						}
 						else
-							RunDossierFileCheck();
+						{
+							if (DBVersion.RunWotApi)
+								RunWotApi(true);
+						}
+						// Force dossier file check or just normal
+						if (vi.runForceDossierFileCheck <= DateTime.Now || DBVersion.RunDossierFileCheckWithForceUpdate)
+							if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < vi.runForceDossierFileCheck)
+								RunDossierFileCheckWithForceUpdate();
+							else
+								RunDossierFileCheck();
+					}
 				}
 				else
 				{
@@ -2417,7 +2479,8 @@ namespace WinApp.Forms
 					}
 					else
 					{
-						RunDossierFileCheck();
+						if (_onlyCheckVersionWithMessage)
+							RunDossierFileCheck();
 					}
 				}
 			}
@@ -2486,12 +2549,30 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 		}
 
-		private void toolItemHelp_Click(object sender, EventArgs e)
+		private void mHelpAbout_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.About();
 			frm.ShowDialog();
 		}
 
+		private void mHelpCheckVersion_Click(object sender, EventArgs e)
+		{
+			RunCheckForNewVersion(true);
+		}
+
+		private void mHelpMessage_Click(object sender, EventArgs e)
+		{
+			// Message
+			VersionInfo vi = CheckForNewVersion.versionInfo;
+			if (vi.message == null)
+				MsgBox.Show("Message not fetched yet, try again in some seconds...", "Message not retrieved yet", this);
+			else if (vi.message != "")
+				MsgBox.Show(vi.message + Environment.NewLine + Environment.NewLine, "Message published " + vi.messageDate.ToString("dd.MM.yyyy"), this);
+			else
+				MsgBox.Show("No message is currently published", "No message published", this);
+		}
+
+		
 		#endregion
 
 		private void ViewRangeTesting()
@@ -2522,5 +2603,7 @@ namespace WinApp.Forms
 				}
 			}
 		}
+
+		
 	}
 }
