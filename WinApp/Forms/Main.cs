@@ -1806,6 +1806,17 @@ namespace WinApp.Forms
 						}
 					}
 				}
+				// Add Row numbers
+				//int rowNumber = 1;
+				//if (rowcount > 0)
+				//{
+				//	for (int i = 2; i < dataGridMain.Rows.Count; i++)
+				//	{
+				//		dataGridMain.Rows[i].HeaderCell.Value = rowNumber.ToString();
+				//		rowNumber ++;
+				//	}
+				//}
+				// dataGridMain.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
 				// Finish up
 				ResizeNow();
 				mainGridSaveColWidth = true;
@@ -1960,7 +1971,7 @@ namespace WinApp.Forms
 		private int dataGridRightClickRow = -1;
 		private void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			if (e.RowIndex != -1)
+			if (e.RowIndex != -1 && e.ColumnIndex != -1)
 			{
 				dataGridRightClickRow = e.RowIndex;
 				dataGridRightClickCol = e.ColumnIndex;
@@ -2135,7 +2146,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception)
 			{
-				throw;
+				// throw;
 			}
 			
 		}
@@ -2161,7 +2172,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception)
 			{
-				throw;
+				// throw;
 			}
 		}
 
@@ -2572,6 +2583,41 @@ namespace WinApp.Forms
 					SetFavListMenu(); // Reload fav list items
 					GridShow("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
 				}
+			}
+		}
+
+		private void dataGridMain_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+		{
+			
+		}
+
+		private void dataGridMain_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+		{
+			if (mViewBattles.Checked && e.ColumnIndex == -1 && e.RowIndex > 1)
+			{
+				// Add row numbers to battle view
+				e.PaintBackground(e.CellBounds, true);
+				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+				{
+					StringFormat sf = new StringFormat();
+					sf.Alignment = StringAlignment.Center;
+					sf.LineAlignment = StringAlignment.Center;
+					e.Graphics.DrawString((e.RowIndex - 1).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
+				}
+				e.Handled = true;
+			}
+			else if (e.ColumnIndex == -1 && e.RowIndex > -1)
+			{
+				// Remove selected row arrow for others
+				e.PaintBackground(e.CellBounds, true);
+				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+				{
+					StringFormat sf = new StringFormat();
+					sf.Alignment = StringAlignment.Center;
+					sf.LineAlignment = StringAlignment.Center;
+					e.Graphics.DrawString("", e.CellStyle.Font, br, e.CellBounds, sf);
+				}
+				e.Handled = true;
 			}
 		}
 

@@ -1312,7 +1312,7 @@
 			// 
 			this.dataGridMain.AllowUserToAddRows = false;
 			this.dataGridMain.AllowUserToDeleteRows = false;
-			this.dataGridMain.AllowUserToOrderColumns = true;
+			this.dataGridMain.AllowUserToResizeRows = false;
 			this.dataGridMain.BackgroundColor = System.Drawing.Color.Gray;
 			this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridMain.CausesValidation = false;
@@ -1344,23 +1344,26 @@
 			this.dataGridMain.Name = "dataGridMain";
 			this.dataGridMain.ReadOnly = true;
 			this.dataGridMain.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-			dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Silver;
+			dataGridViewCellStyle3.Format = "N0";
+			dataGridViewCellStyle3.NullValue = null;
+			dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
 			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
 			this.dataGridMain.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-			this.dataGridMain.RowHeadersVisible = false;
-			this.dataGridMain.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+			this.dataGridMain.RowHeadersWidth = 25;
 			this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
-			this.dataGridMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
 			this.dataGridMain.ShowEditingIcon = false;
 			this.dataGridMain.Size = new System.Drawing.Size(601, 204);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
 			this.dataGridMain.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridMain_CellMouseDown);
+			this.dataGridMain.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridMain_CellPainting);
 			this.dataGridMain.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridMain_ColumnWidthChanged);
+			this.dataGridMain.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridMain_RowPrePaint);
 			this.dataGridMain.SelectionChanged += new System.EventHandler(this.dataGridMain_SelectionChanged);
 			// 
 			// panelInfo
