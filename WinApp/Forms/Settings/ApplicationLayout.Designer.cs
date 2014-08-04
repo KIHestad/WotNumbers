@@ -31,12 +31,12 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationLayout));
 			this.badForm1 = new BadForm();
-			this.btnSave = new BadButton();
-			this.btnCancel = new BadButton();
-			this.badGroupBox1 = new BadGroupBox();
-			this.chkBattleTotalsPosition = new BadCheckBox();
-			this.badLabel1 = new BadLabel();
 			this.ddFontSize = new BadDropDownBox();
+			this.badLabel1 = new BadLabel();
+			this.chkBattleTotalsPosition = new BadCheckBox();
+			this.badGroupBox1 = new BadGroupBox();
+			this.btnCancel = new BadButton();
+			this.btnSave = new BadButton();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -67,44 +67,14 @@
 			this.badForm1.Text = "Application Layout";
 			this.badForm1.TitleHeight = 26;
 			// 
-			// btnSave
+			// ddFontSize
 			// 
-			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(181, 153);
-			this.btnSave.Name = "btnSave";
-			this.btnSave.Size = new System.Drawing.Size(70, 23);
-			this.btnSave.TabIndex = 0;
-			this.btnSave.Text = "Save";
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(257, 153);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(70, 23);
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "Close";
-			// 
-			// badGroupBox1
-			// 
-			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(22, 46);
-			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(308, 91);
-			this.badGroupBox1.TabIndex = 2;
-			this.badGroupBox1.Text = "Settings";
-			// 
-			// chkBattleTotalsPosition
-			// 
-			this.chkBattleTotalsPosition.BackColor = System.Drawing.Color.Transparent;
-			this.chkBattleTotalsPosition.Checked = false;
-			this.chkBattleTotalsPosition.Image = null;
-			this.chkBattleTotalsPosition.Location = new System.Drawing.Point(41, 98);
-			this.chkBattleTotalsPosition.Name = "chkBattleTotalsPosition";
-			this.chkBattleTotalsPosition.Size = new System.Drawing.Size(268, 23);
-			this.chkBattleTotalsPosition.TabIndex = 3;
-			this.chkBattleTotalsPosition.Text = "Show battle average and totals at grid top";
+			this.ddFontSize.Image = null;
+			this.ddFontSize.Location = new System.Drawing.Point(129, 69);
+			this.ddFontSize.Name = "ddFontSize";
+			this.ddFontSize.Size = new System.Drawing.Size(86, 23);
+			this.ddFontSize.TabIndex = 5;
+			this.ddFontSize.Click += new System.EventHandler(this.ddFontSize_Click);
 			// 
 			// badLabel1
 			// 
@@ -119,14 +89,46 @@
 			this.badLabel1.TabIndex = 4;
 			this.badLabel1.Text = "Grid Font Size";
 			// 
-			// ddFontSize
+			// chkBattleTotalsPosition
 			// 
-			this.ddFontSize.Image = null;
-			this.ddFontSize.Location = new System.Drawing.Point(129, 69);
-			this.ddFontSize.Name = "ddFontSize";
-			this.ddFontSize.Size = new System.Drawing.Size(86, 23);
-			this.ddFontSize.TabIndex = 5;
-			this.ddFontSize.Click += new System.EventHandler(this.ddFontSize_Click);
+			this.chkBattleTotalsPosition.BackColor = System.Drawing.Color.Transparent;
+			this.chkBattleTotalsPosition.Checked = false;
+			this.chkBattleTotalsPosition.Image = ((System.Drawing.Image)(resources.GetObject("chkBattleTotalsPosition.Image")));
+			this.chkBattleTotalsPosition.Location = new System.Drawing.Point(41, 102);
+			this.chkBattleTotalsPosition.Name = "chkBattleTotalsPosition";
+			this.chkBattleTotalsPosition.Size = new System.Drawing.Size(268, 23);
+			this.chkBattleTotalsPosition.TabIndex = 3;
+			this.chkBattleTotalsPosition.Text = "Show battle average and totals at grid top";
+			// 
+			// badGroupBox1
+			// 
+			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox1.Image = null;
+			this.badGroupBox1.Location = new System.Drawing.Point(22, 46);
+			this.badGroupBox1.Name = "badGroupBox1";
+			this.badGroupBox1.Size = new System.Drawing.Size(308, 91);
+			this.badGroupBox1.TabIndex = 2;
+			this.badGroupBox1.Text = "Settings";
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(257, 153);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(70, 23);
+			this.btnCancel.TabIndex = 1;
+			this.btnCancel.Text = "Close";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			// 
+			// btnSave
+			// 
+			this.btnSave.Image = null;
+			this.btnSave.Location = new System.Drawing.Point(181, 153);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(70, 23);
+			this.btnSave.TabIndex = 0;
+			this.btnSave.Text = "Save";
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// ApplicationLayout
 			// 
@@ -139,6 +141,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "ApplicationLayout";
+			this.Load += new System.EventHandler(this.ApplicationLayout_Load);
 			this.badForm1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

@@ -93,6 +93,8 @@ namespace WinApp.Code
 		public DateTime readMessage { get; set; }					// Timestamp for last message read from Wot Numbers API
 		public DateTime	doneRunWotApi { get; set; }					// done executed force run wot api triggered from Wot Numbers API
 		public DateTime doneRunForceDossierFileCheck { get; set; }	// done executed force run full force dossier file check triggered from Wot Numbers API
+		public int      gridFontSize { get; set; }					// Grid font size
+		public bool     gridBattlesTotalsTop { get; set; }			// false = totals as footer, true = totals frozen at top
 	}
 
 	class Config
@@ -193,6 +195,8 @@ namespace WinApp.Code
 			Config.Settings.readMessage = new DateTime(2014,8,1);
 			Config.Settings.doneRunForceDossierFileCheck = new DateTime(2014, 8, 1);
 			Config.Settings.doneRunWotApi = new DateTime(2014, 8, 1);
+			Config.Settings.gridFontSize = 8;
+			Config.Settings.gridBattlesTotalsTop = false;
 		}
 
 		

@@ -115,6 +115,10 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
+			// Set font size
+			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
 		}
 		
 		private void CreateDataGridContextMenu()
@@ -1592,6 +1596,8 @@ namespace WinApp.Forms
 				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 				mainGridFormatting = false;
 				dataGridMain.DataSource = null;
+				int rowTotalsIndex = 0;
+				int rowAverageIndex = 0;
 				if (!DB.CheckConnection(false)) return;
 				// Get Columns
 				string select = "";
@@ -1750,34 +1756,34 @@ namespace WinApp.Forms
 					totalWinRate = Convert.ToDouble(dt.Compute("Sum(victoryToolTip)", "")) * 100 / totalBattleCount;
 					totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
 					// the footer row #1 - average
-					DataRow footerRow1 = dt.NewRow();
-					footerRow1["footer"] = 2;
-					footerRow1["battleResultColor"] = "";
-					footerRow1["battleSurviveColor"] = "";
-					footerRow1["battleTimeToolTip"] = DBNull.Value;
-					footerRow1["battlesCountToolTip"] = 0;
-					footerRow1["victoryToolTip"] = 0;
-					footerRow1["drawToolTip"] = 0;
-					footerRow1["defeatToolTip"] = 0;
-					footerRow1["survivedCountToolTip"] = 0;
-					footerRow1["killedCountToolTip"] = 0;
+					DataRow rowAverage = dt.NewRow();
+					rowAverage["footer"] = 2;
+					rowAverage["battleResultColor"] = "";
+					rowAverage["battleSurviveColor"] = "";
+					rowAverage["battleTimeToolTip"] = DBNull.Value;
+					rowAverage["battlesCountToolTip"] = 0;
+					rowAverage["victoryToolTip"] = 0;
+					rowAverage["drawToolTip"] = 0;
+					rowAverage["defeatToolTip"] = 0;
+					rowAverage["survivedCountToolTip"] = 0;
+					rowAverage["killedCountToolTip"] = 0;
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
 						if (colListItem.type == "Int")
 						{
-							footerRow1[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+							rowAverage[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
 						}
 						else if (colListItem.type == "Float")
 						{
-							footerRow1[colListItem.name] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+							rowAverage[colListItem.name] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
 						}
 						else if (colListItem.type == "DateTime")
 						{
-							footerRow1[colListItem.name] = DBNull.Value;
+							rowAverage[colListItem.name] = DBNull.Value;
 						}
 						else if (colListItem.type == "Image")
 						{
-							footerRow1[colListItem.name] = blankImage;
+							rowAverage[colListItem.name] = blankImage;
 						}
 						else
 						{
@@ -1788,21 +1794,21 @@ namespace WinApp.Forms
 								case "Result": s = Math.Round(totalWinRate, 1).ToString() + "%"; break;
 								case "Survived": s = Math.Round(totalSurvivedRate, 1).ToString() + "%"; break;
 							}
-							footerRow1[colListItem.name] = s;
+							rowAverage[colListItem.name] = s;
 						}
 					}
 					// the footer row #2 - totals
-					DataRow footerRow2 = dt.NewRow();
-					footerRow2["footer"] = 1;
-					footerRow2["battleResultColor"] = "";
-					footerRow2["battleSurviveColor"] = "";
-					footerRow2["battleTimeToolTip"] = DBNull.Value;
-					footerRow2["battlesCountToolTip"] = 0;
-					footerRow2["victoryToolTip"] = 0;
-					footerRow2["drawToolTip"] = 0;
-					footerRow2["defeatToolTip"] = 0;
-					footerRow2["survivedCountToolTip"] = 0;
-					footerRow2["killedCountToolTip"] = 0;
+					DataRow rowTotals = dt.NewRow();
+					rowTotals["footer"] = 1;
+					rowTotals["battleResultColor"] = "";
+					rowTotals["battleSurviveColor"] = "";
+					rowTotals["battleTimeToolTip"] = DBNull.Value;
+					rowTotals["battlesCountToolTip"] = 0;
+					rowTotals["victoryToolTip"] = 0;
+					rowTotals["drawToolTip"] = 0;
+					rowTotals["defeatToolTip"] = 0;
+					rowTotals["survivedCountToolTip"] = 0;
+					rowTotals["killedCountToolTip"] = 0;
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
 						// Format column
@@ -1811,17 +1817,17 @@ namespace WinApp.Forms
 							IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 								// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
-								footerRow2[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
+								rowTotals[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
 							else
-								footerRow2[colListItem.name] = DBNull.Value;
+								rowTotals[colListItem.name] = DBNull.Value;
 						}
 						else if (colListItem.type == "DateTime")
 						{
-							footerRow2[colListItem.name] = DBNull.Value;
+							rowTotals[colListItem.name] = DBNull.Value;
 						}
 						else if (colListItem.type == "Image")
 						{
-							footerRow2[colListItem.name] = blankImage;
+							rowTotals[colListItem.name] = blankImage;
 						}
 						else
 						{
@@ -1832,11 +1838,26 @@ namespace WinApp.Forms
 								case "Result": s = ""; break;
 								case "Survived": s = ""; break;
 							}
-							footerRow2[colListItem.name] = s;
+							rowTotals[colListItem.name] = s;
 						}
 					}
-					dt.Rows.InsertAt(footerRow2,0);
-					dt.Rows.InsertAt(footerRow1,0);
+					// Add rows
+					if (Config.Settings.gridBattlesTotalsTop)
+					{
+						// as header
+						dt.Rows.InsertAt(rowTotals, 0);
+						dt.Rows.InsertAt(rowAverage, 0);
+						rowTotalsIndex = 0;
+						rowAverageIndex = 1;
+					}
+					else
+					{
+						// as footer
+						dt.Rows.Add(rowTotals);
+						rowTotalsIndex = dt.Rows.Count -1;
+						dt.Rows.Add(rowAverage);
+						rowAverageIndex = dt.Rows.Count -1;
+					}
 				}
 				// Set row height in template before rendering to fit images
 				dataGridMain.RowTemplate.Height = 23;
@@ -1848,11 +1869,12 @@ namespace WinApp.Forms
 				mainGridFormatting = true;
 				dataGridMain.DataSource = dt;
 				frozenRows = 0;
-				// Freeze top rows
-				if (rowcount > 0)
+				// If totals/average on top make frozen
+				if (rowcount > 0 && Config.Settings.gridBattlesTotalsTop)
 				{
-					dataGridMain.Rows[0].Frozen = true;
-					dataGridMain.Rows[1].Frozen = true;
+					// As frozen top rows
+					dataGridMain.Rows[rowTotalsIndex].Frozen = true;
+					dataGridMain.Rows[rowAverageIndex].Frozen = true;
 					frozenRows = 2;
 				}
 				// Unfocus
@@ -1891,8 +1913,8 @@ namespace WinApp.Forms
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
-						if (rowcount > 0) // Special format in footer for floating values
-							dataGridMain.Rows[0].Cells[colListItem.name].Style.Format = "N1";
+						if (rowcount > 0) // Special format in average row for floating values
+							dataGridMain.Rows[rowAverageIndex].Cells[colListItem.name].Style.Format = "N1";
 					}
 					else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
 					{
@@ -1910,8 +1932,8 @@ namespace WinApp.Forms
 							switch (colListItem.name)
 							{
 								case "Tank":
-									dataGridMain.Rows[0].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
-									dataGridMain.Rows[1].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[rowAverageIndex].Cells["Tank"].ToolTipText = "Average based on " + totalBattleCount.ToString() + " battles";
+									dataGridMain.Rows[rowTotalsIndex].Cells["Tank"].ToolTipText = "Totals based on " + totalBattleCount.ToString() + " battles";
 									break;
 							}
 						}
@@ -1934,7 +1956,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Grid sorting
+		#region Grid sorting and paint events
 
 		private int currentSortColId = -2;
 		private SortOrder currentSortDirection = SortOrder.Descending;
@@ -1942,17 +1964,26 @@ namespace WinApp.Forms
 		private void dataGridMain_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
 		{
 			// Add battle count number on battle view
-			if (MainSettings.View == GridView.Views.Battle && e.ColumnIndex == -1 && e.RowIndex > 1) 
+			if (MainSettings.View == GridView.Views.Battle && e.ColumnIndex == -1)
 			{
-				e.PaintBackground(e.CellBounds, true);
-				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+				// Frozen rows at top
+				int offset = 0;
+				if (Config.Settings.gridBattlesTotalsTop && e.RowIndex > 1)
+					offset = -1;
+				else if (!Config.Settings.gridBattlesTotalsTop && e.RowIndex < dataGridMain.Rows.Count - 2 && e.RowIndex > -1)
+					offset = 1;
+				if (offset != 0) 
 				{
-					StringFormat sf = new StringFormat();
-					sf.Alignment = StringAlignment.Center;
-					sf.LineAlignment = StringAlignment.Center;
-					e.Graphics.DrawString((e.RowIndex - 1).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
+					e.PaintBackground(e.CellBounds, true);
+					using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+					{
+						StringFormat sf = new StringFormat();
+						sf.Alignment = StringAlignment.Center;
+						sf.LineAlignment = StringAlignment.Center;
+						e.Graphics.DrawString((e.RowIndex + offset).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
+					}
+					e.Handled = true;
 				}
-				e.Handled = true;
 			}
 			// Add glyph to column headers
 			else if (MainSettings.View != GridView.Views.Overall && e.RowIndex < 0 && e.ColumnIndex == currentSortColId) 
@@ -2779,6 +2810,10 @@ namespace WinApp.Forms
 		{
 			Form frm = new Forms.ApplicationLayout();
 			frm.ShowDialog();
+			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			GridShow("Refresh after application layout change");
 		}
 
 		
