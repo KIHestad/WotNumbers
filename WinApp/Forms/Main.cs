@@ -901,6 +901,11 @@ namespace WinApp.Forms
 				TankFilterMenuUncheck(true, true, true, true, false);
 				status2message = "Selected all tanks";
 			}
+			else if (menuItem.Text == "Clear Tank Filter")
+			{
+				TankFilterMenuUncheck(true, true, true, true, false);
+				status2message = "Tank filter cleared";
+			}
 			else
 			{
 				// Remove favlist
@@ -933,6 +938,13 @@ namespace WinApp.Forms
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			TankFilterMenuSelect(menuItem, menuItem); // For all tanks, second param is not relevant - no parent menu item
 		}
+
+		private void mTankFilter_Clear_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			TankFilterMenuSelect(menuItem, menuItem); // For all tanks, second param is not relevant - no parent menu item
+		}		
+
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
@@ -1815,17 +1827,6 @@ namespace WinApp.Forms
 						}
 					}
 				}
-				// Add Row numbers
-				//int rowNumber = 1;
-				//if (rowcount > 0)
-				//{
-				//	for (int i = 2; i < dataGridMain.Rows.Count; i++)
-				//	{
-				//		dataGridMain.Rows[i].HeaderCell.Value = rowNumber.ToString();
-				//		rowNumber ++;
-				//	}
-				//}
-				// dataGridMain.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
 				// Finish up
 				ResizeNow();
 				mainGridSaveColWidth = true;
@@ -2678,7 +2679,5 @@ namespace WinApp.Forms
 			}
 
 		}
-
-		
 	}
 }

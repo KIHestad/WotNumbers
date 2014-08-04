@@ -91,6 +91,7 @@
 			this.mTankFilter_Tier8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Tier9 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Tier10 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTankFilter_Clear = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_FavSeparator = new System.Windows.Forms.ToolStripSeparator();
 			this.mTankFilter_All = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Fav01 = new System.Windows.Forms.ToolStripMenuItem();
@@ -247,7 +248,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(642, 25);
+			this.toolMain.Size = new System.Drawing.Size(673, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -481,6 +482,7 @@
             this.mTankFilter_Country,
             this.mTankFilter_Type,
             this.mTankFilter_Tier,
+            this.mTankFilter_Clear,
             this.mTankFilter_FavSeparator,
             this.mTankFilter_All,
             this.mTankFilter_Fav01,
@@ -516,7 +518,7 @@
             this.mTankFilter_CountryUSSR});
 			this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
 			this.mTankFilter_Country.Name = "mTankFilter_Country";
-			this.mTankFilter_Country.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Country.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Country.Text = "Nation";
 			// 
 			// mTankFilter_CountryChina
@@ -594,7 +596,7 @@
             this.mTankFilter_TypeSPG});
 			this.mTankFilter_Type.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Type.Image")));
 			this.mTankFilter_Type.Name = "mTankFilter_Type";
-			this.mTankFilter_Type.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Type.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Type.Text = "Tank Type";
 			// 
 			// mTankFilter_TypeLT
@@ -662,7 +664,7 @@
             this.mTankFilter_Tier10});
 			this.mTankFilter_Tier.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier.Image")));
 			this.mTankFilter_Tier.Name = "mTankFilter_Tier";
-			this.mTankFilter_Tier.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Tier.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Tier.Text = "Tier";
 			// 
 			// mTankFilter_Tier1
@@ -765,10 +767,17 @@
 			this.mTankFilter_Tier10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
 			this.mTankFilter_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
+			// mTankFilter_Clear
+			// 
+			this.mTankFilter_Clear.Name = "mTankFilter_Clear";
+			this.mTankFilter_Clear.Size = new System.Drawing.Size(234, 22);
+			this.mTankFilter_Clear.Text = "Clear Tank Filter";
+			this.mTankFilter_Clear.Click += new System.EventHandler(this.mTankFilter_Clear_Click);
+			// 
 			// mTankFilter_FavSeparator
 			// 
 			this.mTankFilter_FavSeparator.Name = "mTankFilter_FavSeparator";
-			this.mTankFilter_FavSeparator.Size = new System.Drawing.Size(273, 6);
+			this.mTankFilter_FavSeparator.Size = new System.Drawing.Size(231, 6);
 			this.mTankFilter_FavSeparator.Visible = false;
 			// 
 			// mTankFilter_All
@@ -777,7 +786,7 @@
 			this.mTankFilter_All.Checked = true;
 			this.mTankFilter_All.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.mTankFilter_All.Name = "mTankFilter_All";
-			this.mTankFilter_All.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_All.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_All.Text = "All Tanks";
 			this.mTankFilter_All.Click += new System.EventHandler(this.toolItemTankFilter_All_Click);
 			this.mTankFilter_All.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -785,7 +794,7 @@
 			// mTankFilter_Fav01
 			// 
 			this.mTankFilter_Fav01.Name = "mTankFilter_Fav01";
-			this.mTankFilter_Fav01.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav01.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav01.Text = "Favourite item #1";
 			this.mTankFilter_Fav01.Visible = false;
 			this.mTankFilter_Fav01.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -794,7 +803,7 @@
 			// mTankFilter_Fav02
 			// 
 			this.mTankFilter_Fav02.Name = "mTankFilter_Fav02";
-			this.mTankFilter_Fav02.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav02.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav02.Text = "Favourite item #2";
 			this.mTankFilter_Fav02.Visible = false;
 			this.mTankFilter_Fav02.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -803,7 +812,7 @@
 			// mTankFilter_Fav03
 			// 
 			this.mTankFilter_Fav03.Name = "mTankFilter_Fav03";
-			this.mTankFilter_Fav03.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav03.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav03.Text = "Favourite item #3";
 			this.mTankFilter_Fav03.Visible = false;
 			this.mTankFilter_Fav03.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -812,7 +821,7 @@
 			// mTankFilter_Fav04
 			// 
 			this.mTankFilter_Fav04.Name = "mTankFilter_Fav04";
-			this.mTankFilter_Fav04.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav04.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav04.Text = "Favourite item #4";
 			this.mTankFilter_Fav04.Visible = false;
 			this.mTankFilter_Fav04.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -821,7 +830,7 @@
 			// mTankFilter_Fav05
 			// 
 			this.mTankFilter_Fav05.Name = "mTankFilter_Fav05";
-			this.mTankFilter_Fav05.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav05.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav05.Text = "Favourite item #5";
 			this.mTankFilter_Fav05.Visible = false;
 			this.mTankFilter_Fav05.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -830,7 +839,7 @@
 			// mTankFilter_Fav06
 			// 
 			this.mTankFilter_Fav06.Name = "mTankFilter_Fav06";
-			this.mTankFilter_Fav06.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav06.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav06.Text = "Favourite item #6";
 			this.mTankFilter_Fav06.Visible = false;
 			this.mTankFilter_Fav06.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -839,7 +848,7 @@
 			// mTankFilter_Fav07
 			// 
 			this.mTankFilter_Fav07.Name = "mTankFilter_Fav07";
-			this.mTankFilter_Fav07.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav07.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav07.Text = "Favourite item #7";
 			this.mTankFilter_Fav07.Visible = false;
 			this.mTankFilter_Fav07.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -848,7 +857,7 @@
 			// mTankFilter_Fav08
 			// 
 			this.mTankFilter_Fav08.Name = "mTankFilter_Fav08";
-			this.mTankFilter_Fav08.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav08.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav08.Text = "Favourite item #8";
 			this.mTankFilter_Fav08.Visible = false;
 			this.mTankFilter_Fav08.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -857,7 +866,7 @@
 			// mTankFilter_Fav09
 			// 
 			this.mTankFilter_Fav09.Name = "mTankFilter_Fav09";
-			this.mTankFilter_Fav09.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav09.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav09.Text = "Favourite item #9";
 			this.mTankFilter_Fav09.Visible = false;
 			this.mTankFilter_Fav09.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -866,7 +875,7 @@
 			// mTankFilter_Fav10
 			// 
 			this.mTankFilter_Fav10.Name = "mTankFilter_Fav10";
-			this.mTankFilter_Fav10.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_Fav10.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_Fav10.Text = "Favourite item #10";
 			this.mTankFilter_Fav10.Visible = false;
 			this.mTankFilter_Fav10.Click += new System.EventHandler(this.toolItem_Fav_Clicked);
@@ -875,20 +884,20 @@
 			// toolStripSeparator12
 			// 
 			this.toolStripSeparator12.Name = "toolStripSeparator12";
-			this.toolStripSeparator12.Size = new System.Drawing.Size(273, 6);
+			this.toolStripSeparator12.Size = new System.Drawing.Size(231, 6);
 			// 
 			// mTankFilter_EditFavList
 			// 
 			this.mTankFilter_EditFavList.Name = "mTankFilter_EditFavList";
-			this.mTankFilter_EditFavList.Size = new System.Drawing.Size(276, 22);
+			this.mTankFilter_EditFavList.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
 			this.mTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
 			// 
 			// mTankFilter_GetInGarage
 			// 
 			this.mTankFilter_GetInGarage.Name = "mTankFilter_GetInGarage";
-			this.mTankFilter_GetInGarage.Size = new System.Drawing.Size(276, 22);
-			this.mTankFilter_GetInGarage.Text = "Create or Update \"In Garage\" Tank List";
+			this.mTankFilter_GetInGarage.Size = new System.Drawing.Size(234, 22);
+			this.mTankFilter_GetInGarage.Text = "Update \"In Garage\" Tank List...";
 			this.mTankFilter_GetInGarage.Click += new System.EventHandler(this.mTankFilter_GetInGarage_Click);
 			// 
 			// mMode
@@ -1644,6 +1653,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mHelpMessage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem mHelpAbout;
+		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Clear;
 	}
 }
 
