@@ -106,7 +106,7 @@ namespace WinApp.Forms
 			dataGridMain.BorderStyle = BorderStyle.None;
 			dataGridMain.BackgroundColor = ColorTheme.FormBack;
 			dataGridMain.GridColor = ColorTheme.GridBorders;
-			dataGridMain.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+			dataGridMain.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
 			dataGridMain.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridBorders;
 			dataGridMain.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
@@ -116,7 +116,6 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
-
 		
 		private void CreateDataGridContextMenu()
 		{
@@ -1391,11 +1390,24 @@ namespace WinApp.Forms
 				default:
 					break;
 			}
-			// Sort order
-			string sortordercol = "0 as sortorder ";
-			if (join != "")
+			// Get soring
+			GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+			// Default values for painting glyph as sort order direction on column header
+			if (sorting.lastSortColumn == "")
+				sorting.lastSortColumn = "playerTank.lastBattleTime";
+			currentSortColId = -2;
+			currentSortDirection = SortOrder.Descending;
+			// Create sort order
+			string sortOrder = sorting.lastSortColumn + " ";
+			if (sorting.lastSortDirectionAsc)
 			{
-				sortordercol = "favListTank.sortorder as sortorder ";
+				sortOrder += " ASC ";
+				currentSortDirection = SortOrder.Ascending;
+			}
+			else
+			{
+				sortOrder += " DESC ";
+				currentSortDirection = SortOrder.Descending;
 			}
 			// Create the SQL
 			string sql = "";
@@ -1403,10 +1415,10 @@ namespace WinApp.Forms
 			{
 				// Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
 				select = select.Replace("playerTankBattle", "playerTankBattleTotalsView");
-
+				sortOrder = sortOrder.Replace("playerTankBattle", "playerTankBattleTotalsView");
 				// Get SUM for playerTankBattle as several battleModes might appear
 				sql =
-					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
+					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -1416,13 +1428,13 @@ namespace WinApp.Forms
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
 					"WHERE    playerTank.playerId=@playerid " + tankFilter + " " + Environment.NewLine +
-					"ORDER BY playerTank.lastBattleTime DESC";
+					"ORDER BY " + sortOrder;
 			}
 			else
 			{
 				// Only gets one row from playerTankBattle for an explisit battleMode
 				sql =
-					"SELECT   " + select + sortordercol + ", playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
+					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -1432,7 +1444,7 @@ namespace WinApp.Forms
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
 					"WHERE    playerTank.playerId=@playerid " + tankFilter + battleModeFilter + " " + Environment.NewLine +
-					"ORDER BY playerTank.lastBattleTime DESC";
+					"ORDER BY " + sortOrder;
 			}
 			// Code.MsgBox.Show(sql, "sql"); // FOR DEBUG
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
@@ -1482,12 +1494,17 @@ namespace WinApp.Forms
 			// Unfocus
 			dataGridMain.ClearSelection();
 			//  Hide system cols
-			dataGridMain.Columns["sortorder"].Visible = false;
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			dataGridMain.Columns["tank_Id"].Visible = false;
 			// Grid col size
+			int colListItemCount = 0;
 			foreach (ColListHelper.ColListClass colListItem in colList)
 			{
+				// Find sort order column
+				if (sorting != null && colListItem.colName == sorting.lastSortColumn)
+					currentSortColId = colListItemCount;
+				colListItemCount++;
+				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 				if (colListItem.type == "Int")
 				{
@@ -1519,7 +1536,7 @@ namespace WinApp.Forms
 		
 		#region Data Grid - BATTLE VIEW                                    ***********************************************************************
 
-		private void GridShowBattle(string Status2Message, string sortOrder = "battle.battleTime DESC", int sortCol = -2 )
+		private void GridShowBattle(string Status2Message)
 		{
 			try
 			{
@@ -1577,14 +1594,33 @@ namespace WinApp.Forms
 				string tankFilter = "";
 				string tankJoin = "";
 				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
-				string sortordercol = "0 as sortorder ";
+				// Get soring
+				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+				// Default values for painting glyph as sort order direction on column header
+				if (sorting.lastSortColumn == "")
+					sorting.lastSortColumn = "battle.battleTime";
+				currentSortColId = -2;
+				currentSortDirection = SortOrder.Descending;
+				// Create sort order
+				string sortOrder = sorting.lastSortColumn + " ";
+				if (sorting.lastSortDirectionAsc)
+				{
+					sortOrder += " ASC ";
+					currentSortDirection = SortOrder.Ascending;
+				}
+				else
+				{
+					sortOrder += " DESC ";
+					currentSortDirection = SortOrder.Descending;
+				}
+				// Create SQL
 				string sql =
 					"SELECT " + select +
 					"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
 					"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 					"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
 					"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, " +
-					"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id, " + sortordercol +
+					"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id " +
 					"FROM    battle INNER JOIN " +
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"        tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -1720,6 +1756,7 @@ namespace WinApp.Forms
 					footerRow2["killedCountToolTip"] = 0;
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
+						// Format column
 						if (colListItem.type == "Int" || colListItem.type == "Float")
 						{
 							IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
@@ -1782,14 +1819,18 @@ namespace WinApp.Forms
 				dataGridMain.Columns["survivedCountToolTip"].Visible = false;
 				dataGridMain.Columns["killedCountToolTip"].Visible = false;
 				dataGridMain.Columns["footer"].Visible = false;
-				dataGridMain.Columns["sortorder"].Visible = false;
 				dataGridMain.Columns["player_Tank_Id"].Visible = false;
 				dataGridMain.Columns["battle_Id"].Visible = false;
 				dataGridMain.Columns["tank_Id"].Visible = false;
 				// Format grid 
-
+				int colListItemCount = 0;
 				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
+					// Find sort order column
+					if (sorting != null && colListItem.colName == sorting.lastSortColumn)
+						currentSortColId = colListItemCount;
+					colListItemCount++;
+					// Format
 					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 					if (colListItem.type == "Int")
@@ -1840,6 +1881,85 @@ namespace WinApp.Forms
 				throw;
 			}
 			
+		}
+
+		#endregion
+
+		#region Grid sorting
+
+		private int currentSortColId = -2;
+		private SortOrder currentSortDirection = SortOrder.Descending;
+
+		private void dataGridMain_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+		{
+			// Add battle count number on battle view
+			if (MainSettings.View == GridView.Views.Battle && e.ColumnIndex == -1 && e.RowIndex > 1) 
+			{
+				e.PaintBackground(e.CellBounds, true);
+				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+				{
+					StringFormat sf = new StringFormat();
+					sf.Alignment = StringAlignment.Center;
+					sf.LineAlignment = StringAlignment.Center;
+					e.Graphics.DrawString((e.RowIndex - 1).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
+				}
+				e.Handled = true;
+			}
+			// Add glyph to column headers
+			else if (MainSettings.View != GridView.Views.Overall && e.RowIndex < 0 && e.ColumnIndex == currentSortColId) 
+			{
+				dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = currentSortDirection;
+			}
+			// Remove arrow on row headers
+			else if (e.ColumnIndex == -1 && e.RowIndex > -1) 
+			{
+				e.PaintBackground(e.CellBounds, true);
+				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+				{
+					StringFormat sf = new StringFormat();
+					sf.Alignment = StringAlignment.Center;
+					sf.LineAlignment = StringAlignment.Center;
+					e.Graphics.DrawString("", e.CellStyle.Font, br, e.CellBounds, sf);
+				}
+				e.Handled = true;
+			}
+		}
+
+		private void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			// Avoid headerRow and Image columns
+			if (e.ColumnIndex < 0 || dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(Image))
+				return;
+			// Manual Sort for battle and tanks view
+			if (MainSettings.View != GridView.Views.Overall) 
+			{
+				// Find colName
+				string colName = ColListHelper.GetColName(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
+				// Find current sort
+				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+				// Check if this is first sorting
+				if (sorting == null)
+					sorting = new GridSortingHelper.Sorting();
+				// Check if same same column as last
+				if (colName == sorting.lastSortColumn)
+				{
+					// same as last, reverse sort direction
+					sorting.lastSortDirectionAsc = !sorting.lastSortDirectionAsc;
+				}
+				else
+				{
+					// new column, get default sort direction
+					sorting.lastSortColumn = colName;
+					bool sortDirectionAsc = false;
+					if (dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(string))
+						sortDirectionAsc = true;
+					sorting.lastSortDirectionAsc = sortDirectionAsc;
+				}
+				// Save new sorting
+				GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
+				// Show grid
+				GridShow("Datagrid refreshed after sorting");
+			}
 		}
 
 		#endregion
@@ -1922,7 +2042,7 @@ namespace WinApp.Forms
 						}
 					}
 				}
-				else if (mViewBattles.Checked)
+				else if (MainSettings.View == GridView.Views.Battle)
 				{
 					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);
 					if (footer)
@@ -1965,7 +2085,7 @@ namespace WinApp.Forms
 						}
 					}
 				}
-				else if (mViewTankInfo.Checked)
+				else if (MainSettings.View == GridView.Views.Tank)
 				{
 					if (col.Equals("Win Rate"))
 					{
@@ -2572,20 +2692,6 @@ namespace WinApp.Forms
 				MsgBox.Show("No message is currently published", "No message published", this);
 		}
 
-		
-		#endregion
-
-		private void ViewRangeTesting()
-		{
-			Form frm = new Forms.ViewRange();
-			frm.ShowDialog();
-		}
-
-		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
-		{
-			Battle2json.CheckBattleResultNewFiles();
-		}
-
 		private void mTankFilter_GetInGarage_Click(object sender, EventArgs e)
 		{
 			InGarageApiResult.status = "";
@@ -2604,80 +2710,23 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dataGridMain_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+		#endregion
+
+		#region Testing
+		
+		private void ViewRangeTesting()
 		{
-			
+			Form frm = new Forms.ViewRange();
+			frm.ShowDialog();
 		}
 
-		private void dataGridMain_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
 		{
-			if (mViewBattles.Checked && e.ColumnIndex == -1 && e.RowIndex > 1)
-			{
-				// Add row numbers to battle view
-				e.PaintBackground(e.CellBounds, true);
-				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
-				{
-					StringFormat sf = new StringFormat();
-					sf.Alignment = StringAlignment.Center;
-					sf.LineAlignment = StringAlignment.Center;
-					e.Graphics.DrawString((e.RowIndex - 1).ToString(), e.CellStyle.Font, br, e.CellBounds, sf);
-				}
-				e.Handled = true;
-			}
-			else if (mViewBattles.Checked && e.RowIndex < 0 && e.ColumnIndex == sortCol)
-			{
-				// Add manually sort arrow for battle view
-				if (lastSortOrder == "DESC")
-					dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
-				else
-					dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-			}
-			else if (e.ColumnIndex == -1 && e.RowIndex > -1)
-			{
-				// Remove selected row arrow for others
-				e.PaintBackground(e.CellBounds, true);
-				using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
-				{
-					StringFormat sf = new StringFormat();
-					sf.Alignment = StringAlignment.Center;
-					sf.LineAlignment = StringAlignment.Center;
-					e.Graphics.DrawString("", e.CellStyle.Font, br, e.CellBounds, sf);
-				}
-				e.Handled = true;
-			}
+			Battle2json.CheckBattleResultNewFiles();
 		}
 
-		private string lastSortCol = "";
-		private string lastSortOrder = "DESC";
-		private int sortCol = -2;
-		private void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-		{
-			// Avoid headerRow
-			if (e.ColumnIndex < 0)
-				return;
-			if (mViewBattles.Checked)
-			{
-				// Sort
-				int colnum = e.ColumnIndex;
-				string colname = dataGridMain.Columns[colnum].Name;
-				if (dataGridMain.Columns[colnum].ValueType == typeof(Image))
-					return;
-				string sortOrder = "DESC";
-				if (dataGridMain.Columns[colnum].ValueType == typeof(string))
-					sortOrder = "ASC";
-				if (colname == lastSortCol)
-				{
-					if (lastSortOrder == "DESC")
-						sortOrder = "ASC";
-					else
-						sortOrder = "DESC";
-				}
-				lastSortCol = colname;
-				lastSortOrder = sortOrder;
-				sortCol = colnum;
-				GridShowBattle("Datagrid sorted", "'" + colname + "' " + sortOrder);
-			}
+		#endregion
 
-		}
+		
 	}
 }

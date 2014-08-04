@@ -141,6 +141,7 @@
     <Compile Include="Code\FormView\GridFilter.cs" />
     <Compile Include="Code\FormView\MainSettings.cs" />
     <Compile Include="Code\FormView\StatusBarHelper.cs" />
+    <Compile Include="Code\FormView\GridSortingHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
     <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />

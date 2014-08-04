@@ -84,6 +84,7 @@ namespace WinApp.Code
 		public class ColListClass
 		{
 			public string name = "";
+			public string colName = "";
 			public string description = "";
 			public int width = 0;
 			public string type = "";
@@ -121,6 +122,7 @@ namespace WinApp.Code
 					string colName = dr["colName"].ToString(); // Get default colName
 					ColListClass colListItem = new ColListClass();
 					colListItem.name = dr["name"].ToString();
+					colListItem.colName = dr["colName"].ToString();
 					colListItem.width = Convert.ToInt32(dr["colWidth"]);
 					colListItem.type = dr["colDataType"].ToString();
 					selectColList.Add(colListItem);
@@ -183,6 +185,20 @@ namespace WinApp.Code
 			}
 			select = select.Substring(0, select.Length - 2); // Remove latest comma
 			colList = selectColList;
+		}
+
+		public static string GetColName(string name, GridView.Views view)
+		{
+			string sql = "SELECT colName FROM columnSelection WHERE name=@name AND colType=@colType; ";
+			String colName = "";
+			DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				colName = dt.Rows[0]["colName"].ToString();
+			}
+			return colName;
 		}
 
 	}

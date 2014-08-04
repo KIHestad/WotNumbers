@@ -248,7 +248,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(673, 25);
+			this.toolMain.Size = new System.Drawing.Size(642, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1325,7 +1325,7 @@
 			this.dataGridMain.BackgroundColor = System.Drawing.Color.Gray;
 			this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridMain.CausesValidation = false;
-			this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+			this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
 			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
 			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
@@ -1373,7 +1373,6 @@
 			this.dataGridMain.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridMain_CellPainting);
 			this.dataGridMain.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridMain_ColumnHeaderMouseClick);
 			this.dataGridMain.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridMain_ColumnWidthChanged);
-			this.dataGridMain.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridMain_RowPrePaint);
 			this.dataGridMain.SelectionChanged += new System.EventHandler(this.dataGridMain_SelectionChanged);
 			// 
 			// panelInfo

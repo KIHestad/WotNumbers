@@ -91,7 +91,7 @@ namespace WinApp.Code
 		public int      timeZoneAdjust { get; set; }				// Adjust battle time read from dossier according to time zone
 		public bool     showDBErrors { get; set; }					// To show all DB errors  
 		public DateTime readMessage { get; set; }					// Timestamp for last message read from Wot Numbers API
-		public DateTime doneRunWotApi { get; set; }				// done executed force run wot api triggered from Wot Numbers API
+		public DateTime	doneRunWotApi { get; set; }					// done executed force run wot api triggered from Wot Numbers API
 		public DateTime doneRunForceDossierFileCheck { get; set; }	// done executed force run full force dossier file check triggered from Wot Numbers API
 	}
 

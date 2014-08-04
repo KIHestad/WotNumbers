@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 85; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 86; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1095,6 +1095,11 @@ namespace WinApp.Code
 					break;
 				case 85:
 					RunWotApi = true;
+					break;
+				case 86:
+					mssql = "ALTER TABLE columnList ADD lastSortColumn varchar(50) NULL; " +
+							"ALTER TABLE columnList ADD lastSortDirectionAsc bit NOT NULL DEFAULT 0; ";
+					sqlite = mssql;
 					break;
 
 			}
