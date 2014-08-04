@@ -1297,6 +1297,9 @@ namespace WinApp.Forms
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				// No sorting
+				dataGridMain.Columns["Data"].SortMode = DataGridViewColumnSortMode.Programmatic;
+				dataGridMain.Columns["Value"].SortMode = DataGridViewColumnSortMode.Programmatic;
 				// Colors
 				if (applyColors)
 				{
@@ -1305,6 +1308,11 @@ namespace WinApp.Forms
 					dataGridMain.Rows[3].Cells[1].Style.ForeColor = Rating.EffColor(eff);
 					dataGridMain.Rows[4].Cells[1].Style.ForeColor = Rating.WN7color(wn7);
 					dataGridMain.Rows[5].Cells[1].Style.ForeColor = Rating.WN8color(wn8);
+					dataGridMain.Rows[1].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[1].Cells[1].Style.ForeColor;
+					dataGridMain.Rows[2].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
+					dataGridMain.Rows[3].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[3].Cells[1].Style.ForeColor;
+					dataGridMain.Rows[4].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[4].Cells[1].Style.ForeColor;
+					dataGridMain.Rows[5].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[5].Cells[1].Style.ForeColor;
 					
 				}
 				// Finish
@@ -1499,7 +1507,7 @@ namespace WinApp.Forms
 		
 		#region Data Grid - BATTLE VIEW                                    ***********************************************************************
 
-		private void GridShowBattle(string Status2Message)
+		private void GridShowBattle(string Status2Message, string sortOrder = "battle.battleTime DESC", int sortCol = -2 )
 		{
 			try
 			{
@@ -1573,7 +1581,7 @@ namespace WinApp.Forms
 					"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter +
-					"ORDER BY sortorder, battle.battleTime DESC ";
+					"ORDER BY " + sortOrder;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DateTime dateFilter = new DateTime();
 				if (!mBattlesAll.Checked)
@@ -1646,7 +1654,7 @@ namespace WinApp.Forms
 					totalSurvivedRate = Convert.ToDouble(dt.Compute("Sum(survivedCountToolTip)", "")) * 100 / totalBattleCount;
 					// the footer row #1 - average
 					DataRow footerRow1 = dt.NewRow();
-					footerRow1["footer"] = 1;
+					footerRow1["footer"] = 2;
 					footerRow1["battleResultColor"] = "";
 					footerRow1["battleSurviveColor"] = "";
 					footerRow1["battleTimeToolTip"] = DBNull.Value;
@@ -1688,7 +1696,7 @@ namespace WinApp.Forms
 					}
 					// the footer row #2 - totals
 					DataRow footerRow2 = dt.NewRow();
-					footerRow2["footer"] = 2;
+					footerRow2["footer"] = 1;
 					footerRow2["battleResultColor"] = "";
 					footerRow2["battleSurviveColor"] = "";
 					footerRow2["battleTimeToolTip"] = DBNull.Value;
@@ -1738,7 +1746,7 @@ namespace WinApp.Forms
 					dataGridMain.RowTemplate.Height = 31;
 				if (img >= 0)
 					dataGridMain.RowTemplate.Height = 60;
-				// populate datagrid
+				// populate datagrid 
 				mainGridFormatting = true;
 				dataGridMain.DataSource = dt;
 				frozenRows = 0;
@@ -1771,6 +1779,7 @@ namespace WinApp.Forms
 				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
 					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 					if (colListItem.type == "Int")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -1848,6 +1857,7 @@ namespace WinApp.Forms
 					{
 						int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
 						cell.Style.ForeColor = Rating.EffColor(eff);
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
 				else if (col.Equals("WN8"))
@@ -1856,6 +1866,7 @@ namespace WinApp.Forms
 					{
 						int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
 						cell.Style.ForeColor = Rating.WN8color(wn8);
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
 				else if (col.Equals("WN7"))
@@ -1864,6 +1875,7 @@ namespace WinApp.Forms
 					{
 						int wn7 = Convert.ToInt32(dataGridMain["WN7", e.RowIndex].Value);
 						cell.Style.ForeColor = Rating.WN7color(wn7);
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
 				else if (col.Contains("%"))
@@ -1884,6 +1896,7 @@ namespace WinApp.Forms
 							else if (percentage >= 35) color = ColorTheme.Rating_below_average;
 							else if (percentage >= 20) color = ColorTheme.Rating_bad;
 							cell.Style.ForeColor = color;
+							cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						}
 					}
 				}
@@ -1904,6 +1917,7 @@ namespace WinApp.Forms
 							else if (val <= 125000) color = ColorTheme.Rating_below_average;
 							else if (val <= 150000) color = ColorTheme.Rating_bad;
 							cell.Style.ForeColor = color;
+							cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						}
 					}
 				}
@@ -1927,6 +1941,7 @@ namespace WinApp.Forms
 					{
 						string battleResultColor = dataGridMain["battleResultColor", e.RowIndex].Value.ToString();
 						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 						if (battlesCount > 1)
 						{
@@ -1940,6 +1955,7 @@ namespace WinApp.Forms
 					{
 						string battleResultColor = dataGridMain["battleSurviveColor", e.RowIndex].Value.ToString();
 						cell.Style.ForeColor = System.Drawing.ColorTranslator.FromHtml(battleResultColor);
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						int battlesCount = Convert.ToInt32(dataGridMain["battlesCountToolTip", e.RowIndex].Value);
 						if (battlesCount > 1)
 						{
@@ -1956,6 +1972,7 @@ namespace WinApp.Forms
 						{
 							double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
 							cell.Style.ForeColor = Rating.WinRateColor(wr);
+							cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						}
 					}
 					
@@ -2606,6 +2623,14 @@ namespace WinApp.Forms
 				}
 				e.Handled = true;
 			}
+			else if (mViewBattles.Checked && e.RowIndex < 0 && e.ColumnIndex == sortCol)
+			{
+				// Add manually sort arrow for battle view
+				if (lastSortOrder == "DESC")
+					dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				else
+					dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			}
 			else if (e.ColumnIndex == -1 && e.RowIndex > -1)
 			{
 				// Remove selected row arrow for others
@@ -2619,6 +2644,39 @@ namespace WinApp.Forms
 				}
 				e.Handled = true;
 			}
+		}
+
+		private string lastSortCol = "";
+		private string lastSortOrder = "DESC";
+		private int sortCol = -2;
+		private void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			// Avoid headerRow
+			if (e.ColumnIndex < 0)
+				return;
+			if (mViewBattles.Checked)
+			{
+				// Sort
+				int colnum = e.ColumnIndex;
+				string colname = dataGridMain.Columns[colnum].Name;
+				if (dataGridMain.Columns[colnum].ValueType == typeof(Image))
+					return;
+				string sortOrder = "DESC";
+				if (dataGridMain.Columns[colnum].ValueType == typeof(string))
+					sortOrder = "ASC";
+				if (colname == lastSortCol)
+				{
+					if (lastSortOrder == "DESC")
+						sortOrder = "ASC";
+					else
+						sortOrder = "DESC";
+				}
+				lastSortCol = colname;
+				lastSortOrder = sortOrder;
+				sortCol = colnum;
+				GridShowBattle("Datagrid sorted", "'" + colname + "' " + sortOrder);
+			}
+
 		}
 
 		
