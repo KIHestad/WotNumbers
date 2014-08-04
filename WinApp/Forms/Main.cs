@@ -748,6 +748,35 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void FavListMenuUncheck()
+		{
+			// Deselect all tanks
+			mTankFilter_All.Checked = false;
+			
+			// Deselect all favlist
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Checked = false;
+			}
+		}
+
+		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
+		{
+			// Selected all tanks from toolbar
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			// Changed FavList
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.FavListShow = GridFilter.FavListShowType.AllTanks;
+			MainSettings.UpdateCurrentGridFilter(gf);
+			// check fav list menu select
+			FavListMenuUncheck();
+			selectedMenu.Checked = true;
+			mTankFilter.Text = selectedMenu.Text;
+			// Set menu item and show grid
+			GridShow("Selected all tanks");
+		}
+
 		private void toolItem_Fav_Clicked(object sender, EventArgs e)
 		{
 			// Selected favList from toolbar
@@ -756,14 +785,12 @@ namespace WinApp.Forms
 			int newFavListId = FavListHelper.GetId(selectedMenu.Text);
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
-			gf.TankId = -1;
 			gf.FavListId = newFavListId;
 			gf.FavListName = selectedMenu.Text;
 			gf.FavListShow = GridFilter.FavListShowType.FavList;
 			MainSettings.UpdateCurrentGridFilter(gf);
-			// Uncheck fav list menu items
-			TankFilterMenuUncheck(true, true, true, true, false);
 			// check fav list menu select
+			FavListMenuUncheck();
 			selectedMenu.Checked = true;
 			mTankFilter.Text = selectedMenu.Text;
 			// Set menu item and show grid
@@ -772,50 +799,38 @@ namespace WinApp.Forms
 
 		private void SelectFavMenuItem()
 		{
-			// Go to previous tank filter / fav list
-			if (MainSettings.GetCurrentGridFilter().TankId != -1)
+			// Programatically select all tanks or favourite tank list
+			switch (MainSettings.GetCurrentGridFilter().FavListShow)
 			{
-				TankFilterMenuUncheck(true, true, true, true, false);
-				mTankFilter_All.Checked = false;
-			}
-			else
-			{
-				switch (MainSettings.GetCurrentGridFilter().FavListShow)
-				{
-					case GridFilter.FavListShowType.UseCurrent:
-						// No action, use previous selected tanks filter
-						break;
-					case GridFilter.FavListShowType.AllTanks:
-						// Remove all filters, select All Tanks
-						TankFilterMenuUncheck(true, true, true, true, false);
-						break;
-					case GridFilter.FavListShowType.FavList:
-						// Go to 
-						TankFilterMenuUncheck(true, true, true, true, false);
-						mTankFilter_All.Checked = false;
-						// Find favlist in menu and put on checkbox
-						for (int i = 1; i <= 10; i++)
+				case GridFilter.FavListShowType.UseCurrent:
+					// No action, use previous selected tanks filter
+					break;
+				case GridFilter.FavListShowType.AllTanks:
+					// Remove all filters, select All Tanks
+					TankFilterMenuUncheck(true, true, true, false);
+					break;
+				case GridFilter.FavListShowType.FavList:
+					// Go to 
+					TankFilterMenuUncheck(true, true, true,false);
+					mTankFilter_All.Checked = false;
+					// Find favlist in menu and put on checkbox
+					for (int i = 1; i <= 10; i++)
+					{
+						ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+						if (menuItem.Text == MainSettings.GetCurrentGridFilter().FavListName)
 						{
-							ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-							if (menuItem.Text == MainSettings.GetCurrentGridFilter().FavListName)
-							{
-								menuItem.Checked = true;
-								mTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
-							}
+							menuItem.Checked = true;
+							mTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
 						}
-						break;
-					default:
-						break;
-				}
+					}
+					break;
+				default:
+					break;
 			}
 		}
 
-		private void TankFilterMenuUncheck(bool tier, bool country, bool type, bool favList, bool reopenMenu = true)
+		private void TankFilterMenuUncheck(bool tier, bool country, bool type, bool reopenMenu = true)
 		{
-			if (favList)
-			{
-				FavListMenuUncheck();
-			}
 			if (tier)
 			{
 				mTankFilter_Tier1.Checked = false;
@@ -871,20 +886,8 @@ namespace WinApp.Forms
 			if (mTankFilter_Tier8.Checked) tankFilterItemCount++;
 			if (mTankFilter_Tier9.Checked) tankFilterItemCount++;
 			if (mTankFilter_Tier10.Checked) tankFilterItemCount++;
-			// Set "All Tanks" as checked if no tank filter is selected and no fav list is selected
-			mTankFilter_All.Checked = (tankFilterItemCount == 0 && MainSettings.GetCurrentGridFilter().FavListShow != GridFilter.FavListShowType.FavList);
 			// Reopen menu item exept for "all tanks"
 			if (reopenMenu) this.mTankFilter.ShowDropDown();
-		}
-
-		private void FavListMenuUncheck()
-		{
-			// Deselect all favlist
-			for (int i = 1; i <= 10; i++)
-			{
-				ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-				menuItem.Checked = false;
-			}
 		}
 
 		private void TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem, bool checkMenuItem = true)
@@ -897,18 +900,16 @@ namespace WinApp.Forms
 			MainSettings.UpdateCurrentGridFilter(gf);
 			if (menuItem.Text == "All Tanks")
 			{
-				TankFilterMenuUncheck(true, true, true, true, false);
+				TankFilterMenuUncheck(true, true, true, false);
 				status2message = "Selected all tanks";
 			}
 			else if (menuItem.Text == "Clear Tank Filter")
 			{
-				TankFilterMenuUncheck(true, true, true, true, false);
+				TankFilterMenuUncheck(true, true, true, false);
 				status2message = "Tank filter cleared";
 			}
 			else
 			{
-				// Remove favlist
-				FavListMenuUncheck();
 				// Update menu tank filter checked elements
 				if (checkMenuItem)
 				{
@@ -918,7 +919,6 @@ namespace WinApp.Forms
 					else
 						tankFilterItemCount--;
 				}
-				mTankFilter_All.Checked = (tankFilterItemCount == 0);
 				// Refresh grid
 				// Get Tank filter
 				string tankFilterMessage = "";
@@ -932,12 +932,6 @@ namespace WinApp.Forms
 			GridShow(status2message);
 		}
 		
-		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			TankFilterMenuSelect(menuItem, menuItem); // For all tanks, second param is not relevant - no parent menu item
-		}
-
 		private void mTankFilter_Clear_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
@@ -2194,8 +2188,7 @@ namespace WinApp.Forms
 			int tankId = TankData.GetTankID(playerTankId);
 			if (tankId != 0)
 			{
-				TankFilterMenuUncheck(true, true, true, true, false);
-				mTankFilter_All.Checked = false;
+				TankFilterMenuUncheck(true, true, true, false);
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
 				GridShow("Filtered on tank: " + TankData.GetTankName(tankId));
 			}
