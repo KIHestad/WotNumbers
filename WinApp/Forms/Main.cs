@@ -2775,6 +2775,12 @@ namespace WinApp.Forms
 
 		#endregion
 
+		private void mSettingsAppLayout_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.ApplicationLayout();
+			frm.ShowDialog();
+		}
+
 		
 	}
 }

@@ -132,7 +132,6 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "MessageBox";
-			this.TopMost = true;
 			this.Load += new System.EventHandler(this.Message_Load);
 			this.MessageTheme.ResumeLayout(false);
 			this.MessageTheme.PerformLayout();
