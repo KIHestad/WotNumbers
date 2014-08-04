@@ -714,16 +714,22 @@ namespace WinApp.Forms
 
 		#region Menu Items: Tank Filter / Fav List 
 
+		private string tankFilterFavListName = "";
+		private string tankFilterManualFilter = "";
+		private void SetTankFilterMenuName()
+		{
+			string s = tankFilterFavListName;
+			if (s == "")
+				s = "All Tanks";
+			if (tankFilterManualFilter != "")
+				s += " - " + tankFilterManualFilter;
+			mTankFilter.Text = s;
+		}
+		
 		private void SetFavListMenu()
 		{
 			// Hide and uncheck favlist from menu
-			mTankFilter_FavSeparator.Visible = false;
-			for (int i = 1; i <= 10; i++)
-			{
-				ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-				menuItem.Visible = false;
-				menuItem.Checked = false;
-			}
+			FavListMenuUncheck();
 			// Add favlist to menu
 			string sql = "select * from favList where position > 0 and name is not null order by position";
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
@@ -746,6 +752,9 @@ namespace WinApp.Forms
 					}
 				}
 			}
+			// If no favlist is selected check all tanks
+			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+				mTankFilter_All.Checked = true;
 		}
 
 		private void FavListMenuUncheck()
@@ -759,20 +768,21 @@ namespace WinApp.Forms
 				ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
 				menuItem.Checked = false;
 			}
+
+			// Remove menu name
+			tankFilterFavListName = "";
 		}
 
 		private void toolItemTankFilter_All_Click(object sender, EventArgs e)
 		{
-			// Selected all tanks from toolbar
-			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.FavListShow = GridFilter.FavListShowType.AllTanks;
 			MainSettings.UpdateCurrentGridFilter(gf);
 			// check fav list menu select
 			FavListMenuUncheck();
-			selectedMenu.Checked = true;
-			mTankFilter.Text = selectedMenu.Text;
+			mTankFilter_All.Checked = true;
+			SetTankFilterMenuName();
 			// Set menu item and show grid
 			GridShow("Selected all tanks");
 		}
@@ -792,7 +802,8 @@ namespace WinApp.Forms
 			// check fav list menu select
 			FavListMenuUncheck();
 			selectedMenu.Checked = true;
-			mTankFilter.Text = selectedMenu.Text;
+			tankFilterFavListName = selectedMenu.Text;
+			SetTankFilterMenuName();
 			// Set menu item and show grid
 			GridShow("Selected favourite tank list: " + selectedMenu.Text);
 		}
@@ -807,12 +818,12 @@ namespace WinApp.Forms
 					break;
 				case GridFilter.FavListShowType.AllTanks:
 					// Remove all filters, select All Tanks
-					TankFilterMenuUncheck(true, true, true, false);
+					FavListMenuUncheck();
+					mTankFilter_All.Checked = true;
+					SetTankFilterMenuName();
 					break;
 				case GridFilter.FavListShowType.FavList:
-					// Go to 
-					TankFilterMenuUncheck(true, true, true,false);
-					mTankFilter_All.Checked = false;
+					FavListMenuUncheck();
 					// Find favlist in menu and put on checkbox
 					for (int i = 1; i <= 10; i++)
 					{
@@ -820,17 +831,19 @@ namespace WinApp.Forms
 						if (menuItem.Text == MainSettings.GetCurrentGridFilter().FavListName)
 						{
 							menuItem.Checked = true;
-							mTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
+							tankFilterFavListName = MainSettings.GetCurrentGridFilter().FavListName;
 						}
 					}
-					break;
-				default:
+					SetTankFilterMenuName();
 					break;
 			}
 		}
 
 		private void TankFilterMenuUncheck(bool tier, bool country, bool type, bool reopenMenu = true)
 		{
+			tankFilterNation = 0;
+			tankFilterTier = 0;
+			tankFilterType = 0;
 			if (tier)
 			{
 				mTankFilter_Tier1.Checked = false;
@@ -843,6 +856,7 @@ namespace WinApp.Forms
 				mTankFilter_Tier8.Checked = false;
 				mTankFilter_Tier9.Checked = false;
 				mTankFilter_Tier10.Checked = false;
+				mTankFilter_Tier.Text = "Tier";
 			}
 			if (country)
 			{
@@ -853,6 +867,7 @@ namespace WinApp.Forms
 				mTankFilter_CountryUK.Checked = false;
 				mTankFilter_CountryUSA.Checked = false;
 				mTankFilter_CountryUSSR.Checked = false;
+				mTankFilter_Country.Text = "Nation";
 			}
 			if (type)
 			{
@@ -861,99 +876,122 @@ namespace WinApp.Forms
 				mTankFilter_TypeMT.Checked = false;
 				mTankFilter_TypeSPG.Checked = false;
 				mTankFilter_TypeTD.Checked = false;
+				mTankFilter_Type.Text = "Tank Type";
 			}
 			// Count selected menu items
-			tankFilterItemCount = 0;
-			if (mTankFilter_CountryChina.Checked) tankFilterItemCount++;
-			if (mTankFilter_CountryFrance.Checked) tankFilterItemCount++;
-			if (mTankFilter_CountryGermany.Checked) tankFilterItemCount++;
-			if (mTankFilter_CountryUK.Checked) tankFilterItemCount++;
-			if (mTankFilter_CountryUSA.Checked) tankFilterItemCount++;
-			if (mTankFilter_CountryUSSR.Checked) tankFilterItemCount++;
-			if (mTankFilter_CountryJapan.Checked) tankFilterItemCount++;
-			if (mTankFilter_TypeLT.Checked) tankFilterItemCount++;
-			if (mTankFilter_TypeMT.Checked) tankFilterItemCount++;
-			if (mTankFilter_TypeHT.Checked) tankFilterItemCount++;
-			if (mTankFilter_TypeTD.Checked) tankFilterItemCount++;
-			if (mTankFilter_TypeSPG.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier1.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier2.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier3.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier4.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier5.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier6.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier7.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier8.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier9.Checked) tankFilterItemCount++;
-			if (mTankFilter_Tier10.Checked) tankFilterItemCount++;
+			if (mTankFilter_CountryChina.Checked) tankFilterNation++;
+			if (mTankFilter_CountryFrance.Checked) tankFilterNation++;
+			if (mTankFilter_CountryGermany.Checked) tankFilterNation++;
+			if (mTankFilter_CountryUK.Checked) tankFilterNation++;
+			if (mTankFilter_CountryUSA.Checked) tankFilterNation++;
+			if (mTankFilter_CountryUSSR.Checked) tankFilterNation++;
+			if (mTankFilter_CountryJapan.Checked) tankFilterNation++;
+
+			if (mTankFilter_TypeLT.Checked) tankFilterType++;
+			if (mTankFilter_TypeMT.Checked) tankFilterType++;
+			if (mTankFilter_TypeHT.Checked) tankFilterType++;
+			if (mTankFilter_TypeTD.Checked) tankFilterType++;
+			if (mTankFilter_TypeSPG.Checked) tankFilterType++;
+			
+			if (mTankFilter_Tier1.Checked) tankFilterTier++;
+			if (mTankFilter_Tier2.Checked) tankFilterTier++;
+			if (mTankFilter_Tier3.Checked) tankFilterTier++;
+			if (mTankFilter_Tier4.Checked) tankFilterTier++;
+			if (mTankFilter_Tier5.Checked) tankFilterTier++;
+			if (mTankFilter_Tier6.Checked) tankFilterTier++;
+			if (mTankFilter_Tier7.Checked) tankFilterTier++;
+			if (mTankFilter_Tier8.Checked) tankFilterTier++;
+			if (mTankFilter_Tier9.Checked) tankFilterTier++;
+			if (mTankFilter_Tier10.Checked) tankFilterTier++;
+
+			// Add text for manual filters
+			if (tankFilterNation > 0)
+				mTankFilter_Country.Text = "Nation (filtered: " + tankFilterNation + ")";
+			if (tankFilterType > 0)
+				mTankFilter_Type.Text = "Tank Type (filtered: " + tankFilterType + ")";
+			if (tankFilterTier > 0)
+				mTankFilter_Tier.Text = "Tier (filtered: " + tankFilterTier + ")";
+
 			// Reopen menu item exept for "all tanks"
 			if (reopenMenu) this.mTankFilter.ShowDropDown();
 		}
 
-		private void TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem, bool checkMenuItem = true)
+		private void TankFilterMenuSelect(ToolStripMenuItem menuItem, ToolStripMenuItem parentMenuItem)
 		{
 			string status2message = "";
 			// Update selected tankfilter type
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.TankId = -1; // Remove tank filter
-			gf.FavListShow = GridFilter.FavListShowType.AllTanks;
 			MainSettings.UpdateCurrentGridFilter(gf);
-			if (menuItem.Text == "All Tanks")
-			{
-				TankFilterMenuUncheck(true, true, true, false);
-				status2message = "Selected all tanks";
-			}
-			else if (menuItem.Text == "Clear Tank Filter")
-			{
-				TankFilterMenuUncheck(true, true, true, false);
-				status2message = "Tank filter cleared";
-			}
-			else
-			{
-				// Update menu tank filter checked elements
-				if (checkMenuItem)
-				{
-					menuItem.Checked = !menuItem.Checked;
-					if (menuItem.Checked)
-						tankFilterItemCount++;
-					else
-						tankFilterItemCount--;
-				}
-				// Refresh grid
-				// Get Tank filter
-				string tankFilterMessage = "";
-				string tankFilter = "";
-				string tankJoin = "";
-				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
-				status2message = "Selected tank filter: " + tankFilterMessage;
-				mTankFilter.ShowDropDown();
-				parentMenuItem.ShowDropDown();
-			}
+			// Get Tank filter
+			string tankFilterMessage = "";
+			string tankJoin = "";
+			string whereSQL = "";
+			Tankfilter(out whereSQL, out tankJoin, out tankFilterMessage);
+			SetTankFilterMenuName();
+			status2message = "Selected tank filter: " + tankFilterMessage;
+			mTankFilter.ShowDropDown();
+			parentMenuItem.ShowDropDown();
+			// Done
 			GridShow(status2message);
 		}
 		
 		private void mTankFilter_Clear_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-			TankFilterMenuSelect(menuItem, menuItem); // For all tanks, second param is not relevant - no parent menu item
-		}		
-
+			TankFilterMenuUncheck(true, true, true, false);
+			// Update selected tankfilter 
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.TankId = -1; // Remove tank filter
+			MainSettings.UpdateCurrentGridFilter(gf);
+			// Done
+			GridShow("Tank filter cleared");
+		}
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			// Update menu item
+			menuItem.Checked = !menuItem.Checked;
+			if (menuItem.Checked)
+				tankFilterTier++;
+			else
+				tankFilterTier--;
+			if (tankFilterTier > 0)
+				mTankFilter_Tier.Text = "Tier (filtered: " + tankFilterTier + ")";
+			else
+				mTankFilter_Tier.Text = "Tier";
 			TankFilterMenuSelect(menuItem, mTankFilter_Tier);
 		}
 
 		private void toolItemTankFilter_Type_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			// Update menu item
+			menuItem.Checked = !menuItem.Checked;
+			if (menuItem.Checked)
+				tankFilterType++;
+			else
+				tankFilterType--;
+			if (tankFilterType > 0)
+				mTankFilter_Type.Text = "Tank Type (filtered: " + tankFilterType + ")";
+			else
+				mTankFilter_Type.Text = "Tank Type";
 			TankFilterMenuSelect(menuItem, mTankFilter_Type);
 		}
 
 		private void toolItemTankFilter_Country_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			// Update menu item
+			menuItem.Checked = !menuItem.Checked;
+			if (menuItem.Checked)
+				tankFilterNation++;
+			else
+				tankFilterNation--;
+			if (tankFilterNation > 0)
+				mTankFilter_Country.Text = "Nation (filtered: " + tankFilterNation + ")";
+			else
+				mTankFilter_Country.Text = "Nation";
 			TankFilterMenuSelect(menuItem, mTankFilter_Country);
 		}
 
@@ -963,7 +1001,7 @@ namespace WinApp.Forms
 			{
 				TankFilterMenuUncheck(false, true, false, false);
 				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-				TankFilterMenuSelect(menuItem, mTankFilter_Country, false);
+				TankFilterMenuSelect(menuItem, mTankFilter_Country);
 			}
 		}
 
@@ -973,7 +1011,7 @@ namespace WinApp.Forms
 			{
 				TankFilterMenuUncheck(false, false, true, false);
 				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-				TankFilterMenuSelect(menuItem, mTankFilter_Type, false);
+				TankFilterMenuSelect(menuItem, mTankFilter_Type);
 			}
 		}
 
@@ -983,7 +1021,7 @@ namespace WinApp.Forms
 			{
 				TankFilterMenuUncheck(true, false, false, false);
 				ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-				TankFilterMenuSelect(menuItem, mTankFilter_Tier, false);
+				TankFilterMenuSelect(menuItem, mTankFilter_Tier);
 			}
 		}
 
@@ -1106,8 +1144,10 @@ namespace WinApp.Forms
 					
 		#region Fav List and Tank Filter 
 
-		private int tankFilterItemCount = 0; // To keep track on how manny tank filter itmes selected
-		
+		private int tankFilterNation = 0;
+		private int tankFilterType = 0;
+		private int tankFilterTier = 0;
+
 		private void Tankfilter(out string whereSQL, out string joinSQL, out string Status2Message)
 		{
 			string tier = "";
@@ -1118,84 +1158,99 @@ namespace WinApp.Forms
 			string message = "";
 			string newWhereSQL = "";
 			string newJoinSQL = "";
-			// Calc filter and set statusbar message
+			// Check favlist
+			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
+			{
+				message = tankFilterFavListName;
+				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
+				DB.AddWithValue(ref newJoinSQL, "@favListId", MainSettings.GetCurrentGridFilter().FavListId, DB.SqlDataType.Int);
+			}
+			else
+				message = "All tanks";
+			// Check if spesific tank is filtered
 			if (MainSettings.GetCurrentGridFilter().TankId != -1)
 			{
 				int tankId = MainSettings.GetCurrentGridFilter().TankId;
 				string tankName = TankData.GetTankName(tankId);
-				mTankFilter.Text = tankName;
-				message = "Filtered on tank: " + tankName;
+				tankFilterManualFilter = tankName;
+				message += " - Filtered on tank: " + tankName;
 				newWhereSQL = " AND tank.id=@tankId ";
 				DB.AddWithValue(ref newWhereSQL, "@tankId", tankId, DB.SqlDataType.Int);
 			}
-			else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
-			{
-				mTankFilter.Text = MainSettings.GetCurrentGridFilter().FavListName;
-				message = "Favourite list: " + mTankFilter.Text;
-				newJoinSQL = " INNER JOIN favListTank ON tank.id=favListTank.tankId AND favListTank.favListId=@favListId ";
-				DB.AddWithValue(ref newJoinSQL, "@favListId", MainSettings.GetCurrentGridFilter().FavListId, DB.SqlDataType.Int);
-			}
-			else if (tankFilterItemCount == 0)
-			{
-				mTankFilter.Text = "All Tanks";
-				message = "All Tanks";
-			}
 			else
 			{
-				if (mTankFilter_Tier1.Checked) { tier += "1,"; }
-				if (mTankFilter_Tier2.Checked) { tier += "2,"; }
-				if (mTankFilter_Tier3.Checked) { tier += "3,"; }
-				if (mTankFilter_Tier4.Checked) { tier += "4,"; }
-				if (mTankFilter_Tier5.Checked) { tier += "5,"; }
-				if (mTankFilter_Tier6.Checked) { tier += "6,"; }
-				if (mTankFilter_Tier7.Checked) { tier += "7,"; }
-				if (mTankFilter_Tier8.Checked) { tier += "8,"; }
-				if (mTankFilter_Tier9.Checked) { tier += "9,"; }
-				if (mTankFilter_Tier10.Checked) { tier += "10,"; }
-				if (mTankFilter_CountryChina.Checked) { nation += "China,"; nationId += "3,"; }
-				if (mTankFilter_CountryFrance.Checked) { nation += "France,"; nationId += "4,"; }
-				if (mTankFilter_CountryGermany.Checked) { nation += "Germany,"; nationId += "1,"; }
-				if (mTankFilter_CountryUK.Checked) { nation += "UK,"; nationId += "5,"; }
-				if (mTankFilter_CountryUSA.Checked) { nation += "USA,"; nationId += "2,"; }
-				if (mTankFilter_CountryUSSR.Checked) { nation += "USSR,"; nationId += "0,"; }
-				if (mTankFilter_CountryJapan.Checked) { nation += "Japan,"; nationId += "6,"; }
-				if (mTankFilter_TypeLT.Checked) { type += "Light,"; typeId += "1,"; }
-				if (mTankFilter_TypeMT.Checked) { type += "Medium,"; typeId += "2,"; }
-				if (mTankFilter_TypeHT.Checked) { type += "Heavy,"; typeId += "3,"; }
-				if (mTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; }
-				if (mTankFilter_TypeSPG.Checked) { type += "SPG,"; typeId += "5,"; }
+				// Check manual filters
+				int manualFilterCount = 0;
+				if (mTankFilter_Tier1.Checked) { tier += "1,"; manualFilterCount++; }
+				if (mTankFilter_Tier2.Checked) { tier += "2,"; manualFilterCount++; }
+				if (mTankFilter_Tier3.Checked) { tier += "3,"; manualFilterCount++; }
+				if (mTankFilter_Tier4.Checked) { tier += "4,"; manualFilterCount++; }
+				if (mTankFilter_Tier5.Checked) { tier += "5,"; manualFilterCount++; }
+				if (mTankFilter_Tier6.Checked) { tier += "6,"; manualFilterCount++; }
+				if (mTankFilter_Tier7.Checked) { tier += "7,"; manualFilterCount++; }
+				if (mTankFilter_Tier8.Checked) { tier += "8,"; manualFilterCount++; }
+				if (mTankFilter_Tier9.Checked) { tier += "9,"; manualFilterCount++; }
+				if (mTankFilter_Tier10.Checked) { tier += "10,"; manualFilterCount++; }
+
+				if (mTankFilter_CountryChina.Checked) { nation += "China,"; nationId += "3,"; manualFilterCount++; }
+				if (mTankFilter_CountryFrance.Checked) { nation += "France,"; nationId += "4,"; manualFilterCount++; }
+				if (mTankFilter_CountryGermany.Checked) { nation += "Germany,"; nationId += "1,"; manualFilterCount++; }
+				if (mTankFilter_CountryUK.Checked) { nation += "UK,"; nationId += "5,"; manualFilterCount++; }
+				if (mTankFilter_CountryUSA.Checked) { nation += "USA,"; nationId += "2,"; manualFilterCount++; }
+				if (mTankFilter_CountryUSSR.Checked) { nation += "USSR,"; nationId += "0,"; manualFilterCount++; }
+				if (mTankFilter_CountryJapan.Checked) { nation += "Japan,"; nationId += "6,"; manualFilterCount++; }
+
+				if (mTankFilter_TypeLT.Checked) { type += "Light,"; typeId += "1,"; manualFilterCount++; }
+				if (mTankFilter_TypeMT.Checked) { type += "Medium,"; typeId += "2,"; manualFilterCount++; }
+				if (mTankFilter_TypeHT.Checked) { type += "Heavy,"; typeId += "3,"; manualFilterCount++; }
+				if (mTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; manualFilterCount++; }
+				if (mTankFilter_TypeSPG.Checked) { type += "SPG,"; typeId += "5,"; manualFilterCount++; }
 				// Compose status message
 				if (tier.Length > 0)
 				{
 					string tierId = tier;
-					tier = " Tier=" + tier.Substring(0, tier.Length-1);
+					tier = tier.Substring(0, tier.Length - 1);
 					newWhereSQL = " tank.tier IN (" + tierId.Substring(0, tierId.Length - 1) + ") ";
 				}
 				if (nation.Length > 0)
 				{
-					nation = " Nation=" + nation.Substring(0, nation.Length - 1);
+					nation = nation.Substring(0, nation.Length - 1);
 					if (newWhereSQL != "") newWhereSQL += " AND ";
 					newWhereSQL += " tank.countryId IN (" + nationId.Substring(0, nationId.Length - 1) + ") ";
 				}
 				if (type.Length > 0)
 				{
-					type = " Type=" + type.Substring(0, type.Length - 1);
+					type = type.Substring(0, type.Length - 1);
 					if (newWhereSQL != "") newWhereSQL += " AND ";
 					newWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
 				}
 				if (newWhereSQL != "") newWhereSQL = " AND (" + newWhereSQL + ") ";
-				message = nation + type + tier;
-				if (message.Length > 0) message = message.Substring(1);
-				// Add correct mein menu name
-				if (tankFilterItemCount == 1)
+				// Check if manual filter is selected, show in statusbar and as menu name
+				if (manualFilterCount > 0)
 				{
-					mTankFilter.Text = message;
+					// Add correct main menu name
+					if (manualFilterCount == 1)
+						if (tier.Length > 0)
+							tankFilterManualFilter = "Tier " + tier;
+						else
+							tankFilterManualFilter = tier + nation + type;
+					else
+						tankFilterManualFilter = "Filtered";
+					// Statusbar text
+					if (tier.Length > 0)
+						message += " - Tier: " + tier;
+					if (type.Length > 0)
+						message += " - Type: " + type;
+					if (nation.Length > 0)
+						message += " - Nation: " + nation;
 				}
 				else
 				{
-					mTankFilter.Text = "Tank filter";
+					tankFilterManualFilter = "";
 				}
 			}
+			// Show filtername in menu
+			SetTankFilterMenuName();
 			whereSQL = newWhereSQL;
 			joinSQL = newJoinSQL;
 			Status2Message = message;
