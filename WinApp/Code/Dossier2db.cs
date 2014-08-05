@@ -40,6 +40,8 @@ namespace WinApp.Code
 			public int count = 0;
 		}
 
+		private static bool newTank = false;
+
 		public static String ReadJson(string filename, bool ForceUpdate = false)
 		{
 			// Read file into string
@@ -261,6 +263,9 @@ namespace WinApp.Code
 			NewPlayerTankTable.Clear();
 			NewPlayerTankBattleTable.Dispose();
 			NewPlayerTankBattleTable.Clear();
+			// Check for new tanks, then load images
+			if (newTank)
+				ImageHelper.LoadTankImages(); // Load new image by reloading
 			return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 		}
 
@@ -506,6 +511,7 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@tankId", TankID, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
+			newTank = true;
 		}
 
 		private static List<AchItem> UpdatePlayerTankAch(int tankId, int playerTankId, List<AchItem> achList)

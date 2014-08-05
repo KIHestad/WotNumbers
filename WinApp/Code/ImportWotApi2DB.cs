@@ -225,7 +225,7 @@ namespace WinApp.Code
 							}
 
 							// Write to db
-							tankExists = TankData.TankExist(itemId);
+							tankExists = TankData.TankExists(itemId);
 							insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
 							updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id; " ;
 

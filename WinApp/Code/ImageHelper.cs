@@ -44,46 +44,45 @@ namespace WinApp.Code
 			DataTable dt = new DataTable();
 			adapter.Fill(dt);
 			con.Close();
-			DataTable tankImgNew = CreateTankImg();
+			DataTable tankImgNew = new DataTable();
+			tankImgNew.Columns.Add("id", typeof(Int32));
+			tankImgNew.PrimaryKey = new DataColumn[] { tankImgNew.Columns["id"] };
+			tankImgNew.Columns.Add("img", typeof(Image));
+			tankImgNew.Columns.Add("smallimg", typeof(Image));
+			tankImgNew.Columns.Add("contourimg", typeof(Image));
 			foreach (DataRow dr in dt.Rows)
 			{
-				DataRow tankImgNewDataRow = tankImgNew.NewRow();
-				// ID
-				tankImgNewDataRow["id"] = dr["id"];
-				// Img
-				byte[] imgByte = (byte[])dr["img"];
-				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
-				ms.Write(imgByte, 0, imgByte.Length);
-				Image image = new Bitmap(ms);
-				tankImgNewDataRow["img"] = image;
-				// SmallImg
-				imgByte = (byte[])dr["smallImg"];
-				ms = new MemoryStream(imgByte, 0, imgByte.Length);
-				ms.Write(imgByte, 0, imgByte.Length);
-				image = new Bitmap(ms);
-				tankImgNewDataRow["smallImg"] = image;
-				// ContourImg
-				imgByte = (byte[])dr["contourImg"];
-				ms = new MemoryStream(imgByte, 0, imgByte.Length);
-				ms.Write(imgByte, 0, imgByte.Length);
-				image = new Bitmap(ms);
-				tankImgNewDataRow["contourImg"] = image;
-				// Add to dt
-				tankImgNew.Rows.Add(tankImgNewDataRow);
+				if (TankData.PlayerTankExists(Convert.ToInt32(dr["id"])))
+				{
+					DataRow tankImgNewDataRow = tankImgNew.NewRow();
+					// ID
+					tankImgNewDataRow["id"] = dr["id"];
+					// Img
+					byte[] imgByte = (byte[])dr["img"];
+					MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+					ms.Write(imgByte, 0, imgByte.Length);
+					Image image = new Bitmap(ms);
+					tankImgNewDataRow["img"] = image;
+					// SmallImg
+					imgByte = (byte[])dr["smallImg"];
+					ms = new MemoryStream(imgByte, 0, imgByte.Length);
+					ms.Write(imgByte, 0, imgByte.Length);
+					image = new Bitmap(ms);
+					tankImgNewDataRow["smallImg"] = image;
+					// ContourImg
+					imgByte = (byte[])dr["contourImg"];
+					ms = new MemoryStream(imgByte, 0, imgByte.Length);
+					ms.Write(imgByte, 0, imgByte.Length);
+					image = new Bitmap(ms);
+					tankImgNewDataRow["contourImg"] = image;
+					// Add to dt
+					tankImgNew.Rows.Add(tankImgNewDataRow);
+				}
 			}
 			// Set public static tank img datatable to this
 			TankImage = tankImgNew;
-		}
-
-		private static DataTable CreateTankImg()
-		{
-			DataTable dt = new DataTable();
-			dt.Columns.Add("id", typeof(Int32));
-			dt.PrimaryKey = new DataColumn[] { dt.Columns["id"] };
-			dt.Columns.Add("img", typeof(Image));
-			dt.Columns.Add("smallimg", typeof(Image));
-			dt.Columns.Add("contourimg", typeof(Image));
-			return dt;
+			tankImgNew.Dispose();
+			tankImgNew.Clear();
 		}
 
 		public static Image GetTankImage(int tankId, string imageCol)

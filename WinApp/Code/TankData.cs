@@ -47,6 +47,7 @@ namespace WinApp.Code
 
 		public static void GetAchList()
 		{
+			achList.Dispose();
 			achList.Clear();
 			achList = DB.FetchData("SELECT id, name FROM ach");
 		}
@@ -63,7 +64,8 @@ namespace WinApp.Code
 
 		public static void ClearPlayerTankAchList()
 		{
-			playerTankAchList = new DataTable();
+			playerTankAchList.Dispose();
+			playerTankAchList.Clear();
 		}
 
 		public static DataTable playerTankFragList = new DataTable();
@@ -80,9 +82,9 @@ namespace WinApp.Code
 
 		public static void ClearPlayerTankFragList()
 		{
-			playerTankFragList = new DataTable();
+			playerTankFragList.Dispose();
+			playerTankFragList.Clear();
 		}
-		
 
 		public static DataTable tankList = new DataTable();
 
@@ -237,8 +239,6 @@ namespace WinApp.Code
 		
 		public static void GetJson2dbMappingFromDB()
 		{
-			json2dbMapping.Dispose();
-			json2dbMapping.Clear();
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
 		}
 
@@ -358,11 +358,22 @@ namespace WinApp.Code
 			return exists;
 		}
 
-		public static bool TankExist(int tankID)
+		public static bool TankExists(int tankId)
 		{
-			string expression = "id = " + tankID.ToString();
+			string expression = "id = " + tankId.ToString();
 			DataRow[] foundRows = tankList.Select(expression);
 			return (foundRows.Length > 0);
+		}
+
+		public static bool PlayerTankExists(int tankId)
+		{
+			string sql = "SELECT id FROM playerTank WHERE tankId=@tankId; ";
+			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			bool exists = (dt.Rows.Count > 0);
+			dt.Dispose();
+			dt.Clear();
+			return exists;
 		}
 
 		public static DataRow TankInfo(int tankID)
