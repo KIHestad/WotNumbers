@@ -13,7 +13,7 @@ namespace WinApp.Code
 {
 	class ImageHelper
 	{
-		public static DataTable TankImage;
+		public static DataTable TankImage = new DataTable();
 
 		public class ImgColumns : IComparable<ImgColumns>
 		{
@@ -31,7 +31,16 @@ namespace WinApp.Code
 				return this.colPosition.CompareTo(other.colPosition);
 			}
 		}
-		
+
+		public static void CreateTankImageTable()
+		{
+			TankImage.Columns.Add("id", typeof(Int32));
+			TankImage.PrimaryKey = new DataColumn[] { TankImage.Columns["id"] };
+			TankImage.Columns.Add("img", typeof(Image));
+			TankImage.Columns.Add("smallimg", typeof(Image));
+			TankImage.Columns.Add("contourimg", typeof(Image));
+		}	
+
 		public static void LoadTankImages()
 		{
 			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
@@ -44,17 +53,12 @@ namespace WinApp.Code
 			DataTable dt = new DataTable();
 			adapter.Fill(dt);
 			con.Close();
-			DataTable tankImgNew = new DataTable();
-			tankImgNew.Columns.Add("id", typeof(Int32));
-			tankImgNew.PrimaryKey = new DataColumn[] { tankImgNew.Columns["id"] };
-			tankImgNew.Columns.Add("img", typeof(Image));
-			tankImgNew.Columns.Add("smallimg", typeof(Image));
-			tankImgNew.Columns.Add("contourimg", typeof(Image));
+			TankImage.Clear();
 			foreach (DataRow dr in dt.Rows)
 			{
 				if (TankData.PlayerTankExists(Convert.ToInt32(dr["id"])))
 				{
-					DataRow tankImgNewDataRow = tankImgNew.NewRow();
+					DataRow tankImgNewDataRow = TankImage.NewRow();
 					// ID
 					tankImgNewDataRow["id"] = dr["id"];
 					// Img
@@ -76,13 +80,11 @@ namespace WinApp.Code
 					image = new Bitmap(ms);
 					tankImgNewDataRow["contourImg"] = image;
 					// Add to dt
-					tankImgNew.Rows.Add(tankImgNewDataRow);
+					TankImage.Rows.Add(tankImgNewDataRow);
+					TankImage.AcceptChanges();
 				}
 			}
-			// Set public static tank img datatable to this
-			TankImage = tankImgNew;
-			tankImgNew.Dispose();
-			tankImgNew.Clear();
+			
 		}
 
 		public static Image GetTankImage(int tankId, string imageCol)

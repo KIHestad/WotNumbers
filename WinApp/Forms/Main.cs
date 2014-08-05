@@ -262,6 +262,7 @@ namespace WinApp.Forms
 			SetFormTitle();
 			SetFavListMenu();
 			SetListener(false);
+			ImageHelper.CreateTankImageTable();
 			ImageHelper.LoadTankImages();
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
