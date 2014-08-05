@@ -3,7 +3,7 @@
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Wot Numbers" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Numbers Team" UpgradeCode="$(var.UpgradeCode)">
+	<Product Id="*" Name="Wot Numbers" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Wot Numbers Team" UpgradeCode="$(var.UpgradeCode)">
 		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="Installs Wot Numbers, created by BadButton and cmdrTrinity"/>
 
 		<Upgrade Id="$(var.UpgradeCode)">
