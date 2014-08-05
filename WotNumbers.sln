@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApp", "WinApp\WinApp.csproj", "{55E2A3AB-AA77-42B1-9720-038AED1250E3}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{EDB47268-8ED5-4BF6-B24E-1858507780AC}"
@@ -40,7 +42,6 @@ Global
 		{EDB47268-8ED5-4BF6-B24E-1858507780AC}.Release|x86.ActiveCfg = Release|x86
 		{EDB47268-8ED5-4BF6-B24E-1858507780AC}.Release|x86.Build.0 = Release|x86
 		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -50,7 +51,6 @@ Global
 		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3DC5BC31-7FFA-4316-8734-0F1B87F20AE0}.Release|x86.ActiveCfg = Release|Any CPU
 		{D5BDEE9C-3AB3-432E-BC01-1CFACEB88C93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5BDEE9C-3AB3-432E-BC01-1CFACEB88C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5BDEE9C-3AB3-432E-BC01-1CFACEB88C93}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{D5BDEE9C-3AB3-432E-BC01-1CFACEB88C93}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{D5BDEE9C-3AB3-432E-BC01-1CFACEB88C93}.Debug|x86.ActiveCfg = Debug|Any CPU
