@@ -14,6 +14,8 @@ namespace WinApp.Code
 {
 	public class dossier2json
 	{
+		private static Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
+		
 		public BackgroundWorker bwDossierProcess;
 		public static bool dossierRunning = false;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
@@ -247,6 +249,8 @@ namespace WinApp.Code
 						if (dt.Rows.Count > 0)
 							playerId = Convert.ToInt32(dt.Rows[0][0]);
 					}
+					dt.Dispose();
+					dt.Clear();
 				}
 				// If still not identified player break with error
 				if (playerId == 0)
@@ -315,6 +319,8 @@ namespace WinApp.Code
 					}
 				}
 				dossierRunning = false;
+				dt.Dispose();
+				dt.Clear();
 			}
 			else
 			{
@@ -333,9 +339,9 @@ namespace WinApp.Code
 				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
 				//ipyrun.main();
 
-				Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
 				Microsoft.Scripting.Hosting.ScriptScope scope = py.ExecuteFile(dossier2jsonScript); // this is your python program
 				dynamic result = scope.GetVariable("main")();
+				
 
 			}
 			catch (Exception ex)

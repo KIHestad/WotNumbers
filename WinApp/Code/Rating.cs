@@ -355,7 +355,7 @@ namespace WinApp.Code
 				DB.ExecuteNonQuery(sql);
 			}
 			dtBattles.Dispose();
-			dtBattles = new DataTable();
+			dtBattles.Clear();
 		}
 
 		public static double GetAverageBattleTier()

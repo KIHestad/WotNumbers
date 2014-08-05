@@ -1388,6 +1388,8 @@ namespace WinApp.Forms
 				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 				// Status mesage
 				SetStatus2(Status2Message);
+				dtStats.Dispose();
+				dtStats.Clear();
 			}
 			catch (Exception ex)
 			{

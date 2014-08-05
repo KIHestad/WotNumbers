@@ -257,6 +257,10 @@ namespace WinApp.Code
 			sw.Stop();
 			TimeSpan ts = sw.Elapsed;
 			// Log.LogToFile(log);
+			NewPlayerTankTable.Dispose();
+			NewPlayerTankTable.Clear();
+			NewPlayerTankBattleTable.Dispose();
+			NewPlayerTankBattleTable.Clear();
 			return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 		}
 
@@ -489,6 +493,8 @@ namespace WinApp.Code
 						DB.ExecuteNonQuery(sql);
 					}
 				}
+				playerTankOldTable.Dispose();
+				playerTankOldTable.Clear();
 			}
 			return battleSave;
 		}
@@ -632,6 +638,8 @@ namespace WinApp.Code
 			// Add battle, if any and not first run - then avoid
 			if (saveBattleResult && battlesNew > 0)
 				AddBattle(playerTankNewRow, playerTankOldRow, playerTankBattleNewRow, playerTankBattleOld.Rows[0], battleMode, tankId, playerTankId, battlesNew, battleFragList, battleAchList);
+			playerTankBattleOld.Dispose();
+			playerTankBattleOld.Clear();
 		}
 
 		private static List<FragItem> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
@@ -918,7 +926,12 @@ namespace WinApp.Code
 						// Add to database
 						DB.ExecuteNonQuery(battleAchSQL);
 					}
+					dt.Dispose();
+					dt.Clear();
 				}
+				battleTableNew.Dispose();
+				battleTableNew.Clear();
+
 			//}
 			//catch (Exception ex)
 			//{

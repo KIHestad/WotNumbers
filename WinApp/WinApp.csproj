@@ -145,7 +145,7 @@
     <Compile Include="Code\ImageHelper.cs" />
     <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
-    <Compile Include="Code\Support\DB.cs" />
+    <Compile Include="Code\DB.cs" />
     <Compile Include="Code\FormControl\DropDownGrid.cs" />
     <Compile Include="Code\GrindingHelper.cs" />
     <Compile Include="Code\FormControl\PopupGrid.cs" />
@@ -154,7 +154,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Code\FormControl\MsgBox.cs" />
-    <Compile Include="Code\Support\Config.cs" />
+    <Compile Include="Code\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
     <Compile Include="Code\FormControl\BadTheme.cs">
       <SubType>Component</SubType>

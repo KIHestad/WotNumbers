@@ -1199,11 +1199,14 @@ namespace WinApp.Code
 				// Get version now
 				sql = "select version from _version_ where id=1; ";
 				dt.Dispose();
+				dt.Clear();
 				dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
 				{
 					version = Convert.ToInt32(dt.Rows[0][0]);
 				}
+				dt.Dispose();
+				dt.Clear();
 			}
 			return version;
 		}
