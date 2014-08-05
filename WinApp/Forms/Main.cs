@@ -1337,27 +1337,30 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 					dtStats = DB.FetchData(sql);
 					stats = dtStats.Rows[0];
-					// Battle count
-					battleCount[1] = Convert.ToInt32(stats["battles"]);
-					// win rate
-					wr[1] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-					// Rating parameters
-					BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-					DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-					SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-					FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-					DEF = Rating.ConvertDbVal2Double(stats["def"]);
-					CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-					WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-					TIER = 0;
-					if (BATTLES > 0)
-						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-					// eff
-					eff[1] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-					// wn7
-					wn7[1] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
-					// Wn8
-					wn8[1] = Code.Rating.CalculatePlayerTotalWN8("15");
+					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+					{
+						// Battle count
+						battleCount[1] = Convert.ToInt32(stats["battles"]);
+						// win rate
+						wr[1] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+						// Rating parameters
+						BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+						DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+						SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+						FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+						DEF = Rating.ConvertDbVal2Double(stats["def"]);
+						CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+						WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+						TIER = 0;
+						if (BATTLES > 0)
+							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+						// eff
+						eff[1] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+						// wn7
+						wn7[1] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+						// Wn8
+						wn8[1] = Code.Rating.CalculatePlayerTotalWN8("15");
+					}
 
 					// Overall stats team
 					sql =
@@ -1370,27 +1373,30 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 					dtStats = DB.FetchData(sql);
 					stats = dtStats.Rows[0];
-					// Battle count
-					battleCount[2] = Convert.ToInt32(stats["battles"]);
-					// win rate
-					wr[2] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-					// Rating parameters
-					BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-					DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-					SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-					FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-					DEF = Rating.ConvertDbVal2Double(stats["def"]);
-					CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-					WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-					TIER = 0;
-					if (BATTLES > 0)
-						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-					// eff
-					eff[2] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-					// wn7
-					wn7[2] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
-					// Wn8
-					wn8[2] = Code.Rating.CalculatePlayerTotalWN8("7");
+					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+					{
+						// Battle count
+						battleCount[2] = Convert.ToInt32(stats["battles"]);
+						// win rate
+						wr[2] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+						// Rating parameters
+						BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+						DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+						SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+						FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+						DEF = Rating.ConvertDbVal2Double(stats["def"]);
+						CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+						WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+						TIER = 0;
+						if (BATTLES > 0)
+							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+						// eff
+						eff[2] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+						// wn7
+						wn7[2] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+						// Wn8
+						wn8[2] = Code.Rating.CalculatePlayerTotalWN8("7");
+					}
 
 					// Overall stats historical
 					sql =
@@ -1403,27 +1409,30 @@ namespace WinApp.Forms
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 					dtStats = DB.FetchData(sql);
 					stats = dtStats.Rows[0];
-					// Battle count
-					battleCount[3] = Convert.ToInt32(stats["battles"]);
-					// win rate
-					wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-					// Rating parameters
-					BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-					DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-					SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-					FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-					DEF = Rating.ConvertDbVal2Double(stats["def"]);
-					CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-					WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-					TIER = 0;
-					if (BATTLES > 0)
-						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-					// eff
-					eff[3] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-					// wn7
-					wn7[3] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
-					// Wn8
-					wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
+					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+					{
+						// Battle count
+						battleCount[3] = Convert.ToInt32(stats["battles"]);
+						// win rate
+						wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+						// Rating parameters
+						BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+						DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+						SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+						FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+						DEF = Rating.ConvertDbVal2Double(stats["def"]);
+						CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+						WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+						TIER = 0;
+						if (BATTLES > 0)
+							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+						// eff
+						eff[3] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+						// wn7
+						wn7[3] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+						// Wn8
+						wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
+					}
 
 					// Add Data to dataTable
 					DataRow dr = dt.NewRow();
