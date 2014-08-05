@@ -1269,6 +1269,14 @@ namespace WinApp.Forms
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
 		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
 
+		private object RatingVal(string val, int battlecount)
+		{
+			if (battlecount == 0)
+				return DBNull.Value;
+			else
+				return val;
+		}
+
 		private void GridShowOverall(string Status2Message)
 		{
 			try
@@ -1285,7 +1293,7 @@ namespace WinApp.Forms
 				bool applyColors = false;
 				// Get total number of tanks to show in first row
 				string sql =
-					"Select 'Tank count' as Data, cast(count(playerTank.tankId) as varchar) as Total, null as 'Random (15x15)', null as 'Team (7x7)', null as 'Historical' " +
+					"Select 'Tank count' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical' " +
 					"from playerTank " +
 					"where playerid=@playerid and tankid in (select pt.tankId from playerTank pt inner join playerTankBattle ptb on pt.id = ptb.playerTankId) ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
@@ -1439,16 +1447,17 @@ namespace WinApp.Forms
 					dr["Data"] = "Battle count";
 					dr["Total"] = battleCount[0].ToString();
 					dr["Random (15x15)"] = battleCount[1].ToString();
-					dr["Team (7x7)"] = battleCount[2].ToString();
-					dr["Historical"] = battleCount[3].ToString();
+					dr["Team (7x7)"] = RatingVal(battleCount[2].ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Historical"] = RatingVal(battleCount[3].ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
+					
 					// Add Winrate
 					dr = dt.NewRow();
 					dr["Data"] = "Win rate";
 					dr["Total"] = Math.Round(wr[0], 2).ToString() + " %";
 					dr["Random (15x15)"] = Math.Round(wr[1], 2).ToString() + " %";
-					dr["Team (7x7)"] = Math.Round(wr[2], 2).ToString() + " %";
-					dr["Historical"] = Math.Round(wr[3], 2).ToString() + " %";
+					dr["Team (7x7)"] = RatingVal(Math.Round(wr[2], 2).ToString() + " %", Convert.ToInt32(battleCount[2]));
+					dr["Historical"] = RatingVal(Math.Round(wr[3], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 
 					// Add EFF
@@ -1456,24 +1465,24 @@ namespace WinApp.Forms
 					dr["Data"] = "EFF rating";
 					dr["Total"] = Math.Round(eff[0], 2).ToString();
 					dr["Random (15x15)"] = Math.Round(eff[1], 2).ToString();
-					dr["Team (7x7)"] = Math.Round(eff[2], 2).ToString();
-					dr["Historical"] = Math.Round(eff[3], 2).ToString();
+					dr["Team (7x7)"] = RatingVal(Math.Round(eff[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Historical"] = RatingVal(Math.Round(eff[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 					// Add WN7
 					dr = dt.NewRow();
 					dr["Data"] = "WN7 rating";
 					dr["Total"] = Math.Round(wn7[0], 2).ToString();
 					dr["Random (15x15)"] = Math.Round(wn7[1], 2).ToString();
-					dr["Team (7x7)"] = Math.Round(wn7[2], 2).ToString();
-					dr["Historical"] = Math.Round(wn7[3], 2).ToString();
+					dr["Team (7x7)"] = RatingVal(Math.Round(wn7[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Historical"] = RatingVal(Math.Round(wn7[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 					// Add WN8
 					dr = dt.NewRow();
 					dr["Data"] = "WN8 rating";
 					dr["Total"] = Math.Round(wn8[0], 2).ToString();
 					dr["Random (15x15)"] = Math.Round(wn8[1], 2).ToString();
-					dr["Team (7x7)"] = Math.Round(wn8[2], 2).ToString();
-					dr["Historical"] = Math.Round(wn8[3], 2).ToString();
+					dr["Team (7x7)"] = RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Historical"] = RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 
 					// Ready to set colors
