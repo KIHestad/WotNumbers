@@ -168,6 +168,12 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\ApplicationLayout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\ApplicationLayout.Designer.cs">
+      <DependentUpon>ApplicationLayout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BadThemeControls\DropDownGrid.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -310,6 +316,9 @@
     <Compile Include="Code\TankData.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\ApplicationLayout.resx">
+      <DependentUpon>ApplicationLayout.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\DropDownGrid.resx">
       <DependentUpon>DropDownGrid.cs</DependentUpon>
