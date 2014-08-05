@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 86; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 87; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1100,6 +1100,12 @@ namespace WinApp.Code
 					mssql = "ALTER TABLE columnList ADD lastSortColumn varchar(50) NULL; " +
 							"ALTER TABLE columnList ADD lastSortDirectionAsc bit NOT NULL DEFAULT 0; ";
 					sqlite = mssql;
+					break;
+				case 87:
+					Config.Settings.gridFontSize = 8;
+					Config.Settings.grindParametersAutoStart = false;
+					string msg = "";
+					Config.SaveConfig(out msg);
 					break;
 
 			}
