@@ -741,7 +741,6 @@ namespace WinApp.Forms
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
-				mTankFilter_FavSeparator.Visible = true;
 				foreach (DataRow dr in dt.Rows)
 				{
 					ToolStripMenuItem menuItem = (ToolStripMenuItem)mTankFilter.DropDownItems["mTankFilter_Fav" + Convert.ToInt32(dr["position"]).ToString("00")];

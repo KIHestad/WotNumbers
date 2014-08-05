@@ -148,6 +148,7 @@
 			this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
 			this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mHelpCheckVersion = new System.Windows.Forms.ToolStripMenuItem();
@@ -165,7 +166,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -785,7 +785,6 @@
 			// 
 			this.mTankFilter_FavSeparator.Name = "mTankFilter_FavSeparator";
 			this.mTankFilter_FavSeparator.Size = new System.Drawing.Size(231, 6);
-			this.mTankFilter_FavSeparator.Visible = false;
 			// 
 			// mTankFilter_All
 			// 
@@ -1251,6 +1250,13 @@
 			this.toolStripSeparator25.Name = "toolStripSeparator25";
 			this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
 			// 
+			// mSettingsAppLayout
+			// 
+			this.mSettingsAppLayout.Name = "mSettingsAppLayout";
+			this.mSettingsAppLayout.Size = new System.Drawing.Size(263, 22);
+			this.mSettingsAppLayout.Text = "Application &Layout...";
+			this.mSettingsAppLayout.Click += new System.EventHandler(this.mSettingsAppLayout_Click);
+			// 
 			// mSettingsApp
 			// 
 			this.mSettingsApp.Name = "mSettingsApp";
@@ -1494,13 +1500,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// mSettingsAppLayout
-			// 
-			this.mSettingsAppLayout.Name = "mSettingsAppLayout";
-			this.mSettingsAppLayout.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsAppLayout.Text = "Application &Layout...";
-			this.mSettingsAppLayout.Click += new System.EventHandler(this.mSettingsAppLayout_Click);
 			// 
 			// Main
 			// 

@@ -55,6 +55,8 @@ namespace WinApp.Code
 
 		public static void GetPlayerTankAchList()
 		{
+			playerTankAchList.Dispose();
+			playerTankAchList.Clear();
 			playerTankAchList = new DataTable();
 			playerTankAchList = DB.FetchData("SELECT * FROM playerTankAch");
 		}
@@ -68,6 +70,8 @@ namespace WinApp.Code
 
 		public static void GetPlayerTankFragList()
 		{
+			playerTankFragList.Dispose();
+			playerTankFragList.Clear();
 			playerTankFragList = new DataTable();
 			string sql = "SELECT playerTank.id AS playerTankId, playerTank.tankId as PlayerTankTankId, playerTankFrag.* " +
 	  					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId; ";
@@ -84,6 +88,7 @@ namespace WinApp.Code
 
 		public static void GetTankList()
 		{
+			tankList.Dispose();
 			tankList.Clear();
 			tankList = DB.FetchData("SELECT * FROM tank");
 			foreach (DataRow dr in tankList.Rows)
@@ -139,6 +144,8 @@ namespace WinApp.Code
 				wins = Convert.ToInt32(dt.Rows[0]["wins"]);
 				xp = Convert.ToInt32(dt.Rows[0]["xp"]);
 			}
+			dt.Dispose();
+			dt.Clear();
 			return battles;
 		}
 		
@@ -158,6 +165,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			int count = 0;
 			if (dt.Rows.Count > 0) count = Convert.ToInt32(dt.Rows[0]["count"]);
+			dt.Dispose();
+			dt.Clear();
 			return count;
 		}
 
@@ -169,6 +178,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0]["tankId"]);
+			dt.Dispose();
+			dt.Clear();
 			return lookupTankId;
 		}
 
@@ -183,6 +194,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
+			dt.Dispose();
+			dt.Clear();
 			return lookupTankId;
 		}
 
@@ -196,6 +209,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			int lookupTankId = 0;
 			if (dt.Rows.Count > 0) lookupTankId = Convert.ToInt32(dt.Rows[0][0]);
+			dt.Dispose();
+			dt.Clear();
 			return lookupTankId;
 		}
 
@@ -213,6 +228,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			int lookupBattle = 0;
 			if (dt.Rows.Count > 0) lookupBattle = Convert.ToInt32(dt.Rows[0]["Id"]);
+			dt.Dispose();
+			dt.Clear();
 			return (lookupBattle);
 		}
 
@@ -220,6 +237,7 @@ namespace WinApp.Code
 		
 		public static void GetJson2dbMappingFromDB()
 		{
+			json2dbMapping.Dispose();
 			json2dbMapping.Clear();
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
 		}
@@ -258,6 +276,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			string tankName = "";
 			if (dt.Rows.Count > 0) tankName = dt.Rows[0]["name"].ToString();
+			dt.Dispose();
+			dt.Clear();
 			return tankName;
 		}
 
@@ -280,6 +300,8 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@name", TankName, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0) tankTier = Convert.ToInt32(dt.Rows[0]["tier"]);
+			dt.Dispose();
+			dt.Clear();
 			return tankTier;
 		}
 
@@ -290,6 +312,8 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@id", TankId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0) tankTier = Convert.ToInt32(dt.Rows[0]["tier"]);
+			dt.Dispose();
+			dt.Clear();
 			return tankTier;
 		}
 
@@ -317,6 +341,8 @@ namespace WinApp.Code
 			DataTable dt = DB.FetchData(sql);
 			int tankId = 0;
 			if (dt.Rows.Count > 0) tankId = Convert.ToInt32(dt.Rows[0]["id"]);
+			dt.Dispose();
+			dt.Clear();
 			return tankId;
 		}
 
@@ -327,6 +353,8 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@name", achName, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			exists = (dt.Rows.Count > 0);
+			dt.Dispose();
+			dt.Clear();
 			return exists;
 		}
 
