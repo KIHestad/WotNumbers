@@ -1273,17 +1273,24 @@ namespace WinApp.Forms
 		{
 			try
 			{
+				if (!DB.CheckConnection(false)) return;
 				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 				mainGridFormatting = false;
 				dataGridMain.DataSource = null;
-				if (!DB.CheckConnection(false)) return;
+				int[] battleCount = new int[4];
+				double[] wr = new double[4];
+				double[] wn8 = new double[4];
+				double[] wn7 = new double[4];
+				double[] eff = new double[4];
+				bool applyColors = false;
+				// Get total number of tanks to show in first row
 				string sql =
-					"Select 'Tanks count' as Data, cast(count(playerTank.tankId) as varchar) as Value " +
+					"Select 'Tank count' as Data, cast(count(playerTank.tankId) as varchar) as Total, null as 'Random (15x15)', null as 'Team (7x7)', null as 'Historical' " +
 					"from playerTank " +
 					"where playerid=@playerid and tankid in (select pt.tankId from playerTank pt inner join playerTankBattle ptb on pt.id = ptb.playerTankId) ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-				// Overall stats
+				// get overall stats all battles
 				sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
@@ -1293,27 +1300,14 @@ namespace WinApp.Forms
 					"where pt.playerId=@playerId ";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtStats = DB.FetchData(sql);
-				int battleCount = 0;
-				double wr = 0;
-				double wn8 = 0;
-				double wn7 = 0;
-				double eff = 0;
-				bool applyColors = false;
 				if (dtStats.Rows.Count > 0 && dtStats.Rows[0]["battles"] != DBNull.Value)
 				{
+					// TOTALS
 					DataRow stats = dtStats.Rows[0];
-					// Add Battle Count
-					DataRow dr = dt.NewRow();
-					dr["Data"] = "Total Battles";
-					battleCount = Convert.ToInt32(stats["battles"]);
-					dr["Value"] = battleCount.ToString();
-					dt.Rows.Add(dr);
-					// Add Winrate
-					dr = dt.NewRow();
-					dr["Data"] = "Win Rate";
-					wr = (Convert.ToDouble(stats["wins"])/Convert.ToDouble(stats["battles"])*100);
-					dr["Value"] = Math.Round(wr, 2).ToString() + " %";
-					dt.Rows.Add(dr);
+					// Battle count
+					battleCount[0] = Convert.ToInt32(stats["battles"]);
+					// win rate
+					wr[0] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
 					// Rating parameters
 					double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
 					double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
@@ -1325,26 +1319,152 @@ namespace WinApp.Forms
 					double TIER = 0;
 					if (BATTLES > 0)
 						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+					// eff
+					eff[0] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+					// wn7
+					wn7[0] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+					// Wn8
+					wn8[0] = Code.Rating.CalculatePlayerTotalWN8();
 					
+					// Overall stats random
+					sql =
+						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+						"from playerTankBattle ptb left join " +
+						"  playerTank pt on ptb.playerTankId=pt.id left join " +
+						"  tank t on pt.tankId = t.id " +
+						"where pt.playerId=@playerId and ptb.battleMode='15'";
+					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+					dtStats = DB.FetchData(sql);
+					stats = dtStats.Rows[0];
+					// Battle count
+					battleCount[1] = Convert.ToInt32(stats["battles"]);
+					// win rate
+					wr[1] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+					// Rating parameters
+					BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+					DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+					SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+					FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+					DEF = Rating.ConvertDbVal2Double(stats["def"]);
+					CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+					WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+					TIER = 0;
+					if (BATTLES > 0)
+						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+					// eff
+					eff[1] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+					// wn7
+					wn7[1] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+					// Wn8
+					wn8[1] = Code.Rating.CalculatePlayerTotalWN8("15");
+
+					// Overall stats team
+					sql =
+						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+						"from playerTankBattle ptb left join " +
+						"  playerTank pt on ptb.playerTankId=pt.id left join " +
+						"  tank t on pt.tankId = t.id " +
+						"where pt.playerId=@playerId and ptb.battleMode='7'";
+					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+					dtStats = DB.FetchData(sql);
+					stats = dtStats.Rows[0];
+					// Battle count
+					battleCount[2] = Convert.ToInt32(stats["battles"]);
+					// win rate
+					wr[2] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+					// Rating parameters
+					BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+					DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+					SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+					FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+					DEF = Rating.ConvertDbVal2Double(stats["def"]);
+					CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+					WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+					TIER = 0;
+					if (BATTLES > 0)
+						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+					// eff
+					eff[2] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+					// wn7
+					wn7[2] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+					// Wn8
+					wn8[2] = Code.Rating.CalculatePlayerTotalWN8("7");
+
+					// Overall stats historical
+					sql =
+						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+						"from playerTankBattle ptb left join " +
+						"  playerTank pt on ptb.playerTankId=pt.id left join " +
+						"  tank t on pt.tankId = t.id " +
+						"where pt.playerId=@playerId and ptb.battleMode='Historical'";
+					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+					dtStats = DB.FetchData(sql);
+					stats = dtStats.Rows[0];
+					// Battle count
+					battleCount[3] = Convert.ToInt32(stats["battles"]);
+					// win rate
+					wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+					// Rating parameters
+					BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+					DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+					SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+					FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+					DEF = Rating.ConvertDbVal2Double(stats["def"]);
+					CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+					WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+					TIER = 0;
+					if (BATTLES > 0)
+						TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+					// eff
+					eff[3] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+					// wn7
+					wn7[3] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+					// Wn8
+					wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
+
+					// Add Data to dataTable
+					DataRow dr = dt.NewRow();
+					dr["Data"] = "Battle count";
+					dr["Total"] = battleCount[0].ToString();
+					dr["Random (15x15)"] = battleCount[1].ToString();
+					dr["Team (7x7)"] = battleCount[2].ToString();
+					dr["Historical"] = battleCount[3].ToString();
+					dt.Rows.Add(dr);
+					// Add Winrate
+					dr = dt.NewRow();
+					dr["Data"] = "Win rate";
+					dr["Total"] = Math.Round(wr[0], 2).ToString() + " %";
+					dr["Random (15x15)"] = Math.Round(wr[1], 2).ToString() + " %";
+					dr["Team (7x7)"] = Math.Round(wr[2], 2).ToString() + " %";
+					dr["Historical"] = Math.Round(wr[3], 2).ToString() + " %";
+					dt.Rows.Add(dr);
+
 					// Add EFF
 					dr = dt.NewRow();
-					dr["Data"] = "EFF Total Rating";
-					eff = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-					dr["Value"] = Math.Round(eff, 2).ToString();
+					dr["Data"] = "EFF rating";
+					dr["Total"] = Math.Round(eff[0], 2).ToString();
+					dr["Random (15x15)"] = Math.Round(eff[1], 2).ToString();
+					dr["Team (7x7)"] = Math.Round(eff[2], 2).ToString();
+					dr["Historical"] = Math.Round(eff[3], 2).ToString();
 					dt.Rows.Add(dr);
-
 					// Add WN7
 					dr = dt.NewRow();
-					dr["Data"] = "WN7 Total Rating";
-					wn7 = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
-					dr["Value"] = Math.Round(wn7, 2).ToString();
+					dr["Data"] = "WN7 rating";
+					dr["Total"] = Math.Round(wn7[0], 2).ToString();
+					dr["Random (15x15)"] = Math.Round(wn7[1], 2).ToString();
+					dr["Team (7x7)"] = Math.Round(wn7[2], 2).ToString();
+					dr["Historical"] = Math.Round(wn7[3], 2).ToString();
 					dt.Rows.Add(dr);
-
 					// Add WN8
 					dr = dt.NewRow();
-					dr["Data"] = "WN8 Total Rating";
-					wn8 = Code.Rating.CalculatePlayerTotalWN8();
-					dr["Value"] = Math.Round(wn8, 2).ToString();
+					dr["Data"] = "WN8 rating";
+					dr["Total"] = Math.Round(wn8[0], 2).ToString();
+					dr["Random (15x15)"] = Math.Round(wn8[1], 2).ToString();
+					dr["Team (7x7)"] = Math.Round(wn8[2], 2).ToString();
+					dr["Historical"] = Math.Round(wn8[3], 2).ToString();
 					dt.Rows.Add(dr);
 
 					// Ready to set colors
@@ -1361,29 +1481,34 @@ namespace WinApp.Forms
 				// Text cols
 				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Value"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Value"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Total"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+				dataGridMain.Columns["Total"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				// No sorting
 				dataGridMain.Columns["Data"].SortMode = DataGridViewColumnSortMode.Programmatic;
-				dataGridMain.Columns["Value"].SortMode = DataGridViewColumnSortMode.Programmatic;
+				dataGridMain.Columns["Total"].SortMode = DataGridViewColumnSortMode.Programmatic;
 				// Colors
 				if (applyColors)
 				{
-					dataGridMain.Rows[1].Cells[1].Style.ForeColor = Rating.BattleCountColor(battleCount);
-					dataGridMain.Rows[2].Cells[1].Style.ForeColor = Rating.WinRateColor(wr);
-					dataGridMain.Rows[3].Cells[1].Style.ForeColor = Rating.EffColor(eff);
-					dataGridMain.Rows[4].Cells[1].Style.ForeColor = Rating.WN7color(wn7);
-					dataGridMain.Rows[5].Cells[1].Style.ForeColor = Rating.WN8color(wn8);
-					dataGridMain.Rows[1].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[1].Cells[1].Style.ForeColor;
-					dataGridMain.Rows[2].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
-					dataGridMain.Rows[3].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[3].Cells[1].Style.ForeColor;
-					dataGridMain.Rows[4].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[4].Cells[1].Style.ForeColor;
-					dataGridMain.Rows[5].Cells[1].Style.SelectionForeColor = dataGridMain.Rows[5].Cells[1].Style.ForeColor;
-					
+					for (int i = 1; i < 5; i++)
+					{
+						dataGridMain.Rows[1].Cells[i].Style.ForeColor = Rating.BattleCountColor(battleCount[i-1]);
+						dataGridMain.Rows[2].Cells[i].Style.ForeColor = Rating.WinRateColor(wr[i - 1]);
+						dataGridMain.Rows[3].Cells[i].Style.ForeColor = Rating.EffColor(eff[i - 1]);
+						dataGridMain.Rows[4].Cells[i].Style.ForeColor = Rating.WN7color(wn7[i - 1]);
+						dataGridMain.Rows[5].Cells[i].Style.ForeColor = Rating.WN8color(wn8[i - 1]);
+						dataGridMain.Rows[1].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[1].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[2].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[3].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[3].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[4].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[4].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[5].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[5].Cells[1].Style.ForeColor;
+					}
 				}
 				// Finish
-				dataGridMain.Columns[0].Width = 100;
-				dataGridMain.Columns[1].Width = 500;
+				dataGridMain.Columns[0].Width = 120;
+				dataGridMain.Columns[1].Width = 80;
+				dataGridMain.Columns[2].Width = 80;
+				dataGridMain.Columns[3].Width = 80;
+				dataGridMain.Columns[4].Width = 80;
 				ResizeNow();
 				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 				// Status mesage
