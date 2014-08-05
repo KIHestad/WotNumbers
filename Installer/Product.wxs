@@ -8,9 +8,16 @@
 
 		<Upgrade Id="$(var.UpgradeCode)">
 			<!-- Detect older product versions -->
-			<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>
+			<!--<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>-->
+      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+      <UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
 		</Upgrade>
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
+
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+    </InstallExecuteSequence>
+    
 		<MediaTemplate EmbedCab="yes"/>
 		<!-- WixUI_Advanced, WixUI_FeatureTree, WixUI_InstallDir, WixUI_Minimal, WixUI_Mondo = Everything, where to install, features to install ... -->
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
