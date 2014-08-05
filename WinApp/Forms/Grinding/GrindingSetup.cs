@@ -112,33 +112,51 @@ namespace WinApp.Forms
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			if (dataChanged)
+			if (CheckValidData())
 			{
-				MsgBox.Button answer = MsgBox.Show("Do you want to save your changes?", "Save Data?", MsgBoxType.OKCancel, this);
-				if (answer == MsgBox.Button.OKButton)
+				if (dataChanged)
 				{
-					SaveData();
+					MsgBox.Button answer = MsgBox.Show("Do you want to save your changes?", "Save Data?", MsgBoxType.OKCancel, this);
+					if (answer == MsgBox.Button.OKButton)
+					{
+						SaveData();
+					}
 				}
 			}
 		}
 
+		private bool CheckValidData()
+		{
+			bool ok = true;
+			int test = 0;
+			ok = Int32.TryParse(txtGrindXP.Text, out test);
+			if (ok) Int32.TryParse(txtProgressXP.Text, out test);
+			if (ok) Int32.TryParse(txtBattlesPerDay.Text, out test);
+			if (!ok)
+				MsgBox.Show("Illegal character found, please only enter numberic values without decimals", "Illegal character in text box", this);
+			return ok;
+		}
+
 		private void SaveData()
 		{
-			string sql = "UPDATE playerTank SET gGrindXP=@GrindXP, gProgressXP=@ProgressXP, " +
-						 "                      gBattlesDay=@BattlesDay, gComment=@Comment, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
-						 "					    gRestBattles=@RestBattles, gRestDays=@RestDays " +
-						 "WHERE id=@id";
-			DB.AddWithValue(ref sql, "@GrindXP", txtGrindXP.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@ProgressXP", txtProgressXP.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@ProgressPercent", pbProgressPercent.Value, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@RestXP", txtRestXP.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@RestBattles", txtRestBattles.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@RestDays", txtRestDays.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@BattlesDay", txtBattlesPerDay.Text, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@Comment", txtGrindComment.Text, DB.SqlDataType.VarChar);
-			DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
-			if (DB.ExecuteNonQuery(sql))
-				dataChanged = false;
+			if (CheckValidData())
+			{
+				string sql = "UPDATE playerTank SET gGrindXP=@GrindXP, gProgressXP=@ProgressXP, " +
+							 "                      gBattlesDay=@BattlesDay, gComment=@Comment, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
+							 "					    gRestBattles=@RestBattles, gRestDays=@RestDays " +
+							 "WHERE id=@id";
+				DB.AddWithValue(ref sql, "@GrindXP", txtGrindXP.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@ProgressXP", txtProgressXP.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@ProgressPercent", pbProgressPercent.Value, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@RestXP", txtRestXP.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@RestBattles", txtRestBattles.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@RestDays", txtRestDays.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@BattlesDay", txtBattlesPerDay.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@Comment", txtGrindComment.Text, DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
+				if (DB.ExecuteNonQuery(sql))
+					dataChanged = false;
+			}
 		}
 
 		private void btnProgressReset_Click(object sender, EventArgs e)
@@ -191,7 +209,12 @@ namespace WinApp.Forms
 				MsgBox.Button answer = MsgBox.Show("Data is changed, but not saved. Do you want to save your changes now?", "Save data on closing?", MsgBoxType.OKCancel, this);
 				if (answer == MsgBox.Button.OKButton)
 				{
-					SaveData();
+					if (!CheckValidData())
+					{
+						e.Cancel = true;
+					}
+					else					
+						SaveData();
 				}
 			}
 		}

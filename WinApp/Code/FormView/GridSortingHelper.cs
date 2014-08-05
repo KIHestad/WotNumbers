@@ -34,7 +34,7 @@ namespace WinApp.Code
 			string sql = "update columnList set lastSortColumn=@lastSortColumn, lastSortDirectionAsc=@lastSortDirectionAsc where id=@id;";
 			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Image);
 			DB.AddWithValue(ref sql, "@lastSortColumn", sorting.lastSortColumn, DB.SqlDataType.VarChar);
-			DB.AddWithValue(ref sql, "@lastSortDirectionAsc", sorting.lastSortDirectionAsc, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@lastSortDirectionAsc", sorting.lastSortDirectionAsc, DB.SqlDataType.Boolean);
 			DB.ExecuteNonQuery(sql);
 		}
 

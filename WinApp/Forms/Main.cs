@@ -2198,7 +2198,7 @@ namespace WinApp.Forms
 				dataGridMain.CurrentCell = dataGridMain.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
 			}
 			// Check if footer
-			if (dataGridRightClickRow != -1 && MainSettings.View == GridView.Views.Battle)
+			if (dataGridRightClickRow != -1 && dataGridRightClickCol != -1 && MainSettings.View == GridView.Views.Battle)
 			{
 				if (Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value) > 0)
 				{

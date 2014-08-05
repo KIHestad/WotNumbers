@@ -19,7 +19,8 @@ namespace WinApp.Code
 			VarChar = 1,
 			Int = 2,
 			DateTime = 3,
-			Image = 4
+			Image = 4,
+			Boolean = 5,
 		}
 		
 		public static DataTable FetchData(string sql, bool ShowError = true)
@@ -293,6 +294,13 @@ namespace WinApp.Code
 				}
 				else if (DataType == SqlDataType.Image)
 				{
+					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
+				}
+				else if (DataType == SqlDataType.Boolean)
+				{
+					bool boolVal = Convert.ToBoolean(Value);
+					StringValue = "0";
+					if (boolVal) StringValue = "1";
 					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
 				}
 			}
