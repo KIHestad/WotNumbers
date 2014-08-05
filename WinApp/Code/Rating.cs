@@ -94,15 +94,21 @@ namespace WinApp.Code
 			return WN8;
 		}
 
-		public static double CalculatePlayerTotalWN8()
+		public static double CalculatePlayerTotalWN8(string battleMode = "")
 		{
 			double WN8 = 0;
 			// Get player totals from db
+			string battleModeWhere = "";
+			if (battleMode != "")
+			{
+				battleModeWhere += " and ptb.battleMode=@battleMode ";
+				DB.AddWithValue(ref battleModeWhere, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			}
 			string sql = "select sum(battles) as battles, sum(dmg) as dmg, sum(spot) as spot, sum(frags) as frags, sum(def) as def, sum(wins) as wins " +
 				"from playerTankBattle ptb left join " +
 				"  playerTank pt on ptb.playerTankId=pt.id left join " +
 				"  tank t on pt.tankId = t.id " +
-				"where t.expDmg is not null and pt.playerId=@playerId ";
+				"where t.expDmg is not null and pt.playerId=@playerId " + battleModeWhere;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable playerTotalsTable = DB.FetchData(sql);
 			if (playerTotalsTable.Rows.Count > 0)
@@ -122,7 +128,7 @@ namespace WinApp.Code
 					"from playerTankBattle ptb left join " +
 					"  playerTank pt on ptb.playerTankId=pt.id left join " +
 					"  tank t on pt.tankId = t.id " +
-					"where t.expDmg is not null and pt.playerId=@playerId " +
+					"where t.expDmg is not null and pt.playerId=@playerId " + battleModeWhere +
 					"group by t.id, t.expDmg, t.expSpot, t.expFrags, t.expDef, t.expWR  ";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable expectedTable = DB.FetchData(sql);
