@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 88; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 89; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1111,6 +1111,11 @@ namespace WinApp.Code
 					mssql = "UPDATE columnSelection SET name = 'Ventilation' WHERE ID = 68; ";
 					sqlite = mssql;
 					break;
+                case 89:
+					mssql = "update playerTank set lastBattleTime = null where lastBattleTime = '1970/01/01'; ";
+                    sqlite = "update playerTank set lastBattleTime = null where lastbattletime = '1970-01-01 00:00:00'; ";
+                    break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype
