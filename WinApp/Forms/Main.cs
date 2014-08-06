@@ -1296,11 +1296,7 @@ namespace WinApp.Forms
 				string sql =
 					"Select 'Tank count' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical' " +
 					"from playerTank " +
-					"where playerid=@playerid and tankid in (" +
-					" select pt.tankId " +
-					" from playerTank pt inner join " +
-					"      playerTankBattle ptb on pt.id = ptb.playerTankId inner join " +
-					"      tank on pt.tankId = tank.id) ";
+					"where playerid=@playerid";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// get overall stats all battles
