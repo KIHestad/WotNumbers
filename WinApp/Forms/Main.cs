@@ -1296,7 +1296,11 @@ namespace WinApp.Forms
 				string sql =
 					"Select 'Tank count' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical' " +
 					"from playerTank " +
-					"where playerid=@playerid and tankid in (select pt.tankId from playerTank pt inner join playerTankBattle ptb on pt.id = ptb.playerTankId) ";
+					"where playerid=@playerid and tankid in (" +
+					" select pt.tankId " +
+					" from playerTank pt inner join " +
+					"      playerTankBattle ptb on pt.id = ptb.playerTankId inner join " +
+					"      tank on pt.tankId = tank.id) ";
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// get overall stats all battles
@@ -1624,7 +1628,7 @@ namespace WinApp.Forms
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
-					"         country ON tank.countryId = country.id INNER JOIN " + Environment.NewLine +
+					"         country ON tank.countryId = country.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
@@ -1640,7 +1644,7 @@ namespace WinApp.Forms
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
-					"         country ON tank.countryId = country.id INNER JOIN " + Environment.NewLine +
+					"         country ON tank.countryId = country.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         playerTankBattle ON playerTankBattle.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
