@@ -141,7 +141,6 @@
 			this.mSettingsDossierOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsRunManual = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.mSettingsTestAddBattleResult = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
 			this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
@@ -1187,7 +1186,6 @@
 			this.mSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mSettingsRunManual,
             this.mSettingsForceUpdateFromPrev,
-            this.toolStripSeparator1,
             this.mSettingsTestAddBattleResult});
 			this.mSettingsDossierOptions.Name = "mSettingsDossierOptions";
 			this.mSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
@@ -1207,16 +1205,12 @@
 			this.mSettingsForceUpdateFromPrev.Text = "Force Update All Data Dossier File Check";
 			this.mSettingsForceUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsForceUpdateFromPrev_Click);
 			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(283, 6);
-			// 
 			// mSettingsTestAddBattleResult
 			// 
 			this.mSettingsTestAddBattleResult.Name = "mSettingsTestAddBattleResult";
 			this.mSettingsTestAddBattleResult.Size = new System.Drawing.Size(286, 22);
 			this.mSettingsTestAddBattleResult.Text = "Test add battle result";
+			this.mSettingsTestAddBattleResult.Visible = false;
 			this.mSettingsTestAddBattleResult.Click += new System.EventHandler(this.mSettingsTestAddBattleResult_Click);
 			// 
 			// toolStripSeparator24
@@ -1658,7 +1652,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsApp;
 		private System.Windows.Forms.ToolStripButton mViewChart;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsTestAddBattleResult;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_GetInGarage;
 		private System.Windows.Forms.ToolStripDropDownButton mHelp;
