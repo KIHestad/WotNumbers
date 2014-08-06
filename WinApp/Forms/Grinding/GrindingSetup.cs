@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
@@ -74,13 +75,55 @@ namespace WinApp.Forms
 			CalcProgress();
 		}
 
-		
+		private string txtGrindGrindXP_lastvalue = "0";
 		private void txtGrindGrindXP_TextChanged(object sender, EventArgs e)
 		{
+			int i;
+			bool ok = Int32.TryParse(txtGrindXP.Text, out i);
+			if (ok && i >= 0)
+			{
+				txtGrindGrindXP_lastvalue = txtGrindXP.Text;
+				if (txtBattlesPerDay.Text == "0" && txtGrindXP.Text != "0" && txtProgressXP.Text != "0") txtBattlesPerDay.Text = "1";
+			}
+			else
+				txtGrindXP.Text = txtGrindGrindXP_lastvalue;
 			if (txtGrindXP.HasFocus)
 				CalcProgress();
 		}
-				
+
+		private string txtProgressXP_lastvalue = "0";
+		private void txtProgressXP_TextChanged(object sender, EventArgs e)
+		{
+			int i;
+			bool ok = Int32.TryParse(txtProgressXP.Text, out i);
+			if (ok && i >= 0)
+			{
+				txtProgressXP_lastvalue = txtProgressXP.Text;
+				if (txtBattlesPerDay.Text == "0" && txtGrindXP.Text != "0" && txtProgressXP.Text != "0") txtBattlesPerDay.Text = "1";
+			}
+			else
+				txtProgressXP.Text = txtProgressXP_lastvalue;
+			CalcProgress();
+		}
+
+		private void txtGrindComment_TextChanged(object sender, EventArgs e)
+		{
+			dataChanged = true;
+		}
+
+		private string txtBattlesPerDay_lastvalue = "0";
+		private void txtBattlesPerDay_TextChanged(object sender, EventArgs e)
+		{
+			int i;
+			bool ok = Int32.TryParse(txtBattlesPerDay.Text, out i);
+			if (ok && i >= 0)
+				txtBattlesPerDay_lastvalue = txtBattlesPerDay.Text;
+			else
+				txtBattlesPerDay.Text = txtBattlesPerDay_lastvalue; 
+			CalcProgress(false);
+			dataChanged = true;
+		}
+
 		private void btnGrindReset_Click(object sender, EventArgs e)
 		{
 			Code.MsgBox.Button answer = Code.MsgBox.Show("This resets all values, and ends grinding for this tank", "Reset and end grinding?", MsgBoxType.OKCancel, this);
@@ -186,22 +229,6 @@ namespace WinApp.Forms
 			dataChanged = true;
 		}
 
-		private void txtProgressXP_TextChanged(object sender, EventArgs e)
-		{
-			CalcProgress();
-		}
-
-		private void txtGrindComment_TextChanged(object sender, EventArgs e)
-		{
-			dataChanged = true;
-		}
-
-		private void txtBattlesPerDay_TextChanged(object sender, EventArgs e)
-		{
-			CalcProgress(false); 
-			dataChanged = true;
-		}
-
 		private void GrindingSetup_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (dataChanged)
@@ -248,6 +275,11 @@ namespace WinApp.Forms
 		private void btnClose_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void Validate_Key(object sender, KeyPressEventArgs e)
+		{
+			
 		}
 		
 

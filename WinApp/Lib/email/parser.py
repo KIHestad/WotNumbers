@@ -82,7 +82,7 @@ class Parser:
         return self.parse(StringIO(text), headersonly=headersonly)
 
 
-
+
 class HeaderParser(Parser):
     def parse(self, fp, headersonly=True):
         return Parser.parse(self, fp, True)

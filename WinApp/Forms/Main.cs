@@ -1550,8 +1550,10 @@ namespace WinApp.Forms
 				dataGridMain.Columns["Total"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dataGridMain.Columns["Total"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				// No sorting
-				dataGridMain.Columns["Data"].SortMode = DataGridViewColumnSortMode.Programmatic;
-				dataGridMain.Columns["Total"].SortMode = DataGridViewColumnSortMode.Programmatic;
+				for (int i = 0; i < dataGridMain.Columns.Count ; i++)
+				{
+					dataGridMain.Columns[i].SortMode = DataGridViewColumnSortMode.Programmatic;
+				}
 				// Colors
 				if (applyColors)
 				{
