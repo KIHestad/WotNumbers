@@ -1294,11 +1294,58 @@ namespace WinApp.Forms
 				bool applyColors = false;
 				// Get total number of tanks to show in first row
 				string sql =
-					"Select 'Tank count' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical' " +
+					"Select 'Tanks owned' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical' " +
 					"from playerTank " +
-					"where playerid=@playerid";
-				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+					"where playerid=@playerId";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+				// Get total number of tanks used to show in first row
+				sql =
+					"Select count(playerTank.tankId) " +
+					"from playerTank " +
+					"where playerTank.playerId=@playerId and tankid in (" +
+					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)" ;
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				DataTable dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
+				int usedTotal = 0;
+				if (dtCount.Rows[0][0] != DBNull.Value) usedTotal = Convert.ToInt32(dtCount.Rows[0][0]);
+				sql =
+					"Select count(playerTank.tankId) " +
+					"from playerTank " +
+					"where playerTank.playerId=@playerId and tankid in (" +
+					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '15')";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
+				int usedRandom = 0;
+				if (dtCount.Rows[0][0] != DBNull.Value) usedRandom = Convert.ToInt32(dtCount.Rows[0][0]);
+				sql =
+					"Select count(playerTank.tankId) " +
+					"from playerTank " +
+					"where playerTank.playerId=@playerId and tankid in (" +
+					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7')";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
+				int usedTeam = 0;
+				if (dtCount.Rows[0][0] != DBNull.Value) usedTeam = Convert.ToInt32(dtCount.Rows[0][0]);
+				sql =
+					"Select count(playerTank.tankId) " +
+					"from playerTank " +
+					"where playerTank.playerId=@playerId and tankid in (" +
+					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Historical')";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
+				int usedHistorical = 0;
+				if (dtCount.Rows[0][0] != DBNull.Value) usedHistorical = Convert.ToInt32(dtCount.Rows[0][0]);
+
+				// Add usage
+				DataRow dr = dt.NewRow();
+				dr["Data"] = "Tanks used";
+				dr["Total"] = usedTotal.ToString();
+				dr["Random (15x15)"] = usedRandom.ToString();
+				dr["Team (7x7)"] = usedTeam.ToString();
+				dr["Historical"] = usedHistorical.ToString();
+				dt.Rows.Add(dr);
+
 				// get overall stats all battles
 				sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
@@ -1444,7 +1491,7 @@ namespace WinApp.Forms
 					}
 
 					// Add Data to dataTable
-					DataRow dr = dt.NewRow();
+					dr = dt.NewRow();
 					dr["Data"] = "Battle count";
 					dr["Total"] = battleCount[0].ToString();
 					dr["Random (15x15)"] = battleCount[1].ToString();
@@ -1510,16 +1557,16 @@ namespace WinApp.Forms
 				{
 					for (int i = 1; i < 5; i++)
 					{
-						dataGridMain.Rows[1].Cells[i].Style.ForeColor = Rating.BattleCountColor(battleCount[i-1]);
-						dataGridMain.Rows[2].Cells[i].Style.ForeColor = Rating.WinRateColor(wr[i - 1]);
-						dataGridMain.Rows[3].Cells[i].Style.ForeColor = Rating.EffColor(eff[i - 1]);
-						dataGridMain.Rows[4].Cells[i].Style.ForeColor = Rating.WN7color(wn7[i - 1]);
-						dataGridMain.Rows[5].Cells[i].Style.ForeColor = Rating.WN8color(wn8[i - 1]);
-						dataGridMain.Rows[1].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[1].Cells[1].Style.ForeColor;
-						dataGridMain.Rows[2].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
-						dataGridMain.Rows[3].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[3].Cells[1].Style.ForeColor;
-						dataGridMain.Rows[4].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[4].Cells[1].Style.ForeColor;
-						dataGridMain.Rows[5].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[5].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[2].Cells[i].Style.ForeColor = Rating.BattleCountColor(battleCount[i-1]);
+						dataGridMain.Rows[3].Cells[i].Style.ForeColor = Rating.WinRateColor(wr[i - 1]);
+						dataGridMain.Rows[4].Cells[i].Style.ForeColor = Rating.EffColor(eff[i - 1]);
+						dataGridMain.Rows[5].Cells[i].Style.ForeColor = Rating.WN7color(wn7[i - 1]);
+						dataGridMain.Rows[6].Cells[i].Style.ForeColor = Rating.WN8color(wn8[i - 1]);
+						dataGridMain.Rows[2].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[1].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[3].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[4].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[3].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[5].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[4].Cells[1].Style.ForeColor;
+						dataGridMain.Rows[6].Cells[i].Style.SelectionForeColor = dataGridMain.Rows[5].Cells[1].Style.ForeColor;
 					}
 				}
 				// Finish

@@ -651,8 +651,8 @@ namespace WinApp.Code
 		private static List<FragItem> UpdatePlayerTankFrag(int tankId, int playerTankId, string fraglist)
 		{
 			List<FragItem> battleFrag = new List<FragItem>();
-			//try
-			//{
+			try
+			{
 				// fraglist is semicolon separated string, each 4. element is one frag, split the string and create a list of FragItem
 				List<FragItem> newFrag = new List<FragItem>();
 				string[] stringSeparators = new string[] { ";" };
@@ -738,12 +738,11 @@ namespace WinApp.Code
 				{
 					DB.ExecuteNonQuery(playerTankFragSQL, true, true);
 				}
-			//}
-			//catch (Exception ex)
-			//{
-			//	string s = ex.Message;
-			//	throw;
-			//}
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+			}
 			
 			return battleFrag;
 		}
@@ -759,8 +758,8 @@ namespace WinApp.Code
 										 List<FragItem> battleFragList, 
 										 List<AchItem> battleAchList)
 		{
-			//try
-			//{
+			try
+			{
 				// Create datarow to put calculated battle data
 				DataTable battleTableNew = TankData.GetBattle(-1); // Return no data, only empty database with structure
 				DataRow battleNewRow = battleTableNew.NewRow();
@@ -938,12 +937,11 @@ namespace WinApp.Code
 				battleTableNew.Dispose();
 				battleTableNew.Clear();
 
-			//}
-			//catch (Exception ex)
-			//{
-			//	string s = ex.Message;
-			//	throw;
-			//}
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+			}
 			
 		}
 	}

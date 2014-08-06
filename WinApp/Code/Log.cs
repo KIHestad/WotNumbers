@@ -28,22 +28,25 @@ namespace WinApp.Code
 			}
 		}
 
-		public static void LogToFile(Exception ex)
+		public static void LogToFile(Exception ex, string customErrorMsg = "")
 		{
 			// Add list og Strings
 			CreateFileIfNotExist();
 			using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 			{
-				string logtext;
 				if (ex != null)
 				{
-					logtext = DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
-					logtext += "Source: " + ex.Source + Environment.NewLine;
-					logtext += "TargetSite: " + ex.TargetSite + Environment.NewLine;
-					logtext += "Data: " + ex.Data + Environment.NewLine;
-					logtext += "Message: " + ex.Message + Environment.NewLine;
+					string logtext = Environment.NewLine;
+					logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
+					logtext += "   Source:          " + ex.Source + Environment.NewLine;
+					logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
+					logtext += "   Data:            " + ex.Data + Environment.NewLine;
+					logtext += "   Message:         " + ex.Message + Environment.NewLine; 
 					if (ex.InnerException != null && ex.InnerException.ToString() != "")
-						logtext += Environment.NewLine + "InnerException: " + ex.InnerException;
+						logtext += "   InnerException:  " + ex.InnerException + Environment.NewLine;
+					logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
+					if (customErrorMsg != "")
+						logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine; 
 					sw.WriteLine(logtext);
 				}
 			}

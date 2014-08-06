@@ -48,10 +48,12 @@ namespace WinApp.Code
 					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
 					adapter.Fill(dt);
 					con.Close();
+					
 				}
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex, sql);
 				if (ShowError)
 				{
 					Code.MsgBox.Show("Error fetching data from database. Please check your database settings." +
@@ -128,9 +130,9 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex, lastRunnedSQL);
 				if (ShowError)
 				{
-					Log.LogToFile(ex);
 					Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
 						Environment.NewLine + Environment.NewLine + lastRunnedSQL +
 						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
