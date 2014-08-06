@@ -40,8 +40,9 @@ namespace WinApp.Code
 					dossierFileWatcher.Changed += new FileSystemEventHandler(DossierFileChanged);
 					dossierFileWatcher.EnableRaisingEvents = true;
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					Code.MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path", parentForm);
 					run = false;
 				}
@@ -185,8 +186,9 @@ namespace WinApp.Code
 						logtext.Add(LogText(String.Format(" > Dossierfile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
 					}
 				}
-				catch
+				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					// could not read file
 					logtext.Add(LogText(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
 					System.Threading.Thread.Sleep(waitInterval);
@@ -297,8 +299,9 @@ namespace WinApp.Code
 							fileInfonew.Delete();
 							logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
 						}
-						catch (Exception)
+						catch (Exception ex)
 						{
+							Log.LogToFile(ex);
 							// throw;
 							logText.Add(LogText(" > Could not copy dossierfile, probably in use"));
 						}
@@ -346,6 +349,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
 				return "Error converting dossier file to json";

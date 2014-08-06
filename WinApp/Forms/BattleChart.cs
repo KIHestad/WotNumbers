@@ -1085,8 +1085,9 @@ namespace WinApp.Forms
 					}
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				//throw;
 			}
 		}

@@ -69,6 +69,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
 				return false;

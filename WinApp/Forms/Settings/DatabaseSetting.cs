@@ -105,7 +105,8 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message,"Database error", this);
+				Log.LogToFile(ex);
+				MsgBox.Show("Error connecting to database, please check server name and authentication" + Environment.NewLine + Environment.NewLine + ex.Message, "Database error", this);
 			}
 			
 		}
@@ -190,6 +191,7 @@ namespace WinApp.Forms
 				}
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					MsgBox.Show("Error connecting to MS SQL Server, please check server name and authentication." + Environment.NewLine + Environment.NewLine + ex.Message, "Database error", this);
 					ok = false;
 				}

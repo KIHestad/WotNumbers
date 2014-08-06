@@ -60,6 +60,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				versionInfo.error = true;
 				versionInfo.errorMsg = ex.Message;
 			}

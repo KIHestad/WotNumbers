@@ -103,8 +103,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				scrollY.ScrollPosition = dataGridPopup.FirstDisplayedScrollingRowIndex;
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 

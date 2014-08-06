@@ -60,12 +60,10 @@ namespace Common
 			}
 			catch (Exception ex)
 			{
-				{
-					result.Error = true;
-					result.ErrorMsg = ex.Message;
-					result.Title = "Database error fetching data";
-					result.Text = "Error fetching data from database. Please check your database settings.";
-				}
+				result.Error = true;
+				result.ErrorMsg = ex.Message;
+				result.Title = "Database error fetching data";
+				result.Text = "Error fetching data from database. Please check your database settings.";
 			}
 			return dt;
 		}

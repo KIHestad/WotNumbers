@@ -91,6 +91,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				string msg = 
 					"Could not connect to http://www.wnefficiency.net, please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
@@ -108,6 +109,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				Code.MsgBox.Show(ex.Message, "Error occured", parentForm);
 			}
 

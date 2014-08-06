@@ -130,6 +130,7 @@ namespace WinApp.Code
 			{
 				if (ShowError)
 				{
+					Log.LogToFile(ex);
 					Code.MsgBox.Show("Error execute query to database. Please check your input parameters." +
 						Environment.NewLine + Environment.NewLine + lastRunnedSQL +
 						Environment.NewLine + Environment.NewLine + ex.ToString(), "Database error");
@@ -161,8 +162,9 @@ namespace WinApp.Code
 				}
 
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				//throw;
 			}
 			return dt;
@@ -240,6 +242,7 @@ namespace WinApp.Code
 						}
 						catch (System.Exception ex)
 						{
+							Log.LogToFile(ex);
 							dbOk = false;
 							Code.MsgBox.Show("Error creating database, check that valid databasename is selected." + 
 								Environment.NewLine + Environment.NewLine + ex.ToString(), "Error creating database");
@@ -360,8 +363,9 @@ namespace WinApp.Code
 						con.Close();
 						ok = true;
 					}
-					catch (Exception)
+					catch (Exception ex)
 					{
+						Log.LogToFile(ex);
 						if (showErrorIfNotExists) Code.MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settings.", "Config error");
 					}
 				}
@@ -385,8 +389,9 @@ namespace WinApp.Code
 						con.Close();
 						ok = true;
 					}
-					catch (Exception)
+					catch (Exception ex)
 					{
+						Log.LogToFile(ex);
 						if (showErrorIfNotExists) Code.MsgBox.Show("Error connecting to database or test on accessing table data falied. Please check Database Settingse", "Config error");
 					}
 				}

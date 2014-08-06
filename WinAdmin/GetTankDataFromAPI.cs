@@ -207,7 +207,7 @@ namespace WinAdmin
 
 				catch (Exception ex)
 				{
-					MessageBox.Show ("Import error occured: " + Environment.NewLine + Environment.NewLine + ex.Message, "Error");
+					MessageBox.Show("Import error occured: " + Environment.NewLine + Environment.NewLine + ex.Message, "Error");
 				}
 			}
 		}

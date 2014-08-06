@@ -471,8 +471,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				MoveAllColumnsScrollBar();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -858,8 +859,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				MoveSelectedColumnsScrollBar();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -1024,8 +1026,9 @@ namespace WinApp.Forms
 				gf.ColListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
 				MainSettings.UpdateCurrentGridFilter(gf);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 				gf.ColListId = Convert.ToInt32(dataGridColumnList.Rows[0].Cells["id"].Value);
 				gf.ColListName = dataGridColumnList.Rows[0].Cells[1].Value.ToString();

@@ -28,6 +28,28 @@ namespace WinApp.Code
 			}
 		}
 
+		public static void LogToFile(Exception ex)
+		{
+			// Add list og Strings
+			CreateFileIfNotExist();
+			using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+			{
+				string logtext;
+				if (ex != null)
+				{
+					logtext = DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
+					logtext += "Source: " + ex.Source + Environment.NewLine;
+					logtext += "TargetSite: " + ex.TargetSite + Environment.NewLine;
+					logtext += "Data: " + ex.Data + Environment.NewLine;
+					logtext += "Message: " + ex.Message + Environment.NewLine;
+					if (ex.InnerException != null && ex.InnerException.ToString() != "")
+						logtext += Environment.NewLine + "InnerException: " + ex.InnerException;
+					sw.WriteLine(logtext);
+				}
+			}
+		}
+
+
 		public static void LogToFile(string logtext, bool addDateTime = false)
 		{
 			// Add list og Strings

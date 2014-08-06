@@ -620,6 +620,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + ex.InnerException, "Error initializing view", this);
 			}
@@ -1536,6 +1537,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				string s = ex.Message;
 				if (Config.Settings.showDBErrors)
 					Code.MsgBox.Show(ex.Message, "Error showing overall stats", this);
@@ -2093,10 +2095,10 @@ namespace WinApp.Forms
 				SetStatus2(Status2Message);
 				lblStatusRowCount.Text = "Rows " + rowcount.ToString();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				
-				throw;
+				Log.LogToFile(ex);
+				//throw;
 			}
 			
 		}
@@ -2508,8 +2510,9 @@ namespace WinApp.Forms
 				dataGridMain.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition + frozenRows;
 				if (posBefore != dataGridMain.FirstDisplayedScrollingRowIndex) Refresh();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 			
@@ -2534,8 +2537,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				MoveScrollBar();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -2564,8 +2568,9 @@ namespace WinApp.Forms
 				dataGridMain.FirstDisplayedScrollingColumnIndex = scrollX.ScrollPosition;
 				if (posBefore != dataGridMain.FirstDisplayedScrollingColumnIndex) Refresh();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -2639,8 +2644,9 @@ namespace WinApp.Forms
 					dataGridMain.Height = gridAreaHeight - scrollXHeight;
 					scrollY.Height = dataGridMain.Height;
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					// throw;
 				}
 				
@@ -2750,7 +2756,7 @@ namespace WinApp.Forms
 				}
 				else
 				{
-					Code.MsgBox.Show("Could not check for new version, Wot Numbers API server is currently in maintenance mode." + Environment.NewLine + Environment.NewLine,
+					Code.MsgBox.Show("Could not check for new version, Wot Numbers web server is currently in maintenance mode." + Environment.NewLine + Environment.NewLine,
 										"Version check terminated",this);
 				}
 			}
@@ -2763,13 +2769,13 @@ namespace WinApp.Forms
 				{
 					if (_onlyCheckVersionWithMessage)
 					{
-						Code.MsgBox.Show("You are running the lastest version: " + Environment.NewLine + Environment.NewLine +
-										"Wot Numbers " + vi.version + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+						Code.MsgBox.Show("You are running the latest version: " + Environment.NewLine + Environment.NewLine +
+										"Wot Numbers " + AppVersion.AssemblyVersion + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine,
 										"Version checked", this);
 					}
 					else
 					{
-						SetStatus2("You are running the lastest version (Wot Numbers " + vi.version + ")");
+						SetStatus2("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 						// Message
 						if (vi.message != "" && vi.messageDate <= DateTime.Now)
 						{

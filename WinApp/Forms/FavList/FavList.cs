@@ -654,8 +654,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				MoveSelTanksScrollBar();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -821,8 +822,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				MoveAllTanksScrollBar();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}
@@ -958,8 +960,9 @@ namespace WinApp.Forms
 				gf.FavListShow = GridFilter.FavListShowType.FavList;
 				MainSettings.UpdateCurrentGridFilter(gf);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 				gf.FavListId = 0;
 				gf.FavListName = "";

@@ -83,8 +83,9 @@ namespace WinApp.Forms
 					folder = defaultDataPath;
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 			return folder;

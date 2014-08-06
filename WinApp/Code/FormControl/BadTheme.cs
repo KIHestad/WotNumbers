@@ -483,8 +483,9 @@ abstract class BadThemeContainerControl : ContainerControl
 			// Current = GetPointer();
 			// Cursor = Current.Cursor;
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Log.LogToFile(ex);
 			//throw;
 		}
 		// Done
@@ -730,8 +731,9 @@ abstract class BadThemeControl : Control
 			Invalidate();
 			base.OnSizeChanged(e);
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Log.LogToFile(ex);
 			//throw;
 		}
 		
@@ -1465,8 +1467,9 @@ class BadScrollBar : BadThemeControl
 			{
 				ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 			
@@ -1484,8 +1487,9 @@ class BadScrollBar : BadThemeControl
 				{
 					ScrollNecessary = (ScrollElementsTotals > 0 && ScrollElementsTotals > ScrollElementsVisible); 
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					// throw;
 				}
 				Invalidate(); 
@@ -1559,8 +1563,9 @@ class BadScrollBar : BadThemeControl
 			// Draw 
 			e.Graphics.DrawImage(bitmapObject, 0, 0);
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			Log.LogToFile(ex);
 			// throw;
 		}
 	}

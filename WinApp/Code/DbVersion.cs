@@ -1107,10 +1107,10 @@ namespace WinApp.Code
 					string msg = "";
 					Config.SaveConfig(out msg);
 					break;
-                case 88:
-                    mssql = "UPDATE columnSelection SET name = 'Ventilation' WHERE ID = 68; ";
-                    sqlite = mssql;
-                    break;
+				case 88:
+					mssql = "UPDATE columnSelection SET name = 'Ventilation' WHERE ID = 68; ";
+					sqlite = mssql;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype

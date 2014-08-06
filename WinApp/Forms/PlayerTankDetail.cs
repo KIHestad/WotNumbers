@@ -198,8 +198,9 @@ namespace WinApp.Forms
 				// move scrollbar
 				MoveScrollBar();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				// throw;
 			}
 		}

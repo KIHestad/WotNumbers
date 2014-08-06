@@ -111,6 +111,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				string msg = 
 					"Could not connect to WoT API, please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
@@ -270,6 +271,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
@@ -369,6 +371,7 @@ namespace WinApp.Code
 				
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching turrets from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
@@ -510,6 +513,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching guns from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
@@ -611,6 +615,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching radios from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
@@ -786,6 +791,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching acheivments from WoT API", parentForm);
 					//return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
@@ -829,6 +835,7 @@ namespace WinApp.Code
 
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching tanks in garage from WoT API", parentForm);
 				}

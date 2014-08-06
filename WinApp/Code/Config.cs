@@ -212,6 +212,7 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
+				Log.LogToFile(ex);
 				returnMsg = "Error occured saving application settings to config file" + Environment.NewLine + Environment.NewLine + ex.Message;
 			}
 			msg = returnMsg;
@@ -241,6 +242,7 @@ namespace WinApp.Code
 				}
 				catch (Exception ex)
 				{
+					Log.LogToFile(ex);
 					File.Delete(Config.AppDataBaseFolder + configfile);
 					SetConfigDefaults();
 					returMsg = "Error reading config file, please configure application settings." + Environment.NewLine + Environment.NewLine + ex.Message;
