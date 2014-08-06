@@ -116,7 +116,7 @@ namespace WinApp.Forms
 		{
 			int i;
 			bool ok = Int32.TryParse(txtBattlesPerDay.Text, out i);
-			if (ok && i >= 0)
+			if (ok && i > 0)
 				txtBattlesPerDay_lastvalue = txtBattlesPerDay.Text;
 			else
 				txtBattlesPerDay.Text = txtBattlesPerDay_lastvalue; 
