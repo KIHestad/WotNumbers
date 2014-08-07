@@ -134,6 +134,7 @@
     <Compile Include="Code\Battle2json.cs" />
     <Compile Include="Code\CheckForNewVersion.cs" />
     <Compile Include="Code\ExtensionMethods.cs" />
+    <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
     <Compile Include="Code\FormView\ColListHelper.cs" />
@@ -167,6 +168,12 @@
     </Compile>
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FavList\FavListAddRemoveTank.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FavList\FavListAddRemoveTank.Designer.cs">
+      <DependentUpon>FavListAddRemoveTank.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\ApplicationLayout.cs">
       <SubType>Form</SubType>
@@ -316,6 +323,9 @@
     <Compile Include="Code\TankData.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FavList\FavListAddRemoveTank.resx">
+      <DependentUpon>FavListAddRemoveTank.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\ApplicationLayout.resx">
       <DependentUpon>ApplicationLayout.cs</DependentUpon>

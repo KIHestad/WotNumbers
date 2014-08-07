@@ -12,10 +12,10 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class FavList2 : Form
+	public partial class FavList : Form
 	{
 		private int SelectedFavListId;
-		public FavList2(int showFavListId)
+		public FavList(int showFavListId)
 		{
 			InitializeComponent();
 			SelectedFavListId = showFavListId;
@@ -37,9 +37,9 @@ namespace WinApp.Forms
 			toolColList.ShowItemToolTips = false;
 
 			// Style datagrid
-			StyleDataGrid(dataGridFavList);
-			StyleDataGrid(dataGridAllTanks);
-			StyleDataGrid(dataGridSelectedTanks);
+			GridHelper.StyleDataGrid(dataGridFavList);
+			GridHelper.StyleDataGrid(dataGridAllTanks);
+			GridHelper.StyleDataGrid(dataGridSelectedTanks);
 			// Show content
 			ShowFavList();
 			ShowAllTanks();
@@ -69,26 +69,6 @@ namespace WinApp.Forms
 		{
 			DataGridView dgv = (DataGridView)sender;
 			e.Graphics.DrawRectangle(new Pen(ColorTheme.ScrollbarBack), 0, 0, dgv.Width - 1, dgv.Height - 1);
-		}
-
-		private void StyleDataGrid(DataGridView dgv)
-		{
-			dgv.BorderStyle = BorderStyle.FixedSingle;
-			dgv.BackgroundColor = ColorTheme.FormBack;
-			dgv.GridColor = ColorTheme.GridBorders;
-			dgv.EnableHeadersVisualStyles = false;
-			dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-			dgv.ColumnHeadersHeight = 26;
-			dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-			dgv.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
-			dgv.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
-			dgv.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-			dgv.DefaultCellStyle.BackColor = ColorTheme.FormBack;
-			dgv.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dgv.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dgv.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -133,6 +113,7 @@ namespace WinApp.Forms
 			dataGridFavList.Columns["#"].Width = 50;
 			dataGridFavList.Columns["Name"].Width = 150;
 			dataGridFavList.Columns["Show"].Width = 50;
+			dataGridFavList.Columns["Show"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 			dataGridFavList.Columns["id"].Visible = false;
 			// Enable buttons
 			bool buttonsEnabled = (dt.Rows.Count > 0);

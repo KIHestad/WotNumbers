@@ -38,32 +38,12 @@ namespace WinApp.Forms
 			}
 		}
 
-
-		private void StyleDataGrid(DataGridView dgv)
-		{
-			dgv.BackgroundColor = ColorTheme.FormBack;
-			dgv.GridColor = ColorTheme.GridBorders;
-			dgv.EnableHeadersVisualStyles = false;
-			dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-			dgv.ColumnHeadersHeight = 26;
-			dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-			dgv.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
-			dgv.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
-			dgv.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-			dgv.DefaultCellStyle.BackColor = ColorTheme.FormBack;
-			dgv.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dgv.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dgv.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
-		}
-
 		private void PlayerTankDetails_Load(object sender, EventArgs e)
 		{
 			// Mouse scrolling
 			dataGridTankDetail.MouseWheel += new MouseEventHandler(dataGridTankDetail_MouseWheel);
 			// Style datagrid
-			StyleDataGrid(dataGridTankDetail);
+			GridHelper.StyleDataGrid(dataGridTankDetail);
 			lblFooter.Text = "";
 			ResizeNow();
 			if (initPlayerTankId != 0)

@@ -131,17 +131,25 @@ namespace WinApp.Forms
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
 			ToolStripSeparator dataGridMainPopup_Separator1 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
+			ToolStripSeparator dataGridMainPopup_Separator3 = new ToolStripSeparator();
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
 			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Battle Chart");
 			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
 			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
+			ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list");
+			ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list");
+			ToolStripMenuItem dataGridMainPopup_FavListRemoveTank = new ToolStripMenuItem("Remove tank to favourite tank list");
+
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
 			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
 			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
+			dataGridMainPopup_FavListCreateNew.Click += new EventHandler(dataGridMainPopup_FavListCreateNew_Click);
+			dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
+			dataGridMainPopup_FavListRemoveTank.Click += new EventHandler(dataGridMainPopup_FavListRemoveTank_Click);
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
@@ -155,7 +163,11 @@ namespace WinApp.Forms
 					{ 
 						dataGridMainPopup_Details, 
 						dataGridMainPopup_Chart, 
-						dataGridMainPopup_GrindingSetup 
+						dataGridMainPopup_GrindingSetup, 
+						dataGridMainPopup_Separator1,
+						dataGridMainPopup_FavListAddTank,
+						dataGridMainPopup_FavListRemoveTank,
+						dataGridMainPopup_FavListCreateNew
 					});
 					break;
 				case GridView.Views.Battle:
@@ -167,6 +179,10 @@ namespace WinApp.Forms
 						dataGridMainPopup_Separator1,
 						dataGridMainPopup_FilterOnTank,
 						dataGridMainPopup_Separator2,
+						dataGridMainPopup_FavListAddTank,
+						dataGridMainPopup_FavListRemoveTank,
+						dataGridMainPopup_FavListCreateNew,
+						dataGridMainPopup_Separator3,
 						dataGridMainPopup_DeleteBattle
 					});
 					break;
@@ -1048,7 +1064,7 @@ namespace WinApp.Forms
 		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
 		{
 			// Show fal list editor
-			Form frm = new Forms.FavList2(MainSettings.GetCurrentGridFilter().FavListId);
+			Form frm = new Forms.FavList(MainSettings.GetCurrentGridFilter().FavListId);
 			frm.ShowDialog();
 			// After fav list changes reload menu
 			SetFavListMenu(); // Reload fav list items
@@ -2496,10 +2512,37 @@ namespace WinApp.Forms
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
 				GridShow("Filtered on tank: " + TankData.GetTankName(tankId));
 			}
-			
 		}
 
+		private void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.FavListNewEdit(0);
+			frm.ShowDialog();
+			// After fav list changes reload menu
+			SetFavListMenu(); // Reload fav list items
+		}
 
+		private void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
+		{
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			int tankId = TankData.GetTankID(playerTankId);
+			if (tankId != 0)
+			{
+				Form frm = new Forms.FavListAddRemoveTank(tankId, true);
+				frm.ShowDialog();
+			}
+		}
+
+		private void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
+		{
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			int tankId = TankData.GetTankID(playerTankId);
+			if (tankId != 0)
+			{
+				Form frm = new Forms.FavListAddRemoveTank(tankId, false);
+				frm.ShowDialog();
+			}
+		}
 
 
 		#endregion

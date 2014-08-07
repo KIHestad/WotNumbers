@@ -46,9 +46,9 @@ namespace WinApp.Forms
 			toolSelectedColumns.ShowItemToolTips = false;
 			toolColList.ShowItemToolTips = false;
 			// Style datagrid
-			StyleDataGrid(dataGridColumnList);
-			StyleDataGrid(dataGridAllColumns);
-			StyleDataGrid(dataGridSelectedColumns);
+			GridHelper.StyleDataGrid(dataGridColumnList);
+			GridHelper.StyleDataGrid(dataGridAllColumns);
+			GridHelper.StyleDataGrid(dataGridSelectedColumns);
 			// Show content
 			SelectedColListId = MainSettings.GetCurrentGridFilter().ColListId;
 			ShowColumnSetupList();
@@ -134,26 +134,6 @@ namespace WinApp.Forms
 		{
 			DataGridView dgv = (DataGridView)sender;
 			e.Graphics.DrawRectangle(new Pen(ColorTheme.ScrollbarBack), 0, 0, dgv.Width - 1, dgv.Height - 1);
-		}
-
-		private void StyleDataGrid(DataGridView dgv)
-		{
-			dgv.BorderStyle = BorderStyle.FixedSingle;
-			dgv.BackgroundColor = ColorTheme.FormBack;
-			dgv.GridColor = ColorTheme.GridBorders;
-			dgv.EnableHeadersVisualStyles = false;
-			dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-			dgv.ColumnHeadersHeight = 26;
-			dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-			dgv.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
-			dgv.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
-			dgv.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-			dgv.DefaultCellStyle.BackColor = ColorTheme.FormBack;
-			dgv.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
-			dgv.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
-			dgv.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)

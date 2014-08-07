@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class FavList2
+	partial class FavList
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavList2));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavList));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.FavTanksTheme = new BadForm();
@@ -168,20 +168,20 @@
 			// toolColList
 			// 
 			this.toolColList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.toolColList.AutoSize = false;
 			this.toolColList.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolColList.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolColList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolFavListUp,
-            this.toolFavListDown,
-            this.toolFavListVisible,
-            this.toolStripSeparator2,
-            this.toolFavListAdd,
-            this.toolFavListModify,
-            this.toolFavListDelete,
-            this.toolStripSeparator3,
-            this.toolFavListRefresh});
+			this.toolFavListUp,
+			this.toolFavListDown,
+			this.toolFavListVisible,
+			this.toolStripSeparator2,
+			this.toolFavListAdd,
+			this.toolFavListModify,
+			this.toolFavListDelete,
+			this.toolStripSeparator3,
+			this.toolFavListRefresh});
 			this.toolColList.Location = new System.Drawing.Point(42, 72);
 			this.toolColList.Name = "toolColList";
 			this.toolColList.Size = new System.Drawing.Size(678, 25);
@@ -336,18 +336,18 @@
 			// toolSelectedTanks
 			// 
 			this.toolSelectedTanks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.toolSelectedTanks.AutoSize = false;
 			this.toolSelectedTanks.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolSelectedTanks.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolSelectedTanks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel2,
-            this.toolSelectedTanks_SortNation,
-            this.toolSelectedTanks_SortType,
-            this.toolSelectedTanks_SortTier,
-            this.toolStripSeparator1,
-            this.toolSelectedTanks_MoveUp,
-            this.toolSelectedTanks_MoveDown});
+			this.toolStripLabel2,
+			this.toolSelectedTanks_SortNation,
+			this.toolSelectedTanks_SortType,
+			this.toolSelectedTanks_SortTier,
+			this.toolStripSeparator1,
+			this.toolSelectedTanks_MoveUp,
+			this.toolSelectedTanks_MoveDown});
 			this.toolSelectedTanks.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolSelectedTanks.Location = new System.Drawing.Point(453, 298);
 			this.toolSelectedTanks.Name = "toolSelectedTanks";
@@ -423,12 +423,12 @@
 			this.toolAllTanks.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolAllTanks.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolAllTanks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.toolAllTanks_Nation,
-            this.toolAllTanks_Type,
-            this.toolAllTanks_Tier,
-            this.toolAllTanks_Used,
-            this.toolAllTanks_All});
+			this.toolStripLabel1,
+			this.toolAllTanks_Nation,
+			this.toolAllTanks_Type,
+			this.toolAllTanks_Tier,
+			this.toolAllTanks_Used,
+			this.toolAllTanks_All});
 			this.toolAllTanks.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolAllTanks.Location = new System.Drawing.Point(42, 298);
 			this.toolAllTanks.Name = "toolAllTanks";
@@ -447,13 +447,13 @@
 			// 
 			this.toolAllTanks_Nation.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolAllTanks_Nation.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolAllTanks_Nation3,
-            this.toolAllTanks_Nation4,
-            this.toolAllTanks_Nation1,
-            this.toolAllTanks_Nation5,
-            this.toolAllTanks_Nation2,
-            this.toolAllTanks_Nation0,
-            this.toolAllTanks_Nation6});
+			this.toolAllTanks_Nation3,
+			this.toolAllTanks_Nation4,
+			this.toolAllTanks_Nation1,
+			this.toolAllTanks_Nation5,
+			this.toolAllTanks_Nation2,
+			this.toolAllTanks_Nation0,
+			this.toolAllTanks_Nation6});
 			this.toolAllTanks_Nation.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation.Image")));
 			this.toolAllTanks_Nation.Name = "toolAllTanks_Nation";
 			this.toolAllTanks_Nation.Size = new System.Drawing.Size(28, 25);
@@ -527,11 +527,11 @@
 			// 
 			this.toolAllTanks_Type.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolAllTanks_Type.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolAllTanks_Type1,
-            this.toolAllTanks_Type2,
-            this.toolAllTanks_Type3,
-            this.toolAllTanks_Type4,
-            this.toolAllTanks_Type5});
+			this.toolAllTanks_Type1,
+			this.toolAllTanks_Type2,
+			this.toolAllTanks_Type3,
+			this.toolAllTanks_Type4,
+			this.toolAllTanks_Type5});
 			this.toolAllTanks_Type.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Type.Image")));
 			this.toolAllTanks_Type.Name = "toolAllTanks_Type";
 			this.toolAllTanks_Type.Size = new System.Drawing.Size(28, 25);
@@ -586,16 +586,16 @@
 			// 
 			this.toolAllTanks_Tier.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolAllTanks_Tier.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolAllTanks_Tier01,
-            this.toolAllTanks_Tier02,
-            this.toolAllTanks_Tier03,
-            this.toolAllTanks_Tier04,
-            this.toolAllTanks_Tier05,
-            this.toolAllTanks_Tier06,
-            this.toolAllTanks_Tier07,
-            this.toolAllTanks_Tier08,
-            this.toolAllTanks_Tier09,
-            this.toolAllTanks_Tier10});
+			this.toolAllTanks_Tier01,
+			this.toolAllTanks_Tier02,
+			this.toolAllTanks_Tier03,
+			this.toolAllTanks_Tier04,
+			this.toolAllTanks_Tier05,
+			this.toolAllTanks_Tier06,
+			this.toolAllTanks_Tier07,
+			this.toolAllTanks_Tier08,
+			this.toolAllTanks_Tier09,
+			this.toolAllTanks_Tier10});
 			this.toolAllTanks_Tier.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Tier.Image")));
 			this.toolAllTanks_Tier.Name = "toolAllTanks_Tier";
 			this.toolAllTanks_Tier.Size = new System.Drawing.Size(28, 25);
@@ -739,7 +739,7 @@
 			this.dataGridSelectedTanks.AllowUserToOrderColumns = true;
 			this.dataGridSelectedTanks.AllowUserToResizeRows = false;
 			this.dataGridSelectedTanks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridSelectedTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridSelectedTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridSelectedTanks.Cursor = System.Windows.Forms.Cursors.Default;
@@ -827,7 +827,7 @@
 			this.dataGridFavList.AllowUserToOrderColumns = true;
 			this.dataGridFavList.AllowUserToResizeRows = false;
 			this.dataGridFavList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridFavList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridFavList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridFavList.Cursor = System.Windows.Forms.Cursors.Default;
@@ -847,7 +847,7 @@
 			// badGroupBox2
 			// 
 			this.badGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
@@ -889,8 +889,8 @@
 			// groupTanks
 			// 
 			this.groupTanks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupTanks.BackColor = System.Drawing.Color.Transparent;
 			this.groupTanks.Image = null;
 			this.groupTanks.Location = new System.Drawing.Point(25, 260);
