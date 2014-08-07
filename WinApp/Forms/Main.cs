@@ -1380,7 +1380,7 @@ namespace WinApp.Forms
 					// wn7
 					wn7[0] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
 					// Wn8
-					wn8[0] = Code.Rating.CalculatePlayerTotalWN8();
+					// wn8[0] = Code.Rating.CalculatePlayerTotalWN8();
 					
 					// Overall stats random
 					sql =
@@ -1413,8 +1413,28 @@ namespace WinApp.Forms
 						// eff
 						eff[1] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
 						// wn7
-						wn7[1] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
-						// Wn8
+						wn7[1] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("15"));
+						// Wn8 - new sql to avoid battles where expexted value is missing
+						sql =
+						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+						"from playerTankBattle ptb left join " +
+						"  playerTank pt on ptb.playerTankId=pt.id left join " +
+						"  tank t on pt.tankId = t.id " +
+						"where t.expDmg is not null and pt.playerId=@playerId and ptb.battleMode='15'";
+						DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+						dtStats = DB.FetchData(sql);
+						stats = dtStats.Rows[0];
+						BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+						DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+						SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+						FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+						DEF = Rating.ConvertDbVal2Double(stats["def"]);
+						CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+						WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+						TIER = 0;
+						if (BATTLES > 0)
+							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
 						wn8[1] = Code.Rating.CalculatePlayerTotalWN8("15");
 					}
 
@@ -1449,9 +1469,9 @@ namespace WinApp.Forms
 						// eff
 						eff[2] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
 						// wn7
-						wn7[2] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+						wn7[2] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("7"));
 						// Wn8
-						wn8[2] = Code.Rating.CalculatePlayerTotalWN8("7");
+						// wn8[2] = Code.Rating.CalculatePlayerTotalWN8("7");
 					}
 
 					// Overall stats historical
@@ -1485,9 +1505,9 @@ namespace WinApp.Forms
 						// eff
 						eff[3] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
 						// wn7
-						wn7[3] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
+						wn7[3] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Historical"));
 						// Wn8
-						wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
+						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
 					}
 
 					// Add Data to dataTable
@@ -1527,10 +1547,10 @@ namespace WinApp.Forms
 					// Add WN8
 					dr = dt.NewRow();
 					dr["Data"] = "WN8 rating";
-					dr["Total"] = Math.Round(wn8[0], 2).ToString();
+					dr["Total"] = DBNull.Value; //Math.Round(wn8[0], 2).ToString();
 					dr["Random (15x15)"] = Math.Round(wn8[1], 2).ToString();
-					dr["Team (7x7)"] = RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
-					dr["Historical"] = RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Team (7x7)"] = DBNull.Value; //RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 
 					// Ready to set colors

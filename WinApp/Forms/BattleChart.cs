@@ -377,7 +377,7 @@ namespace WinApp.Forms
 					foreach (DataRow dr in dtChart.Rows)
 					{
 						step++;
-						if (step % stepMod == 0)
+						if (step % stepMod == 0 || step == 0)
 							ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, 2)); // Use battle date
 						currentValue -= Convert.ToDouble(dr[chartValue.bCol]); //  Move backwards
 						axisYminimum = SetYaxisLowestValue(currentValue);
@@ -405,7 +405,7 @@ namespace WinApp.Forms
 						axisYminimum = SetYaxisLowestValue(firstValue);
 						if (firstValue < axisYminimum) axisYminimum = Convert.ToInt32(firstValue);
 						step++;
-						if (step % stepMod == 0)
+						if (step % stepMod == 0 || step == 0)
 							ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue, 2));
 					}
 				}
@@ -478,7 +478,7 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtChart.Rows)
 				{
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						winRate = Math.Round(currentWins * 100 / currentBattles, 2);
 						axisYminimum = SetYaxisLowestValue(winRate);
@@ -497,7 +497,7 @@ namespace WinApp.Forms
 					firstWins += Convert.ToDouble(dr["victory"]); // Move forwards
 					firstBattles += Convert.ToDouble(dr["battlesCount"]);
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						winRate = Math.Round(firstWins * 100 / firstBattles, 2);
 						axisYminimum = SetYaxisLowestValue(winRate);
@@ -564,7 +564,7 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtChart.Rows)
 				{
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						avgDamage = Math.Round(currentDamage / currentBattles, 2);
 						axisYminimum = SetYaxisLowestValue(avgDamage);
@@ -583,7 +583,7 @@ namespace WinApp.Forms
 					firstDamage += Convert.ToDouble(dr["dmg"]); // Move forwards
 					firstBattles += Convert.ToDouble(dr["battlesCount"]);
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						avgDamage = Math.Round(firstDamage  / firstBattles, 2);
 						axisYminimum = SetYaxisLowestValue(avgDamage);
@@ -672,7 +672,7 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtChart.Rows)
 				{
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), 2);
 						axisYminimum = SetYaxisLowestValue(EFF);
@@ -700,7 +700,7 @@ namespace WinApp.Forms
 					DEF += Convert.ToDouble(dr["def"]);
 					CAP += Convert.ToDouble(dr["cap"]);
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), 2);
 						axisYminimum = SetYaxisLowestValue(EFF);
@@ -797,7 +797,7 @@ namespace WinApp.Forms
 				foreach (DataRow dr in dtChart.Rows)
 				{
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
 						axisYminimum = SetYaxisLowestValue(WN7);
@@ -827,7 +827,7 @@ namespace WinApp.Forms
 					CAP += Convert.ToDouble(dr["cap"]);
 					WINS += Convert.ToDouble(dr["victory"]);
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
 						axisYminimum = SetYaxisLowestValue(WN7);
@@ -861,16 +861,16 @@ namespace WinApp.Forms
 				"select t.id as tankId, sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 				"  sum (ptb.def) as def, sum (ptb.cap) as cap, sum(wins) as wins " +
 				"from playerTankBattle ptb left join " +
-				"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId left join " +
+				"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId and ptb.battleMode='15' left join " +
 				"  tank t on pt.tankId = t.id " +
-				"where t.expDmg is not null " + ptWhere + " " +
+				"where t.expDmg is not null and ptb.battleMode='15' " + ptWhere + " " +
 				"group by t.id, t.expDmg, t.expSpot, t.expFrags, t.expDef, t.expWR  ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable ptb = DB.FetchData(sql);
 			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
-				bSumWhere = "where t.expDmg is not null" + bSumWhere;
+				bSumWhere = "where t.expDmg is not null and b.battleMode='15'" + bSumWhere;
 				sql =
 					"select t.id as tankId, sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
 					"  sum (b.def) as def, sum (cap) as cap, sum(victory) as wins " +
@@ -904,7 +904,7 @@ namespace WinApp.Forms
 			sql = 
 				"select battle.*, playerTank.tankId as tankId " +
 				"from battle inner join " +
-				"  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId " +
+				"  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId and battleMode='15'" +
 				FilterPeriod(bWhere) + " " + 
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
@@ -918,7 +918,7 @@ namespace WinApp.Forms
 				foreach (DataRow bRow in dtChart.Rows)
 				{
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
 						axisYminimum = SetYaxisLowestValue(WN8);
@@ -957,7 +957,7 @@ namespace WinApp.Forms
 						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(bRow["victory"]);
 					}
 					step++;
-					if (step % stepMod == 0)
+					if (step % stepMod == 0 || step == 0)
 					{
 						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
 						axisYminimum = SetYaxisLowestValue(WN8);

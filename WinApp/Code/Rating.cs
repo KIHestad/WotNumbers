@@ -364,16 +364,22 @@ namespace WinApp.Code
 			dtBattles.Clear();
 		}
 
-		public static double GetAverageBattleTier()
+		public static double GetAverageBattleTier(string battleMode = "")
 		{
 			double tier = 0;
 			// Get average battle tier, used for total player WN7 and battle WN7
+			string battleModeWhere = "";
+			if (battleMode != "")
+			{
+				battleModeWhere += " and ptb.battleMode=@battleMode ";
+				DB.AddWithValue(ref battleModeWhere, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			}
 			string sql =
 				"select sum(ptb.battles) as battles, sum(t.tier * ptb.battles) as tier " +
 				"from playerTankBattle ptb left join " +
 				"  playerTank pt on ptb.playerTankId=pt.id left join " +
 				"  tank t on pt.tankId = t.id " +
-				"where pt.playerId=@playerId ";
+				"where pt.playerId=@playerId " + battleModeWhere;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
