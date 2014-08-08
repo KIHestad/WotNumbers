@@ -929,10 +929,17 @@ namespace WinApp.Forms
 		
 		private void SetFavListMenu()
 		{
-			// Hide and uncheck favlist from menu
+			// Uncheck favlist from menu
 			FavListMenuUncheck();
+			// Hide all favlist
+			for (int i = 1; i <= 10; i++)
+			{
+				ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+				menuItem.Visible = false;
+			}
 			// Add favlist to menu
-			string sql = "select * from favList where position > 0 and name is not null order by position";
+			GridFilter.FavListShowType newShowType = GridFilter.FavListShowType.AllTanks;
+			string sql = "select * from favList where position is not null and name is not null order by position";
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
@@ -948,12 +955,14 @@ namespace WinApp.Forms
 						{
 							menuItem.Checked = true;
 							tankFilterFavListName = menuItem.Text;
+							newShowType = GridFilter.FavListShowType.FavList;
 						}
 					}
 				}
 			}
-			// If no favlist is selected check all tanks
-			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+			// If no faclist is visible, select all tanks
+			MainSettings.GetCurrentGridFilter().FavListShow = newShowType;
+			if (newShowType == GridFilter.FavListShowType.AllTanks)
 				mTankFilter_All.Checked = true;
 			// Set menu name
 			SetTankFilterMenuName();

@@ -140,7 +140,7 @@ namespace WinApp.Forms
 			if (DB.CheckConnection()) // check db config, displays message if error
 			{
 				// Check if current plyer exists in current database, if not remove it
-				DataTable dt = DB.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerName + "'");
+				DataTable dt = DB.FetchData("SELECT * FROM player WHERE name='" + Config.Settings.playerNameAndServer + "'");
 				if (dt.Rows.Count == 0)
 				{
 					Config.Settings.playerId = 0;
