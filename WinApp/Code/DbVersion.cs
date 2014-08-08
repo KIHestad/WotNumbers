@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 89; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 91; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1111,10 +1111,54 @@ namespace WinApp.Code
 					mssql = "UPDATE columnSelection SET name = 'Ventilation' WHERE ID = 68; ";
 					sqlite = mssql;
 					break;
-                case 89:
+				case 89:
 					mssql = "update playerTank set lastBattleTime = null where lastBattleTime = '1970/01/01'; ";
-                    sqlite = "update playerTank set lastBattleTime = null where lastbattletime = '1970-01-01 00:00:00'; ";
-                    break;
+					sqlite = "update playerTank set lastBattleTime = null where lastbattletime = '1970-01-01 00:00:00'; ";
+					break;
+				case 90:
+					mssql = "UPDATE json2dbMapping SET jsonProperty='piercingsReceived' where jsonProperty='piercedReceived'; " +
+							"UPDATE json2dbMapping SET jsonMainSubProperty=jsonMain + '.' + jsonSub + '.' + jsonProperty; " +
+							"UPDATE battle SET piercedReceived = 0; ";
+					sqlite = mssql.Replace("+","||");
+					RunDossierFileCheckWithForceUpdate = true;
+					break;
+				case 91:
+					mssql = "ALTER TABLE columnList ALTER COLUMN lastSortColumn varchar(255) NULL; ";
+					// Cannot modify column, need to drop table and related tables, and recreate
+					sqlite =
+						"alter table columnList rename to columnListToChange; " +
+						"alter table columnListSelection rename to columnListSelectionToChange; " +
+						"CREATE TABLE columnList (  " +
+						"    id                   INTEGER        PRIMARY KEY, " +
+						"    colType              INTEGER        NOT NULL, " +
+						"    name                 VARCHAR( 50 )  NOT NULL, " +
+						"    colDefault           BIT            NOT NULL " +
+						"                                        DEFAULT 0, " +
+						"    position             INTEGER        NULL, " +
+						"    sysCol               BIT            NOT NULL " +
+						"                                        DEFAULT 0, " +
+						"    defaultFavListId     INTEGER        NOT NULL " +
+						"                                        DEFAULT -1, " +
+						"    lastSortColumn       VARCHAR(255)   NULL, " +
+						"    lastSortDirectionAsc BIT            NOT NULL " +
+						"                                        DEFAULT 0  " +
+						"); " +
+						"CREATE TABLE columnListSelection (  " +
+						"    columnSelectionId INTEGER NOT NULL, " +
+						"    columnListId      INTEGER NOT NULL, " +
+						"    sortorder         INTEGER NOT NULL " +
+						"                              DEFAULT 0, " +
+						"    colWidth          INTEGER NOT NULL " +
+						"                              DEFAULT 50, " +
+						"    PRIMARY KEY ( columnSelectionId, columnListId ), " +
+						"    FOREIGN KEY ( columnSelectionId ) REFERENCES columnSelection ( id ), " +
+						"    FOREIGN KEY ( columnListId ) REFERENCES columnList ( id )  " +
+						"); " +
+						"INSERT INTO columnList SELECT * FROM  columnListToChange; " +
+						"INSERT INTO columnListSelection SELECT * FROM columnListSelectionToChange; " +
+						"DROP TABLE columnListSelectionToChange; " +
+						"DROP TABLE  columnListToChange; ";
+					break;
 
 			}
 			string sql = "";

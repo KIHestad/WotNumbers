@@ -322,6 +322,12 @@ namespace WinApp.Code
 					}
 				}
 				dossierRunning = false;
+				if (forceUpdate)
+				{
+					string msg = "";
+					Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
+					Config.SaveConfig(out msg);
+				}
 				dt.Dispose();
 				dt.Clear();
 			}

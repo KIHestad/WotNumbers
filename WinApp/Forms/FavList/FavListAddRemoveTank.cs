@@ -14,11 +14,13 @@ namespace WinApp.Forms
 	{
 		private bool _add = true;
 		private int _tankId = 0;
-		public FavListAddRemoveTank(int tankId, bool add = true)
+		private Form _parentForm;
+		public FavListAddRemoveTank(Form parentForm, int tankId, bool add = true)
 		{
 			InitializeComponent();
 			_add = add;
 			_tankId = tankId;
+			_parentForm = parentForm;
 		}
 
 		private void FavListAddRemoveTank_Load(object sender, EventArgs e)
@@ -38,7 +40,6 @@ namespace WinApp.Forms
 
 			// Populate grid with data
 			ShowFavList();
-			if (_add) dataGridFavList.ClearSelection();
 		}
 
 		private void ShowFavList()
@@ -67,23 +68,81 @@ namespace WinApp.Forms
 			dataGridFavList.Columns["Show"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 			dataGridFavList.Columns["id"].Visible = false;
 			// Set current favList as selected in grid if remove
+			int selectRowIndex = -1;
 			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList && !_add)
 			{
-				int rownum = 0;
 				foreach (DataGridViewRow row in dataGridFavList.Rows)
 				{
 					if (Convert.ToInt32(row.Cells["id"].Value) == MainSettings.GetCurrentGridFilter().FavListId)
-						rownum = row.Index;
+						selectRowIndex = row.Index;
 				}
 			}
+			else if (_add)
+			{
+				// if only one favList, select it
+				if (dataGridFavList.Rows.Count == 1)
+					selectRowIndex = 0;
+				// Use last selected
+				else if (FavListHelper.lastAddFavListFromPopup != 0 && dataGridFavList.Rows.Count >= FavListHelper.lastAddFavListFromPopup)
+				{
+					foreach (DataGridViewRow row in dataGridFavList.Rows)
+					{
+						if (Convert.ToInt32(row.Cells["id"].Value) == FavListHelper.lastAddFavListFromPopup)
+							selectRowIndex = row.Index;
+					}
+				}
+			}
+			dataGridFavList.ClearSelection();
+			if (selectRowIndex >= 0)
+				dataGridFavList.Rows[selectRowIndex].Selected = true;
 			// Connect to scrollbar
-			//scrollFavList.ScrollElementsTotals = dt.Rows.Count;
-			//scrollFavList.ScrollElementsVisible = dataGridFavList.DisplayedRowCount(false);
+			scrollY.ScrollElementsTotals = dt.Rows.Count;
+			scrollY.ScrollElementsVisible = dataGridFavList.DisplayedRowCount(false);
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
+			FavListHelper.refreshGridAfterAddRemove = false;
+			string sql = ""; 
+			// Loop through datagrid and add tank to favLists
+			foreach (DataGridViewRow dr in dataGridFavList.SelectedRows)
+			{
+				if (_add)
+				{
+					sql += "insert into favListTank (favListId, tankId, sortorder) values (@favListId, @tankId, 9998); ";
+				}
+				else
+					sql += "delete from favlistTank where favListId=@favListId and tankId=@tankId; ";
+				DB.AddWithValue(ref sql, "@favListId", dr.Cells["id"].Value, DB.SqlDataType.Int);
+				FavListHelper.lastAddFavListFromPopup = Convert.ToInt32(dr.Cells["id"].Value);
+			}
+			DB.AddWithValue(ref sql, "@tankId", _tankId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+			//Sort
+			if (_add)
+				foreach (DataGridViewRow dr in dataGridFavList.SelectedRows)
+				{
+					if (_add)
+						FavListHelper.TankSort(Convert.ToInt32(dr.Cells["id"].Value));
+				}
+			this.Close();
+		}
 
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void scrollY_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (dataGridFavList.RowCount > 0)
+				dataGridFavList.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
+		}
+
+		private void scrollY_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (dataGridFavList.RowCount > 0)
+				dataGridFavList.FirstDisplayedScrollingRowIndex = scrollY.ScrollPosition;
 		}
 	}
 }

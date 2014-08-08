@@ -4,11 +4,16 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WinApp.Code
 {
 	class FavListHelper
 	{
+
+		public static int lastAddFavListFromPopup = 0;
+		public static bool refreshGridAfterAddRemove = false;
+
 		public static int GetId(string FavListName)
 		{
 			int favListId = 0;
@@ -39,6 +44,45 @@ namespace WinApp.Code
 				}
 				DB.ExecuteNonQuery(sql);
 			}
+		}
+
+		public static void TankSort(int favListId)
+		{
+			string sql = "select tankId from favListTank order by sortorder";
+			DB.AddWithValue(ref sql, "@tankId", favListId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			// Modify sort order generate sql
+			sql = "";
+			int pos = 1;
+			foreach (DataRow row in dt.Rows)
+			{
+				sql += "update favListTank set sortorder=@sortorder; ";
+				DB.AddWithValue(ref sql, "@sortorder", pos, DB.SqlDataType.Int);
+			}
+			// Update
+			DB.ExecuteNonQuery(sql);
+		}
+
+		public static bool CheckIfAnyFavList(Form parentForm, int tankId, bool add)
+		{
+			bool found = true;
+			string sql = "select id from favList ";
+			if (add)
+				sql += "where id not in (select favListId from favListTank where tankId=@tankId) ";
+			else
+				sql += "where id in (select favListId from favListTank where tankId=@tankId) ";
+			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			// Check if any favList is available
+			if (dt.Rows.Count == 0)
+			{
+				found = false;
+				if (add)
+					MsgBox.Show("This tank is already included in all favourite tank lists, or no tank list exists.", "Cannot add tank to favourite tank list", parentForm);
+				else
+					MsgBox.Show("This tank is not includeded in any favourite tank list, or no tank list exists.", "Cannot remove tank from favourite tank list", parentForm);
+			}
+			return found;
 		}
 	}
 }

@@ -63,19 +63,16 @@ namespace WinApp.Forms
 					favListDD += "," + dr["name"].ToString();
 				}
 			}
-			if (colListId == 0)
+			// Populate Copy From DD
+			copyFromDD = "(None)";
+			string copyFromSql = "select * from columnList where colType=@colType order by COALESCE(position,99), name";
+			DB.AddWithValue(ref copyFromSql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
+			DataTable dtcopyFrom = DB.FetchData(copyFromSql);
+			if (dtcopyFrom.Rows.Count > 0)
 			{
-				// Populate Copy From DD
-				copyFromDD = "(None)";
-				string copyFromSql = "select * from columnList where colType=@colType order by COALESCE(position,99), name";
-				DB.AddWithValue(ref copyFromSql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-				DataTable dtcopyFrom = DB.FetchData(copyFromSql);
-				if (dtcopyFrom.Rows.Count > 0)
+				foreach (DataRow dr2 in dtcopyFrom.Rows)
 				{
-					foreach (DataRow dr2 in dtcopyFrom.Rows)
-					{
-						copyFromDD += "," + dr2["name"].ToString();
-					}
+					copyFromDD += "," + dr2["name"].ToString();
 				}
 			}
 		}

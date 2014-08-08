@@ -73,13 +73,15 @@
 			this.scrollY.Name = "scrollY";
 			this.scrollY.ScrollElementsTotals = 100;
 			this.scrollY.ScrollElementsVisible = 20;
-			this.scrollY.ScrollHide = true;
+			this.scrollY.ScrollHide = false;
 			this.scrollY.ScrollNecessary = true;
 			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollY.ScrollPosition = 0;
 			this.scrollY.Size = new System.Drawing.Size(17, 193);
 			this.scrollY.TabIndex = 2;
 			this.scrollY.Text = "badScrollBar1";
+			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
 			// 
 			// dataGridFavList
 			// 
@@ -107,6 +109,7 @@
 			this.btnCancel.Size = new System.Drawing.Size(68, 23);
 			this.btnCancel.TabIndex = 4;
 			this.btnCancel.Text = "Cancel";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// FavListAddRemoveTank
 			// 
