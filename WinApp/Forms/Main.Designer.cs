@@ -199,6 +199,14 @@
 			this.imageListToolStrip.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolStrip.ImageStream")));
 			this.imageListToolStrip.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageListToolStrip.Images.SetKeyName(0, "check.png");
+			this.imageListToolStrip.Images.SetKeyName(1, "tank_detail.png");
+			this.imageListToolStrip.Images.SetKeyName(2, "iconCharts_v2b.png");
+			this.imageListToolStrip.Images.SetKeyName(3, "xp.png");
+			this.imageListToolStrip.Images.SetKeyName(4, "filter.png");
+			this.imageListToolStrip.Images.SetKeyName(5, "tank_add.png");
+			this.imageListToolStrip.Images.SetKeyName(6, "tank_remove.png");
+			this.imageListToolStrip.Images.SetKeyName(7, "tank_new.png");
+			this.imageListToolStrip.Images.SetKeyName(8, "delete.png");
 			// 
 			// MainTheme
 			// 
@@ -248,7 +256,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(673, 25);
+			this.toolMain.Size = new System.Drawing.Size(642, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";

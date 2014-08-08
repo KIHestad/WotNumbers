@@ -132,14 +132,23 @@ namespace WinApp.Forms
 			ToolStripSeparator dataGridMainPopup_Separator1 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator3 = new ToolStripSeparator();
-			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
-			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Battle Chart");
+
 			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
-			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
+			dataGridMainPopup_Details.Image = imageListToolStrip.Images[1];
+			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Battle Chart");
+			dataGridMainPopup_Chart.Image = imageListToolStrip.Images[2];
+			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
+			dataGridMainPopup_GrindingSetup.Image = imageListToolStrip.Images[3];
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
-			ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list");
+			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[4];
 			ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list");
+			dataGridMainPopup_FavListAddTank.Image = imageListToolStrip.Images[5];
 			ToolStripMenuItem dataGridMainPopup_FavListRemoveTank = new ToolStripMenuItem("Remove tank from favourite tank list");
+			dataGridMainPopup_FavListRemoveTank.Image = imageListToolStrip.Images[6];
+			ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list");
+			dataGridMainPopup_FavListCreateNew.Image = imageListToolStrip.Images[7];
+			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
+			dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
 
 			//Assign event handlers
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
