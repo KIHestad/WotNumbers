@@ -179,6 +179,7 @@
 			this.txtProgressXP.Text = "0";
 			this.txtProgressXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtProgressXP.TextChanged += new System.EventHandler(this.txtProgressXP_TextChanged);
+			this.txtProgressXP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtProgressXP_KeyPress);
 			// 
 			// txtRestXP
 			// 
@@ -450,6 +451,7 @@
 			this.txtBattlesPerDay.Text = "0";
 			this.txtBattlesPerDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtBattlesPerDay.TextChanged += new System.EventHandler(this.txtBattlesPerDay_TextChanged);
+			this.txtBattlesPerDay.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBattlesPerDay_KeyPress);
 			// 
 			// badLabel14
 			// 
@@ -516,6 +518,7 @@
 			this.txtGrindXP.Text = "0";
 			this.txtGrindXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtGrindXP.TextChanged += new System.EventHandler(this.txtGrindGrindXP_TextChanged);
+			this.txtGrindXP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtGrindXP_KeyPress);
 			// 
 			// txtGrindComment
 			// 

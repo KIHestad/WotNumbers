@@ -75,35 +75,24 @@ namespace WinApp.Forms
 			CalcProgress();
 		}
 
-		private string txtGrindGrindXP_lastvalue = "0";
 		private void txtGrindGrindXP_TextChanged(object sender, EventArgs e)
 		{
 			int i;
 			bool ok = Int32.TryParse(txtGrindXP.Text, out i);
-			if (ok && i >= 0)
-			{
-				txtGrindGrindXP_lastvalue = txtGrindXP.Text;
-				if (txtBattlesPerDay.Text == "0" && txtGrindXP.Text != "0" && txtProgressXP.Text != "0") txtBattlesPerDay.Text = "1";
-			}
-			else
-				txtGrindXP.Text = txtGrindGrindXP_lastvalue;
-			if (txtGrindXP.HasFocus)
-				CalcProgress();
+			if (ok && i > 0 && (txtGrindXP.Text != "0" || txtProgressXP.Text != "0"))
+				txtBattlesPerDay.Text = "1";
+			CalcProgress();
+			dataChanged = true;
 		}
 
-		private string txtProgressXP_lastvalue = "0";
 		private void txtProgressXP_TextChanged(object sender, EventArgs e)
 		{
 			int i;
 			bool ok = Int32.TryParse(txtProgressXP.Text, out i);
-			if (ok && i >= 0)
-			{
-				txtProgressXP_lastvalue = txtProgressXP.Text;
-				if (txtBattlesPerDay.Text == "0" && txtGrindXP.Text != "0" && txtProgressXP.Text != "0") txtBattlesPerDay.Text = "1";
-			}
-			else
-				txtProgressXP.Text = txtProgressXP_lastvalue;
+			if (ok && i > 0 && (txtGrindXP.Text != "0" || txtProgressXP.Text != "0"))
+				txtBattlesPerDay.Text = "1";
 			CalcProgress();
+			dataChanged = true;
 		}
 
 		private void txtGrindComment_TextChanged(object sender, EventArgs e)
@@ -111,15 +100,8 @@ namespace WinApp.Forms
 			dataChanged = true;
 		}
 
-		private string txtBattlesPerDay_lastvalue = "0";
 		private void txtBattlesPerDay_TextChanged(object sender, EventArgs e)
 		{
-			int i;
-			bool ok = Int32.TryParse(txtBattlesPerDay.Text, out i);
-			if (ok && i > 0)
-				txtBattlesPerDay_lastvalue = txtBattlesPerDay.Text;
-			else
-				txtBattlesPerDay.Text = txtBattlesPerDay_lastvalue; 
 			CalcProgress(false);
 			dataChanged = true;
 		}
@@ -171,12 +153,22 @@ namespace WinApp.Forms
 		private bool CheckValidData()
 		{
 			bool ok = true;
-			int test = 0;
-			ok = Int32.TryParse(txtGrindXP.Text, out test);
-			if (ok) Int32.TryParse(txtProgressXP.Text, out test);
-			if (ok) Int32.TryParse(txtBattlesPerDay.Text, out test);
+			int grindXP = 0;
+			int ProgressXP = 0;
+			int btlprDay = 0;
+			if (txtGrindXP.Text == "") txtGrindXP.Text = "0";
+			if (txtProgressXP.Text == "") txtProgressXP.Text = "0";
+			if (txtBattlesPerDay.Text == "") txtBattlesPerDay.Text = "0";
+			ok = Int32.TryParse(txtGrindXP.Text, out grindXP);
+			if (ok) Int32.TryParse(txtProgressXP.Text, out ProgressXP);
+			if (ok) Int32.TryParse(txtBattlesPerDay.Text, out btlprDay);
 			if (!ok)
 				MsgBox.Show("Illegal character found, please only enter numberic values without decimals", "Illegal character in text box", this);
+			else
+			{
+				if ((grindXP > 0 || ProgressXP > 0) && btlprDay == 0)
+					txtBattlesPerDay.Text = "1";
+			}
 			return ok;
 		}
 
@@ -277,11 +269,34 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
-		private void Validate_Key(object sender, KeyPressEventArgs e)
+		private void txtGrindXP_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			
+			// Check for a naughty character in the KeyDown event.
+			bool validChar = System.Text.RegularExpressions.Regex.IsMatch(e.KeyChar.ToString(), @"[0-9]");
+			bool backSpace = (e.KeyChar == (char)8);
+			// Stop the character from being entered into the control since it is illegal.
+			e.Handled = !(validChar || backSpace);
 		}
-		
+
+		private void txtProgressXP_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			// Check for a naughty character in the KeyDown event.
+			bool validChar = System.Text.RegularExpressions.Regex.IsMatch(e.KeyChar.ToString(), @"[0-9]");
+			bool backSpace = (e.KeyChar == (char)8);
+			// Stop the character from being entered into the control since it is illegal.
+			e.Handled = !(validChar || backSpace);
+		}
+
+		private void txtBattlesPerDay_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			// Check for a naughty character in the KeyDown event.
+			bool validChar = System.Text.RegularExpressions.Regex.IsMatch(e.KeyChar.ToString(), @"[0-9]");
+			bool backSpace = (e.KeyChar == (char)8);
+			// Stop the character from being entered into the control since it is illegal.
+			e.Handled = !(validChar || backSpace);
+		}
+
+
 
 	}
 }

@@ -1267,6 +1267,7 @@ class BadTextBox : BadThemeControl
 		textBox.Left = 6;
 		this.Controls.Add(textBox);
 		textBox.TextChanged += new EventHandler(textBox_TextChanged);
+		textBox.KeyPress += new KeyPressEventHandler(textBox_KeyPress);
 	}
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
@@ -1318,6 +1319,12 @@ class BadTextBox : BadThemeControl
 		HasFocus = false;
 		base.OnLeave(e);
 	}
+
+	protected void textBox_KeyPress(object serder, KeyPressEventArgs e)
+	{
+		base.OnKeyPress(e);
+	}
+
 }
 
 class BadPopupBox : BadThemeControl
