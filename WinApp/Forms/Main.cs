@@ -352,40 +352,43 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void RunInitialDossierFileCheck()
+		private void RunInitialDossierFileCheck(string message = "")
 		{
 			if (DBVersion.RunWotApi)
 				RunWotApi(true);
 			// Check for dossier update
 			if (DBVersion.RunDossierFileCheckWithForceUpdate)
-				RunDossierFileCheckWithForceUpdate();
+				RunDossierFileCheckWithForceUpdate(message);
 			else
-				RunDossierFileCheck();
+				RunDossierFileCheck(message);
 		}
 
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
 		{
 			VersionInfo vi = CheckForNewVersion.versionInfo;
+			string versionCheckInfo = "Version check in progress...";
 			if (vi.error)
 			{
 				// Could not check for new version, run normal dossier file check
 				if (!_onlyCheckVersionWithMessage)
 				{
-					RunInitialDossierFileCheck();
+					RunInitialDossierFileCheck("Could not check for new version, no connection to Wot Numbers website");
 				}
 				// Message if debug mode or manual version check
 				if (Config.Settings.showDBErrors || _onlyCheckVersionWithMessage)
+				{
 					Code.MsgBox.Show("Could not check for new version, could be that you have no Internet access." + Environment.NewLine + Environment.NewLine +
 										vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
 										"Version check failed",
 										this);
+				}
 			}
 			else if (vi.maintenanceMode)
 			{
 				// Web is currently in maintance mode, just skip version check - perform normal startup
 				if (!_onlyCheckVersionWithMessage)
 				{
-					RunInitialDossierFileCheck();
+					RunInitialDossierFileCheck("Wot Numbers website in maintenance mode, version check skipped");
 				}
 				else
 				{
@@ -412,8 +415,6 @@ namespace WinApp.Forms
 					else
 					{
 						// Normal startup, no new version
-						SetStatus2("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
-						// Message
 						if (vi.message != "" && vi.messageDate <= DateTime.Now)
 						{
 							if (Config.Settings.readMessage == null || Config.Settings.readMessage < vi.messageDate)
@@ -435,10 +436,10 @@ namespace WinApp.Forms
 						// Force dossier file check or just normal - replaces RunInitialDossierFileCheck();
 						if (vi.runForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
 						{
-							if (Config.Settings.doneRunForceDossierFileCheck == null || vi.runForceDossierFileCheck < DateTime.Now)
+							if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < vi.runForceDossierFileCheck)
 								DBVersion.RunDossierFileCheckWithForceUpdate = true;
 						}
-						RunInitialDossierFileCheck();
+						RunInitialDossierFileCheck("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 					}
 				}
 				else
@@ -465,7 +466,7 @@ namespace WinApp.Forms
 					else
 					{
 						if (_onlyCheckVersionWithMessage)
-							RunInitialDossierFileCheck();
+							RunInitialDossierFileCheck("New version found (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 					}
 				}
 			}
@@ -3010,10 +3011,11 @@ namespace WinApp.Forms
 			RunDossierFileCheck();
 		}
 
-		private void RunDossierFileCheck()
+		private void RunDossierFileCheck(string message = "")
 		{
 			// Dossier file manual handling
-			SetStatus2("Starting manual dossier check...");
+			if (message == "") message = "Starting manual dossier check...";
+			SetStatus2(message);
 			dossier2json d2j = new dossier2json();
 			d2j.ManualRunInBackground("Running manual dossier file check...", false);
 			//SetFormTitle();
@@ -3025,9 +3027,10 @@ namespace WinApp.Forms
 			RunDossierFileCheckWithForceUpdate();
 		}
 
-		private void RunDossierFileCheckWithForceUpdate()
+		private void RunDossierFileCheckWithForceUpdate(string message="")
 		{
-			SetStatus2("Starting dossier file check with force update...");
+			if (message == "") message = "Starting dossier file check with force update...";
+			SetStatus2(message);
 			dossier2json d2j = new dossier2json();
 			d2j.ManualRunInBackground("Running dossier file check with force update...", true);
 		
