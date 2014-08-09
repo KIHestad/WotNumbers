@@ -21,7 +21,8 @@ namespace WinApp.Forms
 		string ddTankList = "";
 		string ddChartList = "";
 		int initPlayerTankId = 0;
-		int numPoints = 500; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
+		int decimals = 3;
+		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
 		private double axisYminimum = 999999999;
 
 		public BattleChart(int playerTankId = 0)
@@ -200,6 +201,22 @@ namespace WinApp.Forms
 				ddChartList += c.name + ",";
 			}
 			ddChartList = ddChartList.Substring(0, ddChartList.Length - 1); // Remove last comma
+			// Chart layou
+			Font letterType = new Font("MS Sans Serif", 10, GraphicsUnit.Pixel);
+			Color defaultColor = ColorTheme.ControlFont;
+			ChartArea area = ChartingMain.ChartAreas[0];
+			foreach (var axis in area.Axes)
+			{
+				axis.TitleForeColor = defaultColor;
+				axis.LineColor = defaultColor;
+				axis.InterlacedColor = defaultColor;
+				axis.LabelStyle.Font = letterType;
+				axis.LabelAutoFitMinFontSize = (int)letterType.Size;
+				axis.LabelAutoFitMaxFontSize = (int)letterType.Size;
+				//axis.MajorTickMark.Enabled = false;
+			}
+			area.AxisX.LabelStyle.Angle = 20;
+			area.InnerPlotPosition = new System.Windows.Forms.DataVisualization.Charting.ElementPosition(6, 0, 96, 91);
 		}
 
 
@@ -294,12 +311,18 @@ namespace WinApp.Forms
 			ChartValue chartValue = chartValues.Find(c => c.name == selectedChartValue);
 			// Add series
 			Series newSerie = new Series(chartSerie);
-			//newSerie.AxisLabel = tankName;
+			// Line type
 			if (chartValue.totals)
 				if (chkBullet.Checked)
-					newSerie.ChartType = SeriesChartType.Line;
+				{
+					newSerie.ChartType = SeriesChartType.Spline;
+					newSerie.MarkerStyle = MarkerStyle.Circle;
+				}
 				else
-					newSerie.ChartType = SeriesChartType.FastLine;
+				{
+					newSerie.ChartType = SeriesChartType.Spline;
+					newSerie.MarkerStyle = MarkerStyle.None;
+				}
 			else
 				newSerie.ChartType = SeriesChartType.Point;
 			if (ddXaxis.Text == "Date")
@@ -307,7 +330,6 @@ namespace WinApp.Forms
 				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
 				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
 				newSerie.XValueType = ChartValueType.DateTime;
-				newSerie.MarkerStyle = MarkerStyle.Circle;
 				chartOrder = "DESC";
 			}
 			else if (ddXaxis.Text == "Battle")
@@ -315,7 +337,6 @@ namespace WinApp.Forms
 				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
 				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
 				newSerie.XValueType = ChartValueType.Int32;
-				newSerie.MarkerStyle = MarkerStyle.Circle;	
 			}
 			ChartingMain.Series.Add(newSerie);
 			// Special calculations for calculated columns
@@ -378,7 +399,7 @@ namespace WinApp.Forms
 					{
 						step++;
 						if (step % stepMod == 0 || step == 0)
-							ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, 2)); // Use battle date
+							ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, decimals)); // Use battle date
 						currentValue -= Convert.ToDouble(dr[chartValue.bCol]); //  Move backwards
 						axisYminimum = SetYaxisLowestValue(currentValue);
 					}
@@ -388,7 +409,7 @@ namespace WinApp.Forms
 					foreach (DataRow dr in dtChart.Rows)
 					{
 						currentValue = Convert.ToDouble(dr[chartValue.bCol]); //  Move backwards
-						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, 2)); // Use battle date
+						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), Math.Round(currentValue, decimals)); // Use battle date
 						axisYminimum = SetYaxisLowestValue(currentValue);
 					}
 				}
@@ -406,7 +427,7 @@ namespace WinApp.Forms
 						if (firstValue < axisYminimum) axisYminimum = Convert.ToInt32(firstValue);
 						step++;
 						if (step % stepMod == 0 || step == 0)
-							ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue, 2));
+							ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue, decimals));
 					}
 				}
 				else
@@ -416,7 +437,7 @@ namespace WinApp.Forms
 						battleCount += Convert.ToDouble(dr["battlesCount"]); // Use battle count
 						firstValue = Convert.ToDouble(dr[chartValue.bCol]); // Move forwards
 						axisYminimum = SetYaxisLowestValue(firstValue);
-						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue, 2));
+						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, Math.Round(firstValue, decimals));
 					}
 				}
 			}
@@ -469,20 +490,33 @@ namespace WinApp.Forms
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtChart = DB.FetchData(sql);
-			int step = 0;
-			int stepMod = dtChart.Rows.Count / numPoints;
-			if (stepMod < 1) stepMod = 1;
-			double winRate = 0;
+			double chartVal = 0;
 			if (ddXaxis.Text == "Date")
 			{
+				DateTime chartDate = DateTime.Now;
+				double chartValMax = 0;
+				double hourInterval = 24;
+				if (dtChart.Rows.Count > 0)
+				{
+					chartValMax = Math.Round(currentWins * 100 / currentBattles, decimals);
+					chartDate = Convert.ToDateTime(dtChart.Rows[0]["battleTime"]);
+					if (dtChart.Rows.Count > 1000)
+						hourInterval = 48;
+					else if (dtChart.Rows.Count > 2000)
+						hourInterval = 24*7;
+				}
 				foreach (DataRow dr in dtChart.Rows)
 				{
-					step++;
-					if (step % stepMod == 0 || step == 0)
+					chartVal = Math.Round(currentWins * 100 / currentBattles, decimals);
+					if (chartVal > chartValMax) chartValMax = chartVal;
+					DateTime thisDate = Convert.ToDateTime(dr["battleTime"]);
+					if (thisDate <= chartDate)
 					{
-						winRate = Math.Round(currentWins * 100 / currentBattles, 2);
-						axisYminimum = SetYaxisLowestValue(winRate);
-						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), winRate); // Use battle date
+						axisYminimum = SetYaxisLowestValue(chartVal);
+						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartValMax); // Use battle date
+						chartDate = thisDate.AddHours(-hourInterval);
+						chartValMax = 0;
+						chartDate.AddDays(-1);
 					}
 					currentWins -= Convert.ToDouble(dr["victory"]); //  Move backwards
 					currentBattles -= Convert.ToDouble(dr["battlesCount"]);
@@ -490,6 +524,9 @@ namespace WinApp.Forms
 			}
 			else if (ddXaxis.Text == "Battle")
 			{
+				int step = 0;
+				int stepMod = dtChart.Rows.Count / numPoints;
+				if (stepMod < 1) stepMod = 1;
 				double battleCount = 0;
 				foreach (DataRow dr in dtChart.Rows)
 				{
@@ -499,11 +536,10 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						winRate = Math.Round(firstWins * 100 / firstBattles, 2);
-						axisYminimum = SetYaxisLowestValue(winRate);
-						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, winRate);
+						chartVal = Math.Round(firstWins * 100 / firstBattles, decimals);
+						axisYminimum = SetYaxisLowestValue(chartVal);
+						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal);
 					}
-						
 				}
 			}
 			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
@@ -566,7 +602,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						avgDamage = Math.Round(currentDamage / currentBattles, 2);
+						avgDamage = Math.Round(currentDamage / currentBattles, decimals);
 						axisYminimum = SetYaxisLowestValue(avgDamage);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), avgDamage); // Use battle date
 					}
@@ -585,7 +621,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						avgDamage = Math.Round(firstDamage  / firstBattles, 2);
+						avgDamage = Math.Round(firstDamage / firstBattles, decimals);
 						axisYminimum = SetYaxisLowestValue(avgDamage);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, avgDamage);
 					}
@@ -674,7 +710,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), 2);
+						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), decimals);
 						axisYminimum = SetYaxisLowestValue(EFF);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), EFF); // Use battle date
 					}
@@ -702,7 +738,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), 2);
+						EFF = Math.Round(Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTIER), decimals);
 						axisYminimum = SetYaxisLowestValue(EFF);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, EFF); // Use battle date
 					}
@@ -799,7 +835,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
+						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), decimals);
 						axisYminimum = SetYaxisLowestValue(WN7);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(dr["battleTime"]), WN7); // Use battle date
 					}
@@ -829,7 +865,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), 2);
+						WN7 = Math.Round(Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, TIER), decimals);
 						axisYminimum = SetYaxisLowestValue(WN7);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN7); // Use battle date
 					}
@@ -920,7 +956,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
+						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), decimals);
 						axisYminimum = SetYaxisLowestValue(WN8);
 						ChartingMain.Series[chartSerie].Points.AddXY(Convert.ToDateTime(bRow["battleTime"]), WN8); // Use battle date
 					}
@@ -959,7 +995,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), 2);
+						WN8 = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), decimals);
 						axisYminimum = SetYaxisLowestValue(WN8);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, WN8); // Use battle count
 					}
