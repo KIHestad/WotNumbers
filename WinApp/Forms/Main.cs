@@ -366,7 +366,6 @@ namespace WinApp.Forms
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
 		{
 			VersionInfo vi = CheckForNewVersion.versionInfo;
-			string versionCheckInfo = "Version check in progress...";
 			if (vi.error)
 			{
 				// Could not check for new version, run normal dossier file check
