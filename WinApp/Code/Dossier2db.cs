@@ -44,129 +44,143 @@ namespace WinApp.Code
 
 		public static String ReadJson(string filename, bool ForceUpdate = false)
 		{
-			// Read file into string
-			StreamReader sr = new StreamReader(filename, Encoding.UTF8);
-			string json = sr.ReadToEnd();
-			sr.Close();
-						
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
-			
-			// Update base data
-			TankData.GetPlayerTankAchList();
-			TankData.GetPlayerTankFragList();
-
-			// read json string
-			JsonTextReader reader = new JsonTextReader(new StringReader(json));
-						
-			// logging
-			List<string> log = new List<string>();
-			Log.CheckLogFileSize();
-
-			// If updating player tank detected new battle for any tank
-			bool battleSaved = false;
-			
-			// Check for first run (if player tank = 0), then dont get battle result but force update
-			bool saveBattleResult = true;
-			if (TankData.GetPlayerTankCount() == 0)
+			try
 			{
-				saveBattleResult = false;
-				ForceUpdate = true;
-			}
+				// Read file into string
+				StreamReader sr = new StreamReader(filename, Encoding.UTF8);
+				string json = sr.ReadToEnd();
+				sr.Close();
+						
+				Stopwatch sw = new Stopwatch();
+				sw.Start();
+			
+				// Update base data
+				TankData.GetPlayerTankAchList();
+				TankData.GetPlayerTankFragList();
 
-			// Declare
-			DataTable NewPlayerTankTable = TankData.GetPlayerTank(-1); // Return no data, only empty database with structure
-			DataTable NewPlayerTankBattleTable = TankData.GetPlayerTankBattle(-1, TankData.DossierBattleMode.Mode15, false); // Return no data, only empty database with structure
-			DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
-			DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
-			DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
-			DataRow NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
-			string tankName = "";
-			JsonItem currentItem = new JsonItem();
-			string fragList = "";
-			List<AchItem> achList = new List<AchItem>();
-			string[] achDossierSubLevel3 = { "", "Two", "Three" };
-			// Loop through json file
-			while (reader.Read())
-			{
-				if (reader.Depth > 3) // ********************************************  found fourth level = property and value  ************************************************************
+				// read json string
+				JsonTextReader reader = new JsonTextReader(new StringReader(json));
+						
+				// logging
+				List<string> log = new List<string>();
+				Log.CheckLogFileSize();
+
+				// If updating player tank detected new battle for any tank
+				bool battleSaved = false;
+			
+				// Check for first run (if player tank = 0), then dont get battle result but force update
+				bool saveBattleResult = true;
+				if (TankData.GetPlayerTankCount() == 0)
 				{
-					// Found property, check if new property og new value
-					if (reader.TokenType == JsonToken.PropertyName)
-					{
-						// New Property
-						currentItem.property = reader.Value.ToString();
-					}
-					else if (reader.Value != null)
-					{
-						// Value exsists
-						currentItem.value = reader.Value;
+					saveBattleResult = false;
+					ForceUpdate = true;
+				}
 
-						// Check data by getting jsonPlayerTank Mapping
-						string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
-						DataRow[] foundRows = TankData.json2dbMapping.Select(expression);
-						
-						//var result = from myRow in TankData.json2dbMapping.AsEnumerable()
-						//			 where myRow.Field<string>("jsonMainSubProperty") == (currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property).ToString()
-						//			 select myRow;
-						//DataView foundRows = result.AsDataView();
-						
-						// IF mapping found add currentItem into NewPlayerTankRow
-						if (foundRows.Length != 0)
+				// Declare
+				DataTable NewPlayerTankTable = TankData.GetPlayerTank(-1); // Return no data, only empty database with structure
+				DataTable NewPlayerTankBattleTable = TankData.GetPlayerTankBattle(-1, TankData.DossierBattleMode.Mode15, false); // Return no data, only empty database with structure
+				DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
+				DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
+				DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
+				DataRow NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
+				string tankName = "";
+				JsonItem currentItem = new JsonItem();
+				string fragList = "";
+				List<AchItem> achList = new List<AchItem>();
+				string[] achDossierSubLevel3 = { "", "Two", "Three" };
+				// Loop through json file
+				while (reader.Read())
+				{
+					if (reader.Depth > 3) // ********************************************  found fourth level = property and value  ************************************************************
+					{
+						// Found property, check if new property og new value
+						if (reader.TokenType == JsonToken.PropertyName)
 						{
-							if (foundRows[0]["dbPlayerTank"] != DBNull.Value) // Found mapping to PlayerTank
+							// New Property
+							currentItem.property = reader.Value.ToString();
+						}
+						else if (reader.Value != null)
+						{
+							// Value exsists
+							currentItem.value = reader.Value;
+
+							// Check data by getting jsonPlayerTank Mapping
+							string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
+							DataRow[] foundRows = TankData.json2dbMapping.Select(expression);
+						
+							//var result = from myRow in TankData.json2dbMapping.AsEnumerable()
+							//			 where myRow.Field<string>("jsonMainSubProperty") == (currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property).ToString()
+							//			 select myRow;
+							//DataView foundRows = result.AsDataView();
+						
+							// IF mapping found add currentItem into NewPlayerTankRow
+							if (foundRows.Length != 0)
 							{
-								string dataType = foundRows[0]["dbDataType"].ToString();
-								string dbField = foundRows[0]["dbPlayerTank"].ToString();
-								var dbPlayerTankMode = foundRows[0]["dbPlayerTankMode"];
-								if (dbPlayerTankMode == DBNull.Value)
+								if (foundRows[0]["dbPlayerTank"] != DBNull.Value) // Found mapping to PlayerTank
 								{
-									// Default playerTank value
-									switch (dataType)
+									string dataType = foundRows[0]["dbDataType"].ToString();
+									string dbField = foundRows[0]["dbPlayerTank"].ToString();
+									var dbPlayerTankMode = foundRows[0]["dbPlayerTankMode"];
+									if (dbPlayerTankMode == DBNull.Value)
 									{
-										case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
-										case "DateTime":
-											// Fix for missing date on lastBattleTime
-											if (currentItem.property == "lastBattleTime" && currentItem.value.ToString() == "0")
-												NewPlayerTankRow[dbField] = DateTime.Now;
-											else
-												NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value));
-											break;
-										case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
+										// Default playerTank value
+										switch (dataType)
+										{
+											case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
+											case "DateTime":
+												// Fix for missing date on lastBattleTime
+												if (currentItem.property == "lastBattleTime" && currentItem.value.ToString() == "0")
+													NewPlayerTankRow[dbField] = DateTime.Now;
+												else
+													NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value));
+												break;
+											case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
+										}
+									}
+									else if (dbPlayerTankMode.ToString() == "15")
+									{
+										// playerTankBattle mode 15x15
+										switch (dataType)
+										{
+											case "String": NewPlayerTankBattle15Row[dbField] = currentItem.value.ToString(); break;
+											case "DateTime": NewPlayerTankBattle15Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "Int": NewPlayerTankBattle15Row[dbField] = Convert.ToInt32(currentItem.value); break;
+										}
+									}
+									else if (dbPlayerTankMode.ToString() == "7")
+									{
+										// playerTankBattle mode 7x7
+										switch (dataType)
+										{
+											case "String": NewPlayerTankBattle7Row[dbField] = currentItem.value.ToString(); break;
+											case "DateTime": NewPlayerTankBattle7Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "Int": NewPlayerTankBattle7Row[dbField] = Convert.ToInt32(currentItem.value); break;
+										}
+									}
+									else if (dbPlayerTankMode.ToString() == "Historical")
+									{
+										// playerTankBattle mode Historical
+										switch (dataType)
+										{
+											case "String": NewPlayerTankBattleHistoricalRow[dbField] = currentItem.value.ToString(); break;
+											case "DateTime": NewPlayerTankBattleHistoricalRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "Int": NewPlayerTankBattleHistoricalRow[dbField] = Convert.ToInt32(currentItem.value); break;
+										}
 									}
 								}
-								else if (dbPlayerTankMode.ToString() == "15")
+								else if (foundRows[0]["dbAch"] != DBNull.Value) // Found mapped achievement
 								{
-									// playerTankBattle mode 15x15
-									switch (dataType)
+									int count = Convert.ToInt32(currentItem.value);
+									if (count > 0)
 									{
-										case "String": NewPlayerTankBattle15Row[dbField] = currentItem.value.ToString(); break;
-										case "DateTime": NewPlayerTankBattle15Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-										case "Int": NewPlayerTankBattle15Row[dbField] = Convert.ToInt32(currentItem.value); break;
-									}
-								}
-								else if (dbPlayerTankMode.ToString() == "7")
-								{
-									// playerTankBattle mode 7x7
-									switch (dataType)
-									{
-										case "String": NewPlayerTankBattle7Row[dbField] = currentItem.value.ToString(); break;
-										case "DateTime": NewPlayerTankBattle7Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-										case "Int": NewPlayerTankBattle7Row[dbField] = Convert.ToInt32(currentItem.value); break;
-									}
-								}
-								else if (dbPlayerTankMode.ToString() == "Historical")
-								{
-									// playerTankBattle mode Historical
-									switch (dataType)
-									{
-										case "String": NewPlayerTankBattleHistoricalRow[dbField] = currentItem.value.ToString(); break;
-										case "DateTime": NewPlayerTankBattleHistoricalRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-										case "Int": NewPlayerTankBattleHistoricalRow[dbField] = Convert.ToInt32(currentItem.value); break;
+										AchItem ach = new AchItem();
+										ach.achName = currentItem.property.ToString();
+										ach.count = count;
+										achList.Add(ach);
 									}
 								}
 							}
-							else if (foundRows[0]["dbAch"] != DBNull.Value) // Found mapped achievement
+							else if ( currentItem.subSection == "achievements7x7" || currentItem.subSection == "achievements") //  Found unmapped achievent in dedicated subsections
 							{
 								int count = Convert.ToInt32(currentItem.value);
 								if (count > 0)
@@ -177,96 +191,91 @@ namespace WinApp.Code
 									achList.Add(ach);
 								}
 							}
-						}
-						else if ( currentItem.subSection == "achievements7x7" || currentItem.subSection == "achievements") //  Found unmapped achievent in dedicated subsections
-						{
-							int count = Convert.ToInt32(currentItem.value);
-							if (count > 0)
-							{
-								AchItem ach = new AchItem();
-								ach.achName = currentItem.property.ToString();
-								ach.count = count;
-								achList.Add(ach);
-							}
-						}
-						else if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills") // Check frags
-							fragList += currentItem.value.ToString() + ";";
-						// Temp log all data
-						// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
-						// log.Add(currentItem.mainSection + ";" + currentItem.subSection + ";" + currentItem.property );
-					}
-				}
-				else
-				{
-					if (reader.Depth == 3)
-					{
-						if (reader.Value != null) // ***************  found third level = subsection  **************************************
-						{
-							// Get subsection, set property blank
-							currentItem.subSection = reader.Value.ToString();
-							currentItem.property = ""; // reset property for reading next
+							else if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills") // Check frags
+								fragList += currentItem.value.ToString() + ";";
+							// Temp log all data
+							// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
+							// log.Add(currentItem.mainSection + ";" + currentItem.subSection + ";" + currentItem.property );
 						}
 					}
 					else
 					{
-						if (reader.Depth == 2)
+						if (reader.Depth == 3)
 						{
-							if (reader.Value != null) // ****************   found second level = tank level  *****************************************
+							if (reader.Value != null) // ***************  found third level = subsection  **************************************
 							{
-								// Tank data exist, save data found and log
-								if (tankName != "")
-								{
-									// log.Add("  > Check for DB update - Tank: '" + tankName );
-									if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult))
-										battleSaved = true; // result if battle was detected and saved
-									// Reset all values
-									NewPlayerTankTable.Clear();
-									NewPlayerTankRow = NewPlayerTankTable.NewRow();
-									NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
-									NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
-									NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
-									// clear frags and achievments
-									fragList = "";
-									achList.Clear();
-								}
-								// Get new tank name
-								if (currentItem.mainSection == "tanks_v2" || currentItem.mainSection == "tanks") // The only section containing tanks to be read
-								{
-									currentItem.tank = reader.Value.ToString(); // add to current item
-									tankName = reader.Value.ToString(); // add to current tank
-								}
+								// Get subsection, set property blank
+								currentItem.subSection = reader.Value.ToString();
+								currentItem.property = ""; // reset property for reading next
 							}
 						}
-						else if (reader.Value != null) // main level ( 0 or 1)
+						else
 						{
-							// ***************************************************************  found main level - get mainSection name  *************************************
-							currentItem.mainSection = reader.Value.ToString();
-							//log.Add("\nMain section: " + currentItem.mainSection + "(Line: " + reader.LineNumber + ")");
+							if (reader.Depth == 2)
+							{
+								if (reader.Value != null) // ****************   found second level = tank level  *****************************************
+								{
+									// Tank data exist, save data found and log
+									if (tankName != "")
+									{
+										// log.Add("  > Check for DB update - Tank: '" + tankName );
+										if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult))
+											battleSaved = true; // result if battle was detected and saved
+										// Reset all values
+										NewPlayerTankTable.Clear();
+										NewPlayerTankRow = NewPlayerTankTable.NewRow();
+										NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
+										NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
+										NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
+										// clear frags and achievments
+										fragList = "";
+										achList.Clear();
+									}
+									// Get new tank name
+									if (currentItem.mainSection == "tanks_v2" || currentItem.mainSection == "tanks") // The only section containing tanks to be read
+									{
+										currentItem.tank = reader.Value.ToString(); // add to current item
+										tankName = reader.Value.ToString(); // add to current tank
+									}
+								}
+							}
+							else if (reader.Value != null) // main level ( 0 or 1)
+							{
+								// ***************************************************************  found main level - get mainSection name  *************************************
+								currentItem.mainSection = reader.Value.ToString();
+								//log.Add("\nMain section: " + currentItem.mainSection + "(Line: " + reader.LineNumber + ")");
+							}
 						}
 					}
 				}
-			}
-			reader.Close();
-			// Also write last tank found
-			// log.Add("  > Check for DB update - Tank: '" + tankName );
-			if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult)) 
-				battleSaved = true; // result if battle was detected and saved
-			// Done
-			TankData.ClearPlayerTankAchList();
-			TankData.ClearPlayerTankFragList();
+				reader.Close();
+				// Also write last tank found
+				// log.Add("  > Check for DB update - Tank: '" + tankName );
+				if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, fragList, achList, ForceUpdate, saveBattleResult)) 
+					battleSaved = true; // result if battle was detected and saved
+				// Done
+				TankData.ClearPlayerTankAchList();
+				TankData.ClearPlayerTankFragList();
 			
-			if (battleSaved) Log.BattleResultDoneLog();
-			sw.Stop();
-			TimeSpan ts = sw.Elapsed;
-			// Log.LogToFile(log);
-			NewPlayerTankTable.Dispose();
-			NewPlayerTankTable.Clear();
-			NewPlayerTankBattleTable.Dispose();
-			NewPlayerTankBattleTable.Clear();
-			// Check for new tanks, then load images
-			if (newTank)
-				ImageHelper.LoadTankImages(); // Load new image by reloading
-			return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+				if (battleSaved) Log.BattleResultDoneLog();
+				sw.Stop();
+				TimeSpan ts = sw.Elapsed;
+				// Log.LogToFile(log);
+				NewPlayerTankTable.Dispose();
+				NewPlayerTankTable.Clear();
+				NewPlayerTankBattleTable.Dispose();
+				NewPlayerTankBattleTable.Clear();
+				// Check for new tanks, then load images
+				if (newTank)
+					ImageHelper.LoadTankImages(); // Load new image by reloading
+				return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				return ("An error occured analyzing dossier file, please check the log file");
+			}
+			
 		}
 
 		static DateTime ConvertFromUnixTimestamp(double timestamp)
