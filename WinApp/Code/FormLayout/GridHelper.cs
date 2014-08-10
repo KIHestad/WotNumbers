@@ -14,8 +14,8 @@ namespace WinApp.Code
 			dgv.BackgroundColor = ColorTheme.FormBack;
 			dgv.GridColor = ColorTheme.GridBorders;
 			dgv.EnableHeadersVisualStyles = false;
-			dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-			dgv.ColumnHeadersHeight = 26;
+			dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(2,4,0,4);
 			dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
 			dgv.ColumnHeadersDefaultCellStyle.BackColor = ColorTheme.GridHeaderBackLight;
 			dgv.ColumnHeadersDefaultCellStyle.ForeColor = ColorTheme.ControlFont;

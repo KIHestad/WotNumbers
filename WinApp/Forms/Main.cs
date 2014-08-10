@@ -115,6 +115,9 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.ForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionForeColor = ColorTheme.ControlFont;
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
+			dataGridMain.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			dataGridMain.ColumnHeadersDefaultCellStyle.Padding = new Padding(2, 4, 0, 4);
+			
 			// Set font size
 			int fontSize = Config.Settings.gridFontSize;
 			if (fontSize < 6) fontSize = 8;
