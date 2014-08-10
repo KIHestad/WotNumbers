@@ -135,30 +135,29 @@ namespace WinApp.Forms
 
 			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
 			dataGridMainPopup_Details.Image = imageListToolStrip.Images[1];
+			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Battle Chart");
 			dataGridMainPopup_Chart.Image = imageListToolStrip.Images[2];
+			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
 			dataGridMainPopup_GrindingSetup.Image = imageListToolStrip.Images[3];
+			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
 			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[4];
+			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
 			ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list");
 			dataGridMainPopup_FavListAddTank.Image = imageListToolStrip.Images[5];
+			dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
 			ToolStripMenuItem dataGridMainPopup_FavListRemoveTank = new ToolStripMenuItem("Remove tank from favourite tank list");
 			dataGridMainPopup_FavListRemoveTank.Image = imageListToolStrip.Images[6];
+			dataGridMainPopup_FavListRemoveTank.Click += new EventHandler(dataGridMainPopup_FavListRemoveTank_Click);
 			ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list");
 			dataGridMainPopup_FavListCreateNew.Image = imageListToolStrip.Images[7];
+			dataGridMainPopup_FavListCreateNew.Click += new EventHandler(dataGridMainPopup_FavListCreateNew_Click);
 			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
 			dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
-
-			//Assign event handlers
-			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
-			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
-			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
-			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
-			dataGridMainPopup_FavListCreateNew.Click += new EventHandler(dataGridMainPopup_FavListCreateNew_Click);
-			dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
-			dataGridMainPopup_FavListRemoveTank.Click += new EventHandler(dataGridMainPopup_FavListRemoveTank_Click);
+			
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
@@ -2269,8 +2268,8 @@ namespace WinApp.Forms
 						// as header
 						dt.Rows.InsertAt(rowTotals, 0);
 						dt.Rows.InsertAt(rowAverage, 0);
-						rowTotalsIndex = 0;
-						rowAverageIndex = 1;
+						rowTotalsIndex = 1;
+						rowAverageIndex = 0;
 					}
 					else
 					{
@@ -2704,7 +2703,9 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.FavListNewEdit(0);
+			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			int tankId = TankData.GetTankID(playerTankId);
+			Form frm = new Forms.FavListNewEdit(0, "", tankId);
 			frm.ShowDialog();
 			// After fav list changes reload menu
 			SetFavListMenu(); // Reload fav list items
@@ -2729,6 +2730,26 @@ namespace WinApp.Forms
 			{
 				Form frm = new Forms.FavListAddRemoveTank(this, tankId, false);
 				frm.ShowDialog();
+				// refresh if tank removed
+				if (FavListHelper.refreshGridAfterAddRemove)
+				{
+					try
+					{
+						int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
+						dataGridMain.Visible = false;
+						GridShow("Refresh after removed tank from favourite tank list");
+						dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+						MoveScrollBar();
+						dataGridMain.Visible = true;
+						dataGridMain.Focus();
+						FavListHelper.refreshGridAfterAddRemove = false;
+					}
+					catch (Exception)
+					{
+						// Do nothing, just optional scrolling and refresh event
+					}
+					
+				}
 			}
 		}
 

@@ -83,7 +83,7 @@ namespace WinApp.Forms
 				if (dataGridFavList.Rows.Count == 1)
 					selectRowIndex = 0;
 				// Use last selected
-				else if (FavListHelper.lastAddFavListFromPopup != 0 && dataGridFavList.Rows.Count >= FavListHelper.lastAddFavListFromPopup)
+				else if (FavListHelper.lastAddFavListFromPopup != 0)
 				{
 					foreach (DataGridViewRow row in dataGridFavList.Rows)
 					{
@@ -112,7 +112,10 @@ namespace WinApp.Forms
 					sql += "insert into favListTank (favListId, tankId, sortorder) values (@favListId, @tankId, 9998); ";
 				}
 				else
+				{
 					sql += "delete from favlistTank where favListId=@favListId and tankId=@tankId; ";
+					FavListHelper.refreshGridAfterAddRemove = true;
+				}
 				DB.AddWithValue(ref sql, "@favListId", dr.Cells["id"].Value, DB.SqlDataType.Int);
 				FavListHelper.lastAddFavListFromPopup = Convert.ToInt32(dr.Cells["id"].Value);
 			}

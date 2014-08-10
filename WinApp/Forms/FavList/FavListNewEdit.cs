@@ -13,10 +13,11 @@ namespace WinApp.Forms
 {
 	public partial class FavListNewEdit : Form
 	{
-		string copyFromDD = "";
-		int favListId = 0;
-		string prevName = "";
-		public FavListNewEdit(int selectedFavListId = 0, string newFavListName = "")
+		string _copyFromDD = "";
+		int _favListId = 0;
+		string _prevName = "";
+		int _tankId = 0;
+		public FavListNewEdit(int selectedFavListId = 0, string newFavListName = "", int addTankId = 0)
 		{
 			InitializeComponent();
 			if (selectedFavListId == 0)
@@ -30,31 +31,32 @@ namespace WinApp.Forms
 				ddCopyFrom.Visible = false;
 				lblCopyFrom.Visible = false;
 			}
-			favListId = selectedFavListId;
+			_favListId = selectedFavListId;
+			_tankId = addTankId;
 		}
 
 		private void FavListNewEdit_Load(object sender, EventArgs e)
 		{
-			if (favListId > 0)
+			if (_favListId > 0)
 			{
 				// Show selected favList
 				string sql = "select * from favList where id=@id; ";
-				DB.AddWithValue(ref sql, "@id", favListId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@id", _favListId, DB.SqlDataType.Int);
 				DataRow dr = DB.FetchData(sql).Rows[0];
 				txtName.Text = dr["name"].ToString();
-				prevName = dr["name"].ToString();
+				_prevName = dr["name"].ToString();
 			}
 			else 
 			{
 				// Populate Copy From DD
-				copyFromDD = "(None)";
+				_copyFromDD = "(None)";
 				string copyFromSql = "select * from favList order by COALESCE(position,99), name";
 				DataTable dtcopyFrom = DB.FetchData(copyFromSql);
 				if (dtcopyFrom.Rows.Count > 0)
 				{
 					foreach (DataRow dr2 in dtcopyFrom.Rows)
 					{
-						copyFromDD += "," + dr2["name"].ToString();
+						_copyFromDD += "," + dr2["name"].ToString();
 					}
 				}
 			}
@@ -72,24 +74,24 @@ namespace WinApp.Forms
 				string sql = "select id from favList where name=@name; ";
 				DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
 				DataTable dtExists = DB.FetchData(sql);
-				if (newName != prevName && dtExists.Rows.Count > 0)
+				if (newName != _prevName && dtExists.Rows.Count > 0)
 				{
 					Code.MsgBox.Show("This name is already in use, select a different name for your Favourite Tank List", "Name already in use", this);
 				}
 				else
 				{
-					if (favListId > 0)
+					if (_favListId > 0)
 						sql = "update favList set name=@name where id=@id; ";
 					else
 						sql = "insert into favList (name, position) values (@name, 99999); ";
 					// Avoid saving if name is not changed
-					if (favListId > 0 && newName == prevName) return;
+					if (_favListId > 0 && newName == _prevName) return;
 					// Save now
 					DB.AddWithValue(ref sql, "@name", newName, DB.SqlDataType.VarChar);
-					DB.AddWithValue(ref sql, "@id", favListId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@id", _favListId, DB.SqlDataType.Int);
 					DB.ExecuteNonQuery(sql);
 					// Add tanks if new colList and seleced colList in copy to DD
-					if (favListId == 0 && ddCopyFrom.Text != "(None)")
+					if (_favListId == 0 && ddCopyFrom.Text != "(None)")
 					{
 						// Get the id for copy from
 						sql = "select id from favList where name=@name; ";
@@ -109,6 +111,28 @@ namespace WinApp.Forms
 						DB.AddWithValue(ref sql, "@copyFromFavListId", copyFromId, DB.SqlDataType.Int);
 						DB.ExecuteNonQuery(sql);
 					}
+					// Set as default for right click menu
+					// find last favlist
+					sql = "select max(id) from favList; ";
+					DataTable dtAddTank = DB.FetchData(sql);
+					int favListId = Convert.ToInt32(dtAddTank.Rows[0][0]);
+					FavListHelper.lastAddFavListFromPopup = favListId;
+					// Add tank to new favList if selected
+					if (_tankId > 0)
+					{
+						// Check if tank already exists
+						sql = "select favListId from favListTank where favListId=@favListId; ";
+						DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
+						// Add tank if not exsits
+						if (DB.FetchData(sql).Rows.Count == 0)
+						{
+							sql = "insert into favListTank (favListId, tankId, sortorder) values (@favListId, @tankId, 999999) ";
+							DB.AddWithValue(ref sql, "@favListId", favListId, DB.SqlDataType.Int);
+							DB.AddWithValue(ref sql, "@tankId", _tankId, DB.SqlDataType.Int);
+							DB.ExecuteNonQuery(sql);
+							FavListHelper.TankSort(favListId);
+						}
+					}
 					this.Close();
 					FavListHelper.FavListSort();
 				}
@@ -122,7 +146,7 @@ namespace WinApp.Forms
 
 		private void ddCopyFrom_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(ddCopyFrom, Code.DropDownGrid.DropDownGridType.List, copyFromDD);
+			Code.DropDownGrid.Show(ddCopyFrom, Code.DropDownGrid.DropDownGridType.List, _copyFromDD);
 		}
 
 

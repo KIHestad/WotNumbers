@@ -211,14 +211,31 @@ namespace WinApp.Forms
 
 		private void scrollFavList_MouseDown(object sender, MouseEventArgs e)
 		{
-			if (dataGridFavList.RowCount > 0)
-				dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
+			try
+			{
+				if (dataGridFavList.RowCount > 0)
+					dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
+			}
+			catch (Exception)
+			{
+
+				// Scrolling event error handling
+			}
+			
 		}
 
 		private void scrollFavList_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (dataGridFavList.RowCount > 0)
-				dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
+			try
+			{
+				if (dataGridFavList.RowCount > 0)
+					dataGridFavList.FirstDisplayedScrollingRowIndex = scrollFavList.ScrollPosition;
+			}
+			catch (Exception)
+			{
+				// Scrolling event error handling
+			}
+			
 		}
 
 		#endregion
