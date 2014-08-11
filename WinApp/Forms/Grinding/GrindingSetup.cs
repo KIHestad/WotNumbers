@@ -79,8 +79,10 @@ namespace WinApp.Forms
 		{
 			int i;
 			bool ok = Int32.TryParse(txtGrindXP.Text, out i);
-			if (ok && i > 0 && (txtGrindXP.Text != "0" || txtProgressXP.Text != "0"))
+			if (((ok && i > 0) || txtProgressXP.Text != "0") && txtBattlesPerDay.Text == "0")
 				txtBattlesPerDay.Text = "1";
+			else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
+				txtBattlesPerDay.Text = "0";
 			CalcProgress();
 			dataChanged = true;
 		}
@@ -89,8 +91,10 @@ namespace WinApp.Forms
 		{
 			int i;
 			bool ok = Int32.TryParse(txtProgressXP.Text, out i);
-			if (ok && i > 0 && (txtGrindXP.Text != "0" || txtProgressXP.Text != "0"))
+			if (((ok && i > 0) || txtGrindXP.Text != "0") && txtBattlesPerDay.Text == "0")
 				txtBattlesPerDay.Text = "1";
+			else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
+				txtBattlesPerDay.Text = "0";
 			CalcProgress();
 			dataChanged = true;
 		}
