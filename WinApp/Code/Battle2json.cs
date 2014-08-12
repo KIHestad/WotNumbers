@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using IronPython.Hosting;
+using IronPython.Runtime;
+using Microsoft.Scripting.Hosting;
 
 namespace WinApp.Code
 {
@@ -15,10 +17,10 @@ namespace WinApp.Code
 		public static void CheckBattleResultNewFiles()
 		{
 			List<string> battleResultNewFiles = new List<string>(); // List containing new files
-			// Get current battle_result subfolder for getting dat-files
+			// Get WoT top level battle_result folder for getting dat-files
 			DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
 			DirectoryInfo[] folders = di.GetDirectories();
-			// Loop through all battle result forlders
+			// testing one file
 			foreach (DirectoryInfo folder in folders)
 			{
 				string[] files = Directory.GetFiles(folder.FullName, "*.dat");
@@ -42,16 +44,25 @@ namespace WinApp.Code
 				// Convert file to json
 				if (ConvertBattleUsingPython(file))
 				{
-					// Success, read content find battle
+					// Success, clean up delete dat file
+					FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+					string filename = Path.GetFileName(file);
+					fileBattleOriginal.Delete(); // delete original DAT file
 				}
+			}
+		}
+
+		private static void test()
+		{
+			string[] files = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
+			foreach (string file in files)
+			{
+				ConvertBattleUsingPython(file);	
 			}
 		}
 
 		private static bool ConvertBattleUsingPython(string filename)
 		{
-			// Change filename to fixed name
-			if (!File.Exists(Path.GetDirectoryName(filename) + "/battle.dat"))
-				File.Move(filename, Path.GetDirectoryName(filename) + "/battle.dat");
 			// Locate Python script
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file
@@ -61,22 +72,37 @@ namespace WinApp.Code
 				//var ipy = Python.CreateRuntime();
 				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
 				//ipyrun.main();
+				if (!PythonEngine.InUse)
+				{
+					PythonEngine.InUse = true;
+					var argv = new List();
+					argv.Add(battle2jsonScript); // Have to add filename to run as first arg
+					argv.Add(filename);
+					PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
+					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
+					dynamic result = scope.GetVariable("main")();
 
-				Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
-				Microsoft.Scripting.Hosting.ScriptScope scope = py.ExecuteFile(battle2jsonScript); // this is your python program
-				dynamic result = scope.GetVariable("main")();
+					//ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
+					//setup.DebugMode = true;
+					//setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
+					//ScriptRuntime runtime = new ScriptRuntime(setup);
+					//ScriptEngine engine = runtime.GetEngineByTypeName(typeof(PythonContext).AssemblyQualifiedName);
+					//ScriptSource script = engine.CreateScriptSourceFromFile(battle2jsonScript);
+					//CompiledCode code = script.Compile();
+					//ScriptScope scope = engine.CreateScope();
+					//script.Execute(scope);
 
+					PythonEngine.InUse = false;
+				}
 			}
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
 				Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
+				PythonEngine.InUse = false;
 				return false;
 			}
-			// Rename files back to "original" names
-			File.Move(Path.GetDirectoryName(filename) + "/battle.dat", filename);
-			File.Move(Path.GetDirectoryName(filename) + "/battle.json", Path.GetDirectoryName(filename) + "/" + Path.GetFileNameWithoutExtension(filename) + ".json");
 			return true;
 		}
 	}

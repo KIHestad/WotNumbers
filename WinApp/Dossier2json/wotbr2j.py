@@ -1,17 +1,15 @@
 ################################################### 
 # World of Tanks Battle Result to JSON            # 
 # by Phalynx www.vbaddict.net                     # 
-#                                                 #
-# Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2014-07-28       #
 ################################################### 
-import struct, json, time, sys, os 
+# IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+import struct, json, time, sys, os, cPickle, StringIO
+
 from itertools import izip 
   
 ARENA_GAMEPLAY_NAMES = ('ctf', 'domination', 'assault', 'nations', 'ctf2', 'domination2', 'assault2')
 BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie') 
 FINISH_REASON_NAMES = ('extermination', 'base', 'timeout', 'failure', 'technical') 
-
 
 VEHICLE_DEVICE_TYPE_NAMES = ('engine', 
  'ammoBay', 
@@ -57,13 +55,11 @@ def usage():
 
 
 def main(): 
-		import struct, json, time, sys, os, shutil, datetime, cPickle
+		import struct, json, time, sys, os, shutil, datetime
 		  
 		parserversion = "0.9.1.0"
-		
-		  
-		
-		global numofkills, filename_source, filename_target, option_server, option_format, working_directory
+	
+		global numofkills, filename_source, filename_target, option_server, option_format 
 		option_raw = 0
 		option_format = 0
 		option_server = 0
@@ -82,19 +78,10 @@ def main():
 			elif argument == "-s": 
 				option_server = 1
 		
-		#filename_source = str(sys.argv[1]) 
-
-		# IRONPYTHON MODIFIED: added manually input dossier filename
-		# filename_source = "battle.dat"
-		filename_source = '%s\\Wot Numbers\\battle.dat' %  os.environ['APPDATA']
+		filename_source = str(sys.argv[1]) 
 		
 		printmessage('###### WoTBR2J ' + parserversion) 
 		
-		working_directory = os.path.dirname(os.path.realpath(__file__))
-	
-		# IRONPYTHON MODIFIED: select current path as working directory
-		os.chdir(working_directory)
-
 		printmessage('Processing ' + filename_source) 
 		  
 		if option_server == 0: 
@@ -111,18 +98,14 @@ def main():
 		
 		cachefile = open(filename_source, 'rb') 
 				  
-		#try: 
-		#	from SafeUnpickler import SafeUnpickler
-		#	battleresultversion, battleResults = SafeUnpickler.load(cachefile) 
-		#except Exception, e: 
-		#	exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
-		#	sys.exit(1) 
-		
-		try:
-			battleresultversion, battleResults = cPickle.load(cachefile)
-		except Exception, e:
+		try: 
+			# IRONPYTHON MODIFIED: no use if SafeUnpickler
+			#from os.path import SafeUnpickler
+			battleresultversion, battleResults = SafeUnpickler.load(cachefile) 
+		except Exception, e: 
 			exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
-
+			sys.exit(1) 
+		
 		if not 'battleResults' in locals(): 
 			exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 			sys.exit(1) 
@@ -274,11 +257,13 @@ def main():
 		  
 		dumpjson(bresult) 
 		
-		# IRONPYTHON MODIFIED: close dossier input file
-		cachefile.close()
 		
 		printmessage('###### Done!') 
 		printmessage('') 
+
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
+
 		# IRONPYTHON MODIFIED: no need for exit, throws error when calling sys.exit
 		#sys.exit(0)
 
@@ -557,8 +542,8 @@ def convertToFullForm(compactForm):
 					fullForm['personal']['details'][vehicleid]['critsCriticalDevicesList'] = criticalDevicesList 
 					fullForm['personal']['details'][vehicleid]['critsDestroyedDevicesList'] = destroyedDevicesList 
 	
-
-	from SafeUnpickler import SafeUnpickler
+	# IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+	#from SafeUnpickler import SafeUnpickler
 	commonAsList, playersAsList, vehiclesAsList = SafeUnpickler.loads(compactForm[2]) 
 	fullForm['common'] = listToDict(COMMON_RESULTS, commonAsList) 
 	for accountDBID, playerAsList in playersAsList.iteritems(): 
@@ -627,10 +612,8 @@ def write_to_log(logtext):
 		  
 def get_json_data(filename): 
 	import json, time, sys, os 
-	
-	# IRONPYTHON MODIFIED: removed setting path, use working directory (set in main)
-	
-	#os.chdir(sys.path[0]) 
+	  
+	os.chdir(sys.path[0]) 
 
 	if not os.path.exists(filename) or not os.path.isfile(filename) or not os.access(filename, os.R_OK): 
 		catch_fatal(filename + " does not exists!") 
@@ -790,7 +773,46 @@ class VehicleInteractionDetails_LEGACY(object):
 	def toDict(self): 
 		return dict([ (vehID, dict(_VehicleInteractionDetailsItem_LEGACY(self.__values, offset))) for vehID, offset in self.__offsets.iteritems() ]) 
 
+class SafeUnpickler(object):
+	PICKLE_SAFE = {}
 
+	@classmethod
+	def find_class(cls, module, name):
+		if not module in cls.PICKLE_SAFE:
+			raise cPickle.UnpicklingError('Attempting to unpickle unsafe module %s' % module)
+		
+		__import__(module)
+		mod = sys.modules[module]
+			
+		if not name in cls.PICKLE_SAFE[module]:
+			raise cPickle.UnpicklingError('Attempting to unpickle unsafe class %s' % name)
+			
+		klass = getattr(mod, name)
+		return klass
+
+	@classmethod
+	def loads(cls, pickle_string):
+		try:
+			safeUnpickler = cPickle.Unpickler(StringIO.StringIO(pickle_string))
+			# IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+			#safeUnpickler.find_global = cls.find_class
+			return safeUnpickler.load()
+		except Exception, e:
+			raise cPickle.UnpicklingError('Unpickler Error')
+			
+	@classmethod
+	def load(cls, pickle_file):
+		try:
+			safeUnpickler = cPickle.Unpickler(pickle_file)
+			# IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+			#safeUnpickler.find_global = cls.find_class
+			return safeUnpickler.load()
+		
+		except EOFError, er:
+			raise cPickle.UnpicklingError('Unpickler EOF Error')
+		
+		except Exception, e:
+			raise cPickle.UnpicklingError('Unpickler Error')
 
 if __name__ == '__main__': 
 	main() 

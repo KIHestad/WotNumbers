@@ -165,6 +165,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -240,23 +241,23 @@
 			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mViewLabel,
-			this.mViewOverall,
-			this.mViewTankInfo,
-			this.mViewBattles,
-			this.mRefresh,
-			this.mRefreshSeparator,
-			this.mColumnSelect,
-			this.mTankFilter,
-			this.mMode,
-			this.mBattles,
-			this.toolStripSeparator23,
-			this.mViewChart,
-			this.mSettings,
-			this.mHelp});
+            this.mViewLabel,
+            this.mViewOverall,
+            this.mViewTankInfo,
+            this.mViewBattles,
+            this.mRefresh,
+            this.mRefreshSeparator,
+            this.mColumnSelect,
+            this.mTankFilter,
+            this.mMode,
+            this.mBattles,
+            this.toolStripSeparator23,
+            this.mViewChart,
+            this.mSettings,
+            this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(642, 25);
+			this.toolMain.Size = new System.Drawing.Size(673, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -315,23 +316,23 @@
 			// mColumnSelect
 			// 
 			this.mColumnSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mColumnSelect_01,
-			this.mColumnSelect_02,
-			this.mColumnSelect_03,
-			this.mColumnSelect_04,
-			this.mColumnSelect_05,
-			this.mColumnSelect_06,
-			this.mColumnSelect_07,
-			this.mColumnSelect_08,
-			this.mColumnSelect_09,
-			this.mColumnSelect_10,
-			this.mColumnSelect_11,
-			this.mColumnSelect_12,
-			this.mColumnSelect_13,
-			this.mColumnSelect_14,
-			this.mColumnSelect_15,
-			this.toolStripSeparator5,
-			this.mColumnSelect_Edit});
+            this.mColumnSelect_01,
+            this.mColumnSelect_02,
+            this.mColumnSelect_03,
+            this.mColumnSelect_04,
+            this.mColumnSelect_05,
+            this.mColumnSelect_06,
+            this.mColumnSelect_07,
+            this.mColumnSelect_08,
+            this.mColumnSelect_09,
+            this.mColumnSelect_10,
+            this.mColumnSelect_11,
+            this.mColumnSelect_12,
+            this.mColumnSelect_13,
+            this.mColumnSelect_14,
+            this.mColumnSelect_15,
+            this.toolStripSeparator5,
+            this.mColumnSelect_Edit});
 			this.mColumnSelect.Image = ((System.Drawing.Image)(resources.GetObject("mColumnSelect.Image")));
 			this.mColumnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mColumnSelect.Name = "mColumnSelect";
@@ -487,25 +488,25 @@
 			// mTankFilter
 			// 
 			this.mTankFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_Country,
-			this.mTankFilter_Type,
-			this.mTankFilter_Tier,
-			this.mTankFilter_Clear,
-			this.mTankFilter_FavSeparator,
-			this.mTankFilter_All,
-			this.mTankFilter_Fav01,
-			this.mTankFilter_Fav02,
-			this.mTankFilter_Fav03,
-			this.mTankFilter_Fav04,
-			this.mTankFilter_Fav05,
-			this.mTankFilter_Fav06,
-			this.mTankFilter_Fav07,
-			this.mTankFilter_Fav08,
-			this.mTankFilter_Fav09,
-			this.mTankFilter_Fav10,
-			this.toolStripSeparator12,
-			this.mTankFilter_EditFavList,
-			this.mTankFilter_GetInGarage});
+            this.mTankFilter_Country,
+            this.mTankFilter_Type,
+            this.mTankFilter_Tier,
+            this.mTankFilter_Clear,
+            this.mTankFilter_FavSeparator,
+            this.mTankFilter_All,
+            this.mTankFilter_Fav01,
+            this.mTankFilter_Fav02,
+            this.mTankFilter_Fav03,
+            this.mTankFilter_Fav04,
+            this.mTankFilter_Fav05,
+            this.mTankFilter_Fav06,
+            this.mTankFilter_Fav07,
+            this.mTankFilter_Fav08,
+            this.mTankFilter_Fav09,
+            this.mTankFilter_Fav10,
+            this.toolStripSeparator12,
+            this.mTankFilter_EditFavList,
+            this.mTankFilter_GetInGarage});
 			this.mTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter.Image")));
 			this.mTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mTankFilter.Name = "mTankFilter";
@@ -517,13 +518,13 @@
 			// mTankFilter_Country
 			// 
 			this.mTankFilter_Country.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_CountryChina,
-			this.mTankFilter_CountryFrance,
-			this.mTankFilter_CountryGermany,
-			this.mTankFilter_CountryUK,
-			this.mTankFilter_CountryUSA,
-			this.mTankFilter_CountryJapan,
-			this.mTankFilter_CountryUSSR});
+            this.mTankFilter_CountryChina,
+            this.mTankFilter_CountryFrance,
+            this.mTankFilter_CountryGermany,
+            this.mTankFilter_CountryUK,
+            this.mTankFilter_CountryUSA,
+            this.mTankFilter_CountryJapan,
+            this.mTankFilter_CountryUSSR});
 			this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
 			this.mTankFilter_Country.Name = "mTankFilter_Country";
 			this.mTankFilter_Country.Size = new System.Drawing.Size(234, 22);
@@ -603,11 +604,11 @@
 			// mTankFilter_Type
 			// 
 			this.mTankFilter_Type.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_TypeLT,
-			this.mTankFilter_TypeMT,
-			this.mTankFilter_TypeHT,
-			this.mTankFilter_TypeTD,
-			this.mTankFilter_TypeSPG});
+            this.mTankFilter_TypeLT,
+            this.mTankFilter_TypeMT,
+            this.mTankFilter_TypeHT,
+            this.mTankFilter_TypeTD,
+            this.mTankFilter_TypeSPG});
 			this.mTankFilter_Type.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Type.Image")));
 			this.mTankFilter_Type.Name = "mTankFilter_Type";
 			this.mTankFilter_Type.Size = new System.Drawing.Size(234, 22);
@@ -666,16 +667,16 @@
 			// mTankFilter_Tier
 			// 
 			this.mTankFilter_Tier.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_Tier1,
-			this.mTankFilter_Tier2,
-			this.mTankFilter_Tier3,
-			this.mTankFilter_Tier4,
-			this.mTankFilter_Tier5,
-			this.mTankFilter_Tier6,
-			this.mTankFilter_Tier7,
-			this.mTankFilter_Tier8,
-			this.mTankFilter_Tier9,
-			this.mTankFilter_Tier10});
+            this.mTankFilter_Tier1,
+            this.mTankFilter_Tier2,
+            this.mTankFilter_Tier3,
+            this.mTankFilter_Tier4,
+            this.mTankFilter_Tier5,
+            this.mTankFilter_Tier6,
+            this.mTankFilter_Tier7,
+            this.mTankFilter_Tier8,
+            this.mTankFilter_Tier9,
+            this.mTankFilter_Tier10});
 			this.mTankFilter_Tier.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier.Image")));
 			this.mTankFilter_Tier.Name = "mTankFilter_Tier";
 			this.mTankFilter_Tier.Size = new System.Drawing.Size(234, 22);
@@ -916,16 +917,16 @@
 			// mMode
 			// 
 			this.mMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolStripMenuItem54,
-			this.toolStripSeparator17,
-			this.mModeRandomCompanyClan,
-			this.mModeTeam,
-			this.mModeHistorical,
-			this.toolStripSeparator18,
-			this.mModeRandom,
-			this.mModeCompany,
-			this.mModeClan,
-			this.mModeSpecialInfo});
+            this.toolStripMenuItem54,
+            this.toolStripSeparator17,
+            this.mModeRandomCompanyClan,
+            this.mModeTeam,
+            this.mModeHistorical,
+            this.toolStripSeparator18,
+            this.mModeRandom,
+            this.mModeCompany,
+            this.mModeClan,
+            this.mModeSpecialInfo});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
 			this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mMode.Name = "mMode";
@@ -1016,21 +1017,21 @@
 			// mBattles
 			// 
 			this.mBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mBattles1d,
-			this.mBattlesYesterday,
-			this.mBattles3d,
-			this.toolStripSeparator19,
-			this.mBattles1w,
-			this.mBattles2w,
-			this.toolStripSeparator20,
-			this.mBattles1m,
-			this.mBattles3m,
-			this.mBattles6m,
-			this.toolStripSeparator21,
-			this.mBattles1y,
-			this.mBattles2y,
-			this.toolStripSeparator22,
-			this.mBattlesAll});
+            this.mBattles1d,
+            this.mBattlesYesterday,
+            this.mBattles3d,
+            this.toolStripSeparator19,
+            this.mBattles1w,
+            this.mBattles2w,
+            this.toolStripSeparator20,
+            this.mBattles1m,
+            this.mBattles3m,
+            this.mBattles6m,
+            this.toolStripSeparator21,
+            this.mBattles1y,
+            this.mBattles2y,
+            this.toolStripSeparator22,
+            this.mBattlesAll});
 			this.mBattles.Image = ((System.Drawing.Image)(resources.GetObject("mBattles.Image")));
 			this.mBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mBattles.Name = "mBattles";
@@ -1166,15 +1167,15 @@
 			// 
 			this.mSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mSettingsRun,
-			this.mSettingsDossierOptions,
-			this.toolStripSeparator24,
-			this.mUpdateDataFromAPI,
-			this.mImportBattlesFromWotStat,
-			this.mShowDbTables,
-			this.toolStripSeparator25,
-			this.mSettingsAppLayout,
-			this.mSettingsApp});
+            this.mSettingsRun,
+            this.mSettingsDossierOptions,
+            this.toolStripSeparator24,
+            this.mUpdateDataFromAPI,
+            this.mImportBattlesFromWotStat,
+            this.mShowDbTables,
+            this.toolStripSeparator25,
+            this.mSettingsAppLayout,
+            this.mSettingsApp});
 			this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
 			this.mSettings.Name = "mSettings";
 			this.mSettings.ShowDropDownArrow = false;
@@ -1192,9 +1193,10 @@
 			// mSettingsDossierOptions
 			// 
 			this.mSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mSettingsRunManual,
-			this.mSettingsForceUpdateFromPrev,
-			this.mSettingsTestAddBattleResult});
+            this.mSettingsRunManual,
+            this.mSettingsForceUpdateFromPrev,
+            this.toolStripSeparator1,
+            this.mSettingsTestAddBattleResult});
 			this.mSettingsDossierOptions.Name = "mSettingsDossierOptions";
 			this.mSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
 			this.mSettingsDossierOptions.Text = "Dossier File Options";
@@ -1217,8 +1219,7 @@
 			// 
 			this.mSettingsTestAddBattleResult.Name = "mSettingsTestAddBattleResult";
 			this.mSettingsTestAddBattleResult.Size = new System.Drawing.Size(286, 22);
-			this.mSettingsTestAddBattleResult.Text = "Test add battle result";
-			this.mSettingsTestAddBattleResult.Visible = false;
+			this.mSettingsTestAddBattleResult.Text = "For Testing: Read Battle Result";
 			this.mSettingsTestAddBattleResult.Click += new System.EventHandler(this.mSettingsTestAddBattleResult_Click);
 			// 
 			// toolStripSeparator24
@@ -1270,10 +1271,10 @@
 			// 
 			this.mHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mHelpCheckVersion,
-			this.mHelpMessage,
-			this.toolStripSeparator2,
-			this.mHelpAbout});
+            this.mHelpCheckVersion,
+            this.mHelpMessage,
+            this.toolStripSeparator2,
+            this.mHelpAbout});
 			this.mHelp.Image = ((System.Drawing.Image)(resources.GetObject("mHelp.Image")));
 			this.mHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mHelp.Name = "mHelp";
@@ -1503,6 +1504,11 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(283, 6);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1669,6 +1675,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mHelpAbout;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Clear;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsAppLayout;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 	}
 }
 

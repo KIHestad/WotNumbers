@@ -14,8 +14,6 @@ namespace WinApp.Code
 {
 	public class dossier2json
 	{
-		private static Microsoft.Scripting.Hosting.ScriptEngine py = Python.CreateEngine(); // allow us to run ironpython programs
-		
 		public BackgroundWorker bwDossierProcess;
 		public static bool dossierRunning = false;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
@@ -348,9 +346,13 @@ namespace WinApp.Code
 				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
 				//ipyrun.main();
 
-				Microsoft.Scripting.Hosting.ScriptScope scope = py.ExecuteFile(dossier2jsonScript); // this is your python program
-				dynamic result = scope.GetVariable("main")();
-				
+				if (!PythonEngine.InUse)
+				{
+					PythonEngine.InUse = true;
+					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
+					dynamic result = scope.GetVariable("main")();
+					PythonEngine.InUse = false;
+				}
 
 			}
 			catch (Exception ex)
@@ -359,6 +361,7 @@ namespace WinApp.Code
 				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
 				return "Error converting dossier file to json";
+				PythonEngine.InUse = false;
 			}
 			return "";
 		}

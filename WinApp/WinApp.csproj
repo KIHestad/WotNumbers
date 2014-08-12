@@ -144,6 +144,7 @@
     <Compile Include="Code\FormView\StatusBarHelper.cs" />
     <Compile Include="Code\FormView\GridSortingHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
+    <Compile Include="Code\PythonEngine.cs" />
     <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\DB.cs" />
@@ -556,7 +557,6 @@
     <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <Content Include="Dossier2json\wotbr2j.py" />
-    <Content Include="Dossier2json\wotbr2j_org.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />
     <Content Include="Lib\abc.py" />

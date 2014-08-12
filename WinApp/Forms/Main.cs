@@ -248,6 +248,9 @@ namespace WinApp.Forms
 		{
 			// Ready to draw form
 			Init = false;
+			// Create IronPython Engine
+			PythonEngine.CreateEngine();
+
 			// Maximize now if last settings
 			if (mainFormPosSize.WindowState == FormWindowState.Maximized)
 			{
@@ -3124,7 +3127,10 @@ namespace WinApp.Forms
 
 		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
 		{
-			Battle2json.CheckBattleResultNewFiles();
+			if (PythonEngine.InUse)
+				MsgBox.Show("Not able to run this test while dossier file is read. Try again in some seconds.", "IronPhyton engine in use", this);
+			else
+				Battle2json.CheckBattleResultNewFiles();
 		}
 
 		#endregion
