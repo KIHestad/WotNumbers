@@ -1161,57 +1161,57 @@ namespace WinApp.Code
 					break;
                 case 92:
                     mssql = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'battlesCount', 'int', 'battles', 'battlesCount', 'tanks_v2.fortSorties.battlesCount', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'battlesCount', 'Int', 'battles', 'battlesCount', 'tanks_v2.fortSorties.battlesCount', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'capturePoints', 'int', 'cap', 'cap', 'tanks_v2.fortSorties.capturePoints', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'capturePoints', 'Int', 'cap', 'cap', 'tanks_v2.fortSorties.capturePoints', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'damageAssistedRadio', 'int', 'assistSpot', 'assistSpot', 'tanks_v2.fortSorties.damageAssistedRadio', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'damageAssistedRadio', 'Int', 'assistSpot', 'assistSpot', 'tanks_v2.fortSorties.damageAssistedRadio', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'damageAssistedTrack', 'int', 'assistTrack', 'assistTrack', 'tanks_v2.fortSorties.damageAssistedTrack', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'damageAssistedTrack', 'Int', 'assistTrack', 'assistTrack', 'tanks_v2.fortSorties.damageAssistedTrack', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'damageBlockedByArmor', 'int', 'dmgBlocked', 'dmgBlocked', 'tanks_v2.fortSorties.damageBlockedByArmor', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'damageBlockedByArmor', 'Int', 'dmgBlocked', 'dmgBlocked', 'tanks_v2.fortSorties.damageBlockedByArmor', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'damageDealt', 'int', 'dmg', 'dmg', 'tanks_v2.fortSorties.damageDealt', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'damageDealt', 'Int', 'dmg', 'dmg', 'tanks_v2.fortSorties.damageDealt', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'damageReceived', 'int', 'dmgReceived', 'dmgReceived', 'tanks_v2.fortSorties.damageReceived', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'damageReceived', 'Int', 'dmgReceived', 'dmgReceived', 'tanks_v2.fortSorties.damageReceived', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'droppedCapturePoints', 'int', 'def', 'def', 'tanks_v2.fortSorties.droppedCapturePoints', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'droppedCapturePoints', 'Int', 'def', 'def', 'tanks_v2.fortSorties.droppedCapturePoints', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'frags', 'int', 'frags', 'frags', 'tanks_v2.fortSorties.frags', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'frags', 'Int', 'frags', 'frags', 'tanks_v2.fortSorties.frags', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'frags8p', 'int', 'frags8p', NULL, 'tanks_v2.fortSorties.frags8p', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'frags8p', 'Int', 'frags8p', NULL, 'tanks_v2.fortSorties.frags8p', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'heHitsReceived', 'int', 'heHitsReceived', NULL, 'tanks_v2.fortSorties.heHitsReceived', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'heHitsReceived', 'Int', 'heHitsReceived', NULL, 'tanks_v2.fortSorties.heHitsReceived', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'he_hits', 'int', 'he_hits', NULL, 'tanks_v2.fortSorties.he_hits', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'he_hits', 'Int', 'he_hits', NULL, 'tanks_v2.fortSorties.he_hits', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'hits', 'int', 'hits', 'hits', 'tanks_v2.fortSorties.hits', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'hits', 'Int', 'hits', 'hits', 'tanks_v2.fortSorties.hits', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'losses', 'int', 'losses', 'defeat', 'tanks_v2.fortSorties.losses', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'losses', 'Int', 'losses', 'defeat', 'tanks_v2.fortSorties.losses', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'noDamageShotsReceived', 'int', 'noDamageShotsReceived', NULL, 'tanks_v2.fortSorties.noDamageShotsReceived', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'noDamageShotsReceived', 'Int', 'noDamageShotsReceived', NULL, 'tanks_v2.fortSorties.noDamageShotsReceived', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'originalXP', 'int', 'xpOriginal', NULL, 'tanks_v2.fortSorties.originalXP', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'originalXP', 'Int', 'xpOriginal', NULL, 'tanks_v2.fortSorties.originalXP', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'pierced', 'int', 'pierced', 'pierced', 'tanks_v2.fortSorties.pierced', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'pierced', 'Int', 'pierced', 'pierced', 'tanks_v2.fortSorties.pierced', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'piercingsReceived', 'int', 'piercedReceived', 'piercedReceived', 'tanks_v2.fortSorties.piercingsReceived', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'piercingsReceived', 'Int', 'piercedReceived', 'piercedReceived', 'tanks_v2.fortSorties.piercingsReceived', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'potentialDamageReceived', 'int', 'potentialDmgReceived', 'potentialDmgReceived', 'tanks_v2.fortSorties.potentialDamageReceived', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'potentialDamageReceived', 'Int', 'potentialDmgReceived', 'potentialDmgReceived', 'tanks_v2.fortSorties.potentialDamageReceived', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'shots', 'int', 'shots', 'shots', 'tanks_v2.fortSorties.shots', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'shots', 'Int', 'shots', 'shots', 'tanks_v2.fortSorties.shots', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'shotsReceived', 'int', 'shotsReceived', 'shotsReceived', 'tanks_v2.fortSorties.shotsReceived', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'shotsReceived', 'Int', 'shotsReceived', 'shotsReceived', 'tanks_v2.fortSorties.shotsReceived', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'spotted', 'int', 'spot', 'spotted', 'tanks_v2.fortSorties.spotted', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'spotted', 'Int', 'spot', 'spotted', 'tanks_v2.fortSorties.spotted', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'survivedBattles', 'int', 'survived', 'survived', 'tanks_v2.fortSorties.survivedBattles', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'survivedBattles', 'Int', 'survived', 'survived', 'tanks_v2.fortSorties.survivedBattles', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'wins', 'int', 'wins', 'victory', 'tanks_v2.fortSorties.wins', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'wins', 'Int', 'wins', 'victory', 'tanks_v2.fortSorties.wins', 'Strongholds'); " +
                             "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
-                            "VALUES ('tanks_v2', 'fortSorties', 'xp', 'int', 'xp', 'xp', 'tanks_v2.fortSorties.xp', 'Strongholds'); " +
+                            "VALUES ('tanks_v2', 'fortSorties', 'xp', 'Int', 'xp', 'xp', 'tanks_v2.fortSorties.xp', 'Strongholds'); " +
                             "delete from json2dbMapping where jsonMain='tanks_v2' and jsonSub='achievements'; " +
-                            "delete from json2dbMapping where jsonMain='tanks_v2' and jsonSub='achievements7x7'; " ;
+                            "delete from json2dbMapping where jsonMain='tanks_v2' and jsonSub='achievements7x7'; ";
                     sqlite = mssql;
                     break;
 
