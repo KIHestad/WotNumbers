@@ -360,8 +360,8 @@ namespace WinApp.Code
 				Log.LogToFile(ex);
 				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
-				return "Error converting dossier file to json";
 				PythonEngine.InUse = false;
+				return "Error converting dossier file to json";
 			}
 			return "";
 		}
