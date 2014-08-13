@@ -183,7 +183,7 @@ namespace WinApp.Code
 		public static double CalculateWN7(double battleCount, double dmg, double spotted, double frags, double def, double cap, double wins, double TIER, bool calcForBattle = false)
 		{
 			double WN7 = 0;
-			if (battleCount > 0)
+			if (battleCount > 0 && TIER > 0)
 			{
 				// Calc average values
 				double DAMAGE = dmg / battleCount;
@@ -382,7 +382,7 @@ namespace WinApp.Code
 				"where pt.playerId=@playerId " + battleModeWhere;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
 			{
 				double totalBattles = Convert.ToDouble(dt.Rows[0][0]);
 				if (totalBattles > 0)

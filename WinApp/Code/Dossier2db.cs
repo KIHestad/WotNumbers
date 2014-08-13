@@ -249,6 +249,7 @@ namespace WinApp.Code
 									{
 										currentItem.tank = reader.Value.ToString(); // add to current item
 										tankName = reader.Value.ToString(); // add to current tank
+										string s = tankName;
 									}
 								}
 							}

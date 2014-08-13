@@ -114,7 +114,7 @@ namespace WinApp.Forms
 				Config.Settings.dossierFilePath = txtDossierFilePath.Text;
 				Form frm = new Forms.DatabaseSetting();
 				frm.ShowDialog();
-				PlayerPanel();
+				UpdateSettings();
 				Refresh();
 			}
 			else
