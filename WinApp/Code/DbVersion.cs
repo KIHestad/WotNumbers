@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 92; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 93; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1214,7 +1214,13 @@ namespace WinApp.Code
                             "delete from json2dbMapping where jsonMain='tanks_v2' and jsonSub='achievements7x7'; ";
                     sqlite = mssql;
                     break;
-
+                case 93:
+                    mssql = "ALTER TABLE playerTank ADD dmgBlocked INT NOT NULL;" +
+                            "ALTER TABLE playerTank ADD potentialDmgReceived INT NOT NULL;" +
+                            "ALTER TABLE battle ADD dmgBlocked INT NOT NULL;" +
+                            "ALTER TABLE battle ADD potentialDmgReceived INT NOT NULL;";
+                    sqlite = mssql;
+                    break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
