@@ -15,6 +15,7 @@ namespace WinApp.Code
 			Mode15 = 1,
 			Mode7 = 2,
 			ModeHistorical = 3,
+			ModeStrongholds = 4,
 		}
 
 		public static string DbBattleMode(DossierBattleMode mode)
