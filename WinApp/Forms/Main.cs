@@ -1776,7 +1776,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = battleCount[1].ToString();
 					dr["Team (7x7)"] = RatingVal(battleCount[2].ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(battleCount[3].ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = RatingVal(battleCount[4].ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(battleCount[4].ToString(), Convert.ToInt32(battleCount[4]));
 					dt.Rows.Add(dr);
 					
 					// Add Winrate
@@ -1786,7 +1786,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(wr[1], 2).ToString() + " %";
 					dr["Team (7x7)"] = RatingVal(Math.Round(wr[2], 2).ToString() + " %", Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(wr[3], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = RatingVal(Math.Round(wr[4], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(Math.Round(wr[4], 2).ToString() + " %", Convert.ToInt32(battleCount[4]));
 					dt.Rows.Add(dr);
 
 					// Add EFF
@@ -1796,7 +1796,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(eff[1], 2).ToString();
 					dr["Team (7x7)"] = RatingVal(Math.Round(eff[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(eff[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = RatingVal(Math.Round(eff[4], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(Math.Round(eff[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
 					dt.Rows.Add(dr);
 					// Add WN7
 					dr = dt.NewRow();
@@ -1805,7 +1805,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(wn7[1], 2).ToString();
 					dr["Team (7x7)"] = RatingVal(Math.Round(wn7[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(wn7[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = RatingVal(Math.Round(wn7[4], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(Math.Round(wn7[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
 					dt.Rows.Add(dr);
 					// Add WN8
 					dr = dt.NewRow();
