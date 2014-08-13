@@ -1215,11 +1215,11 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 93:
-                    mssql = "ALTER TABLE playerTank ADD dmgBlocked INT NOT NULL;" +
-                            "ALTER TABLE playerTank ADD potentialDmgReceived INT NOT NULL;" +
-                            "ALTER TABLE battle ADD dmgBlocked INT NOT NULL;" +
-                            "ALTER TABLE battle ADD potentialDmgReceived INT NOT NULL;";
-                    sqlite = mssql;
+                    mssql = "ALTER TABLE playerTankBattle ADD dmgBlocked INT NOT NULL DEFAULT 0;" +
+							"ALTER TABLE playerTankBattle ADD potentialDmgReceived INT NOT NULL DEFAULT 0;" +
+							"ALTER TABLE battle ADD dmgBlocked INT NOT NULL DEFAULT 0;" +
+							"ALTER TABLE battle ADD potentialDmgReceived INT NOT NULL DEFAULT 0;";
+					sqlite = mssql.Replace("INT", "integer");
                     break;
 			}
 			string sql = "";
