@@ -141,6 +141,7 @@
 			this.mSettingsDossierOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsRunManual = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsForceUpdateFromPrev = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.mSettingsTestAddBattleResult = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
 			this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
@@ -165,7 +166,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.mModeStrongholds = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -922,6 +923,7 @@
             this.mModeRandomCompanyClan,
             this.mModeTeam,
             this.mModeHistorical,
+            this.mModeStrongholds,
             this.toolStripSeparator18,
             this.mModeRandom,
             this.mModeCompany,
@@ -1215,6 +1217,11 @@
 			this.mSettingsForceUpdateFromPrev.Text = "Force Update All Data Dossier File Check";
 			this.mSettingsForceUpdateFromPrev.Click += new System.EventHandler(this.toolItemSettingsForceUpdateFromPrev_Click);
 			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(283, 6);
+			// 
 			// mSettingsTestAddBattleResult
 			// 
 			this.mSettingsTestAddBattleResult.Name = "mSettingsTestAddBattleResult";
@@ -1504,10 +1511,14 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// toolStripSeparator1
+			// mModeStrongholds
 			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(283, 6);
+			this.mModeStrongholds.Name = "mModeStrongholds";
+			this.mModeStrongholds.Size = new System.Drawing.Size(227, 22);
+			this.mModeStrongholds.Tag = "Strongholds";
+			this.mModeStrongholds.Text = "Strongholds Battles";
+			this.mModeStrongholds.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeStrongholds.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// Main
 			// 
@@ -1676,6 +1687,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Clear;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsAppLayout;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripMenuItem mModeStrongholds;
 	}
 }
 

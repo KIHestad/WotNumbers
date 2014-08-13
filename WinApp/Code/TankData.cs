@@ -29,6 +29,8 @@ namespace WinApp.Code
 					s = "7"; break;
 				case DossierBattleMode.ModeHistorical:
 					s = "Historical"; break;
+				case DossierBattleMode.ModeStrongholds:
+					s = "Strongholds"; break;
 			}
 			return s;
 		}

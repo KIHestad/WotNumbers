@@ -25,6 +25,7 @@ namespace WinApp.Code
 			Clan = 5,
 			Company = 6,
 			Historical = 7,
+			Strongholds = 8,
 		}
 
 		public class Settings

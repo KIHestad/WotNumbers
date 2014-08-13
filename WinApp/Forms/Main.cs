@@ -1495,15 +1495,15 @@ namespace WinApp.Forms
 				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
 				mainGridFormatting = false;
 				dataGridMain.DataSource = null;
-				int[] battleCount = new int[4];
-				double[] wr = new double[4];
-				double[] wn8 = new double[4];
-				double[] wn7 = new double[4];
-				double[] eff = new double[4];
+				int[] battleCount = new int[9];
+				double[] wr = new double[9];
+				double[] wn8 = new double[9];
+				double[] wn7 = new double[9];
+				double[] eff = new double[9];
 				bool applyColors = false;
 				// Get total number of tanks to show in first row
 				string sql =
-					"Select 'Tanks owned' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical' " +
+					"Select 'Tanks owned' as Data, cast(count(playerTank.tankId) as varchar) as Total, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical', '' as 'Strongholds' " +
 					"from playerTank " +
 					"where playerid=@playerId";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
@@ -1518,6 +1518,7 @@ namespace WinApp.Forms
 				DataTable dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
 				int usedTotal = 0;
 				if (dtCount.Rows[0][0] != DBNull.Value) usedTotal = Convert.ToInt32(dtCount.Rows[0][0]);
+				// 15
 				sql =
 					"Select count(playerTank.tankId) " +
 					"from playerTank " +
@@ -1527,6 +1528,7 @@ namespace WinApp.Forms
 				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
 				int usedRandom = 0;
 				if (dtCount.Rows[0][0] != DBNull.Value) usedRandom = Convert.ToInt32(dtCount.Rows[0][0]);
+				// 7
 				sql =
 					"Select count(playerTank.tankId) " +
 					"from playerTank " +
@@ -1536,6 +1538,7 @@ namespace WinApp.Forms
 				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
 				int usedTeam = 0;
 				if (dtCount.Rows[0][0] != DBNull.Value) usedTeam = Convert.ToInt32(dtCount.Rows[0][0]);
+				// hist
 				sql =
 					"Select count(playerTank.tankId) " +
 					"from playerTank " +
@@ -1545,6 +1548,16 @@ namespace WinApp.Forms
 				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
 				int usedHistorical = 0;
 				if (dtCount.Rows[0][0] != DBNull.Value) usedHistorical = Convert.ToInt32(dtCount.Rows[0][0]);
+				// strongh
+				sql =
+					"Select count(playerTank.tankId) " +
+					"from playerTank " +
+					"where playerTank.playerId=@playerId and tankid in (" +
+					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Strongholds')";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
+				int usedStrongholds = 0;
+				if (dtCount.Rows[0][0] != DBNull.Value) usedStrongholds = Convert.ToInt32(dtCount.Rows[0][0]);
 
 				// Add usage
 				DataRow dr = dt.NewRow();
@@ -1553,6 +1566,7 @@ namespace WinApp.Forms
 				dr["Random (15x15)"] = usedRandom.ToString();
 				dr["Team (7x7)"] = usedTeam.ToString();
 				dr["Historical"] = usedHistorical.ToString();
+				dr["Strongholds"] = usedStrongholds.ToString();
 				dt.Rows.Add(dr);
 
 				// get overall stats all battles
@@ -1719,6 +1733,42 @@ namespace WinApp.Forms
 						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
 					}
 
+					// Overall stats strongholds
+					sql =
+						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+						"from playerTankBattle ptb left join " +
+						"  playerTank pt on ptb.playerTankId=pt.id left join " +
+						"  tank t on pt.tankId = t.id " +
+						"where pt.playerId=@playerId and ptb.battleMode='Strongholds'";
+					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+					dtStats = DB.FetchData(sql);
+					stats = dtStats.Rows[0];
+					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+					{
+						// Battle count
+						battleCount[4] = Convert.ToInt32(stats["battles"]);
+						// win rate
+						wr[4] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+						// Rating parameters
+						BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+						DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+						SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+						FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+						DEF = Rating.ConvertDbVal2Double(stats["def"]);
+						CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+						WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+						TIER = 0;
+						if (BATTLES > 0)
+							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+						// eff
+						eff[4] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+						// wn7
+						wn7[4] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Historical"));
+						// Wn8
+						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
+					}
+
 					// Add Data to dataTable
 					dr = dt.NewRow();
 					dr["Data"] = "Battle count";
@@ -1726,6 +1776,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = battleCount[1].ToString();
 					dr["Team (7x7)"] = RatingVal(battleCount[2].ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(battleCount[3].ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(battleCount[4].ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 					
 					// Add Winrate
@@ -1735,6 +1786,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(wr[1], 2).ToString() + " %";
 					dr["Team (7x7)"] = RatingVal(Math.Round(wr[2], 2).ToString() + " %", Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(wr[3], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(Math.Round(wr[4], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 
 					// Add EFF
@@ -1744,6 +1796,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(eff[1], 2).ToString();
 					dr["Team (7x7)"] = RatingVal(Math.Round(eff[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(eff[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(Math.Round(eff[4], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 					// Add WN7
 					dr = dt.NewRow();
@@ -1752,6 +1805,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(wn7[1], 2).ToString();
 					dr["Team (7x7)"] = RatingVal(Math.Round(wn7[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(wn7[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = RatingVal(Math.Round(wn7[4], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 					// Add WN8
 					dr = dt.NewRow();
@@ -1760,6 +1814,7 @@ namespace WinApp.Forms
 					dr["Random (15x15)"] = Math.Round(wn8[1], 2).ToString();
 					dr["Team (7x7)"] = DBNull.Value; //RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Strongholds"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dt.Rows.Add(dr);
 
 					// Ready to set colors
@@ -1786,7 +1841,7 @@ namespace WinApp.Forms
 				// Colors
 				if (applyColors)
 				{
-					for (int i = 1; i < 5; i++)
+					for (int i = 1; i < 6; i++)
 					{
 						dataGridMain.Rows[2].Cells[i].Style.ForeColor = Rating.BattleCountColor(battleCount[i-1]);
 						dataGridMain.Rows[3].Cells[i].Style.ForeColor = Rating.WinRateColor(wr[i - 1]);
@@ -1806,6 +1861,7 @@ namespace WinApp.Forms
 				dataGridMain.Columns[2].Width = 80;
 				dataGridMain.Columns[3].Width = 80;
 				dataGridMain.Columns[4].Width = 80;
+				dataGridMain.Columns[5].Width = 80;
 				ResizeNow();
 				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
 				// Status mesage
@@ -1866,6 +1922,9 @@ namespace WinApp.Forms
 					break;
 				case GridFilter.BattleModeType.Historical:
 					battleModeFilter = " AND (playerTankBattle.battleMode = 'Historical') ";
+					break;
+				case GridFilter.BattleModeType.Strongholds:
+					battleModeFilter = " AND (playerTankBattle.battleMode = 'Strongholds') ";
 					break;
 				default:
 					break;
@@ -2065,6 +2124,9 @@ namespace WinApp.Forms
 							break;
 						case GridFilter.BattleModeType.Historical:
 							battleModeFilter = " AND (battleMode = 'Historical') ";
+							break;
+						case GridFilter.BattleModeType.Strongholds:
+							battleModeFilter = " AND (battleMode = 'Strongholds') ";
 							break;
 						default:
 							break;
