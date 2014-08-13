@@ -1764,7 +1764,7 @@ namespace WinApp.Forms
 						// eff
 						eff[4] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
 						// wn7
-						wn7[4] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Historical"));
+						wn7[4] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Strongholds"));
 						// Wn8
 						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
 					}
