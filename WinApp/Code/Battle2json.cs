@@ -17,11 +17,37 @@ namespace WinApp.Code
 	{
 		private static List<string> battleResultFileRead = new List<string>(); // List of dat-files read from wargaming battle folder, to avoid read several times
 		private static List<string> battleResultFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid read several times
+		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
+		public static bool battleResultReadRunning = false;
+		public static bool battleResultReadRunOnceMore = false;
 
 		private class BattleValues
 		{
 			public string colname;
 			public int value;
+		}
+
+		public static void StartBattleResultFileWatcher()
+		{
+			battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
+			battleResultFileWatcher.Filter = "*.dat";
+			battleResultFileWatcher.IncludeSubdirectories = true;
+			battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+			battleResultFileWatcher.Changed += new FileSystemEventHandler(BattleResultFileChanged);
+			battleResultFileWatcher.EnableRaisingEvents = true;
+		}
+
+		private static void BattleResultFileChanged(object source, FileSystemEventArgs e)
+		{
+			if (!battleResultReadRunning)
+			{
+				GetAndConvertBattleFiles();
+			}
+			else
+			{
+				battleResultReadRunOnceMore = true;
+			}
+				
 		}
 
 		public static void GetExistingBattleFiles()
@@ -36,40 +62,51 @@ namespace WinApp.Code
 
 		public static void GetAndConvertBattleFiles()
 		{
-			List<string> battleResultNewFiles = new List<string>(); // List containing new files
-			// Get WoT top level battle_result folder for getting dat-files
-			DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
-			DirectoryInfo[] folders = di.GetDirectories();
-			// testing one file
-			foreach (DirectoryInfo folder in folders)
+			if (!battleResultReadRunning)
 			{
-				string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
-				foreach (string file in filesDat)
+				battleResultReadRunning = true;
+				List<string> battleResultNewFiles = new List<string>(); // List containing new files
+				// Get WoT top level battle_result folder for getting dat-files
+				DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
+				DirectoryInfo[] folders = di.GetDirectories();
+				// testing one file
+				foreach (DirectoryInfo folder in folders)
 				{
-					string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
-					if (!battleResultFileRead.Exists(x => x == file) && !battleResultFileExists.Exists(x => x == filenameWihoutExt))
+					string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
+					foreach (string file in filesDat)
 					{
-						// New file found, copy it and remember to avoid copy twice
-						battleResultFileRead.Add(file);
-						// Copy
-						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
-						string filename = Path.GetFileName(file);
-						fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
-						battleResultNewFiles.Add(Config.AppDataBattleResultFolder + filename);
+						string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
+						if (!battleResultFileRead.Exists(x => x == file) && !battleResultFileExists.Exists(x => x == filenameWihoutExt))
+						{
+							// New file found, copy it and remember to avoid copy twice
+							battleResultFileRead.Add(file);
+							// Copy
+							FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+							string filename = Path.GetFileName(file);
+							fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
+							battleResultNewFiles.Add(Config.AppDataBattleResultFolder + filename);
+						}
 					}
 				}
-			}
 
-			// Loop through new files
-			foreach (string file in battleResultNewFiles)
-			{
-				// Convert file to json
-				if (ConvertBattleUsingPython(file))
+				// Loop through new files
+				foreach (string file in battleResultNewFiles)
 				{
-					// Success, clean up delete dat file
-					FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
-					string filename = Path.GetFileName(file);
-					fileBattleOriginal.Delete(); // delete original DAT file
+					// Convert file to json
+					if (ConvertBattleUsingPython(file))
+					{
+						// Success, clean up delete dat file
+						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+						string filename = Path.GetFileName(file);
+						fileBattleOriginal.Delete(); // delete original DAT file
+					}
+				}
+				battleResultReadRunning = false;
+				// check if run once more, if new file is found
+				if (battleResultReadRunOnceMore)
+				{
+					battleResultReadRunOnceMore = false;
+					GetAndConvertBattleFiles();
 				}
 			}
 		}

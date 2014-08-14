@@ -292,6 +292,7 @@ namespace WinApp.Forms
 			SetFormTitle();
 			SetFavListMenu();
 			SetListener(false);
+			Battle2json.StartBattleResultFileWatcher();
 			ImageHelper.CreateTankImageTable();
 			ImageHelper.LoadTankImages();
 			// Battle result file watcher
