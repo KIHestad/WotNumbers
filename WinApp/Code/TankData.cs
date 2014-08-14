@@ -44,6 +44,7 @@ namespace WinApp.Code
 			GetAchList();
 			GetPlayerTankAchList();
 			GetPlayerTankFragList();
+			Battle2json.GetExistingBattleFiles();
 		}
 
 		public static DataTable achList = new DataTable();

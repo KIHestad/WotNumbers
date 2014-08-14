@@ -15,15 +15,26 @@ namespace WinApp.Code
 {
 	class Battle2json
 	{
-		private static List<string> battleResultFileRead = new List<string>(); // List for files read from wargaming battle folder, to avoid read several times
-		
+		private static List<string> battleResultFileRead = new List<string>(); // List of dat-files read from wargaming battle folder, to avoid read several times
+		private static List<string> battleResultFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid read several times
+
 		private class BattleValues
 		{
 			public string colname;
 			public int value;
 		}
 
-		public static void CheckBattleResultNewFiles()
+		public static void GetExistingBattleFiles()
+		{
+			// Get existing json files
+			string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
+			foreach (string file in filesJson)
+			{
+				battleResultFileExists.Add(Path.GetFileNameWithoutExtension(file).ToString()); // Remove file extension
+			}
+		}
+
+		public static void GetAndConvertBattleFiles()
 		{
 			List<string> battleResultNewFiles = new List<string>(); // List containing new files
 			// Get WoT top level battle_result folder for getting dat-files
@@ -35,7 +46,8 @@ namespace WinApp.Code
 				string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
 				foreach (string file in filesDat)
 				{
-					if (!battleResultFileRead.Exists(x => x == file))
+					string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
+					if (!battleResultFileRead.Exists(x => x == file) && !battleResultFileExists.Exists(x => x == filenameWihoutExt))
 					{
 						// New file found, copy it and remember to avoid copy twice
 						battleResultFileRead.Add(file);
@@ -60,8 +72,12 @@ namespace WinApp.Code
 					fileBattleOriginal.Delete(); // delete original DAT file
 				}
 			}
+		}
 
-			
+		public static void CheckBattleResultNewFiles()
+		{
+			// Look for new files
+			GetAndConvertBattleFiles();
 			// Get all json files
 			string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
 			foreach (string file in filesJson)

@@ -319,6 +319,7 @@ namespace WinApp.Code
 						}
 					}
 				}
+				// Done analyzing dossier file
 				dossierRunning = false;
 				if (forceUpdate)
 				{
@@ -328,6 +329,8 @@ namespace WinApp.Code
 				}
 				dt.Dispose();
 				dt.Clear();
+				// Check for new battle files, temp solution - do not analyze
+				Battle2json.GetAndConvertBattleFiles();
 			}
 			else
 			{
