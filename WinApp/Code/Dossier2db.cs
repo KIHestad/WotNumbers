@@ -133,7 +133,7 @@ namespace WinApp.Code
 												if (currentItem.property == "lastBattleTime" && currentItem.value.ToString() == "0")
 													NewPlayerTankRow[dbField] = DateTime.Now;
 												else
-													NewPlayerTankRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value));
+													NewPlayerTankRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value));
 												break;
 											case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
@@ -144,7 +144,7 @@ namespace WinApp.Code
 										switch (dataType)
 										{
 											case "String": NewPlayerTankBattle15Row[dbField] = currentItem.value.ToString(); break;
-											case "DateTime": NewPlayerTankBattle15Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "DateTime": NewPlayerTankBattle15Row[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
 											case "Int": NewPlayerTankBattle15Row[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
 									}
@@ -154,7 +154,7 @@ namespace WinApp.Code
 										switch (dataType)
 										{
 											case "String": NewPlayerTankBattle7Row[dbField] = currentItem.value.ToString(); break;
-											case "DateTime": NewPlayerTankBattle7Row[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "DateTime": NewPlayerTankBattle7Row[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
 											case "Int": NewPlayerTankBattle7Row[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
 									}
@@ -164,7 +164,7 @@ namespace WinApp.Code
 										switch (dataType)
 										{
 											case "String": NewPlayerTankBattleHistoricalRow[dbField] = currentItem.value.ToString(); break;
-											case "DateTime": NewPlayerTankBattleHistoricalRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "DateTime": NewPlayerTankBattleHistoricalRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
 											case "Int": NewPlayerTankBattleHistoricalRow[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
 									}
@@ -174,7 +174,7 @@ namespace WinApp.Code
 										switch (dataType)
 										{
 											case "String": NewPlayerTankBattleStrongholdsRow[dbField] = currentItem.value.ToString(); break;
-											case "DateTime": NewPlayerTankBattleStrongholdsRow[dbField] = ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "DateTime": NewPlayerTankBattleStrongholdsRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
 											case "Int": NewPlayerTankBattleStrongholdsRow[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
 									}
@@ -292,27 +292,6 @@ namespace WinApp.Code
 			
 		}
 
-		static DateTime ConvertFromUnixTimestamp(double timestamp)
-		{
-			DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-			return origin.AddSeconds(timestamp);
-		}
-
-		private static DataRow AdjustForTimeZone(DataRow playerTankRow)
-		{
-			TimeZone currentTimeZone = TimeZone.CurrentTimeZone;
-			TimeSpan offset = currentTimeZone.GetUtcOffset(DateTime.Now);
-
-			if (playerTankRow["creationTime"] != DBNull.Value)
-				playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(offset.Hours);
-			if (playerTankRow["updatedTime"] != DBNull.Value)
-				playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(offset.Hours);
-			if (playerTankRow["lastBattleTime"] != DBNull.Value)
-				playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(offset.Hours);
-
-			return playerTankRow;
-		}
-
 		public static bool CheckTankDataResult(string tankName, 
 												DataRow playerTankNewRow, 
 												DataRow playerTankBattle15NewRow, 
@@ -374,7 +353,7 @@ namespace WinApp.Code
 					(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0 || playerTankOldRow_battlesStrongholds > 0)))
 				{  
 					// Adjust for time zone
-					playerTankNewRow = AdjustForTimeZone(playerTankNewRow);
+					playerTankNewRow = DateTimeHelper.AdjustForTimeZone(playerTankNewRow);
 					
 					// Update playerTank
 					string sqlFields = "";

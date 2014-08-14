@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 95; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 96; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1235,6 +1235,10 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET position=position+174 WHERE colType=2 and colGroup='Shooting'; " +
 							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (500, 2, 500, 'credits', 'Income', 'Credits net income (without any cost)', 'Credits', 50, 'Int'); ";
+					break;
+				case 96:
+					mssql = "ALTER TABLE battle ADD arenaUniqueID BIGINT NULL;";
+					sqlite = mssql.Replace("BIGINT", "INTEGER");
 					break;
 			}
 			string sql = "";

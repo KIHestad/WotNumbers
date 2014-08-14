@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,6 +9,7 @@ using System.Windows.Forms;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.Scripting.Hosting;
+using Newtonsoft.Json.Linq;
 
 namespace WinApp.Code
 {
@@ -14,6 +17,12 @@ namespace WinApp.Code
 	{
 		private static List<string> battleResultFileRead = new List<string>(); // List for files read from wargaming battle folder, to avoid read several times
 		
+		private class BattleValues
+		{
+			public string colname;
+			public int value;
+		}
+
 		public static void CheckBattleResultNewFiles()
 		{
 			List<string> battleResultNewFiles = new List<string>(); // List containing new files
@@ -23,8 +32,8 @@ namespace WinApp.Code
 			// testing one file
 			foreach (DirectoryInfo folder in folders)
 			{
-				string[] files = Directory.GetFiles(folder.FullName, "*.dat");
-				foreach (string file in files)
+				string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
+				foreach (string file in filesDat)
 				{
 					if (!battleResultFileRead.Exists(x => x == file))
 					{
@@ -38,6 +47,7 @@ namespace WinApp.Code
 					}
 				}
 			}
+
 			// Loop through new files
 			foreach (string file in battleResultNewFiles)
 			{
@@ -50,14 +60,78 @@ namespace WinApp.Code
 					fileBattleOriginal.Delete(); // delete original DAT file
 				}
 			}
-		}
 
-		private static void test()
-		{
-			string[] files = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
-			foreach (string file in files)
+			
+			// Get all json files
+			string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
+			foreach (string file in filesJson)
 			{
-				ConvertBattleUsingPython(file);	
+				// Read content
+				StreamReader sr = new StreamReader(file, Encoding.UTF8);
+				string json = sr.ReadToEnd();
+				sr.Close();
+				// Root token
+				JToken token_root = JObject.Parse(json);
+				// Common token
+				JToken token_common = token_root["common"];
+				string result = (string)token_common.SelectToken("result"); // Find unique id
+				// Check if ok
+				if (result == "ok")
+				{
+					double arenaUniqueID = (double)token_root.SelectToken("arenaUniqueID"); // Find unique id
+					double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
+					double duration = (double)token_common.SelectToken("duration"); // Arena duration
+					double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
+					DateTime battleTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battlefinishUnix)).AddSeconds(45);
+					// Personal token
+					JToken token_personel = token_root["personal"];
+					int tankId = (int)token_personel.SelectToken("typeCompDescr"); // tankId
+					// Now find battle
+					string sql =
+						"select b.id as battleId " +
+						"from battle b left join playerTank pt on b.playerTankId = pt.id " +
+						"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
+					DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
+					DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
+					DataTable dt = DB.FetchData(sql);
+					if (dt.Rows.Count > 0)
+					{
+						// Battle found, get battleId
+						int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
+						// Get values
+						List<BattleValues> battleValues = new List<BattleValues>();
+						battleValues.Add(new BattleValues() { colname = "credits", value = (int)token_personel.SelectToken("credits") });
+
+						// insert data
+						string fields = "";
+						foreach (var battleValue in battleValues)
+						{
+							fields += battleValue.colname + " = " + battleValue.value.ToString() + ", ";
+						}
+						sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
+						DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
+						DB.ExecuteNonQuery(sql);
+						Debug.WriteLine("OK " + battleTime + " - " + tankId);
+					}
+					else
+					{
+						// Battle do not exists
+						Debug.WriteLine(" - " + battleTime + " - " + tankId);
+						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+						string filename = Path.GetFileName(file);
+						fileBattleOriginal.Delete(); // delete original DAT file
+					}
+					// Done - should delete file here - include later after testing
+				}
+				else
+				{
+					// Error in json file, delete it
+					FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+					string filename = Path.GetFileName(file);
+					fileBattleOriginal.Delete(); // delete original DAT file
+				}
 			}
 		}
 

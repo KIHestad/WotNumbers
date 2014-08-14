@@ -133,6 +133,7 @@
     <Compile Include="Code\AutoSetupHelper.cs" />
     <Compile Include="Code\Battle2json.cs" />
     <Compile Include="Code\CheckForNewVersion.cs" />
+    <Compile Include="Code\DateTimeHelper.cs" />
     <Compile Include="Code\ExtensionMethods.cs" />
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />

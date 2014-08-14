@@ -21,6 +21,7 @@ namespace WinApp.Code
 			DateTime = 3,
 			Image = 4,
 			Boolean = 5,
+			Float = 6,
 		}
 		
 		public static DataTable FetchData(string sql, bool ShowError = true)
@@ -292,6 +293,11 @@ namespace WinApp.Code
 				else if (DataType == SqlDataType.Int)
 				{
 					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue);
+				}
+				else if (DataType == SqlDataType.Float)
+				{
+					var d = Convert.ToDecimal(Value).ToString();
+					Sql = ReplaceParameterWithValue(Sql, Parameter, d);
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
