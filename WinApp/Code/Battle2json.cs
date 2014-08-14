@@ -78,6 +78,7 @@ namespace WinApp.Code
 					var argv = new List();
 					argv.Add(battle2jsonScript); // Have to add filename to run as first arg
 					argv.Add(filename);
+					argv.Add("-f");
 					PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
 					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
 					dynamic result = scope.GetVariable("main")();
