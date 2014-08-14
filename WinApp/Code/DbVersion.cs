@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 94; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 95; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1223,6 +1223,18 @@ namespace WinApp.Code
 					break;
 				case 94:
 					TankData.GetJson2dbMappingFromDB();
+					break;
+				case 95:
+					mssql=  "ALTER TABLE battle ADD credits INT NULL;" +
+							"UPDATE columnSelection SET position=158 WHERE ID=162; " +
+							"UPDATE columnSelection SET position=position+174 WHERE colType=2 and colGroup='Shooting'; " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (500, 2, 500, 'credits', 'Income', 'Credits net income (without any cost)', 'Credits', 50, 'Int'); ";
+					sqlite= "ALTER TABLE battle ADD credits INTEGER NULL;" +
+							"UPDATE columnSelection SET position=158 WHERE ID=162; " +
+							"UPDATE columnSelection SET position=position+174 WHERE colType=2 and colGroup='Shooting'; " +
+							"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (500, 2, 500, 'credits', 'Income', 'Credits net income (without any cost)', 'Credits', 50, 'Int'); ";
 					break;
 			}
 			string sql = "";

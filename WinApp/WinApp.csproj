@@ -536,8 +536,8 @@
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_TD.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\xp.png" />
-    <Content Include="Docs\battle_result\json.txt" />
-    <Content Include="Docs\battle_result\Parameters of interest.txt" />
+    <None Include="DevDocs\battle_result\battle_result_analyze.json" />
+    <Content Include="DevDocs\battle_result\Parameters of interest.txt" />
     <Content Include="Docs\Database\createTableSQLite.txt" />
     <Content Include="DevDocs\DatabaseLog\createView.txt" />
     <Content Include="DevDocs\Dev log\BadButton.txt" />
@@ -1058,8 +1058,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Docs\Images\Achievment\" />
-    <Folder Include="Docs\Images\Tank\" />
     <Folder Include="Lib\_SQLite\" />
   </ItemGroup>
   <ItemGroup>

@@ -2275,13 +2275,29 @@ namespace WinApp.Forms
 					rowAverage["killedCountToolTip"] = 0;
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
-						if (colListItem.type == "Int")
+						if (colListItem.type == "Int" || colListItem.type == "Float")
 						{
-							rowAverage[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
-						}
-						else if (colListItem.type == "Float")
-						{
-							rowAverage[colListItem.name] = Convert.ToDouble(dt.Compute("Sum([" + colListItem.name + "])", "")) / rowcount;
+							if (colListItem.name != "Battles")
+							{
+								int count = 0;
+								double sum = 0;
+								foreach (DataRow dr in dt.Rows)
+								{
+									if (dr[colListItem.name] != DBNull.Value)
+									{
+										count += Convert.ToInt32(dr["battlesCountToolTip"]);
+										sum += Convert.ToInt32(dr[colListItem.name]) * Convert.ToInt32(dr["battlesCountToolTip"]);
+									}
+								}
+								if (count > 0)
+									rowAverage[colListItem.name] = sum / count;
+								else
+									rowAverage[colListItem.name] = 0;
+							}
+							else
+							{
+								rowAverage[colListItem.name] = DBNull.Value;
+							}
 						}
 						else if (colListItem.type == "DateTime")
 						{
@@ -2322,8 +2338,33 @@ namespace WinApp.Forms
 						{
 							IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
+							{
 								// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
-								rowTotals[colListItem.name] = Convert.ToInt32(dt.Compute("Sum([" + colListItem.name + "])", ""));
+								int sum = 0;
+								if (colListItem.name != "Battles")
+								{
+									foreach (DataRow dr in dt.Rows)
+									{
+
+										if (dr[colListItem.name] != DBNull.Value)
+										{
+											sum += Convert.ToInt32(dr[colListItem.name]) * Convert.ToInt32(dr["battlesCountToolTip"]);
+										}
+									}
+								}
+								else
+								{
+									foreach (DataRow dr in dt.Rows)
+									{
+										if (dr[colListItem.name] != DBNull.Value)
+										{
+											sum += Convert.ToInt32(dr[colListItem.name]);
+										}
+									}
+								}
+								
+								rowTotals[colListItem.name] = sum;
+							}
 							else
 								rowTotals[colListItem.name] = DBNull.Value;
 						}
