@@ -14,6 +14,8 @@ namespace WinApp.Code
 {
 	public class Dossier2db
 	{
+		public static bool battleSaved = false; // If new battle is saved
+		
 		public class JsonItem
 		{
 			public string mainSection = "";
@@ -64,10 +66,7 @@ namespace WinApp.Code
 				// logging
 				List<string> log = new List<string>();
 				Log.CheckLogFileSize();
-
-				// If updating player tank detected new battle for any tank
-				bool battleSaved = false;
-			
+								
 				// Check for first run (if player tank = 0), then dont get battle result but force update
 				bool saveBattleResult = true;
 				if (TankData.GetPlayerTankCount() == 0)
@@ -75,6 +74,9 @@ namespace WinApp.Code
 					saveBattleResult = false;
 					ForceUpdate = true;
 				}
+
+				// Reset saved variable, sets to true if any new battle is found
+				battleSaved = false;
 
 				// Declare
 				DataTable NewPlayerTankTable = TankData.GetPlayerTank(-1); // Return no data, only empty database with structure
@@ -271,7 +273,6 @@ namespace WinApp.Code
 				TankData.ClearPlayerTankAchList();
 				TankData.ClearPlayerTankFragList();
 			
-				if (battleSaved) Log.BattleResultDoneLog();
 				sw.Stop();
 				TimeSpan ts = sw.Elapsed;
 				// Log.LogToFile(log);

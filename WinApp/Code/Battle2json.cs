@@ -20,6 +20,7 @@ namespace WinApp.Code
 		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
 		public static bool battleResultReadRunning = false;
 		public static bool battleResultReadRunOnceMore = false;
+		public static bool battleResultWaiting = false;
 
 		private class BattleValues
 		{
@@ -46,8 +47,7 @@ namespace WinApp.Code
 			else
 			{
 				battleResultReadRunOnceMore = true;
-			}
-				
+			}				
 		}
 
 		public static void GetExistingBattleFiles()
@@ -108,11 +108,15 @@ namespace WinApp.Code
 					battleResultReadRunOnceMore = false;
 					GetAndConvertBattleFiles();
 				}
+				// Update into database now, if not dossier file is running
+				// TODO: CheckBattleResultNewFiles();
 			}
 		}
 
 		public static void CheckBattleResultNewFiles()
 		{
+			bool refreshAfterUpdate = false;
+			battleResultWaiting = false;
 			// Look for new files
 			GetAndConvertBattleFiles();
 			// Get all json files
@@ -166,15 +170,24 @@ namespace WinApp.Code
 						DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
 						DB.ExecuteNonQuery(sql);
-						Debug.WriteLine("OK " + battleTime + " - " + tankId);
+						refreshAfterUpdate = true;
+						//Debug.WriteLine("OK " + battleTime + " - " + tankId);
 					}
 					else
 					{
-						// Battle do not exists
-						Debug.WriteLine(" - " + battleTime + " - " + tankId);
-						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
-						string filename = Path.GetFileName(file);
-						fileBattleOriginal.Delete(); // delete original DAT file
+						// Battle do not exists, Delete if old file
+						// Debug.WriteLine(" - " + battleTime + " - " + tankId);
+						if (battleTime < DateTime.Now.AddDays(-3))
+						{
+							FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+							string filename = Path.GetFileName(file);
+							fileBattleOriginal.Delete(); // delete original DAT file
+						}
+						else
+						{
+							// new file not read, waiting for battle
+							battleResultWaiting = true;
+						}
 					}
 					// Done - should delete file here - include later after testing
 				}
@@ -184,6 +197,11 @@ namespace WinApp.Code
 					FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
 					string filename = Path.GetFileName(file);
 					fileBattleOriginal.Delete(); // delete original DAT file
+				}
+				// Create alert file if new battle result added 
+				if (refreshAfterUpdate)
+				{
+					Log.BattleResultDoneLog();
 				}
 			}
 		}

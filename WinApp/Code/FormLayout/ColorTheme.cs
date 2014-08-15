@@ -31,6 +31,7 @@ namespace WinApp.Code
 		public static Color ControlDarkFont = Color.FromArgb(255, 130, 130, 136);
 		public static Color ControlDisabledFont = Color.FromArgb(255, 100, 100, 106);
 		public static Color ControlDimmedFont = Color.FromArgb(255, 85, 85, 89);
+		public static Color ControlDarkRed = Color.FromArgb(255, 127, 0, 0);
 		//public static Color ControlSeparatorGroupBoxBorder = Color.FromArgb(255, 75, 75, 79);
 		public static Color ControlSeparatorGroupBoxBorder = Color.FromArgb(255, 55, 55, 59);
 		

@@ -514,7 +514,10 @@ namespace WinApp.Forms
 
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
-			GridShow("Dossier file check finished successfully, grid refreshed");
+			// New battle saved, check if dossier or battle result is running then wait for refresh until done
+			// TODO: Create a loop with wait time here?
+			if (!dossier2json.dossierRunning && !Battle2json.battleResultReadRunning)
+				GridShow("Dossier file check finished successfully, grid refreshed");
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -2181,7 +2184,7 @@ namespace WinApp.Forms
 					"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
 					"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 					"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
-					"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, " +
+					"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, battle.arenaUniqueID," +
 					"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id " +
 					"FROM    battle INNER JOIN " +
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
@@ -2441,6 +2444,7 @@ namespace WinApp.Forms
 				dataGridMain.Columns["player_Tank_Id"].Visible = false;
 				dataGridMain.Columns["battle_Id"].Visible = false;
 				dataGridMain.Columns["tank_Id"].Visible = false;
+				dataGridMain.Columns["arenaUniqueID"].Visible = false;
 				// Format grid 
 				int colListItemCount = 0;
 				foreach (ColListHelper.ColListClass colListItem in colList)
@@ -2523,7 +2527,10 @@ namespace WinApp.Forms
 				if (offset != 0) 
 				{
 					e.PaintBackground(e.CellBounds, true);
-					using (SolidBrush br = new SolidBrush(ColorTheme.ControlDimmedFont))
+					Color battleCountColor = ColorTheme.FormBorderBlue;
+					if (dataGridMain.Rows[e.RowIndex].Cells["arenaUniqueID"].Value == DBNull.Value)
+						battleCountColor = ColorTheme.ControlDarkRed;
+					using (SolidBrush br = new SolidBrush(battleCountColor))
 					{
 						StringFormat sf = new StringFormat();
 						sf.Alignment = StringAlignment.Center;
