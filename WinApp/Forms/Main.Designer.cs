@@ -113,6 +113,7 @@
 			this.mModeRandomCompanyClan = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
+			this.mModeStrongholds = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
 			this.mModeRandom = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeCompany = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,7 +167,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.mModeStrongholds = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -977,6 +977,15 @@
 			this.mModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
+			// mModeStrongholds
+			// 
+			this.mModeStrongholds.Name = "mModeStrongholds";
+			this.mModeStrongholds.Size = new System.Drawing.Size(227, 22);
+			this.mModeStrongholds.Tag = "Strongholds";
+			this.mModeStrongholds.Text = "Strongholds Battles";
+			this.mModeStrongholds.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeStrongholds.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
 			// toolStripSeparator18
 			// 
 			this.toolStripSeparator18.Name = "toolStripSeparator18";
@@ -1188,7 +1197,7 @@
 			// 
 			this.mSettingsRun.Name = "mSettingsRun";
 			this.mSettingsRun.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsRun.Text = "Listen To Dossier File";
+			this.mSettingsRun.Text = "Automaitically Fetch New Battles";
 			this.mSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
 			this.mSettingsRun.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -1201,7 +1210,7 @@
             this.mSettingsTestAddBattleResult});
 			this.mSettingsDossierOptions.Name = "mSettingsDossierOptions";
 			this.mSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsDossierOptions.Text = "Dossier File Options";
+			this.mSettingsDossierOptions.Text = "Manual Check for New Battles";
 			// 
 			// mSettingsRunManual
 			// 
@@ -1226,7 +1235,7 @@
 			// 
 			this.mSettingsTestAddBattleResult.Name = "mSettingsTestAddBattleResult";
 			this.mSettingsTestAddBattleResult.Size = new System.Drawing.Size(286, 22);
-			this.mSettingsTestAddBattleResult.Text = "For Testing: Read Battle Result";
+			this.mSettingsTestAddBattleResult.Text = "Check for Battle Result";
 			this.mSettingsTestAddBattleResult.Click += new System.EventHandler(this.mSettingsTestAddBattleResult_Click);
 			// 
 			// toolStripSeparator24
@@ -1510,15 +1519,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// mModeStrongholds
-			// 
-			this.mModeStrongholds.Name = "mModeStrongholds";
-			this.mModeStrongholds.Size = new System.Drawing.Size(227, 22);
-			this.mModeStrongholds.Tag = "Strongholds";
-			this.mModeStrongholds.Text = "Strongholds Battles";
-			this.mModeStrongholds.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.mModeStrongholds.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// Main
 			// 

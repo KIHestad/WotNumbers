@@ -516,8 +516,7 @@ namespace WinApp.Forms
 		{
 			// New battle saved, check if dossier or battle result is running then wait for refresh until done
 			// TODO: Create a loop with wait time here?
-			if (!dossier2json.dossierRunning && !Battle2json.battleResultReadRunning)
-				GridShow("Dossier file check finished successfully, grid refreshed");
+			GridShow("Dossier file check finished successfully, grid refreshed");
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -3259,7 +3258,7 @@ namespace WinApp.Forms
 			if (PythonEngine.InUse)
 				MsgBox.Show("Not able to run this test while dossier file is read. Try again in some seconds.", "IronPhyton engine in use", this);
 			else
-				Battle2json.CheckJsonBattleFiles();
+				Battle2json.RunBattleResultRead(true, true);
 		}
 
 		#endregion

@@ -326,21 +326,13 @@ namespace WinApp.Code
 					Config.Settings.doneRunForceDossierFileCheck = DateTime.Now;
 					Config.SaveConfig(out msg);
 				}
+				// Check for battle result
+				Battle2json.RunBattleResultRead(false, true);
 				// If new battle saved and not in process of reading battles, create alert file
 				if (Dossier2db.battleSaved)
 				{
-					// If battle result files waiting, check now
-					if (Battle2json.battleResultWaiting)
-					{
-						// run through battle files
-						Battle2json.CheckJsonBattleFiles();
-					}
-					else
-					{
-						// create alert file
-						Dossier2db.battleSaved = false;
-						Log.BattleResultDoneLog();
-					}
+					Dossier2db.battleSaved = false;
+					Log.BattleResultDoneLog();
 				}
 				// Done
 				dt.Dispose();

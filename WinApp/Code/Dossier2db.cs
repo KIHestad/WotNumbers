@@ -374,40 +374,6 @@ namespace WinApp.Code
 							}
 						}
 					}
-					// Check if new victory, then update playerTank.LastVictoryTime
-					// Calculate number of new victories
-					bool battleVictory = false;
-					bool firstVictory = false;
-					int victoryNew = 0;
-					if (battlesNew15 > 0) victoryNew += Convert.ToInt32(playerTankBattle15NewRow["wins"]) - playerTankOldRow_wins15;
-					if (battlesNew7 > 0) victoryNew += Convert.ToInt32(playerTankBattle7NewRow["wins"]) - playerTankOldRow_wins7;
-					if (battlesNewHistorical > 0) victoryNew += Convert.ToInt32(playerTankBattleHistoricalNewRow["wins"]) - playerTankOldRow_winsHistorical;
-					if (battlesNewStrongholds > 0) victoryNew += Convert.ToInt32(PlayerTankBattleStrongholdsNewRow["wins"]) - playerTankOldRow_winsStrongholds;
-					if (victoryNew > 0)
-					{
-						battleVictory = true;
-						// Check if this is first victory by comparing to current value
-						if (playerTankOldRow["lastVictoryTime"] == DBNull.Value)
-							firstVictory = true; // first time last victory is recorded, assume first victory
-						else
-						{
-							// Check if this victory is first one this day, first find date for last victory
-							DateTime lastVictoryTime = Convert.ToDateTime(playerTankOldRow["lastVictoryTime"]);
-							if (lastVictoryTime.Hour < 5) lastVictoryTime = lastVictoryTime.AddDays(-1); // correct date according to server reset 05:00
-							lastVictoryTime = new DateTime(lastVictoryTime.Year, lastVictoryTime.Month, lastVictoryTime.Day, 0, 0, 0); // Remove time - just focus on date
-							// Find date for this victory
-							DateTime thisBattleTime = Convert.ToDateTime(playerTankNewRow["lastBattleTime"]);
-							if (thisBattleTime.Hour < 5) thisBattleTime = thisBattleTime.AddDays(-1); // correct date according to server reset 05:00
-							thisBattleTime = new DateTime(thisBattleTime.Year, thisBattleTime.Month, thisBattleTime.Day, 0, 0, 0); // Remove time - just focus on date
-							// Now compare to se if this battle victory is not the same as last battle victory recorded - then it is first victory of today
-							firstVictory = (lastVictoryTime != thisBattleTime);
-						}
-						if (firstVictory)
-						{
-							sqlFields += ", lastVictoryTime=";
-							sqlFields += "'" + Convert.ToDateTime(playerTankNewRow["lastBattleTime"]).ToString("yyyy-MM-dd HH:mm:ss") + "'";
-						}
-					}
 					// Update database
 					if (sqlFields.Length > 0 )
 					{
@@ -460,61 +426,6 @@ namespace WinApp.Code
 						UpdatePlayerTankBattle(TankData.DossierBattleMode.ModeStrongholds, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdsNewRow,
 												playerTankNewRow_battlesStrongholds, battlesNewStrongholds, battleFragList, battleAchList, saveBattleResult);
 						battleSave = true;
-					}
-
-
-					// Check if grinding
-					if (Convert.ToInt32(playerTankOldRow["gGrindXP"]) > 0)
-					{
-						// Yes, apply grinding progress to playerTank now
-						// Get grinding data
-						string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
-								"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
-								"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
-								"        SUM(playerTankBattle.xp) / SUM(playerTankBattle.battles) AS avgXP " +
-								"FROM    tank INNER JOIN " +
-								"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
-								"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-								"WHERE  (playerTank.id = @playerTankId) " +
-								"GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime ";
-						DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-						DataRow grinding = DB.FetchData(sql).Rows[0];
-						// Calc new values
-						// Get base XP for this battle
-						int XP = 0;
-						if (battlesNew15 > 0) XP += Convert.ToInt32(playerTankBattle15NewRow["xp"]) - playerTankOldRow_xp15;
-						if (battlesNew7 > 0) XP += Convert.ToInt32(playerTankBattle7NewRow["xp"]) - playerTankOldRow_xp7;
-						if (battlesNewHistorical > 0) XP += Convert.ToInt32(playerTankBattleHistoricalNewRow["xp"]) - playerTankOldRow_xpHistorical;
-						if (battlesNewStrongholds > 0) XP += Convert.ToInt32(PlayerTankBattleStrongholdsNewRow["xp"]) - playerTankOldRow_xpStrongholds;
-						if (battleVictory) // If victory, check if first victory this day, or if every victory has bonus
-						{
-							if (Code.GrindingHelper.Settings.EveryVictoryFactor > 0)
-								XP = XP * Code.GrindingHelper.Settings.EveryVictoryFactor;
-							else if (firstVictory)
-								XP = XP * Code.GrindingHelper.Settings.FirstVictoryFactor;
-						}
-						// Get parameters for grinding calc
-						int progress = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
-						int grind = Convert.ToInt32(grinding["gGrindXP"]);
-						int btlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
-						// Calc values according to increased XP (progress)
-						int progressPercent = GrindingHelper.CalcProgressPercent(grind, progress);
-						int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
-						int realAvgXP = GrindingHelper.CalcRealAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(), grinding["totalXP"].ToString(),
-																	 grinding["avgXP"].ToString(), btlPerDay.ToString());
-						int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
-						int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
-						// Save to playerTank
-						sql = "UPDATE playerTank SET gProgressXP=@ProgressXP, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
-							  "					     gRestBattles=@RestBattles, gRestDays=@RestDays  " +
-							  "WHERE id=@id; ";
-						DB.AddWithValue(ref sql, "@ProgressXP", progress, DB.SqlDataType.Int);
-						DB.AddWithValue(ref sql, "@RestXP", restXP, DB.SqlDataType.Int);
-						DB.AddWithValue(ref sql, "@ProgressPercent", progressPercent, DB.SqlDataType.Int);
-						DB.AddWithValue(ref sql, "@RestBattles", restBattles, DB.SqlDataType.Int);
-						DB.AddWithValue(ref sql, "@RestDays", restDays, DB.SqlDataType.Int);
-						DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
-						DB.ExecuteNonQuery(sql);
 					}
 				}
 				playerTankOldTable.Dispose();
