@@ -184,10 +184,9 @@ namespace WinApp.Code
 						logtext.Add(LogText(String.Format(" > Dossierfile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
 					}
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
-					Log.LogToFile(ex);
-					// could not read file
+					// could not read file - do not log as error, this is normal behavior
 					logtext.Add(LogText(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
 					System.Threading.Thread.Sleep(waitInterval);
 				}
@@ -330,12 +329,18 @@ namespace WinApp.Code
 				// If new battle saved and not in process of reading battles, create alert file
 				if (Dossier2db.battleSaved)
 				{
-					Dossier2db.battleSaved = false;
 					// If battle result files waiting, check now
 					if (Battle2json.battleResultWaiting)
-						Battle2json.CheckBattleResultNewFiles();
-					// create alert file
-					Log.BattleResultDoneLog();
+					{
+						// run through battle files
+						Battle2json.CheckJsonBattleFiles();
+					}
+					else
+					{
+						// create alert file
+						Dossier2db.battleSaved = false;
+						Log.BattleResultDoneLog();
+					}
 				}
 				// Done
 				dt.Dispose();

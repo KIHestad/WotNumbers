@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 96; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 108; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1240,6 +1240,223 @@ namespace WinApp.Code
 					mssql = "ALTER TABLE battle ADD arenaUniqueID BIGINT NULL;";
 					sqlite = mssql.Replace("BIGINT", "INTEGER");
 					break;
+				case 97:
+					mssql = "ALTER TABLE battle ADD autoRepairCost INT NULL;" +
+							"ALTER TABLE battle ADD autoLoadCost INT NULL;" +
+							"ALTER TABLE battle ADD creditsPenalty INT NULL;" +
+							"ALTER TABLE battle ADD creditsContributionIn INT NULL;" +
+							"ALTER TABLE battle ADD creditsContributionOut INT NULL;" +
+							"ALTER TABLE battle ADD creditsToDraw INT NULL;" +
+							"ALTER TABLE battle ADD eventCredits INT NULL;" +
+							"ALTER TABLE battle ADD originalCredits INT NULL;" +
+							"ALTER TABLE battle ADD premiumCreditsFactor10 INT NULL;" +
+							"ALTER TABLE battle ADD arenaTypeID INT NULL;" +
+							"ALTER TABLE battle ADD bonusType INT NULL;" +
+							"ALTER TABLE battle ADD bonusTypeName VARCHAR(255) NULL;" +
+							"ALTER TABLE battle ADD finishReasonName VARCHAR(255) NULL;" +
+							"ALTER TABLE battle ADD deathReason VARCHAR(255) NULL;" +
+							"ALTER TABLE battle ADD markOfMastery INT NULL;" +
+							"ALTER TABLE battle ADD vehTypeLockTime INT NULL;" +
+							"ALTER TABLE battle ADD real_xp INT NULL;" + // xp in battle_result
+							"ALTER TABLE battle ADD xpPenalty INT NULL;" +
+							"ALTER TABLE battle ADD freeXP INT NULL;" +
+							"ALTER TABLE battle ADD dailyXPFactor10 INT NULL;" +
+							"ALTER TABLE battle ADD premiumXPFactor10 INT NULL;" +
+							"ALTER TABLE battle ADD eventFreeXP INT NULL;" +
+							"ALTER TABLE battle ADD fortResource INT NULL;" +
+							"ALTER TABLE battle ADD marksOnGun INT NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;	
+				case 98:
+					mssql = "ALTER TABLE battle ADD achievementCredits INT NULL;" + // missions?
+							"ALTER TABLE battle ADD achievementFreeXP INT NULL;" + // missions?
+							"ALTER TABLE battle ADD achievementXP INT NULL;"; // missions?
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 99:
+					mssql = "ALTER TABLE battle ADD gameplayName VARCHAR(255) NULL;";
+					sqlite = mssql;
+					break;	
+				case 100:
+					mssql = "ALTER TABLE battle ADD eventXP INT NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;	
+				case 101:
+					mssql = "ALTER TABLE battle ADD eventTMenXP INT NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 102:
+					mssql = "ALTER TABLE battle ADD creditsNet INT NULL;"; // calculated
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;	
+				case 103:
+					mssql = "ALTER TABLE battle ADD autoEquipCost INT NULL;"; // calculated
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 104:
+					mssql = "ALTER TABLE battle ADD mapId INT NULL;"; // calculated
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;	
+				case 105:
+					mssql = "CREATE TABLE map (id int primary key, name varchar(255) not null);";
+					sqlite = "CREATE TABLE map (id integer primary key, name varchar(255) not null);";
+					break;	
+				case 106:
+					mssql = "INSERT INTO map (id, name) VALUES (1,'Karelia'); " +
+							"INSERT INTO map (id, name) VALUES (2,'Malinovka'); " +
+							"INSERT INTO map (id, name) VALUES (3,'Himmelsdorf'); " +
+							"INSERT INTO map (id, name) VALUES (4,'Prokhorovka'); " +
+							"INSERT INTO map (id, name) VALUES (5,'Lakeville'); " +
+							"INSERT INTO map (id, name) VALUES (6,'Ensk'); " +
+							"INSERT INTO map (id, name) VALUES (7,'Murovanka'); " +
+							"INSERT INTO map (id, name) VALUES (8,'Erlenberg'); " +
+							"INSERT INTO map (id, name) VALUES (9,'Mines'); " +
+							"INSERT INTO map (id, name) VALUES (10,'Komarin'); " +
+							"INSERT INTO map (id, name) VALUES (11,'Cliff'); " +
+							"INSERT INTO map (id, name) VALUES (12,'Abbey'); " +
+							"INSERT INTO map (id, name) VALUES (13,'Sand River'); " +
+							"INSERT INTO map (id, name) VALUES (14,'Steppes'); " +
+							"INSERT INTO map (id, name) VALUES (15,'Mountain Pass'); " +
+							"INSERT INTO map (id, name) VALUES (16,'Fjords'); " +
+							"INSERT INTO map (id, name) VALUES (17,'Redshire'); " +
+							"INSERT INTO map (id, name) VALUES (18,'Fishermans Bay'); " +
+							"INSERT INTO map (id, name) VALUES (19,'Arctic Region'); " +
+							"INSERT INTO map (id, name) VALUES (20,'Ruinberg'); " +
+							"INSERT INTO map (id, name) VALUES (21,'Siegfried Line'); " +
+							"INSERT INTO map (id, name) VALUES (22,'Swamp'); " +
+							"INSERT INTO map (id, name) VALUES (23,'Westfield'); " +
+							"INSERT INTO map (id, name) VALUES (24,'El Halluf'); " +
+							"INSERT INTO map (id, name) VALUES (26,'Airfield'); " +
+							"INSERT INTO map (id, name) VALUES (27,'Province'); " +
+							"INSERT INTO map (id, name) VALUES (28,'Widepark'); " +
+							"INSERT INTO map (id, name) VALUES (31,'Live Oaks'); " +
+							"INSERT INTO map (id, name) VALUES (32,'South Coast'); " +
+							"INSERT INTO map (id, name) VALUES (33,'Northwest'); " +
+							"INSERT INTO map (id, name) VALUES (34,'Highway'); " +
+							"INSERT INTO map (id, name) VALUES (36,'Port'); " +
+							"INSERT INTO map (id, name) VALUES (43,'Hidden Village'); " +
+							"INSERT INTO map (id, name) VALUES (44,'Dragon Ridge'); " +
+							"INSERT INTO map (id, name) VALUES (49,'Serene Coast'); " +
+							"INSERT INTO map (id, name) VALUES (50,'Severogorsk'); " +
+							"INSERT INTO map (id, name) VALUES (51,'Sacred Valley'); " +
+							"INSERT INTO map (id, name) VALUES (52,'Pearl River'); " +
+							"INSERT INTO map (id, name) VALUES (53,'Training area'); " +
+							"INSERT INTO map (id, name) VALUES (55,'Tundra'); " +
+							"INSERT INTO map (id, name) VALUES (56,'Windstorm'); " +
+							"INSERT INTO map (id, name) VALUES (57,'Winter Himmelsdor'); " +
+							"INSERT INTO map (id, name) VALUES (58,'Ruinberg on Fire'); " +
+							"INSERT INTO map (id, name) VALUES (60,'Kharkov'); " +
+							"INSERT INTO map (id, name) VALUES (61,'Himmelsdorf Champion'); " +
+							"INSERT INTO map (id, name) VALUES (62,'Fire Arc'); " +
+							"INSERT INTO map (id, name) VALUES (1957,'Pearl River'); " +
+							"INSERT INTO map (id, name) VALUES (1983,'Sacred Valley'); " +
+							"INSERT INTO map (id, name) VALUES (2021,'Training area'); ";
+					sqlite = mssql;
+					break;
+				case 107:
+					string s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = s + "VALUES (501, 2, 501, 'originalCredits', 'Original Income', 'Credits income without premium account', 'Credits', 50, 'Int'); " +
+							s + "VALUES (502, 2, 502, 'eventCredits', 'Event Income', 'Credits income as part of mission', 'Credits', 50, 'Int'); " +
+							s + "VALUES (503, 2, 503, 'autoRepairCost', 'Repair Cost', 'Credits spent for auto repair vehicle', 'Credits', 50, 'Int'); " +
+							s + "VALUES (504, 2, 504, 'autoLoadCost', 'Ammo Cost', 'Credits spent for auto resupply ammunitions', 'Credits', 50, 'Int'); " +
+							s + "VALUES (505, 2, 505, 'autoEquipCost', 'Eqip Cost', 'Credits spent for auto resupply consumables', 'Credits', 50, 'Int'); " +
+							s + "VALUES (506, 2, 506, 'creditsPenalty', 'Penalty Cost', 'Credits spent for causing damage to allies', 'Credits', 50, 'Int'); " +
+							s + "VALUES (507, 2, 507, 'creditsToDraw', 'Comp Income', 'Credits income for compensation for damage caused by allies', 'Credits', 50, 'Int'); " +
+							s + "VALUES (508, 2, 508, 'creditsNet', 'Income Battle', 'Total battle credits income, if spent more than earned the total is negative', 'Credits', 50, 'Int'); " +
+							s + "VALUES (509, 2, 511, 'deathReason', 'Death Reason', 'If and how you was killed (Alive, Shot, Burned, Rammed, Crashed, Death zone, Drowned)', 'Result', 100, 'VarChar'); " +
+							s + "VALUES (510, 2, 513, 'markOfMastery', 'Mastery Badge', 'The mastery badge achieved in this battle (4=Ace Tanker, 3=I Class, 2=II Class, 1=III Class, 0=None)', 'Rating', 40, 'Int'); " +
+							s + "VALUES (511, 2, 514, 'gameplayName', 'Game Type', 'The gameplay mode (CTF = Capture The Flag, Assault, Domination = Encounter', 'Battle', 100, 'VarChar'); " +
+							s + "VALUES (512, 2, 515, 'map.name', 'Map', 'The map played the battle on', 'Battle', 100, 'Varchar'); " +
+							s + "VALUES (513, 2, 510, 'finishReasonName', 'Finish Reason', 'How the game ended (Extermination, Base capture, Timeout)', 'Result', 80, 'VarChar'); " +
+							s + "VALUES (514, 2, 517, 'xpPenalty', 'Fine XP', 'Fine in XP for causing damage to alliesXP', 'XP', 50, 'Int'); " +
+							s + "VALUES (515, 2, 518, 'freeXP', 'Free XP', 'Free Xp earned for the battle', 'XP', 50, 'Int'); " +
+							s + "VALUES (516, 2, 519, 'dailyXPFactor10', 'XP Factor', 'XP', 'XP', 50, 'Int'); " +
+							s + "VALUES (517, 2, 520, 'eventFreeXP', 'Free Event XP', 'XP', 'XP', 50, 'Int'); " +
+							s + "VALUES (518, 2, 521, 'eventXP', 'Event XP', 'XP earned due to mission', 'XP', 50, 'Int'); " +
+							s + "VALUES (519, 2, 516, 'real_xp', 'Total XP', 'Total XP earned for the battle, ', 'XP', 50, 'Int'); " +
+							"UPDATE columnSelection SET description='The mastery badge achieved with the tank (4=Ace Tanker, 3=I Class, 2=II Class, 1=III Class, 0=None)' WHERE id=53; " +
+							"UPDATE columnSelection SET colGroup='XP', name='Base XP' WHERE id=38; " +
+							"UPDATE columnSelection SET colGroup='Battle' WHERE colGroup='Mode' and colType=2; ";
+					sqlite = mssql;
+					break;
+				case 108:
+					mssql = "UPDATE columnSelection SET position=1, name='Tank', description='Tank name', colGroup='Tank' WHERE id=58; " +
+							 "UPDATE columnSelection SET position=2, name='Tank Icon', description='Tank icon (contour image)', colGroup='Tank' WHERE id=183; " +
+							 "UPDATE columnSelection SET position=3, name='Tank Image', description='Tank image (small), suitable for grid', colGroup='Tank' WHERE id=184; " +
+							 "UPDATE columnSelection SET position=4, name='Tank Image Large', description='Tank large image, will only partly show if not expanding row height in grid', colGroup='Tank' WHERE id=185; " +
+							 "UPDATE columnSelection SET position=12, name='Tier', description='Tank tier (1-10)', colGroup='Tank' WHERE id=59; " +
+							 "UPDATE columnSelection SET position=13, name='Premium', description='Tank premium (yes/no)', colGroup='Tank' WHERE id=2; " +
+							 "UPDATE columnSelection SET position=14, name='Tank Type', description='Tank type full name', colGroup='Tank' WHERE id=3; " +
+							 "UPDATE columnSelection SET position=15, name='Type', description='Tank type short name (LT, MT, HT, TD, SPG)', colGroup='Tank' WHERE id=4; " +
+							 "UPDATE columnSelection SET position=16, name='Tank Nation', description='Tank nation full name', colGroup='Tank' WHERE id=5; " +
+							 "UPDATE columnSelection SET position=17, name='Nation', description='Tank nation short name (CHI, FRA, GET, JAP, UK, USA, USR)', colGroup='Tank' WHERE id=6; " +
+							 "UPDATE columnSelection SET position=18, name='ID', description='Wargaming ID for tank', colGroup='Tank' WHERE id=39; " +
+							 "UPDATE columnSelection SET position=110, name='DateTime', description='Battle date and time, the date/time the battle was finished', colGroup='Battle' WHERE id=8; " +
+							 "UPDATE columnSelection SET position=111, name='Date', description='Battle date, the date (DD/MM/YYYY) the battle was finished', colGroup='Battle' WHERE id=163; " +
+							 "UPDATE columnSelection SET position=112, name='Time', description='Battle time, the time (HH:MM:SS) when the battle was finished', colGroup='Battle' WHERE id=164; " +
+							 "UPDATE columnSelection SET position=113, name='Life Time', description='Time staying alive in battle in seconds', colGroup='Battle' WHERE id=9; " +
+							 "UPDATE columnSelection SET position=115, name='Battle Mode', description='Battle mode, 15 = Random Battles, Tank Company and Clan Wars, 7 = Team Battle (Historical Battles not included yet)', colGroup='Battle' WHERE id=162; " +
+							 "UPDATE columnSelection SET position=116, name='Game Type', description='The gameplay mode (CTF = Capture The Flag, Assault, Domination = Encounter', colGroup='Battle' WHERE id=511; " +
+							 "UPDATE columnSelection SET position=120, name='Map', description='The map played the battle on', colGroup='Battle' WHERE id=512; " +
+							 "UPDATE columnSelection SET position=130, name='Result', description='The result for battle (Victory, Draw, Defeat or Several if a combination occur when recorded several battles for one row)', colGroup='Battle' WHERE id=10; " +
+							 "UPDATE columnSelection SET position=135, name='Survived', description='If survived in battle (Yes / No or Several if a combination occur when recorded several battles for one row)', colGroup='Battle' WHERE id=11; " +
+							 "UPDATE columnSelection SET position=160, name='Finish Reason', description='How the game ended (Extermination, Base capture, Timeout)', colGroup='Battle' WHERE id=513; " +
+							 "UPDATE columnSelection SET position=161, name='Death Reason', description='If and how you was killed (Alive, Shot, Burned, Rammed, Crashed, Death zone, Drowned)', colGroup='Battle' WHERE id=509; " +
+							 "UPDATE columnSelection SET position=200, name='Frags', description='Number of enemy tanks you killed (frags)', colGroup='Result' WHERE id=18; " +
+							 "UPDATE columnSelection SET position=210, name='Dmg', description='Damage to enemy tanks by you (shooting, ramming, put on fire)', colGroup='Result' WHERE id=19; " +
+							 "UPDATE columnSelection SET position=211, name='Dmg Spot', description='Assisted damage casued by others to enemy tanks due to you spotting the enemy tank', colGroup='Result' WHERE id=21; " +
+							 "UPDATE columnSelection SET position=212, name='Dmg Track', description='Assisted damage casued by others to enemy tanks due to you tracking of the enemy tank', colGroup='Result' WHERE id=22; " +
+							 "UPDATE columnSelection SET position=213, name='Dmg Received', description='The damage received on your tank', colGroup='Result' WHERE id=20; " +
+							 "UPDATE columnSelection SET position=220, name='Cap', description='Cap ponts you achived by staying in cap circle (0 - 100)', colGroup='Result' WHERE id=24; " +
+							 "UPDATE columnSelection SET position=230, name='Def', description='Cap points reduced by damaging enemy tanks capping', colGroup='Result' WHERE id=25; " +
+							 "UPDATE columnSelection SET position=240, name='Spot', description='Enemy tanks spotted (only first spot on enemy tank counts)', colGroup='Result' WHERE id=35; " +
+							 "UPDATE columnSelection SET position=250, name='Mileage', description='Distance driving the tank', colGroup='Result' WHERE id=36; " +
+							 "UPDATE columnSelection SET position=260, name='Trees Cut', description='Number of trees overturned by driving into it', colGroup='Result' WHERE id=37; " +
+							 "UPDATE columnSelection SET position=280, name='Mastery Badge', description='The mastery badge achieved in this battle (4=Ace Tanker, 3=I Class, 2=II Class, 1=III Class, 0=None)', colGroup='Rating' WHERE id=510; " +
+							 "UPDATE columnSelection SET position=281, name='EFF', description='Calculated battle efficiency rating', colGroup='Rating' WHERE id=40; " +
+							 "UPDATE columnSelection SET position=282, name='WN7', description='Calculated battle WN7 rating (according to formula from vBAddict)', colGroup='Rating' WHERE id=186; " +
+							 "UPDATE columnSelection SET position=283, name='WN8', description='Calculated battle WN8 (WRx) rating (according to formula from vbAddict)', colGroup='Rating' WHERE id=47; " +
+							 "UPDATE columnSelection SET position=400, name='XP Factor', description='XP factor for the battle (10 = normal, 20 = 2X, 30 = 3X, 50 = 5X)', colGroup='XP' WHERE id=516; " +
+							 "UPDATE columnSelection SET position=405, name='Base XP', description='Base XP earned, not included: 2X (or more) for first victory or bonuses', colGroup='XP' WHERE id=38; " +
+							 "UPDATE columnSelection SET position=410, name='Total XP', description='Total XP earned for the battle', colGroup='XP' WHERE id=519; " +
+							 "UPDATE columnSelection SET position=430, name='Event XP', description='Part of the total XP earned due to mission', colGroup='XP' WHERE id=518; " +
+							 "UPDATE columnSelection SET position=450, name='Free XP', description='Free Xp earned for the battle', colGroup='XP' WHERE id=515; " +
+							 "UPDATE columnSelection SET position=480, name='Free Event XP', description='Part of the free XP earned du to mission', colGroup='XP' WHERE id=517; " +
+							 "UPDATE columnSelection SET position=490, name='Fine XP', description='Fine for causing damage to alliesXP, this has reduced the total XP', colGroup='XP' WHERE id=514; " +
+							 "UPDATE columnSelection SET position=500, name='Credits Result', description='Total battle credits result, if spent more than earned the total is negative', colGroup='Credits' WHERE id=508; " +
+							 "UPDATE columnSelection SET position=510, name='Income Total', description='Credits net income total, if premium account the extra is added', colGroup='Credits' WHERE id=500; " +
+							 "UPDATE columnSelection SET position=515, name='Income No Prem', description='Credits income without premium account', colGroup='Credits' WHERE id=501; " +
+							 "UPDATE columnSelection SET position=520, name='Income Event', description='Part of the total income earned due to mission', colGroup='Credits' WHERE id=502; " +
+							 "UPDATE columnSelection SET position=525, name='Income Compen', description='Credits income for compensation for damage caused by allies', colGroup='Credits' WHERE id=507; " +
+							 "UPDATE columnSelection SET position=550, name='Cost Repair', description='Credits spent for auto repair vehicle', colGroup='Credits' WHERE id=503; " +
+							 "UPDATE columnSelection SET position=552, name='Cost Ammo', description='Credits spent for auto resupply ammunitions', colGroup='Credits' WHERE id=504; " +
+							 "UPDATE columnSelection SET position=554, name='Cost Equip', description='Credits spent for auto resupply consumables', colGroup='Credits' WHERE id=505; " +
+							 "UPDATE columnSelection SET position=556, name='Cost Penalty', description='Credits spent for causing damage to allies', colGroup='Credits' WHERE id=506; " +
+							 "UPDATE columnSelection SET position=600, name='Shots', description='Number of shots you fired', colGroup='Shooting' WHERE id=26; " +
+							 "UPDATE columnSelection SET position=601, name='Hits', description='Number of hits from you shots', colGroup='Shooting' WHERE id=27; " +
+							 "UPDATE columnSelection SET position=602, name='Hit Rate', description='Persentage hits (hits*100/shots)', colGroup='Shooting' WHERE id=28; " +
+							 "UPDATE columnSelection SET position=603, name='Pierced', description='Number of pierced shots', colGroup='Shooting' WHERE id=30; " +
+							 "UPDATE columnSelection SET position=604, name='Pierced Shots%', description='Persentage pierced hits based on total shots (pierced*100/shots)', colGroup='Shooting' WHERE id=32; " +
+							 "UPDATE columnSelection SET position=605, name='Pierced Hits%', description='Persentage pierced hits based on total hits (pierced*100/hits)', colGroup='Shooting' WHERE id=33; " +
+							 "UPDATE columnSelection SET position=606, name='HE Hits', description='Number of HE hits', colGroup='Shooting' WHERE id=159; " +
+							 "UPDATE columnSelection SET position=607, name='HE Shots %', description='Percentage HE hits based on total shots (hi hits*100/shots)', colGroup='Shooting' WHERE id=160; " +
+							 "UPDATE columnSelection SET position=608, name='HE Hts %', description='Percentage HE hits based on total hits (he hits*100/hits)', colGroup='Shooting' WHERE id=161; " +
+							 "UPDATE columnSelection SET position=609, name='Shots Reveived', description='Number of shots received', colGroup='Shooting' WHERE id=29; " +
+							 "UPDATE columnSelection SET position=610, name='Pierced Received', description='Number of pierced shots received', colGroup='Shooting' WHERE id=31; " +
+							 "UPDATE columnSelection SET position=611, name='HE Received', description='Number of HE shots received', colGroup='Shooting' WHERE id=157; " +
+							 "UPDATE columnSelection SET position=612, name='No Dmg Shots Received', description='Number of no damaging shots received', colGroup='Shooting' WHERE id=158; " +
+							 "UPDATE columnSelection SET position=710, name='Killed Count', description='Number of battles where killed (not survived) for this row (normally 0/1, or more if battle result is Several)', colGroup='Count' WHERE id=17; " +
+							 "UPDATE columnSelection SET position=711, name='Victory', description='Number of victory battles for this row (normally 0/1, or more if battle result is Several)', colGroup='Count' WHERE id=13; " +
+							 "UPDATE columnSelection SET position=712, name='Draw', description='Number of drawed battles for this row (normally 0/1, or more if battle result is Several)', colGroup='Count' WHERE id=14; " +
+							 "UPDATE columnSelection SET position=713, name='Defeat', description='Number of defeated battles for this row (normally 0/1, or more if battle result is Several)', colGroup='Count' WHERE id=15; " +
+							 "UPDATE columnSelection SET position=714, name='Survival Count', description='Number of battles survived for this battle (could be for several battles recorded in one row)', colGroup='Count' WHERE id=16; " +
+							 "UPDATE columnSelection SET position=715, name='Clan', description='Number of Clan battles for this row (normally 0/1, or more if battle result is Several)', colGroup='Count' WHERE id=43; " +
+							 "UPDATE columnSelection SET position=716, name='Company', description='Number of Tank Company battles for this row (normally 0/1, or more if battle result is Several)', colGroup='Count' WHERE id=45; " +
+							 "UPDATE columnSelection SET position=717, name='Battle Count', description='Battle count, number of battles for the row', colGroup='Count' WHERE id=7; ";
+					sqlite = mssql;
+					break;
+
+				
 			}
 			string sql = "";
 			// get sql for correct dbtype

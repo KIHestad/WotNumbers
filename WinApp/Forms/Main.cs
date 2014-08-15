@@ -2191,7 +2191,8 @@ namespace WinApp.Forms
 					"        tank ON playerTank.tankId = tank.id INNER JOIN " +
 					"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
 					"        country ON tank.countryId = country.Id INNER JOIN " +
-					"        battleResult ON battle.battleResultId = battleResult.id INNER JOIN " +
+					"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
+					"        map on battle.mapId = map.id INNER JOIN " +
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter +
 					"ORDER BY " + sortOrder;
@@ -3258,7 +3259,7 @@ namespace WinApp.Forms
 			if (PythonEngine.InUse)
 				MsgBox.Show("Not able to run this test while dossier file is read. Try again in some seconds.", "IronPhyton engine in use", this);
 			else
-				Battle2json.CheckBattleResultNewFiles();
+				Battle2json.CheckJsonBattleFiles();
 		}
 
 		#endregion
