@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 108; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 111; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1455,8 +1455,23 @@ namespace WinApp.Code
 							 "UPDATE columnSelection SET position=717, name='Battle Count', description='Battle count, number of battles for the row', colGroup='Count' WHERE id=7; ";
 					sqlite = mssql;
 					break;
-
-				
+				case 109:
+					mssql = "UPDATE columnSelection SET colName='battle.markOfMastery' WHERE id=510; ";
+					sqlite = mssql;
+					break;
+				case 110:
+					mssql = "ALTER TABLE battle ADD dailyXPFactorTxt VARCHAR(10) NULL;" +
+							"UPDATE columnSelection SET description='XP factor for the battle (1X, 2X, 3X, 5X)', colName='dailyXPFactorTxt', colDataType='VarChar' WHERE id=516; ";
+					sqlite = mssql;
+					break;
+				case 111:
+					mssql = "UPDATE battle SET dailyXPFactorTxt = '1 X' where dailyXPFactor10 = 10;" +
+							"UPDATE battle SET dailyXPFactorTxt = '2 X' where dailyXPFactor10 = 20;" +
+							"UPDATE battle SET dailyXPFactorTxt = '3 X' where dailyXPFactor10 = 30;" +
+							"UPDATE battle SET dailyXPFactorTxt = '5 X' where dailyXPFactor10 = 50;";
+					sqlite = mssql;
+					break;
+					
 			}
 			string sql = "";
 			// get sql for correct dbtype

@@ -179,7 +179,9 @@ namespace WinApp.Code
 							// field returns null
 							if (token_personel.SelectToken("fortResource").HasValues)
 								battleValues.Add(new BattleValues() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
-
+							// dayly double
+							int dailyXPFactor = (int)token_personel.SelectToken("dailyXPFactor10") / 10;
+							battleValues.Add(new BattleValues() { colname = "dailyXPFactorTxt", value = dailyXPFactor.ToString() + " X" });
 							// Special fields: death reason, convert to string
 							int deathReasonId = (int)token_personel.SelectToken("deathReason");
 							string deathReason = "Unknown";

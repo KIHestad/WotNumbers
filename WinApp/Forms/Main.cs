@@ -2281,7 +2281,11 @@ namespace WinApp.Forms
 					{
 						if (colListItem.type == "Int" || colListItem.type == "Float")
 						{
-							if (colListItem.name != "Battles")
+							IEnumerable<string> nonAvgCols = new List<string> 
+							{ 
+								"ID", "XP Factor", "Premium", "Mastery Badge", "Battles"
+							};
+							if (!nonAvgCols.Contains(colListItem.name))
 							{
 								int count = 0;
 								double sum = 0;
@@ -2340,7 +2344,10 @@ namespace WinApp.Forms
 						// Format column
 						if (colListItem.type == "Int" || colListItem.type == "Float")
 						{
-							IEnumerable<string> nonTotalsCols = new List<string> { "EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%" };
+							IEnumerable<string> nonTotalsCols = new List<string> 
+							{ 
+								"EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%", "XP Factor", "Premium", "Mastery Badge"
+							};
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							{
 								// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
