@@ -327,11 +327,11 @@ namespace WinApp.Code
 					Config.SaveConfig(out msg);
 				}
 				// Check for battle result
-				Battle2json.RunBattleResultRead(false, true);
+				Battle2json.RunBattleResultRead(false);
 				// If new battle saved and not in process of reading battles, create alert file
-				if (Dossier2db.battleSaved)
+				if (Dossier2db.battleSaved || GridView.scheduleGridRefresh)
 				{
-					Dossier2db.battleSaved = false;
+					GridView.scheduleGridRefresh = false;
 					Log.BattleResultDoneLog();
 				}
 				// Done

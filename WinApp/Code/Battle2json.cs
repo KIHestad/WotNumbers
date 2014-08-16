@@ -15,8 +15,8 @@ namespace WinApp.Code
 {
 	class Battle2json
 	{
-		private static List<string> battleResultFileRead = new List<string>(); // List of dat-files read from wargaming battle folder, to avoid read several times
-		private static List<string> battleResultFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid read several times
+		private static List<string> battleResultDatFileCopyed = new List<string>(); // List of dat-files copyed from wargaming battle folder, to avoid copy several times
+		private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
 		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
 
 		private class BattleValues
@@ -46,13 +46,18 @@ namespace WinApp.Code
 			string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
 			foreach (string file in filesJson)
 			{
-				battleResultFileExists.Add(Path.GetFileNameWithoutExtension(file).ToString()); // Remove file extension
+				battleResultJsonFileExists.Add(Path.GetFileNameWithoutExtension(file).ToString()); // Remove file extension
+			}
+			// Get existing dst files
+			string[] filesDat = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
+			foreach (string file in filesDat)
+			{
+				battleResultDatFileCopyed.Add(file); // Complete file with path
 			}
 		}
 
 		public static void ConvertBattleFilesToJson()
 		{
-			List<string> battleResultNewFiles = new List<string>(); // List containing new files
 			// Get WoT top level battle_result folder for getting dat-files
 			DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
 			DirectoryInfo[] folders = di.GetDirectories();
@@ -63,29 +68,37 @@ namespace WinApp.Code
 				foreach (string file in filesDat)
 				{
 					string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
-					if (!battleResultFileRead.Exists(x => x == file) && !battleResultFileExists.Exists(x => x == filenameWihoutExt))
+					// Check if not copyed previous (during this session), and that converted json file do not already exists (from previous sessions)
+					if (!battleResultDatFileCopyed.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
 					{
-						// New file found, copy it and remember to avoid copy twice
-						battleResultFileRead.Add(file);
 						// Copy
+						Log.LogToFile("Start copying battle DAT-file: " + file, true);
 						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
 						string filename = Path.GetFileName(file);
 						fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
-						battleResultNewFiles.Add(Config.AppDataBattleResultFolder + filename);
+						Application.DoEvents();
+						// if successful copy remember it
+						if (File.Exists(Config.AppDataBattleResultFolder + filename))
+						{
+							battleResultDatFileCopyed.Add(file);
+							Log.LogToFile("Copyed successfully battle DAT-file: " + file, true);
+						}
 					}
 				}
 			}
 
-			// Loop through new files
-			foreach (string file in battleResultNewFiles)
+			// Loop through all dat-files copyed to local folder
+			string[] filesDatCopyed = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
+			foreach (string file in filesDatCopyed)
 			{
 				// Convert file to json
 				if (ConvertBattleUsingPython(file))
 				{
-					// Success, clean up delete dat file
-					FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
-					string filename = Path.GetFileName(file);
-					fileBattleOriginal.Delete(); // delete original DAT file
+					// Success, json file is now created, clean up by delete dat file
+					FileInfo fileBattleDatCopyed = new FileInfo(file); // the original dossier file
+					fileBattleDatCopyed.Delete(); // delete original DAT file
+					Log.LogToFile("Deleted battle DAT-file: " + file, true);
+					Application.DoEvents();
 				}
 			}
 		}
@@ -94,7 +107,7 @@ namespace WinApp.Code
 		{
 			if (forceReadFiles)
 			{
-				battleResultFileRead = new List<string>();
+				battleResultDatFileCopyed = new List<string>();
 			}
 			bool refreshAfterUpdate = false;
 			// Look for new files
@@ -113,7 +126,7 @@ namespace WinApp.Code
 				JToken token_common = token_root["common"];
 				string result = (string)token_common.SelectToken("result"); // Find unique id
 				// Check if ok
-				bool deleteFileAfterRead = true;
+				bool deleteFileAfterRead = false;
 				if (result == "ok")
 				{
 					double arenaUniqueID = (double)token_root.SelectToken("arenaUniqueID"); // Find unique id
@@ -181,7 +194,7 @@ namespace WinApp.Code
 								battleValues.Add(new BattleValues() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
 							// dayly double
 							int dailyXPFactor = (int)token_personel.SelectToken("dailyXPFactor10") / 10;
-							battleValues.Add(new BattleValues() { colname = "dailyXPFactorTxt", value = dailyXPFactor.ToString() + " X" });
+							battleValues.Add(new BattleValues() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
 							// Special fields: death reason, convert to string
 							int deathReasonId = (int)token_personel.SelectToken("deathReason");
 							string deathReason = "Unknown";
@@ -230,35 +243,40 @@ namespace WinApp.Code
 							if (grindXP > 0)
 								GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
 							// Done
+							deleteFileAfterRead = true;
 							refreshAfterUpdate = true;
+							GridView.scheduleGridRefresh = true;
+							Log.LogToFile("Done reading into DB JSON file: " + file, true);
 						}
 					}
 					else
 					{
-						// Battle do not exists, do not delete if new file
+						Log.LogToFile("New battle file not read, battle do not exists for JSON file: " + file, true);
+						// Battle do not exists, delete if old file file
 						if (battleTime < DateTime.Now.AddDays(-3))
 						{
-							deleteFileAfterRead = false;
+							deleteFileAfterRead = true;
+							Log.LogToFile("Old battle found, schedule for delete for JSON file: " + file, true);
 						}
 					}
-					// Delete file if not unhandled and pretty new
+					// Delete file if handled or old
 					if (deleteFileAfterRead)
 					{
 						// Done - delete file
 						FileInfo fileBattleJson = new FileInfo(file);
 						fileBattleJson.Delete();
+						Log.LogToFile("Deleted read or old JSON file: " + file, true);
 					}
 				}
 				// Create alert file if new battle result added 
 				if (refreshAfterUpdate && refreshGridOnFoundBattles)
 				{
-					Dossier2db.battleSaved = false;
+					GridView.scheduleGridRefresh = false;
 					Log.BattleResultDoneLog();
 				}
 			}
 		}
-
-
+		
 		private static void GrindingProgress(int playerTankId, int XP)
 		{
 			// Yes, apply grinding progress to playerTank now
@@ -300,6 +318,7 @@ namespace WinApp.Code
 
 		private static bool ConvertBattleUsingPython(string filename)
 		{
+			bool ok = false;
 			// Locate Python script
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file
@@ -329,9 +348,13 @@ namespace WinApp.Code
 					//CompiledCode code = script.Compile();
 					//ScriptScope scope = engine.CreateScope();
 					//script.Execute(scope);
-
+					Application.DoEvents();
+					Log.LogToFile("Converted battle DAT-file til JSON file: " + filename, true);
+					ok = true;
 					PythonEngine.InUse = false;
 				}
+				else
+					Log.LogToFile("IronPython Engine in use, not converted battle DAT-file til JSON file: " + filename, true);
 			}
 			catch (Exception ex)
 			{
@@ -339,9 +362,8 @@ namespace WinApp.Code
 				Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
 				PythonEngine.InUse = false;
-				return false;
 			}
-			return true;
+			return ok;
 		}
 	}
 }

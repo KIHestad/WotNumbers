@@ -8,6 +8,8 @@ namespace WinApp.Code
 {
 	public static class GridView
 	{
+		public static bool scheduleGridRefresh = false;
+		
 		public enum Views
 		{
 			Overall = 0,
