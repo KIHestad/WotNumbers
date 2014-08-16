@@ -65,6 +65,7 @@ namespace WinApp.Code
 			foreach (DirectoryInfo folder in folders)
 			{
 				string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
+				int count = 0;
 				foreach (string file in filesDat)
 				{
 					string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
@@ -72,7 +73,7 @@ namespace WinApp.Code
 					if (!battleResultDatFileCopyed.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
 					{
 						// Copy
-						Log.LogToFile("Start copying battle DAT-file: " + file, true);
+						Log.LogToFile(" > * Start copying battle DAT-file: " + file, true);
 						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
 						string filename = Path.GetFileName(file);
 						fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
@@ -81,10 +82,16 @@ namespace WinApp.Code
 						if (File.Exists(Config.AppDataBattleResultFolder + filename))
 						{
 							battleResultDatFileCopyed.Add(file);
-							Log.LogToFile("Copyed successfully battle DAT-file: " + file, true);
+							Log.LogToFile(" > * Copyed successfully battle DAT-file: " + file, true);
 						}
 					}
+					else
+						count++;
 				}
+				if (count > 0)
+					Log.LogToFile(" > DAT-files skipped, read previous: " + count.ToString(), true);
+				if (filesDat.Length == 0)
+					Log.LogToFile(" > * No battle DAT-files found", true);
 			}
 
 			// Loop through all dat-files copyed to local folder
@@ -97,7 +104,7 @@ namespace WinApp.Code
 					// Success, json file is now created, clean up by delete dat file
 					FileInfo fileBattleDatCopyed = new FileInfo(file); // the original dossier file
 					fileBattleDatCopyed.Delete(); // delete original DAT file
-					Log.LogToFile("Deleted battle DAT-file: " + file, true);
+					Log.LogToFile(" > * Deleted battle DAT-file: " + file, true);
 					Application.DoEvents();
 				}
 			}
@@ -105,9 +112,11 @@ namespace WinApp.Code
 
 		public static void RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
+			Log.LogToFile(" > Start looking for battle result", true);
 			if (forceReadFiles)
 			{
 				battleResultDatFileCopyed = new List<string>();
+				Log.LogToFile(" > Clear history, force check all DAT-files", true);
 			}
 			bool refreshAfterUpdate = false;
 			// Look for new files
@@ -246,17 +255,17 @@ namespace WinApp.Code
 							deleteFileAfterRead = true;
 							refreshAfterUpdate = true;
 							GridView.scheduleGridRefresh = true;
-							Log.LogToFile("Done reading into DB JSON file: " + file, true);
+							Log.LogToFile(" > * Done reading into DB JSON file: " + file, true);
 						}
 					}
 					else
 					{
-						Log.LogToFile("New battle file not read, battle do not exists for JSON file: " + file, true);
+						Log.LogToFile(" > * New battle file not read, battle do not exists for JSON file: " + file, true);
 						// Battle do not exists, delete if old file file
 						if (battleTime < DateTime.Now.AddDays(-3))
 						{
 							deleteFileAfterRead = true;
-							Log.LogToFile("Old battle found, schedule for delete for JSON file: " + file, true);
+							Log.LogToFile(" > * Old battle found, schedule for delete for JSON file: " + file, true);
 						}
 					}
 					// Delete file if handled or old
@@ -265,7 +274,7 @@ namespace WinApp.Code
 						// Done - delete file
 						FileInfo fileBattleJson = new FileInfo(file);
 						fileBattleJson.Delete();
-						Log.LogToFile("Deleted read or old JSON file: " + file, true);
+						Log.LogToFile(" > * Deleted read or old JSON file: " + file, true);
 					}
 				}
 				// Create alert file if new battle result added 

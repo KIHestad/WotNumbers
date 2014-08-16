@@ -3265,7 +3265,12 @@ namespace WinApp.Forms
 			if (PythonEngine.InUse)
 				MsgBox.Show("Not able to run this test while dossier file is read. Try again in some seconds.", "IronPhyton engine in use", this);
 			else
+			{
+				Log.LogToFile("", false);
+				Log.LogToFile("Start manual check for battle result", true);
+				Log.LogToFile(" > Reading all battle files", true);
 				Battle2json.RunBattleResultRead(true, true);
+			}
 		}
 
 		#endregion
