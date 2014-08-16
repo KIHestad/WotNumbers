@@ -61,7 +61,12 @@ namespace WinApp.Forms
 			lblStatus2.Text = "Application starting...";
 			lblStatusRowCount.Text = "";
 			// Log startup
-			Code.Log.LogToFile("Application startup", true);
+			Log.AddToLogBuffer("", false);
+			Log.AddToLogBuffer("***********************", true);
+			Log.AddToLogBuffer("* Application startup *", true);
+			Log.AddToLogBuffer("***********************", true);
+			Log.AddToLogBuffer("", false);
+			Log.WriteLogBuffer();
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
@@ -627,6 +632,11 @@ namespace WinApp.Forms
 			Config.Settings.posSize.WindowState = this.WindowState;
 			string msg = "";
 			Config.SaveConfig(out msg);
+			// Log exit
+			Log.AddToLogBuffer("", false);
+			Log.AddToLogBuffer("Application Exit", true);
+			Log.AddToLogBuffer("", false);
+			Log.WriteLogBuffer();
 		}
 
 		private void Main_Resize(object sender, EventArgs e)
@@ -3170,6 +3180,7 @@ namespace WinApp.Forms
 		private void toolItemSettingsRunManual_Click(object sender, EventArgs e)
 		{
 			RunDossierFileCheck();
+			Log.WriteLogBuffer();
 		}
 
 		private void RunDossierFileCheck(string message = "")
@@ -3186,6 +3197,7 @@ namespace WinApp.Forms
 		private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
 		{
 			RunDossierFileCheckWithForceUpdate();
+			Log.WriteLogBuffer();
 		}
 
 		private void RunDossierFileCheckWithForceUpdate(string message="")
@@ -3266,10 +3278,11 @@ namespace WinApp.Forms
 				MsgBox.Show("Not able to run this test while dossier file is read. Try again in some seconds.", "IronPhyton engine in use", this);
 			else
 			{
-				Log.LogToFile("", false);
-				Log.LogToFile("Start manual check for battle result", true);
-				Log.LogToFile(" > Reading all battle files", true);
+				Log.AddToLogBuffer("", false);
+				Log.AddToLogBuffer("Start manual check for battle result", true);
+				Log.AddToLogBuffer(" > Reading all battle files", true);
 				Battle2json.RunBattleResultRead(true, true);
+				Log.WriteLogBuffer();
 			}
 		}
 

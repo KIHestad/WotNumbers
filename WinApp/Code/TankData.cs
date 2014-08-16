@@ -39,6 +39,7 @@ namespace WinApp.Code
 
 		public static void GetAllLists()
 		{
+			Log.CheckLogFileSize();
 			GetTankList();
 			GetJson2dbMappingFromDB();
 			GetAchList();

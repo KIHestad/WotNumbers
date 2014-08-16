@@ -12,19 +12,49 @@ namespace WinApp.Code
 	{
 		private static string filename = "Log.txt"; // Log filename
 		private static string battleResultDoneFile = "LastBattle.txt";
+		public static List<string> logBuffer = new List<string>();
+
+		public static void WriteLogBuffer()
+		{
+			CreateFileIfNotExist();
+			Application.DoEvents();
+			LogToFile(logBuffer, false);
+			logBuffer = new List<string>();
+		}
+
+		public static void AddToLogBuffer(string logtext, bool addDateTime = true)
+		{
+			if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
+			logBuffer.Add(logtext);
+		}
+
+		public static void AddToLogBuffer(List<string> logtext, bool addDateTime = true)
+		{
+			string d = "";
+			if (addDateTime) d = DateTime.Now + "\t";
+			foreach (string txt in logtext)
+			{
+				logBuffer.Add(d + txt);	
+			}
+		}
+
 
 		public static void CheckLogFileSize()
 		{
 			if (File.Exists(Config.AppDataLogFolder + filename))
 			{
 				FileInfo file = new FileInfo(Config.AppDataLogFolder + filename);
-				if (file.Length > 1024*1024*5) // max 5 MB
+				if (file.Length > 1024 * 1024 * 5) // max 5 MB
 				{
 					string movefilename = "Log_" + DateTime.Now.ToString("yyyy-MM-dd_HHmm") + ".txt";
 					file.CopyTo(Config.AppDataLogFolder + movefilename);
 					file.Delete();
 					CreateFileIfNotExist();
 				}
+			}
+			else
+			{
+				CreateFileIfNotExist();
 			}
 		}
 
