@@ -18,11 +18,6 @@ namespace WinApp.Code
 		public static bool dossierRunning = false;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
 
-		private static string LogText(string logtext)
-		{
-			return DateTime.Now + " " + logtext;
-		}
-
 		public static string UpdateDossierFileWatcher(Form parentForm)
 		{
 			string logtext = "Dossier file listener stopped";
@@ -108,35 +103,29 @@ namespace WinApp.Code
 			Log.CheckLogFileSize();
 			List<string> logText = new List<string>();
 			bool ok = true;
-			logText.Add(LogText("Manual run, looking for new dossier file"));
+			Log.AddToLogBuffer("Manual run, looking for new dossier file");
 			string dossierFile = GetLatestUpdatedDossierFile();
 			if (dossierFile == "")
 			{
-				logText.Add(LogText(" > No dossier file found"));
+				Log.AddToLogBuffer(" > No dossier file found");
 				returVal = "No dossier file found - check Application Settings";
 				ok = false;
 			}
 			else
 			{
-				logText.Add(LogText(" > Dossier file found"));
+				Log.AddToLogBuffer(" > Dossier file found");
 			}
 			if (ok)
 			{
-				List<string> newLogText = RunDossierRead(out returVal, dossierFile, ForceUpdate);
-				foreach (string s in newLogText)
-				{
-					logText.Add(s);
-				}
+				RunDossierRead(out returVal, dossierFile, ForceUpdate);
 			}
-			Log.LogToFile(logText);
 			return returVal;
 		}
 
 		private static void DossierFileChanged(object source, FileSystemEventArgs e)
 		{
 			Log.CheckLogFileSize();
-			List<string> logText = new List<string>();
-			logText.Add(LogText("Dossier file listener detected updated dossier file"));
+			Log.AddToLogBuffer("Dossier file listener detected updated dossier file");
 			// Dossier file automatic handling
 			// Stop listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = false;
@@ -148,21 +137,9 @@ namespace WinApp.Code
 			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierFile, 4000);
 			// Perform file conversion from picle til json
 			string statusResult;
-			List<string> logTextNew2 = RunDossierRead(out statusResult, dossierFile);
-			// Add logtext
-			foreach (string s in logtextnew1)
-			{
-				logText.Add(s);
-			}
-			foreach (string s in logTextNew2)
-			{
-				logText.Add(s);
-			}
-			
+			RunDossierRead(out statusResult, dossierFile);
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
-			// Save log to textfile
-			Log.LogToFile(logText);
 		}
 
 		private static List<string> WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
@@ -181,13 +158,13 @@ namespace WinApp.Code
 					{
 						fileOK = true;
 						TimeSpan ts = stopWatch.Elapsed;
-						logtext.Add(LogText(String.Format(" > Dossierfile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
+						Log.AddToLogBuffer(String.Format(" > Dossierfile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
 					}
 				}
 				catch (Exception)
 				{
 					// could not read file - do not log as error, this is normal behavior
-					logtext.Add(LogText(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString())));
+					Log.AddToLogBuffer(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
 					System.Threading.Thread.Sleep(waitInterval);
 				}
 			}
@@ -195,7 +172,7 @@ namespace WinApp.Code
 			return logtext;
 		}
 
-		private static List<string> RunDossierRead(out string statusResult, string dossierFile, bool forceUpdate = false)
+		private static void RunDossierRead(out string statusResult, string dossierFile, bool forceUpdate = false)
 		{
 			List<string> logText = new List<string>();
 			string returVal = "";
@@ -255,7 +232,7 @@ namespace WinApp.Code
 				if (playerId == 0)
 				{
 					ok = false;
-					logText.Add(LogText(" > Error identifying player"));
+					logText.Add(" > Error identifying player");
 					returVal = "Error identifying player";
 				}
 				// If dossier player is not current player change
@@ -286,7 +263,7 @@ namespace WinApp.Code
 					}
 					else
 					{
-						logText.Add(LogText(" > Successfully convertet dossier file to json"));
+						logText.Add(" > Successfully convertet dossier file to json");
 						// Move new file as previos (copy and delete)
 						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
 						fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
@@ -294,13 +271,13 @@ namespace WinApp.Code
 						try
 						{
 							fileInfonew.Delete();
-							logText.Add(LogText(" > Renamed copied dossierfile as previous file"));
+							logText.Add(" > Renamed copied dossierfile as previous file");
 						}
 						catch (Exception ex)
 						{
 							Log.LogToFile(ex);
 							// throw;
-							logText.Add(LogText(" > Could not copy dossierfile, probably in use"));
+							logText.Add(" > Could not copy dossierfile, probably in use");
 						}
 
 					}
@@ -309,11 +286,11 @@ namespace WinApp.Code
 						if (File.Exists(dossierJsonFile))
 						{
 							returVal = Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
-							logText.Add(LogText(" > " + returVal));
+							logText.Add(" > " + returVal);
 						}
 						else
 						{
-							logText.Add(LogText(" > No json file found"));
+							logText.Add(" > No json file found");
 							returVal = "No previous dossier file found - run manual check";
 						}
 					}
@@ -343,7 +320,8 @@ namespace WinApp.Code
 				returVal = "Process already running...";
 			}
 			statusResult = returVal;
-			return logText;
+			Log.AddToLogBuffer(logText);
+			Log.WriteLogBuffer();
 		}
 
 		private static string ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)

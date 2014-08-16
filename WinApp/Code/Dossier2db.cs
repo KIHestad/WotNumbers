@@ -64,7 +64,6 @@ namespace WinApp.Code
 				JsonTextReader reader = new JsonTextReader(new StringReader(json));
 						
 				// logging
-				List<string> log = new List<string>();
 				Log.CheckLogFileSize();
 								
 				// Check for first run (if player tank = 0), then dont get battle result but force update
