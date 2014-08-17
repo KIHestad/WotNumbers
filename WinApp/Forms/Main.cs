@@ -62,9 +62,7 @@ namespace WinApp.Forms
 			lblStatusRowCount.Text = "";
 			// Log startup
 			Log.AddToLogBuffer("", false);
-			Log.AddToLogBuffer("***********************", true);
-			Log.AddToLogBuffer("* Application startup *", true);
-			Log.AddToLogBuffer("***********************", true);
+			Log.AddToLogBuffer("********* Application startup *********", true);
 			Log.AddToLogBuffer("", false);
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
@@ -631,9 +629,7 @@ namespace WinApp.Forms
 			string msg = "";
 			Config.SaveConfig(out msg);
 			// Log exit
-			Log.AddToLogBuffer("", false);
 			Log.AddToLogBuffer("Application Exit", true);
-			Log.AddToLogBuffer("", false);
 			Log.WriteLogBuffer();
 		}
 

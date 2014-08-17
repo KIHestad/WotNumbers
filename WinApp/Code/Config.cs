@@ -201,7 +201,7 @@ namespace WinApp.Code
 		public static bool SaveConfig(out string msg)
 		{
 			bool ok = true;
-			string returnMsg = "Application settings succsessfully saved.";
+			string returnMsg = "Application settings successfully saved.";
 			// Write new settings to Json
 			try
 			{
@@ -220,7 +220,7 @@ namespace WinApp.Code
 		public static bool GetConfig(out string msg)
 		{
 			bool ok = true;
-			string returMsg = "Application settings succsessfully read.";
+			string returMsg = "Application settings successfully read.";
 			// Does config file exist?
 			if (!File.Exists(Config.AppDataBaseFolder + configfile))
 			{

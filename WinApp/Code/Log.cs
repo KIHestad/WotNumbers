@@ -94,7 +94,6 @@ namespace WinApp.Code
 				CreateFileIfNotExist();
 				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 				{
-					sw.WriteLine("");
 					foreach (var s in logtext)
 					{
 						sw.WriteLine(s);

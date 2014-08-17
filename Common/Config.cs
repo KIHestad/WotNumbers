@@ -120,7 +120,7 @@ namespace Common
 		public static bool SaveConfig(ConfigData config, string configfile, out string msg)
 		{
 			bool ok = true;
-			string returnMsg = "Application settings succsessfully saved.";
+			string returnMsg = "Application settings successfully saved.";
 			// Write new settings to Json
 			try
 			{
@@ -138,7 +138,7 @@ namespace Common
 		public static bool GetConfig(ref ConfigData config, string configfile, out string msg)
 		{
 			bool ok = true;
-			string returMsg = "Application settings succsessfully read.";
+			string returMsg = "Application settings successfully read.";
 			// Does config file exist?
 			if (!File.Exists(Config.AppDataBaseFolder + configfile))
 			{

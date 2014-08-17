@@ -282,7 +282,7 @@ namespace WinApp.Code
 				// Check for new tanks, then load images
 				if (newTank)
 					ImageHelper.LoadTankImages(); // Load new image by reloading
-				return ("Dossier file succsessfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+				return ("Dossier file successfully analyzed - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 			}
 			catch (Exception ex)
 			{

@@ -470,6 +470,9 @@ abstract class BadThemeContainerControl : ContainerControl
 	protected Rectangle Header;
 	protected override void OnSizeChanged(EventArgs e)
 	{
+		if (ParentIsForm)
+			if (ParentForm.WindowState == FormWindowState.Minimized)
+				return;
 		try
 		{
 			SetMainAreaSize();
