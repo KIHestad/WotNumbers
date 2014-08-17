@@ -121,8 +121,9 @@
 			this.mModeSpecialInfo = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mBattles1d = new System.Windows.Forms.ToolStripMenuItem();
-			this.mBattles2d = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.mBattles2d = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles3d = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
 			this.mBattles1w = new System.Windows.Forms.ToolStripMenuItem();
@@ -168,7 +169,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1064,14 +1064,6 @@
 			this.mBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// mBattles2d
-			// 
-			this.mBattles2d.Name = "mBattles2d";
-			this.mBattles2d.Size = new System.Drawing.Size(181, 22);
-			this.mBattles2d.Text = "Battles Last 2 Days";
-			this.mBattles2d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
-			this.mBattles2d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
 			// mBattlesYesterday
 			// 
 			this.mBattlesYesterday.Name = "mBattlesYesterday";
@@ -1079,6 +1071,19 @@
 			this.mBattlesYesterday.Text = "Yesterday\'s Battles";
 			this.mBattlesYesterday.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattlesYesterday.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
+			// 
+			// mBattles2d
+			// 
+			this.mBattles2d.Name = "mBattles2d";
+			this.mBattles2d.Size = new System.Drawing.Size(181, 22);
+			this.mBattles2d.Text = "Battles Last 2 Days";
+			this.mBattles2d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			this.mBattles2d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mBattles3d
 			// 
@@ -1209,7 +1214,7 @@
 			// 
 			this.mSettingsRun.Name = "mSettingsRun";
 			this.mSettingsRun.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsRun.Text = "Automaitically Fetch New Battles";
+			this.mSettingsRun.Text = "Automatically Fetch New Battles";
 			this.mSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
 			this.mSettingsRun.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -1534,11 +1539,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
 			// 
 			// Main
 			// 
