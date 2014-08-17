@@ -121,9 +121,9 @@
 			this.badLabel8.Image = null;
 			this.badLabel8.Location = new System.Drawing.Point(29, 273);
 			this.badLabel8.Name = "badLabel8";
-			this.badLabel8.Size = new System.Drawing.Size(237, 23);
+			this.badLabel8.Size = new System.Drawing.Size(351, 23);
 			this.badLabel8.TabIndex = 10;
-			this.badLabel8.Text = "Using Phalynx: \"Dossier2json\" from vBAddict";
+			this.badLabel8.Text = "Using dossier- and battle-to-json made by Phalynx at vBAddict ";
 			// 
 			// badLabel5
 			// 

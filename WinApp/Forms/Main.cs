@@ -66,7 +66,6 @@ namespace WinApp.Forms
 			Log.AddToLogBuffer("* Application startup *", true);
 			Log.AddToLogBuffer("***********************", true);
 			Log.AddToLogBuffer("", false);
-			Log.WriteLogBuffer();
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
@@ -251,6 +250,8 @@ namespace WinApp.Forms
 
 		private void Main_Shown(object sender, EventArgs e)
 		{
+			// Log startup to file now
+			Log.WriteLogBuffer();
 			// Ready to draw form
 			Init = false;
 			// Create IronPython Engine
