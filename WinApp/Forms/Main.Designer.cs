@@ -121,6 +121,7 @@
 			this.mModeSpecialInfo = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mBattles1d = new System.Windows.Forms.ToolStripMenuItem();
+			this.mBattles2d = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles3d = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
@@ -167,6 +168,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -258,7 +260,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(642, 25);
+			this.toolMain.Size = new System.Drawing.Size(673, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1030,6 +1032,8 @@
 			this.mBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mBattles1d,
             this.mBattlesYesterday,
+            this.toolStripSeparator3,
+            this.mBattles2d,
             this.mBattles3d,
             this.toolStripSeparator19,
             this.mBattles1w,
@@ -1059,6 +1063,14 @@
 			this.mBattles1d.Text = "Today\'s Battles";
 			this.mBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// mBattles2d
+			// 
+			this.mBattles2d.Name = "mBattles2d";
+			this.mBattles2d.Size = new System.Drawing.Size(181, 22);
+			this.mBattles2d.Text = "Battles Last 2 Days";
+			this.mBattles2d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
+			this.mBattles2d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mBattlesYesterday
 			// 
@@ -1523,6 +1535,11 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1691,6 +1708,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mSettingsAppLayout;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem mModeStrongholds;
+		private System.Windows.Forms.ToolStripMenuItem mBattles2d;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 	}
 }
 

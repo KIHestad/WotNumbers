@@ -1281,6 +1281,7 @@ namespace WinApp.Forms
 		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
 		{
 			mBattles1d.Checked = false;
+			mBattles2d.Checked = false;
 			mBattlesYesterday.Checked = false;
 			mBattles3d.Checked = false;
 			mBattles1w.Checked = false;
@@ -2211,6 +2212,7 @@ namespace WinApp.Forms
 					dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
 					// Adjust time scale according to selected filter
 					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
+					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
 					else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
 					else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
 					else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
@@ -3278,7 +3280,8 @@ namespace WinApp.Forms
 				Log.AddToLogBuffer("", false);
 				Log.AddToLogBuffer("Start manual check for battle result", true);
 				Log.AddToLogBuffer(" > Reading all battle files", true);
-				Battle2json.RunBattleResultRead(true, true);
+				string result = Battle2json.RunBattleResultRead(true, true);
+				SetStatus2("Checked enhanced battle result - " + result);
 				Log.WriteLogBuffer();
 			}
 		}

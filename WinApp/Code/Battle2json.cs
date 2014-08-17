@@ -111,8 +111,9 @@ namespace WinApp.Code
 			}
 		}
 
-		public static void RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
+		public static string RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
+			string returVal = "";
 			Log.AddToLogBuffer(" > Start looking for battle result");
 			if (forceReadFiles)
 			{
@@ -124,8 +125,15 @@ namespace WinApp.Code
 			ConvertBattleFilesToJson();
 			// Get all json files
 			string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
+			// Any files?
+			if (filesJson.Length == 0)
+				returVal = "No battle result availebale";
+			// count action
+			int processed = 0;
+			int added = 0;
 			foreach (string file in filesJson)
 			{
+				processed++;
 				// Read content
 				StreamReader sr = new StreamReader(file, Encoding.UTF8);
 				string json = sr.ReadToEnd();
@@ -199,6 +207,7 @@ namespace WinApp.Code
 							battleValues.Add(new BattleValues() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
 							battleValues.Add(new BattleValues() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
 							battleValues.Add(new BattleValues() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
+							battleValues.Add(new BattleValues() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") }); // override def - might be above 100
 							// field returns null
 							if (token_personel.SelectToken("fortResource").HasValues)
 								battleValues.Add(new BattleValues() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
@@ -257,6 +266,7 @@ namespace WinApp.Code
 							refreshAfterUpdate = true;
 							GridView.scheduleGridRefresh = true;
 							Log.AddToLogBuffer(" > * Done reading into DB JSON file: " + file);
+							added++;
 						}
 					}
 					else
@@ -285,7 +295,13 @@ namespace WinApp.Code
 					Log.BattleResultDoneLog();
 					Log.WriteLogBuffer();
 				}
+				// Return result
+				if (added == 0)
+					returVal = processed.ToString() + " files checked, no new battle result detected";
+				else
+					returVal = processed.ToString() + " files checked, " + added + " files added as battle result";
 			}
+			return returVal;
 		}
 		
 		private static void GrindingProgress(int playerTankId, int XP)

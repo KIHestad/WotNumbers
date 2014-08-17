@@ -41,7 +41,7 @@ namespace WinApp.Code
 				}
 			}
 			dossierFileWatcher.EnableRaisingEvents = run;
-			Log.LogToFile(logtext,true);
+			Log.LogToFile(logtext, true);
 			return logtext;
 		}
 
