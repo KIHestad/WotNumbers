@@ -238,12 +238,6 @@
     <Compile Include="Forms\FavList\FavList.Designer.cs">
       <DependentUpon>FavList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Grinding\GrindingParameter.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Grinding\GrindingParameter.Designer.cs">
-      <DependentUpon>GrindingParameter.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Grinding\GrindingSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -358,9 +352,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FavList\FavList.resx">
       <DependentUpon>FavList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Grinding\GrindingParameter.resx">
-      <DependentUpon>GrindingParameter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Grinding\GrindingSetup.resx">
       <DependentUpon>GrindingSetup.cs</DependentUpon>

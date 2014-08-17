@@ -308,16 +308,13 @@ namespace WinApp.Forms
 			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			// Ready 
 			MainTheme.Cursor = Cursors.Default;
+			dataGridMain.Visible = true;
+			scrollY.Visible = true;
+			scrollX.Visible = true;
 			// Show status message
 			SetStatus2("Application started");
 			// Check for new version
 			RunCheckForNewVersion();
-			// Show Grinding Param Settings
-			if (Config.Settings.grindParametersAutoStart)
-			{
-				Form frm = new Forms.GrindingParameter();
-				frm.ShowDialog();
-			}
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)

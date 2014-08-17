@@ -39,8 +39,6 @@
 			this.badLabel20 = new BadLabel();
 			this.txtLastVictoryTime = new BadTextBox();
 			this.badLabel19 = new BadLabel();
-			this.lblGrindingParameters = new BadLabel();
-			this.btnGrindingParameters = new BadButton();
 			this.txtWinRate = new BadTextBox();
 			this.badLabel16 = new BadLabel();
 			this.txtWins = new BadTextBox();
@@ -86,8 +84,6 @@
 			this.GrindingSetupTheme.Controls.Add(this.badLabel20);
 			this.GrindingSetupTheme.Controls.Add(this.txtLastVictoryTime);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel19);
-			this.GrindingSetupTheme.Controls.Add(this.lblGrindingParameters);
-			this.GrindingSetupTheme.Controls.Add(this.btnGrindingParameters);
 			this.GrindingSetupTheme.Controls.Add(this.txtWinRate);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel16);
 			this.GrindingSetupTheme.Controls.Add(this.txtWins);
@@ -251,30 +247,6 @@
 			this.badLabel19.TabIndex = 16;
 			this.badLabel19.TabStop = false;
 			this.badLabel19.Text = "Last recorded first victory per day:";
-			// 
-			// lblGrindingParameters
-			// 
-			this.lblGrindingParameters.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.lblGrindingParameters.Dimmed = false;
-			this.lblGrindingParameters.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblGrindingParameters.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblGrindingParameters.Image = null;
-			this.lblGrindingParameters.Location = new System.Drawing.Point(26, 355);
-			this.lblGrindingParameters.Name = "lblGrindingParameters";
-			this.lblGrindingParameters.Size = new System.Drawing.Size(184, 22);
-			this.lblGrindingParameters.TabIndex = 38;
-			this.lblGrindingParameters.TabStop = false;
-			this.lblGrindingParameters.Text = "Grinding params...";
-			// 
-			// btnGrindingParameters
-			// 
-			this.btnGrindingParameters.Image = null;
-			this.btnGrindingParameters.Location = new System.Drawing.Point(263, 355);
-			this.btnGrindingParameters.Name = "btnGrindingParameters";
-			this.btnGrindingParameters.Size = new System.Drawing.Size(75, 23);
-			this.btnGrindingParameters.TabIndex = 39;
-			this.btnGrindingParameters.Text = "Parameters";
-			this.btnGrindingParameters.Click += new System.EventHandler(this.btnGrindingParameters_Click);
 			// 
 			// txtWinRate
 			// 
@@ -752,8 +724,6 @@
 		private BadTextBox txtBattles;
 		private BadLabel badLabel17;
 		private BadLabel badLabel18;
-		private BadButton btnGrindingParameters;
-		private BadLabel lblGrindingParameters;
 		private BadTextBox txtWinRate;
 		private BadLabel badLabel16;
 		private BadTextBox txtLastVictoryTime;

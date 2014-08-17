@@ -258,7 +258,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(673, 25);
+			this.toolMain.Size = new System.Drawing.Size(642, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1355,7 +1355,7 @@
 			this.dataGridMain.AllowUserToAddRows = false;
 			this.dataGridMain.AllowUserToDeleteRows = false;
 			this.dataGridMain.AllowUserToResizeRows = false;
-			this.dataGridMain.BackgroundColor = System.Drawing.Color.Gray;
+			this.dataGridMain.BackgroundColor = System.Drawing.SystemColors.ControlDark;
 			this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridMain.CausesValidation = false;
 			this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -1401,6 +1401,7 @@
 			this.dataGridMain.ShowEditingIcon = false;
 			this.dataGridMain.Size = new System.Drawing.Size(601, 204);
 			this.dataGridMain.TabIndex = 11;
+			this.dataGridMain.Visible = false;
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
 			this.dataGridMain.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridMain_CellMouseDown);
 			this.dataGridMain.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridMain_CellPainting);
@@ -1459,6 +1460,7 @@
 			this.scrollY.Size = new System.Drawing.Size(17, 204);
 			this.scrollY.TabIndex = 21;
 			this.scrollY.Text = "badScrollBar2";
+			this.scrollY.Visible = false;
 			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
 			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
 			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
@@ -1488,6 +1490,7 @@
 			this.scrollX.Size = new System.Drawing.Size(601, 17);
 			this.scrollX.TabIndex = 20;
 			this.scrollX.Text = "badScrollBar1";
+			this.scrollX.Visible = false;
 			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
 			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
 			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);

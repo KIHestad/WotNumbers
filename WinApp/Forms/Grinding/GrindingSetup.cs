@@ -28,15 +28,6 @@ namespace WinApp.Forms
 		{
 			GetTankData();
 			dataChanged = false;
-			UpdateGrindParameters();
-		}
-
-		private void UpdateGrindParameters()
-		{
-			if (Code.GrindingHelper.Settings.EveryVictoryFactor > 0)
-				lblGrindingParameters.Text = "Every victory: " + Code.GrindingHelper.Settings.EveryVictoryFactor.ToString() + "X";
-			else
-				lblGrindingParameters.Text = "First victory each day: " + Code.GrindingHelper.Settings.FirstVictoryFactor.ToString() + "X";
 		}
 
 		private void GetTankData()
@@ -259,14 +250,6 @@ namespace WinApp.Forms
 			btlPerDay++;
 			txtBattlesPerDay.Text = btlPerDay.ToString();
 		}
-
-		private void btnGrindingParameters_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.GrindingParameter();
-			frm.ShowDialog();
-			UpdateGrindParameters();
-		}
-
 
 		private void btnClose_Click(object sender, EventArgs e)
 		{
