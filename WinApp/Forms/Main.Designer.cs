@@ -260,7 +260,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(673, 25);
+			this.toolMain.Size = new System.Drawing.Size(642, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1059,7 +1059,7 @@
 			this.mBattles1d.Checked = true;
 			this.mBattles1d.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.mBattles1d.Name = "mBattles1d";
-			this.mBattles1d.Size = new System.Drawing.Size(181, 22);
+			this.mBattles1d.Size = new System.Drawing.Size(186, 22);
 			this.mBattles1d.Text = "Today\'s Battles";
 			this.mBattles1d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1067,7 +1067,7 @@
 			// mBattlesYesterday
 			// 
 			this.mBattlesYesterday.Name = "mBattlesYesterday";
-			this.mBattlesYesterday.Size = new System.Drawing.Size(181, 22);
+			this.mBattlesYesterday.Size = new System.Drawing.Size(186, 22);
 			this.mBattlesYesterday.Text = "Yesterday\'s Battles";
 			this.mBattlesYesterday.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattlesYesterday.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1075,12 +1075,12 @@
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(183, 6);
 			// 
 			// mBattles2d
 			// 
 			this.mBattles2d.Name = "mBattles2d";
-			this.mBattles2d.Size = new System.Drawing.Size(181, 22);
+			this.mBattles2d.Size = new System.Drawing.Size(186, 22);
 			this.mBattles2d.Text = "Battles Last 2 Days";
 			this.mBattles2d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles2d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1088,7 +1088,7 @@
 			// mBattles3d
 			// 
 			this.mBattles3d.Name = "mBattles3d";
-			this.mBattles3d.Size = new System.Drawing.Size(181, 22);
+			this.mBattles3d.Size = new System.Drawing.Size(186, 22);
 			this.mBattles3d.Text = "Battles Last 3 Days";
 			this.mBattles3d.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles3d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1096,12 +1096,12 @@
 			// toolStripSeparator19
 			// 
 			this.toolStripSeparator19.Name = "toolStripSeparator19";
-			this.toolStripSeparator19.Size = new System.Drawing.Size(178, 6);
+			this.toolStripSeparator19.Size = new System.Drawing.Size(183, 6);
 			// 
 			// mBattles1w
 			// 
 			this.mBattles1w.Name = "mBattles1w";
-			this.mBattles1w.Size = new System.Drawing.Size(181, 22);
+			this.mBattles1w.Size = new System.Drawing.Size(186, 22);
 			this.mBattles1w.Text = "Battles Last Week";
 			this.mBattles1w.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles1w.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1109,7 +1109,7 @@
 			// mBattles2w
 			// 
 			this.mBattles2w.Name = "mBattles2w";
-			this.mBattles2w.Size = new System.Drawing.Size(181, 22);
+			this.mBattles2w.Size = new System.Drawing.Size(186, 22);
 			this.mBattles2w.Text = "Battles Last 2 Weeks";
 			this.mBattles2w.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles2w.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1117,12 +1117,12 @@
 			// toolStripSeparator20
 			// 
 			this.toolStripSeparator20.Name = "toolStripSeparator20";
-			this.toolStripSeparator20.Size = new System.Drawing.Size(178, 6);
+			this.toolStripSeparator20.Size = new System.Drawing.Size(183, 6);
 			// 
 			// mBattles1m
 			// 
 			this.mBattles1m.Name = "mBattles1m";
-			this.mBattles1m.Size = new System.Drawing.Size(181, 22);
+			this.mBattles1m.Size = new System.Drawing.Size(186, 22);
 			this.mBattles1m.Text = "Battles Last Month";
 			this.mBattles1m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles1m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1130,28 +1130,28 @@
 			// mBattles3m
 			// 
 			this.mBattles3m.Name = "mBattles3m";
-			this.mBattles3m.Size = new System.Drawing.Size(181, 22);
-			this.mBattles3m.Text = "Battles Last 3 Month";
+			this.mBattles3m.Size = new System.Drawing.Size(186, 22);
+			this.mBattles3m.Text = "Battles Last 3 Months";
 			this.mBattles3m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles3m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mBattles6m
 			// 
 			this.mBattles6m.Name = "mBattles6m";
-			this.mBattles6m.Size = new System.Drawing.Size(181, 22);
-			this.mBattles6m.Text = "Battles Last 6 Month";
+			this.mBattles6m.Size = new System.Drawing.Size(186, 22);
+			this.mBattles6m.Text = "Battles Last 6 Months";
 			this.mBattles6m.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles6m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolStripSeparator21
 			// 
 			this.toolStripSeparator21.Name = "toolStripSeparator21";
-			this.toolStripSeparator21.Size = new System.Drawing.Size(178, 6);
+			this.toolStripSeparator21.Size = new System.Drawing.Size(183, 6);
 			// 
 			// mBattles1y
 			// 
 			this.mBattles1y.Name = "mBattles1y";
-			this.mBattles1y.Size = new System.Drawing.Size(181, 22);
+			this.mBattles1y.Size = new System.Drawing.Size(186, 22);
 			this.mBattles1y.Text = "Battles Last Year";
 			this.mBattles1y.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles1y.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1159,7 +1159,7 @@
 			// mBattles2y
 			// 
 			this.mBattles2y.Name = "mBattles2y";
-			this.mBattles2y.Size = new System.Drawing.Size(181, 22);
+			this.mBattles2y.Size = new System.Drawing.Size(186, 22);
 			this.mBattles2y.Text = "Battles Last 2 Years";
 			this.mBattles2y.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			this.mBattles2y.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1167,12 +1167,12 @@
 			// toolStripSeparator22
 			// 
 			this.toolStripSeparator22.Name = "toolStripSeparator22";
-			this.toolStripSeparator22.Size = new System.Drawing.Size(178, 6);
+			this.toolStripSeparator22.Size = new System.Drawing.Size(183, 6);
 			// 
 			// mBattlesAll
 			// 
 			this.mBattlesAll.Name = "mBattlesAll";
-			this.mBattlesAll.Size = new System.Drawing.Size(181, 22);
+			this.mBattlesAll.Size = new System.Drawing.Size(186, 22);
 			this.mBattlesAll.Text = "All Battles";
 			this.mBattlesAll.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			// 

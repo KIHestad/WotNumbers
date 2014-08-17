@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 114; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 120; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -968,7 +968,7 @@ namespace WinApp.Code
 					break;
 				case 67:
 					NewSystemTankColList();
-					NewSystemBattleColList();
+					NewSystemBattleColList_Default();
 					break;
 				case 68:
 					mssql = "UPDATE columnSelection SET name='Remaining XP' WHERE id=176; " +
@@ -994,7 +994,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;	
 				case 71:
-					NewSystemBattleColList();
+					NewSystemBattleColList_Default();
 					break;
 				case 72:
 					mssql = "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (54289, 'Lowe', 1, 212); " +
@@ -1478,9 +1478,51 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 114:
-					NewSystemBattleColList();
+					NewSystemBattleColList_Default();
 					break;
-					
+				case 115:
+					mssql = "UPDATE columnSelection SET position=position + 82 where colType=1 and position >117; " +
+							"UPDATE columnSelection SET position=118 where id=49; ";
+					sqlite = mssql;
+					break;
+				case 116:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = s + "VALUES (192, 1, 119, 'tank.expDmg', 'Exp Dmg', 'WN8 Expected value: Damage', 'Rating', 50, 'Float'); " +
+							s + "VALUES (193, 1, 120, 'tank.expWR', 'Exp Win Rate', 'WN8 Expected value: Win Rate', 'Rating', 50, 'Float'); " +
+							s + "VALUES (194, 1, 121, 'tank.expSpot', 'Exp Spot', 'WN8 Expected value: Spotting', 'Rating', 50, 'Float'); " +
+							s + "VALUES (195, 1, 122, 'tank.expFrags', 'Exp Frags', 'WN8 Expected value: Frags', 'Rating', 50, 'Float'); " +
+							s + "VALUES (196, 1, 123, 'tank.expDef', 'Exp Def', 'WN8 Expected value: Defence points', 'Rating', 50, 'Float'); " +
+							s + "VALUES (197, 2, 290, 'tank.expDmg', 'Exp Dmg', 'WN8 Expected value: Damage', 'Rating', 50, 'Float'); " +
+							s + "VALUES (198, 2, 291, 'tank.expWR', 'Exp Win Rate', 'WN8 Expected value: Win Rate', 'Rating', 50, 'Float'); " +
+							s + "VALUES (199, 2, 292, 'tank.expSpot', 'Exp Spot', 'WN8 Expected value: Spotting', 'Rating', 50, 'Float'); " +
+							s + "VALUES (200, 2, 293, 'tank.expFrags', 'Exp Frags', 'WN8 Expected value: Frags', 'Rating', 50, 'Float'); " +
+							s + "VALUES (201, 2, 294, 'tank.expDef', 'Exp Def', 'WN8 Expected value: Defence points', 'Rating', 50, 'Float'); " +
+							s + "VALUES (202, 2, 231, 'case when def > 100 then 100 else def end', 'Def Cropped', 'Cropped to max 100 cap points reduced by damaging enemy tanks capping', 'Result', 50, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 117:
+					mssql = "UPDATE columnSelection SET position=position + 1 where colType=1 and position >226; " +
+							"UPDATE columnSelection SET position=position + 1 where colType=1 and position >225; " +
+							"UPDATE columnSelection SET position=position + 1 where colType=1 and position >224; " +
+							"UPDATE columnSelection SET name='Multiplier' where id=516; ";
+
+					sqlite = mssql;
+					break;
+				case 118:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = s + "VALUES (203, 1, 225, 'CAST(playerTankBattle.cap*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Cap', 'Average capping points per battle', 'Result', 50, 'Float'); " +
+							s + "VALUES (204, 1, 227, 'CAST(playerTankBattle.def*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Def', 'Average defence points per battle', 'Result', 50, 'Float'); " +
+							s + "VALUES (205, 1, 229, 'CAST(playerTankBattle.spot*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Spot', 'Average enemy tanks spotted per battles', 'Result', 50, 'Float'); "+
+							"UPDATE columnSelection SET name='Avg Frags' where id=191; ";
+					sqlite = mssql;
+					break;
+				case 119:
+					NewSystemBattleColList_WN8();
+					break;
+				case 120:
+					NewSystemTankColList_WN8();
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -1634,7 +1676,7 @@ namespace WinApp.Code
 		//ORDER BY sortorder
 
 
-		private static void NewSystemBattleColList()
+		private static void NewSystemBattleColList_Default()
 		{
 			// First remove all other system colList for Battle
 			string sql =
@@ -1680,6 +1722,73 @@ namespace WinApp.Code
 				MainSettings.GridFilterBattle.ColListName = "Default";
 			}
 		}
+
+		private static void NewSystemBattleColList_WN8()
+		{
+			// First remove all other system colList for Battle
+			string sql =
+				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2 and name='WN8'); " +
+				"delete from columnList where sysCol=1 and colType=2 and name='WN8'; ";
+			DB.ExecuteNonQuery(sql);
+			// Then remove current startup, and create new default colList
+			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'WN8', 0, 1, 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			Application.DoEvents();
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='WN8';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,120);" + // Tank
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,100);" + // DateTime
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",5,47);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",6,80);" + // Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (197," + id + ",7,59);" + // Exp Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",8,60);" + // Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (199," + id + ",9,39);" + // Exp Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",10,60);" + // Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (200," + id + ",11,39);" + // Exp Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",12,60);" + // Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (201," + id + ",13,39);"; // Exp Def
+			DB.ExecuteNonQuery(sql);
+		}
+
+		private static void NewSystemTankColList_WN8()
+		{
+			// First remove all other system colList for Battle
+			string sql =
+				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=1 and name='WN8'); " +
+				"delete from columnList where sysCol=1 and colType=1 and name='WN8'; ";
+			DB.ExecuteNonQuery(sql);
+			// Then remove current startup, and create new default colList
+			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'WN8', 0, 1, 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			Application.DoEvents();
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='WN8';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" + // Tank Image
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,120);" + // Tank
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",4,50);" + // Battles
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",5,55);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (188," + id + ",6,83);" + // Avg Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (192," + id + ",7,51);" + // Exp Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",8,71);" + // Win Rate
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (193," + id + ",9,43);" + // Exp Win Rate
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (205," + id + ",10,60);" + // Avg Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (194," + id + ",11,39);" + // Exp Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (191," + id + ",12,60);" + // Avg Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (195," + id + ",13,39);" + // Exp Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (204," + id + ",14,60);" + // Avg Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",15,39);"; // Exp Def
+			DB.ExecuteNonQuery(sql);
+		}
+
 
 	}
 }

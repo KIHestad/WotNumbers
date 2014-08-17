@@ -2481,7 +2481,14 @@ namespace WinApp.Forms
 					else if (colListItem.type == "Float")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
+						IEnumerable<string> showFloatValues = new List<string> 
+						{ 
+							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def"
+						};
+						if (!showFloatValues.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
+							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
+						else
+							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
 						if (rowcount > 0) // Special format in average row for floating values
 							dataGridMain.Rows[rowAverageIndex].Cells[colListItem.name].Style.Format = "N1";
 					}
