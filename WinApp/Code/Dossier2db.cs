@@ -14,6 +14,7 @@ namespace WinApp.Code
 {
 	public class Dossier2db
 	{
+		public static bool dossierRunning = false; // Flag to avoid running several dossier actions at the same time
 		public static bool battleSaved = false; // If new battle is saved
 		
 		public class JsonItem
@@ -89,7 +90,6 @@ namespace WinApp.Code
 				JsonItem currentItem = new JsonItem();
 				string fragList = "";
 				List<AchItem> achList = new List<AchItem>();
-				string[] achDossierSubLevel3 = { "", "Two", "Three" };
 				// Loop through json file
 				while (reader.Read())
 				{

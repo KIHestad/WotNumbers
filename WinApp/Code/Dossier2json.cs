@@ -15,7 +15,6 @@ namespace WinApp.Code
 	public class dossier2json
 	{
 		public BackgroundWorker bwDossierProcess;
-		public static bool dossierRunning = false;
 		public static FileSystemWatcher dossierFileWatcher = new FileSystemWatcher();
 
 		public static string UpdateDossierFileWatcher(Form parentForm)
@@ -176,9 +175,9 @@ namespace WinApp.Code
 		{
 			List<string> logText = new List<string>();
 			string returVal = "";
-			if (!dossierRunning)
+			if (!Dossier2db.dossierRunning)
 			{
-				dossierRunning = true;
+				Dossier2db.dossierRunning = true;
 				bool ok = true;
 				returVal = "Starting file handling...";
 				// Get player name and server from dossier
@@ -296,7 +295,7 @@ namespace WinApp.Code
 					}
 				}
 				// Done analyzing dossier file
-				dossierRunning = false;
+				Dossier2db.dossierRunning = false;
 				if (forceUpdate)
 				{
 					string msg = "";

@@ -3203,25 +3203,32 @@ namespace WinApp.Forms
 
 		private void toolItemSettingsRunManual_Click(object sender, EventArgs e)
 		{
-			RunDossierFileCheck();
-			Log.WriteLogBuffer();
+			if (Dossier2db.dossierRunning)
+				MsgBox.Show("Dossier file check already running, cannot run twice at the same time.", "Dossier File Check already running", this);
+			else
+			{
+				RunDossierFileCheck();
+				Log.WriteLogBuffer();
+			}
 		}
 
 		private void RunDossierFileCheck(string message = "")
 		{
-			// Dossier file manual handling
 			if (message == "") message = "Starting manual dossier check...";
 			SetStatus2(message);
 			dossier2json d2j = new dossier2json();
 			d2j.ManualRunInBackground("Running manual dossier file check...", false);
-			//SetFormTitle();
-			//GridShow(result);
 		}
 
 		private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
 		{
-			RunDossierFileCheckWithForceUpdate();
-			Log.WriteLogBuffer();
+			if (Dossier2db.dossierRunning)
+				MsgBox.Show("Dossier file check already running, cannot run twice at the same time.", "Dossier File Check already running", this);
+			else
+			{
+				RunDossierFileCheckWithForceUpdate();
+				Log.WriteLogBuffer();
+			}
 		}
 
 		private void RunDossierFileCheckWithForceUpdate(string message="")
