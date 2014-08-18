@@ -2066,8 +2066,11 @@ namespace WinApp.Forms
 				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 				// separator back color
-				if (colListItem.name.Length > 13 && colListItem.name.Substring(0,13) == " - Separator ")
+				if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
+				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
+					dataGridMain.Columns[colListItem.name].Resizable = DataGridViewTriState.False;
+				}
 				// Format cells
 				if (colListItem.type == "Int")
 				{
@@ -2472,6 +2475,7 @@ namespace WinApp.Forms
 					if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
+						dataGridMain.Columns[colListItem.name].Resizable = DataGridViewTriState.False;
 						// avg and totals darker separator colors
 						if (rowcount > 0)
 						{
