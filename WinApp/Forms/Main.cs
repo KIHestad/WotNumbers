@@ -3315,8 +3315,8 @@ namespace WinApp.Forms
 
 		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
 		{
-			if (PythonEngine.InUse)
-				MsgBox.Show("Not able to run this test while dossier file is read. Try again in some seconds.", "IronPhyton engine in use", this);
+			if (Dossier2db.dossierRunning || PythonEngine.InUse)
+				MsgBox.Show("Dossier file check already running, battle result will be fetchen automatically in some seconds.", "Dossier File Check in progress", this);
 			else
 			{
 				Log.AddToLogBuffer("", false);
