@@ -288,19 +288,19 @@ namespace WinApp.Code
 						Log.AddToLogBuffer(" > * Deleted read or old JSON file: " + file);
 					}
 				}
-				// Create alert file if new battle result added 
-				if (refreshAfterUpdate && refreshGridOnFoundBattles)
-				{
-					GridView.scheduleGridRefresh = false;
-					Log.BattleResultDoneLog();
-					Log.WriteLogBuffer();
-				}
-				// Return result
-				if (added == 0)
-					returVal = processed.ToString() + " files checked, no new battle result detected";
-				else
-					returVal = processed.ToString() + " files checked, " + added + " files added as battle result";
 			}
+			// Create alert file if new battle result added 
+			if (refreshAfterUpdate && refreshGridOnFoundBattles)
+			{
+				GridView.scheduleGridRefresh = false;
+				Log.BattleResultDoneLog();
+				Log.WriteLogBuffer();
+			}
+			// Return result
+			if (added == 0)
+				returVal = processed.ToString() + " files checked, no new battle result detected";
+			else
+				returVal = processed.ToString() + " files checked, " + added + " files added as battle result";
 			return returVal;
 		}
 		
