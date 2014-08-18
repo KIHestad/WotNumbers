@@ -1869,11 +1869,13 @@ namespace WinApp.Forms
 					dataGridMain.Rows[6].Cells["Random (15x15)"].Style.SelectionForeColor = dataGridMain.Rows[6].Cells["Random (15x15)"].Style.ForeColor;
 
 				}
-				// Right align numbers
+				// No resize and Right align numbers
+				dataGridMain.Columns[0].Resizable = DataGridViewTriState.False;
 				for (int i = 1; i < dataGridMain.Columns.Count; i++)
 				{
 					dataGridMain.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					dataGridMain.Columns[i].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+					dataGridMain.Columns[i].Resizable = DataGridViewTriState.False;
 				}
 				// Finish
 				dataGridMain.Columns[0].Width = 100;
@@ -2063,14 +2065,18 @@ namespace WinApp.Forms
 				if (sorting != null && colListItem.colName == sorting.lastSortColumn)
 					currentSortColId = colListItemCount;
 				colListItemCount++;
-				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
-				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
-				// separator back color
+				// Minimum widht and separator back color
 				if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
 				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
 					dataGridMain.Columns[colListItem.name].Resizable = DataGridViewTriState.False;
+					dataGridMain.Columns[colListItem.name].MinimumWidth = 2;
 				}
+				else
+					dataGridMain.Columns[colListItem.name].MinimumWidth = 35;
+				// Sortmode - width
+				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
+				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 				// Format cells
 				if (colListItem.type == "Int")
 				{
@@ -2468,14 +2474,12 @@ namespace WinApp.Forms
 					if (sorting != null && colListItem.colName == sorting.lastSortColumn)
 						currentSortColId = colListItemCount;
 					colListItemCount++;
-					// Format
-					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
-					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
-					// separator back color
+					// MInimum width and separator back color
 					if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
 						dataGridMain.Columns[colListItem.name].Resizable = DataGridViewTriState.False;
+						dataGridMain.Columns[colListItem.name].MinimumWidth = 2;
 						// avg and totals darker separator colors
 						if (rowcount > 0)
 						{
@@ -2483,6 +2487,11 @@ namespace WinApp.Forms
 							dataGridMain.Rows[rowTotalsIndex].Cells[colListItem.name].Style.BackColor = ColorTheme.GridColumnHeaderSeparator;
 						}
 					}
+					else
+						dataGridMain.Columns[colListItem.name].MinimumWidth = 35;
+					// Width and sorting
+					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 					// Format cells
 					if (colListItem.type == "Int")
 					{
@@ -2933,15 +2942,6 @@ namespace WinApp.Forms
 			{
 				string colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
 				int newWidth = e.Column.Width;
-				if (colName.Length > 13 && colName.Substring(0,13) == " - Separator ")
-					newWidth = 5;
-				else
-				{
-					if (newWidth < 35)
-					{
-						newWidth = 35;
-					}
-				}
 				dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
 				ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
 			}
