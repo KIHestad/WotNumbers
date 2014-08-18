@@ -54,6 +54,7 @@
 			this.toolSelectedColumns = new System.Windows.Forms.ToolStrip();
 			this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
+			this.toolSelectedTanks_Separator = new System.Windows.Forms.ToolStripButton();
 			this.toolAllColumns = new System.Windows.Forms.ToolStrip();
 			this.toolAvailableCol_All = new System.Windows.Forms.ToolStripButton();
 			this.toolAvailableCol_1 = new System.Windows.Forms.ToolStripButton();
@@ -150,16 +151,16 @@
 			this.toolColList.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolColList.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolColList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolColListUp,
-			this.toolColListDown,
-			this.toolColListVisible,
-			this.toolColListDefault,
-			this.toolStripSeparator1,
-			this.toolColListAdd,
-			this.toolColListModify,
-			this.toolColListDelete,
-			this.toolStripSeparator2,
-			this.toolColListRefresh});
+            this.toolColListUp,
+            this.toolColListDown,
+            this.toolColListVisible,
+            this.toolColListDefault,
+            this.toolStripSeparator1,
+            this.toolColListAdd,
+            this.toolColListModify,
+            this.toolColListDelete,
+            this.toolStripSeparator2,
+            this.toolColListRefresh});
 			this.toolColList.Location = new System.Drawing.Point(42, 77);
 			this.toolColList.Name = "toolColList";
 			this.toolColList.Size = new System.Drawing.Size(537, 25);
@@ -328,8 +329,9 @@
 			this.toolSelectedColumns.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolSelectedColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolSelectedColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolSelectedTanks_MoveUp,
-			this.toolSelectedTanks_MoveDown});
+            this.toolSelectedTanks_MoveUp,
+            this.toolSelectedTanks_MoveDown,
+            this.toolSelectedTanks_Separator});
 			this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolSelectedColumns.Location = new System.Drawing.Point(345, 326);
 			this.toolSelectedColumns.Name = "toolSelectedColumns";
@@ -361,23 +363,33 @@
 			this.toolSelectedTanks_MoveDown.ToolTipText = "Move Down";
 			this.toolSelectedTanks_MoveDown.Click += new System.EventHandler(this.toolSelectedColumns_MoveDown_Click);
 			// 
+			// toolSelectedTanks_Separator
+			// 
+			this.toolSelectedTanks_Separator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolSelectedTanks_Separator.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_Separator.Image")));
+			this.toolSelectedTanks_Separator.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolSelectedTanks_Separator.Name = "toolSelectedTanks_Separator";
+			this.toolSelectedTanks_Separator.Size = new System.Drawing.Size(61, 22);
+			this.toolSelectedTanks_Separator.Text = "Separator";
+			this.toolSelectedTanks_Separator.Click += new System.EventHandler(this.toolSelectedTanks_Separator_Click);
+			// 
 			// toolAllColumns
 			// 
 			this.toolAllColumns.AutoSize = false;
 			this.toolAllColumns.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolAllColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolAllColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolAvailableCol_All,
-			this.toolAvailableCol_1,
-			this.toolAvailableCol_2,
-			this.toolAvailableCol_3,
-			this.toolAvailableCol_4,
-			this.toolAvailableCol_5,
-			this.toolAvailableCol_6,
-			this.toolAvailableCol_7,
-			this.toolAvailableCol_8,
-			this.toolAvailableCol_9,
-			this.toolAvailableCol_10});
+            this.toolAvailableCol_All,
+            this.toolAvailableCol_1,
+            this.toolAvailableCol_2,
+            this.toolAvailableCol_3,
+            this.toolAvailableCol_4,
+            this.toolAvailableCol_5,
+            this.toolAvailableCol_6,
+            this.toolAvailableCol_7,
+            this.toolAvailableCol_8,
+            this.toolAvailableCol_9,
+            this.toolAvailableCol_10});
 			this.toolAllColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolAllColumns.Location = new System.Drawing.Point(42, 326);
 			this.toolAllColumns.Name = "toolAllColumns";
@@ -667,8 +679,8 @@
 			// groupTanks
 			// 
 			this.groupTanks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupTanks.BackColor = System.Drawing.Color.Transparent;
 			this.groupTanks.Image = null;
 			this.groupTanks.Location = new System.Drawing.Point(25, 284);
@@ -681,7 +693,7 @@
 			// badGroupBox2
 			// 
 			this.badGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(25, 48);
@@ -783,6 +795,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripButton toolColListRefresh;
 		private BadButton btnClose;
+		private System.Windows.Forms.ToolStripButton toolSelectedTanks_Separator;
 
 
 

@@ -121,7 +121,8 @@ namespace WinApp.Code
 				{
 					string colName = dr["colName"].ToString(); // Get default colName
 					ColListClass colListItem = new ColListClass();
-					colListItem.name = dr["name"].ToString();
+					string colAlias = dr["name"].ToString();
+					colListItem.name = colAlias;
 					colListItem.colName = dr["colName"].ToString();
 					colListItem.width = Convert.ToInt32(dr["colWidth"]);
 					colListItem.type = dr["colDataType"].ToString();
@@ -146,7 +147,7 @@ namespace WinApp.Code
 					else
 					{
 						// Normal select from db
-						Select += colName + " as '" + dr["name"].ToString() + "', ";
+						Select += colName + " as '" + colAlias + "', ";
 					}
 					colNum++;
 				}

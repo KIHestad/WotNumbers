@@ -1017,5 +1017,75 @@ namespace WinApp.Forms
 			
 		}
 
+		private void toolSelectedTanks_Separator_Click(object sender, EventArgs e)
+		{
+			bool sysCol = Convert.ToBoolean(dataGridColumnList.SelectedRows[0].Cells["sysCol"].Value);
+			if (sysCol)
+				ShowSystemColListMessage();
+			else
+				AddSeparator();
+		}
+
+		private void AddSeparator()
+		{
+			// Create list of available separators
+			List<bool> separators = new List<bool>();
+			for (int i = 0; i < 10; i++)
+			{
+				separators.Add(false);
+			}
+			// Find used separators
+			for (int i = 0; i < dataGridSelectedColumns.Rows.Count; i++)
+			{
+				string colName = dataGridSelectedColumns.Rows[i].Cells["Name"].Value.ToString();
+				if (colName.Length > 13 && colName.Substring(0, 13) == " - Separator ")
+				{
+					int separatorNum = Convert.ToInt32(colName.Substring(13, 1));
+					separators[separatorNum] = true;
+				}
+			}
+			// Find first available separator
+			int separatorNew = -1;
+			for (int i = 0; i < 10; i++)
+			{
+				if (separatorNew == -1 && !separators[i])
+					separatorNew = i;
+			}
+			if (separatorNew > -1)
+			{
+				// Move existing elements sort order to make room for new ones
+				int selectedPos = -1;
+				for (int i = 0; i < dataGridSelectedColumns.Rows.Count; i++)
+				{
+					if (dataGridSelectedColumns.Rows[i].Selected)
+						selectedPos = i;
+					if (selectedPos > -1 && i >= selectedPos)
+						dataGridSelectedColumns.Rows[i].Cells["#"].Value = Convert.ToInt32(dataGridSelectedColumns.Rows[i].Cells["#"].Value) + 1;
+				}
+				// Add separator
+				if (selectedPos > -1)
+				{
+					DataRow dr = dtSelectedColumns.NewRow();
+					dr["Name"] = " - Separator " + separatorNew.ToString() + " -";
+					dr["Description"] = "Separator line";
+					dr["colWidth"] = 5;
+					dr["columnSelectionId"] = 900 + separatorNew;
+					dr["columnListId"] = SelectedColListId;
+					dr["#"] = selectedPos + 1;
+					dtSelectedColumns.Rows.InsertAt(dr, selectedPos);
+					dtSelectedColumns.AcceptChanges();
+				}
+				// Select new col
+				dataGridSelectedColumns.ClearSelection();
+				dataGridSelectedColumns.Rows[selectedPos].Selected = true;
+				// Acjust scrollbar
+				MoveSelectedColumnsScrollBar();
+			}
+			else
+			{
+				MsgBox.Show("Max numbers of separators is 10 (Separator 0-9)", "Cannot insert separator", this);
+			}
+		}
+
 	}
 }

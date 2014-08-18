@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 120; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 122; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1478,7 +1478,6 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 114:
-					NewSystemBattleColList_Default();
 					break;
 				case 115:
 					mssql = "UPDATE columnSelection SET position=position + 82 where colType=1 and position >117; " +
@@ -1517,12 +1516,31 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 119:
-					NewSystemBattleColList_WN8();
 					break;
 				case 120:
+					
+					break;
+				case 121:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						s + "VALUES (900, 3, 1, @emptyCol, ' - Separator 0 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (901, 3, 1, @emptyCol, ' - Separator 1 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (902, 3, 1, @emptyCol, ' - Separator 2 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (903, 3, 1, @emptyCol, ' - Separator 3 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (904, 3, 1, @emptyCol, ' - Separator 4 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (905, 3, 1, @emptyCol, ' - Separator 5 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (906, 3, 1, @emptyCol, ' - Separator 6 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (907, 3, 1, @emptyCol, ' - Separator 7 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (908, 3, 1, @emptyCol, ' - Separator 8 -', 'Separator line', 'Separator', 5, 'VarChar'); " +
+						s + "VALUES (909, 3, 1, @emptyCol, ' - Separator 9 -', 'Separator line', 'Separator', 5, 'VarChar'); ";
+					DB.AddWithValue(ref mssql, "@emptyCol", "''", DB.SqlDataType.VarChar);
+					sqlite = mssql;
+					break;
+				case 122:
+					NewSystemBattleColList_Default();
+					NewSystemBattleColList_WN8();
 					NewSystemTankColList_WN8();
 					break;
-
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -1678,12 +1696,12 @@ namespace WinApp.Code
 
 		private static void NewSystemBattleColList_Default()
 		{
-			// First remove all other system colList for Battle
+			// First remove ALL system colList for Battle
 			string sql =
 				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2); " +
 				"delete from columnList where sysCol=1 and colType=2; ";
 			DB.ExecuteNonQuery(sql);
-			// Then remove current startup, and create new default colList
+			// Create new default colList
 			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Default', 0, 1, 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			Application.DoEvents();
@@ -1691,25 +1709,30 @@ namespace WinApp.Code
 			sql = "select max(id) from columnList where sysCol=1 and colType=2;";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
-			sql = 
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,109);" + // Tank
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,122);" + // DateTime
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",5,86);" + // Result
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",6,52);" + // Survived
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",7,63);" + // Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (21," + id + ",8,63);" + // Dmg Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (22," + id + ",9,47);" + // Dmg Track
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",10,45);" + // Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",11,35);" + // Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (24," + id + ",12,42);" + // Cap
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",13,50);" + // Def
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (28," + id + ",14,40);" + // Hit Rate
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (519," + id + ",15,50);" + // Total XP
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (508," + id + ",16,50);" + // Credits Result
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (40," + id + ",17,47);" + // EFF
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",18,47);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",19,100);"; // Map
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,101);" + // DateTime
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",5,59);" + // Result
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",6,53);" + // Survived
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",7,5);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",8,54);" + // Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (21," + id + ",9,47);" + // Dmg Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (22," + id + ",10,47);" + // Dmg Track
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",11,5);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",12,35);" + // Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",13,35);" + // Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (24," + id + ",14,35);" + // Cap
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",15,35);" + // Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",16,5);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (28," + id + ",17,35);" + // Hit Rate
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (519," + id + ",18,55);" + // Total XP
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (508," + id + ",19,52);" + // Credits Result
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",20,5);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (40," + id + ",21,47);" + // EFF
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",22,47);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",23,97);"; // Map
 			DB.ExecuteNonQuery(sql);
 			// Crate new as default?
 			sql = "select count(id) from columnList where colDefault=1 and colType=2;";
@@ -1743,15 +1766,19 @@ namespace WinApp.Code
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,120);" + // Tank
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,100);" + // DateTime
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",5,47);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",6,80);" + // Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (197," + id + ",7,59);" + // Exp Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",8,60);" + // Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (199," + id + ",9,39);" + // Exp Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",10,60);" + // Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (200," + id + ",11,39);" + // Exp Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",12,60);" + // Def
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (201," + id + ",13,39);"; // Exp Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",5,60);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,5);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",7,60);" + // Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (197," + id + ",8,60);" + // Exp Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",9,5);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",10,40);" + // Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (199," + id + ",11,40);" + // Exp Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",12,5);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",13,40);" + // Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (200," + id + ",14,40);" + // Exp Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",15,5);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",16,40);" + // Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (201," + id + ",17,40);"; // Exp Def
 			DB.ExecuteNonQuery(sql);
 		}
 
@@ -1775,17 +1802,22 @@ namespace WinApp.Code
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" + // Tank Image
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,120);" + // Tank
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",4,50);" + // Battles
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",5,55);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (188," + id + ",6,83);" + // Avg Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (192," + id + ",7,51);" + // Exp Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",8,71);" + // Win Rate
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (193," + id + ",9,43);" + // Exp Win Rate
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (205," + id + ",10,60);" + // Avg Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (194," + id + ",11,39);" + // Exp Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (191," + id + ",12,60);" + // Avg Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (195," + id + ",13,39);" + // Exp Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (204," + id + ",14,60);" + // Avg Def
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",15,39);"; // Exp Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",5,60);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,5);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (188," + id + ",7,60);" + // Avg Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (192," + id + ",8,60);" + // Exp Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",9,5);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",10,47);" + // Win Rate
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (193," + id + ",11,47);" + // Exp Win Rate
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",12,5);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (205," + id + ",13,40);" + // Avg Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (194," + id + ",14,40);" + // Exp Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",15,5);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (191," + id + ",16,40);" + // Avg Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (195," + id + ",17,40);" + // Exp Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",18,5);" + //  - Separator 4 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (204," + id + ",19,40);" + // Avg Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",20,40);" ; // Exp Def
 			DB.ExecuteNonQuery(sql);
 		}
 

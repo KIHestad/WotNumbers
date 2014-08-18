@@ -1360,11 +1360,6 @@ namespace WinApp.Forms
 
 
 		#endregion
-
-		#region Col List
-
-		
-		#endregion
 					
 		#region Fav List and Tank Filter 
 
@@ -2060,7 +2055,7 @@ namespace WinApp.Forms
 			//  Hide system cols
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			dataGridMain.Columns["tank_Id"].Visible = false;
-			// Grid col size
+			// Grid col size and formatting
 			int colListItemCount = 0;
 			foreach (ColListHelper.ColListClass colListItem in colList)
 			{
@@ -2070,6 +2065,10 @@ namespace WinApp.Forms
 				colListItemCount++;
 				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+				// separator back color
+				if (colListItem.name.Length > 13 && colListItem.name.Substring(0,13) == " - Separator ")
+					dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
+				// Format cells
 				if (colListItem.type == "Int")
 				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -2469,6 +2468,18 @@ namespace WinApp.Forms
 					// Format
 					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
+					// separator back color
+					if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
+					{
+						dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
+						// avg and totals darker separator colors
+						if (rowcount > 0)
+						{
+							dataGridMain.Rows[rowAverageIndex].Cells[colListItem.name].Style.BackColor = ColorTheme.GridColumnHeaderSeparator;
+							dataGridMain.Rows[rowTotalsIndex].Cells[colListItem.name].Style.BackColor = ColorTheme.GridColumnHeaderSeparator;
+						}
+					}
+					// Format cells
 					if (colListItem.type == "Int")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -2916,12 +2927,18 @@ namespace WinApp.Forms
 		{
 			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
 			{
+				string colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
 				int newWidth = e.Column.Width;
-				if (newWidth < 35)
+				if (colName.Length > 13 && colName.Substring(0,13) == " - Separator ")
+					newWidth = 5;
+				else
 				{
-					newWidth = 35;
-					dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
+					if (newWidth < 35)
+					{
+						newWidth = 35;
+					}
 				}
+				dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
 				ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
 			}
 		}
@@ -3265,6 +3282,16 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void mSettingsAppLayout_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.ApplicationLayout();
+			frm.ShowDialog();
+			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+			GridShow("Refresh after application layout change");
+		}
+
 		#endregion
 
 		#region Testing
@@ -3292,16 +3319,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		private void mSettingsAppLayout_Click(object sender, EventArgs e)
-		{
-			Form frm = new Forms.ApplicationLayout();
-			frm.ShowDialog();
-			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			GridShow("Refresh after application layout change");
-		}
-
+		
 		
 	}
 }
