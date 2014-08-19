@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 124; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 125; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1546,6 +1546,22 @@ namespace WinApp.Code
 					NewSystemBattleColList_Default();
 					NewSystemBattleColList_WN8();
 					NewSystemTankColList_WN8();
+					break;
+				case 125:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						s + "VALUES (910, 3, 1, @emptyCol, ' - Separator 10 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (911, 3, 1, @emptyCol, ' - Separator 11 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (912, 3, 1, @emptyCol, ' - Separator 12 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (913, 3, 1, @emptyCol, ' - Separator 13 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (914, 3, 1, @emptyCol, ' - Separator 14 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (915, 3, 1, @emptyCol, ' - Separator 15 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (916, 3, 1, @emptyCol, ' - Separator 16 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (917, 3, 1, @emptyCol, ' - Separator 17 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (918, 3, 1, @emptyCol, ' - Separator 18 -', 'Separator line', 'Separator', 3, 'VarChar'); " +
+						s + "VALUES (919, 3, 1, @emptyCol, ' - Separator 19 -', 'Separator line', 'Separator', 3, 'VarChar'); ";
+					DB.AddWithValue(ref mssql, "@emptyCol", "''", DB.SqlDataType.VarChar);
+					sqlite = mssql;
 					break;
 
 			}

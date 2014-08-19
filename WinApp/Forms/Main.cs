@@ -768,6 +768,7 @@ namespace WinApp.Forms
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
 						mRefreshSeparator.Visible = true;
+						mColumnSelect_Edit.Text = "Edit Tank View...";
 						// Get Column Setup List - also finds correct tank filter/fav list
 						SetColListMenu();
 						// Get Battle mode
@@ -786,6 +787,7 @@ namespace WinApp.Forms
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
 						mRefreshSeparator.Visible = true;
+						mColumnSelect_Edit.Text = "Edit Battle View...";
 						// Get Column Setup List  - also finds correct tank filter/fav list
 						SetColListMenu();
 						// Get Battle mode
@@ -2071,6 +2073,7 @@ namespace WinApp.Forms
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
 					dataGridMain.Columns[colListItem.name].Resizable = DataGridViewTriState.False;
 					dataGridMain.Columns[colListItem.name].MinimumWidth = 2;
+					dataGridMain.Columns[colListItem.name].HeaderText = "";
 				}
 				else
 					dataGridMain.Columns[colListItem.name].MinimumWidth = 35;
@@ -2480,6 +2483,7 @@ namespace WinApp.Forms
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.BackColor = ColorTheme.GridColumnSeparator;
 						dataGridMain.Columns[colListItem.name].Resizable = DataGridViewTriState.False;
 						dataGridMain.Columns[colListItem.name].MinimumWidth = 2;
+						dataGridMain.Columns[colListItem.name].HeaderText = "";
 						// avg and totals darker separator colors
 						if (rowcount > 0)
 						{

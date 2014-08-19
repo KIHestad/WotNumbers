@@ -55,6 +55,18 @@
 			this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
 			this.toolSelectedTanks_Separator = new System.Windows.Forms.ToolStripButton();
+			this.toolSelectedTanks_Sep = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolSelectedTanks_Sep_02 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSelectedTanks_Sep_03 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSelectedTanks_Sep_04 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolSelectedTanks_Sep_05 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSelectedTanks_Sep_06 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSelectedTanks_Sep_08 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolSelectedTanks_Sep_10 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSelectedTanks_Sep_12 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSelectedTanks_Sep_15 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolAllColumns = new System.Windows.Forms.ToolStrip();
 			this.toolAvailableCol_All = new System.Windows.Forms.ToolStripButton();
 			this.toolAvailableCol_1 = new System.Windows.Forms.ToolStripButton();
@@ -131,7 +143,7 @@
 			this.ColListTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("ColListTheme.SystemMaximizeImage")));
 			this.ColListTheme.SystemMinimizeImage = null;
 			this.ColListTheme.TabIndex = 0;
-			this.ColListTheme.Text = "Column Setup";
+			this.ColListTheme.Text = "Edit Tank/Battle View";
 			this.ColListTheme.TitleHeight = 26;
 			// 
 			// btnClose
@@ -331,7 +343,8 @@
 			this.toolSelectedColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolSelectedTanks_MoveUp,
             this.toolSelectedTanks_MoveDown,
-            this.toolSelectedTanks_Separator});
+            this.toolSelectedTanks_Separator,
+            this.toolSelectedTanks_Sep});
 			this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolSelectedColumns.Location = new System.Drawing.Point(345, 326);
 			this.toolSelectedColumns.Name = "toolSelectedColumns";
@@ -365,13 +378,108 @@
 			// 
 			// toolSelectedTanks_Separator
 			// 
-			this.toolSelectedTanks_Separator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolSelectedTanks_Separator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolSelectedTanks_Separator.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_Separator.Image")));
 			this.toolSelectedTanks_Separator.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolSelectedTanks_Separator.Name = "toolSelectedTanks_Separator";
-			this.toolSelectedTanks_Separator.Size = new System.Drawing.Size(61, 22);
+			this.toolSelectedTanks_Separator.Size = new System.Drawing.Size(23, 22);
 			this.toolSelectedTanks_Separator.Text = "Separator";
 			this.toolSelectedTanks_Separator.Click += new System.EventHandler(this.toolSelectedTanks_Separator_Click);
+			// 
+			// toolSelectedTanks_Sep
+			// 
+			this.toolSelectedTanks_Sep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolSelectedTanks_Sep.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolSelectedTanks_Sep_02,
+            this.toolSelectedTanks_Sep_03,
+            this.toolSelectedTanks_Sep_04,
+            this.toolStripSeparator3,
+            this.toolSelectedTanks_Sep_05,
+            this.toolSelectedTanks_Sep_06,
+            this.toolSelectedTanks_Sep_08,
+            this.toolStripSeparator4,
+            this.toolSelectedTanks_Sep_10,
+            this.toolSelectedTanks_Sep_12,
+            this.toolSelectedTanks_Sep_15});
+			this.toolSelectedTanks_Sep.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_Sep.Image")));
+			this.toolSelectedTanks_Sep.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolSelectedTanks_Sep.Name = "toolSelectedTanks_Sep";
+			this.toolSelectedTanks_Sep.ShowDropDownArrow = false;
+			this.toolSelectedTanks_Sep.Size = new System.Drawing.Size(20, 22);
+			this.toolSelectedTanks_Sep.Text = "toolStripDropDownButton1";
+			// 
+			// toolSelectedTanks_Sep_02
+			// 
+			this.toolSelectedTanks_Sep_02.Name = "toolSelectedTanks_Sep_02";
+			this.toolSelectedTanks_Sep_02.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_02.Text = "Set separator size: 2px (Narrow)";
+			this.toolSelectedTanks_Sep_02.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolSelectedTanks_Sep_03
+			// 
+			this.toolSelectedTanks_Sep_03.Name = "toolSelectedTanks_Sep_03";
+			this.toolSelectedTanks_Sep_03.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_03.Text = "Set separator size: 3px (Default)";
+			this.toolSelectedTanks_Sep_03.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolSelectedTanks_Sep_04
+			// 
+			this.toolSelectedTanks_Sep_04.Name = "toolSelectedTanks_Sep_04";
+			this.toolSelectedTanks_Sep_04.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_04.Text = "Set separator size: 4px";
+			this.toolSelectedTanks_Sep_04.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(244, 6);
+			// 
+			// toolSelectedTanks_Sep_05
+			// 
+			this.toolSelectedTanks_Sep_05.Name = "toolSelectedTanks_Sep_05";
+			this.toolSelectedTanks_Sep_05.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_05.Text = "Set separator size: 5px";
+			this.toolSelectedTanks_Sep_05.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolSelectedTanks_Sep_06
+			// 
+			this.toolSelectedTanks_Sep_06.Name = "toolSelectedTanks_Sep_06";
+			this.toolSelectedTanks_Sep_06.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_06.Text = "Set separator size: 6 px (Medium)";
+			this.toolSelectedTanks_Sep_06.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolSelectedTanks_Sep_08
+			// 
+			this.toolSelectedTanks_Sep_08.Name = "toolSelectedTanks_Sep_08";
+			this.toolSelectedTanks_Sep_08.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_08.Text = "Set separator size: 8 px";
+			this.toolSelectedTanks_Sep_08.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(244, 6);
+			// 
+			// toolSelectedTanks_Sep_10
+			// 
+			this.toolSelectedTanks_Sep_10.Name = "toolSelectedTanks_Sep_10";
+			this.toolSelectedTanks_Sep_10.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_10.Text = "Set separator size: 10 px";
+			this.toolSelectedTanks_Sep_10.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolSelectedTanks_Sep_12
+			// 
+			this.toolSelectedTanks_Sep_12.Name = "toolSelectedTanks_Sep_12";
+			this.toolSelectedTanks_Sep_12.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_12.Text = "Set separator size: 12 px";
+			this.toolSelectedTanks_Sep_12.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
+			// 
+			// toolSelectedTanks_Sep_15
+			// 
+			this.toolSelectedTanks_Sep_15.Name = "toolSelectedTanks_Sep_15";
+			this.toolSelectedTanks_Sep_15.Size = new System.Drawing.Size(247, 22);
+			this.toolSelectedTanks_Sep_15.Text = "Set separator size: 15 px (Wide)";
+			this.toolSelectedTanks_Sep_15.Click += new System.EventHandler(this.toolSelectedTanks_Sep_Size_Click);
 			// 
 			// toolAllColumns
 			// 
@@ -701,7 +809,7 @@
 			this.badGroupBox2.Size = new System.Drawing.Size(572, 225);
 			this.badGroupBox2.TabIndex = 1;
 			this.badGroupBox2.TabStop = false;
-			this.badGroupBox2.Text = "Column Setup Lists";
+			this.badGroupBox2.Text = "Select View";
 			// 
 			// badLabel1
 			// 
@@ -796,6 +904,18 @@
 		private System.Windows.Forms.ToolStripButton toolColListRefresh;
 		private BadButton btnClose;
 		private System.Windows.Forms.ToolStripButton toolSelectedTanks_Separator;
+		private System.Windows.Forms.ToolStripDropDownButton toolSelectedTanks_Sep;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_02;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_03;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_04;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_06;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_08;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_10;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_12;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_15;
+		private System.Windows.Forms.ToolStripMenuItem toolSelectedTanks_Sep_05;
 
 
 

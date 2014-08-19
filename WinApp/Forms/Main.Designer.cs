@@ -260,7 +260,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(642, 25);
+			this.toolMain.Size = new System.Drawing.Size(673, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -349,7 +349,7 @@
 			this.mColumnSelect_01.Checked = true;
 			this.mColumnSelect_01.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.mColumnSelect_01.Name = "mColumnSelect_01";
-			this.mColumnSelect_01.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_01.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_01.Text = "Col List #1";
 			this.mColumnSelect_01.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.mColumnSelect_01.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -357,7 +357,7 @@
 			// mColumnSelect_02
 			// 
 			this.mColumnSelect_02.Name = "mColumnSelect_02";
-			this.mColumnSelect_02.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_02.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_02.Text = "Col List #2";
 			this.mColumnSelect_02.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.mColumnSelect_02.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -365,7 +365,7 @@
 			// mColumnSelect_03
 			// 
 			this.mColumnSelect_03.Name = "mColumnSelect_03";
-			this.mColumnSelect_03.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_03.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_03.Text = "Col List #3";
 			this.mColumnSelect_03.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.mColumnSelect_03.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -373,7 +373,7 @@
 			// mColumnSelect_04
 			// 
 			this.mColumnSelect_04.Name = "mColumnSelect_04";
-			this.mColumnSelect_04.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_04.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_04.Text = "Col List #4";
 			this.mColumnSelect_04.Visible = false;
 			this.mColumnSelect_04.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -382,7 +382,7 @@
 			// mColumnSelect_05
 			// 
 			this.mColumnSelect_05.Name = "mColumnSelect_05";
-			this.mColumnSelect_05.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_05.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_05.Text = "Col List #5";
 			this.mColumnSelect_05.Visible = false;
 			this.mColumnSelect_05.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -391,7 +391,7 @@
 			// mColumnSelect_06
 			// 
 			this.mColumnSelect_06.Name = "mColumnSelect_06";
-			this.mColumnSelect_06.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_06.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_06.Text = "Col List #6";
 			this.mColumnSelect_06.Visible = false;
 			this.mColumnSelect_06.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -400,7 +400,7 @@
 			// mColumnSelect_07
 			// 
 			this.mColumnSelect_07.Name = "mColumnSelect_07";
-			this.mColumnSelect_07.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_07.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_07.Text = "Col List #7";
 			this.mColumnSelect_07.Visible = false;
 			this.mColumnSelect_07.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -409,7 +409,7 @@
 			// mColumnSelect_08
 			// 
 			this.mColumnSelect_08.Name = "mColumnSelect_08";
-			this.mColumnSelect_08.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_08.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_08.Text = "Col List #8";
 			this.mColumnSelect_08.Visible = false;
 			this.mColumnSelect_08.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -418,7 +418,7 @@
 			// mColumnSelect_09
 			// 
 			this.mColumnSelect_09.Name = "mColumnSelect_09";
-			this.mColumnSelect_09.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_09.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_09.Text = "Col List #9";
 			this.mColumnSelect_09.Visible = false;
 			this.mColumnSelect_09.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -427,7 +427,7 @@
 			// mColumnSelect_10
 			// 
 			this.mColumnSelect_10.Name = "mColumnSelect_10";
-			this.mColumnSelect_10.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_10.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_10.Text = "Col List #10";
 			this.mColumnSelect_10.Visible = false;
 			this.mColumnSelect_10.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -436,7 +436,7 @@
 			// mColumnSelect_11
 			// 
 			this.mColumnSelect_11.Name = "mColumnSelect_11";
-			this.mColumnSelect_11.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_11.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_11.Text = "Col List #11";
 			this.mColumnSelect_11.Visible = false;
 			this.mColumnSelect_11.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -445,7 +445,7 @@
 			// mColumnSelect_12
 			// 
 			this.mColumnSelect_12.Name = "mColumnSelect_12";
-			this.mColumnSelect_12.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_12.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_12.Text = "Col List #12";
 			this.mColumnSelect_12.Visible = false;
 			this.mColumnSelect_12.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -454,7 +454,7 @@
 			// mColumnSelect_13
 			// 
 			this.mColumnSelect_13.Name = "mColumnSelect_13";
-			this.mColumnSelect_13.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_13.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_13.Text = "Col List #13";
 			this.mColumnSelect_13.Visible = false;
 			this.mColumnSelect_13.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
@@ -463,7 +463,7 @@
 			// mColumnSelect_14
 			// 
 			this.mColumnSelect_14.Name = "mColumnSelect_14";
-			this.mColumnSelect_14.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_14.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_14.Text = "Col List #14";
 			this.mColumnSelect_14.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.mColumnSelect_14.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -471,7 +471,7 @@
 			// mColumnSelect_15
 			// 
 			this.mColumnSelect_15.Name = "mColumnSelect_15";
-			this.mColumnSelect_15.Size = new System.Drawing.Size(182, 22);
+			this.mColumnSelect_15.Size = new System.Drawing.Size(195, 22);
 			this.mColumnSelect_15.Text = "Col List #15";
 			this.mColumnSelect_15.Click += new System.EventHandler(this.toolItemColumnSelect_Click);
 			this.mColumnSelect_15.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -479,13 +479,13 @@
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(179, 6);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(192, 6);
 			// 
 			// mColumnSelect_Edit
 			// 
 			this.mColumnSelect_Edit.Name = "mColumnSelect_Edit";
-			this.mColumnSelect_Edit.Size = new System.Drawing.Size(182, 22);
-			this.mColumnSelect_Edit.Text = "Edit Column Setup...";
+			this.mColumnSelect_Edit.Size = new System.Drawing.Size(195, 22);
+			this.mColumnSelect_Edit.Text = "Edit Tank/Battle View...";
 			this.mColumnSelect_Edit.Click += new System.EventHandler(this.toolItemColumnSelect_Edit_Click);
 			// 
 			// mTankFilter

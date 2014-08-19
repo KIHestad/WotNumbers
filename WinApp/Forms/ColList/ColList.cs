@@ -15,7 +15,7 @@ namespace WinApp.Forms
 	{
 		// The current selected col list
 		private int SelectedColListId = 0;
-
+		private int separatorDefaultColWidth = 3;
 		#region Init
 
 		public ColList()
@@ -23,12 +23,12 @@ namespace WinApp.Forms
 			InitializeComponent();
 			if (MainSettings.View == GridView.Views.Tank)
 			{
-				ColListTheme.Text = "Column Setup - Tank View";
+				ColListTheme.Text = "Edit Tank View";
 			}
 
 			else if (MainSettings.View == GridView.Views.Battle)
 			{
-				ColListTheme.Text = "Column Setup - Battle View";
+				ColListTheme.Text = "Edit Battle View";
 			}
 		}
 
@@ -58,6 +58,9 @@ namespace WinApp.Forms
 			dataGridSelectedColumns.MouseWheel += new MouseEventHandler(dataGridSelectedColumns_MouseWheel);
 			// Default cursor
 			ColListTheme.Cursor = Cursors.Default;
+			// Separator default colWidth
+			string sql = "select colWidth from columnSelection where id = 900";
+			separatorDefaultColWidth = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
 		}
 
 		#endregion
@@ -1030,7 +1033,7 @@ namespace WinApp.Forms
 		{
 			// Create list of available separators
 			List<bool> separators = new List<bool>();
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 20; i++)
 			{
 				separators.Add(false);
 			}
@@ -1040,13 +1043,13 @@ namespace WinApp.Forms
 				string colName = dataGridSelectedColumns.Rows[i].Cells["Name"].Value.ToString();
 				if (colName.Length > 13 && colName.Substring(0, 13) == " - Separator ")
 				{
-					int separatorNum = Convert.ToInt32(colName.Substring(13, 1));
+					int separatorNum = Convert.ToInt32(colName.Substring(13, 2));
 					separators[separatorNum] = true;
 				}
 			}
 			// Find first available separator
 			int separatorNew = -1;
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 20; i++)
 			{
 				if (separatorNew == -1 && !separators[i])
 					separatorNew = i;
@@ -1068,7 +1071,7 @@ namespace WinApp.Forms
 					DataRow dr = dtSelectedColumns.NewRow();
 					dr["Name"] = " - Separator " + separatorNew.ToString() + " -";
 					dr["Description"] = "Separator line";
-					dr["colWidth"] = 5;
+					dr["colWidth"] = separatorDefaultColWidth;
 					dr["columnSelectionId"] = 900 + separatorNew;
 					dr["columnListId"] = SelectedColListId;
 					dr["#"] = selectedPos + 1;
@@ -1083,8 +1086,20 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				MsgBox.Show("Max numbers of separators is 10 (Separator 0-9)", "Cannot insert separator", this);
+				MsgBox.Show("Max numbers of separators is 20 (Separator 0-19)", "Cannot insert separator", this);
 			}
+		}
+
+		private void toolSelectedTanks_Sep_Size_Click(object sender, EventArgs e)
+		{
+			string sql =
+				"update columnListSelection SET colWidth=@colWidth WHERE columnSelectionId IN " +
+				"(SELECT id from columnSelection WHERE colType=3); " +
+				"update columnSelection SET colWidth=@colWidth, description='Separator line (size @colWidth px)' WHERE colType=3; ";
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			separatorDefaultColWidth = Convert.ToInt32(menu.Name.Substring(22, 2));
+			DB.AddWithValue(ref sql, "@colWidth", separatorDefaultColWidth, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
 		}
 
 	}
