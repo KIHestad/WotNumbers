@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 125; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 127; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1563,7 +1563,31 @@ namespace WinApp.Code
 					DB.AddWithValue(ref mssql, "@emptyCol", "''", DB.SqlDataType.VarChar);
 					sqlite = mssql;
 					break;
-
+				case 126:
+					s = "INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) ";
+					mssql =
+						s + "VALUES ('tanks_v2','a15x15_2', 'potentialDamageReceived','Int','potentialDmgReceived','potentialDmgReceived', NULL,'tanks_v2.a15x15_2.potentialDamageReceived','15'); " +
+						s + "VALUES ('tanks_v2','a7x7', 'potentialDamageReceived','Int','potentialDmgReceived','potentialDmgReceived', NULL,'tanks_v2.a7x7.potentialDamageReceived','7'); " +
+						s + "VALUES ('tanks_v2','a15x15_2', 'damageBlockedByArmor','Int','dmgBlocked','dmgBlocked', NULL,'tanks_v2.a15x15_2.damageBlockedByArmor','15'); " +
+						s + "VALUES ('tanks_v2','a7x7', 'damageBlockedByArmor','Int','dmgBlocked','dmgBlocked', NULL,'tanks_v2.a7x7.damageBlockedByArmor','7'); ";
+					sqlite = mssql;
+					break;
+				case 127:
+					s = "INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) ";
+					mssql =
+						s + "VALUES ('tanks_v2','historical', 'damageBlockedByArmor','Int','dmgBlocked','dmgBlocked', NULL,'tanks_v2.historical.damageBlockedByArmor','7'); " +
+						s + "VALUES ('tanks_v2','historical', 'potentialDamageReceived','Int','potentialDmgReceived','potentialDmgReceived', NULL,'tanks_v2.historical.potentialDamageReceived','7'); ";
+						sqlite = mssql;
+					break;
+				case 128:
+					TankData.GetJson2dbMappingFromDB();					
+					RunDossierFileCheckWithForceUpdate = true;
+					break;
+				// ??????????????????????
+					// Add new columns to columnSelection: potentialDmgReceived and dmgBlocked
+					// New column for Alfalis: dmgAssisted = sum of dmgBlocked and dmbTracked
+					// Get premium from API + force run api fetch
+					//mssql = "UPDATE columnSelection SET colDataType='Int', description='Tank premium (yes=1 / no=0)' where id = 23; ";
 			}
 			string sql = "";
 			// get sql for correct dbtype

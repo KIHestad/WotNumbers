@@ -2076,7 +2076,7 @@ namespace WinApp.Forms
 					dataGridMain.Columns[colListItem.name].HeaderText = "";
 				}
 				else
-					dataGridMain.Columns[colListItem.name].MinimumWidth = 35;
+					dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
 				// Sortmode - width
 				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
@@ -2492,7 +2492,7 @@ namespace WinApp.Forms
 						}
 					}
 					else
-						dataGridMain.Columns[colListItem.name].MinimumWidth = 35;
+						dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
 					// Width and sorting
 					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
 					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
