@@ -1108,6 +1108,7 @@ namespace WinApp.Forms
 			separatorDefaultColWidth = Convert.ToInt32(menu.Name.Substring(22, 2));
 			DB.AddWithValue(ref sql, "@colWidth", separatorDefaultColWidth, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
+			ColListSort();
 		}
 
 	}
