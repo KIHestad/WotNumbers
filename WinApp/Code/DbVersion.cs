@@ -1613,7 +1613,7 @@ namespace WinApp.Code
 						"FROM            playerTankBattle " +
 						"GROUP BY playerTankId; ";
 					sqlite = 
-						//"DROP VIEW playerTankBattleTotalsView;" +
+						"DROP VIEW playerTankBattleTotalsView;" +
 						"CREATE VIEW playerTankBattleTotalsView AS " +
 						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
 						"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
