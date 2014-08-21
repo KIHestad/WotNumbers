@@ -218,12 +218,9 @@ namespace WinApp.Code
 							}
 							string name = itemToken["name_i18n"].ToString();
 							int tier = Int32.Parse(itemToken["level"].ToString());
-							string isPremium = itemToken["is_premium"].ToString();
-							switch (isPremium)
-							{
-								case "true": premium = 1; break;
-								case "false": premium = 0; break;
-							}
+							bool isPremium = Convert.ToBoolean(itemToken["is_premium"]);
+							premium = 0;
+							if (isPremium) premium = 1;
 
 							// Write to db
 							tankExists = TankData.TankExists(itemId);

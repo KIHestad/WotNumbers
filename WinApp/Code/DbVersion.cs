@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 127; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 135; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1580,14 +1580,67 @@ namespace WinApp.Code
 						sqlite = mssql;
 					break;
 				case 128:
-					TankData.GetJson2dbMappingFromDB();					
 					RunDossierFileCheckWithForceUpdate = true;
 					break;
-				// ??????????????????????
-					// Add new columns to columnSelection: potentialDmgReceived and dmgBlocked
-					// New column for Alfalis: dmgAssisted = sum of dmgBlocked and dmbTracked
-					// Get premium from API + force run api fetch
-					//mssql = "UPDATE columnSelection SET colDataType='Int', description='Tank premium (yes=1 / no=0)' where id = 23; ";
+				case 129:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						"UPDATE columnSelection SET position=position+20 where colType=1 and position>220;" +
+						s + "VALUES (206, 1, 220, 'dmgBlocked', 'Dmg Blocked', 'Damage blocked by armor', 'Damange', 50, 'Int'); " +
+						s + "VALUES (207, 1, 221, 'CAST(playerTankBattle.dmgBlocked*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Blocked', 'Average damage blocked by armor per battle', 'Damage', 50, 'Float'); " +
+						s + "VALUES (208, 1, 222, 'potentialDmgReceived', 'Received Pot Dmg', 'Potential damage received', 'Damage', 50, 'Int'); " +
+						s + "VALUES (209, 1, 223, 'CAST(playerTankBattle.potentialDmgReceived*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Received Avg Pot Dmg', 'Average potential damage received per battles', 'Damage', 50, 'Float'); " +
+						s + "VALUES (210, 1, 224, 'CAST(playerTankBattle.dmgReceived*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Received Avg Dmg', 'Average damage received per battles', 'Damage', 50, 'Float'); " +
+						s + "VALUES (211, 1, 225, 'playerTankBattle.assistSpot+playerTankBattle.assistTrack', 'Dmg Assist', 'Average sum damage done by spotting and tracking', 'Damage', 50, 'Int'); " +
+						s + "VALUES (212, 1, 226, 'CAST((playerTankBattle.assistSpot+playerTankBattle.assistTrack)*10/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Avg Dmg Assist', 'Average damage done by spotting and tracking per battles', 'Damage', 50, 'Float'); ";
+					sqlite = mssql;
+					break;
+				case 130:
+					TankData.GetJson2dbMappingFromDB();
+					break;
+				case 131:
+					break;
+				case 132:
+					mssql =
+						"ALTER VIEW playerTankBattleTotalsView AS " +
+						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+						"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
+						"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+						"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
+						"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+						"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(dmgBlocked) AS dmgBlocked,  " +
+						"                         SUM(potentialDmgReceived) AS potentialDmgReceived " +
+						"FROM            playerTankBattle " +
+						"GROUP BY playerTankId; ";
+					sqlite = 
+						//"DROP VIEW playerTankBattleTotalsView;" +
+						"CREATE VIEW playerTankBattleTotalsView AS " +
+						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+						"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
+						"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+						"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
+						"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+						"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(dmgBlocked) AS dmgBlocked,  " +
+						"                         SUM(potentialDmgReceived) AS potentialDmgReceived " +
+						"FROM            playerTankBattle " +
+						"GROUP BY playerTankId; ";
+					break;
+				case 133:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						"UPDATE columnSelection SET position=position+20 where colType=1 and position>220;" +
+						s + "VALUES (214, 2, 215, 'battle.dmgBlocked', 'Dmg Blocked', 'Damage blocked by armor', 'Result', 50, 'Int'); " +
+						s + "VALUES (215, 2, 216, 'battle.potentialDmgReceived', 'Dmg Pot Received', 'Potential damage received', 'Result', 50, 'Int'); " +
+						s + "VALUES (213, 2, 214, 'battle.assistSpot+battle.assistTrack', 'Dmg Assist', 'Average sum damage done by spotting and tracking', 'Result', 50, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 134:
+					mssql = "UPDATE columnSelection SET colName='playerTankBattle.potentialDmgReceived' WHERE id=208;";
+					sqlite = mssql;
+					break;
+				case 135:
+					RunWotApi = true;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype

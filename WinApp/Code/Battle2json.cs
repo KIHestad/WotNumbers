@@ -27,12 +27,17 @@ namespace WinApp.Code
 
 		public static void StartBattleResultFileWatcher()
 		{
-			battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
-			battleResultFileWatcher.Filter = "*.dat";
-			battleResultFileWatcher.IncludeSubdirectories = true;
-			battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
-			battleResultFileWatcher.Changed += new FileSystemEventHandler(BattleResultFileChanged);
-			battleResultFileWatcher.EnableRaisingEvents = true;
+			if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
+			{
+				battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
+				battleResultFileWatcher.Filter = "*.dat";
+				battleResultFileWatcher.IncludeSubdirectories = true;
+				battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+				battleResultFileWatcher.Changed += new FileSystemEventHandler(BattleResultFileChanged);
+				battleResultFileWatcher.EnableRaisingEvents = true;
+			}
+			else
+				battleResultFileWatcher.EnableRaisingEvents = false;
 		}
 
 		private static void BattleResultFileChanged(object source, FileSystemEventArgs e)
@@ -60,53 +65,56 @@ namespace WinApp.Code
 		public static void ConvertBattleFilesToJson()
 		{
 			// Get WoT top level battle_result folder for getting dat-files
-			DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
-			DirectoryInfo[] folders = di.GetDirectories();
-			// testing one file
-			foreach (DirectoryInfo folder in folders)
+			if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
 			{
-				string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
-				int count = 0;
-				foreach (string file in filesDat)
+				DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
+				DirectoryInfo[] folders = di.GetDirectories();
+				// testing one file
+				foreach (DirectoryInfo folder in folders)
 				{
-					string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
-					// Check if not copyed previous (during this session), and that converted json file do not already exists (from previous sessions)
-					if (!battleResultDatFileCopyed.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
+					string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
+					int count = 0;
+					foreach (string file in filesDat)
 					{
-						// Copy
-						Log.AddToLogBuffer(" > * Start copying battle DAT-file: " + file);
-						FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
-						string filename = Path.GetFileName(file);
-						fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
-						Application.DoEvents();
-						// if successful copy remember it
-						if (File.Exists(Config.AppDataBattleResultFolder + filename))
+						string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
+						// Check if not copyed previous (during this session), and that converted json file do not already exists (from previous sessions)
+						if (!battleResultDatFileCopyed.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
 						{
-							battleResultDatFileCopyed.Add(file);
-							Log.AddToLogBuffer(" > * Copyed successfully battle DAT-file: " + file);
+							// Copy
+							Log.AddToLogBuffer(" > * Start copying battle DAT-file: " + file);
+							FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+							string filename = Path.GetFileName(file);
+							fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
+							Application.DoEvents();
+							// if successful copy remember it
+							if (File.Exists(Config.AppDataBattleResultFolder + filename))
+							{
+								battleResultDatFileCopyed.Add(file);
+								Log.AddToLogBuffer(" > * Copyed successfully battle DAT-file: " + file);
+							}
 						}
+						else
+							count++;
 					}
-					else
-						count++;
+					if (count > 0)
+						Log.AddToLogBuffer(" > DAT-files skipped, read previous: " + count.ToString());
+					if (filesDat.Length == 0)
+						Log.AddToLogBuffer(" > * No battle DAT-files found");
 				}
-				if (count > 0)
-					Log.AddToLogBuffer(" > DAT-files skipped, read previous: " + count.ToString());
-				if (filesDat.Length == 0)
-					Log.AddToLogBuffer(" > * No battle DAT-files found");
-			}
 
-			// Loop through all dat-files copyed to local folder
-			string[] filesDatCopyed = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
-			foreach (string file in filesDatCopyed)
-			{
-				// Convert file to json
-				if (ConvertBattleUsingPython(file))
+				// Loop through all dat-files copyed to local folder
+				string[] filesDatCopyed = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
+				foreach (string file in filesDatCopyed)
 				{
-					// Success, json file is now created, clean up by delete dat file
-					FileInfo fileBattleDatCopyed = new FileInfo(file); // the original dossier file
-					fileBattleDatCopyed.Delete(); // delete original DAT file
-					Log.AddToLogBuffer(" > * Deleted battle DAT-file: " + file);
-					Application.DoEvents();
+					// Convert file to json
+					if (ConvertBattleUsingPython(file))
+					{
+						// Success, json file is now created, clean up by delete dat file
+						FileInfo fileBattleDatCopyed = new FileInfo(file); // the original dossier file
+						fileBattleDatCopyed.Delete(); // delete original DAT file
+						Log.AddToLogBuffer(" > * Deleted battle DAT-file: " + file);
+						Application.DoEvents();
+					}
 				}
 			}
 		}

@@ -678,29 +678,37 @@ namespace WinApp.Forms
 
 		private void RemoveSelectedColumn(bool All = false)
 		{
-			int rownum = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
-			if (All)
-				dtSelectedColumns.Clear(); // Remove all rows in Selected Tank List
-			else
+			try
 			{
-				int selectedRowCount = dataGridSelectedColumns.SelectedRows.Count;
-				if (selectedRowCount > 0)
+				int rownum = dataGridSelectedColumns.FirstDisplayedScrollingRowIndex;
+				if (All)
+					dtSelectedColumns.Clear(); // Remove all rows in Selected Tank List
+				else
 				{
-					foreach (DataGridViewRow dr in dataGridSelectedColumns.SelectedRows)
+					int selectedRowCount = dataGridSelectedColumns.SelectedRows.Count;
+					if (selectedRowCount > 0)
 					{
-						int columnId = Convert.ToInt32(dr.Cells["columnSelectionId"].Value);
-						DataRow[] cols = dtSelectedColumns.Select("columnSelectionId = " + columnId.ToString());
-						foreach (DataRow col in cols)
+						foreach (DataGridViewRow dr in dataGridSelectedColumns.SelectedRows)
 						{
-							col.Delete();
+							int columnId = Convert.ToInt32(dr.Cells["columnSelectionId"].Value);
+							DataRow[] cols = dtSelectedColumns.Select("columnSelectionId = " + columnId.ToString());
+							foreach (DataRow col in cols)
+							{
+								col.Delete();
+							}
 						}
 					}
 				}
+				dtSelectedColumns.AcceptChanges(); // completely remove deleted rows
+				ShowSelectedColumns();
+				if (dataGridSelectedColumns.RowCount > 0)
+					dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = rownum;
 			}
-			dtSelectedColumns.AcceptChanges(); // completely remove deleted rows
-			ShowSelectedColumns();
-			if (dataGridSelectedColumns.RowCount > 0)
-				dataGridSelectedColumns.FirstDisplayedScrollingRowIndex = rownum;
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+			}
+			
 		}
 
 		private void SortSelectedColum(string Column, bool SortASC = true)

@@ -132,8 +132,9 @@ namespace WinApp.Code
 					{
 						colName = dr["colNameSQLite"].ToString();
 					}
-					// Check for images
-					if (dr["colDataType"].ToString() == "Image")
+					// Check for datatypes
+					string colDataType = dr["colDataType"].ToString();
+					if (colDataType == "Image")
 					{
 						// Image, get from separate datatable
 						string imgColName = dr["name"].ToString();
@@ -144,10 +145,16 @@ namespace WinApp.Code
 							case "Tank Image Large": img = colNum; break;
 						}
 					}
-					else
+					else if (colDataType == "DateTime" || colDataType == "VarChar")
 					{
-						// Normal select from db
 						Select += colName + " as '" + colAlias + "', ";
+					}
+					else // Numbers
+					{
+						if (colName != "battle.battlesCount")
+							Select += colName + " as '" + colAlias + "', "; // Get average per battle values
+						else
+							Select += colName + " as '" + colAlias + "', "; // Get battle count
 					}
 					colNum++;
 				}
