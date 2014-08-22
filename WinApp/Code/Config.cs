@@ -94,6 +94,7 @@ namespace WinApp.Code
 		public DateTime doneRunForceDossierFileCheck { get; set; }	// done executed force run full force dossier file check triggered from Wot Numbers API
 		public int      gridFontSize  { get; set; }		            // Grid font size
 		public bool     gridBattlesTotalsTop { get; set; }			// false = totals as footer, true = totals frozen at top
+		public bool     homeViewNewLayout { get; set; }				// Experimental mode for home view
 	}
 
 	class Config
@@ -195,6 +196,7 @@ namespace WinApp.Code
 			Config.Settings.doneRunWotApi = new DateTime(2014, 8, 1);
 			Config.Settings.gridFontSize = 8;
 			Config.Settings.gridBattlesTotalsTop = false;
+			Config.Settings.homeViewNewLayout = false;
 		}
 
 		

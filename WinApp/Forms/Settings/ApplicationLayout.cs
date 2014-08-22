@@ -26,12 +26,14 @@ namespace WinApp.Forms
 		{
 			chkBattleTotalsPosition.Checked = Config.Settings.gridBattlesTotalsTop;
 			ddFontSize.Text = Config.Settings.gridFontSize.ToString();
+			chkHomeViewNewLayout.Checked = Config.Settings.homeViewNewLayout;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			Config.Settings.gridBattlesTotalsTop = chkBattleTotalsPosition.Checked;
 			Config.Settings.gridFontSize = Convert.ToInt32(ddFontSize.Text);
+			Config.Settings.homeViewNewLayout = chkHomeViewNewLayout.Checked;
 			string msg = "";
 			Config.SaveConfig(out msg);
 			this.Close();

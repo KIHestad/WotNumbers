@@ -31,6 +31,8 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationLayout));
 			this.badForm1 = new BadForm();
+			this.chkHomeViewNewLayout = new BadCheckBox();
+			this.badGroupBox2 = new BadGroupBox();
 			this.ddFontSize = new BadDropDownBox();
 			this.badLabel1 = new BadLabel();
 			this.chkBattleTotalsPosition = new BadCheckBox();
@@ -42,6 +44,8 @@
 			// 
 			// badForm1
 			// 
+			this.badForm1.Controls.Add(this.chkHomeViewNewLayout);
+			this.badForm1.Controls.Add(this.badGroupBox2);
 			this.badForm1.Controls.Add(this.ddFontSize);
 			this.badForm1.Controls.Add(this.badLabel1);
 			this.badForm1.Controls.Add(this.chkBattleTotalsPosition);
@@ -59,7 +63,7 @@
 			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = false;
-			this.badForm1.Size = new System.Drawing.Size(352, 197);
+			this.badForm1.Size = new System.Drawing.Size(353, 328);
 			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
 			this.badForm1.SystemMaximizeImage = null;
 			this.badForm1.SystemMinimizeImage = null;
@@ -67,10 +71,31 @@
 			this.badForm1.Text = "Application Layout";
 			this.badForm1.TitleHeight = 26;
 			// 
+			// chkHomeViewNewLayout
+			// 
+			this.chkHomeViewNewLayout.BackColor = System.Drawing.Color.Transparent;
+			this.chkHomeViewNewLayout.Checked = false;
+			this.chkHomeViewNewLayout.Image = ((System.Drawing.Image)(resources.GetObject("chkHomeViewNewLayout.Image")));
+			this.chkHomeViewNewLayout.Location = new System.Drawing.Point(41, 192);
+			this.chkHomeViewNewLayout.Name = "chkHomeViewNewLayout";
+			this.chkHomeViewNewLayout.Size = new System.Drawing.Size(213, 23);
+			this.chkHomeViewNewLayout.TabIndex = 7;
+			this.chkHomeViewNewLayout.Text = "New layout (experimental mode)";
+			// 
+			// badGroupBox2
+			// 
+			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox2.Image = null;
+			this.badGroupBox2.Location = new System.Drawing.Point(22, 165);
+			this.badGroupBox2.Name = "badGroupBox2";
+			this.badGroupBox2.Size = new System.Drawing.Size(307, 97);
+			this.badGroupBox2.TabIndex = 6;
+			this.badGroupBox2.Text = "Home View Settings";
+			// 
 			// ddFontSize
 			// 
 			this.ddFontSize.Image = null;
-			this.ddFontSize.Location = new System.Drawing.Point(129, 69);
+			this.ddFontSize.Location = new System.Drawing.Point(129, 71);
 			this.ddFontSize.Name = "ddFontSize";
 			this.ddFontSize.Size = new System.Drawing.Size(86, 23);
 			this.ddFontSize.TabIndex = 5;
@@ -83,7 +108,7 @@
 			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(41, 69);
+			this.badLabel1.Location = new System.Drawing.Point(41, 71);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(81, 23);
 			this.badLabel1.TabIndex = 4;
@@ -94,7 +119,7 @@
 			this.chkBattleTotalsPosition.BackColor = System.Drawing.Color.Transparent;
 			this.chkBattleTotalsPosition.Checked = false;
 			this.chkBattleTotalsPosition.Image = ((System.Drawing.Image)(resources.GetObject("chkBattleTotalsPosition.Image")));
-			this.chkBattleTotalsPosition.Location = new System.Drawing.Point(41, 102);
+			this.chkBattleTotalsPosition.Location = new System.Drawing.Point(41, 104);
 			this.chkBattleTotalsPosition.Name = "chkBattleTotalsPosition";
 			this.chkBattleTotalsPosition.Size = new System.Drawing.Size(268, 23);
 			this.chkBattleTotalsPosition.TabIndex = 3;
@@ -104,16 +129,16 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(22, 46);
+			this.badGroupBox1.Location = new System.Drawing.Point(22, 48);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(308, 91);
+			this.badGroupBox1.Size = new System.Drawing.Size(308, 98);
 			this.badGroupBox1.TabIndex = 2;
-			this.badGroupBox1.Text = "Settings";
+			this.badGroupBox1.Text = "Grid Settings";
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(257, 153);
+			this.btnCancel.Location = new System.Drawing.Point(260, 280);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(70, 23);
 			this.btnCancel.TabIndex = 1;
@@ -123,7 +148,7 @@
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(181, 153);
+			this.btnSave.Location = new System.Drawing.Point(184, 280);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(70, 23);
 			this.btnSave.TabIndex = 0;
@@ -134,7 +159,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(352, 197);
+			this.ClientSize = new System.Drawing.Size(353, 328);
 			this.Controls.Add(this.badForm1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "ApplicationLayout";
@@ -156,5 +181,7 @@
 		private BadDropDownBox ddFontSize;
 		private BadLabel badLabel1;
 		private BadCheckBox chkBattleTotalsPosition;
+		private BadCheckBox chkHomeViewNewLayout;
+		private BadGroupBox badGroupBox2;
 	}
 }

@@ -260,7 +260,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(673, 25);
+			this.toolMain.Size = new System.Drawing.Size(642, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1437,6 +1437,7 @@
 			this.panelInfo.Name = "panelInfo";
 			this.panelInfo.Size = new System.Drawing.Size(649, 72);
 			this.panelInfo.TabIndex = 18;
+			this.panelInfo.Visible = false;
 			// 
 			// lblOverView
 			// 

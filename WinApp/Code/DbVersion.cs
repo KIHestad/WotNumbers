@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 135; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 136; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1640,6 +1640,11 @@ namespace WinApp.Code
 					break;
 				case 135:
 					RunWotApi = true;
+					break;
+				case 136:
+					Config.Settings.homeViewNewLayout = false;
+					msg = "";
+					Config.SaveConfig(out msg);
 					break;
 			}
 			string sql = "";
