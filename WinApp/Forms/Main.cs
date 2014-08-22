@@ -1534,7 +1534,7 @@ namespace WinApp.Forms
 		{
 			ResizeNow();
 			components = new System.ComponentModel.Container();
-			// Get all tanks
+			// Get all tanks and show in imageGadget
 			string sql = "select tankId from playerTank where playerId=@playerId order by lastBattleTime desc ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable tank = DB.FetchData(sql);
@@ -1543,30 +1543,46 @@ namespace WinApp.Forms
 			{
 				for (int col = 0; col < 11; col++)
 				{
-					// Create panel to host gadget
-					Panel panel = new System.Windows.Forms.Panel();
-					panel.Top = 110 * row + 10;
-					panel.Left = 170 * col + 10;
-					panel.Height = 110;
-					panel.Width = 170;
-					// get a tank to show
-					UserControl imageControl;
-					if (tank.Rows.Count == 0)
-						imageControl = new Gadget.ucImage();
+					if (row == 0 && col == 0)
+					{
+						// Show Player Name gadget
+						Panel panelPlayer = new System.Windows.Forms.Panel();
+						panelPlayer.Top = 10;
+						panelPlayer.Left = 10;
+						panelPlayer.Height = 110;
+						panelPlayer.Width = 170;
+						UserControl playerInfo = new Gadget.ucPlayerInfo();
+						panelPlayer.Controls.Add(playerInfo);
+						panelMainArea.Controls.Add(panelPlayer);
+					}
 					else
 					{
-						if (tankCount > tank.Rows.Count)
-							tankCount = 0;
-						int tankId = Convert.ToInt32(tank.Rows[tankCount][0]);
-						Image tankImage = ImageHelper.GetTankImage(tankId, "img");
-						imageControl = new Gadget.ucImage(tankImage);
-						tankCount++;
+						// Create panel to host gadget
+						Panel panel = new System.Windows.Forms.Panel();
+						panel.Top = 110 * row + 10;
+						panel.Left = 170 * col + 10;
+						panel.Height = 110;
+						panel.Width = 170;
+						// get a tank to show
+						UserControl imageControl;
+						if (tank.Rows.Count == 0)
+							imageControl = new Gadget.ucImage();
+						else
+						{
+							if (tankCount > tank.Rows.Count)
+								tankCount = 0;
+							int tankId = Convert.ToInt32(tank.Rows[tankCount][0]);
+							Image tankImage = ImageHelper.GetTankImage(tankId, "img");
+							imageControl = new Gadget.ucImage(tankImage);
+							tankCount++;
+						}
+						panel.Controls.Add(imageControl);
+						panelMainArea.Controls.Add(panel);
 					}
-					panel.Controls.Add(imageControl);
-					panelMainArea.Controls.Add(panel);
 				}
 			}
 			
+
 			//dataGridMain.DataSource = null;
 			//dataGridMain.Columns.Clear();
 			//for (int col = 0; col < 3; col++)
