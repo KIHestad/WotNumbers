@@ -99,6 +99,13 @@ namespace WinApp.Forms
 			scrollX.ScrollElementsTotals = 0;
 			scrollY.ScrollElementsTotals = 0;
 			scrollX.Left = 0;
+			// Grid init placement
+			int gridAreaTop = panelInfo.Height; // Start below info panel
+			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+			dataGridMain.Top = gridAreaTop;
+			dataGridMain.Left = 0;
+			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
+			dataGridMain.Height = gridAreaHeight - scrollX.Height;
 			// Style datagrid
 			dataGridMain.BorderStyle = BorderStyle.None;
 			dataGridMain.BackgroundColor = ColorTheme.FormBack;
@@ -281,9 +288,6 @@ namespace WinApp.Forms
 			{
 				TankData.GetAllLists();
 			}
-			// Show grid
-			ChangeView(GridView.Views.Overall, true);
-			// Show("", false);
 			// Update dossier file watcher
 			string result = dossier2json.UpdateDossierFileWatcher(this);
 			// Check DB Version an dupgrade if needed
@@ -295,6 +299,8 @@ namespace WinApp.Forms
 			Battle2json.StartBattleResultFileWatcher();
 			ImageHelper.CreateTankImageTable();
 			ImageHelper.LoadTankImages();
+			// Show view
+			ChangeView(GridView.Views.Overall, true);
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
 			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
@@ -303,9 +309,6 @@ namespace WinApp.Forms
 			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			// Ready 
 			MainTheme.Cursor = Cursors.Default;
-			dataGridMain.Visible = true;
-			scrollY.Visible = true;
-			scrollX.Visible = true;
 			// Show status message
 			SetStatus2("Application started");
 			// Check for new version
@@ -655,61 +658,32 @@ namespace WinApp.Forms
 			// Set Main Area Panel
 			panelMainArea.Width = MainTheme.MainArea.Width;
 			panelMainArea.Height = MainTheme.MainArea.Height;
-			// Grid init placement
-			int gridAreaTop = panelInfo.Height; // Start below info panel
-			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
-			dataGridMain.Top = gridAreaTop;
-			dataGridMain.Left = 0;
-			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
-			dataGridMain.Height = gridAreaHeight - scrollX.Height;
-			// Set scrollbars, size differs according to scrollbar visibility (ScrollNecessary)
-			RefreshScrollbars();
-			// check if scrollbar is visible to determine width / height
-			int scrollYWidth = 0;
-			int scrollXHeight = 0;
-			if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
-			if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
-			scrollCorner.Left = panelMainArea.Width - scrollCorner.Width;
-			scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
-			scrollY.Top = gridAreaTop;
-			scrollY.Left = panelMainArea.Width - scrollY.Width;
-			scrollX.Top = panelMainArea.Height - scrollX.Height;
-			scrollX.Width = panelMainArea.Width - scrollYWidth;
-			scrollY.Height = gridAreaHeight - scrollXHeight;
 			if (MainSettings.View == GridView.Views.Overall && Config.Settings.homeViewNewLayout)
 			{
-				// New Home view layout
-				int totalHeight = dataGridMain.Rows.GetRowsHeight(DataGridViewElementStates.None) + 2; // Add 2 for border
-				int totalWidth = dataGridMain.Columns.GetColumnsWidth(DataGridViewElementStates.None) + 2; // Add 2 for border
-				if (totalHeight < gridAreaHeight)
-				{
-					// Center vertical
-					dataGridMain.Height = totalHeight;
-					dataGridMain.Top = gridAreaTop + ((panelMainArea.Height - totalHeight) / 2);
-				}
-				else
-				{
-					// Fill height
-					dataGridMain.Height = gridAreaHeight - scrollXHeight; 
-				}
-				if (totalWidth < panelMainArea.Width)
-				{
-					// Center horisontal
-					dataGridMain.Width = totalWidth;
-					dataGridMain.Left = (panelMainArea.Width - totalWidth) / 2;
-				}
-				else
-				{
-					// Fill Widht
-					dataGridMain.Width = panelMainArea.Width - scrollYWidth;
-				}
+
 			}
 			else
 			{
-				// Standard grid 
+				// Set scrollbars, size differs according to scrollbar visibility (ScrollNecessary)
+				RefreshScrollbars();
+				// Scroll and grid size
+				int gridAreaTop = panelInfo.Height; // Start below info panel
+				int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
 				dataGridMain.Top = gridAreaTop;
+				scrollCorner.Left = panelMainArea.Width - scrollCorner.Width;
+				scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
+				scrollY.Top = gridAreaTop;
+				scrollY.Left = panelMainArea.Width - scrollY.Width;
+				scrollX.Top = panelMainArea.Height - scrollX.Height;
+				// check if scrollbar is visible to determine width / height
+				int scrollYWidth = 0;
+				int scrollXHeight = 0;
+				if (scrollY.ScrollNecessary) scrollYWidth = scrollY.Width;
+				if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
 				dataGridMain.Width = panelMainArea.Width - scrollYWidth;
 				dataGridMain.Height = gridAreaHeight - scrollXHeight;
+				scrollY.Height = dataGridMain.Height;
+				scrollX.Width = dataGridMain.Width;
 			}
 		}
 
@@ -784,6 +758,11 @@ namespace WinApp.Forms
 						{
 							// Select view
 							mViewOverall.Checked = true;
+							// Show grid
+							dataGridMain.Visible = true;
+							scrollX.Visible = true;
+							scrollY.Visible = true;
+							scrollCorner.Visible = true;
 							// Show/Hide Tool Items
 							mBattles.Visible = false;
 							mTankFilter.Visible = false;
@@ -800,13 +779,23 @@ namespace WinApp.Forms
 						else
 						{
 							// New experimental home view
-							dataGridMain.ColumnHeadersVisible = false;
-							dataGridMain.RowHeadersVisible = false;
+							dataGridMain.Visible = false;
+							scrollX.Visible = false;
+							scrollY.Visible = false;
+							scrollCorner.Visible = false;
+							panelInfo.Height = 0;
+							//dataGridMain.ColumnHeadersVisible = false;
+							//dataGridMain.RowHeadersVisible = false;
 						}
 						break;
 					case GridView.Views.Tank:
 						// Select view
 						mViewTankInfo.Checked = true;
+						// Show grid
+						dataGridMain.Visible = true;
+						scrollX.Visible = true;
+						scrollY.Visible = true;
+						scrollCorner.Visible = true;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
 						mTankFilter.Visible = true;
@@ -826,6 +815,11 @@ namespace WinApp.Forms
 					case GridView.Views.Battle:
 						// Select view
 						mViewBattles.Checked = true;
+						// Show grid
+						dataGridMain.Visible = true;
+						scrollX.Visible = true;
+						scrollY.Visible = true;
+						scrollCorner.Visible = true;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
 						mTankFilter.Visible = true;
@@ -1532,7 +1526,68 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-				
+
+
+		#region HOME VIEW - new layout
+
+		private void GridShowHomeNewLayout(string Status2Message)
+		{
+			ResizeNow();
+			components = new System.ComponentModel.Container();
+			// Get all tanks
+			string sql = "select tankId from playerTank where playerId=@playerId order by lastBattleTime desc ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DataTable tank = DB.FetchData(sql);
+			int tankCount = 0;
+			for (int row = 0; row < 9; row++)
+			{
+				for (int col = 0; col < 11; col++)
+				{
+					// Create panel to host gadget
+					Panel panel = new System.Windows.Forms.Panel();
+					panel.Top = 110 * row + 10;
+					panel.Left = 170 * col + 10;
+					panel.Height = 110;
+					panel.Width = 170;
+					// get a tank to show
+					UserControl imageControl;
+					if (tank.Rows.Count == 0)
+						imageControl = new Gadget.ucImage();
+					else
+					{
+						if (tankCount > tank.Rows.Count)
+							tankCount = 0;
+						int tankId = Convert.ToInt32(tank.Rows[tankCount][0]);
+						Image tankImage = ImageHelper.GetTankImage(tankId, "img");
+						imageControl = new Gadget.ucImage(tankImage);
+						tankCount++;
+					}
+					panel.Controls.Add(imageControl);
+					panelMainArea.Controls.Add(panel);
+				}
+			}
+			
+			//dataGridMain.DataSource = null;
+			//dataGridMain.Columns.Clear();
+			//for (int col = 0; col < 3; col++)
+			//{
+			//	dataGridMain.Columns.Add(col.ToString(), col.ToString());
+			//	dataGridMain.Columns[col].Width = 300;
+			//}
+			//for (int row = 0; row < 2; row++)
+			//{
+			//	dataGridMain.Rows.Add();
+			//	dataGridMain.Rows[row].Height = 200;
+			//}
+			//frozenRows = 0;
+			//// Unfocus
+			//dataGridMain.ClearSelection();
+			//ResizeNow();
+			//SetStatus2(Status2Message);
+		}
+
+		#endregion
+
 		#region Data Grid - OVERALL VIEW                                   ***********************************************************************
 
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
@@ -1546,26 +1601,7 @@ namespace WinApp.Forms
 				return val;
 		}
 
-		private void GridShowHomeNewLayout(string Status2Message)
-		{
-			dataGridMain.DataSource = null;
-			dataGridMain.Columns.Clear();
-			for (int col = 0; col < 3; col++)
-			{
-				dataGridMain.Columns.Add(col.ToString(), col.ToString());
-				dataGridMain.Columns[col].Width = 300;
-			}
-			for (int row = 0; row < 2; row++)
-			{
-				dataGridMain.Rows.Add();
-				dataGridMain.Rows[row].Height = 200;
-			}
-			frozenRows = 0;
-			// Unfocus
-			dataGridMain.ClearSelection();
-			ResizeNow();
-			SetStatus2(Status2Message);
-		}
+		
 		
 
 		private void GridShowOverall(string Status2Message)
@@ -3391,7 +3427,7 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
 			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
 			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			GridShow("Refresh after application layout change");
+			ChangeView(MainSettings.View, true);
 		}
 
 		#endregion
