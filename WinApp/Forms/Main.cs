@@ -754,10 +754,10 @@ namespace WinApp.Forms
 				switch (MainSettings.View)
 				{
 					case GridView.Views.Overall:
+						// Select view
+						mViewOverall.Checked = true;
 						if (!Config.Settings.homeViewNewLayout)
 						{
-							// Select view
-							mViewOverall.Checked = true;
 							// Show grid
 							dataGridMain.Visible = true;
 							scrollX.Visible = true;
@@ -768,8 +768,8 @@ namespace WinApp.Forms
 							mTankFilter.Visible = false;
 							mColumnSelect.Visible = false;
 							mMode.Visible = false;
-							mRefreshSeparator.Visible = true;
 							mRefreshSeparator.Visible = false;
+							mGadget.Visible = false;
 							// Remove datagrid context menu
 							dataGridMain.ContextMenuStrip = null;
 							dataGridMain.ColumnHeadersVisible = true;
@@ -784,8 +784,14 @@ namespace WinApp.Forms
 							scrollY.Visible = false;
 							scrollCorner.Visible = false;
 							panelInfo.Height = 0;
-							//dataGridMain.ColumnHeadersVisible = false;
-							//dataGridMain.RowHeadersVisible = false;
+							// Show/Hide Tool Items
+							mBattles.Visible = true;
+							mGadget.Visible = true;
+							mBattles.Visible = false;
+							mTankFilter.Visible = false;
+							mColumnSelect.Visible = false;
+							mMode.Visible = false;
+							mRefreshSeparator.Visible = true;
 						}
 						break;
 					case GridView.Views.Tank:
@@ -801,6 +807,7 @@ namespace WinApp.Forms
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
+						mGadget.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Tank View...";
 						// Get Column Setup List - also finds correct tank filter/fav list
@@ -825,6 +832,7 @@ namespace WinApp.Forms
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
+						mGadget.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Battle View...";
 						// Get Column Setup List  - also finds correct tank filter/fav list

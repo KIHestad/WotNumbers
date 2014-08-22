@@ -137,6 +137,8 @@
 			this.mBattles2y = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
 			this.mBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
+			this.playerNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.mViewChart = new System.Windows.Forms.ToolStripButton();
 			this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
@@ -254,13 +256,14 @@
             this.mTankFilter,
             this.mMode,
             this.mBattles,
+            this.mGadget,
             this.toolStripSeparator23,
             this.mViewChart,
             this.mSettings,
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(642, 25);
+			this.toolMain.Size = new System.Drawing.Size(738, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1176,6 +1179,25 @@
 			this.mBattlesAll.Text = "All Battles";
 			this.mBattlesAll.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			// 
+			// mGadget
+			// 
+			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.playerNameToolStripMenuItem});
+			this.mGadget.Image = ((System.Drawing.Image)(resources.GetObject("mGadget.Image")));
+			this.mGadget.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mGadget.Name = "mGadget";
+			this.mGadget.ShowDropDownArrow = false;
+			this.mGadget.Size = new System.Drawing.Size(65, 22);
+			this.mGadget.Text = "Gadget";
+			this.mGadget.ToolTipText = "Gadget";
+			this.mGadget.Visible = false;
+			// 
+			// playerNameToolStripMenuItem
+			// 
+			this.playerNameToolStripMenuItem.Name = "playerNameToolStripMenuItem";
+			this.playerNameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.playerNameToolStripMenuItem.Text = "Player Name";
+			// 
 			// toolStripSeparator23
 			// 
 			this.toolStripSeparator23.Name = "toolStripSeparator23";
@@ -1711,6 +1733,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mModeStrongholds;
 		private System.Windows.Forms.ToolStripMenuItem mBattles2d;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripDropDownButton mGadget;
+		private System.Windows.Forms.ToolStripMenuItem playerNameToolStripMenuItem;
 	}
 }
 
