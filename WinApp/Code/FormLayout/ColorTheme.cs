@@ -58,6 +58,7 @@ namespace WinApp.Code
 		public static Color GridCellFont = Color.FromArgb(255, 200, 200, 200);
 		public static Color GridColumnSeparator = Color.FromArgb(255, 22, 22, 22);
 		public static Color GridColumnHeaderSeparator = Color.FromArgb(255, 17, 17, 17);
+		public static Color GridTotalsRow = Color.FromArgb(255, 22, 22, 22);
 		
 		// Scrollbar
 		public static Color ScrollbarBack = Color.FromArgb(255, 65, 65, 69);

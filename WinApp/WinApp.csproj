@@ -309,17 +309,23 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucBattleTypes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucBattleTypes.Designer.cs">
+      <DependentUpon>ucBattleTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Gadget\ucImage.Designer.cs">
       <DependentUpon>ucImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Gadget\ucPlayerInfo.cs">
+    <Compile Include="Gadget\ucTotalTanks.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Gadget\ucPlayerInfo.Designer.cs">
-      <DependentUpon>ucPlayerInfo.cs</DependentUpon>
+    <Compile Include="Gadget\ucTotalTanks.Designer.cs">
+      <DependentUpon>ucTotalTanks.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -398,11 +404,14 @@
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucBattleTypes.resx">
+      <DependentUpon>ucBattleTypes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucImage.resx">
       <DependentUpon>ucImage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Gadget\ucPlayerInfo.resx">
-      <DependentUpon>ucPlayerInfo.cs</DependentUpon>
+    <EmbeddedResource Include="Gadget\ucTotalTanks.resx">
+      <DependentUpon>ucTotalTanks.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

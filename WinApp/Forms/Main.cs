@@ -90,6 +90,7 @@ namespace WinApp.Forms
 			mRefreshSeparator.Visible = false;
 			mColumnSelect.Visible = false;
 			mMode.Visible = false;
+			mGadget.Visible = false;
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
@@ -1535,84 +1536,72 @@ namespace WinApp.Forms
 
 		#endregion
 
-
-		#region HOME VIEW - new layout
+		#region HOME VIEW - new layout                                   ***********************************************************************
 
 		private void GridShowHomeNewLayout(string Status2Message)
 		{
 			ResizeNow();
-			components = new System.ComponentModel.Container();
-			// Get all tanks and show in imageGadget
-			string sql = "select tankId from playerTank where playerId=@playerId order by lastBattleTime desc ";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable tank = DB.FetchData(sql);
-			int tankCount = 0;
-			for (int row = 0; row < 9; row++)
+			UserControl uc;
+			// components = new System.ComponentModel.Container();
+			foreach (Control c in panelMainArea.Controls)
 			{
-				for (int col = 0; col < 11; col++)
+				if (c.Name.Substring(0, 2) == "uc")
+					panelMainArea.Controls.Remove(c);
+			}
+
+			// Show TotalTanks
+			uc = new Gadget.ucTotalTanks();
+			uc.Top = 0;
+			uc.Left = 0;
+			panelMainArea.Controls.Add(uc);
+
+			// Show BattleTypes
+			uc = new Gadget.ucBattleTypes();
+			uc.Top = 0;
+			uc.Left = 425;
+			panelMainArea.Controls.Add(uc);
+
+			// Get all tanks and show in imageGadget
+			string sql = 
+				"select pt.tankId, b.battleTime, br.name, br.color "+
+				"from battle b inner join " +
+				"  playerTank pt on b.playerTankId = pt.Id inner join " + 
+				"  battleResult br on b.BattleResultId = br.id " +
+				"where pt.playerId=@playerId " +
+				"order by b.battleTime desc; ";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DataTable battle = DB.FetchData(sql);
+			int rowCount = 0;
+			for (int row = 0; row < 3; row++)
+			{
+				for (int col = 0; col < 5; col++)
 				{
-					if (row == 0 && col == 0)
-					{
-						// Show Player Name gadget
-						Panel panelPlayer = new System.Windows.Forms.Panel();
-						panelPlayer.Top = 10;
-						panelPlayer.Left = 10;
-						panelPlayer.Height = 110;
-						panelPlayer.Width = 170;
-						UserControl playerInfo = new Gadget.ucPlayerInfo();
-						panelPlayer.Controls.Add(playerInfo);
-						panelMainArea.Controls.Add(panelPlayer);
-					}
+					// get a tank to show
+					UserControl imageControl;
+					if (battle.Rows.Count == 0)
+						imageControl = new Gadget.ucImage();
 					else
 					{
-						// Create panel to host gadget
-						Panel panel = new System.Windows.Forms.Panel();
-						panel.Top = 110 * row + 10;
-						panel.Left = 170 * col + 10;
-						panel.Height = 110;
-						panel.Width = 170;
-						// get a tank to show
-						UserControl imageControl;
-						if (tank.Rows.Count == 0)
-							imageControl = new Gadget.ucImage();
-						else
-						{
-							if (tankCount > tank.Rows.Count)
-								tankCount = 0;
-							int tankId = Convert.ToInt32(tank.Rows[tankCount][0]);
-							Image tankImage = ImageHelper.GetTankImage(tankId, "img");
-							imageControl = new Gadget.ucImage(tankImage);
-							tankCount++;
-						}
-						panel.Controls.Add(imageControl);
-						panelMainArea.Controls.Add(panel);
+						if (rowCount > battle.Rows.Count)
+							rowCount = 0;
+						int tankId = Convert.ToInt32(battle.Rows[rowCount][0]);
+						Image tankImage = ImageHelper.GetTankImage(tankId, "img");
+						DateTime battleTime = Convert.ToDateTime(battle.Rows[rowCount]["battleTime"]);
+						string result = battle.Rows[rowCount]["name"].ToString();
+						string resultColor = battle.Rows[rowCount]["color"].ToString();
+						imageControl = new Gadget.ucImage(tankImage, battleTime, result, resultColor);
+						rowCount++;
 					}
+					imageControl.Top = 110 * row + 150;
+					imageControl.Left = 170 * col ;
+					panelMainArea.Controls.Add(imageControl);
 				}
 			}
-			
-
-			//dataGridMain.DataSource = null;
-			//dataGridMain.Columns.Clear();
-			//for (int col = 0; col < 3; col++)
-			//{
-			//	dataGridMain.Columns.Add(col.ToString(), col.ToString());
-			//	dataGridMain.Columns[col].Width = 300;
-			//}
-			//for (int row = 0; row < 2; row++)
-			//{
-			//	dataGridMain.Rows.Add();
-			//	dataGridMain.Rows[row].Height = 200;
-			//}
-			//frozenRows = 0;
-			//// Unfocus
-			//dataGridMain.ClearSelection();
-			//ResizeNow();
-			//SetStatus2(Status2Message);
 		}
 
 		#endregion
 
-		#region Data Grid - OVERALL VIEW                                   ***********************************************************************
+		#region HOME VIEW - old layout                                   ***********************************************************************
 
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
 		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
@@ -2876,7 +2865,7 @@ namespace WinApp.Forms
 				{
 					bool footer = (Convert.ToInt32(dataGridMain["footer", e.RowIndex].Value) > 0);
 					if (footer)
-						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.ToolGrayMainBack;
+						dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
 					if (col.Equals("Tank"))
 					{
 						string battleTime = dataGridMain["battleTimeToolTip", e.RowIndex].Value.ToString();

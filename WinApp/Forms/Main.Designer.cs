@@ -139,6 +139,9 @@
 			this.mBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
 			this.playerNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.editAddedGadgetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.mViewChart = new System.Windows.Forms.ToolStripButton();
 			this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
@@ -171,6 +174,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.tankTypeStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1182,7 +1186,11 @@
 			// mGadget
 			// 
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.playerNameToolStripMenuItem});
+            this.playerNameToolStripMenuItem,
+            this.tankTypeStatsToolStripMenuItem,
+            this.imageToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.editAddedGadgetsToolStripMenuItem});
 			this.mGadget.Image = ((System.Drawing.Image)(resources.GetObject("mGadget.Image")));
 			this.mGadget.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mGadget.Name = "mGadget";
@@ -1190,13 +1198,29 @@
 			this.mGadget.Size = new System.Drawing.Size(65, 22);
 			this.mGadget.Text = "Gadget";
 			this.mGadget.ToolTipText = "Gadget";
-			this.mGadget.Visible = false;
 			// 
 			// playerNameToolStripMenuItem
 			// 
 			this.playerNameToolStripMenuItem.Name = "playerNameToolStripMenuItem";
-			this.playerNameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.playerNameToolStripMenuItem.Text = "Player Name";
+			this.playerNameToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.playerNameToolStripMenuItem.Text = "Battle Mode Stats";
+			// 
+			// imageToolStripMenuItem
+			// 
+			this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
+			this.imageToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.imageToolStripMenuItem.Text = "Image";
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(182, 6);
+			// 
+			// editAddedGadgetsToolStripMenuItem
+			// 
+			this.editAddedGadgetsToolStripMenuItem.Name = "editAddedGadgetsToolStripMenuItem";
+			this.editAddedGadgetsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.editAddedGadgetsToolStripMenuItem.Text = "Edit added Gadgets...";
 			// 
 			// toolStripSeparator23
 			// 
@@ -1563,6 +1587,12 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// tankTypeStatsToolStripMenuItem
+			// 
+			this.tankTypeStatsToolStripMenuItem.Name = "tankTypeStatsToolStripMenuItem";
+			this.tankTypeStatsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.tankTypeStatsToolStripMenuItem.Text = "Tank Type Stats";
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1735,6 +1765,10 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripDropDownButton mGadget;
 		private System.Windows.Forms.ToolStripMenuItem playerNameToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem imageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripMenuItem editAddedGadgetsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tankTypeStatsToolStripMenuItem;
 	}
 }
 

@@ -8,7 +8,7 @@ namespace WinApp.Code
 {
 	class GridHelper
 	{
-		public static void StyleDataGrid(DataGridView dgv)
+		public static void StyleDataGrid(DataGridView dgv, DataGridViewSelectionMode selectionMode = DataGridViewSelectionMode.FullRowSelect )
 		{
 			dgv.BorderStyle = BorderStyle.FixedSingle;
 			dgv.BackgroundColor = ColorTheme.FormBack;
@@ -32,7 +32,7 @@ namespace WinApp.Code
 			dgv.AllowUserToDeleteRows = false;
 			dgv.AllowUserToOrderColumns = false;
 			dgv.AllowUserToResizeRows = false;
-			dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+			dgv.SelectionMode = selectionMode;
 		}
 	}
 }

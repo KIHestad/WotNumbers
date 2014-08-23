@@ -175,7 +175,12 @@ namespace WinApp.Code
 					if (dt.Rows.Count > 0)
 					{
 						// Check if read
-						if (dt.Rows[0]["arenaUniqueID"] == DBNull.Value)
+						if (dt.Rows[0]["arenaUniqueID"] != DBNull.Value)
+						{
+							// Battle read, delete file
+							deleteFileAfterRead = true;
+						}
+						else
 						{
 							// New battle found, get battleId
 							int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
