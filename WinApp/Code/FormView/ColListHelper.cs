@@ -178,7 +178,7 @@ namespace WinApp.Code
 							else
 							{
 								if (groupingSum)
-									colListItem.colNameSelect = "SUM(" + colName + ")"; // else avg value
+									colListItem.colNameSelect = "SUM(" + colName + " * battle.battlesCount)"; // else avg value
 								else
 									colListItem.colNameSelect = "AVG(" + colName + ")"; // else avg value
 							}

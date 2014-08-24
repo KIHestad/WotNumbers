@@ -2493,7 +2493,7 @@ namespace WinApp.Forms
 						{
 							IEnumerable<string> nonAvgCols = new List<string> 
 							{ 
-								"ID", "XP Factor", "Premium", "Mastery Badge", "Battles"
+								"ID", "XP Factor", "Premium", "Mastery Badge", "Battle Count"
 							};
 							if (!nonAvgCols.Contains(colListItem.name))
 							{
@@ -2560,9 +2560,9 @@ namespace WinApp.Forms
 							};
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							{
-								// TODO: Must loop through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
+								// looping through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
 								int sum = 0;
-								if (colListItem.name != "Battles")
+								if (colListItem.name != "Battle Count")
 								{
 									foreach (DataRow dr in dt.Rows)
 									{
@@ -2762,7 +2762,7 @@ namespace WinApp.Forms
 			{
 				// Frozen rows at top
 				int offset = 0;
-				if (mBattleGroup_TankAverage.Checked && e.RowIndex > 0)
+				if (!mBattleGroup_No.Checked && e.RowIndex > 0)
 					offset = 1;
 				else if (Config.Settings.gridBattlesTotalsTop && e.RowIndex > 1)
 					offset = -1;
