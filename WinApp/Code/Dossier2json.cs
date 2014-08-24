@@ -19,13 +19,13 @@ namespace WinApp.Code
 
 		public static string UpdateDossierFileWatcher(Form parentForm)
 		{
-			string logtext = "Dossier file listener stopped";
+			string logtext = "Automatically fetch new battles stopped";
 			bool run = (Config.Settings.dossierFileWathcherRun == 1);
 			if (run)
 			{
 				try
 				{
-					logtext = "Dossier file listener started";
+					logtext = "Automatically fetch new battles started";
 					dossierFileWatcher.Path = Path.GetDirectoryName(Config.Settings.dossierFilePath + "\\");
 					dossierFileWatcher.Filter = "*.dat";
 					dossierFileWatcher.NotifyFilter = NotifyFilters.LastWrite;

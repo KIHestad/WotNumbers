@@ -85,13 +85,14 @@ namespace WinApp.Code
 		{
 			public string name = "";
 			public string colName = "";
+			public string colNameSelect = "";
 			public string description = "";
 			public int width = 0;
 			public string type = "";
 			public string group = "";
 		}
 
-		public static void GetSelectedColumnList(out string Select, out List<ColListClass> colList, out int img, out int smallimg, out int contourimg)
+		public static void GetSelectedColumnList(out string Select, out List<ColListClass> colList, out int img, out int smallimg, out int contourimg, bool grouping = false)
 		{
 			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
@@ -124,6 +125,7 @@ namespace WinApp.Code
 					string colAlias = dr["name"].ToString();
 					colListItem.name = colAlias;
 					colListItem.colName = dr["colName"].ToString();
+					colListItem.colNameSelect = colListItem.colName;
 					colListItem.width = Convert.ToInt32(dr["colWidth"]);
 					colListItem.type = dr["colDataType"].ToString();
 					selectColList.Add(colListItem);
@@ -147,14 +149,34 @@ namespace WinApp.Code
 					}
 					else if (colDataType == "DateTime" || colDataType == "VarChar")
 					{
-						Select += colName + " as '" + colAlias + "', ";
+						if (!grouping)
+							Select += colName + " as '" + colAlias + "', "; // return value
+						else
+						{
+							if (colName == "tank.name")
+								Select += colName + " as '" + colAlias + "', "; // return value
+							else
+							{
+								if (colDataType == "DateTime")
+									colListItem.colNameSelect = "NULL";
+								else if (colDataType == "VarChar")
+									colListItem.colNameSelect = "''";
+								Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
+							}
+						}
 					}
 					else // Numbers
 					{
-						if (colName != "battle.battlesCount")
-							Select += colName + " as '" + colAlias + "', "; // Get average per battle values
+						if (!grouping)
+							Select += colName + " as '" + colAlias + "', "; // return value
 						else
-							Select += colName + " as '" + colAlias + "', "; // Get battle count
+						{
+							if (colName == "battle.battlesCount")
+								colListItem.colNameSelect = "SUM(" + colName + ")"; // Get sum battle count
+							else
+								colListItem.colNameSelect = "AVG(" + colName + ")"; // else avg value
+							Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
+						}
 					}
 					colNum++;
 				}

@@ -137,6 +137,9 @@
 			this.mBattles2y = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
 			this.mBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
+			this.mBattleGroup = new System.Windows.Forms.ToolStripDropDownButton();
+			this.mBattleGroup_No = new System.Windows.Forms.ToolStripMenuItem();
+			this.mBattleGroup_Tank = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -237,7 +240,7 @@
 			this.MainTheme.MainArea = mainAreaClass1;
 			this.MainTheme.Name = "MainTheme";
 			this.MainTheme.Resizable = true;
-			this.MainTheme.Size = new System.Drawing.Size(812, 431);
+			this.MainTheme.Size = new System.Drawing.Size(872, 431);
 			this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
 			this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
 			this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -260,6 +263,7 @@
             this.mTankFilter,
             this.mMode,
             this.mBattles,
+            this.mBattleGroup,
             this.mGadget,
             this.toolStripSeparator23,
             this.mViewChart,
@@ -267,7 +271,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(738, 25);
+			this.toolMain.Size = new System.Drawing.Size(834, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1183,6 +1187,36 @@
 			this.mBattlesAll.Text = "All Battles";
 			this.mBattlesAll.Click += new System.EventHandler(this.toolItemBattlesSelected_Click);
 			// 
+			// mBattleGroup
+			// 
+			this.mBattleGroup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mBattleGroup_No,
+            this.mBattleGroup_Tank});
+			this.mBattleGroup.Image = ((System.Drawing.Image)(resources.GetObject("mBattleGroup.Image")));
+			this.mBattleGroup.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mBattleGroup.Name = "mBattleGroup";
+			this.mBattleGroup.ShowDropDownArrow = false;
+			this.mBattleGroup.Size = new System.Drawing.Size(96, 22);
+			this.mBattleGroup.Text = "No Grouping";
+			// 
+			// mBattleGroup_No
+			// 
+			this.mBattleGroup_No.Checked = true;
+			this.mBattleGroup_No.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.mBattleGroup_No.Name = "mBattleGroup_No";
+			this.mBattleGroup_No.Size = new System.Drawing.Size(152, 22);
+			this.mBattleGroup_No.Text = "No Grouping";
+			this.mBattleGroup_No.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
+			this.mBattleGroup_No.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// mBattleGroup_Tank
+			// 
+			this.mBattleGroup_Tank.Name = "mBattleGroup_Tank";
+			this.mBattleGroup_Tank.Size = new System.Drawing.Size(152, 22);
+			this.mBattleGroup_Tank.Text = "Group by Tank";
+			this.mBattleGroup_Tank.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
+			this.mBattleGroup_Tank.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
 			// mGadget
 			// 
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1402,7 +1436,7 @@
 			this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatusRowCount.Location = new System.Drawing.Point(723, 411);
+			this.lblStatusRowCount.Location = new System.Drawing.Point(783, 411);
 			this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatusRowCount.Name = "lblStatusRowCount";
 			this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -1602,7 +1636,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(812, 431);
+			this.ClientSize = new System.Drawing.Size(872, 431);
 			this.Controls.Add(this.MainTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1773,6 +1807,9 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetEdit;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
+		private System.Windows.Forms.ToolStripDropDownButton mBattleGroup;
+		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_No;
+		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_Tank;
 	}
 }
 

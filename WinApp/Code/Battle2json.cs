@@ -25,19 +25,29 @@ namespace WinApp.Code
 			public object value;
 		}
 
-		public static void StartBattleResultFileWatcher()
+		public static void UpdateBattleResultFileWatcher()
 		{
-			if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
+			try
 			{
-				battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
-				battleResultFileWatcher.Filter = "*.dat";
-				battleResultFileWatcher.IncludeSubdirectories = true;
-				battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
-				battleResultFileWatcher.Changed += new FileSystemEventHandler(BattleResultFileChanged);
-				battleResultFileWatcher.EnableRaisingEvents = true;
+				bool run = (Config.Settings.dossierFileWathcherRun == 1);
+				if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
+				{
+					battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
+					battleResultFileWatcher.Filter = "*.dat";
+					battleResultFileWatcher.IncludeSubdirectories = true;
+					battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+					battleResultFileWatcher.Changed += new FileSystemEventHandler(BattleResultFileChanged);
+					battleResultFileWatcher.EnableRaisingEvents = run;
+				}
+				else
+					battleResultFileWatcher.EnableRaisingEvents = false;
 			}
-			else
+			catch (Exception ex)
+			{
 				battleResultFileWatcher.EnableRaisingEvents = false;
+				Log.LogToFile(ex, "Inncorrect dossier file path");
+			}
+			
 		}
 
 		private static void BattleResultFileChanged(object source, FileSystemEventArgs e)

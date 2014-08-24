@@ -91,6 +91,7 @@ namespace WinApp.Forms
 			mColumnSelect.Visible = false;
 			mMode.Visible = false;
 			mGadget.Visible = false;
+			mBattleGroup.Visible = false;
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
@@ -289,15 +290,16 @@ namespace WinApp.Forms
 			{
 				TankData.GetAllLists();
 			}
-			// Update dossier file watcher
+			// Update file watchers
 			string result = dossier2json.UpdateDossierFileWatcher(this);
+			Battle2json.UpdateBattleResultFileWatcher();
 			// Check DB Version an dupgrade if needed
 			bool versionOK = DBVersion.CheckForDbUpgrade(this);
 			// Add init items to Form
 			SetFormTitle();
 			SetFavListMenu();
 			SetListener(false);
-			Battle2json.StartBattleResultFileWatcher();
+			
 			ImageHelper.CreateTankImageTable();
 			ImageHelper.LoadTankImages();
 			// Show view
@@ -599,6 +601,7 @@ namespace WinApp.Forms
 				
 			}
 			string result = dossier2json.UpdateDossierFileWatcher(this);
+			Battle2json.UpdateBattleResultFileWatcher();
 			SetFormBorder();
 			if (showStatus2Message)
 				SetStatus2(result);
@@ -771,6 +774,7 @@ namespace WinApp.Forms
 							mMode.Visible = false;
 							mRefreshSeparator.Visible = false;
 							mGadget.Visible = false;
+							mBattleGroup.Visible = false;
 							// Remove datagrid context menu
 							dataGridMain.ContextMenuStrip = null;
 							dataGridMain.ColumnHeadersVisible = true;
@@ -792,6 +796,7 @@ namespace WinApp.Forms
 							mTankFilter.Visible = false;
 							mColumnSelect.Visible = false;
 							mMode.Visible = false;
+							mBattleGroup.Visible = false;
 							mRefreshSeparator.Visible = true;
 						}
 						break;
@@ -809,6 +814,7 @@ namespace WinApp.Forms
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
 						mGadget.Visible = false;
+						mBattleGroup.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Tank View...";
 						// Get Column Setup List - also finds correct tank filter/fav list
@@ -833,6 +839,7 @@ namespace WinApp.Forms
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
+						mBattleGroup.Visible = true;
 						mGadget.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Battle View...";
@@ -1332,8 +1339,22 @@ namespace WinApp.Forms
 
 		#endregion
 
+		#region Battle Grouping
+
+		private void toolItemGroupingSelected_Click(object sender, EventArgs e)
+		{
+			mBattleGroup_No.Checked = false;
+			mBattleGroup_Tank.Checked = false;
+			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			menuItem.Checked = true;
+			mBattleGroup.Text = menuItem.Text;
+			GridShowBattle("Selected grouping: " + menuItem.Text);
+		}
+
+		#endregion
+
 		#region Menu Items: Battle Time
-			
+
 		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
 		{
 			mBattles1d.Checked = false;
@@ -2256,13 +2277,70 @@ namespace WinApp.Forms
 				int rowTotalsIndex = 0;
 				int rowAverageIndex = 0;
 				if (!DB.CheckConnection(false)) return;
+				// Find if grouping 
+				bool groupingActive = (mBattleGroup_Tank.Checked);
 				// Get Columns
 				string select = "";
 				List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
 				int img;
 				int smallimg;
 				int contourimg;
-				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
+				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, groupingActive);
+				// Get soring
+				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+				// Default values for painting glyph as sort order direction on column header
+				if (sorting.lastSortColumn == "")
+					sorting.lastSortColumn = "battle.battleTime";
+				currentSortColId = -2;
+				currentSortDirection = SortOrder.Descending;
+				// Create sort order if no grouping 
+				string sortDirection = "";
+				if (sorting.lastSortDirectionAsc)
+				{
+					sortDirection += " ASC ";
+					currentSortDirection = SortOrder.Ascending;
+				}
+				else
+				{
+					sortDirection += " DESC ";
+					currentSortDirection = SortOrder.Descending;
+				}
+				// Create Grouping or normal sql parts
+				string selectFixed = "";
+				string groupBy = "";
+				string sortOrder = "";
+
+				if (groupingActive)
+				{
+					// grouping
+					selectFixed =
+						"  '#30A8FF' as battleResultColor,  '#30A8FF' as battleSurviveColor, " +
+						"  NULL as battleTimeToolTip, SUM(battle.battlesCount) as battlesCountToolTip, " +
+						"  SUM(battle.victory) as victoryToolTip, SUM(battle.draw) as drawToolTip, SUM(battle.defeat) as defeatToolTip, " +
+						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, 0 as arenaUniqueID," +
+						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as battle_Id " ;
+					groupBy = "GROUP BY tank.id, tank.Name, playerTank.Id ";
+					// Get sorting be finding calcultated fiels
+					foreach (ColListHelper.ColListClass col in colList)
+					{
+						if (col.colName == sorting.lastSortColumn)
+						{
+							if (col.colNameSelect != "''" && col.colNameSelect != "NULL")
+								sortOrder = "ORDER BY " + col.colNameSelect + " " + sortDirection + " ";
+						}
+					}
+				}
+				else
+				{
+					// no grouping
+					selectFixed =
+						"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
+						"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
+						"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
+						"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, battle.arenaUniqueID," +
+						"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id ";
+					sortOrder = "ORDER BY " + sorting.lastSortColumn + sortDirection + " ";
+				}
 				// Create Battle Time filer
 				string battleTimeFilter = "";
 				if (!mBattlesAll.Checked)
@@ -2309,33 +2387,10 @@ namespace WinApp.Forms
 				string tankFilter = "";
 				string tankJoin = "";
 				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
-				// Get soring
-				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
-				// Default values for painting glyph as sort order direction on column header
-				if (sorting.lastSortColumn == "")
-					sorting.lastSortColumn = "battle.battleTime";
-				currentSortColId = -2;
-				currentSortDirection = SortOrder.Descending;
-				// Create sort order
-				string sortOrder = sorting.lastSortColumn + " ";
-				if (sorting.lastSortDirectionAsc)
-				{
-					sortOrder += " ASC ";
-					currentSortDirection = SortOrder.Ascending;
-				}
-				else
-				{
-					sortOrder += " DESC ";
-					currentSortDirection = SortOrder.Descending;
-				}
+				
 				// Create SQL
 				string sql =
-					"SELECT " + select +
-					"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
-					"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
-					"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
-					"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, battle.arenaUniqueID," +
-					"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id " +
+					"SELECT " + select + " " + selectFixed + " " +
 					"FROM    battle INNER JOIN " +
 					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"        tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -2345,7 +2400,8 @@ namespace WinApp.Forms
 					"        map on battle.mapId = map.id INNER JOIN " +
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter +
-					"ORDER BY " + sortOrder;
+					groupBy + " " +
+					sortOrder;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				DateTime dateFilter = new DateTime();
 				if (!mBattlesAll.Checked)
@@ -2408,8 +2464,8 @@ namespace WinApp.Forms
 				int totalBattleCount = 0;
 				double totalWinRate = 0;
 				double totalSurvivedRate = 0;
-				// Add footer now, if ant rows
-				if (rowcount > 0)
+				// Add footer now, if any rows an no grouping
+				if (rowcount > 0 && mBattleGroup_No.Checked)
 				{
 					// Create blank image in case of image in footer
 					Image blankImage = new Bitmap(1, 1);
@@ -2581,7 +2637,7 @@ namespace WinApp.Forms
 				dataGridMain.DataSource = dt;
 				frozenRows = 0;
 				// If totals/average on top make frozen
-				if (rowcount > 0 && Config.Settings.gridBattlesTotalsTop)
+				if (rowcount > 0 && mBattleGroup_No.Checked && Config.Settings.gridBattlesTotalsTop)
 				{
 					// As frozen top rows
 					dataGridMain.Rows[rowTotalsIndex].Frozen = true;
@@ -2704,16 +2760,23 @@ namespace WinApp.Forms
 			{
 				// Frozen rows at top
 				int offset = 0;
-				if (Config.Settings.gridBattlesTotalsTop && e.RowIndex > 1)
+				if (mBattleGroup_Tank.Checked && e.RowIndex > 0)
+					offset = 1;
+				else if (Config.Settings.gridBattlesTotalsTop && e.RowIndex > 1)
 					offset = -1;
 				else if (!Config.Settings.gridBattlesTotalsTop && e.RowIndex < dataGridMain.Rows.Count - 2 && e.RowIndex > -1)
 					offset = 1;
-				if (offset != 0) 
+				if (offset != 0)
 				{
 					e.PaintBackground(e.CellBounds, true);
-					Color battleCountColor = ColorTheme.FormBorderBlue;
-					if (dataGridMain.Rows[e.RowIndex].Cells["arenaUniqueID"].Value == DBNull.Value)
-						battleCountColor = ColorTheme.ControlDarkRed;
+					Color battleCountColor = ColorTheme.ControlDarkRed;
+					if (dataGridMain.Rows[e.RowIndex].Cells["arenaUniqueID"].Value != DBNull.Value)
+					{
+						if (dataGridMain.Rows[e.RowIndex].Cells["arenaUniqueID"].Value.ToString() != "0")
+							battleCountColor = ColorTheme.FormBorderBlue;
+						else
+							battleCountColor = ColorTheme.ControlDimmedFont;
+					}
 					using (SolidBrush br = new SolidBrush(battleCountColor))
 					{
 						StringFormat sf = new StringFormat();
@@ -3388,8 +3451,30 @@ namespace WinApp.Forms
 
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.ImportWotStat();
-			frm.ShowDialog();
+			if (Dossier2db.dossierRunning)
+				MsgBox.Show("Dossier file check running, cannot start import at the same time. Please wait until dossier file check is done.", "Cannot start import now", this);
+			else
+			{
+				// Stop file watchers if running
+				int runState = Config.Settings.dossierFileWathcherRun;
+				if (runState == 1)
+				{
+					Config.Settings.dossierFileWathcherRun = 0;
+					SetListener();
+					Application.DoEvents();
+				}
+				// Show import form
+				Form frm = new Forms.ImportWotStat();
+				frm.ShowDialog();
+				// Return to prev file watcher state
+				if (runState != Config.Settings.dossierFileWathcherRun)
+				{
+					Config.Settings.dossierFileWathcherRun = runState;
+					SetListener();
+					Application.DoEvents();
+				}
+			}
+			
 		}
 
 		private void mHelpAbout_Click(object sender, EventArgs e)
@@ -3474,8 +3559,7 @@ namespace WinApp.Forms
 		{
 			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
 		}
-
-		
+	
 		
 	}
 }
