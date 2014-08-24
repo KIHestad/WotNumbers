@@ -173,6 +173,8 @@ namespace WinApp.Code
 						{
 							if (colName == "battle.battlesCount")
 								colListItem.colNameSelect = "SUM(" + colName + ")"; // Get sum battle count
+							else if (colName == "battle.eff" || colName == "battle.wn7" || colName == "battle.wn8")
+								colListItem.colNameSelect = "AVG(" + colName + ")"; // rating only use avg values
 							else
 							{
 								if (groupingSum)
