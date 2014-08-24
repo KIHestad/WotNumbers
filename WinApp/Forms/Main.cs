@@ -1344,7 +1344,8 @@ namespace WinApp.Forms
 		private void toolItemGroupingSelected_Click(object sender, EventArgs e)
 		{
 			mBattleGroup_No.Checked = false;
-			mBattleGroup_Tank.Checked = false;
+			mBattleGroup_TankAverage.Checked = false;
+			mBattleGroup_TankSum.Checked = false;
 			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 			menuItem.Checked = true;
 			mBattleGroup.Text = menuItem.Text;
@@ -2278,14 +2279,15 @@ namespace WinApp.Forms
 				int rowAverageIndex = 0;
 				if (!DB.CheckConnection(false)) return;
 				// Find if grouping 
-				bool groupingActive = (mBattleGroup_Tank.Checked);
+				bool groupingActive = (!mBattleGroup_No.Checked);
+				bool groupingSum = (mBattleGroup_TankSum.Checked);
 				// Get Columns
 				string select = "";
 				List<ColListHelper.ColListClass> colList = new List<ColListHelper.ColListClass>();
 				int img;
 				int smallimg;
 				int contourimg;
-				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, groupingActive);
+				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, groupingActive, groupingSum);
 				// Get soring
 				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
 				// Default values for painting glyph as sort order direction on column header
@@ -2465,7 +2467,7 @@ namespace WinApp.Forms
 				double totalWinRate = 0;
 				double totalSurvivedRate = 0;
 				// Add footer now, if any rows an no grouping
-				if (rowcount > 0 && mBattleGroup_No.Checked)
+				if (rowcount > 0 && !groupingActive)
 				{
 					// Create blank image in case of image in footer
 					Image blankImage = new Bitmap(1, 1);
@@ -2637,7 +2639,7 @@ namespace WinApp.Forms
 				dataGridMain.DataSource = dt;
 				frozenRows = 0;
 				// If totals/average on top make frozen
-				if (rowcount > 0 && mBattleGroup_No.Checked && Config.Settings.gridBattlesTotalsTop)
+				if (rowcount > 0 && !groupingActive && Config.Settings.gridBattlesTotalsTop)
 				{
 					// As frozen top rows
 					dataGridMain.Rows[rowTotalsIndex].Frozen = true;
@@ -2677,7 +2679,7 @@ namespace WinApp.Forms
 						dataGridMain.Columns[colListItem.name].MinimumWidth = 2;
 						dataGridMain.Columns[colListItem.name].HeaderText = "";
 						// avg and totals darker separator colors
-						if (rowcount > 0)
+						if (rowcount > 0 && !groupingActive)
 						{
 							dataGridMain.Rows[rowAverageIndex].Cells[colListItem.name].Style.BackColor = ColorTheme.GridColumnHeaderSeparator;
 							dataGridMain.Rows[rowTotalsIndex].Cells[colListItem.name].Style.BackColor = ColorTheme.GridColumnHeaderSeparator;
@@ -2705,7 +2707,7 @@ namespace WinApp.Forms
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 						else
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
-						if (rowcount > 0) // Special format in average row for floating values
+						if (rowcount > 0 && !groupingActive) // Special format in average row for floating values
 							dataGridMain.Rows[rowAverageIndex].Cells[colListItem.name].Style.Format = "N1";
 					}
 					else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
@@ -2760,7 +2762,7 @@ namespace WinApp.Forms
 			{
 				// Frozen rows at top
 				int offset = 0;
-				if (mBattleGroup_Tank.Checked && e.RowIndex > 0)
+				if (mBattleGroup_TankAverage.Checked && e.RowIndex > 0)
 					offset = 1;
 				else if (Config.Settings.gridBattlesTotalsTop && e.RowIndex > 1)
 					offset = -1;

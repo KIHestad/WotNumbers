@@ -92,7 +92,7 @@ namespace WinApp.Code
 			public string group = "";
 		}
 
-		public static void GetSelectedColumnList(out string Select, out List<ColListClass> colList, out int img, out int smallimg, out int contourimg, bool grouping = false)
+		public static void GetSelectedColumnList(out string Select, out List<ColListClass> colList, out int img, out int smallimg, out int contourimg, bool grouping = false, bool groupingSum = false)
 		{
 			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
@@ -174,7 +174,12 @@ namespace WinApp.Code
 							if (colName == "battle.battlesCount")
 								colListItem.colNameSelect = "SUM(" + colName + ")"; // Get sum battle count
 							else
-								colListItem.colNameSelect = "AVG(" + colName + ")"; // else avg value
+							{
+								if (groupingSum)
+									colListItem.colNameSelect = "SUM(" + colName + ")"; // else avg value
+								else
+									colListItem.colNameSelect = "AVG(" + colName + ")"; // else avg value
+							}
 							Select += colListItem.colNameSelect + " as '" + colAlias + "', "; 
 						}
 					}

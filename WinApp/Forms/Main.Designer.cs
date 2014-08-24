@@ -139,7 +139,8 @@
 			this.mBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattleGroup = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mBattleGroup_No = new System.Windows.Forms.ToolStripMenuItem();
-			this.mBattleGroup_Tank = new System.Windows.Forms.ToolStripMenuItem();
+			this.mBattleGroup_TankAverage = new System.Windows.Forms.ToolStripMenuItem();
+			this.mBattleGroup_TankSum = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -178,6 +179,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1191,7 +1193,9 @@
 			// 
 			this.mBattleGroup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mBattleGroup_No,
-            this.mBattleGroup_Tank});
+            this.toolStripSeparator6,
+            this.mBattleGroup_TankAverage,
+            this.mBattleGroup_TankSum});
 			this.mBattleGroup.Image = ((System.Drawing.Image)(resources.GetObject("mBattleGroup.Image")));
 			this.mBattleGroup.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mBattleGroup.Name = "mBattleGroup";
@@ -1204,18 +1208,26 @@
 			this.mBattleGroup_No.Checked = true;
 			this.mBattleGroup_No.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.mBattleGroup_No.Name = "mBattleGroup_No";
-			this.mBattleGroup_No.Size = new System.Drawing.Size(152, 22);
+			this.mBattleGroup_No.Size = new System.Drawing.Size(206, 22);
 			this.mBattleGroup_No.Text = "No Grouping";
 			this.mBattleGroup_No.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
 			this.mBattleGroup_No.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// mBattleGroup_Tank
+			// mBattleGroup_TankAverage
 			// 
-			this.mBattleGroup_Tank.Name = "mBattleGroup_Tank";
-			this.mBattleGroup_Tank.Size = new System.Drawing.Size(152, 22);
-			this.mBattleGroup_Tank.Text = "Group by Tank";
-			this.mBattleGroup_Tank.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
-			this.mBattleGroup_Tank.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.mBattleGroup_TankAverage.Name = "mBattleGroup_TankAverage";
+			this.mBattleGroup_TankAverage.Size = new System.Drawing.Size(206, 22);
+			this.mBattleGroup_TankAverage.Text = "Group by Tank - Average";
+			this.mBattleGroup_TankAverage.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
+			this.mBattleGroup_TankAverage.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// mBattleGroup_TankSum
+			// 
+			this.mBattleGroup_TankSum.Name = "mBattleGroup_TankSum";
+			this.mBattleGroup_TankSum.Size = new System.Drawing.Size(206, 22);
+			this.mBattleGroup_TankSum.Text = "Group by Tank - Sum";
+			this.mBattleGroup_TankSum.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
+			this.mBattleGroup_TankSum.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mGadget
 			// 
@@ -1631,6 +1643,11 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// toolStripSeparator6
+			// 
+			this.toolStripSeparator6.Name = "toolStripSeparator6";
+			this.toolStripSeparator6.Size = new System.Drawing.Size(203, 6);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1809,7 +1826,9 @@
 		private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
 		private System.Windows.Forms.ToolStripDropDownButton mBattleGroup;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_No;
-		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_Tank;
+		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankAverage;
+		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankSum;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 	}
 }
 
