@@ -17,6 +17,7 @@ namespace WinApp.Forms
 	{
 		private int playerTankId;
 		private bool dataChanged = false;
+		private bool _init = true;
 
 		public GrindingSetup(int selectedPlayerTankId)
 		{
@@ -32,62 +33,86 @@ namespace WinApp.Forms
 
 		private void GetTankData()
 		{
+			_init = true;
 			txtGrindComment.Focus();
-			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
-						"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
-						"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
-						"        SUM(playerTankBattle.xp) / SUM (playerTankBattle.battles) AS avgXP " +
-						"FROM    tank INNER JOIN " +
-						"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
-						"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-						"WHERE  (playerTank.id = @playerTankId) " +
-						"GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime ";
+			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment  " +
+						 "FROM    tank INNER JOIN " +
+						 "        playerTank ON tank.id = playerTank.tankId " +
+						 "WHERE  (playerTank.id = @playerTankId) ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-			DataRow tank = DB.FetchData(sql).Rows[0];
-			// Static data
-			GrindingSetupTheme.Text = "Tank Grinding Setup - " + tank["name"].ToString();
-			txtAvgXP.Text = Convert.ToInt32(tank["avgXP"]).ToString();
-			txtMaxXp.Text = tank["maxXP"].ToString();
-			txtTotalXP.Text = tank["totalXP"].ToString();
-			txtBattles.Text = tank["battles"].ToString();
-			txtWins.Text = tank["wins"].ToString();
-			if (tank["lastVictoryTime"] == DBNull.Value)
-				txtLastVictoryTime.Text = "not recorded";
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				DataRow tank = dt.Rows[0];
+				// Static data
+				GrindingSetupTheme.Text = "Tank Grinding Setup - " + tank["name"].ToString();
+				// Add grinding value
+				txtGrindComment.Text = tank["gComment"].ToString();
+				txtGrindXP.Text = tank["gGrindXP"].ToString();
+				txtProgressXP.Text = tank["gProgressXP"].ToString();
+				txtBattlesPerDay.Text = tank["gBattlesDay"].ToString();
+			}
+			sql = "SELECT    SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
+					"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
+					"        SUM(playerTankBattle.xp) / SUM (playerTankBattle.battles) AS avgXP " +
+					"FROM    tank INNER JOIN " +
+					"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
+					"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+					"WHERE  (playerTank.id = @playerTankId) ";
+			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+			dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0 && dt.Rows[0]["battles"] != DBNull.Value)
+			{
+				DataRow tank = dt.Rows[0];
+				txtAvgXP.Text = Convert.ToInt32(tank["avgXP"]).ToString();
+				txtMaxXp.Text = tank["maxXP"].ToString();
+				txtTotalXP.Text = tank["totalXP"].ToString();
+				txtBattles.Text = tank["battles"].ToString();
+				txtWins.Text = tank["wins"].ToString();
+				double winRate = Convert.ToDouble(txtWins.Text) / Convert.ToDouble(txtBattles.Text) * 100;
+				txtWinRate.Text = Math.Round(winRate, 1).ToString();
+			}
 			else
-				txtLastVictoryTime.Text = Convert.ToDateTime(tank["lastVictoryTime"]).ToString("dd.MM.yyyy HH:mm");
-			// Add grinding value
-			txtGrindComment.Text = tank["gComment"].ToString();
-			txtGrindXP.Text = tank["gGrindXP"].ToString();
-			txtProgressXP.Text = tank["gProgressXP"].ToString();
-			txtRestXP.Text = tank["totalXP"].ToString();
-			txtBattlesPerDay.Text = tank["gBattlesDay"].ToString();
-			double winRate = Convert.ToDouble(txtWins.Text) / Convert.ToDouble(txtBattles.Text) * 100;
-			txtWinRate.Text = Math.Round(winRate, 1).ToString();
+			{
+				txtAvgXP.Text = "0";
+				txtMaxXp.Text = "0";
+				txtTotalXP.Text = "0";
+				txtBattles.Text = "0";
+				txtWins.Text = "0";
+				txtWinRate.Text = "0";
+			}
+			_init = false;
 			CalcProgress();
 		}
 
 		private void txtGrindGrindXP_TextChanged(object sender, EventArgs e)
 		{
-			int i;
-			bool ok = Int32.TryParse(txtGrindXP.Text, out i);
-			if (((ok && i > 0) || txtProgressXP.Text != "0") && txtBattlesPerDay.Text == "0")
-				txtBattlesPerDay.Text = "1";
-			else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
-				txtBattlesPerDay.Text = "0";
-			CalcProgress();
-			dataChanged = true;
+			if (!_init)
+			{
+				int i;
+				bool ok = Int32.TryParse(txtGrindXP.Text, out i);
+				if (((ok && i > 0) || txtProgressXP.Text != "0") && txtBattlesPerDay.Text == "0")
+					txtBattlesPerDay.Text = "1";
+				else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
+					txtBattlesPerDay.Text = "0";
+				CalcProgress();
+				dataChanged = true;
+			}
 		}
 
 		private void txtProgressXP_TextChanged(object sender, EventArgs e)
 		{
-			int i;
-			bool ok = Int32.TryParse(txtProgressXP.Text, out i);
-			if (((ok && i > 0) || txtGrindXP.Text != "0") && txtBattlesPerDay.Text == "0")
-				txtBattlesPerDay.Text = "1";
-			else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
-				txtBattlesPerDay.Text = "0";
-			CalcProgress();
-			dataChanged = true;
+			if (!_init)
+			{
+				int i;
+				bool ok = Int32.TryParse(txtProgressXP.Text, out i);
+				if (((ok && i > 0) || txtGrindXP.Text != "0") && txtBattlesPerDay.Text == "0")
+					txtBattlesPerDay.Text = "1";
+				else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
+					txtBattlesPerDay.Text = "0";
+				CalcProgress();
+				dataChanged = true;
+			}
 		}
 
 		private void txtGrindComment_TextChanged(object sender, EventArgs e)
@@ -97,8 +122,11 @@ namespace WinApp.Forms
 
 		private void txtBattlesPerDay_TextChanged(object sender, EventArgs e)
 		{
-			CalcProgress(false);
-			dataChanged = true;
+			if (!_init)
+			{
+				CalcProgress(false);
+				dataChanged = true;
+			}
 		}
 
 		private void btnGrindReset_Click(object sender, EventArgs e)

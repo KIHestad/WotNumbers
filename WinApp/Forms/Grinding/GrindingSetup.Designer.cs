@@ -37,8 +37,6 @@
 			this.txtRestXP = new BadTextBox();
 			this.txtRealAvgXP = new BadTextBox();
 			this.badLabel20 = new BadLabel();
-			this.txtLastVictoryTime = new BadTextBox();
-			this.badLabel19 = new BadLabel();
 			this.txtWinRate = new BadTextBox();
 			this.badLabel16 = new BadLabel();
 			this.txtWins = new BadTextBox();
@@ -82,8 +80,6 @@
 			this.GrindingSetupTheme.Controls.Add(this.txtRestXP);
 			this.GrindingSetupTheme.Controls.Add(this.txtRealAvgXP);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel20);
-			this.GrindingSetupTheme.Controls.Add(this.txtLastVictoryTime);
-			this.GrindingSetupTheme.Controls.Add(this.badLabel19);
 			this.GrindingSetupTheme.Controls.Add(this.txtWinRate);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel16);
 			this.GrindingSetupTheme.Controls.Add(this.txtWins);
@@ -219,34 +215,6 @@
 			this.badLabel20.TabIndex = 6;
 			this.badLabel20.TabStop = false;
 			this.badLabel20.Text = "Calc real XP per btl:";
-			// 
-			// txtLastVictoryTime
-			// 
-			this.txtLastVictoryTime.Enabled = false;
-			this.txtLastVictoryTime.HasFocus = false;
-			this.txtLastVictoryTime.Image = null;
-			this.txtLastVictoryTime.Location = new System.Drawing.Point(390, 127);
-			this.txtLastVictoryTime.MultilineAllow = false;
-			this.txtLastVictoryTime.Name = "txtLastVictoryTime";
-			this.txtLastVictoryTime.PasswordChar = '\0';
-			this.txtLastVictoryTime.Size = new System.Drawing.Size(172, 23);
-			this.txtLastVictoryTime.TabIndex = 17;
-			this.txtLastVictoryTime.TabStop = false;
-			this.txtLastVictoryTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			// 
-			// badLabel19
-			// 
-			this.badLabel19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel19.Dimmed = false;
-			this.badLabel19.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel19.Image = null;
-			this.badLabel19.Location = new System.Drawing.Point(390, 104);
-			this.badLabel19.Name = "badLabel19";
-			this.badLabel19.Size = new System.Drawing.Size(170, 23);
-			this.badLabel19.TabIndex = 16;
-			this.badLabel19.TabStop = false;
-			this.badLabel19.Text = "Last recorded first victory per day:";
 			// 
 			// txtWinRate
 			// 
@@ -726,8 +694,6 @@
 		private BadLabel badLabel18;
 		private BadTextBox txtWinRate;
 		private BadLabel badLabel16;
-		private BadTextBox txtLastVictoryTime;
-		private BadLabel badLabel19;
 		private BadTextBox txtRealAvgXP;
 		private BadLabel badLabel20;
 		private BadButton btnClose;

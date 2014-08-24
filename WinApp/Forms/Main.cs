@@ -3470,6 +3470,11 @@ namespace WinApp.Forms
 
 		#endregion
 
+		private void mGadgetNotImplemented(object sender, EventArgs e)
+		{
+			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
+		}
+
 		
 		
 	}

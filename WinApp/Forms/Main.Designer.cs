@@ -138,10 +138,11 @@
 			this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
 			this.mBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
-			this.playerNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-			this.editAddedGadgetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetEdit = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.mViewChart = new System.Windows.Forms.ToolStripButton();
 			this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
@@ -174,7 +175,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.tankTypeStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1186,11 +1186,11 @@
 			// mGadget
 			// 
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.playerNameToolStripMenuItem,
-            this.tankTypeStatsToolStripMenuItem,
-            this.imageToolStripMenuItem,
+            this.mGadgetAddBattleModeStats,
+            this.mGadgetAddTankTypeStats,
+            this.mGadgetAddImage,
             this.toolStripSeparator4,
-            this.editAddedGadgetsToolStripMenuItem});
+            this.mGadgetEdit});
 			this.mGadget.Image = ((System.Drawing.Image)(resources.GetObject("mGadget.Image")));
 			this.mGadget.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mGadget.Name = "mGadget";
@@ -1199,28 +1199,38 @@
 			this.mGadget.Text = "Gadget";
 			this.mGadget.ToolTipText = "Gadget";
 			// 
-			// playerNameToolStripMenuItem
+			// mGadgetAddBattleModeStats
 			// 
-			this.playerNameToolStripMenuItem.Name = "playerNameToolStripMenuItem";
-			this.playerNameToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.playerNameToolStripMenuItem.Text = "Battle Mode Stats";
+			this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
+			this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(185, 22);
+			this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
+			this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
-			// imageToolStripMenuItem
+			// mGadgetAddTankTypeStats
 			// 
-			this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
-			this.imageToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.imageToolStripMenuItem.Text = "Image";
+			this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
+			this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(185, 22);
+			this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
+			this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
+			// mGadgetAddImage
+			// 
+			this.mGadgetAddImage.Name = "mGadgetAddImage";
+			this.mGadgetAddImage.Size = new System.Drawing.Size(185, 22);
+			this.mGadgetAddImage.Text = "Image";
+			this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
 			this.toolStripSeparator4.Size = new System.Drawing.Size(182, 6);
 			// 
-			// editAddedGadgetsToolStripMenuItem
+			// mGadgetEdit
 			// 
-			this.editAddedGadgetsToolStripMenuItem.Name = "editAddedGadgetsToolStripMenuItem";
-			this.editAddedGadgetsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.editAddedGadgetsToolStripMenuItem.Text = "Edit added Gadgets...";
+			this.mGadgetEdit.Name = "mGadgetEdit";
+			this.mGadgetEdit.Size = new System.Drawing.Size(185, 22);
+			this.mGadgetEdit.Text = "Edit added Gadgets...";
+			this.mGadgetEdit.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
 			// toolStripSeparator23
 			// 
@@ -1587,12 +1597,6 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// tankTypeStatsToolStripMenuItem
-			// 
-			this.tankTypeStatsToolStripMenuItem.Name = "tankTypeStatsToolStripMenuItem";
-			this.tankTypeStatsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.tankTypeStatsToolStripMenuItem.Text = "Tank Type Stats";
-			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1764,11 +1768,11 @@
 		private System.Windows.Forms.ToolStripMenuItem mBattles2d;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripDropDownButton mGadget;
-		private System.Windows.Forms.ToolStripMenuItem playerNameToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem imageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetAddImage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-		private System.Windows.Forms.ToolStripMenuItem editAddedGadgetsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem tankTypeStatsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetEdit;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
 	}
 }
 

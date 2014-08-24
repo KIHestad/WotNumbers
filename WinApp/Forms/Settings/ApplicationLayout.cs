@@ -25,7 +25,11 @@ namespace WinApp.Forms
 		private void ApplicationLayout_Load(object sender, EventArgs e)
 		{
 			chkBattleTotalsPosition.Checked = Config.Settings.gridBattlesTotalsTop;
-			ddFontSize.Text = Config.Settings.gridFontSize.ToString();
+			int fs = Config.Settings.gridFontSize;
+			if (fs == 0) fs = 8;
+			if (fs < 6) fs = 6;
+			if (fs > 14) fs = 14;
+			ddFontSize.Text = fs.ToString();
 			chkHomeViewNewLayout.Checked = Config.Settings.homeViewNewLayout;
 		}
 
