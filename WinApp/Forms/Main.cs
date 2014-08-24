@@ -3454,7 +3454,8 @@ namespace WinApp.Forms
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
 		{
 			if (Dossier2db.dossierRunning)
-				MsgBox.Show("Dossier file check running, cannot start import at the same time. Please wait until dossier file check is done.", "Cannot start import now", this);
+				MsgBox.Show("Dossier file check is running, cannot start import at the same time. Please wait some seconds until dossier file check is done." +
+							Environment.NewLine + Environment.NewLine, "Cannot start import yet", this);
 			else
 			{
 				// Stop file watchers if running
