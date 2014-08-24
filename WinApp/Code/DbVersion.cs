@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 136; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 137; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1645,6 +1645,10 @@ namespace WinApp.Code
 					Config.Settings.homeViewNewLayout = false;
 					msg = "";
 					Config.SaveConfig(out msg);
+					break;
+				case 137:
+					mssql = "UPDATE columnSelection SET colDataType='VarChar' WHERE id = 512;";
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";
