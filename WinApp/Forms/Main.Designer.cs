@@ -111,13 +111,14 @@
 			this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
 			this.mModeRandomCompanyClan = new System.Windows.Forms.ToolStripMenuItem();
-			this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
+			this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeSkrimishes = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
 			this.mModeRandom = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeCompany = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeClan = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.mModeSpecialInfo = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mBattles1d = new System.Windows.Forms.ToolStripMenuItem();
@@ -943,6 +944,7 @@
             this.mModeRandom,
             this.mModeCompany,
             this.mModeClan,
+            this.toolStripSeparator7,
             this.mModeSpecialInfo});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
 			this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -954,7 +956,7 @@
 			// toolStripMenuItem54
 			// 
 			this.toolStripMenuItem54.Name = "toolStripMenuItem54";
-			this.toolStripMenuItem54.Size = new System.Drawing.Size(209, 22);
+			this.toolStripMenuItem54.Size = new System.Drawing.Size(206, 22);
 			this.toolStripMenuItem54.Tag = "All";
 			this.toolStripMenuItem54.Text = "All modes";
 			this.toolStripMenuItem54.Click += new System.EventHandler(this.toolItemMode_Click);
@@ -963,81 +965,86 @@
 			// toolStripSeparator17
 			// 
 			this.toolStripSeparator17.Name = "toolStripSeparator17";
-			this.toolStripSeparator17.Size = new System.Drawing.Size(206, 6);
+			this.toolStripSeparator17.Size = new System.Drawing.Size(203, 6);
 			// 
 			// mModeRandomCompanyClan
 			// 
 			this.mModeRandomCompanyClan.Name = "mModeRandomCompanyClan";
-			this.mModeRandomCompanyClan.Size = new System.Drawing.Size(209, 22);
+			this.mModeRandomCompanyClan.Size = new System.Drawing.Size(206, 22);
 			this.mModeRandomCompanyClan.Tag = "Mode15";
 			this.mModeRandomCompanyClan.Text = "Random, Tank Company";
 			this.mModeRandomCompanyClan.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeRandomCompanyClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
-			// mModeTeam
-			// 
-			this.mModeTeam.Name = "mModeTeam";
-			this.mModeTeam.Size = new System.Drawing.Size(209, 22);
-			this.mModeTeam.Tag = "Mode7";
-			this.mModeTeam.Text = "Team Battles";
-			this.mModeTeam.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.mModeTeam.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-			// 
 			// mModeHistorical
 			// 
 			this.mModeHistorical.Name = "mModeHistorical";
-			this.mModeHistorical.Size = new System.Drawing.Size(209, 22);
+			this.mModeHistorical.Size = new System.Drawing.Size(206, 22);
 			this.mModeHistorical.Tag = "Historical";
-			this.mModeHistorical.Text = "Historical Battles";
+			this.mModeHistorical.Text = "Historical Battle";
 			this.mModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// mModeTeam
+			// 
+			this.mModeTeam.Name = "mModeTeam";
+			this.mModeTeam.Size = new System.Drawing.Size(206, 22);
+			this.mModeTeam.Tag = "Mode7";
+			this.mModeTeam.Text = "Team";
+			this.mModeTeam.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeTeam.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mModeSkrimishes
 			// 
 			this.mModeSkrimishes.Name = "mModeSkrimishes";
-			this.mModeSkrimishes.Size = new System.Drawing.Size(209, 22);
+			this.mModeSkrimishes.Size = new System.Drawing.Size(206, 22);
 			this.mModeSkrimishes.Tag = "Skirmishes";
-			this.mModeSkrimishes.Text = "Skirmishes Battles";
+			this.mModeSkrimishes.Text = "Skirmishes";
 			this.mModeSkrimishes.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeSkrimishes.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolStripSeparator18
 			// 
 			this.toolStripSeparator18.Name = "toolStripSeparator18";
-			this.toolStripSeparator18.Size = new System.Drawing.Size(206, 6);
+			this.toolStripSeparator18.Size = new System.Drawing.Size(203, 6);
 			// 
 			// mModeRandom
 			// 
 			this.mModeRandom.Name = "mModeRandom";
-			this.mModeRandom.Size = new System.Drawing.Size(209, 22);
+			this.mModeRandom.Size = new System.Drawing.Size(206, 22);
 			this.mModeRandom.Tag = "Random";
-			this.mModeRandom.Text = "Random Battles (*)";
+			this.mModeRandom.Text = "Random *";
 			this.mModeRandom.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeRandom.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mModeCompany
 			// 
 			this.mModeCompany.Name = "mModeCompany";
-			this.mModeCompany.Size = new System.Drawing.Size(209, 22);
+			this.mModeCompany.Size = new System.Drawing.Size(206, 22);
 			this.mModeCompany.Tag = "Company";
-			this.mModeCompany.Text = "Tank Company Battles (*)";
+			this.mModeCompany.Text = "Tank Company *";
 			this.mModeCompany.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeCompany.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mModeClan
 			// 
 			this.mModeClan.Name = "mModeClan";
-			this.mModeClan.Size = new System.Drawing.Size(209, 22);
+			this.mModeClan.Size = new System.Drawing.Size(206, 22);
 			this.mModeClan.Tag = "Clan";
-			this.mModeClan.Text = "Clan War Battles (*)";
+			this.mModeClan.Text = "Clan War *";
 			this.mModeClan.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolStripSeparator7
+			// 
+			this.toolStripSeparator7.Name = "toolStripSeparator7";
+			this.toolStripSeparator7.Size = new System.Drawing.Size(203, 6);
 			// 
 			// mModeSpecialInfo
 			// 
 			this.mModeSpecialInfo.Name = "mModeSpecialInfo";
-			this.mModeSpecialInfo.Size = new System.Drawing.Size(209, 22);
-			this.mModeSpecialInfo.Text = "* Stats Information";
+			this.mModeSpecialInfo.Size = new System.Drawing.Size(206, 22);
+			this.mModeSpecialInfo.Text = "* Information";
 			this.mModeSpecialInfo.Click += new System.EventHandler(this.toolItemModeSpecialInfo_Click);
 			// 
 			// mBattles
@@ -1829,6 +1836,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankAverage;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankSum;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
 	}
 }
 
