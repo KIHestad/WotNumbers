@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 138; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 139; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1656,7 +1656,10 @@ namespace WinApp.Code
 							"UPDATE battle SET battleMode='Skirmishes' WHERE battleMode='Strongholds';";
 					sqlite = mssql;
 					break;
-
+				case 139:
+					mssql = "UPDATE columnSelection SET colGroup='Damage' WHERE colGroup='Damange'";
+					sqlite = mssql;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
