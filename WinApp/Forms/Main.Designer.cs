@@ -522,8 +522,8 @@
             this.mTankFilter_Fav09,
             this.mTankFilter_Fav10,
             this.toolStripSeparator12,
-            this.mTankFilter_EditFavList,
-            this.mTankFilter_GetInGarage});
+            this.mTankFilter_GetInGarage,
+            this.mTankFilter_EditFavList});
 			this.mTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter.Image")));
 			this.mTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mTankFilter.Name = "mTankFilter";

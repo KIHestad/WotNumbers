@@ -14,8 +14,10 @@ using System.Reflection;
 using System.Windows.Forms;
 using WinApp.Code;
 
+[DebuggerNonUserCode]
 abstract class BadThemeContainerControl : ContainerControl
 {
+
 	protected Bitmap bitmapObject;
 	protected Graphics graphicObject;
 	public BadThemeContainerControl()
@@ -597,6 +599,7 @@ abstract class BadThemeContainerControl : ContainerControl
 	
 }
 
+[DebuggerNonUserCode]
 class BadForm : BadThemeContainerControl
 {
 	public BadForm()
@@ -645,6 +648,7 @@ class BadForm : BadThemeContainerControl
 	
 }
 
+[DebuggerNonUserCode]
 abstract class BadThemeControl : Control
 {
 	protected Bitmap bitmapObject;
@@ -841,6 +845,7 @@ abstract class BadThemeControl : Control
 	}
 }
 
+[DebuggerNonUserCode]
 class BadButton : BadThemeControl
 {
 
@@ -894,6 +899,7 @@ class BadButton : BadThemeControl
 	
 }
 
+[DebuggerNonUserCode]
 class BadCheckBox : BadThemeControl
 {
 	public BadCheckBox()
@@ -963,6 +969,7 @@ class BadCheckBox : BadThemeControl
 	}
 }
 
+[DebuggerNonUserCode]
 class BadSeperator : BadThemeControl
 {
 
@@ -1015,6 +1022,7 @@ class BadSeperator : BadThemeControl
 	}
 }
 
+[DebuggerNonUserCode]
 class BadProgressBar : BadThemeControl
 {
 
@@ -1134,6 +1142,7 @@ class BadProgressBar : BadThemeControl
 
 }
 
+[DebuggerNonUserCode]
 class BadGroupBox : BadThemeControl
 {
 
@@ -1177,6 +1186,7 @@ class BadGroupBox : BadThemeControl
 	}
 }
 
+[DebuggerNonUserCode]
 class BadLabel : BadThemeControl
 {
 	private bool _Dimmed = false;
@@ -1229,6 +1239,7 @@ class BadLabel : BadThemeControl
 	}
 }
 
+[DebuggerNonUserCode]
 class BadTextBox : BadThemeControl
 {
 	private char _PasswordChar;
@@ -1330,6 +1341,7 @@ class BadTextBox : BadThemeControl
 
 }
 
+[DebuggerNonUserCode]
 class BadPopupBox : BadThemeControl
 {
 
@@ -1375,6 +1387,7 @@ class BadPopupBox : BadThemeControl
 
 }
 
+[DebuggerNonUserCode]
 class BadDropDownBox : BadThemeControl
 {
 
@@ -1442,7 +1455,7 @@ class BadDropDownBox : BadThemeControl
 
 }
 
-
+[DebuggerNonUserCode]
 class BadScrollBar : BadThemeControl
 {
 	private bool _ScrollNecessary = true;
@@ -1729,6 +1742,7 @@ class BadScrollBar : BadThemeControl
 	//}
 }
 
+[DebuggerNonUserCode]
 class BadScrollBarCorner : BadThemeControl
 {
 	public BadScrollBarCorner()
