@@ -36,7 +36,6 @@
 			this.btnClose = new BadButton();
 			this.txtProgressXP = new BadTextBox();
 			this.txtRestXP = new BadTextBox();
-			this.badLabel20 = new BadLabel();
 			this.txtWinRate = new BadTextBox();
 			this.badLabel16 = new BadLabel();
 			this.txtWins = new BadTextBox();
@@ -70,18 +69,19 @@
 			this.badGroupBox4 = new BadGroupBox();
 			this.tankPic = new System.Windows.Forms.PictureBox();
 			this.badGroupBox1 = new BadGroupBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.GrindingSetupTheme.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.tankPic)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// GrindingSetupTheme
 			// 
+			this.GrindingSetupTheme.Controls.Add(this.label1);
 			this.GrindingSetupTheme.Controls.Add(this.txtRealAvgXP);
 			this.GrindingSetupTheme.Controls.Add(this.pbProgressPercent);
 			this.GrindingSetupTheme.Controls.Add(this.btnClose);
 			this.GrindingSetupTheme.Controls.Add(this.txtProgressXP);
 			this.GrindingSetupTheme.Controls.Add(this.txtRestXP);
-			this.GrindingSetupTheme.Controls.Add(this.badLabel20);
 			this.GrindingSetupTheme.Controls.Add(this.txtWinRate);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel16);
 			this.GrindingSetupTheme.Controls.Add(this.txtWins);
@@ -139,7 +139,7 @@
 			this.txtRealAvgXP.AutoSize = true;
 			this.txtRealAvgXP.BackColor = System.Drawing.Color.Transparent;
 			this.txtRealAvgXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.txtRealAvgXP.Location = new System.Drawing.Point(390, 86);
+			this.txtRealAvgXP.Location = new System.Drawing.Point(390, 87);
 			this.txtRealAvgXP.Name = "txtRealAvgXP";
 			this.txtRealAvgXP.Size = new System.Drawing.Size(35, 13);
 			this.txtRealAvgXP.TabIndex = 44;
@@ -201,20 +201,6 @@
 			this.txtRestXP.TabStop = false;
 			this.txtRestXP.Text = "0";
 			this.txtRestXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// badLabel20
-			// 
-			this.badLabel20.BackColor = System.Drawing.Color.Transparent;
-			this.badLabel20.Dimmed = false;
-			this.badLabel20.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel20.Image = null;
-			this.badLabel20.Location = new System.Drawing.Point(390, 62);
-			this.badLabel20.Name = "badLabel20";
-			this.badLabel20.Size = new System.Drawing.Size(88, 23);
-			this.badLabel20.TabIndex = 6;
-			this.badLabel20.TabStop = false;
-			this.badLabel20.Text = "Calc XP per btl:";
 			// 
 			// txtWinRate
 			// 
@@ -647,6 +633,17 @@
 			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Tank Statistics";
 			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.BackColor = System.Drawing.Color.Transparent;
+			this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.label1.Location = new System.Drawing.Point(390, 70);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(80, 13);
+			this.label1.TabIndex = 45;
+			this.label1.Text = "Calc XP per btl:";
+			// 
 			// GrindingSetup
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -705,10 +702,10 @@
 		private BadLabel badLabel18;
 		private BadTextBox txtWinRate;
 		private BadLabel badLabel16;
-		private BadLabel badLabel20;
 		private BadButton btnClose;
 		private BadProgressBar pbProgressPercent;
 		private System.Windows.Forms.PictureBox tankPic;
 		private System.Windows.Forms.Label txtRealAvgXP;
+		private System.Windows.Forms.Label label1;
 	}
 }
