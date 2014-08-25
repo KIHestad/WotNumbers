@@ -1431,11 +1431,11 @@ namespace WinApp.Forms
 
 		private void toolItemModeSpecialInfo_Click(object sender, EventArgs e)
 		{
-			string s = "The tanks statistics are the same for Random, Company and Clan battles." +
+			string s = "The tanks statistics are the same for Random, Tank Company and Clan Wars battles." +
 						Environment.NewLine + Environment.NewLine +
-						"For 'Tanks view' these filters only limit the tanks showing in grid, the stats will be the same." +
+						"For 'Tank view' these filters only limit the tanks showing in grid, the stats will be the same." +
 						Environment.NewLine + Environment.NewLine +
-						"For 'battle view' the stats is calculated per battle and will be correct for any filter.";
+						"For 'Battle view' the stats is calculated per battle and will be correct for any filter.";
 			Code.MsgBox.Show(s, "Special Battle Filter Information", this);
 		}
 
@@ -1654,7 +1654,7 @@ namespace WinApp.Forms
 				bool applyColors = false;
 				// Get total number of tanks to show in first row
 				string sql =
-					"Select 'Tanks owned' as Data, '' as 'Random (15x15)', '' as 'Team (7x7)', '' as 'Historical', '' as 'Strongholds', cast(count(playerTank.tankId) as varchar) as Total " +
+					"Select 'Tanks owned' as Data, '' as 'Random/TC', '' as 'Team', '' as 'Historical', '' as 'Skirmishes', cast(count(playerTank.tankId) as varchar) as Total " +
 					"from playerTank " +
 					"where playerid=@playerId";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
@@ -1699,24 +1699,24 @@ namespace WinApp.Forms
 				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
 				int usedHistorical = 0;
 				if (dtCount.Rows[0][0] != DBNull.Value) usedHistorical = Convert.ToInt32(dtCount.Rows[0][0]);
-				// strongh
+				// Skirmishes
 				sql =
 					"Select count(playerTank.tankId) " +
 					"from playerTank " +
 					"where playerTank.playerId=@playerId and tankid in (" +
-					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Strongholds')";
+					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Skirmishes')";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
-				int usedStrongholds = 0;
-				if (dtCount.Rows[0][0] != DBNull.Value) usedStrongholds = Convert.ToInt32(dtCount.Rows[0][0]);
+				int usedSkirmishes = 0;
+				if (dtCount.Rows[0][0] != DBNull.Value) usedSkirmishes = Convert.ToInt32(dtCount.Rows[0][0]);
 
 				// Add usage
 				DataRow dr = dt.NewRow();
 				dr["Data"] = "Tanks used";
-				dr["Random (15x15)"] = usedRandom.ToString();
-				dr["Team (7x7)"] = usedTeam.ToString();
+				dr["Random/TC"] = usedRandom.ToString();
+				dr["Team"] = usedTeam.ToString();
 				dr["Historical"] = usedHistorical.ToString();
-				dr["Strongholds"] = usedStrongholds.ToString();
+				dr["Skirmishes"] = usedSkirmishes.ToString();
 				dr["Total"] = usedTotal.ToString();
 				dt.Rows.Add(dr);
 
@@ -1884,14 +1884,14 @@ namespace WinApp.Forms
 						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
 					}
 
-					// Overall stats strongholds
+					// Overall stats Skirmishes
 					sql =
 						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
 						"from playerTankBattle ptb left join " +
 						"  playerTank pt on ptb.playerTankId=pt.id left join " +
 						"  tank t on pt.tankId = t.id " +
-						"where pt.playerId=@playerId and ptb.battleMode='Strongholds'";
+						"where pt.playerId=@playerId and ptb.battleMode='Skirmishes'";
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 					dtStats = DB.FetchData(sql);
 					stats = dtStats.Rows[0];
@@ -1915,7 +1915,7 @@ namespace WinApp.Forms
 						//// eff
 						//eff[4] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
 						//// wn7
-						//wn7[4] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Strongholds"));
+						//wn7[4] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Skirmishes"));
 						// Wn8
 						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
 					}
@@ -1923,48 +1923,48 @@ namespace WinApp.Forms
 					// Add Data to dataTable
 					dr = dt.NewRow();
 					dr["Data"] = "Battle count";
-					dr["Random (15x15)"] = battleCount[1].ToString();
-					dr["Team (7x7)"] = RatingVal(battleCount[2].ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Random/TC"] = battleCount[1].ToString();
+					dr["Team"] = RatingVal(battleCount[2].ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(battleCount[3].ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = RatingVal(battleCount[4].ToString(), Convert.ToInt32(battleCount[4]));
+					dr["Skirmishes"] = RatingVal(battleCount[4].ToString(), Convert.ToInt32(battleCount[4]));
 					dr["Total"] = battleCount[0].ToString();
 					dt.Rows.Add(dr);
 					
 					// Add Winrate
 					dr = dt.NewRow();
 					dr["Data"] = "Win rate";
-					dr["Random (15x15)"] = Math.Round(wr[1], 2).ToString() + " %";
-					dr["Team (7x7)"] = RatingVal(Math.Round(wr[2], 2).ToString() + " %", Convert.ToInt32(battleCount[2]));
+					dr["Random/TC"] = Math.Round(wr[1], 2).ToString() + " %";
+					dr["Team"] = RatingVal(Math.Round(wr[2], 2).ToString() + " %", Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = RatingVal(Math.Round(wr[3], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = RatingVal(Math.Round(wr[4], 2).ToString() + " %", Convert.ToInt32(battleCount[4]));
+					dr["Skirmishes"] = RatingVal(Math.Round(wr[4], 2).ToString() + " %", Convert.ToInt32(battleCount[4]));
 					dr["Total"] = Math.Round(wr[0], 2).ToString() + " %";
 					dt.Rows.Add(dr);
 
 					// Add EFF
 					dr = dt.NewRow();
 					dr["Data"] = "EFF rating";
-					dr["Random (15x15)"] = Math.Round(eff[1], 2).ToString();
-					dr["Team (7x7)"] = DBNull.Value; // RatingVal(Math.Round(eff[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Random/TC"] = Math.Round(eff[1], 2).ToString();
+					dr["Team"] = DBNull.Value; // RatingVal(Math.Round(eff[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(eff[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = DBNull.Value; // RatingVal(Math.Round(eff[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
+					dr["Skirmishes"] = DBNull.Value; // RatingVal(Math.Round(eff[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
 					dr["Total"] = DBNull.Value; // Math.Round(eff[0], 2).ToString();
 					dt.Rows.Add(dr);
 					// Add WN7
 					dr = dt.NewRow();
 					dr["Data"] = "WN7 rating";
-					dr["Random (15x15)"] = Math.Round(wn7[1], 2).ToString();
-					dr["Team (7x7)"] = DBNull.Value; // RatingVal(Math.Round(wn7[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Random/TC"] = Math.Round(wn7[1], 2).ToString();
+					dr["Team"] = DBNull.Value; // RatingVal(Math.Round(wn7[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(wn7[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = DBNull.Value; // RatingVal(Math.Round(wn7[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
+					dr["Skirmishes"] = DBNull.Value; // RatingVal(Math.Round(wn7[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
 					dr["Total"] = DBNull.Value; // Math.Round(wn7[0], 2).ToString();
 					dt.Rows.Add(dr);
 					// Add WN8
 					dr = dt.NewRow();
 					dr["Data"] = "WN8 rating";
-					dr["Random (15x15)"] = Math.Round(wn8[1], 2).ToString();
-					dr["Team (7x7)"] = DBNull.Value; //RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
+					dr["Random/TC"] = Math.Round(wn8[1], 2).ToString();
+					dr["Team"] = DBNull.Value; //RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
 					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Strongholds"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
+					dr["Skirmishes"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
 					dr["Total"] = DBNull.Value; //Math.Round(wn8[0], 2).ToString();
 					dt.Rows.Add(dr);
 
@@ -1993,29 +1993,29 @@ namespace WinApp.Forms
 				// Colors
 				if (applyColors)
 				{
-					// Battle count color on 15x15
-					dataGridMain.Rows[2].Cells["Random (15x15)"].Style.ForeColor = Rating.BattleCountColor(battleCount[1]);
-					dataGridMain.Rows[2].Cells["Random (15x15)"].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
+					// Battle count color on random/tc
+					dataGridMain.Rows[2].Cells["Random/TC"].Style.ForeColor = Rating.BattleCountColor(battleCount[1]);
+					dataGridMain.Rows[2].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
 
 					// win rate on all modes
-					dataGridMain.Rows[3].Cells["Random (15x15)"].Style.ForeColor = Rating.WinRateColor(wr[1]);
-					dataGridMain.Rows[3].Cells["Team (7x7)"].Style.ForeColor = Rating.WinRateColor(wr[2]);
+					dataGridMain.Rows[3].Cells["Random/TC"].Style.ForeColor = Rating.WinRateColor(wr[1]);
+					dataGridMain.Rows[3].Cells["Team"].Style.ForeColor = Rating.WinRateColor(wr[2]);
 					dataGridMain.Rows[3].Cells["Historical"].Style.ForeColor = Rating.WinRateColor(wr[3]);
-					dataGridMain.Rows[3].Cells["Strongholds"].Style.ForeColor = Rating.WinRateColor(wr[4]);
+					dataGridMain.Rows[3].Cells["Skirmishes"].Style.ForeColor = Rating.WinRateColor(wr[4]);
 					dataGridMain.Rows[3].Cells["Total"].Style.ForeColor = Rating.WinRateColor(wr[0]);
-					dataGridMain.Rows[3].Cells["Random (15x15)"].Style.SelectionForeColor = Rating.WinRateColor(wr[1]);
-					dataGridMain.Rows[3].Cells["Team (7x7)"].Style.SelectionForeColor = Rating.WinRateColor(wr[2]);
+					dataGridMain.Rows[3].Cells["Random/TC"].Style.SelectionForeColor = Rating.WinRateColor(wr[1]);
+					dataGridMain.Rows[3].Cells["Team"].Style.SelectionForeColor = Rating.WinRateColor(wr[2]);
 					dataGridMain.Rows[3].Cells["Historical"].Style.SelectionForeColor = Rating.WinRateColor(wr[3]);
-					dataGridMain.Rows[3].Cells["Strongholds"].Style.SelectionForeColor = Rating.WinRateColor(wr[4]);
+					dataGridMain.Rows[3].Cells["Skirmishes"].Style.SelectionForeColor = Rating.WinRateColor(wr[4]);
 					dataGridMain.Rows[3].Cells["Total"].Style.SelectionForeColor = Rating.WinRateColor(wr[0]);
 					
-					// rating color on 15x15
-					dataGridMain.Rows[4].Cells["Random (15x15)"].Style.ForeColor = Rating.EffColor(eff[1]);
-					dataGridMain.Rows[5].Cells["Random (15x15)"].Style.ForeColor = Rating.WN7color(wn7[1]);
-					dataGridMain.Rows[6].Cells["Random (15x15)"].Style.ForeColor = Rating.WN8color(wn8[1]);
-					dataGridMain.Rows[4].Cells["Random (15x15)"].Style.SelectionForeColor = dataGridMain.Rows[4].Cells["Random (15x15)"].Style.ForeColor;
-					dataGridMain.Rows[5].Cells["Random (15x15)"].Style.SelectionForeColor = dataGridMain.Rows[5].Cells["Random (15x15)"].Style.ForeColor;
-					dataGridMain.Rows[6].Cells["Random (15x15)"].Style.SelectionForeColor = dataGridMain.Rows[6].Cells["Random (15x15)"].Style.ForeColor;
+					// rating color on random/tc
+					dataGridMain.Rows[4].Cells["Random/TC"].Style.ForeColor = Rating.EffColor(eff[1]);
+					dataGridMain.Rows[5].Cells["Random/TC"].Style.ForeColor = Rating.WN7color(wn7[1]);
+					dataGridMain.Rows[6].Cells["Random/TC"].Style.ForeColor = Rating.WN8color(wn8[1]);
+					dataGridMain.Rows[4].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[4].Cells["Random/TC"].Style.ForeColor;
+					dataGridMain.Rows[5].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[5].Cells["Random/TC"].Style.ForeColor;
+					dataGridMain.Rows[6].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[6].Cells["Random/TC"].Style.ForeColor;
 
 				}
 				// No resize and Right align numbers
@@ -2098,8 +2098,8 @@ namespace WinApp.Forms
 				case GridFilter.BattleModeType.Historical:
 					battleModeFilter = " AND (playerTankBattle.battleMode = 'Historical') ";
 					break;
-				case GridFilter.BattleModeType.Strongholds:
-					battleModeFilter = " AND (playerTankBattle.battleMode = 'Strongholds') ";
+				case GridFilter.BattleModeType.Skirmishes:
+					battleModeFilter = " AND (playerTankBattle.battleMode = 'Skirmishes') ";
 					break;
 				default:
 					break;
@@ -2376,8 +2376,8 @@ namespace WinApp.Forms
 						case GridFilter.BattleModeType.Historical:
 							battleModeFilter = " AND (battleMode = 'Historical') ";
 							break;
-						case GridFilter.BattleModeType.Strongholds:
-							battleModeFilter = " AND (battleMode = 'Strongholds') ";
+						case GridFilter.BattleModeType.Skirmishes:
+							battleModeFilter = " AND (battleMode = 'Skirmishes') ";
 							break;
 						default:
 							break;

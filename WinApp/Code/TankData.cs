@@ -12,10 +12,10 @@ namespace WinApp.Code
 	{
 		public enum DossierBattleMode
 		{
-			Mode15 = 1,
-			Mode7 = 2,
+			ModeRandom_TC = 1,
+			ModeTeam = 2,
 			ModeHistorical = 3,
-			ModeStrongholds = 4,
+			ModeSkirmishes = 4,
 		}
 
 		public static string DbBattleMode(DossierBattleMode mode)
@@ -23,14 +23,14 @@ namespace WinApp.Code
 			string s = "";
 			switch (mode)
 			{
-				case DossierBattleMode.Mode15:
+				case DossierBattleMode.ModeRandom_TC:
 					s = "15"; break;
-				case DossierBattleMode.Mode7:
+				case DossierBattleMode.ModeTeam:
 					s = "7"; break;
 				case DossierBattleMode.ModeHistorical:
 					s = "Historical"; break;
-				case DossierBattleMode.ModeStrongholds:
-					s = "Strongholds"; break;
+				case DossierBattleMode.ModeSkirmishes:
+					s = "Skirmishes"; break;
 			}
 			return s;
 		}

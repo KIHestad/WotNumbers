@@ -68,22 +68,22 @@ namespace WinApp.Gadget
 			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedHistorical = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedHistorical = Convert.ToInt32(dtValue.Rows[0][0]);
-			// strongh
+			// Skirmishes
 			sql =
 				"Select count(playerTank.tankId) " +
 				"from playerTank " +
 				"where playerTank.playerId=@playerId and tankid in (" +
-				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Strongholds')";
+				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Skirmishes')";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
-			int usedStrongholds = 0;
-			if (dtValue.Rows[0][0] != DBNull.Value) usedStrongholds = Convert.ToInt32(dtValue.Rows[0][0]);
+			int usedSkirmishes = 0;
+			if (dtValue.Rows[0][0] != DBNull.Value) usedSkirmishes = Convert.ToInt32(dtValue.Rows[0][0]);
 
 			// Add usage
 			dt.Rows[0]["Random/TC"] = usedRandom;
 			dt.Rows[0]["Team"] = usedTeam;
 			dt.Rows[0]["Historical"] = usedHistorical;
-			dt.Rows[0]["Skirmishes"] = usedStrongholds;
+			dt.Rows[0]["Skirmishes"] = usedSkirmishes;
 
 			// get overall stats all battles
 			double[] wr = new double[9];
@@ -163,14 +163,14 @@ namespace WinApp.Gadget
 					wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
 				}
 
-				// Overall stats strongholds
+				// Overall stats Skirmishes
 				sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
 					"from playerTankBattle ptb left join " +
 					"  playerTank pt on ptb.playerTankId=pt.id left join " +
 					"  tank t on pt.tankId = t.id " +
-					"where pt.playerId=@playerId and ptb.battleMode='Strongholds'";
+					"where pt.playerId=@playerId and ptb.battleMode='Skirmishes'";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				dtStats = DB.FetchData(sql);
 				stats = dtStats.Rows[0];
