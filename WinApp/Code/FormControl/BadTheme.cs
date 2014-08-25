@@ -848,6 +848,22 @@ abstract class BadThemeControl : Control
 [DebuggerNonUserCode]
 class BadButton : BadThemeControl
 {
+	public ToolTip ToolTipContainer
+	{
+		get;
+		set;
+	}
+
+	private string _ToolTipText = "";
+	public string ToolTipText
+	{
+		get { return _ToolTipText; }
+		set
+		{
+			_ToolTipText = value;
+			//Invalidate();
+		}
+	}
 
 	public BadButton()
 	{
@@ -876,6 +892,8 @@ class BadButton : BadThemeControl
 		//DrawBorders(outerBorderPen, ClientRectangle);
 		//DrawCorners(BackColor, ClientRectangle); // Button corners
 
+		ToolTipContainer = new ToolTip();
+
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
@@ -896,7 +914,21 @@ class BadButton : BadThemeControl
 		Invalidate();
 		base.OnTextChanged(e);
 	}
-	
+
+	protected override void OnMouseHover(EventArgs e)
+	{
+		Point p = PointToClient(MousePosition);
+		p.X += 15;
+		p.Y += 10;
+		ToolTipContainer.Show(ToolTipText, this, p);
+		base.OnMouseHover(e);
+	}
+
+	protected override void OnMouseLeave(EventArgs e)
+	{
+		ToolTipContainer.Hide(this);
+		base.OnMouseLeave(e);
+	}
 }
 
 [DebuggerNonUserCode]

@@ -14,11 +14,10 @@ namespace WinApp.Forms
 {
 	public partial class FavList : Form
 	{
-		private int SelectedFavListId;
-		public FavList(int showFavListId)
+		private int SelectedFavListId = 0;
+		public FavList()
 		{
 			InitializeComponent();
-			SelectedFavListId = showFavListId;
 		}
 
 		#region Load and Style
@@ -43,6 +42,19 @@ namespace WinApp.Forms
 			// Show content
 			ShowFavList();
 			ShowAllTanks();
+			// Select an initial fav list
+			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+			{
+				if (dataGridFavList.RowCount > 0)
+				{
+					SelectedFavListId = Convert.ToInt32(dataGridFavList.Rows[0].Cells["id"].Value);
+				}
+			}
+			else
+			{
+				SelectedFavListId = MainSettings.GetCurrentGridFilter().FavListId;
+			}
+			SelectFavList();
 			// Mouse scrolling
 			dataGridAllTanks.MouseWheel += new MouseEventHandler(dataGridAllTanks_MouseWheel);
 			dataGridSelectedTanks.MouseWheel += new MouseEventHandler(dataGridSelTanks_MouseWheel);

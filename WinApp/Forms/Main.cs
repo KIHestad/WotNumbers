@@ -1330,7 +1330,7 @@ namespace WinApp.Forms
 		private void toolItemTankFilter_EditFavList_Click(object sender, EventArgs e)
 		{
 			// Show fal list editor
-			Form frm = new Forms.FavList(MainSettings.GetCurrentGridFilter().FavListId);
+			Form frm = new Forms.FavList();
 			frm.ShowDialog();
 			// After fav list changes reload menu
 			SetFavListMenu(); // Reload fav list items
