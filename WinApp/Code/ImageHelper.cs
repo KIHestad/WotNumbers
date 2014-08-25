@@ -87,8 +87,18 @@ namespace WinApp.Code
 			
 		}
 
+		public enum TankImageType
+		{
+			ContourImage = 0,
+			SmallImage = 1,
+			LargeImage = 2
+		}
+
 		public static Image GetTankImage(int tankId, string imageCol)
 		{
+			// contourimg
+			// smallimg
+			// img
 			DataRow[] dr = TankImage.Select("id = " + tankId.ToString());
 			if (dr.Length > 0)
 				return (Image)dr[0][imageCol];
@@ -99,6 +109,33 @@ namespace WinApp.Code
 			}
 				
 		}
+
+		public static Image GetTankImage(int tankId, TankImageType tankImageType)
+		{
+			string imageCol = "";
+			switch (tankImageType)
+			{
+				case TankImageType.ContourImage:
+					imageCol = "contourimg";
+					break;
+				case TankImageType.SmallImage:
+					imageCol = "smallimg";
+					break;
+				case TankImageType.LargeImage:
+					imageCol = "img";
+					break;
+			}
+			DataRow[] dr = TankImage.Select("id = " + tankId.ToString());
+			if (dr.Length > 0)
+				return (Image)dr[0][imageCol];
+			else
+			{
+				Bitmap img = new Bitmap(1, 1);
+				return img;
+			}
+
+		}
+
 
 	}
 }

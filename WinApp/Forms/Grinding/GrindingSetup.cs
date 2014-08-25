@@ -35,7 +35,7 @@ namespace WinApp.Forms
 		{
 			_init = true;
 			txtGrindComment.Focus();
-			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment  " +
+			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, tank.id as tankId " +
 						 "FROM    tank INNER JOIN " +
 						 "        playerTank ON tank.id = playerTank.tankId " +
 						 "WHERE  (playerTank.id = @playerTankId) ";
@@ -51,6 +51,8 @@ namespace WinApp.Forms
 				txtGrindXP.Text = tank["gGrindXP"].ToString();
 				txtProgressXP.Text = tank["gProgressXP"].ToString();
 				txtBattlesPerDay.Text = tank["gBattlesDay"].ToString();
+				int tankId = Convert.ToInt32(tank["tankId"]);
+				tankPic.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
 			}
 			sql = "SELECT    SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
 					"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +

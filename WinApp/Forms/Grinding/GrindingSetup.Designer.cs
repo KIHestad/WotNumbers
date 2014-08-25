@@ -31,11 +31,11 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GrindingSetup));
 			this.GrindingSetupTheme = new BadForm();
+			this.txtRealAvgXP = new System.Windows.Forms.Label();
 			this.pbProgressPercent = new BadProgressBar();
 			this.btnClose = new BadButton();
 			this.txtProgressXP = new BadTextBox();
 			this.txtRestXP = new BadTextBox();
-			this.txtRealAvgXP = new BadTextBox();
 			this.badLabel20 = new BadLabel();
 			this.txtWinRate = new BadTextBox();
 			this.badLabel16 = new BadLabel();
@@ -64,21 +64,23 @@
 			this.badLabel3 = new BadLabel();
 			this.badLabel2 = new BadLabel();
 			this.badLabel1 = new BadLabel();
-			this.badGroupBox1 = new BadGroupBox();
 			this.btnRevert = new BadButton();
 			this.btnSave = new BadButton();
 			this.gbGrindingSetup = new BadGroupBox();
 			this.badGroupBox4 = new BadGroupBox();
+			this.tankPic = new System.Windows.Forms.PictureBox();
+			this.badGroupBox1 = new BadGroupBox();
 			this.GrindingSetupTheme.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tankPic)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// GrindingSetupTheme
 			// 
+			this.GrindingSetupTheme.Controls.Add(this.txtRealAvgXP);
 			this.GrindingSetupTheme.Controls.Add(this.pbProgressPercent);
 			this.GrindingSetupTheme.Controls.Add(this.btnClose);
 			this.GrindingSetupTheme.Controls.Add(this.txtProgressXP);
 			this.GrindingSetupTheme.Controls.Add(this.txtRestXP);
-			this.GrindingSetupTheme.Controls.Add(this.txtRealAvgXP);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel20);
 			this.GrindingSetupTheme.Controls.Add(this.txtWinRate);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel16);
@@ -107,11 +109,12 @@
 			this.GrindingSetupTheme.Controls.Add(this.badLabel3);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel2);
 			this.GrindingSetupTheme.Controls.Add(this.badLabel1);
-			this.GrindingSetupTheme.Controls.Add(this.badGroupBox1);
 			this.GrindingSetupTheme.Controls.Add(this.btnRevert);
 			this.GrindingSetupTheme.Controls.Add(this.btnSave);
 			this.GrindingSetupTheme.Controls.Add(this.gbGrindingSetup);
 			this.GrindingSetupTheme.Controls.Add(this.badGroupBox4);
+			this.GrindingSetupTheme.Controls.Add(this.tankPic);
+			this.GrindingSetupTheme.Controls.Add(this.badGroupBox1);
 			this.GrindingSetupTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GrindingSetupTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.GrindingSetupTheme.FormFooter = false;
@@ -123,7 +126,7 @@
 			this.GrindingSetupTheme.MainArea = mainAreaClass1;
 			this.GrindingSetupTheme.Name = "GrindingSetupTheme";
 			this.GrindingSetupTheme.Resizable = false;
-			this.GrindingSetupTheme.Size = new System.Drawing.Size(605, 400);
+			this.GrindingSetupTheme.Size = new System.Drawing.Size(605, 395);
 			this.GrindingSetupTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("GrindingSetupTheme.SystemExitImage")));
 			this.GrindingSetupTheme.SystemMaximizeImage = null;
 			this.GrindingSetupTheme.SystemMinimizeImage = null;
@@ -131,11 +134,22 @@
 			this.GrindingSetupTheme.Text = "Tank Grinding Setup";
 			this.GrindingSetupTheme.TitleHeight = 26;
 			// 
+			// txtRealAvgXP
+			// 
+			this.txtRealAvgXP.AutoSize = true;
+			this.txtRealAvgXP.BackColor = System.Drawing.Color.Transparent;
+			this.txtRealAvgXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.txtRealAvgXP.Location = new System.Drawing.Point(390, 86);
+			this.txtRealAvgXP.Name = "txtRealAvgXP";
+			this.txtRealAvgXP.Size = new System.Drawing.Size(35, 13);
+			this.txtRealAvgXP.TabIndex = 44;
+			this.txtRealAvgXP.Text = "label1";
+			// 
 			// pbProgressPercent
 			// 
 			this.pbProgressPercent.BackColor = System.Drawing.Color.Transparent;
 			this.pbProgressPercent.Image = null;
-			this.pbProgressPercent.Location = new System.Drawing.Point(407, 294);
+			this.pbProgressPercent.Location = new System.Drawing.Point(407, 287);
 			this.pbProgressPercent.Name = "pbProgressPercent";
 			this.pbProgressPercent.ProgressBarColorMode = true;
 			this.pbProgressPercent.ProgressBarMargins = 2;
@@ -150,7 +164,7 @@
 			// btnClose
 			// 
 			this.btnClose.Image = null;
-			this.btnClose.Location = new System.Drawing.Point(506, 355);
+			this.btnClose.Location = new System.Drawing.Point(506, 348);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(75, 23);
 			this.btnClose.TabIndex = 42;
@@ -161,7 +175,7 @@
 			// 
 			this.txtProgressXP.HasFocus = false;
 			this.txtProgressXP.Image = null;
-			this.txtProgressXP.Location = new System.Drawing.Point(141, 266);
+			this.txtProgressXP.Location = new System.Drawing.Point(141, 259);
 			this.txtProgressXP.MultilineAllow = false;
 			this.txtProgressXP.Name = "txtProgressXP";
 			this.txtProgressXP.PasswordChar = '\0';
@@ -178,7 +192,7 @@
 			this.txtRestXP.Enabled = false;
 			this.txtRestXP.HasFocus = false;
 			this.txtRestXP.Image = null;
-			this.txtRestXP.Location = new System.Drawing.Point(141, 294);
+			this.txtRestXP.Location = new System.Drawing.Point(141, 287);
 			this.txtRestXP.MultilineAllow = false;
 			this.txtRestXP.Name = "txtRestXP";
 			this.txtRestXP.PasswordChar = '\0';
@@ -188,40 +202,26 @@
 			this.txtRestXP.Text = "0";
 			this.txtRestXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
-			// txtRealAvgXP
-			// 
-			this.txtRealAvgXP.Enabled = false;
-			this.txtRealAvgXP.HasFocus = false;
-			this.txtRealAvgXP.Image = null;
-			this.txtRealAvgXP.Location = new System.Drawing.Point(506, 69);
-			this.txtRealAvgXP.MultilineAllow = false;
-			this.txtRealAvgXP.Name = "txtRealAvgXP";
-			this.txtRealAvgXP.PasswordChar = '\0';
-			this.txtRealAvgXP.Size = new System.Drawing.Size(54, 23);
-			this.txtRealAvgXP.TabIndex = 7;
-			this.txtRealAvgXP.TabStop = false;
-			this.txtRealAvgXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			// 
 			// badLabel20
 			// 
-			this.badLabel20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel20.BackColor = System.Drawing.Color.Transparent;
 			this.badLabel20.Dimmed = false;
 			this.badLabel20.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel20.Image = null;
-			this.badLabel20.Location = new System.Drawing.Point(390, 69);
+			this.badLabel20.Location = new System.Drawing.Point(390, 62);
 			this.badLabel20.Name = "badLabel20";
-			this.badLabel20.Size = new System.Drawing.Size(110, 23);
+			this.badLabel20.Size = new System.Drawing.Size(88, 23);
 			this.badLabel20.TabIndex = 6;
 			this.badLabel20.TabStop = false;
-			this.badLabel20.Text = "Calc real XP per btl:";
+			this.badLabel20.Text = "Calc XP per btl:";
 			// 
 			// txtWinRate
 			// 
 			this.txtWinRate.Enabled = false;
 			this.txtWinRate.HasFocus = false;
 			this.txtWinRate.Image = null;
-			this.txtWinRate.Location = new System.Drawing.Point(312, 127);
+			this.txtWinRate.Location = new System.Drawing.Point(312, 123);
 			this.txtWinRate.MultilineAllow = false;
 			this.txtWinRate.Name = "txtWinRate";
 			this.txtWinRate.PasswordChar = '\0';
@@ -237,7 +237,7 @@
 			this.badLabel16.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel16.Image = null;
-			this.badLabel16.Location = new System.Drawing.Point(238, 127);
+			this.badLabel16.Location = new System.Drawing.Point(238, 123);
 			this.badLabel16.Name = "badLabel16";
 			this.badLabel16.Size = new System.Drawing.Size(64, 23);
 			this.badLabel16.TabIndex = 14;
@@ -249,7 +249,7 @@
 			this.txtWins.Enabled = false;
 			this.txtWins.HasFocus = false;
 			this.txtWins.Image = null;
-			this.txtWins.Location = new System.Drawing.Point(312, 98);
+			this.txtWins.Location = new System.Drawing.Point(312, 94);
 			this.txtWins.MultilineAllow = false;
 			this.txtWins.Name = "txtWins";
 			this.txtWins.PasswordChar = '\0';
@@ -263,7 +263,7 @@
 			this.txtBattles.Enabled = false;
 			this.txtBattles.HasFocus = false;
 			this.txtBattles.Image = null;
-			this.txtBattles.Location = new System.Drawing.Point(312, 69);
+			this.txtBattles.Location = new System.Drawing.Point(312, 65);
 			this.txtBattles.MultilineAllow = false;
 			this.txtBattles.Name = "txtBattles";
 			this.txtBattles.PasswordChar = '\0';
@@ -279,7 +279,7 @@
 			this.badLabel17.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel17.Image = null;
-			this.badLabel17.Location = new System.Drawing.Point(238, 98);
+			this.badLabel17.Location = new System.Drawing.Point(238, 94);
 			this.badLabel17.Name = "badLabel17";
 			this.badLabel17.Size = new System.Drawing.Size(64, 23);
 			this.badLabel17.TabIndex = 10;
@@ -293,7 +293,7 @@
 			this.badLabel18.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel18.Image = null;
-			this.badLabel18.Location = new System.Drawing.Point(238, 69);
+			this.badLabel18.Location = new System.Drawing.Point(238, 65);
 			this.badLabel18.Name = "badLabel18";
 			this.badLabel18.Size = new System.Drawing.Size(76, 23);
 			this.badLabel18.TabIndex = 4;
@@ -303,7 +303,7 @@
 			// btnAddDay
 			// 
 			this.btnAddDay.Image = null;
-			this.btnAddDay.Location = new System.Drawing.Point(544, 209);
+			this.btnAddDay.Location = new System.Drawing.Point(544, 202);
 			this.btnAddDay.Name = "btnAddDay";
 			this.btnAddDay.Size = new System.Drawing.Size(18, 23);
 			this.btnAddDay.TabIndex = 31;
@@ -313,7 +313,7 @@
 			// btnSubtrDay
 			// 
 			this.btnSubtrDay.Image = null;
-			this.btnSubtrDay.Location = new System.Drawing.Point(524, 209);
+			this.btnSubtrDay.Location = new System.Drawing.Point(524, 202);
 			this.btnSubtrDay.Name = "btnSubtrDay";
 			this.btnSubtrDay.Size = new System.Drawing.Size(18, 23);
 			this.btnSubtrDay.TabIndex = 30;
@@ -325,7 +325,7 @@
 			this.txtRestDays.Enabled = false;
 			this.txtRestDays.HasFocus = false;
 			this.txtRestDays.Image = null;
-			this.txtRestDays.Location = new System.Drawing.Point(492, 266);
+			this.txtRestDays.Location = new System.Drawing.Point(492, 259);
 			this.txtRestDays.MultilineAllow = false;
 			this.txtRestDays.Name = "txtRestDays";
 			this.txtRestDays.PasswordChar = '\0';
@@ -342,7 +342,7 @@
 			this.badLabel15.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel15.Image = null;
-			this.badLabel15.Location = new System.Drawing.Point(407, 266);
+			this.badLabel15.Location = new System.Drawing.Point(407, 259);
 			this.badLabel15.Name = "badLabel15";
 			this.badLabel15.Size = new System.Drawing.Size(71, 23);
 			this.badLabel15.TabIndex = 34;
@@ -354,7 +354,7 @@
 			this.txtRestBattles.Enabled = false;
 			this.txtRestBattles.HasFocus = false;
 			this.txtRestBattles.Image = null;
-			this.txtRestBattles.Location = new System.Drawing.Point(492, 238);
+			this.txtRestBattles.Location = new System.Drawing.Point(492, 231);
 			this.txtRestBattles.MultilineAllow = false;
 			this.txtRestBattles.Name = "txtRestBattles";
 			this.txtRestBattles.PasswordChar = '\0';
@@ -371,7 +371,7 @@
 			this.badLabel11.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel11.Image = null;
-			this.badLabel11.Location = new System.Drawing.Point(407, 238);
+			this.badLabel11.Location = new System.Drawing.Point(407, 231);
 			this.badLabel11.Name = "badLabel11";
 			this.badLabel11.Size = new System.Drawing.Size(71, 23);
 			this.badLabel11.TabIndex = 32;
@@ -382,7 +382,7 @@
 			// 
 			this.txtBattlesPerDay.HasFocus = false;
 			this.txtBattlesPerDay.Image = null;
-			this.txtBattlesPerDay.Location = new System.Drawing.Point(492, 209);
+			this.txtBattlesPerDay.Location = new System.Drawing.Point(492, 202);
 			this.txtBattlesPerDay.MultilineAllow = false;
 			this.txtBattlesPerDay.Name = "txtBattlesPerDay";
 			this.txtBattlesPerDay.PasswordChar = '\0';
@@ -400,7 +400,7 @@
 			this.badLabel14.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel14.Image = null;
-			this.badLabel14.Location = new System.Drawing.Point(407, 209);
+			this.badLabel14.Location = new System.Drawing.Point(407, 202);
 			this.badLabel14.Name = "badLabel14";
 			this.badLabel14.Size = new System.Drawing.Size(84, 23);
 			this.badLabel14.TabIndex = 28;
@@ -414,7 +414,7 @@
 			this.badLabel12.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel12.Image = null;
-			this.badLabel12.Location = new System.Drawing.Point(44, 295);
+			this.badLabel12.Location = new System.Drawing.Point(44, 288);
 			this.badLabel12.Name = "badLabel12";
 			this.badLabel12.Size = new System.Drawing.Size(91, 23);
 			this.badLabel12.TabIndex = 25;
@@ -428,7 +428,7 @@
 			this.badLabel10.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel10.Image = null;
-			this.badLabel10.Location = new System.Drawing.Point(44, 266);
+			this.badLabel10.Location = new System.Drawing.Point(44, 259);
 			this.badLabel10.Name = "badLabel10";
 			this.badLabel10.Size = new System.Drawing.Size(71, 23);
 			this.badLabel10.TabIndex = 23;
@@ -438,7 +438,7 @@
 			// btnGrindReset
 			// 
 			this.btnGrindReset.Image = null;
-			this.btnGrindReset.Location = new System.Drawing.Point(283, 294);
+			this.btnGrindReset.Location = new System.Drawing.Point(283, 287);
 			this.btnGrindReset.Name = "btnGrindReset";
 			this.btnGrindReset.Size = new System.Drawing.Size(75, 23);
 			this.btnGrindReset.TabIndex = 27;
@@ -449,7 +449,7 @@
 			// 
 			this.txtGrindXP.HasFocus = false;
 			this.txtGrindXP.Image = null;
-			this.txtGrindXP.Location = new System.Drawing.Point(141, 238);
+			this.txtGrindXP.Location = new System.Drawing.Point(141, 231);
 			this.txtGrindXP.MultilineAllow = false;
 			this.txtGrindXP.Name = "txtGrindXP";
 			this.txtGrindXP.PasswordChar = '\0';
@@ -464,7 +464,7 @@
 			// 
 			this.txtGrindComment.HasFocus = false;
 			this.txtGrindComment.Image = null;
-			this.txtGrindComment.Location = new System.Drawing.Point(141, 209);
+			this.txtGrindComment.Location = new System.Drawing.Point(141, 202);
 			this.txtGrindComment.MultilineAllow = false;
 			this.txtGrindComment.Name = "txtGrindComment";
 			this.txtGrindComment.PasswordChar = '\0';
@@ -480,7 +480,7 @@
 			this.lblGrindXP.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblGrindXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblGrindXP.Image = null;
-			this.lblGrindXP.Location = new System.Drawing.Point(44, 238);
+			this.lblGrindXP.Location = new System.Drawing.Point(44, 231);
 			this.lblGrindXP.Name = "lblGrindXP";
 			this.lblGrindXP.Size = new System.Drawing.Size(75, 23);
 			this.lblGrindXP.TabIndex = 21;
@@ -494,7 +494,7 @@
 			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(44, 209);
+			this.badLabel4.Location = new System.Drawing.Point(44, 202);
 			this.badLabel4.Name = "badLabel4";
 			this.badLabel4.Size = new System.Drawing.Size(75, 23);
 			this.badLabel4.TabIndex = 19;
@@ -506,7 +506,7 @@
 			this.txtTotalXP.Enabled = false;
 			this.txtTotalXP.HasFocus = false;
 			this.txtTotalXP.Image = null;
-			this.txtTotalXP.Location = new System.Drawing.Point(141, 127);
+			this.txtTotalXP.Location = new System.Drawing.Point(141, 123);
 			this.txtTotalXP.MultilineAllow = false;
 			this.txtTotalXP.Name = "txtTotalXP";
 			this.txtTotalXP.PasswordChar = '\0';
@@ -520,7 +520,7 @@
 			this.txtMaxXp.Enabled = false;
 			this.txtMaxXp.HasFocus = false;
 			this.txtMaxXp.Image = null;
-			this.txtMaxXp.Location = new System.Drawing.Point(141, 98);
+			this.txtMaxXp.Location = new System.Drawing.Point(141, 94);
 			this.txtMaxXp.MultilineAllow = false;
 			this.txtMaxXp.Name = "txtMaxXp";
 			this.txtMaxXp.PasswordChar = '\0';
@@ -534,7 +534,7 @@
 			this.txtAvgXP.Enabled = false;
 			this.txtAvgXP.HasFocus = false;
 			this.txtAvgXP.Image = null;
-			this.txtAvgXP.Location = new System.Drawing.Point(141, 69);
+			this.txtAvgXP.Location = new System.Drawing.Point(141, 65);
 			this.txtAvgXP.MultilineAllow = false;
 			this.txtAvgXP.Name = "txtAvgXP";
 			this.txtAvgXP.PasswordChar = '\0';
@@ -550,7 +550,7 @@
 			this.badLabel3.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(44, 127);
+			this.badLabel3.Location = new System.Drawing.Point(44, 123);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(100, 23);
 			this.badLabel3.TabIndex = 12;
@@ -564,7 +564,7 @@
 			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(44, 98);
+			this.badLabel2.Location = new System.Drawing.Point(44, 94);
 			this.badLabel2.Name = "badLabel2";
 			this.badLabel2.Size = new System.Drawing.Size(100, 23);
 			this.badLabel2.TabIndex = 8;
@@ -578,28 +578,17 @@
 			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(44, 69);
+			this.badLabel1.Location = new System.Drawing.Point(44, 65);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(100, 23);
 			this.badLabel1.TabIndex = 2;
 			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Avg XP per battle:";
 			// 
-			// badGroupBox1
-			// 
-			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(26, 47);
-			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(555, 119);
-			this.badGroupBox1.TabIndex = 1;
-			this.badGroupBox1.TabStop = false;
-			this.badGroupBox1.Text = "Tank Statistics";
-			// 
 			// btnRevert
 			// 
 			this.btnRevert.Image = null;
-			this.btnRevert.Location = new System.Drawing.Point(425, 355);
+			this.btnRevert.Location = new System.Drawing.Point(425, 348);
 			this.btnRevert.Name = "btnRevert";
 			this.btnRevert.Size = new System.Drawing.Size(75, 23);
 			this.btnRevert.TabIndex = 41;
@@ -609,7 +598,7 @@
 			// btnSave
 			// 
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(344, 355);
+			this.btnSave.Location = new System.Drawing.Point(344, 348);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 40;
@@ -620,7 +609,7 @@
 			// 
 			this.gbGrindingSetup.BackColor = System.Drawing.Color.Transparent;
 			this.gbGrindingSetup.Image = null;
-			this.gbGrindingSetup.Location = new System.Drawing.Point(26, 180);
+			this.gbGrindingSetup.Location = new System.Drawing.Point(26, 173);
 			this.gbGrindingSetup.Name = "gbGrindingSetup";
 			this.gbGrindingSetup.Size = new System.Drawing.Size(349, 156);
 			this.gbGrindingSetup.TabIndex = 18;
@@ -631,18 +620,38 @@
 			// 
 			this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox4.Image = null;
-			this.badGroupBox4.Location = new System.Drawing.Point(390, 180);
+			this.badGroupBox4.Location = new System.Drawing.Point(390, 173);
 			this.badGroupBox4.Name = "badGroupBox4";
 			this.badGroupBox4.Size = new System.Drawing.Size(191, 156);
 			this.badGroupBox4.TabIndex = 37;
 			this.badGroupBox4.TabStop = false;
 			this.badGroupBox4.Text = "Grinding Progress";
 			// 
+			// tankPic
+			// 
+			this.tankPic.BackColor = System.Drawing.Color.Transparent;
+			this.tankPic.Location = new System.Drawing.Point(420, 55);
+			this.tankPic.Name = "tankPic";
+			this.tankPic.Size = new System.Drawing.Size(160, 100);
+			this.tankPic.TabIndex = 43;
+			this.tankPic.TabStop = false;
+			// 
+			// badGroupBox1
+			// 
+			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox1.Image = null;
+			this.badGroupBox1.Location = new System.Drawing.Point(26, 47);
+			this.badGroupBox1.Name = "badGroupBox1";
+			this.badGroupBox1.Size = new System.Drawing.Size(555, 109);
+			this.badGroupBox1.TabIndex = 1;
+			this.badGroupBox1.TabStop = false;
+			this.badGroupBox1.Text = "Tank Statistics";
+			// 
 			// GrindingSetup
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(605, 400);
+			this.ClientSize = new System.Drawing.Size(605, 395);
 			this.Controls.Add(this.GrindingSetupTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "GrindingSetup";
@@ -653,6 +662,8 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GrindingSetup_FormClosing);
 			this.Load += new System.EventHandler(this.GrindingSetup_Load);
 			this.GrindingSetupTheme.ResumeLayout(false);
+			this.GrindingSetupTheme.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.tankPic)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -694,9 +705,10 @@
 		private BadLabel badLabel18;
 		private BadTextBox txtWinRate;
 		private BadLabel badLabel16;
-		private BadTextBox txtRealAvgXP;
 		private BadLabel badLabel20;
 		private BadButton btnClose;
 		private BadProgressBar pbProgressPercent;
+		private System.Windows.Forms.PictureBox tankPic;
+		private System.Windows.Forms.Label txtRealAvgXP;
 	}
 }
