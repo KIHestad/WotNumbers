@@ -13,6 +13,10 @@ namespace WinApp.Gadget
 	public partial class ucGaugeWinRate : UserControl
 	{
 		string _battleMode = "";
+		double gaugeVal = 18;
+		double gaugeSpeed = 1;
+		double wr = 0;
+
 		public ucGaugeWinRate(string battleMode = "")
 		{
 			InitializeComponent();
@@ -47,8 +51,7 @@ namespace WinApp.Gadget
 					// wins
 					wins = (float)Convert.ToDouble(dr["wins"]);
 					// Show in gauge
-					double wr = wins / battles * 100;
-					aGauge1.Value = (float)Math.Min(Math.Max(wr,18),82);
+					wr = wins / battles * 100;
 					// Show in center text
 					aGauge1.CenterText = Math.Round(wins / battles * 100, 2).ToString() + " %";
 					aGauge1.CenterTextColor = Rating.WinRateColor(wr);
@@ -62,9 +65,22 @@ namespace WinApp.Gadget
 						case "Skirmishes" : capText = "Skirmishes"; break;
 					}
 					aGauge1.CenterSubText = capText;
+					timer1.Enabled = true;
 				}
 			}
 			
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			gaugeVal += gaugeSpeed;
+			if (gaugeVal > wr)
+			{
+				gaugeVal = wr;
+				timer1.Enabled = false;
+			}
+			gaugeSpeed = (18 / gaugeVal);
+			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 18), 82);
 		}
 	}
 }

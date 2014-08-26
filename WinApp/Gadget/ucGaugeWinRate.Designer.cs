@@ -28,8 +28,15 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.aGauge1 = new AGaugeApp.AGauge();
 			this.SuspendLayout();
+			// 
+			// timer1
+			// 
+			this.timer1.Interval = 10;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
 			// aGauge1
 			// 
@@ -136,7 +143,7 @@
 			this.aGauge1.Size = new System.Drawing.Size(190, 140);
 			this.aGauge1.TabIndex = 0;
 			this.aGauge1.Text = "aGauge1";
-			this.aGauge1.Value = 82F;
+			this.aGauge1.Value = 20F;
 			this.aGauge1.ValueMax = 80F;
 			this.aGauge1.ValueMin = 20F;
 			this.aGauge1.ValueScaleLinesMajorStepValue = 5F;
@@ -159,6 +166,7 @@
 		#endregion
 
 		private AGaugeApp.AGauge aGauge1;
+		private System.Windows.Forms.Timer timer1;
 
 
 
