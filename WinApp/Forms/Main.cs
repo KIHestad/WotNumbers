@@ -1573,18 +1573,18 @@ namespace WinApp.Forms
 
 			// Show TotalTanks
 			uc = new Gadget.ucTotalTanks();
-			uc.Top = 0;
-			uc.Left = 0;
+			uc.Top = 175;
+			uc.Left = 50;
 			panelMainArea.Controls.Add(uc);
 
 			// Show BattleTypes
 			uc = new Gadget.ucBattleTypes();
-			uc.Top = 0;
-			uc.Left = 425;
+			uc.Top = 175;
+			uc.Left = 525;
 			panelMainArea.Controls.Add(uc);
 
 			int xPos = 0;
-			int yPos = 125;
+			int yPos = 0;
 			// Show Win rate gauges
 			uc = new Gadget.ucGaugeWinRate("15");
 			uc.Top = yPos;
@@ -1629,7 +1629,7 @@ namespace WinApp.Forms
 			int rowCount = 0;
 			for (int row = 0; row < 2; row++)
 			{
-				for (int col = 0; col < 5; col++)
+				for (int col = 0; col < 6; col++)
 				{
 					// get a tank to show
 					UserControl imageControl;

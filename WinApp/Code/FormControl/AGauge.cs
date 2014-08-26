@@ -243,7 +243,7 @@ namespace AGaugeApp
 			{
 				if (m_value != value)
 				{
-					m_value = Math.Min(Math.Max(value, m_MinValue), m_MaxValue);
+					m_value = Math.Min(Math.Max(value, m_MinValue - 2), m_MaxValue + 2); // Able to go a bit outside scale
 
 					if (this.DesignMode)
 					{
@@ -831,7 +831,7 @@ namespace AGaugeApp
 			{
 				if ((m_ScaleLinesMajorStepValue != value) && (value > 0))
 				{
-					m_ScaleLinesMajorStepValue = Math.Max(Math.Min(value, m_MaxValue), m_MinValue);
+					m_ScaleLinesMajorStepValue = value;
 					drawGaugeBackground = true;
 					Refresh();
 				}

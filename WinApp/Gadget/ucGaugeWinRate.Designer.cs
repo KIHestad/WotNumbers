@@ -59,7 +59,8 @@
         "",
         ""};
 			this.aGauge1.CapText = "";
-			this.aGauge1.Center = new System.Drawing.Point(128, 90);
+			this.aGauge1.Center = new System.Drawing.Point(95, 90);
+			this.aGauge1.CenterSubText = "";
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
@@ -132,13 +133,13 @@
 			this.aGauge1.ScaleNumbersRotation = 0;
 			this.aGauge1.ScaleNumbersStartScaleLine = 0;
 			this.aGauge1.ScaleNumbersStepScaleLines = 1;
-			this.aGauge1.Size = new System.Drawing.Size(245, 140);
+			this.aGauge1.Size = new System.Drawing.Size(190, 140);
 			this.aGauge1.TabIndex = 0;
 			this.aGauge1.Text = "aGauge1";
-			this.aGauge1.Value = 0F;
-			this.aGauge1.ValueMax = 100F;
-			this.aGauge1.ValueMin = 0F;
-			this.aGauge1.ValueScaleLinesMajorStepValue = 10F;
+			this.aGauge1.Value = 82F;
+			this.aGauge1.ValueMax = 80F;
+			this.aGauge1.ValueMin = 20F;
+			this.aGauge1.ValueScaleLinesMajorStepValue = 5F;
 			this.aGauge1.ValueScaleLinesMinorNumOf = 9;
 			// 
 			// ucGaugeWinRate
@@ -149,7 +150,7 @@
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "ucGaugeWinRate";
-			this.Size = new System.Drawing.Size(255, 150);
+			this.Size = new System.Drawing.Size(200, 150);
 			this.Load += new System.EventHandler(this.ucGaugeWinRate_Load);
 			this.ResumeLayout(false);
 

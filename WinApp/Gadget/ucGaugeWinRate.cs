@@ -48,7 +48,7 @@ namespace WinApp.Gadget
 					wins = (float)Convert.ToDouble(dr["wins"]);
 					// Show in gauge
 					double wr = wins / battles * 100;
-					aGauge1.Value = (float)wr;
+					aGauge1.Value = (float)Math.Min(Math.Max(wr,18),82);
 					// Show in center text
 					aGauge1.CenterText = Math.Round(wins / battles * 100, 2).ToString() + " %";
 					aGauge1.CenterTextColor = Rating.WinRateColor(wr);
