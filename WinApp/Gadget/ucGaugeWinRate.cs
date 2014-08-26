@@ -47,9 +47,11 @@ namespace WinApp.Gadget
 					// wins
 					wins = (float)Convert.ToDouble(dr["wins"]);
 					// Show in gauge
-					aGauge1.Value = wins / battles * 100;
+					double wr = wins / battles * 100;
+					aGauge1.Value = (float)wr;
 					// Show in center text
 					aGauge1.CenterText = Math.Round(wins / battles * 100, 2).ToString() + " %";
+					aGauge1.CenterTextColor = Rating.WinRateColor(wr);
 					// Show battle mode
 					string capText = "All Battle Modes";
 					switch (_battleMode)
