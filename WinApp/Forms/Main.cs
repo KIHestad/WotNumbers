@@ -1583,6 +1583,39 @@ namespace WinApp.Forms
 			uc.Left = 425;
 			panelMainArea.Controls.Add(uc);
 
+			int xPos = 0;
+			int yPos = 125;
+			// Show Win rate gauges
+			uc = new Gadget.ucGaugeWinRate("15");
+			uc.Top = yPos;
+			uc.Left = xPos;
+			xPos += uc.Width;
+			panelMainArea.Controls.Add(uc);
+			// Show Win rate gauges
+			uc = new Gadget.ucGaugeWinRate("7");
+			uc.Top = yPos;
+			uc.Left = xPos;
+			xPos += uc.Width;
+			panelMainArea.Controls.Add(uc);
+			// Show Win rate gauges
+			uc = new Gadget.ucGaugeWinRate("Historical");
+			uc.Top = yPos;
+			uc.Left = xPos;
+			xPos += uc.Width;
+			panelMainArea.Controls.Add(uc);
+			// Show Win rate gauges
+			uc = new Gadget.ucGaugeWinRate("Skirmishes");
+			uc.Top = yPos;
+			uc.Left = xPos;
+			xPos += uc.Width;
+			panelMainArea.Controls.Add(uc);
+			// Show Win rate gauges
+			uc = new Gadget.ucGaugeWinRate("");
+			uc.Top = yPos;
+			uc.Left = xPos;
+			panelMainArea.Controls.Add(uc);
+
+
 			// Get all tanks and show in imageGadget
 			string sql = 
 				"select pt.tankId, b.battleTime, br.name, br.color "+
@@ -1594,7 +1627,7 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable battle = DB.FetchData(sql);
 			int rowCount = 0;
-			for (int row = 0; row < 3; row++)
+			for (int row = 0; row < 2; row++)
 			{
 				for (int col = 0; col < 5; col++)
 				{
@@ -1614,7 +1647,7 @@ namespace WinApp.Forms
 						imageControl = new Gadget.ucImage(tankImage, battleTime, result, resultColor);
 						rowCount++;
 					}
-					imageControl.Top = 110 * row + 150;
+					imageControl.Top = 110 * row + 300;
 					imageControl.Left = 170 * col ;
 					panelMainArea.Controls.Add(imageControl);
 				}

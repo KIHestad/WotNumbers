@@ -135,6 +135,12 @@
     <Compile Include="Code\CheckForNewVersion.cs" />
     <Compile Include="Code\DateTimeHelper.cs" />
     <Compile Include="Code\ExtensionMethods.cs" />
+    <Compile Include="Code\FormControl\AGauge.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Code\FormControl\Agauge.Designer.cs">
+      <DependentUpon>AGauge.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
@@ -315,6 +321,12 @@
     <Compile Include="Gadget\ucBattleTypes.Designer.cs">
       <DependentUpon>ucBattleTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugeWinRate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeWinRate.Designer.cs">
+      <DependentUpon>ucGaugeWinRate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -406,6 +418,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucBattleTypes.resx">
       <DependentUpon>ucBattleTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeWinRate.resx">
+      <DependentUpon>ucGaugeWinRate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucImage.resx">
       <DependentUpon>ucImage.cs</DependentUpon>
