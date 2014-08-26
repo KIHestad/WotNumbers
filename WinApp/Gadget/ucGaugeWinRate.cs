@@ -79,7 +79,7 @@ namespace WinApp.Gadget
 				gaugeVal = wr;
 				timer1.Enabled = false;
 			}
-			gaugeSpeed = (18 / gaugeVal);
+			gaugeSpeed = (18 / gaugeVal) * 2;
 			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 18), 82);
 		}
 	}

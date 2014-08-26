@@ -1565,10 +1565,17 @@ namespace WinApp.Forms
 			ResizeNow();
 			UserControl uc;
 			// components = new System.ComponentModel.Container();
+			List<Control> controls = new List<Control>();
 			foreach (Control c in panelMainArea.Controls)
 			{
 				if (c.Name.Substring(0, 2) == "uc")
-					panelMainArea.Controls.Remove(c);
+				{
+					controls.Add(c);
+				}
+			}
+			foreach (Control c in controls)
+			{
+				panelMainArea.Controls.Remove(c);
 			}
 
 			// Show TotalTanks
