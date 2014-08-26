@@ -41,10 +41,6 @@ namespace WinApp.Forms
 			toolAllColumns.Renderer = new StripRenderer();
 			toolSelectedColumns.Renderer = new StripRenderer();
 			toolColList.Renderer = new StripRenderer();
-			// No tooltip
-			toolAllColumns.ShowItemToolTips = false;
-			toolSelectedColumns.ShowItemToolTips = false;
-			toolColList.ShowItemToolTips = false;
 			// Style datagrid
 			GridHelper.StyleDataGrid(dataGridColumnList);
 			GridHelper.StyleDataGrid(dataGridAllColumns);

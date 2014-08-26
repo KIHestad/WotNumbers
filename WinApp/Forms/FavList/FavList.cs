@@ -29,11 +29,8 @@ namespace WinApp.Forms
 			this.MaximumSize = screen.WorkingArea.Size;
 			// Style toolbar
 			toolAllTanks.Renderer = new StripRenderer();
-			toolAllTanks.ShowItemToolTips = false;
 			toolSelectedTanks.Renderer = new StripRenderer();
-			toolSelectedTanks.ShowItemToolTips = false;
 			toolColList.Renderer = new StripRenderer();
-			toolColList.ShowItemToolTips = false;
 
 			// Style datagrid
 			GridHelper.StyleDataGrid(dataGridFavList);
