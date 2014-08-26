@@ -70,7 +70,7 @@
 			this.aGauge1.CenterSubText = "";
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.aGauge1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.aGauge1.Location = new System.Drawing.Point(10, 10);
 			this.aGauge1.Name = "aGauge1";
