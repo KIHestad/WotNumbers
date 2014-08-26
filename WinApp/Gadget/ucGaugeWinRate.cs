@@ -15,6 +15,7 @@ namespace WinApp.Gadget
 		string _battleMode = "";
 		double gaugeVal = 18;
 		double gaugeSpeed = 1;
+        double x = 1.2; // base number used to reduce needle speed
 		double wr = 0;
 
 		public ucGaugeWinRate(string battleMode = "")
@@ -79,7 +80,14 @@ namespace WinApp.Gadget
 				gaugeVal = wr;
 				timer1.Enabled = false;
 			}
-			gaugeSpeed = (18 / gaugeVal) * 2;
+            if (gaugeVal > wr * 0.5)    // speed drops when needle reaches 50% of wr
+            {
+                gaugeSpeed = ((18 / gaugeVal) * 2) - (Math.Pow(x, 2) - 1);
+            }
+            else
+            {
+                gaugeSpeed = ((18 / gaugeVal) * 2);
+            }
 			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 18), 82);
 		}
 	}
