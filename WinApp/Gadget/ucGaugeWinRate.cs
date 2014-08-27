@@ -14,9 +14,6 @@ namespace WinApp.Gadget
 	public partial class ucGaugeWinRate : UserControl
 	{
 		string _battleMode = "";
-		double gaugeVal = 18;
-		double gaugeStep = 1;
-		double wr = 0;
 
 		public ucGaugeWinRate(string battleMode = "")
 		{
@@ -52,10 +49,10 @@ namespace WinApp.Gadget
 					// wins
 					wins = (float)Convert.ToDouble(dr["wins"]);
 					// Show in gauge
-					wr = wins / battles * 100;
+					end_val = wins / battles * 100; // end_val = Win Rate
 					// Show in center text
 					aGauge1.CenterText = Math.Round(wins / battles * 100, 2).ToString() + " %";
-					aGauge1.CenterTextColor = Rating.WinRateColor(wr);
+					aGauge1.CenterTextColor = Rating.WinRateColor(end_val);
 					// Show battle mode
 					string capText = "All Battle Modes";
 					switch (_battleMode)
@@ -66,24 +63,27 @@ namespace WinApp.Gadget
 						case "Skirmishes" : capText = "Skirmishes"; break;
 					}
 					aGauge1.CenterSubText = capText;
-					gaugeStep = (wr - aGauge1.ValueMin) / 50; // Define default "speed" = step per movement
+					// CALC NEEDLE MOVEMENT
+					// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
+					avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
 					timer1.Enabled = true;
 				}
 			}
-			
 		}
-		double gaugeStepCount = 0; 
+		
+		double avg_step_val = 0;
+		double end_val = 0;
+		double step_tot = 75;
+		double step_count = 0;
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			// Define progress as factor 0-1
-			gaugeStepCount += 2;
-			double gaugeProgress = 1 - (gaugeVal / (aGauge1.ValueMax - aGauge1.ValueMin));
-			double reducespeed = 1; 
-			gaugeVal = aGauge1.ValueMin + (gaugeStep * gaugeStepCount * reducespeed);  // * Math.Pow(gaugeStepCount, 2);
-			//Debug.WriteLine (gaugeVal);
-			if (gaugeVal > wr)
+			// AVG_STEP_VAL		(END_VAL-START_VAL)/STEP_TOT
+			//BASE FORMULA		START_VAL + (EXP(1-(STEP_COUNT/STEP_TOTAL)) * STEP_COUNT * AVG_STEP_VAL
+			step_count++;
+			double gaugeVal = aGauge1.ValueMin + (Math.Exp(1 - (step_count / step_tot)) * step_count * avg_step_val);
+			if (gaugeVal >= end_val)
 			{
-				gaugeVal = wr;
+				gaugeVal = end_val;
 				timer1.Enabled = false;
 			}
 			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 18), 82);
