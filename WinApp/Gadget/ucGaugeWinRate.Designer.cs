@@ -143,7 +143,7 @@
 			this.aGauge1.Size = new System.Drawing.Size(190, 140);
 			this.aGauge1.TabIndex = 0;
 			this.aGauge1.Text = "aGauge1";
-			this.aGauge1.Value = 20F;
+			this.aGauge1.Value = 18F;
 			this.aGauge1.ValueMax = 80F;
 			this.aGauge1.ValueMin = 20F;
 			this.aGauge1.ValueScaleLinesMajorStepValue = 5F;

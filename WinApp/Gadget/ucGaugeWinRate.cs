@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using System.Diagnostics;
 
 namespace WinApp.Gadget
 {
@@ -14,8 +15,7 @@ namespace WinApp.Gadget
 	{
 		string _battleMode = "";
 		double gaugeVal = 18;
-		double gaugeSpeed = 1;
-        double x = 1.2; // base number used to reduce needle speed
+		double gaugeStep = 1;
 		double wr = 0;
 
 		public ucGaugeWinRate(string battleMode = "")
@@ -66,28 +66,26 @@ namespace WinApp.Gadget
 						case "Skirmishes" : capText = "Skirmishes"; break;
 					}
 					aGauge1.CenterSubText = capText;
+					gaugeStep = (wr - aGauge1.ValueMin) / 50; // Define default "speed" = step per movement
 					timer1.Enabled = true;
 				}
 			}
 			
 		}
-
+		double gaugeStepCount = 0; 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			gaugeVal += gaugeSpeed;
+			// Define progress as factor 0-1
+			gaugeStepCount += 2;
+			double gaugeProgress = 1 - (gaugeVal / (aGauge1.ValueMax - aGauge1.ValueMin));
+			double reducespeed = 1; 
+			gaugeVal = aGauge1.ValueMin + (gaugeStep * gaugeStepCount * reducespeed);  // * Math.Pow(gaugeStepCount, 2);
+			//Debug.WriteLine (gaugeVal);
 			if (gaugeVal > wr)
 			{
 				gaugeVal = wr;
 				timer1.Enabled = false;
 			}
-            if (gaugeVal > wr * 0.5)    // speed drops when needle reaches 50% of wr
-            {
-                gaugeSpeed = ((18 / gaugeVal) * 2) - (Math.Pow(x, 2) - 1);
-            }
-            else
-            {
-                gaugeSpeed = ((18 / gaugeVal) * 2);
-            }
 			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 18), 82);
 		}
 	}
