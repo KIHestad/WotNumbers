@@ -315,6 +315,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugeWN8.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeWN8.Designer.cs">
+      <DependentUpon>ucGaugeWN8.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucBattleTypes.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -415,6 +421,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeWN8.resx">
+      <DependentUpon>ucGaugeWN8.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucBattleTypes.resx">
       <DependentUpon>ucBattleTypes.cs</DependentUpon>

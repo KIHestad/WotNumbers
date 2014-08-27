@@ -1605,12 +1605,6 @@ namespace WinApp.Forms
 			xPos += uc.Width;
 			panelMainArea.Controls.Add(uc);
 			// Show Win rate gauges
-			uc = new Gadget.ucGaugeWinRate("Historical");
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += uc.Width;
-			panelMainArea.Controls.Add(uc);
-			// Show Win rate gauges
 			uc = new Gadget.ucGaugeWinRate("Skirmishes");
 			uc.Top = yPos;
 			uc.Left = xPos;
@@ -1620,8 +1614,14 @@ namespace WinApp.Forms
 			uc = new Gadget.ucGaugeWinRate("");
 			uc.Top = yPos;
 			uc.Left = xPos;
+			xPos += uc.Width;
 			panelMainArea.Controls.Add(uc);
-
+			// Show WN8 rate 
+			uc = new Gadget.ucGaugeWN8();
+			uc.Top = yPos;
+			uc.Left = xPos;
+			panelMainArea.Controls.Add(uc);
+			
 
 			// Get all tanks and show in imageGadget
 			string sql = 

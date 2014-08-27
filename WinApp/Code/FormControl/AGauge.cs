@@ -1631,7 +1631,7 @@ namespace AGaugeApp
 				if (m_CenterSubText != "")
 				{
 					SizeF textSize = pe.Graphics.MeasureString(m_CenterSubText.Trim(), base.Font);
-					ggr.DrawString(m_CenterSubText.Trim(), base.Font, new SolidBrush(ColorTheme.ControlFont), m_Center.X - (textSize.Width / 2) + 4, m_Center.Y + 40, StringFormat.GenericTypographic);
+					ggr.DrawString(m_CenterSubText.Trim(), base.Font, new SolidBrush(ColorTheme.ControlFont), m_Center.X - (textSize.Width / 2) + 4, m_Center.Y + 38, StringFormat.GenericTypographic);
 				}
 
 			}
