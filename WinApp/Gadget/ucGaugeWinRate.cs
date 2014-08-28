@@ -23,6 +23,35 @@ namespace WinApp.Gadget
 
 		private void ucGaugeWinRate_Load(object sender, EventArgs e)
 		{
+			// Init Gauge
+			aGauge1.ValueMin = 30;
+			aGauge1.ValueMax = 70;
+			aGauge1.Value = 28;
+			aGauge1.ValueScaleLinesMajorStepValue = 5;
+			// Colors 0-8
+			for (byte i = 0; i <= 8; i++)
+			{
+				aGauge1.Range_Idx = i;
+				if (i == 0)
+					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
+				else
+					aGauge1.RangesStartValue[i] = (float)Rating.rangeWR[i];
+				if (i == 8)
+					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
+				else
+					aGauge1.RangesEndValue[i] = (float)Rating.rangeWR[i + 1];
+				aGauge1.RangeEnabled = true;
+			}
+			// Show battle mode
+			string capText = "Total";
+			switch (_battleMode)
+			{
+				case "15": capText = "Random/TC"; break;
+				case "7": capText = "Team"; break;
+				case "Historical": capText = "Historical Battles"; break;
+				case "Skirmishes": capText = "Skirmishes"; break;
+			}
+			aGauge1.CenterSubText = "Win Rate: " + capText;
 			// Overall stats team
 			string sqlBattlemode = "";
 			if (_battleMode != "")
@@ -53,16 +82,6 @@ namespace WinApp.Gadget
 					// Show in center text
 					aGauge1.CenterText = Math.Round(wins / battles * 100, 2).ToString() + " %";
 					aGauge1.CenterTextColor = Rating.WinRateColor(end_val);
-					// Show battle mode
-					string capText = "All Battle Modes";
-					switch (_battleMode)
-					{
-						case "15" : capText = "Random / TC"; break;
-						case "7" : capText = "Team"; break;
-						case "Historical" : capText = "Historical Battles"; break;
-						case "Skirmishes" : capText = "Skirmishes"; break;
-					}
-					aGauge1.CenterSubText = capText;
 					// CALC NEEDLE MOVEMENT
 					// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
 					avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
@@ -81,7 +100,7 @@ namespace WinApp.Gadget
 			//BASE FORMULA		START_VAL + (EXP(1-(STEP_COUNT/STEP_TOTAL)) * STEP_COUNT * AVG_STEP_VAL
 			step_count++;
 			double gaugeVal = aGauge1.ValueMin + (Math.Exp(1 - (step_count / step_tot)) * step_count * avg_step_val);
-			if (gaugeVal >= end_val)
+			if (step_count >= step_tot)
 			{
 				gaugeVal = end_val;
 				timer1.Enabled = false;

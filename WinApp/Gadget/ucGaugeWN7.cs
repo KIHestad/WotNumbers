@@ -11,9 +11,9 @@ using System.Diagnostics;
 
 namespace WinApp.Gadget
 {
-	public partial class ucGaugeWN8 : UserControl
+	public partial class ucGaugeWN7 : UserControl
 	{
-		public ucGaugeWN8()
+		public ucGaugeWN7()
 		{
 			InitializeComponent();
 		}
@@ -25,7 +25,7 @@ namespace WinApp.Gadget
 			aGauge1.ValueMax = 3000;
 			aGauge1.Value = 0;
 			aGauge1.ValueScaleLinesMajorStepValue = 250;
-			aGauge1.CenterSubText = "WN8 Rating";
+			aGauge1.CenterSubText = "WN7 Rating";
 			// Colors 0-8
 			for (byte i = 0; i <= 8; i++)
 			{
@@ -33,21 +33,21 @@ namespace WinApp.Gadget
 				if (i == 0)
 					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
 				else
-					aGauge1.RangesStartValue[i] = (float)Rating.rangeWN8[i];
+					aGauge1.RangesStartValue[i] = (float)Rating.rangeWN7[i];
 				if (i == 8)
 					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
 				else
-					aGauge1.RangesEndValue[i] = (float)Rating.rangeWN8[i + 1];
+					aGauge1.RangesEndValue[i] = (float)Rating.rangeWN7[i + 1];
 				aGauge1.RangeEnabled = true;
 			}
-			// Wn8 - new sql to avoid battles where expexted value is missing
+			// sql 
 			string sql =
 				"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 				"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
 				"from playerTankBattle ptb left join " +
 				"  playerTank pt on ptb.playerTankId=pt.id left join " +
 				"  tank t on pt.tankId = t.id " +
-				"where t.expDmg is not null and pt.playerId=@playerId and ptb.battleMode='15'";
+				"where pt.playerId=@playerId and ptb.battleMode='15'";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count == 0) return;
@@ -62,10 +62,10 @@ namespace WinApp.Gadget
 			double TIER = 0;
 			if (BATTLES > 0)
 				TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-			end_val = Code.Rating.CalculatePlayerTotalWN8("15");
+			end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("15"));
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();
-			aGauge1.CenterTextColor = Rating.WN8color(end_val);
+			aGauge1.CenterTextColor = Rating.WN7color(end_val);
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick

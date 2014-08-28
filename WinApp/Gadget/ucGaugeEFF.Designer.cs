@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Gadget
 {
-	partial class ucGaugeWinRate
+	partial class ucGaugeEFF
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -66,7 +66,7 @@
         "",
         ""};
 			this.aGauge1.CapText = "";
-			this.aGauge1.Center = new System.Drawing.Point(95, 90);
+			this.aGauge1.Center = new System.Drawing.Point(100, 90);
 			this.aGauge1.CenterSubText = "";
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
@@ -83,7 +83,7 @@
 			this.aGauge1.Range_Idx = ((byte)(0));
 			this.aGauge1.RangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.aGauge1.RangeEnabled = false;
-			this.aGauge1.RangeEndValue = 0F;
+			this.aGauge1.RangeEndValue = 10F;
 			this.aGauge1.RangeInnerRadius = 70;
 			this.aGauge1.RangeOuterRadius = 72;
 			this.aGauge1.RangesColor = new System.Drawing.Color[] {
@@ -109,10 +109,10 @@
         false,
         false};
 			this.aGauge1.RangesEndValue = new float[] {
-        0F,
-        0F,
-        0F,
-        0F,
+        10F,
+        20F,
+        30F,
+        100F,
         0F,
         0F,
         0F,
@@ -143,9 +143,9 @@
         72};
 			this.aGauge1.RangesStartValue = new float[] {
         0F,
-        0F,
-        0F,
-        0F,
+        10F,
+        20F,
+        30F,
         0F,
         0F,
         0F,
@@ -167,29 +167,29 @@
 			this.aGauge1.ScaleLinesMinorWidth = 1;
 			this.aGauge1.ScaleNumbersColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.aGauge1.ScaleNumbersFormat = null;
-			this.aGauge1.ScaleNumbersRadius = 85;
+			this.aGauge1.ScaleNumbersRadius = 88;
 			this.aGauge1.ScaleNumbersRotation = 0;
 			this.aGauge1.ScaleNumbersStartScaleLine = 0;
 			this.aGauge1.ScaleNumbersStepScaleLines = 1;
-			this.aGauge1.Size = new System.Drawing.Size(190, 140);
+			this.aGauge1.Size = new System.Drawing.Size(200, 140);
 			this.aGauge1.TabIndex = 0;
 			this.aGauge1.Text = "aGauge1";
 			this.aGauge1.Value = 0F;
-			this.aGauge1.ValueMax = 100F;
+			this.aGauge1.ValueMax = 3000F;
 			this.aGauge1.ValueMin = 0F;
-			this.aGauge1.ValueScaleLinesMajorStepValue = 10F;
+			this.aGauge1.ValueScaleLinesMajorStepValue = 250F;
 			this.aGauge1.ValueScaleLinesMinorNumOf = 9;
 			// 
-			// ucGaugeWinRate
+			// ucGaugeEFF
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Name = "ucGaugeWinRate";
-			this.Size = new System.Drawing.Size(190, 140);
-			this.Load += new System.EventHandler(this.ucGaugeWinRate_Load);
+			this.Name = "ucGaugeEFF";
+			this.Size = new System.Drawing.Size(200, 140);
+			this.Load += new System.EventHandler(this.ucGauge_Load);
 			this.ResumeLayout(false);
 
 		}

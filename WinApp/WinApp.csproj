@@ -315,6 +315,18 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugeEFF.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeEFF.Designer.cs">
+      <DependentUpon>ucGaugeEFF.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeWN7.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeWN7.Designer.cs">
+      <DependentUpon>ucGaugeWN7.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeWN8.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -338,6 +350,12 @@
     </Compile>
     <Compile Include="Gadget\ucImage.Designer.cs">
       <DependentUpon>ucImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gadget\ucTest.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucTest.Designer.cs">
+      <DependentUpon>ucTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\ucTotalTanks.cs">
       <SubType>UserControl</SubType>
@@ -422,6 +440,12 @@
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeEFF.resx">
+      <DependentUpon>ucGaugeEFF.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeWN7.resx">
+      <DependentUpon>ucGaugeWN7.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeWN8.resx">
       <DependentUpon>ucGaugeWN8.cs</DependentUpon>
     </EmbeddedResource>
@@ -433,6 +457,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucImage.resx">
       <DependentUpon>ucImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucTest.resx">
+      <DependentUpon>ucTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTotalTanks.resx">
       <DependentUpon>ucTotalTanks.cs</DependentUpon>

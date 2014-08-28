@@ -66,13 +66,14 @@
         "",
         ""};
 			this.aGauge1.CapText = "";
-			this.aGauge1.Center = new System.Drawing.Point(95, 90);
-			this.aGauge1.CenterSubText = "WN8 Rating";
+			this.aGauge1.Center = new System.Drawing.Point(100, 90);
+			this.aGauge1.CenterSubText = "";
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+			this.aGauge1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.aGauge1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-			this.aGauge1.Location = new System.Drawing.Point(10, 10);
+			this.aGauge1.Location = new System.Drawing.Point(0, 0);
 			this.aGauge1.Name = "aGauge1";
 			this.aGauge1.NeedleColor1 = AGaugeApp.AGauge.NeedleColorEnum.WotNumbers;
 			this.aGauge1.NeedleColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
@@ -80,18 +81,28 @@
 			this.aGauge1.NeedleType = 0;
 			this.aGauge1.NeedleWidth = 2;
 			this.aGauge1.Range_Idx = ((byte)(0));
-			this.aGauge1.RangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127)))));
+			this.aGauge1.RangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.aGauge1.RangeEnabled = false;
 			this.aGauge1.RangeEndValue = 0F;
 			this.aGauge1.RangeInnerRadius = 70;
-			this.aGauge1.RangeOuterRadius = 80;
+			this.aGauge1.RangeOuterRadius = 72;
 			this.aGauge1.RangesColor = new System.Drawing.Color[] {
-        System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
-        System.Drawing.SystemColors.Control,
-        System.Drawing.SystemColors.Control,
-        System.Drawing.SystemColors.Control};
+        System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(132)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(255)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(158)))), ((int)(((byte)(0))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(168)))), ((int)(((byte)(255))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(94)))), ((int)(((byte)(255))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(0)))), ((int)(((byte)(255))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127)))))};
 			this.aGauge1.RangesEnabled = new bool[] {
+        false,
+        false,
+        false,
+        false,
+        false,
         false,
         false,
         false,
@@ -102,20 +113,40 @@
         0F,
         0F,
         0F,
+        0F,
+        0F,
+        0F,
+        0F,
+        0F,
         0F};
 			this.aGauge1.RangesInnerRadius = new int[] {
         70,
         70,
         70,
         70,
+        70,
+        70,
+        70,
+        70,
+        70,
         70};
 			this.aGauge1.RangesOuterRadius = new int[] {
-        80,
-        80,
-        80,
-        80,
-        80};
+        72,
+        72,
+        72,
+        72,
+        72,
+        72,
+        72,
+        72,
+        72,
+        72};
 			this.aGauge1.RangesStartValue = new float[] {
+        0F,
+        0F,
+        0F,
+        0F,
+        0F,
         0F,
         0F,
         0F,
@@ -136,11 +167,11 @@
 			this.aGauge1.ScaleLinesMinorWidth = 1;
 			this.aGauge1.ScaleNumbersColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.aGauge1.ScaleNumbersFormat = null;
-			this.aGauge1.ScaleNumbersRadius = 85;
+			this.aGauge1.ScaleNumbersRadius = 88;
 			this.aGauge1.ScaleNumbersRotation = 0;
 			this.aGauge1.ScaleNumbersStartScaleLine = 0;
 			this.aGauge1.ScaleNumbersStepScaleLines = 1;
-			this.aGauge1.Size = new System.Drawing.Size(190, 140);
+			this.aGauge1.Size = new System.Drawing.Size(200, 140);
 			this.aGauge1.TabIndex = 0;
 			this.aGauge1.Text = "aGauge1";
 			this.aGauge1.Value = 0F;
@@ -157,16 +188,16 @@
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "ucGaugeWN8";
-			this.Size = new System.Drawing.Size(200, 150);
-			this.Load += new System.EventHandler(this.ucGaugeWinRate_Load);
+			this.Size = new System.Drawing.Size(200, 140);
+			this.Load += new System.EventHandler(this.ucGauge_Load);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private AGaugeApp.AGauge aGauge1;
 		private System.Windows.Forms.Timer timer1;
+		private AGaugeApp.AGauge aGauge1;
 
 
 

@@ -96,7 +96,7 @@ namespace WinApp.Gadget
 			// No resize and Right align numbers
 			dataGridView1.Columns[0].Resizable = DataGridViewTriState.False;
 			// Finish
-			dataGridView1.Columns[0].Width = 92;
+			dataGridView1.Columns[0].Width = 97;
 			dataGridView1.Columns[1].Width = 53;
 			dataGridView1.Columns[2].Width = 53;
 			dataGridView1.Columns[3].Width = 53;

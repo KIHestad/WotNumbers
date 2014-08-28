@@ -252,7 +252,9 @@ namespace WinApp.Code
 		#endregion
 					
 		#region Color
-		
+
+		public static double[] rangeEFF = { 0, 630, 860, 1140, 1460, 1735 };
+
 		public static Color EffColor(double eff)
 		{
 			// Dynamic color by efficiency
@@ -263,56 +265,62 @@ namespace WinApp.Code
 			//  { "value": 1775, "color": ${"def.colorRating.very_good"} },  // 1475 - 1774 - very good  (better then 99% of players)
 			//  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
 			Color effRatingColor = ColorTheme.Rating_bad;
-			if (eff >= 1735) effRatingColor = ColorTheme.Rating_uniqum;
-			else if (eff >= 1460) effRatingColor = ColorTheme.Rating_great;
-			else if (eff >= 1140) effRatingColor = ColorTheme.Rating_good;
-			else if (eff >= 860) effRatingColor = ColorTheme.Rating_average;
-			else if (eff >= 630) effRatingColor = ColorTheme.Rating_below_average;
+			if (eff >= rangeEFF[5]) effRatingColor = ColorTheme.Rating_uniqum;
+			else if (eff >= rangeEFF[4]) effRatingColor = ColorTheme.Rating_great;
+			else if (eff >= rangeEFF[3]) effRatingColor = ColorTheme.Rating_good;
+			else if (eff >= rangeEFF[2]) effRatingColor = ColorTheme.Rating_average;
+			else if (eff >= rangeEFF[1]) effRatingColor = ColorTheme.Rating_below_average;
 			return effRatingColor;
 		}
+
+		public static double[] rangeWN7 = { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 };
 
 		public static Color WN7color(double wn7)
 		{
 			// http://wiki.wnefficiency.net/pages/Color_Scale
 			Color wn7RatingColor = ColorTheme.Rating_very_bad;
-			if (wn7 >= 2050) wn7RatingColor = ColorTheme.Rating_super_uniqum;
-			else if (wn7 >= 1850) wn7RatingColor = ColorTheme.Rating_uniqum;
-			else if (wn7 >= 1550) wn7RatingColor = ColorTheme.Rating_great;
-			else if (wn7 >= 1350) wn7RatingColor = ColorTheme.Rating_very_good;
-			else if (wn7 >= 1100) wn7RatingColor = ColorTheme.Rating_good;
-			else if (wn7 >= 900) wn7RatingColor = ColorTheme.Rating_average;
-			else if (wn7 >= 700) wn7RatingColor = ColorTheme.Rating_below_average;
-			else if (wn7 >= 500) wn7RatingColor = ColorTheme.Rating_bad;
+			if (wn7 >= rangeWN7[8]) wn7RatingColor = ColorTheme.Rating_super_uniqum;
+			else if (wn7 >= rangeWN7[7]) wn7RatingColor = ColorTheme.Rating_uniqum;
+			else if (wn7 >= rangeWN7[6]) wn7RatingColor = ColorTheme.Rating_great;
+			else if (wn7 >= rangeWN7[5]) wn7RatingColor = ColorTheme.Rating_very_good;
+			else if (wn7 >= rangeWN7[4]) wn7RatingColor = ColorTheme.Rating_good;
+			else if (wn7 >= rangeWN7[3]) wn7RatingColor = ColorTheme.Rating_average;
+			else if (wn7 >= rangeWN7[2]) wn7RatingColor = ColorTheme.Rating_below_average;
+			else if (wn7 >= rangeWN7[1]) wn7RatingColor = ColorTheme.Rating_bad;
 			return wn7RatingColor;
 		}
-		
+
+		public static double[] rangeWN8 = { 0, 300,600,900,1250,1600,1900,2350,2900 };
+
 		public static Color WN8color(double wn8)
 		{
 			// http://wiki.wnefficiency.net/pages/Color_Scale
 			Color wn8RatingColor = ColorTheme.Rating_very_bad;
-			if (wn8 >= 2900) wn8RatingColor = ColorTheme.Rating_super_uniqum;
-			else if (wn8 >= 2350) wn8RatingColor = ColorTheme.Rating_uniqum;
-			else if (wn8 >= 1900) wn8RatingColor = ColorTheme.Rating_great;
-			else if (wn8 >= 1600) wn8RatingColor = ColorTheme.Rating_very_good;
-			else if (wn8 >= 1250) wn8RatingColor = ColorTheme.Rating_good;
-			else if (wn8 >= 900) wn8RatingColor = ColorTheme.Rating_average;
-			else if (wn8 >= 600) wn8RatingColor = ColorTheme.Rating_below_average;
-			else if (wn8 >= 300) wn8RatingColor = ColorTheme.Rating_bad;
+			if (wn8 >= rangeWN8[8]) wn8RatingColor = ColorTheme.Rating_super_uniqum;
+			else if (wn8 >= rangeWN8[7]) wn8RatingColor = ColorTheme.Rating_uniqum;
+			else if (wn8 >= rangeWN8[6]) wn8RatingColor = ColorTheme.Rating_great;
+			else if (wn8 >= rangeWN8[5]) wn8RatingColor = ColorTheme.Rating_very_good;
+			else if (wn8 >= rangeWN8[4]) wn8RatingColor = ColorTheme.Rating_good;
+			else if (wn8 >= rangeWN8[3]) wn8RatingColor = ColorTheme.Rating_average;
+			else if (wn8 >= rangeWN8[2]) wn8RatingColor = ColorTheme.Rating_below_average;
+			else if (wn8 >= rangeWN8[1]) wn8RatingColor = ColorTheme.Rating_bad;
 			return wn8RatingColor;
 		}
+
+		public static double[] rangeWR = {0,45,47,49,52,54,56,60,65 };
 
 		public static Color WinRateColor(double wr)
 		{
 			// http://wiki.wnefficiency.net/pages/Color_Scale
 			Color wrRatingColor = ColorTheme.Rating_very_bad;
-			if (wr >= 65) wrRatingColor = ColorTheme.Rating_super_uniqum;
-			else if (wr >= 60) wrRatingColor = ColorTheme.Rating_uniqum;
-			else if (wr >= 56) wrRatingColor = ColorTheme.Rating_great;
-			else if (wr >= 54) wrRatingColor = ColorTheme.Rating_very_good;
-			else if (wr >= 52) wrRatingColor = ColorTheme.Rating_good;
-			else if (wr >= 49) wrRatingColor = ColorTheme.Rating_average;
-			else if (wr >= 47) wrRatingColor = ColorTheme.Rating_below_average;
-			else if (wr >= 45) wrRatingColor = ColorTheme.Rating_bad;
+			if (wr >= rangeWR[8]) wrRatingColor = ColorTheme.Rating_super_uniqum;
+			else if (wr >= rangeWR[7]) wrRatingColor = ColorTheme.Rating_uniqum;
+			else if (wr >= rangeWR[6]) wrRatingColor = ColorTheme.Rating_great;
+			else if (wr >= rangeWR[5]) wrRatingColor = ColorTheme.Rating_very_good;
+			else if (wr >= rangeWR[4]) wrRatingColor = ColorTheme.Rating_good;
+			else if (wr >= rangeWR[3]) wrRatingColor = ColorTheme.Rating_average;
+			else if (wr >= rangeWR[2]) wrRatingColor = ColorTheme.Rating_below_average;
+			else if (wr >= rangeWR[1]) wrRatingColor = ColorTheme.Rating_bad;
 			return wrRatingColor;
 		}
 

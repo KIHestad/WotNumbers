@@ -49,7 +49,7 @@ namespace AGaugeApp
 
 		private const Byte ZERO = 0;
 		private const Byte NUMOFCAPS = 5;
-		private const Byte NUMOFRANGES = 5;
+		private const Byte NUMOFRANGES = 10;
 
 		private Single fontBoundY1;
 		private Single fontBoundY2;
@@ -57,16 +57,16 @@ namespace AGaugeApp
 		private Boolean drawGaugeBackground = true;
 
 		private Single m_value;
-		private Boolean[] m_valueIsInRange = { false, false, false, false, false };
 		private Byte m_CapIdx = 1;
+		private Boolean[] m_valueIsInRange = { false, false, false, false, false, false, false, false, false, false };
 		private Color[] m_CapColor = { ColorTheme.ControlFont, ColorTheme.ControlFont, ColorTheme.ControlFont, ColorTheme.ControlFont, ColorTheme.ControlFont };
+		private Point[] m_CapPosition = { new Point(128, 90), new Point(10, 10), new Point(10, 10), new Point(10, 10), new Point(10, 10) };
 		private String[] m_CapText = { "", "", "", "", "" };
 		private String m_CenterText = "";
 		private String m_CenterSubText = "";
 		private Color m_CenterTextColor = ColorTheme.ControlFont;
 		private Font m_CenterTextFont = new Font("Microsoft Sans Serif", 8); 
-		private Point[] m_CapPosition = { new Point(128, 90), new Point(10, 10), new Point(10, 10), new Point(10, 10), new Point(10, 10) };
-		private Point m_Center = new Point(128, 90);
+		private Point m_Center = new Point(95, 90);
 		private Single m_MinValue = 0;
 		private Single m_MaxValue = 100;
 
@@ -94,18 +94,24 @@ namespace AGaugeApp
 		private Int32 m_ScaleLinesMajorWidth = 2;
 
 		private Byte m_RangeIdx;
-		private Boolean[] m_RangeEnabled = { false, false, false, false, false };
+		private Boolean[] m_RangeEnabled = { false, false, false, false, false, false, false, false, false, false };
 		private Color[] m_RangeColor = 
 		{ 
-			ColorTheme.FormBorderBlue, 
-			ColorTheme.FormBorderRed, 
-			Color.FromKnownColor(KnownColor.Control), 
-			Color.FromKnownColor(KnownColor.Control), 
-			Color.FromKnownColor(KnownColor.Control) };
-		private Single[] m_RangeStartValue = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-		private Single[] m_RangeEndValue = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-		private Int32[] m_RangeInnerRadius = { 70, 70, 70, 70, 70 };
-		private Int32[] m_RangeOuterRadius = { 80, 80, 80, 80, 80 };
+			ColorTheme.Rating_very_bad, 
+			ColorTheme.Rating_bad, 
+			ColorTheme.Rating_below_average ,
+			ColorTheme.Rating_average ,
+			ColorTheme.Rating_good ,
+			ColorTheme.Rating_very_good ,
+			ColorTheme.Rating_great ,
+			ColorTheme.Rating_uniqum ,
+			ColorTheme.Rating_super_uniqum,
+			ColorTheme.FormBorderBlue
+		};
+		private Single[] m_RangeStartValue = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+		private Single[] m_RangeEndValue =   { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+		private Int32[] m_RangeInnerRadius = { 70, 70, 70, 70, 70, 70, 70, 70, 70, 70};
+		private Int32[] m_RangeOuterRadius = { 72, 72, 72, 72, 72, 72, 72, 72, 72, 72};
 
 		private Int32 m_ScaleNumbersRadius = 85;
 		private Color m_ScaleNumbersColor = ColorTheme.ControlFont;
@@ -250,7 +256,7 @@ namespace AGaugeApp
 						drawGaugeBackground = true;
 					}
 
-					for (Int32 counter = 0; counter < NUMOFRANGES - 1; counter++)
+					for (Int32 counter = 0; counter < NUMOFRANGES; counter++)
 					{
 						if ((m_RangeStartValue[counter] <= m_value)
 						&& (m_value <= m_RangeEndValue[counter])
@@ -1495,6 +1501,7 @@ namespace AGaugeApp
 				GraphicsPath gp = new GraphicsPath();
 				Single rangeStartAngle;
 				Single rangeSweepAngle;
+				int padding = 8;
 				for (Int32 counter = 0; counter < NUMOFRANGES; counter++)
 				{
 					if (m_RangeEndValue[counter] > m_RangeStartValue[counter]
@@ -1502,13 +1509,15 @@ namespace AGaugeApp
 					{
 						rangeStartAngle = m_BaseArcStart + (m_RangeStartValue[counter] - m_MinValue) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
 						rangeSweepAngle = (m_RangeEndValue[counter] - m_RangeStartValue[counter]) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
-						gp.Reset();
-						gp.AddPie(new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
-						gp.Reverse();
-						gp.AddPie(new Rectangle(m_Center.X - m_RangeInnerRadius[counter], m_Center.Y - m_RangeInnerRadius[counter], 2 * m_RangeInnerRadius[counter], 2 * m_RangeInnerRadius[counter]), rangeStartAngle, rangeSweepAngle);
-						gp.Reverse();
-						ggr.SetClip(gp);
-						ggr.FillPie(new SolidBrush(m_RangeColor[counter]), new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
+						ggr.DrawArc(new Pen(m_RangeColor[counter], 2), new Rectangle(m_Center.X - m_BaseArcRadius -(padding/2), m_Center.Y - m_BaseArcRadius-(padding/2), 2 * m_BaseArcRadius+padding, 2 * m_BaseArcRadius+padding), rangeStartAngle, rangeSweepAngle);
+						// OLD CODE MAKING CLIPPED PIE
+						//gp.Reset();
+						//gp.AddPie(new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
+						//gp.Reverse();
+						//gp.AddPie(new Rectangle(m_Center.X - m_RangeInnerRadius[counter], m_Center.Y - m_RangeInnerRadius[counter], 2 * m_RangeInnerRadius[counter], 2 * m_RangeInnerRadius[counter]), rangeStartAngle, rangeSweepAngle);
+						//gp.Reverse();
+						//ggr.SetClip(gp);
+						//ggr.FillPie(new SolidBrush(m_RangeColor[counter]), new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
 					}
 				}
 

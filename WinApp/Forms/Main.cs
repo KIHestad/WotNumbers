@@ -1578,51 +1578,56 @@ namespace WinApp.Forms
 				panelMainArea.Controls.Remove(c);
 			}
 
-			// Show TotalTanks
-			uc = new Gadget.ucTotalTanks();
-			uc.Top = 175;
-			uc.Left = 50;
-			panelMainArea.Controls.Add(uc);
-
-			// Show BattleTypes
-			uc = new Gadget.ucBattleTypes();
-			uc.Top = 175;
-			uc.Left = 525;
-			panelMainArea.Controls.Add(uc);
-
-			int xPos = 0;
-			int yPos = 0;
+			// Gauge is 190x40
+			int xPos = 15;
+			int yPos = 20;
+			int xMove = 210;
 			// Show Win rate gauges
 			uc = new Gadget.ucGaugeWinRate("15");
 			uc.Top = yPos;
 			uc.Left = xPos;
-			xPos += uc.Width;
+			xPos += xMove;
 			panelMainArea.Controls.Add(uc);
-			// Show Win rate gauges
-			uc = new Gadget.ucGaugeWinRate("7");
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += uc.Width;
-			panelMainArea.Controls.Add(uc);
-			// Show Win rate gauges
-			uc = new Gadget.ucGaugeWinRate("Skirmishes");
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += uc.Width;
-			panelMainArea.Controls.Add(uc);
-			// Show Win rate gauges
-			uc = new Gadget.ucGaugeWinRate("");
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += uc.Width;
-			panelMainArea.Controls.Add(uc);
+			
 			// Show WN8 rate 
 			uc = new Gadget.ucGaugeWN8();
 			uc.Top = yPos;
 			uc.Left = xPos;
+			xPos += xMove;
 			panelMainArea.Controls.Add(uc);
-			
 
+			// Show WN7 rate 
+			uc = new Gadget.ucGaugeWN7();
+			uc.Top = yPos;
+			uc.Left = xPos;
+			xPos += xMove;
+			panelMainArea.Controls.Add(uc);
+
+			// Show WN7 rate 
+			uc = new Gadget.ucGaugeEFF();
+			uc.Top = yPos;
+			uc.Left = xPos;
+			xPos += xMove;
+			panelMainArea.Controls.Add(uc);
+
+			// NEW ROW ***************************************************
+
+			// Grids are 420x93 (half width=210 / room for gauge)
+			// Show TotalTanks
+			uc = new Gadget.ucTotalTanks();
+			uc.Top = 180;
+			uc.Left = 10;
+			panelMainArea.Controls.Add(uc);
+
+			// Show BattleTypes
+			uc = new Gadget.ucBattleTypes();
+			uc.Top = 180;
+			uc.Left = 10 + 420 + 10;
+			panelMainArea.Controls.Add(uc);
+
+			// NEW ROW ***************************************************
+
+			// Images are 160x110
 			// Get all tanks and show in imageGadget
 			string sql = 
 				"select pt.tankId, b.battleTime, br.name, br.color "+
@@ -1636,7 +1641,7 @@ namespace WinApp.Forms
 			int rowCount = 0;
 			for (int row = 0; row < 2; row++)
 			{
-				for (int col = 0; col < 6; col++)
+				for (int col = 0; col < 5; col++)
 				{
 					// get a tank to show
 					UserControl imageControl;
@@ -1654,8 +1659,8 @@ namespace WinApp.Forms
 						imageControl = new Gadget.ucImage(tankImage, battleTime, result, resultColor);
 						rowCount++;
 					}
-					imageControl.Top = 110 * row + 300;
-					imageControl.Left = 170 * col ;
+					imageControl.Top = 300 + (110 * row) ;
+					imageControl.Left = 10 + (172 * col) ;
 					panelMainArea.Controls.Add(imageControl);
 				}
 			}
