@@ -22,7 +22,7 @@ namespace WinApp.Gadget
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;
-			aGauge1.ValueMax = 3000;
+			aGauge1.ValueMax = 2500;
 			aGauge1.Value = 0;
 			aGauge1.ValueScaleLinesMajorStepValue = 250;
 			aGauge1.CenterSubText = "Efficiency Rating";
