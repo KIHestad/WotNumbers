@@ -1581,7 +1581,7 @@ namespace WinApp.Forms
 			// Gauge is 190x40
 			int xPos = 15;
 			int yPos = 20;
-			int xMove = 210;
+			int xMove = 220;
 			// Show Win rate gauges
 			uc = new Gadget.ucGaugeWinRate("15");
 			uc.Top = yPos;
@@ -1616,13 +1616,13 @@ namespace WinApp.Forms
 			// Show TotalTanks
 			uc = new Gadget.ucTotalTanks();
 			uc.Top = 220;
-			uc.Left = 10;
+			uc.Left = 15;
 			panelMainArea.Controls.Add(uc);
 
 			// Show BattleTypes
 			uc = new Gadget.ucBattleTypes();
 			uc.Top = 220;
-			uc.Left = 10 + 420 + 10;
+			uc.Left = 10 + 430 + 10;
 			panelMainArea.Controls.Add(uc);
 
 			// NEW ROW ***************************************************
@@ -1660,7 +1660,7 @@ namespace WinApp.Forms
 						rowCount++;
 					}
 					imageControl.Top = 340 + (110 * row) ;
-					imageControl.Left = 10 + (172 * col) ;
+					imageControl.Left = 20 + (177 * col) ;
 					panelMainArea.Controls.Add(imageControl);
 				}
 			}

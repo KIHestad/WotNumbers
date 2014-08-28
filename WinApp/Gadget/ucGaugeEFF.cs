@@ -46,7 +46,6 @@ namespace WinApp.Gadget
 					aGauge1.RangesEndValue[i] = (float)Rating.rangeEFF[i + 1];
 				aGauge1.RangeEnabled = true;
 			}
-			// sql 
 			// Overall stats team
 			if (timeRange == GadgetHelper.TimeRange.Total)
 			{

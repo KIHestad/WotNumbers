@@ -31,6 +31,11 @@
 			this.components = new System.ComponentModel.Container();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.aGauge1 = new AGaugeApp.AGauge();
+			this.btnToday = new BadButton();
+			this.btnWeek = new BadButton();
+			this.btnMonth = new BadButton();
+			this.btn1000 = new BadButton();
+			this.btnTotal = new BadButton();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -71,7 +76,7 @@
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.aGauge1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.aGauge1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.aGauge1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.aGauge1.Location = new System.Drawing.Point(0, 0);
 			this.aGauge1.Name = "aGauge1";
@@ -180,15 +185,96 @@
 			this.aGauge1.ValueScaleLinesMajorStepValue = 250F;
 			this.aGauge1.ValueScaleLinesMinorNumOf = 9;
 			// 
+			// btnToday
+			// 
+			this.btnToday.BlackButton = true;
+			this.btnToday.Checked = false;
+			this.btnToday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnToday.Image = null;
+			this.btnToday.Location = new System.Drawing.Point(159, 148);
+			this.btnToday.Margin = new System.Windows.Forms.Padding(0);
+			this.btnToday.Name = "btnToday";
+			this.btnToday.Size = new System.Drawing.Size(34, 16);
+			this.btnToday.TabIndex = 15;
+			this.btnToday.Text = "Today";
+			this.btnToday.ToolTipText = "";
+			this.btnToday.Click += new System.EventHandler(this.btnTime_Click);
+			// 
+			// btnWeek
+			// 
+			this.btnWeek.BlackButton = true;
+			this.btnWeek.Checked = false;
+			this.btnWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWeek.Image = null;
+			this.btnWeek.Location = new System.Drawing.Point(121, 148);
+			this.btnWeek.Margin = new System.Windows.Forms.Padding(0);
+			this.btnWeek.Name = "btnWeek";
+			this.btnWeek.Size = new System.Drawing.Size(34, 16);
+			this.btnWeek.TabIndex = 14;
+			this.btnWeek.Text = "Week";
+			this.btnWeek.ToolTipText = "";
+			this.btnWeek.Click += new System.EventHandler(this.btnTime_Click);
+			// 
+			// btnMonth
+			// 
+			this.btnMonth.BlackButton = true;
+			this.btnMonth.Checked = false;
+			this.btnMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnMonth.Image = null;
+			this.btnMonth.Location = new System.Drawing.Point(83, 148);
+			this.btnMonth.Margin = new System.Windows.Forms.Padding(0);
+			this.btnMonth.Name = "btnMonth";
+			this.btnMonth.Size = new System.Drawing.Size(34, 16);
+			this.btnMonth.TabIndex = 13;
+			this.btnMonth.Text = "Month";
+			this.btnMonth.ToolTipText = "";
+			this.btnMonth.Click += new System.EventHandler(this.btnTime_Click);
+			// 
+			// btn1000
+			// 
+			this.btn1000.BlackButton = true;
+			this.btn1000.Checked = false;
+			this.btn1000.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btn1000.Image = null;
+			this.btn1000.Location = new System.Drawing.Point(45, 148);
+			this.btn1000.Margin = new System.Windows.Forms.Padding(0);
+			this.btn1000.Name = "btn1000";
+			this.btn1000.Size = new System.Drawing.Size(34, 16);
+			this.btn1000.TabIndex = 12;
+			this.btn1000.Text = "1000";
+			this.btn1000.ToolTipText = "";
+			this.btn1000.Click += new System.EventHandler(this.btnTime_Click);
+			// 
+			// btnTotal
+			// 
+			this.btnTotal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.btnTotal.BlackButton = true;
+			this.btnTotal.Checked = true;
+			this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTotal.Image = null;
+			this.btnTotal.Location = new System.Drawing.Point(7, 148);
+			this.btnTotal.Margin = new System.Windows.Forms.Padding(0);
+			this.btnTotal.Name = "btnTotal";
+			this.btnTotal.Size = new System.Drawing.Size(34, 16);
+			this.btnTotal.TabIndex = 11;
+			this.btnTotal.Text = "Total";
+			this.btnTotal.ToolTipText = "";
+			this.btnTotal.Click += new System.EventHandler(this.btnTime_Click);
+			// 
 			// ucGaugeWN7
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.Controls.Add(this.btnToday);
+			this.Controls.Add(this.btnWeek);
+			this.Controls.Add(this.btnMonth);
+			this.Controls.Add(this.btn1000);
+			this.Controls.Add(this.btnTotal);
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "ucGaugeWN7";
-			this.Size = new System.Drawing.Size(200, 140);
+			this.Size = new System.Drawing.Size(200, 170);
 			this.Load += new System.EventHandler(this.ucGauge_Load);
 			this.ResumeLayout(false);
 
@@ -198,6 +284,11 @@
 
 		private System.Windows.Forms.Timer timer1;
 		private AGaugeApp.AGauge aGauge1;
+		private BadButton btnToday;
+		private BadButton btnWeek;
+		private BadButton btnMonth;
+		private BadButton btn1000;
+		private BadButton btnTotal;
 
 
 

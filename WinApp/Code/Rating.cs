@@ -93,7 +93,7 @@ namespace WinApp.Code
 			}
 			return WN8;
 		}
-
+				
 		public static double CalculatePlayerTotalWN8(string battleMode = "")
 		{
 			double WN8 = 0;
