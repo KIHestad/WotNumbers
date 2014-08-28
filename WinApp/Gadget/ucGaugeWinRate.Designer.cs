@@ -49,9 +49,10 @@
 			this.btnToday.Checked = false;
 			this.btnToday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnToday.Image = null;
-			this.btnToday.Location = new System.Drawing.Point(156, 147);
+			this.btnToday.Location = new System.Drawing.Point(159, 148);
+			this.btnToday.Margin = new System.Windows.Forms.Padding(0);
 			this.btnToday.Name = "btnToday";
-			this.btnToday.Size = new System.Drawing.Size(35, 20);
+			this.btnToday.Size = new System.Drawing.Size(34, 16);
 			this.btnToday.TabIndex = 5;
 			this.btnToday.Text = "Today";
 			this.btnToday.ToolTipText = "";
@@ -63,9 +64,10 @@
 			this.btnWeek.Checked = false;
 			this.btnWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnWeek.Image = null;
-			this.btnWeek.Location = new System.Drawing.Point(117, 147);
+			this.btnWeek.Location = new System.Drawing.Point(121, 148);
+			this.btnWeek.Margin = new System.Windows.Forms.Padding(0);
 			this.btnWeek.Name = "btnWeek";
-			this.btnWeek.Size = new System.Drawing.Size(35, 20);
+			this.btnWeek.Size = new System.Drawing.Size(34, 16);
 			this.btnWeek.TabIndex = 4;
 			this.btnWeek.Text = "Week";
 			this.btnWeek.ToolTipText = "";
@@ -77,9 +79,10 @@
 			this.btn1000.Checked = false;
 			this.btn1000.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btn1000.Image = null;
-			this.btn1000.Location = new System.Drawing.Point(78, 147);
+			this.btn1000.Location = new System.Drawing.Point(83, 148);
+			this.btn1000.Margin = new System.Windows.Forms.Padding(0);
 			this.btn1000.Name = "btn1000";
-			this.btn1000.Size = new System.Drawing.Size(35, 20);
+			this.btn1000.Size = new System.Drawing.Size(34, 16);
 			this.btn1000.TabIndex = 3;
 			this.btn1000.Text = "1000";
 			this.btn1000.ToolTipText = "";
@@ -91,9 +94,10 @@
 			this.btn5000.Checked = false;
 			this.btn5000.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btn5000.Image = null;
-			this.btn5000.Location = new System.Drawing.Point(39, 147);
+			this.btn5000.Location = new System.Drawing.Point(45, 148);
+			this.btn5000.Margin = new System.Windows.Forms.Padding(0);
 			this.btn5000.Name = "btn5000";
-			this.btn5000.Size = new System.Drawing.Size(35, 20);
+			this.btn5000.Size = new System.Drawing.Size(34, 16);
 			this.btn5000.TabIndex = 2;
 			this.btn5000.Text = "5000";
 			this.btn5000.ToolTipText = "";
@@ -106,9 +110,10 @@
 			this.btnTotal.Checked = true;
 			this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnTotal.Image = null;
-			this.btnTotal.Location = new System.Drawing.Point(0, 147);
+			this.btnTotal.Location = new System.Drawing.Point(7, 148);
+			this.btnTotal.Margin = new System.Windows.Forms.Padding(0);
 			this.btnTotal.Name = "btnTotal";
-			this.btnTotal.Size = new System.Drawing.Size(35, 20);
+			this.btnTotal.Size = new System.Drawing.Size(34, 16);
 			this.btnTotal.TabIndex = 1;
 			this.btnTotal.Text = "Total";
 			this.btnTotal.ToolTipText = "";
@@ -142,7 +147,7 @@
         "",
         ""};
 			this.aGauge1.CapText = "";
-			this.aGauge1.Center = new System.Drawing.Point(95, 90);
+			this.aGauge1.Center = new System.Drawing.Point(100, 90);
 			this.aGauge1.CenterSubText = "";
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
@@ -247,7 +252,7 @@
 			this.aGauge1.ScaleNumbersRotation = 0;
 			this.aGauge1.ScaleNumbersStartScaleLine = 0;
 			this.aGauge1.ScaleNumbersStepScaleLines = 1;
-			this.aGauge1.Size = new System.Drawing.Size(190, 140);
+			this.aGauge1.Size = new System.Drawing.Size(200, 140);
 			this.aGauge1.TabIndex = 0;
 			this.aGauge1.Text = "aGauge1";
 			this.aGauge1.Value = 0F;
@@ -269,7 +274,7 @@
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "ucGaugeWinRate";
-			this.Size = new System.Drawing.Size(190, 173);
+			this.Size = new System.Drawing.Size(200, 170);
 			this.Load += new System.EventHandler(this.ucGaugeWinRate_Load);
 			this.ResumeLayout(false);
 

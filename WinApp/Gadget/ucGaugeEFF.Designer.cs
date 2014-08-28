@@ -71,7 +71,7 @@
 			this.aGauge1.CenterText = "";
 			this.aGauge1.CenterTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.aGauge1.CenterTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.aGauge1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.aGauge1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.aGauge1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
 			this.aGauge1.Location = new System.Drawing.Point(0, 0);
 			this.aGauge1.Name = "aGauge1";

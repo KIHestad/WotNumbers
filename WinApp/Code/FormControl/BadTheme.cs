@@ -780,7 +780,7 @@ abstract class BadThemeControl : Control
 
 		int yPos = 0;
 		if (verticalAlignmentMiddle)
-			yPos = Height / 2 - TextSize.Height / 2;
+			yPos = Height / 2 - TextSize.Height / 2 - 1;
 
 		switch (horizontalAlignment)
 		{

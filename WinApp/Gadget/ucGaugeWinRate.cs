@@ -157,10 +157,13 @@ namespace WinApp.Gadget
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
+			move_speed = Math.Abs(end_val - aGauge1.Value) / 20;
+			if (move_speed > 1) move_speed = 1;
 			step_count = 0;
 			timer1.Enabled = true;
 		}
 
+		double move_speed = 1;
 		double avg_step_val = 0;
 		double end_val = 0;
 		double step_tot = 75;
@@ -173,7 +176,7 @@ namespace WinApp.Gadget
 				gaugeVal = aGauge1.Value;
 				if (end_val < aGauge1.Value)
 				{
-					gaugeVal--;
+					gaugeVal -= move_speed;
 					if (gaugeVal <= end_val || gaugeVal <= aGauge1.ValueMin)
 					{
 						gaugeVal = end_val;
@@ -182,7 +185,7 @@ namespace WinApp.Gadget
 				}
 				else
 				{
-					gaugeVal++;
+					gaugeVal += move_speed;
 					if (gaugeVal >= end_val || gaugeVal >= aGauge1.ValueMax)
 					{
 						gaugeVal = end_val;
