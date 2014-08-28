@@ -15,8 +15,7 @@ namespace WinApp.Gadget
 	public partial class ucGaugeWinRate : UserControl
 	{
 		string _battleMode = "";
-		bool moveNeedle = false;
-
+		
 		public ucGaugeWinRate(string battleMode = "")
 		{
 			InitializeComponent();
@@ -94,6 +93,7 @@ namespace WinApp.Gadget
 				int battleRevert = 0;
 				string battleTimeFilter = "";
 				DateTime basedate = DateTime.Now; // current time
+				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
 				switch (timeRange)
 				{
@@ -105,14 +105,18 @@ namespace WinApp.Gadget
 						break;
 					case GadgetHelper.TimeRange.TimeWeek:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
-						if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 						break;
+					case GadgetHelper.TimeRange.TimeMonth:
+						battleTimeFilter = " AND battleTime>=@battleTime ";
+						// Adjust time scale according to selected filter
+						dateFilter = dateFilter.AddMonths(-1);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						break;
 					case GadgetHelper.TimeRange.TimeToday:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
-						if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 						break;
 					default:
@@ -162,6 +166,8 @@ namespace WinApp.Gadget
 		double end_val = 0;
 		double step_tot = 75;
 		double step_count = 0;
+		bool moveNeedle = false;
+
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			double gaugeVal = 0;
@@ -186,7 +192,7 @@ namespace WinApp.Gadget
 						timer1.Enabled = false;
 					}
 				}
-				if (Math.Abs(end_val - gaugeVal) / move_speed < 20 && move_speed > 0.01)
+				if (Math.Abs(end_val - gaugeVal) / move_speed < 19 && move_speed > 0.01)
 					move_speed = move_speed * 0.95;
 			}
 			else 
@@ -208,8 +214,8 @@ namespace WinApp.Gadget
 		private void btnTime_Click(object sender, EventArgs e)
 		{
 			btnTotal.Checked = false;
-			btn5000.Checked = false;
 			btn1000.Checked = false;
+			btnMonth.Checked = false;
 			btnWeek.Checked = false;
 			btnToday.Checked = false;
 			BadButton b = (BadButton)sender;
@@ -220,6 +226,7 @@ namespace WinApp.Gadget
 				case "btnTotal": timeRange = GadgetHelper.TimeRange.Total; break;
 				case "btn1000": timeRange = GadgetHelper.TimeRange.Num1000; break;
 				case "btn5000": timeRange = GadgetHelper.TimeRange.Num5000; break;
+				case "btnMonth": timeRange = GadgetHelper.TimeRange.TimeMonth; break;
 				case "btnWeek": timeRange = GadgetHelper.TimeRange.TimeWeek; break;
 				case "btnToday": timeRange = GadgetHelper.TimeRange.TimeToday; break;
 			}
