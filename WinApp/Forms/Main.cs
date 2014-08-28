@@ -1615,13 +1615,13 @@ namespace WinApp.Forms
 			// Grids are 420x93 (half width=210 / room for gauge)
 			// Show TotalTanks
 			uc = new Gadget.ucTotalTanks();
-			uc.Top = 180;
+			uc.Top = 220;
 			uc.Left = 10;
 			panelMainArea.Controls.Add(uc);
 
 			// Show BattleTypes
 			uc = new Gadget.ucBattleTypes();
-			uc.Top = 180;
+			uc.Top = 220;
 			uc.Left = 10 + 420 + 10;
 			panelMainArea.Controls.Add(uc);
 
@@ -1659,7 +1659,7 @@ namespace WinApp.Forms
 						imageControl = new Gadget.ucImage(tankImage, battleTime, result, resultColor);
 						rowCount++;
 					}
-					imageControl.Top = 300 + (110 * row) ;
+					imageControl.Top = 340 + (110 * row) ;
 					imageControl.Left = 10 + (172 * col) ;
 					panelMainArea.Controls.Add(imageControl);
 				}

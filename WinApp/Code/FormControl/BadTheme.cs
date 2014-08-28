@@ -865,6 +865,13 @@ class BadButton : BadThemeControl
 		}
 	}
 
+	private bool _Checked = false;
+	public bool Checked
+	{
+		get { return _Checked; }
+		set { _Checked = value; Invalidate();  }
+	}
+
 	public BadButton()
 	{
 		AllowTransparent();
@@ -872,14 +879,18 @@ class BadButton : BadThemeControl
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
-		SolidBrush brushBackColor; 
-		brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+		SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
+		if (Checked)
+		{
+			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+			fontColor = new SolidBrush(ColorTheme.ControlFontHighLight);
+		}
 		if (MouseState == State.MouseDown)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
 		else if (MouseState == State.MouseOver)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
 		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
-		SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
 		if (!Enabled) fontColor = new SolidBrush(ColorTheme.ControlDisabledFont);
 		DrawText(HorizontalAlignment.Center, fontColor, 0);
 		DrawIcon(HorizontalAlignment.Left);

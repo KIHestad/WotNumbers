@@ -107,5 +107,16 @@ namespace WinApp.Gadget
 			}
 			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 18), 82);
 		}
+
+		private void btnTime_Click(object sender, EventArgs e)
+		{
+			btnTotal.Checked = false;
+			btn1000.Checked = false;
+			btnMonth.Checked = false;
+			btnWeek.Checked = false;
+			btnToday.Checked = false;
+			BadButton b = (BadButton)sender;
+			b.Checked = true;
+		}
 	}
 }
