@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using System.Diagnostics;
+using WinApp.Gadget;
 
 namespace WinApp.Gadget
 {
@@ -22,22 +23,12 @@ namespace WinApp.Gadget
 			_battleMode = battleMode;
 		}
 
-		private enum TimeRange
-		{
-			Total = 0,
-			Num1000 = 1,
-			TimeMonth = 2,
-			TimeWeek = 3,
-			TimeToday = 4,
-			Num5000 = 5,
-		}
-
 		private void ucGaugeWinRate_Load(object sender, EventArgs e)
 		{
 			GaugeInit();
 		}
 		
-		private void GaugeInit(TimeRange timeRange = TimeRange.Total)
+		private void GaugeInit(GadgetHelper.TimeRange timeRange = GadgetHelper.TimeRange.Total)
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 30;
@@ -77,7 +68,7 @@ namespace WinApp.Gadget
 			float battles = 0;
 			float wins = 0;
 			// Overall stats team
-			if (timeRange == TimeRange.Total)
+			if (timeRange == GadgetHelper.TimeRange.Total)
 			{
 				string sql =
 					"select sum(ptb.battles) as battles, sum(ptb.wins) as wins " +
@@ -106,20 +97,20 @@ namespace WinApp.Gadget
 				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
 				switch (timeRange)
 				{
-					case TimeRange.Num1000:
+					case GadgetHelper.TimeRange.Num1000:
 						battleRevert = 1000;
 						break;
-					case TimeRange.Num5000:
+					case GadgetHelper.TimeRange.Num5000:
 						battleRevert = 5000;
 						break;
-					case TimeRange.TimeWeek:
+					case GadgetHelper.TimeRange.TimeWeek:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 						break;
-					case TimeRange.TimeToday:
+					case GadgetHelper.TimeRange.TimeToday:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
@@ -156,8 +147,11 @@ namespace WinApp.Gadget
 			aGauge1.CenterTextColor = Rating.WinRateColor(end_val);
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
+			if (end_val < 29) end_val = 29;
+			if (end_val > 71) end_val = 71;
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
-			move_speed = Math.Abs(end_val - aGauge1.Value) / 20;
+			
+			move_speed = Math.Abs(end_val - aGauge1.Value) / 30;
 			if (move_speed > 1) move_speed = 1;
 			step_count = 0;
 			timer1.Enabled = true;
@@ -177,7 +171,7 @@ namespace WinApp.Gadget
 				if (end_val < aGauge1.Value)
 				{
 					gaugeVal -= move_speed;
-					if (gaugeVal <= end_val || gaugeVal <= aGauge1.ValueMin)
+					if (gaugeVal <= end_val || gaugeVal <= 29)
 					{
 						gaugeVal = end_val;
 						timer1.Enabled = false;
@@ -186,12 +180,14 @@ namespace WinApp.Gadget
 				else
 				{
 					gaugeVal += move_speed;
-					if (gaugeVal >= end_val || gaugeVal >= aGauge1.ValueMax)
+					if (gaugeVal >= end_val || gaugeVal >= 71)
 					{
 						gaugeVal = end_val;
 						timer1.Enabled = false;
 					}
 				}
+				if (Math.Abs(end_val - gaugeVal) / move_speed < 20 && move_speed > 0.01)
+					move_speed = move_speed * 0.95;
 			}
 			else 
 			{
@@ -218,14 +214,14 @@ namespace WinApp.Gadget
 			btnToday.Checked = false;
 			BadButton b = (BadButton)sender;
 			b.Checked = true;
-			TimeRange timeRange = TimeRange.Total;
+			GadgetHelper.TimeRange timeRange = GadgetHelper.TimeRange.Total;
 			switch (b.Name)
 			{
-				case "btnTotal": timeRange = TimeRange.Total; break;
-				case "btn1000": timeRange = TimeRange.Num1000; break;
-				case "btn5000": timeRange = TimeRange.Num5000; break;
-				case "btnWeek": timeRange = TimeRange.TimeWeek; break;
-				case "btnToday": timeRange = TimeRange.TimeToday; break;
+				case "btnTotal": timeRange = GadgetHelper.TimeRange.Total; break;
+				case "btn1000": timeRange = GadgetHelper.TimeRange.Num1000; break;
+				case "btn5000": timeRange = GadgetHelper.TimeRange.Num5000; break;
+				case "btnWeek": timeRange = GadgetHelper.TimeRange.TimeWeek; break;
+				case "btnToday": timeRange = GadgetHelper.TimeRange.TimeToday; break;
 			}
 			GaugeInit(timeRange);
 		}

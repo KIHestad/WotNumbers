@@ -16,9 +16,15 @@ namespace WinApp.Gadget
 		public ucGaugeEFF()
 		{
 			InitializeComponent();
+			bool moveNeedle = false;
 		}
 
 		private void ucGauge_Load(object sender, EventArgs e)
+		{
+			GaugeInit();
+		}
+
+		private void GaugeInit(GadgetHelper.TimeRange timeRange = GadgetHelper.TimeRange.Total)
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;
@@ -73,7 +79,7 @@ namespace WinApp.Gadget
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
 			timer1.Enabled = true;
 		}
-		
+
 		double avg_step_val = 0;
 		double end_val = 0;
 		double step_tot = 75;
@@ -90,6 +96,27 @@ namespace WinApp.Gadget
 				timer1.Enabled = false;
 			}
 			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 0), 3000);
+		}
+
+		private void btnTime_Click(object sender, EventArgs e)
+		{
+			btnTotal.Checked = false;
+			btn5000.Checked = false;
+			btn1000.Checked = false;
+			btnWeek.Checked = false;
+			btnToday.Checked = false;
+			BadButton b = (BadButton)sender;
+			b.Checked = true;
+			GadgetHelper.TimeRange timeRange = GadgetHelper.TimeRange.Total;
+			switch (b.Name)
+			{
+				case "btnTotal": timeRange = GadgetHelper.TimeRange.Total; break;
+				case "btn1000": timeRange = GadgetHelper.TimeRange.Num1000; break;
+				case "btn5000": timeRange = GadgetHelper.TimeRange.Num5000; break;
+				case "btnWeek": timeRange = GadgetHelper.TimeRange.TimeWeek; break;
+				case "btnToday": timeRange = GadgetHelper.TimeRange.TimeToday; break;
+			}
+			GaugeInit(timeRange);
 		}
 	}
 }

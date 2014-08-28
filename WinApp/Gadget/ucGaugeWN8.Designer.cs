@@ -47,24 +47,24 @@
 			this.aGauge1.BaseArcWidth = 1;
 			this.aGauge1.Cap_Idx = ((byte)(1));
 			this.aGauge1.CapColors = new System.Drawing.Color[] {
-        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))))};
+		System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))))};
 			this.aGauge1.CapPosition = new System.Drawing.Point(10, 10);
 			this.aGauge1.CapsPosition = new System.Drawing.Point[] {
-        new System.Drawing.Point(128, 90),
-        new System.Drawing.Point(10, 10),
-        new System.Drawing.Point(10, 10),
-        new System.Drawing.Point(10, 10),
-        new System.Drawing.Point(10, 10)};
+		new System.Drawing.Point(128, 90),
+		new System.Drawing.Point(10, 10),
+		new System.Drawing.Point(10, 10),
+		new System.Drawing.Point(10, 10),
+		new System.Drawing.Point(10, 10)};
 			this.aGauge1.CapsText = new string[] {
-        "",
-        "",
-        "",
-        "",
-        ""};
+		"",
+		"",
+		"",
+		"",
+		""};
 			this.aGauge1.CapText = "";
 			this.aGauge1.Center = new System.Drawing.Point(100, 90);
 			this.aGauge1.CenterSubText = "";
@@ -87,71 +87,71 @@
 			this.aGauge1.RangeInnerRadius = 70;
 			this.aGauge1.RangeOuterRadius = 72;
 			this.aGauge1.RangesColor = new System.Drawing.Color[] {
-        System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(132)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(255)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(158)))), ((int)(((byte)(0))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(168)))), ((int)(((byte)(255))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(94)))), ((int)(((byte)(255))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(0)))), ((int)(((byte)(255))))),
-        System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127)))))};
+		System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(132)))), ((int)(((byte)(0))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(0))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(255)))), ((int)(((byte)(0))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(158)))), ((int)(((byte)(0))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(168)))), ((int)(((byte)(255))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(94)))), ((int)(((byte)(255))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(0)))), ((int)(((byte)(255))))),
+		System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127)))))};
 			this.aGauge1.RangesEnabled = new bool[] {
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false};
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		false};
 			this.aGauge1.RangesEndValue = new float[] {
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F};
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F};
 			this.aGauge1.RangesInnerRadius = new int[] {
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70};
+		70,
+		70,
+		70,
+		70,
+		70,
+		70,
+		70,
+		70,
+		70,
+		70};
 			this.aGauge1.RangesOuterRadius = new int[] {
-        72,
-        72,
-        72,
-        72,
-        72,
-        72,
-        72,
-        72,
-        72,
-        72};
+		72,
+		72,
+		72,
+		72,
+		72,
+		72,
+		72,
+		72,
+		72,
+		72};
 			this.aGauge1.RangesStartValue = new float[] {
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F,
-        0F};
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F,
+		0F};
 			this.aGauge1.RangeStartValue = 0F;
 			this.aGauge1.ScaleLinesInterColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.aGauge1.ScaleLinesInterInnerRadius = 63;

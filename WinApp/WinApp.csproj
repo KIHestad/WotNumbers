@@ -315,6 +315,7 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\GadgetHelper.cs" />
     <Compile Include="Gadget\ucGaugeEFF.cs">
       <SubType>UserControl</SubType>
     </Compile>
