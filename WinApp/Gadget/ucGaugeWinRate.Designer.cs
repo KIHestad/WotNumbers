@@ -45,6 +45,7 @@
 			// 
 			// btnToday
 			// 
+			this.btnToday.BlackButton = true;
 			this.btnToday.Checked = false;
 			this.btnToday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnToday.Image = null;
@@ -58,6 +59,7 @@
 			// 
 			// btnWeek
 			// 
+			this.btnWeek.BlackButton = true;
 			this.btnWeek.Checked = false;
 			this.btnWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnWeek.Image = null;
@@ -71,6 +73,7 @@
 			// 
 			// btn1000
 			// 
+			this.btn1000.BlackButton = true;
 			this.btn1000.Checked = false;
 			this.btn1000.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btn1000.Image = null;
@@ -84,6 +87,7 @@
 			// 
 			// btn5000
 			// 
+			this.btn5000.BlackButton = true;
 			this.btn5000.Checked = false;
 			this.btn5000.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btn5000.Image = null;
@@ -98,6 +102,7 @@
 			// btnTotal
 			// 
 			this.btnTotal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.btnTotal.BlackButton = true;
 			this.btnTotal.Checked = true;
 			this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnTotal.Image = null;

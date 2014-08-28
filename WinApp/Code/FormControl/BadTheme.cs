@@ -872,6 +872,13 @@ class BadButton : BadThemeControl
 		set { _Checked = value; Invalidate();  }
 	}
 
+	private bool _BlackButton = false;
+	public bool BlackButton
+	{
+		get { return _BlackButton; }
+		set { _BlackButton = value; Invalidate(); }
+	}
+
 	public BadButton()
 	{
 		AllowTransparent();
@@ -881,9 +888,14 @@ class BadButton : BadThemeControl
 	{
 		SolidBrush brushBackColor = new SolidBrush(ColorTheme.ControlBack);
 		SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
+		if (BlackButton)
+			brushBackColor = new SolidBrush(ColorTheme.GridHeaderBackLight);
 		if (Checked)
 		{
-			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+			if (!BlackButton)
+				brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+			else
+				brushBackColor = new SolidBrush(ColorTheme.ControlBackDark);
 			fontColor = new SolidBrush(ColorTheme.ControlFontHighLight);
 		}
 		if (MouseState == State.MouseDown)
