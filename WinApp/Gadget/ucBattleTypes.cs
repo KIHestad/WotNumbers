@@ -25,15 +25,26 @@ namespace WinApp.Gadget
 				return val;
 		}
 
+		protected override void OnInvalidated(InvalidateEventArgs e)
+		{
+			DataBind();
+			base.OnInvalidated(e);
+		}
+
 		private void ucBattleTypes_Load(object sender, EventArgs e)
+		{
+			DataBind();
+		}
+
+		private void DataBind()
 		{
 			GridHelper.StyleDataGrid(dataGridView1);
 			// Create table structure, and get total number of used tanks to show in first row
 			string sql =
-				"Select 'Tanks used' as Data, cast(0 as float) as 'Random/TC', cast(0 as float) as 'Team', cast(0 as float) as 'Historical', cast(0 as float) as 'Skirmishes', cast(count(playerTank.tankId) as float) as Total " + 
+				"Select 'Tanks used' as Data, cast(0 as float) as 'Random/TC', cast(0 as float) as 'Team', cast(0 as float) as 'Historical', cast(0 as float) as 'Skirmishes', cast(count(playerTank.tankId) as float) as Total " +
 				"from playerTank " +
 				"where playerTank.playerId=@playerId and tankid in (" +
-				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)" ;
+				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			// If no data quit

@@ -346,11 +346,11 @@
     <Compile Include="Gadget\ucGaugeWinRate.Designer.cs">
       <DependentUpon>ucGaugeWinRate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Gadget\ucImage.cs">
+    <Compile Include="Gadget\ucBattleListLargeImages.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Gadget\ucImage.Designer.cs">
-      <DependentUpon>ucImage.cs</DependentUpon>
+    <Compile Include="Gadget\ucBattleListLargeImages.Designer.cs">
+      <DependentUpon>ucBattleListLargeImages.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\ucTest.cs">
       <SubType>UserControl</SubType>
@@ -456,8 +456,8 @@
     <EmbeddedResource Include="Gadget\ucGaugeWinRate.resx">
       <DependentUpon>ucGaugeWinRate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Gadget\ucImage.resx">
-      <DependentUpon>ucImage.cs</DependentUpon>
+    <EmbeddedResource Include="Gadget\ucBattleListLargeImages.resx">
+      <DependentUpon>ucBattleListLargeImages.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTest.resx">
       <DependentUpon>ucTest.cs</DependentUpon>

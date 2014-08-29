@@ -303,6 +303,7 @@ namespace WinApp.Forms
 			ImageHelper.CreateTankImageTable();
 			ImageHelper.LoadTankImages();
 			// Show view
+			HomeViewCreate("Creating Home View...");
 			ChangeView(GridView.Views.Overall, true);
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
@@ -874,7 +875,7 @@ namespace WinApp.Forms
 						else
 						{
 							// New experimental home view
-							GridShowHomeNewLayout(Status2Message);
+							HomeViewRefresh(Status2Message);
 						}
 						break;
 					case GridView.Views.Tank:
@@ -1560,7 +1561,7 @@ namespace WinApp.Forms
 
 		#region HOME VIEW - new layout                                   ***********************************************************************
 
-		private void GridShowHomeNewLayout(string Status2Message)
+		private void HomeViewCreate(string Status2Message)
 		{
 			ResizeNow();
 			UserControl uc;
@@ -1587,6 +1588,7 @@ namespace WinApp.Forms
 			uc.Top = yPos;
 			uc.Left = xPos;
 			xPos += xMove;
+			uc.Name = "test";
 			panelMainArea.Controls.Add(uc);
 			
 			// Show WN8 rate 
@@ -1627,41 +1629,21 @@ namespace WinApp.Forms
 
 			// NEW ROW ***************************************************
 
-			// Images are 160x110
-			// Get all tanks and show in imageGadget
-			string sql = 
-				"select pt.tankId, b.battleTime, br.name, br.color "+
-				"from battle b inner join " +
-				"  playerTank pt on b.playerTankId = pt.Id inner join " + 
-				"  battleResult br on b.BattleResultId = br.id " +
-				"where pt.playerId=@playerId " +
-				"order by b.battleTime desc; ";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable battle = DB.FetchData(sql);
-			int rowCount = 0;
-			for (int row = 0; row < 2; row++)
+			uc = new Gadget.ucBattleListLargeImages(5, 2);
+			uc.Top = 340;
+			uc.Left = 20;
+			panelMainArea.Controls.Add(uc);
+
+		}
+
+		private void HomeViewRefresh(string Status2Message)
+		{
+			List<Control> controls = new List<Control>();
+			foreach (Control c in panelMainArea.Controls)
 			{
-				for (int col = 0; col < 5; col++)
+				if (c.Name.Substring(0, 2) == "uc")
 				{
-					// get a tank to show
-					UserControl imageControl;
-					if (battle.Rows.Count == 0)
-						imageControl = new Gadget.ucImage();
-					else
-					{
-						if (rowCount > battle.Rows.Count)
-							rowCount = 0;
-						int tankId = Convert.ToInt32(battle.Rows[rowCount][0]);
-						Image tankImage = ImageHelper.GetTankImage(tankId, "img");
-						DateTime battleTime = Convert.ToDateTime(battle.Rows[rowCount]["battleTime"]);
-						string result = battle.Rows[rowCount]["name"].ToString();
-						string resultColor = battle.Rows[rowCount]["color"].ToString();
-						imageControl = new Gadget.ucImage(tankImage, battleTime, result, resultColor);
-						rowCount++;
-					}
-					imageControl.Top = 340 + (110 * row) ;
-					imageControl.Left = 20 + (177 * col) ;
-					panelMainArea.Controls.Add(imageControl);
+					c.Invalidate();
 				}
 			}
 		}

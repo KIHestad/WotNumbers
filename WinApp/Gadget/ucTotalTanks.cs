@@ -17,7 +17,18 @@ namespace WinApp.Gadget
 			InitializeComponent();
 		}
 
+		protected override void OnInvalidated(InvalidateEventArgs e)
+		{
+			DataBind();
+			base.OnInvalidated(e);
+		}
+
 		private void ucPlayerInfo_Load(object sender, EventArgs e)
+		{
+			DataBind();
+		}
+
+		private void DataBind()
 		{
 			GridHelper.StyleDataGrid(dataGridView1);
 			string sql =

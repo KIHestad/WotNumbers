@@ -25,10 +25,16 @@ namespace WinApp.Gadget
 		private void ucGaugeWinRate_Load(object sender, EventArgs e)
 		{
 			SelectTimeRangeButton();
-			GaugeInit();
+			DataBind();
 		}
-		
-		private void GaugeInit()
+
+		protected override void OnInvalidated(InvalidateEventArgs e)
+		{
+			DataBind();
+			base.OnInvalidated(e);
+		}
+
+		public void DataBind()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 30;
@@ -225,7 +231,7 @@ namespace WinApp.Gadget
 				case "btnToday": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeToday; break;
 			}
 			SelectTimeRangeButton();
-			GaugeInit();
+			DataBind();
 		}
 
 		private void SelectTimeRangeButton()
