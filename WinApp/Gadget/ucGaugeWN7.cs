@@ -20,10 +20,11 @@ namespace WinApp.Gadget
 
 		private void ucGauge_Load(object sender, EventArgs e)
 		{
+			SelectTimeRangeButton(); 
 			GaugeInit();
 		}
 
-		private void GaugeInit(GadgetHelper.TimeRange timeRange = GadgetHelper.TimeRange.Total)
+		private void GaugeInit()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;
@@ -45,7 +46,7 @@ namespace WinApp.Gadget
 				aGauge1.RangeEnabled = true;
 			}
 			// Overall stats team
-			if (timeRange == GadgetHelper.TimeRange.Total)
+			if (GadgetHelper.SelectedTimeRangeWN7 == GadgetHelper.TimeRange.Total)
 			{
 				string sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
@@ -77,7 +78,7 @@ namespace WinApp.Gadget
 				DateTime basedate = DateTime.Now; // current time
 				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
 				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
-				switch (timeRange)
+				switch (GadgetHelper.SelectedTimeRangeWN7)
 				{
 					case GadgetHelper.TimeRange.Num1000:
 						battleRevert = 1000;
@@ -209,24 +210,35 @@ namespace WinApp.Gadget
 
 		private void btnTime_Click(object sender, EventArgs e)
 		{
+			BadButton b = (BadButton)sender;
+			switch (b.Name)
+			{
+				case "btnTotal": GadgetHelper.SelectedTimeRangeWN7 = GadgetHelper.TimeRange.Total; break;
+				case "btn1000": GadgetHelper.SelectedTimeRangeWN7 = GadgetHelper.TimeRange.Num1000; break;
+				case "btn5000": GadgetHelper.SelectedTimeRangeWN7 = GadgetHelper.TimeRange.Num5000; break;
+				case "btnMonth": GadgetHelper.SelectedTimeRangeWN7 = GadgetHelper.TimeRange.TimeMonth; break;
+				case "btnWeek": GadgetHelper.SelectedTimeRangeWN7 = GadgetHelper.TimeRange.TimeWeek; break;
+				case "btnToday": GadgetHelper.SelectedTimeRangeWN7 = GadgetHelper.TimeRange.TimeToday; break;
+			}
+			SelectTimeRangeButton();
+			GaugeInit();
+		}
+
+		private void SelectTimeRangeButton()
+		{
 			btnTotal.Checked = false;
 			btn1000.Checked = false;
 			btnMonth.Checked = false;
 			btnWeek.Checked = false;
 			btnToday.Checked = false;
-			BadButton b = (BadButton)sender;
-			b.Checked = true;
-			GadgetHelper.TimeRange timeRange = GadgetHelper.TimeRange.Total;
-			switch (b.Name)
+			switch (GadgetHelper.SelectedTimeRangeWN7)
 			{
-				case "btnTotal": timeRange = GadgetHelper.TimeRange.Total; break;
-				case "btn1000": timeRange = GadgetHelper.TimeRange.Num1000; break;
-				case "btn5000": timeRange = GadgetHelper.TimeRange.Num5000; break;
-				case "btnMonth": timeRange = GadgetHelper.TimeRange.TimeMonth; break;
-				case "btnWeek": timeRange = GadgetHelper.TimeRange.TimeWeek; break;
-				case "btnToday": timeRange = GadgetHelper.TimeRange.TimeToday; break;
+				case GadgetHelper.TimeRange.Total: btnTotal.Checked = true; break;
+				case GadgetHelper.TimeRange.Num1000: btn1000.Checked = true; break;
+				case GadgetHelper.TimeRange.TimeMonth: btnMonth.Checked = true; break;
+				case GadgetHelper.TimeRange.TimeWeek: btnWeek.Checked = true; break;
+				case GadgetHelper.TimeRange.TimeToday: btnToday.Checked = true; break;
 			}
-			GaugeInit(timeRange);
 		}
 	}
 }
