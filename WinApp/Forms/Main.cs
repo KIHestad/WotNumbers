@@ -714,8 +714,8 @@ namespace WinApp.Forms
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
 			SetFormTitle();
-			SetStatus2("Refreshing grid...");
-			GridShow("Grid refreshed");
+			SetStatus2("Refreshing view...");
+			GridShow("View refreshed");
 		}
 
 		private void toolItemViewOverall_Click(object sender, EventArgs e)
@@ -875,6 +875,7 @@ namespace WinApp.Forms
 						else
 						{
 							// New experimental home view
+							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
 							HomeViewRefresh(Status2Message);
 						}
 						break;
@@ -1646,6 +1647,7 @@ namespace WinApp.Forms
 					c.Invalidate();
 				}
 			}
+			SetStatus2(Status2Message);
 		}
 
 		#endregion

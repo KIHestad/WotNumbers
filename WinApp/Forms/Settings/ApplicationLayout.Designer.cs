@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationLayout));
 			this.badForm1 = new BadForm();
@@ -63,7 +64,7 @@
 			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = false;
-			this.badForm1.Size = new System.Drawing.Size(353, 328);
+			this.badForm1.Size = new System.Drawing.Size(353, 301);
 			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
 			this.badForm1.SystemMaximizeImage = null;
 			this.badForm1.SystemMinimizeImage = null;
@@ -80,7 +81,7 @@
 			this.chkHomeViewNewLayout.Name = "chkHomeViewNewLayout";
 			this.chkHomeViewNewLayout.Size = new System.Drawing.Size(213, 23);
 			this.chkHomeViewNewLayout.TabIndex = 7;
-			this.chkHomeViewNewLayout.Text = "New layout (experimental mode)";
+			this.chkHomeViewNewLayout.Text = "Use New Layout with Gadgets";
 			// 
 			// badGroupBox2
 			// 
@@ -88,7 +89,7 @@
 			this.badGroupBox2.Image = null;
 			this.badGroupBox2.Location = new System.Drawing.Point(22, 165);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(307, 97);
+			this.badGroupBox2.Size = new System.Drawing.Size(307, 68);
 			this.badGroupBox2.TabIndex = 6;
 			this.badGroupBox2.Text = "Home View Settings";
 			// 
@@ -137,29 +138,35 @@
 			// 
 			// btnCancel
 			// 
+			this.btnCancel.BlackButton = false;
+			this.btnCancel.Checked = false;
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(260, 280);
+			this.btnCancel.Location = new System.Drawing.Point(260, 253);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(70, 23);
 			this.btnCancel.TabIndex = 1;
 			this.btnCancel.Text = "Close";
+			this.btnCancel.ToolTipText = "";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnSave
 			// 
+			this.btnSave.BlackButton = false;
+			this.btnSave.Checked = false;
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(184, 280);
+			this.btnSave.Location = new System.Drawing.Point(184, 253);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(70, 23);
 			this.btnSave.TabIndex = 0;
 			this.btnSave.Text = "Save";
+			this.btnSave.ToolTipText = "";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// ApplicationLayout
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(353, 328);
+			this.ClientSize = new System.Drawing.Size(353, 301);
 			this.Controls.Add(this.badForm1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "ApplicationLayout";

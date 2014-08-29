@@ -105,8 +105,8 @@
 			this.mTankFilter_Fav09 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_Fav10 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-			this.mTankFilter_EditFavList = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTankFilter_GetInGarage = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTankFilter_EditFavList = new System.Windows.Forms.ToolStripMenuItem();
 			this.mMode = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
@@ -181,6 +181,11 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.gaugesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.winRateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.wN8RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.wN7RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.efficiencyRatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -274,7 +279,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(834, 25);
+			this.toolMain.Size = new System.Drawing.Size(839, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -917,19 +922,19 @@
 			this.toolStripSeparator12.Name = "toolStripSeparator12";
 			this.toolStripSeparator12.Size = new System.Drawing.Size(231, 6);
 			// 
-			// mTankFilter_EditFavList
-			// 
-			this.mTankFilter_EditFavList.Name = "mTankFilter_EditFavList";
-			this.mTankFilter_EditFavList.Size = new System.Drawing.Size(234, 22);
-			this.mTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
-			this.mTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
-			// 
 			// mTankFilter_GetInGarage
 			// 
 			this.mTankFilter_GetInGarage.Name = "mTankFilter_GetInGarage";
 			this.mTankFilter_GetInGarage.Size = new System.Drawing.Size(234, 22);
 			this.mTankFilter_GetInGarage.Text = "Update \"In Garage\" Tank List...";
 			this.mTankFilter_GetInGarage.Click += new System.EventHandler(this.mTankFilter_GetInGarage_Click);
+			// 
+			// mTankFilter_EditFavList
+			// 
+			this.mTankFilter_EditFavList.Name = "mTankFilter_EditFavList";
+			this.mTankFilter_EditFavList.Size = new System.Drawing.Size(234, 22);
+			this.mTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
+			this.mTankFilter_EditFavList.Click += new System.EventHandler(this.toolItemTankFilter_EditFavList_Click);
 			// 
 			// mMode
 			// 
@@ -1244,6 +1249,7 @@
 			// mGadget
 			// 
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gaugesToolStripMenuItem,
             this.mGadgetAddBattleModeStats,
             this.mGadgetAddTankTypeStats,
             this.mGadgetAddImage,
@@ -1253,41 +1259,41 @@
 			this.mGadget.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mGadget.Name = "mGadget";
 			this.mGadget.ShowDropDownArrow = false;
-			this.mGadget.Size = new System.Drawing.Size(65, 22);
-			this.mGadget.Text = "Gadget";
+			this.mGadget.Size = new System.Drawing.Size(70, 22);
+			this.mGadget.Text = "Gadgets";
 			this.mGadget.ToolTipText = "Gadget";
 			// 
 			// mGadgetAddBattleModeStats
 			// 
 			this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
-			this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(185, 22);
+			this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(236, 22);
 			this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
 			this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
 			// mGadgetAddTankTypeStats
 			// 
 			this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
-			this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(185, 22);
+			this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(236, 22);
 			this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
 			this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
 			// mGadgetAddImage
 			// 
 			this.mGadgetAddImage.Name = "mGadgetAddImage";
-			this.mGadgetAddImage.Size = new System.Drawing.Size(185, 22);
-			this.mGadgetAddImage.Text = "Image";
+			this.mGadgetAddImage.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetAddImage.Text = "Last Battle Result Large Images";
 			this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(182, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(233, 6);
 			// 
 			// mGadgetEdit
 			// 
 			this.mGadgetEdit.Name = "mGadgetEdit";
-			this.mGadgetEdit.Size = new System.Drawing.Size(185, 22);
-			this.mGadgetEdit.Text = "Edit added Gadgets...";
+			this.mGadgetEdit.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetEdit.Text = "Edit Home View Gadgets...";
 			this.mGadgetEdit.Click += new System.EventHandler(this.mGadgetNotImplemented);
 			// 
 			// toolStripSeparator23
@@ -1655,6 +1661,46 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// gaugesToolStripMenuItem
+			// 
+			this.gaugesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.winRateToolStripMenuItem,
+            this.wN8RatingToolStripMenuItem,
+            this.wN7RatingToolStripMenuItem,
+            this.efficiencyRatingToolStripMenuItem});
+			this.gaugesToolStripMenuItem.Name = "gaugesToolStripMenuItem";
+			this.gaugesToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+			this.gaugesToolStripMenuItem.Text = "Gauges";
+			this.gaugesToolStripMenuItem.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
+			// winRateToolStripMenuItem
+			// 
+			this.winRateToolStripMenuItem.Name = "winRateToolStripMenuItem";
+			this.winRateToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.winRateToolStripMenuItem.Text = "Win Rate";
+			this.winRateToolStripMenuItem.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
+			// wN8RatingToolStripMenuItem
+			// 
+			this.wN8RatingToolStripMenuItem.Name = "wN8RatingToolStripMenuItem";
+			this.wN8RatingToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.wN8RatingToolStripMenuItem.Text = "WN8 Rating";
+			this.wN8RatingToolStripMenuItem.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
+			// wN7RatingToolStripMenuItem
+			// 
+			this.wN7RatingToolStripMenuItem.Name = "wN7RatingToolStripMenuItem";
+			this.wN7RatingToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.wN7RatingToolStripMenuItem.Text = "WN7 Rating";
+			this.wN7RatingToolStripMenuItem.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
+			// efficiencyRatingToolStripMenuItem
+			// 
+			this.efficiencyRatingToolStripMenuItem.Name = "efficiencyRatingToolStripMenuItem";
+			this.efficiencyRatingToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.efficiencyRatingToolStripMenuItem.Text = "Efficiency Rating";
+			this.efficiencyRatingToolStripMenuItem.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1837,6 +1883,11 @@
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankSum;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+		private System.Windows.Forms.ToolStripMenuItem gaugesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem winRateToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem wN8RatingToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem wN7RatingToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem efficiencyRatingToolStripMenuItem;
 	}
 }
 
