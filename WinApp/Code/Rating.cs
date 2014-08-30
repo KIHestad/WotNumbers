@@ -29,7 +29,94 @@ namespace WinApp.Code
 
 		#region WN8
 
-		public static double CalcBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15")
+		public static double CalcBattleEFF(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "")
+		{
+			double EFF = 0;
+			string sql =
+					"select battlesCount as battles, dmg, spotted as spot, frags, " +
+					"  def, cap, tank.tier as tier , victory as wins " +
+					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
+					"  tank on playerTank.tankId = tank.id " +
+					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " order by battleTime DESC";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DataTable dtBattles = DB.FetchData(sql);
+			if (dtBattles.Rows.Count > 0)
+			{
+				if (battleCount == 0) battleCount = dtBattles.Rows.Count;
+				int count = 0;
+				double BATTLES=0;
+				double DAMAGE=0;
+				double SPOT=0;
+				double FRAGS=0;
+				double DEF=0;
+				double CAP=0;
+				double WINS=0;
+				double TIER = 0;
+				foreach (DataRow stats in dtBattles.Rows)
+				{
+					double btl = Rating.ConvertDbVal2Double(stats["battles"]);
+					BATTLES += btl;
+					DAMAGE += Rating.ConvertDbVal2Double(stats["dmg"]) * btl;
+					SPOT += Rating.ConvertDbVal2Double(stats["spot"]) * btl;
+					FRAGS += Rating.ConvertDbVal2Double(stats["frags"]) * btl;
+					DEF += Rating.ConvertDbVal2Double(stats["def"]) * btl;
+					CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
+					WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
+					TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
+					count++;
+					if (count > battleCount) break;
+				}
+				EFF = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+			}
+			return EFF;
+		}
+
+		public static double CalcBattleWN7(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "")
+		{
+			double WN7 = 0;
+			string sql =
+					"select battlesCount as battles, dmg, spotted as spot, frags, " +
+					"  def, cap, tank.tier as tier , victory as wins " +
+					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
+					"  tank on playerTank.tankId = tank.id " +
+					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " order by battleTime DESC";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DataTable dtBattles = DB.FetchData(sql);
+			if (dtBattles.Rows.Count > 0)
+			{
+				if (battleCount == 0) battleCount = dtBattles.Rows.Count;
+				int count = 0;
+				double BATTLES = 0;
+				double DAMAGE = 0;
+				double SPOT = 0;
+				double FRAGS = 0;
+				double DEF = 0;
+				double CAP = 0;
+				double WINS = 0;
+				double TIER = 0;
+				foreach (DataRow stats in dtBattles.Rows)
+				{
+					double btl = Rating.ConvertDbVal2Double(stats["battles"]);
+					BATTLES += btl;
+					DAMAGE += Rating.ConvertDbVal2Double(stats["dmg"]) * btl;
+					SPOT += Rating.ConvertDbVal2Double(stats["spot"]) * btl;
+					FRAGS += Rating.ConvertDbVal2Double(stats["frags"]) * btl;
+					DEF += Rating.ConvertDbVal2Double(stats["def"]) * btl;
+					CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
+					WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
+					TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
+					count++;
+					if (count > battleCount) break;
+				}
+				if (BATTLES > 0)
+					WN7 = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, (TIER / BATTLES));
+			}
+			return WN7;
+		}
+
+		public static double CalcBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "")
 		{
 			double WN8 = 0;
 			// Create an empty datatable with all tanks, no values
@@ -48,10 +135,10 @@ namespace WinApp.Code
 			// Get all battles
 			sql =
 				"select battlesCount as battles, dmg, spotted as spot, frags, " +
-				"  def, cap, t.tier as tier , victory as wins, t.id as tankId " +
+				"  def, cap, tank.tier as tier , victory as wins, tank.id as tankId " +
 				"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
-				"  tank t on playerTank.tankId = t.id " +
-				"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " order by battleTime DESC";
+				"  tank on playerTank.tankId = tank.id " +
+				"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " order by battleTime DESC";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DataTable dtBattles = DB.FetchData(sql);

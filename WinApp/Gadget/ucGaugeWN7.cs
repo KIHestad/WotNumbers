@@ -111,46 +111,47 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				string sql =
-					"select battlesCount as battles, dmg, spotted as spot, frags, " +
-					"  def, cap, t.tier as tier , victory as wins " +
-					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
-					"  tank t on playerTank.tankId = t.id " +
-					"where playerId=@playerId and battleMode='15' " + battleTimeFilter + " order by battleTime DESC";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dtBattles = DB.FetchData(sql);
-				end_val = 0;
-				if (dtBattles.Rows.Count > 0)
-				{
-					if (battleRevert == 0) battleRevert = dtBattles.Rows.Count;
-					int count = 0;
-					double BATTLES = 0;
-					double DAMAGE = 0;
-					double SPOT = 0;
-					double FRAGS = 0;
-					double DEF = 0;
-					double CAP = 0;
-					double WINS = 0;
-					double TIER = 0;
-					foreach (DataRow stats in dtBattles.Rows)
-					{
-						double btl = Rating.ConvertDbVal2Double(stats["battles"]);
-						BATTLES += btl;
-						DAMAGE += Rating.ConvertDbVal2Double(stats["dmg"]) * btl;
-						SPOT += Rating.ConvertDbVal2Double(stats["spot"]) * btl;
-						FRAGS += Rating.ConvertDbVal2Double(stats["frags"]) * btl;
-						DEF += Rating.ConvertDbVal2Double(stats["def"]) * btl;
-						CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
-						WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
-						TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
-						count++;
-						if (count > battleRevert) break;
-					}
-					if (BATTLES > 0)
-						end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, (TIER / BATTLES));
-					else
-						end_val = 0;
-				}
+				end_val = Rating.CalcBattleWN7(battleTimeFilter, battleRevert);
+				//string sql =
+				//	"select battlesCount as battles, dmg, spotted as spot, frags, " +
+				//	"  def, cap, t.tier as tier , victory as wins " +
+				//	"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
+				//	"  tank t on playerTank.tankId = t.id " +
+				//	"where playerId=@playerId and battleMode='15' " + battleTimeFilter + " order by battleTime DESC";
+				//DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+				//DataTable dtBattles = DB.FetchData(sql);
+				//end_val = 0;
+				//if (dtBattles.Rows.Count > 0)
+				//{
+				//	if (battleRevert == 0) battleRevert = dtBattles.Rows.Count;
+				//	int count = 0;
+				//	double BATTLES = 0;
+				//	double DAMAGE = 0;
+				//	double SPOT = 0;
+				//	double FRAGS = 0;
+				//	double DEF = 0;
+				//	double CAP = 0;
+				//	double WINS = 0;
+				//	double TIER = 0;
+				//	foreach (DataRow stats in dtBattles.Rows)
+				//	{
+				//		double btl = Rating.ConvertDbVal2Double(stats["battles"]);
+				//		BATTLES += btl;
+				//		DAMAGE += Rating.ConvertDbVal2Double(stats["dmg"]) * btl;
+				//		SPOT += Rating.ConvertDbVal2Double(stats["spot"]) * btl;
+				//		FRAGS += Rating.ConvertDbVal2Double(stats["frags"]) * btl;
+				//		DEF += Rating.ConvertDbVal2Double(stats["def"]) * btl;
+				//		CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
+				//		WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
+				//		TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
+				//		count++;
+				//		if (count > battleRevert) break;
+				//	}
+				//	if (BATTLES > 0)
+				//		end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, (TIER / BATTLES));
+				//	else
+				//		end_val = 0;
+				//}
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();

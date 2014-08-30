@@ -90,58 +90,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				//// Create an empty datatable with all tanks, no values
-				//string sql =
-				//	"select t.id as tankId, 0 as battles, 0 as dmg, 0 as spot, 0 as frags, " +
-				//	"  0 as def, 0 as cap, 0 as wins " +
-				//	"from playerTankBattle ptb left join " +
-				//	"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId and ptb.battleMode='15' left join " +
-				//	"  tank t on pt.tankId = t.id " +
-				//	"where t.expDmg is not null and ptb.battleMode='15' " +
-				//	"group by t.id ";
-				//DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-
-				//DataTable ptb = DB.FetchData(sql);
-				// Get all battles
-				//string sql =
-				//	"select battlesCount as battles, dmg, spotted as spot, frags, " +
-				//	"  def, cap, t.tier as tier , victory as wins, t.id as tankId " +
-				//	"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
-				//	"  tank t on playerTank.tankId = t.id " +
-				//	"where playerId=@playerId and battleMode='15' " + battleTimeFilter + " order by battleTime DESC";
-				//DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				//DataTable dtBattles = DB.FetchData(sql);
-				end_val = Rating.CalcBattleWN8(battleTimeFilter, battleRevert);
-				//if (dtBattles.Rows.Count > 0)
-				//{
-				//	if (battleRevert == 0) battleRevert = dtBattles.Rows.Count;
-				//	int count = 0;
-				//	foreach (DataRow stats in dtBattles.Rows)
-				//	{
-				//		double btl = Rating.ConvertDbVal2Double(stats["battles"]);
-				//		// add to datatable
-				//		string tankId = stats["tankId"].ToString();
-				//		DataRow[] ptbRow = ptb.Select("tankId = " + tankId);
-				//		if (ptbRow.Length > 0)
-				//		{
-				//			ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) + Convert.ToInt32(stats["battles"]) ;
-				//			ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(stats["dmg"]) * btl;
-				//			ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(stats["spot"]) * btl;
-				//			ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(stats["frags"]) * btl;
-				//			ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) + Convert.ToInt32(stats["def"]) * btl;
-				//			ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(stats["cap"]) * btl;
-				//			ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(stats["wins"]) * btl;
-				//		}
-				//		else
-				//		{
-				//			if (Config.Settings.showDBErrors)
-				//				Log.LogToFile("*** COULD NOT FIND TANK CALCULTATING WN8 RATING FOR GAUGE ("+tankId+") ***");
-				//		}
-				//		count++;
-				//		if (count > battleRevert) break;
-				//	}
-				//	end_val = Code.Rating.CalculatePlayerTankTotalWN8(ptb);
-				//}
+				end_val = Rating.CalcBattleWN8(battleTimeFilter, battleRevert);			
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();

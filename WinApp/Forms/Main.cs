@@ -1589,7 +1589,6 @@ namespace WinApp.Forms
 			uc.Top = yPos;
 			uc.Left = xPos;
 			xPos += xMove;
-			uc.Name = "test";
 			panelMainArea.Controls.Add(uc);
 			
 			// Show WN8 rate 
@@ -2546,11 +2545,12 @@ namespace WinApp.Forms
 									}
 								}
 								if (count > 0)
-									if (count > 1 && colListItem.name == "WN8")
-									{
-										// Special calculation for WN8
-										rowAverage[colListItem.name] = Rating.CalcBattleWN8(battleTimeFilter, 0, battleMode); 
-									}
+									if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
+										rowAverage[colListItem.name] = Rating.CalcBattleWN8(battleTimeFilter, 0, battleMode, tankFilter);
+									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
+										rowAverage[colListItem.name] = Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter);
+									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
+										rowAverage[colListItem.name] = Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter);
 									else
 										rowAverage[colListItem.name] = sum / count;
 								else
