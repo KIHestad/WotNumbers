@@ -2372,6 +2372,7 @@ namespace WinApp.Forms
 						"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id ";
 					sortOrder = "ORDER BY " + sorting.lastSortColumn + sortDirection + " ";
 				}
+				
 				// Create Battle Time filer
 				string battleTimeFilter = "";
 				if (!mBattlesAll.Checked)
@@ -2380,18 +2381,46 @@ namespace WinApp.Forms
 						battleTimeFilter = " AND (battleTime>=@battleTime AND battleTime<=@battleFromTime) ";
 					else
 						battleTimeFilter = " AND battleTime>=@battleTime ";
+					DateTime dateFilter = new DateTime();
+					if (!mBattlesAll.Checked)
+					{
+						DateTime basedate = DateTime.Now; // current time
+						if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+						dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
+						// Adjust time scale according to selected filter
+						if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
+						else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
+						else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
+						else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
+						else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
+						else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
+						else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
+						else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
+						else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
+						else if (mBattlesYesterday.Checked)
+						{
+							DateTime dateFromYesterdayFilter = dateFilter;
+							dateFilter = dateFilter.AddDays(-1);
+							DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						}
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					}
 				}
+
 				// Create Battle mode filter
 				string battleModeFilter = "";
+				string battleMode = "%";
 				if (MainSettings.GridFilterBattle.BattleMode != GridFilter.BattleModeType.All)
 				{
 					switch (MainSettings.GridFilterBattle.BattleMode)
 					{
 						case GridFilter.BattleModeType.Mode15:
 							battleModeFilter = " AND (battleMode = '15') ";
+							battleMode = "15";
 							break;
 						case GridFilter.BattleModeType.Mode7:
 							battleModeFilter = " AND (battleMode = '7') ";
+							battleMode = "7";
 							break;
 						case GridFilter.BattleModeType.Random:
 							battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
@@ -2404,15 +2433,18 @@ namespace WinApp.Forms
 							break;
 						case GridFilter.BattleModeType.Historical:
 							battleModeFilter = " AND (battleMode = 'Historical') ";
+							battleMode = "Historical";
 							break;
 						case GridFilter.BattleModeType.Skirmishes:
 							battleModeFilter = " AND (battleMode = 'Skirmishes') ";
+							battleMode = "Skirmishes";
 							break;
 						default:
 							break;
 					}
 				}
-
+											
+				
 				// Get Tank filter
 				string tankFilterMessage = "";
 				string tankFilter = "";
@@ -2434,30 +2466,7 @@ namespace WinApp.Forms
 					groupBy + " " +
 					sortOrder;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				DateTime dateFilter = new DateTime();
-				if (!mBattlesAll.Checked)
-				{
-					DateTime basedate = DateTime.Now; // current time
-					if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-					dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
-					// Adjust time scale according to selected filter
-					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
-					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
-					else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
-					else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
-					else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
-					else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
-					else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
-					else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
-					else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
-					else if (mBattlesYesterday.Checked)
-					{
-						DateTime dateFromYesterdayFilter = dateFilter;
-						dateFilter = dateFilter.AddDays(-1);
-						DB.AddWithValue(ref sql, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-					}
-					DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-				}
+				
 				DataTable dt = new DataTable();
 				dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// If images add cols in datatable containing the image
@@ -2537,7 +2546,13 @@ namespace WinApp.Forms
 									}
 								}
 								if (count > 0)
-									rowAverage[colListItem.name] = sum / count;
+									if (count > 1 && colListItem.name == "WN8")
+									{
+										// Special calculation for WN8
+										rowAverage[colListItem.name] = Rating.CalcBattleWN8(battleTimeFilter, 0, battleMode); 
+									}
+									else
+										rowAverage[colListItem.name] = sum / count;
 								else
 									rowAverage[colListItem.name] = 0;
 							}
