@@ -31,17 +31,18 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.toolStripMain = new System.Windows.Forms.ToolStrip();
 			this.menuFile = new System.Windows.Forms.ToolStripDropDownButton();
+			this.menuNewDB = new System.Windows.Forms.ToolStripMenuItem();
+			this.menuSelectDB = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.MenuExit = new System.Windows.Forms.ToolStripMenuItem();
+			this.menuData = new System.Windows.Forms.ToolStripDropDownButton();
+			this.menuDataCreateTableStruct = new System.Windows.Forms.ToolStripMenuItem();
+			this.menuDataGetTankDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.txtAdminSQLiteDB = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.openFileDialogDQLiteADminDB = new System.Windows.Forms.OpenFileDialog();
-			this.menuNewDB = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.menuSelectDB = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuData = new System.Windows.Forms.ToolStripDropDownButton();
-			this.menuDataCreateTableStruct = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuDataGetTankDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
+			this.readMasteryBadgesFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMain.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -73,12 +74,58 @@
 			this.menuFile.Size = new System.Drawing.Size(38, 22);
 			this.menuFile.Text = "&File";
 			// 
+			// menuNewDB
+			// 
+			this.menuNewDB.Name = "menuNewDB";
+			this.menuNewDB.Size = new System.Drawing.Size(201, 22);
+			this.menuNewDB.Text = "Create New Admin DB...";
+			this.menuNewDB.Click += new System.EventHandler(this.menuNewDB_Click);
+			// 
+			// menuSelectDB
+			// 
+			this.menuSelectDB.Name = "menuSelectDB";
+			this.menuSelectDB.Size = new System.Drawing.Size(201, 22);
+			this.menuSelectDB.Text = "Select Admin DB...";
+			this.menuSelectDB.Click += new System.EventHandler(this.menuSelectDB_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(198, 6);
+			// 
 			// MenuExit
 			// 
 			this.MenuExit.Name = "MenuExit";
 			this.MenuExit.Size = new System.Drawing.Size(201, 22);
 			this.MenuExit.Text = "&Exit";
 			this.MenuExit.Click += new System.EventHandler(this.MenuExit_Click);
+			// 
+			// menuData
+			// 
+			this.menuData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.menuData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuDataCreateTableStruct,
+            this.menuDataGetTankDataFromAPI,
+            this.readMasteryBadgesFromFileToolStripMenuItem});
+			this.menuData.Image = ((System.Drawing.Image)(resources.GetObject("menuData.Image")));
+			this.menuData.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.menuData.Name = "menuData";
+			this.menuData.Size = new System.Drawing.Size(44, 22);
+			this.menuData.Text = "Data";
+			// 
+			// menuDataCreateTableStruct
+			// 
+			this.menuDataCreateTableStruct.Name = "menuDataCreateTableStruct";
+			this.menuDataCreateTableStruct.Size = new System.Drawing.Size(234, 22);
+			this.menuDataCreateTableStruct.Text = "Create table structure";
+			this.menuDataCreateTableStruct.Click += new System.EventHandler(this.menuDataCreateTableStruct_Click);
+			// 
+			// menuDataGetTankDataFromAPI
+			// 
+			this.menuDataGetTankDataFromAPI.Name = "menuDataGetTankDataFromAPI";
+			this.menuDataGetTankDataFromAPI.Size = new System.Drawing.Size(234, 22);
+			this.menuDataGetTankDataFromAPI.Text = "Get tank data from API...";
+			this.menuDataGetTankDataFromAPI.Click += new System.EventHandler(this.menuDataGetTankDataFromAPI_Click);
 			// 
 			// groupBox1
 			// 
@@ -114,50 +161,12 @@
 			// 
 			this.openFileDialogDQLiteADminDB.FileName = "openFileDialog1";
 			// 
-			// menuNewDB
+			// readMasteryBadgesFromFileToolStripMenuItem
 			// 
-			this.menuNewDB.Name = "menuNewDB";
-			this.menuNewDB.Size = new System.Drawing.Size(201, 22);
-			this.menuNewDB.Text = "Create New Admin DB...";
-			this.menuNewDB.Click += new System.EventHandler(this.menuNewDB_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(198, 6);
-			// 
-			// menuSelectDB
-			// 
-			this.menuSelectDB.Name = "menuSelectDB";
-			this.menuSelectDB.Size = new System.Drawing.Size(201, 22);
-			this.menuSelectDB.Text = "Select Admin DB...";
-			this.menuSelectDB.Click += new System.EventHandler(this.menuSelectDB_Click);
-			// 
-			// menuData
-			// 
-			this.menuData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.menuData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuDataCreateTableStruct,
-            this.menuDataGetTankDataFromAPI});
-			this.menuData.Image = ((System.Drawing.Image)(resources.GetObject("menuData.Image")));
-			this.menuData.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.menuData.Name = "menuData";
-			this.menuData.Size = new System.Drawing.Size(44, 22);
-			this.menuData.Text = "Data";
-			// 
-			// menuDataCreateTableStruct
-			// 
-			this.menuDataCreateTableStruct.Name = "menuDataCreateTableStruct";
-			this.menuDataCreateTableStruct.Size = new System.Drawing.Size(203, 22);
-			this.menuDataCreateTableStruct.Text = "Create table structure";
-			this.menuDataCreateTableStruct.Click += new System.EventHandler(this.menuDataCreateTableStruct_Click);
-			// 
-			// menuDataGetTankDataFromAPI
-			// 
-			this.menuDataGetTankDataFromAPI.Name = "menuDataGetTankDataFromAPI";
-			this.menuDataGetTankDataFromAPI.Size = new System.Drawing.Size(203, 22);
-			this.menuDataGetTankDataFromAPI.Text = "Get tank data from API...";
-			this.menuDataGetTankDataFromAPI.Click += new System.EventHandler(this.menuDataGetTankDataFromAPI_Click);
+			this.readMasteryBadgesFromFileToolStripMenuItem.Name = "readMasteryBadgesFromFileToolStripMenuItem";
+			this.readMasteryBadgesFromFileToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+			this.readMasteryBadgesFromFileToolStripMenuItem.Text = "Read mastery badges from file";
+			this.readMasteryBadgesFromFileToolStripMenuItem.Click += new System.EventHandler(this.readMasteryBadgesFromFileToolStripMenuItem_Click);
 			// 
 			// Main
 			// 
@@ -194,6 +203,7 @@
 		private System.Windows.Forms.ToolStripDropDownButton menuData;
 		private System.Windows.Forms.ToolStripMenuItem menuDataCreateTableStruct;
 		private System.Windows.Forms.ToolStripMenuItem menuDataGetTankDataFromAPI;
+		private System.Windows.Forms.ToolStripMenuItem readMasteryBadgesFromFileToolStripMenuItem;
 	}
 }
 
