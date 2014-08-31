@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 141; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 147; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1669,6 +1669,44 @@ namespace WinApp.Code
 					Config.Settings.mainGridTankRowWidht = 24;
 					Config.SaveConfig(out msg);
 					break;
+				case 142:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql =
+						"UPDATE columnSelection SET name='Mastery Badge ID' WHERE id IN (53, 510); " +
+						"UPDATE columnSelection SET position=position+20 where colType=1 and position>220;" +
+						s + "VALUES (216, 1, 114, '', 'Mastery Badge', 'The mastery badge achieved for this tank shown as image', 'Rating', 40, 'Image'); " +
+						s + "VALUES (520, 2, 279, '', 'Mastery Badge', 'The mastery badge achieved in this battle shown as image', 'Rating', 40, 'Image'); ";
+					sqlite = mssql;
+					break;
+				case 143:
+					mssql =
+						"UPDATE columnSelection SET position=214 WHERE id=206; " +
+						"UPDATE columnSelection SET position=218 WHERE id=207; ";
+					sqlite = mssql;
+					break;
+				case 144:
+					mssql =
+						"UPDATE columnSelection SET position=position+10 where colType=1 and position>214;" +
+						"UPDATE columnSelection SET position=215 WHERE id=211; ";
+					sqlite = mssql;
+					break;
+				case 145:
+					mssql =
+						"UPDATE columnSelection SET position=position+10 where colType=1 and position>228;" +
+						"UPDATE columnSelection SET position=230 WHERE id=212; ";
+					sqlite = mssql;
+					break;
+				case 146:
+					mssql =
+						"UPDATE columnSelection SET colName='' where colDataType='Image';";
+					sqlite = mssql;
+					break;
+				case 147:
+					mssql =
+						"UPDATE columnList SET lastSortColumn='';";
+					sqlite = mssql;
+					break;
+				
 			}
 			string sql = "";
 			// get sql for correct dbtype

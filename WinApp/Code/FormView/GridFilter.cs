@@ -31,7 +31,7 @@ namespace WinApp.Code
 		public class Settings
 		{
 			public int ColListId = 0;
-			public string ColListName = "";
+			public string ColListName = ""; // Col showing in grid
 			public FavListShowType FavListShow = FavListShowType.AllTanks;
 			public int FavListId = 0;
 			public string FavListName = "";

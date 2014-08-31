@@ -83,16 +83,20 @@ namespace WinApp.Code
 
 		public class ColListClass
 		{
-			public string name = "";
+			public string colType = "";
 			public string colName = "";
-			public string colNameSelect = "";
+			public string name = "";
+			public string colNameSelect = ""; // colName + ' as ' + name
 			public string description = "";
-			public int width = 0;
-			public string type = "";
-			public string group = "";
+			public string colGroup = "";
+			public int colWidth = 0;
+			public string colDataType = "";
 		}
 
-		public static void GetSelectedColumnList(out string Select, out List<ColListClass> colList, out int img, out int smallimg, out int contourimg, bool grouping = false, bool groupingSum = false)
+		public static void GetSelectedColumnList(
+			out string Select, out List<ColListClass> colList, 
+			out int img, out int smallimg, out int contourimg, out int masterybadgeimg,
+			bool grouping = false, bool groupingSum = false)
 		{
 			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
 						 "FROM   columnListSelection INNER JOIN " +
@@ -105,14 +109,15 @@ namespace WinApp.Code
 			img = -1;
 			smallimg = -1;
 			contourimg = -1;
+			masterybadgeimg = -1;
 			List<ColListClass> selectColList = new List<ColListClass>();
 			if (dt.Rows.Count == 0)
 			{
 				Select = "'No columns defined in Column Selection List' As 'Error', ";
 				ColListClass colListItem = new ColListClass();
 				colListItem.name = "Error";
-				colListItem.width = 300;
-				colListItem.type = "VarChar";
+				colListItem.colWidth = 300;
+				colListItem.colType = "VarChar";
 				selectColList.Add(colListItem);
 			}
 			else
@@ -126,8 +131,8 @@ namespace WinApp.Code
 					colListItem.name = colAlias;
 					colListItem.colName = dr["colName"].ToString();
 					colListItem.colNameSelect = colListItem.colName;
-					colListItem.width = Convert.ToInt32(dr["colWidth"]);
-					colListItem.type = dr["colDataType"].ToString();
+					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
+					colListItem.colType = dr["colDataType"].ToString();
 					selectColList.Add(colListItem);
 					// Check for alternative colName for SQLite
 					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
@@ -145,6 +150,7 @@ namespace WinApp.Code
 							case "Tank Icon": contourimg = colNum; break;
 							case "Tank Image": smallimg = colNum; break;
 							case "Tank Image Large": img = colNum; break;
+							case "Mastery Badge": masterybadgeimg = colNum; break;
 						}
 					}
 					else if (colDataType == "DateTime" || colDataType == "VarChar")
@@ -207,9 +213,9 @@ namespace WinApp.Code
 				ColListClass colListItem = new ColListClass();
 				colListItem.name = dr["name"].ToString();
 				colListItem.description = dr["description"].ToString();
-				colListItem.width = Convert.ToInt32(dr["colWidth"]);
-				colListItem.group = dr["colGroup"].ToString();
-				colListItem.type = dr["colDataType"].ToString();
+				colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
+				colListItem.colGroup = dr["colGroup"].ToString();
+				colListItem.colType = dr["colDataType"].ToString();
 				selectColList.Add(colListItem);
 				// Check for alternative colName for SQLite
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
@@ -224,18 +230,25 @@ namespace WinApp.Code
 			colList = selectColList;
 		}
 
-		public static string GetColName(string name, GridView.Views view)
+		public static ColListClass GetColListItem(string name, GridView.Views view)
 		{
-			string sql = "SELECT colName FROM columnSelection WHERE name=@name AND colType=@colType; ";
-			String colName = "";
+			string sql = "SELECT * FROM columnSelection WHERE name=@name AND colType=@colType; ";
 			DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
+			ColListClass clc = new ColListClass();
 			if (dt.Rows.Count > 0)
 			{
-				colName = dt.Rows[0]["colName"].ToString();
+				clc.colName = dt.Rows[0]["colName"].ToString();
+				clc.colNameSelect = dt.Rows[0]["colName"].ToString() + " as " + dt.Rows[0]["name"].ToString();
+				clc.description = dt.Rows[0]["description"].ToString();
+				clc.colGroup = dt.Rows[0]["colGroup"].ToString();
+				clc.name = dt.Rows[0]["name"].ToString();
+				clc.colType = dt.Rows[0]["colType"].ToString();
+				clc.colWidth = Convert.ToInt32(dt.Rows[0]["colWidth"]);
+				clc.colDataType = dt.Rows[0]["colDataType"].ToString();
 			}
-			return colName;
+			return clc;
 		}
 
 	}
