@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 140; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 141; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1662,6 +1662,11 @@ namespace WinApp.Code
 					break;
 				case 140:
 					Config.Settings.homeViewNewLayout = true;
+					Config.SaveConfig(out msg);
+					break;
+				case 141:
+					Config.Settings.mainGridBattleRowWidht = 24;
+					Config.Settings.mainGridTankRowWidht = 24;
 					Config.SaveConfig(out msg);
 					break;
 			}

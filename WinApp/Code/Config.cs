@@ -95,6 +95,8 @@ namespace WinApp.Code
 		public int      gridFontSize  { get; set; }		            // Grid font size
 		public bool     gridBattlesTotalsTop { get; set; }			// false = totals as footer, true = totals frozen at top
 		public bool     homeViewNewLayout { get; set; }				// Experimental mode for home view
+		public int mainGridTankRowWidht { get; set; }				// Width for row header in main grid
+		public int mainGridBattleRowWidht { get; set; }				// Width for row header in main grid
 	}
 
 	class Config
@@ -196,7 +198,9 @@ namespace WinApp.Code
 			Config.Settings.doneRunWotApi = new DateTime(2014, 8, 1);
 			Config.Settings.gridFontSize = 8;
 			Config.Settings.gridBattlesTotalsTop = false;
-			Config.Settings.homeViewNewLayout = false;
+			Config.Settings.homeViewNewLayout = true;
+			Config.Settings.mainGridBattleRowWidht = 24;
+			Config.Settings.mainGridTankRowWidht = 24;
 		}
 
 		

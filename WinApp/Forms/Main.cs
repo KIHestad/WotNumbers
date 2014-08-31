@@ -809,6 +809,7 @@ namespace WinApp.Forms
 						scrollX.Visible = true;
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
+						dataGridMain.RowHeadersWidth = Config.Settings.mainGridTankRowWidht;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
 						mTankFilter.Visible = true;
@@ -835,6 +836,7 @@ namespace WinApp.Forms
 						scrollX.Visible = true;
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
+						dataGridMain.RowHeadersWidth = Config.Settings.mainGridBattleRowWidht;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
 						mTankFilter.Visible = true;
@@ -3189,10 +3191,29 @@ namespace WinApp.Forms
 		{
 			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
 			{
+				
 				string colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
 				int newWidth = e.Column.Width;
 				dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
 				ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
+			}
+		}
+
+		private void dataGridMain_RowHeadersWidthChanged(object sender, EventArgs e)
+		{
+			int rowHeaderWidth = dataGridMain.RowHeadersWidth;
+			switch (MainSettings.View)
+			{
+				case GridView.Views.Overall:
+					break;
+				case GridView.Views.Tank:
+					Config.Settings.mainGridTankRowWidht = rowHeaderWidth; 
+					break;
+				case GridView.Views.Battle:
+					Config.Settings.mainGridBattleRowWidht = rowHeaderWidth; 
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -3606,7 +3627,7 @@ namespace WinApp.Forms
 		{
 			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
 		}
-	
+					
 		
 	}
 }

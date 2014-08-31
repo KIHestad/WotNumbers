@@ -279,7 +279,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(839, 25);
+			this.toolMain.Size = new System.Drawing.Size(808, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1585,6 +1585,7 @@
 			this.dataGridMain.Size = new System.Drawing.Size(601, 204);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.Visible = false;
+			this.dataGridMain.RowHeadersWidthChanged += new System.EventHandler(this.dataGridMain_RowHeadersWidthChanged);
 			this.dataGridMain.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridMain_CellFormatting);
 			this.dataGridMain.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridMain_CellMouseDown);
 			this.dataGridMain.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridMain_CellPainting);
