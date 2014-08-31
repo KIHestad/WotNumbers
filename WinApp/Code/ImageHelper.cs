@@ -14,6 +14,7 @@ namespace WinApp.Code
 	class ImageHelper
 	{
 		public static DataTable TankImage = new DataTable();
+		public static DataTable MasteryBadgeImage = new DataTable();
 
 		public class ImgColumns : IComparable<ImgColumns>
 		{
@@ -39,7 +40,15 @@ namespace WinApp.Code
 			TankImage.Columns.Add("img", typeof(Image));
 			TankImage.Columns.Add("smallimg", typeof(Image));
 			TankImage.Columns.Add("contourimg", typeof(Image));
-		}	
+		}
+
+		public static void CreateMasteryBageImageTable()
+		{
+			MasteryBadgeImage.Columns.Add("id", typeof(Int32));
+			MasteryBadgeImage.PrimaryKey = new DataColumn[] { MasteryBadgeImage.Columns["id"] };
+			MasteryBadgeImage.Columns.Add("img", typeof(Image));
+			LoadMasteryBadgeImages();
+		}
 
 		public static void LoadTankImages()
 		{
@@ -87,6 +96,37 @@ namespace WinApp.Code
 			
 		}
 
+		public static void LoadMasteryBadgeImages()
+		{
+			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
+			string sql = "select * from masterybadge";
+			SQLiteConnection con = new SQLiteConnection(adminDbCon);
+			con.Open();
+			SQLiteCommand command = new SQLiteCommand(sql, con);
+			SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+			DataTable dt = new DataTable();
+			adapter.Fill(dt);
+			con.Close();
+			MasteryBadgeImage.Clear();
+			foreach (DataRow dr in dt.Rows)
+			{
+				DataRow masterybadgeImgNewDataRow = MasteryBadgeImage.NewRow();
+				// ID
+				masterybadgeImgNewDataRow["id"] = dr["id"];
+				// Img
+				byte[] imgByte = (byte[])dr["img"];
+				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+				ms.Write(imgByte, 0, imgByte.Length);
+				Image image = new Bitmap(ms);
+				masterybadgeImgNewDataRow["img"] = image;
+				// Add to dt
+				MasteryBadgeImage.Rows.Add(masterybadgeImgNewDataRow);
+				MasteryBadgeImage.AcceptChanges();
+			}
+
+		}
+
 		public enum TankImageType
 		{
 			ContourImage = 0,
@@ -108,6 +148,19 @@ namespace WinApp.Code
 				return img;
 			}
 				
+		}
+
+		public static Image GetMasteryBadgeImage(int id)
+		{
+			DataRow[] dr = MasteryBadgeImage.Select("id = " + id.ToString());
+			if (dr.Length > 0)
+				return (Image)dr[0]["img"];
+			else
+			{
+				Bitmap img = new Bitmap(1, 1);
+				return img;
+			}
+
 		}
 
 		public static Image GetTankImage(int tankId, TankImageType tankImageType)
@@ -135,7 +188,5 @@ namespace WinApp.Code
 			}
 
 		}
-
-
 	}
 }

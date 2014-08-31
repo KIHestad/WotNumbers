@@ -157,6 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="formadmin_ico_6.ico" />
+    <Content Include="Img\Badges\3.png" />
+    <Content Include="Img\Badges\2.png" />
+    <Content Include="Img\Badges\1.png" />
+    <Content Include="Img\Badges\4.png" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
     <Content Include="Lib\antigravity.py" />
@@ -667,6 +671,11 @@ if not exist "$(TargetDir)NativeBinaries\x86" md "$(TargetDir)NativeBinaries\x86
 xcopy /s /y /d "$(SolutionDir)packages\LibGit2Sharp.0.18.1.0\lib\net40\NativeBinaries\x86\*.*" "$(TargetDir)NativeBinaries\x86"
 if not exist "$(TargetDir)NativeBinaries\amd64" md "$(TargetDir)NativeBinaries\amd64"
 xcopy /s /y /d "$(SolutionDir)packages\LibGit2Sharp.0.18.1.0\lib\net40\NativeBinaries\amd64\*.*" "$(TargetDir)NativeBinaries\amd64"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>md "$(TargetDir)Img"
+del "$(TargetDir)Img" /q /s 
+xcopy "$(ProjectDir)Img" "$(TargetDir)Img" /y /s</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

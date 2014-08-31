@@ -89,13 +89,13 @@ namespace WinApp.Forms
 				foreach (ColListHelper.ColListClass col in cols)
 				{
 					// Add header
-					if (currentHeader != col.group)
+					if (currentHeader != col.colGroup)
 					{
 						DataRow drHeader = dtGrid.NewRow();
-						drHeader["Parameter"] = col.group + " Details";
+						drHeader["Parameter"] = col.colGroup + " Details";
 						drHeader["Header"] = true;
 						dtGrid.Rows.Add(drHeader);
-						currentHeader = col.group;
+						currentHeader = col.colGroup;
 					}
 					// Add value
 					DataRow drTankDetail = dtGrid.NewRow();

@@ -301,6 +301,7 @@ namespace WinApp.Forms
 			SetListener(false);
 			
 			ImageHelper.CreateTankImageTable();
+			ImageHelper.CreateMasteryBageImageTable();
 			ImageHelper.LoadTankImages();
 			// Show view
 			HomeViewCreate("Creating Home View...");
@@ -2100,7 +2101,8 @@ namespace WinApp.Forms
 			int img;
 			int smallimg;
 			int contourimg;
-			ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg);
+			int masterybadgeimg;
+			ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, out masterybadgeimg);
 			// Get Tank filter
 			string message = "";
 			string tankFilter = "";
@@ -2135,14 +2137,16 @@ namespace WinApp.Forms
 					break;
 			}
 			// Get soring
-			GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+			GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 			// Default values for painting glyph as sort order direction on column header
 			if (sorting.lastSortColumn == "")
+			{
 				sorting.lastSortColumn = "playerTank.lastBattleTime";
-			currentSortColId = -2;
-			currentSortDirection = SortOrder.Descending;
+				sorting.lastColumn = "";
+			}
 			// Create sort order
 			string sortOrder = sorting.lastSortColumn + " ";
+			currentSortColName = sorting.lastColumn;
 			if (sorting.lastSortDirectionAsc)
 			{
 				sortOrder += " ASC ";
@@ -2153,6 +2157,7 @@ namespace WinApp.Forms
 				sortOrder += " DESC ";
 				currentSortDirection = SortOrder.Descending;
 			}
+
 			// Create the SQL
 			string sql = "";
 			if (MainSettings.GridFilterTank.BattleMode == GridFilter.BattleModeType.All)
@@ -2162,7 +2167,7 @@ namespace WinApp.Forms
 				sortOrder = sortOrder.Replace("playerTankBattle", "playerTankBattleTotalsView");
 				// Get SUM for playerTankBattle as several battleModes might appear
 				sql =
-					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
+					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -2178,7 +2183,7 @@ namespace WinApp.Forms
 			{
 				// Only gets one row from playerTankBattle for an explisit battleMode
 				sql =
-					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id " + Environment.NewLine +
+					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
 					"FROM     tank INNER JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
@@ -2201,7 +2206,7 @@ namespace WinApp.Forms
 			DataSet ds = new DataSet("DataSet");
 			DataTable dtTankData = new DataTable("TankData");
 			dtTankData = DB.FetchData(sql, Config.Settings.showDBErrors);
-			// If images add cols in datatable containing the image
+			// If tank images add cols in datatable containing the image
 			if (contourimg + smallimg + img > -3)
 			{
 				// Use ImageHelper to add columns in use
@@ -2231,6 +2236,24 @@ namespace WinApp.Forms
 						dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
 				}
 			}
+			// If Mastery badge image add it
+			if (masterybadgeimg > -1)
+			{
+				// Use ImageHelper to add columns in use
+				List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
+				imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", masterybadgeimg));
+				// Sort images to get right position
+				imgPosition.Sort();
+				// Add column
+				dtTankData.Columns.Add(imgPosition[0].colName, typeof(Image)).SetOrdinal(imgPosition[0].colPosition);
+				// Fill with images
+				// Fill with images
+				foreach (DataRow dr in dtTankData.Rows)
+				{
+					int mb_id = Convert.ToInt32(dr["mb_id"]);
+					dr["Mastery Badge"] = ImageHelper.GetMasteryBadgeImage(mb_id);
+				}
+			}
 			// Assign datatable to grid
 			dataGridMain.Columns.Clear();
 			mainGridFormatting = true;
@@ -2241,14 +2264,12 @@ namespace WinApp.Forms
 			//  Hide system cols
 			dataGridMain.Columns["player_Tank_Id"].Visible = false;
 			dataGridMain.Columns["tank_Id"].Visible = false;
+			dataGridMain.Columns["tank_name"].Visible = false;
+			dataGridMain.Columns["mb_id"].Visible = false;
 			// Grid col size and formatting
-			int colListItemCount = 0;
+			int colNum = 0;
 			foreach (ColListHelper.ColListClass colListItem in colList)
 			{
-				// Find sort order column
-				if (sorting != null && colListItem.colName == sorting.lastSortColumn)
-					currentSortColId = colListItemCount;
-				colListItemCount++;
 				// Minimum widht and separator back color
 				if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
 				{
@@ -2261,26 +2282,27 @@ namespace WinApp.Forms
 					dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
 				// Sortmode - width
 				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
-				dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+				dataGridMain.Columns[colListItem.name].Width = colListItem.colWidth;
 				// Format cells
-				if (colListItem.type == "Int")
+				if (colListItem.colType == "Int")
 				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 				}
-				else if (colListItem.type == "Float")
+				else if (colListItem.colType == "Float")
 				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
 				}
-				else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
+				else if (colListItem.colType == "Image" && colListItem.name == "Tank Image")
 				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				}
-				else if (colListItem.type == "Image" && colListItem.name == "Tank Image Large")
+				else if (colListItem.colType == "Image" && colListItem.name == "Tank Image Large")
 				{
 					dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				}
+				colNum++;
 			}
 			ResizeNow();
 			mainGridSaveColWidth = true;
@@ -2317,16 +2339,19 @@ namespace WinApp.Forms
 				int img;
 				int smallimg;
 				int contourimg;
-				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, groupingActive, groupingSum);
+				int masterybadgeimg;
+				ColListHelper.GetSelectedColumnList(out select, out colList, out img, out smallimg, out contourimg, out masterybadgeimg, groupingActive, groupingSum);
 				// Get soring
-				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 				// Default values for painting glyph as sort order direction on column header
-				if (sorting.lastSortColumn == "")
-					sorting.lastSortColumn = "battle.battleTime";
-				currentSortColId = -2;
-				currentSortDirection = SortOrder.Descending;
+				if (sorting.lastColumn == "")
+				{
+					sorting.lastColumn = "battle.battleTime";
+					sorting.lastSortColumn = sorting.lastColumn;
+				}
 				// Create sort order if no grouping 
 				string sortDirection = "";
+				currentSortColName = sorting.lastColumn;
 				if (sorting.lastSortDirectionAsc)
 				{
 					sortDirection += " ASC ";
@@ -2349,8 +2374,8 @@ namespace WinApp.Forms
 						"  '#30A8FF' as battleResultColor,  '#30A8FF' as battleSurviveColor, " +
 						"  NULL as battleTimeToolTip, SUM(battle.battlesCount) as battlesCountToolTip, " +
 						"  SUM(battle.victory) as victoryToolTip, SUM(battle.draw) as drawToolTip, SUM(battle.defeat) as defeatToolTip, " +
-						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, 0 as arenaUniqueID," +
-						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as battle_Id " ;
+						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, 0 as arenaUniqueID," +
+						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as mb_id, 0 as battle_Id ";
 					groupBy = "GROUP BY tank.id, tank.Name, playerTank.Id ";
 					// Get sorting be finding calcultated fiels
 					foreach (ColListHelper.ColListClass col in colList)
@@ -2369,9 +2394,10 @@ namespace WinApp.Forms
 						"  battleResult.color as battleResultColor,  battleSurvive.color as battleSurviveColor, " +
 						"  CAST(battle.battleTime AS DATETIME) as battleTimeToolTip, battle.battlesCount as battlesCountToolTip, " +
 						"  battle.victory as victoryToolTip, battle.draw as drawToolTip, battle.defeat as defeatToolTip, " +
-						"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, battle.arenaUniqueID," +
+						"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, " +
+						"  battle.markOfMastery as mb_id, battle.arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id ";
-					sortOrder = "ORDER BY " + sorting.lastSortColumn + sortDirection + " ";
+					sortOrder = "ORDER BY " + sorting.lastSortColumn + " " + sortDirection + " ";
 				}
 				
 				// Create Battle Time filer
@@ -2471,7 +2497,7 @@ namespace WinApp.Forms
 				DataTable dt = new DataTable();
 				dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// If images add cols in datatable containing the image
-				if (contourimg + smallimg + img > -3)
+				if (contourimg + smallimg + img + masterybadgeimg> -3)
 				{
 					// Use ImageHelper to add columns in use
 					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
@@ -2498,6 +2524,26 @@ namespace WinApp.Forms
 							dr["Tank Image"] = ImageHelper.GetTankImage(tankId, "smallimg");
 						if (img >= 0)
 							dr["Tank Image Large"] = ImageHelper.GetTankImage(tankId, "img");
+					}
+				}
+				// If Mastery badge image add it
+				if (masterybadgeimg > -1)
+				{
+					// Use ImageHelper to add columns in use
+					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
+					imgPosition.Add(new ImageHelper.ImgColumns("Mastery Badge", masterybadgeimg));
+					// Sort images to get right position
+					imgPosition.Sort();
+					// Add column
+					dt.Columns.Add(imgPosition[0].colName, typeof(Image)).SetOrdinal(imgPosition[0].colPosition);
+					// Fill with images
+					// Fill with images
+					foreach (DataRow dr in dt.Rows)
+					{
+						int mb_id = 0;
+						if (dr["mb_id"] != DBNull.Value)
+							mb_id = Convert.ToInt32(dr["mb_id"]);
+						dr["Mastery Badge"] = ImageHelper.GetMasteryBadgeImage(mb_id);
 					}
 				}
 				int rowcount = dt.Rows.Count;
@@ -2528,7 +2574,7 @@ namespace WinApp.Forms
 					rowAverage["killedCountToolTip"] = 0;
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
-						if (colListItem.type == "Int" || colListItem.type == "Float")
+						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
 							IEnumerable<string> nonAvgCols = new List<string> 
 							{ 
@@ -2563,11 +2609,11 @@ namespace WinApp.Forms
 								rowAverage[colListItem.name] = DBNull.Value;
 							}
 						}
-						else if (colListItem.type == "DateTime")
+						else if (colListItem.colType == "DateTime")
 						{
 							rowAverage[colListItem.name] = DBNull.Value;
 						}
-						else if (colListItem.type == "Image")
+						else if (colListItem.colType == "Image")
 						{
 							rowAverage[colListItem.name] = blankImage;
 						}
@@ -2598,7 +2644,7 @@ namespace WinApp.Forms
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
 						// Format column
-						if (colListItem.type == "Int" || colListItem.type == "Float")
+						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
 							IEnumerable<string> nonTotalsCols = new List<string> 
 							{ 
@@ -2635,11 +2681,11 @@ namespace WinApp.Forms
 							else
 								rowTotals[colListItem.name] = DBNull.Value;
 						}
-						else if (colListItem.type == "DateTime")
+						else if (colListItem.colType == "DateTime")
 						{
 							rowTotals[colListItem.name] = DBNull.Value;
 						}
-						else if (colListItem.type == "Image")
+						else if (colListItem.colType == "Image")
 						{
 							rowTotals[colListItem.name] = blankImage;
 						}
@@ -2708,15 +2754,12 @@ namespace WinApp.Forms
 				dataGridMain.Columns["player_Tank_Id"].Visible = false;
 				dataGridMain.Columns["battle_Id"].Visible = false;
 				dataGridMain.Columns["tank_Id"].Visible = false;
+				dataGridMain.Columns["tank_name"].Visible = false;
 				dataGridMain.Columns["arenaUniqueID"].Visible = false;
+				dataGridMain.Columns["mb_id"].Visible = false;
 				// Format grid 
-				int colListItemCount = 0;
 				foreach (ColListHelper.ColListClass colListItem in colList)
 				{
-					// Find sort order column
-					if (sorting != null && colListItem.colName == sorting.lastSortColumn)
-						currentSortColId = colListItemCount;
-					colListItemCount++;
 					// MInimum width and separator back color
 					if (colListItem.name.Length > 13 && colListItem.name.Substring(0, 13) == " - Separator ")
 					{
@@ -2734,15 +2777,15 @@ namespace WinApp.Forms
 					else
 						dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
 					// Width and sorting
-					dataGridMain.Columns[colListItem.name].Width = colListItem.width;
+					dataGridMain.Columns[colListItem.name].Width = colListItem.colWidth;
 					dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
 					// Format cells
-					if (colListItem.type == "Int")
+					if (colListItem.colType == "Int")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 					}
-					else if (colListItem.type == "Float")
+					else if (colListItem.colType == "Float")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						IEnumerable<string> showFloatValues = new List<string> 
@@ -2756,11 +2799,11 @@ namespace WinApp.Forms
 						if (rowcount > 0 && !groupingActive) // Special format in average row for floating values
 							dataGridMain.Rows[rowAverageIndex].Cells[colListItem.name].Style.Format = "N1";
 					}
-					else if (colListItem.type == "Image" && colListItem.name == "Tank Image")
+					else if (colListItem.colType == "Image" && colListItem.name == "Tank Image")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 					}
-					else if (colListItem.type == "Image" && colListItem.name == "Tank Image Large")
+					else if (colListItem.colType == "Image" && colListItem.name == "Tank Image Large")
 					{
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 					}
@@ -2798,7 +2841,7 @@ namespace WinApp.Forms
 
 		#region Grid sorting and paint events
 
-		private int currentSortColId = -2;
+		private string currentSortColName = "";
 		private SortOrder currentSortDirection = SortOrder.Descending;
 
 		private void dataGridMain_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -2836,7 +2879,7 @@ namespace WinApp.Forms
 				}
 			}
 			// Add glyph to column headers
-			else if (MainSettings.View != GridView.Views.Overall && e.RowIndex < 0 && e.ColumnIndex == currentSortColId) 
+			else if (MainSettings.View != GridView.Views.Overall && e.RowIndex < 0 && e.ColumnIndex > -1 && dataGridMain.Columns[e.ColumnIndex].HeaderText == currentSortColName) 
 			{
 				dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = currentSortDirection;
 			}
@@ -2858,20 +2901,21 @@ namespace WinApp.Forms
 		private void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			// Avoid headerRow and Image columns
-			if (e.ColumnIndex < 0 || dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(Image))
+			if (e.ColumnIndex < 0)
 				return;
 			// Manual Sort for battle and tanks view
 			if (MainSettings.View != GridView.Views.Overall) 
 			{
 				// Find colName
-				string colName = ColListHelper.GetColName(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
+
+				ColListHelper.ColListClass clc = ColListHelper.GetColListItem(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
 				// Find current sort
-				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter().ColListId);
+				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 				// Check if this is first sorting
 				if (sorting == null)
 					sorting = new GridSortingHelper.Sorting();
 				// Check if same same column as last
-				if (colName == sorting.lastSortColumn)
+				if (clc.name == sorting.lastColumn)
 				{
 					// same as last, reverse sort direction
 					sorting.lastSortDirectionAsc = !sorting.lastSortDirectionAsc;
@@ -2879,7 +2923,8 @@ namespace WinApp.Forms
 				else
 				{
 					// new column, get default sort direction
-					sorting.lastSortColumn = colName;
+					sorting.lastColumn = clc.name; // column name in header
+					sorting.lastSortColumn = clc.colName; // database field to sort on
 					bool sortDirectionAsc = false;
 					if (dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(string))
 						sortDirectionAsc = true;
