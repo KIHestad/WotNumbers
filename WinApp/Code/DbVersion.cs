@@ -1674,8 +1674,8 @@ namespace WinApp.Code
 					mssql =
 						"UPDATE columnSelection SET name='Mastery Badge ID' WHERE id IN (53, 510); " +
 						"UPDATE columnSelection SET position=position+20 where colType=1 and position>220;" +
-						s + "VALUES (216, 1, 114, '', 'Mastery Badge', 'The mastery badge achieved for this tank shown as image', 'Rating', 40, 'Image'); " +
-						s + "VALUES (520, 2, 279, '', 'Mastery Badge', 'The mastery badge achieved in this battle shown as image', 'Rating', 40, 'Image'); ";
+						s + "VALUES (216, 1, 114, '', 'Mastery Badge', 'The mastery badge achieved for this tank shown as image', 'Rating', 50, 'Image'); " +
+						s + "VALUES (520, 2, 279, '', 'Mastery Badge', 'The mastery badge achieved in this battle shown as image', 'Rating', 50, 'Image'); ";
 					sqlite = mssql;
 					break;
 				case 143:
