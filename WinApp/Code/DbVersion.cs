@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 147; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 149; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -967,8 +967,6 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 67:
-					NewSystemTankColList();
-					NewSystemBattleColList_Default();
 					break;
 				case 68:
 					mssql = "UPDATE columnSelection SET name='Remaining XP' WHERE id=176; " +
@@ -994,7 +992,6 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;	
 				case 71:
-					NewSystemBattleColList_Default();
 					break;
 				case 72:
 					mssql = "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (54289, 'Lowe', 1, 212); " +
@@ -1543,9 +1540,6 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 124:
-					NewSystemBattleColList_Default();
-					NewSystemBattleColList_WN8();
-					NewSystemTankColList_WN8();
 					break;
 				case 125:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
@@ -1706,6 +1700,12 @@ namespace WinApp.Code
 						"UPDATE columnList SET lastSortColumn='';";
 					sqlite = mssql;
 					break;
+				case 148:
+					NewSystemTankColList();
+					break;
+				case 149:
+					NewSystemBattleColList();
+					break;
 				
 			}
 			string sql = "";
@@ -1722,7 +1722,7 @@ namespace WinApp.Code
 		public static bool CheckForDbUpgrade(Form parentForm)
 		{
 			bool upgradeOK = true;
-			int DBVersionCurrentNumber = CurrentNumber(); // Get current DB version
+			int DBVersionCurrentNumber = GetDBVersion(); // Get current DB version
 			if (DBVersionCurrentNumber == 0) return false; // Quit verison check if no db version could be found
 			if (DBVersionCurrentNumber == ExpectedNumber) return true; // Quit version check when expected version is found, everything is OK!
 			if (DBVersionCurrentNumber < ExpectedNumber)
@@ -1735,7 +1735,9 @@ namespace WinApp.Code
 					DBVersionCurrentNumber++;
 					// Upgrade to next db version now
 					string sql = UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType); // Get upgrade script for this version and dbType 
-					continueNext = DB.ExecuteNonQuery(sql); // Run upgrade script
+					if (sql != "")
+						continueNext = DB.ExecuteNonQuery(sql); // Run upgrade script
+					Application.DoEvents(); // To avoid freeze
 					// Update db _version_ if success
 					if (continueNext)
 					{
@@ -1753,7 +1755,7 @@ namespace WinApp.Code
 		}
 
 		// Returns database current version, on first run version table is created and version = 1
-		public static int CurrentNumber()
+		public static int GetDBVersion()
 		{
 			int version = 0;
 			string sql = "";
@@ -1777,7 +1779,7 @@ namespace WinApp.Code
 			return version;
 		}
 
-		public static int WN8Version()
+		public static int GetWN8Version()
 		{
 			int version = 0;
 			string sql = "select version from _version_ where id=2; ";
@@ -1798,45 +1800,64 @@ namespace WinApp.Code
 		//WHERE columnListSelection.columnListId=28
 		//ORDER BY sortorder
 
+		// *** TANK SYSTEM COL LIST *** //
 
 		private static void NewSystemTankColList()
 		{
-			// First remove all other system colList for Tank
+			// First remove all system colList for Tank
 			string sql = 
 				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=1); " +
 				"delete from columnList where sysCol=1 and colType=1; ";
 			DB.ExecuteNonQuery(sql);
-			// Then remove current startup, and create new default colList
-			sql =	
-				"update columnList set colDefault=0 where colType=1; " +
-				"insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 1, 1, 1, -1); ";
+			// Create lists all over
+			string newDefaultFavListId = "";
+			newDefaultFavListId = NewSystemTankColList_Default(-10);
+			NewSystemTankColList_Grinding(-9);
+			NewSystemTankColList_WN8(-8);
+			// Sort lists
+			ColListHelper.ColListSort(1);
+			// Set default if missing
+			SetFavListAsDefaultIfMissing(newDefaultFavListId, 1);
+		}
+
+		private static string NewSystemTankColList_Default(int position)
+		{
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 1, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=1;";
+			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='Default';";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" +    // tier
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" +   // smallImg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,120);" +    // name
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (44," + id + ",4,50);" +    // type
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (57," + id + ",5,50);" +    // country
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (54," + id + ",6,100);" +   // lastBattleTime
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",7,50);" +    // battles
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",8,50);" +    // winrate
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (154," + id + ",9,50);" +   // max dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (155," + id + ",10,50);" +  // max frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (156," + id + ",11,50);" +  // max xp
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (53," + id + ",12,50);" +   // mark of mastery
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",13,50);" +   // eff
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",14,50);";    // wn8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" + // Tank Image
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,120);" + // Tank
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (44," + id + ",4,50);" + // Type
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (57," + id + ",5,50);" + // Nation
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,3);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (54," + id + ",7,100);" + // Last Battle
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",8,50);" + // Battles
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",9,50);" + // Win Rate
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",10,3);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (155," + id + ",11,50);" + // Frags Max
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (154," + id + ",12,50);" + // Dmg Max
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (156," + id + ",13,50);" + // XP Max
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",14,3);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (216," + id + ",15,50);" + // Mastery Badge
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",16,50);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (187," + id + ",17,50);" + // WN7
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",18,50);"; // EFF
 			DB.ExecuteNonQuery(sql);
-			// Then create grinding colList
-			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Grinding', 0, 2, 1, -1); ";
+			return id;
+		}
+
+		private static string NewSystemTankColList_Grinding(int position)
+		{
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Grinding', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=1;";
-			id = DB.FetchData(sql).Rows[0][0].ToString();
+			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='Grinding';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" +    // tier
@@ -1851,112 +1872,12 @@ namespace WinApp.Code
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (174," + id + ",10,40);" +  // gBattlesDay
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (179," + id + ",11,40);";   // gRestDays
 			DB.ExecuteNonQuery(sql);
+			return id;
 		}
 
-		
-		//SELECT '"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values ('+cast(columnSelectionId as varchar)+',"+id+",'+cast(sortorder as varchar)+','+cast(columnListSelection.colWidth as varchar)+');" + // ' + columnSelection.name
-		//FROM columnListSelection inner join columnSelection on columnSelection.Id = columnListSelection.columnSelectionId
-		//WHERE columnListSelection.columnListId=28
-		//ORDER BY sortorder
-
-
-		private static void NewSystemBattleColList_Default()
+		private static string NewSystemTankColList_WN8(int position)
 		{
-			// First remove ALL system colList for Battle
-			string sql =
-				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2); " +
-				"delete from columnList where sysCol=1 and colType=2; ";
-			DB.ExecuteNonQuery(sql);
-			// Create new default colList
-			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Default', 0, 1, 1, -1); ";
-			DB.ExecuteNonQuery(sql);
-			Application.DoEvents();
-			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=2;";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
-			// Insert columns
-			sql =
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,109);" + // Tank
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,101);" + // DateTime
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",5,59);" + // Result
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",6,53);" + // Survived
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",7,3);" + //  - Separator 0 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",8,54);" + // Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (21," + id + ",9,47);" + // Dmg Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (22," + id + ",10,47);" + // Dmg Track
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",11,3);" + //  - Separator 1 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",12,35);" + // Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",13,35);" + // Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (24," + id + ",14,35);" + // Cap
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",15,35);" + // Def
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",16,3);" + //  - Separator 2 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (28," + id + ",17,35);" + // Hit Rate
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (519," + id + ",18,55);" + // Total XP
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (508," + id + ",19,52);" + // Credits Result
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",20,3);" + //  - Separator 3 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (40," + id + ",21,47);" + // EFF
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",22,47);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",23,97);"; // Map
-			DB.ExecuteNonQuery(sql);
-			// Crate new as default?
-			sql = "select count(id) from columnList where colDefault=1 and colType=2;";
-			int count = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
-			if (count == 0)
-			{
-				sql = "update columnList set colDefault=1 where id=" + id + "; ";
-				DB.ExecuteNonQuery(sql);
-				MainSettings.GridFilterBattle.ColListId = Convert.ToInt32(id);
-				MainSettings.GridFilterBattle.ColListName = "Default";
-			}
-		}
-
-		private static void NewSystemBattleColList_WN8()
-		{
-			// First remove all other system colList for Battle
-			string sql =
-				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2 and name='WN8'); " +
-				"delete from columnList where sysCol=1 and colType=2 and name='WN8'; ";
-			DB.ExecuteNonQuery(sql);
-			// Then remove current startup, and create new default colList
-			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'WN8', 0, 1, 1, -1); ";
-			DB.ExecuteNonQuery(sql);
-			Application.DoEvents();
-			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='WN8';";
-			string id = DB.FetchData(sql).Rows[0][0].ToString();
-			// Insert columns
-			sql =
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,120);" + // Tank
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,100);" + // DateTime
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",5,60);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,3);" + //  - Separator 0 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",7,60);" + // Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (197," + id + ",8,60);" + // Exp Dmg
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",9,3);" + //  - Separator 1 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",10,40);" + // Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (199," + id + ",11,40);" + // Exp Spot
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",12,3);" + //  - Separator 2 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",13,40);" + // Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (200," + id + ",14,40);" + // Exp Frags
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",15,3);" + //  - Separator 3 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",16,40);" + // Def
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (201," + id + ",17,40);"; // Exp Def
-			DB.ExecuteNonQuery(sql);
-		}
-
-		private static void NewSystemTankColList_WN8()
-		{
-			// First remove all other system colList for Battle
-			string sql =
-				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=1 and name='WN8'); " +
-				"delete from columnList where sysCol=1 and colType=1 and name='WN8'; ";
-			DB.ExecuteNonQuery(sql);
-			// Then remove current startup, and create new default colList
-			sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'WN8', 0, 1, 1, -1); ";
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'WN8', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			Application.DoEvents();
 			// Find id for new list
@@ -1983,10 +1904,111 @@ namespace WinApp.Code
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (195," + id + ",17,40);" + // Exp Frags
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",18,3);" + //  - Separator 4 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (204," + id + ",19,40);" + // Avg Def
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",20,40);" ; // Exp Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",20,40);"; // Exp Def
 			DB.ExecuteNonQuery(sql);
+			return id;
 		}
 
+		// *** BATTLE SYSTEM COL LIST *** //
+
+		private static void NewSystemBattleColList()
+		{
+			// First remove all system colList for Battle
+			string sql =
+				"delete from columnListSelection where columnListId IN (select id from columnList where sysCol=1 and colType=2); " +
+				"delete from columnList where sysCol=1 and colType=2; ";
+			DB.ExecuteNonQuery(sql);
+			// Create lists all over
+			string newDefaultFavListId = "";
+			newDefaultFavListId = NewSystemBattleColList_Default(-10);
+			NewSystemBattleColList_WN8(-9);
+			// Sort lists
+			ColListHelper.ColListSort(2);
+			// Set default if missing
+			SetFavListAsDefaultIfMissing(newDefaultFavListId, 2);
+		}
+
+		private static string NewSystemBattleColList_Default(int position)
+		{
+			// Create new default colList
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Default', 0, " + position.ToString() + ", 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='Default';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,109);" + // Tank
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,104);" + // DateTime
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",5,59);" + // Result
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",6,53);" + // Survived
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",7,3);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",8,54);" + // Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (21," + id + ",9,47);" + // Dmg Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (22," + id + ",10,47);" + // Dmg Track
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",11,3);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",12,35);" + // Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",13,35);" + // Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (24," + id + ",14,35);" + // Cap
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",15,35);" + // Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",16,3);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (519," + id + ",18,55);" + // Total XP
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (508," + id + ",19,52);" + // Credits Result
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",20,3);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (520," + id + ",21,50);" + // Mastery Badge
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",22,47);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (186," + id + ",23,47);" + // WN7
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",25,97);"; // Map
+			DB.ExecuteNonQuery(sql);
+			return id;
+		}
+
+		private static string NewSystemBattleColList_WN8(int position)
+		{
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'WN8', 0, " + position.ToString() + ", 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='WN8';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,120);" + // Tank
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,100);" + // DateTime
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",5,60);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,3);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",7,60);" + // Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (197," + id + ",8,60);" + // Exp Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",9,3);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (35," + id + ",10,40);" + // Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (199," + id + ",11,40);" + // Exp Spot
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",12,3);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",13,40);" + // Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (200," + id + ",14,40);" + // Exp Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",15,3);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (25," + id + ",16,40);" + // Def
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (201," + id + ",17,40);"; // Exp Def
+			DB.ExecuteNonQuery(sql);
+			return id;
+		}
+		
+		// *** SET NEW DEFAULT COL LIST IF MISSING ***/
+
+		private static void SetFavListAsDefaultIfMissing(string favListId, int colTypeId)
+		{
+			string sql = "select count(id) from columnList where colDefault=1 and colType=" + colTypeId.ToString() + ";";
+			int count = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+			if (count == 0)
+			{
+				sql = "update columnList set colDefault=1 where id=" + favListId + "; ";
+				DB.ExecuteNonQuery(sql);
+				MainSettings.GridFilterBattle.ColListId = Convert.ToInt32(favListId);
+				MainSettings.GridFilterBattle.ColListName = "Default";
+			}
+		}
 
 	}
 }

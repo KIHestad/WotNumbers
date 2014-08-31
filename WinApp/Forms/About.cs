@@ -21,11 +21,11 @@ namespace WinApp.Forms
 		private void About_Load(object sender, EventArgs e)
 		{
 			string dbVersionComment = " (correct version)";
-			if (DBVersion.ExpectedNumber != DBVersion.CurrentNumber())
+			if (DBVersion.ExpectedNumber != DBVersion.GetDBVersion())
 				dbVersionComment = " (expected: " + DBVersion.ExpectedNumber.ToString("0000") + ")";
 			lblAppVer.Text = AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion;
-			lblDBver.Text = DBVersion.CurrentNumber().ToString("0000");
-			lblWN8ver.Text = DBVersion.WN8Version().ToString();
+			lblDBver.Text = DBVersion.GetDBVersion().ToString("0000");
+			lblWN8ver.Text = DBVersion.GetWN8Version().ToString();
 		}
 
 		private void linkWotNumbers_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
