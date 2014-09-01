@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 153; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 155; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1647,6 +1647,12 @@ namespace WinApp.Code
 					mssql =
 						s + "VALUES ('tanks_v2','achievements', 'markOfMastery','Int','markOfMastery', NULL , NULL,'tanks_v2.achievements.markOfMastery', NULL); ";
 					sqlite = mssql;
+					break;
+				case 154:
+					TankData.GetJson2dbMappingFromDB();
+					break;
+				case 155:
+					RunDossierFileCheckWithForceUpdate = true;
 					break;
 			}
 			string sql = "";
