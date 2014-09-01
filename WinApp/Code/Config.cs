@@ -97,6 +97,7 @@ namespace WinApp.Code
 		public bool     homeViewNewLayout { get; set; }				// Experimental mode for home view
 		public int mainGridTankRowWidht { get; set; }				// Width for row header in main grid
 		public int mainGridBattleRowWidht { get; set; }				// Width for row header in main grid
+		public bool useSmallMasteryBadgeIcons { get; set; }			// Flag for small MB icons
 	}
 
 	class Config
@@ -201,6 +202,7 @@ namespace WinApp.Code
 			Config.Settings.homeViewNewLayout = true;
 			Config.Settings.mainGridBattleRowWidht = 24;
 			Config.Settings.mainGridTankRowWidht = 24;
+			Config.Settings.useSmallMasteryBadgeIcons = true;
 		}
 
 		

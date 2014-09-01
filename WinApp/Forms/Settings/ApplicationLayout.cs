@@ -12,6 +12,8 @@ namespace WinApp.Forms
 {
 	public partial class ApplicationLayout : Form
 	{
+		private bool currentMasteryBadgeIcons;
+		
 		public ApplicationLayout()
 		{
 			InitializeComponent();
@@ -31,6 +33,8 @@ namespace WinApp.Forms
 			if (fs > 14) fs = 14;
 			ddFontSize.Text = fs.ToString();
 			chkHomeViewNewLayout.Checked = Config.Settings.homeViewNewLayout;
+			currentMasteryBadgeIcons = Config.Settings.useSmallMasteryBadgeIcons;
+			chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -38,8 +42,13 @@ namespace WinApp.Forms
 			Config.Settings.gridBattlesTotalsTop = chkBattleTotalsPosition.Checked;
 			Config.Settings.gridFontSize = Convert.ToInt32(ddFontSize.Text);
 			Config.Settings.homeViewNewLayout = chkHomeViewNewLayout.Checked;
+			Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
 			string msg = "";
 			Config.SaveConfig(out msg);
+			// Load new mastery badge icons if changed
+			if (currentMasteryBadgeIcons != chkSmallMasteryBadgeIcons.Checked)
+				ImageHelper.CreateMasteryBageImageTable();
+			// Done
 			this.Close();
 		}
 

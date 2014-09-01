@@ -44,6 +44,7 @@ namespace WinApp.Code
 
 		public static void CreateMasteryBageImageTable()
 		{
+			MasteryBadgeImage = new DataTable();
 			MasteryBadgeImage.Columns.Add("id", typeof(Int32));
 			MasteryBadgeImage.PrimaryKey = new DataColumn[] { MasteryBadgeImage.Columns["id"] };
 			MasteryBadgeImage.Columns.Add("img", typeof(Image));
@@ -115,7 +116,10 @@ namespace WinApp.Code
 				// ID
 				masterybadgeImgNewDataRow["id"] = dr["id"];
 				// Img
-				byte[] imgByte = (byte[])dr["img"];
+				string imgField = "img";
+				if (Config.Settings.useSmallMasteryBadgeIcons)
+					imgField = "imgSmall";
+				byte[] imgByte = (byte[])dr[imgField];
 				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
 				ms.Write(imgByte, 0, imgByte.Length);
 				Image image = new Bitmap(ms);

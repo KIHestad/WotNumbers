@@ -91,19 +91,7 @@ namespace WinAdmin
 
 		private void UpgradeDB()
 		{
-			DB.DBResult result = new DB.DBResult();
-			// Add masterybadge table if missing
-			string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='masterybadge';";
-			DataTable dt = DB.FetchData(sql, Settings.Config, out result);
-			if (dt.Rows.Count == 0)
-			{
-				sql = "create table masterybadge ( " +
-					"	id integer primary key, " +
-					"	img blob " +
-					")";
-				DB.ExecuteNonQuery(sql, Settings.Config, out result);
-				FormHelper.ShowError(result);
-			}
+			
 		}
 
 		private void menuDataGetTankDataFromAPI_Click(object sender, EventArgs e)
@@ -114,28 +102,46 @@ namespace WinAdmin
 
 		private void readMasteryBadgesFromFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			// Remove current images
+			// Recreate table
 			DB.DBResult result = new DB.DBResult();
-			string sql = "DELETE FROM masterybadge; ";
+			// Add masterybadge table if missing
+			string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='masterybadge';";
+			DataTable dt = DB.FetchData(sql, Settings.Config, out result);
+			if (dt.Rows.Count == 1)
+			{
+				sql = "drop table masterybadge;";
+				DB.ExecuteNonQuery(sql, Settings.Config, out result);
+				FormHelper.ShowError(result);
+			}
+			sql = "create table masterybadge ( " +
+				"	id integer primary key, " +
+				"	img blob, imgSmall blob " +
+				")";
 			DB.ExecuteNonQuery(sql, Settings.Config, out result);
+			FormHelper.ShowError(result);
+			// Remove current images
 			// Loop throug current images
+			result = new DB.DBResult();
 			string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Img\\Badges\\";
 			string[] images = Directory.GetFiles(path, "*.png");
 			foreach (string imageFile in images)
 			{
 				// read image into database
 				byte[] img = getImageFromFile(imageFile);
-
+				byte[] imgSmall = getImageFromFile(imageFile.Replace("\\Img\\Badges\\","\\Img\\Badges\\Small\\"));
 				// SQL Lite binary insert
 				string conString = Config.DatabaseConnection(Settings.Config);
 				SQLiteConnection con = new SQLiteConnection(conString);
 				SQLiteCommand cmd = con.CreateCommand();
-				cmd.CommandText = "INSERT INTO masterybadge (id, img) VALUES (@id, @img); ";
+				cmd.CommandText = "INSERT INTO masterybadge (id, img, imgSmall) VALUES (@id, @img, @imgSmall); ";
 				SQLiteParameter imgParam = new SQLiteParameter("@img", System.Data.DbType.Binary);
+				SQLiteParameter imgSmallParam = new SQLiteParameter("@imgSmall", System.Data.DbType.Binary);
 				SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
 				imgParam.Value = img;
+				imgSmallParam.Value = imgSmall;
 				idParam.Value = Path.GetFileNameWithoutExtension(imageFile);
 				cmd.Parameters.Add(imgParam);
+				cmd.Parameters.Add(imgSmallParam);
 				cmd.Parameters.Add(idParam);
 				con.Open();
 				try
@@ -148,6 +154,7 @@ namespace WinAdmin
 				}
 				con.Close();
 			}
+			MessageBox.Show("Images imported from file", "Done");
 		}
 
 		public static byte[] getImageFromFile(string fileName)
