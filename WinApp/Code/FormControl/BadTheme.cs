@@ -952,6 +952,13 @@ class BadButton : BadThemeControl
 		ToolTipContainer.Hide(this);
 		base.OnMouseLeave(e);
 	}
+
+	protected override void OnMouseDown(MouseEventArgs e)
+	{
+		ToolTipContainer.Hide(this);
+		base.OnMouseDown(e);
+	}
+	
 }
 
 [DebuggerNonUserCode]
