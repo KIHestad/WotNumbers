@@ -157,12 +157,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="formadmin_ico_6.ico" />
-    <Content Include="Img\Badges\Small\1.png" />
+    <Content Include="Img\Badges\Small\3.png" />
     <Content Include="Img\Badges\Small\2.png" />
     <Content Include="Img\Badges\3.png" />
     <Content Include="Img\Badges\2.png" />
     <Content Include="Img\Badges\1.png" />
-    <Content Include="Img\Badges\Small\3.png" />
+    <Content Include="Img\Badges\Small\1.png" />
     <Content Include="Img\Badges\4.png" />
     <Content Include="Img\Badges\Small\4.png" />
     <Content Include="Lib\abc.py" />
