@@ -67,7 +67,10 @@ namespace WinApp.Code
 					count++;
 					if (count > battleCount) break;
 				}
-				EFF = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+				if (BATTLES > 0)
+				{
+					EFF = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER / BATTLES);
+				}
 			}
 			return EFF;
 		}
