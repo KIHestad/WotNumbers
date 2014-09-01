@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 150; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 152; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -102,8 +102,6 @@ namespace WinApp.Code
 					mssql=	"ALTER TABLE columnSelection ADD colWidth int NOT NULL default 70; ";
 					sqlite=	"ALTER TABLE columnSelection ADD colWidth integer NOT NULL default 70; ";;
 					break;
-				case 9:
-					break; // Replaced by upgrade 19
 				case 10:
 					mssql = "CREATE TABLE playerTankBattle( " +
 							"	id int IDENTITY(1,1) primary key, " +
@@ -263,10 +261,6 @@ namespace WinApp.Code
 				case 13:
 					mssql = "ALTER TABLE playerTankBattle ADD wn8 int NOT NULL default 0, eff int NOT NULL default 0; ";
 					sqlite= "ALTER TABLE playerTankBattle ADD wn8 integer NOT NULL default 0; ALTER TABLE playerTankBattle ADD eff integer NOT NULL default 0; "; ;
-					break;
-				case 14:
-					// Removed from Create New DB - not used any more
-					// mssql = "DROP VIEW tankData2BattleMappingView; DROP VIEW tankInfoShort; DROP VIEW PlayerTankStatsView; DROP VIEW playerTankAchAllView; ";
 					break;
 				case 15:
 					mssql = "update json2dbMapping set dbBattle='modeClan' where jsonMainSubProperty='tanks.clan.battlesCount'; " +
@@ -557,43 +551,6 @@ namespace WinApp.Code
 							"update columnSelection set colWidth = 40 where id IN (28,32,33,160,161,162,36,38,40,47);";
 					sqlite = mssql;
 					break;	
-				case 30:
-					// Korrigert av KI - image datatype tar ikke default 0
-					//mssql = "alter table tank add imgPath varchar(255) NULL ; " +
-					//		"alter table tank add smallImgPath varchar(255)  NULL ; " +
-					//		"alter table tank add contourImgPath varchar(255)  NULL; " +
-					//		"alter table tank add img image  NULL ; " +
-					//		"alter table tank add smallImg image NULL ; " +
-					//		"alter table tank add contourImg image NULL; ";
-					//sqlite = "alter table tank add imgPath varchar(255) NOT NULL default 0; " +
-					//		"alter table tank add smallImgPath varchar(255) NOT NULL default 0; " +
-					//		"alter table tank add contourImgPath varchar(255) NOT NULL default 0; " +
-					//		"alter table tank add img blob NOT NULL default 0; " +
-					//		"alter table tank add smallImg blob NOT NULL default 0; " +
-					//		"alter table tank add contourImg blob NOT NULL default 0; ";
-					//break;
-				case 31:
-					//mssql = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img IMAGE NULL; " +
-					//		"ALTER TABLE ach ADD img1 IMAGE NULL; " +
-					//		"ALTER TABLE ach ADD img2 IMAGE NULL; " +
-					//		"ALTER TABLE ach ADD img3 IMAGE NULL; " +
-					//		"ALTER TABLE ach ADD img4 IMAGE NULL; " ;
-					//sqlite = "ALTER TABLE ach ADD imgPath VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img1Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img2Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img3Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img4Path VARCHAR(255) NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img BLOB NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img1 BLOB NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img2 BLOB NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img3 BLOB NOT NULL DEFAULT 0; " +
-					//		"ALTER TABLE ach ADD img4 BLOB NOT NULL DEFAULT 0;";
-					break;
 				case 32:
 					mssql = "UPDATE columnSelection SET colDataType = 'Float' WHERE id IN (18,24,25,26,27,35,59)";
 					sqlite = mssql;
@@ -938,9 +895,6 @@ namespace WinApp.Code
 					mssql = "CREATE UNIQUE INDEX IX_ach_name ON ach (name ASC); ";
 					sqlite = mssql;
 					break;
-				case 60:
-					// damageBlockedByArmor
-					break;
 				case 61:
 					mssql = "ALTER TABLE _version_ ADD description varchar(255) NULL; " +
 							"UPDATE _version_ SET description = 'DB version' WHERE id = 1; " +
@@ -966,8 +920,6 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colNameSQLite = 'strftime(''%d.%m.%Y'', battleTime)' where id=163;";
 					sqlite = mssql;
 					break;
-				case 67:
-					break;
 				case 68:
 					mssql = "UPDATE columnSelection SET name='Remaining XP' WHERE id=176; " +
 							"UPDATE columnSelection SET description='Remaining XP needed to reach target XP' WHERE id=176; " +
@@ -991,8 +943,6 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colName='coalesce(battle.heHits * 100 / nullif(battle.hits, 0),0)' WHERE id=161; " ;
 					sqlite = mssql;
 					break;	
-				case 71:
-					break;
 				case 72:
 					mssql = "insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (54289, 'Lowe', 1, 212); " +
 							"insert into wsTankId (tankId, tankName, wsCountryId, wsTankId) values (57857, 'T-62A SPORT', 0, 226); " +
@@ -1467,14 +1417,9 @@ namespace WinApp.Code
 							"UPDATE battle SET dailyXPFactorTxt = '5 X' where dailyXPFactor10 = 50;";
 					sqlite = mssql;
 					break;
-				case 112:
-					// Replaced by 114
-					break;
 				case 113:
 					mssql = "UPDATE map SET name='Winter Himmelsdorf' WHERE id=57";
 					sqlite = mssql;
-					break;
-				case 114:
 					break;
 				case 115:
 					mssql = "UPDATE columnSelection SET position=position + 82 where colType=1 and position >117; " +
@@ -1512,11 +1457,6 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET name='Avg Frags' where id=191; ";
 					sqlite = mssql;
 					break;
-				case 119:
-					break;
-				case 120:
-					
-					break;
 				case 121:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
 					mssql =
@@ -1533,13 +1473,9 @@ namespace WinApp.Code
 					DB.AddWithValue(ref mssql, "@emptyCol", "''", DB.SqlDataType.VarChar);
 					sqlite = mssql;
 					break;
-				case 122:
-					break;
 				case 123:
 					mssql = "UPDATE columnSelection SET colWidth=3 WHERE colType=3; ";
 					sqlite = mssql;
-					break;
-				case 124:
 					break;
 				case 125:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
@@ -1591,8 +1527,6 @@ namespace WinApp.Code
 					break;
 				case 130:
 					TankData.GetJson2dbMappingFromDB();
-					break;
-				case 131:
 					break;
 				case 132:
 					mssql =
@@ -1700,15 +1634,13 @@ namespace WinApp.Code
 						"UPDATE columnList SET lastSortColumn='';";
 					sqlite = mssql;
 					break;
-				case 148:
-					NewSystemTankColList();
-					break;
-				case 149:
-					NewSystemBattleColList();
-					break;
 				case 150:
 					Config.Settings.useSmallMasteryBadgeIcons = true;
 					Config.SaveConfig(out msg);
+					break;
+				case 152:
+					NewSystemTankColList();
+					NewSystemBattleColList();
 					break;
 			}
 			string sql = "";
@@ -1813,14 +1745,16 @@ namespace WinApp.Code
 				"delete from columnList where sysCol=1 and colType=1; ";
 			DB.ExecuteNonQuery(sql);
 			// Create lists all over
-			string newDefaultFavListId = "";
-			newDefaultFavListId = NewSystemTankColList_Default(-10);
+			string newDefaultColListId = "";
+			newDefaultColListId = NewSystemTankColList_Default(-10);
 			NewSystemTankColList_Grinding(-9);
 			NewSystemTankColList_WN8(-8);
 			// Sort lists
 			ColListHelper.ColListSort(1);
 			// Set default if missing
-			SetFavListAsDefaultIfMissing(newDefaultFavListId, 1);
+			SetFavListAsDefaultIfMissing(newDefaultColListId, 1);
+			// get default gridfilter, might be new
+			MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
 		}
 
 		private static string NewSystemTankColList_Default(int position)
@@ -1922,13 +1856,16 @@ namespace WinApp.Code
 				"delete from columnList where sysCol=1 and colType=2; ";
 			DB.ExecuteNonQuery(sql);
 			// Create lists all over
-			string newDefaultFavListId = "";
-			newDefaultFavListId = NewSystemBattleColList_Default(-10);
+			string newDefaultColListId = "";
+			newDefaultColListId = NewSystemBattleColList_Default(-10);
 			NewSystemBattleColList_WN8(-9);
 			// Sort lists
 			ColListHelper.ColListSort(2);
 			// Set default if missing
-			SetFavListAsDefaultIfMissing(newDefaultFavListId, 2);
+			SetFavListAsDefaultIfMissing(newDefaultColListId, 2);
+			// Change to default in case selected no longer exists
+			MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+
 		}
 
 		private static string NewSystemBattleColList_Default(int position)
