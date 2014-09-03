@@ -2497,7 +2497,7 @@ namespace WinApp.Forms
 				DataTable dt = new DataTable();
 				dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 				// If images add cols in datatable containing the image
-				if (contourimg + smallimg + img + masterybadgeimg> -3)
+				if (contourimg + smallimg + img > -3)
 				{
 					// Use ImageHelper to add columns in use
 					List<ImageHelper.ImgColumns> imgPosition = new List<ImageHelper.ImgColumns>();
