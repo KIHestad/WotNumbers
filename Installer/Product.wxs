@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.3.12.0"?>
+<?define ProductVersion = "0.3.13.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -44,18 +44,18 @@
 			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
 			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
 		</Feature>
-    <!-- Display Launch Application checkbox --><!--
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
-    <Property Id="WixShellExecTarget" Value="[C:\Program Files (x86)\Wot Numbers\WotNumbers.exe]" />
-    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
-    <UI>
-      --><!--<UIRef Id="WixUI_Minimal" />--><!--
-      <Publish Dialog="ExitDialog"
-        Control="Finish"
-        Event="DoAction"
-        Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
-      <UIRef Id="WixUI_ErrorProgressText"/>
-    </UI>-->
+	<!-- Display Launch Application checkbox --><!--
+	<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
+	<Property Id="WixShellExecTarget" Value="[C:\Program Files (x86)\Wot Numbers\WotNumbers.exe]" />
+	<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+	<UI>
+	  --><!--<UIRef Id="WixUI_Minimal" />--><!--
+	  <Publish Dialog="ExitDialog"
+		Control="Finish"
+		Event="DoAction"
+		Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+	  <UIRef Id="WixUI_ErrorProgressText"/>
+	</UI>-->
 
   </Product>
 
