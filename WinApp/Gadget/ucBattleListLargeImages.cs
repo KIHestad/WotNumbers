@@ -84,26 +84,29 @@ namespace WinApp.Gadget
 				"order by b.battleTime desc; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable battle = DB.FetchData(sql);
-			int rowCount = 0;
-			for (int row = 0; row < _rows; row++)
+			if (battle.Rows.Count > 0)
 			{
-				for (int col = 0; col < _cols; col++)
+				int rowCount = 0;
+				for (int row = 0; row < _rows; row++)
 				{
-					// get a tank to show
-					if (rowCount > battle.Rows.Count)
-						rowCount = 0;
-					int tankId = Convert.ToInt32(battle.Rows[rowCount][0]);
-					Image tankImage = ImageHelper.GetTankImage(tankId, "img");
-					DateTime battleTime = Convert.ToDateTime(battle.Rows[rowCount]["battleTime"]);
-					string result = battle.Rows[rowCount]["name"].ToString();
-					string resultColor = battle.Rows[rowCount]["color"].ToString();
-					// Add content to controls
-					tankInfo[rowCount].tankPic.Image = tankImage;
-					tankInfo[rowCount].battleTime.Text = battleTime.ToString("dd.MM.yy HH:mm");
-					tankInfo[rowCount].battleResult.Text = result;
-					tankInfo[rowCount].battleResult.ForeColor = System.Drawing.ColorTranslator.FromHtml(resultColor);
-					// go to next battle result
-					rowCount++;
+					for (int col = 0; col < _cols; col++)
+					{
+						// get a tank to show
+						if (rowCount > battle.Rows.Count)
+							rowCount = 0;
+						int tankId = Convert.ToInt32(battle.Rows[rowCount][0]);
+						Image tankImage = ImageHelper.GetTankImage(tankId, "img");
+						DateTime battleTime = Convert.ToDateTime(battle.Rows[rowCount]["battleTime"]);
+						string result = battle.Rows[rowCount]["name"].ToString();
+						string resultColor = battle.Rows[rowCount]["color"].ToString();
+						// Add content to controls
+						tankInfo[rowCount].tankPic.Image = tankImage;
+						tankInfo[rowCount].battleTime.Text = battleTime.ToString("dd.MM.yy HH:mm");
+						tankInfo[rowCount].battleResult.Text = result;
+						tankInfo[rowCount].battleResult.ForeColor = System.Drawing.ColorTranslator.FromHtml(resultColor);
+						// go to next battle result
+						rowCount++;
+					}
 				}
 			}
 		}
