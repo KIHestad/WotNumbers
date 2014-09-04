@@ -362,7 +362,7 @@ namespace WinApp.Forms
 				bwCheckForNewVersion.RunWorkerAsync();
 			}
 		}
-
+		
 		private void RunInitialDossierFileCheck(string message = "")
 		{
 			if (DBVersion.RunWotApi)
@@ -461,52 +461,16 @@ namespace WinApp.Forms
 					Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "New version avaliable for download", MsgBoxType.OKCancel, this);
 					if (answer == MsgBox.Button.OKButton)
 					{
-						// Start download now
-						IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
-						defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
-						WebClient webClient = new WebClient();
-						webClient.Proxy = defaultWebProxy;
-						webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadNewVersionDone);
-						webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadNewVersionInProgress);
-						string filename = Config.AppDataDownloadFolder + vi.downloadFile;
-						if (File.Exists(filename))
-							File.Delete(filename);
-						webClient.DownloadFileAsync(new Uri(vi.downloadURL), filename);
+						Form frm = new Forms.Download();
+						frm.ShowDialog();
+						RunInitialDossierFileCheck("New version downloaded (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 					}
 					else
 					{
-						if (_onlyCheckVersionWithMessage)
+						if (!_onlyCheckVersionWithMessage)
 							RunInitialDossierFileCheck("New version found (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 					}
 				}
-			}
-		}
-
-		private void DownloadNewVersionInProgress(object sender, DownloadProgressChangedEventArgs e)
-		{
-			SetStatus2("File downloading, progress: " + e.ProgressPercentage + "%");
-			if (e.ProgressPercentage == 100)
-				SetStatus2("File download complete");
-		}
-
-		private void DownloadNewVersionDone(object sender, AsyncCompletedEventArgs e)
-		{
-			SetStatus2("File download complete");
-			Application.DoEvents();
-			VersionInfo vi = CheckForNewVersion.versionInfo;
-			string filename = Config.AppDataDownloadFolder + vi.downloadFile;
-			string msg = "Wot Numbers version " + vi.version + " is downloaded. The downloaded file is located here:" + Environment.NewLine + Environment.NewLine +
-				filename + Environment.NewLine + Environment.NewLine +
-				"Press 'OK' to close Wot Numbers and start the installation." + Environment.NewLine + Environment.NewLine;
-			Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "Start installation now", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
-			{
-				Process.Start(filename);
-				this.Close();
-			}
-			else
-			{
-				RunDossierFileCheck();
 			}
 		}
 

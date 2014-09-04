@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateFromApi));
 			this.UpdateFromApiTheme = new BadForm();
@@ -63,12 +64,15 @@
 			// 
 			// btnStart
 			// 
+			this.btnStart.BlackButton = false;
+			this.btnStart.Checked = false;
 			this.btnStart.Image = null;
 			this.btnStart.Location = new System.Drawing.Point(281, 83);
 			this.btnStart.Name = "btnStart";
 			this.btnStart.Size = new System.Drawing.Size(75, 23);
 			this.btnStart.TabIndex = 2;
 			this.btnStart.Text = "Start";
+			this.btnStart.ToolTipText = "";
 			this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
 			// 
 			// lblProgressStatus
