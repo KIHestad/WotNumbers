@@ -1537,7 +1537,6 @@ namespace WinApp.Forms
 		private void HomeViewCreate(string Status2Message)
 		{
 			ResizeNow();
-			UserControl uc;
 			// First remove current controls
 			List<Control> controlsRemove = new List<Control>();
 			foreach (Control c in panelMainArea.Controls)
@@ -1552,10 +1551,13 @@ namespace WinApp.Forms
 				panelMainArea.Controls.Remove(c);
 			}
 			// Add current gadgets
-			List<Control> controlsAdd = GadgetHelper.GetGadgets();
-			foreach (Control c in controlsAdd)
+			GadgetHelper.GetGadgets();
+			foreach (GadgetHelper.GadgetItem gadget in GadgetHelper.Gadgets)
 			{
-				panelMainArea.Controls.Add(c);
+				panelMainArea.Controls.Add(gadget.control);
+				Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
+				c[0].Height = gadget.height;
+				c[0].Width = gadget.width;
 			}
 		}
 
@@ -3593,7 +3595,6 @@ namespace WinApp.Forms
 			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
 		}
 
-		private Panel gadgetSelect;
 		private void mHomeEdit_Click(object sender, EventArgs e)
 		{
 			mHomeEdit.Checked = !mHomeEdit.Checked;
@@ -3617,21 +3618,12 @@ namespace WinApp.Forms
 					}
 				}
 				// Add panel indicating selected control
-				gadgetSelect = new Panel();
-				gadgetSelect.Name = "gadgetSelect";
-				gadgetSelect.BorderStyle = BorderStyle.FixedSingle;
-				gadgetSelect.BackColor = Color.Transparent;
-				gadgetSelect.Paint += new PaintEventHandler(selectedControl_OnPaint);
-				panelMainArea.Controls.Add(gadgetSelect);
-				gadgetSelect.Parent = panelMainArea;
-				gadgetSelect.Visible = false;
+				panelMainArea.Paint += new PaintEventHandler(panelMainArea_OnPaint);
 			}
 			else
 			{
 				// Remove mouse move event for main panel
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
-				// Remove gadget selector
-				panelMainArea.Controls.Remove(gadgetSelect);
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3647,25 +3639,37 @@ namespace WinApp.Forms
 			}
 		}
 
+		private GadgetHelper.GadgetItem lastGadgetArea = null;
 		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
 		{
+			// Show mouse position
 			string posText = e.X + " x " + e.Y;
 			lblStatus2.Text = "Position: " + posText;
-			bool makeVisible = (e.X > 10 && e.X < panelMainArea.Width - 10 && e.Y > 10 && e.Y < panelMainArea.Height - 10);
-			gadgetSelect.Visible = makeVisible;
-			if (makeVisible)
+			// Get area
+			GadgetHelper.GadgetItem newGadgetArea = GadgetHelper.FindGadgetArea(e.X, e.Y);
+			if (newGadgetArea == null)
 			{
-				gadgetSelect.Top = e.Y;
-				gadgetSelect.Left = e.X;
+				// none area selected
+				selectedControl = lastGadgetArea;
+				selectedControlColor = new Pen(ColorTheme.FormBack);
+				lastGadgetArea = null;
+				panelMainArea.Refresh(); // force paint event
+			}
+			else if (newGadgetArea != lastGadgetArea)
+			{
+				selectedControl = newGadgetArea;
+				selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
+				lastGadgetArea = newGadgetArea;
+				panelMainArea.Refresh(); // force paint event
 			}
 		}
 
-		protected void selectedControl_OnPaint(object sender, PaintEventArgs e)
+		private Pen selectedControlColor = new Pen(Color.Transparent);
+		private GadgetHelper.GadgetItem selectedControl = null;
+		protected void panelMainArea_OnPaint(object sender, PaintEventArgs e)
 		{
-			using (SolidBrush brush = new SolidBrush(BackColor))
-				e.Graphics.FillRectangle(brush, ClientRectangle);
-			e.Graphics.DrawRectangle(Pens.White, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
-			e.Graphics.DrawRectangle(Pens.White, 1, 1, ClientSize.Width - 3, ClientSize.Height - 3);
+			if (selectedControl != null)
+				e.Graphics.DrawRectangle(selectedControlColor, selectedControl.left-1, selectedControl.top-1, selectedControl.width+1, selectedControl.height+1);
 		}
 	}
 }

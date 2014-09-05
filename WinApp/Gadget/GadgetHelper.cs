@@ -25,9 +25,20 @@ namespace WinApp.Gadget
 		public static TimeRange SelectedTimeRangeWN8 = TimeRange.Total;
 		public static TimeRange SelectedTimeRangeWR = TimeRange.Total;
 
-		public static List<Control> GetGadgets()
+		public class GadgetItem
 		{
-			List<Control> gadgets = new List<Control>();
+			public int left;
+			public int top;
+			public int width;
+			public int height;
+			public Control control;
+		}
+
+		public static List<GadgetItem> Gadgets = null;
+
+		public static void GetGadgets()
+		{
+			Gadgets = new List<GadgetItem>();
 			string sql = 
 				"select homeViewGadget.id, homeViewGadget.visible, homeViewGadget.width,homeViewGadget.height,homeViewGadget.posX,homeViewGadget.posY, " +
 				"  gadget.userControlName, gadget.name, count(homeViewGadgetParameter.id) as parameterCount " +
@@ -61,14 +72,14 @@ namespace WinApp.Gadget
 					}
 				}
 				Control uc = GetGadgetControl(dr["userControlName"].ToString(), param);
-				uc.Name = dr["userControlName"].ToString();
+				uc.Name = "uc" + dr["id"].ToString();
+				uc.Tag = dr["userControlName"].ToString();
 				uc.Top = Convert.ToInt32(dr["posY"]);
 				uc.Left = Convert.ToInt32(dr["posX"]);
 				uc.Height = Convert.ToInt32(dr["height"]);
 				uc.Width = Convert.ToInt32(dr["width"]);
-				gadgets.Add(uc);
+				Gadgets.Add(new GadgetItem { left = uc.Left, top = uc.Top, width = uc.Width, height = uc.Height, control = uc });
 			}
-			return gadgets;
 		}
 
 		private static Control GetGadgetControl(string name, object[] param)
@@ -85,6 +96,29 @@ namespace WinApp.Gadget
 				case "ucBattleListLargeImages" : uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]),Convert.ToInt32(param[1])) ; break;
 			}
 			return uc;
+		}
+
+		public static GadgetItem FindGadgetArea(int mouseLeft, int mouseTop)
+		{
+			GadgetItem foundGadgetArea = null;
+			bool found = false;
+			int i = 0;
+			while (!found && i < Gadgets.Count)
+			{
+				if (mouseLeft >= Gadgets[i].left &&
+					mouseLeft <= Gadgets[i].left + Gadgets[i].width &&
+					mouseTop >= Gadgets[i].top &&
+					mouseTop <= Gadgets[i].top + Gadgets[i].height)
+				{
+					found = true;
+					foundGadgetArea = Gadgets[i];
+				}
+				else
+				{
+					i++;
+				}
+			}
+			return foundGadgetArea;
 		}
 	}
 }
