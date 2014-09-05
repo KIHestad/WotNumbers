@@ -518,23 +518,27 @@ namespace WinApp.Forms
 			}
 		}
 
+		private bool Status2AutoEnabled = true;
 		private void SetStatus2(string txt = "")
 		{
-			string msg = txt; 
-			if (StatusBarHelper.MessageExists && txt != "")
-				msg += "   -   ";
-			msg += StatusBarHelper.Message;
-			if (msg != "")
+			if (Status2AutoEnabled)
 			{
-				timerStatus2.Enabled = false;
-				Application.DoEvents();
-				timerStatus2.Interval = 3000;
-				lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor); // White color, not faded
-				lblStatus2.Text = msg;
-				Application.DoEvents();
-				timerStatus2.Enabled = true;
-				if (StatusBarHelper.MessageExists)
-					StatusBarHelper.CheckForClear();
+				string msg = txt; 
+				if (StatusBarHelper.MessageExists && txt != "")
+					msg += "   -   ";
+				msg += StatusBarHelper.Message;
+				if (msg != "")
+				{
+					timerStatus2.Enabled = false;
+					Application.DoEvents();
+					timerStatus2.Interval = 3000;
+					lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor); // White color, not faded
+					lblStatus2.Text = msg;
+					Application.DoEvents();
+					timerStatus2.Enabled = true;
+					if (StatusBarHelper.MessageExists)
+						StatusBarHelper.CheckForClear();
+				}
 			}
 		}
 
@@ -3636,7 +3640,67 @@ namespace WinApp.Forms
 		{
 			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
 		}
-					
-		
+
+		private void mHomeEdit_Click(object sender, EventArgs e)
+		{
+			mHomeEdit.Checked = !mHomeEdit.Checked;
+			if (mHomeEdit.Checked)
+			{
+				// Enable edit style
+				MainTheme.Resizable = false;
+				Status2AutoEnabled = false;
+				timerStatus2.Enabled = false;
+				Application.DoEvents();
+				lblStatus2.ForeColor = ColorTheme.FormBorderBlue;
+				lblStatus2.Text = "Enabled Home View Edit Mode";
+				// Add mouse move event for main panel
+				panelMainArea.MouseMove += new MouseEventHandler(panelEditor_MouseMove);
+				// Disable all gadgets
+				foreach (Control c in panelMainArea.Controls)
+				{
+					if (c.Name.Substring(0, 2) == "uc")
+					{
+						c.Enabled = false;
+					}
+				}
+				// Add panel indicating selected control
+				Panel selectedControl = new Panel();
+				selectedControl.BorderStyle = BorderStyle.FixedSingle;
+				selectedControl.Paint += new PaintEventHandler(selectedControl_OnPaint);
+				selectedControl.Visible = false;
+			}
+			else
+			{
+				// Remove mouse move event for main panel
+				panelMainArea.MouseMove -= panelEditor_MouseMove;
+
+				// Enable all gadgets
+				foreach (Control c in panelMainArea.Controls)
+				{
+					if (c.Name.Substring(0, 2) == "uc")
+					{
+						c.Enabled = true;
+					}
+				}
+
+				// Enable default style
+				MainTheme.Resizable = true;
+				Status2AutoEnabled = true;
+			}
+		}
+
+		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
+		{
+			string posText = e.X + " x " + e.Y;
+			lblStatus2.Text = "Position: " + posText;
+		}
+
+		protected void selectedControl_OnPaint(object sender, PaintEventArgs e)
+		{
+			using (SolidBrush brush = new SolidBrush(BackColor))
+				e.Graphics.FillRectangle(brush, ClientRectangle);
+			e.Graphics.DrawRectangle(Pens.White, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
+			e.Graphics.DrawRectangle(Pens.White, 1, 1, ClientSize.Width - 2, ClientSize.Height - 2);
+		}
 	}
 }

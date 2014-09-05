@@ -186,6 +186,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -273,13 +274,14 @@
             this.mBattles,
             this.mBattleGroup,
             this.mGadget,
+            this.mHomeEdit,
             this.toolStripSeparator23,
             this.mViewChart,
             this.mSettings,
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(839, 25);
+			this.toolMain.Size = new System.Drawing.Size(862, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1708,6 +1710,16 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// mHomeEdit
+			// 
+			this.mHomeEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mHomeEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeEdit.Image")));
+			this.mHomeEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mHomeEdit.Name = "mHomeEdit";
+			this.mHomeEdit.Size = new System.Drawing.Size(23, 22);
+			this.mHomeEdit.Text = "toolStripButton1";
+			this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1895,6 +1907,7 @@
 		private System.Windows.Forms.ToolStripMenuItem wN8RatingToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem wN7RatingToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem efficiencyRatingToolStripMenuItem;
+		private System.Windows.Forms.ToolStripButton mHomeEdit;
 	}
 }
 
