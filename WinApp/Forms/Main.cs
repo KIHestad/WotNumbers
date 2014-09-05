@@ -12,6 +12,7 @@ using WinApp.Code;
 using System.ComponentModel;
 using System.Net;
 using System.Diagnostics;
+using WinApp.Gadget;
 
 namespace WinApp.Forms
 {
@@ -1537,74 +1538,25 @@ namespace WinApp.Forms
 		{
 			ResizeNow();
 			UserControl uc;
-			// components = new System.ComponentModel.Container();
-			List<Control> controls = new List<Control>();
+			// First remove current controls
+			List<Control> controlsRemove = new List<Control>();
 			foreach (Control c in panelMainArea.Controls)
 			{
 				if (c.Name.Substring(0, 2) == "uc")
 				{
-					controls.Add(c);
+					controlsRemove.Add(c);
 				}
 			}
-			foreach (Control c in controls)
+			foreach (Control c in controlsRemove)
 			{
 				panelMainArea.Controls.Remove(c);
 			}
-
-			// Gauge is 190x40
-			int xPos = 15;
-			int yPos = 20;
-			int xMove = 220;
-			// Show Win rate gauges
-			uc = new Gadget.ucGaugeWinRate("15");
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += xMove;
-			panelMainArea.Controls.Add(uc);
-			
-			// Show WN8 rate 
-			uc = new Gadget.ucGaugeWN8();
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += xMove;
-			panelMainArea.Controls.Add(uc);
-
-			// Show WN7 rate 
-			uc = new Gadget.ucGaugeWN7();
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += xMove;
-			panelMainArea.Controls.Add(uc);
-
-			// Show WN7 rate 
-			uc = new Gadget.ucGaugeEFF();
-			uc.Top = yPos;
-			uc.Left = xPos;
-			xPos += xMove;
-			panelMainArea.Controls.Add(uc);
-
-			// NEW ROW ***************************************************
-
-			// Grids are 420x93 (half width=210 / room for gauge)
-			// Show TotalTanks
-			uc = new Gadget.ucTotalTanks();
-			uc.Top = 220;
-			uc.Left = 15;
-			panelMainArea.Controls.Add(uc);
-
-			// Show BattleTypes
-			uc = new Gadget.ucBattleTypes();
-			uc.Top = 220;
-			uc.Left = 10 + 430 + 10;
-			panelMainArea.Controls.Add(uc);
-
-			// NEW ROW ***************************************************
-
-			uc = new Gadget.ucBattleListLargeImages(5, 2);
-			uc.Top = 340;
-			uc.Left = 20;
-			panelMainArea.Controls.Add(uc);
-
+			// Add current gadgets
+			List<Control> controlsAdd = GadgetHelper.GetGadgets();
+			foreach (Control c in controlsAdd)
+			{
+				panelMainArea.Controls.Add(c);
+			}
 		}
 
 		private void HomeViewRefresh(string Status2Message)
@@ -3641,6 +3593,7 @@ namespace WinApp.Forms
 			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
 		}
 
+		private Panel gadgetSelect;
 		private void mHomeEdit_Click(object sender, EventArgs e)
 		{
 			mHomeEdit.Checked = !mHomeEdit.Checked;
@@ -3664,16 +3617,21 @@ namespace WinApp.Forms
 					}
 				}
 				// Add panel indicating selected control
-				Panel selectedControl = new Panel();
-				selectedControl.BorderStyle = BorderStyle.FixedSingle;
-				selectedControl.Paint += new PaintEventHandler(selectedControl_OnPaint);
-				selectedControl.Visible = false;
+				gadgetSelect = new Panel();
+				gadgetSelect.Name = "gadgetSelect";
+				gadgetSelect.BorderStyle = BorderStyle.FixedSingle;
+				gadgetSelect.BackColor = Color.Transparent;
+				gadgetSelect.Paint += new PaintEventHandler(selectedControl_OnPaint);
+				panelMainArea.Controls.Add(gadgetSelect);
+				gadgetSelect.Parent = panelMainArea;
+				gadgetSelect.Visible = false;
 			}
 			else
 			{
 				// Remove mouse move event for main panel
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
-
+				// Remove gadget selector
+				panelMainArea.Controls.Remove(gadgetSelect);
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3693,6 +3651,13 @@ namespace WinApp.Forms
 		{
 			string posText = e.X + " x " + e.Y;
 			lblStatus2.Text = "Position: " + posText;
+			bool makeVisible = (e.X > 10 && e.X < panelMainArea.Width - 10 && e.Y > 10 && e.Y < panelMainArea.Height - 10);
+			gadgetSelect.Visible = makeVisible;
+			if (makeVisible)
+			{
+				gadgetSelect.Top = e.Y;
+				gadgetSelect.Left = e.X;
+			}
 		}
 
 		protected void selectedControl_OnPaint(object sender, PaintEventArgs e)
@@ -3700,7 +3665,7 @@ namespace WinApp.Forms
 			using (SolidBrush brush = new SolidBrush(BackColor))
 				e.Graphics.FillRectangle(brush, ClientRectangle);
 			e.Graphics.DrawRectangle(Pens.White, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
-			e.Graphics.DrawRectangle(Pens.White, 1, 1, ClientSize.Width - 2, ClientSize.Height - 2);
+			e.Graphics.DrawRectangle(Pens.White, 1, 1, ClientSize.Width - 3, ClientSize.Height - 3);
 		}
 	}
 }

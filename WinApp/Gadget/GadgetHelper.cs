@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using WinApp.Code;
 
 namespace WinApp.Gadget
 {
@@ -21,5 +24,67 @@ namespace WinApp.Gadget
 		public static TimeRange SelectedTimeRangeWN7 = TimeRange.Total;
 		public static TimeRange SelectedTimeRangeWN8 = TimeRange.Total;
 		public static TimeRange SelectedTimeRangeWR = TimeRange.Total;
+
+		public static List<Control> GetGadgets()
+		{
+			List<Control> gadgets = new List<Control>();
+			string sql = 
+				"select homeViewGadget.id, homeViewGadget.visible, homeViewGadget.width,homeViewGadget.height,homeViewGadget.posX,homeViewGadget.posY, " +
+				"  gadget.userControlName, gadget.name, count(homeViewGadgetParameter.id) as parameterCount " +
+				"from homeViewGadget inner join " +
+				"  gadget on homeViewGadget.gadgetId = gadget.id left outer join " +
+				"  homeViewGadgetParameter on homeViewGadget.id = homeViewGadgetParameter.homeViewGadgetId " +
+				"where visible=1 " +
+				"group by homeViewGadget.id, visible, homeViewGadget.width, homeViewGadget.height, posX, posY, userControlName, name, sortorder  " +
+				"order by sortorder;";
+			DataTable dt = DB.FetchData(sql);
+			foreach (DataRow dr in dt.Rows)
+			{
+				// get parameters
+				object[] param = {null, null, null, null, null};
+				if (dr["parameterCount"] != null && Convert.ToInt32(dr["parameterCount"]) > 0)
+				{
+					sql = "select * from homeViewGadgetParameter where homeViewGadgetId=@homeViewGadgetId order by paramNum; ";
+					DB.AddWithValue(ref sql, "@homeViewGadgetId", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int );
+					DataTable dtParams = DB.FetchData(sql);
+					int paramCount = 0;
+					foreach (DataRow drParams in dtParams.Rows)
+					{
+						switch (drParams["dataType"].ToString())
+						{
+							case "string": param[paramCount] = drParams["value"].ToString(); break;
+							case "int": param[paramCount] = Convert.ToInt32(drParams["value"]); break;
+							case "double": param[paramCount] = Convert.ToDouble(drParams["value"]); break;
+							case "bool": param[paramCount] = Convert.ToBoolean(drParams["value"]); break;
+						}
+						paramCount++;
+					}
+				}
+				Control uc = GetGadgetControl(dr["userControlName"].ToString(), param);
+				uc.Name = dr["userControlName"].ToString();
+				uc.Top = Convert.ToInt32(dr["posY"]);
+				uc.Left = Convert.ToInt32(dr["posX"]);
+				uc.Height = Convert.ToInt32(dr["height"]);
+				uc.Width = Convert.ToInt32(dr["width"]);
+				gadgets.Add(uc);
+			}
+			return gadgets;
+		}
+
+		private static Control GetGadgetControl(string name, object[] param)
+		{
+			Control uc = null;
+			switch (name)
+			{
+				case "ucGaugeWinRate" : uc = new Gadget.ucGaugeWinRate(param[0].ToString()); break;
+				case "ucGaugeWN8" : uc = new Gadget.ucGaugeWN8(); break;
+				case "ucGaugeWN7" : uc = new Gadget.ucGaugeWN7(); break;
+				case "ucGaugeEFF" : uc = new Gadget.ucGaugeEFF(); break;
+				case "ucTotalTanks" : uc = new Gadget.ucTotalTanks(); break;
+				case "ucBattleTypes" : uc = new Gadget.ucBattleTypes(); break;
+				case "ucBattleListLargeImages" : uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]),Convert.ToInt32(param[1])) ; break;
+			}
+			return uc;
+		}
 	}
 }
