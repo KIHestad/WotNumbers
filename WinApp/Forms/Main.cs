@@ -92,6 +92,7 @@ namespace WinApp.Forms
 			mColumnSelect.Visible = false;
 			mMode.Visible = false;
 			mGadget.Visible = false;
+			mHomeEdit.Visible = false;
 			mBattleGroup.Visible = false;
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
@@ -725,6 +726,7 @@ namespace WinApp.Forms
 				// Default settings
 				dataGridMain.ColumnHeadersVisible = true;
 				dataGridMain.RowHeadersVisible = true;
+				dataGridMain.BringToFront();
 				// Set new values according to new selected view
 				switch (MainSettings.View)
 				{
@@ -745,6 +747,7 @@ namespace WinApp.Forms
 							mMode.Visible = false;
 							mRefreshSeparator.Visible = false;
 							mGadget.Visible = false;
+							mHomeEdit.Visible = false;
 							mBattleGroup.Visible = false;
 							// Remove datagrid context menu
 							dataGridMain.ContextMenuStrip = null;
@@ -763,6 +766,7 @@ namespace WinApp.Forms
 							// Show/Hide Tool Items
 							mBattles.Visible = true;
 							mGadget.Visible = true;
+							mHomeEdit.Visible = true;
 							mBattles.Visible = false;
 							mTankFilter.Visible = false;
 							mColumnSelect.Visible = false;
@@ -786,6 +790,7 @@ namespace WinApp.Forms
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
 						mGadget.Visible = false;
+						mHomeEdit.Visible = false;
 						mBattleGroup.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Tank View...";
@@ -814,6 +819,7 @@ namespace WinApp.Forms
 						mMode.Visible = true;
 						mBattleGroup.Visible = true;
 						mGadget.Visible = false;
+						mHomeEdit.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Battle View...";
 						// Get Column Setup List  - also finds correct tank filter/fav list
@@ -1541,7 +1547,7 @@ namespace WinApp.Forms
 			List<Control> controlsRemove = new List<Control>();
 			foreach (Control c in panelMainArea.Controls)
 			{
-				if (c.Name.Substring(0, 2) == "uc")
+				if (c.Name.Length > 1 && c.Name.Substring(0, 2) == "uc")
 				{
 					controlsRemove.Add(c);
 				}
@@ -3609,6 +3615,8 @@ namespace WinApp.Forms
 				lblStatus2.Text = "Enabled Home View Edit Mode";
 				// Add mouse move event for main panel
 				panelMainArea.MouseMove += new MouseEventHandler(panelEditor_MouseMove);
+				panelMainArea.MouseDown += new MouseEventHandler(panelEditor_MouseDown);
+				panelMainArea.MouseUp += new MouseEventHandler(panelEditor_MouseUp);
 				// Disable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3624,6 +3632,8 @@ namespace WinApp.Forms
 			{
 				// Remove mouse move event for main panel
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
+				panelMainArea.MouseDown -= panelEditor_MouseDown;
+				panelMainArea.MouseUp -= panelEditor_MouseUp;
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3636,33 +3646,93 @@ namespace WinApp.Forms
 				// Enable default style
 				MainTheme.Resizable = true;
 				Status2AutoEnabled = true;
+				SetStatus2("Disabled Home View Edit Mode");
 			}
 		}
 
-		private GadgetHelper.GadgetItem lastGadgetArea = null;
+		private GadgetHelper.GadgetItem lastSelectedGadget = null;
+		private bool moveMode = false;
 		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
 		{
 			// Show mouse position
 			string posText = e.X + " x " + e.Y;
 			lblStatus2.Text = "Position: " + posText;
 			// Get area
-			GadgetHelper.GadgetItem newGadgetArea = GadgetHelper.FindGadgetArea(e.X, e.Y);
-			if (newGadgetArea == null)
+			if (!moveMode)
 			{
-				// none area selected
-				selectedControl = lastGadgetArea;
-				selectedControlColor = new Pen(ColorTheme.FormBack);
-				lastGadgetArea = null;
-				panelMainArea.Refresh(); // force paint event
+				GadgetHelper.GadgetItem newSelectedGadget = GadgetHelper.FindGadgetArea(e.X, e.Y);
+				if (newSelectedGadget == null)
+				{
+					// none area selected
+					selectedControl = lastSelectedGadget;
+					selectedControlColor = new Pen(ColorTheme.FormBack);
+					lastSelectedGadget = null;
+					panelMainArea.Refresh(); // force paint event
+				}
+				else if (newSelectedGadget != lastSelectedGadget)
+				{
+					selectedControl = newSelectedGadget;
+					selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
+					lastSelectedGadget = newSelectedGadget;
+					panelMainArea.Refresh(); // force paint event
+				}
 			}
-			else if (newGadgetArea != lastGadgetArea)
+			else
 			{
-				selectedControl = newGadgetArea;
-				selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
-				lastGadgetArea = newGadgetArea;
+				int gridSize = 20;
+				lastSelectedGadget.control.Top = selectedGadgetTop + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
+				lastSelectedGadget.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
+			}
+		}
+
+		//private Panel controlMove = null;
+		private int mouseDownX = 0;
+		private int mouseDownY = 0;
+		private int selectedGadgetTop = 0;
+		private int selectedGadgetLeft = 0;
+		private void panelEditor_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == System.Windows.Forms.MouseButtons.Left && selectedControl != null)
+			{
+				// move mode
+				moveMode = true;
+				// change color to selection
+				selectedControlColor = new Pen(ColorTheme.ControlBackDarkMoving);
+				panelMainArea.Refresh(); // force paint event
+				// Remeber position
+				mouseDownX = Cursor.Position.X;
+				mouseDownY = Cursor.Position.Y;
+				selectedGadgetTop = lastSelectedGadget.control.Top;
+				selectedGadgetLeft = lastSelectedGadget.control.Left;
+				lastSelectedGadget.control.BringToFront();
+			}
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				// move mode off
+				moveMode = false;
+				// remove selection - or change color?
+				selectedControlColor = new Pen(ColorTheme.FormBorderRed);
 				panelMainArea.Refresh(); // force paint event
 			}
 		}
+
+		private void panelEditor_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (lastSelectedGadget != null)
+			{
+				// Save new location
+				GadgetHelper.SaveGadgetPosition(lastSelectedGadget.id, lastSelectedGadget.control.Left, lastSelectedGadget.control.Top);
+				lastSelectedGadget.top = lastSelectedGadget.control.Top;
+				lastSelectedGadget.left = lastSelectedGadget.control.Left;
+				// move mode off
+				moveMode = false;
+				// change color on selection
+				selectedControlColor = new Pen(ColorTheme.FormBack);
+				panelMainArea.Refresh(); // force paint event
+				lastSelectedGadget = null;
+			}
+		}
+		
 
 		private Pen selectedControlColor = new Pen(Color.Transparent);
 		private GadgetHelper.GadgetItem selectedControl = null;
@@ -3671,5 +3741,7 @@ namespace WinApp.Forms
 			if (selectedControl != null)
 				e.Graphics.DrawRectangle(selectedControlColor, selectedControl.left-1, selectedControl.top-1, selectedControl.width+1, selectedControl.height+1);
 		}
+
+
 	}
 }

@@ -24,6 +24,7 @@ namespace WinApp.Code
 		// Controls
 		public static Color ControlBack = Color.FromArgb(255, 55, 55, 59);
 		public static Color ControlBackDark = Color.FromArgb(255, 45, 45, 49);
+		public static Color ControlBackDarkMoving = Color.FromArgb(255, 24, 24, 24);
 		public static Color ControlBorder = Color.FromArgb(255, 65, 65, 69);
 		public static Color ControlBorderFocused = Color.FromArgb(255, 100, 100, 106);
 		public static Color ControlBackMouseOver = Color.FromArgb(255, 68, 68, 72);

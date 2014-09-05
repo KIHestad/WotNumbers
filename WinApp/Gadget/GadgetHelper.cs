@@ -27,14 +27,25 @@ namespace WinApp.Gadget
 
 		public class GadgetItem
 		{
+			public Control control;
+			public string name;
+			public int id;
 			public int left;
 			public int top;
 			public int width;
 			public int height;
-			public Control control;
 		}
 
 		public static List<GadgetItem> Gadgets = null;
+
+		public static void SaveGadgetPosition(int gadgetId, int left, int top)
+		{
+			string sql = "update homeViewGadget set posX=@posX, posY=@posY where id=@id;";
+			DB.AddWithValue(ref sql, "@posX", left, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@posY", top, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@id", gadgetId, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
+		}
 
 		public static void GetGadgets()
 		{
@@ -53,10 +64,12 @@ namespace WinApp.Gadget
 			{
 				// get parameters
 				object[] param = {null, null, null, null, null};
+				int gadgetId = Convert.ToInt32(dr["id"]);
+				string gadgetName = dr["userControlName"].ToString();
 				if (dr["parameterCount"] != null && Convert.ToInt32(dr["parameterCount"]) > 0)
 				{
 					sql = "select * from homeViewGadgetParameter where homeViewGadgetId=@homeViewGadgetId order by paramNum; ";
-					DB.AddWithValue(ref sql, "@homeViewGadgetId", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int );
+					DB.AddWithValue(ref sql, "@homeViewGadgetId", gadgetId, DB.SqlDataType.Int );
 					DataTable dtParams = DB.FetchData(sql);
 					int paramCount = 0;
 					foreach (DataRow drParams in dtParams.Rows)
@@ -78,7 +91,7 @@ namespace WinApp.Gadget
 				uc.Left = Convert.ToInt32(dr["posX"]);
 				uc.Height = Convert.ToInt32(dr["height"]);
 				uc.Width = Convert.ToInt32(dr["width"]);
-				Gadgets.Add(new GadgetItem { left = uc.Left, top = uc.Top, width = uc.Width, height = uc.Height, control = uc });
+				Gadgets.Add(new GadgetItem { left = uc.Left, top = uc.Top, width = uc.Width, height = uc.Height, control = uc, id = gadgetId, name = gadgetName });
 			}
 		}
 
