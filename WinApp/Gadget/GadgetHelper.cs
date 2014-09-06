@@ -127,7 +127,7 @@ namespace WinApp.Gadget
 			}
 			if (sql != "")
 				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-			gadgets.Add(gadget);
+			gadgets.Insert(0,gadget);
 			return gadgetId;
 		}
 
@@ -155,7 +155,6 @@ namespace WinApp.Gadget
 				}
 				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 			}
-			GetGadgets();
 		}
 
 		public static bool HasGadetParameter(GadgetItem gadget)

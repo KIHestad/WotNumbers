@@ -727,6 +727,12 @@ namespace WinApp.Forms
 				dataGridMain.ColumnHeadersVisible = true;
 				dataGridMain.RowHeadersVisible = true;
 				dataGridMain.BringToFront();
+				// Remove home view edit mode if enabled
+				if (mHomeEdit.Checked)
+				{
+					mHomeEdit.Checked = false;
+					GadgetEditModeChange();
+				}
 				// Set new values according to new selected view
 				switch (MainSettings.View)
 				{
@@ -3621,7 +3627,7 @@ namespace WinApp.Forms
 				newGadget.width = controlAdd.Width;
 				newGadget.posX = controlAdd.Left;
 				newGadget.posY = controlAdd.Top;
-				newGadget.sortorder = 0;
+				newGadget.sortorder = -1;
 				newGadget.visible = true;
 				// Special gadgets customization
 				switch (controlName)
@@ -3665,6 +3671,8 @@ namespace WinApp.Forms
 				panelMainArea.MouseMove += new MouseEventHandler(panelEditor_MouseMove);
 				panelMainArea.MouseDown += new MouseEventHandler(panelEditor_MouseDown);
 				panelMainArea.MouseUp += new MouseEventHandler(panelEditor_MouseUp);
+				// Add panel event for indicating selected control
+				panelMainArea.Paint += new PaintEventHandler(panelMainArea_OnPaint);
 				// Disable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3673,8 +3681,6 @@ namespace WinApp.Forms
 						c.Enabled = false;
 					}
 				}
-				// Add panel indicating selected control
-				panelMainArea.Paint += new PaintEventHandler(panelMainArea_OnPaint);
 			}
 			else
 			{
@@ -3682,6 +3688,7 @@ namespace WinApp.Forms
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
 				panelMainArea.MouseDown -= panelEditor_MouseDown;
 				panelMainArea.MouseUp -= panelEditor_MouseUp;
+				panelMainArea.Paint -= panelMainArea_OnPaint;
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
