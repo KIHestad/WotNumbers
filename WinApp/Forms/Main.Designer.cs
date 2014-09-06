@@ -154,6 +154,7 @@
 			this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.mGadgetEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.mViewChart = new System.Windows.Forms.ToolStripButton();
 			this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
@@ -186,7 +187,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -988,7 +988,7 @@
 			this.mModeHistorical.Name = "mModeHistorical";
 			this.mModeHistorical.Size = new System.Drawing.Size(206, 22);
 			this.mModeHistorical.Tag = "Historical";
-			this.mModeHistorical.Text = "Historical Battle";
+			this.mModeHistorical.Text = "Historical";
 			this.mModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -1343,6 +1343,16 @@
 			this.mGadgetEdit.Size = new System.Drawing.Size(236, 22);
 			this.mGadgetEdit.Text = "Edit Home View Gadgets...";
 			this.mGadgetEdit.Click += new System.EventHandler(this.mGadgetNotImplemented);
+			// 
+			// mHomeEdit
+			// 
+			this.mHomeEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mHomeEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeEdit.Image")));
+			this.mHomeEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mHomeEdit.Name = "mHomeEdit";
+			this.mHomeEdit.Size = new System.Drawing.Size(23, 22);
+			this.mHomeEdit.Text = "toolStripButton1";
+			this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
 			// 
 			// toolStripSeparator23
 			// 
@@ -1709,16 +1719,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// mHomeEdit
-			// 
-			this.mHomeEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.mHomeEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeEdit.Image")));
-			this.mHomeEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mHomeEdit.Name = "mHomeEdit";
-			this.mHomeEdit.Size = new System.Drawing.Size(23, 22);
-			this.mHomeEdit.Text = "toolStripButton1";
-			this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
 			// 
 			// Main
 			// 
