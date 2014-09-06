@@ -322,11 +322,23 @@
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\GadgetHelper.cs" />
+    <Compile Include="Gadget\paramColsRows.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramColsRows.Designer.cs">
+      <DependentUpon>paramColsRows.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeEFF.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Gadget\ucGaugeEFF.Designer.cs">
       <DependentUpon>ucGaugeEFF.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gadget\paramBattleMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramBattleMode.Designer.cs">
+      <DependentUpon>paramBattleMode.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\ucGaugeWN7.cs">
       <SubType>UserControl</SubType>
@@ -450,8 +462,14 @@
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramColsRows.resx">
+      <DependentUpon>paramColsRows.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeEFF.resx">
       <DependentUpon>ucGaugeEFF.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramBattleMode.resx">
+      <DependentUpon>paramBattleMode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeWN7.resx">
       <DependentUpon>ucGaugeWN7.cs</DependentUpon>

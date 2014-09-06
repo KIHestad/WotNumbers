@@ -73,7 +73,7 @@ namespace WinApp.Gadget
 
 		private void DataBind()
 		{
-			// Images are 160x110
+			// Images are 160x100
 			// Get all tanks and show in imageGadget
 			string sql =
 				"select pt.tankId, b.battleTime, br.name, br.color " +
@@ -84,16 +84,23 @@ namespace WinApp.Gadget
 				"order by b.battleTime desc; ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable battle = DB.FetchData(sql);
-			if (battle.Rows.Count > 0)
+			int rowCount = 0;
+			for (int row = 0; row < _rows; row++)
 			{
-				int rowCount = 0;
-				for (int row = 0; row < _rows; row++)
+				for (int col = 0; col < _cols; col++)
 				{
-					for (int col = 0; col < _cols; col++)
+					// get a tank to show
+					if (rowCount > battle.Rows.Count - 1)
 					{
-						// get a tank to show
-						if (rowCount > battle.Rows.Count)
-							rowCount = 0;
+						// add default image
+						Image tankImage = imageList1.Images[0];
+						// Add content to controls
+						tankInfo[rowCount].tankPic.Image = tankImage;
+						tankInfo[rowCount].battleTime.Text = "";
+						tankInfo[rowCount].battleResult.Text = "";
+					}
+					else
+					{
 						int tankId = Convert.ToInt32(battle.Rows[rowCount][0]);
 						Image tankImage = ImageHelper.GetTankImage(tankId, "img");
 						DateTime battleTime = Convert.ToDateTime(battle.Rows[rowCount]["battleTime"]);
@@ -104,9 +111,9 @@ namespace WinApp.Gadget
 						tankInfo[rowCount].battleTime.Text = battleTime.ToString("dd.MM.yy HH:mm");
 						tankInfo[rowCount].battleResult.Text = result;
 						tankInfo[rowCount].battleResult.ForeColor = System.Drawing.ColorTranslator.FromHtml(resultColor);
-						// go to next battle result
-						rowCount++;
 					}
+					// go to next battle result
+					rowCount++;
 				}
 			}
 		}

@@ -1537,51 +1537,7 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
-		#region HOME VIEW - new layout                                   ***********************************************************************
-
-		private void HomeViewCreate(string Status2Message)
-		{
-			ResizeNow();
-			// First remove current controls
-			List<Control> controlsRemove = new List<Control>();
-			foreach (Control c in panelMainArea.Controls)
-			{
-				if (c.Name.Length > 1 && c.Name.Substring(0, 2) == "uc")
-				{
-					controlsRemove.Add(c);
-				}
-			}
-			foreach (Control c in controlsRemove)
-			{
-				panelMainArea.Controls.Remove(c);
-			}
-			// Add current gadgets
-			GadgetHelper.GetGadgets();
-			foreach (GadgetHelper.GadgetItem gadget in GadgetHelper.Gadgets)
-			{
-				panelMainArea.Controls.Add(gadget.control);
-				Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
-				c[0].Height = gadget.height;
-				c[0].Width = gadget.width;
-			}
-		}
-
-		private void HomeViewRefresh(string Status2Message)
-		{
-			List<Control> controls = new List<Control>();
-			foreach (Control c in panelMainArea.Controls)
-			{
-				if (c.Name.Substring(0, 2) == "uc")
-				{
-					c.Invalidate();
-				}
-			}
-			SetStatus2(Status2Message);
-		}
-
-		#endregion
-
+				
 		#region HOME VIEW - old layout                                   ***********************************************************************
 
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
@@ -3035,7 +2991,6 @@ namespace WinApp.Forms
 			{
 				e.Cancel = true; // Close if no valid cell is clicked
 			}
-				
 		}
 		
 
@@ -3569,16 +3524,6 @@ namespace WinApp.Forms
 			ChangeView(MainSettings.View, true);
 		}
 
-		#endregion
-
-		#region Testing
-		
-		private void ViewRangeTesting()
-		{
-			Form frm = new Forms.ViewRange();
-			frm.ShowDialog();
-		}
-
 		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
 		{
 			if (Dossier2db.dossierRunning || PythonEngine.InUse)
@@ -3596,14 +3541,118 @@ namespace WinApp.Forms
 
 		#endregion
 
-		private void mGadgetNotImplemented(object sender, EventArgs e)
+		#region Testing
+		
+		private void ViewRangeTesting()
 		{
-			MsgBox.Show("This feature is not yet implemented.", "Feature not implemented");
+			Form frm = new Forms.ViewRange();
+			frm.ShowDialog();
+		}
+
+		
+
+		#endregion
+
+		#region Gadgets
+
+		private void HomeViewCreate(string Status2Message)
+		{
+			ResizeNow();
+			// First remove current controls
+			List<Control> controlsRemove = new List<Control>();
+			foreach (Control c in panelMainArea.Controls)
+			{
+				if (c.Name.Length > 1 && c.Name.Substring(0, 2) == "uc")
+				{
+					controlsRemove.Add(c);
+				}
+			}
+			foreach (Control c in controlsRemove)
+			{
+				panelMainArea.Controls.Remove(c);
+			}
+			// Add current gadgets
+			GadgetHelper.GetGadgets();
+			foreach (GadgetHelper.GadgetItem gadget in GadgetHelper.gadgets)
+			{
+				panelMainArea.Controls.Add(gadget.control);
+				Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
+				c[0].Height = gadget.height;
+				c[0].Width = gadget.width;
+				//Application.DoEvents();
+			}
+		}
+
+		private void HomeViewRefresh(string Status2Message)
+		{
+			List<Control> controls = new List<Control>();
+			foreach (Control c in panelMainArea.Controls)
+			{
+				if (c.Name.Substring(0, 2) == "uc")
+				{
+					c.Invalidate();
+				}
+			}
+			SetStatus2(Status2Message);
+		}
+
+		private void mGadgetAdd(object sender, EventArgs e)
+		{
+			// Enable edit mode if not
+			if (!mHomeEdit.Checked)
+			{
+				mHomeEdit.Checked = true;
+				GadgetEditModeChange();
+			}
+			// Get gadget
+			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			string controlName = menu.Tag.ToString();
+			// Find popup form for controls with parameters
+			ShowGadgetParameter(controlName);
+			if (GadgetHelper.newParametersOK)
+			{
+				// Create new control
+				Control controlAdd = GadgetHelper.GetGadgetControl(menu.Tag.ToString(), GadgetHelper.newParameters);
+				// Save new control
+				GadgetHelper.GadgetItem newGadget = new GadgetHelper.GadgetItem();
+				newGadget.control = controlAdd;
+				newGadget.controlName = controlName;
+				newGadget.height = controlAdd.Height;
+				newGadget.width = controlAdd.Width;
+				newGadget.posX = controlAdd.Left;
+				newGadget.posY = controlAdd.Top;
+				newGadget.sortorder = 0;
+				newGadget.visible = true;
+				// Special gadgets customization
+				switch (controlName)
+				{
+					case "ucBattleListLargeImages":
+						newGadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
+						newGadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
+						break;
+				}
+				newGadget.name = GadgetHelper.GetGadgetName(controlName);
+				int gadgetId = GadgetHelper.InsertNewGadget(newGadget);
+				newGadget.id = gadgetId;
+				// Add to panel and resize
+				controlAdd.Name = "uc" + gadgetId.ToString();
+				panelMainArea.Controls.Add(controlAdd);
+				Control[] c = panelMainArea.Controls.Find(controlAdd.Name, false);
+				c[0].Height = newGadget.height;
+				c[0].Width = newGadget.width;
+				c[0].BringToFront();
+				c[0].Enabled = false;
+			}
 		}
 
 		private void mHomeEdit_Click(object sender, EventArgs e)
 		{
 			mHomeEdit.Checked = !mHomeEdit.Checked;
+			GadgetEditModeChange();
+		}
+
+		private void GadgetEditModeChange()
+		{
 			if (mHomeEdit.Checked)
 			{
 				// Enable edit style
@@ -3645,54 +3694,68 @@ namespace WinApp.Forms
 				// Enable default style
 				Status2AutoEnabled = true;
 				SetStatus2("Disabled Home View Edit Mode");
+				GadgetHelper.SortGadgets();
 			}
 		}
 
-		private GadgetHelper.GadgetItem lastSelectedGadget = null;
+		//private GadgetHelper.GadgetItem lastSelectedGadget = null;
+		private GadgetHelper.GadgetItem selectedGadget = null; // current selected gadget
+		private Pen selectedControlColor = new Pen(Color.Transparent); // color to paint around selected gadget
 		private bool moveMode = false;
+		
 		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
 		{
 			// Show mouse position
 			string posText = e.X + " x " + e.Y;
-			lblStatus2.Text = "Position: " + posText;
-			// Get area
+			string actionText = "";
+			// Check move mode
 			if (!moveMode)
 			{
-				GadgetHelper.GadgetItem newSelectedGadget = GadgetHelper.FindGadgetArea(e.X, e.Y);
+				// Not moving, just selecting area
+				GadgetHelper.GadgetItem newSelectedGadget = GadgetHelper.FindGadgetFromLocation(e.X, e.Y);
 				if (newSelectedGadget == null)
 				{
 					// none area selected
-					selectedControl = lastSelectedGadget;
-					selectedControlColor = new Pen(ColorTheme.FormBack);
-					lastSelectedGadget = null;
+					selectedGadget = null;
+					panelMainArea.ContextMenu = null;
 					panelMainArea.Refresh(); // force paint event
 				}
-				else if (newSelectedGadget != lastSelectedGadget)
+				else if (newSelectedGadget != selectedGadget)
 				{
-					selectedControl = newSelectedGadget;
+					selectedGadget = newSelectedGadget;
 					selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
-					lastSelectedGadget = newSelectedGadget;
+					bool hasParam = GadgetHelper.HasGadetParameter(selectedGadget);
+					CreateGadgetContextMenu(hasParam);
 					panelMainArea.Refresh(); // force paint event
+					actionText = " - Selected gadget: " + selectedGadget.name.ToString();
+				}
+				else
+				{
+					actionText = " - Selected gadget: " + selectedGadget.name.ToString();
 				}
 			}
 			else
 			{
+				// Moving selected gadget
 				int gridSize = 10;
-				lastSelectedGadget.control.Top = selectedGadgetTop + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
-				lastSelectedGadget.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
+				selectedGadget.control.Top = selectedGadgetTop + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
+				selectedGadget.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
+				actionText = " - Moving gadget: " + selectedGadget.name.ToString();
 			}
+			lblStatus2.Text = "Position: " + posText + actionText;
 		}
 
-		//private Panel controlMove = null;
 		private int mouseDownX = 0;
 		private int mouseDownY = 0;
 		private int selectedGadgetTop = 0;
 		private int selectedGadgetLeft = 0;
+		
 		private void panelEditor_MouseDown(object sender, MouseEventArgs e)
 		{
-			if (e.Button == System.Windows.Forms.MouseButtons.Left && selectedControl != null)
+			Application.DoEvents();
+			if (e.Button == System.Windows.Forms.MouseButtons.Left && selectedGadget != null)
 			{
-				// move mode
+				// move gadget mode
 				moveMode = true;
 				// change color to selection
 				selectedControlColor = new Pen(ColorTheme.ControlBackDarkMoving);
@@ -3700,11 +3763,11 @@ namespace WinApp.Forms
 				// Remeber position
 				mouseDownX = Cursor.Position.X;
 				mouseDownY = Cursor.Position.Y;
-				selectedGadgetTop = lastSelectedGadget.control.Top;
-				selectedGadgetLeft = lastSelectedGadget.control.Left;
-				lastSelectedGadget.control.BringToFront();
+				selectedGadgetTop = selectedGadget.control.Top;
+				selectedGadgetLeft = selectedGadget.control.Left;
+				selectedGadget.control.BringToFront();
 			}
-			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			if (e.Button == System.Windows.Forms.MouseButtons.Right && selectedGadget != null)
 			{
 				// move mode off
 				moveMode = false;
@@ -3716,29 +3779,148 @@ namespace WinApp.Forms
 
 		private void panelEditor_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (lastSelectedGadget != null)
+			Application.DoEvents();
+			if (selectedGadget != null)
 			{
-				// Save new location
-				GadgetHelper.SaveGadgetPosition(lastSelectedGadget.id, lastSelectedGadget.control.Left, lastSelectedGadget.control.Top);
-				lastSelectedGadget.top = lastSelectedGadget.control.Top;
-				lastSelectedGadget.left = lastSelectedGadget.control.Left;
-				// move mode off
-				moveMode = false;
-				// change color on selection
-				selectedControlColor = new Pen(ColorTheme.FormBack);
-				panelMainArea.Refresh(); // force paint event
-				lastSelectedGadget = null;
+				// Save new location if moved
+				if (selectedGadget.posY != selectedGadget.control.Top || selectedGadget.posX != selectedGadget.control.Left)
+				{
+					GadgetHelper.SaveGadgetPosition(selectedGadget.id, selectedGadget.control.Left, selectedGadget.control.Top);
+					selectedGadget.posY = selectedGadget.control.Top;
+					selectedGadget.posX = selectedGadget.control.Left;
+				}
 			}
+			// move mode off
+			moveMode = false;
+			// change color on selection
+			selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
+			panelMainArea.Refresh(); // force paint event
 		}
-		
 
-		private Pen selectedControlColor = new Pen(Color.Transparent);
-		private GadgetHelper.GadgetItem selectedControl = null;
+
 		protected void panelMainArea_OnPaint(object sender, PaintEventArgs e)
 		{
-			if (selectedControl != null)
-				e.Graphics.DrawRectangle(selectedControlColor, selectedControl.left-1, selectedControl.top-1, selectedControl.width+1, selectedControl.height+1);
+			if (selectedGadget != null)
+				e.Graphics.DrawRectangle(selectedControlColor, selectedGadget.posX-1, selectedGadget.posY-1, selectedGadget.width+1, selectedGadget.height+1);
 		}
+
+		private void mGadgetRedraw_Click(object sender, EventArgs e)
+		{
+			HomeViewCreate("Redrawn gadgets");
+			GadgetEditModeChange();
+		}
+
+		private void CreateGadgetContextMenu(bool customizeAvailable)
+		{
+			// Datagrid context menu (Right click on Grid)
+			ContextMenuStrip gadgetMainPopup = new ContextMenuStrip();
+			gadgetMainPopup.Renderer = new StripRenderer();
+			gadgetMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
+			// Items
+			ToolStripSeparator gadgetMainPopup_Separator1 = new ToolStripSeparator();
+			ToolStripMenuItem gadgetMainPopup_Remove = new ToolStripMenuItem("Remove Gadget");
+			gadgetMainPopup_Remove.Click += new EventHandler(gadgetMainPopup_Remove_Click);
+			ToolStripMenuItem gadgetMainPopup_Customize = new ToolStripMenuItem("Customize Gadget");
+			gadgetMainPopup_Customize.Click += new EventHandler(gadgetMainPopup_Customize_Click);
+			// Add events
+			gadgetMainPopup.Opening += new System.ComponentModel.CancelEventHandler(gadgetMainPopup_Opening);
+			
+			// Add context menu
+			if (customizeAvailable)
+			{
+				gadgetMainPopup.Items.AddRange(new ToolStripItem[] 
+				{ 
+					gadgetMainPopup_Customize, 
+					gadgetMainPopup_Separator1,
+					gadgetMainPopup_Remove
+				});
+			}
+			else
+			{
+				gadgetMainPopup.Items.AddRange(new ToolStripItem[] 
+				{ 
+					gadgetMainPopup_Remove
+				});
+			}
+			//Assign to panel
+			panelMainArea.ContextMenuStrip = gadgetMainPopup;
+		}
+
+		private void gadgetMainPopup_Opening(object sender, CancelEventArgs e)
+		{
+			if (selectedGadget == null)
+			{
+				e.Cancel = true; // Close if validation fails
+			}
+		}
+
+		private void gadgetMainPopup_Remove_Click(object sender, EventArgs e)
+		{
+			if (selectedGadget != null)
+			{
+				GadgetHelper.RemoveGadget(selectedGadget);
+				panelMainArea.Controls.Remove(selectedGadget.control);
+			}
+		}
+
+		private void gadgetMainPopup_Customize_Click(object sender, EventArgs e)
+		{
+			GadgetHelper.GadgetItem gadget = selectedGadget;
+			ShowGadgetParameter(gadget.controlName, gadget.id);
+			if (GadgetHelper.newParametersOK)
+			{
+				// Special gadgets customization
+				switch (gadget.controlName)
+				{
+					case "ucBattleListLargeImages":
+						gadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
+						gadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
+						GadgetHelper.SaveGadgetSize(gadget);
+						break;
+				}
+				// save new settings
+				GadgetHelper.SaveGadgetParameter(gadget);
+				// remove it
+				panelMainArea.Controls.Remove(gadget.control);
+				// get updated control
+				Control uc = GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
+				uc.Name = "uc" + gadget.id.ToString();
+				uc.Tag = gadget.name;
+				uc.Top = gadget.posY;
+				uc.Left = gadget.posX;
+				uc.Height = gadget.height;
+				uc.Width = gadget.width;
+				gadget.control = uc;
+				
+				// Add to panel and resize
+				panelMainArea.Controls.Add(gadget.control);
+				Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
+				c[0].Height = gadget.height;
+				c[0].Width = gadget.width;
+				c[0].BringToFront();
+				c[0].Enabled = false;
+			}
+		}
+
+		private void ShowGadgetParameter(string controlName, int gadgetId = -1)
+		{
+			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+			Form frm = null;
+			switch (controlName)
+			{
+				case "ucGaugeWinRate":
+					frm = new Gadget.paramBattleMode(gadgetId);
+					break;
+				case "ucBattleListLargeImages":
+					frm = new Gadget.paramColsRows(gadgetId);
+					break;
+			}
+			if (frm != null)
+				frm.ShowDialog(this);
+		}
+
+
+		#endregion
 
 
 	}
