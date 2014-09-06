@@ -3772,7 +3772,7 @@ namespace WinApp.Forms
 				// move mode off
 				moveMode = false;
 				// remove selection - or change color?
-				selectedControlColor = new Pen(ColorTheme.FormBorderRed);
+				selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
 				panelMainArea.Refresh(); // force paint event
 			}
 		}
