@@ -14,7 +14,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 155; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 157; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1653,6 +1653,46 @@ namespace WinApp.Code
 					break;
 				case 155:
 					RunDossierFileCheckWithForceUpdate = true;
+					break;
+				case 156:
+					mssql =
+						"CREATE TABLE gadget ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"controlName varchar(255) NOT NULL, " +
+						"visible bit NOT NULL, " +
+						"sortorder int NOT NULL, " +
+						"posX int NOT NULL, " +
+						"posY int NOT NULL, " +
+						"width int NOT NULL, " +
+						"height int NOT NULL) ";
+					sqlite =
+						"CREATE TABLE gadget ( " +
+						"id integer primary key, " +
+						"controlName varchar(255) NOT NULL, " +
+						"visible bit NOT NULL, " +
+						"sortorder integer NOT NULL, " +
+						"posX integer NOT NULL, " +
+						"posY integer NOT NULL, " +
+						"width integer NOT NULL, " +
+						"height integer NOT NULL) ";
+					break;
+				case 157:
+					mssql =
+						"CREATE TABLE gadgetParameter ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"gadgetId int NOT NULL, " +
+						"paramNum int NOT NULL, " +
+						"dataType varchar(255) NOT NULL, " +
+						"value varchar(2000) NOT NULL, " +
+						"foreign key (gadgetId) references gadget (id) )";
+					sqlite =
+						"CREATE TABLE gadgetParameter ( " +
+						"id integer primary key, " +
+						"gadgetId integer NOT NULL, " +
+						"paramNum integer NOT NULL, " +
+						"dataType varchar(255) NOT NULL, " +
+						"value varchar(2000) NOT NULL, " +
+						"foreign key (gadgetId) references gadget (id) )";
 					break;
 			}
 			string sql = "";
