@@ -3607,7 +3607,6 @@ namespace WinApp.Forms
 			if (mHomeEdit.Checked)
 			{
 				// Enable edit style
-				MainTheme.Resizable = false;
 				Status2AutoEnabled = false;
 				timerStatus2.Enabled = false;
 				Application.DoEvents();
@@ -3644,7 +3643,6 @@ namespace WinApp.Forms
 				}
 
 				// Enable default style
-				MainTheme.Resizable = true;
 				Status2AutoEnabled = true;
 				SetStatus2("Disabled Home View Edit Mode");
 			}
@@ -3679,7 +3677,7 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				int gridSize = 20;
+				int gridSize = 10;
 				lastSelectedGadget.control.Top = selectedGadgetTop + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
 				lastSelectedGadget.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
 			}
