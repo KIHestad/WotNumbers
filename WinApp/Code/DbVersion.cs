@@ -15,7 +15,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 158; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 159; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1698,6 +1698,10 @@ namespace WinApp.Code
 				case 158:
 					GadgetHelper.gadgets = new List<GadgetHelper.GadgetItem>();
 					GadgetHelper.DefaultSetup();
+					break;
+				case 159:
+					mssql = "UPDATE columnSelection SET colName='battle.battleLifeTime' WHERE id = 9; ";
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";

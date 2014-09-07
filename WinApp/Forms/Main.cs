@@ -24,12 +24,14 @@ namespace WinApp.Forms
 		private bool LoadConfigOK = true;
 		private string LoadConfigMsg = "";
 		private ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
-		
+		private int currentPlayerId = 0;
+
 		public Main()
 		{
 			InitializeComponent();
 			// Get Config
 			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
+			currentPlayerId = Config.Settings.playerId;
 			mainFormPosSize = Config.Settings.posSize;
 		}
 
@@ -483,11 +485,24 @@ namespace WinApp.Forms
 		private int status2DefaultColor = 200;
 		private int status2fadeColor = 200;
 
+		private bool newBattleFileChangeInProsess = false;
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
-			// New battle saved, check if dossier or battle result is running then wait for refresh until done
-			// TODO: Create a loop with wait time here?
-			GridShow("Dossier file check finished successfully, grid refreshed");
+			if (newBattleFileChangeInProsess)
+			{
+				// Start
+				newBattleFileChangeInProsess = true;
+				// New battle saved, check if new player selected
+				if (currentPlayerId != Config.Settings.playerId)
+				{
+					currentPlayerId = Config.Settings.playerId;
+					SetFormTitle();
+					MsgBox.Show("Battle data from new player detected, chenged current player to: " + Config.Settings.playerNameAndServer, "New player detected");
+				}
+				GridShow("Dossier file check finished successfully, grid refreshed");
+				// Done
+				newBattleFileChangeInProsess = false;
+			}
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -684,6 +699,7 @@ namespace WinApp.Forms
 
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
+			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
 			SetStatus2("Refreshing view...");
 			GridShow("View refreshed");
@@ -3368,6 +3384,7 @@ namespace WinApp.Forms
 		{
 			Form frm = new Forms.ApplicationSetting();
 			frm.ShowDialog();
+			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
 			SetFavListMenu(); // Reload fav list items
 			SetColListMenu(); // Refresh column setup list now
@@ -3956,9 +3973,6 @@ namespace WinApp.Forms
 				frm.ShowDialog(this);
 		}
 
-
-		#endregion
-
 		private void mGadgetRemoveAll_Click(object sender, EventArgs e)
 		{
 			MsgBox.Button answer = MsgBox.Show("This will remove all gadgets.", "Remove all gadgets", MsgBoxType.OKCancel, this);
@@ -3980,6 +3994,6 @@ namespace WinApp.Forms
 			}
 		}
 
-
+		#endregion
 	}
 }
