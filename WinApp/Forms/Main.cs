@@ -485,24 +485,10 @@ namespace WinApp.Forms
 		private int status2DefaultColor = 200;
 		private int status2fadeColor = 200;
 
-		private bool newBattleFileChangeInProsess = false;
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
-			if (newBattleFileChangeInProsess)
-			{
-				// Start
-				newBattleFileChangeInProsess = true;
-				// New battle saved, check if new player selected
-				if (currentPlayerId != Config.Settings.playerId)
-				{
-					currentPlayerId = Config.Settings.playerId;
-					SetFormTitle();
-					MsgBox.Show("Battle data from new player detected, chenged current player to: " + Config.Settings.playerNameAndServer, "New player detected");
-				}
-				GridShow("Dossier file check finished successfully, grid refreshed");
-				// Done
-				newBattleFileChangeInProsess = false;
-			}
+			// New battle saved
+			GridShow("Dossier file check finished successfully, grid refreshed");
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -699,7 +685,6 @@ namespace WinApp.Forms
 
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
-			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
 			SetStatus2("Refreshing view...");
 			GridShow("View refreshed");
@@ -862,6 +847,29 @@ namespace WinApp.Forms
 		{
 			try
 			{
+				if (currentPlayerId != Config.Settings.playerId)
+				{
+					// Stop file watchers if running
+					int runState = Config.Settings.dossierFileWathcherRun;
+					if (runState == 1)
+					{
+						Config.Settings.dossierFileWathcherRun = 0;
+						SetListener();
+						Application.DoEvents();
+					}
+					currentPlayerId = Config.Settings.playerId;
+					SetFormTitle();
+					MsgBox.Show("Current player is changed because new player data is fetched." + 
+						Environment.NewLine + Environment.NewLine + "Player changed to: " + Config.Settings.playerNameAndServer +
+						Environment.NewLine + Environment.NewLine, "Current player chenged");
+					// Return to prev file watcher state
+					if (runState != Config.Settings.dossierFileWathcherRun)
+					{
+						Config.Settings.dossierFileWathcherRun = runState;
+						SetListener();
+						Application.DoEvents();
+					}
+				}
 				switch (MainSettings.View)
 				{
 					case GridView.Views.Overall:
