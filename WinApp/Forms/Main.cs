@@ -3792,7 +3792,7 @@ namespace WinApp.Forms
 		
 		private void panelEditor_MouseDown(object sender, MouseEventArgs e)
 		{
-			Application.DoEvents();
+			
 			if (e.Button == System.Windows.Forms.MouseButtons.Left && selectedGadget != null)
 			{
 				// move gadget mode
@@ -3819,7 +3819,6 @@ namespace WinApp.Forms
 
 		private void panelEditor_MouseUp(object sender, MouseEventArgs e)
 		{
-			Application.DoEvents();
 			if (selectedGadget != null)
 			{
 				// Save new location if moved
