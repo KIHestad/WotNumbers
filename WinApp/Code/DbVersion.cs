@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinApp.Gadget;
 
 namespace WinApp.Code
 {
@@ -14,7 +15,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 157; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 158; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1693,6 +1694,10 @@ namespace WinApp.Code
 						"dataType varchar(255) NOT NULL, " +
 						"value varchar(2000) NOT NULL, " +
 						"foreign key (gadgetId) references gadget (id) )";
+					break;
+				case 158:
+					GadgetHelper.gadgets = new List<GadgetHelper.GadgetItem>();
+					GadgetHelper.DefaultSetup();
 					break;
 			}
 			string sql = "";

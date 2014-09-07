@@ -3625,8 +3625,10 @@ namespace WinApp.Forms
 				newGadget.controlName = controlName;
 				newGadget.height = controlAdd.Height;
 				newGadget.width = controlAdd.Width;
-				newGadget.posX = controlAdd.Left;
-				newGadget.posY = controlAdd.Top;
+				newGadget.posX = 2;
+				newGadget.posY = 2;
+				newGadget.control.Top = newGadget.posX;
+				newGadget.control.Left = newGadget.posY;
 				newGadget.sortorder = -1;
 				newGadget.visible = true;
 				// Special gadgets customization
@@ -3912,6 +3914,7 @@ namespace WinApp.Forms
 		private void ShowGadgetParameter(string controlName, int gadgetId = -1)
 		{
 			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+			GadgetHelper.newParametersOK = true;
 			Form frm = null;
 			switch (controlName)
 			{
@@ -3928,6 +3931,27 @@ namespace WinApp.Forms
 
 
 		#endregion
+
+		private void mGadgetRemoveAll_Click(object sender, EventArgs e)
+		{
+			MsgBox.Button answer = MsgBox.Show("This will remove all gadgets.", "Remove all gadgets", MsgBoxType.OKCancel, this);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				GadgetHelper.RemoveGadgetAll();
+				HomeViewCreate("Removed all gadgets");
+			}
+		}
+
+		private void mGadgetReset_Click(object sender, EventArgs e)
+		{
+			MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBoxType.OKCancel, this);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				GadgetHelper.RemoveGadgetAll();
+				GadgetHelper.DefaultSetup();
+				HomeViewCreate("Reset to default gadgets");
+			}
+		}
 
 
 	}

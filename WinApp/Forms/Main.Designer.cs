@@ -1366,12 +1366,14 @@
 			this.mGadgetReset.Name = "mGadgetReset";
 			this.mGadgetReset.Size = new System.Drawing.Size(236, 22);
 			this.mGadgetReset.Text = "Reset to Default";
+			this.mGadgetReset.Click += new System.EventHandler(this.mGadgetReset_Click);
 			// 
 			// mGadgetRemoveAll
 			// 
 			this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
 			this.mGadgetRemoveAll.Size = new System.Drawing.Size(236, 22);
 			this.mGadgetRemoveAll.Text = "Remove all Gadgets";
+			this.mGadgetRemoveAll.Click += new System.EventHandler(this.mGadgetRemoveAll_Click);
 			// 
 			// mHomeEdit
 			// 

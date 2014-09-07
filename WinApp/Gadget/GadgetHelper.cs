@@ -91,6 +91,13 @@ namespace WinApp.Gadget
 			gadgets.Remove(gadget);
 		}
 
+		public static void RemoveGadgetAll()
+		{
+			string sql = "delete from gadgetParameter ; delete from gadget ;";
+			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			gadgets.Clear();
+		}
+
 		public static int InsertNewGadget(GadgetItem gadget)
 		{
 			int gadgetId = 0;
@@ -174,74 +181,91 @@ namespace WinApp.Gadget
 
 		public static void GetGadgets()
 		{
-			gadgets = new List<GadgetItem>();
-			string sql = 
-				"select gadget.id, gadget.visible, gadget.width, gadget.height, gadget.posX, gadget.posY, " +
-				"  gadget.controlName, count(gadgetParameter.id) as parameterCount " +
-				"from gadget left outer join " +
-				"  gadgetParameter on gadget.id = gadgetParameter.gadgetId " +
-				"where visible=1 " +
-				"group by gadget.id, visible, width, height, posX, posY, controlName, sortorder  " +
-				"order by sortorder;";
-			DataTable dt = DB.FetchData(sql);
-			foreach (DataRow dr in dt.Rows)
+			try
 			{
-				// get parameters
-				object[] param = {null, null, null, null, null};
-				int gadgetId = Convert.ToInt32(dr["id"]);
-				string controlName = dr["controlName"].ToString();
-				if (dr["parameterCount"] != null && Convert.ToInt32(dr["parameterCount"]) > 0)
+				gadgets = new List<GadgetItem>();
+				string sql =
+					"select gadget.id, gadget.visible, gadget.width, gadget.height, gadget.posX, gadget.posY, " +
+					"  gadget.controlName, count(gadgetParameter.id) as parameterCount " +
+					"from gadget left outer join " +
+					"  gadgetParameter on gadget.id = gadgetParameter.gadgetId " +
+					"where visible=1 " +
+					"group by gadget.id, visible, width, height, posX, posY, controlName, sortorder  " +
+					"order by sortorder;";
+				DataTable dt = DB.FetchData(sql);
+				foreach (DataRow dr in dt.Rows)
 				{
-					sql = "select * from gadgetParameter where gadgetId=@gadgetId order by paramNum; ";
-					DB.AddWithValue(ref sql, "@gadgetId", gadgetId, DB.SqlDataType.Int );
-					DataTable dtParams = DB.FetchData(sql);
-					int paramCount = 0;
-					foreach (DataRow drParams in dtParams.Rows)
+					// get parameters
+					object[] param = { null, null, null, null, null };
+					int gadgetId = Convert.ToInt32(dr["id"]);
+					string controlName = dr["controlName"].ToString();
+					if (dr["parameterCount"] != null && Convert.ToInt32(dr["parameterCount"]) > 0)
 					{
-						switch (drParams["dataType"].ToString())
+						sql = "select * from gadgetParameter where gadgetId=@gadgetId order by paramNum; ";
+						DB.AddWithValue(ref sql, "@gadgetId", gadgetId, DB.SqlDataType.Int);
+						DataTable dtParams = DB.FetchData(sql);
+						int paramCount = 0;
+						foreach (DataRow drParams in dtParams.Rows)
 						{
-							case "System.String": param[paramCount] = drParams["value"].ToString(); break;
-							case "System.Int32": param[paramCount] = Convert.ToInt32(drParams["value"]); break;
-							case "System.Double": param[paramCount] = Convert.ToDouble(drParams["value"]); break;
-							case "System.Boolean": param[paramCount] = Convert.ToBoolean(drParams["value"]); break;
+							switch (drParams["dataType"].ToString())
+							{
+								case "System.String": param[paramCount] = drParams["value"].ToString(); break;
+								case "System.Int32": param[paramCount] = Convert.ToInt32(drParams["value"]); break;
+								case "System.Double": param[paramCount] = Convert.ToDouble(drParams["value"]); break;
+								case "System.Boolean": param[paramCount] = Convert.ToBoolean(drParams["value"]); break;
+							}
+							paramCount++;
 						}
-						paramCount++;
 					}
+					Control uc = GetGadgetControl(dr["controlName"].ToString(), param);
+					uc.Name = "uc" + dr["id"].ToString();
+					uc.Tag = dr["controlName"].ToString();
+					uc.Top = Convert.ToInt32(dr["posY"]);
+					uc.Left = Convert.ToInt32(dr["posX"]);
+					uc.Height = Convert.ToInt32(dr["height"]);
+					uc.Width = Convert.ToInt32(dr["width"]);
+					gadgets.Add(new GadgetItem
+					{
+						posX = uc.Left,
+						posY = uc.Top,
+						width = uc.Width,
+						height = uc.Height,
+						control = uc,
+						id = gadgetId,
+						controlName = controlName,
+						name = GetGadgetName(controlName)
+					});
 				}
-				Control uc = GetGadgetControl(dr["controlName"].ToString(), param);
-				uc.Name = "uc" + dr["id"].ToString();
-				uc.Tag = dr["controlName"].ToString();
-				uc.Top = Convert.ToInt32(dr["posY"]);
-				uc.Left = Convert.ToInt32(dr["posX"]);
-				uc.Height = Convert.ToInt32(dr["height"]);
-				uc.Width = Convert.ToInt32(dr["width"]);
-				gadgets.Add(new GadgetItem { 
-					posX = uc.Left, 
-					posY = uc.Top, 
-					width = uc.Width, 
-					height = uc.Height, 
-					control = uc, 
-					id = gadgetId, 
-					controlName = controlName ,
-					name = GetGadgetName(controlName)
-				});
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
 			}
 		}
 
 		public static Control GetGadgetControl(string name, object[] param)
 		{
-			Control uc = null;
-			switch (name)
+			try
 			{
-				case "ucGaugeWinRate": uc = new Gadget.ucGaugeWinRate(param[0].ToString()); break;
-				case "ucGaugeWN8" : uc = new Gadget.ucGaugeWN8(); break;
-				case "ucGaugeWN7" : uc = new Gadget.ucGaugeWN7(); break;
-				case "ucGaugeEFF" : uc = new Gadget.ucGaugeEFF(); break;
-				case "ucTotalTanks" : uc = new Gadget.ucTotalTanks(); break;
-				case "ucBattleTypes" : uc = new Gadget.ucBattleTypes(); break;
-				case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
+				Control uc = null;
+				switch (name)
+				{
+					case "ucGaugeWinRate": uc = new Gadget.ucGaugeWinRate(param[0].ToString()); break;
+					case "ucGaugeWN8": uc = new Gadget.ucGaugeWN8(); break;
+					case "ucGaugeWN7": uc = new Gadget.ucGaugeWN7(); break;
+					case "ucGaugeEFF": uc = new Gadget.ucGaugeEFF(); break;
+					case "ucTotalTanks": uc = new Gadget.ucTotalTanks(); break;
+					case "ucBattleTypes": uc = new Gadget.ucBattleTypes(); break;
+					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
+				}
+				return uc;
+
 			}
-			return uc;
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				return null;
+			}
 		}
 
 		public static string GetGadgetName(string controlName)
@@ -281,6 +305,32 @@ namespace WinApp.Gadget
 				}
 			}
 			return foundGadgetArea;
+		}
+
+		public static void DefaultSetup()
+		{
+			string sql = "delete from gadgetParameter ; delete from gadget ;";
+			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			gadgets.Clear();
+			string s = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) ";
+			sql = "";
+			sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 32, 22, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeWN8', 1, 2, 252, 22, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeWN7', 1, 3, 472, 22, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeEFF', 1, 4, 692, 22, 200, 170) ; ";
+			sql += s + "VALUES ('ucBattleListLargeImages', 1, 7, 62, 362, 840, 230) ; ";
+			sql += s + "VALUES ('ucTotalTanks', 1, 5, 32, 222, 420, 93) ; ";
+			sql += s + "VALUES ('ucBattleTypes', 1, 6, 472, 222, 420, 93) ; ";
+			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";
+			sql = "";
+			int gadgetId = 0;
+			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWinRate'").Rows[0][0]);
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
+			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucBattleListLargeImages'").Rows[0][0]);
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.Int32', '5'); ";
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.Int32', '2'); ";
+			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 		}
 	}
 }
