@@ -23,7 +23,8 @@ namespace WinApp.Code
 		
 		// Gadget
 		public static Color gadgetGrid = Color.FromArgb(255, 45, 45, 49);
-		public static Color gadgetOriginForMoved = Color.FromArgb(255, 68, 68, 72);
+		public static Color gadgetGridLight = Color.FromArgb(255, 57, 57, 61);
+		public static Color gadgetOriginForMoved = Color.FromArgb(255, 75, 75, 79);
 
 		// Controls
 		public static Color ControlBack = Color.FromArgb(255, 55, 55, 59);

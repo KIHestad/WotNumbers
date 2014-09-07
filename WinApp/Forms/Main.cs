@@ -3834,20 +3834,32 @@ namespace WinApp.Forms
 			{
 				// Add grid
 				Pen linePen = new Pen(ColorTheme.gadgetGrid);
+				Pen linePenLight = new Pen(ColorTheme.gadgetGridLight);
 				int interval = 10;
 				// Horisontal lines
 				int y = 2;
+				int count = 0;
 				while (y < this.ClientSize.Height)
 				{
-					e.Graphics.DrawLine(linePen, 0, y, this.ClientSize.Width, y);
+					if (count % 5 == 0)
+						e.Graphics.DrawLine(linePenLight, 0, y, this.ClientSize.Width, y);
+					else
+						e.Graphics.DrawLine(linePen, 0, y, this.ClientSize.Width, y);
+					
 					y += interval;
+					count ++;
 				}
 				// Vertical lines
 				int x = 2;
+				count = 0;
 				while (x < this.ClientSize.Width)
 				{
-					e.Graphics.DrawLine(linePen, x, 0, x, this.ClientSize.Height);
+					if (count % 5 == 0)
+						e.Graphics.DrawLine(linePenLight, x, 0, x, this.ClientSize.Height);
+					else
+						e.Graphics.DrawLine(linePen, x, 0, x, this.ClientSize.Height);
 					x += interval;
+					count++;
 				}
 				linePen.Dispose();
 
