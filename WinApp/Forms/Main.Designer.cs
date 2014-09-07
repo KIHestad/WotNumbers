@@ -185,9 +185,7 @@
 			this.panelInfo = new System.Windows.Forms.Panel();
 			this.lblOverView = new System.Windows.Forms.Label();
 			this.picIS7 = new System.Windows.Forms.PictureBox();
-			this.scrollY = new BadScrollBar();
 			this.scrollCorner = new BadScrollBarCorner();
-			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
@@ -1285,7 +1283,7 @@
             this.wN7RatingToolStripMenuItem,
             this.efficiencyRatingToolStripMenuItem});
 			this.gaugesToolStripMenuItem.Name = "gaugesToolStripMenuItem";
-			this.gaugesToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+			this.gaugesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
 			this.gaugesToolStripMenuItem.Text = "Gauges";
 			// 
 			// winRateToolStripMenuItem
@@ -1323,7 +1321,7 @@
 			// mGadgetAddBattleModeStats
 			// 
 			this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
-			this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetAddBattleModeStats.Tag = "ucBattleTypes";
 			this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
 			this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetAdd);
@@ -1331,7 +1329,7 @@
 			// mGadgetAddTankTypeStats
 			// 
 			this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
-			this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetAddTankTypeStats.Tag = "ucTotalTanks";
 			this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
 			this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetAdd);
@@ -1339,39 +1337,39 @@
 			// mGadgetAddImage
 			// 
 			this.mGadgetAddImage.Name = "mGadgetAddImage";
-			this.mGadgetAddImage.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetAddImage.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetAddImage.Tag = "ucBattleListLargeImages";
-			this.mGadgetAddImage.Text = "Last Battle Result Large Images";
+			this.mGadgetAddImage.Text = "Recent Battles Large Images";
 			this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetAdd);
 			// 
 			// toolStripSeparator8
 			// 
 			this.toolStripSeparator8.Name = "toolStripSeparator8";
-			this.toolStripSeparator8.Size = new System.Drawing.Size(233, 6);
+			this.toolStripSeparator8.Size = new System.Drawing.Size(218, 6);
 			// 
 			// mGadgetRedraw
 			// 
 			this.mGadgetRedraw.Name = "mGadgetRedraw";
-			this.mGadgetRedraw.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetRedraw.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetRedraw.Text = "Redraw all Gadgets";
 			this.mGadgetRedraw.Click += new System.EventHandler(this.mGadgetRedraw_Click);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(233, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(218, 6);
 			// 
 			// mGadgetReset
 			// 
 			this.mGadgetReset.Name = "mGadgetReset";
-			this.mGadgetReset.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetReset.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetReset.Text = "Reset to Default";
 			this.mGadgetReset.Click += new System.EventHandler(this.mGadgetReset_Click);
 			// 
 			// mGadgetRemoveAll
 			// 
 			this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
-			this.mGadgetRemoveAll.Size = new System.Drawing.Size(236, 22);
+			this.mGadgetRemoveAll.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetRemoveAll.Text = "Remove all Gadgets";
 			this.mGadgetRemoveAll.Click += new System.EventHandler(this.mGadgetRemoveAll_Click);
 			// 
@@ -1568,9 +1566,7 @@
 			this.panelMainArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.panelMainArea.Controls.Add(this.dataGridMain);
 			this.panelMainArea.Controls.Add(this.panelInfo);
-			this.panelMainArea.Controls.Add(this.scrollY);
 			this.panelMainArea.Controls.Add(this.scrollCorner);
-			this.panelMainArea.Controls.Add(this.scrollX);
 			this.panelMainArea.Location = new System.Drawing.Point(9, 57);
 			this.panelMainArea.Name = "panelMainArea";
 			this.panelMainArea.Size = new System.Drawing.Size(649, 336);
@@ -1673,26 +1669,6 @@
 			this.picIS7.TabIndex = 17;
 			this.picIS7.TabStop = false;
 			// 
-			// scrollY
-			// 
-			this.scrollY.BackColor = System.Drawing.Color.Transparent;
-			this.scrollY.Image = null;
-			this.scrollY.Location = new System.Drawing.Point(621, 88);
-			this.scrollY.Name = "scrollY";
-			this.scrollY.ScrollElementsTotals = 100;
-			this.scrollY.ScrollElementsVisible = 0;
-			this.scrollY.ScrollHide = true;
-			this.scrollY.ScrollNecessary = true;
-			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.scrollY.ScrollPosition = 0;
-			this.scrollY.Size = new System.Drawing.Size(17, 204);
-			this.scrollY.TabIndex = 21;
-			this.scrollY.Text = "badScrollBar2";
-			this.scrollY.Visible = false;
-			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
-			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
-			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
-			// 
 			// scrollCorner
 			// 
 			this.scrollCorner.Image = null;
@@ -1702,26 +1678,6 @@
 			this.scrollCorner.TabIndex = 19;
 			this.scrollCorner.Text = "badScrollBarCorner1";
 			this.scrollCorner.Visible = false;
-			// 
-			// scrollX
-			// 
-			this.scrollX.BackColor = System.Drawing.Color.Transparent;
-			this.scrollX.Image = null;
-			this.scrollX.Location = new System.Drawing.Point(14, 298);
-			this.scrollX.Name = "scrollX";
-			this.scrollX.ScrollElementsTotals = 100;
-			this.scrollX.ScrollElementsVisible = 0;
-			this.scrollX.ScrollHide = true;
-			this.scrollX.ScrollNecessary = true;
-			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
-			this.scrollX.ScrollPosition = 0;
-			this.scrollX.Size = new System.Drawing.Size(601, 17);
-			this.scrollX.TabIndex = 20;
-			this.scrollX.Text = "badScrollBar1";
-			this.scrollX.Visible = false;
-			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
-			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
-			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
 			// 
 			// lblStatus2
 			// 

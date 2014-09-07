@@ -3721,6 +3721,8 @@ namespace WinApp.Forms
 				panelMainArea.MouseUp -= panelEditor_MouseUp;
 				panelMainArea.Refresh();
 				panelMainArea.Paint -= panelMainArea_OnPaint;
+				panelMainArea.ContextMenuStrip = null;
+				panelMainArea.Refresh(); // force paint event
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3755,7 +3757,7 @@ namespace WinApp.Forms
 				{
 					// none area selected
 					selectedGadget = null;
-					panelMainArea.ContextMenu = null;
+					panelMainArea.ContextMenuStrip = null;
 					panelMainArea.Refresh(); // force paint event
 				}
 				else if (newSelectedGadget != selectedGadget)
@@ -4010,7 +4012,10 @@ namespace WinApp.Forms
 			{
 				GadgetHelper.RemoveGadgetAll();
 				GadgetHelper.DefaultSetup();
+				mHomeEdit.Checked = false;
+				GadgetEditModeChange();
 				HomeViewCreate("Reset to default gadgets");
+
 			}
 		}
 
