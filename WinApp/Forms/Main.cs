@@ -3720,7 +3720,7 @@ namespace WinApp.Forms
 			{
 				// Not moving, just selecting area
 				GadgetHelper.GadgetItem newSelectedGadget = GadgetHelper.FindGadgetFromLocation(e.X, e.Y);
-				if (newSelectedGadget == null)
+				if (selectedGadget != null && newSelectedGadget == null)
 				{
 					// none area selected
 					selectedGadget = null;
@@ -3736,7 +3736,7 @@ namespace WinApp.Forms
 					panelMainArea.Refresh(); // force paint event
 					actionText = " - Selected gadget: " + selectedGadget.name.ToString();
 				}
-				else
+				else if (selectedGadget != null)
 				{
 					actionText = " - Selected gadget: " + selectedGadget.name.ToString();
 				}
