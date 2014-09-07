@@ -185,7 +185,9 @@
 			this.panelInfo = new System.Windows.Forms.Panel();
 			this.lblOverView = new System.Windows.Forms.Label();
 			this.picIS7 = new System.Windows.Forms.PictureBox();
+			this.scrollY = new BadScrollBar();
 			this.scrollCorner = new BadScrollBarCorner();
+			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
@@ -1566,7 +1568,9 @@
 			this.panelMainArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.panelMainArea.Controls.Add(this.dataGridMain);
 			this.panelMainArea.Controls.Add(this.panelInfo);
+			this.panelMainArea.Controls.Add(this.scrollY);
 			this.panelMainArea.Controls.Add(this.scrollCorner);
+			this.panelMainArea.Controls.Add(this.scrollX);
 			this.panelMainArea.Location = new System.Drawing.Point(9, 57);
 			this.panelMainArea.Name = "panelMainArea";
 			this.panelMainArea.Size = new System.Drawing.Size(649, 336);
@@ -1669,6 +1673,26 @@
 			this.picIS7.TabIndex = 17;
 			this.picIS7.TabStop = false;
 			// 
+			// scrollY
+			// 
+			this.scrollY.BackColor = System.Drawing.Color.Transparent;
+			this.scrollY.Image = null;
+			this.scrollY.Location = new System.Drawing.Point(621, 88);
+			this.scrollY.Name = "scrollY";
+			this.scrollY.ScrollElementsTotals = 100;
+			this.scrollY.ScrollElementsVisible = 0;
+			this.scrollY.ScrollHide = true;
+			this.scrollY.ScrollNecessary = true;
+			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+			this.scrollY.ScrollPosition = 0;
+			this.scrollY.Size = new System.Drawing.Size(17, 204);
+			this.scrollY.TabIndex = 21;
+			this.scrollY.Text = "badScrollBar2";
+			this.scrollY.Visible = false;
+			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
+			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
+			// 
 			// scrollCorner
 			// 
 			this.scrollCorner.Image = null;
@@ -1678,6 +1702,26 @@
 			this.scrollCorner.TabIndex = 19;
 			this.scrollCorner.Text = "badScrollBarCorner1";
 			this.scrollCorner.Visible = false;
+			// 
+			// scrollX
+			// 
+			this.scrollX.BackColor = System.Drawing.Color.Transparent;
+			this.scrollX.Image = null;
+			this.scrollX.Location = new System.Drawing.Point(14, 298);
+			this.scrollX.Name = "scrollX";
+			this.scrollX.ScrollElementsTotals = 100;
+			this.scrollX.ScrollElementsVisible = 0;
+			this.scrollX.ScrollHide = true;
+			this.scrollX.ScrollNecessary = true;
+			this.scrollX.ScrollOrientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
+			this.scrollX.ScrollPosition = 0;
+			this.scrollX.Size = new System.Drawing.Size(601, 17);
+			this.scrollX.TabIndex = 20;
+			this.scrollX.Text = "badScrollBar1";
+			this.scrollX.Visible = false;
+			this.scrollX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseDown);
+			this.scrollX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseMove);
+			this.scrollX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
 			// 
 			// lblStatus2
 			// 
