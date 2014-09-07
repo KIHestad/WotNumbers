@@ -3675,6 +3675,10 @@ namespace WinApp.Forms
 				panelMainArea.MouseUp += new MouseEventHandler(panelEditor_MouseUp);
 				// Add panel event for indicating selected control
 				panelMainArea.Paint += new PaintEventHandler(panelMainArea_OnPaint);
+				// force paint grid
+				moveMode = true;
+				panelMainArea.Refresh();
+				moveMode = false;
 				// Disable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3690,6 +3694,7 @@ namespace WinApp.Forms
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
 				panelMainArea.MouseDown -= panelEditor_MouseDown;
 				panelMainArea.MouseUp -= panelEditor_MouseUp;
+				panelMainArea.Refresh();
 				panelMainArea.Paint -= panelMainArea_OnPaint;
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
@@ -3699,7 +3704,6 @@ namespace WinApp.Forms
 						c.Enabled = true;
 					}
 				}
-
 				// Enable default style
 				Status2AutoEnabled = true;
 				SetStatus2("Disabled Home View Edit Mode");
@@ -3767,7 +3771,7 @@ namespace WinApp.Forms
 				// move gadget mode
 				moveMode = true;
 				// change color to selection
-				selectedControlColor = new Pen(ColorTheme.ControlBackDarkMoving);
+				selectedControlColor = new Pen(ColorTheme.gadgetOriginForMoved);
 				panelMainArea.Refresh(); // force paint event
 				// Remeber position
 				mouseDownX = Cursor.Position.X;
@@ -3809,8 +3813,31 @@ namespace WinApp.Forms
 
 		protected void panelMainArea_OnPaint(object sender, PaintEventArgs e)
 		{
-			if (selectedGadget != null)
-				e.Graphics.DrawRectangle(selectedControlColor, selectedGadget.posX-1, selectedGadget.posY-1, selectedGadget.width+1, selectedGadget.height+1);
+			if (mHomeEdit.Checked)
+			{
+				// Add grid
+				Pen linePen = new Pen(ColorTheme.gadgetGrid);
+				int interval = 10;
+				// Horisontal lines
+				int y = 2;
+				while (y < this.ClientSize.Height)
+				{
+					e.Graphics.DrawLine(linePen, 0, y, this.ClientSize.Width, y);
+					y += interval;
+				}
+				// Vertical lines
+				int x = 2;
+				while (x < this.ClientSize.Width)
+				{
+					e.Graphics.DrawLine(linePen, x, 0, x, this.ClientSize.Height);
+					x += interval;
+				}
+				linePen.Dispose();
+
+				// Add blue border for selected element
+				if (selectedGadget != null)
+					e.Graphics.DrawRectangle(selectedControlColor, selectedGadget.posX - 1, selectedGadget.posY - 1, selectedGadget.width + 1, selectedGadget.height + 1);
+			}
 		}
 
 		private void mGadgetRedraw_Click(object sender, EventArgs e)
