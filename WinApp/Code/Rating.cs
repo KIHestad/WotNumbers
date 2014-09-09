@@ -402,10 +402,25 @@ namespace WinApp.Code
 					
 		#region Color
 
-		public static double[] rangeEFF = { 0, 630, 860, 1140, 1460, 1735 };
+		public static double[] rangeEFF = { 0, 450, 700, 900, 1100, 1300, 1550, 1800, 2000 };
 
 		public static Color EffColor(double eff)
 		{
+			// NEW
+			//Efficiency ranges for {{teff}}, {{e}}.
+			//TEFF       E
+			//0..299     1 - very bad player ColorTheme.Rating_very_bad;
+			//300..499   2 - bad player      ColorTheme.Rating_bad;
+			//500..699   3 - poor
+			//700..899   4 - below average   ColorTheme.Rating_below_average;
+			//900..1099  5 - average         ColorTheme.Rating_average;
+			//1100..1299 6 - above average   ColorTheme.Rating_good;
+			//1300..1549 7 - good            ColorTheme.Rating_very_good;
+			//1550..1799 8 - great           ColorTheme.Rating_great;
+			//1800..1999 9 - master          ColorTheme.Rating_uniqum;
+			//2000+      E - Expert          ColorTheme.Rating_super_uniqum;
+			
+			
 			// Dynamic color by efficiency
 			//  { "value": 610,  "color": ${"def.colorRating.very_bad" } },  //    0 - 609  - very bad   (20% of players)
 			//  { "value": 850,  "color": ${"def.colorRating.bad"      } },  //  610 - 849  - bad        (better then 20% of players)
@@ -413,12 +428,15 @@ namespace WinApp.Code
 			//  { "value": 1475, "color": ${"def.colorRating.good"     } },  // 1145 - 1474 - good       (better then 90% of players)
 			//  { "value": 1775, "color": ${"def.colorRating.very_good"} },  // 1475 - 1774 - very good  (better then 99% of players)
 			//  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
-			Color effRatingColor = ColorTheme.Rating_bad;
-			if (eff >= rangeEFF[5]) effRatingColor = ColorTheme.Rating_uniqum;
-			else if (eff >= rangeEFF[4]) effRatingColor = ColorTheme.Rating_great;
-			else if (eff >= rangeEFF[3]) effRatingColor = ColorTheme.Rating_good;
-			else if (eff >= rangeEFF[2]) effRatingColor = ColorTheme.Rating_average;
-			else if (eff >= rangeEFF[1]) effRatingColor = ColorTheme.Rating_below_average;
+			Color effRatingColor = ColorTheme.Rating_very_bad;
+			if (eff >= rangeEFF[8]) effRatingColor = ColorTheme.Rating_super_uniqum;
+			else if (eff >= rangeEFF[7]) effRatingColor = ColorTheme.Rating_uniqum;
+			else if (eff >= rangeEFF[6]) effRatingColor = ColorTheme.Rating_great;
+			else if (eff >= rangeEFF[5]) effRatingColor = ColorTheme.Rating_very_good;
+			else if (eff >= rangeEFF[4]) effRatingColor = ColorTheme.Rating_good;
+			else if (eff >= rangeEFF[3]) effRatingColor = ColorTheme.Rating_average;
+			else if (eff >= rangeEFF[2]) effRatingColor = ColorTheme.Rating_below_average;
+			else if (eff >= rangeEFF[1]) effRatingColor = ColorTheme.Rating_bad;
 			return effRatingColor;
 		}
 

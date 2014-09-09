@@ -38,16 +38,14 @@ namespace WinApp.Gadget
 			aGauge1.ValueScaleLinesMajorStepValue = 250;
 			aGauge1.CenterSubText = "Efficiency Rating";
 			// Colors 0-5
-			for (byte i = 0; i <= 5; i++)
+			for (byte i = 0; i <= 8; i++)
 			{
 				aGauge1.Range_Idx = i;
-				// Special color handling for eff
-				aGauge1.RangesColor[i] = Rating.EffColor(Rating.rangeEFF[i]);
 				if (i == 0)
 					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
 				else
 					aGauge1.RangesStartValue[i] = (float)Rating.rangeEFF[i];
-				if (i == 5)
+				if (i == 8)
 					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
 				else
 					aGauge1.RangesEndValue[i] = (float)Rating.rangeEFF[i + 1];
