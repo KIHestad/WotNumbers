@@ -276,6 +276,7 @@
 			this.Name = "ucGaugeWN8";
 			this.Size = new System.Drawing.Size(200, 170);
 			this.Load += new System.EventHandler(this.ucGauge_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWN8_Paint);
 			this.ResumeLayout(false);
 
 		}

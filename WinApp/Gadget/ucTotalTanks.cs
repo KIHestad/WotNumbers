@@ -30,7 +30,7 @@ namespace WinApp.Gadget
 
 		private void DataBind()
 		{
-			GridHelper.StyleDataGrid(dataGridView1);
+			GridHelper.StyleGadgetDataGrid(dataGridView1);
 			string sql =
 				"SELECT  tankType.shortName AS Type, COUNT(playerTank.id) AS Tanks, SUM(playerTankBattleTotalsView.battles) AS Battles, SUM(playerTankBattleTotalsView.wins) As Victory " +
 				"FROM    playerTank INNER JOIN " +
@@ -107,7 +107,7 @@ namespace WinApp.Gadget
 			// No resize and Right align numbers
 			dataGridView1.Columns[0].Resizable = DataGridViewTriState.False;
 			// Finish
-			dataGridView1.Columns[0].Width = 97;
+			dataGridView1.Columns[0].Width = 95;
 			dataGridView1.Columns[1].Width = 53;
 			dataGridView1.Columns[2].Width = 53;
 			dataGridView1.Columns[3].Width = 53;
@@ -123,26 +123,36 @@ namespace WinApp.Gadget
 
 		private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			string col = dataGridView1.Columns[e.ColumnIndex].Name;
-			DataGridViewCell cell = dataGridView1[e.ColumnIndex, e.RowIndex];
-			if (e.RowIndex == 2 && e.ColumnIndex > 0)
+			if (this.Enabled)
 			{
-				if (cell.Value != DBNull.Value)
+				string col = dataGridView1.Columns[e.ColumnIndex].Name;
+				DataGridViewCell cell = dataGridView1[e.ColumnIndex, e.RowIndex];
+				if (e.RowIndex == 2 && e.ColumnIndex > 0)
 				{
-					cell.Style.ForeColor = Rating.WinRateColor(Convert.ToDouble(cell.Value));
-					cell.Style.SelectionForeColor = cell.Style.ForeColor;
-					cell.Style.Format = "0.00";
+					if (cell.Value != DBNull.Value)
+					{
+						cell.Style.ForeColor = Rating.WinRateColor(Convert.ToDouble(cell.Value));
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
+						cell.Style.Format = "0.00";
+					}
 				}
-			}
-			else if (e.RowIndex == 1 && e.ColumnIndex > 0)
-			{
-				cell.Style.Format = "N0";
+				else if (e.RowIndex == 1 && e.ColumnIndex > 0)
+				{
+					cell.Style.Format = "N0";
+				}
 			}
 		}
 
 		private void dataGridView1_Sorted(object sender, EventArgs e)
 		{
 			dataGridView1.ClearSelection();
+		}
+
+		private void ucTotalTanks_Paint(object sender, PaintEventArgs e)
+		{
+			if (BackColor == ColorTheme.FormBackSelectedGadget)
+				GadgetHelper.DrawBorderOnGadget(sender, e);
+			dataGridView1.DefaultCellStyle.BackColor = BackColor;
 		}
 	}
 }

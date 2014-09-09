@@ -3602,6 +3602,28 @@ namespace WinApp.Forms
 			{
 				panelMainArea.Controls.Remove(c);
 			}
+			// Add grid image
+			Image image = imageGrid.Images[0];
+			Bitmap bm = new Bitmap(image.Width * 40, image.Height * 30);
+			Graphics gp = Graphics.FromImage(bm);
+			for (int x = 0; x < 40; x++)
+			{
+				for (int y = 0; y < 30; y++)
+				{
+					gp.DrawImage(image, new Point(x * 50, y * 50));
+				}
+			}
+			Image result = bm;
+			PictureBox picGrid = new PictureBox();
+			picGrid.Width = 2000;
+			picGrid.Height = 1500;
+			picGrid.Top = 2;
+			picGrid.Left = 2;
+			picGrid.Image = result;
+			picGrid.Name = "ucPicGrid";
+			picGrid.Visible = false;
+			panelMainArea.Controls.Add(picGrid);
+			
 			// Add current gadgets
 			GadgetHelper.GetGadgets();
 			foreach (GadgetHelper.GadgetItem gadget in GadgetHelper.gadgets)
@@ -3610,7 +3632,7 @@ namespace WinApp.Forms
 				Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
 				c[0].Height = gadget.height;
 				c[0].Width = gadget.width;
-				//Application.DoEvents();
+				c[0].BringToFront();
 			}
 		}
 
@@ -3698,12 +3720,7 @@ namespace WinApp.Forms
 				panelMainArea.MouseMove += new MouseEventHandler(panelEditor_MouseMove);
 				panelMainArea.MouseDown += new MouseEventHandler(panelEditor_MouseDown);
 				panelMainArea.MouseUp += new MouseEventHandler(panelEditor_MouseUp);
-				// Add panel event for indicating selected control
-				panelMainArea.Paint += new PaintEventHandler(panelMainArea_OnPaint);
-				// force paint grid
-				moveMode = true;
-				panelMainArea.Refresh();
-				moveMode = false;
+				
 				// Disable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
@@ -3712,15 +3729,19 @@ namespace WinApp.Forms
 						c.Enabled = false;
 					}
 				}
+				// Show grid
+				Control[] ucPicGrid = panelMainArea.Controls.Find("ucPicGrid", false);
+				ucPicGrid[0].Visible = true;
 			}
 			else
 			{
+				// RemoveOwnedForm Grid
+				Control[] ucPicGrid = panelMainArea.Controls.Find("ucPicGrid", false);
+				ucPicGrid[0].Visible = false;
 				// Remove mouse move event for main panel
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
 				panelMainArea.MouseDown -= panelEditor_MouseDown;
 				panelMainArea.MouseUp -= panelEditor_MouseUp;
-				panelMainArea.Refresh();
-				panelMainArea.Paint -= panelMainArea_OnPaint;
 				panelMainArea.ContextMenuStrip = null;
 				panelMainArea.Refresh(); // force paint event
 				// Enable all gadgets
@@ -3740,19 +3761,21 @@ namespace WinApp.Forms
 
 		//private GadgetHelper.GadgetItem lastSelectedGadget = null;
 		private GadgetHelper.GadgetItem selectedGadget = null; // current selected gadget
-		private Pen selectedControlColor = new Pen(Color.Transparent); // color to paint around selected gadget
 		private bool moveMode = false;
 		
 		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
 		{
-			// Show mouse position
-			string posText = e.X + " x " + e.Y;
 			string actionText = "";
 			// Check move mode
 			if (!moveMode)
 			{
 				// Not moving, just selecting area
 				GadgetHelper.GadgetItem newSelectedGadget = GadgetHelper.FindGadgetFromLocation(e.X, e.Y);
+				if (selectedGadget != null && newSelectedGadget != selectedGadget)
+				{
+					// Lost focus on previous gadget, set default back color
+					selectedGadget.control.BackColor = ColorTheme.FormBack;
+				}
 				if (selectedGadget != null && newSelectedGadget == null)
 				{
 					// none area selected
@@ -3762,8 +3785,9 @@ namespace WinApp.Forms
 				}
 				else if (newSelectedGadget != selectedGadget)
 				{
+					// gadget selected
 					selectedGadget = newSelectedGadget;
-					selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
+					selectedGadget.control.BackColor = ColorTheme.FormBackSelectedGadget;
 					bool hasParam = GadgetHelper.HasGadetParameter(selectedGadget);
 					CreateGadgetContextMenu(hasParam);
 					panelMainArea.Refresh(); // force paint event
@@ -3782,7 +3806,8 @@ namespace WinApp.Forms
 				selectedGadget.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
 				actionText = " - Moving gadget: " + selectedGadget.name.ToString();
 			}
-			lblStatus2.Text = "Position: " + posText + actionText;
+			// Show mouse position
+			lblStatus2.Text = "Position: " + e.X + " x " + e.Y + actionText;
 		}
 
 		private int mouseDownX = 0;
@@ -3797,9 +3822,6 @@ namespace WinApp.Forms
 			{
 				// move gadget mode
 				moveMode = true;
-				// change color to selection
-				selectedControlColor = new Pen(ColorTheme.gadgetOriginForMoved);
-				panelMainArea.Refresh(); // force paint event
 				// Remeber position
 				mouseDownX = Cursor.Position.X;
 				mouseDownY = Cursor.Position.Y;
@@ -3811,9 +3833,6 @@ namespace WinApp.Forms
 			{
 				// move mode off
 				moveMode = false;
-				// remove selection - or change color?
-				selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
-				panelMainArea.Refresh(); // force paint event
 			}
 		}
 
@@ -3831,51 +3850,40 @@ namespace WinApp.Forms
 			}
 			// move mode off
 			moveMode = false;
-			// change color on selection
-			selectedControlColor = new Pen(ColorTheme.FormBorderBlue);
-			panelMainArea.Refresh(); // force paint event
 		}
 
-
-		protected void panelMainArea_OnPaint(object sender, PaintEventArgs e)
+		private void DrawGrid(object sender, PaintEventArgs e)
 		{
-			if (mHomeEdit.Checked)
+			// Add grid
+			Pen linePen = new Pen(ColorTheme.gadgetGrid);
+			Pen linePenLight = new Pen(ColorTheme.gadgetGridLight);
+			int interval = 10;
+			// Horisontal lines
+			int y = 2;
+			int count = 0;
+			while (y < this.ClientSize.Height)
 			{
-				// Add grid
-				Pen linePen = new Pen(ColorTheme.gadgetGrid);
-				Pen linePenLight = new Pen(ColorTheme.gadgetGridLight);
-				int interval = 10;
-				// Horisontal lines
-				int y = 2;
-				int count = 0;
-				while (y < this.ClientSize.Height)
-				{
-					if (count % 5 == 0)
-						e.Graphics.DrawLine(linePenLight, 0, y, this.ClientSize.Width, y);
-					else
-						e.Graphics.DrawLine(linePen, 0, y, this.ClientSize.Width, y);
-					
-					y += interval;
-					count ++;
-				}
-				// Vertical lines
-				int x = 2;
-				count = 0;
-				while (x < this.ClientSize.Width)
-				{
-					if (count % 5 == 0)
-						e.Graphics.DrawLine(linePenLight, x, 0, x, this.ClientSize.Height);
-					else
-						e.Graphics.DrawLine(linePen, x, 0, x, this.ClientSize.Height);
-					x += interval;
-					count++;
-				}
-				linePen.Dispose();
+				if (count % 5 == 0)
+					e.Graphics.DrawLine(linePenLight, 0, y, this.ClientSize.Width, y);
+				else
+					e.Graphics.DrawLine(linePen, 0, y, this.ClientSize.Width, y);
 
-				// Add blue border for selected element
-				if (selectedGadget != null)
-					e.Graphics.DrawRectangle(selectedControlColor, selectedGadget.posX - 1, selectedGadget.posY - 1, selectedGadget.width + 1, selectedGadget.height + 1);
+				y += interval;
+				count++;
 			}
+			// Vertical lines
+			int x = 2;
+			count = 0;
+			while (x < this.ClientSize.Width)
+			{
+				if (count % 5 == 0)
+					e.Graphics.DrawLine(linePenLight, x, 0, x, this.ClientSize.Height);
+				else
+					e.Graphics.DrawLine(linePen, x, 0, x, this.ClientSize.Height);
+				x += interval;
+				count++;
+			}
+			linePen.Dispose();
 		}
 
 		private void mGadgetRedraw_Click(object sender, EventArgs e)

@@ -22,6 +22,7 @@ namespace WinApp.Code
 		public static Color FormBorderRed = Color.FromArgb(255, 190, 0, 0);
 		
 		// Gadget
+		public static Color FormBackSelectedGadget = Color.FromArgb(255, 38, 38, 38);
 		public static Color gadgetGrid = Color.FromArgb(255, 45, 45, 49);
 		public static Color gadgetGridLight = Color.FromArgb(255, 57, 57, 61);
 		public static Color gadgetOriginForMoved = Color.FromArgb(255, 75, 75, 79);

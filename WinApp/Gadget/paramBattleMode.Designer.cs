@@ -123,6 +123,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "ucGaugeWinRateParameter";
 			this.Load += new System.EventHandler(this.paramBattleMode_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.paramBattleMode_Paint);
 			this.badForm1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

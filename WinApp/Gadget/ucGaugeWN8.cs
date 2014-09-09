@@ -185,5 +185,11 @@ namespace WinApp.Gadget
 				case GadgetHelper.TimeRange.TimeToday: btnToday.Checked = true; break;
 			}
 		}
+
+		private void ucGaugeWN8_Paint(object sender, PaintEventArgs e)
+		{
+			if (BackColor == ColorTheme.FormBackSelectedGadget)
+				GadgetHelper.DrawBorderOnGadget(sender, e);
+		}
 	}
 }

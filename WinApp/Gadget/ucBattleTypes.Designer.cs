@@ -37,11 +37,10 @@
 			this.dataGridView1.AllowUserToAddRows = false;
 			this.dataGridView1.AllowUserToDeleteRows = false;
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+			this.dataGridView1.Location = new System.Drawing.Point(1, 1);
 			this.dataGridView1.Name = "dataGridView1";
 			this.dataGridView1.ReadOnly = true;
-			this.dataGridView1.Size = new System.Drawing.Size(420, 93);
+			this.dataGridView1.Size = new System.Drawing.Size(418, 93);
 			this.dataGridView1.TabIndex = 0;
 			this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
 			this.dataGridView1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dataGridView1_DataBindingComplete);
@@ -54,8 +53,9 @@
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.Controls.Add(this.dataGridView1);
 			this.Name = "ucBattleTypes";
-			this.Size = new System.Drawing.Size(420, 93);
+			this.Size = new System.Drawing.Size(420, 95);
 			this.Load += new System.EventHandler(this.ucBattleTypes_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucBattleTypes_Paint);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
 

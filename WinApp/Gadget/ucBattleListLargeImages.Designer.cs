@@ -47,6 +47,7 @@
 			this.Name = "ucBattleListLargeImages";
 			this.Size = new System.Drawing.Size(160, 100);
 			this.Load += new System.EventHandler(this.ucImage_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucBattleListLargeImages_Paint);
 			this.ResumeLayout(false);
 
 		}

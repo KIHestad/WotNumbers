@@ -319,8 +319,8 @@ namespace WinApp.Gadget
 			sql += s + "VALUES ('ucGaugeWN7', 1, 3, 472, 22, 200, 170) ; ";
 			sql += s + "VALUES ('ucGaugeEFF', 1, 4, 692, 22, 200, 170) ; ";
 			sql += s + "VALUES ('ucBattleListLargeImages', 1, 7, 62, 362, 840, 230) ; ";
-			sql += s + "VALUES ('ucTotalTanks', 1, 5, 32, 222, 420, 93) ; ";
-			sql += s + "VALUES ('ucBattleTypes', 1, 6, 472, 222, 420, 93) ; ";
+			sql += s + "VALUES ('ucTotalTanks', 1, 5, 32, 222, 420, 95) ; ";
+			sql += s + "VALUES ('ucBattleTypes', 1, 6, 472, 222, 420, 95) ; ";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";
 			sql = "";
@@ -332,5 +332,14 @@ namespace WinApp.Gadget
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.Int32', '2'); ";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 		}
+
+		public static void DrawBorderOnGadget(object sender, PaintEventArgs e)
+		{
+			UserControl uc = (UserControl)sender;
+			e.Graphics.DrawRectangle(new System.Drawing.Pen(ColorTheme.FormBorderBlue), 0, 0, uc.Width-1, uc.Height-1);
+		}
 	}
+
+
+
 }

@@ -190,6 +190,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -284,7 +285,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(862, 25);
+			this.toolMain.Size = new System.Drawing.Size(831, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1751,6 +1752,12 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// imageGrid
+			// 
+			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
+			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageGrid.Images.SetKeyName(0, "grid.png");
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1942,6 +1949,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetRedraw;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetRemoveAll;
+		private System.Windows.Forms.ImageList imageGrid;
 	}
 }
 

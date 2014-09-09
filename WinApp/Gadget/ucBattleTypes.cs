@@ -38,7 +38,7 @@ namespace WinApp.Gadget
 
 		private void DataBind()
 		{
-			GridHelper.StyleDataGrid(dataGridView1);
+			GridHelper.StyleGadgetDataGrid(dataGridView1);
 			// Create table structure, and get total number of used tanks to show in first row
 			string sql =
 				"Select 'Tanks used' as Data, cast(0 as float) as 'Random/TC', cast(0 as float) as 'Team', cast(0 as float) as 'Historical', cast(0 as float) as 'Skirmishes', cast(count(playerTank.tankId) as float) as Total " +
@@ -233,7 +233,7 @@ namespace WinApp.Gadget
 			// No resize and Right align numbers
 			dataGridView1.Columns[0].Resizable = DataGridViewTriState.False;
 			// Finish
-			dataGridView1.Columns[0].Width = 90;
+			dataGridView1.Columns[0].Width = 88;
 			dataGridView1.Columns[1].Width = 71;
 			dataGridView1.Columns[2].Width = 64;
 			dataGridView1.Columns[3].Width = 64;
@@ -253,28 +253,38 @@ namespace WinApp.Gadget
 
 		private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			string col = dataGridView1.Columns[e.ColumnIndex].Name;
-			DataGridViewCell cell = dataGridView1[e.ColumnIndex, e.RowIndex];
-			if (e.RowIndex == 2 && e.ColumnIndex > 0)
+			if (this.Enabled)
 			{
-				if (cell.Value != DBNull.Value)
+				string col = dataGridView1.Columns[e.ColumnIndex].Name;
+				DataGridViewCell cell = dataGridView1[e.ColumnIndex, e.RowIndex];
+				if (e.RowIndex == 2 && e.ColumnIndex > 0)
 				{
-					cell.Style.ForeColor = Rating.WinRateColor(Convert.ToDouble(cell.Value));
-					cell.Style.SelectionForeColor = cell.Style.ForeColor;
-					cell.Style.Format = "0.00";
+					if (cell.Value != DBNull.Value)
+					{
+						cell.Style.ForeColor = Rating.WinRateColor(Convert.ToDouble(cell.Value));
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
+						cell.Style.Format = "0.00";
+					}
+				}
+				else if (e.RowIndex == 1 && e.ColumnIndex > 0)
+				{
+					if (cell.Value != DBNull.Value)
+					{
+						cell.Style.Format = "N0";
+						if (e.ColumnIndex == 1)
+							cell.Style.ForeColor = Rating.BattleCountColor(Convert.ToInt32(cell.Value));
+						cell.Style.SelectionForeColor = cell.Style.ForeColor;
+
+					}
 				}
 			}
-			else if (e.RowIndex == 1 && e.ColumnIndex > 0)
-			{
-				if (cell.Value != DBNull.Value)
-				{
-					cell.Style.Format = "N0";
-					if (e.ColumnIndex == 1)
-					cell.Style.ForeColor = Rating.BattleCountColor(Convert.ToInt32(cell.Value));
-					cell.Style.SelectionForeColor = cell.Style.ForeColor;
-					
-				}
-			}
+		}
+
+		private void ucBattleTypes_Paint(object sender, PaintEventArgs e)
+		{
+			if (BackColor == ColorTheme.FormBackSelectedGadget)
+				GadgetHelper.DrawBorderOnGadget(sender, e);
+			dataGridView1.DefaultCellStyle.BackColor = BackColor;
 		}
 	}
 }

@@ -29,10 +29,42 @@ using WinApp.Code;
 
 namespace AGaugeApp
 {
+	public abstract class AGaugeControl : Control
+	{
+		protected Graphics grapichObject;
+		protected Bitmap bitmapObject;
+
+		public AGaugeControl()
+		{
+			SetStyle((ControlStyles)8198, true);
+			bitmapObject = new Bitmap(1, 1);
+			grapichObject = Graphics.FromImage(bitmapObject);
+		}
+		
+		public void AllowTransparent()
+		{
+			SetStyle(ControlStyles.Opaque, false);
+			SetStyle((ControlStyles)141314, true);
+		}
+
+		protected override void OnSizeChanged(EventArgs e)
+		{
+			grapichObject.Dispose();
+			bitmapObject.Dispose();
+			bitmapObject = new Bitmap(Width, Height);
+			grapichObject = Graphics.FromImage(bitmapObject);
+			Invalidate();
+			base.OnSizeChanged(e);
+		}
+
+		protected override abstract void OnPaint(PaintEventArgs e);
+
+	}
+	
 	[ToolboxBitmapAttribute(typeof(AGauge), "AGauge.bmp"),
 	DefaultEvent("ValueInRangeChanged"),
 	Description("Displays a value on an analog gauge. Raises an event if the value enters one of the definable ranges.")]
-	public partial class AGauge : Control
+	public partial class AGauge : AGaugeControl
 	{
 		#region enum, var, delegate, event
 		public enum NeedleColorEnum
@@ -53,8 +85,8 @@ namespace AGaugeApp
 
 		private Single fontBoundY1;
 		private Single fontBoundY2;
-		private Bitmap gaugeBitmap;
 		private Boolean drawGaugeBackground = true;
+		private Color backColor = Color.Transparent;
 
 		private Single m_value;
 		private Byte m_CapIdx = 1;
@@ -185,15 +217,22 @@ namespace AGaugeApp
 			}
 		}
 
-		public override System.Drawing.Color BackColor
+		private string _Text;
+		public override string Text
+		{
+			get { return _Text; }
+			set { _Text = value; Invalidate(); }
+		}
+
+		public override Color BackColor
 		{
 			get
 			{
-				return ColorTheme.FormBack;
+				return backColor;
 			}
 			set
 			{
-				base.BackColor = value;
+				backColor = value;
 				drawGaugeBackground = true;
 				Refresh();
 			}
@@ -229,8 +268,8 @@ namespace AGaugeApp
 		public AGauge()
 		{
 			InitializeComponent();
-			this.Width = 255;
-			this.Height = 140;
+			AllowTransparent();
+			BackColor = Color.Transparent;
 			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			this.Font = new Font("Microsoft Sans Serif", 7); 
 		}
@@ -1434,9 +1473,9 @@ namespace AGaugeApp
 		#endregion
 
 		#region base member overrides
-		protected override void OnPaintBackground(PaintEventArgs pevent)
-		{
-		}
+		//protected override void OnPaintBackground(PaintEventArgs pevent)
+		//{
+		//}
 
 		protected override void OnPaint(PaintEventArgs pe)
 		{
@@ -1445,58 +1484,58 @@ namespace AGaugeApp
 				return;
 			}
 
+			grapichObject.Clear(BackColor);
+
 			if (drawGaugeBackground)
 			{
-				drawGaugeBackground = false;
-
+				//drawGaugeBackground = false;
 				FindFontBounds();
 
-				gaugeBitmap = new Bitmap(Width, Height, pe.Graphics);
-				Graphics ggr = Graphics.FromImage(gaugeBitmap);
-				ggr.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
 
-				if (BackgroundImage != null)
-				{
-					switch (BackgroundImageLayout)
-					{
-						case ImageLayout.Center:
-							ggr.DrawImageUnscaled(BackgroundImage, Width / 2 - BackgroundImage.Width / 2, Height / 2 - BackgroundImage.Height / 2);
-							break;
-						case ImageLayout.None:
-							ggr.DrawImageUnscaled(BackgroundImage, 0, 0);
-							break;
-						case ImageLayout.Stretch:
-							ggr.DrawImage(BackgroundImage, 0, 0, Width, Height);
-							break;
-						case ImageLayout.Tile:
-							Int32 pixelOffsetX = 0;
-							Int32 pixelOffsetY = 0;
-							while (pixelOffsetX < Width)
-							{
-								pixelOffsetY = 0;
-								while (pixelOffsetY < Height)
-								{
-									ggr.DrawImageUnscaled(BackgroundImage, pixelOffsetX, pixelOffsetY);
-									pixelOffsetY += BackgroundImage.Height;
-								}
-								pixelOffsetX += BackgroundImage.Width;
-							}
-							break;
-						case ImageLayout.Zoom:
-							if ((Single)(BackgroundImage.Width / Width) < (Single)(BackgroundImage.Height / Height))
-							{
-								ggr.DrawImage(BackgroundImage, 0, 0, Height, Height);
-							}
-							else
-							{
-								ggr.DrawImage(BackgroundImage, 0, 0, Width, Width);
-							}
-							break;
-					}
-				}
+				//ggr.FillRectangle(new SolidBrush(backColor), ClientRectangle);
 
-				ggr.SmoothingMode = SmoothingMode.HighQuality;
-				ggr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+				//if (BackgroundImage != null)
+				//{
+				//	switch (BackgroundImageLayout)
+				//	{
+				//		case ImageLayout.Center:
+				//			ggr.DrawImageUnscaled(BackgroundImage, Width / 2 - BackgroundImage.Width / 2, Height / 2 - BackgroundImage.Height / 2);
+				//			break;
+				//		case ImageLayout.None:
+				//			ggr.DrawImageUnscaled(BackgroundImage, 0, 0);
+				//			break;
+				//		case ImageLayout.Stretch:
+				//			ggr.DrawImage(BackgroundImage, 0, 0, Width, Height);
+				//			break;
+				//		case ImageLayout.Tile:
+				//			Int32 pixelOffsetX = 0;
+				//			Int32 pixelOffsetY = 0;
+				//			while (pixelOffsetX < Width)
+				//			{
+				//				pixelOffsetY = 0;
+				//				while (pixelOffsetY < Height)
+				//				{
+				//					ggr.DrawImageUnscaled(BackgroundImage, pixelOffsetX, pixelOffsetY);
+				//					pixelOffsetY += BackgroundImage.Height;
+				//				}
+				//				pixelOffsetX += BackgroundImage.Width;
+				//			}
+				//			break;
+				//		case ImageLayout.Zoom:
+				//			if ((Single)(BackgroundImage.Width / Width) < (Single)(BackgroundImage.Height / Height))
+				//			{
+				//				ggr.DrawImage(BackgroundImage, 0, 0, Height, Height);
+				//			}
+				//			else
+				//			{
+				//				ggr.DrawImage(BackgroundImage, 0, 0, Width, Width);
+				//			}
+				//			break;
+				//	}
+				//}
+
+				grapichObject.SmoothingMode = SmoothingMode.HighQuality;
+				grapichObject.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
 				GraphicsPath gp = new GraphicsPath();
 				Single rangeStartAngle;
@@ -1509,7 +1548,7 @@ namespace AGaugeApp
 					{
 						rangeStartAngle = m_BaseArcStart + (m_RangeStartValue[counter] - m_MinValue) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
 						rangeSweepAngle = (m_RangeEndValue[counter] - m_RangeStartValue[counter]) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
-						ggr.DrawArc(new Pen(m_RangeColor[counter], 2), new Rectangle(m_Center.X - m_BaseArcRadius -(padding/2), m_Center.Y - m_BaseArcRadius-(padding/2), 2 * m_BaseArcRadius+padding, 2 * m_BaseArcRadius+padding), rangeStartAngle, rangeSweepAngle);
+						grapichObject.DrawArc(new Pen(m_RangeColor[counter], 2), new Rectangle(m_Center.X - m_BaseArcRadius - (padding / 2), m_Center.Y - m_BaseArcRadius - (padding / 2), 2 * m_BaseArcRadius + padding, 2 * m_BaseArcRadius + padding), rangeStartAngle, rangeSweepAngle);
 						// OLD CODE MAKING CLIPPED PIE
 						//gp.Reset();
 						//gp.AddPie(new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
@@ -1521,10 +1560,10 @@ namespace AGaugeApp
 					}
 				}
 
-				ggr.SetClip(ClientRectangle);
+				grapichObject.SetClip(ClientRectangle);
 				if (m_BaseArcRadius > 0)
 				{
-					ggr.DrawArc(new Pen(m_BaseArcColor, m_BaseArcWidth), new Rectangle(m_Center.X - m_BaseArcRadius, m_Center.Y - m_BaseArcRadius, 2 * m_BaseArcRadius, 2 * m_BaseArcRadius), m_BaseArcStart, m_BaseArcSweep);
+					grapichObject.DrawArc(new Pen(m_BaseArcColor, m_BaseArcWidth), new Rectangle(m_Center.X - m_BaseArcRadius, m_Center.Y - m_BaseArcRadius, 2 * m_BaseArcRadius, 2 * m_BaseArcRadius), m_BaseArcStart, m_BaseArcSweep);
 				}
 
 				String valueText = "";
@@ -1534,17 +1573,17 @@ namespace AGaugeApp
 				while (countValue <= (m_MaxValue - m_MinValue))
 				{
 					valueText = (m_MinValue + countValue).ToString(m_ScaleNumbersFormat);
-					ggr.ResetTransform();
-					boundingBox = ggr.MeasureString(valueText, Font, -1, StringFormat.GenericTypographic);
+					grapichObject.ResetTransform();
+					boundingBox = grapichObject.MeasureString(valueText, Font, -1, StringFormat.GenericTypographic);
 
 					gp.Reset();
 					gp.AddEllipse(new Rectangle(m_Center.X - m_ScaleLinesMajorOuterRadius, m_Center.Y - m_ScaleLinesMajorOuterRadius, 2 * m_ScaleLinesMajorOuterRadius, 2 * m_ScaleLinesMajorOuterRadius));
 					gp.Reverse();
 					gp.AddEllipse(new Rectangle(m_Center.X - m_ScaleLinesMajorInnerRadius, m_Center.Y - m_ScaleLinesMajorInnerRadius, 2 * m_ScaleLinesMajorInnerRadius, 2 * m_ScaleLinesMajorInnerRadius));
 					gp.Reverse();
-					ggr.SetClip(gp);
+					grapichObject.SetClip(gp);
 
-					ggr.DrawLine(new Pen(m_ScaleLinesMajorColor, m_ScaleLinesMajorWidth),
+					grapichObject.DrawLine(new Pen(m_ScaleLinesMajorColor, m_ScaleLinesMajorWidth),
 					(Single)(Center.X),
 					(Single)(Center.Y),
 					(Single)(Center.X + 2 * m_ScaleLinesMajorOuterRadius * Math.Cos((m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue)) * Math.PI / 180.0)),
@@ -1555,7 +1594,7 @@ namespace AGaugeApp
 					gp.Reverse();
 					gp.AddEllipse(new Rectangle(m_Center.X - m_ScaleLinesMinorInnerRadius, m_Center.Y - m_ScaleLinesMinorInnerRadius, 2 * m_ScaleLinesMinorInnerRadius, 2 * m_ScaleLinesMinorInnerRadius));
 					gp.Reverse();
-					ggr.SetClip(gp);
+					grapichObject.SetClip(gp);
 
 					if (countValue < (m_MaxValue - m_MinValue))
 					{
@@ -1568,9 +1607,9 @@ namespace AGaugeApp
 								gp.Reverse();
 								gp.AddEllipse(new Rectangle(m_Center.X - m_ScaleLinesInterInnerRadius, m_Center.Y - m_ScaleLinesInterInnerRadius, 2 * m_ScaleLinesInterInnerRadius, 2 * m_ScaleLinesInterInnerRadius));
 								gp.Reverse();
-								ggr.SetClip(gp);
+								grapichObject.SetClip(gp);
 
-								ggr.DrawLine(new Pen(m_ScaleLinesInterColor, m_ScaleLinesInterWidth),
+								grapichObject.DrawLine(new Pen(m_ScaleLinesInterColor, m_ScaleLinesInterWidth),
 								(Single)(Center.X),
 								(Single)(Center.Y),
 								(Single)(Center.X + 2 * m_ScaleLinesInterOuterRadius * Math.Cos((m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue) + counter2 * m_BaseArcSweep / (((Single)((m_MaxValue - m_MinValue) / m_ScaleLinesMajorStepValue)) * (m_ScaleLinesMinorNumOf + 1))) * Math.PI / 180.0)),
@@ -1581,11 +1620,11 @@ namespace AGaugeApp
 								gp.Reverse();
 								gp.AddEllipse(new Rectangle(m_Center.X - m_ScaleLinesMinorInnerRadius, m_Center.Y - m_ScaleLinesMinorInnerRadius, 2 * m_ScaleLinesMinorInnerRadius, 2 * m_ScaleLinesMinorInnerRadius));
 								gp.Reverse();
-								ggr.SetClip(gp);
+								grapichObject.SetClip(gp);
 							}
 							else
 							{
-								ggr.DrawLine(new Pen(m_ScaleLinesMinorColor, m_ScaleLinesMinorWidth),
+								grapichObject.DrawLine(new Pen(m_ScaleLinesMinorColor, m_ScaleLinesMinorWidth),
 								(Single)(Center.X),
 								(Single)(Center.Y),
 								(Single)(Center.X + 2 * m_ScaleLinesMinorOuterRadius * Math.Cos((m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue) + counter2 * m_BaseArcSweep / (((Single)((m_MaxValue - m_MinValue) / m_ScaleLinesMajorStepValue)) * (m_ScaleLinesMinorNumOf + 1))) * Math.PI / 180.0)),
@@ -1594,58 +1633,58 @@ namespace AGaugeApp
 						}
 					}
 
-					ggr.SetClip(ClientRectangle);
+					grapichObject.SetClip(ClientRectangle);
 
 					if (m_ScaleNumbersRotation != 0)
 					{
-						ggr.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-						ggr.RotateTransform(90.0F + m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue));
+						grapichObject.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+						grapichObject.RotateTransform(90.0F + m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue));
 					}
 
-					ggr.TranslateTransform((Single)(Center.X + m_ScaleNumbersRadius * Math.Cos((m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue)) * Math.PI / 180.0f)),
+					grapichObject.TranslateTransform((Single)(Center.X + m_ScaleNumbersRadius * Math.Cos((m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue)) * Math.PI / 180.0f)),
 										   (Single)(Center.Y + m_ScaleNumbersRadius * Math.Sin((m_BaseArcStart + countValue * m_BaseArcSweep / (m_MaxValue - m_MinValue)) * Math.PI / 180.0f)),
 										   System.Drawing.Drawing2D.MatrixOrder.Append);
 
 
 					if (counter1 >= ScaleNumbersStartScaleLine - 1)
 					{
-						ggr.DrawString(valueText, Font, new SolidBrush(m_ScaleNumbersColor), -boundingBox.Width / 2, -fontBoundY1 - (fontBoundY2 - fontBoundY1 + 1) / 2, StringFormat.GenericTypographic);
+						grapichObject.DrawString(valueText, Font, new SolidBrush(m_ScaleNumbersColor), -boundingBox.Width / 2, -fontBoundY1 - (fontBoundY2 - fontBoundY1 + 1) / 2, StringFormat.GenericTypographic);
 					}
 
 					countValue += m_ScaleLinesMajorStepValue;
 					counter1++;
 				}
 
-				ggr.ResetTransform();
-				ggr.SetClip(ClientRectangle);
+				grapichObject.ResetTransform();
+				grapichObject.SetClip(ClientRectangle);
 
 				if (m_ScaleNumbersRotation != 0)
 				{
-					ggr.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+					grapichObject.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
 				}
 
 				for (Int32 counter = 0; counter < NUMOFCAPS; counter++)
 				{
 					if (m_CapText[counter] != "")
 					{
-						ggr.DrawString(m_CapText[counter], Font, new SolidBrush(m_CapColor[counter]), m_CapPosition[counter].X, m_CapPosition[counter].Y, StringFormat.GenericTypographic);
+						grapichObject.DrawString(m_CapText[counter], Font, new SolidBrush(m_CapColor[counter]), m_CapPosition[counter].X, m_CapPosition[counter].Y, StringFormat.GenericTypographic);
 					}
 				}
 				// Center Text
 				if (m_CenterText != "")
 				{
 					SizeF textSize = pe.Graphics.MeasureString(m_CenterText.Trim(), m_CenterTextFont);
-					ggr.DrawString(m_CenterText.Trim(), m_CenterTextFont, new SolidBrush(m_CenterTextColor), m_Center.X - (textSize.Width/2) + 6, m_Center.Y + 25, StringFormat.GenericTypographic);
+					grapichObject.DrawString(m_CenterText.Trim(), m_CenterTextFont, new SolidBrush(m_CenterTextColor), m_Center.X - (textSize.Width / 2) + 6, m_Center.Y + 25, StringFormat.GenericTypographic);
 				}
 				if (m_CenterSubText != "")
 				{
 					SizeF textSize = pe.Graphics.MeasureString(m_CenterSubText.Trim(), base.Font);
-					ggr.DrawString(m_CenterSubText.Trim(), base.Font, new SolidBrush(ColorTheme.ControlFont), m_Center.X - (textSize.Width / 2) + 4, m_Center.Y + 38, StringFormat.GenericTypographic);
+					grapichObject.DrawString(m_CenterSubText.Trim(), base.Font, new SolidBrush(ColorTheme.ControlFont), m_Center.X - (textSize.Width / 2) + 4, m_Center.Y + 38, StringFormat.GenericTypographic);
 				}
 
 			}
 
-			pe.Graphics.DrawImageUnscaled(gaugeBitmap, 0, 0);
+			pe.Graphics.DrawImageUnscaled(bitmapObject, 0, 0);
 			pe.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 			pe.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 

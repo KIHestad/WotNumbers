@@ -1,7 +1,9 @@
-﻿namespace AGaugeApp
+﻿using System.Windows.Forms;
+namespace AGaugeApp
 {
 	partial class AGauge
 	{
+		
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>

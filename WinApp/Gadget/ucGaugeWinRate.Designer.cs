@@ -276,6 +276,7 @@
 			this.Name = "ucGaugeWinRate";
 			this.Size = new System.Drawing.Size(200, 170);
 			this.Load += new System.EventHandler(this.ucGaugeWinRate_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWinRate_Paint);
 			this.ResumeLayout(false);
 
 		}

@@ -1219,14 +1219,8 @@ class BadGroupBox : BadThemeControl
 		grapichObject.Clear(BackColor);
 		int Yoffset = 7;
 		// Outer Border
-		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlSeparatorGroupBoxBorder); 
-		Rectangle GroupBoxOuter = new Rectangle(0, Yoffset, ClientRectangle.Width, ClientRectangle.Height - Yoffset);
-		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
-		// Inner Area
-		BorderColor = new SolidBrush(ColorTheme.FormBack);
-		Rectangle GroupBoxInner = new Rectangle(1, Yoffset+1, ClientRectangle.Width-2, ClientRectangle.Height - Yoffset - 2);
-		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
-		
+		Rectangle GroupBoxOuter = new Rectangle(0, Yoffset, ClientRectangle.Width -1, ClientRectangle.Height - Yoffset -1);
+		grapichObject.DrawRectangle(new Pen(ColorTheme.ControlSeparatorGroupBoxBorder), GroupBoxOuter);
 		if (Text != "")
 		{
 			int Xoffset = 10;
@@ -1349,15 +1343,10 @@ class BadTextBox : BadThemeControl
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
 		// Outer Border
-		SolidBrush BorderColor = new SolidBrush(ColorTheme.ControlBorder);
-		Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height);
-		grapichObject.FillRectangle(BorderColor, GroupBoxOuter);
-		// Inner Area
-		BorderColor = new SolidBrush(ColorTheme.FormBack);
-		int borderWidth = 1;
-		Rectangle GroupBoxInner = new Rectangle(borderWidth, borderWidth, ClientRectangle.Width - (borderWidth * 2), ClientRectangle.Height - (borderWidth*2));
-		grapichObject.FillRectangle(BorderColor, GroupBoxInner);
-		//textBox.Font = new Font(textBox.Font.FontFamily, 12, GraphicsUnit.Pixel);
+		SolidBrush BackColor = new SolidBrush(ColorTheme.FormBack);
+		Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width -1, ClientRectangle.Height -1);
+		grapichObject.FillRectangle(BackColor, GroupBoxOuter);
+		grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorder), GroupBoxOuter);
 		textBox.Multiline = MultilineAllow;
 		textBox.Height = Height - 7;
 		textBox.Width = Width - 12;

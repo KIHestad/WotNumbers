@@ -82,6 +82,12 @@ namespace WinApp.Gadget
 			this.Close();
 		}
 
+		private void paramBattleMode_Paint(object sender, PaintEventArgs e)
+		{
+			if (BackColor == ColorTheme.FormBackSelectedGadget)
+				GadgetHelper.DrawBorderOnGadget(sender, e);
+		}
+
 
 	}
 }

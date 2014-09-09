@@ -47,10 +47,10 @@ namespace WinApp.Gadget
 				for (int col = 0; col < _cols; col++)
 				{
 					TankInfo newTank = new TankInfo();
-					newTank.tankPic.Left = col * 170;
-					newTank.tankPic.Top = row * 120;
-					newTank.tankPic.Width = 160;
-					newTank.tankPic.Height = 100;
+					newTank.tankPic.Left = (col * 170) + 1;
+					newTank.tankPic.Top = (row * 120) + 1;
+					newTank.tankPic.Width = 158;
+					newTank.tankPic.Height = 108;
 					newTank.battleTime.BackColor = Color.Transparent;
 					newTank.battleTime.ForeColor = ColorTheme.ControlFont;
 					newTank.battleTime.Left = 0;
@@ -116,6 +116,12 @@ namespace WinApp.Gadget
 					rowCount++;
 				}
 			}
+		}
+
+		private void ucBattleListLargeImages_Paint(object sender, PaintEventArgs e)
+		{
+			if (BackColor == ColorTheme.FormBackSelectedGadget)
+				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 	}
 }

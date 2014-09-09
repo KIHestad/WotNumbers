@@ -141,6 +141,9 @@
     <Compile Include="Code\FormControl\Agauge.Designer.cs">
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\FormControl\ClearPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
@@ -376,6 +379,12 @@
     <Compile Include="Gadget\ucTest.Designer.cs">
       <DependentUpon>ucTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucTest2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucTest2.Designer.cs">
+      <DependentUpon>ucTest2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucTotalTanks.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -488,6 +497,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTest.resx">
       <DependentUpon>ucTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucTest2.resx">
+      <DependentUpon>ucTest2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTotalTanks.resx">
       <DependentUpon>ucTotalTanks.cs</DependentUpon>
