@@ -257,6 +257,7 @@ namespace WinApp.Gadget
 					case "ucTotalTanks": uc = new Gadget.ucTotalTanks(); break;
 					case "ucBattleTypes": uc = new Gadget.ucBattleTypes(); break;
 					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
+					case "ucChartBattle": uc = new Gadget.ucChartBattle(); break;
 				}
 				return uc;
 
@@ -280,6 +281,7 @@ namespace WinApp.Gadget
 				case "ucTotalTanks": name = "Total Type Stats Grid"; break;
 				case "ucBattleTypes": name = "Battle Mode Stats Grid"; break;
 				case "ucBattleListLargeImages": name = "Last Battles Large Images"; break;
+				case "ucChartBattle": name = "Chart per Battle"; break;
 			}
 			return name;
 		}

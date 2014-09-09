@@ -127,7 +127,7 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.SelectionBackColor = ColorTheme.GridSelectedCellColor;
 			dataGridMain.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			dataGridMain.ColumnHeadersDefaultCellStyle.Padding = new Padding(2, 4, 0, 4);
-			
+			dataGridMain.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
 			// Set font size
 			int fontSize = Config.Settings.gridFontSize;
 			if (fontSize < 6) fontSize = 8;
@@ -2465,7 +2465,7 @@ namespace WinApp.Forms
 				int totalBattleCount = 0;
 				double totalWinRate = 0;
 				double totalSurvivedRate = 0;
-				// Add footer now, if any rows an no grouping
+				// Add footer now, if any rows an no grouping ************************ AVG **********************
 				if (rowcount > 0 && !groupingActive)
 				{
 					// Create blank image in case of image in footer
@@ -2486,14 +2486,15 @@ namespace WinApp.Forms
 					rowAverage["defeatToolTip"] = 0;
 					rowAverage["survivedCountToolTip"] = 0;
 					rowAverage["killedCountToolTip"] = 0;
+					IEnumerable<string> nonAvgCols = new List<string> 
+					{ 
+						"ID", "Premium", "Mastery Badge", "Mastery Badge ID", "Battle Count" 
+					};
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
-							IEnumerable<string> nonAvgCols = new List<string> 
-							{ 
-								"ID", "XP Factor", "Premium", "Mastery Badge", "Battle Count"
-							};
+							
 							if (!nonAvgCols.Contains(colListItem.name))
 							{
 								int count = 0;
@@ -2543,7 +2544,7 @@ namespace WinApp.Forms
 							rowAverage[colListItem.name] = s;
 						}
 					}
-					// the footer row #2 - totals
+					// the footer row #2 ************************** TOTALS **************************
 					DataRow rowTotals = dt.NewRow();
 					rowTotals["footer"] = 1;
 					rowTotals["battleResultColor"] = "";
@@ -2555,20 +2556,27 @@ namespace WinApp.Forms
 					rowTotals["defeatToolTip"] = 0;
 					rowTotals["survivedCountToolTip"] = 0;
 					rowTotals["killedCountToolTip"] = 0;
+					IEnumerable<string> nonTotalsCols = new List<string> 
+					{ 
+						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  
+						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %"
+					};
+					IEnumerable<string> countCols = new List<string> 
+					{ 
+						"Killed Count", "Victory" ,"Draw","Defeat","Survival Count","Clan","Company","Battle Count"
+					};
+
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
 						// Format column
 						if (colListItem.colType == "Int" || colListItem.colType == "Float")
 						{
-							IEnumerable<string> nonTotalsCols = new List<string> 
-							{ 
-								"EFF", "WN7", "WN8", "Hit Rate", "Tier", "ID", "Pierced Shots%", "Pierced Hits%", "HE Shots%", "XP Factor", "Premium", "Mastery Badge"
-							};
+							
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							{
 								// looping through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
 								int sum = 0;
-								if (colListItem.name != "Battle Count")
+								if (!countCols.Contains(colListItem.name))
 								{
 									foreach (DataRow dr in dt.Rows)
 									{
@@ -2589,7 +2597,6 @@ namespace WinApp.Forms
 										}
 									}
 								}
-								
 								rowTotals[colListItem.name] = sum;
 							}
 							else
@@ -4027,5 +4034,16 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+		private void dataGridMain_KeyDown(object sender, KeyEventArgs e)
+		{
+
+		}
+
+		private void dataGridMain_KeyUp(object sender, KeyEventArgs e)
+		{
+
+		}
+
 	}
 }

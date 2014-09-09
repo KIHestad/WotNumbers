@@ -331,6 +331,12 @@
     <Compile Include="Gadget\paramColsRows.Designer.cs">
       <DependentUpon>paramColsRows.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucChartBattle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucChartBattle.Designer.cs">
+      <DependentUpon>ucChartBattle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeEFF.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -372,18 +378,6 @@
     </Compile>
     <Compile Include="Gadget\ucBattleListLargeImages.Designer.cs">
       <DependentUpon>ucBattleListLargeImages.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Gadget\ucTest.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Gadget\ucTest.Designer.cs">
-      <DependentUpon>ucTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Gadget\ucTest2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Gadget\ucTest2.Designer.cs">
-      <DependentUpon>ucTest2.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\ucTotalTanks.cs">
       <SubType>UserControl</SubType>
@@ -474,6 +468,9 @@
     <EmbeddedResource Include="Gadget\paramColsRows.resx">
       <DependentUpon>paramColsRows.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucChartBattle.resx">
+      <DependentUpon>ucChartBattle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeEFF.resx">
       <DependentUpon>ucGaugeEFF.cs</DependentUpon>
     </EmbeddedResource>
@@ -494,12 +491,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucBattleListLargeImages.resx">
       <DependentUpon>ucBattleListLargeImages.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Gadget\ucTest.resx">
-      <DependentUpon>ucTest.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Gadget\ucTest2.resx">
-      <DependentUpon>ucTest2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTotalTanks.resx">
       <DependentUpon>ucTotalTanks.cs</DependentUpon>

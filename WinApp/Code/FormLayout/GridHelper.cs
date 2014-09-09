@@ -34,6 +34,7 @@ namespace WinApp.Code
 			dgv.AllowUserToOrderColumns = false;
 			dgv.AllowUserToResizeRows = false;
 			dgv.SelectionMode = selectionMode;
+			dgv.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
 		}
 
 		public static void StyleGadgetDataGrid(DataGridView dgv, DataGridViewSelectionMode selectionMode = DataGridViewSelectionMode.FullRowSelect)
@@ -61,6 +62,7 @@ namespace WinApp.Code
 			dgv.AllowUserToOrderColumns = false;
 			dgv.AllowUserToResizeRows = false;
 			dgv.SelectionMode = selectionMode;
+			dgv.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
 		}
 	}
 }

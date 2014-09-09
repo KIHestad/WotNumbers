@@ -144,7 +144,7 @@
 			this.mBattleGroup_TankAverage = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattleGroup_TankSum = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
-			this.gaugesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetGauges = new System.Windows.Forms.ToolStripMenuItem();
 			this.winRateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.wN8RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.wN7RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -191,6 +191,8 @@
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
+			this.mGadgetCharts = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetCharts_PerBattle = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -285,7 +287,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(831, 25);
+			this.toolMain.Size = new System.Drawing.Size(862, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1261,7 +1263,8 @@
 			// mGadget
 			// 
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gaugesToolStripMenuItem,
+            this.mGadgetGauges,
+            this.mGadgetCharts,
             this.mGadgetAddBattleModeStats,
             this.mGadgetAddTankTypeStats,
             this.mGadgetAddImage,
@@ -1278,16 +1281,16 @@
 			this.mGadget.Text = "Gadgets";
 			this.mGadget.ToolTipText = "Gadget";
 			// 
-			// gaugesToolStripMenuItem
+			// mGadgetGauges
 			// 
-			this.gaugesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.mGadgetGauges.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.winRateToolStripMenuItem,
             this.wN8RatingToolStripMenuItem,
             this.wN7RatingToolStripMenuItem,
             this.efficiencyRatingToolStripMenuItem});
-			this.gaugesToolStripMenuItem.Name = "gaugesToolStripMenuItem";
-			this.gaugesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-			this.gaugesToolStripMenuItem.Text = "Gauges";
+			this.mGadgetGauges.Name = "mGadgetGauges";
+			this.mGadgetGauges.Size = new System.Drawing.Size(221, 22);
+			this.mGadgetGauges.Text = "Gauges";
 			// 
 			// winRateToolStripMenuItem
 			// 
@@ -1758,6 +1761,22 @@
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
 			// 
+			// mGadgetCharts
+			// 
+			this.mGadgetCharts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mGadgetCharts_PerBattle});
+			this.mGadgetCharts.Name = "mGadgetCharts";
+			this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
+			this.mGadgetCharts.Text = "Charts";
+			// 
+			// mGadgetCharts_PerBattle
+			// 
+			this.mGadgetCharts_PerBattle.Name = "mGadgetCharts_PerBattle";
+			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(152, 22);
+			this.mGadgetCharts_PerBattle.Tag = "ucChartBattle";
+			this.mGadgetCharts_PerBattle.Text = "Per Battle";
+			this.mGadgetCharts_PerBattle.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1940,7 +1959,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankSum;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-		private System.Windows.Forms.ToolStripMenuItem gaugesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetGauges;
 		private System.Windows.Forms.ToolStripMenuItem winRateToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem wN8RatingToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem wN7RatingToolStripMenuItem;
@@ -1950,6 +1969,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mGadgetRedraw;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetRemoveAll;
 		private System.Windows.Forms.ImageList imageGrid;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetCharts;
+		private System.Windows.Forms.ToolStripMenuItem mGadgetCharts_PerBattle;
 	}
 }
 
