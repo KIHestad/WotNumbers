@@ -402,25 +402,10 @@ namespace WinApp.Code
 					
 		#region Color
 
-		public static double[] rangeEFF = { 0, 450, 700, 900, 1100, 1300, 1550, 1800, 2000 };
+		public static double[] rangeEFF = { 0, 305, 610, 850, 1145, 1300, 1475, 1775, 2000 };
 
 		public static Color EffColor(double eff)
 		{
-			// NEW
-			//Efficiency ranges for {{teff}}, {{e}}.
-			//TEFF       E
-			//0..299     1 - very bad player ColorTheme.Rating_very_bad;
-			//300..499   2 - bad player      ColorTheme.Rating_bad;
-			//500..699   3 - poor
-			//700..899   4 - below average   ColorTheme.Rating_below_average;
-			//900..1099  5 - average         ColorTheme.Rating_average;
-			//1100..1299 6 - above average   ColorTheme.Rating_good;
-			//1300..1549 7 - good            ColorTheme.Rating_very_good;
-			//1550..1799 8 - great           ColorTheme.Rating_great;
-			//1800..1999 9 - master          ColorTheme.Rating_uniqum;
-			//2000+      E - Expert          ColorTheme.Rating_super_uniqum;
-			
-			
 			// Dynamic color by efficiency
 			//  { "value": 610,  "color": ${"def.colorRating.very_bad" } },  //    0 - 609  - very bad   (20% of players)
 			//  { "value": 850,  "color": ${"def.colorRating.bad"      } },  //  610 - 849  - bad        (better then 20% of players)
