@@ -532,6 +532,23 @@
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />
     <None Include="Dossier2json\tanks.json" />
+    <None Include="Dossier2json_93\maps.json" />
+    <None Include="Dossier2json_93\structures_10.json" />
+    <None Include="Dossier2json_93\structures_17.json" />
+    <None Include="Dossier2json_93\structures_18.json" />
+    <None Include="Dossier2json_93\structures_20.json" />
+    <None Include="Dossier2json_93\structures_22.json" />
+    <None Include="Dossier2json_93\structures_24.json" />
+    <None Include="Dossier2json_93\structures_26.json" />
+    <None Include="Dossier2json_93\structures_27.json" />
+    <None Include="Dossier2json_93\structures_28.json" />
+    <None Include="Dossier2json_93\structures_29.json" />
+    <None Include="Dossier2json_93\structures_65.json" />
+    <None Include="Dossier2json_93\structures_69.json" />
+    <None Include="Dossier2json_93\structures_77.json" />
+    <None Include="Dossier2json_93\structures_81.json" />
+    <None Include="Dossier2json_93\structures_85.json" />
+    <None Include="Dossier2json_93\tanks.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -657,6 +674,8 @@
     <Content Include="Docs\Database\insert.txt" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
+    <Content Include="Dossier2json_93\wotbr2j.py" />
+    <Content Include="Dossier2json_93\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />
     <Content Include="Lib\abc.py" />
     <Content Include="Lib\aifc.py" />
