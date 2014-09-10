@@ -362,11 +362,11 @@ namespace WinApp.Code
 									sqlFields += "'" + playerTankNewRow[colName] + "'"; 
 									break;
 								case "DateTime": 
-									DateTime d = Convert.ToDateTime(playerTankNewRow[colName]);
-									if (d.Year == 1970)
+									DateTime dateTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(playerTankNewRow[colName]));
+									if (dateTime.Year == 1970)
 										sqlFields += "NULL";
 									else
-										sqlFields += "'" + DateTimeHelper.AdjustForTimeZone(d).ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+										sqlFields += "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
 									break;
 								default: 
 									sqlFields += playerTankNewRow[colName]; 
@@ -557,9 +557,19 @@ namespace WinApp.Code
 					sqlFields += ", " + colName + "=";
 					switch (colType)
 					{
-						case "String": sqlFields += "'" + playerTankBattleNewRow[colName] + "'"; break;
-						case "DateTime": sqlFields += "'" + Convert.ToDateTime(playerTankBattleNewRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
-						default: sqlFields += playerTankBattleNewRow[colName]; break;
+						case "String": 
+							sqlFields += "'" + playerTankBattleNewRow[colName] + "'"; 
+							break;
+						case "DateTime":
+							DateTime dateTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(playerTankBattleNewRow[colName]));
+							if (dateTime.Year == 1970)
+								sqlFields += "NULL";
+							else
+								sqlFields += "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+							break;
+						default: 
+							sqlFields += playerTankBattleNewRow[colName]; 
+							break;
 					}
 				}
 			}
@@ -751,8 +761,13 @@ namespace WinApp.Code
 						sqlFields += ", " + colName;
 						switch (colType)
 						{
-							case "String": sqlValues += ", '" + battleNewRow[colName] + "'"; break;
-							case "DateTime": sqlValues += ", '" + Convert.ToDateTime(battleNewRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
+							case "String": 
+								sqlValues += ", '" + battleNewRow[colName] + "'"; 
+								break;
+							case "DateTime":
+								DateTime dateTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow[colName]));
+								sqlValues += ", '" + dateTime.ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+								break;
 							default:
 								{
 									int value = Convert.ToInt32(battleNewRow[colName]);
