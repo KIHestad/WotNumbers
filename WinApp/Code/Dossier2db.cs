@@ -129,13 +129,7 @@ namespace WinApp.Code
 										switch (dataType)
 										{
 											case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
-											case "DateTime":
-												// Fix for missing date on lastBattleTime
-												if (currentItem.property == "lastBattleTime" && currentItem.value.ToString() == "0")
-													NewPlayerTankRow[dbField] = DateTime.Now;
-												else
-													NewPlayerTankRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value));
-												break;
+											case "DateTime": NewPlayerTankRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
 											case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
 									}
@@ -352,9 +346,6 @@ namespace WinApp.Code
 				if (battlesNew15 > 0 || battlesNew7 > 0 || battlesNewHistorical > 0 || battlesNewSkirmishes > 0 ||
 					(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0 || playerTankOldRow_battlesSkirmishes > 0)))
 				{  
-					// Adjust for time zone
-					playerTankNewRow = DateTimeHelper.AdjustForTimeZone(playerTankNewRow);
-					
 					// Update playerTank
 					string sqlFields = "";
 					foreach (DataColumn column in playerTankOldTable.Columns)
@@ -367,9 +358,19 @@ namespace WinApp.Code
 							sqlFields += ", " + colName + "=";
 							switch (colType)
 							{
-								case "String": sqlFields += "'" + playerTankNewRow[colName] + "'"; break;
-								case "DateTime": sqlFields += "'" + Convert.ToDateTime(playerTankNewRow[colName]).ToString("yyyy-MM-dd HH:mm:ss") + "'"; break;
-								default: sqlFields += playerTankNewRow[colName]; break;
+								case "String": 
+									sqlFields += "'" + playerTankNewRow[colName] + "'"; 
+									break;
+								case "DateTime": 
+									DateTime d = Convert.ToDateTime(playerTankNewRow[colName]);
+									if (d.Year == 1970)
+										sqlFields += "NULL";
+									else
+										sqlFields += "'" + DateTimeHelper.AdjustForTimeZone(d).ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+									break;
+								default: 
+									sqlFields += playerTankNewRow[colName]; 
+									break;
 							}
 						}
 					}

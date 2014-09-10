@@ -83,9 +83,9 @@ namespace WinApp.Code
 
 		private void bwDossierProcess_DoWork(object sender, DoWorkEventArgs e)
 		{
-			ManualRun(_ForceUpdate);
+			string result = ManualRun(_ForceUpdate);
 			StatusBarHelper.ClearAfterNextShow = true;
-			StatusBarHelper.Message = "Dossier file successfully read";
+			StatusBarHelper.Message = result;
 			// Update config if force update is run
 			if (_ForceUpdate)
 			{
@@ -107,7 +107,7 @@ namespace WinApp.Code
 			if (dossierFile == "")
 			{
 				Log.AddToLogBuffer(" > No dossier file found");
-				returVal = "No dossier file found - check Application Settings";
+				returVal = "No dossier file found - check application settings";
 				ok = false;
 			}
 			else
@@ -116,7 +116,7 @@ namespace WinApp.Code
 			}
 			if (ok)
 			{
-				RunDossierRead(out returVal, dossierFile, ForceUpdate);
+				returVal = RunDossierRead(dossierFile, ForceUpdate);
 			}
 			return returVal;
 		}
@@ -135,8 +135,7 @@ namespace WinApp.Code
 			// Wait until file is ready to read, 
 			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierFile, 4000);
 			// Perform file conversion from picle til json
-			string statusResult;
-			RunDossierRead(out statusResult, dossierFile);
+			string statusResult = RunDossierRead(dossierFile);
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
 		}
@@ -171,7 +170,7 @@ namespace WinApp.Code
 			return logtext;
 		}
 
-		private static void RunDossierRead(out string statusResult, string dossierFile, bool forceUpdate = false)
+		private static string RunDossierRead(string dossierFile, bool forceUpdate = false)
 		{
 			List<string> logText = new List<string>();
 			string returVal = "";
@@ -290,7 +289,7 @@ namespace WinApp.Code
 						else
 						{
 							logText.Add(" > No json file found");
-							returVal = "No previous dossier file found - run manual check";
+							returVal = "No dossier file found - check log file";
 						}
 					}
 				}
@@ -316,11 +315,11 @@ namespace WinApp.Code
 			}
 			else
 			{
-				returVal = "Process already running...";
+				returVal = "Dossier file check already running";
 			}
-			statusResult = returVal;
 			Log.AddToLogBuffer(logText);
 			Log.WriteLogBuffer();
+			return returVal;
 		}
 
 		private static string ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)

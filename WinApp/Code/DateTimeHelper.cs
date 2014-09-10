@@ -14,20 +14,20 @@ namespace WinApp.Code
 			return origin.AddSeconds(timestamp);
 		}
 
-		public static DataRow AdjustForTimeZone(DataRow playerTankRow)
-		{
-			TimeZone currentTimeZone = TimeZone.CurrentTimeZone;
-			TimeSpan offset = currentTimeZone.GetUtcOffset(DateTime.Now);
+		//public static DataRow AdjustForTimeZone(DataRow playerTankRow)
+		//{
+		//	TimeZone currentTimeZone = TimeZone.CurrentTimeZone;
+		//	TimeSpan offset = currentTimeZone.GetUtcOffset(DateTime.Now);
 
-			if (playerTankRow["creationTime"] != DBNull.Value)
-				playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(offset.Hours);
-			if (playerTankRow["updatedTime"] != DBNull.Value)
-				playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(offset.Hours);
-			if (playerTankRow["lastBattleTime"] != DBNull.Value)
-				playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(offset.Hours);
+		//	if (playerTankRow["creationTime"] != DBNull.Value)
+		//		playerTankRow["creationTime"] = Convert.ToDateTime(playerTankRow["creationTime"]).AddHours(offset.Hours);
+		//	if (playerTankRow["updatedTime"] != DBNull.Value)
+		//		playerTankRow["updatedTime"] = Convert.ToDateTime(playerTankRow["updatedTime"]).AddHours(offset.Hours);
+		//	if (playerTankRow["lastBattleTime"] != DBNull.Value)
+		//		playerTankRow["lastBattleTime"] = Convert.ToDateTime(playerTankRow["lastBattleTime"]).AddHours(offset.Hours);
 
-			return playerTankRow;
-		}
+		//	return playerTankRow;
+		//}
 
 		public static DateTime AdjustForTimeZone(DateTime timeToAdjust)
 		{

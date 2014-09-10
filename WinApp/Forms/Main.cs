@@ -308,7 +308,6 @@ namespace WinApp.Forms
 			ImageHelper.CreateMasteryBageImageTable();
 			ImageHelper.LoadTankImages();
 			// Show view
-			HomeViewCreate("Creating Home View...");
 			ChangeView(GridView.Views.Overall, true);
 			// Battle result file watcher
 			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
@@ -488,7 +487,7 @@ namespace WinApp.Forms
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
 			// New battle saved
-			GridShow("Dossier file check finished successfully, grid refreshed");
+			ShowView("Grid refreshed");
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -687,7 +686,7 @@ namespace WinApp.Forms
 		{
 			SetFormTitle();
 			SetStatus2("Refreshing view...");
-			GridShow("View refreshed");
+			ShowView("View refreshed");
 		}
 
 		private void toolItemViewOverall_Click(object sender, EventArgs e)
@@ -839,64 +838,77 @@ namespace WinApp.Forms
 						InfoPanelSlideStart(false);
 						break;
 				}
-				GridShow(); // Changed view, no status message applied, sets in GridShow
+				ShowView(); // Changed view, no status message applied, sets in GridShow
 			}
 		}
 
-		private void GridShow(string Status2Message = "", bool ShowDefaultStatus2Message = true)
+		private bool homeViewCreated = false;
+		private void ShowView(string Status2Message = "", bool ShowDefaultStatus2Message = true)
 		{
 			try
 			{
-				if (currentPlayerId != Config.Settings.playerId)
+				if (Config.Settings.playerId == 0)
 				{
-					// Stop file watchers if running
-					int runState = Config.Settings.dossierFileWathcherRun;
-					if (runState == 1)
-					{
-						Config.Settings.dossierFileWathcherRun = 0;
-						SetListener();
-						Application.DoEvents();
-					}
-					currentPlayerId = Config.Settings.playerId;
-					SetFormTitle();
-					MsgBox.Show("Current player is changed because new player data is fetched." + 
-						Environment.NewLine + Environment.NewLine + "Player changed to: " + Config.Settings.playerNameAndServer +
-						Environment.NewLine + Environment.NewLine, "Current player chenged");
-					// Return to prev file watcher state
-					if (runState != Config.Settings.dossierFileWathcherRun)
-					{
-						Config.Settings.dossierFileWathcherRun = runState;
-						SetListener();
-						Application.DoEvents();
-					}
+					SetStatus2("No player selected, please check application settings");
 				}
-				switch (MainSettings.View)
+				else
 				{
-					case GridView.Views.Overall:
-						if (!Config.Settings.homeViewNewLayout)
+					if (currentPlayerId != Config.Settings.playerId)
+					{
+						// Stop file watchers if running
+						int runState = Config.Settings.dossierFileWathcherRun;
+						if (runState == 1)
 						{
-							// Old home view
-							lblOverView.Text = "Welcome " + Config.Settings.playerName;
-							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
-							GridShowOverall(Status2Message);
+							Config.Settings.dossierFileWathcherRun = 0;
+							SetListener();
+							Application.DoEvents();
 						}
-						else
+						currentPlayerId = Config.Settings.playerId;
+						SetFormTitle();
+						MsgBox.Show("Current player is changed because new player data is fetched." +
+							Environment.NewLine + Environment.NewLine + "Player changed to: " + Config.Settings.playerNameAndServer +
+							Environment.NewLine + Environment.NewLine, "Current player chenged");
+						// Return to prev file watcher state
+						if (runState != Config.Settings.dossierFileWathcherRun)
 						{
-							// New experimental home view
-							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
-							HomeViewRefresh(Status2Message);
+							Config.Settings.dossierFileWathcherRun = runState;
+							SetListener();
+							Application.DoEvents();
 						}
-						break;
-					case GridView.Views.Tank:
-						if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Tank view selected";
-						GridShowTank(Status2Message);
-						break;
-					case GridView.Views.Battle:
-						if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
-						GridShowBattle(Status2Message);
-						break;
-					default:
-						break;
+					}
+					switch (MainSettings.View)
+					{
+						case GridView.Views.Overall:
+							if (!Config.Settings.homeViewNewLayout)
+							{
+								// Old home view
+								lblOverView.Text = "Welcome " + Config.Settings.playerName;
+								if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
+								GridShowOverall(Status2Message);
+							}
+							else
+							{
+								// New home view
+								if (!homeViewCreated)
+								{
+									HomeViewCreate("Creating Home View...");
+									homeViewCreated = true;
+								}
+								if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
+								HomeViewRefresh(Status2Message);
+							}
+							break;
+						case GridView.Views.Tank:
+							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Tank view selected";
+							GridShowTank(Status2Message);
+							break;
+						case GridView.Views.Battle:
+							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
+							GridShowBattle(Status2Message);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			catch (Exception ex)
@@ -987,7 +999,7 @@ namespace WinApp.Forms
 				SelectFavMenuItem();
 				Refresh();
 				// Show grid
-				GridShow("Selected column setup: " + selectedMenu.Text);
+				ShowView("Selected column setup: " + selectedMenu.Text);
 			}
 		}
 
@@ -996,7 +1008,7 @@ namespace WinApp.Forms
 			Form frm = new Forms.ColList();
 			frm.ShowDialog();
 			SetColListMenu(); // Refresh column setup list now
-			GridShow("Refreshed grid after column setup change"); // Refresh grid now
+			ShowView("Refreshed grid after column setup change"); // Refresh grid now
 		}
 
 		#endregion
@@ -1083,7 +1095,7 @@ namespace WinApp.Forms
 			mTankFilter_All.Checked = true;
 			SetTankFilterMenuName();
 			// Set menu item and show grid
-			GridShow("Selected all tanks");
+			ShowView("Selected all tanks");
 		}
 
 		private void toolItem_Fav_Clicked(object sender, EventArgs e)
@@ -1104,7 +1116,7 @@ namespace WinApp.Forms
 			tankFilterFavListName = selectedMenu.Text;
 			SetTankFilterMenuName();
 			// Set menu item and show grid
-			GridShow("Selected favourite tank list: " + selectedMenu.Text);
+			ShowView("Selected favourite tank list: " + selectedMenu.Text);
 		}
 
 		private void SelectFavMenuItem()
@@ -1232,7 +1244,7 @@ namespace WinApp.Forms
 			mTankFilter.ShowDropDown();
 			parentMenuItem.ShowDropDown();
 			// Done
-			GridShow(status2message);
+			ShowView(status2message);
 		}
 		
 		private void mTankFilter_Clear_Click(object sender, EventArgs e)
@@ -1243,7 +1255,7 @@ namespace WinApp.Forms
 			gf.TankId = -1; // Remove tank filter
 			MainSettings.UpdateCurrentGridFilter(gf);
 			// Done
-			GridShow("Tank filter cleared");
+			ShowView("Tank filter cleared");
 		}
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
@@ -1344,7 +1356,7 @@ namespace WinApp.Forms
 			frm.ShowDialog();
 			// After fav list changes reload menu
 			SetFavListMenu(); // Reload fav list items
-			GridShow("Refreshed grid after fovourite tank list change"); // Refresh grid now
+			ShowView("Refreshed grid after fovourite tank list change"); // Refresh grid now
 		}
 
 		#endregion
@@ -1415,7 +1427,7 @@ namespace WinApp.Forms
 			
 			mMode.Text = mainToolItemMenuText;
 			// Set menu item and show grid
-			GridShow("Selected battle mode: " + selectedMenu.Text);
+			ShowView("Selected battle mode: " + selectedMenu.Text);
 		}
 
 		private void SetBattleModeMenu()
@@ -2854,7 +2866,7 @@ namespace WinApp.Forms
 				// Save new sorting
 				GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
 				// Show grid
-				GridShow("Datagrid refreshed after sorting");
+				ShowView("Datagrid refreshed after sorting");
 			}
 		}
 
@@ -3037,7 +3049,7 @@ namespace WinApp.Forms
 			Form frm = new Forms.GrindingSetup(playerTankId);
 			frm.ShowDialog();
 			if (MainSettings.View == GridView.Views.Tank)
-				GridShow("Refreshed grid");
+				ShowView("Refreshed grid");
 		}
 
 		private void dataGridMainPopup_BattleChart_Click(object sender, EventArgs e)
@@ -3078,7 +3090,7 @@ namespace WinApp.Forms
 						"delete from battle where id=@battleId; ";
 					DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
 					DB.ExecuteNonQuery(sql);
-					GridShow("Deleted battle, grid refreshed");
+					ShowView("Deleted battle, grid refreshed");
 				}
 			}
 		}
@@ -3091,7 +3103,7 @@ namespace WinApp.Forms
 			{
 				TankFilterMenuUncheck(true, true, true, false);
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
-				GridShow("Filtered on tank: " + TankData.GetTankName(tankId));
+				ShowView("Filtered on tank: " + TankData.GetTankName(tankId));
 			}
 		}
 
@@ -3131,7 +3143,7 @@ namespace WinApp.Forms
 					{
 						int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
 						dataGridMain.Visible = false;
-						GridShow("Refresh after removed tank from favourite tank list");
+						ShowView("Refresh after removed tank from favourite tank list");
 						dataGridMain.FirstDisplayedScrollingRowIndex = pos;
 						MoveScrollBar();
 						dataGridMain.Visible = true;
@@ -3397,8 +3409,25 @@ namespace WinApp.Forms
 	
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
+			// Stop file watchers if running
+			int runState = Config.Settings.dossierFileWathcherRun;
+			if (runState == 1)
+			{
+				Config.Settings.dossierFileWathcherRun = 0;
+				SetListener();
+			}
+			
 			Form frm = new Forms.ApplicationSetting();
 			frm.ShowDialog();
+
+			// Return to prev file watcher state
+			if (runState != Config.Settings.dossierFileWathcherRun)
+			{
+				Config.Settings.dossierFileWathcherRun = runState;
+				SetListener();
+			}
+
+			// Update main form
 			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
 			SetFavListMenu(); // Reload fav list items
@@ -3547,7 +3576,7 @@ namespace WinApp.Forms
 				{
 					// After fav list changes reload menu
 					SetFavListMenu(); // Reload fav list items
-					GridShow("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
+					ShowView("Refreshed grid after 'In Garage' tank list updated"); // Refresh grid now
 				}
 			}
 		}
