@@ -131,200 +131,208 @@ namespace WinApp.Code
 
 		public static string RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
-			string returVal = "";
-			Log.AddToLogBuffer(" > Start looking for battle result");
-			if (forceReadFiles)
+			try
 			{
-				battleResultDatFileCopyed = new List<string>();
-				Log.AddToLogBuffer(" > Clear history, force check all DAT-files");
-			}
-			bool refreshAfterUpdate = false;
-			// Look for new files
-			ConvertBattleFilesToJson();
-			// Get all json files
-			string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
-			// Any files?
-			if (filesJson.Length == 0)
-				returVal = "No battle result availebale";
-			// count action
-			int processed = 0;
-			int added = 0;
-			foreach (string file in filesJson)
-			{
-				processed++;
-				// Read content
-				StreamReader sr = new StreamReader(file, Encoding.UTF8);
-				string json = sr.ReadToEnd();
-				sr.Close();
-				// Root token
-				JToken token_root = JObject.Parse(json);
-				// Common token
-				JToken token_common = token_root["common"];
-				string result = (string)token_common.SelectToken("result"); // Find unique id
-				// Check if ok
-				bool deleteFileAfterRead = false;
-				if (result == "ok")
+				string returVal = "";
+				Log.AddToLogBuffer(" > Start looking for battle result");
+				if (forceReadFiles)
 				{
-					double arenaUniqueID = (double)token_root.SelectToken("arenaUniqueID"); // Find unique id
-					double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
-					double duration = (double)token_common.SelectToken("duration"); // Arena duration
-					double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
-					DateTime battleTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battlefinishUnix)).AddSeconds(45);
-					// Personal token
-					JToken token_personel = token_root["personal"];
-					int tankId = (int)token_personel.SelectToken("typeCompDescr"); // tankId
-					// Now find battle
-					string sql =
-						"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID  " +
-						"from battle b left join playerTank pt on b.playerTankId = pt.id " +
-						"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
-					DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-					DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
-					DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
-					DataTable dt = DB.FetchData(sql);
-					if (dt.Rows.Count > 0)
+					battleResultDatFileCopyed = new List<string>();
+					Log.AddToLogBuffer(" > Clear history, force check all DAT-files");
+				}
+				bool refreshAfterUpdate = false;
+				// Look for new files
+				ConvertBattleFilesToJson();
+				// Get all json files
+				string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
+				// Any files?
+				if (filesJson.Length == 0)
+					returVal = "No battle result availebale";
+				// count action
+				int processed = 0;
+				int added = 0;
+				foreach (string file in filesJson)
+				{
+					processed++;
+					// Read content
+					StreamReader sr = new StreamReader(file, Encoding.UTF8);
+					string json = sr.ReadToEnd();
+					sr.Close();
+					// Root token
+					JToken token_root = JObject.Parse(json);
+					// Common token
+					JToken token_common = token_root["common"];
+					string result = (string)token_common.SelectToken("result"); // Find unique id
+					// Check if ok
+					bool deleteFileAfterRead = false;
+					if (result == "ok")
 					{
-						// Check if read
-						if (dt.Rows[0]["arenaUniqueID"] != DBNull.Value)
+						double arenaUniqueID = (double)token_root.SelectToken("arenaUniqueID"); // Find unique id
+						double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
+						double duration = (double)token_common.SelectToken("duration"); // Arena duration
+						double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
+						DateTime battleTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battlefinishUnix)).AddSeconds(45);
+						// Personal token
+						JToken token_personel = token_root["personal"];
+						int tankId = (int)token_personel.SelectToken("typeCompDescr"); // tankId
+						// Now find battle
+						string sql =
+							"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID  " +
+							"from battle b left join playerTank pt on b.playerTankId = pt.id " +
+							"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
+						DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+						DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
+						DataTable dt = DB.FetchData(sql);
+						if (dt.Rows.Count > 0)
 						{
-							// Battle read, delete file
-							deleteFileAfterRead = true;
+							// Check if read
+							if (dt.Rows[0]["arenaUniqueID"] != DBNull.Value)
+							{
+								// Battle read, delete file
+								deleteFileAfterRead = true;
+							}
+							else
+							{
+								// New battle found, get battleId
+								int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
+								int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
+								int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
+								// Get values
+								List<BattleValues> battleValues = new List<BattleValues>();
+								// common
+								battleValues.Add(new BattleValues() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
+								battleValues.Add(new BattleValues() { colname = "bonusType", value = (int)token_common.SelectToken("bonusType") });
+								battleValues.Add(new BattleValues() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
+								battleValues.Add(new BattleValues() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
+								battleValues.Add(new BattleValues() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
+								// personal - credits
+								battleValues.Add(new BattleValues() { colname = "originalCredits", value = (int)token_personel.SelectToken("originalCredits") });
+								battleValues.Add(new BattleValues() { colname = "credits", value = (int)token_personel.SelectToken("credits") });
+								battleValues.Add(new BattleValues() { colname = "creditsPenalty", value = (int)token_personel.SelectToken("creditsPenalty") });
+								battleValues.Add(new BattleValues() { colname = "creditsToDraw", value = (int)token_personel.SelectToken("creditsToDraw") });
+								battleValues.Add(new BattleValues() { colname = "creditsContributionIn", value = (int)token_personel.SelectToken("creditsContributionIn") });
+								battleValues.Add(new BattleValues() { colname = "creditsContributionOut", value = (int)token_personel.SelectToken("creditsContributionOut") });
+								battleValues.Add(new BattleValues() { colname = "autoRepairCost", value = (int)token_personel.SelectToken("autoRepairCost") });
+								battleValues.Add(new BattleValues() { colname = "eventCredits", value = (int)token_personel.SelectToken("eventCredits") });
+								battleValues.Add(new BattleValues() { colname = "premiumCreditsFactor10", value = (int)token_personel.SelectToken("premiumCreditsFactor10") });
+								battleValues.Add(new BattleValues() { colname = "achievementCredits", value = (int)token_personel.SelectToken("achievementCredits") });
+								// personal XP
+								battleValues.Add(new BattleValues() { colname = "real_xp", value = (int)token_personel.SelectToken("xp") });
+								battleValues.Add(new BattleValues() { colname = "xpPenalty", value = (int)token_personel.SelectToken("xpPenalty") });
+								battleValues.Add(new BattleValues() { colname = "freeXP", value = (int)token_personel.SelectToken("freeXP") });
+								battleValues.Add(new BattleValues() { colname = "dailyXPFactor10", value = (int)token_personel.SelectToken("dailyXPFactor10") });
+								battleValues.Add(new BattleValues() { colname = "premiumXPFactor10", value = (int)token_personel.SelectToken("premiumXPFactor10") });
+								battleValues.Add(new BattleValues() { colname = "eventFreeXP", value = (int)token_personel.SelectToken("eventFreeXP") });
+								battleValues.Add(new BattleValues() { colname = "achievementFreeXP", value = (int)token_personel.SelectToken("achievementFreeXP") });
+								battleValues.Add(new BattleValues() { colname = "achievementXP", value = (int)token_personel.SelectToken("achievementXP") });
+								battleValues.Add(new BattleValues() { colname = "eventXP", value = (int)token_personel.SelectToken("eventXP") });
+								battleValues.Add(new BattleValues() { colname = "eventTMenXP", value = (int)token_personel.SelectToken("eventTMenXP") });
+								// personal others
+								battleValues.Add(new BattleValues() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
+								battleValues.Add(new BattleValues() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
+								battleValues.Add(new BattleValues() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
+								battleValues.Add(new BattleValues() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") }); // override def - might be above 100
+								// field returns null
+								if (token_personel.SelectToken("fortResource").HasValues)
+									battleValues.Add(new BattleValues() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
+								// dayly double
+								int dailyXPFactor = (int)token_personel.SelectToken("dailyXPFactor10") / 10;
+								battleValues.Add(new BattleValues() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
+								// Special fields: death reason, convert to string
+								int deathReasonId = (int)token_personel.SelectToken("deathReason");
+								string deathReason = "Unknown";
+								switch (deathReasonId)
+								{
+									case -1: deathReason = "Alive"; break;
+									case 0: deathReason = "Shot"; break;
+									case 1: deathReason = "Burned"; break;
+									case 2: deathReason = "Rammed"; break;
+									case 3: deathReason = "Chrashed"; break;
+									case 4: deathReason = "Death zone"; break;
+									case 5: deathReason = "Drowned"; break;
+								}
+								battleValues.Add(new BattleValues() { colname = "deathReason", value = "'" + deathReason + "'" });
+								// Get from array autoLoadCost
+								JArray array_autoload = (JArray)token_personel.SelectToken("autoLoadCost");
+								int autoLoadCost = (int)array_autoload[0];
+								battleValues.Add(new BattleValues() { colname = "autoLoadCost", value = autoLoadCost });
+								// Get from array autoEquipCost
+								JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
+								int autoEquipCost = (int)array_autoequip[0];
+								battleValues.Add(new BattleValues() { colname = "autoEquipCost", value = autoEquipCost });
+								// Calculated net credits
+								int creditsNet = (int)token_personel.SelectToken("credits");
+								creditsNet -= (int)token_personel.SelectToken("creditsPenalty"); // fine for damage to allies
+								creditsNet += (int)token_personel.SelectToken("creditsToDraw"); // compensation for dmg caused by allies
+								creditsNet -= (int)token_personel.SelectToken("autoRepairCost"); // repear cost
+								creditsNet -= autoLoadCost;
+								creditsNet -= autoEquipCost;
+								battleValues.Add(new BattleValues() { colname = "creditsNet", value = creditsNet });
+								// map id
+								int arenaTypeID = (int)token_common.SelectToken("arenaTypeID");
+								int mapId = arenaTypeID & 32767;
+								battleValues.Add(new BattleValues() { colname = "mapId", value = mapId });
+								// insert data
+								string fields = "";
+								foreach (var battleValue in battleValues)
+								{
+									fields += battleValue.colname + " = " + battleValue.value.ToString() + ", ";
+								}
+								sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
+								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
+								DB.ExecuteNonQuery(sql);
+								// If grinding, adjust grogress
+								if (grindXP > 0)
+									GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
+								// Done
+								deleteFileAfterRead = true;
+								refreshAfterUpdate = true;
+								GridView.scheduleGridRefresh = true;
+								Log.AddToLogBuffer(" > * Done reading into DB JSON file: " + file);
+								added++;
+							}
 						}
 						else
 						{
-							// New battle found, get battleId
-							int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
-							int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
-							int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
-							// Get values
-							List<BattleValues> battleValues = new List<BattleValues>();
-							// common
-							battleValues.Add(new BattleValues() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
-							battleValues.Add(new BattleValues() { colname = "bonusType", value = (int)token_common.SelectToken("bonusType") });
-							battleValues.Add(new BattleValues() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
-							battleValues.Add(new BattleValues() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
-							battleValues.Add(new BattleValues() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
-							// personal - credits
-							battleValues.Add(new BattleValues() { colname = "originalCredits", value = (int)token_personel.SelectToken("originalCredits") });
-							battleValues.Add(new BattleValues() { colname = "credits", value = (int)token_personel.SelectToken("credits") });
-							battleValues.Add(new BattleValues() { colname = "creditsPenalty", value = (int)token_personel.SelectToken("creditsPenalty") });
-							battleValues.Add(new BattleValues() { colname = "creditsToDraw", value = (int)token_personel.SelectToken("creditsToDraw") });
-							battleValues.Add(new BattleValues() { colname = "creditsContributionIn", value = (int)token_personel.SelectToken("creditsContributionIn") });
-							battleValues.Add(new BattleValues() { colname = "creditsContributionOut", value = (int)token_personel.SelectToken("creditsContributionOut") });
-							battleValues.Add(new BattleValues() { colname = "autoRepairCost", value = (int)token_personel.SelectToken("autoRepairCost") });
-							battleValues.Add(new BattleValues() { colname = "eventCredits", value = (int)token_personel.SelectToken("eventCredits") });
-							battleValues.Add(new BattleValues() { colname = "premiumCreditsFactor10", value = (int)token_personel.SelectToken("premiumCreditsFactor10") });
-							battleValues.Add(new BattleValues() { colname = "achievementCredits", value = (int)token_personel.SelectToken("achievementCredits") });
-							// personal XP
-							battleValues.Add(new BattleValues() { colname = "real_xp", value = (int)token_personel.SelectToken("xp") });
-							battleValues.Add(new BattleValues() { colname = "xpPenalty", value = (int)token_personel.SelectToken("xpPenalty") });
-							battleValues.Add(new BattleValues() { colname = "freeXP", value = (int)token_personel.SelectToken("freeXP") });
-							battleValues.Add(new BattleValues() { colname = "dailyXPFactor10", value = (int)token_personel.SelectToken("dailyXPFactor10") });
-							battleValues.Add(new BattleValues() { colname = "premiumXPFactor10", value = (int)token_personel.SelectToken("premiumXPFactor10") });
-							battleValues.Add(new BattleValues() { colname = "eventFreeXP", value = (int)token_personel.SelectToken("eventFreeXP") });
-							battleValues.Add(new BattleValues() { colname = "achievementFreeXP", value = (int)token_personel.SelectToken("achievementFreeXP") });
-							battleValues.Add(new BattleValues() { colname = "achievementXP", value = (int)token_personel.SelectToken("achievementXP") });
-							battleValues.Add(new BattleValues() { colname = "eventXP", value = (int)token_personel.SelectToken("eventXP") });
-							battleValues.Add(new BattleValues() { colname = "eventTMenXP", value = (int)token_personel.SelectToken("eventTMenXP") });
-							// personal others
-							battleValues.Add(new BattleValues() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
-							battleValues.Add(new BattleValues() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
-							battleValues.Add(new BattleValues() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
-							battleValues.Add(new BattleValues() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") }); // override def - might be above 100
-							// field returns null
-							if (token_personel.SelectToken("fortResource").HasValues)
-								battleValues.Add(new BattleValues() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
-							// dayly double
-							int dailyXPFactor = (int)token_personel.SelectToken("dailyXPFactor10") / 10;
-							battleValues.Add(new BattleValues() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
-							// Special fields: death reason, convert to string
-							int deathReasonId = (int)token_personel.SelectToken("deathReason");
-							string deathReason = "Unknown";
-							switch (deathReasonId)
+							Log.AddToLogBuffer(" > * New battle file not read, battle do not exists for JSON file: " + file);
+							// Battle do not exists, delete if old file file
+							if (battleTime < DateTime.Now.AddDays(-3))
 							{
-								case -1: deathReason = "Alive"; break;
-								case 0: deathReason = "Shot"; break;
-								case 1: deathReason = "Burned"; break;
-								case 2: deathReason = "Rammed"; break;
-								case 3: deathReason = "Chrashed"; break;
-								case 4: deathReason = "Death zone"; break;
-								case 5: deathReason = "Drowned"; break;
+								deleteFileAfterRead = true;
+								Log.AddToLogBuffer(" > * Old battle found, schedule for delete for JSON file: " + file);
 							}
-							battleValues.Add(new BattleValues() { colname = "deathReason", value = "'" + deathReason + "'" });
-							// Get from array autoLoadCost
-							JArray array_autoload = (JArray)token_personel.SelectToken("autoLoadCost");
-							int autoLoadCost = (int)array_autoload[0];
-							battleValues.Add(new BattleValues() { colname = "autoLoadCost", value = autoLoadCost });
-							// Get from array autoEquipCost
-							JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
-							int autoEquipCost = (int)array_autoequip[0];
-							battleValues.Add(new BattleValues() { colname = "autoEquipCost", value = autoEquipCost });
-							// Calculated net credits
-							int creditsNet = (int)token_personel.SelectToken("credits");
-							creditsNet -= (int)token_personel.SelectToken("creditsPenalty"); // fine for damage to allies
-							creditsNet += (int)token_personel.SelectToken("creditsToDraw"); // compensation for dmg caused by allies
-							creditsNet -= (int)token_personel.SelectToken("autoRepairCost"); // repear cost
-							creditsNet -= autoLoadCost;
-							creditsNet -= autoEquipCost;
-							battleValues.Add(new BattleValues() { colname = "creditsNet", value = creditsNet });
-							// map id
-							int arenaTypeID = (int)token_common.SelectToken("arenaTypeID");
-							int mapId = arenaTypeID & 32767;
-							battleValues.Add(new BattleValues() { colname = "mapId", value = mapId });
-							// insert data
-							string fields = "";
-							foreach (var battleValue in battleValues)
-							{
-								fields += battleValue.colname + " = " + battleValue.value.ToString() + ", ";
-							}
-							sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
-							DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-							DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
-							DB.ExecuteNonQuery(sql);
-							// If grinding, adjust grogress
-							if (grindXP > 0)
-								GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
-							// Done
-							deleteFileAfterRead = true;
-							refreshAfterUpdate = true;
-							GridView.scheduleGridRefresh = true;
-							Log.AddToLogBuffer(" > * Done reading into DB JSON file: " + file);
-							added++;
 						}
-					}
-					else
-					{
-						Log.AddToLogBuffer(" > * New battle file not read, battle do not exists for JSON file: " + file);
-						// Battle do not exists, delete if old file file
-						if (battleTime < DateTime.Now.AddDays(-3))
+						// Delete file if handled or old
+						if (deleteFileAfterRead)
 						{
-							deleteFileAfterRead = true;
-							Log.AddToLogBuffer(" > * Old battle found, schedule for delete for JSON file: " + file);
+							// Done - delete file
+							FileInfo fileBattleJson = new FileInfo(file);
+							fileBattleJson.Delete();
+							Log.AddToLogBuffer(" > * Deleted read or old JSON file: " + file);
 						}
-					}
-					// Delete file if handled or old
-					if (deleteFileAfterRead)
-					{
-						// Done - delete file
-						FileInfo fileBattleJson = new FileInfo(file);
-						fileBattleJson.Delete();
-						Log.AddToLogBuffer(" > * Deleted read or old JSON file: " + file);
 					}
 				}
+				// Create alert file if new battle result added 
+				if (refreshAfterUpdate && refreshGridOnFoundBattles)
+				{
+					GridView.scheduleGridRefresh = false;
+					Log.BattleResultDoneLog();
+					Log.WriteLogBuffer();
+				}
+				// Return result
+				if (added == 0)
+					returVal = processed.ToString() + " files checked, no new battle result detected";
+				else
+					returVal = processed.ToString() + " files checked, " + added + " files added as battle result";
+				return returVal;
 			}
-			// Create alert file if new battle result added 
-			if (refreshAfterUpdate && refreshGridOnFoundBattles)
+			catch (Exception ex)
 			{
-				GridView.scheduleGridRefresh = false;
-				Log.BattleResultDoneLog();
-				Log.WriteLogBuffer();
+				Log.LogToFile(ex);
+				return "Battle result terminated due to error, see logfile";
 			}
-			// Return result
-			if (added == 0)
-				returVal = processed.ToString() + " files checked, no new battle result detected";
-			else
-				returVal = processed.ToString() + " files checked, " + added + " files added as battle result";
-			return returVal;
 		}
 		
 		private static void GrindingProgress(int playerTankId, int XP)

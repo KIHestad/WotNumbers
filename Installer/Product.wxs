@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.4.1.0"?>
+<?define ProductVersion = "0.4.2.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -251,9 +251,6 @@
 		<ComponentGroup Id="ProductComponents_Dossier2json">
 			<Component Id="cmp8540176488F077374645127C6834BCA8" Directory="INSTALLFOLDER_Dossier2json" Guid="{474FF12A-5345-4182-BEA0-A42716B74A4F}">
 				<File Id="fil43C93A51802E58A2266566EE76D87EF7" KeyPath="yes" Source="$(var.D2jSource)\maps.json" />
-			</Component>
-			<Component Id="cmp5208B95BA67D1F67A5933407B977F608" Directory="INSTALLFOLDER_Dossier2json" Guid="{8DA489E9-95C8-42AB-BE85-F4C39432DA75}">
-				<File Id="filE03A81ACA4C6C17C42A40FFC46EAC5B5" KeyPath="yes" Source="$(var.D2jSource)\README.md" />
 			</Component>
 			<Component Id="cmpD5E8EB7A99336F8E29BB1D09D6C79C6C" Directory="INSTALLFOLDER_Dossier2json" Guid="{27CA70F1-C079-4BE0-92B7-DAA06B9D92D8}">
 				<File Id="filC756F9EC8BADF7738ED2A6DED5C6F62D" KeyPath="yes" Source="$(var.D2jSource)\structures_10.json" />
