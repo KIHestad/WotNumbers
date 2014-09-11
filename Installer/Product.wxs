@@ -44,6 +44,7 @@
 			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
 		</Feature>
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
 		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]WotNumbers.exe" />
 		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 		<UI>
@@ -52,7 +53,6 @@
 				Control="Finish"
 				Event="DoAction"
 				Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
-			<!--<UIRef Id="WixUI_ErrorProgressText"/>-->
 		</UI>
 
   </Product>
