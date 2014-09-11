@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.4.2.0"?>
+<?define ProductVersion = "0.4.3.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -7,16 +7,16 @@
 		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="Installs Wot Numbers, created by BadButton and cmdrTrinity"/>
 
 		<Upgrade Id="$(var.UpgradeCode)">
-			<!-- Detect older product versions -->
-			<!--<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>-->
-	  <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
-	  <UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
+		<!-- Detect older product versions -->
+		<!--<UpgradeVersion OnlyDetect="no" IncludeMinimum="yes" IncludeMaximum="no" Minimum="0.0.1" Maximum="$(var.ProductVersion)" Property="PREVIOUSVERSIONSINSTALLED"/>-->
+		<UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+		<UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
 		</Upgrade>
 		<!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
 
-	<InstallExecuteSequence>
-	  <RemoveExistingProducts After="InstallInitialize" />
-	</InstallExecuteSequence>
+		<InstallExecuteSequence>
+		  <RemoveExistingProducts After="InstallInitialize" />
+		</InstallExecuteSequence>
 	
 		<MediaTemplate EmbedCab="yes"/>
 		<!-- WixUI_Advanced, WixUI_FeatureTree, WixUI_InstallDir, WixUI_Minimal, WixUI_Mondo = Everything, where to install, features to install ... -->
@@ -34,15 +34,6 @@
 		<!-- Images -->
 		<WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
 		<WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
-		<!-- Innstaller content -->
-		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
-			<ComponentRef Id="ProductComponent_ShortCut"/>
-			<ComponentGroupRef Id="ProductComponents" />
-			<ComponentGroupRef Id="ProductComponents_Bin" />
-			<ComponentGroupRef Id="ProductComponents_Lib" />
-			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
-			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
-		</Feature>
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
 		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]WotNumbers.exe" />
@@ -54,8 +45,17 @@
 				Event="DoAction"
 				Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
 		</UI>
+		<!-- Installer content -->
+		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
+			<ComponentRef Id="ProductComponent_ShortCut"/>
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="ProductComponents_Bin" />
+			<ComponentGroupRef Id="ProductComponents_Lib" />
+			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
+			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
+		</Feature>
 
-  </Product>
+	</Product>
 
 	<!-- Files folder structure-->
 		
