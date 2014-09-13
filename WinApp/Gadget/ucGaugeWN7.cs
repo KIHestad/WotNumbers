@@ -212,7 +212,7 @@ namespace WinApp.Gadget
 					moveNeedle = true; // use normal movment after this
 				}
 			}
-			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 0), 2500);
+            aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 0), aGauge1.ValueMax);
 		}
 
 		private void btnTime_Click(object sender, EventArgs e)
