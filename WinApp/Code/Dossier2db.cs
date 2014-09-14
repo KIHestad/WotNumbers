@@ -300,6 +300,11 @@ namespace WinApp.Code
 			// Get Tank ID
 			bool battleSave = false; // Sets true if battle is saved, and is return value
 			// int tankId = TankData.GetTankID(tankName); old code - get from name
+			if (playerTankNewRow["compactDescr"] == DBNull.Value)
+			{
+				Log.LogToFile("### Tank result terminated ### Did not find compactDescr in dossier file for tank: " + tankName,true);
+				return false;
+			}
 			int tankId = Convert.ToInt32(playerTankNewRow["compactDescr"]);
 			if (tankId > 0) // when tankid=0 the tank is not found in tank table
 			{
