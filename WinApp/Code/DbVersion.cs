@@ -15,7 +15,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 162; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 164; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1716,6 +1716,16 @@ namespace WinApp.Code
 					mssql = "ALTER TABLE playerTank ADD compactDescr int NOT NULL default 0; ";
 					sqlite = "ALTER TABLE playerTank ADD compactDescr integer NOT NULL default 0; "; 
 					break;
+				case 163:
+					s = "INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) ";
+					mssql =
+						s + "VALUES ('tanks','common', 'compactDescr','Int','compactDescr', NULL , NULL,'tanks.common.compactDescr', NULL); ";
+					sqlite = mssql;
+					break;
+				case 164:
+					TankData.GetJson2dbMappingFromDB();
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype
