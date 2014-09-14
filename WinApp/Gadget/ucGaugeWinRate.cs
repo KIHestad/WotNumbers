@@ -15,7 +15,7 @@ namespace WinApp.Gadget
 	public partial class ucGaugeWinRate : UserControl
 	{
 		string _battleMode = "";
-		
+		float outsideRange = 0;
 		public ucGaugeWinRate(string battleMode = "")
 		{
 			InitializeComponent();
@@ -41,6 +41,7 @@ namespace WinApp.Gadget
 			aGauge1.ValueMax = 70;
 			if (aGauge1.Value < 29) aGauge1.Value = 29;
 			aGauge1.ValueScaleLinesMajorStepValue = 5;
+			outsideRange = (aGauge1.ValueMax - aGauge1.ValueMin) * 3 / 100;
 			// Colors 0-8
 			for (byte i = 0; i <= 8; i++)
 			{
@@ -158,8 +159,8 @@ namespace WinApp.Gadget
 			aGauge1.CenterTextColor = Rating.WinRateColor(end_val);
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
-			if (end_val < 29) end_val = 29;
-			if (end_val > 71) end_val = 71;
+			if (end_val < aGauge1.ValueMin - outsideRange) end_val = aGauge1.ValueMin - outsideRange;
+			if (end_val > aGauge1.ValueMax) end_val = aGauge1.ValueMax + outsideRange;
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
 			
 			move_speed = Math.Abs(end_val - aGauge1.Value) / 30;
@@ -184,7 +185,7 @@ namespace WinApp.Gadget
 				if (end_val < aGauge1.Value)
 				{
 					gaugeVal -= move_speed;
-					if (gaugeVal <= end_val || gaugeVal <= 29)
+					if (gaugeVal <= end_val || gaugeVal <= aGauge1.ValueMin - outsideRange)
 					{
 						gaugeVal = end_val;
 						timer1.Enabled = false;
@@ -193,7 +194,7 @@ namespace WinApp.Gadget
 				else
 				{
 					gaugeVal += move_speed;
-					if (gaugeVal >= end_val || gaugeVal >= 71)
+					if (gaugeVal >= end_val || gaugeVal >= aGauge1.ValueMax + outsideRange)
 					{
 						gaugeVal = end_val;
 						timer1.Enabled = false;
