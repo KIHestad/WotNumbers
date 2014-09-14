@@ -214,8 +214,8 @@ namespace WinApp.Gadget
 					timer1.Enabled = false;
 					moveNeedle = true; // use normal movment after this
 				}
-			}			
-			aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 29), 71);
+			}
+            aGauge1.Value = (float)Math.Min(Math.Max(gaugeVal, 29), aGauge1.ValueMax);
 		}
 
 		private void btnTime_Click(object sender, EventArgs e)
