@@ -288,7 +288,8 @@ namespace AGaugeApp
 			{
 				if (m_value != value)
 				{
-					m_value = Math.Min(Math.Max(value, m_MinValue - 2), m_MaxValue + 2); // Able to go a bit outside scale
+					float outsideRange = (m_MaxValue - m_MinValue) * 5 / 100;
+					m_value = Math.Min(Math.Max(value, m_MinValue - outsideRange), m_MaxValue + outsideRange); // Able to go a bit outside scale
 
 					if (this.DesignMode)
 					{
