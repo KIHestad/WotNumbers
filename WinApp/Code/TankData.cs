@@ -105,7 +105,7 @@ namespace WinApp.Code
 				tankName = tankName.Replace("ö", "o");
 				tankName = tankName.Replace("ä", "a");
 				tankName = tankName.Replace("â", "a");
-				tankName = tankName.Replace("ß", "ss");
+				tankName = tankName.Replace("ß", "s");
 				dr["name"] = tankName;
 				dr.AcceptChanges();
 			}

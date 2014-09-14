@@ -15,7 +15,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 159; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 162; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1702,6 +1702,19 @@ namespace WinApp.Code
 				case 159:
 					mssql = "UPDATE columnSelection SET colName='battle.battleLifeTime' WHERE id = 9; ";
 					sqlite = mssql;
+					break;
+				case 160:
+					s = "INSERT INTO json2dbMapping (jsonMain ,jsonSub ,jsonProperty ,dbDataType ,dbPlayerTank ,dbBattle ,dbAch ,jsonMainSubProperty ,dbPlayerTankMode) ";
+					mssql =
+						s + "VALUES ('tanks_v2','common', 'compactDescr','Int','compactDescr', NULL , NULL,'tanks_v2.common.compactDescr', NULL); ";
+					sqlite = mssql;
+					break;
+				case 161:
+					TankData.GetJson2dbMappingFromDB();
+					break;
+				case 162:
+					mssql = "ALTER TABLE playerTank ADD compactDescr int NOT NULL default 0; ";
+					sqlite = "ALTER TABLE playerTank ADD compactDescr integer NOT NULL default 0; "; 
 					break;
 			}
 			string sql = "";
