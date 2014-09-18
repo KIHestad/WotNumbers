@@ -2338,8 +2338,8 @@ namespace WinApp.Forms
 					if (!mBattlesAll.Checked)
 					{
 						DateTime basedate = DateTime.Now; // current time
-						if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-						dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
+						if (DateTime.Now.Hour < 7) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
+						dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
 						// Adjust time scale according to selected filter
 						if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
 						else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
