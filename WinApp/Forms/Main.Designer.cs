@@ -149,6 +149,8 @@
 			this.wN8RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.wN7RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.efficiencyRatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetCharts = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetCharts_PerBattle = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
@@ -191,8 +193,6 @@
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
-			this.mGadgetCharts = new System.Windows.Forms.ToolStripMenuItem();
-			this.mGadgetCharts_PerBattle = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -287,7 +287,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(862, 25);
+			this.toolMain.Size = new System.Drawing.Size(831, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1324,6 +1324,22 @@
 			this.efficiencyRatingToolStripMenuItem.Text = "Efficiency Rating";
 			this.efficiencyRatingToolStripMenuItem.Click += new System.EventHandler(this.mGadgetAdd);
 			// 
+			// mGadgetCharts
+			// 
+			this.mGadgetCharts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mGadgetCharts_PerBattle});
+			this.mGadgetCharts.Name = "mGadgetCharts";
+			this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
+			this.mGadgetCharts.Text = "Charts";
+			// 
+			// mGadgetCharts_PerBattle
+			// 
+			this.mGadgetCharts_PerBattle.Name = "mGadgetCharts_PerBattle";
+			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(124, 22);
+			this.mGadgetCharts_PerBattle.Tag = "ucChartBattle";
+			this.mGadgetCharts_PerBattle.Text = "Per Battle";
+			this.mGadgetCharts_PerBattle.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
 			// mGadgetAddBattleModeStats
 			// 
 			this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
@@ -1570,10 +1586,10 @@
 			// panelMainArea
 			// 
 			this.panelMainArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.panelMainArea.Controls.Add(this.scrollCorner);
+			this.panelMainArea.Controls.Add(this.scrollY);
 			this.panelMainArea.Controls.Add(this.dataGridMain);
 			this.panelMainArea.Controls.Add(this.panelInfo);
-			this.panelMainArea.Controls.Add(this.scrollY);
-			this.panelMainArea.Controls.Add(this.scrollCorner);
 			this.panelMainArea.Controls.Add(this.scrollX);
 			this.panelMainArea.Location = new System.Drawing.Point(9, 57);
 			this.panelMainArea.Name = "panelMainArea";
@@ -1760,22 +1776,6 @@
 			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
-			// 
-			// mGadgetCharts
-			// 
-			this.mGadgetCharts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mGadgetCharts_PerBattle});
-			this.mGadgetCharts.Name = "mGadgetCharts";
-			this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
-			this.mGadgetCharts.Text = "Charts";
-			// 
-			// mGadgetCharts_PerBattle
-			// 
-			this.mGadgetCharts_PerBattle.Name = "mGadgetCharts_PerBattle";
-			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(152, 22);
-			this.mGadgetCharts_PerBattle.Tag = "ucChartBattle";
-			this.mGadgetCharts_PerBattle.Text = "Per Battle";
-			this.mGadgetCharts_PerBattle.Click += new System.EventHandler(this.mGadgetAdd);
 			// 
 			// Main
 			// 

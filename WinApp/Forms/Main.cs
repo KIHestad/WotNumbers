@@ -727,6 +727,9 @@ namespace WinApp.Forms
 				dataGridMain.ColumnHeadersVisible = true;
 				dataGridMain.RowHeadersVisible = true;
 				dataGridMain.BringToFront();
+				scrollCorner.BringToFront();
+				scrollX.BringToFront();
+				scrollY.BringToFront();
 				// Remove home view edit mode if enabled
 				if (mHomeEdit.Checked)
 				{
@@ -3166,14 +3169,24 @@ namespace WinApp.Forms
 
 		private void dataGridMain_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
-			if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
+			string colName = "";
+			try
 			{
-				
-				string colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
-				int newWidth = e.Column.Width;
-				dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
-				ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
+				if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
+				{
+					colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
+					int newWidth = e.Column.Width;
+					dataGridMain.Columns[e.Column.HeaderText].Width = newWidth;
+					ColListHelper.SaveColWidth(e.Column.HeaderText, newWidth);
+				}
 			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex, "Error saving column resize: [" + colName +  "]");
+				if (Config.Settings.showDBErrors)
+					MsgBox.Show("Error occured saving resized column, see log file.", "Error resizing column", this);
+			}
+			
 		}
 
 		private void dataGridMain_RowHeadersWidthChanged(object sender, EventArgs e)
@@ -4063,16 +4076,6 @@ namespace WinApp.Forms
 		}
 
 		#endregion
-
-		private void dataGridMain_KeyDown(object sender, KeyEventArgs e)
-		{
-
-		}
-
-		private void dataGridMain_KeyUp(object sender, KeyEventArgs e)
-		{
-
-		}
 
 	}
 }
