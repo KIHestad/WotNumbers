@@ -55,6 +55,8 @@ namespace WinApp.Code
 		{
 			Form frm = new Forms.Message(Title, Message, MessageType);
 			frm.FormBorderStyle = FormBorderStyle.None;
+			if (owner.WindowState == FormWindowState.Minimized)
+				owner.WindowState = Config.Settings.posSize.WindowState;
 			if (owner == null)
 				frm.ShowDialog();
 			else

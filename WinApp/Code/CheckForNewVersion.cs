@@ -42,7 +42,7 @@ namespace WinApp.Code
 			try
 			{
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000;     // milliseconds for wait for timeout
+				httpRequest.Timeout = 20000;     // milliseconds for wait for timeout
 				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
 				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
