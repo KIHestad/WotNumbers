@@ -230,6 +230,7 @@ namespace WinApp.Gadget
 					double val = oldVal[x] + (move[x] * timerStep);
 					serie1.Points[x].YValues[0] = val;
 					if (val > max) max = val;
+					if (newVal[x] > max) max = newVal[x];
 				}
 			}
 			else
