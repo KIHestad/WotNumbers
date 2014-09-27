@@ -38,6 +38,7 @@
 			this.btnMonth = new BadButton();
 			this.btnMonth3 = new BadButton();
 			this.btnTotal = new BadButton();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -174,6 +175,11 @@
 			this.btnTotal.ToolTipText = "";
 			this.btnTotal.Click += new System.EventHandler(this.btnSelection_Click);
 			// 
+			// timer1
+			// 
+			this.timer1.Interval = 50;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
 			// ucChartTier
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,5 +211,6 @@
 		private BadButton btnMonth3;
 		private BadButton btnTotal;
 		private System.Windows.Forms.Label lblChartType;
+		private System.Windows.Forms.Timer timer1;
 	}
 }

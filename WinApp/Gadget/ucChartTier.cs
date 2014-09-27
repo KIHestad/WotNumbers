@@ -13,8 +13,15 @@ namespace WinApp.Gadget
 {
 	public partial class ucChartTier : UserControl
 	{
-		string _battleMode = "";
+		private string _battleMode = "";
 		
+		// slide chart
+		private int timerStep = 0;
+		private int timerMaxStep = 20;
+		private double[] oldVal = new double[10];
+		private double[] newVal = new double[10];
+		private double[] move = new double[10];
+
 		private enum Selection
 		{
 			Total = 1,
@@ -36,6 +43,7 @@ namespace WinApp.Gadget
 		{
 			chart1.Top = 1;
 			chart1.Left = 1;
+			timerMaxStep = 20;
 			selection = Selection.Total;
 			lblChartType.ForeColor = ColorTheme.ControlFont;
 			ReziseChart();
@@ -64,7 +72,7 @@ namespace WinApp.Gadget
 			for (double i = 1; i <= 10; i++)
 			{
 				DataPoint p = new DataPoint();
-				p.YValues[0] = (i * 10);
+				p.YValues[0] = 0;
 				p.AxisLabel = i.ToRoman();
 				p.Font = new Font("MS Sans Serif", 9, GraphicsUnit.Pixel);
 				p.LabelForeColor = ColorTheme.ControlFont;
@@ -139,10 +147,16 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			Series serie1 = chart1.Series[0];
-			for (int x = 0; x < 10; x++)
-				serie1.Points[x].YValues[0] = 0;
+			//for (int x = 0; x < 10; x++)
+			//	serie1.Points[x].YValues[0] = 0;
 			double tot = 0;
-			double max = 0;
+			// old values
+			for (int x = 0; x < 10; x++)
+			{
+				oldVal[x] = serie1.Points[x].YValues[0];
+				newVal[x] = 0;
+			}
+			// new values
 			if (dt.Rows.Count > 0)
 			{
 				foreach (DataRow dr in dt.Rows)
@@ -150,17 +164,19 @@ namespace WinApp.Gadget
 					int x = Convert.ToInt32(dr["tier"]) - 1;
 					double val = Convert.ToDouble(dr["battleCount"]);
 					tot += val;
-					if (val > max) max = val;
-					serie1.Points[x].YValues[0] = val;
+					newVal[x] = val; 
 				}
 			}
+			// move per step
 			for (int x = 0; x < 10; x++)
 			{
-				serie1.Points[x].IsValueShownAsLabel = (serie1.Points[x].YValues[0] > 0);
+				move[x] = (newVal[x] - oldVal[x]) / timerMaxStep;
 			}
-			serie1.Points.ResumeUpdates();
-			chart1.ChartAreas[0].AxisY.Maximum = (max * 1.2); 
+			// New values
 			lblChartType.Text = "Battle Count - " + battleModeText + ": " + tot.ToString("N0");
+			timerStep = 0;
+			timer1.Interval = 10;
+			timer1.Enabled = true;
 		}
 
 		private void ucChart_Resize(object sender, EventArgs e)
@@ -191,6 +207,48 @@ namespace WinApp.Gadget
 			btn.Checked = true;
 			selection = (Selection)Enum.Parse(typeof(Selection), btn.Tag.ToString());
 			DrawChart();
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			double max = 0;
+			Series serie1 = chart1.Series[0];
+			timerStep++;
+			timer1.Interval = Convert.ToInt32(timer1.Interval * 1.2);
+			//if (firstrun)
+			//{
+			//	timerStep = timerMaxStep;
+			//	firstrun = false;
+			//}
+			if (timerStep < timerMaxStep)
+			{
+				// slide chart
+				timerStep++;
+				for (int x = 0; x < 10; x++)
+				{
+					serie1.Points[x].IsValueShownAsLabel = false;
+					double val = oldVal[x] + (move[x] * timerStep);
+					serie1.Points[x].YValues[0] = val;
+					if (val > max) max = val;
+				}
+			}
+			else
+			{
+				// Final values
+				max = 0;
+				// Hide values = 0
+				for (int x = 0; x < 10; x++)
+				{
+					serie1.Points[x].YValues[0] = newVal[x];
+					if (newVal[x] > max) max = newVal[x];
+					serie1.Points[x].IsValueShownAsLabel = (serie1.Points[x].YValues[0] > 0);
+				}
+				// stop timer
+				timer1.Enabled = false;
+			}
+			chart1.ChartAreas[0].AxisY.Maximum = (max * 1.2);
+			serie1.Points.ResumeUpdates();
+			Application.DoEvents();
 		}
 	}
 }
