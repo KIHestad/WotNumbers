@@ -68,7 +68,7 @@
 			this.btnCancel.BlackButton = false;
 			this.btnCancel.Checked = false;
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(103, 91);
+			this.btnCancel.Location = new System.Drawing.Point(173, 91);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(64, 23);
 			this.btnCancel.TabIndex = 3;
@@ -81,7 +81,7 @@
 			this.btnSelect.BlackButton = false;
 			this.btnSelect.Checked = false;
 			this.btnSelect.Image = null;
-			this.btnSelect.Location = new System.Drawing.Point(173, 91);
+			this.btnSelect.Location = new System.Drawing.Point(103, 91);
 			this.btnSelect.Name = "btnSelect";
 			this.btnSelect.Size = new System.Drawing.Size(64, 23);
 			this.btnSelect.TabIndex = 2;

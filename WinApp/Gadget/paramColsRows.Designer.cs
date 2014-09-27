@@ -29,14 +29,14 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.badForm1 = new BadForm();
-			this.badLabel1 = new BadLabel();
-			this.badLabel2 = new BadLabel();
-			this.txtCols = new BadTextBox();
-			this.txtRows = new BadTextBox();
 			this.btnCancel = new BadButton();
 			this.btnSelect = new BadButton();
+			this.txtRows = new BadTextBox();
+			this.txtCols = new BadTextBox();
+			this.badLabel2 = new BadLabel();
+			this.badLabel1 = new BadLabel();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -56,7 +56,7 @@
 			this.badForm1.FormMargin = 0;
 			this.badForm1.Image = null;
 			this.badForm1.Location = new System.Drawing.Point(0, 0);
-			this.badForm1.MainArea = mainAreaClass2;
+			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = true;
 			this.badForm1.Size = new System.Drawing.Size(199, 161);
@@ -67,44 +67,31 @@
 			this.badForm1.Text = "Select Size";
 			this.badForm1.TitleHeight = 26;
 			// 
-			// badLabel1
+			// btnCancel
 			// 
-			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel1.Dimmed = false;
-			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(35, 44);
-			this.badLabel1.Name = "badLabel1";
-			this.badLabel1.Size = new System.Drawing.Size(53, 23);
-			this.badLabel1.TabIndex = 0;
-			this.badLabel1.Text = "Columns";
+			this.btnCancel.BlackButton = false;
+			this.btnCancel.Checked = false;
+			this.btnCancel.Image = null;
+			this.btnCancel.Location = new System.Drawing.Point(105, 114);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(64, 23);
+			this.btnCancel.TabIndex = 5;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.ToolTipText = "";
+			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
-			// badLabel2
+			// btnSelect
 			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(35, 74);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(53, 23);
-			this.badLabel2.TabIndex = 1;
-			this.badLabel2.Text = "Rows";
-			// 
-			// txtCols
-			// 
-			this.txtCols.HasFocus = false;
-			this.txtCols.Image = null;
-			this.txtCols.Location = new System.Drawing.Point(105, 45);
-			this.txtCols.MultilineAllow = false;
-			this.txtCols.Name = "txtCols";
-			this.txtCols.PasswordChar = '\0';
-			this.txtCols.Size = new System.Drawing.Size(64, 23);
-			this.txtCols.TabIndex = 2;
-			this.txtCols.Text = "5";
-			this.txtCols.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.btnSelect.BlackButton = false;
+			this.btnSelect.Checked = false;
+			this.btnSelect.Image = null;
+			this.btnSelect.Location = new System.Drawing.Point(35, 114);
+			this.btnSelect.Name = "btnSelect";
+			this.btnSelect.Size = new System.Drawing.Size(64, 23);
+			this.btnSelect.TabIndex = 4;
+			this.btnSelect.Text = "Select";
+			this.btnSelect.ToolTipText = "";
+			this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
 			// 
 			// txtRows
 			// 
@@ -119,31 +106,44 @@
 			this.txtRows.Text = "2";
 			this.txtRows.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
-			// btnCancel
+			// txtCols
 			// 
-			this.btnCancel.BlackButton = false;
-			this.btnCancel.Checked = false;
-			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(35, 114);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(64, 23);
-			this.btnCancel.TabIndex = 5;
-			this.btnCancel.Text = "Cancel";
-			this.btnCancel.ToolTipText = "";
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			this.txtCols.HasFocus = false;
+			this.txtCols.Image = null;
+			this.txtCols.Location = new System.Drawing.Point(105, 45);
+			this.txtCols.MultilineAllow = false;
+			this.txtCols.Name = "txtCols";
+			this.txtCols.PasswordChar = '\0';
+			this.txtCols.Size = new System.Drawing.Size(64, 23);
+			this.txtCols.TabIndex = 2;
+			this.txtCols.Text = "5";
+			this.txtCols.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
-			// btnSelect
+			// badLabel2
 			// 
-			this.btnSelect.BlackButton = false;
-			this.btnSelect.Checked = false;
-			this.btnSelect.Image = null;
-			this.btnSelect.Location = new System.Drawing.Point(105, 114);
-			this.btnSelect.Name = "btnSelect";
-			this.btnSelect.Size = new System.Drawing.Size(64, 23);
-			this.btnSelect.TabIndex = 4;
-			this.btnSelect.Text = "Select";
-			this.btnSelect.ToolTipText = "";
-			this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(35, 74);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(53, 23);
+			this.badLabel2.TabIndex = 1;
+			this.badLabel2.Text = "Rows";
+			// 
+			// badLabel1
+			// 
+			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel1.Dimmed = false;
+			this.badLabel1.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel1.Image = null;
+			this.badLabel1.Location = new System.Drawing.Point(35, 44);
+			this.badLabel1.Name = "badLabel1";
+			this.badLabel1.Size = new System.Drawing.Size(53, 23);
+			this.badLabel1.TabIndex = 0;
+			this.badLabel1.Text = "Columns";
 			// 
 			// paramColsRows
 			// 

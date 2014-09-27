@@ -36,6 +36,7 @@ namespace WinApp.Gadget
 		{
 			chart1.Top = 1;
 			chart1.Left = 1;
+			selection = Selection.Total;
 			lblChartType.ForeColor = ColorTheme.ControlFont;
 			ReziseChart();
 			CreateEmptyChart();
@@ -141,6 +142,7 @@ namespace WinApp.Gadget
 			for (int x = 0; x < 10; x++)
 				serie1.Points[x].YValues[0] = 0;
 			double tot = 0;
+			double max = 0;
 			if (dt.Rows.Count > 0)
 			{
 				foreach (DataRow dr in dt.Rows)
@@ -148,6 +150,7 @@ namespace WinApp.Gadget
 					int x = Convert.ToInt32(dr["tier"]) - 1;
 					double val = Convert.ToDouble(dr["battleCount"]);
 					tot += val;
+					if (val > max) max = val;
 					serie1.Points[x].YValues[0] = val;
 				}
 			}
@@ -156,7 +159,7 @@ namespace WinApp.Gadget
 				serie1.Points[x].IsValueShownAsLabel = (serie1.Points[x].YValues[0] > 0);
 			}
 			serie1.Points.ResumeUpdates();
-			chart1.ChartAreas[0].RecalculateAxesScale();
+			chart1.ChartAreas[0].AxisY.Maximum = (max * 1.2); 
 			lblChartType.Text = "Battle Count - " + battleModeText + ": " + tot.ToString("N0");
 		}
 

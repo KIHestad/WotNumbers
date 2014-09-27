@@ -62,17 +62,16 @@
 			chartArea1.BorderColor = System.Drawing.Color.Transparent;
 			chartArea1.Name = "ChartArea1";
 			this.chart1.ChartAreas.Add(chartArea1);
-			this.chart1.Location = new System.Drawing.Point(3, 3);
+			this.chart1.Location = new System.Drawing.Point(15, 3);
 			this.chart1.Name = "chart1";
 			series1.ChartArea = "ChartArea1";
-			series1.IsValueShownAsLabel = false;
 			series1.Name = "Series1";
 			series1.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.No;
 			series1.SmartLabelStyle.CalloutLineColor = System.Drawing.Color.SaddleBrown;
 			series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
 			series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
 			this.chart1.Series.Add(series1);
-			this.chart1.Size = new System.Drawing.Size(191, 121);
+			this.chart1.Size = new System.Drawing.Size(249, 151);
 			this.chart1.TabIndex = 0;
 			this.chart1.Text = "chart1";
 			// 
@@ -82,7 +81,7 @@
 			this.lblChartType.BackColor = System.Drawing.Color.Transparent;
 			this.lblChartType.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblChartType.ForeColor = System.Drawing.SystemColors.ControlLight;
-			this.lblChartType.Location = new System.Drawing.Point(8, 127);
+			this.lblChartType.Location = new System.Drawing.Point(58, 157);
 			this.lblChartType.Name = "lblChartType";
 			this.lblChartType.Size = new System.Drawing.Size(186, 18);
 			this.lblChartType.TabIndex = 16;
@@ -96,7 +95,7 @@
 			this.btnToday.Checked = false;
 			this.btnToday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnToday.Image = null;
-			this.btnToday.Location = new System.Drawing.Point(160, 147);
+			this.btnToday.Location = new System.Drawing.Point(210, 177);
 			this.btnToday.Margin = new System.Windows.Forms.Padding(0);
 			this.btnToday.Name = "btnToday";
 			this.btnToday.Size = new System.Drawing.Size(34, 16);
@@ -113,7 +112,7 @@
 			this.btnYday.Checked = false;
 			this.btnYday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnYday.Image = null;
-			this.btnYday.Location = new System.Drawing.Point(122, 147);
+			this.btnYday.Location = new System.Drawing.Point(172, 177);
 			this.btnYday.Margin = new System.Windows.Forms.Padding(0);
 			this.btnYday.Name = "btnYday";
 			this.btnYday.Size = new System.Drawing.Size(34, 16);
@@ -130,7 +129,7 @@
 			this.btnMonth.Checked = false;
 			this.btnMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnMonth.Image = null;
-			this.btnMonth.Location = new System.Drawing.Point(84, 147);
+			this.btnMonth.Location = new System.Drawing.Point(134, 177);
 			this.btnMonth.Margin = new System.Windows.Forms.Padding(0);
 			this.btnMonth.Name = "btnMonth";
 			this.btnMonth.Size = new System.Drawing.Size(34, 16);
@@ -147,7 +146,7 @@
 			this.btnMonth3.Checked = false;
 			this.btnMonth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnMonth3.Image = null;
-			this.btnMonth3.Location = new System.Drawing.Point(46, 147);
+			this.btnMonth3.Location = new System.Drawing.Point(96, 177);
 			this.btnMonth3.Margin = new System.Windows.Forms.Padding(0);
 			this.btnMonth3.Name = "btnMonth3";
 			this.btnMonth3.Size = new System.Drawing.Size(34, 16);
@@ -165,7 +164,7 @@
 			this.btnTotal.Checked = true;
 			this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnTotal.Image = null;
-			this.btnTotal.Location = new System.Drawing.Point(8, 147);
+			this.btnTotal.Location = new System.Drawing.Point(58, 177);
 			this.btnTotal.Margin = new System.Windows.Forms.Padding(0);
 			this.btnTotal.Name = "btnTotal";
 			this.btnTotal.Size = new System.Drawing.Size(34, 16);
@@ -188,7 +187,7 @@
 			this.Controls.Add(this.btnTotal);
 			this.Controls.Add(this.chart1);
 			this.Name = "ucChartTier";
-			this.Size = new System.Drawing.Size(200, 170);
+			this.Size = new System.Drawing.Size(300, 200);
 			this.Load += new System.EventHandler(this.ucChart_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucChart_Paint);
 			this.Resize += new System.EventHandler(this.ucChart_Resize);
