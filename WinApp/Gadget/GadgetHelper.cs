@@ -37,6 +37,7 @@ namespace WinApp.Gadget
 			public int posY;
 			public int width;
 			public int height;
+			public bool resizable = false;
 		}
 
 		public static List<GadgetItem> gadgets = null;
@@ -233,7 +234,8 @@ namespace WinApp.Gadget
 						control = uc,
 						id = gadgetId,
 						controlName = controlName,
-						name = GetGadgetName(controlName)
+						name = GetGadgetName(controlName),
+						resizable = IsGadgetRezisable(controlName)
 					});
 				}
 			}
@@ -241,6 +243,14 @@ namespace WinApp.Gadget
 			{
 				Log.LogToFile(ex);
 			}
+		}
+
+		public static bool IsGadgetRezisable(string gadgetName)
+		{
+			bool resizable = false;
+			if (gadgetName == "ucChartTier")
+				resizable = true;
+			return resizable;
 		}
 
 		public static Control GetGadgetControl(string name, object[] param)
@@ -258,9 +268,9 @@ namespace WinApp.Gadget
 					case "ucBattleTypes": uc = new Gadget.ucBattleTypes(); break;
 					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
 					case "ucChartBattle": uc = new Gadget.ucChartBattle(); break;
+					case "ucChartTier": uc = new Gadget.ucChartTier(param[0].ToString()); break;
 				}
 				return uc;
-
 			}
 			catch (Exception ex)
 			{
@@ -282,6 +292,7 @@ namespace WinApp.Gadget
 				case "ucBattleTypes": name = "Battle Mode Stats Grid"; break;
 				case "ucBattleListLargeImages": name = "Last Battles Large Images"; break;
 				case "ucChartBattle": name = "Chart per Battle"; break;
+				case "ucChartTier": name = "Chart per Battle"; break;
 			}
 			return name;
 		}

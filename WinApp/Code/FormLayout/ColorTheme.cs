@@ -74,7 +74,9 @@ namespace WinApp.Code
 		public static Color ScrollbarFront = Color.FromArgb(255, 102, 102, 106);
 		public static Color ScrollbarArrow = Color.FromArgb(255, 152, 152, 156);
 
-		// Colorful mode
+		// Charts
+		public static Color ChartBarBlue = Color.FromArgb(255, 31, 71, 165);
+
 		// Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
 		public static Color Rating_very_bad = ColorTranslator.FromHtml("#CE0000");		// dark red
 		public static Color Rating_bad = ColorTranslator.FromHtml("#FF0000");			// red

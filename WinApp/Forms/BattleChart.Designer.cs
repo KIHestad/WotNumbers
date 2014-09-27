@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class BattleChart
+	partial class BattleChartTier
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -31,7 +31,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
 			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleChart));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleChartTier));
 			this.BattleChartTheme = new BadForm();
 			this.lblFooter = new System.Windows.Forms.Label();
 			this.ddPeriod = new BadDropDownBox();

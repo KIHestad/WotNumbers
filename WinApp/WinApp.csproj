@@ -324,6 +324,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucChartTier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucChartTier.Designer.cs">
+      <DependentUpon>ucChartTier.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\GadgetHelper.cs" />
     <Compile Include="Gadget\paramColsRows.cs">
       <SubType>Form</SubType>
@@ -464,6 +470,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucChartTier.resx">
+      <DependentUpon>ucChartTier.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramColsRows.resx">
       <DependentUpon>paramColsRows.cs</DependentUpon>

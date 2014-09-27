@@ -16,7 +16,7 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class BattleChart : Form
+	public partial class BattleChartTier : Form
 	{
 		public enum CalculationType
 		{
@@ -50,7 +50,7 @@ namespace WinApp.Forms
 		private double axisYminimum = 999999999;
 		private List<ChartType> chartValues = new List<ChartType>(); // List of all available chart types 
 
-		public BattleChart(int playerTankId = 0)
+		public BattleChartTier(int playerTankId = 0)
 		{
 			InitializeComponent();
 			initPlayerTankId = playerTankId;

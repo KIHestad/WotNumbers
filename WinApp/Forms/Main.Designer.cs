@@ -151,6 +151,7 @@
 			this.efficiencyRatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetCharts = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetCharts_PerBattle = new System.Windows.Forms.ToolStripMenuItem();
+			this.perTierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
@@ -183,16 +184,17 @@
 			this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblStatusRowCount = new System.Windows.Forms.Label();
 			this.panelMainArea = new System.Windows.Forms.Panel();
+			this.scrollCorner = new BadScrollBarCorner();
+			this.scrollY = new BadScrollBar();
 			this.dataGridMain = new System.Windows.Forms.DataGridView();
 			this.panelInfo = new System.Windows.Forms.Panel();
 			this.lblOverView = new System.Windows.Forms.Label();
 			this.picIS7 = new System.Windows.Forms.PictureBox();
-			this.scrollY = new BadScrollBar();
-			this.scrollCorner = new BadScrollBarCorner();
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
+			this.groupByTankTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -287,7 +289,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(831, 25);
+			this.toolMain.Size = new System.Drawing.Size(862, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1327,6 +1329,8 @@
 			// mGadgetCharts
 			// 
 			this.mGadgetCharts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.perTierToolStripMenuItem,
+            this.groupByTankTypeToolStripMenuItem,
             this.mGadgetCharts_PerBattle});
 			this.mGadgetCharts.Name = "mGadgetCharts";
 			this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
@@ -1335,10 +1339,18 @@
 			// mGadgetCharts_PerBattle
 			// 
 			this.mGadgetCharts_PerBattle.Name = "mGadgetCharts_PerBattle";
-			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(124, 22);
+			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(181, 22);
 			this.mGadgetCharts_PerBattle.Tag = "ucChartBattle";
-			this.mGadgetCharts_PerBattle.Text = "Per Battle";
+			this.mGadgetCharts_PerBattle.Text = "Group by Nation";
 			this.mGadgetCharts_PerBattle.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
+			// perTierToolStripMenuItem
+			// 
+			this.perTierToolStripMenuItem.Name = "perTierToolStripMenuItem";
+			this.perTierToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.perTierToolStripMenuItem.Tag = "ucChartTier";
+			this.perTierToolStripMenuItem.Text = "Group by Tier";
+			this.perTierToolStripMenuItem.Click += new System.EventHandler(this.mGadgetAdd);
 			// 
 			// mGadgetAddBattleModeStats
 			// 
@@ -1596,6 +1608,36 @@
 			this.panelMainArea.Size = new System.Drawing.Size(649, 336);
 			this.panelMainArea.TabIndex = 18;
 			// 
+			// scrollCorner
+			// 
+			this.scrollCorner.Image = null;
+			this.scrollCorner.Location = new System.Drawing.Point(621, 298);
+			this.scrollCorner.Name = "scrollCorner";
+			this.scrollCorner.Size = new System.Drawing.Size(17, 17);
+			this.scrollCorner.TabIndex = 19;
+			this.scrollCorner.Text = "badScrollBarCorner1";
+			this.scrollCorner.Visible = false;
+			// 
+			// scrollY
+			// 
+			this.scrollY.BackColor = System.Drawing.Color.Transparent;
+			this.scrollY.Image = null;
+			this.scrollY.Location = new System.Drawing.Point(621, 88);
+			this.scrollY.Name = "scrollY";
+			this.scrollY.ScrollElementsTotals = 100;
+			this.scrollY.ScrollElementsVisible = 0;
+			this.scrollY.ScrollHide = true;
+			this.scrollY.ScrollNecessary = true;
+			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+			this.scrollY.ScrollPosition = 0;
+			this.scrollY.Size = new System.Drawing.Size(17, 204);
+			this.scrollY.TabIndex = 21;
+			this.scrollY.Text = "badScrollBar2";
+			this.scrollY.Visible = false;
+			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
+			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
+			// 
 			// dataGridMain
 			// 
 			this.dataGridMain.AllowUserToAddRows = false;
@@ -1693,36 +1735,6 @@
 			this.picIS7.TabIndex = 17;
 			this.picIS7.TabStop = false;
 			// 
-			// scrollY
-			// 
-			this.scrollY.BackColor = System.Drawing.Color.Transparent;
-			this.scrollY.Image = null;
-			this.scrollY.Location = new System.Drawing.Point(621, 88);
-			this.scrollY.Name = "scrollY";
-			this.scrollY.ScrollElementsTotals = 100;
-			this.scrollY.ScrollElementsVisible = 0;
-			this.scrollY.ScrollHide = true;
-			this.scrollY.ScrollNecessary = true;
-			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-			this.scrollY.ScrollPosition = 0;
-			this.scrollY.Size = new System.Drawing.Size(17, 204);
-			this.scrollY.TabIndex = 21;
-			this.scrollY.Text = "badScrollBar2";
-			this.scrollY.Visible = false;
-			this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
-			this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
-			this.scrollY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollX_MouseUp);
-			// 
-			// scrollCorner
-			// 
-			this.scrollCorner.Image = null;
-			this.scrollCorner.Location = new System.Drawing.Point(621, 298);
-			this.scrollCorner.Name = "scrollCorner";
-			this.scrollCorner.Size = new System.Drawing.Size(17, 17);
-			this.scrollCorner.TabIndex = 19;
-			this.scrollCorner.Text = "badScrollBarCorner1";
-			this.scrollCorner.Visible = false;
-			// 
 			// scrollX
 			// 
 			this.scrollX.BackColor = System.Drawing.Color.Transparent;
@@ -1776,6 +1788,12 @@
 			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
+			// 
+			// groupByTankTypeToolStripMenuItem
+			// 
+			this.groupByTankTypeToolStripMenuItem.Name = "groupByTankTypeToolStripMenuItem";
+			this.groupByTankTypeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.groupByTankTypeToolStripMenuItem.Text = "Group by Tank Type";
 			// 
 			// Main
 			// 
@@ -1971,6 +1989,8 @@
 		private System.Windows.Forms.ImageList imageGrid;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetCharts;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetCharts_PerBattle;
+		private System.Windows.Forms.ToolStripMenuItem perTierToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem groupByTankTypeToolStripMenuItem;
 	}
 }
 
