@@ -324,6 +324,18 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucChartTankType.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucChartTankType.Designer.cs">
+      <DependentUpon>ucChartTankType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gadget\ucChartNation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucChartNation.Designer.cs">
+      <DependentUpon>ucChartNation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucChartTier.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -470,6 +482,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucChartTankType.resx">
+      <DependentUpon>ucChartTankType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucChartNation.resx">
+      <DependentUpon>ucChartNation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucChartTier.resx">
       <DependentUpon>ucChartTier.cs</DependentUpon>

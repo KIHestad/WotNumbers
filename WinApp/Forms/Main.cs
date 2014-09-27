@@ -4090,6 +4090,12 @@ namespace WinApp.Forms
 				case "ucChartTier":
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
+				case "ucChartNation":
+					frm = new Gadget.paramBattleMode(gadgetId);
+					break;
+				case "ucChartTankType":
+					frm = new Gadget.paramBattleMode(gadgetId);
+					break;
 			}
 			if (frm != null)
 				frm.ShowDialog(this);

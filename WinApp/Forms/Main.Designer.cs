@@ -150,8 +150,9 @@
 			this.wN7RatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.efficiencyRatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetCharts = new System.Windows.Forms.ToolStripMenuItem();
-			this.mGadgetCharts_PerBattle = new System.Windows.Forms.ToolStripMenuItem();
 			this.perTierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.groupByTankTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetCharts_PerBattle = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
@@ -194,7 +195,6 @@
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
-			this.groupByTankTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1336,14 +1336,6 @@
 			this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetCharts.Text = "Charts";
 			// 
-			// mGadgetCharts_PerBattle
-			// 
-			this.mGadgetCharts_PerBattle.Name = "mGadgetCharts_PerBattle";
-			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(181, 22);
-			this.mGadgetCharts_PerBattle.Tag = "ucChartBattle";
-			this.mGadgetCharts_PerBattle.Text = "Group by Nation";
-			this.mGadgetCharts_PerBattle.Click += new System.EventHandler(this.mGadgetAdd);
-			// 
 			// perTierToolStripMenuItem
 			// 
 			this.perTierToolStripMenuItem.Name = "perTierToolStripMenuItem";
@@ -1351,6 +1343,22 @@
 			this.perTierToolStripMenuItem.Tag = "ucChartTier";
 			this.perTierToolStripMenuItem.Text = "Group by Tier";
 			this.perTierToolStripMenuItem.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
+			// groupByTankTypeToolStripMenuItem
+			// 
+			this.groupByTankTypeToolStripMenuItem.Name = "groupByTankTypeToolStripMenuItem";
+			this.groupByTankTypeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.groupByTankTypeToolStripMenuItem.Tag = "ucChartTankType";
+			this.groupByTankTypeToolStripMenuItem.Text = "Group by Tank Type";
+			this.groupByTankTypeToolStripMenuItem.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
+			// mGadgetCharts_PerBattle
+			// 
+			this.mGadgetCharts_PerBattle.Name = "mGadgetCharts_PerBattle";
+			this.mGadgetCharts_PerBattle.Size = new System.Drawing.Size(181, 22);
+			this.mGadgetCharts_PerBattle.Tag = "ucChartNation";
+			this.mGadgetCharts_PerBattle.Text = "Group by Nation";
+			this.mGadgetCharts_PerBattle.Click += new System.EventHandler(this.mGadgetAdd);
 			// 
 			// mGadgetAddBattleModeStats
 			// 
@@ -1788,12 +1796,6 @@
 			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
-			// 
-			// groupByTankTypeToolStripMenuItem
-			// 
-			this.groupByTankTypeToolStripMenuItem.Name = "groupByTankTypeToolStripMenuItem";
-			this.groupByTankTypeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-			this.groupByTankTypeToolStripMenuItem.Text = "Group by Tank Type";
 			// 
 			// Main
 			// 

@@ -248,7 +248,7 @@ namespace WinApp.Gadget
 		public static bool IsGadgetRezisable(string gadgetName)
 		{
 			bool resizable = false;
-			if (gadgetName == "ucChartTier")
+			if (gadgetName == "ucChartTier" || gadgetName == "ucChartNation" || gadgetName == "ucChartTankType")
 				resizable = true;
 			return resizable;
 		}
@@ -269,6 +269,8 @@ namespace WinApp.Gadget
 					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
 					case "ucChartBattle": uc = new Gadget.ucChartBattle(); break;
 					case "ucChartTier": uc = new Gadget.ucChartTier(param[0].ToString()); break;
+					case "ucChartNation": uc = new Gadget.ucChartNation(param[0].ToString()); break;
+					case "ucChartTankType": uc = new Gadget.ucChartTankType(param[0].ToString()); break;
 				}
 				return uc;
 			}
@@ -293,6 +295,8 @@ namespace WinApp.Gadget
 				case "ucBattleListLargeImages": name = "Last Battles Large Images"; break;
 				case "ucChartBattle": name = "Chart per Battle"; break;
 				case "ucChartTier": name = "Chart per Battle"; break;
+				case "ucChartNation": name = "Chart per Nation"; break;
+				case "ucChartTankType": name = "Chart per Tank Type"; break;
 			}
 			return name;
 		}
