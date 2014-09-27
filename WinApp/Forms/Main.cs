@@ -3727,6 +3727,7 @@ namespace WinApp.Forms
 				newGadget.control.Left = newGadget.posY;
 				newGadget.sortorder = -1;
 				newGadget.visible = true;
+				newGadget.resizable = GadgetHelper.IsGadgetRezisable(controlName);
 				// Special gadgets customization
 				switch (controlName)
 				{
