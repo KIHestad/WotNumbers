@@ -119,8 +119,8 @@ namespace WinApp.Gadget
 				kills = Convert.ToDouble(dt.Rows[0]["kills"]);
 				kdr = Math.Round((frags / kills), 2);
 			}
-			lblLeft.Text = kills.ToString("N0");
-			lblRight.Text = frags.ToString("N0");
+			lblLeft.Text = frags.ToString("N0");
+			lblRight.Text = kills.ToString("N0");
 			lblCenter.Text = kdr.ToString();
 			lblCenter.ForeColor = Rating.KillDeathColor(kdr);
 			aGauge1.Value = (float)kdr;
