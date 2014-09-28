@@ -90,11 +90,11 @@ namespace WinApp.Forms
 			toolMain.ShowItemToolTips = false;
 			mBattles.Visible = false;
 			mTankFilter.Visible = false;
-			mRefreshSeparator.Visible = false;
+			mRefreshSeparator.Visible = true;
 			mColumnSelect.Visible = false;
 			mMode.Visible = false;
-			mGadget.Visible = false;
-			mHomeEdit.Visible = false;
+			mGadget.Visible = true;
+			mHomeEdit.Visible = true;
 			mBattleGroup.Visible = false;
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
@@ -4096,6 +4096,9 @@ namespace WinApp.Forms
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
 				case "ucChartTankType":
+					frm = new Gadget.paramBattleMode(gadgetId);
+					break;
+				case "ucGaugeKillDeath":
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
 			}

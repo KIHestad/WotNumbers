@@ -324,6 +324,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugeKillDeath.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeKillDeath.Designer.cs">
+      <DependentUpon>ucGaugeKillDeath.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucChartTankType.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -482,6 +488,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeKillDeath.resx">
+      <DependentUpon>ucGaugeKillDeath.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucChartTankType.resx">
       <DependentUpon>ucChartTankType.cs</DependentUpon>

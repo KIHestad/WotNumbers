@@ -13,11 +13,12 @@ namespace WinApp.Gadget
 		public enum TimeRange
 		{
 			Total = 0,
-			Num1000 = 1,
+			TimeMonth3 = 6,
 			TimeMonth = 2,
 			TimeWeek = 3,
 			TimeToday = 4,
 			Num5000 = 5,
+			Num1000 = 1,
 		}
 
 		public static TimeRange SelectedTimeRangeEFF = TimeRange.Total;
@@ -271,6 +272,7 @@ namespace WinApp.Gadget
 					case "ucChartTier": uc = new Gadget.ucChartTier(param[0].ToString()); break;
 					case "ucChartNation": uc = new Gadget.ucChartNation(param[0].ToString()); break;
 					case "ucChartTankType": uc = new Gadget.ucChartTankType(param[0].ToString()); break;
+					case "ucGaugeKillDeath": uc = new Gadget.ucGaugeKillDeath(param[0].ToString()); break;
 				}
 				return uc;
 			}
@@ -297,6 +299,7 @@ namespace WinApp.Gadget
 				case "ucChartTier": name = "Chart per Battle"; break;
 				case "ucChartNation": name = "Chart per Nation"; break;
 				case "ucChartTankType": name = "Chart per Tank Type"; break;
+				case "ucGaugeKillDeath": name = "Kill / Death Ratio Gauge"; break;
 			}
 			return name;
 		}

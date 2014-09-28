@@ -495,6 +495,23 @@ namespace WinApp.Code
 			return battleCountRatingColor;
 		}
 
+		public static double[] rangeKillDeath = { 0, 0.25, 0.5, 0.75, 1, 1.2, 1.4, 1.6, 1.8, 2 };
+
+		public static Color KillDeathColor(double value)
+		{
+			Color killDeathRatingColor = ColorTheme.Rating_very_bad;
+			if (value >= rangeKillDeath[8]) killDeathRatingColor = ColorTheme.Rating_super_uniqum;
+			else if (value >= rangeKillDeath[7]) killDeathRatingColor = ColorTheme.Rating_uniqum;
+			else if (value >= rangeKillDeath[6]) killDeathRatingColor = ColorTheme.Rating_great;
+			else if (value >= rangeKillDeath[5]) killDeathRatingColor = ColorTheme.Rating_very_good;
+			else if (value >= rangeKillDeath[4]) killDeathRatingColor = ColorTheme.Rating_good;
+			else if (value >= rangeKillDeath[3]) killDeathRatingColor = ColorTheme.Rating_average;
+			else if (value >= rangeKillDeath[2]) killDeathRatingColor = ColorTheme.Rating_below_average;
+			else if (value >= rangeKillDeath[1]) killDeathRatingColor = ColorTheme.Rating_bad;
+			return killDeathRatingColor;
+		}
+
+
 		#endregion
 
 		#region Recalculate Battles
