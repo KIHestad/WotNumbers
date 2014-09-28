@@ -225,12 +225,12 @@ namespace WinApp.Gadget
 		{
 			// Chart
 			chart1.Width = this.Width - 2;
-			chart1.Height = this.Height - (this.Height - lblChartType.Top + 12); // Make room for icons
+			chart1.Height = this.Height - (this.Height - lblChartType.Top + 13); // Make room for icons
 			// Images
 			for (int id = 0; id < imgControls.Count; id++)
 			{
 				Control c = imgControls[id];
-				c.Top = this.Height - (this.Height - lblChartType.Top + 13);
+				c.Top = this.Height - (this.Height - lblChartType.Top + 14);
 				double barWidth = (chart1.Width - 8) / imgControls.Count;
 				c.Left = Convert.ToInt32(barWidth / 2 - 1 + barWidth * id);
 			}

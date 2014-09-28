@@ -83,7 +83,7 @@ namespace WinApp.Gadget
 			serie1.IsXValueIndexed = true;
 			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
-			string sql = "select * from country order by shortName ";
+			string sql = "select * from country order by id ";
 			DataTable dt = DB.FetchData(sql);
 			foreach (DataRow dr in dt.Rows)
 			{
@@ -110,6 +110,11 @@ namespace WinApp.Gadget
 				Control[] c = this.Controls.Find(pic.Name, false);
 				c[0].BringToFront();
 				imgControls.Add(c[0]); // store in image control for later resize
+				// Add tooltip
+				//ToolTip tip = new ToolTip();
+				//tip.ToolTipTitle = dr["name"].ToString();
+				//tip.Container.Add(c[0]);
+
 			}
 		}
 
@@ -223,12 +228,12 @@ namespace WinApp.Gadget
 		{
 			// CHart
 			chart1.Width = this.Width - 2;
-			chart1.Height = this.Height - (this.Height - lblChartType.Top + 12);
+			chart1.Height = this.Height - (this.Height - lblChartType.Top + 13);
 			// Images
 			for (int id = 0; id < imgControls.Count; id++)
 			{
 				Control c = imgControls[id];
-				c.Top = this.Height - (this.Height - lblChartType.Top + 13);
+				c.Top = this.Height - (this.Height - lblChartType.Top + 14);
 				double barWidth = (chart1.Width - 8) / imgControls.Count;
 				c.Left = Convert.ToInt32(barWidth / 2 - 1 + barWidth * id);
 			}
