@@ -303,10 +303,12 @@ namespace WinApp.Forms
 			SetFormTitle();
 			SetFavListMenu();
 			SetListener(false);
-			
+			// Get Images
 			ImageHelper.CreateTankImageTable();
 			ImageHelper.CreateMasteryBageImageTable();
 			ImageHelper.LoadTankImages();
+			ImageHelper.CreateTankTypeImageTable();
+			ImageHelper.LoadTankTypeImages();
 			// Show view
 			ChangeView(GridView.Views.Overall, true);
 			// Battle result file watcher

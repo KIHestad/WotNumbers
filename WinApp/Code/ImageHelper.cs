@@ -15,6 +15,7 @@ namespace WinApp.Code
 	{
 		public static DataTable TankImage = new DataTable();
 		public static DataTable MasteryBadgeImage = new DataTable();
+		public static DataTable TankTypeImage = new DataTable();
 
 		public class ImgColumns : IComparable<ImgColumns>
 		{
@@ -49,6 +50,15 @@ namespace WinApp.Code
 			MasteryBadgeImage.PrimaryKey = new DataColumn[] { MasteryBadgeImage.Columns["id"] };
 			MasteryBadgeImage.Columns.Add("img", typeof(Image));
 			LoadMasteryBadgeImages();
+		}
+
+		public static void CreateTankTypeImageTable()
+		{
+			TankTypeImage = new DataTable();
+			TankTypeImage.Columns.Add("id", typeof(Int32));
+			TankTypeImage.PrimaryKey = new DataColumn[] { TankTypeImage.Columns["id"] };
+			TankTypeImage.Columns.Add("img", typeof(Image));
+			LoadTankTypeImages();
 		}
 
 		public static void LoadTankImages()
@@ -97,6 +107,7 @@ namespace WinApp.Code
 			
 		}
 
+
 		public static void LoadMasteryBadgeImages()
 		{
 			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
@@ -127,6 +138,38 @@ namespace WinApp.Code
 				// Add to dt
 				MasteryBadgeImage.Rows.Add(masterybadgeImgNewDataRow);
 				MasteryBadgeImage.AcceptChanges();
+			}
+
+		}
+
+		public static void LoadTankTypeImages()
+		{
+			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
+			string sql = "select * from tanktype";
+			SQLiteConnection con = new SQLiteConnection(adminDbCon);
+			con.Open();
+			SQLiteCommand command = new SQLiteCommand(sql, con);
+			SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+			DataTable dt = new DataTable();
+			adapter.Fill(dt);
+			con.Close();
+			TankTypeImage.Clear();
+			foreach (DataRow dr in dt.Rows)
+			{
+				DataRow newDataRow = TankTypeImage.NewRow();
+				// ID
+				newDataRow["id"] = dr["id"];
+				// Img
+				string imgField = "img";
+				byte[] imgByte = (byte[])dr[imgField];
+				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+				ms.Write(imgByte, 0, imgByte.Length);
+				Image image = new Bitmap(ms);
+				newDataRow["img"] = image;
+				// Add to dt
+				TankTypeImage.Rows.Add(newDataRow);
+				TankTypeImage.AcceptChanges();
 			}
 
 		}
