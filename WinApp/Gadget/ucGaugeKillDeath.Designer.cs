@@ -49,7 +49,7 @@
 			// lblLeft
 			// 
 			this.lblLeft.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblLeft.Location = new System.Drawing.Point(27, 103);
+			this.lblLeft.Location = new System.Drawing.Point(22, 103);
 			this.lblLeft.Name = "lblLeft";
 			this.lblLeft.Size = new System.Drawing.Size(48, 17);
 			this.lblLeft.TabIndex = 6;
@@ -58,7 +58,7 @@
 			// lblRight
 			// 
 			this.lblRight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblRight.Location = new System.Drawing.Point(123, 103);
+			this.lblRight.Location = new System.Drawing.Point(130, 103);
 			this.lblRight.Name = "lblRight";
 			this.lblRight.Size = new System.Drawing.Size(48, 17);
 			this.lblRight.TabIndex = 7;
@@ -301,7 +301,7 @@
 			this.aGauge1.Value = 0F;
 			this.aGauge1.ValueMax = 2F;
 			this.aGauge1.ValueMin = 0F;
-			this.aGauge1.ValueScaleLinesMajorStepValue = 1F;
+			this.aGauge1.ValueScaleLinesMajorStepValue = 0.25F;
 			this.aGauge1.ValueScaleLinesMinorNumOf = 9;
 			// 
 			// ucGaugeKillDeath
