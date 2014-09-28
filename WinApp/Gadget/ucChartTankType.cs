@@ -77,7 +77,7 @@ namespace WinApp.Gadget
 			serie1.Color = ColorTheme.ChartBarBlue;
 			serie1.IsXValueIndexed = true;
 			// Add points
-			string sql = "select * from tankType order by shortName ";
+			string sql = "select * from tankType order by id ";
 			DataTable dt = DB.FetchData(sql);
 			int pIndex = 0;
 			foreach (DataRow dr in dt.Rows)
@@ -124,8 +124,8 @@ namespace WinApp.Gadget
 					"		tank ON playerTank.tankId = tank.id INNER JOIN " +
 					"       tankType ON tank.tankTypeId = tankType.id " +
 					"WHERE  (playerTank.playerId = @playerId) " + sqlBattlemode +
-					"GROUP BY tankType.shortName " +
-					"ORDER BY tankType.shortName ";
+					"GROUP BY tankType.shortName, tankType.id " +
+					"ORDER BY tankType.id ";
 			}
 			else
 			{
@@ -159,8 +159,8 @@ namespace WinApp.Gadget
 					"       tank ON playerTank.tankId = tank.id INNER JOIN " +
 					"       tankType ON tank.tankTypeId = tankType.id " +
 					"WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) " + sqlBattlemode +
-					"GROUP BY tankType.shortName " +
-					"ORDER BY tankType.shortName ";
+					"GROUP BY tankType.shortName, tankType.id " +
+					"ORDER BY tankType.id ";
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 			}
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
@@ -206,7 +206,7 @@ namespace WinApp.Gadget
 		private void ReziseChart()
 		{
 			chart1.Width = this.Width - 2;
-			chart1.Height = this.Height - (this.Height - lblChartType.Top);
+			chart1.Height = this.Height - (this.Height - lblChartType.Top -5);
 		}
 
 		private void ucChart_Paint(object sender, PaintEventArgs e)

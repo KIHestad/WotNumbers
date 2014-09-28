@@ -206,7 +206,7 @@ namespace WinApp.Gadget
 		private void ReziseChart()
 		{
 			chart1.Width = this.Width - 2;
-			chart1.Height = this.Height - (this.Height - lblChartType.Top);
+			chart1.Height = this.Height - (this.Height - lblChartType.Top -5);
 		}
 
 		private void ucChart_Paint(object sender, PaintEventArgs e)

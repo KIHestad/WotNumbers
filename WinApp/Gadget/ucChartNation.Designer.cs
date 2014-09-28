@@ -82,7 +82,7 @@
 			this.lblChartType.BackColor = System.Drawing.Color.Transparent;
 			this.lblChartType.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblChartType.ForeColor = System.Drawing.SystemColors.ControlLight;
-			this.lblChartType.Location = new System.Drawing.Point(33, 137);
+			this.lblChartType.Location = new System.Drawing.Point(33, 134);
 			this.lblChartType.Name = "lblChartType";
 			this.lblChartType.Size = new System.Drawing.Size(186, 18);
 			this.lblChartType.TabIndex = 16;
