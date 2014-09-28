@@ -76,7 +76,7 @@ namespace WinApp.Gadget
 			Series serie1 = chart1.Series[0];
 			serie1.Color = ColorTheme.ChartBarBlue;
 			serie1.IsXValueIndexed = true;
-			serie1["MaxPixelPointWidth"] = "25";
+			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
 			string sql = "select * from tankType order by id ";
 			DataTable dt = DB.FetchData(sql);

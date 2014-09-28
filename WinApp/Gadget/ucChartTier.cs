@@ -68,7 +68,7 @@ namespace WinApp.Gadget
 			Series serie1 = chart1.Series[0];
 			serie1.Color = ColorTheme.ChartBarBlue;
 			serie1.IsXValueIndexed = true;
-			serie1["MaxPixelPointWidth"] = "25";
+			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
 			for (double i = 1; i <= 10; i++)
 			{
