@@ -177,5 +177,58 @@ namespace WinAdmin
 			
 			return imgArray;
 		}
+
+		private void readTankTypeFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// Recreate table
+			DB.DBResult result = new DB.DBResult();
+			// Add masterybadge table if missing
+			string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='tanktype';";
+			DataTable dt = DB.FetchData(sql, Settings.Config, out result);
+			if (dt.Rows.Count == 1)
+			{
+				sql = "drop table tanktype;";
+				DB.ExecuteNonQuery(sql, Settings.Config, out result);
+				FormHelper.ShowError(result);
+			}
+			sql = "create table tanktype ( " +
+				"	id integer primary key, " +
+				"	img blob " +
+				")";
+			DB.ExecuteNonQuery(sql, Settings.Config, out result);
+			FormHelper.ShowError(result);
+			// Remove current images
+			// Loop throug current images
+			result = new DB.DBResult();
+			string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Img\\TankType\\";
+			string[] images = Directory.GetFiles(path, "*.png");
+			foreach (string imageFile in images)
+			{
+				// read image into database
+				byte[] img = getImageFromFile(imageFile);
+				// SQL Lite binary insert
+				string conString = Config.DatabaseConnection(Settings.Config);
+				SQLiteConnection con = new SQLiteConnection(conString);
+				SQLiteCommand cmd = con.CreateCommand();
+				cmd.CommandText = "INSERT INTO tanktype (id, img) VALUES (@id, @img); ";
+				SQLiteParameter imgParam = new SQLiteParameter("@img", System.Data.DbType.Binary);
+				SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+				imgParam.Value = img;
+				idParam.Value = Path.GetFileNameWithoutExtension(imageFile);
+				cmd.Parameters.Add(imgParam);
+				cmd.Parameters.Add(idParam);
+				con.Open();
+				try
+				{
+					cmd.ExecuteNonQuery();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+				con.Close();
+			}
+			MessageBox.Show("Images imported from file", "Done");
+		}
 	}
 }
