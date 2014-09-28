@@ -62,6 +62,10 @@
 			chartArea1.BackColor = System.Drawing.Color.Transparent;
 			chartArea1.BorderColor = System.Drawing.Color.Transparent;
 			chartArea1.Name = "ChartArea1";
+			chartArea1.Position.Auto = false;
+			chartArea1.Position.Height = 100F;
+			chartArea1.Position.Width = 98F;
+			chartArea1.Position.X = 1F;
 			this.chart1.ChartAreas.Add(chartArea1);
 			this.chart1.Location = new System.Drawing.Point(15, 3);
 			this.chart1.Name = "chart1";

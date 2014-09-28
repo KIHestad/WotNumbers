@@ -22,6 +22,9 @@ namespace WinApp.Gadget
 		private double[] newVal = new double[10];
 		private double[] move = new double[10];
 
+		// label controls
+		List<Control> lblControls = new List<Control>();
+
 		private enum Selection
 		{
 			Total = 1,
@@ -46,8 +49,8 @@ namespace WinApp.Gadget
 			timerMaxStep = 20;
 			selection = Selection.Total;
 			lblChartType.ForeColor = ColorTheme.ControlFont;
-			ReziseChart();
 			CreateEmptyChart();
+			ReziseChart();
 			DrawChart();
 		}
 
@@ -58,9 +61,11 @@ namespace WinApp.Gadget
 			Color defaultColor = ColorTheme.ControlFont;
 			ChartArea area = chart1.ChartAreas[0];
 			area.AxisY.Enabled = AxisEnabled.False;
+			area.InnerPlotPosition = new System.Windows.Forms.DataVisualization.Charting.ElementPosition(0, 0, 100, 100);
 			foreach (var axis in area.Axes)
 			{
 				axis.LabelStyle.Font = letterType;
+				axis.LabelStyle.ForeColor = Color.Transparent;
 				axis.LabelAutoFitMinFontSize = (int)letterType.Size;
 				axis.LabelAutoFitMaxFontSize = (int)letterType.Size;
 			}
@@ -70,14 +75,31 @@ namespace WinApp.Gadget
 			serie1.IsXValueIndexed = true;
 			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
-			for (double i = 1; i <= 10; i++)
+			for (double id = 1; id <= 10; id++)
 			{
 				DataPoint p = new DataPoint();
 				p.YValues[0] = 0;
-				p.AxisLabel = i.ToRoman();
+				p.AxisLabel = id.ToRoman();
 				p.Font = new Font("MS Sans Serif", 9, GraphicsUnit.Pixel);
 				p.LabelForeColor = ColorTheme.ControlFont;
 				serie1.Points.Add(p);
+				// Add labels as x-axis labels
+				Label lbl = new Label();
+				lbl.Name = "lbl" + id.ToString();
+				lbl.Text = id.ToRoman();
+				lbl.AutoSize = false;
+				lbl.Height = 16;
+				lbl.Width = 16;
+				lbl.ForeColor = ColorTheme.ControlFont;
+				lbl.TextAlign = ContentAlignment.MiddleCenter;
+				lbl.Font = new Font("Microsoft Sans Serif", 9); 
+				this.Controls.Add(lbl);
+				Control[] c = this.Controls.Find(lbl.Name, false);
+				c[0].BringToFront();
+				lblControls.Add(c[0]); // store in image control for later resize
+				// Add tooltip
+				ToolTip tip = new ToolTip();
+				tip.SetToolTip(c[0], "Tier " + id);
 			}
 		}
 
@@ -187,8 +209,17 @@ namespace WinApp.Gadget
 
 		private void ReziseChart()
 		{
+			// Chart
 			chart1.Width = this.Width - 2;
-			chart1.Height = this.Height - (this.Height - lblChartType.Top -5);
+			chart1.Height = this.Height - (this.Height - lblChartType.Top + 21); // Make room for labels
+			// Labels
+			for (int id = 0; id < lblControls.Count; id++)
+			{
+				Control c = lblControls[id];
+				double barWidth = chart1.Width / lblControls.Count + 0.75; 
+				c.Top = this.Height - (this.Height - lblChartType.Top + 18);
+				c.Left = Convert.ToInt32((barWidth / 2) - 7 + (barWidth * id));
+			}
 		}
 
 		private void ucChart_Paint(object sender, PaintEventArgs e)
