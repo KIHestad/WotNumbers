@@ -76,6 +76,7 @@ namespace WinApp.Gadget
 			Series serie1 = chart1.Series[0];
 			serie1.Color = ColorTheme.ChartBarBlue;
 			serie1.IsXValueIndexed = true;
+			serie1["MaxPixelPointWidth"] = "25";
 			// Add points
 			string sql = "select * from country order by shortName ";
 			DataTable dt = DB.FetchData(sql);
