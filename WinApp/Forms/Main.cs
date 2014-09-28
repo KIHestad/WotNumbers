@@ -305,6 +305,7 @@ namespace WinApp.Forms
 			SetListener(false);
 			// Get Images
 			ImageHelper.CreateTankImageTable();
+			ImageHelper.LoadTankImages();
 			ImageHelper.CreateMasteryBageImageTable();
 			ImageHelper.CreateTankTypeImageTable();
 			ImageHelper.CreateNationImageTable();

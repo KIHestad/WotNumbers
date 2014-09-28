@@ -96,7 +96,7 @@ namespace WinApp.Gadget
 				serie1.Points.Add(p);
 				// Add to index
 				TankTypeIndex ci = new TankTypeIndex();
-				ci.index = Convert.ToInt32(id -1);
+				ci.index = id -1;
 				ci.tankTypeName = p.AxisLabel;
 				tankTypeIndex.Add(ci);
 				// Add images as x-axis labels
