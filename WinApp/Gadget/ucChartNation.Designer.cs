@@ -84,7 +84,7 @@
 			this.lblChartType.ForeColor = System.Drawing.SystemColors.ControlLight;
 			this.lblChartType.Location = new System.Drawing.Point(33, 134);
 			this.lblChartType.Name = "lblChartType";
-			this.lblChartType.Size = new System.Drawing.Size(186, 18);
+			this.lblChartType.Size = new System.Drawing.Size(186, 22);
 			this.lblChartType.TabIndex = 16;
 			this.lblChartType.Text = "Chart Type";
 			this.lblChartType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -185,12 +185,12 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.Controls.Add(this.lblChartType);
 			this.Controls.Add(this.btnToday);
 			this.Controls.Add(this.btnYday);
 			this.Controls.Add(this.btnMonth);
 			this.Controls.Add(this.btnMonth3);
 			this.Controls.Add(this.btnTotal);
+			this.Controls.Add(this.lblChartType);
 			this.Controls.Add(this.chart1);
 			this.Name = "ucChartNation";
 			this.Size = new System.Drawing.Size(250, 180);

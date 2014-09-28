@@ -207,6 +207,18 @@ namespace WinApp.Code
 				Bitmap img = new Bitmap(1, 1);
 				return img;
 			}
+		}
+
+		public static Image GetTankTypeImage(int id)
+		{
+			DataRow[] dr = TankTypeImage.Select("id = " + id.ToString());
+			if (dr.Length > 0)
+				return (Image)dr[0]["img"];
+			else
+			{
+				Bitmap img = new Bitmap(1, 1);
+				return img;
+			}
 
 		}
 

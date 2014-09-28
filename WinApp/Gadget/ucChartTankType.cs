@@ -22,6 +22,9 @@ namespace WinApp.Gadget
 		private double[] newVal = new double[10];
 		private double[] move = new double[10];
 
+		// image controls
+		List<Control> imgControls = new List<Control>();
+
 		private enum Selection
 		{
 			Total = 1,
@@ -54,8 +57,8 @@ namespace WinApp.Gadget
 			timerMaxStep = 20;
 			selection = Selection.Total;
 			lblChartType.ForeColor = ColorTheme.ControlFont;
-			ReziseChart();
 			CreateEmptyChart();
+			ReziseChart();
 			DrawChart();
 		}
 
@@ -66,9 +69,11 @@ namespace WinApp.Gadget
 			Color defaultColor = ColorTheme.ControlFont;
 			ChartArea area = chart1.ChartAreas[0];
 			area.AxisY.Enabled = AxisEnabled.False;
+			area.InnerPlotPosition = new System.Windows.Forms.DataVisualization.Charting.ElementPosition(0, 0, 100, 100);
 			foreach (var axis in area.Axes)
 			{
 				axis.LabelStyle.Font = letterType;
+				axis.LabelStyle.ForeColor = Color.Transparent;
 				axis.LabelAutoFitMinFontSize = (int)letterType.Size;
 				axis.LabelAutoFitMaxFontSize = (int)letterType.Size;
 			}
@@ -80,9 +85,9 @@ namespace WinApp.Gadget
 			// Add points
 			string sql = "select * from tankType order by id ";
 			DataTable dt = DB.FetchData(sql);
-			int pIndex = 0;
 			foreach (DataRow dr in dt.Rows)
 			{
+				int id = Convert.ToInt32(dr["id"]);
 				DataPoint p = new DataPoint();
 				p.YValues[0] = 0;
 				p.AxisLabel = dr["shortName"].ToString();
@@ -91,11 +96,23 @@ namespace WinApp.Gadget
 				serie1.Points.Add(p);
 				// Add to index
 				TankTypeIndex ci = new TankTypeIndex();
-				ci.index = pIndex;
+				ci.index = Convert.ToInt32(id -1);
 				ci.tankTypeName = p.AxisLabel;
 				tankTypeIndex.Add(ci);
-				pIndex++;
+				// Add images as x-axis labels
+				Image img = ImageHelper.GetTankTypeImage(id);
+				PictureBox pic = new PictureBox();
+				pic.Name = "pic" + id.ToString();
+				pic.Image = img;
+				pic.Height = 16;
+				pic.Width = 16;
+				this.Controls.Add(pic);
+				Control[] c = this.Controls.Find(pic.Name,false);
+				c[0].BringToFront();
+				imgControls.Add(c[0]); // store in image control for later resize
 			}
+			
+
 		}
 
 		private void DrawChart()
@@ -206,8 +223,17 @@ namespace WinApp.Gadget
 
 		private void ReziseChart()
 		{
+			// Chart
 			chart1.Width = this.Width - 2;
-			chart1.Height = this.Height - (this.Height - lblChartType.Top -5);
+			chart1.Height = this.Height - (this.Height - lblChartType.Top + 12); // Make room for icons
+			// Images
+			for (int id = 0; id < imgControls.Count; id++)
+			{
+				Control c = imgControls[id];
+				c.Top = this.Height - (this.Height - lblChartType.Top + 13);
+				double barWidth = (chart1.Width - 8) / imgControls.Count;
+				c.Left = Convert.ToInt32(barWidth / 2 - 1 + barWidth * id);
+			}
 		}
 
 		private void ucChart_Paint(object sender, PaintEventArgs e)
