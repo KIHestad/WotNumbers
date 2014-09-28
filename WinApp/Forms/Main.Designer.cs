@@ -566,7 +566,7 @@
 			// 
 			this.mTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryChina.Image")));
 			this.mTankFilter_CountryChina.Name = "mTankFilter_CountryChina";
-			this.mTankFilter_CountryChina.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryChina.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryChina.Text = "China";
 			this.mTankFilter_CountryChina.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryChina.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -577,7 +577,7 @@
 			this.mTankFilter_CountryFrance.BackColor = System.Drawing.SystemColors.Control;
 			this.mTankFilter_CountryFrance.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryFrance.Image")));
 			this.mTankFilter_CountryFrance.Name = "mTankFilter_CountryFrance";
-			this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryFrance.Text = "France";
 			this.mTankFilter_CountryFrance.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryFrance.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -587,7 +587,7 @@
 			// 
 			this.mTankFilter_CountryGermany.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryGermany.Image")));
 			this.mTankFilter_CountryGermany.Name = "mTankFilter_CountryGermany";
-			this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryGermany.Text = "Germany";
 			this.mTankFilter_CountryGermany.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryGermany.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -597,7 +597,7 @@
 			// 
 			this.mTankFilter_CountryUK.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUK.Image")));
 			this.mTankFilter_CountryUK.Name = "mTankFilter_CountryUK";
-			this.mTankFilter_CountryUK.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryUK.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryUK.Text = "U.K.";
 			this.mTankFilter_CountryUK.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryUK.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -607,7 +607,7 @@
 			// 
 			this.mTankFilter_CountryUSA.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSA.Image")));
 			this.mTankFilter_CountryUSA.Name = "mTankFilter_CountryUSA";
-			this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryUSA.Text = "U.S.A.";
 			this.mTankFilter_CountryUSA.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryUSA.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -617,7 +617,7 @@
 			// 
 			this.mTankFilter_CountryJapan.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryJapan.Image")));
 			this.mTankFilter_CountryJapan.Name = "mTankFilter_CountryJapan";
-			this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryJapan.Text = "Japan";
 			this.mTankFilter_CountryJapan.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryJapan.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
@@ -627,7 +627,7 @@
 			// 
 			this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
 			this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
-			this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(122, 22);
+			this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(152, 22);
 			this.mTankFilter_CountryUSSR.Text = "U.S.S.R.";
 			this.mTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
 			this.mTankFilter_CountryUSSR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);

@@ -16,6 +16,7 @@ namespace WinApp.Code
 		public static DataTable TankImage = new DataTable();
 		public static DataTable MasteryBadgeImage = new DataTable();
 		public static DataTable TankTypeImage = new DataTable();
+		public static DataTable NationImage = new DataTable();
 
 		public class ImgColumns : IComparable<ImgColumns>
 		{
@@ -59,6 +60,15 @@ namespace WinApp.Code
 			TankTypeImage.PrimaryKey = new DataColumn[] { TankTypeImage.Columns["id"] };
 			TankTypeImage.Columns.Add("img", typeof(Image));
 			LoadTankTypeImages();
+		}
+
+		public static void CreateNationImageTable()
+		{
+			NationImage = new DataTable();
+			NationImage.Columns.Add("id", typeof(Int32));
+			NationImage.PrimaryKey = new DataColumn[] { NationImage.Columns["id"] };
+			NationImage.Columns.Add("img", typeof(Image));
+			LoadNationImages();
 		}
 
 		public static void LoadTankImages()
@@ -174,6 +184,38 @@ namespace WinApp.Code
 
 		}
 
+		public static void LoadNationImages()
+		{
+			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
+			string sql = "select * from nation";
+			SQLiteConnection con = new SQLiteConnection(adminDbCon);
+			con.Open();
+			SQLiteCommand command = new SQLiteCommand(sql, con);
+			SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+			DataTable dt = new DataTable();
+			adapter.Fill(dt);
+			con.Close();
+			NationImage.Clear();
+			foreach (DataRow dr in dt.Rows)
+			{
+				DataRow newDataRow = NationImage.NewRow();
+				// ID
+				newDataRow["id"] = dr["id"];
+				// Img
+				string imgField = "img";
+				byte[] imgByte = (byte[])dr[imgField];
+				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+				ms.Write(imgByte, 0, imgByte.Length);
+				Image image = new Bitmap(ms);
+				newDataRow["img"] = image;
+				// Add to dt
+				NationImage.Rows.Add(newDataRow);
+				NationImage.AcceptChanges();
+			}
+
+		}
+
 		public enum TankImageType
 		{
 			ContourImage = 0,
@@ -219,8 +261,20 @@ namespace WinApp.Code
 				Bitmap img = new Bitmap(1, 1);
 				return img;
 			}
-
 		}
+
+		public static Image GetNationImage(int id)
+		{
+			DataRow[] dr = NationImage.Select("id = " + id.ToString());
+			if (dr.Length > 0)
+				return (Image)dr[0]["img"];
+			else
+			{
+				Bitmap img = new Bitmap(1, 1);
+				return img;
+			}
+		}
+
 
 		public static Image GetTankImage(int tankId, TankImageType tankImageType)
 		{

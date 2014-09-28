@@ -306,9 +306,8 @@ namespace WinApp.Forms
 			// Get Images
 			ImageHelper.CreateTankImageTable();
 			ImageHelper.CreateMasteryBageImageTable();
-			ImageHelper.LoadTankImages();
 			ImageHelper.CreateTankTypeImageTable();
-			ImageHelper.LoadTankTypeImages();
+			ImageHelper.CreateNationImageTable();
 			// Show view
 			ChangeView(GridView.Views.Overall, true);
 			// Battle result file watcher
