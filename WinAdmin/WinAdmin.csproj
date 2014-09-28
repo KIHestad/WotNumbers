@@ -165,6 +165,13 @@
     <Content Include="Img\Badges\Small\1.png" />
     <Content Include="Img\Badges\4.png" />
     <Content Include="Img\Badges\Small\4.png" />
+    <Content Include="Img\Nation\0.png" />
+    <Content Include="Img\Nation\1.png" />
+    <Content Include="Img\Nation\2.png" />
+    <Content Include="Img\Nation\3.png" />
+    <Content Include="Img\Nation\4.png" />
+    <Content Include="Img\Nation\5.png" />
+    <Content Include="Img\Nation\6.png" />
     <Content Include="Img\TankType\1.png" />
     <Content Include="Img\TankType\2.png" />
     <Content Include="Img\TankType\3.png" />
