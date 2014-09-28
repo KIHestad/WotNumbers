@@ -273,6 +273,7 @@ namespace WinApp.Gadget
 					case "ucChartNation": uc = new Gadget.ucChartNation(param[0].ToString()); break;
 					case "ucChartTankType": uc = new Gadget.ucChartTankType(param[0].ToString()); break;
 					case "ucGaugeKillDeath": uc = new Gadget.ucGaugeKillDeath(param[0].ToString()); break;
+					case "ucGaugeDmgCausedReceived": uc = new Gadget.ucGaugeDmgCausedReceived(param[0].ToString()); break;
 				}
 				return uc;
 			}
@@ -300,6 +301,7 @@ namespace WinApp.Gadget
 				case "ucChartNation": name = "Chart per Nation"; break;
 				case "ucChartTankType": name = "Chart per Tank Type"; break;
 				case "ucGaugeKillDeath": name = "Kill / Death Ratio Gauge"; break;
+				case "ucGaugeDmgCausedReceived": name = "Damage Caused / Received"; break;
 			}
 			return name;
 		}

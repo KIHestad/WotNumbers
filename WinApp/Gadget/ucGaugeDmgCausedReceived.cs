@@ -12,12 +12,12 @@ using WinApp.Gadget;
 
 namespace WinApp.Gadget
 {
-	public partial class ucGaugeKillDeath : UserControl
+	public partial class ucGaugeDmgCausedReceived : UserControl
 	{
 		string _battleMode = "";
 		GadgetHelper.TimeRange SelectedTimeRange = GadgetHelper.TimeRange.Total;
 
-		public ucGaugeKillDeath(string battleMode = "")
+		public ucGaugeDmgCausedReceived(string battleMode = "")
 		{
 			InitializeComponent();
 			_battleMode = battleMode;
@@ -71,7 +71,7 @@ namespace WinApp.Gadget
 					DB.AddWithValue(ref sqlBattlemode, "@battleMode", _battleMode, DB.SqlDataType.VarChar);
 				}
 				sql =
-					"SELECT SUM(playerTankBattle.frags) AS frags, SUM(playerTankBattle.battles - playerTankBattle.survived) AS kills " +
+					"SELECT SUM(playerTankBattle.dmg) AS dmg, SUM(dmgReceived) AS dmgReceived " +
 					"FROM   playerTankBattle INNER JOIN " +
 					"		playerTank ON playerTankBattle.playerTankId = playerTank.id " +
 					"WHERE  (playerTank.playerId = @playerId) " + sqlBattlemode;
@@ -102,7 +102,7 @@ namespace WinApp.Gadget
 					DB.AddWithValue(ref sqlBattlemode, "@battleMode", _battleMode, DB.SqlDataType.VarChar);
 				}
 				sql =
-					"SELECT SUM(battle.frags) AS frags, SUM(battle.killed) AS kills " +
+					"SELECT SUM(battle.dmg) AS dmg, SUM(battle.dmgReceived) AS dmgReceived " +
 					"FROM   battle INNER JOIN " +
 					"       playerTank ON battle.playerTankId = playerTank.id " +
 					"WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) " + sqlBattlemode;
@@ -110,16 +110,16 @@ namespace WinApp.Gadget
 			}
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
-			double frags = 0;
-			double kills = 0;
-			if (dt.Rows.Count > 0 && dt.Rows[0]["frags"] != DBNull.Value)
+			double dmg = 0;
+			double dmgReceived = 0;
+			if (dt.Rows.Count > 0 && dt.Rows[0]["dmg"] != DBNull.Value)
 			{
-				frags = Convert.ToDouble(dt.Rows[0]["frags"]);
-				kills = Convert.ToDouble(dt.Rows[0]["kills"]);
-				gaugeVal = Math.Round((frags / kills), 2);
+				dmg = Convert.ToDouble(dt.Rows[0]["dmg"]);
+				dmgReceived = Convert.ToDouble(dt.Rows[0]["dmgReceived"]);
+				gaugeVal = Math.Round((dmg / dmgReceived), 2);
 			}
-			lblLeft.Text = frags.ToString("N0");
-			lblRight.Text = kills.ToString("N0");
+			lblLeft.Text = Shorten(dmg);
+			lblRight.Text = Shorten(dmgReceived);
 			lblCenter.Text = gaugeVal.ToString();
 			lblCenter.ForeColor = Rating.KillDeathColor(gaugeVal);
 			speed = (gaugeVal - aGauge1.Value) / 30;
@@ -127,6 +127,17 @@ namespace WinApp.Gadget
 			timer1.Enabled = true;
 		}
 
+		private string Shorten(double val)
+		{
+			string s = "";
+			if (val > 1000000)
+				s = Math.Round((val / 1000000), 1).ToString() + "M";
+			else if (val > 1000)
+				s = Math.Round((val / 1000), 1).ToString() + "K";
+			else
+				s = val.ToString();
+			return s;
+		}
 		
 		private void btnTime_Click(object sender, EventArgs e)
 		{

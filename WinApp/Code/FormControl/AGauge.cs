@@ -1492,49 +1492,6 @@ namespace AGaugeApp
 				//drawGaugeBackground = false;
 				FindFontBounds();
 
-
-				//ggr.FillRectangle(new SolidBrush(backColor), ClientRectangle);
-
-				//if (BackgroundImage != null)
-				//{
-				//	switch (BackgroundImageLayout)
-				//	{
-				//		case ImageLayout.Center:
-				//			ggr.DrawImageUnscaled(BackgroundImage, Width / 2 - BackgroundImage.Width / 2, Height / 2 - BackgroundImage.Height / 2);
-				//			break;
-				//		case ImageLayout.None:
-				//			ggr.DrawImageUnscaled(BackgroundImage, 0, 0);
-				//			break;
-				//		case ImageLayout.Stretch:
-				//			ggr.DrawImage(BackgroundImage, 0, 0, Width, Height);
-				//			break;
-				//		case ImageLayout.Tile:
-				//			Int32 pixelOffsetX = 0;
-				//			Int32 pixelOffsetY = 0;
-				//			while (pixelOffsetX < Width)
-				//			{
-				//				pixelOffsetY = 0;
-				//				while (pixelOffsetY < Height)
-				//				{
-				//					ggr.DrawImageUnscaled(BackgroundImage, pixelOffsetX, pixelOffsetY);
-				//					pixelOffsetY += BackgroundImage.Height;
-				//				}
-				//				pixelOffsetX += BackgroundImage.Width;
-				//			}
-				//			break;
-				//		case ImageLayout.Zoom:
-				//			if ((Single)(BackgroundImage.Width / Width) < (Single)(BackgroundImage.Height / Height))
-				//			{
-				//				ggr.DrawImage(BackgroundImage, 0, 0, Height, Height);
-				//			}
-				//			else
-				//			{
-				//				ggr.DrawImage(BackgroundImage, 0, 0, Width, Width);
-				//			}
-				//			break;
-				//	}
-				//}
-
 				grapichObject.SmoothingMode = SmoothingMode.HighQuality;
 				grapichObject.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
@@ -1550,14 +1507,6 @@ namespace AGaugeApp
 						rangeStartAngle = m_BaseArcStart + (m_RangeStartValue[counter] - m_MinValue) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
 						rangeSweepAngle = (m_RangeEndValue[counter] - m_RangeStartValue[counter]) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
 						grapichObject.DrawArc(new Pen(m_RangeColor[counter], 2), new Rectangle(m_Center.X - m_BaseArcRadius - (padding / 2), m_Center.Y - m_BaseArcRadius - (padding / 2), 2 * m_BaseArcRadius + padding, 2 * m_BaseArcRadius + padding), rangeStartAngle, rangeSweepAngle);
-						// OLD CODE MAKING CLIPPED PIE
-						//gp.Reset();
-						//gp.AddPie(new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
-						//gp.Reverse();
-						//gp.AddPie(new Rectangle(m_Center.X - m_RangeInnerRadius[counter], m_Center.Y - m_RangeInnerRadius[counter], 2 * m_RangeInnerRadius[counter], 2 * m_RangeInnerRadius[counter]), rangeStartAngle, rangeSweepAngle);
-						//gp.Reverse();
-						//ggr.SetClip(gp);
-						//ggr.FillPie(new SolidBrush(m_RangeColor[counter]), new Rectangle(m_Center.X - m_RangeOuterRadius[counter], m_Center.Y - m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter], 2 * m_RangeOuterRadius[counter]), rangeStartAngle, rangeSweepAngle);
 					}
 				}
 
@@ -1675,7 +1624,7 @@ namespace AGaugeApp
 				if (m_CenterText != "")
 				{
 					SizeF textSize = pe.Graphics.MeasureString(m_CenterText.Trim(), m_CenterTextFont);
-					grapichObject.DrawString(m_CenterText.Trim(), m_CenterTextFont, new SolidBrush(m_CenterTextColor), m_Center.X - (textSize.Width / 2) + 6, m_Center.Y + 25, StringFormat.GenericTypographic);
+					grapichObject.DrawString(m_CenterText.Trim(), m_CenterTextFont, new SolidBrush(m_CenterTextColor), m_Center.X - (textSize.Width / 2) + 6, m_Center.Y + 23, StringFormat.GenericTypographic);
 				}
 				if (m_CenterSubText != "")
 				{
@@ -1691,121 +1640,40 @@ namespace AGaugeApp
 
 			Single brushAngle = (Int32)(m_BaseArcStart + (m_value - m_MinValue) * m_BaseArcSweep / (m_MaxValue - m_MinValue)) % 360;
 			Double needleAngle = brushAngle * Math.PI / 180;
-
+			
+			PointF[] points = new PointF[3];
+			Brush brush1 = new SolidBrush(ColorTheme.ControlFont);
+					
 			switch (m_NeedleType)
 			{
 				case 0:
-					PointF[] points = new PointF[3];
-					Brush brush1 = Brushes.White;
-					Brush brush2 = Brushes.White;
-					Brush brush3 = Brushes.White;
-					Brush brush4 = Brushes.White;
-
-					Brush brushBucket = Brushes.White;
-					Int32 subcol = (Int32)(((brushAngle + 225) % 180) * 100 / 180);
-					Int32 subcol2 = (Int32)(((brushAngle + 135) % 180) * 100 / 180);
-
-					pe.Graphics.FillEllipse(new SolidBrush(m_NeedleColor2), Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-					switch (m_NeedleColor1)
-					{
-						case NeedleColorEnum.WotNumbers:
-							brush1 = new SolidBrush(ColorTheme.ControlFont);
-							brush2 = new SolidBrush(ColorTheme.ControlFont);
-							brush3 = new SolidBrush(ColorTheme.ControlFont);
-							brush4 = new SolidBrush(ColorTheme.ControlFont);
-							Pen p = new Pen(ColorTheme.ControlFont);
-							pe.Graphics.DrawEllipse(p, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Gray:
-							brush1 = new SolidBrush(Color.FromArgb(80 + subcol, 80 + subcol, 80 + subcol));
-							brush2 = new SolidBrush(Color.FromArgb(180 - subcol, 180 - subcol, 180 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(80 + subcol2, 80 + subcol2, 80 + subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(180 - subcol2, 180 - subcol2, 180 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Gray, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Red:
-							brush1 = new SolidBrush(Color.FromArgb(145 + subcol, subcol, subcol));
-							brush2 = new SolidBrush(Color.FromArgb(245 - subcol, 100 - subcol, 100 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(145 + subcol2, subcol2, subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(245 - subcol2, 100 - subcol2, 100 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Red, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Green:
-							brush1 = new SolidBrush(Color.FromArgb(subcol, 145 + subcol, subcol));
-							brush2 = new SolidBrush(Color.FromArgb(100 - subcol, 245 - subcol, 100 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(subcol2, 145 + subcol2, subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(100 - subcol2, 245 - subcol2, 100 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Green, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Blue:
-							brush1 = new SolidBrush(Color.FromArgb(subcol, subcol, 145 + subcol));
-							brush2 = new SolidBrush(Color.FromArgb(100 - subcol, 100 - subcol, 245 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(subcol2, subcol2, 145 + subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(100 - subcol2, 100 - subcol2, 245 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Blue, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Magenta:
-							brush1 = new SolidBrush(Color.FromArgb(subcol, 145 + subcol, 145 + subcol));
-							brush2 = new SolidBrush(Color.FromArgb(100 - subcol, 245 - subcol, 245 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(subcol2, 145 + subcol2, 145 + subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(100 - subcol2, 245 - subcol2, 245 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Magenta, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Violet:
-							brush1 = new SolidBrush(Color.FromArgb(145 + subcol, subcol, 145 + subcol));
-							brush2 = new SolidBrush(Color.FromArgb(245 - subcol, 100 - subcol, 245 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(145 + subcol2, subcol2, 145 + subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(245 - subcol2, 100 - subcol2, 245 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Violet, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-						case NeedleColorEnum.Yellow:
-							brush1 = new SolidBrush(Color.FromArgb(145 + subcol, 145 + subcol, subcol));
-							brush2 = new SolidBrush(Color.FromArgb(245 - subcol, 245 - subcol, 100 - subcol));
-							brush3 = new SolidBrush(Color.FromArgb(145 + subcol2, 145 + subcol2, subcol2));
-							brush4 = new SolidBrush(Color.FromArgb(245 - subcol2, 245 - subcol2, 100 - subcol2));
-							pe.Graphics.DrawEllipse(Pens.Violet, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
-							break;
-					}
-
-					if (Math.Floor((Single)(((brushAngle + 225) % 360) / 180.0)) == 0)
-					{
-						brushBucket = brush1;
-						brush1 = brush2;
-						brush2 = brushBucket;
-					}
-
-					if (Math.Floor((Single)(((brushAngle + 135) % 360) / 180.0)) == 0)
-					{
-						brush4 = brush3;
-					}
-
+					// Center
+					pe.Graphics.FillEllipse(brush1, Center.X - m_NeedleWidth * 3, Center.Y - m_NeedleWidth * 3, m_NeedleWidth * 6, m_NeedleWidth * 6);
+					// Needle tip
 					points[0].X = (Single)(Center.X + m_NeedleRadius * Math.Cos(needleAngle));
 					points[0].Y = (Single)(Center.Y + m_NeedleRadius * Math.Sin(needleAngle));
-					points[1].X = (Single)(Center.X - m_NeedleRadius / 20 * Math.Cos(needleAngle));
-					points[1].Y = (Single)(Center.Y - m_NeedleRadius / 20 * Math.Sin(needleAngle));
+					// Corner centers
 					points[2].X = (Single)(Center.X - m_NeedleRadius / 5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle + Math.PI / 2));
 					points[2].Y = (Single)(Center.Y - m_NeedleRadius / 5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle + Math.PI / 2));
+					points[1].X = (Single)(Center.X - m_NeedleRadius / 5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle - Math.PI / 2));
+					points[1].Y = (Single)(Center.Y - m_NeedleRadius / 5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle - Math.PI / 2));
+					// Draw needle
 					pe.Graphics.FillPolygon(brush1, points);
-
-					points[2].X = (Single)(Center.X - m_NeedleRadius / 5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle - Math.PI / 2));
-					points[2].Y = (Single)(Center.Y - m_NeedleRadius / 5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle - Math.PI / 2));
-					pe.Graphics.FillPolygon(brush2, points);
-
-					points[0].X = (Single)(Center.X - (m_NeedleRadius / 20 - 1) * Math.Cos(needleAngle));
-					points[0].Y = (Single)(Center.Y - (m_NeedleRadius / 20 - 1) * Math.Sin(needleAngle));
-					points[1].X = (Single)(Center.X - m_NeedleRadius / 5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle + Math.PI / 2));
-					points[1].Y = (Single)(Center.Y - m_NeedleRadius / 5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle + Math.PI / 2));
-					points[2].X = (Single)(Center.X - m_NeedleRadius / 5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle - Math.PI / 2));
-					points[2].Y = (Single)(Center.Y - m_NeedleRadius / 5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle - Math.PI / 2));
-					pe.Graphics.FillPolygon(brush4, points);
-
-					points[0].X = (Single)(Center.X - m_NeedleRadius / 20 * Math.Cos(needleAngle));
-					points[0].Y = (Single)(Center.Y - m_NeedleRadius / 20 * Math.Sin(needleAngle));
-					points[1].X = (Single)(Center.X + m_NeedleRadius * Math.Cos(needleAngle));
-					points[1].Y = (Single)(Center.Y + m_NeedleRadius * Math.Sin(needleAngle));
-
-					pe.Graphics.DrawLine(new Pen(m_NeedleColor2), Center.X, Center.Y, points[0].X, points[0].Y);
-					pe.Graphics.DrawLine(new Pen(m_NeedleColor2), Center.X, Center.Y, points[1].X, points[1].Y);
+					break;
+				case 2:
+					// Needle tip
+					points[0].X = (Single)(Center.X + m_NeedleRadius * Math.Cos(needleAngle));
+					points[0].Y = (Single)(Center.Y + m_NeedleRadius * Math.Sin(needleAngle));
+					// Corner centers
+					points[2].X = (Single)(Center.X + m_NeedleRadius / 1.5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle + Math.PI / 1.2));
+					points[2].Y = (Single)(Center.Y + m_NeedleRadius / 1.5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle + Math.PI / 1.2));
+					points[1].X = (Single)(Center.X + m_NeedleRadius / 1.5 * Math.Cos(needleAngle) + m_NeedleWidth * 2 * Math.Cos(needleAngle - Math.PI / 1.2));
+					points[1].Y = (Single)(Center.Y + m_NeedleRadius / 1.5 * Math.Sin(needleAngle) + m_NeedleWidth * 2 * Math.Sin(needleAngle - Math.PI / 1.2));
+					// Draw needle
+					pe.Graphics.FillPolygon(brush1, points);
+					// Draw inner arc
+					int innerArcRadius = Convert.ToInt32(m_NeedleRadius / 1.6);
+					pe.Graphics.DrawArc(new Pen(ColorTheme.ControlDisabledFont, 1), new Rectangle(m_Center.X - innerArcRadius, m_Center.Y - innerArcRadius, 2 * innerArcRadius, 2 * innerArcRadius), m_BaseArcStart, m_BaseArcSweep);
 					break;
 				case 1:
 					Point startPoint = new Point((Int32)(Center.X - m_NeedleRadius / 8 * Math.Cos(needleAngle)),

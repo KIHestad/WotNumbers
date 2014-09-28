@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Gadget
 {
-	partial class ucGaugeKillDeath
+	partial class ucGaugeDmgCausedReceived
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -51,7 +51,7 @@
 			// lblLeft
 			// 
 			this.lblLeft.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblLeft.Location = new System.Drawing.Point(10, 103);
+			this.lblLeft.Location = new System.Drawing.Point(6, 103);
 			this.lblLeft.Name = "lblLeft";
 			this.lblLeft.Size = new System.Drawing.Size(48, 17);
 			this.lblLeft.TabIndex = 6;
@@ -60,7 +60,7 @@
 			// lblRight
 			// 
 			this.lblRight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblRight.Location = new System.Drawing.Point(143, 103);
+			this.lblRight.Location = new System.Drawing.Point(147, 103);
 			this.lblRight.Name = "lblRight";
 			this.lblRight.Size = new System.Drawing.Size(48, 17);
 			this.lblRight.TabIndex = 7;
@@ -83,11 +83,11 @@
 			// 
 			this.lblSub.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblSub.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblSub.Location = new System.Drawing.Point(63, 102);
+			this.lblSub.Location = new System.Drawing.Point(46, 102);
 			this.lblSub.Name = "lblSub";
-			this.lblSub.Size = new System.Drawing.Size(77, 15);
+			this.lblSub.Size = new System.Drawing.Size(110, 15);
 			this.lblSub.TabIndex = 9;
-			this.lblSub.Text = "Kill / Death Ratio";
+			this.lblSub.Text = "Dmg Caused/Received";
 			this.lblSub.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// lblBattleMode
@@ -319,7 +319,7 @@
 			this.aGauge1.ValueScaleLinesMajorStepValue = 0.5F;
 			this.aGauge1.ValueScaleLinesMinorNumOf = 9;
 			// 
-			// ucGaugeKillDeath
+			// ucDmgCausedReceived
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -336,7 +336,7 @@
 			this.Controls.Add(this.btnTotal);
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Name = "ucGaugeKillDeath";
+			this.Name = "ucDmgCausedReceived";
 			this.Size = new System.Drawing.Size(200, 148);
 			this.Load += new System.EventHandler(this.ucGauge_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWinRate_Paint);

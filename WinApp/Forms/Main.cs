@@ -4101,6 +4101,9 @@ namespace WinApp.Forms
 				case "ucGaugeKillDeath":
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
+				case "ucGaugeDmgCausedReceived":
+					frm = new Gadget.paramBattleMode(gadgetId);
+					break;
 			}
 			if (frm != null)
 				frm.ShowDialog(this);

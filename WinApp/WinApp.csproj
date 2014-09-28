@@ -324,6 +324,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugeDmgCausedReceived.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeDmgCausedReceived.Designer.cs">
+      <DependentUpon>ucGaugeDmgCausedReceived.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeKillDeath.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -488,6 +494,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeDmgCausedReceived.resx">
+      <DependentUpon>ucGaugeDmgCausedReceived.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeKillDeath.resx">
       <DependentUpon>ucGaugeKillDeath.cs</DependentUpon>

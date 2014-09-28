@@ -149,6 +149,9 @@
 			this.mGadgetWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetWN7 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetEFF = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+			this.mGadgetKillDeath = new System.Windows.Forms.ToolStripMenuItem();
+			this.mGadgetDamageCausedReceived = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetCharts = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetChartTier = new System.Windows.Forms.ToolStripMenuItem();
 			this.mGadgetChartTankType = new System.Windows.Forms.ToolStripMenuItem();
@@ -195,9 +198,6 @@
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
-			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-			this.mGadgetKillDeath = new System.Windows.Forms.ToolStripMenuItem();
-			this.mGadgetDamageCausedReceived = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -292,7 +292,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(862, 25);
+			this.toolMain.Size = new System.Drawing.Size(831, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1332,6 +1332,27 @@
 			this.mGadgetEFF.Text = "Efficiency Rating";
 			this.mGadgetEFF.Click += new System.EventHandler(this.mGadgetAdd);
 			// 
+			// toolStripSeparator9
+			// 
+			this.toolStripSeparator9.Name = "toolStripSeparator9";
+			this.toolStripSeparator9.Size = new System.Drawing.Size(215, 6);
+			// 
+			// mGadgetKillDeath
+			// 
+			this.mGadgetKillDeath.Name = "mGadgetKillDeath";
+			this.mGadgetKillDeath.Size = new System.Drawing.Size(218, 22);
+			this.mGadgetKillDeath.Tag = "ucGaugeKillDeath";
+			this.mGadgetKillDeath.Text = "Kill / Death Ratio";
+			this.mGadgetKillDeath.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
+			// mGadgetDamageCausedReceived
+			// 
+			this.mGadgetDamageCausedReceived.Name = "mGadgetDamageCausedReceived";
+			this.mGadgetDamageCausedReceived.Size = new System.Drawing.Size(218, 22);
+			this.mGadgetDamageCausedReceived.Tag = "ucGaugeDmgCausedReceived";
+			this.mGadgetDamageCausedReceived.Text = "Damage Caused / Received";
+			this.mGadgetDamageCausedReceived.Click += new System.EventHandler(this.mGadgetAdd);
+			// 
 			// mGadgetCharts
 			// 
 			this.mGadgetCharts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1802,25 +1823,6 @@
 			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
-			// 
-			// toolStripSeparator9
-			// 
-			this.toolStripSeparator9.Name = "toolStripSeparator9";
-			this.toolStripSeparator9.Size = new System.Drawing.Size(215, 6);
-			// 
-			// mGadgetKillDeath
-			// 
-			this.mGadgetKillDeath.Name = "mGadgetKillDeath";
-			this.mGadgetKillDeath.Size = new System.Drawing.Size(218, 22);
-			this.mGadgetKillDeath.Tag = "ucGaugeKillDeath";
-			this.mGadgetKillDeath.Text = "Kill / Death Ratio";
-			this.mGadgetKillDeath.Click += new System.EventHandler(this.mGadgetAdd);
-			// 
-			// mGadgetDamageCausedReceived
-			// 
-			this.mGadgetDamageCausedReceived.Name = "mGadgetDamageCausedReceived";
-			this.mGadgetDamageCausedReceived.Size = new System.Drawing.Size(218, 22);
-			this.mGadgetDamageCausedReceived.Text = "Damage Caused / Received";
 			// 
 			// Main
 			// 
