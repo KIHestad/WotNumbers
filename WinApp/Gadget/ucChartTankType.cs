@@ -110,6 +110,9 @@ namespace WinApp.Gadget
 				Control[] c = this.Controls.Find(pic.Name,false);
 				c[0].BringToFront();
 				imgControls.Add(c[0]); // store in image control for later resize
+				// Add tooltip
+				ToolTip tip = new ToolTip();
+				tip.SetToolTip(c[0], dr["name"].ToString());
 			}
 			
 
