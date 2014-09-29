@@ -25,8 +25,8 @@ namespace WinApp.Code
 		{
 			public int Top = 10;
 			public int Left = 10;
-			public int Width = 780;
-			public int Height = 480;
+			public int Width = 1000;
+			public int Height = 690;
 			public FormWindowState WindowState = FormWindowState.Normal;
 		}
 

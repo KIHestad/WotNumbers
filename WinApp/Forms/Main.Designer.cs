@@ -260,7 +260,7 @@
 			this.MainTheme.MainArea = mainAreaClass1;
 			this.MainTheme.Name = "MainTheme";
 			this.MainTheme.Resizable = true;
-			this.MainTheme.Size = new System.Drawing.Size(872, 431);
+			this.MainTheme.Size = new System.Drawing.Size(872, 459);
 			this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
 			this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
 			this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -1622,7 +1622,7 @@
 			this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatusRowCount.Location = new System.Drawing.Point(783, 411);
+			this.lblStatusRowCount.Location = new System.Drawing.Point(783, 439);
 			this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatusRowCount.Name = "lblStatusRowCount";
 			this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -1796,7 +1796,7 @@
 			this.lblStatus2.AutoSize = true;
 			this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-			this.lblStatus2.Location = new System.Drawing.Point(69, 411);
+			this.lblStatus2.Location = new System.Drawing.Point(69, 439);
 			this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatus2.Name = "lblStatus2";
 			this.lblStatus2.Size = new System.Drawing.Size(82, 13);
@@ -1810,7 +1810,7 @@
 			this.lblStatus1.AutoSize = true;
 			this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
 			this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.lblStatus1.Location = new System.Drawing.Point(13, 411);
+			this.lblStatus1.Location = new System.Drawing.Point(13, 439);
 			this.lblStatus1.Margin = new System.Windows.Forms.Padding(0);
 			this.lblStatus1.Name = "lblStatus1";
 			this.lblStatus1.Size = new System.Drawing.Size(37, 13);
@@ -1829,7 +1829,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(872, 431);
+			this.ClientSize = new System.Drawing.Size(872, 459);
 			this.Controls.Add(this.MainTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

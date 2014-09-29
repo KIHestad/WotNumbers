@@ -362,15 +362,15 @@ namespace WinApp.Gadget
 			string s = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) ";
 			sql = "";
 			sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 152, 32, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeWN8', 1, 2, 402, 32, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeEFF', 1, 3, 652, 32, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeWN8',     1, 2, 402, 32, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeEFF',     1, 3, 652, 32, 200, 170) ; ";
 
-			sql += s + "VALUES ('ucGaugeKillDeath', 1, 4, 272, 232, 200, 150) ; ";
+			sql += s + "VALUES ('ucGaugeKillDeath',         1, 4, 272, 232, 200, 150) ; ";
 			sql += s + "VALUES ('ucGaugeDmgCausedReceived', 1, 5, 532, 232, 200, 150) ; ";
 			
-			sql += s + "VALUES ('ucChartTier', 1, 6, 52, 412, 370, 170) ; ";
-			sql += s + "VALUES ('ucChartNation', 1, 7, 752, 412, 250, 170) ; ";
-			sql += s + "VALUES ('ucChartTankType', 1, 8, 492, 412, 200, 170) ; ";
+			sql += s + "VALUES ('ucChartTier',     1, 6, 32,  412, 370, 170) ; ";
+			sql += s + "VALUES ('ucChartTankType', 1, 7, 462, 412, 200, 170) ; ";
+			sql += s + "VALUES ('ucChartNation',   1, 8, 712, 412, 250, 170) ; ";
 			
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";

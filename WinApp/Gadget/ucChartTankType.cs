@@ -52,7 +52,18 @@ namespace WinApp.Gadget
 			_barColorHTML = barColorHTML;
 		}
 
+		protected override void OnInvalidated(InvalidateEventArgs e)
+		{
+			DrawChart();
+			base.OnInvalidated(e);
+		}
+
 		private void ucChart_Load(object sender, EventArgs e)
+		{
+			DataBind();
+		}
+
+		private void DataBind()
 		{
 			chart1.Top = 1;
 			chart1.Left = 1;
