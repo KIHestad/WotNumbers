@@ -166,9 +166,9 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-		double gaugeVal = 0;
-		double speed = 0.1;
-		bool increase = true;
+		private double gaugeVal = 0;
+		private double speed = 0.1;
+		private bool increase = true;
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			double newGaugeVal = aGauge1.Value + speed;

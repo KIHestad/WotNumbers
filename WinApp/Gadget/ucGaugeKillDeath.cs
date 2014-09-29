@@ -123,8 +123,8 @@ namespace WinApp.Gadget
 			lblRight.Text = kills.ToString("N0");
 			lblCenter.Text = gaugeVal.ToString();
 			lblCenter.ForeColor = Rating.KillDeathColor(gaugeVal);
-			speed = (gaugeVal - aGauge1.Value) / 30;
-			increase = (speed > 0);
+			speedXXX = (gaugeVal - aGauge1.Value) / 30;
+			increase = (speedXXX > 0);
 			timer1.Enabled = true;
 		}
 
@@ -155,12 +155,12 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-		double gaugeVal = 0;
-		double speed = 0.1;
-		bool increase = true;
+		private double gaugeVal = 0;
+		private double speedXXX = 0.1;
+		private bool increase = true;
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			double newGaugeVal = aGauge1.Value + speed;
+			double newGaugeVal = aGauge1.Value + speedXXX;
 			if (increase && newGaugeVal >= gaugeVal || !increase && newGaugeVal < gaugeVal)
 			{
 				timer1.Enabled = false;
@@ -169,11 +169,11 @@ namespace WinApp.Gadget
 			else
 			{
 				if (Math.Abs(gaugeVal - newGaugeVal) < 0.6)
-					speed = speed * 0.93; // drop speed
-				if (increase && speed < 0.002)
-					speed = 0.002;
-				else if (!increase && speed > -0.002)
-					speed = -0.002;
+					speedXXX = speedXXX * 0.93; // drop speed
+				if (increase && speedXXX < 0.002)
+					speedXXX = 0.002;
+				else if (!increase && speedXXX > -0.002)
+					speedXXX = -0.002;
 			}
 			aGauge1.Value = (float)newGaugeVal;
 		}
