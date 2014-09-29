@@ -89,7 +89,7 @@ namespace WinApp.Gadget
 				lbl.Text = id.ToRoman();
 				lbl.AutoSize = false;
 				lbl.Height = 16;
-				lbl.Width = 16;
+				lbl.Width = 24;
 				lbl.ForeColor = ColorTheme.ControlFont;
 				lbl.TextAlign = ContentAlignment.MiddleCenter;
 				lbl.Font = new Font("Microsoft Sans Serif", 9); 
@@ -218,7 +218,7 @@ namespace WinApp.Gadget
 				Control c = lblControls[id];
 				double barWidth = chart1.Width / lblControls.Count + 0.75; 
 				c.Top = this.Height - (this.Height - lblChartType.Top + 18);
-				c.Left = Convert.ToInt32((barWidth / 2) - 7 + (barWidth * id));
+				c.Left = Convert.ToInt32((barWidth / 2) - 11 + (barWidth * id));
 			}
 		}
 

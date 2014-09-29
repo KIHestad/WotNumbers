@@ -51,7 +51,7 @@
 			// lblLeft
 			// 
 			this.lblLeft.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblLeft.Location = new System.Drawing.Point(10, 103);
+			this.lblLeft.Location = new System.Drawing.Point(10, 108);
 			this.lblLeft.Name = "lblLeft";
 			this.lblLeft.Size = new System.Drawing.Size(48, 17);
 			this.lblLeft.TabIndex = 6;
@@ -60,7 +60,7 @@
 			// lblRight
 			// 
 			this.lblRight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblRight.Location = new System.Drawing.Point(143, 103);
+			this.lblRight.Location = new System.Drawing.Point(143, 108);
 			this.lblRight.Name = "lblRight";
 			this.lblRight.Size = new System.Drawing.Size(48, 17);
 			this.lblRight.TabIndex = 7;
@@ -83,7 +83,7 @@
 			// 
 			this.lblSub.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblSub.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblSub.Location = new System.Drawing.Point(63, 102);
+			this.lblSub.Location = new System.Drawing.Point(63, 107);
 			this.lblSub.Name = "lblSub";
 			this.lblSub.Size = new System.Drawing.Size(77, 15);
 			this.lblSub.TabIndex = 9;
@@ -94,7 +94,7 @@
 			// 
 			this.lblBattleMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblBattleMode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.lblBattleMode.Location = new System.Drawing.Point(72, 89);
+			this.lblBattleMode.Location = new System.Drawing.Point(72, 93);
 			this.lblBattleMode.Name = "lblBattleMode";
 			this.lblBattleMode.Size = new System.Drawing.Size(57, 15);
 			this.lblBattleMode.TabIndex = 10;
@@ -107,7 +107,7 @@
 			this.btnToday.Checked = false;
 			this.btnToday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnToday.Image = null;
-			this.btnToday.Location = new System.Drawing.Point(159, 123);
+			this.btnToday.Location = new System.Drawing.Point(159, 128);
 			this.btnToday.Margin = new System.Windows.Forms.Padding(0);
 			this.btnToday.Name = "btnToday";
 			this.btnToday.Size = new System.Drawing.Size(34, 16);
@@ -122,7 +122,7 @@
 			this.btnWeek.Checked = false;
 			this.btnWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnWeek.Image = null;
-			this.btnWeek.Location = new System.Drawing.Point(121, 123);
+			this.btnWeek.Location = new System.Drawing.Point(121, 128);
 			this.btnWeek.Margin = new System.Windows.Forms.Padding(0);
 			this.btnWeek.Name = "btnWeek";
 			this.btnWeek.Size = new System.Drawing.Size(34, 16);
@@ -137,7 +137,7 @@
 			this.btnMonth.Checked = false;
 			this.btnMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnMonth.Image = null;
-			this.btnMonth.Location = new System.Drawing.Point(83, 123);
+			this.btnMonth.Location = new System.Drawing.Point(83, 128);
 			this.btnMonth.Margin = new System.Windows.Forms.Padding(0);
 			this.btnMonth.Name = "btnMonth";
 			this.btnMonth.Size = new System.Drawing.Size(34, 16);
@@ -152,7 +152,7 @@
 			this.btn3M.Checked = false;
 			this.btn3M.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btn3M.Image = null;
-			this.btn3M.Location = new System.Drawing.Point(45, 123);
+			this.btn3M.Location = new System.Drawing.Point(45, 128);
 			this.btn3M.Margin = new System.Windows.Forms.Padding(0);
 			this.btn3M.Name = "btn3M";
 			this.btn3M.Size = new System.Drawing.Size(34, 16);
@@ -168,7 +168,7 @@
 			this.btnTotal.Checked = true;
 			this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnTotal.Image = null;
-			this.btnTotal.Location = new System.Drawing.Point(7, 123);
+			this.btnTotal.Location = new System.Drawing.Point(7, 128);
 			this.btnTotal.Margin = new System.Windows.Forms.Padding(0);
 			this.btnTotal.Name = "btnTotal";
 			this.btnTotal.Size = new System.Drawing.Size(34, 16);
@@ -337,7 +337,7 @@
 			this.Controls.Add(this.aGauge1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "ucGaugeKillDeath";
-			this.Size = new System.Drawing.Size(200, 148);
+			this.Size = new System.Drawing.Size(200, 150);
 			this.Load += new System.EventHandler(this.ucGauge_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWinRate_Paint);
 			this.ResumeLayout(false);

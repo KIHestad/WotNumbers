@@ -343,8 +343,8 @@ namespace WinApp.Gadget
 			sql += s + "VALUES ('ucChartTier', 1, 6, 352, 252,350,170) ; ";
 			sql += s + "VALUES ('ucChartNation', 1, 7, 782,252,240,170) ; ";
 			sql += s + "VALUES ('ucChartTankType', 1, 5, 52,252,200,170) ; ";
-			sql += s + "VALUES ('ucGaugeDmgCausedReceived', 1, 9,802,452,200,148) ; ";
-			sql += s + "VALUES ('ucGaugeKillDeath', 1, 8, 52,452,200,148) ; ";
+			sql += s + "VALUES ('ucGaugeDmgCausedReceived', 1, 9,802,452,200,150) ; ";
+			sql += s + "VALUES ('ucGaugeKillDeath', 1, 8, 52,452,200,150) ; ";
 			sql += s + "VALUES ('ucBattleTypes', 1, 10, 312,502,420,95) ; ";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";
