@@ -15,7 +15,7 @@ namespace WinApp.Code
 		public static bool RunWotApi = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 164; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 165; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1725,7 +1725,9 @@ namespace WinApp.Code
 				case 164:
 					TankData.GetJson2dbMappingFromDB();
 					break;
-
+				case 165:
+					RunWotApi = true;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
