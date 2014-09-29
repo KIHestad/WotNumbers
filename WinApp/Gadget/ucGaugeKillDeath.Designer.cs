@@ -339,7 +339,7 @@
 			this.Name = "ucGaugeKillDeath";
 			this.Size = new System.Drawing.Size(200, 150);
 			this.Load += new System.EventHandler(this.ucGauge_Load);
-			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWinRate_Paint);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGauge_Paint);
 			this.ResumeLayout(false);
 
 		}

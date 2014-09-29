@@ -112,6 +112,7 @@ namespace WinApp.Gadget
 			DataTable dt = DB.FetchData(sql);
 			double frags = 0;
 			double kills = 0;
+			gaugeVal = 0;
 			if (dt.Rows.Count > 0 && dt.Rows[0]["frags"] != DBNull.Value)
 			{
 				frags = Convert.ToDouble(dt.Rows[0]["frags"]);
@@ -148,7 +149,7 @@ namespace WinApp.Gadget
 			DataBind();
 		}
 
-		private void ucGaugeWinRate_Paint(object sender, PaintEventArgs e)
+		private void ucGauge_Paint(object sender, PaintEventArgs e)
 		{
 			if (BackColor == ColorTheme.FormBackSelectedGadget)
 				GadgetHelper.DrawBorderOnGadget(sender, e);
@@ -167,8 +168,12 @@ namespace WinApp.Gadget
 			}
 			else
 			{
-				if (Math.Abs(gaugeVal - newGaugeVal) < 0.5)
-					speed = speed * 0.9; // drop speed
+				if (Math.Abs(gaugeVal - newGaugeVal) < 0.6)
+					speed = speed * 0.93; // drop speed
+				if (increase && speed < 0.002)
+					speed = 0.002;
+				else if (!increase && speed > -0.002)
+					speed = -0.002;
 			}
 			aGauge1.Value = (float)newGaugeVal;
 		}
