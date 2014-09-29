@@ -112,19 +112,19 @@ namespace WinApp.Gadget
 			DataTable dt = DB.FetchData(sql);
 			double frags = 0;
 			double kills = 0;
-			gaugeVal = 0;
+			end_val = 0;
 			if (dt.Rows.Count > 0 && dt.Rows[0]["frags"] != DBNull.Value)
 			{
 				frags = Convert.ToDouble(dt.Rows[0]["frags"]);
 				kills = Convert.ToDouble(dt.Rows[0]["kills"]);
-				gaugeVal = Math.Round((frags / kills), 2);
+				end_val = Math.Round((frags / kills), 2);
 			}
 			lblLeft.Text = frags.ToString("N0");
 			lblRight.Text = kills.ToString("N0");
-			lblCenter.Text = gaugeVal.ToString();
-			lblCenter.ForeColor = Rating.KillDeathColor(gaugeVal);
-			speedXXX = (gaugeVal - aGauge1.Value) / 30;
-			increase = (speedXXX > 0);
+			lblCenter.Text = end_val.ToString();
+			lblCenter.ForeColor = Rating.KillDeathColor(end_val);
+			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
+			move_speed = Math.Abs(end_val - aGauge1.Value) / 30;
 			timer1.Enabled = true;
 		}
 
@@ -155,27 +155,52 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-		private double gaugeVal = 0;
-		private double speedXXX = 0.1;
-		private bool increase = true;
+		double move_speed = 0.05;
+		double avg_step_val = 0;
+		double end_val = 0;
+		double step_tot = 75;
+		double step_count = 0;
+		bool moveNeedle = false;
+
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			double newGaugeVal = aGauge1.Value + speedXXX;
-			if (increase && newGaugeVal >= gaugeVal || !increase && newGaugeVal < gaugeVal)
+			double gaugeVal = 0;
+			if (moveNeedle)
 			{
-				timer1.Enabled = false;
-				newGaugeVal = gaugeVal;
+				gaugeVal = aGauge1.Value;
+				if (end_val < aGauge1.Value)
+				{
+					gaugeVal -= move_speed;
+					if (gaugeVal <= end_val || gaugeVal <= aGauge1.ValueMin)
+					{
+						gaugeVal = end_val;
+						timer1.Enabled = false;
+					}
+				}
+				else
+				{
+					gaugeVal += move_speed;
+					if (gaugeVal >= end_val || gaugeVal >= aGauge1.ValueMax)
+					{
+						gaugeVal = end_val;
+						timer1.Enabled = false;
+					}
+				}
+				if (Math.Abs(end_val - gaugeVal) / move_speed < 19 && move_speed > 0.001)
+					move_speed = move_speed * 0.95;
 			}
 			else
 			{
-				if (Math.Abs(gaugeVal - newGaugeVal) < 0.6)
-					speedXXX = speedXXX * 0.93; // drop speed
-				if (increase && speedXXX < 0.002)
-					speedXXX = 0.002;
-				else if (!increase && speedXXX > -0.002)
-					speedXXX = -0.002;
+				step_count++;
+				gaugeVal = aGauge1.ValueMin + (Math.Exp(1 - (step_count / step_tot)) * step_count * avg_step_val);
+				if (step_count >= step_tot)
+				{
+					gaugeVal = end_val;
+					timer1.Enabled = false;
+					moveNeedle = true; // use normal movment after this
+				}
 			}
-			aGauge1.Value = (float)newGaugeVal;
+			aGauge1.Value = (float)gaugeVal;
 		}
 	}
 }
