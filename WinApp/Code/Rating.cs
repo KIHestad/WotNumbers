@@ -173,6 +173,7 @@ namespace WinApp.Code
 					count++;
 					if (count > battleCount) break;
 				}
+				// Check for null values
 				WN8 = Code.Rating.CalculatePlayerTankTotalWN8(ptb);
 			}
 			return WN8;
@@ -228,7 +229,7 @@ namespace WinApp.Code
 					int tankId = Convert.ToInt32(ptbRow["tankId"]);
 					double battlecount = Convert.ToDouble(ptbRow["battles"]);
 					DataRow expected = TankData.TankInfo(tankId);
-					if (battlecount > 0)
+					if (battlecount > 0 && expected != null && expected["expDmg"] != DBNull.Value)
 					{
 						expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
 						expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
@@ -290,7 +291,7 @@ namespace WinApp.Code
 				{
 					// Get tanks with battle count per tank and expected values
 					double battlecount = Convert.ToDouble(expected["battles"]);
-					if (battlecount > 0)
+					if (battlecount > 0 && expected["expDmg"] != DBNull.Value)
 					{
 						expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
 						expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
