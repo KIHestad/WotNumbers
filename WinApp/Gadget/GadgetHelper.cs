@@ -73,10 +73,28 @@ namespace WinApp.Gadget
 			{
 				if (param != null)
 				{
-					string newParam = "update gadgetParameter set value=@value where gadgetId=@gadgetId and paramNum=@paramNum; ";
-					DB.AddWithValue(ref newParam, "@value", param.ToString(), DB.SqlDataType.VarChar);
-					DB.AddWithValue(ref newParam, "@gadgetId", gadget.id, DB.SqlDataType.Int);
-					DB.AddWithValue(ref newParam, "@paramNum", paramNum, DB.SqlDataType.Int);
+					// Check if exists
+					string sqlCheck = "select id from gadgetParameter where gadgetId=@gadgetId and paramNum=@paramNum;";
+					DB.AddWithValue(ref sqlCheck, "@gadgetId", gadget.id, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sqlCheck, "@paramNum", paramNum, DB.SqlDataType.Int);
+					DataTable dt = DB.FetchData(sqlCheck);
+					string newParam = "";
+					if (dt.Rows.Count == 0)
+					{
+						newParam = "insert into gadgetParameter (gadgetId, paramNum, value, dataType) values (@gadgetId, @paramNum, @value, @dataType);";
+						DB.AddWithValue(ref newParam, "@gadgetId", gadget.id, DB.SqlDataType.Int);
+						DB.AddWithValue(ref newParam, "@paramNum", paramNum, DB.SqlDataType.Int);
+						DB.AddWithValue(ref newParam, "@value", param.ToString(), DB.SqlDataType.VarChar);
+						string dataType = param.GetType().ToString();
+						DB.AddWithValue(ref newParam, "@dataType", dataType, DB.SqlDataType.VarChar);
+					}
+					else
+					{
+						newParam = "update gadgetParameter set value=@value where gadgetId=@gadgetId and paramNum=@paramNum; ";
+						DB.AddWithValue(ref newParam, "@value", param.ToString(), DB.SqlDataType.VarChar);
+						DB.AddWithValue(ref newParam, "@gadgetId", gadget.id, DB.SqlDataType.Int);
+						DB.AddWithValue(ref newParam, "@paramNum", paramNum, DB.SqlDataType.Int);
+					}
 					sql += newParam;
 					paramNum++;
 				}
@@ -259,6 +277,7 @@ namespace WinApp.Gadget
 			try
 			{
 				Control uc = null;
+				string param1 = "";
 				switch (name)
 				{
 					case "ucGaugeWinRate": uc = new Gadget.ucGaugeWinRate(param[0].ToString()); break;
@@ -269,9 +288,15 @@ namespace WinApp.Gadget
 					case "ucBattleTypes": uc = new Gadget.ucBattleTypes(); break;
 					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
 					case "ucChartBattle": uc = new Gadget.ucChartBattle(); break;
-					case "ucChartTier": uc = new Gadget.ucChartTier(param[0].ToString()); break;
-					case "ucChartNation": uc = new Gadget.ucChartNation(param[0].ToString()); break;
-					case "ucChartTankType": uc = new Gadget.ucChartTankType(param[0].ToString()); break;
+					case "ucChartTier": 
+						if (param[1] != null) param1 = param[1].ToString();
+						uc = new Gadget.ucChartTier(param[0].ToString(), param1); break;
+					case "ucChartNation":
+						if (param[1] != null) param1 = param[1].ToString();
+						uc = new Gadget.ucChartNation(param[0].ToString(), param1); break;
+					case "ucChartTankType": 
+						if (param[1] != null) param1 = param[1].ToString();
+						uc = new Gadget.ucChartTankType(param[0].ToString(), param1); break;
 					case "ucGaugeKillDeath": uc = new Gadget.ucGaugeKillDeath(param[0].ToString()); break;
 					case "ucGaugeDmgCausedReceived": uc = new Gadget.ucGaugeDmgCausedReceived(param[0].ToString()); break;
 				}

@@ -14,6 +14,7 @@ namespace WinApp.Gadget
 	public partial class ucChartTier : UserControl
 	{
 		private string _battleMode = "";
+		private string _barColorHTML = "";
 		
 		// slide chart
 		private int timerStep = 0;
@@ -36,10 +37,11 @@ namespace WinApp.Gadget
 
 		private static Selection selection = Selection.Total;
 
-		public ucChartTier(string battleMode = "")
+		public ucChartTier(string battleMode = "", string barColorHTML = "")
 		{
 			InitializeComponent();
 			_battleMode = battleMode;
+			_barColorHTML = barColorHTML;
 		}
 
 		private void ucChart_Load(object sender, EventArgs e)
@@ -71,7 +73,12 @@ namespace WinApp.Gadget
 			}
 			// Get serie
 			Series serie1 = chart1.Series[0];
-			serie1.Color = ColorTheme.ChartBarBlue;
+			Color barColor = ColorTheme.ChartBarBlue;
+			if (_barColorHTML != "")
+			{
+				barColor = ColorTranslator.FromHtml(_barColorHTML);
+			}
+			serie1.Color = barColor;
 			serie1.IsXValueIndexed = true;
 			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points

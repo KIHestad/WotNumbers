@@ -324,6 +324,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\paramBM_Color.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramBM_Color.Designer.cs">
+      <DependentUpon>paramBM_Color.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeDmgCausedReceived.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -494,6 +500,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramBM_Color.resx">
+      <DependentUpon>paramBM_Color.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeDmgCausedReceived.resx">
       <DependentUpon>ucGaugeDmgCausedReceived.cs</DependentUpon>

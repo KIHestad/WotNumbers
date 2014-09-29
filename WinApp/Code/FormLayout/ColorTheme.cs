@@ -76,6 +76,10 @@ namespace WinApp.Code
 
 		// Charts
 		public static Color ChartBarBlue = Color.FromArgb(255, 31, 71, 165);
+		public static Color ChartBarRed = ColorTranslator.FromHtml("#A31F1F");
+		public static Color ChartBarGreen = ColorTranslator.FromHtml("#1B8E30");
+		public static Color ChartBarPurple = ColorTranslator.FromHtml("#761E99");
+		public static Color ChartBarOcre = ColorTranslator.FromHtml("#896A1B");
 
 		// Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
 		public static Color Rating_very_bad = ColorTranslator.FromHtml("#CE0000");		// dark red

@@ -4090,13 +4090,13 @@ namespace WinApp.Forms
 					frm = new Gadget.paramColsRows(gadgetId);
 					break;
 				case "ucChartTier":
-					frm = new Gadget.paramBattleMode(gadgetId);
+					frm = new Gadget.paramBM_Color(gadgetId);
 					break;
 				case "ucChartNation":
-					frm = new Gadget.paramBattleMode(gadgetId);
+					frm = new Gadget.paramBM_Color(gadgetId);
 					break;
 				case "ucChartTankType":
-					frm = new Gadget.paramBattleMode(gadgetId);
+					frm = new Gadget.paramBM_Color(gadgetId);
 					break;
 				case "ucGaugeKillDeath":
 					frm = new Gadget.paramBattleMode(gadgetId);
