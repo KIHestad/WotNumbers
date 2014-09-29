@@ -361,32 +361,38 @@ namespace WinApp.Gadget
 			gadgets.Clear();
 			string s = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) ";
 			sql = "";
-			sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 52, 52, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeWN8', 1, 2, 302, 52, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeWN7', 1, 3, 552, 52, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeEFF', 1, 4, 802, 52, 200, 170) ; ";
-			sql += s + "VALUES ('ucChartTier', 1, 6, 352, 252,350,170) ; ";
-			sql += s + "VALUES ('ucChartNation', 1, 7, 782,252,240,170) ; ";
-			sql += s + "VALUES ('ucChartTankType', 1, 5, 52,252,200,170) ; ";
-			sql += s + "VALUES ('ucGaugeDmgCausedReceived', 1, 9,802,452,200,150) ; ";
-			sql += s + "VALUES ('ucGaugeKillDeath', 1, 8, 52,452,200,150) ; ";
-			sql += s + "VALUES ('ucBattleTypes', 1, 10, 312,502,420,95) ; ";
+			sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 152, 32, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeWN8', 1, 2, 402, 32, 200, 170) ; ";
+			sql += s + "VALUES ('ucGaugeEFF', 1, 3, 652, 32, 200, 170) ; ";
+
+			sql += s + "VALUES ('ucGaugeKillDeath', 1, 4, 272, 232, 200, 150) ; ";
+			sql += s + "VALUES ('ucGaugeDmgCausedReceived', 1, 5, 532, 232, 200, 150) ; ";
+			
+			sql += s + "VALUES ('ucChartTier', 1, 6, 52, 412, 370, 170) ; ";
+			sql += s + "VALUES ('ucChartNation', 1, 7, 752, 412, 250, 170) ; ";
+			sql += s + "VALUES ('ucChartTankType', 1, 8, 492, 412, 200, 170) ; ";
+			
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";
 			sql = "";
 			int gadgetId = 0;
 			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWinRate'").Rows[0][0]);
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTier'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartNation'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTankType'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
+
 			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeDmgCausedReceived'").Rows[0][0]);
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
 			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeKillDeath'").Rows[0][0]);
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
+			
+			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTier'").Rows[0][0]);
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#A31F1F'); ";
+			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartNation'").Rows[0][0]);
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1F47A5'); ";
+			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTankType'").Rows[0][0]);
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1B8E30'); ";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 		}
 
