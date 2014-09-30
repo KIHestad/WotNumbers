@@ -145,7 +145,7 @@ namespace WinApp.Forms
 			ToolStripSeparator dataGridMainPopup_Separator1 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator3 = new ToolStripSeparator();
-
+			ToolStripSeparator dataGridMainPopup_Separator4 = new ToolStripSeparator();
 			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
 			dataGridMainPopup_Details.Image = imageListToolStrip.Images[1];
 			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
@@ -170,6 +170,9 @@ namespace WinApp.Forms
 			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
 			dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
 			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
+			ToolStripMenuItem dataGridMainPopup_RecalcRatings = new ToolStripMenuItem("Show WN8 Battle Details");
+			//dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
+			dataGridMainPopup_RecalcRatings.Click += new EventHandler(dataGridMainPopup_RecalcRatings_Click);
 			
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
@@ -204,6 +207,8 @@ namespace WinApp.Forms
 						dataGridMainPopup_FavListRemoveTank,
 						dataGridMainPopup_FavListCreateNew,
 						dataGridMainPopup_Separator3,
+						dataGridMainPopup_RecalcRatings,
+						dataGridMainPopup_Separator4,
 						dataGridMainPopup_DeleteBattle
 					});
 					break;
@@ -3098,6 +3103,60 @@ namespace WinApp.Forms
 					ShowView("Deleted battle, grid refreshed");
 				}
 			}
+		}
+
+		private void dataGridMainPopup_RecalcRatings_Click(object sender, EventArgs e)
+		{
+			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
+			string sql =
+				"SELECT playerTank.tankId, battle.battlesCount, battle.dmg, battle.spotted, battle.frags, battle.def, " +
+				"      tank.expDmg, tank.expSpot, tank.expFrags, tank.expDef, tank.expWR " +
+				"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id INNER JOIN tank ON playerTank.tankId = tank.id " +
+				"WHERE battle.id = @battleId";
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				DataRow dr = dt.Rows[0];
+				int tankId = Convert.ToInt32(dr["tankId"]);
+				int battlesCount = Convert.ToInt32(dr["battlesCount"]);
+				int dmg = Convert.ToInt32(dr["dmg"]);
+				int spotted = Convert.ToInt32(dr["spotted"]);
+				int frags = Convert.ToInt32(dr["frags"]);
+				int def = Convert.ToInt32(dr["def"]);
+				int exp_dmg = Convert.ToInt32(dr["expDmg"]) * battlesCount;
+				int exp_spotted = Convert.ToInt32(dr["expSpot"]) * battlesCount;
+				int exp_frags = Convert.ToInt32(dr["expFrags"]) * battlesCount;
+				int exp_def = Convert.ToInt32(dr["expDef"]) * battlesCount;
+				int exp_wr = Convert.ToInt32(dr["expWR"]);
+				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
+				double rWINc;
+				double rDAMAGEc;
+				double rFRAGSc;
+				double rSPOTc;
+				double rDEFc;
+				Rating.UseWN8FormulaReturnResult(
+					dmg,     spotted,     frags,     def,     exp_wr,
+					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
+					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+				string message = "WN8 Rating for ";
+				if (battlesCount == 1)
+					message += "this battle: ";
+				else
+					message += "these " + battlesCount + " battles: ";
+				message += wn8 + Environment.NewLine + Environment.NewLine;
+				message += "Value" +       "\t  " + "Result" +           "\t" + "Expected" +     "\t " + "WN8 result" + Environment.NewLine;
+				message += "-----------" + "\t  " + "-----------"      + "\t" + "-------------" + "\t " + "--------------" + Environment.NewLine ;
+				message += "Damage:" +     "\t  " + dmg.ToString() +     "\t" + exp_dmg +        "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
+				message += "Frags:" +      "\t  " + frags.ToString() +   "\t" + exp_frags +      "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
+				message += "Spot:" +       "\t  " + spotted.ToString() + "\t" + exp_spotted +    "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
+				message += "Defence:" +    "\t  " + def.ToString() +     "\t" + exp_def +        "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
+				message += "Win rate:" +   "\t  " + "(fixed)" +          "\t" + exp_wr + "%" +   "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
+				message += Environment.NewLine;
+				MsgBox.Show(message, "WN8 Battle Details");
+			}
+
+			
 		}
 
 		private void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)

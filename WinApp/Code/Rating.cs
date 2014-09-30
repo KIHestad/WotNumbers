@@ -325,7 +325,34 @@ namespace WinApp.Code
 			// Return value
 			return WN8;
 		}
+
+		public static void UseWN8FormulaReturnResult(
+			double dmg, double spotted, double frags, double def, double avgWinRate, 
+			double expDmg, double expSpot, double expFrag, double expDef, double expWinRate,
+			out double rWINc, out double rDAMAGEc, out double rFRAGc, out double rSPOTc, out double rDEFc)
+		{
+			// Step 1
+			double rDAMAGE = dmg / expDmg;
+			double rSPOT = spotted / expSpot;
+			double rFRAG = frags / expFrag;
+			double rDEF = def / expDef;
+			double rWIN = avgWinRate / expWinRate;
+			// Step 2
+			double rWIN2 = Math.Max(0, (rWIN - 0.71) / (1 - 0.71));
+			double rDAMAGE2 = Math.Max(0, (rDAMAGE - 0.22) / (1 - 0.22));
+			double rFRAG2 = Math.Max(0, Math.Min(rDAMAGE2 + 0.2, (rFRAG - 0.12) / (1 - 0.12)));
+			double rSPOT2 = Math.Max(0, Math.Min(rDAMAGE2 + 0.1, (rSPOT - 0.38) / (1 - 0.38)));
+			double rDEF2 = Math.Max(0, Math.Min(rDAMAGE2 + 0.1, (rDEF - 0.10) / (1 - 0.10)));
+			// Step 3
+			rDAMAGEc = (980 * rDAMAGE2);
+			rFRAGc = (210 * rDAMAGE2 * rFRAG2);
+			rSPOTc = (155 * rFRAG2 * rSPOT2);
+			rDEFc = (75 * rDEF2 * rFRAG2);
+			rWINc = (145 * Math.Min(1.8, rWIN2));
+			
+		}
 		
+
 		#endregion
 
 		#region WN7
