@@ -3145,13 +3145,13 @@ namespace WinApp.Forms
 				else
 					message += "these " + battlesCount + " battles: ";
 				message += wn8 + Environment.NewLine + Environment.NewLine;
-				message += "Value" +       "\t  " + "Result" +           "\t" + "Expected" +     "\t " + "WN8 result" + Environment.NewLine;
-				message += "-----------" + "\t  " + "-----------"      + "\t" + "-------------" + "\t " + "--------------" + Environment.NewLine ;
-				message += "Damage:" +     "\t  " + dmg.ToString() +     "\t" + exp_dmg +        "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
-				message += "Frags:" +      "\t  " + frags.ToString() +   "\t" + exp_frags +      "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
-				message += "Spot:" +       "\t  " + spotted.ToString() + "\t" + exp_spotted +    "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
-				message += "Defence:" +    "\t  " + def.ToString() +     "\t" + exp_def +        "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
-				message += "Win rate:" +   "\t  " + "(fixed)" +          "\t" + exp_wr + "%" +   "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
+				message += "Value" +         "\t  " + "Result" +           "\t" + "Expected" +      "\t " + "WN8 result" + Environment.NewLine;
+				message += "-------------" + "\t  " + "----------"       + "\t" + "------------" + "\t " + "----------------" + Environment.NewLine ;
+				message += "Damage:" +       "\t  " + dmg.ToString() +     "\t" + exp_dmg +         "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
+				message += "Frags:" +        "\t  " + frags.ToString() +   "\t" + exp_frags +       "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
+				message += "Spot:" +         "\t  " + spotted.ToString() + "\t" + exp_spotted +     "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
+				message += "Defence:" +      "\t  " + def.ToString() +     "\t" + exp_def +         "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
+				message += "Win rate:" +     "\t  " + "(fixed)" +          "\t" + exp_wr + "%" +    "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
 				message += Environment.NewLine;
 				MsgBox.Show(message, "WN8 Battle Details");
 			}
