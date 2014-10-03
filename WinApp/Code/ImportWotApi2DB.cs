@@ -84,7 +84,7 @@ namespace WinApp.Code
 				server = "EU";
 			switch (server)
 			{
-				case "EU": applicationId = "0a7f2eb79dce0dd45df9b8fedfed7530"; break;
+				case "EU": applicationId = "2a70055c41b7a6fff1e35a3ba9cadbf1"; break;
 				case "COM": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
 				case "RU": applicationId = ""; break;
 				case "ASIA": applicationId = ""; break;
