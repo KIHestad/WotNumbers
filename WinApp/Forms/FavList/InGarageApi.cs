@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using WinApp.Code;
 
 namespace WinApp.Forms
 {
@@ -14,6 +15,12 @@ namespace WinApp.Forms
 		public InGarageApi()
 		{
 			InitializeComponent();
+		}
+
+		private void InGarageApi_Load(object sender, EventArgs e)
+		{
+			Uri url= new Uri("http://wotnumbers.com/Api/WotAuthenticate.aspx?uid=1&server=" + Config.Settings.playerServer);
+			webBrowser1.Url = url;
 		}
 
 		private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -26,7 +33,7 @@ namespace WinApp.Forms
 			{
 				// Get Values
 				// status=ok
-				// access_token=ba1ca887d157e6842507b715ba3f0eaee69f1789
+				// access_token=zzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 				// nickname=BadButton
 				// account_id=500700596
 				// expires_at=1407971037
@@ -65,5 +72,7 @@ namespace WinApp.Forms
 				this.Close();
 			}
 		}
+
+		
 	}
 }

@@ -57,43 +57,80 @@ namespace WinApp.Code
 
 		#region fetchFromAPI
 
+		private static string WotServerApiUrl()
+		{
+			string serverURL = "";
+			string server = Config.Settings.playerServer;
+			// override to EU server for not supported regions
+			if (server == "" || server == "RU" || server == "ASIA" || server == "KR")
+				server = "EU";
+			switch (server)
+			{
+				case "EU": serverURL = "http://api.worldoftanks.eu";  break;
+				case "COM": serverURL = "http://api.worldoftanks.com"; break;
+				case "RU": serverURL = "http://api.worldoftanks.ru"; break;
+				case "ASIA": serverURL = "http://api.worldoftanks-sea.com"; break;
+				case "KR": serverURL = "http://api.worldoftanks.kr"; break;
+			}
+			return serverURL;
+		}
+
+		private static string WotApplicationId()
+		{
+			string applicationId = "";
+			string server = Config.Settings.playerServer;
+			// override to EU server for not supported regions or if missing
+			if (server == "" || server == "RU" || server == "ASIA" || server == "KR")
+				server = "EU";
+			switch (server)
+			{
+				case "EU": applicationId = "0a7f2eb79dce0dd45df9b8fedfed7530"; break;
+				case "COM": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
+				case "RU": applicationId = ""; break;
+				case "ASIA": applicationId = ""; break;
+				case "KR": applicationId = ""; break;
+			}
+			return applicationId;
+		}
+
 		private static string FetchFromAPI(WotApiType WotAPi, int tankId, Form parentForm)
 		{
 			try
 			{
 				Log.CheckLogFileSize();
 				Log.LogToFile(Environment.NewLine + "Get data from WoT API: " + WotAPi.ToString());
-				string url = "";
+				string url = WotServerApiUrl();
+				string applicationId = WotApplicationId();
 				if (WotAPi == WotApiType.Tank)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tanks/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+					url += "/wot/encyclopedia/tanks/?application_id=" + applicationId;
 				}
 				if (WotAPi == WotApiType.Turret)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+					url += "/wot/encyclopedia/tankturrets/?application_id=" + applicationId;
 					itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
 				}
 				else if (WotAPi == WotApiType.Gun)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+					url += "/wot/encyclopedia/tankguns/?application_id=" + applicationId;
 					itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
 				}
 				else if (WotAPi == WotApiType.Radio)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankradios/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+					url += "/wot/encyclopedia/tankradios/?application_id=" + applicationId;
 					itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
 				}
 				else if (WotAPi == WotApiType.Achievement)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/achievements/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+					url += "/wot/encyclopedia/achievements/?application_id=" + applicationId;
 				}
 				else if (WotAPi == WotApiType.TankDetails)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530&tank_id=" + tankId;
+					url += "/wot/encyclopedia/tankinfo/?application_id=" + applicationId + "&tank_id=" + tankId;
 				}
 				else if (WotAPi == WotApiType.PlayersInGarageVehicles)
 				{
-					url = "https://api.worldoftanks.eu/wot/tanks/stats/?application_id=2a70055c41b7a6fff1e35a3ba9cadbf1&access_token=" + Forms.InGarageApiResult.access_token + "&account_id=" + Forms.InGarageApiResult.account_id + "&in_garage=1";
+					url += "/wot/tanks/stats/?application_id=" + applicationId + "&access_token=" + Forms.InGarageApiResult.access_token + "&account_id=" + Forms.InGarageApiResult.account_id + "&in_garage=1";
 				}
 				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);

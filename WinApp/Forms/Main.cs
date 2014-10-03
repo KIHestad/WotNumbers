@@ -261,73 +261,82 @@ namespace WinApp.Forms
 
 		private void Main_Shown(object sender, EventArgs e)
 		{
-			// Log startup to file now
-			Log.WriteLogBuffer();
-			// Ready to draw form
-			Init = false;
-			// Create IronPython Engine
-			PythonEngine.CreateEngine();
+			try
+			{
+				// Log startup to file now
+				Log.WriteLogBuffer();
+				// Ready to draw form
+				Init = false;
+				// Create IronPython Engine
+				PythonEngine.CreateEngine();
 
-			// Maximize now if last settings
-			if (mainFormPosSize.WindowState == FormWindowState.Maximized)
-			{
-				this.WindowState = FormWindowState.Maximized;
-			}
-			// Startup settings
-			if (!LoadConfigOK)
-			{
-				Code.Log.LogToFile("> No config MsgBox", true);
-				MsgBox.Button answer = Code.MsgBox.Show(
-					"Press 'OK' to create new SQLite database." +
-					Environment.NewLine + Environment.NewLine +
-					"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
-					Environment.NewLine + Environment.NewLine,
-					"Welcome to Wot Numbers", MsgBoxType.OKCancel, this);
-				if (answer == MsgBox.Button.OKButton)
-					AutoSetup();
+				// Maximize now if last settings
+				if (mainFormPosSize.WindowState == FormWindowState.Maximized)
+				{
+					this.WindowState = FormWindowState.Maximized;
+				}
+				// Startup settings
 				if (!LoadConfigOK)
 				{
-					Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
-					lblOverView.Text = "";
-					Config.Settings.dossierFileWathcherRun = 0;
-					SetListener();
-					Form frm = new Forms.ApplicationSetting();
-					frm.ShowDialog();
+					Code.Log.LogToFile("> No config MsgBox", true);
+					MsgBox.Button answer = Code.MsgBox.Show(
+						"Press 'OK' to create new SQLite database." +
+						Environment.NewLine + Environment.NewLine +
+						"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
+						Environment.NewLine + Environment.NewLine,
+						"Welcome to Wot Numbers", MsgBoxType.OKCancel, this);
+					if (answer == MsgBox.Button.OKButton)
+						AutoSetup();
+					if (!LoadConfigOK)
+					{
+						Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
+						lblOverView.Text = "";
+						Config.Settings.dossierFileWathcherRun = 0;
+						SetListener();
+						Form frm = new Forms.ApplicationSetting();
+						frm.ShowDialog();
+					}
 				}
+				if (DB.CheckConnection())
+				{
+					TankData.GetAllLists();
+				}
+				// Update file watchers
+				string result = dossier2json.UpdateDossierFileWatcher(this);
+				Battle2json.UpdateBattleResultFileWatcher();
+				// Check DB Version an dupgrade if needed
+				bool versionOK = DBVersion.CheckForDbUpgrade(this);
+				// Add init items to Form
+				SetFormTitle();
+				SetFavListMenu();
+				SetListener(false);
+				// Get Images
+				ImageHelper.CreateTankImageTable();
+				ImageHelper.LoadTankImages();
+				ImageHelper.CreateMasteryBageImageTable();
+				ImageHelper.CreateTankTypeImageTable();
+				ImageHelper.CreateNationImageTable();
+				// Show view
+				ChangeView(GridView.Views.Overall, true);
+				// Battle result file watcher
+				fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
+				fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
+				fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
+				fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
+				fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+				// Ready 
+				MainTheme.Cursor = Cursors.Default;
+				// Show status message
+				SetStatus2("Application started");
+				// Check for new version
+				RunCheckForNewVersion();
 			}
-			if (DB.CheckConnection())
+			catch (Exception ex)
 			{
-				TankData.GetAllLists();
+				Log.LogToFile(ex);
+				MsgBox.Show("Error occured initializing application:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine, "Startup error", this);
 			}
-			// Update file watchers
-			string result = dossier2json.UpdateDossierFileWatcher(this);
-			Battle2json.UpdateBattleResultFileWatcher();
-			// Check DB Version an dupgrade if needed
-			bool versionOK = DBVersion.CheckForDbUpgrade(this);
-			// Add init items to Form
-			SetFormTitle();
-			SetFavListMenu();
-			SetListener(false);
-			// Get Images
-			ImageHelper.CreateTankImageTable();
-			ImageHelper.LoadTankImages();
-			ImageHelper.CreateMasteryBageImageTable();
-			ImageHelper.CreateTankTypeImageTable();
-			ImageHelper.CreateNationImageTable();
-			// Show view
-			ChangeView(GridView.Views.Overall, true);
-			// Battle result file watcher
-			fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
-			fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
-			fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
-			fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-			fileSystemWatcherNewBattle.EnableRaisingEvents = true;
-			// Ready 
-			MainTheme.Cursor = Cursors.Default;
-			// Show status message
-			SetStatus2("Application started");
-			// Check for new version
-			RunCheckForNewVersion();
+			
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)

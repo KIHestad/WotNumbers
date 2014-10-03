@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InGarageApi));
 			this.badForm1 = new BadForm();
 			this.webBrowser1 = new System.Windows.Forms.WebBrowser();
@@ -46,7 +46,7 @@
 			this.badForm1.FormMargin = 0;
 			this.badForm1.Image = null;
 			this.badForm1.Location = new System.Drawing.Point(0, 0);
-			this.badForm1.MainArea = mainAreaClass1;
+			this.badForm1.MainArea = mainAreaClass2;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = true;
 			this.badForm1.Size = new System.Drawing.Size(537, 862);
@@ -67,7 +67,7 @@
 			this.webBrowser1.Name = "webBrowser1";
 			this.webBrowser1.Size = new System.Drawing.Size(512, 812);
 			this.webBrowser1.TabIndex = 0;
-			this.webBrowser1.Url = new System.Uri("http://wotnumbers.com/Api/WotAuthenticate.aspx?uid=1", System.UriKind.Absolute);
+			this.webBrowser1.Url = new System.Uri("", System.UriKind.Relative);
 			this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
 			// 
 			// InGarageApi
@@ -83,6 +83,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "GetInGarage";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.Load += new System.EventHandler(this.InGarageApi_Load);
 			this.badForm1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
