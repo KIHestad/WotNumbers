@@ -20,6 +20,7 @@ namespace WinApp.Forms
 		private void InGarageApi_Load(object sender, EventArgs e)
 		{
 			Uri url= new Uri("http://wotnumbers.com/Api/WotAuthenticate.aspx?uid=1&server=" + Config.Settings.playerServer);
+			webBrowser1.ScriptErrorsSuppressed = true;
 			webBrowser1.Url = url;
 		}
 
