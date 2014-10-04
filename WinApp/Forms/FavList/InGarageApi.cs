@@ -74,6 +74,12 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+		{
+			txtAddress.Text = e.Url.ToString();
+			txtAddress.ToolTipText = txtAddress.Text;
+		}
+
 		
 	}
 }

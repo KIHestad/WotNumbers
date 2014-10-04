@@ -1298,11 +1298,35 @@ class BadLabel : BadThemeControl
 [DebuggerNonUserCode]
 class BadTextBox : BadThemeControl
 {
+	public ToolTip ToolTipContainer
+	{
+		get;
+		set;
+	}
+
+	private string _ToolTipText = "";
+	public string ToolTipText
+	{
+		get { return _ToolTipText; }
+		set
+		{
+			_ToolTipText = value;
+			//Invalidate();
+		}
+	}
+	
 	private char _PasswordChar;
 	public char PasswordChar
 	{
 		get { return _PasswordChar; }
 		set { _PasswordChar = value; }
+	}
+
+	private bool _ReadOnly;
+	public bool ReadOnly
+	{
+		get { return _ReadOnly; }
+		set { _ReadOnly = value; }
 	}
 
 	private HorizontalAlignment _TextAlign;
@@ -1338,6 +1362,9 @@ class BadTextBox : BadThemeControl
 		this.Controls.Add(textBox);
 		textBox.TextChanged += new EventHandler(textBox_TextChanged);
 		textBox.KeyPress += new KeyPressEventHandler(textBox_KeyPress);
+		textBox.MouseHover += new EventHandler(textBox_MouseHover);
+		textBox.MouseLeave += new EventHandler(textBox_MouseLeave);
+		textBox.MouseDown += new MouseEventHandler(textBox_MouseDown);
 	}
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
@@ -1353,6 +1380,8 @@ class BadTextBox : BadThemeControl
 		textBox.PasswordChar = PasswordChar;
 		textBox.TextAlign = TextAlign;
 		textBox.Text = Text;
+		textBox.ReadOnly = ReadOnly;
+		ToolTipContainer = new ToolTip();
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
@@ -1385,11 +1414,32 @@ class BadTextBox : BadThemeControl
 		base.OnLeave(e);
 	}
 
-	protected void textBox_KeyPress(object serder, KeyPressEventArgs e)
+	protected void textBox_KeyPress(object sender, KeyPressEventArgs e)
 	{
 		base.OnKeyPress(e);
 	}
 
+
+	protected void textBox_MouseHover(object sender, EventArgs e)
+	{
+		Point p = PointToClient(MousePosition);
+		p.X += 15;
+		p.Y += 10; 
+		ToolTipContainer.Show(ToolTipText, this, p);
+		base.OnMouseHover(e);
+	}
+
+	protected void textBox_MouseLeave(object sender, EventArgs e)
+	{
+		ToolTipContainer.Hide(this);
+		base.OnMouseLeave(e);
+	}
+
+	protected void textBox_MouseDown(object sender, MouseEventArgs e)
+	{
+		ToolTipContainer.Hide(this);
+		base.OnMouseDown(e);
+	}
 }
 
 [DebuggerNonUserCode]

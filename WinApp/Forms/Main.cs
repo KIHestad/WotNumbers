@@ -2852,41 +2852,52 @@ namespace WinApp.Forms
 
 		private void dataGridMain_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			// Avoid headerRow and Image columns
-			if (e.ColumnIndex < 0)
-				return;
-			// Manual Sort for battle and tanks view
-			if (MainSettings.View != GridView.Views.Overall) 
+			try
 			{
-				// Find colName
+				// Avoid headerRow and Image columns
+				if (e.ColumnIndex < 0)
+					return;
+				// Manual Sort for battle and tanks view
+				if (MainSettings.View != GridView.Views.Overall)
+				{
+					// Find colName
 
-				ColListHelper.ColListClass clc = ColListHelper.GetColListItem(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
-				// Find current sort
-				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
-				// Check if this is first sorting
-				if (sorting == null)
-					sorting = new GridSortingHelper.Sorting();
-				// Check if same same column as last
-				if (clc.name == sorting.lastColumn)
-				{
-					// same as last, reverse sort direction
-					sorting.lastSortDirectionAsc = !sorting.lastSortDirectionAsc;
+					ColListHelper.ColListClass clc = ColListHelper.GetColListItem(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
+					// Find current sort
+					GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
+					// Check if this is first sorting
+					if (sorting == null)
+						sorting = new GridSortingHelper.Sorting();
+					// Check if same same column as last
+					if (clc.name == sorting.lastColumn)
+					{
+						// same as last, reverse sort direction
+						sorting.lastSortDirectionAsc = !sorting.lastSortDirectionAsc;
+					}
+					else
+					{
+						// new column, get default sort direction
+						sorting.lastColumn = clc.name; // column name in header
+						sorting.lastSortColumn = clc.colName; // database field to sort on
+						bool sortDirectionAsc = false;
+						if (dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(string))
+							sortDirectionAsc = true;
+						sorting.lastSortDirectionAsc = sortDirectionAsc;
+					}
+					// Save new sorting
+					GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
+					// Show grid
+					ShowView("Datagrid refreshed after sorting");
 				}
-				else
-				{
-					// new column, get default sort direction
-					sorting.lastColumn = clc.name; // column name in header
-					sorting.lastSortColumn = clc.colName; // database field to sort on
-					bool sortDirectionAsc = false;
-					if (dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(string))
-						sortDirectionAsc = true;
-					sorting.lastSortDirectionAsc = sortDirectionAsc;
-				}
-				// Save new sorting
-				GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
-				// Show grid
-				ShowView("Datagrid refreshed after sorting");
 			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				if (Config.Settings.showDBErrors)
+					MsgBox.Show("Error on grid header mouse click event, see log file", "Grid error", this);
+
+			}
+			
 		}
 
 		#endregion
@@ -3036,20 +3047,30 @@ namespace WinApp.Forms
 		private int dataGridRightClickRow = -1;
 		private void dataGridMain_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			if (e.RowIndex != -1 && e.ColumnIndex != -1)
+			try
 			{
-				dataGridRightClickRow = e.RowIndex;
-				dataGridRightClickCol = e.ColumnIndex;
-				dataGridMain.CurrentCell = dataGridMain.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
-			}
-			// Check if footer
-			if (dataGridRightClickRow != -1 && dataGridRightClickCol != -1 && MainSettings.View == GridView.Views.Battle)
-			{
-				if (Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value) > 0)
+				if (e.RowIndex != -1 && e.ColumnIndex != -1)
 				{
-					dataGridRightClickCol = -1;
-					dataGridRightClickRow = -1;
+					dataGridRightClickRow = e.RowIndex;
+					dataGridRightClickCol = e.ColumnIndex;
+					dataGridMain.CurrentCell = dataGridMain.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
 				}
+				// Check if footer
+				if (dataGridRightClickRow != -1 && dataGridRightClickCol != -1 && MainSettings.View == GridView.Views.Battle)
+				{
+					if (Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value) > 0)
+					{
+						dataGridRightClickCol = -1;
+						dataGridRightClickRow = -1;
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				if (Config.Settings.showDBErrors)
+					MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
 			}
 		}
 
@@ -3408,8 +3429,15 @@ namespace WinApp.Forms
 
 		private void MoveScrollBar()
 		{
-			scrollX.ScrollPosition = dataGridMain.FirstDisplayedScrollingColumnIndex;
-			scrollY.ScrollPosition = dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
+			try
+			{
+				scrollX.ScrollPosition = dataGridMain.FirstDisplayedScrollingColumnIndex;
+				scrollY.ScrollPosition = dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
+			}
+			catch (Exception)
+			{
+				// ignore errors, only affect scrollbar position
+			}
 		}
 
 		#endregion
