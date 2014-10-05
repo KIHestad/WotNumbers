@@ -13,9 +13,11 @@ namespace WinApp.Code
 	{
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 		public static bool RunWotApi = false;
+		public static bool RunRecalcBattleWN8 = false;
+		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 165; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 166; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1727,6 +1729,9 @@ namespace WinApp.Code
 					break;
 				case 165:
 					RunWotApi = true;
+					break;
+				case 166:
+					RunRecalcBattleWN8 = true;
 					break;
 			}
 			string sql = "";

@@ -386,6 +386,8 @@ namespace WinApp.Forms
 		{
 			if (DBVersion.RunWotApi)
 				RunWotApi(true);
+			if (DBVersion.RunRecalcBattleWN8)
+				RunRecalcBattleWN8(true);
 			// Check for dossier update
 			if (DBVersion.RunDossierFileCheckWithForceUpdate)
 				RunDossierFileCheckWithForceUpdate(message);
@@ -3556,7 +3558,23 @@ namespace WinApp.Forms
 
 		private void RunWotApi(bool autoRun = false)
 		{
+			int WN8versionCurrent = DBVersion.GetWN8Version();
 			Form frm = new Forms.UpdateFromApi(autoRun);
+			frm.ShowDialog();
+			int WN8versionNew = DBVersion.GetWN8Version();
+			if (WN8versionNew > WN8versionCurrent)
+				RunRecalcBattleWN8(true);
+		}
+
+		private void mRecalcBattleWN8_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.RecalcBattleWN8();
+			frm.ShowDialog();
+		}
+
+		private void RunRecalcBattleWN8(bool autoRun = false)
+		{
+			Form frm = new Forms.RecalcBattleWN8(autoRun);
 			frm.ShowDialog();
 		}
 
@@ -4230,6 +4248,8 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+		
 
 	}
 }

@@ -198,6 +198,7 @@
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
+			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -292,7 +293,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(831, 25);
+			this.toolMain.Size = new System.Drawing.Size(862, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -1475,6 +1476,7 @@
             this.mSettingsDossierOptions,
             this.toolStripSeparator24,
             this.mUpdateDataFromAPI,
+            this.mRecalcBattleWN8,
             this.mImportBattlesFromWotStat,
             this.mShowDbTables,
             this.toolStripSeparator25,
@@ -1824,6 +1826,13 @@
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
 			// 
+			// mRecalcBattleWN8
+			// 
+			this.mRecalcBattleWN8.Name = "mRecalcBattleWN8";
+			this.mRecalcBattleWN8.Size = new System.Drawing.Size(263, 22);
+			this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
+			this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleWN8_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2023,6 +2032,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetKillDeath;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetDamageCausedReceived;
+		private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN8;
 	}
 }
 
