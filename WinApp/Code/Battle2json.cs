@@ -19,7 +19,18 @@ namespace WinApp.Code
 		private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
 		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
 
-		private class BattleValues
+		private class BattlePlayer
+		{
+			public int accountId;
+			public string clanAbbrev;
+			public int clanDBID;
+			public string name;
+			public int platoonID;
+			public int team;
+			public int vehicleid;
+		}
+
+		private class BattleValue
 		{
 			public string colname;
 			public object value;
@@ -199,46 +210,46 @@ namespace WinApp.Code
 								int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
 								int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
 								// Get values
-								List<BattleValues> battleValues = new List<BattleValues>();
+								List<BattleValue> battleValues = new List<BattleValue>();
 								// common
-								battleValues.Add(new BattleValues() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
-								battleValues.Add(new BattleValues() { colname = "bonusType", value = (int)token_common.SelectToken("bonusType") });
-								battleValues.Add(new BattleValues() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
-								battleValues.Add(new BattleValues() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
-								battleValues.Add(new BattleValues() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
+								battleValues.Add(new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
+								battleValues.Add(new BattleValue() { colname = "bonusType", value = (int)token_common.SelectToken("bonusType") });
+								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
+								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
+								battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
 								// personal - credits
-								battleValues.Add(new BattleValues() { colname = "originalCredits", value = (int)token_personel.SelectToken("originalCredits") });
-								battleValues.Add(new BattleValues() { colname = "credits", value = (int)token_personel.SelectToken("credits") });
-								battleValues.Add(new BattleValues() { colname = "creditsPenalty", value = (int)token_personel.SelectToken("creditsPenalty") });
-								battleValues.Add(new BattleValues() { colname = "creditsToDraw", value = (int)token_personel.SelectToken("creditsToDraw") });
-								battleValues.Add(new BattleValues() { colname = "creditsContributionIn", value = (int)token_personel.SelectToken("creditsContributionIn") });
-								battleValues.Add(new BattleValues() { colname = "creditsContributionOut", value = (int)token_personel.SelectToken("creditsContributionOut") });
-								battleValues.Add(new BattleValues() { colname = "autoRepairCost", value = (int)token_personel.SelectToken("autoRepairCost") });
-								battleValues.Add(new BattleValues() { colname = "eventCredits", value = (int)token_personel.SelectToken("eventCredits") });
-								battleValues.Add(new BattleValues() { colname = "premiumCreditsFactor10", value = (int)token_personel.SelectToken("premiumCreditsFactor10") });
-								battleValues.Add(new BattleValues() { colname = "achievementCredits", value = (int)token_personel.SelectToken("achievementCredits") });
+								battleValues.Add(new BattleValue() { colname = "originalCredits", value = (int)token_personel.SelectToken("originalCredits") });
+								battleValues.Add(new BattleValue() { colname = "credits", value = (int)token_personel.SelectToken("credits") });
+								battleValues.Add(new BattleValue() { colname = "creditsPenalty", value = (int)token_personel.SelectToken("creditsPenalty") });
+								battleValues.Add(new BattleValue() { colname = "creditsToDraw", value = (int)token_personel.SelectToken("creditsToDraw") });
+								battleValues.Add(new BattleValue() { colname = "creditsContributionIn", value = (int)token_personel.SelectToken("creditsContributionIn") });
+								battleValues.Add(new BattleValue() { colname = "creditsContributionOut", value = (int)token_personel.SelectToken("creditsContributionOut") });
+								battleValues.Add(new BattleValue() { colname = "autoRepairCost", value = (int)token_personel.SelectToken("autoRepairCost") });
+								battleValues.Add(new BattleValue() { colname = "eventCredits", value = (int)token_personel.SelectToken("eventCredits") });
+								battleValues.Add(new BattleValue() { colname = "premiumCreditsFactor10", value = (int)token_personel.SelectToken("premiumCreditsFactor10") });
+								battleValues.Add(new BattleValue() { colname = "achievementCredits", value = (int)token_personel.SelectToken("achievementCredits") });
 								// personal XP
-								battleValues.Add(new BattleValues() { colname = "real_xp", value = (int)token_personel.SelectToken("xp") });
-								battleValues.Add(new BattleValues() { colname = "xpPenalty", value = (int)token_personel.SelectToken("xpPenalty") });
-								battleValues.Add(new BattleValues() { colname = "freeXP", value = (int)token_personel.SelectToken("freeXP") });
-								battleValues.Add(new BattleValues() { colname = "dailyXPFactor10", value = (int)token_personel.SelectToken("dailyXPFactor10") });
-								battleValues.Add(new BattleValues() { colname = "premiumXPFactor10", value = (int)token_personel.SelectToken("premiumXPFactor10") });
-								battleValues.Add(new BattleValues() { colname = "eventFreeXP", value = (int)token_personel.SelectToken("eventFreeXP") });
-								battleValues.Add(new BattleValues() { colname = "achievementFreeXP", value = (int)token_personel.SelectToken("achievementFreeXP") });
-								battleValues.Add(new BattleValues() { colname = "achievementXP", value = (int)token_personel.SelectToken("achievementXP") });
-								battleValues.Add(new BattleValues() { colname = "eventXP", value = (int)token_personel.SelectToken("eventXP") });
-								battleValues.Add(new BattleValues() { colname = "eventTMenXP", value = (int)token_personel.SelectToken("eventTMenXP") });
+								battleValues.Add(new BattleValue() { colname = "real_xp", value = (int)token_personel.SelectToken("xp") });
+								battleValues.Add(new BattleValue() { colname = "xpPenalty", value = (int)token_personel.SelectToken("xpPenalty") });
+								battleValues.Add(new BattleValue() { colname = "freeXP", value = (int)token_personel.SelectToken("freeXP") });
+								battleValues.Add(new BattleValue() { colname = "dailyXPFactor10", value = (int)token_personel.SelectToken("dailyXPFactor10") });
+								battleValues.Add(new BattleValue() { colname = "premiumXPFactor10", value = (int)token_personel.SelectToken("premiumXPFactor10") });
+								battleValues.Add(new BattleValue() { colname = "eventFreeXP", value = (int)token_personel.SelectToken("eventFreeXP") });
+								battleValues.Add(new BattleValue() { colname = "achievementFreeXP", value = (int)token_personel.SelectToken("achievementFreeXP") });
+								battleValues.Add(new BattleValue() { colname = "achievementXP", value = (int)token_personel.SelectToken("achievementXP") });
+								battleValues.Add(new BattleValue() { colname = "eventXP", value = (int)token_personel.SelectToken("eventXP") });
+								battleValues.Add(new BattleValue() { colname = "eventTMenXP", value = (int)token_personel.SelectToken("eventTMenXP") });
 								// personal others
-								battleValues.Add(new BattleValues() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
-								battleValues.Add(new BattleValues() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
-								battleValues.Add(new BattleValues() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
-								battleValues.Add(new BattleValues() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") }); // override def - might be above 100
+								battleValues.Add(new BattleValue() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
+								battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
+								battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
+								battleValues.Add(new BattleValue() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") }); // override def - might be above 100
 								// field returns null
 								if (token_personel.SelectToken("fortResource").HasValues)
-									battleValues.Add(new BattleValues() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
+									battleValues.Add(new BattleValue() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
 								// dayly double
 								int dailyXPFactor = (int)token_personel.SelectToken("dailyXPFactor10") / 10;
-								battleValues.Add(new BattleValues() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
+								battleValues.Add(new BattleValue() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
 								// Special fields: death reason, convert to string
 								int deathReasonId = (int)token_personel.SelectToken("deathReason");
 								string deathReason = "Unknown";
@@ -252,15 +263,15 @@ namespace WinApp.Code
 									case 4: deathReason = "Death zone"; break;
 									case 5: deathReason = "Drowned"; break;
 								}
-								battleValues.Add(new BattleValues() { colname = "deathReason", value = "'" + deathReason + "'" });
+								battleValues.Add(new BattleValue() { colname = "deathReason", value = "'" + deathReason + "'" });
 								// Get from array autoLoadCost
 								JArray array_autoload = (JArray)token_personel.SelectToken("autoLoadCost");
 								int autoLoadCost = (int)array_autoload[0];
-								battleValues.Add(new BattleValues() { colname = "autoLoadCost", value = autoLoadCost });
+								battleValues.Add(new BattleValue() { colname = "autoLoadCost", value = autoLoadCost });
 								// Get from array autoEquipCost
 								JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
 								int autoEquipCost = (int)array_autoequip[0];
-								battleValues.Add(new BattleValues() { colname = "autoEquipCost", value = autoEquipCost });
+								battleValues.Add(new BattleValue() { colname = "autoEquipCost", value = autoEquipCost });
 								// Calculated net credits
 								int creditsNet = (int)token_personel.SelectToken("credits");
 								creditsNet -= (int)token_personel.SelectToken("creditsPenalty"); // fine for damage to allies
@@ -268,11 +279,11 @@ namespace WinApp.Code
 								creditsNet -= (int)token_personel.SelectToken("autoRepairCost"); // repear cost
 								creditsNet -= autoLoadCost;
 								creditsNet -= autoEquipCost;
-								battleValues.Add(new BattleValues() { colname = "creditsNet", value = creditsNet });
+								battleValues.Add(new BattleValue() { colname = "creditsNet", value = creditsNet });
 								// map id
 								int arenaTypeID = (int)token_common.SelectToken("arenaTypeID");
 								int mapId = arenaTypeID & 32767;
-								battleValues.Add(new BattleValues() { colname = "mapId", value = mapId });
+								battleValues.Add(new BattleValue() { colname = "mapId", value = mapId });
 								// insert data
 								string fields = "";
 								foreach (var battleValue in battleValues)
@@ -283,6 +294,74 @@ namespace WinApp.Code
 								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
 								DB.ExecuteNonQuery(sql);
+								// Add Battle Players
+								List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
+								JToken token_players = token_root["players"];
+								foreach (JToken player in token_players)
+								{
+									BattlePlayer newPlayer = new BattlePlayer();
+									JProperty playerProperty = (JProperty)player;
+									newPlayer.accountId = Convert.ToInt32(playerProperty.Name);
+									JToken playerInfo = player.First;
+									newPlayer.clanDBID = (int)playerInfo.SelectToken("clanDBID");
+									newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
+									newPlayer.name = (string)playerInfo.SelectToken("name");
+									newPlayer.platoonID = (int)playerInfo.SelectToken("platoonID");
+									newPlayer.team = (int)playerInfo.SelectToken("team");
+									newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
+									battlePlayers.Add(newPlayer);
+								}
+								// Get results from vehiles section and add to db
+								JToken token_vehicles = token_root["vehicles"];
+								foreach (JToken vechicle in token_vehicles)
+								{
+									JProperty vechicleProperty = (JProperty)vechicle;
+									int vehicleid = Convert.ToInt32(vechicleProperty.Name);
+									BattlePlayer player = battlePlayers.Find(p => p.vehicleid == vehicleid);
+									if (player != null)
+									{
+										JToken vechicleInfo = vechicle.First;
+										// Get fields and values, init adding battle id
+										fields = "battleID";
+										string values = battleId.ToString();
+										// Get values from player section
+										fields += ", accountId, clanAbbrev, clanDBID, name, platoonID, team";
+										values += ", " + player.accountId;
+										values += ", '" + player.clanAbbrev + "'";
+										values += ", " + player.clanDBID;
+										values += ", '" + player.name + "'";
+										values += ", " + player.platoonID;
+										values += ", " + player.team;
+										// Get values from vehicles section
+										fields +=", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
+										values += ", " + vechicleInfo.SelectToken("typeCompDescr");
+										values += ", " + vechicleInfo.SelectToken("xp");
+										values += ", " + vechicleInfo.SelectToken("damageDealt");
+										values += ", " + vechicleInfo.SelectToken("credits");
+										values += ", " + vechicleInfo.SelectToken("capturePoints");
+										values += ", " + vechicleInfo.SelectToken("damageReceived");
+										values += ", " + vechicleInfo.SelectToken("deathReason");
+										values += ", " + vechicleInfo.SelectToken("directHits");
+										fields += ", directHitsReceived, droppedCapturePoints, hits, kills, shots, shotsReceived, spotted, tkills, fortResource";
+										values += ", " + vechicleInfo.SelectToken("directHitsReceived");
+										values += ", " + vechicleInfo.SelectToken("droppedCapturePoints");
+										values += ", " + vechicleInfo.SelectToken("hits");
+										values += ", " + vechicleInfo.SelectToken("kills");
+										values += ", " + vechicleInfo.SelectToken("shots");
+										values += ", " + vechicleInfo.SelectToken("shotsReceived");
+										values += ", " + vechicleInfo.SelectToken("spotted");
+										values += ", " + vechicleInfo.SelectToken("tkills");
+										JValue fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
+										if (fortResource.Value == null)
+											values += ", NULL";
+										else
+											values += ", " + fortResource.Value;
+										// Create SQL and update db
+										sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
+										DB.ExecuteNonQuery(sql);
+									}
+								}
+
 								// If grinding, adjust grogress
 								if (grindXP > 0)
 									GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
@@ -339,15 +418,16 @@ namespace WinApp.Code
 		{
 			// Yes, apply grinding progress to playerTank now
 			// Get grinding data
-			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
-					"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
-					"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
-					"        SUM(playerTankBattle.xp) / SUM(playerTankBattle.battles) AS avgXP " +
-					"FROM    tank INNER JOIN " +
-					"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
-					"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-					"WHERE  (playerTank.id = @playerTankId) " +
-					"GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime ";
+			string sql = 
+				"SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
+				"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
+				"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
+				"        SUM(playerTankBattle.xp) / SUM(playerTankBattle.battles) AS avgXP " +
+				"FROM    tank INNER JOIN " +
+				"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
+				"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+				"WHERE  (playerTank.id = @playerTankId) " +
+				"GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			DataRow grinding = DB.FetchData(sql).Rows[0];
 			// Get parameters for grinding calc
@@ -362,9 +442,10 @@ namespace WinApp.Code
 			int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
 			int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
 			// Save to playerTank
-			sql = "UPDATE playerTank SET gProgressXP=@ProgressXP, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
-					"					     gRestBattles=@RestBattles, gRestDays=@RestDays  " +
-					"WHERE id=@id; ";
+			sql = 
+				"UPDATE playerTank SET gProgressXP=@ProgressXP, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
+				"					   gRestBattles=@RestBattles, gRestDays=@RestDays  " +
+				"WHERE id=@id; ";
 			DB.AddWithValue(ref sql, "@ProgressXP", progress, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@RestXP", restXP, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@ProgressPercent", progressPercent, DB.SqlDataType.Int);
@@ -407,12 +488,12 @@ namespace WinApp.Code
 					//ScriptScope scope = engine.CreateScope();
 					//script.Execute(scope);
 					Application.DoEvents();
-					Log.AddToLogBuffer("Converted battle DAT-file til JSON file: " + filename);
+					Log.AddToLogBuffer("Converted battle DAT-file to JSON file: " + filename);
 					ok = true;
 					PythonEngine.InUse = false;
 				}
 				else
-					Log.AddToLogBuffer("IronPython Engine in use, not converted battle DAT-file til JSON file: " + filename);
+					Log.AddToLogBuffer("IronPython Engine in use, not converted battle DAT-file to JSON file: " + filename);
 			}
 			catch (Exception ex)
 			{

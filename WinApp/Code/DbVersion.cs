@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 166; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 167; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1732,6 +1732,30 @@ namespace WinApp.Code
 					break;
 				case 166:
 					RunRecalcBattleWN8 = true;
+					break;
+				case 167:
+					mssql =
+						"CREATE TABLE battlePlayer ( " +
+						" id int IDENTITY(1,1) primary key, " +
+						" battleId int NOT NULL, accountId int NOT NULL, " +
+						" name varchar (30) NOT NULL, team int NOT NULL, tankId int NOT NULL, clanDBID int NULL, " +
+						" clanAbbrev varchar (10) NULL, platoonID int NULL, xp int NOT NULL, damageDealt int NOT NULL, " +
+						" credits int NOT NULL, capturePoints int NOT NULL, damageReceived int NOT NULL, deathReason int NOT NULL, " +
+						" directHits int NOT NULL, directHitsReceived int NOT NULL, droppedCapturePoints int NOT NULL, hits int NOT NULL, " +
+						" kills int NOT NULL, shots int NOT NULL, shotsReceived int NOT NULL, spotted int NOT NULL, " +
+						" tkills int NOT NULL, fortResource int NULL, " +
+						" foreign key (battleId) references battle (id) )";
+					sqlite =
+						"CREATE TABLE battlePlayer ( " +
+						" id integer primary key, " +
+						" battleId integer NOT NULL, accountId integer NOT NULL, " +
+						" name varchar (30) NOT NULL, team integer NOT NULL, tankId integer NOT NULL, clanDBID integer NULL, " +
+						" clanAbbrev varchar (10) NULL, platoonID integer NULL, xp integer NOT NULL, damageDealt integer NOT NULL, " +
+						" credits integer NOT NULL, capturePointegers integer NOT NULL, damageReceived integer NOT NULL, deathReason integer NOT NULL, " +
+						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, droppedCapturePointegers integer NOT NULL, hits integer NOT NULL, " +
+						" kills integer NOT NULL, shots integer NOT NULL, shotsReceived integer NOT NULL, spotted integer NOT NULL, " +
+						" tkills integer NOT NULL, fortResource integer NULL, " +
+						" foreign key (battleId) references battle (id) )";
 					break;
 			}
 			string sql = "";

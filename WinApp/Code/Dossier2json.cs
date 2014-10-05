@@ -134,7 +134,7 @@ namespace WinApp.Code
 			FileInfo file = new FileInfo(dossierFile);
 			// Wait until file is ready to read, 
 			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierFile, 4000);
-			// Perform file conversion from picle til json
+			// Perform file conversion from picle to json
 			string statusResult = RunDossierRead(dossierFile);
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
@@ -244,7 +244,7 @@ namespace WinApp.Code
 				}
 				if (ok)
 				{
-					// Copy dossier file and perform file conversion til json format
+					// Copy dossier file and perform file conversion to json format
 					string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 					string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
 					string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
