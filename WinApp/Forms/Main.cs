@@ -87,7 +87,7 @@ namespace WinApp.Forms
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
 			toolMain.BackColor = ColorTheme.FormBackTitle;
-			toolMain.ShowItemToolTips = false;
+			toolMain.ShowItemToolTips = true;
 			mBattles.Visible = false;
 			mTankFilter.Visible = false;
 			mRefreshSeparator.Visible = true;
@@ -146,33 +146,46 @@ namespace WinApp.Forms
 			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator3 = new ToolStripSeparator();
 			ToolStripSeparator dataGridMainPopup_Separator4 = new ToolStripSeparator();
-			ToolStripMenuItem dataGridMainPopup_Details = new ToolStripMenuItem("Tank Details");
-			dataGridMainPopup_Details.Image = imageListToolStrip.Images[1];
-			dataGridMainPopup_Details.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
-			ToolStripMenuItem dataGridMainPopup_Chart = new ToolStripMenuItem("Battle Chart");
-			dataGridMainPopup_Chart.Image = imageListToolStrip.Images[2];
-			dataGridMainPopup_Chart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
+			
+			ToolStripMenuItem dataGridMainPopup_TankDetails = new ToolStripMenuItem("Tank Details");
+			dataGridMainPopup_TankDetails.Image = imageListToolStrip.Images[1];
+			dataGridMainPopup_TankDetails.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
+			
+			ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart (Selected Tank)");
+			dataGridMainPopup_BattleChart.Image = imageListToolStrip.Images[2];
+			dataGridMainPopup_BattleChart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
+			
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
 			dataGridMainPopup_GrindingSetup.Image = imageListToolStrip.Images[3];
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
+			
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
 			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[4];
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
+			
 			ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list");
 			dataGridMainPopup_FavListAddTank.Image = imageListToolStrip.Images[5];
 			dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
+			
 			ToolStripMenuItem dataGridMainPopup_FavListRemoveTank = new ToolStripMenuItem("Remove tank from favourite tank list");
 			dataGridMainPopup_FavListRemoveTank.Image = imageListToolStrip.Images[6];
 			dataGridMainPopup_FavListRemoveTank.Click += new EventHandler(dataGridMainPopup_FavListRemoveTank_Click);
+			
 			ToolStripMenuItem dataGridMainPopup_FavListCreateNew = new ToolStripMenuItem("Create new favourite tank list");
 			dataGridMainPopup_FavListCreateNew.Image = imageListToolStrip.Images[7];
 			dataGridMainPopup_FavListCreateNew.Click += new EventHandler(dataGridMainPopup_FavListCreateNew_Click);
+			
 			ToolStripMenuItem dataGridMainPopup_DeleteBattle = new ToolStripMenuItem("Delete this battle");
 			dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
 			dataGridMainPopup_DeleteBattle.Click += new EventHandler(dataGridMainPopup_DeleteBattle_Click);
-			ToolStripMenuItem dataGridMainPopup_RecalcRatings = new ToolStripMenuItem("Show WN8 Battle Details");
-			//dataGridMainPopup_DeleteBattle.Image = imageListToolStrip.Images[8];
-			dataGridMainPopup_RecalcRatings.Click += new EventHandler(dataGridMainPopup_RecalcRatings_Click);
+
+			ToolStripMenuItem dataGridMainPopup_WN8 = new ToolStripMenuItem("WN8 Battle Details");
+			dataGridMainPopup_WN8.Image = imageListToolStrip.Images[10];
+			dataGridMainPopup_WN8.Click += new EventHandler(dataGridMainPopup_RecalcRatings_Click);
+			
+			ToolStripMenuItem dataGridMainPopup_BattleDetails = new ToolStripMenuItem("Battle Details");
+			dataGridMainPopup_BattleDetails.Image = imageListToolStrip.Images[9];
+			dataGridMainPopup_BattleDetails.Click += new EventHandler(dataGridMainPopup_BattleDetails_Click);
 			
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
@@ -185,8 +198,8 @@ namespace WinApp.Forms
 				case GridView.Views.Tank:
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
-						dataGridMainPopup_Details, 
-						dataGridMainPopup_Chart, 
+						dataGridMainPopup_TankDetails, 
+						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup, 
 						dataGridMainPopup_Separator1,
 						dataGridMainPopup_FavListAddTank,
@@ -197,8 +210,11 @@ namespace WinApp.Forms
 				case GridView.Views.Battle:
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
-						dataGridMainPopup_Details, 
-						dataGridMainPopup_Chart, 
+						dataGridMainPopup_BattleDetails,
+						dataGridMainPopup_WN8,
+						dataGridMainPopup_Separator4,
+						dataGridMainPopup_TankDetails, 
+						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup,
 						dataGridMainPopup_Separator1,
 						dataGridMainPopup_FilterOnTank,
@@ -207,8 +223,6 @@ namespace WinApp.Forms
 						dataGridMainPopup_FavListRemoveTank,
 						dataGridMainPopup_FavListCreateNew,
 						dataGridMainPopup_Separator3,
-						dataGridMainPopup_RecalcRatings,
-						dataGridMainPopup_Separator4,
 						dataGridMainPopup_DeleteBattle
 					});
 					break;
@@ -821,6 +835,7 @@ namespace WinApp.Forms
 						mBattleGroup.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Tank View...";
+						mColumnSelect.ToolTipText = "Select Tank View";
 						// Get Column Setup List - also finds correct tank filter/fav list
 						SetColListMenu();
 						// Get Battle mode
@@ -849,6 +864,7 @@ namespace WinApp.Forms
 						mHomeEdit.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Battle View...";
+						mColumnSelect.ToolTipText = "Select Battle View";
 						// Get Column Setup List  - also finds correct tank filter/fav list
 						SetColListMenu();
 						// Get Battle mode
@@ -3099,6 +3115,13 @@ namespace WinApp.Forms
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			Form frm = new Forms.BattleChartTier(playerTankId);
 			FormHelper.OpenForm(this, frm);
+		}
+
+		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)
+		{
+			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
+			Form frm = new Forms.BattleDetail(battleId);
+			frm.ShowDialog();
 		}
 
 		private void dataGridMainPopup_TankDetails_Click(object sender, EventArgs e)

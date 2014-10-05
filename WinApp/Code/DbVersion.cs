@@ -1744,7 +1744,8 @@ namespace WinApp.Code
 						" directHits int NOT NULL, directHitsReceived int NOT NULL, droppedCapturePoints int NOT NULL, hits int NOT NULL, " +
 						" kills int NOT NULL, shots int NOT NULL, shotsReceived int NOT NULL, spotted int NOT NULL, " +
 						" tkills int NOT NULL, fortResource int NULL, " +
-						" foreign key (battleId) references battle (id) )";
+						" foreign key (battleId) references battle (id), " +
+						" foreign key (tankId) references tank (id) ); ";
 					sqlite =
 						"CREATE TABLE battlePlayer ( " +
 						" id integer primary key, " +
@@ -1755,7 +1756,8 @@ namespace WinApp.Code
 						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, droppedCapturePointegers integer NOT NULL, hits integer NOT NULL, " +
 						" kills integer NOT NULL, shots integer NOT NULL, shotsReceived integer NOT NULL, spotted integer NOT NULL, " +
 						" tkills integer NOT NULL, fortResource integer NULL, " +
-						" foreign key (battleId) references battle (id) )";
+						" foreign key (battleId) references battle (id) " +
+						" foreign key (tankId) references tank (id) ); ";
 					break;
 			}
 			string sql = "";

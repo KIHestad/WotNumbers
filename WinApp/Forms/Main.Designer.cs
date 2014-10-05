@@ -39,6 +39,7 @@
 			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
+			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
 			this.MainTheme = new BadForm();
 			this.toolMain = new WinApp.Code.ToolStripEx();
 			this.mViewLabel = new System.Windows.Forms.ToolStripLabel();
@@ -176,6 +177,7 @@
 			this.mSettingsTestAddBattleResult = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
 			this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
+			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
@@ -197,8 +199,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
-			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -233,14 +233,22 @@
 			this.imageListToolStrip.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolStrip.ImageStream")));
 			this.imageListToolStrip.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageListToolStrip.Images.SetKeyName(0, "check.png");
-			this.imageListToolStrip.Images.SetKeyName(1, "tank_detail.png");
-			this.imageListToolStrip.Images.SetKeyName(2, "iconCharts_v2b.png");
+			this.imageListToolStrip.Images.SetKeyName(1, "iconTank.png");
+			this.imageListToolStrip.Images.SetKeyName(2, "Chart_new1.png");
 			this.imageListToolStrip.Images.SetKeyName(3, "xp.png");
 			this.imageListToolStrip.Images.SetKeyName(4, "filter.png");
 			this.imageListToolStrip.Images.SetKeyName(5, "tank_add.png");
 			this.imageListToolStrip.Images.SetKeyName(6, "tank_remove.png");
 			this.imageListToolStrip.Images.SetKeyName(7, "tank_new.png");
 			this.imageListToolStrip.Images.SetKeyName(8, "delete.png");
+			this.imageListToolStrip.Images.SetKeyName(9, "iconBattle.png");
+			this.imageListToolStrip.Images.SetKeyName(10, "wn8.png");
+			// 
+			// imageGrid
+			// 
+			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
+			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageGrid.Images.SetKeyName(0, "grid.png");
 			// 
 			// MainTheme
 			// 
@@ -293,7 +301,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(862, 25);
+			this.toolMain.Size = new System.Drawing.Size(831, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -313,7 +321,7 @@
 			this.mViewOverall.Name = "mViewOverall";
 			this.mViewOverall.Size = new System.Drawing.Size(60, 22);
 			this.mViewOverall.Text = "&Home";
-			this.mViewOverall.ToolTipText = " ";
+			this.mViewOverall.ToolTipText = " Home View";
 			this.mViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
 			// 
 			// mViewTankInfo
@@ -323,6 +331,7 @@
 			this.mViewTankInfo.Name = "mViewTankInfo";
 			this.mViewTankInfo.Size = new System.Drawing.Size(58, 22);
 			this.mViewTankInfo.Text = "&Tanks";
+			this.mViewTankInfo.ToolTipText = "Tank View";
 			this.mViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
 			// 
 			// mViewBattles
@@ -332,6 +341,7 @@
 			this.mViewBattles.Name = "mViewBattles";
 			this.mViewBattles.Size = new System.Drawing.Size(62, 22);
 			this.mViewBattles.Text = "&Battles";
+			this.mViewBattles.ToolTipText = "Battle View";
 			this.mViewBattles.Click += new System.EventHandler(this.toolItemViewBattles_Click);
 			// 
 			// mRefresh
@@ -342,6 +352,7 @@
 			this.mRefresh.Name = "mRefresh";
 			this.mRefresh.Size = new System.Drawing.Size(23, 22);
 			this.mRefresh.Text = "Refresh grid";
+			this.mRefresh.ToolTipText = "Refresh Grid";
 			this.mRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
 			// 
 			// mRefreshSeparator
@@ -375,7 +386,7 @@
 			this.mColumnSelect.ShowDropDownArrow = false;
 			this.mColumnSelect.Size = new System.Drawing.Size(65, 22);
 			this.mColumnSelect.Text = "Default";
-			this.mColumnSelect.ToolTipText = "Default";
+			this.mColumnSelect.ToolTipText = "Select Tank/Battle View";
 			// 
 			// mColumnSelect_01
 			// 
@@ -549,6 +560,7 @@
 			this.mTankFilter.ShowDropDownArrow = false;
 			this.mTankFilter.Size = new System.Drawing.Size(75, 22);
 			this.mTankFilter.Text = "All Tanks";
+			this.mTankFilter.ToolTipText = "Select Favourite Tank List";
 			this.mTankFilter.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_MouseDown);
 			// 
 			// mTankFilter_Country
@@ -971,6 +983,7 @@
 			this.mMode.ShowDropDownArrow = false;
 			this.mMode.Size = new System.Drawing.Size(80, 22);
 			this.mMode.Text = "All modes";
+			this.mMode.ToolTipText = "Select Battle Mode";
 			// 
 			// toolStripMenuItem54
 			// 
@@ -1098,6 +1111,7 @@
 			this.mBattles.ShowDropDownArrow = false;
 			this.mBattles.Size = new System.Drawing.Size(106, 22);
 			this.mBattles.Text = "Today\'s Battles";
+			this.mBattles.ToolTipText = "Select Battle Time";
 			// 
 			// mBattles1d
 			// 
@@ -1234,6 +1248,7 @@
 			this.mBattleGroup.ShowDropDownArrow = false;
 			this.mBattleGroup.Size = new System.Drawing.Size(96, 22);
 			this.mBattleGroup.Text = "No Grouping";
+			this.mBattleGroup.ToolTipText = "Select Battle Grouping";
 			// 
 			// mBattleGroup_No
 			// 
@@ -1285,7 +1300,7 @@
 			this.mGadget.ShowDropDownArrow = false;
 			this.mGadget.Size = new System.Drawing.Size(70, 22);
 			this.mGadget.Text = "Gadgets";
-			this.mGadget.ToolTipText = "Gadget";
+			this.mGadget.ToolTipText = "Select Gadget";
 			// 
 			// mGadgetGauges
 			// 
@@ -1451,6 +1466,7 @@
 			this.mHomeEdit.Name = "mHomeEdit";
 			this.mHomeEdit.Size = new System.Drawing.Size(23, 22);
 			this.mHomeEdit.Text = "toolStripButton1";
+			this.mHomeEdit.ToolTipText = "Gadget Edit Mode";
 			this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
 			// 
 			// toolStripSeparator23
@@ -1466,6 +1482,7 @@
 			this.mViewChart.Name = "mViewChart";
 			this.mViewChart.Size = new System.Drawing.Size(23, 22);
 			this.mViewChart.Text = "toolStripButton1";
+			this.mViewChart.ToolTipText = "Chart";
 			this.mViewChart.Click += new System.EventHandler(this.toolItemViewChart_Click);
 			// 
 			// mSettings
@@ -1545,6 +1562,13 @@
 			this.mUpdateDataFromAPI.Text = "Update Data from API...";
 			this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
 			// 
+			// mRecalcBattleWN8
+			// 
+			this.mRecalcBattleWN8.Name = "mRecalcBattleWN8";
+			this.mRecalcBattleWN8.Size = new System.Drawing.Size(263, 22);
+			this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
+			this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleWN8_Click);
+			// 
 			// mImportBattlesFromWotStat
 			// 
 			this.mImportBattlesFromWotStat.Name = "mImportBattlesFromWotStat";
@@ -1592,6 +1616,7 @@
 			this.mHelp.ShowDropDownArrow = false;
 			this.mHelp.Size = new System.Drawing.Size(20, 22);
 			this.mHelp.Text = "toolStripDropDownButton1";
+			this.mHelp.ToolTipText = "Help";
 			// 
 			// mHelpCheckVersion
 			// 
@@ -1819,19 +1844,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// imageGrid
-			// 
-			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
-			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
-			this.imageGrid.Images.SetKeyName(0, "grid.png");
-			// 
-			// mRecalcBattleWN8
-			// 
-			this.mRecalcBattleWN8.Name = "mRecalcBattleWN8";
-			this.mRecalcBattleWN8.Size = new System.Drawing.Size(263, 22);
-			this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
-			this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleWN8_Click);
 			// 
 			// Main
 			// 

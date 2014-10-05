@@ -180,6 +180,12 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BattleDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BattleDetail.Designer.cs">
+      <DependentUpon>BattleDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -438,6 +444,9 @@
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BattleDetail.resx">
+      <DependentUpon>BattleDetail.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>
     </EmbeddedResource>
@@ -661,6 +670,8 @@
     <Content Include="DevDocs\Img\ToolStripIcons\16x16_white.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\arrow_down.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\arrow_up.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\battle_detail.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\Chart_new1.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
     <Content Include="DevDocs\DatabaseLog\createProc.txt" />
     <Content Include="DevDocs\Img\ToolStripIcons\col_setup.png" />
@@ -674,6 +685,13 @@
     <Content Include="DevDocs\Img\ToolStripIcons\country_ussr.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\delete.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\filter.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\Gadgets.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\grouping.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\grouping2.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\grouping3.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\grouping4.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\grouping5.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\grouping6.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattle.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattle2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattleTime.png" />
@@ -691,6 +709,9 @@
     <Content Include="DevDocs\Img\ToolStripIcons\iconHome4.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconModes.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconTank.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\options.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\separator.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\separator_size.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tank_add.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tank_detail.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\tank_new.png" />
@@ -715,6 +736,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_SPGs2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\type_TD.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\wn8.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\xp.png" />
     <None Include="DevDocs\battle_result\battle_result_analyze.json" />
     <Content Include="DevDocs\battle_result\Parameters of interest.txt" />
