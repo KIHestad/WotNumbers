@@ -301,7 +301,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(831, 25);
+			this.toolMain.Size = new System.Drawing.Size(862, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -351,8 +351,8 @@
 			this.mRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mRefresh.Name = "mRefresh";
 			this.mRefresh.Size = new System.Drawing.Size(23, 22);
-			this.mRefresh.Text = "Refresh grid";
-			this.mRefresh.ToolTipText = "Refresh Grid";
+			this.mRefresh.Text = "Refresh";
+			this.mRefresh.ToolTipText = "Refresh";
 			this.mRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
 			// 
 			// mRefreshSeparator
