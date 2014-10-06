@@ -185,6 +185,7 @@
 			// 
 			// lblTankName
 			// 
+			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
 			this.lblTankName.Location = new System.Drawing.Point(254, 11);
 			this.lblTankName.Name = "lblTankName";
