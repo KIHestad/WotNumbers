@@ -145,13 +145,13 @@ namespace WinApp.Forms
 				// Survival
 				string survival = dr["battleSurviveName"].ToString();
 				string deathReason = "";
-				if (dr["deathReason"] != DBNull.Value && survival != "Yes") deathReason = " due to: " + dr["deathReason"].ToString();
+				if (dr["deathReason"] != DBNull.Value && survival != "Yes") deathReason = " by: " + dr["deathReason"].ToString();
 				Color battleSurviveColor = ColorTranslator.FromHtml(dr["battleSurviveColor"].ToString());
 				switch (survival)
 				{
 					case "Yes": survival = "Survived"; break;
-					case "No": survival = "Killed" + deathReason; break;
-					case "Some": survival = "Survived: " + survivedCount.ToString() + " / " + battleCount.ToString(); break;
+					case "No": survival = "Destroyed" + deathReason; break;
+					case "Some": survival = "Battles survived: " + survivedCount.ToString(); break;
 				}
 				lblSurvival.Text = survival;
 				lblSurvival.ForeColor = battleSurviveColor;
@@ -163,7 +163,7 @@ namespace WinApp.Forms
 				if (bonusType == -1)
 				{
 					if (battleCount > 1)
-						battleMode = "Several battles recorded";
+						battleMode = "Battles recorded: " + battleCount.ToString() ;
 					else
 						battleMode = "Battle result not fetched";
 				}
@@ -209,14 +209,14 @@ namespace WinApp.Forms
 				DataRow dr = dt.Rows[0];
 				int tankId = Convert.ToInt32(dr["tankId"]);
 				int battlesCount = Convert.ToInt32(dr["battlesCount"]);
-				int dmg = battlesCount * Convert.ToInt32(dr["dmg"]);
-				int spotted = battlesCount * Convert.ToInt32(dr["spotted"]);
-				int frags = battlesCount * Convert.ToInt32(dr["frags"]);
-				int def = battlesCount * Convert.ToInt32(dr["def"]);
-				int exp_dmg = Convert.ToInt32(dr["expDmg"]) * battlesCount;
-				int exp_spotted = Convert.ToInt32(dr["expSpot"]) * battlesCount;
-				int exp_frags = Convert.ToInt32(dr["expFrags"]) * battlesCount;
-				int exp_def = Convert.ToInt32(dr["expDef"]) * battlesCount;
+				int dmg = Convert.ToInt32(dr["dmg"]);
+				int spotted = Convert.ToInt32(dr["spotted"]);
+				int frags = Convert.ToInt32(dr["frags"]);
+				int def = Convert.ToInt32(dr["def"]);
+				int exp_dmg = Convert.ToInt32(dr["expDmg"]);
+				int exp_spotted = Convert.ToInt32(dr["expSpot"]) ;
+				int exp_frags = Convert.ToInt32(dr["expFrags"]) ;
+				int exp_def = Convert.ToInt32(dr["expDef"]);
 				int exp_wr = Convert.ToInt32(dr["expWR"]);
 				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
 				double rWINc;
