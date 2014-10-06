@@ -12,8 +12,15 @@ namespace WinApp.Forms
 {
 	public partial class BattleDetail : Form
 	{
-		private int _battleId;
+		#region Init
 		
+		private int _battleId;
+		private int team1 = 1;
+		private int team2 = 2;
+		private DataGridView dgvTeam1 = new DataGridView();
+		private DataGridView dgvTeam2 = new DataGridView();
+		private bool showFortResources = false;
+
 		public BattleDetail(int battleId)
 		{
 			InitializeComponent();
@@ -27,8 +34,11 @@ namespace WinApp.Forms
 			btnOurTeam.Checked = false;
 			btnPersonal.Checked = false;
 			btnTeams.Checked = false;
-			// deselect panels
+			// hide my result
 			panel1.Visible = false;
+			// hide grids
+			dgvTeam1.Visible = false;
+			dgvTeam2.Visible = false;
 			// select tab
 			BadButton btn = (BadButton)sender;
 			btn.Checked = true;
@@ -38,13 +48,52 @@ namespace WinApp.Forms
 				case "btnPersonal" :
 					panel1.Visible = true;
 					break;
+				case "btnTeams" :
+					ShowTeams();
+					break;
+				case "btnOurTeam" :
+					ShowOwnTeam();
+					break;
+				case "btnEnemyTeam" :
+					ShowEnemyTeam();
+					break;
 			}
 		}
 
 		private void BattleDetail_Load(object sender, EventArgs e)
 		{
 			GetMyPersonalInfo();
+			string sql = "select id from battlePlayer where battleId=@battleId";
+			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			if (DB.FetchData(sql).Rows.Count > 0)
+			{
+				// Show team tabs and make ready datagrids
+				btnTeams.Visible = true;
+				btnOurTeam.Visible = true;
+				btnEnemyTeam.Visible = true;
+				dgvTeam1.Visible = false;
+				dgvTeam2.Visible = false;
+				GridHelper.StyleDataGrid(dgvTeam1);
+				GridHelper.StyleDataGrid(dgvTeam2);
+				this.Controls.Add(dgvTeam1);
+				this.Controls.Add(dgvTeam2);
+				// Find team 1 and 2
+				sql = "select team from battlePlayer where battleId=@battleId and name=@name";
+				DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@name", Config.Settings.playerName, DB.SqlDataType.VarChar);
+				DataTable dt = DB.FetchData(sql);
+				if (dt.Rows.Count > 0)
+				{
+					team1 = Convert.ToInt32(dt.Rows[0][0]);
+					team2 = 1;
+					if (team1 == 1) team2 = 2;
+				}
+			}
 		}
+
+		#endregion
+
+		#region My Result
 
 		private void GetMyPersonalInfo()
 		{
@@ -76,7 +125,8 @@ namespace WinApp.Forms
 				// Tank name
 				lblTankName.Text = dr["tankName"].ToString();
 				// Mastery Badge Image
-				int masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
+				int masteryBadge = 0;
+				if (dr["markOfMastery"] != DBNull.Value) masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
 				picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge, false);
 				// Map name
 				string mapName = "";
@@ -127,7 +177,7 @@ namespace WinApp.Forms
 						case 3: battleMode = "Tank Company Battle"; break;
 						case 4: battleMode = "Clan War Battle"; break;
 						case 5: battleMode = "Tutorial Battle"; break;
-						case 10: battleMode = "Skimish Battle"; break;
+						case 10: battleMode = "Skimish Battle"; showFortResources = true; break;
 					}
 				}
 				lblBattleMode.Text = battleMode;
@@ -143,12 +193,6 @@ namespace WinApp.Forms
 				lblEFF.ForeColor = Rating.WN8color(eff);
 				GetWN8Details();
 			}
-		}
-
-		private void BattleDetail_Resize(object sender, EventArgs e)
-		{
-			//lblResult.Left = panel1.Width / 2 - lblResult.Width / 2;
-			//picTank.Left = panel1.Width / 2 - picTank.Width / 2;
 		}
 
 		private void GetWN8Details()
@@ -201,10 +245,159 @@ namespace WinApp.Forms
 				txtRating_Val_Spot.Text = Math.Round(rSPOTc, 1).ToString();
 				txtRating_Val_Def.Text = Math.Round(rDEFc, 1).ToString();
 				txtRating_Val_WR.Text = Math.Round(rWINc, 1).ToString();
+				// Indicators
+				picRatingWN8_Dmg.Image = imgIndicators.Images[GetIndicator(dmg, exp_dmg)];
+				picRatingWN8_Frags.Image = imgIndicators.Images[GetIndicator(frags, exp_frags)];
+				picRatingWN8_Spot.Image = imgIndicators.Images[GetIndicator(spotted, exp_spotted)];
+				picRatingWN8_Def.Image = imgIndicators.Images[GetIndicator(def, exp_def)];
 			}
-
-
 		}
+
+		private int GetIndicator(double value, double compareTo)
+		{
+			int indicator = 1; // neutral
+			if (value > compareTo)
+				indicator = 0; // up
+			else if (value < compareTo)
+				indicator = 2; // down
+			return indicator;
+		}
+
+		#endregion
+
+		#region Team Overview
+
+		private void ShowTeams()
+		{
+			ResizeNow();
+			dgvTeam1.DataSource = GetDataGridSource(team1);
+			dgvTeam2.DataSource = GetDataGridSource(team2);
+			AutoSizeColumns(dgvTeam1);
+			AutoSizeColumns(dgvTeam2);
+			dgvTeam1.BringToFront();
+			dgvTeam2.BringToFront();
+		}
+
+		private void ShowOwnTeam()
+		{
+			ResizeNow();
+			dgvTeam1.DataSource = GetDataGridSource(team1, true);
+			AutoSizeColumns(dgvTeam1);
+			dgvTeam1.BringToFront();
+		}
+
+		private void ShowEnemyTeam()
+		{
+			ResizeNow();
+			dgvTeam2.DataSource = GetDataGridSource(team2, true);
+			AutoSizeColumns(dgvTeam2);
+			dgvTeam2.BringToFront();
+		}
+
+		private DataTable GetDataGridSource(int team, bool enhanced = false)
+		{
+			string fortResourcesFields = "";
+			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
+			string enhancedFields = "";
+			if (enhanced)
+				enhancedFields =
+					", credits as 'Credits' " +
+					", spotted as 'Spot' " +
+					", kills as 'Frags' " +
+					", tkills as 'Team kills' " +
+					", shots as 'Shots' " +
+					", hits as 'Hits' " +
+					", directHits as 'Direct Hits' " +
+					", capturePoints as 'Cap' " +
+					", droppedCapturePoints as 'Dropped Cap' " +
+					", damageReceived as 'Dmg Received' " +
+					", shotsReceived as 'Shots Received' " +
+					", directHitsReceived as 'Hits Received' " +
+					", deathReason as 'Death Reason' ";
+			string sql =
+				"select tank.name as 'Tank', battlePlayer.name as 'Team Player', clanAbbrev as Clan, xp as 'XP', damageDealt as 'Dmg' " + 
+				fortResourcesFields +
+				enhancedFields +
+				"from battlePlayer inner join " + 
+				"     tank on battlePlayer.tankId = tank.id " +
+				"where battleId=@battleId and team=@team";
+			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
+			return DB.FetchData(sql);
+		}
+		
+		private void AutoSizeColumns(DataGridView dgv)
+		{
+			dgv.Visible = true;
+			dgv.AutoResizeColumns();
+			int maxWidth = 80;
+			foreach (DataGridViewColumn c in dgv.Columns)
+			{
+				if (c.Width > maxWidth)
+				{
+					c.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+					c.Width = maxWidth;
+				}
+			}
+		}
+
+		#endregion
+
+		#region resize
+
+		private void BattleDetail_Resize(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
+		private void ResizeNow()
+		{
+			if (btnTeams.Checked)
+			{
+				PlaceGrid(dgvTeam1, GridLocation.Left);
+				PlaceGrid(dgvTeam2, GridLocation.Right);
+			}
+			else if (btnOurTeam.Checked)
+				PlaceGrid(dgvTeam1, GridLocation.Whole);
+			else if (btnEnemyTeam.Checked)
+				PlaceGrid(dgvTeam2, GridLocation.Whole);
+		}
+
+		private enum GridLocation
+		{
+			Left = 1,
+			Right = 2,
+			Whole = 3,
+		}
+
+		private void PlaceGrid(Control ctrl, GridLocation location)
+		{
+			switch (location)
+			{
+				case GridLocation.Left:
+					ctrl.Left = grpMain.Left + 1;
+					ctrl.Top = grpMain.Top + 8;
+					ctrl.Width = grpMain.Width / 2 - 1;
+					ctrl.Height = grpMain.Height - 9;
+					break;
+				case GridLocation.Right:
+					ctrl.Left = grpMain.Left + (grpMain.Width / 2) + 1;
+					ctrl.Top = grpMain.Top + 8;
+					ctrl.Width = grpMain.Width / 2 - 1;
+					ctrl.Height = grpMain.Height - 9;
+					break;
+				case GridLocation.Whole:
+					ctrl.Left = grpMain.Left + 1;
+					ctrl.Top = grpMain.Top + 8;
+					ctrl.Width = grpMain.Width - 2;
+					ctrl.Height = grpMain.Height - 9;
+					break;
+				default:
+					break;
+			}
+		}
+
+		#endregion
 
 	}
 }
