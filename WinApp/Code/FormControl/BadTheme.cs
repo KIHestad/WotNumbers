@@ -1252,6 +1252,12 @@ class BadLabel : BadThemeControl
 		set { _Dimmed = value; Invalidate(); }
 	}
 
+	private ContentAlignment _TxtAlign;
+	public ContentAlignment TxtAlign
+	{
+		get { return _TxtAlign; }
+		set { _TxtAlign = value; }
+	}
 
 	private Color _FontColor = ColorTheme.ControlFont;
 	public Color FontColor
@@ -1280,7 +1286,8 @@ class BadLabel : BadThemeControl
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
 		label.Text = Text;
-		ForeColor = FontColor;
+		label.ForeColor = FontColor;
+		label.TextAlign = TxtAlign;
 		if (Dimmed)
 			label.ForeColor = ColorTheme.ControlDimmedFont;
 		else

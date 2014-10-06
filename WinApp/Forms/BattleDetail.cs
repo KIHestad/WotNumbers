@@ -131,6 +131,17 @@ namespace WinApp.Forms
 					}
 				}
 				lblBattleMode.Text = battleMode;
+				// Ratings
+				double wn8 = Convert.ToDouble(dr["WN8"]);
+				double wn7 = Convert.ToDouble(dr["WN7"]);
+				double eff = Convert.ToDouble(dr["EFF"]);
+				lblWN8.Text = Math.Round(wn8,0).ToString();
+				lblWN7.Text = Math.Round(wn7,0).ToString();
+				lblEFF.Text = Math.Round(eff,0).ToString();
+				lblWN8.ForeColor = Rating.WN8color(wn8);
+				lblWN7.ForeColor = Rating.WN8color(wn7);
+				lblEFF.ForeColor = Rating.WN8color(eff);
+				GetWN8Details();
 			}
 		}
 
@@ -140,6 +151,60 @@ namespace WinApp.Forms
 			//picTank.Left = panel1.Width / 2 - picTank.Width / 2;
 		}
 
+		private void GetWN8Details()
+		{
+			string sql =
+				"SELECT playerTank.tankId, battle.battlesCount, battle.dmg, battle.spotted, battle.frags, battle.def, " +
+				"      tank.expDmg, tank.expSpot, tank.expFrags, tank.expDef, tank.expWR " +
+				"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id INNER JOIN tank ON playerTank.tankId = tank.id " +
+				"WHERE battle.id = @battleId";
+			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				DataRow dr = dt.Rows[0];
+				int tankId = Convert.ToInt32(dr["tankId"]);
+				int battlesCount = Convert.ToInt32(dr["battlesCount"]);
+				int dmg = Convert.ToInt32(dr["dmg"]);
+				int spotted = Convert.ToInt32(dr["spotted"]);
+				int frags = Convert.ToInt32(dr["frags"]);
+				int def = Convert.ToInt32(dr["def"]);
+				int exp_dmg = Convert.ToInt32(dr["expDmg"]) * battlesCount;
+				int exp_spotted = Convert.ToInt32(dr["expSpot"]) * battlesCount;
+				int exp_frags = Convert.ToInt32(dr["expFrags"]) * battlesCount;
+				int exp_def = Convert.ToInt32(dr["expDef"]) * battlesCount;
+				int exp_wr = Convert.ToInt32(dr["expWR"]);
+				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
+				double rWINc;
+				double rDAMAGEc;
+				double rFRAGSc;
+				double rSPOTc;
+				double rDEFc;
+				Rating.UseWN8FormulaReturnResult(
+					dmg, spotted, frags, def, exp_wr,
+					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
+					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+				// Exp val
+				txtRating_Exp_Dmg.Text = exp_dmg.ToString();
+				txtRating_Exp_Frags.Text = exp_frags.ToString();
+				txtRating_Exp_Spot.Text = exp_spotted.ToString();
+				txtRating_Exp_Def.Text = exp_def.ToString();
+				txtRating_Exp_WR.Text = exp_wr.ToString() + "%";
+				// Result
+				txtRating_Res_Dmg.Text = dmg.ToString();
+				txtRating_Res_Frags.Text = frags.ToString();
+				txtRating_Res_Spot.Text = spotted.ToString();
+				txtRating_Res_Def.Text = def.ToString();
+				// Values
+				txtRating_Val_Dmg.Text = Math.Round(rDAMAGEc, 1).ToString();
+				txtRating_Val_Frags.Text = Math.Round(rFRAGSc, 1).ToString();
+				txtRating_Val_Spot.Text = Math.Round(rSPOTc, 1).ToString();
+				txtRating_Val_Def.Text = Math.Round(rDEFc, 1).ToString();
+				txtRating_Val_WR.Text = Math.Round(rWINc, 1).ToString();
+			}
+
+
+		}
 
 	}
 }

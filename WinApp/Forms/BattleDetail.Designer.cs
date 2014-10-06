@@ -33,7 +33,37 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleDetail));
 			this.BattleDetailTheme = new BadForm();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.txtRating_Val_WR = new BadTextBox();
+			this.txtRating_Val_Def = new BadTextBox();
+			this.txtRating_Val_Spot = new BadTextBox();
+			this.txtRating_Val_Frags = new BadTextBox();
+			this.txtRating_Val_Dmg = new BadTextBox();
+			this.txtRating_Exp_WR = new BadTextBox();
+			this.txtRating_Exp_Def = new BadTextBox();
+			this.txtRating_Exp_Spot = new BadTextBox();
+			this.txtRating_Exp_Frags = new BadTextBox();
+			this.txtRating_Exp_Dmg = new BadTextBox();
+			this.txtRating_Res_WR = new BadTextBox();
+			this.txtRating_Res_Def = new BadTextBox();
+			this.txtRating_Res_Spot = new BadTextBox();
+			this.txtRating_Res_Frags = new BadTextBox();
+			this.txtRating_Res_Dmg = new BadTextBox();
+			this.badLabel9 = new BadLabel();
+			this.badLabel8 = new BadLabel();
+			this.badLabel7 = new BadLabel();
+			this.badLabel6 = new BadLabel();
+			this.badLabel5 = new BadLabel();
+			this.badLabel4 = new BadLabel();
+			this.badLabel3 = new BadLabel();
+			this.badLabel2 = new BadLabel();
+			this.badGroupBox2 = new BadGroupBox();
 			this.panel2 = new System.Windows.Forms.Panel();
+			this.lblEFF = new System.Windows.Forms.Label();
+			this.lblWN7 = new System.Windows.Forms.Label();
+			this.lblWN8 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
 			this.lblTankName = new System.Windows.Forms.Label();
 			this.picMB = new System.Windows.Forms.PictureBox();
 			this.lblDuration = new System.Windows.Forms.Label();
@@ -78,7 +108,7 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(678, 521);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(847, 484);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
@@ -89,18 +119,381 @@
 			// panel1
 			// 
 			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.panel1.Controls.Add(this.txtRating_Val_WR);
+			this.panel1.Controls.Add(this.txtRating_Val_Def);
+			this.panel1.Controls.Add(this.txtRating_Val_Spot);
+			this.panel1.Controls.Add(this.txtRating_Val_Frags);
+			this.panel1.Controls.Add(this.txtRating_Val_Dmg);
+			this.panel1.Controls.Add(this.txtRating_Exp_WR);
+			this.panel1.Controls.Add(this.txtRating_Exp_Def);
+			this.panel1.Controls.Add(this.txtRating_Exp_Spot);
+			this.panel1.Controls.Add(this.txtRating_Exp_Frags);
+			this.panel1.Controls.Add(this.txtRating_Exp_Dmg);
+			this.panel1.Controls.Add(this.txtRating_Res_WR);
+			this.panel1.Controls.Add(this.txtRating_Res_Def);
+			this.panel1.Controls.Add(this.txtRating_Res_Spot);
+			this.panel1.Controls.Add(this.txtRating_Res_Frags);
+			this.panel1.Controls.Add(this.txtRating_Res_Dmg);
+			this.panel1.Controls.Add(this.badLabel9);
+			this.panel1.Controls.Add(this.badLabel8);
+			this.panel1.Controls.Add(this.badLabel7);
+			this.panel1.Controls.Add(this.badLabel6);
+			this.panel1.Controls.Add(this.badLabel5);
+			this.panel1.Controls.Add(this.badLabel4);
+			this.panel1.Controls.Add(this.badLabel3);
+			this.panel1.Controls.Add(this.badLabel2);
+			this.panel1.Controls.Add(this.badGroupBox2);
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(626, 426);
+			this.panel1.Size = new System.Drawing.Size(795, 389);
 			this.panel1.TabIndex = 6;
+			// 
+			// txtRating_Val_WR
+			// 
+			this.txtRating_Val_WR.HasFocus = false;
+			this.txtRating_Val_WR.Image = null;
+			this.txtRating_Val_WR.Location = new System.Drawing.Point(187, 244);
+			this.txtRating_Val_WR.MultilineAllow = false;
+			this.txtRating_Val_WR.Name = "txtRating_Val_WR";
+			this.txtRating_Val_WR.PasswordChar = '\0';
+			this.txtRating_Val_WR.ReadOnly = false;
+			this.txtRating_Val_WR.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Val_WR.TabIndex = 31;
+			this.txtRating_Val_WR.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Val_WR.ToolTipText = "";
+			// 
+			// txtRating_Val_Def
+			// 
+			this.txtRating_Val_Def.HasFocus = false;
+			this.txtRating_Val_Def.Image = null;
+			this.txtRating_Val_Def.Location = new System.Drawing.Point(187, 222);
+			this.txtRating_Val_Def.MultilineAllow = false;
+			this.txtRating_Val_Def.Name = "txtRating_Val_Def";
+			this.txtRating_Val_Def.PasswordChar = '\0';
+			this.txtRating_Val_Def.ReadOnly = false;
+			this.txtRating_Val_Def.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Val_Def.TabIndex = 30;
+			this.txtRating_Val_Def.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Val_Def.ToolTipText = "";
+			// 
+			// txtRating_Val_Spot
+			// 
+			this.txtRating_Val_Spot.HasFocus = false;
+			this.txtRating_Val_Spot.Image = null;
+			this.txtRating_Val_Spot.Location = new System.Drawing.Point(187, 200);
+			this.txtRating_Val_Spot.MultilineAllow = false;
+			this.txtRating_Val_Spot.Name = "txtRating_Val_Spot";
+			this.txtRating_Val_Spot.PasswordChar = '\0';
+			this.txtRating_Val_Spot.ReadOnly = false;
+			this.txtRating_Val_Spot.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Val_Spot.TabIndex = 29;
+			this.txtRating_Val_Spot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Val_Spot.ToolTipText = "";
+			// 
+			// txtRating_Val_Frags
+			// 
+			this.txtRating_Val_Frags.HasFocus = false;
+			this.txtRating_Val_Frags.Image = null;
+			this.txtRating_Val_Frags.Location = new System.Drawing.Point(187, 178);
+			this.txtRating_Val_Frags.MultilineAllow = false;
+			this.txtRating_Val_Frags.Name = "txtRating_Val_Frags";
+			this.txtRating_Val_Frags.PasswordChar = '\0';
+			this.txtRating_Val_Frags.ReadOnly = false;
+			this.txtRating_Val_Frags.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Val_Frags.TabIndex = 28;
+			this.txtRating_Val_Frags.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Val_Frags.ToolTipText = "";
+			// 
+			// txtRating_Val_Dmg
+			// 
+			this.txtRating_Val_Dmg.HasFocus = false;
+			this.txtRating_Val_Dmg.Image = null;
+			this.txtRating_Val_Dmg.Location = new System.Drawing.Point(187, 156);
+			this.txtRating_Val_Dmg.MultilineAllow = false;
+			this.txtRating_Val_Dmg.Name = "txtRating_Val_Dmg";
+			this.txtRating_Val_Dmg.PasswordChar = '\0';
+			this.txtRating_Val_Dmg.ReadOnly = false;
+			this.txtRating_Val_Dmg.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Val_Dmg.TabIndex = 27;
+			this.txtRating_Val_Dmg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Val_Dmg.ToolTipText = "";
+			// 
+			// txtRating_Exp_WR
+			// 
+			this.txtRating_Exp_WR.HasFocus = false;
+			this.txtRating_Exp_WR.Image = null;
+			this.txtRating_Exp_WR.Location = new System.Drawing.Point(140, 244);
+			this.txtRating_Exp_WR.MultilineAllow = false;
+			this.txtRating_Exp_WR.Name = "txtRating_Exp_WR";
+			this.txtRating_Exp_WR.PasswordChar = '\0';
+			this.txtRating_Exp_WR.ReadOnly = false;
+			this.txtRating_Exp_WR.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Exp_WR.TabIndex = 26;
+			this.txtRating_Exp_WR.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Exp_WR.ToolTipText = "";
+			// 
+			// txtRating_Exp_Def
+			// 
+			this.txtRating_Exp_Def.HasFocus = false;
+			this.txtRating_Exp_Def.Image = null;
+			this.txtRating_Exp_Def.Location = new System.Drawing.Point(140, 222);
+			this.txtRating_Exp_Def.MultilineAllow = false;
+			this.txtRating_Exp_Def.Name = "txtRating_Exp_Def";
+			this.txtRating_Exp_Def.PasswordChar = '\0';
+			this.txtRating_Exp_Def.ReadOnly = false;
+			this.txtRating_Exp_Def.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Exp_Def.TabIndex = 25;
+			this.txtRating_Exp_Def.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Exp_Def.ToolTipText = "";
+			// 
+			// txtRating_Exp_Spot
+			// 
+			this.txtRating_Exp_Spot.HasFocus = false;
+			this.txtRating_Exp_Spot.Image = null;
+			this.txtRating_Exp_Spot.Location = new System.Drawing.Point(140, 200);
+			this.txtRating_Exp_Spot.MultilineAllow = false;
+			this.txtRating_Exp_Spot.Name = "txtRating_Exp_Spot";
+			this.txtRating_Exp_Spot.PasswordChar = '\0';
+			this.txtRating_Exp_Spot.ReadOnly = false;
+			this.txtRating_Exp_Spot.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Exp_Spot.TabIndex = 24;
+			this.txtRating_Exp_Spot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Exp_Spot.ToolTipText = "";
+			// 
+			// txtRating_Exp_Frags
+			// 
+			this.txtRating_Exp_Frags.HasFocus = false;
+			this.txtRating_Exp_Frags.Image = null;
+			this.txtRating_Exp_Frags.Location = new System.Drawing.Point(140, 178);
+			this.txtRating_Exp_Frags.MultilineAllow = false;
+			this.txtRating_Exp_Frags.Name = "txtRating_Exp_Frags";
+			this.txtRating_Exp_Frags.PasswordChar = '\0';
+			this.txtRating_Exp_Frags.ReadOnly = false;
+			this.txtRating_Exp_Frags.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Exp_Frags.TabIndex = 23;
+			this.txtRating_Exp_Frags.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Exp_Frags.ToolTipText = "";
+			// 
+			// txtRating_Exp_Dmg
+			// 
+			this.txtRating_Exp_Dmg.HasFocus = false;
+			this.txtRating_Exp_Dmg.Image = null;
+			this.txtRating_Exp_Dmg.Location = new System.Drawing.Point(140, 156);
+			this.txtRating_Exp_Dmg.MultilineAllow = false;
+			this.txtRating_Exp_Dmg.Name = "txtRating_Exp_Dmg";
+			this.txtRating_Exp_Dmg.PasswordChar = '\0';
+			this.txtRating_Exp_Dmg.ReadOnly = false;
+			this.txtRating_Exp_Dmg.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Exp_Dmg.TabIndex = 22;
+			this.txtRating_Exp_Dmg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Exp_Dmg.ToolTipText = "";
+			// 
+			// txtRating_Res_WR
+			// 
+			this.txtRating_Res_WR.HasFocus = false;
+			this.txtRating_Res_WR.Image = null;
+			this.txtRating_Res_WR.Location = new System.Drawing.Point(91, 244);
+			this.txtRating_Res_WR.MultilineAllow = false;
+			this.txtRating_Res_WR.Name = "txtRating_Res_WR";
+			this.txtRating_Res_WR.PasswordChar = '\0';
+			this.txtRating_Res_WR.ReadOnly = false;
+			this.txtRating_Res_WR.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Res_WR.TabIndex = 21;
+			this.txtRating_Res_WR.Text = "Fixed";
+			this.txtRating_Res_WR.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Res_WR.ToolTipText = "";
+			// 
+			// txtRating_Res_Def
+			// 
+			this.txtRating_Res_Def.HasFocus = false;
+			this.txtRating_Res_Def.Image = null;
+			this.txtRating_Res_Def.Location = new System.Drawing.Point(91, 222);
+			this.txtRating_Res_Def.MultilineAllow = false;
+			this.txtRating_Res_Def.Name = "txtRating_Res_Def";
+			this.txtRating_Res_Def.PasswordChar = '\0';
+			this.txtRating_Res_Def.ReadOnly = false;
+			this.txtRating_Res_Def.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Res_Def.TabIndex = 20;
+			this.txtRating_Res_Def.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Res_Def.ToolTipText = "";
+			// 
+			// txtRating_Res_Spot
+			// 
+			this.txtRating_Res_Spot.HasFocus = false;
+			this.txtRating_Res_Spot.Image = null;
+			this.txtRating_Res_Spot.Location = new System.Drawing.Point(91, 200);
+			this.txtRating_Res_Spot.MultilineAllow = false;
+			this.txtRating_Res_Spot.Name = "txtRating_Res_Spot";
+			this.txtRating_Res_Spot.PasswordChar = '\0';
+			this.txtRating_Res_Spot.ReadOnly = false;
+			this.txtRating_Res_Spot.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Res_Spot.TabIndex = 19;
+			this.txtRating_Res_Spot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Res_Spot.ToolTipText = "";
+			// 
+			// txtRating_Res_Frags
+			// 
+			this.txtRating_Res_Frags.HasFocus = false;
+			this.txtRating_Res_Frags.Image = null;
+			this.txtRating_Res_Frags.Location = new System.Drawing.Point(91, 178);
+			this.txtRating_Res_Frags.MultilineAllow = false;
+			this.txtRating_Res_Frags.Name = "txtRating_Res_Frags";
+			this.txtRating_Res_Frags.PasswordChar = '\0';
+			this.txtRating_Res_Frags.ReadOnly = false;
+			this.txtRating_Res_Frags.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Res_Frags.TabIndex = 18;
+			this.txtRating_Res_Frags.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Res_Frags.ToolTipText = "";
+			// 
+			// txtRating_Res_Dmg
+			// 
+			this.txtRating_Res_Dmg.HasFocus = false;
+			this.txtRating_Res_Dmg.Image = null;
+			this.txtRating_Res_Dmg.Location = new System.Drawing.Point(91, 156);
+			this.txtRating_Res_Dmg.MultilineAllow = false;
+			this.txtRating_Res_Dmg.Name = "txtRating_Res_Dmg";
+			this.txtRating_Res_Dmg.PasswordChar = '\0';
+			this.txtRating_Res_Dmg.ReadOnly = false;
+			this.txtRating_Res_Dmg.Size = new System.Drawing.Size(50, 23);
+			this.txtRating_Res_Dmg.TabIndex = 17;
+			this.txtRating_Res_Dmg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtRating_Res_Dmg.ToolTipText = "";
+			// 
+			// badLabel9
+			// 
+			this.badLabel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel9.Dimmed = false;
+			this.badLabel9.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel9.Image = null;
+			this.badLabel9.Location = new System.Drawing.Point(187, 136);
+			this.badLabel9.Name = "badLabel9";
+			this.badLabel9.Size = new System.Drawing.Size(50, 23);
+			this.badLabel9.TabIndex = 16;
+			this.badLabel9.Text = "Value";
+			this.badLabel9.TxtAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// badLabel8
+			// 
+			this.badLabel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel8.Dimmed = false;
+			this.badLabel8.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel8.Image = null;
+			this.badLabel8.Location = new System.Drawing.Point(140, 136);
+			this.badLabel8.Name = "badLabel8";
+			this.badLabel8.Size = new System.Drawing.Size(49, 23);
+			this.badLabel8.TabIndex = 15;
+			this.badLabel8.Text = "Exp";
+			this.badLabel8.TxtAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// badLabel7
+			// 
+			this.badLabel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel7.Dimmed = false;
+			this.badLabel7.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel7.Image = null;
+			this.badLabel7.Location = new System.Drawing.Point(91, 136);
+			this.badLabel7.Name = "badLabel7";
+			this.badLabel7.Size = new System.Drawing.Size(50, 23);
+			this.badLabel7.TabIndex = 14;
+			this.badLabel7.Text = "Result";
+			this.badLabel7.TxtAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// badLabel6
+			// 
+			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel6.Dimmed = false;
+			this.badLabel6.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel6.Image = null;
+			this.badLabel6.Location = new System.Drawing.Point(32, 244);
+			this.badLabel6.Name = "badLabel6";
+			this.badLabel6.Size = new System.Drawing.Size(58, 23);
+			this.badLabel6.TabIndex = 13;
+			this.badLabel6.Text = "Win Rate";
+			this.badLabel6.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
+			// badLabel5
+			// 
+			this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel5.Dimmed = false;
+			this.badLabel5.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel5.Image = null;
+			this.badLabel5.Location = new System.Drawing.Point(32, 222);
+			this.badLabel5.Name = "badLabel5";
+			this.badLabel5.Size = new System.Drawing.Size(58, 23);
+			this.badLabel5.TabIndex = 12;
+			this.badLabel5.Text = "Defence";
+			this.badLabel5.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
+			// badLabel4
+			// 
+			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Dimmed = false;
+			this.badLabel4.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel4.Image = null;
+			this.badLabel4.Location = new System.Drawing.Point(32, 200);
+			this.badLabel4.Name = "badLabel4";
+			this.badLabel4.Size = new System.Drawing.Size(58, 23);
+			this.badLabel4.TabIndex = 11;
+			this.badLabel4.Text = "Spot";
+			this.badLabel4.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
+			// badLabel3
+			// 
+			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel3.Dimmed = false;
+			this.badLabel3.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel3.Image = null;
+			this.badLabel3.Location = new System.Drawing.Point(32, 178);
+			this.badLabel3.Name = "badLabel3";
+			this.badLabel3.Size = new System.Drawing.Size(58, 23);
+			this.badLabel3.TabIndex = 10;
+			this.badLabel3.Text = "Frags";
+			this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
+			// badLabel2
+			// 
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(32, 156);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(58, 23);
+			this.badLabel2.TabIndex = 9;
+			this.badLabel2.Text = "Damage";
+			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
+			// badGroupBox2
+			// 
+			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox2.Image = null;
+			this.badGroupBox2.Location = new System.Drawing.Point(16, 115);
+			this.badGroupBox2.Name = "badGroupBox2";
+			this.badGroupBox2.Size = new System.Drawing.Size(234, 164);
+			this.badGroupBox2.TabIndex = 7;
+			this.badGroupBox2.Text = "WN8 Rating Details";
 			// 
 			// panel2
 			// 
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.panel2.Controls.Add(this.lblEFF);
+			this.panel2.Controls.Add(this.lblWN7);
+			this.panel2.Controls.Add(this.lblWN8);
+			this.panel2.Controls.Add(this.label7);
+			this.panel2.Controls.Add(this.label8);
+			this.panel2.Controls.Add(this.label9);
 			this.panel2.Controls.Add(this.lblTankName);
 			this.panel2.Controls.Add(this.picMB);
 			this.panel2.Controls.Add(this.lblDuration);
@@ -117,15 +510,81 @@
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel2.Location = new System.Drawing.Point(0, 0);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(626, 100);
+			this.panel2.Size = new System.Drawing.Size(795, 100);
 			this.panel2.TabIndex = 6;
+			// 
+			// lblEFF
+			// 
+			this.lblEFF.AutoSize = true;
+			this.lblEFF.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.lblEFF.Location = new System.Drawing.Point(380, 76);
+			this.lblEFF.Name = "lblEFF";
+			this.lblEFF.Size = new System.Drawing.Size(35, 13);
+			this.lblEFF.TabIndex = 20;
+			this.lblEFF.Text = "XXXX";
+			this.lblEFF.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// lblWN7
+			// 
+			this.lblWN7.AutoSize = true;
+			this.lblWN7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.lblWN7.Location = new System.Drawing.Point(380, 58);
+			this.lblWN7.Name = "lblWN7";
+			this.lblWN7.Size = new System.Drawing.Size(35, 13);
+			this.lblWN7.TabIndex = 19;
+			this.lblWN7.Text = "XXXX";
+			this.lblWN7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// lblWN8
+			// 
+			this.lblWN8.AutoSize = true;
+			this.lblWN8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.lblWN8.Location = new System.Drawing.Point(380, 40);
+			this.lblWN8.Name = "lblWN8";
+			this.lblWN8.Size = new System.Drawing.Size(35, 13);
+			this.lblWN8.TabIndex = 18;
+			this.lblWN8.Text = "XXXX";
+			this.lblWN8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.label7.Location = new System.Drawing.Point(342, 76);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(29, 13);
+			this.label7.TabIndex = 17;
+			this.label7.Text = "EFF:";
+			this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.label8.Location = new System.Drawing.Point(342, 58);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(35, 13);
+			this.label8.TabIndex = 16;
+			this.label8.Text = "WN7:";
+			this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.label9.Location = new System.Drawing.Point(342, 40);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(35, 13);
+			this.label9.TabIndex = 15;
+			this.label9.Text = "WN8:";
+			this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lblTankName
 			// 
 			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(306, 11);
+			this.lblTankName.Location = new System.Drawing.Point(475, 11);
 			this.lblTankName.Name = "lblTankName";
 			this.lblTankName.Size = new System.Drawing.Size(200, 14);
 			this.lblTankName.TabIndex = 7;
@@ -135,7 +594,7 @@
 			// picMB
 			// 
 			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picMB.Location = new System.Drawing.Point(362, 35);
+			this.picMB.Location = new System.Drawing.Point(531, 35);
 			this.picMB.Name = "picMB";
 			this.picMB.Size = new System.Drawing.Size(67, 64);
 			this.picMB.TabIndex = 14;
@@ -256,7 +715,7 @@
 			// picTank
 			// 
 			this.picTank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picTank.Location = new System.Drawing.Point(456, 0);
+			this.picTank.Location = new System.Drawing.Point(625, 0);
 			this.picTank.Name = "picTank";
 			this.picTank.Size = new System.Drawing.Size(170, 100);
 			this.picTank.TabIndex = 1;
@@ -317,13 +776,13 @@
 			// badGroupBox1
 			// 
 			this.badGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 56);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(628, 436);
+			this.badGroupBox1.Size = new System.Drawing.Size(797, 399);
 			this.badGroupBox1.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -331,7 +790,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(678, 521);
+			this.ClientSize = new System.Drawing.Size(847, 484);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(678, 400);
@@ -375,5 +834,35 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.PictureBox picMB;
+		private BadTextBox txtRating_Val_WR;
+		private BadTextBox txtRating_Val_Def;
+		private BadTextBox txtRating_Val_Spot;
+		private BadTextBox txtRating_Val_Frags;
+		private BadTextBox txtRating_Val_Dmg;
+		private BadTextBox txtRating_Exp_WR;
+		private BadTextBox txtRating_Exp_Def;
+		private BadTextBox txtRating_Exp_Spot;
+		private BadTextBox txtRating_Exp_Frags;
+		private BadTextBox txtRating_Exp_Dmg;
+		private BadTextBox txtRating_Res_WR;
+		private BadTextBox txtRating_Res_Def;
+		private BadTextBox txtRating_Res_Spot;
+		private BadTextBox txtRating_Res_Frags;
+		private BadTextBox txtRating_Res_Dmg;
+		private BadLabel badLabel9;
+		private BadLabel badLabel8;
+		private BadLabel badLabel7;
+		private BadLabel badLabel6;
+		private BadLabel badLabel5;
+		private BadLabel badLabel4;
+		private BadLabel badLabel3;
+		private BadLabel badLabel2;
+		private BadGroupBox badGroupBox2;
+		private System.Windows.Forms.Label lblEFF;
+		private System.Windows.Forms.Label lblWN7;
+		private System.Windows.Forms.Label lblWN8;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
 	}
 }
