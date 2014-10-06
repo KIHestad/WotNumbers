@@ -34,8 +34,8 @@
 			this.BattleDetailTheme = new BadForm();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.picMB = new System.Windows.Forms.PictureBox();
 			this.lblTankName = new System.Windows.Forms.Label();
+			this.picMB = new System.Windows.Forms.PictureBox();
 			this.lblDuration = new System.Windows.Forms.Label();
 			this.lblTime = new System.Windows.Forms.Label();
 			this.lblDate = new System.Windows.Forms.Label();
@@ -101,8 +101,8 @@
 			// panel2
 			// 
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-			this.panel2.Controls.Add(this.picMB);
 			this.panel2.Controls.Add(this.lblTankName);
+			this.panel2.Controls.Add(this.picMB);
 			this.panel2.Controls.Add(this.lblDuration);
 			this.panel2.Controls.Add(this.lblTime);
 			this.panel2.Controls.Add(this.lblDate);
@@ -120,26 +120,26 @@
 			this.panel2.Size = new System.Drawing.Size(626, 100);
 			this.panel2.TabIndex = 6;
 			// 
-			// picMB
-			// 
-			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picMB.Location = new System.Drawing.Point(342, 15);
-			this.picMB.Name = "picMB";
-			this.picMB.Size = new System.Drawing.Size(67, 71);
-			this.picMB.TabIndex = 14;
-			this.picMB.TabStop = false;
-			// 
 			// lblTankName
 			// 
 			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(407, 11);
+			this.lblTankName.Location = new System.Drawing.Point(313, 8);
 			this.lblTankName.Name = "lblTankName";
-			this.lblTankName.Size = new System.Drawing.Size(98, 24);
+			this.lblTankName.Size = new System.Drawing.Size(200, 14);
 			this.lblTankName.TabIndex = 7;
 			this.lblTankName.Text = "Tank Name";
 			this.lblTankName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// picMB
+			// 
+			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.picMB.Location = new System.Drawing.Point(362, 25);
+			this.picMB.Name = "picMB";
+			this.picMB.Size = new System.Drawing.Size(67, 64);
+			this.picMB.TabIndex = 14;
+			this.picMB.TabStop = false;
 			// 
 			// lblDuration
 			// 
