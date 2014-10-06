@@ -1252,7 +1252,7 @@ class BadLabel : BadThemeControl
 		set { _Dimmed = value; Invalidate(); }
 	}
 
-	private ContentAlignment _TxtAlign;
+	private ContentAlignment _TxtAlign = ContentAlignment.TopLeft;
 	public ContentAlignment TxtAlign
 	{
 		get { return _TxtAlign; }

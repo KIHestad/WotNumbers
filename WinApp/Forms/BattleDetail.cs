@@ -209,10 +209,10 @@ namespace WinApp.Forms
 				DataRow dr = dt.Rows[0];
 				int tankId = Convert.ToInt32(dr["tankId"]);
 				int battlesCount = Convert.ToInt32(dr["battlesCount"]);
-				int dmg = Convert.ToInt32(dr["dmg"]);
-				int spotted = Convert.ToInt32(dr["spotted"]);
-				int frags = Convert.ToInt32(dr["frags"]);
-				int def = Convert.ToInt32(dr["def"]);
+				int dmg = battlesCount * Convert.ToInt32(dr["dmg"]);
+				int spotted = battlesCount * Convert.ToInt32(dr["spotted"]);
+				int frags = battlesCount * Convert.ToInt32(dr["frags"]);
+				int def = battlesCount * Convert.ToInt32(dr["def"]);
 				int exp_dmg = Convert.ToInt32(dr["expDmg"]) * battlesCount;
 				int exp_spotted = Convert.ToInt32(dr["expSpot"]) * battlesCount;
 				int exp_frags = Convert.ToInt32(dr["expFrags"]) * battlesCount;
