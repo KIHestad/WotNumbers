@@ -115,7 +115,7 @@ namespace WinAdmin
 			}
 			sql = "create table masterybadge ( " +
 				"	id integer primary key, " +
-				"	img blob, imgSmall blob " +
+				"	img blob, imgSmall blob, imgLarge " +
 				")";
 			DB.ExecuteNonQuery(sql, Settings.Config, out result);
 			FormHelper.ShowError(result);
@@ -129,19 +129,23 @@ namespace WinAdmin
 				// read image into database
 				byte[] img = getImageFromFile(imageFile);
 				byte[] imgSmall = getImageFromFile(imageFile.Replace("\\Img\\Badges\\","\\Img\\Badges\\Small\\"));
+				byte[] imgLarge = getImageFromFile(imageFile.Replace("\\Img\\Badges\\", "\\Img\\Badges\\Large\\"));
 				// SQL Lite binary insert
 				string conString = Config.DatabaseConnection(Settings.Config);
 				SQLiteConnection con = new SQLiteConnection(conString);
 				SQLiteCommand cmd = con.CreateCommand();
-				cmd.CommandText = "INSERT INTO masterybadge (id, img, imgSmall) VALUES (@id, @img, @imgSmall); ";
+				cmd.CommandText = "INSERT INTO masterybadge (id, img, imgSmall, imgLarge) VALUES (@id, @img, @imgSmall, @imgLarge); ";
 				SQLiteParameter imgParam = new SQLiteParameter("@img", System.Data.DbType.Binary);
 				SQLiteParameter imgSmallParam = new SQLiteParameter("@imgSmall", System.Data.DbType.Binary);
+				SQLiteParameter imgLargeParam = new SQLiteParameter("@imgLarge", System.Data.DbType.Binary);
 				SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
 				imgParam.Value = img;
 				imgSmallParam.Value = imgSmall;
+				imgLargeParam.Value = imgLarge;
 				idParam.Value = Path.GetFileNameWithoutExtension(imageFile);
 				cmd.Parameters.Add(imgParam);
 				cmd.Parameters.Add(imgSmallParam);
+				cmd.Parameters.Add(imgLargeParam);
 				cmd.Parameters.Add(idParam);
 				con.Open();
 				try

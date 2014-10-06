@@ -50,6 +50,7 @@ namespace WinApp.Code
 			MasteryBadgeImage.Columns.Add("id", typeof(Int32));
 			MasteryBadgeImage.PrimaryKey = new DataColumn[] { MasteryBadgeImage.Columns["id"] };
 			MasteryBadgeImage.Columns.Add("img", typeof(Image));
+			MasteryBadgeImage.Columns.Add("imgLarge", typeof(Image));
 			LoadMasteryBadgeImages();
 		}
 
@@ -145,6 +146,12 @@ namespace WinApp.Code
 				ms.Write(imgByte, 0, imgByte.Length);
 				Image image = new Bitmap(ms);
 				masterybadgeImgNewDataRow["img"] = image;
+				// Large Image
+				byte[] imgLargeByte = (byte[])dr["imgLarge"];
+				ms = new MemoryStream(imgLargeByte, 0, imgLargeByte.Length);
+				ms.Write(imgLargeByte, 0, imgLargeByte.Length);
+				image = new Bitmap(ms);
+				masterybadgeImgNewDataRow["imgLarge"] = image;
 				// Add to dt
 				MasteryBadgeImage.Rows.Add(masterybadgeImgNewDataRow);
 				MasteryBadgeImage.AcceptChanges();
@@ -239,11 +246,14 @@ namespace WinApp.Code
 				
 		}
 
-		public static Image GetMasteryBadgeImage(int id)
+		public static Image GetMasteryBadgeImage(int id, bool icon = true)
 		{
 			DataRow[] dr = MasteryBadgeImage.Select("id = " + id.ToString());
 			if (dr.Length > 0)
-				return (Image)dr[0]["img"];
+				if (icon)
+					return (Image)dr[0]["img"];
+				else
+					return (Image)dr[0]["imgLarge"];
 			else
 			{
 				Bitmap img = new Bitmap(1, 1);

@@ -157,6 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="formadmin_ico_6.ico" />
+    <Content Include="Img\Badges\Large\1.png" />
+    <Content Include="Img\Badges\Large\2.png" />
+    <Content Include="Img\Badges\Large\3.png" />
+    <Content Include="Img\Badges\Large\4.png" />
     <Content Include="Img\Badges\Small\3.png" />
     <Content Include="Img\Badges\Small\2.png" />
     <Content Include="Img\Badges\3.png" />

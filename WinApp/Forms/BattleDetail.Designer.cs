@@ -34,13 +34,14 @@
 			this.BattleDetailTheme = new BadForm();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panel2 = new System.Windows.Forms.Panel();
+			this.picMB = new System.Windows.Forms.PictureBox();
+			this.lblTankName = new System.Windows.Forms.Label();
 			this.lblDuration = new System.Windows.Forms.Label();
 			this.lblTime = new System.Windows.Forms.Label();
 			this.lblDate = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.lblTankName = new System.Windows.Forms.Label();
 			this.lblResult = new System.Windows.Forms.Label();
 			this.lblMap = new System.Windows.Forms.Label();
 			this.lblSurvival = new System.Windows.Forms.Label();
@@ -54,6 +55,7 @@
 			this.BattleDetailTheme.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picMB)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picTank)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -76,7 +78,7 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(700, 550);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(678, 521);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
@@ -93,19 +95,20 @@
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(648, 455);
+			this.panel1.Size = new System.Drawing.Size(626, 426);
 			this.panel1.TabIndex = 6;
 			// 
 			// panel2
 			// 
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.panel2.Controls.Add(this.picMB);
+			this.panel2.Controls.Add(this.lblTankName);
 			this.panel2.Controls.Add(this.lblDuration);
 			this.panel2.Controls.Add(this.lblTime);
 			this.panel2.Controls.Add(this.lblDate);
 			this.panel2.Controls.Add(this.label3);
 			this.panel2.Controls.Add(this.label2);
 			this.panel2.Controls.Add(this.label1);
-			this.panel2.Controls.Add(this.lblTankName);
 			this.panel2.Controls.Add(this.lblResult);
 			this.panel2.Controls.Add(this.lblMap);
 			this.panel2.Controls.Add(this.lblSurvival);
@@ -114,14 +117,35 @@
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel2.Location = new System.Drawing.Point(0, 0);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(648, 100);
+			this.panel2.Size = new System.Drawing.Size(626, 100);
 			this.panel2.TabIndex = 6;
+			// 
+			// picMB
+			// 
+			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.picMB.Location = new System.Drawing.Point(342, 15);
+			this.picMB.Name = "picMB";
+			this.picMB.Size = new System.Drawing.Size(67, 71);
+			this.picMB.TabIndex = 14;
+			this.picMB.TabStop = false;
+			// 
+			// lblTankName
+			// 
+			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
+			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.lblTankName.Location = new System.Drawing.Point(407, 11);
+			this.lblTankName.Name = "lblTankName";
+			this.lblTankName.Size = new System.Drawing.Size(98, 24);
+			this.lblTankName.TabIndex = 7;
+			this.lblTankName.Text = "Tank Name";
+			this.lblTankName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// lblDuration
 			// 
 			this.lblDuration.AutoSize = true;
 			this.lblDuration.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblDuration.Location = new System.Drawing.Point(256, 76);
+			this.lblDuration.Location = new System.Drawing.Point(229, 76);
 			this.lblDuration.Name = "lblDuration";
 			this.lblDuration.Size = new System.Drawing.Size(42, 13);
 			this.lblDuration.TabIndex = 13;
@@ -132,7 +156,7 @@
 			// 
 			this.lblTime.AutoSize = true;
 			this.lblTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTime.Location = new System.Drawing.Point(256, 58);
+			this.lblTime.Location = new System.Drawing.Point(229, 58);
 			this.lblTime.Name = "lblTime";
 			this.lblTime.Size = new System.Drawing.Size(44, 13);
 			this.lblTime.TabIndex = 12;
@@ -143,7 +167,7 @@
 			// 
 			this.lblDate.AutoSize = true;
 			this.lblDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblDate.Location = new System.Drawing.Point(256, 40);
+			this.lblDate.Location = new System.Drawing.Point(229, 40);
 			this.lblDate.Name = "lblDate";
 			this.lblDate.Size = new System.Drawing.Size(75, 13);
 			this.lblDate.TabIndex = 11;
@@ -154,7 +178,7 @@
 			// 
 			this.label3.AutoSize = true;
 			this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label3.Location = new System.Drawing.Point(205, 76);
+			this.label3.Location = new System.Drawing.Point(178, 76);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(50, 13);
 			this.label3.TabIndex = 10;
@@ -165,7 +189,7 @@
 			// 
 			this.label2.AutoSize = true;
 			this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label2.Location = new System.Drawing.Point(205, 58);
+			this.label2.Location = new System.Drawing.Point(178, 58);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(33, 13);
 			this.label2.TabIndex = 9;
@@ -176,23 +200,12 @@
 			// 
 			this.label1.AutoSize = true;
 			this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label1.Location = new System.Drawing.Point(205, 40);
+			this.label1.Location = new System.Drawing.Point(178, 40);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(33, 13);
 			this.label1.TabIndex = 8;
 			this.label1.Text = "Date:";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// lblTankName
-			// 
-			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(254, 11);
-			this.lblTankName.Name = "lblTankName";
-			this.lblTankName.Size = new System.Drawing.Size(273, 24);
-			this.lblTankName.TabIndex = 7;
-			this.lblTankName.Text = "Tank Name";
-			this.lblTankName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// lblResult
 			// 
@@ -243,7 +256,7 @@
 			// picTank
 			// 
 			this.picTank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picTank.Location = new System.Drawing.Point(478, 0);
+			this.picTank.Location = new System.Drawing.Point(456, 0);
 			this.picTank.Name = "picTank";
 			this.picTank.Size = new System.Drawing.Size(170, 100);
 			this.picTank.TabIndex = 1;
@@ -310,7 +323,7 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(25, 56);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(650, 465);
+			this.badGroupBox1.Size = new System.Drawing.Size(628, 436);
 			this.badGroupBox1.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -318,10 +331,10 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(700, 550);
+			this.ClientSize = new System.Drawing.Size(678, 521);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.MinimumSize = new System.Drawing.Size(600, 300);
+			this.MinimumSize = new System.Drawing.Size(678, 300);
 			this.Name = "BattleDetail";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "BattleDetail";
@@ -333,6 +346,7 @@
 			this.panel1.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picMB)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picTank)).EndInit();
 			this.ResumeLayout(false);
 
@@ -360,5 +374,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.PictureBox picMB;
 	}
 }

@@ -72,10 +72,12 @@ namespace WinApp.Forms
 				lblResult.ForeColor = battleResultColor;
 				// Tank img
 				int tankId = Convert.ToInt32(dr["tankId"]);
-				Image tankImg = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
-				picTank.Image = tankImg;
+				picTank.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
 				// Tank name
 				lblTankName.Text = dr["tankName"].ToString();
+				// Mastery Badge Image
+				int masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
+				picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge, false);
 				// Map name
 				string mapName = "";
 				if (dr["mapName"] != DBNull.Value) mapName = dr["mapName"].ToString();
