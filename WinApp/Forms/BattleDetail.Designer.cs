@@ -125,7 +125,7 @@
 			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(313, 8);
+			this.lblTankName.Location = new System.Drawing.Point(306, 11);
 			this.lblTankName.Name = "lblTankName";
 			this.lblTankName.Size = new System.Drawing.Size(200, 14);
 			this.lblTankName.TabIndex = 7;
@@ -135,7 +135,7 @@
 			// picMB
 			// 
 			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picMB.Location = new System.Drawing.Point(362, 25);
+			this.picMB.Location = new System.Drawing.Point(362, 35);
 			this.picMB.Name = "picMB";
 			this.picMB.Size = new System.Drawing.Size(67, 64);
 			this.picMB.TabIndex = 14;
@@ -334,7 +334,7 @@
 			this.ClientSize = new System.Drawing.Size(678, 521);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.MinimumSize = new System.Drawing.Size(678, 300);
+			this.MinimumSize = new System.Drawing.Size(678, 400);
 			this.Name = "BattleDetail";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "BattleDetail";
