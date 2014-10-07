@@ -1438,14 +1438,22 @@ class BadTextBox : BadThemeControl
 
 	protected void textBox_MouseLeave(object sender, EventArgs e)
 	{
-		ToolTipContainer.Hide(this);
-		base.OnMouseLeave(e);
+		try
+		{
+			ToolTipContainer.Hide(this);
+			base.OnMouseLeave(e);
+		}
+		catch (Exception) {	}
 	}
 
 	protected void textBox_MouseDown(object sender, MouseEventArgs e)
 	{
-		ToolTipContainer.Hide(this);
-		base.OnMouseDown(e);
+		try
+		{
+			ToolTipContainer.Hide(this);
+			base.OnMouseDown(e);
+		}
+		catch (Exception) {	}
 	}
 }
 

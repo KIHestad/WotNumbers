@@ -20,44 +20,13 @@ namespace WinApp.Forms
 		private DataGridView dgvTeam1 = new DataGridView();
 		private DataGridView dgvTeam2 = new DataGridView();
 		private bool showFortResources = false;
+		private Panel pnlBack = new Panel();
+		private BadScrollBar scroll = new BadScrollBar();
 
 		public BattleDetail(int battleId)
 		{
 			InitializeComponent();
 			_battleId = battleId;
-		}
-
-		private void btnTab_Click(object sender, EventArgs e)
-		{
-			// deselect tabs
-			btnEnemyTeam.Checked = false;
-			btnOurTeam.Checked = false;
-			btnPersonal.Checked = false;
-			btnTeams.Checked = false;
-			// hide my result
-			panel1.Visible = false;
-			// hide grids
-			dgvTeam1.Visible = false;
-			dgvTeam2.Visible = false;
-			// select tab
-			BadButton btn = (BadButton)sender;
-			btn.Checked = true;
-			string selectedTab = btn.Name;
-			switch (selectedTab)
-			{
-				case "btnPersonal" :
-					panel1.Visible = true;
-					break;
-				case "btnTeams" :
-					ShowTeams();
-					break;
-				case "btnOurTeam" :
-					ShowOwnTeam();
-					break;
-				case "btnEnemyTeam" :
-					ShowEnemyTeam();
-					break;
-			}
 		}
 
 		private void BattleDetail_Load(object sender, EventArgs e)
@@ -77,6 +46,21 @@ namespace WinApp.Forms
 				GridHelper.StyleDataGrid(dgvTeam2);
 				this.Controls.Add(dgvTeam1);
 				this.Controls.Add(dgvTeam2);
+				// Add panel as background
+				pnlBack.BackColor = ColorTheme.ControlSeparatorGroupBoxBorder;
+				pnlBack.Visible = false;
+				this.Controls.Add(pnlBack);
+				// Add scrollbar
+				scroll.ScrollOrientation = ScrollOrientation.HorizontalScroll;
+				scroll.Name = "scroll";
+				scroll.Height = 17;
+				scroll.Left = grpMain.Left + 1;
+				scroll.Visible = false;
+				this.Controls.Add(scroll);
+				// Add scrollbar events
+				scroll.MouseDown += new MouseEventHandler(scroll_MouseDown);
+				scroll.MouseUp += new MouseEventHandler(scroll_MouseUp);
+				scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
 				// Find team 1 and 2
 				sql = "select team from battlePlayer where battleId=@battleId and name=@name";
 				DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
@@ -88,6 +72,43 @@ namespace WinApp.Forms
 					team2 = 1;
 					if (team1 == 1) team2 = 2;
 				}
+			}
+		}
+
+		private void btnTab_Click(object sender, EventArgs e)
+		{
+			// deselect tabs
+			btnEnemyTeam.Checked = false;
+			btnOurTeam.Checked = false;
+			btnPersonal.Checked = false;
+			btnTeams.Checked = false;
+			// hide my result
+			panel1.Visible = false;
+			// hide grids
+			dgvTeam1.Visible = false;
+			dgvTeam2.Visible = false;
+			// hide grid background
+			pnlBack.Visible = false;
+			// hide scroll
+			scroll.Visible = false;
+			// select tab
+			BadButton btn = (BadButton)sender;
+			btn.Checked = true;
+			string selectedTab = btn.Name;
+			switch (selectedTab)
+			{
+				case "btnPersonal":
+					panel1.Visible = true;
+					break;
+				case "btnTeams":
+					ShowTeams();
+					break;
+				case "btnOurTeam":
+					ShowOwnTeam();
+					break;
+				case "btnEnemyTeam":
+					ShowEnemyTeam();
+					break;
 			}
 		}
 
@@ -143,6 +164,14 @@ namespace WinApp.Forms
 				int battleCount = Convert.ToInt32(dr["battlesCount"]);
 				int survivedCount = Convert.ToInt32(dr["survived"]);
 				// Survival
+
+				//Destroyed by a shot from Geeflex
+				//Destroyed by fire  
+				//Destroyed by ramming from Geeflex
+				//Vehicle crashed
+				//Destroyed by/in a death zone  
+				//Vehicle drowned
+				
 				string survival = dr["battleSurviveName"].ToString();
 				string deathReason = "";
 				if (dr["deathReason"] != DBNull.Value && survival != "Yes") deathReason = " by: " + dr["deathReason"].ToString();
@@ -269,29 +298,38 @@ namespace WinApp.Forms
 
 		private void ShowTeams()
 		{
-			ResizeNow();
 			dgvTeam1.DataSource = GetDataGridSource(team1);
 			dgvTeam2.DataSource = GetDataGridSource(team2);
 			AutoSizeColumns(dgvTeam1);
 			AutoSizeColumns(dgvTeam2);
+			ResizeNow();
+			pnlBack.BringToFront();
 			dgvTeam1.BringToFront();
 			dgvTeam2.BringToFront();
+			pnlBack.Visible = true;
 		}
 
 		private void ShowOwnTeam()
 		{
-			ResizeNow();
+			
 			dgvTeam1.DataSource = GetDataGridSource(team1, true);
 			AutoSizeColumns(dgvTeam1);
+			ResizeNow();
+			scroll.BringToFront();
 			dgvTeam1.BringToFront();
+			RefreshScrollbars(dgvTeam1);
+			MoveScrollBar();
 		}
 
 		private void ShowEnemyTeam()
 		{
-			ResizeNow();
 			dgvTeam2.DataSource = GetDataGridSource(team2, true);
 			AutoSizeColumns(dgvTeam2);
+			ResizeNow();
+			scroll.BringToFront();
 			dgvTeam2.BringToFront();
+			RefreshScrollbars(dgvTeam2);
+			MoveScrollBar();
 		}
 
 		private DataTable GetDataGridSource(int team, bool enhanced = false)
@@ -343,6 +381,90 @@ namespace WinApp.Forms
 
 		#endregion
 
+		#region GridScrollbar
+
+		bool scrollingX = false;
+		private void scroll_MouseDown(object sender, MouseEventArgs e)
+		{
+			scrollingX = true;
+			ScrollX();
+		}
+
+		private void scroll_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingX = false;
+		}
+
+		private void scroll_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (scrollingX) ScrollX();
+		}
+
+		private void ScrollX()
+		{
+			try
+			{
+				DataGridView dgv = null;
+				if (btnOurTeam.Checked)
+					dgv = dgvTeam1;
+				else if (btnEnemyTeam.Checked)
+					dgv = dgvTeam2;
+				if (dgv != null)
+				{
+					int posBefore = dgv.FirstDisplayedScrollingColumnIndex;
+					dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
+					if (posBefore != dgv.FirstDisplayedScrollingColumnIndex) Refresh();
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				// throw;
+			}
+		}
+
+		private void dataGridMain_SelectionChanged(object sender, EventArgs e)
+		{
+			MoveScrollBar(); // Move scrollbar according to grid movements
+		}
+
+		private void RefreshScrollbars(DataGridView dgv)
+		{
+			// Set scrollbar properties according to grid content
+			int XVisible = 0;
+			int XTotal = 0;
+			// Calc scroll boundarys
+			if (dgv.RowCount > 0)
+			{
+				foreach (DataGridViewColumn col in dgv.Columns)
+				{
+					if (col.Visible) XTotal++;
+				}
+				XVisible = dgv.DisplayedColumnCount(false);
+			}
+			// Scroll init
+			scroll.ScrollElementsVisible = XVisible;
+			scroll.ScrollElementsTotals = XTotal;
+			scroll.Visible = scroll.ScrollNecessary;
+		}
+
+		private void MoveScrollBar()
+		{
+			try
+			{
+				if (btnOurTeam.Checked)
+					scroll.ScrollPosition = dgvTeam1.FirstDisplayedScrollingColumnIndex;
+				else if (btnEnemyTeam.Checked)
+					scroll.ScrollPosition = dgvTeam2.FirstDisplayedScrollingColumnIndex;
+			}
+			catch (Exception)
+			{
+				// ignore errors, only affect scrollbar position
+			}
+		}
+
+		#endregion
+
 		#region resize
 
 		private void BattleDetail_Resize(object sender, EventArgs e)
@@ -354,23 +476,33 @@ namespace WinApp.Forms
 		{
 			if (btnTeams.Checked)
 			{
-				PlaceGrid(dgvTeam1, GridLocation.Left);
-				PlaceGrid(dgvTeam2, GridLocation.Right);
+				PlaceControl(pnlBack, GridLocation.Whole);
+				PlaceControl(dgvTeam1, GridLocation.Left);
+				PlaceControl(dgvTeam2, GridLocation.Right);
 			}
 			else if (btnOurTeam.Checked)
-				PlaceGrid(dgvTeam1, GridLocation.Whole);
+			{
+				RefreshScrollbars(dgvTeam1);
+				PlaceControl(dgvTeam1, GridLocation.Both);
+				PlaceScroll(dgvTeam1);
+			}
 			else if (btnEnemyTeam.Checked)
-				PlaceGrid(dgvTeam2, GridLocation.Whole);
+			{
+				RefreshScrollbars(dgvTeam1);
+				PlaceControl(dgvTeam2, GridLocation.Both);
+				PlaceScroll(dgvTeam2);
+			}
 		}
 
 		private enum GridLocation
 		{
 			Left = 1,
 			Right = 2,
-			Whole = 3,
+			Both = 3,
+			Whole = 4,
 		}
 
-		private void PlaceGrid(Control ctrl, GridLocation location)
+		private void PlaceControl(Control ctrl, GridLocation location)
 		{
 			switch (location)
 			{
@@ -383,8 +515,17 @@ namespace WinApp.Forms
 				case GridLocation.Right:
 					ctrl.Left = grpMain.Left + (grpMain.Width / 2) + 1;
 					ctrl.Top = grpMain.Top + 8;
-					ctrl.Width = grpMain.Width / 2 - 1;
+					ctrl.Width = grpMain.Width / 2 - 2;
 					ctrl.Height = grpMain.Height - 9;
+					break;
+				case GridLocation.Both:
+					ctrl.Left = grpMain.Left + 1;
+					ctrl.Top = grpMain.Top + 8;
+					ctrl.Width = grpMain.Width - 2;
+					int scrollHeight = 0;
+					if (scroll.ScrollNecessary)
+						scrollHeight = scroll.Height;
+					ctrl.Height = grpMain.Height - 9 - scrollHeight;
 					break;
 				case GridLocation.Whole:
 					ctrl.Left = grpMain.Left + 1;
@@ -395,6 +536,12 @@ namespace WinApp.Forms
 				default:
 					break;
 			}
+		}
+
+		private void PlaceScroll(Control grid)
+		{
+			scroll.Top = grid.Top + grid.Height;
+			scroll.Width = grid.Width;
 		}
 
 		#endregion

@@ -637,9 +637,9 @@
 			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(417, 11);
+			this.lblTankName.Location = new System.Drawing.Point(437, 11);
 			this.lblTankName.Name = "lblTankName";
-			this.lblTankName.Size = new System.Drawing.Size(200, 14);
+			this.lblTankName.Size = new System.Drawing.Size(180, 21);
 			this.lblTankName.TabIndex = 7;
 			this.lblTankName.Text = "Tank Name";
 			this.lblTankName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
