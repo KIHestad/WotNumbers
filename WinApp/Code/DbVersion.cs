@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 167; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 169; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1758,6 +1758,29 @@ namespace WinApp.Code
 						" tkills integer NOT NULL, fortResource integer NULL, " +
 						" foreign key (battleId) references battle (id) " +
 						" foreign key (tankId) references tank (id) ); ";
+					break;
+				case 168:
+					mssql = "ALTER TABLE battle ADD enemyClanAbbrev varchar(10) NULL;" +
+							"ALTER TABLE battle ADD enemyClanDBID INT NULL;" +
+							"ALTER TABLE battle ADD playerFortResources INT NULL;" +
+							"ALTER TABLE battle ADD clanForResources INT NULL;" +
+							"ALTER TABLE battle ADD enemyClanFortResources INT NULL;" +
+							"ALTER TABLE battle ADD killedByPlayerName varchar(30) NULL;" +
+							"ALTER TABLE battle ADD killedByAccountId INT NULL;" +
+							"ALTER TABLE battle ADD platoonParticipants INT NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 169:
+					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+					mssql = s + "VALUES (521, 2, 170, 'enemyClanAbbrev', 'Enemy Clan', 'Enemy Clan (name)', 'Battle', 50, 'VarChar'); " +
+							s + "VALUES (522, 2, 171, 'enemyClanDBID', 'Enemy Clan ID', 'Enemy Clan (account ID)', 'Result', 35, 'Int'); " +
+							s + "VALUES (523, 2, 270, 'playerFortResources', 'IR', 'Earned Industrial Resources by you (Skirmish)', 'Result', 35, 'Int'); " +
+							s + "VALUES (524, 2, 271, 'clanForResources', 'Clan IR', 'Your Clan earned Industrial Resources (Skirmish)', 'Result', 35, 'Int'); " +
+							s + "VALUES (525, 2, 272, 'enemyClanFortResources', 'Enemy Clan IR', 'Enemy Clan earned Industrial Resources (Skirmish)', 'Result', 35, 'Int'); " +
+							s + "VALUES (526, 2, 172, 'killedByPlayerName', 'Killed By', 'Destoyed by player (name)', 'Battle', 50, 'VarChar'); " +
+							s + "VALUES (527, 2, 173, 'killedByAccountId', 'Killed By Player ID', 'Destoed by player (account ID)', 'Battle', 35, 'Int'); " +
+							s + "VALUES (528, 2, 165, 'platoonParticipants', 'Platoon', 'Number of platoon participants (2 or 3), 0 if not played in platoon', 'Battle', 35, 'Int'); ";
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";

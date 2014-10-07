@@ -140,6 +140,13 @@ namespace WinApp.Code
 			}
 		}
 
+		private class Platoon
+		{
+			public int platoonID;
+			public int team;
+			public int platoonNum;
+		}
+
 		public static string RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
 			try
@@ -213,7 +220,34 @@ namespace WinApp.Code
 								List<BattleValue> battleValues = new List<BattleValue>();
 								// common
 								battleValues.Add(new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
-								battleValues.Add(new BattleValue() { colname = "bonusType", value = (int)token_common.SelectToken("bonusType") });
+								// Find game type
+								int bonusType = (int)token_common.SelectToken("bonusType");
+								battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
+								// Get clan
+								bool getEnemyClan = false;
+								if (bonusType == 3 || bonusType == 4 || bonusType == 10 )
+									getEnemyClan = true;
+								// Get platoon
+								bool getPlatoon = false;
+								if (bonusType == 1)
+									getPlatoon = true;
+								// Get Industrial Resource
+								bool getFortResource = false;
+								if (bonusType == 10)
+									getFortResource = true;
+								
+								
+								//string battleMode = "";
+								//switch (bonusType)
+								//{
+								//	case 0: battleMode = "Unknown Battle Mode"; break;
+								//	case 1: battleMode = "Standard Battle"; break;
+								//	case 2: battleMode = "Trainig Room Battle"; break;
+								//	case 3: battleMode = "Tank Company Battle"; break;
+								//	case 4: battleMode = "Clan War Battle"; break;
+								//	case 5: battleMode = "Tutorial Battle"; break;
+								//	case 10: battleMode = "Skimish Battle"; break;
+								//}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
@@ -297,6 +331,21 @@ namespace WinApp.Code
 								// Add Battle Players
 								List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
 								JToken token_players = token_root["players"];
+								// Get values to save to battle
+								int enemyClanDBID = 0;
+								string enemyClanAbbrev = "";
+								int playerFortResources = 0;
+								int[] teamFortResources = new int[3];
+								teamFortResources[1] = 0;
+								teamFortResources[2] = 0;
+								int playerTeam = 0;
+								int enemyTeam = 0;
+								int killerID = 0;
+								List<Platoon> platoon = new List<Platoon>();
+								int playerPlatoonId = 0;
+								int playerPlatoonParticipants = 0;
+								int killedByAccountId = 0;
+								string killedByPlayerName = "";
 								foreach (JToken player in token_players)
 								{
 									BattlePlayer newPlayer = new BattlePlayer();
@@ -310,6 +359,20 @@ namespace WinApp.Code
 									newPlayer.team = (int)playerInfo.SelectToken("team");
 									newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
 									battlePlayers.Add(newPlayer);
+									// Get values for saving to battle
+									if (getEnemyClan && newPlayer.clanDBID > 0 && enemyClanDBID == -1)
+									{
+										enemyClanDBID = newPlayer.clanDBID;
+										enemyClanAbbrev = newPlayer.clanAbbrev;
+									}
+									if (getPlatoon && newPlayer.platoonID > 0)
+									{
+										Platoon p = new Platoon();
+										p.platoonID = newPlayer.platoonID;
+										p.team = newPlayer.team;
+										p.platoonNum = 0;
+										platoon.Add(p);
+									}
 								}
 								// Get results from vehiles section and add to db
 								JToken token_vehicles = token_root["vehicles"];
@@ -326,12 +389,12 @@ namespace WinApp.Code
 										string values = battleId.ToString();
 										// Get values from player section
 										fields += ", accountId, clanAbbrev, clanDBID, name, platoonID, team";
-										values += ", " + player.accountId;
+										values += ", " + player.accountId.ToString();
 										values += ", '" + player.clanAbbrev + "'";
-										values += ", " + player.clanDBID;
+										values += ", " + player.clanDBID.ToString();
 										values += ", '" + player.name + "'";
-										values += ", " + player.platoonID;
-										values += ", " + player.team;
+										values += ", " + player.platoonID.ToString();
+										values += ", " + player.team.ToString();
 										// Get values from vehicles section
 										fields +=", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
 										values += ", " + vechicleInfo.SelectToken("typeCompDescr");
@@ -355,13 +418,107 @@ namespace WinApp.Code
 										if (fortResource.Value == null)
 											values += ", NULL";
 										else
+										{
+											if (player.name == Config.Settings.playerName)
+											{
+												playerFortResources = Convert.ToInt32(fortResource.Value);
+												playerTeam = player.team;
+												teamFortResources[player.team] += Convert.ToInt32(fortResource.Value);
+												killerID = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
+												playerPlatoonId = player.platoonID;
+											}
 											values += ", " + fortResource.Value;
+										}
 										// Create SQL and update db
 										sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
 										DB.ExecuteNonQuery(sql);
 									}
+									// Get killer info
+									if (killerID > 0)
+									{
+										BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == killerID);
+										if (killer != null)
+										{
+											killedByAccountId = killer.accountId;
+											killedByPlayerName = killer.name;
+										}
+									}
 								}
-
+								// Get player platoon participants
+								if (getPlatoon && playerPlatoonId > 0)
+								{
+									playerPlatoonParticipants = platoon.FindAll(p => p.platoonID == playerPlatoonId).Count;
+								}
+								// Get enemy team
+								enemyTeam = 1;
+								if (playerTeam == 1) enemyTeam = 2;
+								// Save values to battle
+								sql =
+									"update battle set " +
+									"  enemyClanAbbrev=@enemyClanAbbrev, " +
+									"  enemyClanDBID=@enemyClanDBID, " +
+									"  playerFortResources=@playerFortResources, " +
+									"  clanForResources=@clanForResources, " +
+									"  enemyClanFortResources=@enemyClanFortResources, " +
+									"  killedByPlayerName=@killedByPlayerName, " +
+									"  killedByAccountId=@killedByAccountId, " +
+									"  platoonParticipants=@platoonParticipants " +
+									"where id=@battleId;";
+								// Clan info
+								bool runSql = false;
+								if (!getEnemyClan || enemyClanDBID == 0)
+								{
+									DB.AddWithValue(ref sql, "@enemyClanAbbrev", DBNull.Value, DB.SqlDataType.VarChar);
+									DB.AddWithValue(ref sql, "@enemyClanDBID", DBNull.Value, DB.SqlDataType.Int);
+								}
+								else
+								{
+									DB.AddWithValue(ref sql, "@enemyClanAbbrev", enemyClanAbbrev, DB.SqlDataType.VarChar);
+									DB.AddWithValue(ref sql, "@enemyClanDBID", enemyClanDBID, DB.SqlDataType.Int);
+									runSql = true;
+								}
+								// Industrial Resources
+								if (!getFortResource)
+								{
+									DB.AddWithValue(ref sql, "@playerFortResources", DBNull.Value, DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@clanForResources", DBNull.Value, DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@enemyClanFortResources", DBNull.Value, DB.SqlDataType.Int);
+								}
+								else
+								{
+									DB.AddWithValue(ref sql, "@playerFortResources", playerFortResources, DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@clanForResources", teamFortResources[playerTeam], DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@enemyClanFortResources", teamFortResources[enemyTeam], DB.SqlDataType.Int);
+									runSql = true;
+								}
+								// Killed by
+								if (killedByAccountId == 0)
+								{
+									DB.AddWithValue(ref sql, "@killedByPlayerName", DBNull.Value, DB.SqlDataType.VarChar);
+									DB.AddWithValue(ref sql, "@killedByAccountId", DBNull.Value, DB.SqlDataType.Int);
+								}
+								else
+								{
+									DB.AddWithValue(ref sql, "@killedByPlayerName", killedByPlayerName, DB.SqlDataType.VarChar);
+									DB.AddWithValue(ref sql, "@killedByAccountId", killedByAccountId, DB.SqlDataType.Int);
+									runSql = true;
+								}
+								// Platoon
+								if (!getPlatoon || playerPlatoonParticipants == 0)
+								{
+									DB.AddWithValue(ref sql, "@platoonParticipants", DBNull.Value, DB.SqlDataType.Int);
+								}
+								else
+								{
+									DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
+									runSql = true;
+								}
+								// Add Battle ID and run sql if any values
+								if (runSql)
+								{
+									DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+									DB.ExecuteNonQuery(sql);
+								}
 								// If grinding, adjust grogress
 								if (grindXP > 0)
 									GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));

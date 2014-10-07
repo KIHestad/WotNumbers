@@ -69,7 +69,7 @@ namespace WinApp.Code
 		{
 			string lastRunnedSQL = "";
 			bool ok = false;
-			string[] sqlList = sql.Split(new string[] { "GO",";" }, StringSplitOptions.RemoveEmptyEntries);
+			string[] sqlList = sql.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 			try
 			{
 				if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
