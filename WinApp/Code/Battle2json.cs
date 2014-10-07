@@ -415,20 +415,26 @@ namespace WinApp.Code
 										values += ", " + vechicleInfo.SelectToken("spotted");
 										values += ", " + vechicleInfo.SelectToken("tkills");
 										JValue fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
-										if (fortResource.Value == null)
-											values += ", NULL";
+										int fortResourceValue = 0;
+										if (fortResource.Value != null) 
+										{
+											fortResourceValue = Convert.ToInt32(fortResource.Value);
+											values += ", " + fortResourceValue.ToString();
+										}
 										else
 										{
-											if (player.name == Config.Settings.playerName)
-											{
-												playerFortResources = Convert.ToInt32(fortResource.Value);
-												playerTeam = player.team;
-												teamFortResources[player.team] += Convert.ToInt32(fortResource.Value);
-												killerID = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
-												playerPlatoonId = player.platoonID;
-											}
-											values += ", " + fortResource.Value;
+											values += ", NULL ";
 										}
+										// If this is current player remember for later save to battle
+										if (player.name == Config.Settings.playerName)
+										{
+											playerFortResources = Convert.ToInt32(fortResource.Value);
+											playerTeam = player.team;
+											killerID = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
+											playerPlatoonId = player.platoonID;
+										}
+										// Add sum for team IR
+										teamFortResources[player.team] += fortResourceValue;
 										// Create SQL and update db
 										sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
 										DB.ExecuteNonQuery(sql);

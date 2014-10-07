@@ -2537,7 +2537,7 @@ namespace WinApp.Forms
 					rowAverage["killedCountToolTip"] = 0;
 					IEnumerable<string> nonAvgCols = new List<string> 
 					{ 
-						"ID", "Premium", "Mastery Badge", "Mastery Badge ID", "Battle Count" 
+						"ID", "Premium", "Mastery Badge", "Mastery Badge ID", "Battle Count" , "Platoon", "Killed By Player ID", "Enemy Clan ID"
 					};
 					foreach (ColListHelper.ColListClass colListItem in colList)
 					{
@@ -2608,7 +2608,7 @@ namespace WinApp.Forms
 					IEnumerable<string> nonTotalsCols = new List<string> 
 					{ 
 						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  
-						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %"
+						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID"
 					};
 					IEnumerable<string> countCols = new List<string> 
 					{ 
