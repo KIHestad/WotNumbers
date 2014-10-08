@@ -73,6 +73,8 @@ namespace WinApp.Code
 				else
 					defaultGridFilter.FavListShow = (FavListShowType)defaultFavListId;
 			}
+			if (gridView == GridView.Views.Tank)
+				defaultGridFilter.BattleMode = BattleModeType.Mode15;
 			return defaultGridFilter;
 		}
 
