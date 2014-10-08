@@ -570,7 +570,7 @@
 			// 
 			this.lblEFF.AutoSize = true;
 			this.lblEFF.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblEFF.Location = new System.Drawing.Point(380, 76);
+			this.lblEFF.Location = new System.Drawing.Point(400, 76);
 			this.lblEFF.Name = "lblEFF";
 			this.lblEFF.Size = new System.Drawing.Size(35, 13);
 			this.lblEFF.TabIndex = 20;
@@ -581,7 +581,7 @@
 			// 
 			this.lblWN7.AutoSize = true;
 			this.lblWN7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblWN7.Location = new System.Drawing.Point(380, 58);
+			this.lblWN7.Location = new System.Drawing.Point(400, 58);
 			this.lblWN7.Name = "lblWN7";
 			this.lblWN7.Size = new System.Drawing.Size(35, 13);
 			this.lblWN7.TabIndex = 19;
@@ -592,7 +592,7 @@
 			// 
 			this.lblWN8.AutoSize = true;
 			this.lblWN8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblWN8.Location = new System.Drawing.Point(380, 40);
+			this.lblWN8.Location = new System.Drawing.Point(400, 40);
 			this.lblWN8.Name = "lblWN8";
 			this.lblWN8.Size = new System.Drawing.Size(35, 13);
 			this.lblWN8.TabIndex = 18;
@@ -603,7 +603,7 @@
 			// 
 			this.label7.AutoSize = true;
 			this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label7.Location = new System.Drawing.Point(342, 76);
+			this.label7.Location = new System.Drawing.Point(362, 76);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(29, 13);
 			this.label7.TabIndex = 17;
@@ -614,7 +614,7 @@
 			// 
 			this.label8.AutoSize = true;
 			this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label8.Location = new System.Drawing.Point(342, 58);
+			this.label8.Location = new System.Drawing.Point(362, 58);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(35, 13);
 			this.label8.TabIndex = 16;
@@ -625,7 +625,7 @@
 			// 
 			this.label9.AutoSize = true;
 			this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label9.Location = new System.Drawing.Point(342, 40);
+			this.label9.Location = new System.Drawing.Point(362, 40);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(35, 13);
 			this.label9.TabIndex = 15;
@@ -657,67 +657,61 @@
 			// 
 			this.lblDuration.AutoSize = true;
 			this.lblDuration.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblDuration.Location = new System.Drawing.Point(229, 76);
+			this.lblDuration.Location = new System.Drawing.Point(276, 76);
 			this.lblDuration.Name = "lblDuration";
 			this.lblDuration.Size = new System.Drawing.Size(42, 13);
 			this.lblDuration.TabIndex = 13;
 			this.lblDuration.Text = "MM:SS";
-			this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lblTime
 			// 
 			this.lblTime.AutoSize = true;
 			this.lblTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTime.Location = new System.Drawing.Point(229, 58);
+			this.lblTime.Location = new System.Drawing.Point(276, 58);
 			this.lblTime.Name = "lblTime";
 			this.lblTime.Size = new System.Drawing.Size(44, 13);
 			this.lblTime.TabIndex = 12;
 			this.lblTime.Text = "HH:MM";
-			this.lblTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lblDate
 			// 
 			this.lblDate.AutoSize = true;
 			this.lblDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblDate.Location = new System.Drawing.Point(229, 40);
+			this.lblDate.Location = new System.Drawing.Point(276, 40);
 			this.lblDate.Name = "lblDate";
-			this.lblDate.Size = new System.Drawing.Size(75, 13);
+			this.lblDate.Size = new System.Drawing.Size(68, 13);
 			this.lblDate.TabIndex = 11;
-			this.lblDate.Text = "DD.MM.YYYY";
-			this.lblDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.lblDate.Text = "DD.MM.YYY";
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
 			this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label3.Location = new System.Drawing.Point(178, 76);
+			this.label3.Location = new System.Drawing.Point(225, 76);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(50, 13);
 			this.label3.TabIndex = 10;
 			this.label3.Text = "Duration:";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
 			this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label2.Location = new System.Drawing.Point(178, 58);
+			this.label2.Location = new System.Drawing.Point(225, 58);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(33, 13);
 			this.label2.TabIndex = 9;
 			this.label2.Text = "Time:";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
 			this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label1.Location = new System.Drawing.Point(178, 40);
+			this.label1.Location = new System.Drawing.Point(225, 40);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(33, 13);
 			this.label1.TabIndex = 8;
 			this.label1.Text = "Date:";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lblResult
 			// 
@@ -745,11 +739,10 @@
 			// 
 			// lblSurvival
 			// 
-			this.lblSurvival.AutoSize = true;
 			this.lblSurvival.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
 			this.lblSurvival.Location = new System.Drawing.Point(13, 40);
 			this.lblSurvival.Name = "lblSurvival";
-			this.lblSurvival.Size = new System.Drawing.Size(119, 13);
+			this.lblSurvival.Size = new System.Drawing.Size(195, 13);
 			this.lblSurvival.TabIndex = 4;
 			this.lblSurvival.Text = "Survival / Extermination";
 			this.lblSurvival.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

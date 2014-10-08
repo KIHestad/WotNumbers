@@ -137,9 +137,20 @@ namespace WinApp.Forms
 			{
 				DataRow dr = dt.Rows[0];
 				// Battle result
-				lblResult.Text = dr["battleResultName"].ToString();
+				string battleResult = dr["battleResultName"].ToString();
+				
 				Color battleResultColor = ColorTranslator.FromHtml(dr["battleResultColor"].ToString());
 				lblResult.ForeColor = battleResultColor;
+				if (dr["enemyClanAbbrev"] != DBNull.Value)
+				{
+					switch (battleResult)
+					{
+						case "Victory": battleResult += " over " + dr["enemyClanAbbrev"].ToString(); break;
+						case "Draw": battleResult += " against " + dr["enemyClanAbbrev"].ToString(); break;
+						case "Defeat": battleResult = "Defeated by " + dr["enemyClanAbbrev"].ToString(); break;
+					}
+				}	
+				lblResult.Text = battleResult;
 				// Tank img
 				int tankId = Convert.ToInt32(dr["tankId"]);
 				picTank.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
@@ -164,51 +175,54 @@ namespace WinApp.Forms
 				int battleCount = Convert.ToInt32(dr["battlesCount"]);
 				int survivedCount = Convert.ToInt32(dr["survived"]);
 				// Survival
-
-				//Destroyed by a shot from Geeflex
-				//Destroyed by fire  
-				//Destroyed by ramming from Geeflex
-				//Vehicle crashed
-				//Destroyed by/in a death zone  
-				//Vehicle drowned
-				
 				string survival = dr["battleSurviveName"].ToString();
-				string deathReason = "";
-				if (dr["deathReason"] != DBNull.Value && survival != "Yes") deathReason = " by: " + dr["deathReason"].ToString();
 				Color battleSurviveColor = ColorTranslator.FromHtml(dr["battleSurviveColor"].ToString());
 				switch (survival)
 				{
 					case "Yes": survival = "Survived"; break;
-					case "No": survival = "Destroyed" + deathReason; break;
-					case "Some": survival = "Battles survived: " + survivedCount.ToString(); break;
+					case "Some": survival = "Battles: " + battleCount.ToString() + "Survived: " + survivedCount.ToString(); break;
+					case "No": 
+						string deathReason = "Destroyed";
+						if (dr["deathReason"] != DBNull.Value) 
+							deathReason = dr["deathReason"].ToString();
+						string killedPrefix = " caused by ";
+						switch (deathReason)
+						{
+							case "Shot": survival = "Destroyed by a shot"; killedPrefix=" from"; break;
+							case "Burned": survival = "Destroyed by fire"; break;
+							case "Rammed": survival = "Destroyed by ramming"; killedPrefix=" from"; break;
+							case "Chrashed": survival = "Vehicle crashed"; break;
+							case "Death zone": survival = "Destroyed in a death zone"; break;
+							case "Drowned": survival = "Vehicle drowned"; break;
+						}
+						if (dr["killedByPlayerName"] != DBNull.Value)
+							survival += killedPrefix + " " + dr["killedByPlayerName"].ToString();
+						break;
+					
 				}
 				lblSurvival.Text = survival;
 				lblSurvival.ForeColor = battleSurviveColor;
 				
 				// Battle mode
 				string battleMode = "";
-				int bonusType = -1;
-				if (dr["bonusType"] != DBNull.Value) bonusType = Convert.ToInt32(dr["bonusType"]);
-				if (bonusType == -1)
-				{
-					if (battleCount > 1)
-						battleMode = "Battles recorded: " + battleCount.ToString() ;
-					else
-						battleMode = "Battle result not fetched";
-				}
+				if (dr["battleResultMode"] != DBNull.Value)
+					battleMode = dr["battleResultMode"].ToString() + " Battle";
 				else
 				{
-					switch (bonusType)
+					battleMode = dr["battleMode"].ToString();
+					switch (battleMode)
 					{
-						case 0: battleMode = "Unknown Battle Mode"; break;
-						case 1: battleMode = "Standard Battle"; break;
-						case 2: battleMode = "Trainig Room Battle"; break;
-						case 3: battleMode = "Tank Company Battle"; break;
-						case 4: battleMode = "Clan War Battle"; break;
-						case 5: battleMode = "Tutorial Battle"; break;
-						case 10: battleMode = "Skimish Battle"; showFortResources = true; break;
+						case "15": battleMode = "Random Battle"; break;
+						case "7": battleMode = "Team Battle"; break;
+						case "Historical": battleMode = "Historical Battle"; break;
+						case "Skirmish": battleMode = "Skirmish Battle"; break;
 					}
+					if (Convert.ToInt32(dr["modeClan"]) > 0)
+						battleMode = "Clan War Battle";
+					else if (Convert.ToInt32(dr["modeCompany"]) > 0)
+						battleMode = "Tank Company Battle";
 				}
+				
 				lblBattleMode.Text = battleMode;
 				// Ratings
 				double wn8 = Convert.ToDouble(dr["WN8"]);

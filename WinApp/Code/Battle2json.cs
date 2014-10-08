@@ -235,19 +235,26 @@ namespace WinApp.Code
 								bool getFortResource = false;
 								if (bonusType == 10)
 									getFortResource = true;
-								
-								
-								//string battleMode = "";
-								//switch (bonusType)
-								//{
-								//	case 0: battleMode = "Unknown Battle Mode"; break;
-								//	case 1: battleMode = "Standard Battle"; break;
-								//	case 2: battleMode = "Trainig Room Battle"; break;
-								//	case 3: battleMode = "Tank Company Battle"; break;
-								//	case 4: battleMode = "Clan War Battle"; break;
-								//	case 5: battleMode = "Tutorial Battle"; break;
-								//	case 10: battleMode = "Skimish Battle"; break;
-								//}
+								// Get battle mode as text from bonus type
+								string battleResultMode = "";
+								switch (bonusType)
+								{
+									case 0: battleResultMode = "Unknown"; break;
+									case 1: battleResultMode = "Random"; break;
+									case 2: battleResultMode = "Trainig Room"; break;
+									case 3: battleResultMode = "Tank Company"; break;
+									case 4: battleResultMode = "Clan War"; break;
+									case 5: battleResultMode = "Tutorial"; break;
+									case 10: battleResultMode = "Skimish"; break;
+								}
+								// Get other modes from battle
+								sql = "select battleMode from battle where id=" + battleId;
+								string battleModeFromBattle = DB.FetchData(sql).Rows[0][0].ToString();
+								switch (battleModeFromBattle)
+								{
+									case "7": battleResultMode = "Team"; break;
+									case "Historical": battleResultMode = "Historical"; break;
+								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
@@ -468,7 +475,8 @@ namespace WinApp.Code
 									"  enemyClanFortResources=@enemyClanFortResources, " +
 									"  killedByPlayerName=@killedByPlayerName, " +
 									"  killedByAccountId=@killedByAccountId, " +
-									"  platoonParticipants=@platoonParticipants " +
+									"  platoonParticipants=@platoonParticipants, " +
+									"  battleResultMode=@battleResultMode " +
 									"where id=@battleId;";
 								// Clan info
 								if (!getEnemyClan || enemyClanDBID == 0)
@@ -507,6 +515,7 @@ namespace WinApp.Code
 								}
 								// Platoon
 								DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@battleResultMode", battleResultMode, DB.SqlDataType.VarChar);
 								// Add Battle ID and run sql if any values
 								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 								DB.ExecuteNonQuery(sql);

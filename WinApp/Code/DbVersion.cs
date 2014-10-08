@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 169; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 170; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1780,6 +1780,13 @@ namespace WinApp.Code
 							s + "VALUES (526, 2, 172, 'killedByPlayerName', 'Killed By', 'Destoyed by player (name)', 'Battle', 50, 'VarChar'); " +
 							s + "VALUES (527, 2, 173, 'killedByAccountId', 'Killed By Player ID', 'Destoed by player (account ID)', 'Battle', 35, 'Int'); " +
 							s + "VALUES (528, 2, 165, 'platoonParticipants', 'Platoon', 'Number of platoon participants (2 or 3), 0 if not played in platoon', 'Battle', 35, 'Int'); ";
+					sqlite = mssql;
+					break;
+				case 170:
+					mssql = "ALTER TABLE battle ADD battleResultMode varchar(20) NULL; " +
+						    "UPDATE columnSelection SET name='Main Mode' where id=162; " +
+					        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+					        "VALUES (529, 2, 114, 'battle.battleResultMode', 'Battle Mode', 'Battle mode retrieved from enhanced battle fetch', 'Battle', 50, 'VarChar'); ";
 					sqlite = mssql;
 					break;
 			}
