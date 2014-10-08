@@ -19,13 +19,18 @@ namespace WinApp.Code
 		public enum BattleModeType
 		{
 			All = 1,
-			Mode15 = 2,
-			Mode7 = 3,
+			RandomAndTankCompany = 2,
+			Team = 3,
 			Random = 4,
-			Clan = 5,
-			Company = 6,
+			ClanWar = 5,
+			TankCompany = 6,
 			Historical = 7,
 			Skirmishes = 8,
+			RandomSolo = 9,
+			RandomPlatoon = 10,
+			RandomPlatoon2 = 11,
+			RandomPlatoon3 = 12,
+
 		}
 
 		public class Settings
@@ -74,7 +79,7 @@ namespace WinApp.Code
 					defaultGridFilter.FavListShow = (FavListShowType)defaultFavListId;
 			}
 			if (gridView == GridView.Views.Tank)
-				defaultGridFilter.BattleMode = BattleModeType.Mode15;
+				defaultGridFilter.BattleMode = BattleModeType.RandomAndTankCompany;
 			return defaultGridFilter;
 		}
 

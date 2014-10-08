@@ -471,7 +471,6 @@ namespace WinApp.Code
 									"  platoonParticipants=@platoonParticipants " +
 									"where id=@battleId;";
 								// Clan info
-								bool runSql = false;
 								if (!getEnemyClan || enemyClanDBID == 0)
 								{
 									DB.AddWithValue(ref sql, "@enemyClanAbbrev", DBNull.Value, DB.SqlDataType.VarChar);
@@ -481,7 +480,6 @@ namespace WinApp.Code
 								{
 									DB.AddWithValue(ref sql, "@enemyClanAbbrev", enemyClanAbbrev, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@enemyClanDBID", enemyClanDBID, DB.SqlDataType.Int);
-									runSql = true;
 								}
 								// Industrial Resources
 								if (!getFortResource)
@@ -495,7 +493,6 @@ namespace WinApp.Code
 									DB.AddWithValue(ref sql, "@playerFortResources", playerFortResources, DB.SqlDataType.Int);
 									DB.AddWithValue(ref sql, "@clanForResources", teamFortResources[playerTeam], DB.SqlDataType.Int);
 									DB.AddWithValue(ref sql, "@enemyClanFortResources", teamFortResources[enemyTeam], DB.SqlDataType.Int);
-									runSql = true;
 								}
 								// Killed by
 								if (killedByAccountId == 0)
@@ -507,24 +504,12 @@ namespace WinApp.Code
 								{
 									DB.AddWithValue(ref sql, "@killedByPlayerName", killedByPlayerName, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@killedByAccountId", killedByAccountId, DB.SqlDataType.Int);
-									runSql = true;
 								}
 								// Platoon
-								if (!getPlatoon || playerPlatoonParticipants == 0)
-								{
-									DB.AddWithValue(ref sql, "@platoonParticipants", DBNull.Value, DB.SqlDataType.Int);
-								}
-								else
-								{
-									DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
-									runSql = true;
-								}
+								DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
 								// Add Battle ID and run sql if any values
-								if (runSql)
-								{
-									DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-									DB.ExecuteNonQuery(sql);
-								}
+								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+								DB.ExecuteNonQuery(sql);
 								// If grinding, adjust grogress
 								if (grindXP > 0)
 									GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));

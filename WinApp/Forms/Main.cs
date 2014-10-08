@@ -836,6 +836,11 @@ namespace WinApp.Forms
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
+						mModeClan.Visible = false;
+						mModeCompany.Visible = false;
+						mModeRandom.Visible = false;
+						mModeRandomTankCompany.Visible = true;
+						mModeRandomSoloPlatoon.Visible = false;
 						mGadget.Visible = false;
 						mHomeEdit.Visible = false;
 						mBattleGroup.Visible = false;
@@ -865,6 +870,11 @@ namespace WinApp.Forms
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
+						mModeClan.Visible = true;
+						mModeCompany.Visible = true;
+						mModeRandom.Visible = true;
+						mModeRandomTankCompany.Visible = false;
+						mModeRandomSoloPlatoon.Visible = true;
 						mBattleGroup.Visible = true;
 						mGadget.Visible = false;
 						mHomeEdit.Visible = false;
@@ -1464,9 +1474,18 @@ namespace WinApp.Forms
 					menuItem.Checked = false;
 				}
 			}
+			foreach (var dropDownItem in mModeRandomSoloPlatoon.DropDownItems)
+			{
+				if (dropDownItem is ToolStripMenuItem)
+				{
+					ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
+					menuItem.Checked = false;
+				}
+			}
+
 			// check battle mode list menu select
 			selectedMenu.Checked = true;
-			string mainToolItemMenuText = BattleModeHelper.GetShortmenuName(selectedMenu.Text);
+			string mainToolItemMenuText = selectedMenu.Text;
 			
 			mMode.Text = mainToolItemMenuText;
 			// Set menu item and show grid
@@ -1475,6 +1494,7 @@ namespace WinApp.Forms
 
 		private void SetBattleModeMenu()
 		{
+			bool done = false;
 			foreach (var dropDownItem in mMode.DropDownItems)
 			{
 				string battleMode = MainSettings.GetCurrentGridFilter().BattleMode.ToString();
@@ -1484,7 +1504,8 @@ namespace WinApp.Forms
 					if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
 					{
 						menuItem.Checked = true;
-						mMode.Text = BattleModeHelper.GetShortmenuName(menuItem.Text);
+						mMode.Text = menuItem.Text;
+						done = true;
 					}
 					else
 					{
@@ -1492,16 +1513,26 @@ namespace WinApp.Forms
 					}
 				}
 			}
-		}
-
-		private void toolItemModeSpecialInfo_Click(object sender, EventArgs e)
-		{
-			string s = "The tanks statistics are the same for Random, Tank Company and Clan Wars battles." +
-						Environment.NewLine + Environment.NewLine +
-						"For 'Tank view' these filters only limit the tanks showing in grid, the stats will be the same." +
-						Environment.NewLine + Environment.NewLine +
-						"For 'Battle view' the stats is calculated per battle and will be correct for any filter.";
-			Code.MsgBox.Show(s, "Special Battle Filter Information", this);
+			if (!done)
+			{
+				foreach (var dropDownItem in mModeRandomSoloPlatoon.DropDownItems)
+				{
+					string battleMode = MainSettings.GetCurrentGridFilter().BattleMode.ToString();
+					if (dropDownItem is ToolStripMenuItem)
+					{
+						ToolStripMenuItem menuItem = (ToolStripMenuItem)dropDownItem;
+						if (menuItem.Tag != null && battleMode == menuItem.Tag.ToString())
+						{
+							menuItem.Checked = true;
+							mMode.Text = menuItem.Text;
+						}
+						else
+						{
+							menuItem.Checked = false;
+						}
+					}
+				}
+			}
 		}
 
 
@@ -2081,19 +2112,19 @@ namespace WinApp.Forms
 			string battleModeFilter = "";
 			switch (MainSettings.GridFilterTank.BattleMode)
 			{
-				case GridFilter.BattleModeType.Mode15:
+				case GridFilter.BattleModeType.RandomAndTankCompany:
 					battleModeFilter = " AND (playerTankBattle.battleMode = '15') ";
 					break;
-				case GridFilter.BattleModeType.Mode7:
+				case GridFilter.BattleModeType.Team:
 					battleModeFilter = " AND (playerTankBattle.battleMode = '7') ";
 					break;
 				case GridFilter.BattleModeType.Random:
 					battleModeFilter = " AND (playerTankBattle.battleMode = '15' AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
 					break;
-				case GridFilter.BattleModeType.Clan:
+				case GridFilter.BattleModeType.ClanWar:
 					battleModeFilter = " AND (playerTank.hasClan = 1) ";
 					break;
-				case GridFilter.BattleModeType.Company:
+				case GridFilter.BattleModeType.TankCompany:
 					battleModeFilter = " AND (playerTank.hasCompany = 1) ";
 					break;
 				case GridFilter.BattleModeType.Historical:
@@ -2410,22 +2441,25 @@ namespace WinApp.Forms
 				{
 					switch (MainSettings.GridFilterBattle.BattleMode)
 					{
-						case GridFilter.BattleModeType.Mode15:
+						case GridFilter.BattleModeType.RandomAndTankCompany:
 							battleModeFilter = " AND (battleMode = '15') ";
 							battleMode = "15";
 							break;
-						case GridFilter.BattleModeType.Mode7:
+						case GridFilter.BattleModeType.Team:
 							battleModeFilter = " AND (battleMode = '7') ";
 							battleMode = "7";
 							break;
 						case GridFilter.BattleModeType.Random:
 							battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
+							battleMode = "15";
 							break;
-						case GridFilter.BattleModeType.Clan:
-							battleModeFilter = " AND (modeClan > 0) ";
+						case GridFilter.BattleModeType.ClanWar:
+							battleModeFilter = " AND (battleMode = '15' AND modeClan > 0) ";
+							battleMode = "15";
 							break;
-						case GridFilter.BattleModeType.Company:
-							battleModeFilter = " AND (modeCompany > 0) ";
+						case GridFilter.BattleModeType.TankCompany:
+							battleModeFilter = " AND (battleMode = '15' AND modeCompany > 0) ";
+							battleMode = "15";
 							break;
 						case GridFilter.BattleModeType.Historical:
 							battleModeFilter = " AND (battleMode = 'Historical') ";
@@ -2435,8 +2469,23 @@ namespace WinApp.Forms
 							battleModeFilter = " AND (battleMode = 'Skirmishes') ";
 							battleMode = "Skirmishes";
 							break;
-						default:
+						case GridFilter.BattleModeType.RandomPlatoon:
+							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants > 0) ";
+							battleMode = "15";
 							break;
+						case GridFilter.BattleModeType.RandomPlatoon2:
+							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 2) ";
+							battleMode = "15";
+							break;
+						case GridFilter.BattleModeType.RandomPlatoon3:
+							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 3) ";
+							battleMode = "15";
+							break;
+						case GridFilter.BattleModeType.RandomSolo:
+							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 0) ";
+							battleMode = "15";
+							break;
+						
 					}
 				}
 											
