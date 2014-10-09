@@ -54,8 +54,8 @@ namespace WinApp.Forms
 				dgvTeam2.ColumnHeadersHeight = 42;
 				dgvTeam1.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
 				dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
-				dgvTeam1.Sorted += new EventHandler(dgvSorted);
-				dgvTeam2.Sorted += new EventHandler(dgvSorted);
+				dgvTeam1.Sorted += new EventHandler(dgvTeam1Sorted);
+				dgvTeam2.Sorted += new EventHandler(dgvTeam2Sorted);
 				this.Controls.Add(dgvTeam1);
 				this.Controls.Add(dgvTeam2);
 				dgvTeam1.RowTemplate.Height = 26;
@@ -459,9 +459,9 @@ namespace WinApp.Forms
 			{
 				dgv.Columns["Player"].Width = 110;
 				dgv.Columns["Tank"].Width = 120;
-				dgv.Columns["Credits"].Width = 65;
+				dgv.Columns["Base Credit"].Width = 65;
 				dgv.Columns["Dmg Received"].Width = 65;
-				dgv.Columns["Credits"].DefaultCellStyle.Format = "N0";
+				dgv.Columns["Base Credit"].DefaultCellStyle.Format = "N0";
 				dgv.Columns["Dmg Received"].DefaultCellStyle.Format = "N0";
 			}
 			// Show
@@ -478,17 +478,25 @@ namespace WinApp.Forms
 				if (dgv["Dead", e.RowIndex].Value == DBNull.Value)
 				{
 					dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = ColorTheme.ControlDarkFont;
-					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowDeadPlayer;
+					if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
+						dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerDead;
+					else
+						dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowPlayerDead;
 				}
-				if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
-					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayer;
+				else if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
+					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
+			
 			}
 		}
 
-		private void dgvSorted(object sender, EventArgs e)
+		private void dgvTeam1Sorted(object sender, EventArgs e)
 		{
-			DataGridView dgv = (DataGridView)sender;
-			dgv.ClearSelection();
+			dgvTeam1.ClearSelection();
+		}
+
+		private void dgvTeam2Sorted(object sender, EventArgs e)
+		{
+			dgvTeam2.ClearSelection();
 		}
 
 		#endregion
