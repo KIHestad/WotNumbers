@@ -86,7 +86,6 @@ namespace WinApp.Forms
 			}
 			// Style toolbar
 			toolMain.Renderer = new StripRenderer();
-			toolMain.BackColor = ColorTheme.FormBackTitle;
 			toolMain.ShowItemToolTips = true;
 			mBattles.Visible = false;
 			mTankFilter.Visible = false;
@@ -672,6 +671,7 @@ namespace WinApp.Forms
 			// Set Main Area Panel
 			panelMainArea.Width = MainTheme.MainArea.Width;
 			panelMainArea.Height = MainTheme.MainArea.Height;
+			toolMain.Width = panelMainArea.Width - toolMain.Left;
 			if (MainSettings.View == GridView.Views.Overall && Config.Settings.homeViewNewLayout)
 			{
 
@@ -891,6 +891,7 @@ namespace WinApp.Forms
 						InfoPanelSlideStart(false);
 						break;
 				}
+				toolMain.Renderer = new StripRenderer();
 				ShowView(); // Changed view, no status message applied, sets in GridShow
 			}
 		}

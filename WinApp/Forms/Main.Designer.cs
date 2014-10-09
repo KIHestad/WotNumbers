@@ -281,6 +281,7 @@
 			// 
 			// toolMain
 			// 
+			this.toolMain.AutoSize = false;
 			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -303,7 +304,7 @@
             this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
-			this.toolMain.Size = new System.Drawing.Size(862, 25);
+			this.toolMain.Size = new System.Drawing.Size(863, 25);
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
@@ -316,6 +317,7 @@
 			// 
 			// mViewOverall
 			// 
+			this.mViewOverall.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
 			this.mViewOverall.Checked = true;
 			this.mViewOverall.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.mViewOverall.Image = ((System.Drawing.Image)(resources.GetObject("mViewOverall.Image")));
@@ -328,6 +330,7 @@
 			// 
 			// mViewTankInfo
 			// 
+			this.mViewTankInfo.BackColor = System.Drawing.Color.Fuchsia;
 			this.mViewTankInfo.Image = ((System.Drawing.Image)(resources.GetObject("mViewTankInfo.Image")));
 			this.mViewTankInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mViewTankInfo.Name = "mViewTankInfo";
@@ -338,6 +341,7 @@
 			// 
 			// mViewBattles
 			// 
+			this.mViewBattles.BackColor = System.Drawing.Color.Fuchsia;
 			this.mViewBattles.Image = ((System.Drawing.Image)(resources.GetObject("mViewBattles.Image")));
 			this.mViewBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mViewBattles.Name = "mViewBattles";
@@ -348,6 +352,7 @@
 			// 
 			// mRefresh
 			// 
+			this.mRefresh.BackColor = System.Drawing.Color.Fuchsia;
 			this.mRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mRefresh.Image = ((System.Drawing.Image)(resources.GetObject("mRefresh.Image")));
 			this.mRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -364,6 +369,7 @@
 			// 
 			// mColumnSelect
 			// 
+			this.mColumnSelect.BackColor = System.Drawing.Color.Transparent;
 			this.mColumnSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mColumnSelect_01,
             this.mColumnSelect_02,
@@ -536,6 +542,7 @@
 			// 
 			// mTankFilter
 			// 
+			this.mTankFilter.BackColor = System.Drawing.Color.Transparent;
 			this.mTankFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mTankFilter_Country,
             this.mTankFilter_Type,
@@ -966,6 +973,7 @@
 			// 
 			// mMode
 			// 
+			this.mMode.BackColor = System.Drawing.Color.Transparent;
 			this.mMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mModeAll,
             this.toolStripSeparator17,
@@ -1115,6 +1123,7 @@
 			// 
 			// mBattles
 			// 
+			this.mBattles.BackColor = System.Drawing.Color.Transparent;
 			this.mBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mBattles1d,
             this.mBattlesYesterday,
@@ -1265,6 +1274,7 @@
 			// 
 			// mBattleGroup
 			// 
+			this.mBattleGroup.BackColor = System.Drawing.Color.Transparent;
 			this.mBattleGroup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mBattleGroup_No,
             this.toolStripSeparator6,
@@ -1311,6 +1321,7 @@
 			// 
 			// mGadget
 			// 
+			this.mGadget.BackColor = System.Drawing.Color.Transparent;
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mGadgetGauges,
             this.mGadgetCharts,
@@ -1488,6 +1499,7 @@
 			// 
 			// mHomeEdit
 			// 
+			this.mHomeEdit.BackColor = System.Drawing.Color.Transparent;
 			this.mHomeEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mHomeEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeEdit.Image")));
 			this.mHomeEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -1504,6 +1516,7 @@
 			// 
 			// mViewChart
 			// 
+			this.mViewChart.BackColor = System.Drawing.Color.Transparent;
 			this.mViewChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mViewChart.Image = ((System.Drawing.Image)(resources.GetObject("mViewChart.Image")));
 			this.mViewChart.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -1515,6 +1528,7 @@
 			// 
 			// mSettings
 			// 
+			this.mSettings.BackColor = System.Drawing.Color.Transparent;
 			this.mSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mSettingsRun,
@@ -1632,6 +1646,7 @@
 			// 
 			// mHelp
 			// 
+			this.mHelp.BackColor = System.Drawing.Color.Transparent;
 			this.mHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mHelpCheckVersion,
