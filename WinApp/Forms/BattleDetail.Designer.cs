@@ -63,6 +63,7 @@
 			this.badLabel2 = new BadLabel();
 			this.badGroupBox2 = new BadGroupBox();
 			this.panel2 = new System.Windows.Forms.Panel();
+			this.label1 = new System.Windows.Forms.Label();
 			this.lblEFF = new System.Windows.Forms.Label();
 			this.lblWN7 = new System.Windows.Forms.Label();
 			this.lblWN8 = new System.Windows.Forms.Label();
@@ -76,7 +77,6 @@
 			this.lblDate = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
 			this.lblResult = new System.Windows.Forms.Label();
 			this.lblMap = new System.Windows.Forms.Label();
 			this.lblSurvival = new System.Windows.Forms.Label();
@@ -125,7 +125,7 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(789, 478);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(865, 559);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
@@ -170,7 +170,7 @@
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(737, 383);
+			this.panel1.Size = new System.Drawing.Size(813, 464);
 			this.panel1.TabIndex = 6;
 			// 
 			// picRatingWN8_Dmg
@@ -541,6 +541,7 @@
 			// panel2
 			// 
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.panel2.Controls.Add(this.label1);
 			this.panel2.Controls.Add(this.lblEFF);
 			this.panel2.Controls.Add(this.lblWN7);
 			this.panel2.Controls.Add(this.lblWN8);
@@ -554,7 +555,6 @@
 			this.panel2.Controls.Add(this.lblDate);
 			this.panel2.Controls.Add(this.label3);
 			this.panel2.Controls.Add(this.label2);
-			this.panel2.Controls.Add(this.label1);
 			this.panel2.Controls.Add(this.lblResult);
 			this.panel2.Controls.Add(this.lblMap);
 			this.panel2.Controls.Add(this.lblSurvival);
@@ -563,8 +563,17 @@
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel2.Location = new System.Drawing.Point(0, 0);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(737, 100);
+			this.panel2.Size = new System.Drawing.Size(813, 100);
 			this.panel2.TabIndex = 6;
+			// 
+			// label1
+			// 
+			this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
+			this.label1.Location = new System.Drawing.Point(225, 40);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(50, 13);
+			this.label1.TabIndex = 8;
+			this.label1.Text = "Date:";
 			// 
 			// lblEFF
 			// 
@@ -637,7 +646,7 @@
 			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(437, 11);
+			this.lblTankName.Location = new System.Drawing.Point(513, 11);
 			this.lblTankName.Name = "lblTankName";
 			this.lblTankName.Size = new System.Drawing.Size(180, 21);
 			this.lblTankName.TabIndex = 7;
@@ -647,7 +656,7 @@
 			// picMB
 			// 
 			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picMB.Location = new System.Drawing.Point(473, 35);
+			this.picMB.Location = new System.Drawing.Point(549, 35);
 			this.picMB.Name = "picMB";
 			this.picMB.Size = new System.Drawing.Size(67, 64);
 			this.picMB.TabIndex = 14;
@@ -703,16 +712,6 @@
 			this.label2.TabIndex = 9;
 			this.label2.Text = "Time:";
 			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.label1.Location = new System.Drawing.Point(225, 40);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(33, 13);
-			this.label1.TabIndex = 8;
-			this.label1.Text = "Date:";
-			// 
 			// lblResult
 			// 
 			this.lblResult.AutoSize = true;
@@ -739,10 +738,11 @@
 			// 
 			// lblSurvival
 			// 
+			this.lblSurvival.AutoSize = true;
 			this.lblSurvival.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
 			this.lblSurvival.Location = new System.Drawing.Point(13, 40);
 			this.lblSurvival.Name = "lblSurvival";
-			this.lblSurvival.Size = new System.Drawing.Size(195, 13);
+			this.lblSurvival.Size = new System.Drawing.Size(119, 13);
 			this.lblSurvival.TabIndex = 4;
 			this.lblSurvival.Text = "Survival / Extermination";
 			this.lblSurvival.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -761,7 +761,7 @@
 			// picTank
 			// 
 			this.picTank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picTank.Location = new System.Drawing.Point(567, 0);
+			this.picTank.Location = new System.Drawing.Point(643, 0);
 			this.picTank.Name = "picTank";
 			this.picTank.Size = new System.Drawing.Size(170, 100);
 			this.picTank.TabIndex = 1;
@@ -831,7 +831,7 @@
 			this.grpMain.Image = null;
 			this.grpMain.Location = new System.Drawing.Point(25, 56);
 			this.grpMain.Name = "grpMain";
-			this.grpMain.Size = new System.Drawing.Size(739, 393);
+			this.grpMain.Size = new System.Drawing.Size(815, 474);
 			this.grpMain.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -839,7 +839,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(789, 478);
+			this.ClientSize = new System.Drawing.Size(865, 559);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(789, 400);

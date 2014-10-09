@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -20,6 +21,7 @@ namespace WinApp.Forms
 		private DataGridView dgvTeam1 = new DataGridView();
 		private DataGridView dgvTeam2 = new DataGridView();
 		private bool showFortResources = false;
+		private bool showAllColumns = false;
 		private Panel pnlBack = new Panel();
 		private BadScrollBar scroll = new BadScrollBar();
 
@@ -44,8 +46,20 @@ namespace WinApp.Forms
 				dgvTeam2.Visible = false;
 				GridHelper.StyleDataGrid(dgvTeam1);
 				GridHelper.StyleDataGrid(dgvTeam2);
+				dgvTeam1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+				dgvTeam2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+				dgvTeam1.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgvTeam2.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgvTeam1.ColumnHeadersHeight = 42;
+				dgvTeam2.ColumnHeadersHeight = 42;
+				dgvTeam1.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
+				dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
+				dgvTeam1.Sorted += new EventHandler(dgvSorted);
+				dgvTeam2.Sorted += new EventHandler(dgvSorted);
 				this.Controls.Add(dgvTeam1);
 				this.Controls.Add(dgvTeam2);
+				dgvTeam1.RowTemplate.Height = 26;
+				dgvTeam2.RowTemplate.Height = 26;
 				// Add panel as background
 				pnlBack.BackColor = ColorTheme.ControlSeparatorGroupBoxBorder;
 				pnlBack.Visible = false;
@@ -188,9 +202,9 @@ namespace WinApp.Forms
 						string killedPrefix = " caused by ";
 						switch (deathReason)
 						{
-							case "Shot": survival = "Destroyed by a shot"; killedPrefix=" from"; break;
-							case "Burned": survival = "Destroyed by fire"; break;
-							case "Rammed": survival = "Destroyed by ramming"; killedPrefix=" from"; break;
+							case "Shot": survival = "Killed by a shot"; killedPrefix=" from"; break;
+							case "Burned": survival = "Put on fire"; killedPrefix = " by"; break;
+							case "Rammed": survival = "Rammed"; killedPrefix=" by"; break;
 							case "Chrashed": survival = "Vehicle crashed"; break;
 							case "Death zone": survival = "Destroyed in a death zone"; break;
 							case "Drowned": survival = "Vehicle drowned"; break;
@@ -202,20 +216,21 @@ namespace WinApp.Forms
 				}
 				lblSurvival.Text = survival;
 				lblSurvival.ForeColor = battleSurviveColor;
-				
+				// Skirmishes?
+				string mainMode = dr["battleMode"].ToString();
+				if (mainMode == "Skirmishes") showFortResources = true;
 				// Battle mode
 				string battleMode = "";
 				if (dr["battleResultMode"] != DBNull.Value)
 					battleMode = dr["battleResultMode"].ToString() + " Battle";
 				else
 				{
-					battleMode = dr["battleMode"].ToString();
-					switch (battleMode)
+					switch (mainMode)
 					{
 						case "15": battleMode = "Random Battle"; break;
 						case "7": battleMode = "Team Battle"; break;
 						case "Historical": battleMode = "Historical Battle"; break;
-						case "Skirmish": battleMode = "Skirmish Battle"; break;
+						case "Skirmishes": battleMode = "Skirmish Battle"; break;
 					}
 					if (Convert.ToInt32(dr["modeClan"]) > 0)
 						battleMode = "Clan War Battle";
@@ -312,11 +327,12 @@ namespace WinApp.Forms
 
 		private void ShowTeams()
 		{
+			showAllColumns = false;
 			dgvTeam1.DataSource = GetDataGridSource(team1);
 			dgvTeam2.DataSource = GetDataGridSource(team2);
+			ResizeNow();
 			AutoSizeColumns(dgvTeam1);
 			AutoSizeColumns(dgvTeam2);
-			ResizeNow();
 			pnlBack.BringToFront();
 			dgvTeam1.BringToFront();
 			dgvTeam2.BringToFront();
@@ -325,10 +341,10 @@ namespace WinApp.Forms
 
 		private void ShowOwnTeam()
 		{
-			
-			dgvTeam1.DataSource = GetDataGridSource(team1, true);
-			AutoSizeColumns(dgvTeam1);
+			showAllColumns = true;
+			dgvTeam1.DataSource = GetDataGridSource(team1);
 			ResizeNow();
+			AutoSizeColumns(dgvTeam1);
 			scroll.BringToFront();
 			dgvTeam1.BringToFront();
 			RefreshScrollbars(dgvTeam1);
@@ -337,37 +353,35 @@ namespace WinApp.Forms
 
 		private void ShowEnemyTeam()
 		{
-			dgvTeam2.DataSource = GetDataGridSource(team2, true);
-			AutoSizeColumns(dgvTeam2);
+			showAllColumns = true;
+			dgvTeam2.DataSource = GetDataGridSource(team2);
 			ResizeNow();
+			AutoSizeColumns(dgvTeam2);
 			scroll.BringToFront();
 			dgvTeam2.BringToFront();
 			RefreshScrollbars(dgvTeam2);
 			MoveScrollBar();
 		}
 
-		private DataTable GetDataGridSource(int team, bool enhanced = false)
+		private DataTable GetDataGridSource(int team)
 		{
 			string fortResourcesFields = "";
 			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
 			string enhancedFields = "";
-			if (enhanced)
+			if (showAllColumns)
 				enhancedFields =
-					", credits as 'Credits' " +
+					", credits as 'Base Credit' " +
+					", capturePoints as 'Cap' " +
+					", droppedCapturePoints as 'Decap' " +
 					", spotted as 'Spot' " +
-					", kills as 'Frags' " +
-					", tkills as 'Team kills' " +
 					", shots as 'Shots' " +
 					", hits as 'Hits' " +
-					", directHits as 'Direct Hits' " +
-					", capturePoints as 'Cap' " +
-					", droppedCapturePoints as 'Dropped Cap' " +
-					", damageReceived as 'Dmg Received' " +
+					", tkills as 'Team Kills' " +
 					", shotsReceived as 'Shots Received' " +
 					", directHitsReceived as 'Hits Received' " +
-					", deathReason as 'Death Reason' ";
+					", damageReceived as 'Dmg Received' ";
 			string sql =
-				"select tank.name as 'Tank', battlePlayer.name as 'Team Player', clanAbbrev as Clan, xp as 'XP', damageDealt as 'Dmg' " + 
+				"select deathReason as 'Dead', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.id as 'TankId', tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " + 
 				fortResourcesFields +
 				enhancedFields +
 				"from battlePlayer inner join " + 
@@ -375,22 +389,106 @@ namespace WinApp.Forms
 				"where battleId=@battleId and team=@team";
 			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
-			return DB.FetchData(sql);
+			DataTable dt = DB.FetchData(sql);
+			// Add image as first col
+			dt.Columns.Add("TankImage", typeof(Image)).SetOrdinal(3);
+			// Add images
+			foreach (DataRow dr in dt.Rows)
+			{
+				int tankId = Convert.ToInt32(dr["TankId"]);
+				Image img = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
+				Bitmap newImage = new Bitmap(92,24);
+				using (Graphics gr = Graphics.FromImage((Image)newImage))
+				{
+					//gr.SmoothingMode = SmoothingMode.HighQuality;
+					gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+					//gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+					gr.DrawImage(img, 0, 0, 92, 24);
+				}
+				dr["TankImage"] = (Image)newImage;
+				foreach (DataColumn dc in dt.Columns)
+				{
+					if (dc.DataType == System.Type.GetType("System.Int32") && Convert.ToInt32(dr[dc.ColumnName]) == 0) dr[dc.ColumnName] = DBNull.Value;	
+				}
+				
+			}
+			return dt;
 		}
-		
+
 		private void AutoSizeColumns(DataGridView dgv)
 		{
-			dgv.Visible = true;
-			dgv.AutoResizeColumns();
-			int maxWidth = 80;
-			foreach (DataGridViewColumn c in dgv.Columns)
+			// Deselect
+			dgv.ClearSelection();
+			// Hide
+			dgv.Columns["TankId"].Visible = false;
+			dgv.Columns["Dead"].Visible = false;
+			dgv.Columns["TankImage"].HeaderText = "";
+			// Left align text col
+			dgv.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dgv.Columns["Clan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dgv.Columns["Player"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			// Format
+			dgv.Columns["Dmg"].DefaultCellStyle.Format = "N0";
+			dgv.Columns["XP"].DefaultCellStyle.Format = "N0";
+			// Default width
+			foreach (DataGridViewColumn dgvc in dgv.Columns)
+				dgvc.Width = 50;
+			// col fixed width
+			dgv.Columns["TankImage"].Width = 60;
+			dgv.Columns["TankImage"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			// Calc width for rest of fields
+			if (!showAllColumns)
 			{
-				if (c.Width > maxWidth)
-				{
-					c.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-					c.Width = maxWidth;
-				}
+				// left part = player, clan, tank img, tank
+				int w = dgv.Width - 2; // total available width without img col
+				int left = Convert.ToInt32(w * 0.65);
+				int leftFreeArea = left - 60 - 50;
+				dgv.Columns["Player"].Width = leftFreeArea / 2;
+				dgv.Columns["Tank"].Width = leftFreeArea - (leftFreeArea / 2);
+				// right part = dmg, frags, xp, IR
+				int right = w - left;
+				int rightCols = 3;
+				if (showFortResources) rightCols = 4;
+				int i = right / rightCols;
+				dgv.Columns["Frags"].Width = i;
+				dgv.Columns["Dmg"].Width = i;
+				if (showFortResources) dgv.Columns["IR"].Width = i;
+				dgv.Columns["XP"].Width = right - (i * (rightCols - 1));
 			}
+			else
+			{
+				dgv.Columns["Player"].Width = 110;
+				dgv.Columns["Tank"].Width = 120;
+				dgv.Columns["Credits"].Width = 65;
+				dgv.Columns["Dmg Received"].Width = 65;
+				dgv.Columns["Credits"].DefaultCellStyle.Format = "N0";
+				dgv.Columns["Dmg Received"].DefaultCellStyle.Format = "N0";
+			}
+			// Show
+			dgv.Visible = true;
+			
+		}
+
+		private void dgvCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		{
+			DataGridView dgv = (DataGridView)sender;
+			string col = dgv.Columns[e.ColumnIndex].Name;
+			if (col.Equals("Player"))
+			{
+				if (dgv["Dead", e.RowIndex].Value == DBNull.Value)
+				{
+					dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = ColorTheme.ControlDarkFont;
+					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowDeadPlayer;
+				}
+				if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
+					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayer;
+			}
+		}
+
+		private void dgvSorted(object sender, EventArgs e)
+		{
+			DataGridView dgv = (DataGridView)sender;
+			dgv.ClearSelection();
 		}
 
 		#endregion
@@ -484,6 +582,7 @@ namespace WinApp.Forms
 		private void BattleDetail_Resize(object sender, EventArgs e)
 		{
 			ResizeNow();
+			
 		}
 
 		private void ResizeNow()
@@ -493,17 +592,21 @@ namespace WinApp.Forms
 				PlaceControl(pnlBack, GridLocation.Whole);
 				PlaceControl(dgvTeam1, GridLocation.Left);
 				PlaceControl(dgvTeam2, GridLocation.Right);
+				AutoSizeColumns(dgvTeam1);
+				AutoSizeColumns(dgvTeam2);
 			}
 			else if (btnOurTeam.Checked)
 			{
-				RefreshScrollbars(dgvTeam1);
 				PlaceControl(dgvTeam1, GridLocation.Both);
+				AutoSizeColumns(dgvTeam1);
+				RefreshScrollbars(dgvTeam1);
 				PlaceScroll(dgvTeam1);
 			}
 			else if (btnEnemyTeam.Checked)
 			{
-				RefreshScrollbars(dgvTeam1);
 				PlaceControl(dgvTeam2, GridLocation.Both);
+				AutoSizeColumns(dgvTeam2);
+				RefreshScrollbars(dgvTeam1);
 				PlaceScroll(dgvTeam2);
 			}
 		}
@@ -523,13 +626,13 @@ namespace WinApp.Forms
 				case GridLocation.Left:
 					ctrl.Left = grpMain.Left + 1;
 					ctrl.Top = grpMain.Top + 8;
-					ctrl.Width = grpMain.Width / 2 - 1;
+					ctrl.Width = grpMain.Width / 2 - 3;
 					ctrl.Height = grpMain.Height - 9;
 					break;
 				case GridLocation.Right:
-					ctrl.Left = grpMain.Left + (grpMain.Width / 2) + 1;
+					ctrl.Left = grpMain.Left + (grpMain.Width / 2) + 3;
 					ctrl.Top = grpMain.Top + 8;
-					ctrl.Width = grpMain.Width / 2 - 2;
+					ctrl.Width = grpMain.Width / 2 - 4;
 					ctrl.Height = grpMain.Height - 9;
 					break;
 				case GridLocation.Both:

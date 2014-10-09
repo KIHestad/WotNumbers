@@ -68,7 +68,8 @@ namespace WinApp.Code
 		public static Color GridColumnSeparator = Color.FromArgb(255, 22, 22, 22);
 		public static Color GridColumnHeaderSeparator = Color.FromArgb(255, 17, 17, 17);
 		public static Color GridTotalsRow = Color.FromArgb(255, 22, 22, 22);
-		
+		public static Color GridRowCurrentPlayer = Color.FromArgb(255, 48, 46, 28);
+		public static Color GridRowDeadPlayer = Color.FromArgb(255, 42, 28, 28);
 		// Scrollbar
 		public static Color ScrollbarBack = Color.FromArgb(255, 65, 65, 69);
 		public static Color ScrollbarFront = Color.FromArgb(255, 102, 102, 106);

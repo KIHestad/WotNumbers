@@ -87,33 +87,34 @@ namespace WinApp.Code
 			TankImage.Clear();
 			foreach (DataRow dr in dt.Rows)
 			{
+				DataRow tankImgNewDataRow = TankImage.NewRow();
+				// ID
+				tankImgNewDataRow["id"] = dr["id"];
+				// SmallImg
+				byte[] imgByte = (byte[])dr["smallImg"];
+				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+				ms.Write(imgByte, 0, imgByte.Length);
+				Image image = new Bitmap(ms);
+				tankImgNewDataRow["smallImg"] = image;
 				if (TankData.PlayerTankExists(Convert.ToInt32(dr["id"])))
 				{
-					DataRow tankImgNewDataRow = TankImage.NewRow();
-					// ID
-					tankImgNewDataRow["id"] = dr["id"];
-					// Img
-					byte[] imgByte = (byte[])dr["img"];
-					MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
-					ms.Write(imgByte, 0, imgByte.Length);
-					Image image = new Bitmap(ms);
-					tankImgNewDataRow["img"] = image;
-					// SmallImg
-					imgByte = (byte[])dr["smallImg"];
+					// Img Large
+					imgByte = (byte[])dr["img"];
 					ms = new MemoryStream(imgByte, 0, imgByte.Length);
 					ms.Write(imgByte, 0, imgByte.Length);
 					image = new Bitmap(ms);
-					tankImgNewDataRow["smallImg"] = image;
+					tankImgNewDataRow["img"] = image;
 					// ContourImg
 					imgByte = (byte[])dr["contourImg"];
 					ms = new MemoryStream(imgByte, 0, imgByte.Length);
 					ms.Write(imgByte, 0, imgByte.Length);
 					image = new Bitmap(ms);
 					tankImgNewDataRow["contourImg"] = image;
-					// Add to dt
-					TankImage.Rows.Add(tankImgNewDataRow);
-					TankImage.AcceptChanges();
 				}
+				// Add to dt
+				TankImage.Rows.Add(tankImgNewDataRow);
+				TankImage.AcceptChanges();
+
 			}
 			
 		}

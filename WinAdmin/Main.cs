@@ -127,6 +127,9 @@ namespace WinAdmin
 			foreach (string imageFile in images)
 			{
 				// read image into database
+				// Normal= 124 x  31
+				// Small =  50 x  24
+				// Large = 160 x 199
 				byte[] img = getImageFromFile(imageFile);
 				byte[] imgSmall = getImageFromFile(imageFile.Replace("\\Img\\Badges\\","\\Img\\Badges\\Small\\"));
 				byte[] imgLarge = getImageFromFile(imageFile.Replace("\\Img\\Badges\\", "\\Img\\Badges\\Large\\"));

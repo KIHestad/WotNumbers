@@ -131,6 +131,7 @@
   <ItemGroup>
     <Compile Include="Code\AppVersion.cs" />
     <Compile Include="Code\AutoSetupHelper.cs" />
+    <Compile Include="Code\FormControl\BadGridView.cs" />
     <Compile Include="Code\Battle2json.cs" />
     <Compile Include="Code\CheckForNewVersion.cs" />
     <Compile Include="Code\DateTimeHelper.cs" />
@@ -657,6 +658,8 @@
     <Content Include="DevDocs\Img\FormIcons\OLD\logo_org_icon5_details.ico" />
     <Content Include="DevDocs\Img\FormIcons\wontum_admin.ico" />
     <Content Include="DevDocs\Img\FormIcons\wontum_master.ico" />
+    <Content Include="DevDocs\Img\FormIcons\wotnumbers_signature.png" />
+    <Content Include="DevDocs\Img\grid.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg1.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg1_large.png" />
     <Content Include="DevDocs\Img\InfoPanel\bg2_72px.png" />
