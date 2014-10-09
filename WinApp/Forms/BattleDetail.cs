@@ -56,6 +56,8 @@ namespace WinApp.Forms
 				dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
 				dgvTeam1.Sorted += new EventHandler(dgvTeam1Sorted);
 				dgvTeam2.Sorted += new EventHandler(dgvTeam2Sorted);
+				dgvTeam1.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
+				dgvTeam2.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
 				this.Controls.Add(dgvTeam1);
 				this.Controls.Add(dgvTeam2);
 				dgvTeam1.RowTemplate.Height = 26;
@@ -323,7 +325,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Team Overview
+		#region Grids
 
 		private void ShowTeams()
 		{
@@ -331,8 +333,8 @@ namespace WinApp.Forms
 			dgvTeam1.DataSource = GetDataGridSource(team1);
 			dgvTeam2.DataSource = GetDataGridSource(team2);
 			ResizeNow();
-			AutoSizeColumns(dgvTeam1);
-			AutoSizeColumns(dgvTeam2);
+			FormatDataGrid(dgvTeam1);
+			FormatDataGrid(dgvTeam2);
 			pnlBack.BringToFront();
 			dgvTeam1.BringToFront();
 			dgvTeam2.BringToFront();
@@ -344,7 +346,7 @@ namespace WinApp.Forms
 			showAllColumns = true;
 			dgvTeam1.DataSource = GetDataGridSource(team1);
 			ResizeNow();
-			AutoSizeColumns(dgvTeam1);
+			FormatDataGrid(dgvTeam1);
 			scroll.BringToFront();
 			dgvTeam1.BringToFront();
 			RefreshScrollbars(dgvTeam1);
@@ -356,7 +358,7 @@ namespace WinApp.Forms
 			showAllColumns = true;
 			dgvTeam2.DataSource = GetDataGridSource(team2);
 			ResizeNow();
-			AutoSizeColumns(dgvTeam2);
+			FormatDataGrid(dgvTeam2);
 			scroll.BringToFront();
 			dgvTeam2.BringToFront();
 			RefreshScrollbars(dgvTeam2);
@@ -415,7 +417,7 @@ namespace WinApp.Forms
 			return dt;
 		}
 
-		private void AutoSizeColumns(DataGridView dgv)
+		private void FormatDataGrid(DataGridView dgv)
 		{
 			// Deselect
 			dgv.ClearSelection();
@@ -430,9 +432,14 @@ namespace WinApp.Forms
 			// Format
 			dgv.Columns["Dmg"].DefaultCellStyle.Format = "N0";
 			dgv.Columns["XP"].DefaultCellStyle.Format = "N0";
-			// Default width
+			// Default width and set sorting
 			foreach (DataGridViewColumn dgvc in dgv.Columns)
+			{
 				dgvc.Width = 50;
+				// Sorting, set manual for non string columns
+				if (dgvc.Name != "Tank" && dgvc.Name != "Clan" && dgvc.Name != "Player" && dgvc.Name != "TankImage")
+					dgvc.SortMode = DataGridViewColumnSortMode.Programmatic;
+			}
 			// col fixed width
 			dgv.Columns["TankImage"].Width = 60;
 			dgv.Columns["TankImage"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -497,6 +504,28 @@ namespace WinApp.Forms
 		private void dgvTeam2Sorted(object sender, EventArgs e)
 		{
 			dgvTeam2.ClearSelection();
+		}
+
+		private void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			DataGridView dgv = (DataGridView)sender;
+			DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
+			if (column.SortMode != DataGridViewColumnSortMode.Programmatic)
+				return;
+
+			var sortGlyph = column.HeaderCell.SortGlyphDirection;
+			switch (sortGlyph)
+			{
+				case SortOrder.None:
+				case SortOrder.Ascending:
+					dgv.Sort(column, ListSortDirection.Descending);
+					column.HeaderCell.SortGlyphDirection = SortOrder.Descending;
+					break;
+				case SortOrder.Descending:
+					dgv.Sort(column, ListSortDirection.Ascending);
+					column.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+					break;
+			}
 		}
 
 		#endregion
@@ -600,20 +629,20 @@ namespace WinApp.Forms
 				PlaceControl(pnlBack, GridLocation.Whole);
 				PlaceControl(dgvTeam1, GridLocation.Left);
 				PlaceControl(dgvTeam2, GridLocation.Right);
-				AutoSizeColumns(dgvTeam1);
-				AutoSizeColumns(dgvTeam2);
+				FormatDataGrid(dgvTeam1);
+				FormatDataGrid(dgvTeam2);
 			}
 			else if (btnOurTeam.Checked)
 			{
 				PlaceControl(dgvTeam1, GridLocation.Both);
-				AutoSizeColumns(dgvTeam1);
+				FormatDataGrid(dgvTeam1);
 				RefreshScrollbars(dgvTeam1);
 				PlaceScroll(dgvTeam1);
 			}
 			else if (btnEnemyTeam.Checked)
 			{
 				PlaceControl(dgvTeam2, GridLocation.Both);
-				AutoSizeColumns(dgvTeam2);
+				FormatDataGrid(dgvTeam2);
 				RefreshScrollbars(dgvTeam1);
 				PlaceScroll(dgvTeam2);
 			}
