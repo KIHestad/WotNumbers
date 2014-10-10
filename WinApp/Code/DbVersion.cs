@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 170; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 173; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1788,6 +1788,31 @@ namespace WinApp.Code
 					        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 					        "VALUES (529, 2, 114, 'battle.battleResultMode', 'Battle Mode', 'Battle mode retrieved from enhanced battle fetch', 'Battle', 50, 'VarChar'); ";
 					sqlite = mssql;
+					break;
+				case 171:
+					mssql = "ALTER TABLE battlePlayer ADD potentialDamageReceived INT NULL;" +
+							"ALTER TABLE battlePlayer ADD noDamageShotsReceived INT NULL;" +
+							"ALTER TABLE battlePlayer ADD sniperDamageDealt INT NULL;" +
+							"ALTER TABLE battlePlayer ADD piercingsReceived INT NULL;" +
+							"ALTER TABLE battlePlayer ADD pierced INT NULL;" +
+							"ALTER TABLE battlePlayer ADD mileage INT NULL;" +
+							"ALTER TABLE battlePlayer ADD lifeTime INT NULL;" +
+							"ALTER TABLE battlePlayer ADD killerID INT NULL;" +
+							"ALTER TABLE battlePlayer ADD isPrematureLeave INT NULL;" +
+							"ALTER TABLE battlePlayer ADD explosionHits INT NULL;" +
+							"ALTER TABLE battlePlayer ADD explosionHitsReceived INT NULL;" +
+							"ALTER TABLE battlePlayer ADD damageBlockedByArmor INT NULL;" +
+							"ALTER TABLE battlePlayer ADD damageAssistedTrack INT NULL;" +
+							"ALTER TABLE battlePlayer ADD damageAssistedRadio INT NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 172:
+					mssql = "ALTER TABLE battlePlayer ADD isTeamKiller INT NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 173:
+					mssql = "ALTER TABLE battlePlayer ADD killerName VARCHAR(30) NULL;";
+					sqlite = mssql.Replace("INT", "INTEGER");
 					break;
 			}
 			string sql = "";

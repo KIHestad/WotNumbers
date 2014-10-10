@@ -423,21 +423,57 @@ namespace WinApp.Code
 										values += ", " + vechicleInfo.SelectToken("tkills");
 										JValue fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
 										int fortResourceValue = 0;
-										if (fortResource.Value != null) 
+										if (fortResource.Value != null)
 										{
 											fortResourceValue = Convert.ToInt32(fortResource.Value);
 											values += ", " + fortResourceValue.ToString();
 										}
 										else
 										{
-											values += ", NULL ";
+											values += ", 0";
 										}
+										// Added more
+										fields += ", potentialDamageReceived, noDamageShotsReceived, sniperDamageDealt, piercingsReceived, pierced, isTeamKiller";
+										values += ", " + vechicleInfo.SelectToken("potentialDamageReceived");
+										values += ", " + vechicleInfo.SelectToken("noDamageShotsReceived");
+										values += ", " + vechicleInfo.SelectToken("sniperDamageDealt");
+										values += ", " + vechicleInfo.SelectToken("piercingsReceived");
+										values += ", " + vechicleInfo.SelectToken("pierced");
+										// Is Team Killer
+										bool isTeamKiller = Convert.ToBoolean(vechicleInfo.SelectToken("isTeamKiller"));
+										if (isTeamKiller) values += ", 1"; else values += ", 0";
+										// Added more
+										fields += ", mileage, lifeTime, killerID, killerName, isPrematureLeave, explosionHits, explosionHitsReceived, damageBlockedByArmor, damageAssistedTrack, damageAssistedRadio ";
+										values += ", " + vechicleInfo.SelectToken("mileage");
+										values += ", " + vechicleInfo.SelectToken("lifeTime");
+										// Killed by account id
+										int playerKillerId = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
+										BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == playerKillerId);
+										if (killer != null)
+											values += ", " + killer.accountId;
+										else
+											values += ", 0";
+										if (killer != null)
+											values += ", '" + killer.name + "'";
+										else
+											values += ", NULL";
+										// Premature Leave
+										bool isPrematureLeave = Convert.ToBoolean(vechicleInfo.SelectToken("isPrematureLeave"));
+										if (isPrematureLeave) values += ", 1"; else values += ", 0";
+										// More fields
+										values += ", " + vechicleInfo.SelectToken("explosionHits");
+										values += ", " + vechicleInfo.SelectToken("explosionHitsReceived");
+										values += ", " + vechicleInfo.SelectToken("damageBlockedByArmor");
+										values += ", " + vechicleInfo.SelectToken("damageAssistedTrack");
+										values += ", " + vechicleInfo.SelectToken("damageAssistedRadio");
+										
+										
 										// If this is current player remember for later save to battle
 										if (player.name == Config.Settings.playerName)
 										{
 											playerFortResources = Convert.ToInt32(fortResource.Value);
 											playerTeam = player.team;
-											killerID = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
+											killerID = playerKillerId;
 											playerPlatoonId = player.platoonID;
 										}
 										// Add sum for team IR

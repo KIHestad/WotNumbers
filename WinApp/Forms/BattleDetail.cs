@@ -346,6 +346,7 @@ namespace WinApp.Forms
 			showAllColumns = true;
 			dgvTeam1.DataSource = GetDataGridSource(team1);
 			ResizeNow();
+			scroll.ScrollPosition = 0;
 			FormatDataGrid(dgvTeam1);
 			scroll.BringToFront();
 			dgvTeam1.BringToFront();
@@ -358,6 +359,7 @@ namespace WinApp.Forms
 			showAllColumns = true;
 			dgvTeam2.DataSource = GetDataGridSource(team2);
 			ResizeNow();
+			scroll.ScrollPosition = 0;
 			FormatDataGrid(dgvTeam2);
 			scroll.BringToFront();
 			dgvTeam2.BringToFront();
@@ -372,16 +374,37 @@ namespace WinApp.Forms
 			string enhancedFields = "";
 			if (showAllColumns)
 				enhancedFields =
-					", credits as 'Base Credit' " +
+					", killerName as 'Killed By' " +
+										
+					", damageAssistedTrack as 'Dmg Track' " +
+					", damageAssistedRadio as 'Dmg Spot' " +
+					", sniperDamageDealt as 'Dmg Sniper' " +
+					
+					", damageReceived as 'Dmg Received' " +
+					", damageBlockedByArmor as 'Dmg Blocked' " +
+					
+					", spotted as 'Spot' " +
 					", capturePoints as 'Cap' " +
 					", droppedCapturePoints as 'Decap' " +
-					", spotted as 'Spot' " +
+					
 					", shots as 'Shots' " +
 					", hits as 'Hits' " +
-					", tkills as 'Team Kills' " +
-					", shotsReceived as 'Shots Received' " +
+					", pierced as 'Pierced Hits' " +
+					", explosionHits as 'Explosion Hits' " +
+					
 					", directHitsReceived as 'Hits Received' " +
-					", damageReceived as 'Dmg Received' ";
+					", piercingsReceived as 'Piercings Received' " +
+					", explosionHitsReceived as 'Expl Hits Received' " +
+					", noDamageShotsReceived as 'No Dmg Hits Received' " +
+
+					", mileage as 'Milage' " +
+					", lifeTime as 'Life Time' " +
+
+					", credits as 'Base Credit' " +
+					", isPrematureLeave as 'Premature Leave' " +
+					", isTeamKiller as 'Team Killer' " +
+					", tkills as 'Team Kills' ";
+		
 			string sql =
 				"select battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
 				fortResourcesFields +
@@ -490,12 +513,18 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				dgv.Columns["Player"].Width = 110;
-				dgv.Columns["Tank"].Width = 120;
+				dgv.Columns["Player"].Width = 100;
+				dgv.Columns["Tank"].Width = 100;
+				dgv.Columns["Killed By"].Width = 80;
+				dgv.Columns["Killed By"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				dgv.Columns["Base Credit"].Width = 65;
 				dgv.Columns["Dmg Received"].Width = 65;
 				dgv.Columns["Base Credit"].DefaultCellStyle.Format = "N0";
 				dgv.Columns["Dmg Received"].DefaultCellStyle.Format = "N0";
+				dgv.Columns["Milage"].DefaultCellStyle.Format = "N0";
+				dgv.Columns["Explosion Hits"].Width = 55;
+				dgv.Columns["Expl Hits Received"].Width = 60;
+				dgv.Columns["No Dmg Hits Received"].Width = 80;
 			}
 			// Show
 			dgv.Visible = true;
@@ -533,7 +562,7 @@ namespace WinApp.Forms
 			string columnName = column.HeaderText;
 			if (columnName == "") return; // No soring on image
 			var sortGlyph = column.HeaderCell.SortGlyphDirection;
-			if (columnName != "Tank" && columnName != "Clan" && columnName != "Player")
+			if (columnName != "Tank" && columnName != "Clan" && columnName != "Player" && columnName != "Killed By")
 			{
 				// Descending sort
 				switch (sortGlyph)
@@ -552,17 +581,21 @@ namespace WinApp.Forms
 				sortDirection = " DESC";
 			int team = Convert.ToInt32(dgv.Rows[0].Cells["Team"].Value);
 			dgv.DataSource = GetDataGridSource(team, "'" + columnName + "'" + sortDirection);
-			if (team == 1)
-				dgvTeam1.ClearSelection();
-			else
-				dgvTeam2.ClearSelection();
-		
+			if ((btnEnemyTeam.Checked || btnOurTeam.Checked) && scroll.ScrollPosition > 0)
+			{
+				Refresh();
+				dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
+			}
+			dgv.ClearSelection();			
 		}
 
 		private void dgvColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
-			DataGridView dgv = (DataGridView)sender;
-			dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
+			if (btnEnemyTeam.Checked || btnOurTeam.Checked)
+			{
+				DataGridView dgv = (DataGridView)sender;
+				dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
+			}
 		}
 
 		#endregion
