@@ -125,7 +125,7 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(865, 559);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(865, 575);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
@@ -170,7 +170,7 @@
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(813, 464);
+			this.panel1.Size = new System.Drawing.Size(813, 480);
 			this.panel1.TabIndex = 6;
 			// 
 			// picRatingWN8_Dmg
@@ -831,7 +831,7 @@
 			this.grpMain.Image = null;
 			this.grpMain.Location = new System.Drawing.Point(25, 56);
 			this.grpMain.Name = "grpMain";
-			this.grpMain.Size = new System.Drawing.Size(815, 474);
+			this.grpMain.Size = new System.Drawing.Size(815, 490);
 			this.grpMain.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -839,7 +839,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(865, 559);
+			this.ClientSize = new System.Drawing.Size(865, 575);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(789, 400);

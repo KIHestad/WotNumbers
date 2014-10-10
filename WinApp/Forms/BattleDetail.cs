@@ -54,10 +54,10 @@ namespace WinApp.Forms
 				dgvTeam2.ColumnHeadersHeight = 42;
 				dgvTeam1.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
 				dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
-				dgvTeam1.Sorted += new EventHandler(dgvTeam1Sorted);
-				dgvTeam2.Sorted += new EventHandler(dgvTeam2Sorted);
 				dgvTeam1.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
 				dgvTeam2.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
+				dgvTeam1.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(dgvDataBindingComplete);
+				dgvTeam2.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(dgvDataBindingComplete);
 				this.Controls.Add(dgvTeam1);
 				this.Controls.Add(dgvTeam2);
 				dgvTeam1.RowTemplate.Height = 26;
@@ -365,7 +365,7 @@ namespace WinApp.Forms
 			MoveScrollBar();
 		}
 
-		private DataTable GetDataGridSource(int team)
+		private DataTable GetDataGridSource(int team, string orderBy = "xp DESC")
 		{
 			string fortResourcesFields = "";
 			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
@@ -383,20 +383,33 @@ namespace WinApp.Forms
 					", directHitsReceived as 'Hits Received' " +
 					", damageReceived as 'Dmg Received' ";
 			string sql =
-				"select deathReason as 'Dead', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.id as 'TankId', tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " + 
+				"select deathReason as 'Dead', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.id as 'TankId', tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP', " + team + " as 'Team' " +
 				fortResourcesFields +
 				enhancedFields +
-				"from battlePlayer inner join " + 
+				"from battlePlayer inner join " +
 				"     tank on battlePlayer.tankId = tank.id " +
-				"where battleId=@battleId and team=@team";
+				"where battleId=@battleId and team=@team " +
+				"order by " + orderBy;
 			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			// Add image as first col
 			dt.Columns.Add("TankImage", typeof(Image)).SetOrdinal(3);
+			// Add Total Row
+			DataRow totalRow = dt.NewRow();
+			// Set 0 ad deafult
+			foreach (DataColumn dc in dt.Columns)
+				if (dc.DataType == System.Type.GetType("System.Int32"))
+					totalRow[dc.ColumnName] = 0;
+			totalRow["Player"] = "Total";
+			Bitmap blankImg = new Bitmap(1, 1);
+			totalRow["TankImage"] = (Image)blankImg;
+			dt.Rows.Add(totalRow);
+			int totRow = dt.Rows.Count -1;
 			// Add images
-			foreach (DataRow dr in dt.Rows)
+			for (int i = 0; i < dt.Rows.Count - 1; i++)
 			{
+				DataRow dr = dt.Rows[i];
 				int tankId = Convert.ToInt32(dr["TankId"]);
 				Image img = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
 				Bitmap newImage = new Bitmap(92,24);
@@ -410,10 +423,22 @@ namespace WinApp.Forms
 				dr["TankImage"] = (Image)newImage;
 				foreach (DataColumn dc in dt.Columns)
 				{
-					if (dc.DataType == System.Type.GetType("System.Int32") && Convert.ToInt32(dr[dc.ColumnName]) == 0) dr[dc.ColumnName] = DBNull.Value;	
+					if (dc.DataType == System.Type.GetType("System.Int32"))
+					{
+						if (dc.ColumnName != "Dead" && Convert.ToInt32(dr[dc.ColumnName]) == 0) 
+							dr[dc.ColumnName] = DBNull.Value;
+						else
+						{
+							int total = Convert.ToInt32(dt.Rows[totRow][dc.ColumnName]);
+							int addvalue = Convert.ToInt32(dr[dc.ColumnName]);
+							dt.Rows[totRow][dc.ColumnName] = total + addvalue;
+						}
+					}
 				}
-				
 			}
+			// Change total row type
+			dt.Rows[totRow]["Dead"] = -99; // Indicates total row, dark background
+			dt.AcceptChanges();
 			return dt;
 		}
 
@@ -424,6 +449,7 @@ namespace WinApp.Forms
 			// Hide
 			dgv.Columns["TankId"].Visible = false;
 			dgv.Columns["Dead"].Visible = false;
+			dgv.Columns["Team"].Visible = false;
 			dgv.Columns["TankImage"].HeaderText = "";
 			// Left align text col
 			dgv.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -436,9 +462,8 @@ namespace WinApp.Forms
 			foreach (DataGridViewColumn dgvc in dgv.Columns)
 			{
 				dgvc.Width = 50;
-				// Sorting, set manual for non string columns
-				if (dgvc.Name != "Tank" && dgvc.Name != "Clan" && dgvc.Name != "Player" && dgvc.Name != "TankImage")
-					dgvc.SortMode = DataGridViewColumnSortMode.Programmatic;
+				// Sorting, set manual 
+				dgvc.SortMode = DataGridViewColumnSortMode.Programmatic;
 			}
 			// col fixed width
 			dgv.Columns["TankImage"].Width = 60;
@@ -482,7 +507,8 @@ namespace WinApp.Forms
 			string col = dgv.Columns[e.ColumnIndex].Name;
 			if (col.Equals("Player"))
 			{
-				if (dgv["Dead", e.RowIndex].Value == DBNull.Value)
+				int dead = Convert.ToInt32(dgv["Dead", e.RowIndex].Value);
+				if (dead >= 0)
 				{
 					dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = ColorTheme.ControlDarkFont;
 					if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
@@ -490,42 +516,51 @@ namespace WinApp.Forms
 					else
 						dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowPlayerDead;
 				}
+				else if (dead == -99)
+					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
 				else if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
 					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
 			
 			}
 		}
 
-		private void dgvTeam1Sorted(object sender, EventArgs e)
-		{
-			dgvTeam1.ClearSelection();
-		}
-
-		private void dgvTeam2Sorted(object sender, EventArgs e)
-		{
-			dgvTeam2.ClearSelection();
-		}
-
 		private void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
+			// Sorting
 			DataGridView dgv = (DataGridView)sender;
 			DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
-			if (column.SortMode != DataGridViewColumnSortMode.Programmatic)
-				return;
-
+			string columnName = column.HeaderText;
+			if (columnName == "") return; // No soring on image
 			var sortGlyph = column.HeaderCell.SortGlyphDirection;
-			switch (sortGlyph)
+			if (columnName != "Tank" && columnName != "Clan" && columnName != "Player")
 			{
-				case SortOrder.None:
-				case SortOrder.Ascending:
-					dgv.Sort(column, ListSortDirection.Descending);
-					column.HeaderCell.SortGlyphDirection = SortOrder.Descending;
-					break;
-				case SortOrder.Descending:
-					dgv.Sort(column, ListSortDirection.Ascending);
-					column.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-					break;
+				// Descending sort
+				switch (sortGlyph)
+				{
+					case SortOrder.None:
+					case SortOrder.Ascending:
+						column.HeaderCell.SortGlyphDirection = SortOrder.Descending;
+						break;
+					case SortOrder.Descending:
+						column.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+						break;
+				}
 			}
+			string sortDirection = "";
+			if (column.HeaderCell.SortGlyphDirection == SortOrder.Descending)
+				sortDirection = " DESC";
+			int team = Convert.ToInt32(dgv.Rows[0].Cells["Team"].Value);
+			dgv.DataSource = GetDataGridSource(team, "'" + columnName + "'" + sortDirection);
+			if (team == 1)
+				dgvTeam1.ClearSelection();
+			else
+				dgvTeam2.ClearSelection();
+		
+		}
+
+		private void dgvDataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+		{
+			((DataGridView)sender).Rows[0].Frozen = true;
 		}
 
 		#endregion
