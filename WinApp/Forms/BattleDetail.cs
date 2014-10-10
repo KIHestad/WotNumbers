@@ -449,12 +449,13 @@ namespace WinApp.Forms
 				{
 					if (dc.DataType == System.Type.GetType("System.Int32"))
 					{
-						if (dc.ColumnName != "Dead" && Convert.ToInt32(dr[dc.ColumnName]) == 0) 
+						if (dc.ColumnName != "Dead" && dr[dc.ColumnName] != DBNull.Value && Convert.ToInt32(dr[dc.ColumnName]) == 0) 
 							dr[dc.ColumnName] = DBNull.Value;
 						else
 						{
 							int total = Convert.ToInt32(dt.Rows[totRow][dc.ColumnName]);
-							int addvalue = Convert.ToInt32(dr[dc.ColumnName]);
+							int addvalue = 0;
+							if (dr[dc.ColumnName] != DBNull.Value) addvalue = Convert.ToInt32(dr[dc.ColumnName]);
 							dt.Rows[totRow][dc.ColumnName] = total + addvalue;
 						}
 					}
