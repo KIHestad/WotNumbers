@@ -56,8 +56,8 @@ namespace WinApp.Forms
 				dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
 				dgvTeam1.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
 				dgvTeam2.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
-				dgvTeam1.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(dgvDataBindingComplete);
-				dgvTeam2.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(dgvDataBindingComplete);
+				dgvTeam1.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
+				dgvTeam2.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
 				this.Controls.Add(dgvTeam1);
 				this.Controls.Add(dgvTeam2);
 				dgvTeam1.RowTemplate.Height = 26;
@@ -383,9 +383,10 @@ namespace WinApp.Forms
 					", directHitsReceived as 'Hits Received' " +
 					", damageReceived as 'Dmg Received' ";
 			string sql =
-				"select deathReason as 'Dead', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.id as 'TankId', tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP', " + team + " as 'Team' " +
+				"select battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
 				fortResourcesFields +
 				enhancedFields +
+				", deathReason as 'Dead', tank.id as 'TankId', " + team + " as 'Team' " +
 				"from battlePlayer inner join " +
 				"     tank on battlePlayer.tankId = tank.id " +
 				"where battleId=@battleId and team=@team " +
@@ -558,9 +559,10 @@ namespace WinApp.Forms
 		
 		}
 
-		private void dgvDataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+		private void dgvColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
-			((DataGridView)sender).Rows[0].Frozen = true;
+			DataGridView dgv = (DataGridView)sender;
+			dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
 		}
 
 		#endregion
@@ -678,7 +680,7 @@ namespace WinApp.Forms
 			{
 				PlaceControl(dgvTeam2, GridLocation.Both);
 				FormatDataGrid(dgvTeam2);
-				RefreshScrollbars(dgvTeam1);
+				RefreshScrollbars(dgvTeam2);
 				PlaceScroll(dgvTeam2);
 			}
 		}

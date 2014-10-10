@@ -3416,7 +3416,8 @@ namespace WinApp.Forms
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show("Error occured saving resized column, see log file.", "Error resizing column", this);
 			}
-			
+			// Move back to scrollbar position
+			dataGridMain.FirstDisplayedScrollingColumnIndex = scrollX.ScrollPosition;
 		}
 
 		private void dataGridMain_RowHeadersWidthChanged(object sender, EventArgs e)
