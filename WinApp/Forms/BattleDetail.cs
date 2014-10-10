@@ -470,6 +470,8 @@ namespace WinApp.Forms
 		{
 			// Deselect
 			dgv.ClearSelection();
+			// Freeze first column
+			dgv.Columns[0].Frozen = true;
 			// Hide
 			dgv.Columns["TankId"].Visible = false;
 			dgv.Columns["Dead"].Visible = false;
@@ -591,7 +593,7 @@ namespace WinApp.Forms
 
 		private void dgvColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
 		{
-			if (btnEnemyTeam.Checked || btnOurTeam.Checked)
+			if (scroll.ScrollPosition > 0 && (btnEnemyTeam.Checked || btnOurTeam.Checked))
 			{
 				DataGridView dgv = (DataGridView)sender;
 				dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
@@ -631,7 +633,7 @@ namespace WinApp.Forms
 				if (dgv != null)
 				{
 					int posBefore = dgv.FirstDisplayedScrollingColumnIndex;
-					dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition;
+					dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition + 1; // adjust for frozen row
 					if (posBefore != dgv.FirstDisplayedScrollingColumnIndex) Refresh();
 				}
 			}
@@ -663,7 +665,7 @@ namespace WinApp.Forms
 			}
 			// Scroll init
 			scroll.ScrollElementsVisible = XVisible;
-			scroll.ScrollElementsTotals = XTotal;
+			scroll.ScrollElementsTotals = XTotal - 1; // subtract one for frozen row
 			scroll.Visible = scroll.ScrollNecessary;
 		}
 
@@ -672,9 +674,9 @@ namespace WinApp.Forms
 			try
 			{
 				if (btnOurTeam.Checked)
-					scroll.ScrollPosition = dgvTeam1.FirstDisplayedScrollingColumnIndex;
+					scroll.ScrollPosition = dgvTeam1.FirstDisplayedScrollingColumnIndex - 1; // adjust for frozen row
 				else if (btnEnemyTeam.Checked)
-					scroll.ScrollPosition = dgvTeam2.FirstDisplayedScrollingColumnIndex;
+					scroll.ScrollPosition = dgvTeam2.FirstDisplayedScrollingColumnIndex - 1; // adjust for frozen row
 			}
 			catch (Exception)
 			{

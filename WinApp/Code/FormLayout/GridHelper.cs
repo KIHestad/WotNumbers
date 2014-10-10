@@ -11,6 +11,9 @@ namespace WinApp.Code
 	{
 		public static void StyleDataGrid(DataGridView dgv, DataGridViewSelectionMode selectionMode = DataGridViewSelectionMode.FullRowSelect )
 		{
+			dgv.ReadOnly = true;
+			dgv.AllowUserToAddRows = false;
+			dgv.AllowUserToDeleteRows = false; 
 			dgv.BorderStyle = BorderStyle.FixedSingle;
 			dgv.BackgroundColor = ColorTheme.FormBack;
 			dgv.GridColor = ColorTheme.GridBorders;
@@ -39,6 +42,9 @@ namespace WinApp.Code
 
 		public static void StyleGadgetDataGrid(DataGridView dgv, DataGridViewSelectionMode selectionMode = DataGridViewSelectionMode.FullRowSelect)
 		{
+			dgv.ReadOnly = true;
+			dgv.AllowUserToAddRows = false;
+			dgv.AllowUserToDeleteRows = false;
 			dgv.BorderStyle = BorderStyle.None;
 			dgv.BackgroundColor = ColorTheme.FormBack;
 			dgv.GridColor = ColorTheme.FormBack;
