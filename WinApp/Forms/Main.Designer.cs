@@ -40,6 +40,7 @@
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
+			this.timerWoTAffnity = new System.Windows.Forms.Timer(this.components);
 			this.MainTheme = new BadForm();
 			this.toolMain = new WinApp.Code.ToolStripEx();
 			this.mWoT = new System.Windows.Forms.ToolStripButton();
@@ -186,6 +187,7 @@
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
 			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
+			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mHelpCheckVersion = new System.Windows.Forms.ToolStripMenuItem();
 			this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
@@ -202,8 +204,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.timerWoTAffnity = new System.Windows.Forms.Timer(this.components);
-			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -254,6 +254,11 @@
 			this.imageGrid.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageGrid.ImageStream")));
 			this.imageGrid.TransparentColor = System.Drawing.Color.Transparent;
 			this.imageGrid.Images.SetKeyName(0, "grid.png");
+			// 
+			// timerWoTAffnity
+			// 
+			this.timerWoTAffnity.Interval = 6000;
+			this.timerWoTAffnity.Tick += new System.EventHandler(this.timerWoTAffnity_Tick);
 			// 
 			// MainTheme
 			// 
@@ -315,12 +320,13 @@
 			// 
 			// mWoT
 			// 
+			this.mWoT.AutoSize = false;
 			this.mWoT.BackColor = System.Drawing.Color.Transparent;
 			this.mWoT.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mWoT.Image = ((System.Drawing.Image)(resources.GetObject("mWoT.Image")));
 			this.mWoT.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mWoT.Name = "mWoT";
-			this.mWoT.Size = new System.Drawing.Size(23, 22);
+			this.mWoT.Size = new System.Drawing.Size(22, 22);
 			this.mWoT.ToolTipText = "Start World of Tanks";
 			this.mWoT.Click += new System.EventHandler(this.mWoT_Click);
 			// 
@@ -367,12 +373,13 @@
 			// 
 			// mRefresh
 			// 
+			this.mRefresh.AutoSize = false;
 			this.mRefresh.BackColor = System.Drawing.Color.Fuchsia;
 			this.mRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mRefresh.Image = ((System.Drawing.Image)(resources.GetObject("mRefresh.Image")));
 			this.mRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mRefresh.Name = "mRefresh";
-			this.mRefresh.Size = new System.Drawing.Size(23, 22);
+			this.mRefresh.Size = new System.Drawing.Size(22, 22);
 			this.mRefresh.Text = "Refresh";
 			this.mRefresh.ToolTipText = "Refresh";
 			this.mRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
@@ -1514,12 +1521,13 @@
 			// 
 			// mHomeEdit
 			// 
+			this.mHomeEdit.AutoSize = false;
 			this.mHomeEdit.BackColor = System.Drawing.Color.Transparent;
 			this.mHomeEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mHomeEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeEdit.Image")));
 			this.mHomeEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mHomeEdit.Name = "mHomeEdit";
-			this.mHomeEdit.Size = new System.Drawing.Size(23, 22);
+			this.mHomeEdit.Size = new System.Drawing.Size(22, 22);
 			this.mHomeEdit.Text = "toolStripButton1";
 			this.mHomeEdit.ToolTipText = "Gadget Edit Mode";
 			this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
@@ -1531,18 +1539,20 @@
 			// 
 			// mViewChart
 			// 
+			this.mViewChart.AutoSize = false;
 			this.mViewChart.BackColor = System.Drawing.Color.Transparent;
 			this.mViewChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mViewChart.Image = ((System.Drawing.Image)(resources.GetObject("mViewChart.Image")));
 			this.mViewChart.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mViewChart.Name = "mViewChart";
-			this.mViewChart.Size = new System.Drawing.Size(23, 22);
+			this.mViewChart.Size = new System.Drawing.Size(22, 22);
 			this.mViewChart.Text = "toolStripButton1";
 			this.mViewChart.ToolTipText = "Chart";
 			this.mViewChart.Click += new System.EventHandler(this.toolItemViewChart_Click);
 			// 
 			// mSettings
 			// 
+			this.mSettings.AutoSize = false;
 			this.mSettings.BackColor = System.Drawing.Color.Transparent;
 			this.mSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1560,7 +1570,7 @@
 			this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
 			this.mSettings.Name = "mSettings";
 			this.mSettings.ShowDropDownArrow = false;
-			this.mSettings.Size = new System.Drawing.Size(20, 22);
+			this.mSettings.Size = new System.Drawing.Size(22, 22);
 			this.mSettings.Text = "Settings";
 			// 
 			// mSettingsRun
@@ -1661,8 +1671,17 @@
 			this.mSettingsApp.Text = "Application &Settings...";
 			this.mSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
 			// 
+			// mWoTStartGameSettings
+			// 
+			this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
+			this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
+			this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
+			this.mWoTStartGameSettings.Text = "WoT Start Game Settings...";
+			this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
+			// 
 			// mHelp
 			// 
+			this.mHelp.AutoSize = false;
 			this.mHelp.BackColor = System.Drawing.Color.Transparent;
 			this.mHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1674,7 +1693,7 @@
 			this.mHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mHelp.Name = "mHelp";
 			this.mHelp.ShowDropDownArrow = false;
-			this.mHelp.Size = new System.Drawing.Size(20, 20);
+			this.mHelp.Size = new System.Drawing.Size(22, 22);
 			this.mHelp.Text = "toolStripDropDownButton1";
 			this.mHelp.ToolTipText = "Help";
 			// 
@@ -1904,19 +1923,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// timerWoTAffnity
-			// 
-			this.timerWoTAffnity.Interval = 6000;
-			this.timerWoTAffnity.Tick += new System.EventHandler(this.timerWoTAffnity_Tick);
-			// 
-			// mWoTStartGameSettings
-			// 
-			this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
-			this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
-			this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
-			this.mWoTStartGameSettings.Text = "WoT Start Game Settings...";
-			this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
 			// 
 			// Main
 			// 
