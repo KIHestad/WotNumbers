@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 174; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 176; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1572,11 +1572,6 @@ namespace WinApp.Code
 				case 135:
 					RunWotApi = true;
 					break;
-				case 136:
-					Config.Settings.homeViewNewLayout = false;
-					msg = "";
-					Config.SaveConfig(out msg);
-					break;
 				case 137:
 					mssql = "UPDATE columnSelection SET colDataType='VarChar' WHERE id = 512;";
 					sqlite = mssql;
@@ -1590,10 +1585,6 @@ namespace WinApp.Code
 				case 139:
 					mssql = "UPDATE columnSelection SET colGroup='Damage' WHERE colGroup='Damange'";
 					sqlite = mssql;
-					break;
-				case 140:
-					Config.Settings.homeViewNewLayout = true;
-					Config.SaveConfig(out msg);
 					break;
 				case 141:
 					Config.Settings.mainGridBattleRowWidht = 24;
@@ -1818,11 +1809,11 @@ namespace WinApp.Code
 					Config.Settings.wotGameAffinity = 0;
 					Config.Settings.wotGameFolder = "";
 					Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
-					Config.SaveConfig(out msg);
 					break;
 				case 175:
 					Config.Settings.wotGameAutoStart = false;
-					Config.SaveConfig(out msg);
+					break;
+				case 176:
 					break;
 
 			}

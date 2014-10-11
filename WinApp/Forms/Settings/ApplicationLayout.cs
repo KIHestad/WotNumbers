@@ -32,7 +32,6 @@ namespace WinApp.Forms
 			if (fs < 6) fs = 6;
 			if (fs > 14) fs = 14;
 			ddFontSize.Text = fs.ToString();
-			chkHomeViewNewLayout.Checked = Config.Settings.homeViewNewLayout;
 			currentMasteryBadgeIcons = Config.Settings.useSmallMasteryBadgeIcons;
 			chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
 		}
@@ -41,7 +40,6 @@ namespace WinApp.Forms
 		{
 			Config.Settings.gridBattlesTotalsTop = chkBattleTotalsPosition.Checked;
 			Config.Settings.gridFontSize = Convert.ToInt32(ddFontSize.Text);
-			Config.Settings.homeViewNewLayout = chkHomeViewNewLayout.Checked;
 			Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
 			string msg = "";
 			Config.SaveConfig(out msg);

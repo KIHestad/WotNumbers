@@ -25,6 +25,8 @@ namespace WinApp.Forms
 		private string LoadConfigMsg = "";
 		private ConfigData.PosSize mainFormPosSize = new ConfigData.PosSize();
 		private int currentPlayerId = 0;
+		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
+		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
 
 		public Main()
 		{
@@ -675,11 +677,7 @@ namespace WinApp.Forms
 			panelMainArea.Width = MainTheme.MainArea.Width;
 			panelMainArea.Height = MainTheme.MainArea.Height;
 			toolMain.Width = panelMainArea.Width - toolMain.Left;
-			if (MainSettings.View == GridView.Views.Overall && Config.Settings.homeViewNewLayout)
-			{
-
-			}
-			else
+			if (MainSettings.View != GridView.Views.Overall)
 			{
 				// Set scrollbars, size differs according to scrollbar visibility (ScrollNecessary)
 				RefreshScrollbars();
@@ -783,47 +781,21 @@ namespace WinApp.Forms
 					case GridView.Views.Overall:
 						// Select view
 						mViewOverall.Checked = true;
-						if (!Config.Settings.homeViewNewLayout)
-						{
-							// Show grid
-							dataGridMain.Visible = true;
-							scrollX.Visible = true;
-							scrollY.Visible = true;
-							scrollCorner.Visible = true;
-							// Show/Hide Tool Items
-							mBattles.Visible = false;
-							mTankFilter.Visible = false;
-							mColumnSelect.Visible = false;
-							mMode.Visible = false;
-							mRefreshSeparator.Visible = false;
-							mGadget.Visible = false;
-							mHomeEdit.Visible = false;
-							mBattleGroup.Visible = false;
-							// Remove datagrid context menu
-							dataGridMain.ContextMenuStrip = null;
-							dataGridMain.ColumnHeadersVisible = true;
-							// Start slider
-							InfoPanelSlideStart(true);
-						}
-						else
-						{
-							// New experimental home view
-							dataGridMain.Visible = false;
-							scrollX.Visible = false;
-							scrollY.Visible = false;
-							scrollCorner.Visible = false;
-							panelInfo.Height = 0;
-							// Show/Hide Tool Items
-							mBattles.Visible = true;
-							mGadget.Visible = true;
-							mHomeEdit.Visible = true;
-							mBattles.Visible = false;
-							mTankFilter.Visible = false;
-							mColumnSelect.Visible = false;
-							mMode.Visible = false;
-							mBattleGroup.Visible = false;
-							mRefreshSeparator.Visible = true;
-						}
+						dataGridMain.Visible = false;
+						scrollX.Visible = false;
+						scrollY.Visible = false;
+						scrollCorner.Visible = false;
+						panelInfo.Height = 0;
+						// Show/Hide Tool Items
+						mBattles.Visible = true;
+						mGadget.Visible = true;
+						mHomeEdit.Visible = true;
+						mBattles.Visible = false;
+						mTankFilter.Visible = false;
+						mColumnSelect.Visible = false;
+						mMode.Visible = false;
+						mBattleGroup.Visible = false;
+						mRefreshSeparator.Visible = true;
 						break;
 					case GridView.Views.Tank:
 						// Select view
@@ -936,24 +908,14 @@ namespace WinApp.Forms
 					switch (MainSettings.View)
 					{
 						case GridView.Views.Overall:
-							if (!Config.Settings.homeViewNewLayout)
+							// New home view
+							if (!homeViewCreated)
 							{
-								// Old home view
-								lblOverView.Text = "Welcome " + Config.Settings.playerName;
-								if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
-								GridShowOverall(Status2Message);
+								HomeViewCreate("Creating Home View...");
+								homeViewCreated = true;
 							}
-							else
-							{
-								// New home view
-								if (!homeViewCreated)
-								{
-									HomeViewCreate("Creating Home View...");
-									homeViewCreated = true;
-								}
-								if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
-								HomeViewRefresh(Status2Message);
-							}
+							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Home view selected";
+							HomeViewRefresh(Status2Message);
 							break;
 						case GridView.Views.Tank:
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Tank view selected";
@@ -1654,435 +1616,6 @@ namespace WinApp.Forms
 			whereSQL = newWhereSQL;
 			joinSQL = newJoinSQL;
 			Status2Message = message;
-		}
-
-		#endregion
-				
-		#region HOME VIEW - old layout                                   ***********************************************************************
-
-		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
-		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
-
-		private object RatingVal(string val, int battlecount)
-		{
-			if (battlecount == 0)
-				return DBNull.Value;
-			else
-				return val;
-		}
-
-		
-		
-
-		private void GridShowOverall(string Status2Message)
-		{
-			try
-			{
-				if (!DB.CheckConnection(false)) return;
-				mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
-				mainGridFormatting = false;
-				int[] battleCount = new int[9];
-				double[] wr = new double[9];
-				double[] wn8 = new double[9];
-				double[] wn7 = new double[9];
-				double[] eff = new double[9];
-				bool applyColors = false;
-				// Get total number of tanks to show in first row
-				string sql =
-					"Select 'Tanks owned' as Data, '' as 'Random/TC', '' as 'Team', '' as 'Historical', '' as 'Skirmishes', cast(count(playerTank.tankId) as varchar) as Total " +
-					"from playerTank " +
-					"where playerid=@playerId";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
-				// Get total number of tanks used to show in first row
-				sql =
-					"Select count(playerTank.tankId) " +
-					"from playerTank " +
-					"where playerTank.playerId=@playerId and tankid in (" +
-					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)" ;
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				DataTable dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
-				int usedTotal = 0;
-				if (dtCount.Rows[0][0] != DBNull.Value) usedTotal = Convert.ToInt32(dtCount.Rows[0][0]);
-				// 15
-				sql =
-					"Select count(playerTank.tankId) " +
-					"from playerTank " +
-					"where playerTank.playerId=@playerId and tankid in (" +
-					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '15')";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
-				int usedRandom = 0;
-				if (dtCount.Rows[0][0] != DBNull.Value) usedRandom = Convert.ToInt32(dtCount.Rows[0][0]);
-				// 7
-				sql =
-					"Select count(playerTank.tankId) " +
-					"from playerTank " +
-					"where playerTank.playerId=@playerId and tankid in (" +
-					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7')";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
-				int usedTeam = 0;
-				if (dtCount.Rows[0][0] != DBNull.Value) usedTeam = Convert.ToInt32(dtCount.Rows[0][0]);
-				// hist
-				sql =
-					"Select count(playerTank.tankId) " +
-					"from playerTank " +
-					"where playerTank.playerId=@playerId and tankid in (" +
-					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Historical')";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
-				int usedHistorical = 0;
-				if (dtCount.Rows[0][0] != DBNull.Value) usedHistorical = Convert.ToInt32(dtCount.Rows[0][0]);
-				// Skirmishes
-				sql =
-					"Select count(playerTank.tankId) " +
-					"from playerTank " +
-					"where playerTank.playerId=@playerId and tankid in (" +
-					"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Skirmishes')";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-				dtCount = DB.FetchData(sql, Config.Settings.showDBErrors);
-				int usedSkirmishes = 0;
-				if (dtCount.Rows[0][0] != DBNull.Value) usedSkirmishes = Convert.ToInt32(dtCount.Rows[0][0]);
-
-				// Add usage
-				DataRow dr = dt.NewRow();
-				dr["Data"] = "Tanks used";
-				dr["Random/TC"] = usedRandom.ToString();
-				dr["Team"] = usedTeam.ToString();
-				dr["Historical"] = usedHistorical.ToString();
-				dr["Skirmishes"] = usedSkirmishes.ToString();
-				dr["Total"] = usedTotal.ToString();
-				dt.Rows.Add(dr);
-
-				// get overall stats all battles
-				sql =
-					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-					"from playerTankBattle ptb left join " +
-					"  playerTank pt on ptb.playerTankId=pt.id left join " +
-					"  tank t on pt.tankId = t.id " +
-					"where pt.playerId=@playerId ";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dtStats = DB.FetchData(sql);
-				if (dtStats.Rows.Count > 0 && dtStats.Rows[0]["battles"] != DBNull.Value)
-				{
-					// TOTALS
-					DataRow stats = dtStats.Rows[0];
-					// Battle count
-					battleCount[0] = Convert.ToInt32(stats["battles"]);
-					// win rate
-					wr[0] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-					// Rating parameters
-					//double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-					//double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-					//double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-					//double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-					//double DEF = Rating.ConvertDbVal2Double(stats["def"]);
-					//double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-					//double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-					//double TIER = 0;
-					//if (BATTLES > 0)
-					//	TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-					//// eff
-					//eff[0] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-					//// wn7
-					//wn7[0] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier());
-					// Wn8
-					// wn8[0] = Code.Rating.CalculatePlayerTotalWN8();
-					
-					// Overall stats random
-					sql =
-						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-						"from playerTankBattle ptb left join " +
-						"  playerTank pt on ptb.playerTankId=pt.id left join " +
-						"  tank t on pt.tankId = t.id " +
-						"where pt.playerId=@playerId and ptb.battleMode='15'";
-					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					dtStats = DB.FetchData(sql);
-					stats = dtStats.Rows[0];
-					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
-					{
-						// Battle count
-						battleCount[1] = Convert.ToInt32(stats["battles"]);
-						// win rate
-						wr[1] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-						// Rating parameters
-						double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-						double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-						double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-						double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-						double DEF = Rating.ConvertDbVal2Double(stats["def"]);
-						double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-						double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-						double TIER = 0;
-						if (BATTLES > 0)
-							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-						// eff
-						eff[1] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-						// wn7
-						wn7[1] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("15"));
-						// Wn8 - new sql to avoid battles where expexted value is missing
-						sql =
-						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-						"from playerTankBattle ptb left join " +
-						"  playerTank pt on ptb.playerTankId=pt.id left join " +
-						"  tank t on pt.tankId = t.id " +
-						"where t.expDmg is not null and pt.playerId=@playerId and ptb.battleMode='15'";
-						DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-						dtStats = DB.FetchData(sql);
-						stats = dtStats.Rows[0];
-						BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-						DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-						SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-						FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-						DEF = Rating.ConvertDbVal2Double(stats["def"]);
-						CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-						WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-						TIER = 0;
-						if (BATTLES > 0)
-							TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-						wn8[1] = Code.Rating.CalculatePlayerTotalWN8("15");
-					}
-
-					// Overall stats team
-					sql =
-						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-						"from playerTankBattle ptb left join " +
-						"  playerTank pt on ptb.playerTankId=pt.id left join " +
-						"  tank t on pt.tankId = t.id " +
-						"where pt.playerId=@playerId and ptb.battleMode='7'";
-					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					dtStats = DB.FetchData(sql);
-					stats = dtStats.Rows[0];
-					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
-					{
-						// Battle count
-						battleCount[2] = Convert.ToInt32(stats["battles"]);
-						// win rate
-						wr[2] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-						// Rating parameters
-						//BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-						//DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-						//SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-						//FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-						//DEF = Rating.ConvertDbVal2Double(stats["def"]);
-						//CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-						//WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-						//TIER = 0;
-						//if (BATTLES > 0)
-						//	TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-						//// eff
-						//eff[2] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-						//// wn7
-						//wn7[2] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("7"));
-						// Wn8
-						// wn8[2] = Code.Rating.CalculatePlayerTotalWN8("7");
-					}
-
-					// Overall stats historical
-					sql =
-						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-						"from playerTankBattle ptb left join " +
-						"  playerTank pt on ptb.playerTankId=pt.id left join " +
-						"  tank t on pt.tankId = t.id " +
-						"where pt.playerId=@playerId and ptb.battleMode='Historical'";
-					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					dtStats = DB.FetchData(sql);
-					stats = dtStats.Rows[0];
-					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
-					{
-						// Battle count
-						battleCount[3] = Convert.ToInt32(stats["battles"]);
-						// win rate
-						wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-						// Rating parameters
-						//BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-						//DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-						//SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-						//FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-						//DEF = Rating.ConvertDbVal2Double(stats["def"]);
-						//CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-						//WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-						//TIER = 0;
-						//if (BATTLES > 0)
-						//	TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-						//// eff
-						//eff[3] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-						//// wn7
-						//wn7[3] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Historical"));
-						// Wn8
-						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
-					}
-
-					// Overall stats Skirmishes
-					sql =
-						"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-						"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-						"from playerTankBattle ptb left join " +
-						"  playerTank pt on ptb.playerTankId=pt.id left join " +
-						"  tank t on pt.tankId = t.id " +
-						"where pt.playerId=@playerId and ptb.battleMode='Skirmishes'";
-					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					dtStats = DB.FetchData(sql);
-					stats = dtStats.Rows[0];
-					if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
-					{
-						// Battle count
-						battleCount[4] = Convert.ToInt32(stats["battles"]);
-						// win rate
-						wr[4] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-						// Rating parameters
-						//BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-						//DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-						//SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-						//FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-						//DEF = Rating.ConvertDbVal2Double(stats["def"]);
-						//CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-						//WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-						//TIER = 0;
-						//if (BATTLES > 0)
-						//	TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-						//// eff
-						//eff[4] = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
-						//// wn7
-						//wn7[4] = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("Skirmishes"));
-						// Wn8
-						// wn8[3] = Code.Rating.CalculatePlayerTotalWN8("Historical");
-					}
-
-					// Add Data to dataTable
-					dr = dt.NewRow();
-					dr["Data"] = "Battle count";
-					dr["Random/TC"] = battleCount[1].ToString();
-					dr["Team"] = RatingVal(battleCount[2].ToString(), Convert.ToInt32(battleCount[2]));
-					dr["Historical"] = RatingVal(battleCount[3].ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Skirmishes"] = RatingVal(battleCount[4].ToString(), Convert.ToInt32(battleCount[4]));
-					dr["Total"] = battleCount[0].ToString();
-					dt.Rows.Add(dr);
-					
-					// Add Winrate
-					dr = dt.NewRow();
-					dr["Data"] = "Win rate";
-					dr["Random/TC"] = Math.Round(wr[1], 2).ToString() + " %";
-					dr["Team"] = RatingVal(Math.Round(wr[2], 2).ToString() + " %", Convert.ToInt32(battleCount[2]));
-					dr["Historical"] = RatingVal(Math.Round(wr[3], 2).ToString() + " %", Convert.ToInt32(battleCount[3]));
-					dr["Skirmishes"] = RatingVal(Math.Round(wr[4], 2).ToString() + " %", Convert.ToInt32(battleCount[4]));
-					dr["Total"] = Math.Round(wr[0], 2).ToString() + " %";
-					dt.Rows.Add(dr);
-
-					// Add EFF
-					dr = dt.NewRow();
-					dr["Data"] = "EFF rating";
-					dr["Random/TC"] = Math.Round(eff[1], 2).ToString();
-					dr["Team"] = DBNull.Value; // RatingVal(Math.Round(eff[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
-					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(eff[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Skirmishes"] = DBNull.Value; // RatingVal(Math.Round(eff[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
-					dr["Total"] = DBNull.Value; // Math.Round(eff[0], 2).ToString();
-					dt.Rows.Add(dr);
-					// Add WN7
-					dr = dt.NewRow();
-					dr["Data"] = "WN7 rating";
-					dr["Random/TC"] = Math.Round(wn7[1], 2).ToString();
-					dr["Team"] = DBNull.Value; // RatingVal(Math.Round(wn7[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
-					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(wn7[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Skirmishes"] = DBNull.Value; // RatingVal(Math.Round(wn7[4], 2).ToString(), Convert.ToInt32(battleCount[4]));
-					dr["Total"] = DBNull.Value; // Math.Round(wn7[0], 2).ToString();
-					dt.Rows.Add(dr);
-					// Add WN8
-					dr = dt.NewRow();
-					dr["Data"] = "WN8 rating";
-					dr["Random/TC"] = Math.Round(wn8[1], 2).ToString();
-					dr["Team"] = DBNull.Value; //RatingVal(Math.Round(wn8[2], 2).ToString(), Convert.ToInt32(battleCount[2]));
-					dr["Historical"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Skirmishes"] = DBNull.Value; // RatingVal(Math.Round(wn8[3], 2).ToString(), Convert.ToInt32(battleCount[3]));
-					dr["Total"] = DBNull.Value; //Math.Round(wn8[0], 2).ToString();
-					dt.Rows.Add(dr);
-
-					// Ready to set colors
-					applyColors = true;
-
-				}
-				// Set row height in template 
-				dataGridMain.RowTemplate.Height = 23;
-				// Populate grid
-				dataGridMain.Columns.Clear();
-				dataGridMain.DataSource = dt;
-				frozenRows = 0;
-				// Unfocus
-				dataGridMain.ClearSelection();
-				// Text cols
-				dataGridMain.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Total"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				dataGridMain.Columns["Total"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-				// No sorting
-				for (int i = 0; i < dataGridMain.Columns.Count ; i++)
-				{
-					dataGridMain.Columns[i].SortMode = DataGridViewColumnSortMode.Programmatic;
-				}
-				// Colors
-				if (applyColors)
-				{
-					// Battle count color on random/tc
-					dataGridMain.Rows[2].Cells["Random/TC"].Style.ForeColor = Rating.BattleCountColor(battleCount[1]);
-					dataGridMain.Rows[2].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[2].Cells[1].Style.ForeColor;
-
-					// win rate on all modes
-					dataGridMain.Rows[3].Cells["Random/TC"].Style.ForeColor = Rating.WinRateColor(wr[1]);
-					dataGridMain.Rows[3].Cells["Team"].Style.ForeColor = Rating.WinRateColor(wr[2]);
-					dataGridMain.Rows[3].Cells["Historical"].Style.ForeColor = Rating.WinRateColor(wr[3]);
-					dataGridMain.Rows[3].Cells["Skirmishes"].Style.ForeColor = Rating.WinRateColor(wr[4]);
-					dataGridMain.Rows[3].Cells["Total"].Style.ForeColor = Rating.WinRateColor(wr[0]);
-					dataGridMain.Rows[3].Cells["Random/TC"].Style.SelectionForeColor = Rating.WinRateColor(wr[1]);
-					dataGridMain.Rows[3].Cells["Team"].Style.SelectionForeColor = Rating.WinRateColor(wr[2]);
-					dataGridMain.Rows[3].Cells["Historical"].Style.SelectionForeColor = Rating.WinRateColor(wr[3]);
-					dataGridMain.Rows[3].Cells["Skirmishes"].Style.SelectionForeColor = Rating.WinRateColor(wr[4]);
-					dataGridMain.Rows[3].Cells["Total"].Style.SelectionForeColor = Rating.WinRateColor(wr[0]);
-					
-					// rating color on random/tc
-					dataGridMain.Rows[4].Cells["Random/TC"].Style.ForeColor = Rating.EffColor(eff[1]);
-					dataGridMain.Rows[5].Cells["Random/TC"].Style.ForeColor = Rating.WN7color(wn7[1]);
-					dataGridMain.Rows[6].Cells["Random/TC"].Style.ForeColor = Rating.WN8color(wn8[1]);
-					dataGridMain.Rows[4].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[4].Cells["Random/TC"].Style.ForeColor;
-					dataGridMain.Rows[5].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[5].Cells["Random/TC"].Style.ForeColor;
-					dataGridMain.Rows[6].Cells["Random/TC"].Style.SelectionForeColor = dataGridMain.Rows[6].Cells["Random/TC"].Style.ForeColor;
-
-				}
-				// No resize and Right align numbers
-				dataGridMain.Columns[0].Resizable = DataGridViewTriState.False;
-				for (int i = 1; i < dataGridMain.Columns.Count; i++)
-				{
-					dataGridMain.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[i].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-					dataGridMain.Columns[i].Resizable = DataGridViewTriState.False;
-				}
-				// Finish
-				dataGridMain.Columns[0].Width = 100;
-				dataGridMain.Columns[1].Width = 70;
-				dataGridMain.Columns[2].Width = 70;
-				dataGridMain.Columns[3].Width = 70;
-				dataGridMain.Columns[4].Width = 70;
-				dataGridMain.Columns[5].Width = 70;
-				ResizeNow();
-				lblStatusRowCount.Text = "Rows " + dataGridMain.RowCount.ToString();
-				// Status mesage
-				SetStatus2(Status2Message);
-				dtStats.Dispose();
-				dtStats.Clear();
-			}
-			catch (Exception ex)
-			{
-				Log.LogToFile(ex);
-				string s = ex.Message;
-				if (Config.Settings.showDBErrors)
-					Code.MsgBox.Show(ex.Message, "Error showing overall stats", this);
-				//throw;
-			}
 		}
 
 		#endregion

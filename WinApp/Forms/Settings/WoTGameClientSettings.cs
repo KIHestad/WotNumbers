@@ -36,6 +36,14 @@ namespace WinApp.Forms
 			if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.Game)
 				ddStartApp.Text = "Wot Game";
 			txtFolder.Text = Config.Settings.wotGameFolder;
+			if (txtFolder.Text == "")
+			{
+				if (Directory.Exists("C:\\Games\\World_of_Tanks"))
+					txtFolder.Text = "C:\\Games\\World_of_Tanks";
+				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
+					txtFolder.Text = "D:\\Games\\World_of_Tanks";
+			}
+
 			chkAutoRun.Checked = Config.Settings.wotGameAutoStart;
 			if (Config.Settings.wotGameAffinity > 0)
 			{
@@ -120,14 +128,7 @@ namespace WinApp.Forms
 		{
 			// Select dossier file
 			folderBrowserDialog1.ShowNewFolderButton = false;
-			if (txtFolder.Text == "")
-			{
-				if (Directory.Exists("C:\\Games\\World_of_Tanks"))
-					folderBrowserDialog1.SelectedPath = "C:\\Games\\World_of_Tanks";
-				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
-					folderBrowserDialog1.SelectedPath = "D:\\Games\\World_of_Tanks";
-			}
-			else
+			if (txtFolder.Text != "")
 			{
 				folderBrowserDialog1.SelectedPath = txtFolder.Text;
 			}
