@@ -21,6 +21,12 @@ namespace WinApp.Code
 			SQLite = 2
 		}
 
+		public enum WoTGameStartType
+		{
+			Launcher = 1,
+			Game = 2,
+		}
+
 		public class PosSize
 		{
 			public int Top = 10;
@@ -98,6 +104,9 @@ namespace WinApp.Code
 		public int mainGridTankRowWidht { get; set; }				// Width for row header in main grid
 		public int mainGridBattleRowWidht { get; set; }				// Width for row header in main grid
 		public bool useSmallMasteryBadgeIcons { get; set; }			// Flag for small MB icons
+		public WoTGameStartType wotGameStartType { get; set; }      // Param for start WoT from Wot Numbers
+		public string wotGameFolder { get; set; }
+		public long wotGameAffinity { get; set; }
 	}
 
 	class Config
@@ -203,6 +212,9 @@ namespace WinApp.Code
 			Config.Settings.mainGridBattleRowWidht = 24;
 			Config.Settings.mainGridTankRowWidht = 24;
 			Config.Settings.useSmallMasteryBadgeIcons = true;
+			Config.Settings.wotGameAffinity = 0;
+			Config.Settings.wotGameFolder = "";
+			Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
 		}
 
 		

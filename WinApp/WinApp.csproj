@@ -337,6 +337,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\WoTGameClientSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\WoTGameClientSettings.Designer.cs">
+      <DependentUpon>WoTGameClientSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\paramBM_Color.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -519,6 +525,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\WoTGameClientSettings.resx">
+      <DependentUpon>WoTGameClientSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramBM_Color.resx">
       <DependentUpon>paramBM_Color.cs</DependentUpon>

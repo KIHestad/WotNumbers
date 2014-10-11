@@ -54,5 +54,18 @@ namespace WinApp.Code
 		{
 			return Convert.ToInt32(number).ToRoman();
 		}
+
+		public static string ToBinary(this long number)
+		{
+			string binary = string.Empty;
+			while (number > 0)
+			{
+				// Logical AND the number and prepend it to the result string
+				binary = (number & 1) + binary;
+				number = number >> 1;
+			}
+
+			return binary;
+		}
 	}
 }

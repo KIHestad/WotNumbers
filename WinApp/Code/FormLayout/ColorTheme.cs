@@ -56,8 +56,8 @@ namespace WinApp.Code
 		public static Color ToolGrayCheckHover = Color.FromArgb(255, 92, 92, 96);
 		public static Color ToolGrayCheckPressed = Color.FromArgb(255, 108, 108, 112);
 		public static Color ToolWhiteToolStrip = Color.FromArgb(255, 220, 220, 220);
-		public static Color ToolBlue = Color.FromArgb(255, 66, 125, 215);
-		public static Color ToolBlueSelectedButton = Color.FromArgb(255, 68, 96, 127);
+		public static Color ToolBlueHoverButton = Color.FromArgb(255, 70, 98, 129); // Color.FromArgb(255, 66, 125, 215);
+		public static Color ToolBlueSelectedButton = Color.FromArgb(255, 60, 86, 114);
 		
 		// Grid 
 		public static Color GridHeaderBackLight = Color.FromArgb(255, 22, 22, 22);

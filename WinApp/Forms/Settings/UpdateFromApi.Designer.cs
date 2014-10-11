@@ -79,7 +79,6 @@
 			// 
 			this.lblProgressStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblProgressStatus.Dimmed = false;
-			this.lblProgressStatus.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblProgressStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblProgressStatus.Image = null;
 			this.lblProgressStatus.Location = new System.Drawing.Point(26, 83);

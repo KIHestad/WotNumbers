@@ -888,7 +888,6 @@
             // 
             this.lblSelectedTanks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblSelectedTanks.Dimmed = false;
-            this.lblSelectedTanks.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
             this.lblSelectedTanks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
             this.lblSelectedTanks.Image = null;
             this.lblSelectedTanks.Location = new System.Drawing.Point(453, 276);
@@ -902,7 +901,6 @@
             // 
             this.lblAllTanks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblAllTanks.Dimmed = false;
-            this.lblAllTanks.FontColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
             this.lblAllTanks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
             this.lblAllTanks.Image = null;
             this.lblAllTanks.Location = new System.Drawing.Point(42, 276);

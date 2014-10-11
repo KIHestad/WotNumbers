@@ -42,6 +42,7 @@
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
 			this.MainTheme = new BadForm();
 			this.toolMain = new WinApp.Code.ToolStripEx();
+			this.mWoT = new System.Windows.Forms.ToolStripButton();
 			this.mViewLabel = new System.Windows.Forms.ToolStripLabel();
 			this.mViewOverall = new System.Windows.Forms.ToolStripButton();
 			this.mViewTankInfo = new System.Windows.Forms.ToolStripButton();
@@ -201,6 +202,8 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.timerWoTAffnity = new System.Windows.Forms.Timer(this.components);
+			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -285,6 +288,7 @@
 			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mWoT,
             this.mViewLabel,
             this.mViewOverall,
             this.mViewTankInfo,
@@ -308,6 +312,17 @@
 			this.toolMain.Stretch = true;
 			this.toolMain.TabIndex = 18;
 			this.toolMain.Text = "toolStripEx1";
+			// 
+			// mWoT
+			// 
+			this.mWoT.BackColor = System.Drawing.Color.Transparent;
+			this.mWoT.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mWoT.Image = ((System.Drawing.Image)(resources.GetObject("mWoT.Image")));
+			this.mWoT.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mWoT.Name = "mWoT";
+			this.mWoT.Size = new System.Drawing.Size(23, 22);
+			this.mWoT.ToolTipText = "Start World of Tanks";
+			this.mWoT.Click += new System.EventHandler(this.mWoT_Click);
 			// 
 			// mViewLabel
 			// 
@@ -1540,7 +1555,8 @@
             this.mShowDbTables,
             this.toolStripSeparator25,
             this.mSettingsAppLayout,
-            this.mSettingsApp});
+            this.mSettingsApp,
+            this.mWoTStartGameSettings});
 			this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
 			this.mSettings.Name = "mSettings";
 			this.mSettings.ShowDropDownArrow = false;
@@ -1606,6 +1622,7 @@
 			// 
 			// mRecalcBattleWN8
 			// 
+			this.mRecalcBattleWN8.Image = ((System.Drawing.Image)(resources.GetObject("mRecalcBattleWN8.Image")));
 			this.mRecalcBattleWN8.Name = "mRecalcBattleWN8";
 			this.mRecalcBattleWN8.Size = new System.Drawing.Size(263, 22);
 			this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
@@ -1657,7 +1674,7 @@
 			this.mHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mHelp.Name = "mHelp";
 			this.mHelp.ShowDropDownArrow = false;
-			this.mHelp.Size = new System.Drawing.Size(20, 22);
+			this.mHelp.Size = new System.Drawing.Size(20, 20);
 			this.mHelp.Text = "toolStripDropDownButton1";
 			this.mHelp.ToolTipText = "Help";
 			// 
@@ -1888,6 +1905,19 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// timerWoTAffnity
+			// 
+			this.timerWoTAffnity.Interval = 6000;
+			this.timerWoTAffnity.Tick += new System.EventHandler(this.timerWoTAffnity_Tick);
+			// 
+			// mWoTStartGameSettings
+			// 
+			this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
+			this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
+			this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
+			this.mWoTStartGameSettings.Text = "WoT Start Game Settings...";
+			this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2090,6 +2120,9 @@
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon;
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon2;
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon3;
+		private System.Windows.Forms.ToolStripButton mWoT;
+		private System.Windows.Forms.Timer timerWoTAffnity;
+		private System.Windows.Forms.ToolStripMenuItem mWoTStartGameSettings;
 	}
 }
 

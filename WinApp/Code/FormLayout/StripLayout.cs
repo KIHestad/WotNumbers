@@ -20,9 +20,9 @@ namespace WinApp.Code
 		public override Color ButtonSelectedGradientBegin			{get { return ColorTheme.ToolGrayHover; }}
 		public override Color ButtonSelectedGradientMiddle			{get { return ColorTheme.ToolGrayHover; }}
 		public override Color ButtonSelectedGradientEnd				{get { return ColorTheme.ToolGrayHover; }}
-		public override Color ButtonPressedGradientBegin			{get { return ColorTheme.ToolBlue; }}
-		public override Color ButtonPressedGradientMiddle			{get { return ColorTheme.ToolBlue; }}
-		public override Color ButtonPressedGradientEnd				{get { return ColorTheme.ToolBlue; }}
+		public override Color ButtonPressedGradientBegin			{get { return ColorTheme.ToolBlueHoverButton; }}
+		public override Color ButtonPressedGradientMiddle			{get { return ColorTheme.ToolBlueHoverButton; }}
+		public override Color ButtonPressedGradientEnd				{get { return ColorTheme.ToolBlueHoverButton; }}
 		public override Color CheckBackground						{get { return ColorTheme.ToolGrayCheckBack; }}
 		public override Color CheckSelectedBackground				{get { return ColorTheme.ToolGrayCheckHover; }}
 		public override Color CheckPressedBackground				{get { return ColorTheme.ToolGrayCheckPressed; }}

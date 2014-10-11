@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 173; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 174; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1813,6 +1813,12 @@ namespace WinApp.Code
 				case 173:
 					mssql = "ALTER TABLE battlePlayer ADD killerName VARCHAR(30) NULL;";
 					sqlite = mssql.Replace("INT", "INTEGER");
+					break;
+				case 174:
+					Config.Settings.wotGameAffinity = 0;
+					Config.Settings.wotGameFolder = "";
+					Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+					Config.SaveConfig(out msg);
 					break;
 			}
 			string sql = "";

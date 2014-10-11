@@ -4387,7 +4387,114 @@ namespace WinApp.Forms
 
 		#endregion
 
-		
+		private void mWoT_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				string workingDir = Config.Settings.wotGameFolder;
+				if (workingDir == "")
+				{
+					Form frm = new Forms.WoTGameClientSettings();
+					frm.ShowDialog();
+				}
+				else
+				{
+					string lastchar = workingDir.Substring(workingDir.Length - 1, 1);
+					if (lastchar == "/" || lastchar == "\\")
+						workingDir = workingDir.Substring(0, workingDir.Length - 1);
+					string filename = "";
+					switch (Config.Settings.wotGameStartType)
+					{
+						case ConfigData.WoTGameStartType.Launcher:
+							filename = "WOTLauncher.exe";
+							break;
+						case ConfigData.WoTGameStartType.Game:
+							filename = "WorldOfTanks.exe";
+							break;
+					}
+					// Check if running
+					// Find WoT process
+					Process[] wotProcess = Process.GetProcessesByName("WorldOfTanks");
+					if (wotProcess.Length > 0)
+					{
+						SetStatus2("World of Tanks is already running");
+					}
+					else
+					{
+						SetStatus2("Starting World of Tanks");
+						//Create process
+						System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+						pProcess.StartInfo.FileName = workingDir + "/" + filename;
+						pProcess.StartInfo.WorkingDirectory = workingDir;
+						pProcess.StartInfo.UseShellExecute = false;
+						pProcess.StartInfo.RedirectStandardOutput = true;
+						//Start the process
+						pProcess.Start();
+					}
+					//Start timer for setting affnity after started if optimized settings used
+					if (Config.Settings.wotGameAffinity != 0)
+					{
+						timerWoTAffnity.Enabled = true;
+						timerWotAffnityCount = 0;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				SetStatus2("Error trying to start World of Tanks, check your startup settings");
+			}
+					
+		}
 
+		private int timerWotAffnityCount = 0;
+		private void timerWoTAffnity_Tick(object sender, EventArgs e)
+		{
+			try
+			{
+				// Number of tics before timeout
+				timerWotAffnityCount++;
+				if (timerWotAffnityCount > 30) timerWoTAffnity.Enabled = false; // 10 = 1 minute before timeout
+				// Find WoT process
+				Process[] wotProcess = Process.GetProcessesByName("WorldOfTanks");
+				if (wotProcess.Length > 0)
+				{
+					foreach (Process p in wotProcess)
+					{
+						long AffinityMask = (long)p.ProcessorAffinity;
+						long newAffinityMask = Config.Settings.wotGameAffinity;
+						if (AffinityMask != newAffinityMask || p.PriorityClass != ProcessPriorityClass.High)
+						{
+							string s = "WoT using CPU:" + AffinityMask.ToBinary();
+							s += " (" + p.PriorityClass.ToString() + " Priority)";
+							s += " - Changing to CPU:" + newAffinityMask.ToBinary() + " (High Priority)";
+							SetStatus2(s);
+							p.ProcessorAffinity = (IntPtr)newAffinityMask;
+							p.PriorityClass = ProcessPriorityClass.High;
+						}
+						else
+						{
+							string s = "WoT is using CPU:" + AffinityMask.ToBinary();
+							s += " (" + p.PriorityClass.ToString() + " Priority)";
+							SetStatus2(s);
+						}
+					}
+					timerWoTAffnity.Enabled = false;
+				}
+			}
+			catch (Exception ex)
+			{
+				timerWoTAffnity.Enabled = false;
+				SetStatus2("Error occured setting WoT CPU affinity and priority, check log file");
+				Log.LogToFile(ex);
+			}
+
+		}
+
+		private void mWoTStartGameSettings_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.WoTGameClientSettings();
+			frm.ShowDialog();
+		}
 	}
 }
