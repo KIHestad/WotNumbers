@@ -195,9 +195,18 @@ namespace WinApp.Forms
 				Color battleSurviveColor = ColorTranslator.FromHtml(dr["battleSurviveColor"].ToString());
 				switch (survival)
 				{
-					case "Yes": survival = "Survived"; break;
-					case "Some": survival = "Battles: " + battleCount.ToString() + "Survived: " + survivedCount.ToString(); break;
-					case "No": 
+					case "Yes":
+						survival = "Survived"; 
+						if (battleCount > 1)
+							survival = "Battles: " + battleCount.ToString() + " - Survived all"; 
+						break;
+					case "Some": 
+						survival = "Battles: " + battleCount.ToString() + " - Survived: " + survivedCount.ToString(); 
+						break;
+					case "No":
+						survival = "Destroyed";
+						if (battleCount > 1)
+							survival = "Battles: " + battleCount.ToString() + " - Destroyed in all"; 
 						string deathReason = "Destroyed";
 						if (dr["deathReason"] != DBNull.Value) 
 							deathReason = dr["deathReason"].ToString();

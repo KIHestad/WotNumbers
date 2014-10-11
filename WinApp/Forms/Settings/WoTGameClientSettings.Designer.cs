@@ -33,6 +33,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WoTGameClientSettings));
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.badForm1 = new BadForm();
+			this.chkAutoRun = new BadCheckBox();
 			this.btnCancel = new BadButton();
 			this.btnSave = new BadButton();
 			this.chkCore7 = new BadCheckBox();
@@ -57,6 +58,7 @@
 			// 
 			// badForm1
 			// 
+			this.badForm1.Controls.Add(this.chkAutoRun);
 			this.badForm1.Controls.Add(this.btnCancel);
 			this.badForm1.Controls.Add(this.btnSave);
 			this.badForm1.Controls.Add(this.chkCore7);
@@ -87,7 +89,7 @@
 			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = false;
-			this.badForm1.Size = new System.Drawing.Size(401, 404);
+			this.badForm1.Size = new System.Drawing.Size(401, 435);
 			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
 			this.badForm1.SystemMaximizeImage = null;
 			this.badForm1.SystemMinimizeImage = null;
@@ -95,12 +97,23 @@
 			this.badForm1.Text = "WoT Game Starting Settings";
 			this.badForm1.TitleHeight = 26;
 			// 
+			// chkAutoRun
+			// 
+			this.chkAutoRun.BackColor = System.Drawing.Color.Transparent;
+			this.chkAutoRun.Checked = false;
+			this.chkAutoRun.Image = ((System.Drawing.Image)(resources.GetObject("chkAutoRun.Image")));
+			this.chkAutoRun.Location = new System.Drawing.Point(39, 132);
+			this.chkAutoRun.Name = "chkAutoRun";
+			this.chkAutoRun.Size = new System.Drawing.Size(212, 23);
+			this.chkAutoRun.TabIndex = 19;
+			this.chkAutoRun.Text = "Auto run when Wot Numbers starts";
+			// 
 			// btnCancel
 			// 
 			this.btnCancel.BlackButton = false;
 			this.btnCancel.Checked = false;
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(304, 362);
+			this.btnCancel.Location = new System.Drawing.Point(304, 391);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 18;
@@ -113,7 +126,7 @@
 			this.btnSave.BlackButton = false;
 			this.btnSave.Checked = false;
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(223, 362);
+			this.btnSave.Location = new System.Drawing.Point(223, 391);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 17;
@@ -127,7 +140,7 @@
 			this.chkCore7.Checked = false;
 			this.chkCore7.Enabled = false;
 			this.chkCore7.Image = ((System.Drawing.Image)(resources.GetObject("chkCore7.Image")));
-			this.chkCore7.Location = new System.Drawing.Point(144, 306);
+			this.chkCore7.Location = new System.Drawing.Point(144, 335);
 			this.chkCore7.Name = "chkCore7";
 			this.chkCore7.Size = new System.Drawing.Size(99, 23);
 			this.chkCore7.TabIndex = 16;
@@ -140,7 +153,7 @@
 			this.chkCore6.Checked = false;
 			this.chkCore6.Enabled = false;
 			this.chkCore6.Image = ((System.Drawing.Image)(resources.GetObject("chkCore6.Image")));
-			this.chkCore6.Location = new System.Drawing.Point(144, 286);
+			this.chkCore6.Location = new System.Drawing.Point(144, 315);
 			this.chkCore6.Name = "chkCore6";
 			this.chkCore6.Size = new System.Drawing.Size(99, 23);
 			this.chkCore6.TabIndex = 15;
@@ -153,7 +166,7 @@
 			this.chkCore5.Checked = false;
 			this.chkCore5.Enabled = false;
 			this.chkCore5.Image = ((System.Drawing.Image)(resources.GetObject("chkCore5.Image")));
-			this.chkCore5.Location = new System.Drawing.Point(144, 266);
+			this.chkCore5.Location = new System.Drawing.Point(144, 295);
 			this.chkCore5.Name = "chkCore5";
 			this.chkCore5.Size = new System.Drawing.Size(99, 23);
 			this.chkCore5.TabIndex = 14;
@@ -166,7 +179,7 @@
 			this.chkCore4.Checked = false;
 			this.chkCore4.Enabled = false;
 			this.chkCore4.Image = ((System.Drawing.Image)(resources.GetObject("chkCore4.Image")));
-			this.chkCore4.Location = new System.Drawing.Point(144, 247);
+			this.chkCore4.Location = new System.Drawing.Point(144, 276);
 			this.chkCore4.Name = "chkCore4";
 			this.chkCore4.Size = new System.Drawing.Size(99, 23);
 			this.chkCore4.TabIndex = 13;
@@ -179,7 +192,7 @@
 			this.chkCore3.Checked = false;
 			this.chkCore3.Enabled = false;
 			this.chkCore3.Image = ((System.Drawing.Image)(resources.GetObject("chkCore3.Image")));
-			this.chkCore3.Location = new System.Drawing.Point(39, 306);
+			this.chkCore3.Location = new System.Drawing.Point(39, 335);
 			this.chkCore3.Name = "chkCore3";
 			this.chkCore3.Size = new System.Drawing.Size(99, 23);
 			this.chkCore3.TabIndex = 12;
@@ -192,7 +205,7 @@
 			this.chkCore2.Checked = false;
 			this.chkCore2.Enabled = false;
 			this.chkCore2.Image = ((System.Drawing.Image)(resources.GetObject("chkCore2.Image")));
-			this.chkCore2.Location = new System.Drawing.Point(39, 286);
+			this.chkCore2.Location = new System.Drawing.Point(39, 315);
 			this.chkCore2.Name = "chkCore2";
 			this.chkCore2.Size = new System.Drawing.Size(99, 23);
 			this.chkCore2.TabIndex = 11;
@@ -205,7 +218,7 @@
 			this.chkCore1.Checked = false;
 			this.chkCore1.Enabled = false;
 			this.chkCore1.Image = ((System.Drawing.Image)(resources.GetObject("chkCore1.Image")));
-			this.chkCore1.Location = new System.Drawing.Point(39, 266);
+			this.chkCore1.Location = new System.Drawing.Point(39, 295);
 			this.chkCore1.Name = "chkCore1";
 			this.chkCore1.Size = new System.Drawing.Size(99, 23);
 			this.chkCore1.TabIndex = 10;
@@ -218,7 +231,7 @@
 			this.chkCore0.Checked = false;
 			this.chkCore0.Enabled = false;
 			this.chkCore0.Image = ((System.Drawing.Image)(resources.GetObject("chkCore0.Image")));
-			this.chkCore0.Location = new System.Drawing.Point(39, 247);
+			this.chkCore0.Location = new System.Drawing.Point(39, 276);
 			this.chkCore0.Name = "chkCore0";
 			this.chkCore0.Size = new System.Drawing.Size(99, 23);
 			this.chkCore0.TabIndex = 9;
@@ -230,7 +243,7 @@
 			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel3.Dimmed = false;
 			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(39, 216);
+			this.badLabel3.Location = new System.Drawing.Point(39, 245);
 			this.badLabel3.Name = "badLabel3";
 			this.badLabel3.Size = new System.Drawing.Size(323, 25);
 			this.badLabel3.TabIndex = 8;
@@ -242,7 +255,7 @@
 			this.chkOptimizeOn.BackColor = System.Drawing.Color.Transparent;
 			this.chkOptimizeOn.Checked = false;
 			this.chkOptimizeOn.Image = ((System.Drawing.Image)(resources.GetObject("chkOptimizeOn.Image")));
-			this.chkOptimizeOn.Location = new System.Drawing.Point(39, 186);
+			this.chkOptimizeOn.Location = new System.Drawing.Point(39, 215);
 			this.chkOptimizeOn.Name = "chkOptimizeOn";
 			this.chkOptimizeOn.Size = new System.Drawing.Size(157, 23);
 			this.chkOptimizeOn.TabIndex = 7;
@@ -253,7 +266,7 @@
 			// 
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
-			this.badGroupBox2.Location = new System.Drawing.Point(20, 161);
+			this.badGroupBox2.Location = new System.Drawing.Point(20, 190);
 			this.badGroupBox2.Name = "badGroupBox2";
 			this.badGroupBox2.Size = new System.Drawing.Size(358, 187);
 			this.badGroupBox2.TabIndex = 6;
@@ -326,7 +339,7 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(20, 45);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(358, 99);
+			this.badGroupBox1.Size = new System.Drawing.Size(358, 123);
 			this.badGroupBox1.TabIndex = 0;
 			this.badGroupBox1.Text = "Settings";
 			// 
@@ -334,7 +347,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(401, 404);
+			this.ClientSize = new System.Drawing.Size(401, 435);
 			this.Controls.Add(this.badForm1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "WoTGameClientSettings";
@@ -369,5 +382,6 @@
 		private BadTextBox txtFolder;
 		private BadLabel badLabel2;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+		private BadCheckBox chkAutoRun;
 	}
 }

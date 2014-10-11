@@ -1820,6 +1820,11 @@ namespace WinApp.Code
 					Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
 					Config.SaveConfig(out msg);
 					break;
+				case 175:
+					Config.Settings.wotGameAutoStart = false;
+					Config.SaveConfig(out msg);
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype

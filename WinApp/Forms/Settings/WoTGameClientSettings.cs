@@ -36,6 +36,7 @@ namespace WinApp.Forms
 			if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.Game)
 				ddStartApp.Text = "Wot Game";
 			txtFolder.Text = Config.Settings.wotGameFolder;
+			chkAutoRun.Checked = Config.Settings.wotGameAutoStart;
 			if (Config.Settings.wotGameAffinity > 0)
 			{
 				chkOptimizeOn.Checked = true;
@@ -76,6 +77,7 @@ namespace WinApp.Forms
 				wotGameStartType = ConfigData.WoTGameStartType.Game;
 			Config.Settings.wotGameStartType = wotGameStartType;
 			Config.Settings.wotGameFolder = txtFolder.Text;
+			Config.Settings.wotGameAutoStart = chkAutoRun.Checked;
 			long wotGameAffinity = 0;
 			if (chkOptimizeOn.Checked)
 			{

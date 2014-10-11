@@ -107,6 +107,7 @@ namespace WinApp.Code
 		public WoTGameStartType wotGameStartType { get; set; }      // Param for start WoT from Wot Numbers
 		public string wotGameFolder { get; set; }
 		public long wotGameAffinity { get; set; }
+		public bool wotGameAutoStart { get; set; }
 	}
 
 	class Config
@@ -215,6 +216,7 @@ namespace WinApp.Code
 			Config.Settings.wotGameAffinity = 0;
 			Config.Settings.wotGameFolder = "";
 			Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+			Config.Settings.wotGameAutoStart = false;
 		}
 
 		

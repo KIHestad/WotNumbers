@@ -284,6 +284,9 @@ namespace WinApp.Forms
 			{
 				// Log startup to file now
 				Log.WriteLogBuffer();
+				// Start WoT if autoRun is enabled
+				if (Config.Settings.wotGameAutoStart)
+					StartWoTGame();
 				// Ready to draw form
 				Init = false;
 				// Create IronPython Engine
@@ -4389,6 +4392,11 @@ namespace WinApp.Forms
 
 		private void mWoT_Click(object sender, EventArgs e)
 		{
+			StartWoTGame();					
+		}
+
+		private void StartWoTGame()
+		{
 			try
 			{
 				string workingDir = Config.Settings.wotGameFolder;
@@ -4444,7 +4452,6 @@ namespace WinApp.Forms
 				Log.LogToFile(ex);
 				SetStatus2("Error trying to start World of Tanks, check your startup settings");
 			}
-					
 		}
 
 		private int timerWotAffnityCount = 0;
@@ -4485,7 +4492,7 @@ namespace WinApp.Forms
 			catch (Exception ex)
 			{
 				timerWoTAffnity.Enabled = false;
-				SetStatus2("Error occured setting WoT CPU affinity and priority, check log file");
+				SetStatus2("Could not change WoT using optimization settings, check log file for details");
 				Log.LogToFile(ex);
 			}
 
