@@ -10,26 +10,18 @@ namespace WinApp.Code
 {
 	public static class TankHelper
 	{
-		public enum DossierBattleMode
-		{
-			ModeRandom_TC = 1,
-			ModeTeam = 2,
-			ModeHistorical = 3,
-			ModeSkirmishes = 4,
-		}
-
-		public static string DbBattleMode(DossierBattleMode mode)
+		public static string DbBattleMode(BattleHelper.MainBattleMode mode)
 		{
 			string s = "";
 			switch (mode)
 			{
-				case DossierBattleMode.ModeRandom_TC:
+				case BattleHelper.MainBattleMode.ModeRandom_TC:
 					s = "15"; break;
-				case DossierBattleMode.ModeTeam:
+				case BattleHelper.MainBattleMode.ModeTeam:
 					s = "7"; break;
-				case DossierBattleMode.ModeHistorical:
+				case BattleHelper.MainBattleMode.ModeHistorical:
 					s = "Historical"; break;
-				case DossierBattleMode.ModeSkirmishes:
+				case BattleHelper.MainBattleMode.ModeSkirmishes:
 					s = "Skirmishes"; break;
 			}
 			return s;
@@ -123,7 +115,7 @@ namespace WinApp.Code
 			return DB.FetchData(sql);
 		}
 
-		public static DataTable GetPlayerTankBattle(int playerTankId, DossierBattleMode dossierBattleMode, bool CreateNewIfNotExists)
+		public static DataTable GetPlayerTankBattle(int playerTankId, BattleHelper.MainBattleMode dossierBattleMode, bool CreateNewIfNotExists)
 		{
 			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
@@ -138,7 +130,7 @@ namespace WinApp.Code
 			return dt;
 		}
 
-		public static int GetPlayerTankBattleCount(int playerTankId, DossierBattleMode dossierBattleMode, out int wins, out int xp)
+		public static int GetPlayerTankBattleCount(int playerTankId, BattleHelper.MainBattleMode dossierBattleMode, out int wins, out int xp)
 		{
 			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql = "SELECT battles, wins, xp FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
@@ -250,7 +242,7 @@ namespace WinApp.Code
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
 		}
 
-		public static DataTable GetTankData2BattleMapping(DossierBattleMode dossierBattleMode)
+		public static DataTable GetTankData2BattleMapping(BattleHelper.MainBattleMode dossierBattleMode)
 		{
 			string battleMode = DbBattleMode(dossierBattleMode);
 			string sql =

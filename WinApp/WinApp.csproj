@@ -131,6 +131,7 @@
   <ItemGroup>
     <Compile Include="Code\AppVersion.cs" />
     <Compile Include="Code\AutoSetupHelper.cs" />
+    <Compile Include="Code\BattleHelper.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
     <Compile Include="Code\Battle2json.cs" />
     <Compile Include="Code\CheckForNewVersion.cs" />

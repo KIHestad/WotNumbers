@@ -15,7 +15,7 @@ namespace WinApp.Forms
 	{
 		#region Init
 		
-		private int _battleId;
+		private int battleId;
 		private int team1 = 1;
 		private int team2 = 2;
 		private DataGridView dgvTeam1 = new DataGridView();
@@ -24,11 +24,13 @@ namespace WinApp.Forms
 		private bool showAllColumns = false;
 		private Panel pnlBack = new Panel();
 		private BadScrollBar scroll = new BadScrollBar();
+		private BattleHelper.MainBattleMode mainBattleMode;
+		private int tankId = 0;
 
-		public BattleDetail(int battleId)
+		public BattleDetail(int selectedBattleId)
 		{
 			InitializeComponent();
-			_battleId = battleId;
+			battleId = selectedBattleId;
 		}
 
 		private void BattleDetail_Load(object sender, EventArgs e)
@@ -36,10 +38,12 @@ namespace WinApp.Forms
 			// My result
 			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
 			dgvWN8.AllowUserToResizeColumns = false;
+			GridHelper.StyleDataGrid(dgvDamage, DataGridViewSelectionMode.CellSelect);
+			dgvDamage.AllowUserToResizeColumns = false;
 			GetMyPersonalInfo();
 			// Teams
 			string sql = "select id from battlePlayer where battleId=@battleId";
-			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			if (DB.FetchData(sql).Rows.Count > 0)
 			{
 				// Show team tabs and make ready datagrids
@@ -83,7 +87,7 @@ namespace WinApp.Forms
 				scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
 				// Find team 1 and 2
 				sql = "select team from battlePlayer where battleId=@battleId and name=@name";
-				DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@name", Config.Settings.playerName, DB.SqlDataType.VarChar);
 				DataTable dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
@@ -152,7 +156,7 @@ namespace WinApp.Forms
 				"       map on battle.mapId = map.id INNER JOIN " +
 				"       battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
 				"WHERE	battle.id=@battleId";
-			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
@@ -173,7 +177,7 @@ namespace WinApp.Forms
 				}	
 				lblResult.Text = battleResult;
 				// Tank img
-				int tankId = Convert.ToInt32(dr["tankId"]);
+				tankId = Convert.ToInt32(dr["tankId"]);
 				picTank.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
 				// Tank name
 				lblTankName.Text = dr["tankName"].ToString();
@@ -232,28 +236,39 @@ namespace WinApp.Forms
 				}
 				lblSurvival.Text = survival;
 				lblSurvival.ForeColor = battleSurviveColor;
-				// Skirmishes?
+				// Main Battle Mode
 				string mainMode = dr["battleMode"].ToString();
-				if (mainMode == "Skirmishes") showFortResources = true;
-				// Battle mode
 				string battleMode = "";
+				switch (mainMode)
+				{
+					case "15": 
+						mainBattleMode = BattleHelper.MainBattleMode.ModeRandom_TC;
+						battleMode = "Random Battle"; 
+						break;
+					case "7": 
+						mainBattleMode = BattleHelper.MainBattleMode.ModeTeam;
+						battleMode = "Team Battle";
+						break;
+					case "Historical": 
+						mainBattleMode = BattleHelper.MainBattleMode.ModeHistorical;
+						battleMode = "Historical Battle";
+						break;
+					case "Skirmishes": 
+						mainBattleMode = BattleHelper.MainBattleMode.ModeSkirmishes;
+						battleMode = "Skirmish Battle";
+						showFortResources = true; 
+						break;
+				}
+				// Battle mode text
 				if (dr["battleResultMode"] != DBNull.Value)
 					battleMode = dr["battleResultMode"].ToString() + " Battle";
 				else
 				{
-					switch (mainMode)
-					{
-						case "15": battleMode = "Random Battle"; break;
-						case "7": battleMode = "Team Battle"; break;
-						case "Historical": battleMode = "Historical Battle"; break;
-						case "Skirmishes": battleMode = "Skirmish Battle"; break;
-					}
 					if (Convert.ToInt32(dr["modeClan"]) > 0)
 						battleMode = "Clan War Battle";
 					else if (Convert.ToInt32(dr["modeCompany"]) > 0)
 						battleMode = "Tank Company Battle";
 				}
-				
 				lblBattleMode.Text = battleMode;
 				// Ratings
 				double wn8 = Convert.ToDouble(dr["WN8"]);
@@ -266,6 +281,7 @@ namespace WinApp.Forms
 				lblWN7.ForeColor = Rating.WN8color(wn7);
 				lblEFF.ForeColor = Rating.WN8color(eff);
 				GetWN8Details();
+				GetDamageDetails();
 			}
 		}
 
@@ -276,7 +292,7 @@ namespace WinApp.Forms
 				"      tank.expDmg, tank.expSpot, tank.expFrags, tank.expDef, tank.expWR " +
 				"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.id INNER JOIN tank ON playerTank.tankId = tank.id " +
 				"WHERE battle.id = @battleId";
-			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
@@ -311,7 +327,7 @@ namespace WinApp.Forms
 				// Damage
 				DataRow drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Damage";
-				drWN8["Image"] = imgIndicators.Images[GetIndicator(dmg, exp_dmg)];
+				drWN8["Image"] = GetIndicator(dmg, exp_dmg);
 				drWN8["Result"] = dmg.ToString();
 				drWN8["Exp"] = exp_dmg.ToString();
 				drWN8["Value"] = Math.Round(rDAMAGEc, 1).ToString();
@@ -319,7 +335,7 @@ namespace WinApp.Forms
 				// Frags
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Frags";
-				drWN8["Image"] = imgIndicators.Images[GetIndicator(frags, exp_frags)];
+				drWN8["Image"] = GetIndicator(frags, exp_frags);
 				drWN8["Result"] = frags.ToString();
 				drWN8["Exp"] = exp_frags.ToString();
 				drWN8["Value"] = Math.Round(rFRAGSc, 1).ToString();
@@ -327,7 +343,7 @@ namespace WinApp.Forms
 				// Spot
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Spot";
-				drWN8["Image"] = imgIndicators.Images[GetIndicator(spotted, exp_spotted)];
+				drWN8["Image"] = GetIndicator(spotted, exp_spotted);
 				drWN8["Result"] = spotted.ToString();
 				drWN8["Exp"] = exp_spotted.ToString();
 				drWN8["Value"] = Math.Round(rSPOTc, 1).ToString();
@@ -335,7 +351,7 @@ namespace WinApp.Forms
 				// Defence
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Defence";
-				drWN8["Image"] = imgIndicators.Images[GetIndicator(def, exp_def)];
+				drWN8["Image"] = GetIndicator(def, exp_def);
 				drWN8["Result"] = def.ToString();
 				drWN8["Exp"] = exp_def.ToString();
 				drWN8["Value"] = Math.Round(rDEFc, 1).ToString();
@@ -354,6 +370,7 @@ namespace WinApp.Forms
 				// Format dgv
 				dgvWN8.Columns[0].HeaderText = "WN8";
 				dgvWN8.Columns[1].HeaderText = "";
+				// Total width = 220
 				dgvWN8.Columns[0].Width = 70;
 				dgvWN8.Columns[1].Width = 20;
 				dgvWN8.Columns[2].Width = 40;
@@ -377,14 +394,105 @@ namespace WinApp.Forms
 			}
 		}
 
-		private int GetIndicator(double value, double compareTo)
+		private void GetDamageDetails()
 		{
-			int indicator = 1; // neutral
-			if (value > compareTo)
-				indicator = 0; // up
-			else if (value < compareTo)
-				indicator = 2; // down
-			return indicator;
+			string sql =
+				"SELECT dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived  " +
+				"FROM battle " +
+				"WHERE id = @battleId";
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+			DataTable dtRes = DB.FetchData(sql);
+			sql =
+				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived " +
+				"FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode";
+			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
+			DataTable dtAvg = DB.FetchData(sql);
+			if (dtRes.Rows.Count > 0)
+			{
+				DataRow drVal = dtRes.Rows[0];
+				DataRow drAvg = null;
+				bool avgOK = (dtAvg.Rows.Count > 0);
+				int battleCount = 0;
+				if (avgOK)
+				{
+					drAvg = dtAvg.Rows[0];
+					if (drAvg["battles"] != DBNull.Value)
+						battleCount = Convert.ToInt32(drAvg["battles"]);
+					avgOK = (battleCount > 0);
+				}
+				// Create new datatable to show result
+				DataTable dt = new DataTable();
+				dt.Columns.Add("Parameter", typeof(string));
+				dt.Columns.Add("Image", typeof(Image));
+				dt.Columns.Add("Result", typeof(string));
+				dt.Columns.Add("Average", typeof(string));
+				// Add Rows
+				dt.Rows.Add(GetValues(dt, drVal, drAvg, "To Enemy Tanks", "dmg", battleCount));
+				dt.Rows.Add(GetValues(dt, drVal, drAvg, "By Spotting", "assistSpot", battleCount));
+				dt.Rows.Add(GetValues(dt, drVal, drAvg, "By Tracking", "assistTrack", battleCount));
+				dt.Rows.Add(GetValues(dt, drVal, drAvg, "By Blocking", "dmgBlocked", battleCount));
+				dt.Rows.Add(GetValues(dt, drVal, drAvg, "Received", "dmgReceived", battleCount, false));
+				dt.Rows.Add(GetValues(dt, drVal, drAvg, "Pot Received", "potentialDmgReceived", battleCount));
+
+				// Done;
+				dt.AcceptChanges();
+				DataGridView dgv = dgvDamage;
+				dgv.DataSource = dt;
+				// Format dgv
+				dgv.Columns[0].HeaderText = "Damage";
+				dgv.Columns[1].HeaderText = "";
+				// Total width = 230
+				dgv.Columns[0].Width = 100;
+				dgv.Columns[1].Width = 20;
+				dgv.Columns[2].Width = 50;
+				dgv.Columns[3].Width = 50;
+				dgv.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+				dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgv.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgv.Width = dgv.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 2;
+				dgv.Height = dgv.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + dgv.ColumnHeadersHeight + 2;
+				dgv.Columns[2].DefaultCellStyle.Format = "N0";
+				dgv.Columns[3].DefaultCellStyle.Format = "N0";
+				foreach (DataGridViewColumn dgvc in dgv.Columns)
+				{
+					dgvc.SortMode = DataGridViewColumnSortMode.NotSortable;
+				}
+				dgv.Visible = true;
+				dgv.ClearSelection();
+			}
+		}
+
+		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int battleCount, bool higherIsBest = true)
+		{
+			DataRow drNew = dt.NewRow();
+			drNew["Parameter"] = rowHeader;
+			int val = Convert.ToInt32(drVal[sqlField]);
+			double avg = 0;
+			if (battleCount > 0) avg = Convert.ToInt32(drAvg[sqlField]) / battleCount;
+			if (higherIsBest)
+				drNew["Image"] = GetIndicator(val, avg, (battleCount > 0));
+			else
+				drNew["Image"] = GetIndicator(avg, val, (battleCount > 0));
+			drNew["Result"] = val.ToString();
+			drNew["Average"] = avg.ToString();
+			return drNew;
+		}
+
+		private Image GetIndicator(double value, double compareTo, bool showIcon = true)
+		{
+			if (!showIcon)
+				return new Bitmap(1, 1);
+			else
+			{
+				int indicator = 1; // neutral
+				if (value > compareTo)
+					indicator = 0; // up
+				else if (value < compareTo)
+					indicator = 2; // down
+				return imgIndicators.Images[indicator];
+			}
 		}
 
 		#endregion
@@ -478,7 +586,7 @@ namespace WinApp.Forms
 				"     tank on battlePlayer.tankId = tank.id " +
 				"where battleId=@battleId and team=@team " +
 				"order by " + orderBy;
-			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			// Add image as first col

@@ -34,6 +34,7 @@
 			this.imgIndicators = new System.Windows.Forms.ImageList(this.components);
 			this.BattleDetailTheme = new BadForm();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.dgvDamage = new System.Windows.Forms.DataGridView();
 			this.dgvWN8 = new System.Windows.Forms.DataGridView();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.label1 = new System.Windows.Forms.Label();
@@ -62,6 +63,7 @@
 			this.grpMain = new BadGroupBox();
 			this.BattleDetailTheme.SuspendLayout();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dgvDamage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvWN8)).BeginInit();
 			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picMB)).BeginInit();
@@ -109,12 +111,22 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.panel1.Controls.Add(this.dgvDamage);
 			this.panel1.Controls.Add(this.dgvWN8);
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(813, 480);
 			this.panel1.TabIndex = 6;
+			// 
+			// dgvDamage
+			// 
+			this.dgvDamage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvDamage.Location = new System.Drawing.Point(16, 278);
+			this.dgvDamage.Name = "dgvDamage";
+			this.dgvDamage.Size = new System.Drawing.Size(242, 142);
+			this.dgvDamage.TabIndex = 37;
+			this.dgvDamage.Visible = false;
 			// 
 			// dgvWN8
 			// 
@@ -439,6 +451,7 @@
 			this.Resize += new System.EventHandler(this.BattleDetail_Resize);
 			this.BattleDetailTheme.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dgvDamage)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvWN8)).EndInit();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
@@ -479,5 +492,6 @@
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.ImageList imgIndicators;
 		private System.Windows.Forms.DataGridView dgvWN8;
+		private System.Windows.Forms.DataGridView dgvDamage;
 	}
 }
