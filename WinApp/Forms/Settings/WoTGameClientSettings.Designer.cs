@@ -32,7 +32,11 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WoTGameClientSettings));
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.badForm1 = new BadForm();
+			this.btnFile = new BadButton();
+			this.txtBatchFile = new BadTextBox();
+			this.badLabel4 = new BadLabel();
 			this.chkAutoRun = new BadCheckBox();
 			this.btnCancel = new BadButton();
 			this.btnSave = new BadButton();
@@ -53,12 +57,12 @@
 			this.badLabel1 = new BadLabel();
 			this.ddStartApp = new BadDropDownBox();
 			this.badGroupBox1 = new BadGroupBox();
-			this.btnFile = new BadButton();
-			this.txtBatchFile = new BadTextBox();
-			this.badLabel4 = new BadLabel();
-			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// openFileDialog1
+			// 
+			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
 			// badForm1
 			// 
@@ -103,6 +107,45 @@
 			this.badForm1.TabIndex = 0;
 			this.badForm1.Text = "WoT Game Starting Settings";
 			this.badForm1.TitleHeight = 26;
+			// 
+			// btnFile
+			// 
+			this.btnFile.BlackButton = false;
+			this.btnFile.Checked = false;
+			this.btnFile.Image = null;
+			this.btnFile.Location = new System.Drawing.Point(338, 131);
+			this.btnFile.Name = "btnFile";
+			this.btnFile.Size = new System.Drawing.Size(24, 23);
+			this.btnFile.TabIndex = 22;
+			this.btnFile.Text = "...";
+			this.btnFile.ToolTipText = "";
+			this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
+			// 
+			// txtBatchFile
+			// 
+			this.txtBatchFile.HasFocus = false;
+			this.txtBatchFile.Image = null;
+			this.txtBatchFile.Location = new System.Drawing.Point(89, 131);
+			this.txtBatchFile.MultilineAllow = false;
+			this.txtBatchFile.Name = "txtBatchFile";
+			this.txtBatchFile.PasswordChar = '\0';
+			this.txtBatchFile.ReadOnly = false;
+			this.txtBatchFile.Size = new System.Drawing.Size(243, 23);
+			this.txtBatchFile.TabIndex = 21;
+			this.txtBatchFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+			this.txtBatchFile.ToolTipText = "Additional batch file or program to run";
+			// 
+			// badLabel4
+			// 
+			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel4.Dimmed = false;
+			this.badLabel4.Image = null;
+			this.badLabel4.Location = new System.Drawing.Point(39, 131);
+			this.badLabel4.Name = "badLabel4";
+			this.badLabel4.Size = new System.Drawing.Size(43, 23);
+			this.badLabel4.TabIndex = 20;
+			this.badLabel4.Text = "Run";
+			this.badLabel4.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// chkAutoRun
 			// 
@@ -349,49 +392,6 @@
 			this.badGroupBox1.Size = new System.Drawing.Size(358, 150);
 			this.badGroupBox1.TabIndex = 0;
 			this.badGroupBox1.Text = "Settings";
-			// 
-			// btnFile
-			// 
-			this.btnFile.BlackButton = false;
-			this.btnFile.Checked = false;
-			this.btnFile.Image = null;
-			this.btnFile.Location = new System.Drawing.Point(338, 131);
-			this.btnFile.Name = "btnFile";
-			this.btnFile.Size = new System.Drawing.Size(24, 23);
-			this.btnFile.TabIndex = 22;
-			this.btnFile.Text = "...";
-			this.btnFile.ToolTipText = "";
-			this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
-			// 
-			// txtBatchFile
-			// 
-			this.txtBatchFile.HasFocus = false;
-			this.txtBatchFile.Image = null;
-			this.txtBatchFile.Location = new System.Drawing.Point(89, 131);
-			this.txtBatchFile.MultilineAllow = false;
-			this.txtBatchFile.Name = "txtBatchFile";
-			this.txtBatchFile.PasswordChar = '\0';
-			this.txtBatchFile.ReadOnly = false;
-			this.txtBatchFile.Size = new System.Drawing.Size(243, 23);
-			this.txtBatchFile.TabIndex = 21;
-			this.txtBatchFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-			this.txtBatchFile.ToolTipText = "Optional batch file to run";
-			// 
-			// badLabel4
-			// 
-			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel4.Dimmed = false;
-			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(39, 131);
-			this.badLabel4.Name = "badLabel4";
-			this.badLabel4.Size = new System.Drawing.Size(43, 23);
-			this.badLabel4.TabIndex = 20;
-			this.badLabel4.Text = "Run";
-			this.badLabel4.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// openFileDialog1
-			// 
-			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
 			// WoTGameClientSettings
 			// 

@@ -3989,12 +3989,12 @@ namespace WinApp.Forms
 					if (Config.Settings.wotGameRunBatchFile != "")
 					{
 						if (msg == "")
-							msg = "Starting batch file";
+							msg = "Starting additional programs";
 						else
-							msg += ", starting batch file";
-						err = "Error trying to start batch file";
+							msg += ", starting additional programs";
+						err = "Error trying to start additional programs";
 						//Create process
-						ProcessStartInfo psi = new ProcessStartInfo("cmd.exe");
+						ProcessStartInfo psi = new ProcessStartInfo();
 						psi.RedirectStandardInput = true;
 						psi.RedirectStandardOutput = true;
 						psi.UseShellExecute = false;
