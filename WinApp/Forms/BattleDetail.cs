@@ -123,6 +123,7 @@ namespace WinApp.Forms
 			{
 				case "btnPersonal":
 					dgvWN8.ClearSelection();
+					dgvDamage.ClearSelection();
 					panel1.Visible = true;
 					break;
 				case "btnTeams":
