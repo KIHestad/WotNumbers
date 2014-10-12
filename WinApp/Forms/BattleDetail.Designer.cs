@@ -34,34 +34,7 @@
 			this.imgIndicators = new System.Windows.Forms.ImageList(this.components);
 			this.BattleDetailTheme = new BadForm();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.picRatingWN8_Dmg = new System.Windows.Forms.PictureBox();
-			this.picRatingWN8_Frags = new System.Windows.Forms.PictureBox();
-			this.picRatingWN8_Spot = new System.Windows.Forms.PictureBox();
-			this.picRatingWN8_Def = new System.Windows.Forms.PictureBox();
-			this.txtRating_Val_WR = new BadTextBox();
-			this.txtRating_Val_Def = new BadTextBox();
-			this.txtRating_Val_Spot = new BadTextBox();
-			this.txtRating_Val_Frags = new BadTextBox();
-			this.txtRating_Val_Dmg = new BadTextBox();
-			this.txtRating_Exp_WR = new BadTextBox();
-			this.txtRating_Exp_Def = new BadTextBox();
-			this.txtRating_Exp_Spot = new BadTextBox();
-			this.txtRating_Exp_Frags = new BadTextBox();
-			this.txtRating_Exp_Dmg = new BadTextBox();
-			this.txtRating_Res_WR = new BadTextBox();
-			this.txtRating_Res_Def = new BadTextBox();
-			this.txtRating_Res_Spot = new BadTextBox();
-			this.txtRating_Res_Frags = new BadTextBox();
-			this.txtRating_Res_Dmg = new BadTextBox();
-			this.badLabel9 = new BadLabel();
-			this.badLabel8 = new BadLabel();
-			this.badLabel7 = new BadLabel();
-			this.badLabel6 = new BadLabel();
-			this.badLabel5 = new BadLabel();
-			this.badLabel4 = new BadLabel();
-			this.badLabel3 = new BadLabel();
-			this.badLabel2 = new BadLabel();
-			this.badGroupBox2 = new BadGroupBox();
+			this.dgvWN8 = new System.Windows.Forms.DataGridView();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.lblEFF = new System.Windows.Forms.Label();
@@ -89,10 +62,7 @@
 			this.grpMain = new BadGroupBox();
 			this.BattleDetailTheme.SuspendLayout();
 			this.panel1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Dmg)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Frags)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Spot)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Def)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvWN8)).BeginInit();
 			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picMB)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picTank)).BeginInit();
@@ -139,398 +109,21 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.panel1.Controls.Add(this.picRatingWN8_Dmg);
-			this.panel1.Controls.Add(this.picRatingWN8_Frags);
-			this.panel1.Controls.Add(this.picRatingWN8_Spot);
-			this.panel1.Controls.Add(this.picRatingWN8_Def);
-			this.panel1.Controls.Add(this.txtRating_Val_WR);
-			this.panel1.Controls.Add(this.txtRating_Val_Def);
-			this.panel1.Controls.Add(this.txtRating_Val_Spot);
-			this.panel1.Controls.Add(this.txtRating_Val_Frags);
-			this.panel1.Controls.Add(this.txtRating_Val_Dmg);
-			this.panel1.Controls.Add(this.txtRating_Exp_WR);
-			this.panel1.Controls.Add(this.txtRating_Exp_Def);
-			this.panel1.Controls.Add(this.txtRating_Exp_Spot);
-			this.panel1.Controls.Add(this.txtRating_Exp_Frags);
-			this.panel1.Controls.Add(this.txtRating_Exp_Dmg);
-			this.panel1.Controls.Add(this.txtRating_Res_WR);
-			this.panel1.Controls.Add(this.txtRating_Res_Def);
-			this.panel1.Controls.Add(this.txtRating_Res_Spot);
-			this.panel1.Controls.Add(this.txtRating_Res_Frags);
-			this.panel1.Controls.Add(this.txtRating_Res_Dmg);
-			this.panel1.Controls.Add(this.badLabel9);
-			this.panel1.Controls.Add(this.badLabel8);
-			this.panel1.Controls.Add(this.badLabel7);
-			this.panel1.Controls.Add(this.badLabel6);
-			this.panel1.Controls.Add(this.badLabel5);
-			this.panel1.Controls.Add(this.badLabel4);
-			this.panel1.Controls.Add(this.badLabel3);
-			this.panel1.Controls.Add(this.badLabel2);
-			this.panel1.Controls.Add(this.badGroupBox2);
+			this.panel1.Controls.Add(this.dgvWN8);
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(813, 480);
 			this.panel1.TabIndex = 6;
 			// 
-			// picRatingWN8_Dmg
+			// dgvWN8
 			// 
-			this.picRatingWN8_Dmg.Location = new System.Drawing.Point(82, 160);
-			this.picRatingWN8_Dmg.Name = "picRatingWN8_Dmg";
-			this.picRatingWN8_Dmg.Size = new System.Drawing.Size(16, 16);
-			this.picRatingWN8_Dmg.TabIndex = 35;
-			this.picRatingWN8_Dmg.TabStop = false;
-			// 
-			// picRatingWN8_Frags
-			// 
-			this.picRatingWN8_Frags.Location = new System.Drawing.Point(82, 182);
-			this.picRatingWN8_Frags.Name = "picRatingWN8_Frags";
-			this.picRatingWN8_Frags.Size = new System.Drawing.Size(16, 16);
-			this.picRatingWN8_Frags.TabIndex = 34;
-			this.picRatingWN8_Frags.TabStop = false;
-			// 
-			// picRatingWN8_Spot
-			// 
-			this.picRatingWN8_Spot.Location = new System.Drawing.Point(82, 204);
-			this.picRatingWN8_Spot.Name = "picRatingWN8_Spot";
-			this.picRatingWN8_Spot.Size = new System.Drawing.Size(16, 16);
-			this.picRatingWN8_Spot.TabIndex = 33;
-			this.picRatingWN8_Spot.TabStop = false;
-			// 
-			// picRatingWN8_Def
-			// 
-			this.picRatingWN8_Def.Location = new System.Drawing.Point(82, 226);
-			this.picRatingWN8_Def.Name = "picRatingWN8_Def";
-			this.picRatingWN8_Def.Size = new System.Drawing.Size(16, 16);
-			this.picRatingWN8_Def.TabIndex = 32;
-			this.picRatingWN8_Def.TabStop = false;
-			// 
-			// txtRating_Val_WR
-			// 
-			this.txtRating_Val_WR.HasFocus = false;
-			this.txtRating_Val_WR.Image = null;
-			this.txtRating_Val_WR.Location = new System.Drawing.Point(198, 244);
-			this.txtRating_Val_WR.MultilineAllow = false;
-			this.txtRating_Val_WR.Name = "txtRating_Val_WR";
-			this.txtRating_Val_WR.PasswordChar = '\0';
-			this.txtRating_Val_WR.ReadOnly = false;
-			this.txtRating_Val_WR.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Val_WR.TabIndex = 31;
-			this.txtRating_Val_WR.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Val_WR.ToolTipText = "";
-			// 
-			// txtRating_Val_Def
-			// 
-			this.txtRating_Val_Def.HasFocus = false;
-			this.txtRating_Val_Def.Image = null;
-			this.txtRating_Val_Def.Location = new System.Drawing.Point(198, 222);
-			this.txtRating_Val_Def.MultilineAllow = false;
-			this.txtRating_Val_Def.Name = "txtRating_Val_Def";
-			this.txtRating_Val_Def.PasswordChar = '\0';
-			this.txtRating_Val_Def.ReadOnly = false;
-			this.txtRating_Val_Def.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Val_Def.TabIndex = 30;
-			this.txtRating_Val_Def.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Val_Def.ToolTipText = "";
-			// 
-			// txtRating_Val_Spot
-			// 
-			this.txtRating_Val_Spot.HasFocus = false;
-			this.txtRating_Val_Spot.Image = null;
-			this.txtRating_Val_Spot.Location = new System.Drawing.Point(198, 200);
-			this.txtRating_Val_Spot.MultilineAllow = false;
-			this.txtRating_Val_Spot.Name = "txtRating_Val_Spot";
-			this.txtRating_Val_Spot.PasswordChar = '\0';
-			this.txtRating_Val_Spot.ReadOnly = false;
-			this.txtRating_Val_Spot.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Val_Spot.TabIndex = 29;
-			this.txtRating_Val_Spot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Val_Spot.ToolTipText = "";
-			// 
-			// txtRating_Val_Frags
-			// 
-			this.txtRating_Val_Frags.HasFocus = false;
-			this.txtRating_Val_Frags.Image = null;
-			this.txtRating_Val_Frags.Location = new System.Drawing.Point(198, 178);
-			this.txtRating_Val_Frags.MultilineAllow = false;
-			this.txtRating_Val_Frags.Name = "txtRating_Val_Frags";
-			this.txtRating_Val_Frags.PasswordChar = '\0';
-			this.txtRating_Val_Frags.ReadOnly = false;
-			this.txtRating_Val_Frags.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Val_Frags.TabIndex = 28;
-			this.txtRating_Val_Frags.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Val_Frags.ToolTipText = "";
-			// 
-			// txtRating_Val_Dmg
-			// 
-			this.txtRating_Val_Dmg.HasFocus = false;
-			this.txtRating_Val_Dmg.Image = null;
-			this.txtRating_Val_Dmg.Location = new System.Drawing.Point(198, 156);
-			this.txtRating_Val_Dmg.MultilineAllow = false;
-			this.txtRating_Val_Dmg.Name = "txtRating_Val_Dmg";
-			this.txtRating_Val_Dmg.PasswordChar = '\0';
-			this.txtRating_Val_Dmg.ReadOnly = false;
-			this.txtRating_Val_Dmg.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Val_Dmg.TabIndex = 27;
-			this.txtRating_Val_Dmg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Val_Dmg.ToolTipText = "";
-			// 
-			// txtRating_Exp_WR
-			// 
-			this.txtRating_Exp_WR.HasFocus = false;
-			this.txtRating_Exp_WR.Image = null;
-			this.txtRating_Exp_WR.Location = new System.Drawing.Point(151, 244);
-			this.txtRating_Exp_WR.MultilineAllow = false;
-			this.txtRating_Exp_WR.Name = "txtRating_Exp_WR";
-			this.txtRating_Exp_WR.PasswordChar = '\0';
-			this.txtRating_Exp_WR.ReadOnly = false;
-			this.txtRating_Exp_WR.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Exp_WR.TabIndex = 26;
-			this.txtRating_Exp_WR.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Exp_WR.ToolTipText = "";
-			// 
-			// txtRating_Exp_Def
-			// 
-			this.txtRating_Exp_Def.HasFocus = false;
-			this.txtRating_Exp_Def.Image = null;
-			this.txtRating_Exp_Def.Location = new System.Drawing.Point(151, 222);
-			this.txtRating_Exp_Def.MultilineAllow = false;
-			this.txtRating_Exp_Def.Name = "txtRating_Exp_Def";
-			this.txtRating_Exp_Def.PasswordChar = '\0';
-			this.txtRating_Exp_Def.ReadOnly = false;
-			this.txtRating_Exp_Def.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Exp_Def.TabIndex = 25;
-			this.txtRating_Exp_Def.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Exp_Def.ToolTipText = "";
-			// 
-			// txtRating_Exp_Spot
-			// 
-			this.txtRating_Exp_Spot.HasFocus = false;
-			this.txtRating_Exp_Spot.Image = null;
-			this.txtRating_Exp_Spot.Location = new System.Drawing.Point(151, 200);
-			this.txtRating_Exp_Spot.MultilineAllow = false;
-			this.txtRating_Exp_Spot.Name = "txtRating_Exp_Spot";
-			this.txtRating_Exp_Spot.PasswordChar = '\0';
-			this.txtRating_Exp_Spot.ReadOnly = false;
-			this.txtRating_Exp_Spot.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Exp_Spot.TabIndex = 24;
-			this.txtRating_Exp_Spot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Exp_Spot.ToolTipText = "";
-			// 
-			// txtRating_Exp_Frags
-			// 
-			this.txtRating_Exp_Frags.HasFocus = false;
-			this.txtRating_Exp_Frags.Image = null;
-			this.txtRating_Exp_Frags.Location = new System.Drawing.Point(151, 178);
-			this.txtRating_Exp_Frags.MultilineAllow = false;
-			this.txtRating_Exp_Frags.Name = "txtRating_Exp_Frags";
-			this.txtRating_Exp_Frags.PasswordChar = '\0';
-			this.txtRating_Exp_Frags.ReadOnly = false;
-			this.txtRating_Exp_Frags.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Exp_Frags.TabIndex = 23;
-			this.txtRating_Exp_Frags.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Exp_Frags.ToolTipText = "";
-			// 
-			// txtRating_Exp_Dmg
-			// 
-			this.txtRating_Exp_Dmg.HasFocus = false;
-			this.txtRating_Exp_Dmg.Image = null;
-			this.txtRating_Exp_Dmg.Location = new System.Drawing.Point(151, 156);
-			this.txtRating_Exp_Dmg.MultilineAllow = false;
-			this.txtRating_Exp_Dmg.Name = "txtRating_Exp_Dmg";
-			this.txtRating_Exp_Dmg.PasswordChar = '\0';
-			this.txtRating_Exp_Dmg.ReadOnly = false;
-			this.txtRating_Exp_Dmg.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Exp_Dmg.TabIndex = 22;
-			this.txtRating_Exp_Dmg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Exp_Dmg.ToolTipText = "";
-			// 
-			// txtRating_Res_WR
-			// 
-			this.txtRating_Res_WR.HasFocus = false;
-			this.txtRating_Res_WR.Image = null;
-			this.txtRating_Res_WR.Location = new System.Drawing.Point(102, 244);
-			this.txtRating_Res_WR.MultilineAllow = false;
-			this.txtRating_Res_WR.Name = "txtRating_Res_WR";
-			this.txtRating_Res_WR.PasswordChar = '\0';
-			this.txtRating_Res_WR.ReadOnly = false;
-			this.txtRating_Res_WR.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Res_WR.TabIndex = 21;
-			this.txtRating_Res_WR.Text = "Fixed";
-			this.txtRating_Res_WR.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Res_WR.ToolTipText = "";
-			// 
-			// txtRating_Res_Def
-			// 
-			this.txtRating_Res_Def.HasFocus = false;
-			this.txtRating_Res_Def.Image = null;
-			this.txtRating_Res_Def.Location = new System.Drawing.Point(102, 222);
-			this.txtRating_Res_Def.MultilineAllow = false;
-			this.txtRating_Res_Def.Name = "txtRating_Res_Def";
-			this.txtRating_Res_Def.PasswordChar = '\0';
-			this.txtRating_Res_Def.ReadOnly = false;
-			this.txtRating_Res_Def.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Res_Def.TabIndex = 20;
-			this.txtRating_Res_Def.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Res_Def.ToolTipText = "";
-			// 
-			// txtRating_Res_Spot
-			// 
-			this.txtRating_Res_Spot.HasFocus = false;
-			this.txtRating_Res_Spot.Image = null;
-			this.txtRating_Res_Spot.Location = new System.Drawing.Point(102, 200);
-			this.txtRating_Res_Spot.MultilineAllow = false;
-			this.txtRating_Res_Spot.Name = "txtRating_Res_Spot";
-			this.txtRating_Res_Spot.PasswordChar = '\0';
-			this.txtRating_Res_Spot.ReadOnly = false;
-			this.txtRating_Res_Spot.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Res_Spot.TabIndex = 19;
-			this.txtRating_Res_Spot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Res_Spot.ToolTipText = "";
-			// 
-			// txtRating_Res_Frags
-			// 
-			this.txtRating_Res_Frags.HasFocus = false;
-			this.txtRating_Res_Frags.Image = null;
-			this.txtRating_Res_Frags.Location = new System.Drawing.Point(102, 178);
-			this.txtRating_Res_Frags.MultilineAllow = false;
-			this.txtRating_Res_Frags.Name = "txtRating_Res_Frags";
-			this.txtRating_Res_Frags.PasswordChar = '\0';
-			this.txtRating_Res_Frags.ReadOnly = false;
-			this.txtRating_Res_Frags.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Res_Frags.TabIndex = 18;
-			this.txtRating_Res_Frags.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Res_Frags.ToolTipText = "";
-			// 
-			// txtRating_Res_Dmg
-			// 
-			this.txtRating_Res_Dmg.HasFocus = false;
-			this.txtRating_Res_Dmg.Image = null;
-			this.txtRating_Res_Dmg.Location = new System.Drawing.Point(102, 156);
-			this.txtRating_Res_Dmg.MultilineAllow = false;
-			this.txtRating_Res_Dmg.Name = "txtRating_Res_Dmg";
-			this.txtRating_Res_Dmg.PasswordChar = '\0';
-			this.txtRating_Res_Dmg.ReadOnly = false;
-			this.txtRating_Res_Dmg.Size = new System.Drawing.Size(50, 23);
-			this.txtRating_Res_Dmg.TabIndex = 17;
-			this.txtRating_Res_Dmg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtRating_Res_Dmg.ToolTipText = "";
-			// 
-			// badLabel9
-			// 
-			this.badLabel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel9.Dimmed = false;
-			this.badLabel9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel9.Image = null;
-			this.badLabel9.Location = new System.Drawing.Point(198, 136);
-			this.badLabel9.Name = "badLabel9";
-			this.badLabel9.Size = new System.Drawing.Size(50, 23);
-			this.badLabel9.TabIndex = 16;
-			this.badLabel9.Text = "Value";
-			this.badLabel9.TxtAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// badLabel8
-			// 
-			this.badLabel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel8.Dimmed = false;
-			this.badLabel8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel8.Image = null;
-			this.badLabel8.Location = new System.Drawing.Point(151, 136);
-			this.badLabel8.Name = "badLabel8";
-			this.badLabel8.Size = new System.Drawing.Size(49, 23);
-			this.badLabel8.TabIndex = 15;
-			this.badLabel8.Text = "Exp";
-			this.badLabel8.TxtAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// badLabel7
-			// 
-			this.badLabel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel7.Dimmed = false;
-			this.badLabel7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel7.Image = null;
-			this.badLabel7.Location = new System.Drawing.Point(102, 136);
-			this.badLabel7.Name = "badLabel7";
-			this.badLabel7.Size = new System.Drawing.Size(50, 23);
-			this.badLabel7.TabIndex = 14;
-			this.badLabel7.Text = "Result";
-			this.badLabel7.TxtAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// badLabel6
-			// 
-			this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel6.Dimmed = false;
-			this.badLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel6.Image = null;
-			this.badLabel6.Location = new System.Drawing.Point(32, 244);
-			this.badLabel6.Name = "badLabel6";
-			this.badLabel6.Size = new System.Drawing.Size(58, 23);
-			this.badLabel6.TabIndex = 13;
-			this.badLabel6.Text = "Win Rate";
-			this.badLabel6.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// badLabel5
-			// 
-			this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel5.Dimmed = false;
-			this.badLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel5.Image = null;
-			this.badLabel5.Location = new System.Drawing.Point(32, 222);
-			this.badLabel5.Name = "badLabel5";
-			this.badLabel5.Size = new System.Drawing.Size(58, 23);
-			this.badLabel5.TabIndex = 12;
-			this.badLabel5.Text = "Defence";
-			this.badLabel5.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// badLabel4
-			// 
-			this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel4.Dimmed = false;
-			this.badLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel4.Image = null;
-			this.badLabel4.Location = new System.Drawing.Point(32, 200);
-			this.badLabel4.Name = "badLabel4";
-			this.badLabel4.Size = new System.Drawing.Size(58, 23);
-			this.badLabel4.TabIndex = 11;
-			this.badLabel4.Text = "Spot";
-			this.badLabel4.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// badLabel3
-			// 
-			this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel3.Dimmed = false;
-			
-			this.badLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel3.Image = null;
-			this.badLabel3.Location = new System.Drawing.Point(32, 178);
-			this.badLabel3.Name = "badLabel3";
-			this.badLabel3.Size = new System.Drawing.Size(58, 23);
-			this.badLabel3.TabIndex = 10;
-			this.badLabel3.Text = "Frags";
-			this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			
-			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(32, 156);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(58, 23);
-			this.badLabel2.TabIndex = 9;
-			this.badLabel2.Text = "Damage";
-			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// badGroupBox2
-			// 
-			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
-			this.badGroupBox2.Image = null;
-			this.badGroupBox2.Location = new System.Drawing.Point(16, 115);
-			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(245, 164);
-			this.badGroupBox2.TabIndex = 7;
-			this.badGroupBox2.Text = "WN8 Rating Details";
+			this.dgvWN8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvWN8.Location = new System.Drawing.Point(16, 119);
+			this.dgvWN8.Name = "dgvWN8";
+			this.dgvWN8.Size = new System.Drawing.Size(242, 142);
+			this.dgvWN8.TabIndex = 36;
+			this.dgvWN8.Visible = false;
 			// 
 			// panel2
 			// 
@@ -846,10 +439,7 @@
 			this.Resize += new System.EventHandler(this.BattleDetail_Resize);
 			this.BattleDetailTheme.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Dmg)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Frags)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Spot)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRatingWN8_Def)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvWN8)).EndInit();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picMB)).EndInit();
@@ -881,40 +471,13 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.PictureBox picMB;
-		private BadTextBox txtRating_Val_WR;
-		private BadTextBox txtRating_Val_Def;
-		private BadTextBox txtRating_Val_Spot;
-		private BadTextBox txtRating_Val_Frags;
-		private BadTextBox txtRating_Val_Dmg;
-		private BadTextBox txtRating_Exp_WR;
-		private BadTextBox txtRating_Exp_Def;
-		private BadTextBox txtRating_Exp_Spot;
-		private BadTextBox txtRating_Exp_Frags;
-		private BadTextBox txtRating_Exp_Dmg;
-		private BadTextBox txtRating_Res_WR;
-		private BadTextBox txtRating_Res_Def;
-		private BadTextBox txtRating_Res_Spot;
-		private BadTextBox txtRating_Res_Frags;
-		private BadTextBox txtRating_Res_Dmg;
-		private BadLabel badLabel9;
-		private BadLabel badLabel8;
-		private BadLabel badLabel7;
-		private BadLabel badLabel6;
-		private BadLabel badLabel5;
-		private BadLabel badLabel4;
-		private BadLabel badLabel3;
-		private BadLabel badLabel2;
-		private BadGroupBox badGroupBox2;
 		private System.Windows.Forms.Label lblEFF;
 		private System.Windows.Forms.Label lblWN7;
 		private System.Windows.Forms.Label lblWN8;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.PictureBox picRatingWN8_Dmg;
-		private System.Windows.Forms.PictureBox picRatingWN8_Frags;
-		private System.Windows.Forms.PictureBox picRatingWN8_Spot;
-		private System.Windows.Forms.PictureBox picRatingWN8_Def;
 		private System.Windows.Forms.ImageList imgIndicators;
+		private System.Windows.Forms.DataGridView dgvWN8;
 	}
 }

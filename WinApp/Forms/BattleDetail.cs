@@ -33,7 +33,11 @@ namespace WinApp.Forms
 
 		private void BattleDetail_Load(object sender, EventArgs e)
 		{
+			// My result
+			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
+			dgvWN8.AllowUserToResizeColumns = false;
 			GetMyPersonalInfo();
+			// Teams
 			string sql = "select id from battlePlayer where battleId=@battleId";
 			DB.AddWithValue(ref sql, "@battleId", _battleId, DB.SqlDataType.Int);
 			if (DB.FetchData(sql).Rows.Count > 0)
@@ -114,6 +118,7 @@ namespace WinApp.Forms
 			switch (selectedTab)
 			{
 				case "btnPersonal":
+					dgvWN8.ClearSelection();
 					panel1.Visible = true;
 					break;
 				case "btnTeams":
@@ -297,28 +302,78 @@ namespace WinApp.Forms
 					dmg, spotted, frags, def, exp_wr,
 					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
-				// Exp val
-				txtRating_Exp_Dmg.Text = exp_dmg.ToString();
-				txtRating_Exp_Frags.Text = exp_frags.ToString();
-				txtRating_Exp_Spot.Text = exp_spotted.ToString();
-				txtRating_Exp_Def.Text = exp_def.ToString();
-				txtRating_Exp_WR.Text = exp_wr.ToString() + "%";
-				// Result
-				txtRating_Res_Dmg.Text = dmg.ToString();
-				txtRating_Res_Frags.Text = frags.ToString();
-				txtRating_Res_Spot.Text = spotted.ToString();
-				txtRating_Res_Def.Text = def.ToString();
-				// Values
-				txtRating_Val_Dmg.Text = Math.Round(rDAMAGEc, 1).ToString();
-				txtRating_Val_Frags.Text = Math.Round(rFRAGSc, 1).ToString();
-				txtRating_Val_Spot.Text = Math.Round(rSPOTc, 1).ToString();
-				txtRating_Val_Def.Text = Math.Round(rDEFc, 1).ToString();
-				txtRating_Val_WR.Text = Math.Round(rWINc, 1).ToString();
-				// Indicators
-				picRatingWN8_Dmg.Image = imgIndicators.Images[GetIndicator(dmg, exp_dmg)];
-				picRatingWN8_Frags.Image = imgIndicators.Images[GetIndicator(frags, exp_frags)];
-				picRatingWN8_Spot.Image = imgIndicators.Images[GetIndicator(spotted, exp_spotted)];
-				picRatingWN8_Def.Image = imgIndicators.Images[GetIndicator(def, exp_def)];
+				DataTable dtWN8 = new DataTable();
+				dtWN8.Columns.Add("Parameter", typeof(string));
+				dtWN8.Columns.Add("Image", typeof(Image));
+				dtWN8.Columns.Add("Result", typeof(string));
+				dtWN8.Columns.Add("Exp", typeof(string));
+				dtWN8.Columns.Add("Value", typeof(string));
+				// Damage
+				DataRow drWN8 = dtWN8.NewRow();
+				drWN8["Parameter"] = "Damage";
+				drWN8["Image"] = imgIndicators.Images[GetIndicator(dmg, exp_dmg)];
+				drWN8["Result"] = dmg.ToString();
+				drWN8["Exp"] = exp_dmg.ToString();
+				drWN8["Value"] = Math.Round(rDAMAGEc, 1).ToString();
+				dtWN8.Rows.Add(drWN8);
+				// Frags
+				drWN8 = dtWN8.NewRow();
+				drWN8["Parameter"] = "Frags";
+				drWN8["Image"] = imgIndicators.Images[GetIndicator(frags, exp_frags)];
+				drWN8["Result"] = frags.ToString();
+				drWN8["Exp"] = exp_frags.ToString();
+				drWN8["Value"] = Math.Round(rFRAGSc, 1).ToString();
+				dtWN8.Rows.Add(drWN8);
+				// Spot
+				drWN8 = dtWN8.NewRow();
+				drWN8["Parameter"] = "Spot";
+				drWN8["Image"] = imgIndicators.Images[GetIndicator(spotted, exp_spotted)];
+				drWN8["Result"] = spotted.ToString();
+				drWN8["Exp"] = exp_spotted.ToString();
+				drWN8["Value"] = Math.Round(rSPOTc, 1).ToString();
+				dtWN8.Rows.Add(drWN8);
+				// Defence
+				drWN8 = dtWN8.NewRow();
+				drWN8["Parameter"] = "Defence";
+				drWN8["Image"] = imgIndicators.Images[GetIndicator(def, exp_def)];
+				drWN8["Result"] = def.ToString();
+				drWN8["Exp"] = exp_def.ToString();
+				drWN8["Value"] = Math.Round(rDEFc, 1).ToString();
+				dtWN8.Rows.Add(drWN8);
+				// Win Rate
+				drWN8 = dtWN8.NewRow();
+				drWN8["Parameter"] = "Win Rate";
+				drWN8["Image"] = imgIndicators.Images[1];
+				drWN8["Result"] = "Fixed";
+				drWN8["Exp"] = exp_wr.ToString() + "%";
+				drWN8["Value"] = Math.Round(rWINc, 1).ToString();
+				dtWN8.Rows.Add(drWN8);
+				// Done;
+				dtWN8.AcceptChanges();
+				dgvWN8.DataSource = dtWN8;
+				// Format dgv
+				dgvWN8.Columns[0].HeaderText = "WN8";
+				dgvWN8.Columns[1].HeaderText = "";
+				dgvWN8.Columns[0].Width = 70;
+				dgvWN8.Columns[1].Width = 20;
+				dgvWN8.Columns[2].Width = 40;
+				dgvWN8.Columns[3].Width = 40;
+				dgvWN8.Columns[4].Width = 50;
+				dgvWN8.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+				dgvWN8.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgvWN8.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgvWN8.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+				dgvWN8.Width = dgvWN8.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 2;
+				dgvWN8.Height = dgvWN8.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + dgvWN8.ColumnHeadersHeight + 2;
+				dgvWN8.Columns[2].DefaultCellStyle.Format = "N0";
+				dgvWN8.Columns[3].DefaultCellStyle.Format = "N0";
+				dgvWN8.Columns[4].DefaultCellStyle.Format = "N1";
+				foreach (DataGridViewColumn dgvc in dgvWN8.Columns)
+				{
+					dgvc.SortMode = DataGridViewColumnSortMode.NotSortable;					
+				}
+				dgvWN8.Visible = true;
+				dgvWN8.ClearSelection();
 			}
 		}
 
