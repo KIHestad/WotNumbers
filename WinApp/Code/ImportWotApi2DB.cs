@@ -260,7 +260,7 @@ namespace WinApp.Code
 							if (isPremium) premium = 1;
 
 							// Write to db
-							tankExists = TankData.TankExists(itemId);
+							tankExists = TankHelper.TankExists(itemId);
 							insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
 							updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id; " ;
 
@@ -691,7 +691,7 @@ namespace WinApp.Code
 							itemToken = ach.First();
 
 							// Check if ach already exists
-							if (!TankData.GetAchievmentExist(itemToken["name"].ToString()))
+							if (!TankHelper.GetAchievmentExist(itemToken["name"].ToString()))
 							{
 								string sql = "INSERT INTO ACH (name, section, section_order, name_i18n, type, ordernum, description) " +
 											"VALUES (@name, @section, 0, @name_i18n, @type, @ordernum, @description); ";

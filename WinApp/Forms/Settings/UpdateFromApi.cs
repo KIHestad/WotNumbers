@@ -48,11 +48,11 @@ namespace WinApp.Forms
 
 			// Get tanks, remember to init tankList first
 			UpdateProgressBar("Retrieves tanks from Wargaming API");
-			TankData.GetTankList();
+			TankHelper.GetTankList();
 			ImportWotApi2DB.ImportTanks(this);
 			// Init after getting tanks and other basic data import
-			TankData.GetTankList();
-			TankData.GetJson2dbMappingFromDB();
+			TankHelper.GetTankList();
+			TankHelper.GetJson2dbMappingFromDB();
 
 			// Get turret
 			UpdateProgressBar("Retrieves tank turrets from Wargaming API");
@@ -69,7 +69,7 @@ namespace WinApp.Forms
 			// Get achievements
 			UpdateProgressBar("Retrieves achievements from Wargaming API");
 			ImportWotApi2DB.ImportAchievements(this);
-			TankData.GetAchList();
+			TankHelper.GetAchList();
 
 			// Get WN8 ratings
 			UpdateProgressBar("Retrieves WN8 expected values from API");

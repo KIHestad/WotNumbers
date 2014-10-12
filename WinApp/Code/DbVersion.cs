@@ -1171,7 +1171,7 @@ namespace WinApp.Code
 					sqlite = mssql.Replace("INT", "integer");
 					break;
 				case 94:
-					TankData.GetJson2dbMappingFromDB();
+					TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 95:
 					mssql=  "ALTER TABLE battle ADD credits INT NULL;" +
@@ -1529,7 +1529,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 130:
-					TankData.GetJson2dbMappingFromDB();
+					TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 132:
 					mssql =
@@ -1643,7 +1643,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 154:
-					TankData.GetJson2dbMappingFromDB();
+					TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 155:
 					RunDossierFileCheckWithForceUpdate = true;
@@ -1703,7 +1703,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 161:
-					TankData.GetJson2dbMappingFromDB();
+					TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 162:
 					mssql = "ALTER TABLE playerTank ADD compactDescr int NOT NULL default 0; ";
@@ -1716,7 +1716,7 @@ namespace WinApp.Code
 					sqlite = mssql;
 					break;
 				case 164:
-					TankData.GetJson2dbMappingFromDB();
+					TankHelper.GetJson2dbMappingFromDB();
 					break;
 				case 165:
 					RunWotApi = true;

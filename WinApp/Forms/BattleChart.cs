@@ -322,7 +322,7 @@ namespace WinApp.Forms
 			if (tankName != "All Tanks")
 			{
 				// Find playertank and current value
-				int playerTankId = TankData.GetPlayerTankId(tankName);
+				int playerTankId = TankHelper.GetPlayerTankId(tankName);
 				ptWhere = " where pt.id=@playerTankId ";
 				bWhere = " where playerTankId=@playerTankId ";
 				DB.AddWithValue(ref ptWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
@@ -386,14 +386,14 @@ namespace WinApp.Forms
 						// The total tier is added in column number 6, the total number of battles in col num 0
 						defaultTier = Convert.ToDouble(dtCurrent.Rows[0][6]) / Convert.ToDouble(dtCurrent.Rows[0][0]);
 					else
-						defaultTier = TankData.GetTankTier(tankName);
+						defaultTier = TankHelper.GetTankTier(tankName);
 					break;
 				case CalculationType.wn7:
 					if (tankName == "All Tanks")
 						// The total tier is added in column number 6, the total number of battles in col num 0
 						defaultTier = Rating.GetAverageBattleTier();
 					else
-						defaultTier = TankData.GetTankTier(tankName);
+						defaultTier = TankHelper.GetTankTier(tankName);
 					break;
 				case CalculationType.wn8:
 					break;
@@ -473,7 +473,7 @@ namespace WinApp.Forms
 			string bWhere = "";
 			if (tankName != "All Tanks")
 			{
-				int playerTankId = TankData.GetPlayerTankId(tankName);
+				int playerTankId = TankHelper.GetPlayerTankId(tankName);
 				ptWhere = " and pt.id=@playerTankId ";
 				bSumWhere = " and playerTankId=@playerTankId ";
 				bWhere = " where playerTankId=@playerTankId ";

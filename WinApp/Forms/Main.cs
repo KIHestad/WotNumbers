@@ -323,7 +323,7 @@ namespace WinApp.Forms
 				}
 				if (DB.CheckConnection())
 				{
-					TankData.GetAllLists();
+					TankHelper.GetAllLists();
 				}
 				// Update file watchers
 				string result = dossier2json.UpdateDossierFileWatcher(this);
@@ -1533,7 +1533,7 @@ namespace WinApp.Forms
 			if (MainSettings.GetCurrentGridFilter().TankId != -1)
 			{
 				int tankId = MainSettings.GetCurrentGridFilter().TankId;
-				string tankName = TankData.GetTankName(tankId);
+				string tankName = TankHelper.GetTankName(tankId);
 				tankFilterManualFilter = tankName;
 				message += " - Filtered on tank: " + tankName;
 				newWhereSQL = " AND tank.id=@tankId ";
@@ -2867,19 +2867,19 @@ namespace WinApp.Forms
 		private void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankData.GetTankID(playerTankId);
+			int tankId = TankHelper.GetTankID(playerTankId);
 			if (tankId != 0)
 			{
 				TankFilterMenuUncheck(true, true, true, false);
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
-				ShowView("Filtered on tank: " + TankData.GetTankName(tankId));
+				ShowView("Filtered on tank: " + TankHelper.GetTankName(tankId));
 			}
 		}
 
 		private void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankData.GetTankID(playerTankId);
+			int tankId = TankHelper.GetTankID(playerTankId);
 			Form frm = new Forms.FavListNewEdit(0, "", tankId);
 			frm.ShowDialog();
 			// After fav list changes reload menu
@@ -2889,7 +2889,7 @@ namespace WinApp.Forms
 		private void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankData.GetTankID(playerTankId);
+			int tankId = TankHelper.GetTankID(playerTankId);
 			if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, true))
 			{
 				Form frm = new Forms.FavListAddRemoveTank(this, tankId, true);
@@ -2900,7 +2900,7 @@ namespace WinApp.Forms
 		private void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankData.GetTankID(playerTankId);
+			int tankId = TankHelper.GetTankID(playerTankId);
 			if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, false))
 			{
 				Form frm = new Forms.FavListAddRemoveTank(this, tankId, false);
@@ -4005,16 +4005,16 @@ namespace WinApp.Forms
 						long newAffinityMask = Config.Settings.wotGameAffinity;
 						if (AffinityMask != newAffinityMask || p.PriorityClass != ProcessPriorityClass.High)
 						{
-							string s = "WoT using CPU:" + AffinityMask.ToBinary();
+							string s = "Changed WoT game client process from using CPU: " + AffinityMask.ToBinary();
 							s += " (" + p.PriorityClass.ToString() + " Priority)";
-							s += " - Changing to CPU:" + newAffinityMask.ToBinary() + " (High Priority)";
+							s += " - to CPU: " + newAffinityMask.ToBinary() + " (High Priority)";
 							SetStatus2(s);
 							p.ProcessorAffinity = (IntPtr)newAffinityMask;
 							p.PriorityClass = ProcessPriorityClass.High;
 						}
 						else
 						{
-							string s = "WoT is using CPU:" + AffinityMask.ToBinary();
+							string s = "WoT game client process is using CPU: " + AffinityMask.ToBinary();
 							s += " (" + p.PriorityClass.ToString() + " Priority)";
 							SetStatus2(s);
 						}

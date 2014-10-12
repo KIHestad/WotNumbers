@@ -74,46 +74,49 @@ namespace WinApp.Code
 
 		public static void LoadTankImages()
 		{
-			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
-			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
-			string sql = "select * from tank";
-			SQLiteConnection con = new SQLiteConnection(adminDbCon);
-			con.Open();
-			SQLiteCommand command = new SQLiteCommand(sql, con);
-			SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-			DataTable dt = new DataTable();
-			adapter.Fill(dt);
-			con.Close();
-			TankImage.Clear();
-			foreach (DataRow dr in dt.Rows)
-			{
-				DataRow tankImgNewDataRow = TankImage.NewRow();
-				// ID
-				tankImgNewDataRow["id"] = dr["id"];
-				// SmallImg
-				byte[] imgByte = (byte[])dr["smallImg"];
-				MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
-				ms.Write(imgByte, 0, imgByte.Length);
-				Image image = new Bitmap(ms);
-				tankImgNewDataRow["smallImg"] = image;
-				if (TankData.PlayerTankExists(Convert.ToInt32(dr["id"])))
+			if (DB.CheckConnection(false))
+			{ 
+				string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+				string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
+				string sql = "select * from tank";
+				SQLiteConnection con = new SQLiteConnection(adminDbCon);
+				con.Open();
+				SQLiteCommand command = new SQLiteCommand(sql, con);
+				SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+				DataTable dt = new DataTable();
+				adapter.Fill(dt);
+				con.Close();
+				TankImage.Clear();
+				foreach (DataRow dr in dt.Rows)
 				{
-					// Img Large
-					//imgByte = (byte[])dr["img"];
-					//ms = new MemoryStream(imgByte, 0, imgByte.Length);
-					//ms.Write(imgByte, 0, imgByte.Length);
-					//image = new Bitmap(ms);
-					//tankImgNewDataRow["img"] = image;
-					// ContourImg
-					imgByte = (byte[])dr["contourImg"];
-					ms = new MemoryStream(imgByte, 0, imgByte.Length);
+					DataRow tankImgNewDataRow = TankImage.NewRow();
+					// ID
+					tankImgNewDataRow["id"] = dr["id"];
+					// SmallImg
+					byte[] imgByte = (byte[])dr["smallImg"];
+					MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
 					ms.Write(imgByte, 0, imgByte.Length);
-					image = new Bitmap(ms);
-					tankImgNewDataRow["contourImg"] = image;
+					Image image = new Bitmap(ms);
+					tankImgNewDataRow["smallImg"] = image;
+					if (TankHelper.PlayerTankExists(Convert.ToInt32(dr["id"])))
+					{
+						// Img Large
+						//imgByte = (byte[])dr["img"];
+						//ms = new MemoryStream(imgByte, 0, imgByte.Length);
+						//ms.Write(imgByte, 0, imgByte.Length);
+						//image = new Bitmap(ms);
+						//tankImgNewDataRow["img"] = image;
+						// ContourImg
+						imgByte = (byte[])dr["contourImg"];
+						ms = new MemoryStream(imgByte, 0, imgByte.Length);
+						ms.Write(imgByte, 0, imgByte.Length);
+						image = new Bitmap(ms);
+						tankImgNewDataRow["contourImg"] = image;
+					}
+					// Add to dt
+					TankImage.Rows.Add(tankImgNewDataRow);
+					TankImage.AcceptChanges();
 				}
-				// Add to dt
-				TankImage.Rows.Add(tankImgNewDataRow);
-				TankImage.AcceptChanges();
 			}
 		}
 

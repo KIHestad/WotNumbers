@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WinApp.Code
 {
-	public static class TankData
+	public static class TankHelper
 	{
 		public enum DossierBattleMode
 		{
@@ -64,7 +64,9 @@ namespace WinApp.Code
 			playerTankAchList.Dispose();
 			playerTankAchList.Clear();
 			playerTankAchList = new DataTable();
-			playerTankAchList = DB.FetchData("SELECT * FROM playerTankAch");
+			playerTankAchList = DB.FetchData("SELECT playerTankAch.* " +
+											"FROM playerTankAch INNER JOIN playerTank ON playerTankAch.playerTankId=playerTank.Id " +
+											"WHERE playerId=" + Config.Settings.playerId.ToString());
 		}
 
 		public static void ClearPlayerTankAchList()
@@ -81,7 +83,8 @@ namespace WinApp.Code
 			playerTankFragList.Clear();
 			playerTankFragList = new DataTable();
 			string sql = "SELECT playerTank.id AS playerTankId, playerTank.tankId as PlayerTankTankId, playerTankFrag.* " +
-	  					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId; ";
+	  					"FROM playerTank INNER JOIN playerTankFrag ON playerTank.id=playerTankFrag.playerTankId " +
+						"WHERE playerId=" + Config.Settings.playerId.ToString();
 			playerTankFragList = DB.FetchData(sql);
 		}
 
@@ -102,10 +105,10 @@ namespace WinApp.Code
 			{
 				// Replace WoT API tank name with Phalynx Dossier tank name
 				string tankName = dr["name"].ToString();
-				tankName = tankName.Replace("ö", "o");
-				tankName = tankName.Replace("ä", "a");
-				tankName = tankName.Replace("â", "a");
-				tankName = tankName.Replace("ß", "s");
+				//tankName = tankName.Replace("ö", "o");
+				//tankName = tankName.Replace("ä", "a");
+				//tankName = tankName.Replace("â", "a");
+				//tankName = tankName.Replace("ß", "s");
 				dr["name"] = tankName;
 				dr.AcceptChanges();
 			}

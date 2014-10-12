@@ -58,8 +58,8 @@ namespace WinApp.Code
 				sw.Start();
 			
 				// Update base data
-				TankData.GetPlayerTankAchList();
-				TankData.GetPlayerTankFragList();
+				TankHelper.GetPlayerTankAchList();
+				TankHelper.GetPlayerTankFragList();
 
 				// read json string
 				JsonTextReader reader = new JsonTextReader(new StringReader(json));
@@ -69,7 +69,7 @@ namespace WinApp.Code
 								
 				// Check for first run (if player tank = 0), then dont get battle result but force update
 				bool saveBattleResult = true;
-				if (TankData.GetPlayerTankCount() == 0)
+				if (TankHelper.GetPlayerTankCount() == 0)
 				{
 					saveBattleResult = false;
 					ForceUpdate = true;
@@ -79,8 +79,8 @@ namespace WinApp.Code
 				battleSaved = false;
 
 				// Declare
-				DataTable NewPlayerTankTable = TankData.GetPlayerTank(-1); // Return no data, only empty database with structure
-				DataTable NewPlayerTankBattleTable = TankData.GetPlayerTankBattle(-1, TankData.DossierBattleMode.ModeRandom_TC, false); // Return no data, only empty database with structure
+				DataTable NewPlayerTankTable = TankHelper.GetPlayerTank(-1); // Return no data, only empty database with structure
+				DataTable NewPlayerTankBattleTable = TankHelper.GetPlayerTankBattle(-1, TankHelper.DossierBattleMode.ModeRandom_TC, false); // Return no data, only empty database with structure
 				DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
 				DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
 				DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
@@ -108,7 +108,7 @@ namespace WinApp.Code
 
 							// Check data by getting jsonPlayerTank Mapping
 							string expression = "jsonMainSubProperty='" + currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property + "'";
-							DataRow[] foundRows = TankData.json2dbMapping.Select(expression);
+							DataRow[] foundRows = TankHelper.json2dbMapping.Select(expression);
 						
 							//var result = from myRow in TankData.json2dbMapping.AsEnumerable()
 							//			 where myRow.Field<string>("jsonMainSubProperty") == (currentItem.mainSection + "." + currentItem.subSection + "." + currentItem.property).ToString()
@@ -263,8 +263,8 @@ namespace WinApp.Code
 				if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, NewPlayerTankBattleSkirmishesRow, fragList, achList, ForceUpdate, saveBattleResult)) 
 					battleSaved = true; // result if battle was detected and saved
 				// Done
-				TankData.ClearPlayerTankAchList();
-				TankData.ClearPlayerTankFragList();
+				TankHelper.ClearPlayerTankAchList();
+				TankHelper.ClearPlayerTankFragList();
 			
 				sw.Stop();
 				TimeSpan ts = sw.Elapsed;
@@ -316,13 +316,13 @@ namespace WinApp.Code
 			if (playerTankBattleHistoricalNewRow["battles"] != DBNull.Value) playerTankNewRow_battlesHistorical = Convert.ToInt32(playerTankBattleHistoricalNewRow["battles"]);
 			if (PlayerTankBattleSkirmishesNewRow["battles"] != DBNull.Value) playerTankNewRow_battlesSkirmishes = Convert.ToInt32(PlayerTankBattleSkirmishesNewRow["battles"]);
 			// Check if battle count has increased, get existing battle count
-			DataTable playerTankOldTable = TankData.GetPlayerTank(tankId); // Return Existing Player Tank Data
+			DataTable playerTankOldTable = TankHelper.GetPlayerTank(tankId); // Return Existing Player Tank Data
 			// Check if Player has this tank
 			if (playerTankOldTable.Rows.Count == 0)
 			{
 				// New tank detected, this parts only run when new tank is detected
 				SaveNewPlayerTank(tankId, tankName); // Save new tank
-				playerTankOldTable = TankData.GetPlayerTank(tankId); // Get data into DataTable once more now after row is added
+				playerTankOldTable = TankHelper.GetPlayerTank(tankId); // Get data into DataTable once more now after row is added
 			}
 			// Get the get existing (old) tank data row
 			DataRow playerTankOldRow = playerTankOldTable.Rows[0];
@@ -336,10 +336,10 @@ namespace WinApp.Code
 			int playerTankOldRow_xp7 = 0;
 			int playerTankOldRow_xpHistorical = 0;
 			int playerTankOldRow_xpSkirmishes = 0;
-			int playerTankOldRow_battles15 = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.ModeRandom_TC, out playerTankOldRow_wins15, out playerTankOldRow_xp15);
-			int playerTankOldRow_battles7 = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.ModeTeam, out playerTankOldRow_wins7, out playerTankOldRow_xp7);
-			int playerTankOldRow_battlesHistorical = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.ModeHistorical, out playerTankOldRow_winsHistorical, out playerTankOldRow_xpHistorical);
-			int playerTankOldRow_battlesSkirmishes = TankData.GetPlayerTankBattleCount(playerTankId, TankData.DossierBattleMode.ModeSkirmishes, out playerTankOldRow_winsSkirmishes, out playerTankOldRow_xpSkirmishes); 
+			int playerTankOldRow_battles15 = TankHelper.GetPlayerTankBattleCount(playerTankId, TankHelper.DossierBattleMode.ModeRandom_TC, out playerTankOldRow_wins15, out playerTankOldRow_xp15);
+			int playerTankOldRow_battles7 = TankHelper.GetPlayerTankBattleCount(playerTankId, TankHelper.DossierBattleMode.ModeTeam, out playerTankOldRow_wins7, out playerTankOldRow_xp7);
+			int playerTankOldRow_battlesHistorical = TankHelper.GetPlayerTankBattleCount(playerTankId, TankHelper.DossierBattleMode.ModeHistorical, out playerTankOldRow_winsHistorical, out playerTankOldRow_xpHistorical);
+			int playerTankOldRow_battlesSkirmishes = TankHelper.GetPlayerTankBattleCount(playerTankId, TankHelper.DossierBattleMode.ModeSkirmishes, out playerTankOldRow_winsSkirmishes, out playerTankOldRow_xpSkirmishes); 
 				
 			// Calculate number of new battles 
 			int battlesNew15 = playerTankNewRow_battles15 - playerTankOldRow_battles15;
@@ -409,25 +409,25 @@ namespace WinApp.Code
 				// Now update playerTank battle for different battle modes
 				if (battlesNew15 > 0 || (forceUpdate && playerTankOldRow_battles15 != 0))
 				{
-					UpdatePlayerTankBattle(TankData.DossierBattleMode.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
+					UpdatePlayerTankBattle(TankHelper.DossierBattleMode.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
 											playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNew7 > 0 || (forceUpdate && playerTankOldRow_battles7 != 0))
 				{
-					UpdatePlayerTankBattle(TankData.DossierBattleMode.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
+					UpdatePlayerTankBattle(TankHelper.DossierBattleMode.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
 											playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewHistorical > 0 || (forceUpdate && playerTankOldRow_battlesHistorical != 0))
 				{
-					UpdatePlayerTankBattle(TankData.DossierBattleMode.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
+					UpdatePlayerTankBattle(TankHelper.DossierBattleMode.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
 											playerTankNewRow_battlesHistorical, battlesNewHistorical, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewSkirmishes > 0 || (forceUpdate && playerTankOldRow_battlesSkirmishes != 0))
 				{
-					UpdatePlayerTankBattle(TankData.DossierBattleMode.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
+					UpdatePlayerTankBattle(TankHelper.DossierBattleMode.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
 											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
@@ -441,7 +441,7 @@ namespace WinApp.Code
 		private static void SaveNewPlayerTank(int tankId, string tankName)
 		{
 			// Check if this tank exists
-			if (!TankData.TankExists(tankId))
+			if (!TankHelper.TankExists(tankId))
 			{
 				int tier = 1;
 				int countryId = 1;
@@ -486,7 +486,7 @@ namespace WinApp.Code
 						// Find ach ID
 						string expression = "name=@achName";
 						DB.AddWithValue(ref expression, "@achName", newAch.achName, DB.SqlDataType.VarChar);
-						DataRow[] lookupAch = TankData.achList.Select(expression);
+						DataRow[] lookupAch = TankHelper.achList.Select(expression);
 						
 						//string sql = "SELECT id FROM ach WHERE name=@achName; ";
 						//DB.AddWithValue(ref sql, "@achName", newAch.achName, DB.SqlDataType.VarChar);
@@ -497,7 +497,7 @@ namespace WinApp.Code
 							int achId = Convert.ToInt32(lookupAch[0]["id"]);
 							// Find the current achievent
 							expression = "playerTankId=" + playerTankId.ToString() + " AND achId=" + achId.ToString();
-							DataRow[] lookupPlayerTankAch = TankData.playerTankAchList.Select(expression);
+							DataRow[] lookupPlayerTankAch = TankHelper.playerTankAchList.Select(expression);
 						
 							//string sql = "SELECT * FROM playerTankAch WHERE playerTankId=@playerTankId AND achId=@achId; ";
 							//DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
@@ -547,7 +547,7 @@ namespace WinApp.Code
 			return battleAchList;
 		}
 
-		private static void UpdatePlayerTankBattle(TankData.DossierBattleMode battleMode, 
+		private static void UpdatePlayerTankBattle(TankHelper.DossierBattleMode battleMode, 
 													int playerTankId, 
 													int tankId,
 													DataRow playerTankNewRow, DataRow playerTankOldRow,
@@ -559,7 +559,7 @@ namespace WinApp.Code
 													bool saveBattleResult)
 		{
 			// Get or create playerTank BattleResult
-			DataTable playerTankBattleOld = TankData.GetPlayerTankBattle(playerTankId, battleMode, true); 
+			DataTable playerTankBattleOld = TankHelper.GetPlayerTankBattle(playerTankId, battleMode, true); 
 			// Update playerTankBattle
 			string sqlFields = "";
 			// Get rating parameters
@@ -570,7 +570,7 @@ namespace WinApp.Code
 			double wins = Rating.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
 			double cap = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
 			// Calculate WN7
-			sqlFields += "wn7=" + Math.Round(Rating.CalculateWN7(playerTankNewRow_battles, dmg, spotted, frags, def, cap, wins, TankData.GetTankTier(tankId)), 0).ToString();
+			sqlFields += "wn7=" + Math.Round(Rating.CalculateWN7(playerTankNewRow_battles, dmg, spotted, frags, def, cap, wins, TankHelper.GetTankTier(tankId)), 0).ToString();
 			// Calculate WN8
 			sqlFields += ", wn8=" + Math.Round(Rating.CalculateTankWN8(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, wins),0).ToString();
 			// Calculate Eff
@@ -606,7 +606,7 @@ namespace WinApp.Code
 			{
 				string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode=@battleMode; ";
 				DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@battleMode", TankData.DbBattleMode(battleMode), DB.SqlDataType.VarChar);
+				DB.AddWithValue(ref sql, "@battleMode", TankHelper.DbBattleMode(battleMode), DB.SqlDataType.VarChar);
 				DB.ExecuteNonQuery(sql);
 			}
 			// Add battle, if any and not first run - then avoid
@@ -633,7 +633,7 @@ namespace WinApp.Code
 					FragItem.dossierId = Convert.ToInt32(dossierFragItem[i * 4 + 1]);
 					FragItem.fragCount = Convert.ToInt32(dossierFragItem[i * 4 + 2]);
 					FragItem.tankName = dossierFragItem[i * 4 + 3].ToString();
-					FragItem.tankId = TankData.GetTankID(FragItem.tankName);
+					FragItem.tankId = TankHelper.GetTankID(FragItem.tankName);
 					newFrag.Add(FragItem);
 				}
 				// Check newFrag compared to existing frags for this tank
@@ -641,7 +641,7 @@ namespace WinApp.Code
 				// Get frags for this tank
 
 				string expression = "PlayerTankTankId=" + tankId.ToString();
-				DataRow[] lookupPlayerFrag = TankData.playerTankFragList.Select(expression);
+				DataRow[] lookupPlayerFrag = TankHelper.playerTankFragList.Select(expression);
 
 				//string sql =
 				//	"SELECT playerTank.id AS playerTankId, playerTankFrag.* " +
@@ -719,7 +719,7 @@ namespace WinApp.Code
 										 DataRow playerTankOldRow, 
 										 DataRow playerTankBattleNewRow, 
 										 DataRow playerTankBattleOldRow,
-										 TankData.DossierBattleMode battleMode, 
+										 TankHelper.DossierBattleMode battleMode, 
 										 int tankId, 
 										 int playerTankId, 
 										 int battlesCount, 
@@ -729,9 +729,9 @@ namespace WinApp.Code
 			try
 			{
 				// Create datarow to put calculated battle data
-				DataTable battleTableNew = TankData.GetBattle(-1); // Return no data, only empty database with structure
+				DataTable battleTableNew = TankHelper.GetBattle(-1); // Return no data, only empty database with structure
 				DataRow battleNewRow = battleTableNew.NewRow();
-				foreach (DataRow dr in TankData.GetTankData2BattleMapping(battleMode).Rows)
+				foreach (DataRow dr in TankHelper.GetTankData2BattleMapping(battleMode).Rows)
 				{
 					// Mapping fields
 					string battleField = dr["dbBattle"].ToString();
@@ -825,7 +825,7 @@ namespace WinApp.Code
 				// Add battle mode
 				sqlFields += ", battleMode";
 				sqlValues += ", @battleMode";
-				DB.AddWithValue(ref sqlValues, "@battleMode", TankData.DbBattleMode(battleMode), DB.SqlDataType.VarChar); 
+				DB.AddWithValue(ref sqlValues, "@battleMode", TankHelper.DbBattleMode(battleMode), DB.SqlDataType.VarChar); 
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(battleNewRow["victory"]);
 				int defeatcount = Convert.ToInt32(battleNewRow["defeat"]);

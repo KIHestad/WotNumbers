@@ -118,8 +118,8 @@ namespace WinApp.Forms
 						// Then get tankId and playerTankId
 						int wstankId = Convert.ToInt32(recentBattles.Rows[i]["rbTankId"]);
 						int wsCountryId = Convert.ToInt32(recentBattles.Rows[i]["rbCountryId"]);
-						int tankId = TankData.ConvertWs2TankId(wstankId, wsCountryId); // Convert WS tankId + countryID to tank.TankID
-						int playerTankId = TankData.GetPlayerTankId(tankId);
+						int tankId = TankHelper.ConvertWs2TankId(wstankId, wsCountryId); // Convert WS tankId + countryID to tank.TankID
+						int playerTankId = TankHelper.GetPlayerTankId(tankId);
 						if (playerTankId != 0) // If not player tank is found skip
 						{
 							DateTime battleTime = Convert.ToDateTime("1970-01-01 01:00:00").AddSeconds(Convert.ToInt32(recentBattles.Rows[i]["rbBattleTime"]));
@@ -174,7 +174,7 @@ namespace WinApp.Forms
 								int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEff(tankId, battlesCount, dmg, spotted, frags, def, cap),0));
 								// Insert or update Battle table
 								string sqlInsertBattle = "";
-								int battleId = TankData.GetBattleIdForImportedWsBattle(wsId);
+								int battleId = TankHelper.GetBattleIdForImportedWsBattle(wsId);
 								if (battleId > 0)
 									sqlInsertBattle =
 									"update battle SET playerTankId=@playerTankId, battlesCount=@battlesCount, frags=@frags, dmg=@dmg, dmgReceived=@dmgReceived, spotted=@spotted, cap=@cap, def=@def, survived=@survived, killed=@killed, " +
@@ -235,7 +235,7 @@ namespace WinApp.Forms
 										string[] frag = newitem.Split(stringSeparators2, StringSplitOptions.None);
 										int wsfragcountryId = Convert.ToInt32(frag[0]);
 										int wsfragtankId = Convert.ToInt32(frag[1]);
-										int fraggedtankId = TankData.ConvertWs2TankId(wsfragtankId, wsfragcountryId); // Convert WS tankId + countryID to tank.TankID
+										int fraggedtankId = TankHelper.ConvertWs2TankId(wsfragtankId, wsfragcountryId); // Convert WS tankId + countryID to tank.TankID
 										bool fraggedTankExist = false;
 										foreach (var fragListItem in fragList)
 										{

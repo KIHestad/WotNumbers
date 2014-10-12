@@ -156,7 +156,7 @@ namespace WinApp.Forms
 				string msg = "";
 				Config.SaveConfig(out msg);
 				// Init
-				TankData.GetAllLists();
+				TankHelper.GetAllLists();
 				// Check for upgrade
 				DBVersion.CheckForDbUpgrade(this);
 				// Startup with default settings

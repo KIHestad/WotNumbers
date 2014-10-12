@@ -93,7 +93,7 @@ namespace WinApp.Code
 		{
 			Double WN8 = 0;
 			// get tankdata for current tank
-			DataRow tankInfo = TankData.TankInfo(tankId);
+			DataRow tankInfo = TankHelper.TankInfo(tankId);
 			if (tankInfo != null && battleCount > 0 && tankInfo["expDmg"] != DBNull.Value)
 			{
 				// WN8 = Winrate for tank(s)
@@ -138,7 +138,7 @@ namespace WinApp.Code
 					// Get tanks with battle count per tank and expected values
 					int tankId = Convert.ToInt32(ptbRow["tankId"]);
 					double battlecount = Convert.ToDouble(ptbRow["battles"]);
-					DataRow expected = TankData.TankInfo(tankId);
+					DataRow expected = TankHelper.TankInfo(tankId);
 					if (battlecount > 0 && expected != null && expected["expDmg"] != DBNull.Value)
 					{
 						expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
@@ -393,7 +393,7 @@ namespace WinApp.Code
 		public static double CalculateTankEff(int tankId, double battleCount, double dmg, double spotted, double frags, double def, double cap)
 		{
 			// Get tankdata for current tank to get tier
-			DataRow tankInfo = TankData.TankInfo(tankId);
+			DataRow tankInfo = TankHelper.TankInfo(tankId);
 			double tier = 0;
 			if (tankInfo != null)
 			{
