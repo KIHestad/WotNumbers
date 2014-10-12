@@ -3944,7 +3944,7 @@ namespace WinApp.Forms
 					if (Config.Settings.wotGameStartType != ConfigData.WoTGameStartType.None)
 					{
 						// Start WoT
-						err = "Error trying to start World of Tanks";
+						err = "Error trying to start World of Tanks, check WoT game start settings.";
 						string workingDir = Config.Settings.wotGameFolder;
 						string lastchar = workingDir.Substring(workingDir.Length - 1, 1);
 						if (lastchar == "/" || lastchar == "\\")
@@ -3992,7 +3992,7 @@ namespace WinApp.Forms
 							msg = "Starting additional programs";
 						else
 							msg += ", starting additional programs";
-						err = "Error trying to start additional programs";
+						err = "Error trying to start additional programs, check WoT game start settings.";
 						//Create process
 						ProcessStartInfo psi = new ProcessStartInfo();
 						psi.RedirectStandardInput = true;
@@ -4016,7 +4016,7 @@ namespace WinApp.Forms
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
-				SetStatus2(err + ", check your startup settings");
+				MsgBox.Show(err + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine, "Error running programs", this);
 			}
 		}
 
