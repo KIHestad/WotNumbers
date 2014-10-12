@@ -35,6 +35,8 @@ namespace WinApp.Forms
 			// Get saved data
 			if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.Game)
 				ddStartApp.Text = "Wot Game";
+			else if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.Launcher)
+				ddStartApp.Text = "WoT Launcher";
 			txtFolder.Text = Config.Settings.wotGameFolder;
 			if (txtFolder.Text == "")
 			{
@@ -43,7 +45,7 @@ namespace WinApp.Forms
 				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
 					txtFolder.Text = "D:\\Games\\World_of_Tanks";
 			}
-
+			txtBatchFile.Text = Config.Settings.wotGameRunBatchFile;
 			chkAutoRun.Checked = Config.Settings.wotGameAutoStart;
 			if (Config.Settings.wotGameAffinity > 0)
 			{
@@ -75,16 +77,19 @@ namespace WinApp.Forms
 
 		private void ddStartApp_Click(object sender, EventArgs e)
 		{
-			Code.DropDownGrid.Show(ddStartApp, Code.DropDownGrid.DropDownGridType.List, "WoT Launcher,Wot Game");
+			Code.DropDownGrid.Show(ddStartApp, Code.DropDownGrid.DropDownGridType.List, "Do not start WoT,WoT Launcher,Wot Game");
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+			ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.None;
 			if (ddStartApp.Text == "Wot Game")
 				wotGameStartType = ConfigData.WoTGameStartType.Game;
+			if (ddStartApp.Text == "WoT Launcher")
+				wotGameStartType = ConfigData.WoTGameStartType.Launcher;
 			Config.Settings.wotGameStartType = wotGameStartType;
 			Config.Settings.wotGameFolder = txtFolder.Text;
+			Config.Settings.wotGameRunBatchFile = txtBatchFile.Text;
 			Config.Settings.wotGameAutoStart = chkAutoRun.Checked;
 			long wotGameAffinity = 0;
 			if (chkOptimizeOn.Checked)
@@ -137,6 +142,16 @@ namespace WinApp.Forms
 			if (folderBrowserDialog1.SelectedPath != "")
 			{
 				txtFolder.Text = folderBrowserDialog1.SelectedPath;
+			}
+		}
+
+		private void btnFile_Click(object sender, EventArgs e)
+		{
+			openFileDialog1.FileName = "*.bat";
+			openFileDialog1.ShowDialog();
+			if (openFileDialog1.FileName != "*.bat" && openFileDialog1.FileName != "")
+			{
+				txtBatchFile.Text = openFileDialog1.FileName;
 			}
 		}
 	}

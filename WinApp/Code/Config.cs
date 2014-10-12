@@ -23,8 +23,10 @@ namespace WinApp.Code
 
 		public enum WoTGameStartType
 		{
+			None = 0,
 			Launcher = 1,
 			Game = 2,
+			NotConfigured = 3,
 		}
 
 		public class PosSize
@@ -108,6 +110,7 @@ namespace WinApp.Code
 		public string wotGameFolder { get; set; }
 		public long wotGameAffinity { get; set; }
 		public bool wotGameAutoStart { get; set; }
+		public string wotGameRunBatchFile { get; set; }
 	}
 
 	class Config
@@ -215,8 +218,9 @@ namespace WinApp.Code
 			Config.Settings.useSmallMasteryBadgeIcons = true;
 			Config.Settings.wotGameAffinity = 0;
 			Config.Settings.wotGameFolder = "";
-			Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+			Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.NotConfigured;
 			Config.Settings.wotGameAutoStart = false;
+			Config.Settings.wotGameRunBatchFile = "";
 		}
 
 		

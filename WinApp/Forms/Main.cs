@@ -3930,60 +3930,93 @@ namespace WinApp.Forms
 
 		private void StartWoTGame()
 		{
+			string err = "";
+			string msg = "";
 			try
 			{
-				string workingDir = Config.Settings.wotGameFolder;
-				if (workingDir == "")
+				if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.NotConfigured)
 				{
 					Form frm = new Forms.WoTGameClientSettings();
 					frm.ShowDialog();
 				}
 				else
 				{
-					string lastchar = workingDir.Substring(workingDir.Length - 1, 1);
-					if (lastchar == "/" || lastchar == "\\")
-						workingDir = workingDir.Substring(0, workingDir.Length - 1);
-					string filename = "";
-					switch (Config.Settings.wotGameStartType)
+					if (Config.Settings.wotGameStartType != ConfigData.WoTGameStartType.None)
 					{
-						case ConfigData.WoTGameStartType.Launcher:
-							filename = "WOTLauncher.exe";
-							break;
-						case ConfigData.WoTGameStartType.Game:
-							filename = "WorldOfTanks.exe";
-							break;
+						// Start WoT
+						err = "Error trying to start World of Tanks";
+						string workingDir = Config.Settings.wotGameFolder;
+						string lastchar = workingDir.Substring(workingDir.Length - 1, 1);
+						if (lastchar == "/" || lastchar == "\\")
+							workingDir = workingDir.Substring(0, workingDir.Length - 1);
+						string filename = "";
+						switch (Config.Settings.wotGameStartType)
+						{
+							case ConfigData.WoTGameStartType.Launcher:
+								filename = "WOTLauncher.exe";
+								break;
+							case ConfigData.WoTGameStartType.Game:
+								filename = "WorldOfTanks.exe";
+								break;
+						}
+						// Check if running
+						// Find WoT process
+						Process[] wotProcess = Process.GetProcessesByName("WorldOfTanks");
+						if (wotProcess.Length > 0)
+						{
+							msg = "World of Tanks is already running";
+						}
+						else
+						{
+							msg = "Starting World of Tanks";
+							//Create process
+							System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+							pProcess.StartInfo.FileName = workingDir + "/" + filename;
+							pProcess.StartInfo.WorkingDirectory = workingDir;
+							pProcess.StartInfo.UseShellExecute = false;
+							pProcess.StartInfo.RedirectStandardOutput = true;
+							//Start the process
+							pProcess.Start();
+						}
+						//Start timer for setting affnity after started if optimized settings used
+						if (Config.Settings.wotGameAffinity != 0)
+						{
+							timerWoTAffnity.Enabled = true;
+							timerWotAffnityCount = 0;
+						}
 					}
-					// Check if running
-					// Find WoT process
-					Process[] wotProcess = Process.GetProcessesByName("WorldOfTanks");
-					if (wotProcess.Length > 0)
+					// Run batch file
+					if (Config.Settings.wotGameRunBatchFile != "" && err == "")
 					{
-						SetStatus2("World of Tanks is already running");
-					}
-					else
-					{
-						SetStatus2("Starting World of Tanks");
+						if (msg == "")
+							msg = "Starting batch file";
+						else
+							msg += ", starting batch file";
+						err = "Error trying to start batch file";
 						//Create process
-						System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
-						pProcess.StartInfo.FileName = workingDir + "/" + filename;
-						pProcess.StartInfo.WorkingDirectory = workingDir;
-						pProcess.StartInfo.UseShellExecute = false;
-						pProcess.StartInfo.RedirectStandardOutput = true;
+						ProcessStartInfo psi = new ProcessStartInfo("cmd.exe");
+						psi.RedirectStandardInput = true;
+						psi.RedirectStandardOutput = true;
+						psi.UseShellExecute = false;
+						psi.WindowStyle = ProcessWindowStyle.Hidden;
+						psi.CreateNoWindow = true;
+						psi.FileName = Config.Settings.wotGameRunBatchFile;
 						//Start the process
-						pProcess.Start();
+						Process p = Process.Start(psi); 
 					}
-					//Start timer for setting affnity after started if optimized settings used
-					if (Config.Settings.wotGameAffinity != 0)
+					// No action message
+					if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.None && Config.Settings.wotGameRunBatchFile == "")
 					{
-						timerWoTAffnity.Enabled = true;
-						timerWotAffnityCount = 0;
+						msg = "No action is configured, check your startup settings";
 					}
+					if (msg != "")
+						SetStatus2(msg);
 				}
 			}
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
-				SetStatus2("Error trying to start World of Tanks, check your startup settings");
+				SetStatus2(err + ", check your startup settings");
 			}
 		}
 
@@ -4005,16 +4038,16 @@ namespace WinApp.Forms
 						long newAffinityMask = Config.Settings.wotGameAffinity;
 						if (AffinityMask != newAffinityMask || p.PriorityClass != ProcessPriorityClass.High)
 						{
-							string s = "Changed WoT game client process from using CPU: " + AffinityMask.ToBinary();
+							string s = "Changed WoT game client process to optimized CPU settings. From: " + AffinityMask.ToBinary();
 							s += " (" + p.PriorityClass.ToString() + " Priority)";
-							s += " - to CPU: " + newAffinityMask.ToBinary() + " (High Priority)";
+							s += " - To: " + newAffinityMask.ToBinary() + " (High Priority)";
 							SetStatus2(s);
 							p.ProcessorAffinity = (IntPtr)newAffinityMask;
 							p.PriorityClass = ProcessPriorityClass.High;
 						}
 						else
 						{
-							string s = "WoT game client process is using CPU: " + AffinityMask.ToBinary();
+							string s = "WoT game client process uses optimized CPU settings: " + AffinityMask.ToBinary();
 							s += " (" + p.PriorityClass.ToString() + " Priority)";
 							SetStatus2(s);
 						}

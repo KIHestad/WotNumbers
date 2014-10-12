@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 176; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 177; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1808,12 +1808,16 @@ namespace WinApp.Code
 				case 174:
 					Config.Settings.wotGameAffinity = 0;
 					Config.Settings.wotGameFolder = "";
-					Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+					Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.NotConfigured;
 					break;
 				case 175:
 					Config.Settings.wotGameAutoStart = false;
 					break;
 				case 176:
+					break;
+				case 177:
+					Config.Settings.wotGameRunBatchFile = "";
+					Config.SaveConfig(out msg);
 					break;
 
 			}
