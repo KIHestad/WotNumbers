@@ -3986,7 +3986,7 @@ namespace WinApp.Forms
 						}
 					}
 					// Run batch file
-					if (Config.Settings.wotGameRunBatchFile != "" && err == "")
+					if (Config.Settings.wotGameRunBatchFile != "")
 					{
 						if (msg == "")
 							msg = "Starting batch file";
