@@ -535,7 +535,7 @@ namespace WinApp.Forms
 					Convert.ToInt32(drTotBattle["creditsContributionOut"]);
 				avgCost = avgCost / totBattleCount;
 				Image totalCostImg = GetIndicator(totalCost, avgCost, higherIsBest: false);
-				dtCredit.Rows.Add(GetValues(dtCredit, totalCost.ToString(), Math.Round(avgCost,0).ToString(), "Cost", totalCostImg));
+				dtCredit.Rows.Add(GetValues(dtCredit, "-" + totalCost.ToString(), "-" + Math.Round(avgCost,0).ToString(), "Cost", totalCostImg));
 				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Repair", "autoRepairCost", avgBattleCount));
 				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Ammo", "autoLoadCost", avgBattleCount));
 				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Consumables", "autoLoadCost", avgBattleCount));
