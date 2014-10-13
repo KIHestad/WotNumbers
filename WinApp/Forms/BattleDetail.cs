@@ -441,7 +441,7 @@ namespace WinApp.Forms
 				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Tracking", "assistTrack", avgBattleCount));
 				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", avgBattleCount));
 				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", avgBattleCount, false));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", avgBattleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", avgBattleCount, false));
 				// Damage done/received
 				string dmgDoneReceived = "INF";
 				double dmgDR = Convert.ToDouble(drVal["dmgReceived"]);
@@ -480,7 +480,7 @@ namespace WinApp.Forms
 				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Received", "shotsReceived", avgBattleCount, false, decimals: 1));
 				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "piercedReceived", avgBattleCount, false, decimals: 1));
 				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHitsReceived", avgBattleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", avgBattleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", avgBattleCount, false, decimals: 1));
 
 				// Done;
 				dtShooting.AcceptChanges();
