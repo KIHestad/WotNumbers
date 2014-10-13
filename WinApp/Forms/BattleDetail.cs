@@ -37,9 +37,8 @@ namespace WinApp.Forms
 		{
 			// My result
 			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
+			dgvWN8.GridColor = ColorTheme.GridHeaderBackLight;
 			dgvWN8.AllowUserToResizeColumns = false;
-			GridHelper.StyleDataGrid(dgvDamage, DataGridViewSelectionMode.CellSelect);
-			dgvDamage.AllowUserToResizeColumns = false;
 			GetMyPersonalInfo();
 			// Teams
 			string sql = "select id from battlePlayer where battleId=@battleId";
@@ -282,7 +281,7 @@ namespace WinApp.Forms
 				lblWN7.ForeColor = Rating.WN8color(wn7);
 				lblEFF.ForeColor = Rating.WN8color(eff);
 				GetWN8Details();
-				GetDamageDetails();
+				GetStandardGridDetails();
 			}
 		}
 
@@ -325,6 +324,7 @@ namespace WinApp.Forms
 				dtWN8.Columns.Add("Result", typeof(string));
 				dtWN8.Columns.Add("Exp", typeof(string));
 				dtWN8.Columns.Add("Value", typeof(string));
+				
 				// Damage
 				DataRow drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Damage";
@@ -369,7 +369,7 @@ namespace WinApp.Forms
 				dtWN8.AcceptChanges();
 				dgvWN8.DataSource = dtWN8;
 				// Format dgv
-				dgvWN8.Columns[0].HeaderText = "WN8";
+				dgvWN8.Columns[0].HeaderText = "";
 				dgvWN8.Columns[1].HeaderText = "";
 				// Total width = 220
 				dgvWN8.Columns[0].Width = 70;
@@ -395,16 +395,20 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void GetDamageDetails()
+		private void GetStandardGridDetails()
 		{
 			string sql =
-				"SELECT dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived  " +
+				"SELECT dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
+				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
+				"  frags, spotted as spot, cap, def " +
 				"FROM battle " +
 				"WHERE id = @battleId";
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DataTable dtRes = DB.FetchData(sql);
 			sql =
-				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived " +
+				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
+				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
+				"  frags, spot, cap, def " +
 				"FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
 				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
@@ -429,56 +433,97 @@ namespace WinApp.Forms
 				dt.Columns.Add("Image", typeof(Image));
 				dt.Columns.Add("Result", typeof(string));
 				dt.Columns.Add("Average", typeof(string));
-				// Add Rows
-				dt.Rows.Add(GetValues(dt, drVal, drAvg, "To Enemy Tanks", "dmg", battleCount));
-				dt.Rows.Add(GetValues(dt, drVal, drAvg, "By Spotting", "assistSpot", battleCount));
-				dt.Rows.Add(GetValues(dt, drVal, drAvg, "By Tracking", "assistTrack", battleCount));
-				dt.Rows.Add(GetValues(dt, drVal, drAvg, "By Blocking", "dmgBlocked", battleCount));
-				dt.Rows.Add(GetValues(dt, drVal, drAvg, "Received", "dmgReceived", battleCount, false));
-				dt.Rows.Add(GetValues(dt, drVal, drAvg, "Pot Received", "potentialDmgReceived", battleCount));
-
+				
+				// Add Rows to damage grid
+				DataTable dtDamage = dt.Clone();
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Done", "dmg", battleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Spotting", "assistSpot", battleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Tracking", "assistTrack", battleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", battleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", battleCount, false));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", battleCount));
 				// Done;
-				dt.AcceptChanges();
-				DataGridView dgv = dgvDamage;
-				dgv.DataSource = dt;
-				// Format dgv
-				dgv.Columns[0].HeaderText = "Damage";
-				dgv.Columns[1].HeaderText = "";
-				// Total width = 230
-				dgv.Columns[0].Width = 100;
-				dgv.Columns[1].Width = 20;
-				dgv.Columns[2].Width = 50;
-				dgv.Columns[3].Width = 50;
-				dgv.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-				dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-				dgv.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-				dgv.Width = dgv.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 2;
-				dgv.Height = dgv.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + dgv.ColumnHeadersHeight + 2;
-				dgv.Columns[2].DefaultCellStyle.Format = "N0";
-				dgv.Columns[3].DefaultCellStyle.Format = "N0";
-				foreach (DataGridViewColumn dgvc in dgv.Columns)
-				{
-					dgvc.SortMode = DataGridViewColumnSortMode.NotSortable;
-				}
-				dgv.Visible = true;
-				dgv.ClearSelection();
+				dtDamage.AcceptChanges();
+				dgvDamage.DataSource = dtDamage;
+				FormatStandardDataGrid(dgvDamage, "");
+				
+				// Add Rows to shooting grid
+				DataTable dtShooting = dt.Clone();
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Fired", "shots", battleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Hits", "hits", battleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "pierced", battleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHits", battleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Received", "shotsReceived", battleCount, false, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "piercedReceived", battleCount, false, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHitsReceived", battleCount, false, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", battleCount, decimals: 1));
+				// Done;
+				dtShooting.AcceptChanges();
+				dgvShooting.DataSource = dtShooting;
+				FormatStandardDataGrid(dgvShooting, "");
+
+				// Add Rows to shooting grid
+				DataTable dtPerformance = dt.Clone();
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Frags", "frags", battleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Spot", "spot", battleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Cap", "cap", battleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Defence", "def", battleCount, decimals: 1));
+				// Done;
+				dtPerformance.AcceptChanges();
+				dgvPerformance.DataSource = dtPerformance;
+				FormatStandardDataGrid(dgvPerformance, "");
+
+
 			}
 		}
 
-		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int battleCount, bool higherIsBest = true)
+		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int battleCount, bool higherIsBest = true, int decimals = 0)
 		{
 			DataRow drNew = dt.NewRow();
 			drNew["Parameter"] = rowHeader;
 			int val = Convert.ToInt32(drVal[sqlField]);
 			double avg = 0;
-			if (battleCount > 0) avg = Convert.ToInt32(drAvg[sqlField]) / battleCount;
+			if (battleCount > 0) avg = Convert.ToDouble(drAvg[sqlField]) / battleCount;
 			if (higherIsBest)
 				drNew["Image"] = GetIndicator(val, avg, (battleCount > 0));
 			else
 				drNew["Image"] = GetIndicator(avg, val, (battleCount > 0));
 			drNew["Result"] = val.ToString();
-			drNew["Average"] = avg.ToString();
+			drNew["Average"] = Math.Round(avg, decimals).ToString();
 			return drNew;
+		}
+
+		private void FormatStandardDataGrid(DataGridView dgv, string headerText)
+		{
+			// Format dgv
+			GridHelper.StyleDataGrid(dgv, DataGridViewSelectionMode.CellSelect);
+			dgv.GridColor = ColorTheme.GridHeaderBackLight;
+			dgv.AllowUserToResizeColumns = false;
+			// Headers
+			dgv.Columns[0].HeaderText = headerText;
+			dgv.Columns[1].HeaderText = "";
+			// Total width = 230
+			dgv.Columns[0].Width = 100;
+			dgv.Columns[1].Width = 20;
+			dgv.Columns[2].Width = 50;
+			dgv.Columns[3].Width = 50;
+			// Align
+			dgv.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+			dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			dgv.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			// Size
+			dgv.Width = dgv.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 2;
+			dgv.Height = dgv.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + dgv.ColumnHeadersHeight + 2;
+			// Format
+			dgv.Columns[2].DefaultCellStyle.Format = "N0";
+			dgv.Columns[3].DefaultCellStyle.Format = "N0";
+			// No sorting
+			foreach (DataGridViewColumn dgvc in dgv.Columns)
+			{
+				dgvc.SortMode = DataGridViewColumnSortMode.NotSortable;
+			}
+			dgv.Visible = true;
+			dgv.ClearSelection();
 		}
 
 		private Image GetIndicator(double value, double compareTo, bool showIcon = true)
@@ -488,9 +533,9 @@ namespace WinApp.Forms
 			else
 			{
 				int indicator = 1; // neutral
-				if (value > compareTo)
+				if (value > compareTo * 1.025)
 					indicator = 0; // up
-				else if (value < compareTo)
+				else if (value < compareTo * 0.975)
 					indicator = 2; // down
 				return imgIndicators.Images[indicator];
 			}

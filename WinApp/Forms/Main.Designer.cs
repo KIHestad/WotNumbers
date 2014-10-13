@@ -247,7 +247,7 @@
 			this.imageListToolStrip.Images.SetKeyName(7, "tank_new.png");
 			this.imageListToolStrip.Images.SetKeyName(8, "delete.png");
 			this.imageListToolStrip.Images.SetKeyName(9, "iconBattle.png");
-			this.imageListToolStrip.Images.SetKeyName(10, "wn8.png");
+			this.imageListToolStrip.Images.SetKeyName(10, "wn8_ver2.png");
 			// 
 			// imageGrid
 			// 
