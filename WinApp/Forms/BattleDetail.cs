@@ -308,7 +308,7 @@ namespace WinApp.Forms
 				int exp_frags = Convert.ToInt32(dr["expFrags"]) ;
 				int exp_def = Convert.ToInt32(dr["expDef"]);
 				int exp_wr = Convert.ToInt32(dr["expWR"]);
-				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
+				//string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
 				double rWINc;
 				double rDAMAGEc;
 				double rFRAGSc;
@@ -374,8 +374,8 @@ namespace WinApp.Forms
 				// Total width = 220
 				dgvWN8.Columns[0].Width = 70;
 				dgvWN8.Columns[1].Width = 20;
-				dgvWN8.Columns[2].Width = 40;
-				dgvWN8.Columns[3].Width = 40;
+				dgvWN8.Columns[2].Width = 50;
+				dgvWN8.Columns[3].Width = 50;
 				dgvWN8.Columns[4].Width = 50;
 				dgvWN8.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 				dgvWN8.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -398,7 +398,7 @@ namespace WinApp.Forms
 		private void GetStandardGridDetails()
 		{
 			string sql =
-				"SELECT dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
+				"SELECT battlesCount, dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
 				"  frags, spotted as spot, cap, def " +
 				"FROM battle " +
@@ -419,13 +419,13 @@ namespace WinApp.Forms
 				DataRow drVal = dtRes.Rows[0];
 				DataRow drAvg = null;
 				bool avgOK = (dtAvg.Rows.Count > 0);
-				int battleCount = 0;
+				int avgBattleCount = 0;
 				if (avgOK)
 				{
 					drAvg = dtAvg.Rows[0];
 					if (drAvg["battles"] != DBNull.Value)
-						battleCount = Convert.ToInt32(drAvg["battles"]);
-					avgOK = (battleCount > 0);
+						avgBattleCount = Convert.ToInt32(drAvg["battles"]);
+					avgOK = (avgBattleCount > 0);
 				}
 				// Create new datatable to show result
 				DataTable dt = new DataTable();
@@ -436,12 +436,36 @@ namespace WinApp.Forms
 				
 				// Add Rows to damage grid
 				DataTable dtDamage = dt.Clone();
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Done", "dmg", battleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Spotting", "assistSpot", battleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Tracking", "assistTrack", battleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", battleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", battleCount, false));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", battleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Done", "dmg", avgBattleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Spotting", "assistSpot", avgBattleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Tracking", "assistTrack", avgBattleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", avgBattleCount));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", avgBattleCount, false));
+				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", avgBattleCount));
+				// Damage done/received
+				string dmgDoneReceived = "INF";
+				double dmgDR = Convert.ToDouble(drVal["dmgReceived"]);
+				Image dmgDRImage = new Bitmap(1, 1);
+				bool getDmgDRImage = true;
+				if (dmgDR > 0) 
+				{
+					dmgDR = Convert.ToDouble(drVal["dmg"]) / dmgDR;
+					dmgDoneReceived = Math.Round(dmgDR,1).ToString();
+				}
+				else
+					getDmgDRImage = false;
+				string avgDmgDoneReceived = "INF";
+				double avgDmgDR = Convert.ToDouble(drAvg["dmgReceived"]);
+				if (avgDmgDR > 0) 
+				{
+					avgDmgDR = (Convert.ToDouble(drAvg["dmg"]) / avgDmgDR);
+					avgDmgDoneReceived = Math.Round(avgDmgDR,1).ToString();
+				}
+				else
+					getDmgDRImage = false;
+				if (getDmgDRImage) dmgDRImage = GetIndicator(dmgDR, avgDmgDR);
+				dtDamage.Rows.Add(GetValues(dtDamage, dmgDoneReceived, avgDmgDoneReceived, "Dmg Done/Received", dmgDRImage));
+
 				// Done;
 				dtDamage.AcceptChanges();
 				dgvDamage.DataSource = dtDamage;
@@ -449,14 +473,15 @@ namespace WinApp.Forms
 				
 				// Add Rows to shooting grid
 				DataTable dtShooting = dt.Clone();
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Fired", "shots", battleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Hits", "hits", battleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "pierced", battleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHits", battleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Received", "shotsReceived", battleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "piercedReceived", battleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHitsReceived", battleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", battleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Fired", "shots", avgBattleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Hits", "hits", avgBattleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "pierced", avgBattleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHits", avgBattleCount, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Received", "shotsReceived", avgBattleCount, false, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "piercedReceived", avgBattleCount, false, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHitsReceived", avgBattleCount, false, decimals: 1));
+				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", avgBattleCount, decimals: 1));
+
 				// Done;
 				dtShooting.AcceptChanges();
 				dgvShooting.DataSource = dtShooting;
@@ -464,10 +489,10 @@ namespace WinApp.Forms
 
 				// Add Rows to shooting grid
 				DataTable dtPerformance = dt.Clone();
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Frags", "frags", battleCount, decimals: 1));
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Spot", "spot", battleCount, decimals: 1));
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Cap", "cap", battleCount, decimals: 1));
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Defence", "def", battleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Frags", "frags", avgBattleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Spot", "spot", avgBattleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Cap", "cap", avgBattleCount, decimals: 1));
+				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Defence", "def", avgBattleCount, decimals: 1));
 				// Done;
 				dtPerformance.AcceptChanges();
 				dgvPerformance.DataSource = dtPerformance;
@@ -493,6 +518,21 @@ namespace WinApp.Forms
 			return drNew;
 		}
 
+		private DataRow GetValues(DataTable dt, string val, string avg, string rowHeader, Image image)
+		{
+			// Image number:
+			// 0 = higher (green)
+			// 1 = equal (orange)
+			// 2 = lower (red)
+			DataRow drNew = dt.NewRow();
+			drNew["Parameter"] = rowHeader;
+			drNew["Image"] = image;
+			drNew["Result"] = val;
+			drNew["Average"] = avg;
+			return drNew;
+		}
+
+
 		private void FormatStandardDataGrid(DataGridView dgv, string headerText)
 		{
 			// Format dgv
@@ -503,7 +543,7 @@ namespace WinApp.Forms
 			dgv.Columns[0].HeaderText = headerText;
 			dgv.Columns[1].HeaderText = "";
 			// Total width = 230
-			dgv.Columns[0].Width = 100;
+			dgv.Columns[0].Width = 120;
 			dgv.Columns[1].Width = 20;
 			dgv.Columns[2].Width = 50;
 			dgv.Columns[3].Width = 50;

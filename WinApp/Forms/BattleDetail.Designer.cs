@@ -162,7 +162,7 @@
 			this.label10.AutoSize = true;
 			this.label10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label10.Location = new System.Drawing.Point(419, 118);
+			this.label10.Location = new System.Drawing.Point(439, 118);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(67, 13);
 			this.label10.TabIndex = 54;
@@ -183,7 +183,7 @@
 			this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
 			this.pictureBox8.Location = new System.Drawing.Point(279, 113);
 			this.pictureBox8.Name = "pictureBox8";
-			this.pictureBox8.Size = new System.Drawing.Size(222, 22);
+			this.pictureBox8.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox8.TabIndex = 52;
 			this.pictureBox8.TabStop = false;
 			// 
@@ -192,7 +192,7 @@
 			this.label6.AutoSize = true;
 			this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label6.Location = new System.Drawing.Point(166, 313);
+			this.label6.Location = new System.Drawing.Point(186, 292);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(47, 13);
 			this.label6.TabIndex = 51;
@@ -202,7 +202,7 @@
 			// 
 			this.pictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-			this.pictureBox6.Location = new System.Drawing.Point(21, 310);
+			this.pictureBox6.Location = new System.Drawing.Point(21, 289);
 			this.pictureBox6.Name = "pictureBox6";
 			this.pictureBox6.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox6.TabIndex = 50;
@@ -213,7 +213,7 @@
 			this.label5.AutoSize = true;
 			this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label5.Location = new System.Drawing.Point(429, 269);
+			this.label5.Location = new System.Drawing.Point(449, 269);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(49, 13);
 			this.label5.TabIndex = 49;
@@ -234,7 +234,7 @@
 			this.label4.AutoSize = true;
 			this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label4.Location = new System.Drawing.Point(129, 118);
+			this.label4.Location = new System.Drawing.Point(149, 118);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(87, 13);
 			this.label4.TabIndex = 47;
@@ -255,16 +255,16 @@
 			this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
 			this.pictureBox3.Location = new System.Drawing.Point(279, 264);
 			this.pictureBox3.Name = "pictureBox3";
-			this.pictureBox3.Size = new System.Drawing.Size(222, 22);
+			this.pictureBox3.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox3.TabIndex = 44;
 			this.pictureBox3.TabStop = false;
 			// 
 			// pictureBox2
 			// 
 			this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-			this.pictureBox2.Location = new System.Drawing.Point(16, 308);
+			this.pictureBox2.Location = new System.Drawing.Point(16, 287);
 			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(222, 22);
+			this.pictureBox2.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox2.TabIndex = 43;
 			this.pictureBox2.TabStop = false;
 			// 
@@ -273,7 +273,7 @@
 			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
 			this.pictureBox1.Location = new System.Drawing.Point(16, 113);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(222, 22);
+			this.pictureBox1.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox1.TabIndex = 42;
 			this.pictureBox1.TabStop = false;
 			// 
@@ -282,16 +282,16 @@
 			this.dgvWN8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvWN8.Location = new System.Drawing.Point(16, 133);
 			this.dgvWN8.Name = "dgvWN8";
-			this.dgvWN8.Size = new System.Drawing.Size(222, 142);
+			this.dgvWN8.Size = new System.Drawing.Size(242, 135);
 			this.dgvWN8.TabIndex = 36;
 			this.dgvWN8.Visible = false;
 			// 
 			// dgvDamage
 			// 
 			this.dgvDamage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvDamage.Location = new System.Drawing.Point(16, 328);
+			this.dgvDamage.Location = new System.Drawing.Point(16, 307);
 			this.dgvDamage.Name = "dgvDamage";
-			this.dgvDamage.Size = new System.Drawing.Size(222, 142);
+			this.dgvDamage.Size = new System.Drawing.Size(242, 142);
 			this.dgvDamage.TabIndex = 37;
 			this.dgvDamage.Visible = false;
 			// 
@@ -300,7 +300,7 @@
 			this.dgvShooting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvShooting.Location = new System.Drawing.Point(279, 284);
 			this.dgvShooting.Name = "dgvShooting";
-			this.dgvShooting.Size = new System.Drawing.Size(222, 142);
+			this.dgvShooting.Size = new System.Drawing.Size(242, 142);
 			this.dgvShooting.TabIndex = 38;
 			this.dgvShooting.Visible = false;
 			// 
@@ -309,7 +309,7 @@
 			this.dgvPerformance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvPerformance.Location = new System.Drawing.Point(279, 133);
 			this.dgvPerformance.Name = "dgvPerformance";
-			this.dgvPerformance.Size = new System.Drawing.Size(222, 97);
+			this.dgvPerformance.Size = new System.Drawing.Size(242, 97);
 			this.dgvPerformance.TabIndex = 39;
 			this.dgvPerformance.Visible = false;
 			// 

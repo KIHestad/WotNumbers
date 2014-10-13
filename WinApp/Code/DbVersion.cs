@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 177; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 178; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1721,9 +1721,6 @@ namespace WinApp.Code
 				case 165:
 					RunWotApi = true;
 					break;
-				case 166:
-					RunRecalcBattleWN8 = true;
-					break;
 				case 167:
 					mssql =
 						"CREATE TABLE battlePlayer ( " +
@@ -1818,6 +1815,9 @@ namespace WinApp.Code
 				case 177:
 					Config.Settings.wotGameRunBatchFile = "";
 					Config.SaveConfig(out msg);
+					break;
+				case 178:
+					RunRecalcBattleWN8 = true;
 					break;
 
 			}

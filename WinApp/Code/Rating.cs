@@ -108,7 +108,7 @@ namespace WinApp.Code
 				double expDef = Convert.ToDouble(tankInfo["expDef"]) * battleCount;
 				double expWinRate = Convert.ToDouble(tankInfo["expWR"]);
 				// Use WN8 formula to calculate result
-				WN8 = UseWN8Formula(dmg, spotted, frags, def, avgWinRate, expDmg, expSpot, expFrag, expDef, expWinRate);
+				WN8 = UseWN8Formula(dmg * battleCount, spotted * battleCount, frags * battleCount, def * battleCount, avgWinRate, expDmg, expSpot, expFrag, expDef, expWinRate);
 			}
 			return WN8;
 		}
