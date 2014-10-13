@@ -339,8 +339,8 @@ namespace WinApp.Code
 								List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
 								JToken token_players = token_root["players"];
 								// Get values to save to battle
-								int enemyClanDBID = 0;
-								string enemyClanAbbrev = "";
+								int[] enemyClanDBID = new int[3];
+								string[] enemyClanAbbrev = new string[3];
 								int playerFortResources = 0;
 								int[] teamFortResources = new int[3];
 								teamFortResources[1] = 0;
@@ -367,10 +367,23 @@ namespace WinApp.Code
 									newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
 									battlePlayers.Add(newPlayer);
 									// Get values for saving to battle
-									if (getEnemyClan && newPlayer.clanDBID > 0 && enemyClanDBID == -1)
+									if (getEnemyClan && newPlayer.clanDBID > 0)
 									{
-										enemyClanDBID = newPlayer.clanDBID;
-										enemyClanAbbrev = newPlayer.clanAbbrev;
+										// Found player with clan, continue and check that all enemy players belongs to same clan, if not cancel
+										if (enemyClanDBID[newPlayer.team] == 0)
+										{
+											// First player clan found, fetch it
+											enemyClanDBID[newPlayer.team] = newPlayer.clanDBID;
+											enemyClanAbbrev[newPlayer.team] = newPlayer.clanAbbrev;
+										}
+										else if (enemyClanDBID[newPlayer.team] != newPlayer.clanDBID)
+										{
+											// Found a different clan, cancel
+											getEnemyClan = false;
+											enemyClanDBID[newPlayer.team] = 0;
+											enemyClanAbbrev[newPlayer.team] = "";
+										}
+										
 									}
 									if (getPlatoon && newPlayer.platoonID > 0)
 									{
@@ -515,15 +528,15 @@ namespace WinApp.Code
 									"  battleResultMode=@battleResultMode " +
 									"where id=@battleId;";
 								// Clan info
-								if (!getEnemyClan || enemyClanDBID == 0)
+								if (!getEnemyClan || enemyClanDBID[enemyTeam] == 0)
 								{
 									DB.AddWithValue(ref sql, "@enemyClanAbbrev", DBNull.Value, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@enemyClanDBID", DBNull.Value, DB.SqlDataType.Int);
 								}
 								else
 								{
-									DB.AddWithValue(ref sql, "@enemyClanAbbrev", enemyClanAbbrev, DB.SqlDataType.VarChar);
-									DB.AddWithValue(ref sql, "@enemyClanDBID", enemyClanDBID, DB.SqlDataType.Int);
+									DB.AddWithValue(ref sql, "@enemyClanAbbrev", enemyClanAbbrev[enemyTeam], DB.SqlDataType.VarChar);
+									DB.AddWithValue(ref sql, "@enemyClanDBID", enemyClanDBID[enemyTeam], DB.SqlDataType.Int);
 								}
 								// Industrial Resources
 								if (!getFortResource)
