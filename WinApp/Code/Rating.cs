@@ -29,7 +29,7 @@ namespace WinApp.Code
 
 		#region WN8
 
-		public static double CalcBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
+		public static double CalcAvgBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double WN8 = 0;
 			// Create an empty datatable with all tanks, no values
@@ -88,7 +88,7 @@ namespace WinApp.Code
 			}
 			return WN8;
 		}
-
+				
 		public static double CalculateTankWN8(int tankId, double battleCount, double dmg, double spotted, double frags, double def, double wins, bool WN8WRx = false)
 		{
 			Double WN8 = 0;

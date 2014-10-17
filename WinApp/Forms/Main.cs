@@ -2157,7 +2157,7 @@ namespace WinApp.Forms
 								}
 								if (count > 0)
 									if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-										rowAverage[colListItem.name] = Rating.CalcBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter);
+										rowAverage[colListItem.name] = Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
 										rowAverage[colListItem.name] = Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
@@ -2778,12 +2778,12 @@ namespace WinApp.Forms
 				double spotted = Convert.ToInt32(dr["spotted"]) ;
 				double frags = Convert.ToInt32(dr["frags"]) ;
 				double def = Convert.ToInt32(dr["def"]) ;
-				int exp_dmg = Convert.ToInt32(dr["expDmg"]) * battlesCount;
-				int exp_spotted = Convert.ToInt32(dr["expSpot"]) * battlesCount;
-				int exp_frags = Convert.ToInt32(dr["expFrags"]) * battlesCount;
-				int exp_def = Convert.ToInt32(dr["expDef"]) * battlesCount;
+				int exp_dmg = Convert.ToInt32(dr["expDmg"]) ;
+				int exp_spotted = Convert.ToInt32(dr["expSpot"]) ;
+				int exp_frags = Convert.ToInt32(dr["expFrags"]) ;
+				int exp_def = Convert.ToInt32(dr["expDef"]) ;
 				int exp_wr = Convert.ToInt32(dr["expWR"]);
-				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
+				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, 1, dmg, spotted, frags, def, 0, true), 0).ToString();
 				double rWINc;
 				double rDAMAGEc;
 				double rFRAGSc;

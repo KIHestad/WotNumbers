@@ -65,7 +65,7 @@ namespace WinApp.Forms
 				double frags = Convert.ToDouble(dr["frags"]);
 				double def = Convert.ToDouble(dr["def"]);
 				double wins = Convert.ToDouble(dr["victory"]);
-				double WN8 = Math.Round(Rating.CalculateTankWN8(tankId, battleCount, dmg, spotted, frags, def, wins, true),0);
+				double WN8 = Math.Round(Rating.CalculateTankWN8(tankId, 1, dmg, spotted, frags, def, wins, true),0);
 				string newSQL = "update battle set wn8=@wn8 where id=@id;";
 				DB.AddWithValue(ref newSQL, "@wn8", WN8, DB.SqlDataType.Int);
 				DB.AddWithValue(ref newSQL, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);

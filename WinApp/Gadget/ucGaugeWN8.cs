@@ -90,7 +90,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				end_val = Rating.CalcBattleWN8(battleTimeFilter, battleRevert);			
+				end_val = Rating.CalcAvgBattleWN8(battleTimeFilter, battleRevert);			
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();
