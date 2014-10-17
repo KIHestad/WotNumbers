@@ -117,7 +117,8 @@ namespace WinApp.Gadget
 			{
 				frags = Convert.ToDouble(dt.Rows[0]["frags"]);
 				kills = Convert.ToDouble(dt.Rows[0]["kills"]);
-				end_val = Math.Round((frags / kills), 2);
+				if (kills > 0)
+					end_val = Math.Round((frags / kills), 2);
 			}
 			lblLeft.Text = frags.ToString("N0");
 			lblRight.Text = kills.ToString("N0");

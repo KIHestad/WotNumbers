@@ -29,7 +29,7 @@ namespace WinApp.Code
 
 		#region WN8
 
-		public static double CalcBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "")
+		public static double CalcBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double WN8 = 0;
 			// Create an empty datatable with all tanks, no values
@@ -51,7 +51,7 @@ namespace WinApp.Code
 				"  def, cap, tank.tier as tier , victory as wins, tank.id as tankId " +
 				"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
 				"  tank on playerTank.tankId = tank.id " +
-				"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " order by battleTime DESC";
+				"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DataTable dtBattles = DB.FetchData(sql);
@@ -108,7 +108,7 @@ namespace WinApp.Code
 				double expDef = Convert.ToDouble(tankInfo["expDef"]) * battleCount;
 				double expWinRate = Convert.ToDouble(tankInfo["expWR"]);
 				// Use WN8 formula to calculate result
-				WN8 = UseWN8Formula(dmg * battleCount, spotted * battleCount, frags * battleCount, def * battleCount, avgWinRate, expDmg, expSpot, expFrag, expDef, expWinRate);
+				WN8 = UseWN8Formula(dmg ,spotted ,frags ,def ,avgWinRate, expDmg, expSpot, expFrag, expDef, expWinRate);
 			}
 			return WN8;
 		}
@@ -267,7 +267,7 @@ namespace WinApp.Code
 
 		#region WN7
 
-		public static double CalcBattleWN7(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "")
+		public static double CalcBattleWN7(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double WN7 = 0;
 			string sql =
@@ -275,7 +275,7 @@ namespace WinApp.Code
 					"  def, cap, tank.tier as tier , victory as wins " +
 					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
 					"  tank on playerTank.tankId = tank.id " +
-					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " order by battleTime DESC";
+					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DataTable dtBattles = DB.FetchData(sql);
@@ -344,7 +344,7 @@ namespace WinApp.Code
 
 		#region EFF
 
-		public static double CalcBattleEFF(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "")
+		public static double CalcBattleEFF(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double EFF = 0;
 			string sql =
@@ -352,7 +352,7 @@ namespace WinApp.Code
 					"  def, cap, tank.tier as tier , victory as wins " +
 					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
 					"  tank on playerTank.tankId = tank.id " +
-					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " order by battleTime DESC";
+					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
 			DataTable dtBattles = DB.FetchData(sql);

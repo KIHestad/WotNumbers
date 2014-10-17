@@ -549,7 +549,7 @@ namespace WinApp.Forms
 				dgvCredit.DataSource = dtCredit;
 				FormatStandardDataGrid(dgvCredit, "");
 
-				// Add Rows to shooting grid
+				// Add Rows to XP grid
 				DataTable dtXP = dt.Clone();
 				dtXP.Rows.Add(GetValues(dtXP, drVal, drAvg, "Test", "frags", avgBattleCount, decimals: 1));
 				dtXP.Rows.Add(GetValues(dtXP, drVal, drAvg, "Test", "spot", avgBattleCount, decimals: 1));
