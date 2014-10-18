@@ -401,9 +401,9 @@ namespace WinApp.Forms
 			string sql =
 				"SELECT battlesCount, dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spotted as spot, cap, def, " +
+				"  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, " +
 				"  credits, creditsPenalty, creditsContributionIn, creditsContributionOut, creditsToDraw, autoRepairCost, autoLoadCost, autoEquipCost, " +
-				"    eventCredits , originalCredits, creditsNet, achievementCredits, premiumCreditsFactor10, " +
+				"    eventCredits , originalCredits, creditsNet, achievementCredits, premiumCreditsFactor10, dailyXPFactorTxt, " +
 				"  real_xp, xpPenalty, freeXP, dailyXPFactor10, premiumXPFactor10, eventXP, eventFreeXP, eventTMenXP, achievementXP, achievementFreeXP " +
 				"FROM battle " +
 				"WHERE id = @battleId";
@@ -413,23 +413,13 @@ namespace WinApp.Forms
 			sql =
 				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spot, cap, def " +
+				"  frags, spot, cap, def, mileage, treesCut " +
 				"FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
 				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode and playerTank.playerId=@playerId ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
 			DataTable dtAvg = DB.FetchData(sql);
-			// All tank battle results
-			sql =
-				"SELECT SUM(battlesCount) as battles, SUM(credits) as credits, SUM(creditsNet) as creditsNet, " +
-				"   SUM(autoRepairCost) as autoRepairCost, SUM(autoLoadCost) as autoLoadCost, SUM(autoEquipCost) as autoEquipCost, SUM(creditsContributionOut) as creditsContributionOut " +
-				"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
-				"WHERE playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
-			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
-			DataTable dtTotBattle = DB.FetchData(sql);
 			if (dtRes.Rows.Count > 0)
 			{
 				DataRow drVal = dtRes.Rows[0];
@@ -443,8 +433,6 @@ namespace WinApp.Forms
 						avgBattleCount = Convert.ToInt32(drAvg["battles"]);
 					avgOK = (avgBattleCount > 0);
 				}
-				DataRow drTotBattle = dtTotBattle.Rows[0];
-				double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
 				// Create new datatable to show result
 				DataTable dt = new DataTable();
 				dt.Columns.Add("Parameter", typeof(string));
@@ -468,7 +456,7 @@ namespace WinApp.Forms
 				if (dmgDR > 0) 
 				{
 					dmgDR = Convert.ToDouble(drVal["dmg"]) / dmgDR;
-					dmgDoneReceived = Math.Round(dmgDR,1).ToString();
+					dmgDoneReceived = Math.Round(dmgDR,1).ToString("# ### ##0.0");
 				}
 				else
 					getDmgDRImage = false;
@@ -477,7 +465,7 @@ namespace WinApp.Forms
 				if (avgDmgDR > 0) 
 				{
 					avgDmgDR = (Convert.ToDouble(drAvg["dmg"]) / avgDmgDR);
-					avgDmgDoneReceived = Math.Round(avgDmgDR,1).ToString();
+					avgDmgDoneReceived = Math.Round(avgDmgDR,1).ToString("# ### ##0.0");
 				}
 				else
 					getDmgDRImage = false;
@@ -516,49 +504,93 @@ namespace WinApp.Forms
 				dgvPerformance.DataSource = dtPerformance;
 				FormatStandardDataGrid(dgvPerformance, "");
 
-				// Add Rows to credit grid
-				DataTable dtCredit = dt.Clone();
-				dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Income", "credits", Convert.ToInt32(totBattleCount)));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Mission", "eventCredits", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Achievement", "achievementCredits", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "creditsToDraw", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "creditsContributionIn", "creditsContributionIn", avgBattleCount));
-				double totalCost = 
-					Convert.ToInt32(drVal["autoRepairCost"]) + 
-					Convert.ToInt32(drVal["autoLoadCost"]) +
-					Convert.ToInt32(drVal["autoEquipCost"]) +
-					Convert.ToInt32(drVal["creditsContributionOut"]);
-				double avgCost = 
-					Convert.ToInt32(drTotBattle["autoRepairCost"]) +
-					Convert.ToInt32(drTotBattle["autoLoadCost"]) +
-					Convert.ToInt32(drTotBattle["autoEquipCost"]) +
-					Convert.ToInt32(drTotBattle["creditsContributionOut"]);
-				avgCost = avgCost / totBattleCount;
-				Image totalCostImg = GetIndicator(totalCost, avgCost, higherIsBest: false);
-				dtCredit.Rows.Add(GetValues(dtCredit, "-" + totalCost.ToString(), "-" + Math.Round(avgCost,0).ToString(), "Cost", totalCostImg));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Repair", "autoRepairCost", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Ammo", "autoLoadCost", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Consumables", "autoLoadCost", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "autoEquipCost", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   creditsContributionOut", "creditsContributionOut", avgBattleCount));
-				dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Result", "creditsNet", Convert.ToInt32(totBattleCount)));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "originalCredits", "originalCredits", avgBattleCount));
-				//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "premiumCreditsFactor10", "premiumCreditsFactor10", avgBattleCount));
+				// Add Rows to other reslut grid
+				DataTable dtOther = dt.Clone();
+				dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Drive distance (m)", "mileage", avgBattleCount));
+				dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Trees Cut", "treesCut", avgBattleCount, decimals: 1));
 				// Done;
-				dtCredit.AcceptChanges();
-				dgvCredit.DataSource = dtCredit;
-				FormatStandardDataGrid(dgvCredit, "");
+				dtOther.AcceptChanges();
+				dgvOther.DataSource = dtOther;
+				FormatStandardDataGrid(dgvOther, "");
 
-				// Add Rows to XP grid
-				DataTable dtXP = dt.Clone();
-				dtXP.Rows.Add(GetValues(dtXP, drVal, drAvg, "Test", "frags", avgBattleCount, decimals: 1));
-				dtXP.Rows.Add(GetValues(dtXP, drVal, drAvg, "Test", "spot", avgBattleCount, decimals: 1));
-				dtXP.Rows.Add(GetValues(dtXP, drVal, drAvg, "Test", "cap", avgBattleCount, decimals: 1));
-				dtXP.Rows.Add(GetValues(dtXP, drVal, drAvg, "Test", "def", avgBattleCount, decimals: 1));
-				// Done;
-				dtXP.AcceptChanges();
-				dgvXP.DataSource = dtXP;
-				FormatStandardDataGrid(dgvXP, "");
+				// Enhanced battle result
+				if (drVal["arenaUniqueID"] == DBNull.Value)
+				{
+					// not fetched battle result
+					pictureBoxCredits.Visible = false;
+					pictureBoxCreditsBack.Visible = false;
+					lblCredits.Visible = false;
+					pictureBoxXP.Visible = false;
+					pictureBoxXPBack.Visible = false;
+					lblXP.Visible = false;
+				}
+				else
+				{
+					// All battle results for this tank
+					sql =
+						"SELECT SUM(battlesCount) as battles, SUM(credits) as credits, SUM(creditsNet) as creditsNet, " +
+						"   SUM(autoRepairCost) as autoRepairCost, SUM(autoLoadCost) as autoLoadCost, SUM(autoEquipCost) as autoEquipCost, SUM(creditsContributionOut) as creditsContributionOut, " +
+						"  SUM(real_xp) as real_xp, SUM(xpPenalty) as xpPenalty, SUM(freeXP) as freeXP, SUM(eventXP) as eventXP, SUM(eventFreeXP) as eventFreeXP, SUM(eventTMenXP) as eventTMenXP, " +
+						"  SUM(achievementXP) as achievementXP, SUM(achievementFreeXP) as achievementFreeXP " +
+						"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
+						"WHERE playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
+					DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+					DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
+					DataTable dtTotBattle = DB.FetchData(sql);
+					DataRow drTotBattle = dtTotBattle.Rows[0];
+					double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
+				
+					// Add Rows to credit grid
+					DataTable dtCredit = dt.Clone();
+					dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Income", "credits", Convert.ToInt32(totBattleCount)));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Mission", "eventCredits", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Achievement", "achievementCredits", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "creditsToDraw", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "creditsContributionIn", "creditsContributionIn", avgBattleCount));
+					double totalCost =
+						Convert.ToInt32(drVal["autoRepairCost"]) +
+						Convert.ToInt32(drVal["autoLoadCost"]) +
+						Convert.ToInt32(drVal["autoEquipCost"]) +
+						Convert.ToInt32(drVal["creditsContributionOut"]);
+					double avgCost =
+						Convert.ToInt32(drTotBattle["autoRepairCost"]) +
+						Convert.ToInt32(drTotBattle["autoLoadCost"]) +
+						Convert.ToInt32(drTotBattle["autoEquipCost"]) +
+						Convert.ToInt32(drTotBattle["creditsContributionOut"]);
+					avgCost = avgCost / totBattleCount;
+					Image totalCostImg = GetIndicator(totalCost, avgCost, higherIsBest: false);
+					dtCredit.Rows.Add(GetValues(dtCredit, "-" + totalCost.ToString("# ### ###"), "-" + Math.Round(avgCost, 0).ToString("# ### ###"), "Cost", totalCostImg));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Repair", "autoRepairCost", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Ammo", "autoLoadCost", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Consumables", "autoLoadCost", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "autoEquipCost", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   creditsContributionOut", "creditsContributionOut", avgBattleCount));
+					dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Result", "creditsNet", Convert.ToInt32(totBattleCount)));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "originalCredits", "originalCredits", avgBattleCount));
+					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "premiumCreditsFactor10", "premiumCreditsFactor10", avgBattleCount));
+					// Done;
+					dtCredit.AcceptChanges();
+					dgvCredit.DataSource = dtCredit;
+					FormatStandardDataGrid(dgvCredit, "");
+
+					// Show multiplier
+					string multiplier = drVal["dailyXPFactorTxt"].ToString().Replace(" ", "");
+					if (multiplier != "1X")
+						lblXP.Text = "XP (" + multiplier + ")";
+					// Add Rows to XP grid
+					DataTable dtXP = dt.Clone();
+					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Total XP", "real_xp", Convert.ToInt32(totBattleCount)));
+					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventXP", Convert.ToInt32(totBattleCount)));
+					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Fine for causing dmg", "xpPenalty", Convert.ToInt32(totBattleCount), higherIsBest: false));
+					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Free XP", "freeXP", Convert.ToInt32(totBattleCount)));
+					//dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventFreeXP", Convert.ToInt32(totBattleCount)));
+					// Done;
+					dtXP.AcceptChanges();
+					dgvXP.DataSource = dtXP;
+					FormatStandardDataGrid(dgvXP, "");
+				}
+				
 			}
 		}
 
@@ -570,8 +602,11 @@ namespace WinApp.Forms
 			double avg = 0;
 			if (battleCount > 0) avg = Convert.ToDouble(drAvg[sqlField]) / battleCount;
 			drNew["Image"] = GetIndicator(val, avg, (battleCount > 0), higherIsBest: higherIsBest);
-			drNew["Result"] = val.ToString();
-			drNew["Average"] = Math.Round(avg, decimals).ToString();
+			drNew["Result"] = val.ToString("# ### ##0");
+			string numFormat = "# ### ##0";
+			if (decimals > 0)
+				numFormat += ".0";
+			drNew["Average"] = Math.Round(avg, decimals).ToString(numFormat);
 			return drNew;
 		}
 
@@ -584,7 +619,7 @@ namespace WinApp.Forms
 			DataRow drNew = dt.NewRow();
 			drNew["Parameter"] = rowHeader;
 			drNew["Image"] = image;
-			drNew["Result"] = val;
+			drNew["Result"] = val; 
 			drNew["Average"] = avg;
 			return drNew;
 		}

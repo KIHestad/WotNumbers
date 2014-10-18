@@ -218,7 +218,7 @@ namespace WinApp.Forms
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
 						//TODO: Temp remove features
-						//dataGridMainPopup_BattleDetails,
+						dataGridMainPopup_BattleDetails,
 						dataGridMainPopup_WN8,
 						dataGridMainPopup_Separator4,
 						dataGridMainPopup_TankDetails, 
@@ -286,8 +286,8 @@ namespace WinApp.Forms
 			try
 			{
 				//TODO: Remove temp features
-				mWoT.Visible = false;
-				mWoTStartGameSettings.Visible = false;
+				//mWoT.Visible = false;
+				//mWoTStartGameSettings.Visible = false;
 
 				
 				

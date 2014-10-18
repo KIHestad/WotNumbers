@@ -37,13 +37,17 @@
 			this.label11 = new System.Windows.Forms.Label();
 			this.pictureBox9 = new System.Windows.Forms.PictureBox();
 			this.pictureBox10 = new System.Windows.Forms.PictureBox();
-			this.label12 = new System.Windows.Forms.Label();
+			this.dgvOther = new System.Windows.Forms.DataGridView();
+			this.lblCredits = new System.Windows.Forms.Label();
+			this.pictureBoxCredits = new System.Windows.Forms.PictureBox();
+			this.pictureBoxCreditsBack = new System.Windows.Forms.PictureBox();
+			this.lblXP = new System.Windows.Forms.Label();
 			this.dgvCredit = new System.Windows.Forms.DataGridView();
 			this.label10 = new System.Windows.Forms.Label();
-			this.pictureBox11 = new System.Windows.Forms.PictureBox();
+			this.pictureBoxXP = new System.Windows.Forms.PictureBox();
 			this.pictureBox7 = new System.Windows.Forms.PictureBox();
 			this.pictureBox8 = new System.Windows.Forms.PictureBox();
-			this.pictureBox12 = new System.Windows.Forms.PictureBox();
+			this.pictureBoxXPBack = new System.Windows.Forms.PictureBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.pictureBox6 = new System.Windows.Forms.PictureBox();
 			this.dgvXP = new System.Windows.Forms.DataGridView();
@@ -87,11 +91,14 @@
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvOther)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxCredits)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxCreditsBack)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvCredit)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxXP)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxXPBack)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvXP)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
@@ -135,7 +142,7 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(877, 747);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(877, 596);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
@@ -152,13 +159,17 @@
 			this.panel1.Controls.Add(this.label11);
 			this.panel1.Controls.Add(this.pictureBox9);
 			this.panel1.Controls.Add(this.pictureBox10);
-			this.panel1.Controls.Add(this.label12);
+			this.panel1.Controls.Add(this.dgvOther);
+			this.panel1.Controls.Add(this.lblCredits);
+			this.panel1.Controls.Add(this.pictureBoxCredits);
+			this.panel1.Controls.Add(this.pictureBoxCreditsBack);
+			this.panel1.Controls.Add(this.lblXP);
 			this.panel1.Controls.Add(this.dgvCredit);
 			this.panel1.Controls.Add(this.label10);
-			this.panel1.Controls.Add(this.pictureBox11);
+			this.panel1.Controls.Add(this.pictureBoxXP);
 			this.panel1.Controls.Add(this.pictureBox7);
 			this.panel1.Controls.Add(this.pictureBox8);
-			this.panel1.Controls.Add(this.pictureBox12);
+			this.panel1.Controls.Add(this.pictureBoxXPBack);
 			this.panel1.Controls.Add(this.label6);
 			this.panel1.Controls.Add(this.pictureBox6);
 			this.panel1.Controls.Add(this.dgvXP);
@@ -176,7 +187,7 @@
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Location = new System.Drawing.Point(26, 64);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(825, 652);
+			this.panel1.Size = new System.Drawing.Size(825, 501);
 			this.panel1.TabIndex = 6;
 			// 
 			// label11
@@ -186,9 +197,9 @@
 			this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
 			this.label11.Location = new System.Drawing.Point(737, 118);
 			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(39, 13);
-			this.label11.TabIndex = 62;
-			this.label11.Text = "Credits";
+			this.label11.Size = new System.Drawing.Size(40, 13);
+			this.label11.TabIndex = 66;
+			this.label11.Text = "Driving";
 			// 
 			// pictureBox9
 			// 
@@ -197,7 +208,7 @@
 			this.pictureBox9.Location = new System.Drawing.Point(571, 115);
 			this.pictureBox9.Name = "pictureBox9";
 			this.pictureBox9.Size = new System.Drawing.Size(42, 42);
-			this.pictureBox9.TabIndex = 61;
+			this.pictureBox9.TabIndex = 65;
 			this.pictureBox9.TabStop = false;
 			// 
 			// pictureBox10
@@ -206,26 +217,65 @@
 			this.pictureBox10.Location = new System.Drawing.Point(566, 113);
 			this.pictureBox10.Name = "pictureBox10";
 			this.pictureBox10.Size = new System.Drawing.Size(242, 22);
-			this.pictureBox10.TabIndex = 60;
+			this.pictureBox10.TabIndex = 64;
 			this.pictureBox10.TabStop = false;
 			// 
-			// label12
+			// dgvOther
 			// 
-			this.label12.AutoSize = true;
-			this.label12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-			this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label12.Location = new System.Drawing.Point(747, 269);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(21, 13);
-			this.label12.TabIndex = 59;
-			this.label12.Text = "XP";
+			this.dgvOther.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvOther.Location = new System.Drawing.Point(566, 133);
+			this.dgvOther.Name = "dgvOther";
+			this.dgvOther.Size = new System.Drawing.Size(242, 67);
+			this.dgvOther.TabIndex = 63;
+			this.dgvOther.Visible = false;
+			// 
+			// lblCredits
+			// 
+			this.lblCredits.AutoSize = true;
+			this.lblCredits.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.lblCredits.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
+			this.lblCredits.Location = new System.Drawing.Point(737, 225);
+			this.lblCredits.Name = "lblCredits";
+			this.lblCredits.Size = new System.Drawing.Size(39, 13);
+			this.lblCredits.TabIndex = 62;
+			this.lblCredits.Text = "Credits";
+			// 
+			// pictureBoxCredits
+			// 
+			this.pictureBoxCredits.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.pictureBoxCredits.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCredits.Image")));
+			this.pictureBoxCredits.Location = new System.Drawing.Point(571, 222);
+			this.pictureBoxCredits.Name = "pictureBoxCredits";
+			this.pictureBoxCredits.Size = new System.Drawing.Size(42, 42);
+			this.pictureBoxCredits.TabIndex = 61;
+			this.pictureBoxCredits.TabStop = false;
+			// 
+			// pictureBoxCreditsBack
+			// 
+			this.pictureBoxCreditsBack.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCreditsBack.Image")));
+			this.pictureBoxCreditsBack.Location = new System.Drawing.Point(566, 220);
+			this.pictureBoxCreditsBack.Name = "pictureBoxCreditsBack";
+			this.pictureBoxCreditsBack.Size = new System.Drawing.Size(242, 22);
+			this.pictureBoxCreditsBack.TabIndex = 60;
+			this.pictureBoxCreditsBack.TabStop = false;
+			// 
+			// lblXP
+			// 
+			this.lblXP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.lblXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
+			this.lblXP.Location = new System.Drawing.Point(719, 355);
+			this.lblXP.Name = "lblXP";
+			this.lblXP.Size = new System.Drawing.Size(73, 17);
+			this.lblXP.TabIndex = 59;
+			this.lblXP.Text = "XP";
+			this.lblXP.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// dgvCredit
 			// 
 			this.dgvCredit.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvCredit.Location = new System.Drawing.Point(566, 133);
+			this.dgvCredit.Location = new System.Drawing.Point(566, 240);
 			this.dgvCredit.Name = "dgvCredit";
-			this.dgvCredit.Size = new System.Drawing.Size(242, 97);
+			this.dgvCredit.Size = new System.Drawing.Size(242, 88);
 			this.dgvCredit.TabIndex = 56;
 			this.dgvCredit.Visible = false;
 			// 
@@ -240,15 +290,15 @@
 			this.label10.TabIndex = 54;
 			this.label10.Text = "Performance";
 			// 
-			// pictureBox11
+			// pictureBoxXP
 			// 
-			this.pictureBox11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-			this.pictureBox11.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox11.Image")));
-			this.pictureBox11.Location = new System.Drawing.Point(571, 266);
-			this.pictureBox11.Name = "pictureBox11";
-			this.pictureBox11.Size = new System.Drawing.Size(42, 42);
-			this.pictureBox11.TabIndex = 58;
-			this.pictureBox11.TabStop = false;
+			this.pictureBoxXP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			this.pictureBoxXP.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxXP.Image")));
+			this.pictureBoxXP.Location = new System.Drawing.Point(571, 352);
+			this.pictureBoxXP.Name = "pictureBoxXP";
+			this.pictureBoxXP.Size = new System.Drawing.Size(42, 42);
+			this.pictureBoxXP.TabIndex = 58;
+			this.pictureBoxXP.TabStop = false;
 			// 
 			// pictureBox7
 			// 
@@ -269,14 +319,14 @@
 			this.pictureBox8.TabIndex = 52;
 			this.pictureBox8.TabStop = false;
 			// 
-			// pictureBox12
+			// pictureBoxXPBack
 			// 
-			this.pictureBox12.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox12.Image")));
-			this.pictureBox12.Location = new System.Drawing.Point(566, 264);
-			this.pictureBox12.Name = "pictureBox12";
-			this.pictureBox12.Size = new System.Drawing.Size(242, 22);
-			this.pictureBox12.TabIndex = 57;
-			this.pictureBox12.TabStop = false;
+			this.pictureBoxXPBack.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxXPBack.Image")));
+			this.pictureBoxXPBack.Location = new System.Drawing.Point(566, 351);
+			this.pictureBoxXPBack.Name = "pictureBoxXPBack";
+			this.pictureBoxXPBack.Size = new System.Drawing.Size(242, 22);
+			this.pictureBoxXPBack.TabIndex = 57;
+			this.pictureBoxXPBack.TabStop = false;
 			// 
 			// label6
 			// 
@@ -302,9 +352,9 @@
 			// dgvXP
 			// 
 			this.dgvXP.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvXP.Location = new System.Drawing.Point(566, 284);
+			this.dgvXP.Location = new System.Drawing.Point(566, 372);
 			this.dgvXP.Name = "dgvXP";
-			this.dgvXP.Size = new System.Drawing.Size(242, 142);
+			this.dgvXP.Size = new System.Drawing.Size(242, 101);
 			this.dgvXP.TabIndex = 55;
 			this.dgvXP.Visible = false;
 			// 
@@ -382,7 +432,7 @@
 			this.dgvWN8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvWN8.Location = new System.Drawing.Point(16, 133);
 			this.dgvWN8.Name = "dgvWN8";
-			this.dgvWN8.Size = new System.Drawing.Size(242, 135);
+			this.dgvWN8.Size = new System.Drawing.Size(242, 131);
 			this.dgvWN8.TabIndex = 36;
 			this.dgvWN8.Visible = false;
 			// 
@@ -391,7 +441,7 @@
 			this.dgvDamage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvDamage.Location = new System.Drawing.Point(16, 306);
 			this.dgvDamage.Name = "dgvDamage";
-			this.dgvDamage.Size = new System.Drawing.Size(242, 142);
+			this.dgvDamage.Size = new System.Drawing.Size(242, 167);
 			this.dgvDamage.TabIndex = 37;
 			this.dgvDamage.Visible = false;
 			// 
@@ -400,7 +450,7 @@
 			this.dgvShooting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvShooting.Location = new System.Drawing.Point(291, 284);
 			this.dgvShooting.Name = "dgvShooting";
-			this.dgvShooting.Size = new System.Drawing.Size(242, 142);
+			this.dgvShooting.Size = new System.Drawing.Size(242, 189);
 			this.dgvShooting.TabIndex = 38;
 			this.dgvShooting.Visible = false;
 			// 
@@ -409,7 +459,7 @@
 			this.dgvPerformance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvPerformance.Location = new System.Drawing.Point(291, 133);
 			this.dgvPerformance.Name = "dgvPerformance";
-			this.dgvPerformance.Size = new System.Drawing.Size(242, 97);
+			this.dgvPerformance.Size = new System.Drawing.Size(242, 109);
 			this.dgvPerformance.TabIndex = 39;
 			this.dgvPerformance.Visible = false;
 			// 
@@ -706,7 +756,7 @@
 			this.grpMain.Image = null;
 			this.grpMain.Location = new System.Drawing.Point(25, 56);
 			this.grpMain.Name = "grpMain";
-			this.grpMain.Size = new System.Drawing.Size(827, 662);
+			this.grpMain.Size = new System.Drawing.Size(827, 511);
 			this.grpMain.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -714,7 +764,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(877, 747);
+			this.ClientSize = new System.Drawing.Size(877, 596);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(877, 575);
@@ -730,11 +780,14 @@
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvOther)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxCredits)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxCreditsBack)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvCredit)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxXP)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxXPBack)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvXP)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
@@ -800,13 +853,17 @@
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.PictureBox pictureBox7;
 		private System.Windows.Forms.PictureBox pictureBox8;
+		private System.Windows.Forms.Label lblCredits;
+		private System.Windows.Forms.PictureBox pictureBoxCredits;
+		private System.Windows.Forms.PictureBox pictureBoxCreditsBack;
+		private System.Windows.Forms.Label lblXP;
+		private System.Windows.Forms.PictureBox pictureBoxXP;
+		private System.Windows.Forms.PictureBox pictureBoxXPBack;
+		private System.Windows.Forms.DataGridView dgvXP;
+		private System.Windows.Forms.DataGridView dgvCredit;
 		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.PictureBox pictureBox9;
 		private System.Windows.Forms.PictureBox pictureBox10;
-		private System.Windows.Forms.Label label12;
-		private System.Windows.Forms.PictureBox pictureBox11;
-		private System.Windows.Forms.PictureBox pictureBox12;
-		private System.Windows.Forms.DataGridView dgvXP;
-		private System.Windows.Forms.DataGridView dgvCredit;
+		private System.Windows.Forms.DataGridView dgvOther;
 	}
 }
