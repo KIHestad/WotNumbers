@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 178; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 179; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1740,7 +1740,7 @@ namespace WinApp.Code
 						" battleId integer NOT NULL, accountId integer NOT NULL, " +
 						" name varchar (30) NOT NULL, team integer NOT NULL, tankId integer NOT NULL, clanDBID integer NULL, " +
 						" clanAbbrev varchar (10) NULL, platoonID integer NULL, xp integer NOT NULL, damageDealt integer NOT NULL, " +
-						" credits integer NOT NULL, capturePointegers integer NOT NULL, damageReceived integer NOT NULL, deathReason integer NOT NULL, " +
+						" credits integer NOT NULL, damageReceived integer NOT NULL, deathReason integer NOT NULL, " +
 						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, droppedCapturePointegers integer NOT NULL, hits integer NOT NULL, " +
 						" kills integer NOT NULL, shots integer NOT NULL, shotsReceived integer NOT NULL, spotted integer NOT NULL, " +
 						" tkills integer NOT NULL, fortResource integer NULL, " +
@@ -1818,6 +1818,10 @@ namespace WinApp.Code
 					break;
 				case 178:
 					RunRecalcBattleWN8 = true;
+					break;
+				case 179:
+					mssql = "";
+					sqlite = "ALTER TABLE battlePlayer ADD capturePoints INT NULL;";
 					break;
 
 			}
