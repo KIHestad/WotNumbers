@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 179; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 181; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1741,7 +1741,7 @@ namespace WinApp.Code
 						" name varchar (30) NOT NULL, team integer NOT NULL, tankId integer NOT NULL, clanDBID integer NULL, " +
 						" clanAbbrev varchar (10) NULL, platoonID integer NULL, xp integer NOT NULL, damageDealt integer NOT NULL, " +
 						" credits integer NOT NULL, damageReceived integer NOT NULL, deathReason integer NOT NULL, " +
-						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, droppedCapturePointegers integer NOT NULL, hits integer NOT NULL, " +
+						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, hits integer NOT NULL, " +
 						" kills integer NOT NULL, shots integer NOT NULL, shotsReceived integer NOT NULL, spotted integer NOT NULL, " +
 						" tkills integer NOT NULL, fortResource integer NULL, " +
 						" foreign key (battleId) references battle (id) " +
@@ -1821,8 +1821,16 @@ namespace WinApp.Code
 					break;
 				case 179:
 					mssql = "";
-					sqlite = "ALTER TABLE battlePlayer ADD capturePoints INT NULL;";
+					sqlite = "ALTER TABLE battlePlayer ADD capturePoints INT NULL;"; // Correst bug in 167 renaming int to integer
 					break;
+				case 180:
+					mssql = "";
+					sqlite = "ALTER TABLE battlePlayer ADD droppedCapturePoints INT NULL;"; // Correst bug in 167 renaming int to integer
+					break;
+				case 181:
+					NewSystemBattleColList_Skirmish(99);
+					break;
+					
 
 			}
 			string sql = "";
@@ -2130,6 +2138,46 @@ namespace WinApp.Code
 				MainSettings.GridFilterBattle.ColListId = Convert.ToInt32(favListId);
 				MainSettings.GridFilterBattle.ColListName = "Default";
 			}
+		}
+
+		private static string NewSystemBattleColList_Skirmish(int position)
+		{
+			// Create new default colList
+			string sql = 
+				"insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) " + 
+				"values (2,'Skirmish', 0, " + position.ToString() + ", 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			// Find id for new list
+			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='Skirmish';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+			sql =
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (59," + id + ",1,35);" + // Tier
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (184," + id + ",2,90);" + // Tank Image
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (58," + id + ",3,96);" + // Tank
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (8," + id + ",4,104);" + // DateTime
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (10," + id + ",5,59);" + // Result
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (11," + id + ",6,53);" + // Survived
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (526," + id + ",7,73);" + // Killed By
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (513," + id + ",8,78);" + // Finish Reason
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",9,3);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (19," + id + ",10,47);" + // Dmg
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (18," + id + ",11,35);" + // Frags
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",12,3);" + //  - Separator 4 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (519," + id + ",13,55);" + // Total XP
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (508," + id + ",14,52);" + // Credits Result
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",15,3);" + //  - Separator 1 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (523," + id + ",16,38);" + // IR
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (524," + id + ",17,49);" + // Clan IR
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",18,3);" + //  - Separator 0 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (525," + id + ",19,50);" + // Enemy Clan IR
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (521," + id + ",20,55);" + // Enemy Clan
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",21,3);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",23,47);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",25,97);" ; // Map
+			DB.ExecuteNonQuery(sql);
+			ColListHelper.ColListSort(2);
+			return id;
 		}
 
 	}
