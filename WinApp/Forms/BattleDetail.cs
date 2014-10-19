@@ -278,8 +278,8 @@ namespace WinApp.Forms
 				lblWN7.Text = Math.Round(wn7,0).ToString();
 				lblEFF.Text = Math.Round(eff,0).ToString();
 				lblWN8.ForeColor = Rating.WN8color(wn8);
-				lblWN7.ForeColor = Rating.WN8color(wn7);
-				lblEFF.ForeColor = Rating.WN8color(eff);
+				lblWN7.ForeColor = Rating.WN7color(wn7);
+				lblEFF.ForeColor = Rating.EffColor(eff);
 				GetWN8Details();
 				GetStandardGridDetails();
 			}
@@ -729,11 +729,58 @@ namespace WinApp.Forms
 			MoveScrollBar();
 		}
 
-		private DataTable GetDataGridSource(int team, string orderBy = "xp DESC")
+		private string GetSortField(string headerText)
+		{
+			string sortField = "";
+			switch (headerText)
+			{
+				case "IR": sortField = "fortResource"; break;
+				case "Player": sortField = "battlePlayer.name"; break;
+				case "Clan": sortField = "clanAbbrev"; break;
+				case "Tank": sortField = "tank.name"; break;
+				case "Dmg": sortField = "damageDealt"; break;
+				case "Frags": sortField = "kills"; break;
+				case "XP": sortField = "xp"; break;
+				case "Killed By": sortField = "killerName"; break;
+				case "Dmg Track": sortField = "damageAssistedTrack"; break;
+				case "Dmg Spot": sortField = "damageAssistedRadio"; break;
+				case "Dmg Sniper": sortField = "sniperDamageDealt"; break;
+				case "Dmg Received": sortField = "damageReceived"; break;
+				case "Dmg Blocked": sortField = "damageBlockedByArmor"; break;
+				case "Spot": sortField = "spotted"; break;
+				case "Cap": sortField = "capturePoints"; break;
+				case "Decap": sortField = "droppedCapturePoints"; break;
+				case "Shots": sortField = "shots"; break;
+				case "Hits": sortField = "hits"; break;
+				case "Pierced Hits": sortField = "pierced"; break;
+				case "Explosion Hits": sortField = "explosionHits"; break;
+				case "Hits Received": sortField = "directHitsReceived"; break;
+				case "Piercings Received": sortField = "piercingsReceived"; break;
+				case "Expl Hits Received": sortField = "explosionHitsReceived"; break;
+				case "No Dmg Hits Received": sortField = "noDamageShotsReceived"; break;
+				case "Milage": sortField = "mileage"; break;
+				case "Life Time": sortField = "lifeTime"; break;
+				case "Base Credit": sortField = "credits"; break;
+				case "Premature Leave": sortField = "isPrematureLeave"; break;
+				case "Team Killer": sortField = "isTeamKiller"; break;
+				case "Team Kills": sortField = "tkills"; break;
+
+			}
+			return sortField;
+		}
+
+		private DataTable GetDataGridSource(int team, string orderHeaderText = "XP", bool orderAscending = false)
 		{
 			string fortResourcesFields = "";
 			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
 			string enhancedFields = "";
+			string orderBy = GetSortField(orderHeaderText);
+			if (orderBy != "")
+			{
+				orderBy = " ORDER BY " + orderBy;
+				if (!orderAscending)
+					orderBy += " DESC ";
+			}
 			if (showAllColumns)
 				enhancedFields =
 					", killerName as 'Killed By' " +
@@ -766,7 +813,7 @@ namespace WinApp.Forms
 					", isPrematureLeave as 'Premature Leave' " +
 					", isTeamKiller as 'Team Killer' " +
 					", tkills as 'Team Kills' ";
-		
+
 			string sql =
 				"select battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
 				fortResourcesFields +
@@ -775,7 +822,7 @@ namespace WinApp.Forms
 				"from battlePlayer inner join " +
 				"     tank on battlePlayer.tankId = tank.id " +
 				"where battleId=@battleId and team=@team " +
-				"order by " + orderBy;
+				orderBy;
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@team", team, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
@@ -907,14 +954,23 @@ namespace WinApp.Forms
 				{
 					dgv.Rows[e.RowIndex].DefaultCellStyle.ForeColor = ColorTheme.ControlDarkFont;
 					if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
+					{
 						dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerDead;
+						dgv.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.GridRowCurrentPlayerDeadeSelected;
+					}
 					else
+					{
 						dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowPlayerDead;
+						dgv.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.GridRowPlayerDeadeSelected;
+					}
 				}
 				else if (dead == -99)
 					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
 				else if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
+				{
 					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
+					dgv.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+				}
 			
 			}
 		}
@@ -941,11 +997,11 @@ namespace WinApp.Forms
 						break;
 				}
 			}
-			string sortDirection = "";
+			bool sortDirection = true;
 			if (column.HeaderCell.SortGlyphDirection == SortOrder.Descending)
-				sortDirection = " DESC";
+				sortDirection = false; ;
 			int team = Convert.ToInt32(dgv.Rows[0].Cells["Team"].Value);
-			dgv.DataSource = GetDataGridSource(team, "'" + columnName + "'" + sortDirection);
+			dgv.DataSource = GetDataGridSource(team, columnName, sortDirection);
 			if ((btnEnemyTeam.Checked || btnOurTeam.Checked) && scroll.ScrollPosition > 0)
 			{
 				Refresh();

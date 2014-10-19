@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 181; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 182; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1734,6 +1734,7 @@ namespace WinApp.Code
 						" tkills int NOT NULL, fortResource int NULL, " +
 						" foreign key (battleId) references battle (id), " +
 						" foreign key (tankId) references tank (id) ); ";
+					// for sqllite it have to be created here, gets dropped and recreated in upgrade 182
 					sqlite =
 						"CREATE TABLE battlePlayer ( " +
 						" id integer primary key, " +
@@ -1746,7 +1747,7 @@ namespace WinApp.Code
 						" tkills integer NOT NULL, fortResource integer NULL, " +
 						" foreign key (battleId) references battle (id) " +
 						" foreign key (tankId) references tank (id) ); ";
-					break;
+					break; 
 				case 168:
 					mssql = "ALTER TABLE battle ADD enemyClanAbbrev varchar(10) NULL;" +
 							"ALTER TABLE battle ADD enemyClanDBID INT NULL;" +
@@ -1792,15 +1793,15 @@ namespace WinApp.Code
 							"ALTER TABLE battlePlayer ADD damageBlockedByArmor INT NULL;" +
 							"ALTER TABLE battlePlayer ADD damageAssistedTrack INT NULL;" +
 							"ALTER TABLE battlePlayer ADD damageAssistedRadio INT NULL;";
-					sqlite = mssql.Replace("INT", "INTEGER");
+					sqlite = ""; // gets recreated in upgrade 182
 					break;
 				case 172:
 					mssql = "ALTER TABLE battlePlayer ADD isTeamKiller INT NULL;";
-					sqlite = mssql.Replace("INT", "INTEGER");
+					sqlite = ""; // gets recreated in upgrade 182
 					break;
 				case 173:
 					mssql = "ALTER TABLE battlePlayer ADD killerName VARCHAR(30) NULL;";
-					sqlite = mssql.Replace("INT", "INTEGER");
+					sqlite = ""; // gets recreated in upgrade 182
 					break;
 				case 174:
 					Config.Settings.wotGameAffinity = 0;
@@ -1819,16 +1820,41 @@ namespace WinApp.Code
 				case 178:
 					RunRecalcBattleWN8 = true;
 					break;
-				case 179:
-					mssql = "";
-					sqlite = "ALTER TABLE battlePlayer ADD capturePoints INT NULL;"; // Correst bug in 167 renaming int to integer
-					break;
-				case 180:
-					mssql = "";
-					sqlite = "ALTER TABLE battlePlayer ADD droppedCapturePoints INT NULL;"; // Correst bug in 167 renaming int to integer
-					break;
 				case 181:
 					NewSystemBattleColList_Skirmish(99);
+					break;
+				case 182:
+					mssql = "";
+					sqlite =
+						"DROP TABLE battlePlayer; " +
+						"CREATE TABLE battlePlayer ( " +
+						" id integer IDENTITY(1,1) primary key, " +
+						" battleId integer NOT NULL, accountId integer NOT NULL, " +
+						" name varchar (30) NOT NULL, team integer NOT NULL, tankId integer NOT NULL, clanDBID integer NULL, " +
+						" clanAbbrev varchar (10) NULL, platoonID integer NULL, xp integer NOT NULL, damageDealt integer NOT NULL, " +
+						" credits integer NOT NULL, capturePoints integer NOT NULL, damageReceived integer NOT NULL, deathReason integer NOT NULL, " +
+						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, droppedCapturePoints integer NOT NULL, hits integer NOT NULL, " +
+						" kills integer NOT NULL, shots integer NOT NULL, shotsReceived integer NOT NULL, spotted integer NOT NULL, " +
+						" tkills integer NOT NULL, fortResource integer NULL, " +
+						" foreign key (battleId) references battle (id), " +
+						" foreign key (tankId) references tank (id) ); " +
+						"ALTER TABLE battlePlayer ADD potentialDamageReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD noDamageShotsReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD sniperDamageDealt integer NULL;" +
+						"ALTER TABLE battlePlayer ADD piercingsReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD pierced integer NULL;" +
+						"ALTER TABLE battlePlayer ADD mileage integer NULL;" +
+						"ALTER TABLE battlePlayer ADD lifeTime integer NULL;" +
+						"ALTER TABLE battlePlayer ADD killerID integer NULL;" +
+						"ALTER TABLE battlePlayer ADD isPrematureLeave integer NULL;" +
+						"ALTER TABLE battlePlayer ADD explosionHits integer NULL;" +
+						"ALTER TABLE battlePlayer ADD explosionHitsReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD damageBlockedByArmor integer NULL;" +
+						"ALTER TABLE battlePlayer ADD damageAssistedTrack integer NULL;" +
+						"ALTER TABLE battlePlayer ADD damageAssistedRadio integer NULL;" +
+						"ALTER TABLE battlePlayer ADD isTeamKiller integer NULL;" +
+						"ALTER TABLE battlePlayer ADD killerName VARCHAR(30) NULL;";
+
 					break;
 					
 

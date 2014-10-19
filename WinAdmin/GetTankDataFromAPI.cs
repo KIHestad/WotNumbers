@@ -61,7 +61,7 @@ namespace WinAdmin
 		{
 			Refresh();
 			ImportTanks();
-			ImportImgLinks();
+			ImportTankImg();
 		}
 
 
@@ -163,15 +163,16 @@ namespace WinAdmin
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
 							string name = itemToken["name_i18n"].ToString();
-
+							string imgPath = itemToken["image"].ToString();
+							string smallImgPath = itemToken["image_small"].ToString();
+							string contourImgPath = itemToken["contour_image"].ToString();
 							// Write to db
 							string sql = "select 1 from tank where id=@id";
 							DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
 							DataTable dt = DB.FetchData(sql, Settings.Config, out result);
 							tankExists = (dt.Rows.Count > 0);
-							
-							insertSql = "INSERT INTO tank (id, name) VALUES (@id, @name); ";
-							updateSql = "UPDATE tank set name=@name WHERE id=@id; ";
+							insertSql = "INSERT INTO tank (id, name, imgPath, smallImgPath, contourImgPath) VALUES (@id, @name, @imgPath, @smallImgPath, @contourImgPath); ";
+							updateSql = "UPDATE tank set name=@name, imgPath=@imgPath, smallImgPath=@smallImgPath, contourImgPath=@contourImgPath WHERE id=@id; ";
 
 							// insert if tank does not exist
 							if (!tankExists)
@@ -181,6 +182,9 @@ namespace WinAdmin
 								Application.DoEvents();
 								DB.AddWithValue(ref insertSql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
 								DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar, Settings.Config);
+								DB.AddWithValue(ref updateSql, "@imgPath", imgPath, DB.SqlDataType.VarChar, Settings.Config);
+								DB.AddWithValue(ref updateSql, "@smallImgPath", smallImgPath, DB.SqlDataType.VarChar, Settings.Config);
+								DB.AddWithValue(ref updateSql, "@contourImgPath", contourImgPath, DB.SqlDataType.VarChar, Settings.Config);
 								sqlTotal += insertSql + Environment.NewLine;
 							}
 
@@ -192,6 +196,9 @@ namespace WinAdmin
 								Application.DoEvents();
 								DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
 								DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar, Settings.Config);
+								DB.AddWithValue(ref updateSql, "@imgPath", imgPath, DB.SqlDataType.VarChar, Settings.Config);
+								DB.AddWithValue(ref updateSql, "@smallImgPath", smallImgPath, DB.SqlDataType.VarChar, Settings.Config);
+								DB.AddWithValue(ref updateSql, "@contourImgPath", contourImgPath, DB.SqlDataType.VarChar, Settings.Config);
 								sqlTotal += updateSql + Environment.NewLine;
 							}
 						}
@@ -216,13 +223,13 @@ namespace WinAdmin
 
 		#region ImportImgLinks
 
-		private void ImportImgLinks()  // run time = 4 min
+		private void ImportTankImg()  // run time = 4 min
 		{
-			lblStatus.Text = "Getting json data from Wot API (" + DateTime.Now.ToString() + ")";
+			lblStatus.Text = "Getting images (" + DateTime.Now.ToString() + ")";
 			Application.DoEvents();
 			DB.DBResult result = new DB.DBResult();
 			DataTable dtTanks = DB.FetchData("select id from tank", Settings.Config, out result);   // Fetch id of tanks in db
-			pbStatus.Maximum = dtTanks.Rows.Count * 3; // Tree part impot, first tanks, them link to img, then download img
+			pbStatus.Maximum = dtTanks.Rows.Count * 2; // Tree part impot, first tanks, then download img
 			int currentTank = 0;
 			while (currentTank < dtTanks.Rows.Count)
 			{
