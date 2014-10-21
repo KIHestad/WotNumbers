@@ -34,6 +34,10 @@ namespace WinApp.Forms
 			ddFontSize.Text = fs.ToString();
 			currentMasteryBadgeIcons = Config.Settings.useSmallMasteryBadgeIcons;
 			chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
+			chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
+			chkNotifyIconFormExitToMinimize.Checked = Config.Settings.notifyIconFormExitToMinimize;
+			//if (!chkNotifyIconUse.Checked)
+			//	chkNotifyIconFormExitToMinimize.Enabled = false;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -41,6 +45,8 @@ namespace WinApp.Forms
 			Config.Settings.gridBattlesTotalsTop = chkBattleTotalsPosition.Checked;
 			Config.Settings.gridFontSize = Convert.ToInt32(ddFontSize.Text);
 			Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
+			Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
+			Config.Settings.notifyIconFormExitToMinimize = chkNotifyIconFormExitToMinimize.Checked;
 			string msg = "";
 			Config.SaveConfig(out msg);
 			// Load new mastery badge icons if changed
@@ -55,6 +61,11 @@ namespace WinApp.Forms
 			this.Close();
 		}
 
+		private void chkNotifyIconUse_Click(object sender, EventArgs e)
+		{
+			// chkNotifyIconFormExitToMinimize.Enabled = chkNotifyIconUse.Checked;
+		}
 
+		
 	}
 }

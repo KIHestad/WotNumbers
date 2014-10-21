@@ -51,6 +51,14 @@ abstract class BadThemeContainerControl : ContainerControl
 		set { _Resizable = value; }
 	}
 
+	private bool _FormExitAsMinimize = false;
+	public bool FormExitAsMinimize
+	{
+		get { return _FormExitAsMinimize; }
+		set { _FormExitAsMinimize = value; }
+	}
+
+
 	private int _TitleHeight = 26; 
 	public int TitleHeight
 	{
@@ -553,7 +561,13 @@ abstract class BadThemeContainerControl : ContainerControl
 			{
 				SysIconLeft -= SystemExitImage.Width;
 				if (PTC.X > SysIconLeft & PTC.X < SysIconLeft + SystemExitImage.Width)
-					ParentForm.Close();
+				{
+					// Perform check if exit button is overrided to behave as minimize
+					if (_FormExitAsMinimize)
+						ParentForm.WindowState = FormWindowState.Minimized;
+					else
+						ParentForm.Close();
+				}
 			}
 			if (SystemMaximizeImage != null)
 			{

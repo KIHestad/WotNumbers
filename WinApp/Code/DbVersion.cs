@@ -17,7 +17,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 184; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 185; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1864,6 +1864,11 @@ namespace WinApp.Code
 					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
 							"VALUES (217, 2, 163, 'battle.comment', 'Comment', 'Battle comment, available to add/edit from battle details', 'Battle', 120, 'VarChar'); ";
 					sqlite = mssql;
+					break;
+				case 185:
+					Config.Settings.notifyIconUse = false;
+					Config.Settings.notifyIconFormExitToMinimize = false;
+					Config.SaveConfig(out msg);
 					break;
 
 			}

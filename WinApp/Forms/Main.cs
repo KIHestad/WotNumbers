@@ -27,6 +27,7 @@ namespace WinApp.Forms
 		private int currentPlayerId = 0;
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
 		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
+		private FormWindowState mainFormWindowsState = FormWindowState.Normal;
 
 		public Main()
 		{
@@ -74,6 +75,12 @@ namespace WinApp.Forms
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
+			// Maximize now if last settings
+			if (mainFormPosSize.WindowState == FormWindowState.Maximized)
+			{
+				this.WindowState = FormWindowState.Maximized;
+				mainFormWindowsState = FormWindowState.Maximized;
+			}
 			// Black Border on loading
 			MainTheme.FormBorderColor = ColorTheme.FormBorderBlack;
 			// Resize Form Theme Title Area to fit 125% or 150% font size in Win
@@ -136,7 +143,28 @@ namespace WinApp.Forms
 			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
 			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
 		}
-		
+
+
+		private ContextMenu notifyIconContextMenu;
+		private MenuItem notifyIconMenuItem1;
+		private void CreateNotifyIconContextMenu()
+		{
+			notifyIconContextMenu = new System.Windows.Forms.ContextMenu();
+			notifyIconMenuItem1 = new System.Windows.Forms.MenuItem();
+			// Initialize notifyIconContextMenu 
+			notifyIconContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { notifyIconMenuItem1 });
+			// Initialize notifyIconMenuItem1 
+			notifyIconMenuItem1.Index = 0;
+			notifyIconMenuItem1.Text = "Exit";
+			notifyIconMenuItem1.Click += new System.EventHandler(notifyIconMenuItem1_Click);
+		}
+
+		private void notifyIconMenuItem1_Click(object Sender, EventArgs e)
+		{
+			// Close the form, which closes the application. 
+			this.Close();
+		}
+
 		private void CreateDataGridContextMenu()
 		{
 			// Datagrid context menu (Right click on Grid)
@@ -285,12 +313,13 @@ namespace WinApp.Forms
 		{
 			try
 			{
-				//TODO: Remove temp features
-				//mWoT.Visible = false;
-				//mWoTStartGameSettings.Visible = false;
+				// Systray icon with context menu
+				CreateNotifyIconContextMenu();
+				notifyIcon.ContextMenu = notifyIconContextMenu;
+				notifyIcon.Visible = Config.Settings.notifyIconUse;
+				this.ShowInTaskbar = !Config.Settings.notifyIconUse;
+				MainTheme.FormExitAsMinimize = Config.Settings.notifyIconFormExitToMinimize;
 
-				
-				
 				// Log startup to file now
 				Log.WriteLogBuffer();
 				// Start WoT if autoRun is enabled
@@ -301,11 +330,6 @@ namespace WinApp.Forms
 				// Create IronPython Engine
 				PythonEngine.CreateEngine();
 
-				// Maximize now if last settings
-				if (mainFormPosSize.WindowState == FormWindowState.Maximized)
-				{
-					this.WindowState = FormWindowState.Maximized;
-				}
 				// Startup settings
 				if (!LoadConfigOK)
 				{
@@ -536,7 +560,9 @@ namespace WinApp.Forms
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
 			// New battle saved
-			ShowView("Grid refreshed");
+			ShowView("New battle fetched, grid refreshed");
+			if (notifyIcon.Visible)
+				notifyIcon.ShowBalloonTip(500);
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -648,6 +674,7 @@ namespace WinApp.Forms
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
+			notifyIcon.Visible = false;
 			// Save config to save current screen pos and size
 			Config.Settings.posSize.WindowState = this.WindowState;
 			string msg = "";
@@ -662,6 +689,9 @@ namespace WinApp.Forms
 			if (!Init)
 			{
 				ResizeNow();
+				// Remember if new viewable size is normal or maximized
+				if (this.WindowState != FormWindowState.Minimized)
+					mainFormWindowsState = this.WindowState;
 				// Remember new size for saving on form close
 				if (this.WindowState == FormWindowState.Normal)
 				{
@@ -4093,6 +4123,31 @@ namespace WinApp.Forms
 		{
 			Form frm = new Forms.WoTGameClientSettings();
 			frm.ShowDialog();
+		}
+
+		private void notifyIcon_Click(object sender, EventArgs e)
+		{
+			
+		}
+
+		private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Left)
+			{
+				if (this.WindowState == FormWindowState.Minimized)
+				{
+					this.WindowState = mainFormWindowsState;
+				}
+				else
+				{
+					this.WindowState = FormWindowState.Minimized;
+				}
+			}
+		}
+
+		private void mExit_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 
 	}

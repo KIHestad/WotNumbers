@@ -32,6 +32,9 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationLayout));
 			this.badForm1 = new BadForm();
+			this.chkNotifyIconFormExitToMinimize = new BadCheckBox();
+			this.chkNotifyIconUse = new BadCheckBox();
+			this.badGroupBox2 = new BadGroupBox();
 			this.chkSmallMasteryBadgeIcons = new BadCheckBox();
 			this.ddFontSize = new BadDropDownBox();
 			this.badLabel1 = new BadLabel();
@@ -39,11 +42,16 @@
 			this.badGroupBox1 = new BadGroupBox();
 			this.btnCancel = new BadButton();
 			this.btnSave = new BadButton();
+			this.badLabel2 = new BadLabel();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// badForm1
 			// 
+			this.badForm1.Controls.Add(this.badLabel2);
+			this.badForm1.Controls.Add(this.chkNotifyIconFormExitToMinimize);
+			this.badForm1.Controls.Add(this.chkNotifyIconUse);
+			this.badForm1.Controls.Add(this.badGroupBox2);
 			this.badForm1.Controls.Add(this.chkSmallMasteryBadgeIcons);
 			this.badForm1.Controls.Add(this.ddFontSize);
 			this.badForm1.Controls.Add(this.badLabel1);
@@ -62,7 +70,7 @@
 			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = false;
-			this.badForm1.Size = new System.Drawing.Size(353, 245);
+			this.badForm1.Size = new System.Drawing.Size(353, 368);
 			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
 			this.badForm1.SystemMaximizeImage = null;
 			this.badForm1.SystemMinimizeImage = null;
@@ -70,21 +78,54 @@
 			this.badForm1.Text = "Application Layout";
 			this.badForm1.TitleHeight = 26;
 			// 
+			// chkNotifyIconFormExitToMinimize
+			// 
+			this.chkNotifyIconFormExitToMinimize.BackColor = System.Drawing.Color.Transparent;
+			this.chkNotifyIconFormExitToMinimize.Checked = false;
+			this.chkNotifyIconFormExitToMinimize.Image = ((System.Drawing.Image)(resources.GetObject("chkNotifyIconFormExitToMinimize.Image")));
+			this.chkNotifyIconFormExitToMinimize.Location = new System.Drawing.Point(41, 124);
+			this.chkNotifyIconFormExitToMinimize.Name = "chkNotifyIconFormExitToMinimize";
+			this.chkNotifyIconFormExitToMinimize.Size = new System.Drawing.Size(242, 23);
+			this.chkNotifyIconFormExitToMinimize.TabIndex = 11;
+			this.chkNotifyIconFormExitToMinimize.Text = "Override form exit to behave as minimize";
+			// 
+			// chkNotifyIconUse
+			// 
+			this.chkNotifyIconUse.BackColor = System.Drawing.Color.Transparent;
+			this.chkNotifyIconUse.Checked = false;
+			this.chkNotifyIconUse.Image = ((System.Drawing.Image)(resources.GetObject("chkNotifyIconUse.Image")));
+			this.chkNotifyIconUse.Location = new System.Drawing.Point(41, 95);
+			this.chkNotifyIconUse.Name = "chkNotifyIconUse";
+			this.chkNotifyIconUse.Size = new System.Drawing.Size(140, 23);
+			this.chkNotifyIconUse.TabIndex = 10;
+			this.chkNotifyIconUse.Text = "Use system tray icon";
+			this.chkNotifyIconUse.Click += new System.EventHandler(this.chkNotifyIconUse_Click);
+			// 
+			// badGroupBox2
+			// 
+			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
+			this.badGroupBox2.Image = null;
+			this.badGroupBox2.Location = new System.Drawing.Point(22, 45);
+			this.badGroupBox2.Name = "badGroupBox2";
+			this.badGroupBox2.Size = new System.Drawing.Size(308, 117);
+			this.badGroupBox2.TabIndex = 9;
+			this.badGroupBox2.Text = "Sys Tray Icon";
+			// 
 			// chkSmallMasteryBadgeIcons
 			// 
 			this.chkSmallMasteryBadgeIcons.BackColor = System.Drawing.Color.Transparent;
 			this.chkSmallMasteryBadgeIcons.Checked = false;
 			this.chkSmallMasteryBadgeIcons.Image = ((System.Drawing.Image)(resources.GetObject("chkSmallMasteryBadgeIcons.Image")));
-			this.chkSmallMasteryBadgeIcons.Location = new System.Drawing.Point(41, 133);
+			this.chkSmallMasteryBadgeIcons.Location = new System.Drawing.Point(41, 266);
 			this.chkSmallMasteryBadgeIcons.Name = "chkSmallMasteryBadgeIcons";
-			this.chkSmallMasteryBadgeIcons.Size = new System.Drawing.Size(190, 23);
+			this.chkSmallMasteryBadgeIcons.Size = new System.Drawing.Size(193, 23);
 			this.chkSmallMasteryBadgeIcons.TabIndex = 8;
-			this.chkSmallMasteryBadgeIcons.Text = "Use Small Mastery Badge Icons ";
+			this.chkSmallMasteryBadgeIcons.Text = "Use small mastery badge icons ";
 			// 
 			// ddFontSize
 			// 
 			this.ddFontSize.Image = null;
-			this.ddFontSize.Location = new System.Drawing.Point(129, 71);
+			this.ddFontSize.Location = new System.Drawing.Point(129, 204);
 			this.ddFontSize.Name = "ddFontSize";
 			this.ddFontSize.Size = new System.Drawing.Size(86, 23);
 			this.ddFontSize.TabIndex = 5;
@@ -95,11 +136,11 @@
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(41, 71);
+			this.badLabel1.Location = new System.Drawing.Point(41, 204);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(81, 23);
 			this.badLabel1.TabIndex = 4;
-			this.badLabel1.Text = "Grid Font Size";
+			this.badLabel1.Text = "Grid font size";
 			this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// chkBattleTotalsPosition
@@ -107,7 +148,7 @@
 			this.chkBattleTotalsPosition.BackColor = System.Drawing.Color.Transparent;
 			this.chkBattleTotalsPosition.Checked = false;
 			this.chkBattleTotalsPosition.Image = ((System.Drawing.Image)(resources.GetObject("chkBattleTotalsPosition.Image")));
-			this.chkBattleTotalsPosition.Location = new System.Drawing.Point(41, 104);
+			this.chkBattleTotalsPosition.Location = new System.Drawing.Point(41, 237);
 			this.chkBattleTotalsPosition.Name = "chkBattleTotalsPosition";
 			this.chkBattleTotalsPosition.Size = new System.Drawing.Size(268, 23);
 			this.chkBattleTotalsPosition.TabIndex = 3;
@@ -117,9 +158,9 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(22, 48);
+			this.badGroupBox1.Location = new System.Drawing.Point(22, 181);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(308, 136);
+			this.badGroupBox1.Size = new System.Drawing.Size(308, 123);
 			this.badGroupBox1.TabIndex = 2;
 			this.badGroupBox1.Text = "Grid Settings";
 			// 
@@ -128,7 +169,7 @@
 			this.btnCancel.BlackButton = false;
 			this.btnCancel.Checked = false;
 			this.btnCancel.Image = null;
-			this.btnCancel.Location = new System.Drawing.Point(260, 201);
+			this.btnCancel.Location = new System.Drawing.Point(260, 323);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(70, 23);
 			this.btnCancel.TabIndex = 1;
@@ -141,7 +182,7 @@
 			this.btnSave.BlackButton = false;
 			this.btnSave.Checked = false;
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(184, 201);
+			this.btnSave.Location = new System.Drawing.Point(184, 323);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(70, 23);
 			this.btnSave.TabIndex = 0;
@@ -149,11 +190,23 @@
 			this.btnSave.ToolTipText = "";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
+			// badLabel2
+			// 
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(41, 66);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(242, 23);
+			this.badLabel2.TabIndex = 12;
+			this.badLabel2.Text = "Changes will apply for next application startup";
+			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
 			// ApplicationLayout
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(353, 245);
+			this.ClientSize = new System.Drawing.Size(353, 368);
 			this.Controls.Add(this.badForm1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "ApplicationLayout";
@@ -176,5 +229,9 @@
 		private BadLabel badLabel1;
 		private BadCheckBox chkBattleTotalsPosition;
 		private BadCheckBox chkSmallMasteryBadgeIcons;
+		private BadCheckBox chkNotifyIconFormExitToMinimize;
+		private BadCheckBox chkNotifyIconUse;
+		private BadGroupBox badGroupBox2;
+		private BadLabel badLabel2;
 	}
 }

@@ -111,6 +111,8 @@ namespace WinApp.Code
 		public long wotGameAffinity { get; set; }
 		public bool wotGameAutoStart { get; set; }
 		public string wotGameRunBatchFile { get; set; }
+		public bool notifyIconUse { get; set; }                     // Notify icon settings - use notify icon insted of taskbar icon
+		public bool notifyIconFormExitToMinimize { get; set; }      // Override exit from form to minimize
 	}
 
 	class Config
@@ -221,6 +223,8 @@ namespace WinApp.Code
 			Config.Settings.wotGameStartType = ConfigData.WoTGameStartType.NotConfigured;
 			Config.Settings.wotGameAutoStart = false;
 			Config.Settings.wotGameRunBatchFile = "";
+			Config.Settings.notifyIconUse = false;
+			Config.Settings.notifyIconFormExitToMinimize = false;
 		}
 
 		
