@@ -19,22 +19,6 @@ namespace WinAdmin
 	{
 		#region variables
 
-		private static int itemCount;
-		private static JToken rootToken;
-		private static JToken itemToken;
-		private static int itemId;
-		private static string insertSql;
-		private static string updateSql;
-		//private static bool ok = true;
-		//private static DataTable itemsInDB;
-
-		// private static List<string> log = new List<string>();
-		//private static string logAddedItems;
-		//private static int logAddedItemsCount;
-		//private static string logItemExists;
-		// private static int logItemExistsCount;
-		//private static string logTanksWithoutDetails; // some special tanks have lacking vehicle details in API
-
 		private enum WotApiType
 		{
 			Tank = 1,
@@ -59,25 +43,32 @@ namespace WinAdmin
 
 		private void GetTankDataFromAPI_Shown(object sender, EventArgs e)
 		{
+			
+		}
+
+		private void cmdStart_Click(object sender, EventArgs e)
+		{
 			pbStatus.Value = 0;
 			pbStatus.Maximum = 100;
 			Refresh();
-			ImportTanks();
+			if (chkFetchNewTanks.Checked)
+				ImportTanks();
 			ImportTankImg();
 		}
 
-
 		#region fetchFromAPI
 
-		private static string FetchFromAPI(WotApiType WotAPi, int tankId)
+		private static string FetchFromAPI(WotApiType WotAPi, int tankId, string server)
 		{
 			try
 			{
 				string url = "";
 				if (WotAPi == WotApiType.Tank)
 				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tanks/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530"; // EU
-					//url = "https://api.worldoftanks.com/wot/encyclopedia/tanks/?application_id=417860beae5ef8a03e11520aaacbf123"; // NA
+					if (server == "EU")
+						url = "https://api.worldoftanks.eu/wot/encyclopedia/tanks/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530"; // EU
+					else if (server == "NA")
+						url = "https://api.worldoftanks.com/wot/encyclopedia/tanks/?application_id=417860beae5ef8a03e11520aaacbf123"; // NA
 				}
 				if (WotAPi == WotApiType.Turret)
 				{
@@ -128,9 +119,18 @@ namespace WinAdmin
 
 		private void ImportTanks()
 		{
+			int itemCount;
+			JToken rootToken;
+			JToken itemToken;
+			int itemId;
+			string insertSql;
+			string updateSql;
+
 			lblStatus.Text = "Getting json data from Wot API (" + DateTime.Now.ToString() + ")";
 			Application.DoEvents();
-			string json = FetchFromAPI(WotApiType.Tank, 0);
+			string server = "EU";
+			if (rbNA.Checked) server = "NA";
+			string json = FetchFromAPI(WotApiType.Tank, 0, server);
 			if (json == "")
 			{
 				MessageBox.Show("No data imported, no json result from WoT API.","Error");
@@ -226,47 +226,50 @@ namespace WinAdmin
 			pbStatus.Maximum = dtTanks.Rows.Count; // Two part impot, first tanks, then download img
 			foreach (DataRow dr in dtTanks.Rows)
 			{
-				lblStatus.Text = "Downloading images for tank: " + dr["id"].ToString();
 				pbStatus.Value++;
 				Application.DoEvents();
-				byte[] img = getImageFromAPI(dr["imgPath"].ToString());
-				byte[] smallImg = getImageFromAPI(dr["smallImgPath"].ToString());
-				byte[] contourImg = getImageFromAPI(dr["contourImgPath"].ToString());
-				
-				//if image not found, skip
-				if (img != null && smallImg != null && contourImg != null)
+				bool imgExist = (dr["img"] != DBNull.Value && dr["smallImg"] != DBNull.Value && dr["contourImg"] != DBNull.Value);
+				if (!imgExist || !chkKeepExistingImg.Checked)
 				{
-					// SQL Lite binary insert
-					string conString = Config.DatabaseConnection(Settings.Config);
-					SQLiteConnection con = new SQLiteConnection(conString);
-					SQLiteCommand cmd = con.CreateCommand();
-					cmd.CommandText = "UPDATE tank SET img=@img, smallImg=@smallImg, contourImg=@contourImg WHERE id=@id";
-					SQLiteParameter imgParam = new SQLiteParameter("@img", System.Data.DbType.Binary);
-					SQLiteParameter smallImgParam = new SQLiteParameter("@smallImg", System.Data.DbType.Binary);
-					SQLiteParameter contourImgParam = new SQLiteParameter("@contourImg", System.Data.DbType.Binary);
-					SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
-					imgParam.Value = img;
-					smallImgParam.Value = smallImg;
-					contourImgParam.Value = contourImg;
-					idParam.Value = itemId;
-					cmd.Parameters.Add(imgParam);
-					cmd.Parameters.Add(smallImgParam);
-					cmd.Parameters.Add(contourImgParam);
-					cmd.Parameters.Add(idParam);
-					con.Open();
-					try
+					lblStatus.Text = "Downloading images for tank: " + dr["id"].ToString();
+					byte[] img = getImageFromAPI(dr["imgPath"].ToString());
+					byte[] smallImg = getImageFromAPI(dr["smallImgPath"].ToString());
+					byte[] contourImg = getImageFromAPI(dr["contourImgPath"].ToString());
+				
+					//if image not found, skip
+					if (img != null && smallImg != null && contourImg != null)
 					{
-						cmd.ExecuteNonQuery();
+						// SQL Lite binary insert
+						string conString = Config.DatabaseConnection(Settings.Config);
+						SQLiteConnection con = new SQLiteConnection(conString);
+						SQLiteCommand cmd = con.CreateCommand();
+						cmd.CommandText = "UPDATE tank SET img=@img, smallImg=@smallImg, contourImg=@contourImg WHERE id=@id";
+						SQLiteParameter imgParam = new SQLiteParameter("@img", System.Data.DbType.Binary);
+						SQLiteParameter smallImgParam = new SQLiteParameter("@smallImg", System.Data.DbType.Binary);
+						SQLiteParameter contourImgParam = new SQLiteParameter("@contourImg", System.Data.DbType.Binary);
+						SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+						imgParam.Value = img;
+						smallImgParam.Value = smallImg;
+						contourImgParam.Value = contourImg;
+						idParam.Value = dr["id"];
+						cmd.Parameters.Add(imgParam);
+						cmd.Parameters.Add(smallImgParam);
+						cmd.Parameters.Add(contourImgParam);
+						cmd.Parameters.Add(idParam);
+						con.Open();
+						try
+						{
+							cmd.ExecuteNonQuery();
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(ex.Message);
+						}
+						con.Close();
 					}
-					catch (Exception ex)
-					{
-						MessageBox.Show(ex.Message);
-					}
-					con.Close();
 				}
 			}
 			lblStatus.Text = "Tank image import complete";
-			pbStatus.Value = 0;
 		}
 
 		#endregion
@@ -302,6 +305,7 @@ namespace WinAdmin
 			catch (Exception ex)
 			{
 				// error
+				string msg = ex.Message;
 				//MessageBox.Show(ex.Message + Environment.NewLine + Environment.NewLine + url , "Not found file");
 			}
 			
@@ -309,6 +313,8 @@ namespace WinAdmin
 		}
 
 		#endregion
+
+		
 
 
 	}
