@@ -32,6 +32,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationLayout));
 			this.badForm1 = new BadForm();
+			this.badLabel2 = new BadLabel();
 			this.chkNotifyIconFormExitToMinimize = new BadCheckBox();
 			this.chkNotifyIconUse = new BadCheckBox();
 			this.badGroupBox2 = new BadGroupBox();
@@ -42,7 +43,6 @@
 			this.badGroupBox1 = new BadGroupBox();
 			this.btnCancel = new BadButton();
 			this.btnSave = new BadButton();
-			this.badLabel2 = new BadLabel();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -61,6 +61,7 @@
 			this.badForm1.Controls.Add(this.btnSave);
 			this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.badForm1.FormExitAsMinimize = false;
 			this.badForm1.FormFooter = false;
 			this.badForm1.FormFooterHeight = 26;
 			this.badForm1.FormInnerBorder = 3;
@@ -78,6 +79,18 @@
 			this.badForm1.Text = "Application Layout";
 			this.badForm1.TitleHeight = 26;
 			// 
+			// badLabel2
+			// 
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(41, 66);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(242, 23);
+			this.badLabel2.TabIndex = 12;
+			this.badLabel2.Text = "Changes will apply for next application startup";
+			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
 			// chkNotifyIconFormExitToMinimize
 			// 
 			this.chkNotifyIconFormExitToMinimize.BackColor = System.Drawing.Color.Transparent;
@@ -85,9 +98,9 @@
 			this.chkNotifyIconFormExitToMinimize.Image = ((System.Drawing.Image)(resources.GetObject("chkNotifyIconFormExitToMinimize.Image")));
 			this.chkNotifyIconFormExitToMinimize.Location = new System.Drawing.Point(41, 124);
 			this.chkNotifyIconFormExitToMinimize.Name = "chkNotifyIconFormExitToMinimize";
-			this.chkNotifyIconFormExitToMinimize.Size = new System.Drawing.Size(242, 23);
+			this.chkNotifyIconFormExitToMinimize.Size = new System.Drawing.Size(268, 23);
 			this.chkNotifyIconFormExitToMinimize.TabIndex = 11;
-			this.chkNotifyIconFormExitToMinimize.Text = "Override form exit to behave as minimize";
+			this.chkNotifyIconFormExitToMinimize.Text = "Minimize  when closing application";
 			// 
 			// chkNotifyIconUse
 			// 
@@ -109,7 +122,7 @@
 			this.badGroupBox2.Name = "badGroupBox2";
 			this.badGroupBox2.Size = new System.Drawing.Size(308, 117);
 			this.badGroupBox2.TabIndex = 9;
-			this.badGroupBox2.Text = "Sys Tray Icon";
+			this.badGroupBox2.Text = "Application Behavior";
 			// 
 			// chkSmallMasteryBadgeIcons
 			// 
@@ -189,18 +202,6 @@
 			this.btnSave.Text = "Save";
 			this.btnSave.ToolTipText = "";
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(41, 66);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(242, 23);
-			this.badLabel2.TabIndex = 12;
-			this.badLabel2.Text = "Changes will apply for next application startup";
-			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// ApplicationLayout
 			// 

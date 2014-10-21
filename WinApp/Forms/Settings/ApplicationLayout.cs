@@ -36,8 +36,18 @@ namespace WinApp.Forms
 			chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
 			chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
 			chkNotifyIconFormExitToMinimize.Checked = Config.Settings.notifyIconFormExitToMinimize;
+			SetTextForChkNotifyIconFormExitToMinimize();
 			//if (!chkNotifyIconUse.Checked)
 			//	chkNotifyIconFormExitToMinimize.Enabled = false;
+		}
+
+		private void SetTextForChkNotifyIconFormExitToMinimize()
+		{
+			string text = "Minimize to task bar when closing application";
+			if (chkNotifyIconUse.Checked)
+				text = "Minimize to sys tray when closing application";
+			chkNotifyIconFormExitToMinimize.Text = text;
+			Refresh();
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -63,6 +73,7 @@ namespace WinApp.Forms
 
 		private void chkNotifyIconUse_Click(object sender, EventArgs e)
 		{
+			SetTextForChkNotifyIconFormExitToMinimize();
 			// chkNotifyIconFormExitToMinimize.Enabled = chkNotifyIconUse.Checked;
 		}
 
