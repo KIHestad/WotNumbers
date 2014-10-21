@@ -59,6 +59,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "GetTankDataFromAPI";
+			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Get Tank Data From API";
 			this.Load += new System.EventHandler(this.GetTankDataFromAPI_Load);

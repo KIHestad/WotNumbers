@@ -837,6 +837,7 @@ namespace WinApp.Forms
 						CreateDataGridContextMenu();
 						// Info slider hide
 						InfoPanelSlideStart(false);
+						this.ActiveControl = dataGridMain;
 						break;
 					case GridView.Views.Battle:
 						// Select view
@@ -871,6 +872,7 @@ namespace WinApp.Forms
 						CreateDataGridContextMenu();
 						// Info slider hide
 						InfoPanelSlideStart(false);
+						this.ActiveControl = dataGridMain;
 						break;
 				}
 				toolMain.Renderer = new StripRenderer();
@@ -3054,15 +3056,31 @@ namespace WinApp.Forms
 			try
 			{
 				// scroll in grid from mouse wheel
-				int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
-				int scrollLines = SystemInformation.MouseWheelScrollLines;
-				if (e.Delta > 0)
+				if (scrollY.ScrollNecessary)
 				{
-					this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines) + frozenRows;
+					int currentIndex = this.dataGridMain.FirstDisplayedScrollingRowIndex - frozenRows;
+					int scrollLines = SystemInformation.MouseWheelScrollLines;
+					if (e.Delta > 0)
+					{
+						this.dataGridMain.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines) + frozenRows;
+					}
+					else if (e.Delta < 0)
+					{
+						this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines + frozenRows;
+					}
 				}
-				else if (e.Delta < 0)
+				else if (scrollX.ScrollNecessary)
 				{
-					this.dataGridMain.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines + frozenRows;
+					int currentIndex = this.dataGridMain.FirstDisplayedScrollingColumnIndex;
+					int scrollColumns = 1; //SystemInformation.MouseWheelScrollLines;
+					if (e.Delta > 0)
+					{
+						this.dataGridMain.FirstDisplayedScrollingColumnIndex = Math.Max(0, currentIndex - scrollColumns);
+					}
+					else if (e.Delta < 0)
+					{
+						this.dataGridMain.FirstDisplayedScrollingColumnIndex = currentIndex + scrollColumns;
+					}
 				}
 				// move scrollbar
 				MoveScrollBar();
@@ -4076,5 +4094,6 @@ namespace WinApp.Forms
 			Form frm = new Forms.WoTGameClientSettings();
 			frm.ShowDialog();
 		}
+
 	}
 }
