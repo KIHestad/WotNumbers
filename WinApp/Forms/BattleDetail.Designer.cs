@@ -33,6 +33,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imgIndicators = new System.Windows.Forms.ImageList(this.components);
 			this.BattleDetailTheme = new BadForm();
+			this.btnBattleComment = new BadButton();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label11 = new System.Windows.Forms.Label();
 			this.pictureBox9 = new System.Windows.Forms.PictureBox();
@@ -62,6 +63,10 @@
 			this.dgvDamage = new System.Windows.Forms.DataGridView();
 			this.dgvShooting = new System.Windows.Forms.DataGridView();
 			this.dgvPerformance = new System.Windows.Forms.DataGridView();
+			this.btnEnemyTeam = new BadButton();
+			this.btnOurTeam = new BadButton();
+			this.btnTeams = new BadButton();
+			this.btnPersonal = new BadButton();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.lblEFF = new System.Windows.Forms.Label();
@@ -82,10 +87,6 @@
 			this.lblSurvival = new System.Windows.Forms.Label();
 			this.lblBattleMode = new System.Windows.Forms.Label();
 			this.picTank = new System.Windows.Forms.PictureBox();
-			this.btnEnemyTeam = new BadButton();
-			this.btnOurTeam = new BadButton();
-			this.btnTeams = new BadButton();
-			this.btnPersonal = new BadButton();
 			this.grpMain = new BadGroupBox();
 			this.BattleDetailTheme.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -125,14 +126,17 @@
 			// 
 			// BattleDetailTheme
 			// 
+			this.BattleDetailTheme.Controls.Add(this.btnBattleComment);
 			this.BattleDetailTheme.Controls.Add(this.panel1);
 			this.BattleDetailTheme.Controls.Add(this.btnEnemyTeam);
 			this.BattleDetailTheme.Controls.Add(this.btnOurTeam);
 			this.BattleDetailTheme.Controls.Add(this.btnTeams);
 			this.BattleDetailTheme.Controls.Add(this.btnPersonal);
+			this.BattleDetailTheme.Controls.Add(this.panel2);
 			this.BattleDetailTheme.Controls.Add(this.grpMain);
 			this.BattleDetailTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BattleDetailTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.BattleDetailTheme.FormExitAsMinimize = false;
 			this.BattleDetailTheme.FormFooter = false;
 			this.BattleDetailTheme.FormFooterHeight = 26;
 			this.BattleDetailTheme.FormInnerBorder = 3;
@@ -142,13 +146,26 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(877, 596);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(877, 592);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
 			this.BattleDetailTheme.TabIndex = 0;
 			this.BattleDetailTheme.Text = "Battle Details";
 			this.BattleDetailTheme.TitleHeight = 26;
+			// 
+			// btnBattleComment
+			// 
+			this.btnBattleComment.BlackButton = false;
+			this.btnBattleComment.Checked = false;
+			this.btnBattleComment.Image = null;
+			this.btnBattleComment.Location = new System.Drawing.Point(139, 40);
+			this.btnBattleComment.Name = "btnBattleComment";
+			this.btnBattleComment.Size = new System.Drawing.Size(108, 23);
+			this.btnBattleComment.TabIndex = 7;
+			this.btnBattleComment.Text = "Battle Comment";
+			this.btnBattleComment.ToolTipText = "";
+			this.btnBattleComment.Click += new System.EventHandler(this.btnTab_Click);
 			// 
 			// panel1
 			// 
@@ -184,10 +201,9 @@
 			this.panel1.Controls.Add(this.dgvDamage);
 			this.panel1.Controls.Add(this.dgvShooting);
 			this.panel1.Controls.Add(this.dgvPerformance);
-			this.panel1.Controls.Add(this.panel2);
-			this.panel1.Location = new System.Drawing.Point(26, 64);
+			this.panel1.Location = new System.Drawing.Point(28, 166);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(825, 501);
+			this.panel1.Size = new System.Drawing.Size(822, 400);
 			this.panel1.TabIndex = 6;
 			// 
 			// label11
@@ -195,7 +211,7 @@
 			this.label11.AutoSize = true;
 			this.label11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label11.Location = new System.Drawing.Point(737, 118);
+			this.label11.Location = new System.Drawing.Point(736, 18);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(40, 13);
 			this.label11.TabIndex = 66;
@@ -205,7 +221,7 @@
 			// 
 			this.pictureBox9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
-			this.pictureBox9.Location = new System.Drawing.Point(571, 115);
+			this.pictureBox9.Location = new System.Drawing.Point(570, 15);
 			this.pictureBox9.Name = "pictureBox9";
 			this.pictureBox9.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox9.TabIndex = 65;
@@ -214,7 +230,7 @@
 			// pictureBox10
 			// 
 			this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
-			this.pictureBox10.Location = new System.Drawing.Point(566, 113);
+			this.pictureBox10.Location = new System.Drawing.Point(565, 13);
 			this.pictureBox10.Name = "pictureBox10";
 			this.pictureBox10.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox10.TabIndex = 64;
@@ -223,7 +239,7 @@
 			// dgvOther
 			// 
 			this.dgvOther.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvOther.Location = new System.Drawing.Point(566, 133);
+			this.dgvOther.Location = new System.Drawing.Point(565, 33);
 			this.dgvOther.Name = "dgvOther";
 			this.dgvOther.Size = new System.Drawing.Size(242, 67);
 			this.dgvOther.TabIndex = 63;
@@ -234,7 +250,7 @@
 			this.lblCredits.AutoSize = true;
 			this.lblCredits.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.lblCredits.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.lblCredits.Location = new System.Drawing.Point(737, 225);
+			this.lblCredits.Location = new System.Drawing.Point(736, 125);
 			this.lblCredits.Name = "lblCredits";
 			this.lblCredits.Size = new System.Drawing.Size(39, 13);
 			this.lblCredits.TabIndex = 62;
@@ -244,7 +260,7 @@
 			// 
 			this.pictureBoxCredits.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBoxCredits.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCredits.Image")));
-			this.pictureBoxCredits.Location = new System.Drawing.Point(571, 222);
+			this.pictureBoxCredits.Location = new System.Drawing.Point(570, 122);
 			this.pictureBoxCredits.Name = "pictureBoxCredits";
 			this.pictureBoxCredits.Size = new System.Drawing.Size(42, 42);
 			this.pictureBoxCredits.TabIndex = 61;
@@ -253,7 +269,7 @@
 			// pictureBoxCreditsBack
 			// 
 			this.pictureBoxCreditsBack.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCreditsBack.Image")));
-			this.pictureBoxCreditsBack.Location = new System.Drawing.Point(566, 220);
+			this.pictureBoxCreditsBack.Location = new System.Drawing.Point(565, 120);
 			this.pictureBoxCreditsBack.Name = "pictureBoxCreditsBack";
 			this.pictureBoxCreditsBack.Size = new System.Drawing.Size(242, 22);
 			this.pictureBoxCreditsBack.TabIndex = 60;
@@ -263,7 +279,7 @@
 			// 
 			this.lblXP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.lblXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.lblXP.Location = new System.Drawing.Point(719, 355);
+			this.lblXP.Location = new System.Drawing.Point(718, 255);
 			this.lblXP.Name = "lblXP";
 			this.lblXP.Size = new System.Drawing.Size(73, 17);
 			this.lblXP.TabIndex = 59;
@@ -273,7 +289,7 @@
 			// dgvCredit
 			// 
 			this.dgvCredit.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvCredit.Location = new System.Drawing.Point(566, 240);
+			this.dgvCredit.Location = new System.Drawing.Point(565, 140);
 			this.dgvCredit.Name = "dgvCredit";
 			this.dgvCredit.Size = new System.Drawing.Size(242, 88);
 			this.dgvCredit.TabIndex = 56;
@@ -284,7 +300,7 @@
 			this.label10.AutoSize = true;
 			this.label10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label10.Location = new System.Drawing.Point(450, 118);
+			this.label10.Location = new System.Drawing.Point(449, 18);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(67, 13);
 			this.label10.TabIndex = 54;
@@ -294,7 +310,7 @@
 			// 
 			this.pictureBoxXP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBoxXP.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxXP.Image")));
-			this.pictureBoxXP.Location = new System.Drawing.Point(571, 352);
+			this.pictureBoxXP.Location = new System.Drawing.Point(570, 252);
 			this.pictureBoxXP.Name = "pictureBoxXP";
 			this.pictureBoxXP.Size = new System.Drawing.Size(42, 42);
 			this.pictureBoxXP.TabIndex = 58;
@@ -304,7 +320,7 @@
 			// 
 			this.pictureBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
-			this.pictureBox7.Location = new System.Drawing.Point(296, 115);
+			this.pictureBox7.Location = new System.Drawing.Point(295, 15);
 			this.pictureBox7.Name = "pictureBox7";
 			this.pictureBox7.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox7.TabIndex = 53;
@@ -313,7 +329,7 @@
 			// pictureBox8
 			// 
 			this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-			this.pictureBox8.Location = new System.Drawing.Point(291, 113);
+			this.pictureBox8.Location = new System.Drawing.Point(290, 13);
 			this.pictureBox8.Name = "pictureBox8";
 			this.pictureBox8.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox8.TabIndex = 52;
@@ -322,7 +338,7 @@
 			// pictureBoxXPBack
 			// 
 			this.pictureBoxXPBack.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxXPBack.Image")));
-			this.pictureBoxXPBack.Location = new System.Drawing.Point(566, 351);
+			this.pictureBoxXPBack.Location = new System.Drawing.Point(565, 251);
 			this.pictureBoxXPBack.Name = "pictureBoxXPBack";
 			this.pictureBoxXPBack.Size = new System.Drawing.Size(242, 22);
 			this.pictureBoxXPBack.TabIndex = 57;
@@ -333,7 +349,7 @@
 			this.label6.AutoSize = true;
 			this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label6.Location = new System.Drawing.Point(183, 291);
+			this.label6.Location = new System.Drawing.Point(182, 191);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(47, 13);
 			this.label6.TabIndex = 51;
@@ -343,7 +359,7 @@
 			// 
 			this.pictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-			this.pictureBox6.Location = new System.Drawing.Point(21, 288);
+			this.pictureBox6.Location = new System.Drawing.Point(20, 188);
 			this.pictureBox6.Name = "pictureBox6";
 			this.pictureBox6.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox6.TabIndex = 50;
@@ -352,9 +368,9 @@
 			// dgvXP
 			// 
 			this.dgvXP.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvXP.Location = new System.Drawing.Point(566, 372);
+			this.dgvXP.Location = new System.Drawing.Point(565, 272);
 			this.dgvXP.Name = "dgvXP";
-			this.dgvXP.Size = new System.Drawing.Size(242, 101);
+			this.dgvXP.Size = new System.Drawing.Size(242, 107);
 			this.dgvXP.TabIndex = 55;
 			this.dgvXP.Visible = false;
 			// 
@@ -363,7 +379,7 @@
 			this.label5.AutoSize = true;
 			this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label5.Location = new System.Drawing.Point(459, 269);
+			this.label5.Location = new System.Drawing.Point(458, 169);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(49, 13);
 			this.label5.TabIndex = 49;
@@ -373,7 +389,7 @@
 			// 
 			this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-			this.pictureBox5.Location = new System.Drawing.Point(296, 266);
+			this.pictureBox5.Location = new System.Drawing.Point(295, 166);
 			this.pictureBox5.Name = "pictureBox5";
 			this.pictureBox5.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox5.TabIndex = 48;
@@ -384,7 +400,7 @@
 			this.label4.AutoSize = true;
 			this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label4.Location = new System.Drawing.Point(137, 118);
+			this.label4.Location = new System.Drawing.Point(136, 18);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(87, 13);
 			this.label4.TabIndex = 47;
@@ -394,7 +410,7 @@
 			// 
 			this.pictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-			this.pictureBox4.Location = new System.Drawing.Point(21, 115);
+			this.pictureBox4.Location = new System.Drawing.Point(20, 15);
 			this.pictureBox4.Name = "pictureBox4";
 			this.pictureBox4.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox4.TabIndex = 46;
@@ -403,7 +419,7 @@
 			// pictureBox3
 			// 
 			this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-			this.pictureBox3.Location = new System.Drawing.Point(291, 264);
+			this.pictureBox3.Location = new System.Drawing.Point(290, 164);
 			this.pictureBox3.Name = "pictureBox3";
 			this.pictureBox3.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox3.TabIndex = 44;
@@ -412,7 +428,7 @@
 			// pictureBox2
 			// 
 			this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-			this.pictureBox2.Location = new System.Drawing.Point(16, 286);
+			this.pictureBox2.Location = new System.Drawing.Point(15, 186);
 			this.pictureBox2.Name = "pictureBox2";
 			this.pictureBox2.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox2.TabIndex = 43;
@@ -421,7 +437,7 @@
 			// pictureBox1
 			// 
 			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.Location = new System.Drawing.Point(16, 113);
+			this.pictureBox1.Location = new System.Drawing.Point(15, 13);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox1.TabIndex = 42;
@@ -430,7 +446,7 @@
 			// dgvWN8
 			// 
 			this.dgvWN8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvWN8.Location = new System.Drawing.Point(16, 133);
+			this.dgvWN8.Location = new System.Drawing.Point(15, 33);
 			this.dgvWN8.Name = "dgvWN8";
 			this.dgvWN8.Size = new System.Drawing.Size(242, 131);
 			this.dgvWN8.TabIndex = 36;
@@ -439,32 +455,89 @@
 			// dgvDamage
 			// 
 			this.dgvDamage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvDamage.Location = new System.Drawing.Point(16, 306);
+			this.dgvDamage.Location = new System.Drawing.Point(15, 206);
 			this.dgvDamage.Name = "dgvDamage";
-			this.dgvDamage.Size = new System.Drawing.Size(242, 167);
+			this.dgvDamage.Size = new System.Drawing.Size(242, 173);
 			this.dgvDamage.TabIndex = 37;
 			this.dgvDamage.Visible = false;
 			// 
 			// dgvShooting
 			// 
 			this.dgvShooting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvShooting.Location = new System.Drawing.Point(291, 284);
+			this.dgvShooting.Location = new System.Drawing.Point(290, 184);
 			this.dgvShooting.Name = "dgvShooting";
-			this.dgvShooting.Size = new System.Drawing.Size(242, 189);
+			this.dgvShooting.Size = new System.Drawing.Size(242, 195);
 			this.dgvShooting.TabIndex = 38;
 			this.dgvShooting.Visible = false;
 			// 
 			// dgvPerformance
 			// 
 			this.dgvPerformance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvPerformance.Location = new System.Drawing.Point(291, 133);
+			this.dgvPerformance.Location = new System.Drawing.Point(290, 33);
 			this.dgvPerformance.Name = "dgvPerformance";
 			this.dgvPerformance.Size = new System.Drawing.Size(242, 109);
 			this.dgvPerformance.TabIndex = 39;
 			this.dgvPerformance.Visible = false;
 			// 
+			// btnEnemyTeam
+			// 
+			this.btnEnemyTeam.BlackButton = false;
+			this.btnEnemyTeam.Checked = false;
+			this.btnEnemyTeam.Image = null;
+			this.btnEnemyTeam.Location = new System.Drawing.Point(481, 40);
+			this.btnEnemyTeam.Name = "btnEnemyTeam";
+			this.btnEnemyTeam.Size = new System.Drawing.Size(108, 23);
+			this.btnEnemyTeam.TabIndex = 5;
+			this.btnEnemyTeam.Text = "Enemy Team";
+			this.btnEnemyTeam.ToolTipText = "";
+			this.btnEnemyTeam.Visible = false;
+			this.btnEnemyTeam.Click += new System.EventHandler(this.btnTab_Click);
+			// 
+			// btnOurTeam
+			// 
+			this.btnOurTeam.BlackButton = false;
+			this.btnOurTeam.Checked = false;
+			this.btnOurTeam.Image = null;
+			this.btnOurTeam.Location = new System.Drawing.Point(367, 40);
+			this.btnOurTeam.Name = "btnOurTeam";
+			this.btnOurTeam.Size = new System.Drawing.Size(108, 23);
+			this.btnOurTeam.TabIndex = 4;
+			this.btnOurTeam.Text = "Our Team";
+			this.btnOurTeam.ToolTipText = "";
+			this.btnOurTeam.Visible = false;
+			this.btnOurTeam.Click += new System.EventHandler(this.btnTab_Click);
+			// 
+			// btnTeams
+			// 
+			this.btnTeams.BlackButton = false;
+			this.btnTeams.Checked = false;
+			this.btnTeams.Image = null;
+			this.btnTeams.Location = new System.Drawing.Point(253, 40);
+			this.btnTeams.Name = "btnTeams";
+			this.btnTeams.Size = new System.Drawing.Size(108, 23);
+			this.btnTeams.TabIndex = 2;
+			this.btnTeams.Text = "Teams Overview";
+			this.btnTeams.ToolTipText = "";
+			this.btnTeams.Visible = false;
+			this.btnTeams.Click += new System.EventHandler(this.btnTab_Click);
+			// 
+			// btnPersonal
+			// 
+			this.btnPersonal.BlackButton = false;
+			this.btnPersonal.Checked = true;
+			this.btnPersonal.Image = null;
+			this.btnPersonal.Location = new System.Drawing.Point(25, 40);
+			this.btnPersonal.Name = "btnPersonal";
+			this.btnPersonal.Size = new System.Drawing.Size(108, 23);
+			this.btnPersonal.TabIndex = 1;
+			this.btnPersonal.Text = "My Result";
+			this.btnPersonal.ToolTipText = "";
+			this.btnPersonal.Click += new System.EventHandler(this.btnTab_Click);
+			// 
 			// panel2
 			// 
+			this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.panel2.Controls.Add(this.label1);
 			this.panel2.Controls.Add(this.lblEFF);
@@ -485,10 +558,9 @@
 			this.panel2.Controls.Add(this.lblSurvival);
 			this.panel2.Controls.Add(this.lblBattleMode);
 			this.panel2.Controls.Add(this.picTank);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel2.Location = new System.Drawing.Point(0, 0);
+			this.panel2.Location = new System.Drawing.Point(26, 64);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(825, 100);
+			this.panel2.Size = new System.Drawing.Size(825, 102);
 			this.panel2.TabIndex = 6;
 			// 
 			// label1
@@ -692,61 +764,6 @@
 			this.picTank.TabIndex = 1;
 			this.picTank.TabStop = false;
 			// 
-			// btnEnemyTeam
-			// 
-			this.btnEnemyTeam.BlackButton = false;
-			this.btnEnemyTeam.Checked = false;
-			this.btnEnemyTeam.Image = null;
-			this.btnEnemyTeam.Location = new System.Drawing.Point(367, 40);
-			this.btnEnemyTeam.Name = "btnEnemyTeam";
-			this.btnEnemyTeam.Size = new System.Drawing.Size(108, 23);
-			this.btnEnemyTeam.TabIndex = 5;
-			this.btnEnemyTeam.Text = "Enemy Team";
-			this.btnEnemyTeam.ToolTipText = "";
-			this.btnEnemyTeam.Visible = false;
-			this.btnEnemyTeam.Click += new System.EventHandler(this.btnTab_Click);
-			// 
-			// btnOurTeam
-			// 
-			this.btnOurTeam.BlackButton = false;
-			this.btnOurTeam.Checked = false;
-			this.btnOurTeam.Image = null;
-			this.btnOurTeam.Location = new System.Drawing.Point(253, 40);
-			this.btnOurTeam.Name = "btnOurTeam";
-			this.btnOurTeam.Size = new System.Drawing.Size(108, 23);
-			this.btnOurTeam.TabIndex = 4;
-			this.btnOurTeam.Text = "Our Team";
-			this.btnOurTeam.ToolTipText = "";
-			this.btnOurTeam.Visible = false;
-			this.btnOurTeam.Click += new System.EventHandler(this.btnTab_Click);
-			// 
-			// btnTeams
-			// 
-			this.btnTeams.BlackButton = false;
-			this.btnTeams.Checked = false;
-			this.btnTeams.Image = null;
-			this.btnTeams.Location = new System.Drawing.Point(139, 40);
-			this.btnTeams.Name = "btnTeams";
-			this.btnTeams.Size = new System.Drawing.Size(108, 23);
-			this.btnTeams.TabIndex = 2;
-			this.btnTeams.Text = "Teams Overview";
-			this.btnTeams.ToolTipText = "";
-			this.btnTeams.Visible = false;
-			this.btnTeams.Click += new System.EventHandler(this.btnTab_Click);
-			// 
-			// btnPersonal
-			// 
-			this.btnPersonal.BlackButton = false;
-			this.btnPersonal.Checked = true;
-			this.btnPersonal.Image = null;
-			this.btnPersonal.Location = new System.Drawing.Point(25, 40);
-			this.btnPersonal.Name = "btnPersonal";
-			this.btnPersonal.Size = new System.Drawing.Size(108, 23);
-			this.btnPersonal.TabIndex = 1;
-			this.btnPersonal.Text = "My Result";
-			this.btnPersonal.ToolTipText = "";
-			this.btnPersonal.Click += new System.EventHandler(this.btnTab_Click);
-			// 
 			// grpMain
 			// 
 			this.grpMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -756,7 +773,7 @@
 			this.grpMain.Image = null;
 			this.grpMain.Location = new System.Drawing.Point(25, 56);
 			this.grpMain.Name = "grpMain";
-			this.grpMain.Size = new System.Drawing.Size(827, 511);
+			this.grpMain.Size = new System.Drawing.Size(827, 513);
 			this.grpMain.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -764,7 +781,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(877, 596);
+			this.ClientSize = new System.Drawing.Size(877, 592);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MinimumSize = new System.Drawing.Size(877, 575);
@@ -865,5 +882,6 @@
 		private System.Windows.Forms.PictureBox pictureBox9;
 		private System.Windows.Forms.PictureBox pictureBox10;
 		private System.Windows.Forms.DataGridView dgvOther;
+		private BadButton btnBattleComment;
 	}
 }

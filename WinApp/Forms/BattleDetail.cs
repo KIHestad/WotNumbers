@@ -105,8 +105,10 @@ namespace WinApp.Forms
 			btnOurTeam.Checked = false;
 			btnPersonal.Checked = false;
 			btnTeams.Checked = false;
+			btnBattleComment.Checked = false;
 			// hide my result
 			panel1.Visible = false;
+			panel2.Visible = false;
 			// hide grids
 			dgvTeam1.Visible = false;
 			dgvTeam2.Visible = false;
@@ -124,6 +126,7 @@ namespace WinApp.Forms
 					dgvWN8.ClearSelection();
 					dgvDamage.ClearSelection();
 					panel1.Visible = true;
+					panel2.Visible = true;
 					break;
 				case "btnTeams":
 					ShowTeams();
@@ -133,6 +136,9 @@ namespace WinApp.Forms
 					break;
 				case "btnEnemyTeam":
 					ShowEnemyTeam();
+					break;
+				case "btnBattleComment":
+					panel2.Visible = true;
 					break;
 			}
 		}
