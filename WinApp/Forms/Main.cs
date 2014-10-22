@@ -560,9 +560,9 @@ namespace WinApp.Forms
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
 			// New battle saved
-			ShowView("New battle fetched, grid refreshed");
+			ShowView("New battle fetched, view refreshed");
 			if (notifyIcon.Visible)
-				notifyIcon.ShowBalloonTip(500);
+				notifyIcon.ShowBalloonTip(1000);
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
