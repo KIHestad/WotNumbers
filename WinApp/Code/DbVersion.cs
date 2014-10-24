@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using WinApp.Gadget;
 
 namespace WinApp.Code
@@ -17,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 185; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 188; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1292,7 +1294,7 @@ namespace WinApp.Code
 							"INSERT INTO map (id, name) VALUES (53,'Training area'); " +
 							"INSERT INTO map (id, name) VALUES (55,'Tundra'); " +
 							"INSERT INTO map (id, name) VALUES (56,'Windstorm'); " +
-							"INSERT INTO map (id, name) VALUES (57,'Winter Himmelsdor'); " +
+							"INSERT INTO map (id, name) VALUES (57,'Winter Himmelsdor'); " +
 							"INSERT INTO map (id, name) VALUES (58,'Ruinberg on Fire'); " +
 							"INSERT INTO map (id, name) VALUES (60,'Kharkov'); " +
 							"INSERT INTO map (id, name) VALUES (61,'Himmelsdorf Champion'); " +
@@ -1870,6 +1872,19 @@ namespace WinApp.Code
 					Config.Settings.notifyIconFormExitToMinimize = false;
 					Config.SaveConfig(out msg);
 					break;
+				case 186:
+					mssql = "UPDATE map SET name='Fiery Salient' WHERE id=62;";
+					sqlite = mssql;
+					break;
+				case 187:
+					mssql = "ALTER TABLE map ADD description VARCHAR(2000) NULL; " +
+							"ALTER TABLE map ADD arena_id VARCHAR(50) NULL; ";
+					sqlite = mssql;
+					break;
+				case 188:
+					mssql = GetUpgradeSQL("188");
+					sqlite = mssql;
+					break;
 
 			}
 			string sql = "";
@@ -1879,6 +1894,27 @@ namespace WinApp.Code
 			else if (dbType == ConfigData.dbType.SQLite) 
 				sql = sqlite;
 			// return sql
+			return sql;
+		}
+
+		private static string GetUpgradeSQL(string version)
+		{
+			string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\upgrade.json";
+			// Read content
+			StreamReader sr = new StreamReader(file, Encoding.UTF8);
+			string json = sr.ReadToEnd();
+			sr.Close();
+			// Root token
+			JToken token_root = JObject.Parse(json);
+			// Array containing upgrade scripts
+			JArray array_script = (JArray)token_root.SelectToken(version);
+			// Convert to list
+			List<string> scripts = array_script.ToObject<List<string>>();
+			string sql = "";
+			foreach (string script in scripts)
+			{
+				sql += script + Environment.NewLine;
+			}
 			return sql;
 		}
 

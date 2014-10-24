@@ -101,15 +101,7 @@ namespace WinApp.Gadget
 		private void btnColorPicker_Click(object sender, EventArgs e)
 		{
 			colorDialog1.Color = panel1.BackColor;
-			// Default Custom Colors
-			int[] defaultColors = new int[5];
-			defaultColors[0] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarRed);
-			defaultColors[1] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarOcre);
-			defaultColors[2] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarGreen);
-			defaultColors[3] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarBlue);
-			defaultColors[4] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarPurple);
-			colorDialog1.CustomColors = defaultColors;
-
+			colorDialog1.CustomColors = ColorTheme.DefaultChartBarColors();
 			colorDialog1.ShowDialog();
 			panel1.BackColor = colorDialog1.Color;
 		}

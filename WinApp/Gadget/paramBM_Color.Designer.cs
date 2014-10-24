@@ -29,15 +29,15 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.badForm1 = new BadForm();
+			this.btnColorPicker = new BadButton();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.badLabel2 = new BadLabel();
 			this.btnCancel = new BadButton();
 			this.btnSelect = new BadButton();
 			this.ddBattleMode = new BadDropDownBox();
 			this.badLabel1 = new BadLabel();
-			this.badLabel2 = new BadLabel();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.btnColorPicker = new BadButton();
 			this.colorDialog1 = new System.Windows.Forms.ColorDialog();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
@@ -53,13 +53,14 @@
 			this.badForm1.Controls.Add(this.badLabel1);
 			this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.badForm1.FormExitAsMinimize = false;
 			this.badForm1.FormFooter = false;
 			this.badForm1.FormFooterHeight = 26;
 			this.badForm1.FormInnerBorder = 3;
 			this.badForm1.FormMargin = 0;
 			this.badForm1.Image = null;
 			this.badForm1.Location = new System.Drawing.Point(0, 0);
-			this.badForm1.MainArea = mainAreaClass2;
+			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = false;
 			this.badForm1.Size = new System.Drawing.Size(260, 154);
@@ -69,6 +70,39 @@
 			this.badForm1.TabIndex = 0;
 			this.badForm1.Text = "Select Parameters";
 			this.badForm1.TitleHeight = 26;
+			// 
+			// btnColorPicker
+			// 
+			this.btnColorPicker.BlackButton = false;
+			this.btnColorPicker.Checked = false;
+			this.btnColorPicker.Image = null;
+			this.btnColorPicker.Location = new System.Drawing.Point(212, 78);
+			this.btnColorPicker.Name = "btnColorPicker";
+			this.btnColorPicker.Size = new System.Drawing.Size(25, 23);
+			this.btnColorPicker.TabIndex = 6;
+			this.btnColorPicker.Text = "...";
+			this.btnColorPicker.ToolTipText = "";
+			this.btnColorPicker.Click += new System.EventHandler(this.btnColorPicker_Click);
+			// 
+			// panel1
+			// 
+			this.panel1.BackColor = System.Drawing.Color.Gray;
+			this.panel1.Location = new System.Drawing.Point(103, 78);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(103, 23);
+			this.panel1.TabIndex = 5;
+			// 
+			// badLabel2
+			// 
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(25, 78);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(75, 23);
+			this.badLabel2.TabIndex = 4;
+			this.badLabel2.Text = "Bar Color:";
+			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// btnCancel
 			// 
@@ -109,47 +143,13 @@
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
-			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(25, 48);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(76, 23);
 			this.badLabel1.TabIndex = 0;
 			this.badLabel1.Text = "Battle Mode:";
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			
-			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(25, 78);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(75, 23);
-			this.badLabel2.TabIndex = 4;
-			this.badLabel2.Text = "Bar Color:";
-			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(71)))), ((int)(((byte)(165)))));
-			this.panel1.Location = new System.Drawing.Point(103, 78);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(103, 23);
-			this.panel1.TabIndex = 5;
-			// 
-			// btnColorPicker
-			// 
-			this.btnColorPicker.BlackButton = false;
-			this.btnColorPicker.Checked = false;
-			this.btnColorPicker.Image = null;
-			this.btnColorPicker.Location = new System.Drawing.Point(212, 78);
-			this.btnColorPicker.Name = "btnColorPicker";
-			this.btnColorPicker.Size = new System.Drawing.Size(25, 23);
-			this.btnColorPicker.TabIndex = 6;
-			this.btnColorPicker.Text = "...";
-			this.btnColorPicker.ToolTipText = "";
-			this.btnColorPicker.Click += new System.EventHandler(this.btnColorPicker_Click);
+			this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// paramBM_Color
 			// 

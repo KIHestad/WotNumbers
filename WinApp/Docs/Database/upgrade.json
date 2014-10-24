@@ -1,0 +1,24 @@
+﻿{
+  "188": [
+    "UPDATE map SET name='Sand River' WHERE id=13;",
+    "UPDATE map SET name='Mountain Pass' WHERE id=15;",
+    "UPDATE map SET name='Fishermans Bay' WHERE id=18;",
+    "UPDATE map SET name='Arctic Region' WHERE id=19;",
+    "UPDATE map SET name='Siegfried Line' WHERE id=21;",
+    "UPDATE map SET name='El Halluf' WHERE id=24;",
+    "UPDATE map SET name='Live Oaks' WHERE id=31;",
+    "UPDATE map SET name='South Coast' WHERE id=32;",
+    "UPDATE map SET name='Hidden Village' WHERE id=43;",
+    "UPDATE map SET name='Dragon Ridge' WHERE id=44;",
+    "UPDATE map SET name='Serene Coast' WHERE id=49;",
+    "UPDATE map SET name='Pearl River' WHERE id=52;",
+    "UPDATE map SET name='Training Area' WHERE id=53;",
+    "UPDATE map SET name='Winter Himmelsdorf' WHERE id=57;",
+    "UPDATE map SET name='Ruinberg on Fire' WHERE id=58;",
+    "UPDATE map SET name='Tank Rally' WHERE id=61;",
+    "UPDATE map SET name='Pearl River' WHERE id=1957;",
+    "UPDATE map SET name='Sacred Valley' WHERE id=1983;",
+    "UPDATE map SET name='Sacred Valley' WHERE id=51;",
+    "UPDATE map SET name='Training area' WHERE id=2021;"
+    ]
+}

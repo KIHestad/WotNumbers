@@ -182,11 +182,17 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BattleDetail.cs">
+    <Compile Include="Forms\BattleDetail\BattleDetail.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BattleDetail.Designer.cs">
+    <Compile Include="Forms\BattleDetail\BattleDetail.Designer.cs">
       <DependentUpon>BattleDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BattleDetail\BattleMapAndComment.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\BattleDetail\BattleMapAndComment.Designer.cs">
+      <DependentUpon>BattleMapAndComment.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
@@ -452,8 +458,11 @@
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BattleDetail.resx">
+    <EmbeddedResource Include="Forms\BattleDetail\BattleDetail.resx">
       <DependentUpon>BattleDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BattleDetail\BattleMapAndComment.resx">
+      <DependentUpon>BattleMapAndComment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>
@@ -754,6 +763,7 @@
     <Content Include="DevDocs\WotStatistics\4.png" />
     <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
+    <None Include="Docs\Database\upgrade.json" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

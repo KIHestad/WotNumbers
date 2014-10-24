@@ -53,6 +53,7 @@ namespace WinApp.Code
 			Achievement = 5,
 			TankDetails = 6,
 			PlayersInGarageVehicles = 7,
+			Maps = 8,
 		}
 
 		#region fetchFromAPI
@@ -123,6 +124,10 @@ namespace WinApp.Code
 				else if (WotAPi == WotApiType.Achievement)
 				{
 					url += "/wot/encyclopedia/achievements/?application_id=" + applicationId;
+				}
+				else if (WotAPi == WotApiType.Maps)
+				{
+					url += "/wot/encyclopedia/arenas/?application_id=" + applicationId;
 				}
 				else if (WotAPi == WotApiType.TankDetails)
 				{
@@ -658,6 +663,67 @@ namespace WinApp.Code
 		}
 
 		#endregion
+
+		#region importMaps
+
+		public static String ImportMaps(Form parentForm)
+		{
+			string json = FetchFromAPI(WotApiType.Maps, 0, parentForm);
+			if (json == "")
+			{
+				return "No data imported.";
+			}
+			else
+			{
+				log.Add("Start checking maps (" + DateTime.Now.ToString() + ")");
+
+				try
+				{
+					JObject allTokens = JObject.Parse(json);
+					rootToken = allTokens.First;
+					string sqlTotal = "";
+					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+					{
+						rootToken = rootToken.Next;
+						itemCount = (int)((JProperty)rootToken).Value;
+						rootToken = rootToken.Next;
+						JToken maps = rootToken.Children().First();
+						foreach (JProperty map in maps)
+						{
+							Application.DoEvents(); // TODO: testing freeze-problem running API requests
+							itemToken = map.First();
+							string name = itemToken["name_i18n"].ToString();
+							name = name.Replace("'","");
+							string description = itemToken["description"].ToString();
+							string arena_id = itemToken["arena_id"].ToString();
+							updateSql = "UPDATE map SET description=@description, arena_id=@arena_id WHERE name=@name; " ;
+							DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
+							DB.AddWithValue(ref updateSql, "@description", description, DB.SqlDataType.VarChar);
+							DB.AddWithValue(ref updateSql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
+							sqlTotal += updateSql + "\n" + Environment.NewLine;
+							logAddedItems = logAddedItems + name + ", ";
+							logAddedItemsCount++;
+						}
+
+						// Update log file after import
+						updateLog("maps");
+					}
+					DB.ExecuteNonQuery(sqlTotal, true, true);
+					return ("Import Complete");
+				}
+
+				catch (Exception ex)
+				{
+					Log.LogToFile(ex);
+					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
+					Code.MsgBox.Show(ex.Message, "Error fetching maps from WoT API", parentForm);
+					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
+				}
+			}
+		}
+
+		#endregion
+
 
 		#region importAchievements
 

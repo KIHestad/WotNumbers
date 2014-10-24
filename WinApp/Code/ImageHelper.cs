@@ -150,6 +150,50 @@ namespace WinApp.Code
 			return image;
 		}
 
+		public static Image GetMap(int mapId, bool getIllustation = false)
+		{
+			string sql = "select arena_id from map where id=@mapId";
+			DB.AddWithValue(ref sql, "@mapId", mapId, DB.SqlDataType.Int);
+			DataTable dtArenaId = DB.FetchData(sql);
+			string arena_id = "";
+			if (dtArenaId.Rows.Count > 0)
+			{
+				arena_id = dtArenaId.Rows[0][0].ToString();
+			}
+			return GetMap(arena_id, getIllustation);
+		}
+
+		public static Image GetMap(string arena_id, bool getIllustation = false)
+		{
+			Bitmap img = new Bitmap(1, 1);
+			Image image = (Image)img;
+			if (arena_id != "")
+			{
+				string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+				string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
+				string sql = "select * from map where name=@arena_id";
+				DB.AddWithValue(ref sql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
+				SQLiteConnection con = new SQLiteConnection(adminDbCon);
+				con.Open();
+				SQLiteCommand command = new SQLiteCommand(sql, con);
+				SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+				DataTable dt = new DataTable();
+				adapter.Fill(dt);
+				con.Close();
+				string field = "minimap";
+				if (getIllustation) field = "illustration";
+				if (dt.Rows.Count > 0)
+				{
+					// SmallImg
+					byte[] imgByte = (byte[])dt.Rows[0][field];
+					MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+					ms.Write(imgByte, 0, imgByte.Length);
+					image = new Bitmap(ms);
+				}
+			}
+			return image;
+		}
+
 
 		public static void LoadMasteryBadgeImages()
 		{

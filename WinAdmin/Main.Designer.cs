@@ -38,14 +38,15 @@
 			this.menuData = new System.Windows.Forms.ToolStripDropDownButton();
 			this.menuDataCreateTableStruct = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuDataGetTankDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.readMasteryBadgesFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.readTankTypeFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.readNationImagesFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.txtAdminSQLiteDB = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.openFileDialogDQLiteADminDB = new System.Windows.Forms.OpenFileDialog();
-			this.readNationImagesFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.readMapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMain.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -112,7 +113,8 @@
             this.toolStripSeparator2,
             this.readMasteryBadgesFromFileToolStripMenuItem,
             this.readTankTypeFromFileToolStripMenuItem,
-            this.readNationImagesFromFileToolStripMenuItem});
+            this.readNationImagesFromFileToolStripMenuItem,
+            this.readMapsToolStripMenuItem});
 			this.menuData.Image = ((System.Drawing.Image)(resources.GetObject("menuData.Image")));
 			this.menuData.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.menuData.Name = "menuData";
@@ -133,6 +135,11 @@
 			this.menuDataGetTankDataFromAPI.Text = "Get tank data from API...";
 			this.menuDataGetTankDataFromAPI.Click += new System.EventHandler(this.menuDataGetTankDataFromAPI_Click);
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(272, 6);
+			// 
 			// readMasteryBadgesFromFileToolStripMenuItem
 			// 
 			this.readMasteryBadgesFromFileToolStripMenuItem.Name = "readMasteryBadgesFromFileToolStripMenuItem";
@@ -146,6 +153,13 @@
 			this.readTankTypeFromFileToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
 			this.readTankTypeFromFileToolStripMenuItem.Text = "Read tank type images from file";
 			this.readTankTypeFromFileToolStripMenuItem.Click += new System.EventHandler(this.readTankTypeFromFileToolStripMenuItem_Click);
+			// 
+			// readNationImagesFromFileToolStripMenuItem
+			// 
+			this.readNationImagesFromFileToolStripMenuItem.Name = "readNationImagesFromFileToolStripMenuItem";
+			this.readNationImagesFromFileToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+			this.readNationImagesFromFileToolStripMenuItem.Text = "Read nation images from file";
+			this.readNationImagesFromFileToolStripMenuItem.Click += new System.EventHandler(this.readNationImagesFromFileToolStripMenuItem_Click);
 			// 
 			// groupBox1
 			// 
@@ -181,17 +195,12 @@
 			// 
 			this.openFileDialogDQLiteADminDB.FileName = "openFileDialog1";
 			// 
-			// readNationImagesFromFileToolStripMenuItem
+			// readMapsToolStripMenuItem
 			// 
-			this.readNationImagesFromFileToolStripMenuItem.Name = "readNationImagesFromFileToolStripMenuItem";
-			this.readNationImagesFromFileToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
-			this.readNationImagesFromFileToolStripMenuItem.Text = "Read nation images from file";
-			this.readNationImagesFromFileToolStripMenuItem.Click += new System.EventHandler(this.readNationImagesFromFileToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(272, 6);
+			this.readMapsToolStripMenuItem.Name = "readMapsToolStripMenuItem";
+			this.readMapsToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+			this.readMapsToolStripMenuItem.Text = "Read map images from file";
+			this.readMapsToolStripMenuItem.Click += new System.EventHandler(this.readMapsToolStripMenuItem_Click);
 			// 
 			// Main
 			// 
@@ -232,6 +241,7 @@
 		private System.Windows.Forms.ToolStripMenuItem readTankTypeFromFileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem readNationImagesFromFileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem readMapsToolStripMenuItem;
 	}
 }
 

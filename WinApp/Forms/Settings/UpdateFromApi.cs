@@ -42,7 +42,7 @@ namespace WinApp.Forms
 			this.Cursor = Cursors.WaitCursor;
 			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
 			btnStart.Enabled = false;
-			badProgressBar.ValueMax = 6;
+			badProgressBar.ValueMax = 7;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 
@@ -71,6 +71,10 @@ namespace WinApp.Forms
 			ImportWotApi2DB.ImportAchievements(this);
 			TankHelper.GetAchList();
 
+			// Get achievements
+			UpdateProgressBar("Retrieves maps from Wargaming API");
+			ImportWotApi2DB.ImportMaps(this);
+			
 			// Get WN8 ratings
 			UpdateProgressBar("Retrieves WN8 expected values from API");
 			ImportWN8Api2DB.UpdateWN8(this);

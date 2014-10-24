@@ -290,5 +290,66 @@ namespace WinAdmin
 			}
 			MessageBox.Show("Images imported from file", "Done");
 		}
+
+		private void readMapsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// Recreate table
+			DB.DBResult result = new DB.DBResult();
+			// Add masterybadge table if missing
+			string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='map';";
+			DataTable dt = DB.FetchData(sql, Settings.Config, out result);
+			if (dt.Rows.Count == 0)
+			sql = "create table map ( " +
+				"	id integer primary key, " +
+				"   name varchar(100) not null, " +
+				"   minimap blob, " + 
+				"	illustration blob " +
+				")";
+			DB.ExecuteNonQuery(sql, Settings.Config, out result);
+			FormHelper.ShowError(result);
+			// Remove current images
+			// Loop throug current images
+			result = new DB.DBResult();
+			string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\Img\\Map\\";
+			string[] images = Directory.GetFiles(path, "*.jpg");
+			foreach (string imageFile in images)
+			{
+				string name = Path.GetFileNameWithoutExtension(imageFile);
+				sql = "select id from map where name=@name";
+				DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar, Settings.Config);
+				if (DB.FetchData(sql, Settings.Config, out result).Rows.Count == 0)
+					sql = "INSERT INTO map (name, minimap, illustration) VALUES (@name, @minimap, @illustration); ";
+				else
+					sql = "UPDATE map SET minimap=@minimap, illustration=@illustration WHERE name=@name; ";
+				// read image into database
+				byte[] imgMinimap = getImageFromFile(imageFile);
+				byte[] imgIllustration = getImageFromFile(Path.GetDirectoryName(imageFile) + "\\Illustration\\" + Path.GetFileName(imageFile));
+				// SQL Lite binary insert
+				string conString = Config.DatabaseConnection(Settings.Config);
+				SQLiteConnection con = new SQLiteConnection(conString);
+				SQLiteCommand cmd = con.CreateCommand();
+				cmd.CommandText = sql;
+				SQLiteParameter imgMinimapParam = new SQLiteParameter("@minimap", System.Data.DbType.Binary);
+				SQLiteParameter imgIllustrationParam = new SQLiteParameter("@illustration", System.Data.DbType.Binary);
+				SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
+				imgMinimapParam.Value = imgMinimap;
+				imgIllustrationParam.Value = imgIllustration;
+				nameParam.Value = name;
+				cmd.Parameters.Add(imgMinimapParam);
+				cmd.Parameters.Add(imgIllustrationParam);
+				cmd.Parameters.Add(nameParam);
+				con.Open();
+				try
+				{
+					cmd.ExecuteNonQuery();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+				con.Close();
+			}
+			MessageBox.Show("Images imported from file", "Done");
+		}
 	}
 }

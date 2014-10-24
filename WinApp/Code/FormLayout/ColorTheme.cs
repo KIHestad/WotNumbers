@@ -81,12 +81,18 @@ namespace WinApp.Code
 		public static Color ScrollbarArrow = Color.FromArgb(255, 152, 152, 156);
 
 		// Charts
-		public static Color ChartBarBlue = Color.FromArgb(255, 31, 71, 165);
+		public static Color ChartBarBlue = ColorTranslator.FromHtml("#1F47A5");  
 		public static Color ChartBarRed = ColorTranslator.FromHtml("#A31F1F");
 		public static Color ChartBarGreen = ColorTranslator.FromHtml("#1B8E30");
 		public static Color ChartBarPurple = ColorTranslator.FromHtml("#761E99");
 		public static Color ChartBarOcre = ColorTranslator.FromHtml("#896A1B");
-
+		// Lighter tone
+		public static Color ChartBarBlueLight = ColorTranslator.FromHtml("#315377");
+		public static Color ChartBarRedLight = ColorTranslator.FromHtml("#772F2F");
+		public static Color ChartBarGreenLight = ColorTranslator.FromHtml("#3A7030");
+		public static Color ChartBarPurpleLight = ColorTranslator.FromHtml("#683468");
+		public static Color ChartBarOcreLight = ColorTranslator.FromHtml("#755D2E");
+		
 		// Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
 		public static Color Rating_very_bad = ColorTranslator.FromHtml("#CE0000");		// dark red
 		public static Color Rating_bad = ColorTranslator.FromHtml("#FF0000");			// red
@@ -98,5 +104,26 @@ namespace WinApp.Code
 		public static Color Rating_uniqum = ColorTranslator.FromHtml("#CC5EFF");		// purple
 		public static Color Rating_super_uniqum = ColorTranslator.FromHtml("#B200FF");	// deep purple
 
+		public static int[] DefaultChartBarColors()
+		{
+			int[] defaultColors = new int[16];
+			defaultColors[0] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarRed);
+			defaultColors[1] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarOcre);
+			defaultColors[2] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarGreen);
+			defaultColors[3] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarBlue);
+			defaultColors[4] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarPurple);
+			defaultColors[5] = System.Drawing.ColorTranslator.ToOle(Color.White);
+			defaultColors[6] = System.Drawing.ColorTranslator.ToOle(Color.White);
+			defaultColors[7] = System.Drawing.ColorTranslator.ToOle(Color.White);
+			defaultColors[8] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarRedLight);
+			defaultColors[9] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarOcreLight);
+			defaultColors[10] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarGreenLight);
+			defaultColors[11] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarBlueLight);
+			defaultColors[12] = System.Drawing.ColorTranslator.ToOle(ColorTheme.ChartBarPurpleLight);
+			defaultColors[13] = System.Drawing.ColorTranslator.ToOle(Color.White);
+			defaultColors[14] = System.Drawing.ColorTranslator.ToOle(Color.White);
+			defaultColors[15] = System.Drawing.ColorTranslator.ToOle(Color.White);
+			return defaultColors;
+		}
 	}
 }

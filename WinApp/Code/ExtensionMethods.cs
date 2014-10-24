@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WinApp.Code
 {
@@ -66,6 +67,20 @@ namespace WinApp.Code
 			}
 
 			return binary;
+		}
+
+		public static string ReplaceWhiteSpaceWithSpace(this string text)
+		{
+			string value = Regex.Replace(text, "\\s", " ");
+			return value;
+		}
+
+		public static string ReplaceSpaceWithWhiteSpace(this string text)
+		{
+			return Regex.Replace(text, " ", @"\s+");
+
+			//string value = Regex.Replace(text, " ", "\\s");
+			//return value;
 		}
 	}
 }
