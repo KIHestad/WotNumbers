@@ -212,33 +212,12 @@ namespace WinApp.Forms
 				// Header picture /tank & Map), and map info
 				Image imgHeader = new Bitmap(picHeader.Width, picHeader.Height);
 				tankId = Convert.ToInt32(dr["tankId"]);
-				Image imageTank = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
-				int tankLabelRelativeToImage = picHeader.Left - lblTankName.Left;
+				picHeader.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
 				string mapName = "";
 				if (dr["mapName"] != DBNull.Value)
-				{
 					mapName = dr["mapName"].ToString();
-					Image imageMap = ImageHelper.GetMap(dr["arena_id"].ToString(), true);
-					//Image imageOverlay = imgMapOverlay.Images[0];
-					int xpos = picHeader.Width - imageMap.Width;
-					using (Graphics gr = Graphics.FromImage(imgHeader))
-					{
-						gr.DrawImage(imageMap, xpos, 0, 231, 98);
-						gr.DrawImage(imageTank, 30, -1, 160, 100);
-					}
-					lblTankName.Left = lblTankName.Left + 30;
-				}
 				else
-				{
-					int xpos = picHeader.Width - imageTank.Width;
-					using (Graphics gr = Graphics.FromImage(imgHeader))
-					{
-						gr.DrawImage(imageTank, xpos, -1, 160, 100);
-					}
 					btnMapAndComment.Text = "Comment";
-					lblTankName.Left = picHeader.Left + picHeader.Width - imageTank.Width - tankLabelRelativeToImage;
-				}
-				picHeader.Image = imgHeader;
 				lblMap.Text = mapName;
 				// Battle time
 				DateTime finished = Convert.ToDateTime(dr["battleTime"]);

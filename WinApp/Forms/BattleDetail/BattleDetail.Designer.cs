@@ -156,7 +156,7 @@
 			this.BattleDetailTheme.MainArea = mainAreaClass1;
 			this.BattleDetailTheme.Name = "BattleDetailTheme";
 			this.BattleDetailTheme.Resizable = true;
-			this.BattleDetailTheme.Size = new System.Drawing.Size(877, 665);
+			this.BattleDetailTheme.Size = new System.Drawing.Size(834, 661);
 			this.BattleDetailTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleDetailTheme.SystemExitImage")));
 			this.BattleDetailTheme.SystemMaximizeImage = null;
 			this.BattleDetailTheme.SystemMinimizeImage = null;
@@ -167,7 +167,7 @@
 			// panelMapAndComment
 			// 
 			this.panelMapAndComment.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.panelMapAndComment.Location = new System.Drawing.Point(603, 139);
+			this.panelMapAndComment.Location = new System.Drawing.Point(743, 133);
 			this.panelMapAndComment.Name = "panelMapAndComment";
 			this.panelMapAndComment.Size = new System.Drawing.Size(68, 20);
 			this.panelMapAndComment.TabIndex = 8;
@@ -225,7 +225,7 @@
 			this.panelMyResult.Controls.Add(this.dgvPerformance);
 			this.panelMyResult.Location = new System.Drawing.Point(24, 165);
 			this.panelMyResult.Name = "panelMyResult";
-			this.panelMyResult.Size = new System.Drawing.Size(830, 473);
+			this.panelMyResult.Size = new System.Drawing.Size(787, 469);
 			this.panelMyResult.TabIndex = 6;
 			// 
 			// label12
@@ -312,7 +312,7 @@
 			this.lblCredits.AutoSize = true;
 			this.lblCredits.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.lblCredits.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.lblCredits.Location = new System.Drawing.Point(743, 183);
+			this.lblCredits.Location = new System.Drawing.Point(702, 183);
 			this.lblCredits.Name = "lblCredits";
 			this.lblCredits.Size = new System.Drawing.Size(39, 13);
 			this.lblCredits.TabIndex = 62;
@@ -322,7 +322,7 @@
 			// 
 			this.pictureBoxCredits.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBoxCredits.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCredits.Image")));
-			this.pictureBoxCredits.Location = new System.Drawing.Point(577, 180);
+			this.pictureBoxCredits.Location = new System.Drawing.Point(536, 180);
 			this.pictureBoxCredits.Name = "pictureBoxCredits";
 			this.pictureBoxCredits.Size = new System.Drawing.Size(42, 42);
 			this.pictureBoxCredits.TabIndex = 61;
@@ -331,7 +331,7 @@
 			// pictureBoxCreditsBack
 			// 
 			this.pictureBoxCreditsBack.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCreditsBack.Image")));
-			this.pictureBoxCreditsBack.Location = new System.Drawing.Point(572, 178);
+			this.pictureBoxCreditsBack.Location = new System.Drawing.Point(531, 178);
 			this.pictureBoxCreditsBack.Name = "pictureBoxCreditsBack";
 			this.pictureBoxCreditsBack.Size = new System.Drawing.Size(242, 22);
 			this.pictureBoxCreditsBack.TabIndex = 60;
@@ -341,7 +341,7 @@
 			// 
 			this.lblXP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.lblXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.lblXP.Location = new System.Drawing.Point(725, 324);
+			this.lblXP.Location = new System.Drawing.Point(684, 324);
 			this.lblXP.Name = "lblXP";
 			this.lblXP.Size = new System.Drawing.Size(73, 17);
 			this.lblXP.TabIndex = 59;
@@ -351,7 +351,7 @@
 			// dgvCredit
 			// 
 			this.dgvCredit.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvCredit.Location = new System.Drawing.Point(572, 198);
+			this.dgvCredit.Location = new System.Drawing.Point(531, 198);
 			this.dgvCredit.Name = "dgvCredit";
 			this.dgvCredit.Size = new System.Drawing.Size(242, 89);
 			this.dgvCredit.TabIndex = 56;
@@ -362,7 +362,7 @@
 			this.label10.AutoSize = true;
 			this.label10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label10.Location = new System.Drawing.Point(731, 20);
+			this.label10.Location = new System.Drawing.Point(690, 20);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(67, 13);
 			this.label10.TabIndex = 54;
@@ -372,7 +372,7 @@
 			// 
 			this.pictureBoxXP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBoxXP.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxXP.Image")));
-			this.pictureBoxXP.Location = new System.Drawing.Point(577, 322);
+			this.pictureBoxXP.Location = new System.Drawing.Point(536, 322);
 			this.pictureBoxXP.Name = "pictureBoxXP";
 			this.pictureBoxXP.Size = new System.Drawing.Size(42, 42);
 			this.pictureBoxXP.TabIndex = 58;
@@ -382,7 +382,7 @@
 			// 
 			this.pictureBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
-			this.pictureBox7.Location = new System.Drawing.Point(577, 17);
+			this.pictureBox7.Location = new System.Drawing.Point(536, 17);
 			this.pictureBox7.Name = "pictureBox7";
 			this.pictureBox7.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox7.TabIndex = 53;
@@ -391,7 +391,7 @@
 			// pictureBox8
 			// 
 			this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-			this.pictureBox8.Location = new System.Drawing.Point(572, 15);
+			this.pictureBox8.Location = new System.Drawing.Point(531, 15);
 			this.pictureBox8.Name = "pictureBox8";
 			this.pictureBox8.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox8.TabIndex = 52;
@@ -400,7 +400,7 @@
 			// pictureBoxXPBack
 			// 
 			this.pictureBoxXPBack.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxXPBack.Image")));
-			this.pictureBoxXPBack.Location = new System.Drawing.Point(572, 320);
+			this.pictureBoxXPBack.Location = new System.Drawing.Point(531, 320);
 			this.pictureBoxXPBack.Name = "pictureBoxXPBack";
 			this.pictureBoxXPBack.Size = new System.Drawing.Size(242, 22);
 			this.pictureBoxXPBack.TabIndex = 57;
@@ -411,7 +411,7 @@
 			this.label6.AutoSize = true;
 			this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label6.Location = new System.Drawing.Point(461, 20);
+			this.label6.Location = new System.Drawing.Point(440, 20);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(47, 13);
 			this.label6.TabIndex = 51;
@@ -421,7 +421,7 @@
 			// 
 			this.pictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-			this.pictureBox6.Location = new System.Drawing.Point(299, 17);
+			this.pictureBox6.Location = new System.Drawing.Point(278, 17);
 			this.pictureBox6.Name = "pictureBox6";
 			this.pictureBox6.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox6.TabIndex = 50;
@@ -430,7 +430,7 @@
 			// dgvXP
 			// 
 			this.dgvXP.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvXP.Location = new System.Drawing.Point(572, 341);
+			this.dgvXP.Location = new System.Drawing.Point(531, 341);
 			this.dgvXP.Name = "dgvXP";
 			this.dgvXP.Size = new System.Drawing.Size(242, 112);
 			this.dgvXP.TabIndex = 55;
@@ -441,7 +441,7 @@
 			this.label5.AutoSize = true;
 			this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
-			this.label5.Location = new System.Drawing.Point(462, 238);
+			this.label5.Location = new System.Drawing.Point(441, 238);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(49, 13);
 			this.label5.TabIndex = 49;
@@ -451,7 +451,7 @@
 			// 
 			this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
 			this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-			this.pictureBox5.Location = new System.Drawing.Point(299, 235);
+			this.pictureBox5.Location = new System.Drawing.Point(278, 235);
 			this.pictureBox5.Name = "pictureBox5";
 			this.pictureBox5.Size = new System.Drawing.Size(42, 42);
 			this.pictureBox5.TabIndex = 48;
@@ -481,7 +481,7 @@
 			// pictureBox3
 			// 
 			this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-			this.pictureBox3.Location = new System.Drawing.Point(294, 233);
+			this.pictureBox3.Location = new System.Drawing.Point(273, 233);
 			this.pictureBox3.Name = "pictureBox3";
 			this.pictureBox3.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox3.TabIndex = 44;
@@ -490,7 +490,7 @@
 			// pictureBox2
 			// 
 			this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-			this.pictureBox2.Location = new System.Drawing.Point(294, 15);
+			this.pictureBox2.Location = new System.Drawing.Point(273, 15);
 			this.pictureBox2.Name = "pictureBox2";
 			this.pictureBox2.Size = new System.Drawing.Size(242, 22);
 			this.pictureBox2.TabIndex = 43;
@@ -518,7 +518,7 @@
 			// dgvDamage
 			// 
 			this.dgvDamage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvDamage.Location = new System.Drawing.Point(294, 35);
+			this.dgvDamage.Location = new System.Drawing.Point(273, 35);
 			this.dgvDamage.Name = "dgvDamage";
 			this.dgvDamage.Size = new System.Drawing.Size(242, 177);
 			this.dgvDamage.TabIndex = 37;
@@ -527,7 +527,7 @@
 			// dgvShooting
 			// 
 			this.dgvShooting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvShooting.Location = new System.Drawing.Point(294, 253);
+			this.dgvShooting.Location = new System.Drawing.Point(273, 253);
 			this.dgvShooting.Name = "dgvShooting";
 			this.dgvShooting.Size = new System.Drawing.Size(242, 199);
 			this.dgvShooting.TabIndex = 38;
@@ -536,7 +536,7 @@
 			// dgvPerformance
 			// 
 			this.dgvPerformance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvPerformance.Location = new System.Drawing.Point(572, 35);
+			this.dgvPerformance.Location = new System.Drawing.Point(531, 35);
 			this.dgvPerformance.Name = "dgvPerformance";
 			this.dgvPerformance.Size = new System.Drawing.Size(242, 111);
 			this.dgvPerformance.TabIndex = 39;
@@ -617,7 +617,7 @@
 			this.panelTopBattleResult.Controls.Add(this.picHeader);
 			this.panelTopBattleResult.Location = new System.Drawing.Point(1, 27);
 			this.panelTopBattleResult.Name = "panelTopBattleResult";
-			this.panelTopBattleResult.Size = new System.Drawing.Size(875, 98);
+			this.panelTopBattleResult.Size = new System.Drawing.Size(832, 100);
 			this.panelTopBattleResult.TabIndex = 6;
 			// 
 			// lblTankName
@@ -625,7 +625,7 @@
 			this.lblTankName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTankName.BackColor = System.Drawing.Color.Transparent;
 			this.lblTankName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(187)))));
-			this.lblTankName.Location = new System.Drawing.Point(427, 10);
+			this.lblTankName.Location = new System.Drawing.Point(593, 10);
 			this.lblTankName.Name = "lblTankName";
 			this.lblTankName.Size = new System.Drawing.Size(106, 13);
 			this.lblTankName.TabIndex = 7;
@@ -644,7 +644,7 @@
 			// picMB
 			// 
 			this.picMB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.picMB.Location = new System.Drawing.Point(402, 33);
+			this.picMB.Location = new System.Drawing.Point(498, 33);
 			this.picMB.Name = "picMB";
 			this.picMB.Size = new System.Drawing.Size(67, 64);
 			this.picMB.TabIndex = 14;
@@ -750,9 +750,9 @@
 			// 
 			this.picHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.picHeader.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.picHeader.Location = new System.Drawing.Point(487, 0);
+			this.picHeader.Location = new System.Drawing.Point(671, 0);
 			this.picHeader.Name = "picHeader";
-			this.picHeader.Size = new System.Drawing.Size(387, 98);
+			this.picHeader.Size = new System.Drawing.Size(160, 100);
 			this.picHeader.TabIndex = 21;
 			this.picHeader.TabStop = false;
 			// 
@@ -765,7 +765,7 @@
 			this.grpMain.Image = null;
 			this.grpMain.Location = new System.Drawing.Point(21, 156);
 			this.grpMain.Name = "grpMain";
-			this.grpMain.Size = new System.Drawing.Size(835, 487);
+			this.grpMain.Size = new System.Drawing.Size(792, 483);
 			this.grpMain.TabIndex = 0;
 			// 
 			// BattleDetail
@@ -773,10 +773,10 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(877, 665);
+			this.ClientSize = new System.Drawing.Size(834, 661);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.MinimumSize = new System.Drawing.Size(877, 575);
+			this.MinimumSize = new System.Drawing.Size(834, 661);
 			this.Name = "BattleDetail";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "BattleDetail";
