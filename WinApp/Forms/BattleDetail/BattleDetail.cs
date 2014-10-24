@@ -29,7 +29,6 @@ namespace WinApp.Forms
 		// Map and Comment
 		private bool fetchedMapAndComment = false;
 		private Control MapAndCommentControl = null;
-		private bool showMap = false;
 
 		public BattleDetail(int selectedBattleId)
 		{
@@ -139,9 +138,6 @@ namespace WinApp.Forms
 					dgvDamage.ClearSelection();
 					panelMyResult.Visible = true;
 					panelTopBattleResult.Visible = true;
-					picMapIllustration.Visible = false;
-					picTank.Visible = true;
-					lblTankName.Visible = true;
 					break;
 				case "btnTeams":
 					ShowTeams();
@@ -154,9 +150,6 @@ namespace WinApp.Forms
 					break;
 				case "btnMapAndComment":
 					panelTopBattleResult.Visible = true;
-					picMapIllustration.Visible = showMap;
-					picTank.Visible = !showMap;
-					lblTankName.Visible = !showMap;
 					ShowMapAndComment();
 					break;
 			}
@@ -201,33 +194,38 @@ namespace WinApp.Forms
 					}
 				}	
 				lblResult.Text = battleResult;
-				// Tank img
-				tankId = Convert.ToInt32(dr["tankId"]);
-				picTank.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
 				// Tank name
 				lblTankName.Text = dr["tankName"].ToString();
 				// Mastery Badge Image
 				int masteryBadge = 0;
 				if (dr["markOfMastery"] != DBNull.Value) masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
 				picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge);
-				// Map name and pic
+				// Header picture /tank & Map), and map info
+				Image img = new Bitmap(picHeaderRight.Width, picHeaderRight.Height);
 				string mapName = "";
 				if (dr["mapName"] != DBNull.Value)
 				{
 					mapName = dr["mapName"].ToString();
 					Image imageBackground = ImageHelper.GetMap(dr["arena_id"].ToString(), true);
 					Image imageOverlay = imgMapOverlay.Images[0];
-					Image img = new Bitmap(imageBackground.Width, imageBackground.Height);
+					int xpos = picHeaderRight.Width - imageBackground.Width;
 					using (Graphics gr = Graphics.FromImage(img))
 					{
-						gr.DrawImage(imageBackground, new Point(0, 0));
-						gr.DrawImage(imageOverlay, new Point(0, 0));
+						gr.DrawImage(imageBackground, new Point(xpos, 0));
+						gr.DrawImage(imageOverlay, new Point(xpos, 0));
 					}
-					picMapIllustration.Image = img;
-					showMap = true;
 				}
 				else
+				{
 					btnMapAndComment.Text = "Comment";
+				}
+				tankId = Convert.ToInt32(dr["tankId"]);
+				Image imageTank = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
+				using (Graphics gr = Graphics.FromImage(img))
+				{
+					gr.DrawImage(imageTank, 0, -1, 160, 100);
+				}
+				picHeaderRight.Image = img;
 				lblMap.Text = mapName;
 				// Battle time
 				DateTime finished = Convert.ToDateTime(dr["battleTime"]);
