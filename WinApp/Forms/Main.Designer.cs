@@ -29,11 +29,11 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-			BadThemeContainerControl.MainAreaClass mainAreaClass2 = new BadThemeContainerControl.MainAreaClass();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
@@ -265,7 +265,7 @@
 			// 
 			// notifyIcon
 			// 
-			this.notifyIcon.BalloonTipText = "New battle fetched";
+			this.notifyIcon.BalloonTipText = "New battle data fetched";
 			this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
 			this.notifyIcon.Text = "Wot Numbers";
 			this.notifyIcon.Visible = true;
@@ -288,7 +288,7 @@
 			this.MainTheme.FormMargin = 0;
 			this.MainTheme.Image = ((System.Drawing.Image)(resources.GetObject("MainTheme.Image")));
 			this.MainTheme.Location = new System.Drawing.Point(0, 0);
-			this.MainTheme.MainArea = mainAreaClass2;
+			this.MainTheme.MainArea = mainAreaClass1;
 			this.MainTheme.Name = "MainTheme";
 			this.MainTheme.Resizable = true;
 			this.MainTheme.Size = new System.Drawing.Size(872, 459);
@@ -305,24 +305,24 @@
 			this.toolMain.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mWoT,
-			this.mViewLabel,
-			this.mViewOverall,
-			this.mViewTankInfo,
-			this.mViewBattles,
-			this.mRefresh,
-			this.mRefreshSeparator,
-			this.mColumnSelect,
-			this.mTankFilter,
-			this.mMode,
-			this.mBattles,
-			this.mBattleGroup,
-			this.mGadget,
-			this.mHomeEdit,
-			this.toolStripSeparator23,
-			this.mViewChart,
-			this.mSettings,
-			this.mHelp});
+            this.mWoT,
+            this.mViewLabel,
+            this.mViewOverall,
+            this.mViewTankInfo,
+            this.mViewBattles,
+            this.mRefresh,
+            this.mRefreshSeparator,
+            this.mColumnSelect,
+            this.mTankFilter,
+            this.mMode,
+            this.mBattles,
+            this.mBattleGroup,
+            this.mGadget,
+            this.mHomeEdit,
+            this.toolStripSeparator23,
+            this.mViewChart,
+            this.mSettings,
+            this.mHelp});
 			this.toolMain.Location = new System.Drawing.Point(9, 29);
 			this.toolMain.Name = "toolMain";
 			this.toolMain.Size = new System.Drawing.Size(863, 25);
@@ -405,23 +405,23 @@
 			// 
 			this.mColumnSelect.BackColor = System.Drawing.Color.Transparent;
 			this.mColumnSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mColumnSelect_01,
-			this.mColumnSelect_02,
-			this.mColumnSelect_03,
-			this.mColumnSelect_04,
-			this.mColumnSelect_05,
-			this.mColumnSelect_06,
-			this.mColumnSelect_07,
-			this.mColumnSelect_08,
-			this.mColumnSelect_09,
-			this.mColumnSelect_10,
-			this.mColumnSelect_11,
-			this.mColumnSelect_12,
-			this.mColumnSelect_13,
-			this.mColumnSelect_14,
-			this.mColumnSelect_15,
-			this.toolStripSeparator5,
-			this.mColumnSelect_Edit});
+            this.mColumnSelect_01,
+            this.mColumnSelect_02,
+            this.mColumnSelect_03,
+            this.mColumnSelect_04,
+            this.mColumnSelect_05,
+            this.mColumnSelect_06,
+            this.mColumnSelect_07,
+            this.mColumnSelect_08,
+            this.mColumnSelect_09,
+            this.mColumnSelect_10,
+            this.mColumnSelect_11,
+            this.mColumnSelect_12,
+            this.mColumnSelect_13,
+            this.mColumnSelect_14,
+            this.mColumnSelect_15,
+            this.toolStripSeparator5,
+            this.mColumnSelect_Edit});
 			this.mColumnSelect.Image = ((System.Drawing.Image)(resources.GetObject("mColumnSelect.Image")));
 			this.mColumnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mColumnSelect.Name = "mColumnSelect";
@@ -578,25 +578,25 @@
 			// 
 			this.mTankFilter.BackColor = System.Drawing.Color.Transparent;
 			this.mTankFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_Country,
-			this.mTankFilter_Type,
-			this.mTankFilter_Tier,
-			this.mTankFilter_Clear,
-			this.mTankFilter_FavSeparator,
-			this.mTankFilter_All,
-			this.mTankFilter_Fav01,
-			this.mTankFilter_Fav02,
-			this.mTankFilter_Fav03,
-			this.mTankFilter_Fav04,
-			this.mTankFilter_Fav05,
-			this.mTankFilter_Fav06,
-			this.mTankFilter_Fav07,
-			this.mTankFilter_Fav08,
-			this.mTankFilter_Fav09,
-			this.mTankFilter_Fav10,
-			this.toolStripSeparator12,
-			this.mTankFilter_GetInGarage,
-			this.mTankFilter_EditFavList});
+            this.mTankFilter_Country,
+            this.mTankFilter_Type,
+            this.mTankFilter_Tier,
+            this.mTankFilter_Clear,
+            this.mTankFilter_FavSeparator,
+            this.mTankFilter_All,
+            this.mTankFilter_Fav01,
+            this.mTankFilter_Fav02,
+            this.mTankFilter_Fav03,
+            this.mTankFilter_Fav04,
+            this.mTankFilter_Fav05,
+            this.mTankFilter_Fav06,
+            this.mTankFilter_Fav07,
+            this.mTankFilter_Fav08,
+            this.mTankFilter_Fav09,
+            this.mTankFilter_Fav10,
+            this.toolStripSeparator12,
+            this.mTankFilter_GetInGarage,
+            this.mTankFilter_EditFavList});
 			this.mTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter.Image")));
 			this.mTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mTankFilter.Name = "mTankFilter";
@@ -609,13 +609,13 @@
 			// mTankFilter_Country
 			// 
 			this.mTankFilter_Country.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_CountryUSSR,
-			this.mTankFilter_CountryGermany,
-			this.mTankFilter_CountryUSA,
-			this.mTankFilter_CountryChina,
-			this.mTankFilter_CountryFrance,
-			this.mTankFilter_CountryUK,
-			this.mTankFilter_CountryJapan});
+            this.mTankFilter_CountryUSSR,
+            this.mTankFilter_CountryGermany,
+            this.mTankFilter_CountryUSA,
+            this.mTankFilter_CountryChina,
+            this.mTankFilter_CountryFrance,
+            this.mTankFilter_CountryUK,
+            this.mTankFilter_CountryJapan});
 			this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
 			this.mTankFilter_Country.Name = "mTankFilter_Country";
 			this.mTankFilter_Country.Size = new System.Drawing.Size(234, 22);
@@ -695,11 +695,11 @@
 			// mTankFilter_Type
 			// 
 			this.mTankFilter_Type.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_TypeLT,
-			this.mTankFilter_TypeMT,
-			this.mTankFilter_TypeHT,
-			this.mTankFilter_TypeTD,
-			this.mTankFilter_TypeSPG});
+            this.mTankFilter_TypeLT,
+            this.mTankFilter_TypeMT,
+            this.mTankFilter_TypeHT,
+            this.mTankFilter_TypeTD,
+            this.mTankFilter_TypeSPG});
 			this.mTankFilter_Type.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Type.Image")));
 			this.mTankFilter_Type.Name = "mTankFilter_Type";
 			this.mTankFilter_Type.Size = new System.Drawing.Size(234, 22);
@@ -758,16 +758,16 @@
 			// mTankFilter_Tier
 			// 
 			this.mTankFilter_Tier.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mTankFilter_Tier1,
-			this.mTankFilter_Tier2,
-			this.mTankFilter_Tier3,
-			this.mTankFilter_Tier4,
-			this.mTankFilter_Tier5,
-			this.mTankFilter_Tier6,
-			this.mTankFilter_Tier7,
-			this.mTankFilter_Tier8,
-			this.mTankFilter_Tier9,
-			this.mTankFilter_Tier10});
+            this.mTankFilter_Tier1,
+            this.mTankFilter_Tier2,
+            this.mTankFilter_Tier3,
+            this.mTankFilter_Tier4,
+            this.mTankFilter_Tier5,
+            this.mTankFilter_Tier6,
+            this.mTankFilter_Tier7,
+            this.mTankFilter_Tier8,
+            this.mTankFilter_Tier9,
+            this.mTankFilter_Tier10});
 			this.mTankFilter_Tier.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier.Image")));
 			this.mTankFilter_Tier.Name = "mTankFilter_Tier";
 			this.mTankFilter_Tier.Size = new System.Drawing.Size(234, 22);
@@ -1009,16 +1009,16 @@
 			// 
 			this.mMode.BackColor = System.Drawing.Color.Transparent;
 			this.mMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mModeAll,
-			this.toolStripSeparator17,
-			this.mModeRandomTankCompany,
-			this.mModeRandom,
-			this.mModeRandomSoloPlatoon,
-			this.mModeCompany,
-			this.mModeClan,
-			this.mModeHistorical,
-			this.mModeTeam,
-			this.mModeSkrimishes});
+            this.mModeAll,
+            this.toolStripSeparator17,
+            this.mModeRandomTankCompany,
+            this.mModeRandom,
+            this.mModeRandomSoloPlatoon,
+            this.mModeCompany,
+            this.mModeClan,
+            this.mModeHistorical,
+            this.mModeTeam,
+            this.mModeSkrimishes});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
 			this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mMode.Name = "mMode";
@@ -1063,10 +1063,10 @@
 			// mModeRandomSoloPlatoon
 			// 
 			this.mModeRandomSoloPlatoon.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mModeRandomSolo,
-			this.mRandomPlatoon,
-			this.mRandomPlatoon2,
-			this.mRandomPlatoon3});
+            this.mModeRandomSolo,
+            this.mRandomPlatoon,
+            this.mRandomPlatoon2,
+            this.mRandomPlatoon3});
 			this.mModeRandomSoloPlatoon.Name = "mModeRandomSoloPlatoon";
 			this.mModeRandomSoloPlatoon.Size = new System.Drawing.Size(206, 22);
 			this.mModeRandomSoloPlatoon.Text = "Random - Solo / Platoon";
@@ -1159,23 +1159,23 @@
 			// 
 			this.mBattles.BackColor = System.Drawing.Color.Transparent;
 			this.mBattles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mBattles1d,
-			this.mBattlesYesterday,
-			this.toolStripSeparator3,
-			this.mBattles2d,
-			this.mBattles3d,
-			this.toolStripSeparator19,
-			this.mBattles1w,
-			this.mBattles2w,
-			this.toolStripSeparator20,
-			this.mBattles1m,
-			this.mBattles3m,
-			this.mBattles6m,
-			this.toolStripSeparator21,
-			this.mBattles1y,
-			this.mBattles2y,
-			this.toolStripSeparator22,
-			this.mBattlesAll});
+            this.mBattles1d,
+            this.mBattlesYesterday,
+            this.toolStripSeparator3,
+            this.mBattles2d,
+            this.mBattles3d,
+            this.toolStripSeparator19,
+            this.mBattles1w,
+            this.mBattles2w,
+            this.toolStripSeparator20,
+            this.mBattles1m,
+            this.mBattles3m,
+            this.mBattles6m,
+            this.toolStripSeparator21,
+            this.mBattles1y,
+            this.mBattles2y,
+            this.toolStripSeparator22,
+            this.mBattlesAll});
 			this.mBattles.Image = ((System.Drawing.Image)(resources.GetObject("mBattles.Image")));
 			this.mBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mBattles.Name = "mBattles";
@@ -1310,10 +1310,10 @@
 			// 
 			this.mBattleGroup.BackColor = System.Drawing.Color.Transparent;
 			this.mBattleGroup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mBattleGroup_No,
-			this.toolStripSeparator6,
-			this.mBattleGroup_TankAverage,
-			this.mBattleGroup_TankSum});
+            this.mBattleGroup_No,
+            this.toolStripSeparator6,
+            this.mBattleGroup_TankAverage,
+            this.mBattleGroup_TankSum});
 			this.mBattleGroup.Image = ((System.Drawing.Image)(resources.GetObject("mBattleGroup.Image")));
 			this.mBattleGroup.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mBattleGroup.Name = "mBattleGroup";
@@ -1357,16 +1357,16 @@
 			// 
 			this.mGadget.BackColor = System.Drawing.Color.Transparent;
 			this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mGadgetGauges,
-			this.mGadgetCharts,
-			this.mGadgetAddBattleModeStats,
-			this.mGadgetAddTankTypeStats,
-			this.mGadgetAddImage,
-			this.toolStripSeparator8,
-			this.mGadgetRedraw,
-			this.toolStripSeparator4,
-			this.mGadgetReset,
-			this.mGadgetRemoveAll});
+            this.mGadgetGauges,
+            this.mGadgetCharts,
+            this.mGadgetAddBattleModeStats,
+            this.mGadgetAddTankTypeStats,
+            this.mGadgetAddImage,
+            this.toolStripSeparator8,
+            this.mGadgetRedraw,
+            this.toolStripSeparator4,
+            this.mGadgetReset,
+            this.mGadgetRemoveAll});
 			this.mGadget.Image = ((System.Drawing.Image)(resources.GetObject("mGadget.Image")));
 			this.mGadget.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mGadget.Name = "mGadget";
@@ -1378,13 +1378,13 @@
 			// mGadgetGauges
 			// 
 			this.mGadgetGauges.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mGadgetWR,
-			this.mGadgetWN8,
-			this.mGadgetWN7,
-			this.mGadgetEFF,
-			this.toolStripSeparator9,
-			this.mGadgetKillDeath,
-			this.mGadgetDamageCausedReceived});
+            this.mGadgetWR,
+            this.mGadgetWN8,
+            this.mGadgetWN7,
+            this.mGadgetEFF,
+            this.toolStripSeparator9,
+            this.mGadgetKillDeath,
+            this.mGadgetDamageCausedReceived});
 			this.mGadgetGauges.Name = "mGadgetGauges";
 			this.mGadgetGauges.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetGauges.Text = "Gauges";
@@ -1445,9 +1445,9 @@
 			// mGadgetCharts
 			// 
 			this.mGadgetCharts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mGadgetChartTier,
-			this.mGadgetChartTankType,
-			this.mGadgetChartNation});
+            this.mGadgetChartTier,
+            this.mGadgetChartTankType,
+            this.mGadgetChartNation});
 			this.mGadgetCharts.Name = "mGadgetCharts";
 			this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
 			this.mGadgetCharts.Text = "Charts";
@@ -1568,19 +1568,19 @@
 			this.mSettings.BackColor = System.Drawing.Color.Transparent;
 			this.mSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mSettingsRun,
-			this.mSettingsDossierOptions,
-			this.toolStripSeparator24,
-			this.mUpdateDataFromAPI,
-			this.mRecalcBattleWN8,
-			this.mImportBattlesFromWotStat,
-			this.mShowDbTables,
-			this.toolStripSeparator25,
-			this.mWoTStartGameSettings,
-			this.mSettingsAppLayout,
-			this.mSettingsApp,
-			this.toolStripSeparator7,
-			this.mExit});
+            this.mSettingsRun,
+            this.mSettingsDossierOptions,
+            this.toolStripSeparator24,
+            this.mUpdateDataFromAPI,
+            this.mRecalcBattleWN8,
+            this.mImportBattlesFromWotStat,
+            this.mShowDbTables,
+            this.toolStripSeparator25,
+            this.mWoTStartGameSettings,
+            this.mSettingsAppLayout,
+            this.mSettingsApp,
+            this.toolStripSeparator7,
+            this.mExit});
 			this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
 			this.mSettings.Name = "mSettings";
 			this.mSettings.ShowDropDownArrow = false;
@@ -1598,10 +1598,10 @@
 			// mSettingsDossierOptions
 			// 
 			this.mSettingsDossierOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mSettingsRunManual,
-			this.mSettingsForceUpdateFromPrev,
-			this.toolStripSeparator1,
-			this.mSettingsTestAddBattleResult});
+            this.mSettingsRunManual,
+            this.mSettingsForceUpdateFromPrev,
+            this.toolStripSeparator1,
+            this.mSettingsTestAddBattleResult});
 			this.mSettingsDossierOptions.Name = "mSettingsDossierOptions";
 			this.mSettingsDossierOptions.Size = new System.Drawing.Size(263, 22);
 			this.mSettingsDossierOptions.Text = "Manual Check for New Battles";
@@ -1676,7 +1676,7 @@
 			this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
 			this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
 			this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
-			this.mWoTStartGameSettings.Text = "WoT Start Game Settings...";
+			this.mWoTStartGameSettings.Text = "WoT Launcher Settings...";
 			this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
 			// 
 			// mSettingsAppLayout
@@ -1711,10 +1711,10 @@
 			this.mHelp.BackColor = System.Drawing.Color.Transparent;
 			this.mHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.mHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.mHelpCheckVersion,
-			this.mHelpMessage,
-			this.toolStripSeparator2,
-			this.mHelpAbout});
+            this.mHelpCheckVersion,
+            this.mHelpMessage,
+            this.toolStripSeparator2,
+            this.mHelpAbout});
 			this.mHelp.Image = ((System.Drawing.Image)(resources.GetObject("mHelp.Image")));
 			this.mHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mHelp.Name = "mHelp";
@@ -1814,43 +1814,43 @@
 			this.dataGridMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridMain.CausesValidation = false;
 			this.dataGridMain.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-			dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-			dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Gainsboro;
-			dataGridViewCellStyle4.NullValue = null;
-			dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(2, 2, 0, 2);
-			dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
-			dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
-			dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
+			dataGridViewCellStyle1.NullValue = null;
+			dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(2, 2, 0, 2);
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dataGridMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this.dataGridMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridMain.Cursor = System.Windows.Forms.Cursors.Arrow;
-			dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-			dataGridViewCellStyle5.NullValue = null;
-			dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
-			dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+			dataGridViewCellStyle2.NullValue = null;
+			dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle2;
 			this.dataGridMain.EnableHeadersVisualStyles = false;
 			this.dataGridMain.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
 			this.dataGridMain.Location = new System.Drawing.Point(14, 88);
 			this.dataGridMain.Name = "dataGridMain";
 			this.dataGridMain.ReadOnly = true;
 			this.dataGridMain.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-			dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-			dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Silver;
-			dataGridViewCellStyle6.Format = "N0";
-			dataGridViewCellStyle6.NullValue = null;
-			dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
-			dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
-			dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dataGridMain.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+			dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+			dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Silver;
+			dataGridViewCellStyle3.Format = "N0";
+			dataGridViewCellStyle3.NullValue = null;
+			dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
+			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dataGridMain.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this.dataGridMain.RowHeadersWidth = 25;
 			this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridMain.ShowEditingIcon = false;

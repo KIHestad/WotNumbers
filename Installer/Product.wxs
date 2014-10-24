@@ -127,6 +127,9 @@
 			<Component Id="cmpAdminDB" Guid="{E3A9263F-EC63-4E01-B68B-24D2F010CE42}">
 				<File Id="filAdminDB" Source="..\WinApp\Docs\Database\Admin.db"  KeyPath="yes"></File>
 			</Component>
+			<Component Id="cmpupgrade" Guid="{42D6E6C4-0AF6-4000-B19F-76D56F5A75F2}">
+				<File Id="filupgrade" Source="..\WinApp\Docs\Database\upgrade.json"  KeyPath="yes"></File>
+			</Component>
 		</ComponentGroup>
 	</Fragment>
 	
