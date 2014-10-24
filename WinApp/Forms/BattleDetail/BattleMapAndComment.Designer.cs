@@ -35,7 +35,7 @@
 			// 
 			// picMap
 			// 
-			this.picMap.Location = new System.Drawing.Point(12, 12);
+			this.picMap.Location = new System.Drawing.Point(15, 15);
 			this.picMap.Name = "picMap";
 			this.picMap.Size = new System.Drawing.Size(300, 300);
 			this.picMap.TabIndex = 1;
@@ -46,7 +46,7 @@
 			this.lblMapDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblMapDescription.Dimmed = false;
 			this.lblMapDescription.Image = null;
-			this.lblMapDescription.Location = new System.Drawing.Point(12, 328);
+			this.lblMapDescription.Location = new System.Drawing.Point(15, 331);
 			this.lblMapDescription.Name = "lblMapDescription";
 			this.lblMapDescription.Size = new System.Drawing.Size(300, 106);
 			this.lblMapDescription.TabIndex = 2;

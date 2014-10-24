@@ -26,6 +26,12 @@ namespace WinApp.Forms
 		private BadScrollBar scroll = new BadScrollBar();
 		private BattleHelper.MainBattleMode mainBattleMode;
 		private int tankId = 0;
+		private int wn8 = 0;
+		private int wn8avg = 0;
+		private int wn7 = 0;
+		private int wn7avg = 0;
+		private int eff = 0;
+		private int effavg = 0;
 		// Map and Comment
 		private bool fetchedMapAndComment = false;
 		private Control MapAndCommentControl = null;
@@ -117,7 +123,6 @@ namespace WinApp.Forms
 			btnMapAndComment.Checked = false;
 			// hide my result
 			panelMyResult.Visible = false;
-			panelTopBattleResult.Visible = false;
 			// hide map and comment
 			panelMapAndComment.Visible = false;
 			// hide grids
@@ -134,10 +139,15 @@ namespace WinApp.Forms
 			switch (selectedTab)
 			{
 				case "btnPersonal":
-					dgvWN8.ClearSelection();
+					dgvCredit.ClearSelection();
 					dgvDamage.ClearSelection();
+					dgvOther.ClearSelection();
+					dgvPerformance.ClearSelection();
+					dgvRating.ClearSelection();
+					dgvShooting.ClearSelection();
+					dgvWN8.ClearSelection();
+					dgvXP.ClearSelection();
 					panelMyResult.Visible = true;
-					panelTopBattleResult.Visible = true;
 					break;
 				case "btnTeams":
 					ShowTeams();
@@ -149,7 +159,6 @@ namespace WinApp.Forms
 					ShowEnemyTeam();
 					break;
 				case "btnMapAndComment":
-					panelTopBattleResult.Visible = true;
 					ShowMapAndComment();
 					break;
 			}
@@ -199,33 +208,37 @@ namespace WinApp.Forms
 				// Mastery Badge Image
 				int masteryBadge = 0;
 				if (dr["markOfMastery"] != DBNull.Value) masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
-				picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge);
+				picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge, false);
 				// Header picture /tank & Map), and map info
-				Image img = new Bitmap(picHeaderRight.Width, picHeaderRight.Height);
+				Image imgHeader = new Bitmap(picHeader.Width, picHeader.Height);
+				tankId = Convert.ToInt32(dr["tankId"]);
+				Image imageTank = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
+				int tankLabelRelativeToImage = picHeader.Left - lblTankName.Left;
 				string mapName = "";
 				if (dr["mapName"] != DBNull.Value)
 				{
 					mapName = dr["mapName"].ToString();
-					Image imageBackground = ImageHelper.GetMap(dr["arena_id"].ToString(), true);
-					Image imageOverlay = imgMapOverlay.Images[0];
-					int xpos = picHeaderRight.Width - imageBackground.Width;
-					using (Graphics gr = Graphics.FromImage(img))
+					Image imageMap = ImageHelper.GetMap(dr["arena_id"].ToString(), true);
+					//Image imageOverlay = imgMapOverlay.Images[0];
+					int xpos = picHeader.Width - imageMap.Width;
+					using (Graphics gr = Graphics.FromImage(imgHeader))
 					{
-						gr.DrawImage(imageBackground, new Point(xpos, 0));
-						gr.DrawImage(imageOverlay, new Point(xpos, 0));
+						gr.DrawImage(imageMap, xpos, 0, 231, 98);
+						gr.DrawImage(imageTank, 30, -1, 160, 100);
 					}
+					lblTankName.Left = lblTankName.Left + 30;
 				}
 				else
 				{
+					int xpos = picHeader.Width - imageTank.Width;
+					using (Graphics gr = Graphics.FromImage(imgHeader))
+					{
+						gr.DrawImage(imageTank, xpos, -1, 160, 100);
+					}
 					btnMapAndComment.Text = "Comment";
+					lblTankName.Left = picHeader.Left + picHeader.Width - imageTank.Width - tankLabelRelativeToImage;
 				}
-				tankId = Convert.ToInt32(dr["tankId"]);
-				Image imageTank = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
-				using (Graphics gr = Graphics.FromImage(img))
-				{
-					gr.DrawImage(imageTank, 0, -1, 160, 100);
-				}
-				picHeaderRight.Image = img;
+				picHeader.Image = imgHeader;
 				lblMap.Text = mapName;
 				// Battle time
 				DateTime finished = Convert.ToDateTime(dr["battleTime"]);
@@ -307,17 +320,11 @@ namespace WinApp.Forms
 					else if (Convert.ToInt32(dr["modeCompany"]) > 0)
 						battleMode = "Tank Company Battle";
 				}
+				// get WN8 to use as total in wn8 detail grid
+				wn8 = Convert.ToInt32(dr["wn8"]);
+				wn7 = Convert.ToInt32(dr["wn7"]);
+				eff = Convert.ToInt32(dr["eff"]);
 				lblBattleMode.Text = battleMode;
-				// Ratings
-				double wn8 = Convert.ToDouble(dr["WN8"]);
-				double wn7 = Convert.ToDouble(dr["WN7"]);
-				double eff = Convert.ToDouble(dr["EFF"]);
-				lblWN8.Text = Math.Round(wn8,0).ToString();
-				lblWN7.Text = Math.Round(wn7,0).ToString();
-				lblEFF.Text = Math.Round(eff,0).ToString();
-				lblWN8.ForeColor = Rating.WN8color(wn8);
-				lblWN7.ForeColor = Rating.WN7color(wn7);
-				lblEFF.ForeColor = Rating.EffColor(eff);
 				GetWN8Details();
 				GetStandardGridDetails();
 			}
@@ -337,15 +344,15 @@ namespace WinApp.Forms
 				DataRow dr = dt.Rows[0];
 				int tankId = Convert.ToInt32(dr["tankId"]);
 				int battlesCount = Convert.ToInt32(dr["battlesCount"]);
-				int dmg = Convert.ToInt32(dr["dmg"]);
-				int spotted = Convert.ToInt32(dr["spotted"]);
-				int frags = Convert.ToInt32(dr["frags"]);
-				int def = Convert.ToInt32(dr["def"]);
-				int exp_dmg = Convert.ToInt32(dr["expDmg"]);
-				int exp_spotted = Convert.ToInt32(dr["expSpot"]) ;
-				int exp_frags = Convert.ToInt32(dr["expFrags"]) ;
-				int exp_def = Convert.ToInt32(dr["expDef"]);
-				int exp_wr = Convert.ToInt32(dr["expWR"]);
+				double dmg = Convert.ToDouble(dr["dmg"]);
+				double spotted = Convert.ToDouble(dr["spotted"]);
+				double frags = Convert.ToDouble(dr["frags"]);
+				double def = Convert.ToDouble(dr["def"]);
+				double exp_dmg = Convert.ToDouble(dr["expDmg"]);
+				double exp_spotted = Convert.ToDouble(dr["expSpot"]);
+				double exp_frags = Convert.ToDouble(dr["expFrags"]);
+				double exp_def = Convert.ToDouble(dr["expDef"]);
+				double exp_wr = Convert.ToDouble(dr["expWR"]);
 				//string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
 				double rWINc;
 				double rDAMAGEc;
@@ -367,33 +374,33 @@ namespace WinApp.Forms
 				DataRow drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Damage";
 				drWN8["Image"] = GetIndicator(dmg, exp_dmg);
-				drWN8["Result"] = dmg.ToString();
-				drWN8["Exp"] = exp_dmg.ToString();
-				drWN8["Value"] = Math.Round(rDAMAGEc, 1).ToString();
+				drWN8["Result"] = dmg.ToString("N0");
+				drWN8["Exp"] = exp_dmg.ToString("N0");
+				drWN8["Value"] = Math.Round(rDAMAGEc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Frags
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Frags";
 				drWN8["Image"] = GetIndicator(frags, exp_frags);
-				drWN8["Result"] = frags.ToString();
-				drWN8["Exp"] = exp_frags.ToString();
-				drWN8["Value"] = Math.Round(rFRAGSc, 1).ToString();
+				drWN8["Result"] = frags.ToString("N0");
+				drWN8["Exp"] = exp_frags.ToString("N0");
+				drWN8["Value"] = Math.Round(rFRAGSc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Spot
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Spot";
 				drWN8["Image"] = GetIndicator(spotted, exp_spotted);
-				drWN8["Result"] = spotted.ToString();
-				drWN8["Exp"] = exp_spotted.ToString();
-				drWN8["Value"] = Math.Round(rSPOTc, 1).ToString();
+				drWN8["Result"] = spotted.ToString("N0");
+				drWN8["Exp"] = exp_spotted.ToString("N0");
+				drWN8["Value"] = Math.Round(rSPOTc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Defence
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Defence";
 				drWN8["Image"] = GetIndicator(def, exp_def);
-				drWN8["Result"] = def.ToString();
-				drWN8["Exp"] = exp_def.ToString();
-				drWN8["Value"] = Math.Round(rDEFc, 1).ToString();
+				drWN8["Result"] = def.ToString("N0");
+				drWN8["Exp"] = exp_def.ToString("N0");
+				drWN8["Value"] = Math.Round(rDEFc, 1).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Win Rate
 				drWN8 = dtWN8.NewRow();
@@ -401,7 +408,15 @@ namespace WinApp.Forms
 				drWN8["Image"] = imgIndicators.Images[1];
 				drWN8["Result"] = "Fixed";
 				drWN8["Exp"] = exp_wr.ToString() + "%";
-				drWN8["Value"] = Math.Round(rWINc, 1).ToString();
+				drWN8["Value"] = Math.Round(rWINc, 1).ToString("N0");
+				dtWN8.Rows.Add(drWN8);
+				// Total
+				drWN8 = dtWN8.NewRow();
+				drWN8["Parameter"] = "WN8";
+				drWN8["Image"] = new Bitmap(1,1);
+				drWN8["Result"] = "";
+				drWN8["Exp"] = "";
+				drWN8["Value"] = wn8.ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Done;
 				dtWN8.AcceptChanges();
@@ -421,9 +436,6 @@ namespace WinApp.Forms
 				dgvWN8.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 				dgvWN8.Width = dgvWN8.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + 2;
 				dgvWN8.Height = dgvWN8.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + dgvWN8.ColumnHeadersHeight + 2;
-				dgvWN8.Columns[2].DefaultCellStyle.Format = "N0";
-				dgvWN8.Columns[3].DefaultCellStyle.Format = "N0";
-				dgvWN8.Columns[4].DefaultCellStyle.Format = "N1";
 				foreach (DataGridViewColumn dgvc in dgvWN8.Columns)
 				{
 					dgvc.SortMode = DataGridViewColumnSortMode.NotSortable;					
@@ -433,16 +445,22 @@ namespace WinApp.Forms
 			}
 		}
 
+		private void dgvWN8_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+		{
+			// rating color
+			dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = Rating.WN8color(wn8);
+		}
+
 		private void GetStandardGridDetails()
 		{
 			// This battle result
 			string sql =
 				"SELECT battlesCount, dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, " +
+				"  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, eff, wn7, wn8, " +
 				"  credits, creditsPenalty, creditsContributionIn, creditsContributionOut, creditsToDraw, autoRepairCost, autoLoadCost, autoEquipCost, " +
 				"    eventCredits , originalCredits, creditsNet, achievementCredits, premiumCreditsFactor10, dailyXPFactorTxt, " +
-				"  real_xp, xpPenalty, freeXP, dailyXPFactor10, premiumXPFactor10, eventXP, eventFreeXP, eventTMenXP, achievementXP, achievementFreeXP " +
+				"  real_xp, (xpPenalty * -1) as xpPenalty, freeXP, dailyXPFactor10, premiumXPFactor10, eventXP, eventFreeXP, eventTMenXP, achievementXP, achievementFreeXP " +
 				"FROM battle " +
 				"WHERE id = @battleId";
 			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
@@ -451,7 +469,7 @@ namespace WinApp.Forms
 			sql =
 				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spot, cap, def, mileage, treesCut " +
+				"  frags, spot, cap, def, mileage, treesCut, eff, wn7, wn8 " +
 				"FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
 				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode and playerTank.playerId=@playerId ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
@@ -542,7 +560,7 @@ namespace WinApp.Forms
 				dgvPerformance.DataSource = dtPerformance;
 				FormatStandardDataGrid(dgvPerformance, "");
 
-				// Add Rows to other reslut grid
+				// Add Rows to other result grid
 				DataTable dtOther = dt.Clone();
 				dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Drive distance (m)", "mileage", avgBattleCount));
 				dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Trees Cut", "treesCut", avgBattleCount, decimals: 1));
@@ -550,6 +568,26 @@ namespace WinApp.Forms
 				dtOther.AcceptChanges();
 				dgvOther.DataSource = dtOther;
 				FormatStandardDataGrid(dgvOther, "");
+
+				// Add rows to Ratings grid
+				// Add Rows to shooting grid
+				DataTable dtRating = dt.Clone();
+				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN8", "wn8", 1));
+				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN7", "wn7", 1));
+				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "EFF", "eff", 1));
+				wn8avg = Convert.ToInt32(drAvg["wn8"]);
+				wn7avg = Convert.ToInt32(drAvg["wn7"]);
+				effavg = Convert.ToInt32(drAvg["eff"]);
+
+				// Done;
+				dtRating.AcceptChanges();
+				dgvRating.DataSource = dtRating;
+				FormatStandardDataGrid(dgvRating, "");
+
+
+				//lblWN8.ForeColor = Rating.WN8color(wn8);
+				//lblWN7.ForeColor = Rating.WN7color(wn7);
+				//lblEFF.ForeColor = Rating.EffColor(eff);
 
 				// Enhanced battle result
 				if (drVal["arenaUniqueID"] == DBNull.Value)
@@ -568,7 +606,7 @@ namespace WinApp.Forms
 					sql =
 						"SELECT SUM(battlesCount) as battles, SUM(credits) as credits, SUM(creditsNet) as creditsNet, " +
 						"   SUM(autoRepairCost) as autoRepairCost, SUM(autoLoadCost) as autoLoadCost, SUM(autoEquipCost) as autoEquipCost, SUM(creditsContributionOut) as creditsContributionOut, " +
-						"  SUM(real_xp) as real_xp, SUM(xpPenalty) as xpPenalty, SUM(freeXP) as freeXP, SUM(eventXP) as eventXP, SUM(eventFreeXP) as eventFreeXP, SUM(eventTMenXP) as eventTMenXP, " +
+						"  SUM(real_xp) as real_xp, SUM(xpPenalty) * -1 as xpPenalty, SUM(freeXP) as freeXP, SUM(eventXP) as eventXP, SUM(eventFreeXP) as eventFreeXP, SUM(eventTMenXP) as eventTMenXP, " +
 						"  SUM(achievementXP) as achievementXP, SUM(achievementFreeXP) as achievementFreeXP " +
 						"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
 						"WHERE playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
@@ -620,7 +658,7 @@ namespace WinApp.Forms
 					DataTable dtXP = dt.Clone();
 					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Total XP", "real_xp", Convert.ToInt32(totBattleCount)));
 					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventXP", Convert.ToInt32(totBattleCount)));
-					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Fine for causing dmg", "xpPenalty", Convert.ToInt32(totBattleCount), higherIsBest: false));
+					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Fine for causing dmg", "xpPenalty", Convert.ToInt32(totBattleCount)));
 					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Free XP", "freeXP", Convert.ToInt32(totBattleCount)));
 					//dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventFreeXP", Convert.ToInt32(totBattleCount)));
 					// Done;
@@ -630,6 +668,17 @@ namespace WinApp.Forms
 				}
 				
 			}
+		}
+
+		private void dgvRating_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+		{
+			// rating color
+			dgvRating.Rows[0].Cells["Result"].Style.ForeColor = Rating.WN8color(wn8);
+			dgvRating.Rows[0].Cells["Average"].Style.ForeColor = Rating.WN8color(wn8avg);
+			dgvRating.Rows[1].Cells["Result"].Style.ForeColor = Rating.WN7color(wn7);
+			dgvRating.Rows[1].Cells["Average"].Style.ForeColor = Rating.WN7color(wn7avg);
+			dgvRating.Rows[2].Cells["Result"].Style.ForeColor = Rating.EffColor(eff);
+			dgvRating.Rows[2].Cells["Average"].Style.ForeColor = Rating.EffColor(effavg);
 		}
 
 		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int battleCount, bool higherIsBest = true, int decimals = 0)
@@ -661,7 +710,6 @@ namespace WinApp.Forms
 			drNew["Average"] = avg;
 			return drNew;
 		}
-
 
 		private void FormatStandardDataGrid(DataGridView dgv, string headerText)
 		{
@@ -835,33 +883,43 @@ namespace WinApp.Forms
 			}
 			if (showAllColumns)
 				enhancedFields =
+					", '' as separator1 " +
 					", killerName as 'Killed By' " +
-										
+
+					", '' as separator2 " +
 					", damageAssistedTrack as 'Dmg Track' " +
 					", damageAssistedRadio as 'Dmg Spot' " +
 					", sniperDamageDealt as 'Dmg Sniper' " +
-					
+
+					", '' as separator8 " +
 					", damageReceived as 'Dmg Received' " +
 					", damageBlockedByArmor as 'Dmg Blocked' " +
-					
+
+					", '' as separator3 " +
 					", spotted as 'Spot' " +
 					", capturePoints as 'Cap' " +
 					", droppedCapturePoints as 'Decap' " +
-					
+
+					", '' as separator4 " +
 					", shots as 'Shots' " +
 					", hits as 'Hits' " +
 					", pierced as 'Pierced Hits' " +
 					", explosionHits as 'Explosion Hits' " +
-					
+
+					", '' as separator5 " +
 					", directHitsReceived as 'Hits Received' " +
 					", piercingsReceived as 'Piercings Received' " +
 					", explosionHitsReceived as 'Expl Hits Received' " +
 					", noDamageShotsReceived as 'No Dmg Hits Received' " +
 
+					", '' as separator6 " + 
 					", mileage as 'Milage' " +
 					", lifeTime as 'Life Time' " +
 
+					", '' as separator7 " + 
 					", credits as 'Base Credit' " +
+
+					", '' as separator9 " + 
 					", isPrematureLeave as 'Premature Leave' " +
 					", isTeamKiller as 'Team Killer' " +
 					", tkills as 'Team Kills' ";
@@ -949,7 +1007,17 @@ namespace WinApp.Forms
 			// Default width and set sorting
 			foreach (DataGridViewColumn dgvc in dgv.Columns)
 			{
-				dgvc.Width = 50;
+				if (dgvc.Name.Length > 9 && dgvc.Name.Substring(0, 9) == "separator")
+				{
+					dgvc.MinimumWidth = 2;
+					dgvc.Width = 3;
+					dgvc.HeaderText = "";
+					dgvc.Resizable = DataGridViewTriState.False;
+				}
+				else
+				{
+					dgvc.Width = 50;
+				}
 				// Sorting, set manual 
 				dgvc.SortMode = DataGridViewColumnSortMode.Programmatic;
 			}
@@ -1023,7 +1091,11 @@ namespace WinApp.Forms
 					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
 					dgv.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
 				}
-			
+			}
+			else if (col.Length > 9 && col.Substring(0, 9) == "separator")
+			{
+				e.CellStyle.BackColor = ColorTheme.GridHeaderBackLight;
+				e.CellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
 			}
 		}
 

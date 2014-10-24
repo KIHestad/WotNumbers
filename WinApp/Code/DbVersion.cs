@@ -1045,9 +1045,6 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET colName='CAST(tank.tier AS FLOAT)' WHERE id=59; ";
 					sqlite = mssql;
 					break;
-				case 85:
-					RunWotApi = true;
-					break;
 				case 86:
 					mssql = "ALTER TABLE columnList ADD lastSortColumn varchar(50) NULL; " +
 							"ALTER TABLE columnList ADD lastSortDirectionAsc bit NOT NULL DEFAULT 0; ";
@@ -1571,9 +1568,6 @@ namespace WinApp.Code
 					mssql = "UPDATE columnSelection SET colName='playerTankBattle.potentialDmgReceived' WHERE id=208;";
 					sqlite = mssql;
 					break;
-				case 135:
-					RunWotApi = true;
-					break;
 				case 137:
 					mssql = "UPDATE columnSelection SET colDataType='VarChar' WHERE id = 512;";
 					sqlite = mssql;
@@ -1719,9 +1713,6 @@ namespace WinApp.Code
 					break;
 				case 164:
 					TankHelper.GetJson2dbMappingFromDB();
-					break;
-				case 165:
-					RunWotApi = true;
 					break;
 				case 167:
 					mssql =
@@ -1884,6 +1875,7 @@ namespace WinApp.Code
 				case 188:
 					mssql = GetUpgradeSQL("188");
 					sqlite = mssql;
+					RunWotApi = true;
 					break;
 
 			}
