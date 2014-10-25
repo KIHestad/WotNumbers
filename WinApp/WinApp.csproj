@@ -188,11 +188,11 @@
     <Compile Include="Forms\BattleDetail\BattleDetail.Designer.cs">
       <DependentUpon>BattleDetail.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BattleDetail\BattleMapAndComment.cs">
+    <Compile Include="Forms\BattleDetail\BattleReview.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\BattleDetail\BattleMapAndComment.Designer.cs">
-      <DependentUpon>BattleMapAndComment.cs</DependentUpon>
+    <Compile Include="Forms\BattleDetail\BattleReview.Designer.cs">
+      <DependentUpon>BattleReview.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
@@ -461,8 +461,8 @@
     <EmbeddedResource Include="Forms\BattleDetail\BattleDetail.resx">
       <DependentUpon>BattleDetail.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BattleDetail\BattleMapAndComment.resx">
-      <DependentUpon>BattleMapAndComment.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\BattleDetail\BattleReview.resx">
+      <DependentUpon>BattleReview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>

@@ -34,8 +34,8 @@
 			this.imgIndicators = new System.Windows.Forms.ImageList(this.components);
 			this.imgMapOverlay = new System.Windows.Forms.ImageList(this.components);
 			this.BattleDetailTheme = new BadForm();
-			this.panelMapAndComment = new System.Windows.Forms.Panel();
-			this.btnMapAndComment = new BadButton();
+			this.panelBattleReview = new System.Windows.Forms.Panel();
+			this.btnBattleReview = new BadButton();
 			this.panelMyResult = new System.Windows.Forms.Panel();
 			this.label12 = new System.Windows.Forms.Label();
 			this.pictureBox11 = new System.Windows.Forms.PictureBox();
@@ -135,8 +135,8 @@
 			// 
 			// BattleDetailTheme
 			// 
-			this.BattleDetailTheme.Controls.Add(this.panelMapAndComment);
-			this.BattleDetailTheme.Controls.Add(this.btnMapAndComment);
+			this.BattleDetailTheme.Controls.Add(this.panelBattleReview);
+			this.BattleDetailTheme.Controls.Add(this.btnBattleReview);
 			this.BattleDetailTheme.Controls.Add(this.panelMyResult);
 			this.BattleDetailTheme.Controls.Add(this.btnEnemyTeam);
 			this.BattleDetailTheme.Controls.Add(this.btnOurTeam);
@@ -164,26 +164,26 @@
 			this.BattleDetailTheme.Text = "Battle Details";
 			this.BattleDetailTheme.TitleHeight = 26;
 			// 
-			// panelMapAndComment
+			// panelBattleReview
 			// 
-			this.panelMapAndComment.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.panelMapAndComment.Location = new System.Drawing.Point(743, 133);
-			this.panelMapAndComment.Name = "panelMapAndComment";
-			this.panelMapAndComment.Size = new System.Drawing.Size(68, 20);
-			this.panelMapAndComment.TabIndex = 8;
+			this.panelBattleReview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.panelBattleReview.Location = new System.Drawing.Point(743, 133);
+			this.panelBattleReview.Name = "panelBattleReview";
+			this.panelBattleReview.Size = new System.Drawing.Size(68, 20);
+			this.panelBattleReview.TabIndex = 8;
 			// 
-			// btnMapAndComment
+			// btnBattleReview
 			// 
-			this.btnMapAndComment.BlackButton = false;
-			this.btnMapAndComment.Checked = false;
-			this.btnMapAndComment.Image = null;
-			this.btnMapAndComment.Location = new System.Drawing.Point(135, 140);
-			this.btnMapAndComment.Name = "btnMapAndComment";
-			this.btnMapAndComment.Size = new System.Drawing.Size(108, 23);
-			this.btnMapAndComment.TabIndex = 7;
-			this.btnMapAndComment.Text = "Map & Comment";
-			this.btnMapAndComment.ToolTipText = "";
-			this.btnMapAndComment.Click += new System.EventHandler(this.btnTab_Click);
+			this.btnBattleReview.BlackButton = false;
+			this.btnBattleReview.Checked = false;
+			this.btnBattleReview.Image = null;
+			this.btnBattleReview.Location = new System.Drawing.Point(135, 140);
+			this.btnBattleReview.Name = "btnBattleReview";
+			this.btnBattleReview.Size = new System.Drawing.Size(108, 23);
+			this.btnBattleReview.TabIndex = 7;
+			this.btnBattleReview.Text = "Battle Review";
+			this.btnBattleReview.ToolTipText = "";
+			this.btnBattleReview.Click += new System.EventHandler(this.btnTab_Click);
 			// 
 			// panelMyResult
 			// 
@@ -870,8 +870,8 @@
 		private System.Windows.Forms.PictureBox pictureBox9;
 		private System.Windows.Forms.PictureBox pictureBox10;
 		private System.Windows.Forms.DataGridView dgvOther;
-		private BadButton btnMapAndComment;
-		private System.Windows.Forms.Panel panelMapAndComment;
+		private BadButton btnBattleReview;
+		private System.Windows.Forms.Panel panelBattleReview;
 		private System.Windows.Forms.PictureBox picHeader;
 		private System.Windows.Forms.ImageList imgMapOverlay;
 		private System.Windows.Forms.Label label12;

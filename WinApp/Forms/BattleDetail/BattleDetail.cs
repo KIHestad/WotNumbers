@@ -34,7 +34,7 @@ namespace WinApp.Forms
 		private int effavg = 0;
 		// Map and Comment
 		private bool fetchedMapAndComment = false;
-		private Control MapAndCommentControl = null;
+		private Control controlBattleReview = null;
 
 		public BattleDetail(int selectedBattleId)
 		{
@@ -44,12 +44,13 @@ namespace WinApp.Forms
 
 		private void BattleDetail_Load(object sender, EventArgs e)
 		{
-			// Map And Comment
-			panelMapAndComment.Visible = false;
-			panelMapAndComment.Top = panelMyResult.Top;
-			panelMapAndComment.Left = panelMyResult.Left;
-			panelMapAndComment.Height = panelMyResult.Height;
-			panelMapAndComment.Width = panelMyResult.Width;
+			// BattleResult
+			panelBattleReview.Visible = false;
+			panelBattleReview.Top = panelMyResult.Top;
+			panelBattleReview.Left = panelMyResult.Left;
+			panelBattleReview.Height = panelMyResult.Height;
+			panelBattleReview.Width = panelMyResult.Width;
+			panelBattleReview.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
 			// My result
 			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
 			dgvWN8.GridColor = ColorTheme.GridHeaderBackLight;
@@ -120,11 +121,11 @@ namespace WinApp.Forms
 			btnOurTeam.Checked = false;
 			btnPersonal.Checked = false;
 			btnTeams.Checked = false;
-			btnMapAndComment.Checked = false;
+			btnBattleReview.Checked = false;
 			// hide my result
 			panelMyResult.Visible = false;
 			// hide map and comment
-			panelMapAndComment.Visible = false;
+			panelBattleReview.Visible = false;
 			// hide grids
 			dgvTeam1.Visible = false;
 			dgvTeam2.Visible = false;
@@ -158,8 +159,8 @@ namespace WinApp.Forms
 				case "btnEnemyTeam":
 					ShowEnemyTeam();
 					break;
-				case "btnMapAndComment":
-					ShowMapAndComment();
+				case "btnBattleReview":
+					ShowBattleReview();
 					break;
 			}
 		}
@@ -217,7 +218,7 @@ namespace WinApp.Forms
 				if (dr["mapName"] != DBNull.Value)
 					mapName = dr["mapName"].ToString();
 				else
-					btnMapAndComment.Text = "Comment";
+					btnBattleReview.Text = "Comment";
 				lblMap.Text = mapName;
 				// Battle time
 				DateTime finished = Convert.ToDateTime(dr["battleTime"]);
@@ -794,18 +795,19 @@ namespace WinApp.Forms
 			MoveScrollBar();
 		}
 
-		private void ShowMapAndComment()
+		private void ShowBattleReview()
 		{
 			if (!fetchedMapAndComment)
 			{
-				MapAndCommentControl = new Forms.BattleMapAndComment(battleId);
-				MapAndCommentControl.Name = "MapAndCommentControl";
-				panelMapAndComment.Controls.Add(MapAndCommentControl);
-				Control[] c = panelMapAndComment.Controls.Find("MapAndCommentControl", false);
+				controlBattleReview = new Forms.BattleReview(battleId);
+				controlBattleReview.Name = "controlBattleReview";
+				panelBattleReview.Controls.Add(controlBattleReview);
+				controlBattleReview.Dock = DockStyle.Fill;
+				Control[] c = panelBattleReview.Controls.Find("controlBattleReview", false);
 				c[0].BringToFront();
 			}
-			panelMapAndComment.Visible = true;
-			panelMapAndComment.BringToFront();
+			panelBattleReview.Visible = true;
+			panelBattleReview.BringToFront();
 		}
 
 		private string GetSortField(string headerText)
@@ -1239,6 +1241,11 @@ namespace WinApp.Forms
 				FormatDataGrid(dgvTeam2);
 				RefreshScrollbars(dgvTeam2);
 				PlaceScroll(dgvTeam2);
+			}
+			else if (btnBattleReview.Checked)
+			{
+				Control[] c = panelBattleReview.Controls.Find("controlBattleReview", false);
+				c[0].Refresh();
 			}
 		}
 
