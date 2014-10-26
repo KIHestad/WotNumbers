@@ -212,24 +212,55 @@ namespace WinApp.Forms
 		#region painting
 
 		// Parameters to control painting
-		bool startPaint = false;
-		bool eraseMode = false;
-		Color penColor = Color.White;
-		int penSize = 2;
-		int cursorSize = 1;
 		bool paintingExists = false;
+		bool startPaint = false;
+		bool paintMode = true;
+		Point lastPos;
+		int cursorSize = 1;
+		Color penColor = Color.White;
 		Cursor paintCursor = Cursors.Cross;
+		SolidBrush sb = new SolidBrush(Color.White);
+		int penSize = 2;
+		Pen pen = new Pen(Color.White, 4); // default size = penSize * 2
+		
 
 		private void picPaint_MouseDown(object sender, MouseEventArgs e)
 		{
 			startPaint = true;
+			paintingExists = true;
+			lastPos = e.Location;
+			picPaint.Cursor = cursorPainting[cursorSize]; // draw cursor
+			PaintNow(e);
 		}
 
 		private void picPaint_MouseMove(object sender, MouseEventArgs e)
 		{
+			PaintNow(e);
+			if (startPaint && paintMode)
+			{
+				graphics.DrawLine(pen, lastPos, e.Location);
+				lastPos = e.Location;
+			}
+			lastPos = e.Location;
+		}
+
+		private void picPaint_MouseUp(object sender, MouseEventArgs e)
+		{
+			startPaint = false;
+			picPaint.Cursor = paintCursor;
+		}
+
+		private void PaintNow(MouseEventArgs e)
+		{
 			if (startPaint)
 			{
-				if (eraseMode)
+				if (paintMode)
+				{
+					// Painting
+					graphics.FillEllipse(sb, e.X - penSize, e.Y - penSize, penSize * 2, penSize * 2);
+					picPaint.Image = bitmap;
+				}
+				else
 				{
 					// Erasing
 					graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
@@ -239,27 +270,9 @@ namespace WinApp.Forms
 					}
 					picPaint.Image = bitmap;
 				}
-				else
-				{
-					// Hide cursor
-					picPaint.Cursor = cursorPainting[cursorSize];
-
-					// Painting
-					SolidBrush sb = new SolidBrush(penColor);
-					graphics.FillEllipse(sb, e.X - penSize, e.Y - penSize, penSize * 2, penSize * 2);
-					picPaint.Image = bitmap;
-					paintingExists = true;
-				}
 
 			}
 		}
-
-		private void picPaint_MouseUp(object sender, MouseEventArgs e)
-		{
-			startPaint = false;
-			picPaint.Cursor = paintCursor;
-		}
-
 
 		private void PaintingPenColor_Click(object sender, EventArgs e)
 		{
@@ -272,22 +285,24 @@ namespace WinApp.Forms
 			mPenBlue.Checked = false;
 			mPenPink.Checked = false;
 			mEraser.Checked = false;
-			eraseMode = false;
+			paintMode = false;
 			ToolStripButton btn = (ToolStripButton)sender;
 			btn.Checked = true;
 			Application.DoEvents();
 			if (mEraser.Checked)
 			{
-				eraseMode = true;
+				paintMode = false;
 				paintCursor = cursorEraser[cursorSize];
 			}
 			else
 			{
-				eraseMode = false;
+				paintMode = true;
 				paintCursor = Cursors.Cross;
 
 			}
 			penColor = ColorTranslator.FromHtml("#" + btn.Tag.ToString());
+			sb = new SolidBrush(penColor);
+			pen = new Pen(sb, penSize * 2);
 			picPaint.Cursor = paintCursor;
 		}
 
@@ -305,11 +320,12 @@ namespace WinApp.Forms
 				case 2: cursorSize = 1; break;
 				case 4: cursorSize = 2; break;
 			}
-			if (eraseMode)
+			if (!paintMode)
 			{
 				paintCursor = cursorEraser[cursorSize];
 				picPaint.Cursor = paintCursor;
 			}
+			pen = new Pen(sb, penSize * 2);
 		}
 
 		private void mClear_Click(object sender, EventArgs e)
