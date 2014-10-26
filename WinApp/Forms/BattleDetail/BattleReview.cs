@@ -138,7 +138,7 @@ namespace WinApp.Forms
 		{
 			int battleReviewBattleId = Convert.ToInt32(dgvReviews.Rows[e.RowIndex].Cells["battleId"].Value);
 			Form frm = new Forms.BattleDetail(battleReviewBattleId, parentForm);
-			frm.Show(parentForm);
+			FormHelper.OpenFormCenterOfParent(this.Parent.FindForm(), frm);
 		}
 
 		private void btnCommentClear_Click(object sender, EventArgs e)

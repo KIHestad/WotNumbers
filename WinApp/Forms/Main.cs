@@ -2742,21 +2742,21 @@ namespace WinApp.Forms
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			Form frm = new Forms.BattleChartTier(playerTankId);
-			FormHelper.OpenForm(this, frm);
+			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 
 		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			Form frm = new Forms.BattleDetail(battleId, this);
-			frm.Show();
+			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 
 		private void dataGridMainPopup_TankDetails_Click(object sender, EventArgs e)
 		{
 			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			Form frm = new Forms.PlayerTankDetail(playerTankId);
-			FormHelper.OpenForm(this, frm);
+			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 
 		private void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
@@ -3191,7 +3191,7 @@ namespace WinApp.Forms
 		private void toolItemViewChart_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.BattleChartTier(0);
-			FormHelper.OpenForm(this, frm);
+			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 	
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
@@ -3311,7 +3311,7 @@ namespace WinApp.Forms
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.DatabaseTable();
-			FormHelper.OpenForm(this, frm);
+			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
