@@ -16,6 +16,7 @@ namespace WinApp.Forms
 		#region Init
 		
 		private int battleId;
+		private Form parentForm;
 		private int team1 = 1;
 		private int team2 = 2;
 		private DataGridView dgvTeam1 = new DataGridView();
@@ -36,10 +37,11 @@ namespace WinApp.Forms
 		private bool fetchedMapAndComment = false;
 		private Control controlBattleReview = null;
 
-		public BattleDetail(int selectedBattleId)
+		public BattleDetail(int selectedBattleId, Form selectedParentForm)
 		{
 			InitializeComponent();
 			battleId = selectedBattleId;
+			parentForm = selectedParentForm;
 		}
 
 		private void BattleDetail_Load(object sender, EventArgs e)
@@ -799,7 +801,7 @@ namespace WinApp.Forms
 		{
 			if (!fetchedMapAndComment)
 			{
-				controlBattleReview = new Forms.BattleReview(battleId);
+				controlBattleReview = new Forms.BattleReview(battleId, parentForm);
 				controlBattleReview.Name = "controlBattleReview";
 				panelBattleReview.Controls.Add(controlBattleReview);
 				controlBattleReview.Dock = DockStyle.Fill;

@@ -2748,7 +2748,7 @@ namespace WinApp.Forms
 		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
-			Form frm = new Forms.BattleDetail(battleId);
+			Form frm = new Forms.BattleDetail(battleId, this);
 			frm.Show();
 		}
 

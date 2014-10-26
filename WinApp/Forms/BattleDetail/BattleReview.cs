@@ -19,10 +19,12 @@ namespace WinApp.Forms
 		private int mapId = 0;
 		private int clanId = 0;
 		private string battleMode = "";
-		public BattleReview(int showBattleId)
+		private Form parentForm;
+		public BattleReview(int showBattleId, Form selectedParentForm)
 		{
 			InitializeComponent();
 			battleId = showBattleId;
+			parentForm = selectedParentForm;
 		}
 		// Paintig objects
 		Bitmap bitmap; // bitmap object to hold the painting
@@ -122,13 +124,21 @@ namespace WinApp.Forms
 			if (chkClan.Checked && chkClan.Visible)
 				where += " and battle.enemyClanDBID=" + clanId + " ";
 			string sql =
-				"select battleTime as 'Battle Time', comment as 'Battle Comment' " +
+				"select battleTime as 'Battle Time', comment as 'Battle Comment', battle.id as battleId " +
 				"from battle inner join playerTank on battle.playerTankId = playerTank.id " +
-				"where comment is not null " + where +
+				"where comment is not null and battle.id <> @battleId " + where +
 				"order by battleTime DESC; ";
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			dgvReviews.DataSource = dt;
+			dgvReviews.Columns["battleId"].Visible = false;
+		}
 
+		private void dgvReviews_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			int battleReviewBattleId = Convert.ToInt32(dgvReviews.Rows[e.RowIndex].Cells["battleId"].Value);
+			Form frm = new Forms.BattleDetail(battleReviewBattleId, parentForm);
+			frm.Show(parentForm);
 		}
 
 		private void btnCommentClear_Click(object sender, EventArgs e)
@@ -302,8 +312,6 @@ namespace WinApp.Forms
 			}
 		}
 
-		#endregion
-
 		private void mClear_Click(object sender, EventArgs e)
 		{
 			bitmap = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
@@ -325,5 +333,8 @@ namespace WinApp.Forms
 				DB.ExecuteNonQuery(sql, imgParameter: "@painting", img: picPaint.Image);
 			}
 		}
+
+		#endregion
+
 	}
 }
