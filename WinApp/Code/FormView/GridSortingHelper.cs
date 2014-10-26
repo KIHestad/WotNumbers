@@ -19,7 +19,7 @@ namespace WinApp.Code
 		{
 			Sorting sorting = new Sorting();
 			string sql = "select * from columnList where id=@id;";
-			DB.AddWithValue(ref sql, "@id", currentGridFilter.ColListId, DB.SqlDataType.Image);
+			DB.AddWithValue(ref sql, "@id", currentGridFilter.ColListId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)
 			{
@@ -45,7 +45,7 @@ namespace WinApp.Code
 		public static void SaveSorting(int colListId, Sorting sorting)
 		{
 			string sql = "update columnList set lastSortColumn=@lastSortColumn, lastSortDirectionAsc=@lastSortDirectionAsc where id=@id;";
-			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Image);
+			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@lastSortColumn", sorting.lastColumn, DB.SqlDataType.VarChar);
 			DB.AddWithValue(ref sql, "@lastSortDirectionAsc", sorting.lastSortDirectionAsc, DB.SqlDataType.Boolean);
 			DB.ExecuteNonQuery(sql);

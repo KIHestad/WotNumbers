@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 188; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 189; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1876,6 +1876,20 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("188");
 					sqlite = mssql;
 					RunWotApi = true;
+					break;
+				case 189:
+					mssql =
+						"CREATE TABLE battleMapPaint ( " +
+						"id int IDENTITY(1,1) primary key, " +
+						"battleId int NOT NULL, " +
+						"painting varbinary(MAX), " +
+						"foreign key (battleId) references battle (id) )";
+					sqlite =
+						"CREATE TABLE battleMapPaint ( " +
+						"id integer primary key, " +
+						"battleId integer NOT NULL, " +
+						"painting blob, " +
+						"foreign key (battleId) references battle (id) )";
 					break;
 
 			}

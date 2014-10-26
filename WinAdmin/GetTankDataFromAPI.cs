@@ -299,7 +299,7 @@ namespace WinAdmin
 				}
 
 				// Read into byte array
-				Image image = Image.FromStream(memStream);
+				//Image image = Image.FromStream(memStream);
 				imgArray = memStream.ToArray();
 			}
 			catch (Exception ex)

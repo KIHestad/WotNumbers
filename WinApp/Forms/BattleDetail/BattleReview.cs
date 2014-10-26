@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using System.Drawing.Imaging;
 
 namespace WinApp.Forms
 {
@@ -23,14 +24,43 @@ namespace WinApp.Forms
 			InitializeComponent();
 			battleId = showBattleId;
 		}
+		// Paintig objects
+		Bitmap bitmap; // bitmap object to hold the painting
+		Graphics graphics; // graphics object to perform painting
+		// Custom cursors
+		Cursor[] cursorEraser = new Cursor[3];
+		Cursor[] cursorPainting = new Cursor[3];
+
+		#region Main
 
 		private void BattleMapAndComment_Load(object sender, EventArgs e)
 		{
 			// Paint toolstrip
 			toolStripPaint.Renderer = new CustomStripRenderer();
-			
+			// Init paint area
+			bitmap = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
+			graphics = Graphics.FromImage(bitmap);
+			// Check if painting exists
+			string sql = "select painting from battleMapPaint where battleId=@battleId";
+			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+			DataTable dtBtlMapPaint = DB.FetchData(sql);
+			if (dtBtlMapPaint.Rows.Count > 0)
+			{
+				paintingExists = true;
+				byte[] imgByte = (byte[])dtBtlMapPaint.Rows[0]["painting"];
+				bitmap = new Bitmap(ImageHelper.ByteArrayToImage(imgByte));
+				picPaint.Image = bitmap;
+			}
+			// Custom cursors
+			cursorPainting[0] = CursorHelper.CreateCursor(imageListCursors.Images[0], 2, 2); 
+			cursorPainting[1] = CursorHelper.CreateCursor(imageListCursors.Images[1], 3, 3); 
+			cursorPainting[2] = CursorHelper.CreateCursor(imageListCursors.Images[2], 4, 4); 
+			cursorEraser[0] = CursorHelper.CreateCursor(imageListCursors.Images[3], 4, 4);
+			cursorEraser[1] = CursorHelper.CreateCursor(imageListCursors.Images[4], 9, 9);
+			cursorEraser[2] = CursorHelper.CreateCursor(imageListCursors.Images[5], 19, 19);
+
 			// Fetch battle data data
-			string sql = 
+			sql = 
 				"select map.*, battle.comment as battleComment, playerTank.tankId as tankId, map.id as mapId, " + 
 				"  battle.enemyClanDBID as enemyClanDBID, battle.battleMode as battleMode " +
 				"from battle left join " +
@@ -167,34 +197,57 @@ namespace WinApp.Forms
 			GetOtherBattleReviews();
 		}
 
+		#endregion
+
 		#region painting
 
-		Graphics g;
+		// Parameters to control painting
 		bool startPaint = false;
+		bool eraseMode = false;
 		Color penColor = Color.White;
 		int penSize = 2;
+		int cursorSize = 1;
+		bool paintingExists = false;
+		Cursor paintCursor = Cursors.Cross;
 
-		private void panelMap_MouseDown(object sender, MouseEventArgs e)
+		private void picPaint_MouseDown(object sender, MouseEventArgs e)
 		{
 			startPaint = true;
-			Cursor.Hide();
 		}
 
-		private void panelMap_MouseMove(object sender, MouseEventArgs e)
+		private void picPaint_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (startPaint)
 			{
-				//Setting the Pen Color
-				SolidBrush sb = new SolidBrush(penColor);
-				// Draw
-				g.FillEllipse(sb, e.X - penSize, e.Y - penSize, penSize * 2, penSize * 2);
+				if (eraseMode)
+				{
+					// Erasing
+					graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+					using (var br = new SolidBrush(Color.FromArgb(0, 255, 255, 255)))
+					{
+						graphics.FillEllipse(br, e.X - penSize * 5, e.Y - penSize * 5, penSize * 10, penSize * 10);
+					}
+					picPaint.Image = bitmap;
+				}
+				else
+				{
+					// Hide cursor
+					picPaint.Cursor = cursorPainting[cursorSize];
+
+					// Painting
+					SolidBrush sb = new SolidBrush(penColor);
+					graphics.FillEllipse(sb, e.X - penSize, e.Y - penSize, penSize * 2, penSize * 2);
+					picPaint.Image = bitmap;
+					paintingExists = true;
+				}
+
 			}
 		}
 
-		private void panelMap_MouseUp(object sender, MouseEventArgs e)
+		private void picPaint_MouseUp(object sender, MouseEventArgs e)
 		{
 			startPaint = false;
-			Cursor.Show();
+			picPaint.Cursor = paintCursor;
 		}
 
 
@@ -208,9 +261,24 @@ namespace WinApp.Forms
 			mPenGreen.Checked = false;
 			mPenBlue.Checked = false;
 			mPenPink.Checked = false;
+			mEraser.Checked = false;
+			eraseMode = false;
 			ToolStripButton btn = (ToolStripButton)sender;
 			btn.Checked = true;
-			penColor = ColorTranslator.FromHtml(btn.Tag.ToString());
+			Application.DoEvents();
+			if (mEraser.Checked)
+			{
+				eraseMode = true;
+				paintCursor = cursorEraser[cursorSize];
+			}
+			else
+			{
+				eraseMode = false;
+				paintCursor = Cursors.Cross;
+
+			}
+			penColor = ColorTranslator.FromHtml("#" + btn.Tag.ToString());
+			picPaint.Cursor = paintCursor;
 		}
 
 		private void PaintingPenSize_Click(object sender, EventArgs e)
@@ -221,8 +289,41 @@ namespace WinApp.Forms
 			ToolStripButton btn = (ToolStripButton)sender;
 			btn.Checked = true;
 			penSize = Convert.ToInt32(btn.Tag);
+			switch (penSize)
+			{
+				case 1: cursorSize = 0; break;
+				case 2: cursorSize = 1; break;
+				case 4: cursorSize = 2; break;
+			}
+			if (eraseMode)
+			{
+				paintCursor = cursorEraser[cursorSize];
+				picPaint.Cursor = paintCursor;
+			}
 		}
 
 		#endregion
+
+		private void mClear_Click(object sender, EventArgs e)
+		{
+			bitmap = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
+			graphics = Graphics.FromImage(bitmap);
+			picPaint.Image = bitmap;
+			paintingExists = false;
+		}
+
+		private void mSave_Click(object sender, EventArgs e)
+		{
+			// Delete previous painting
+			string sql = "DELETE FROM battleMapPaint WHERE battleId=" + battleId;
+			DB.ExecuteNonQuery(sql);
+			// Save new painting if exists
+			if (paintingExists)
+			{
+				sql = "INSERT INTO battleMapPaint (battleId, painting) VALUES (@battleId, @painting)";
+				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+				DB.ExecuteNonQuery(sql, imgParameter: "@painting", img: picPaint.Image);
+			}
+		}
 	}
 }

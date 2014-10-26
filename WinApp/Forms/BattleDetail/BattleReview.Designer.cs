@@ -35,10 +35,10 @@
 			this.panelGrid = new System.Windows.Forms.Panel();
 			this.panelComment = new System.Windows.Forms.Panel();
 			this.panelMap = new System.Windows.Forms.Panel();
+			this.picPaint = new System.Windows.Forms.PictureBox();
 			this.toolStripPaint = new System.Windows.Forms.ToolStrip();
-			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+			this.mSave = new System.Windows.Forms.ToolStripButton();
+			this.mClear = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.mPenWhite = new System.Windows.Forms.ToolStripButton();
 			this.mPenBlack = new System.Windows.Forms.ToolStripButton();
@@ -48,10 +48,12 @@
 			this.mPenGreen = new System.Windows.Forms.ToolStripButton();
 			this.mPenBlue = new System.Windows.Forms.ToolStripButton();
 			this.mPenPink = new System.Windows.Forms.ToolStripButton();
+			this.mEraser = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.mSizeSmall = new System.Windows.Forms.ToolStripButton();
 			this.mSizeMedium = new System.Windows.Forms.ToolStripButton();
 			this.mSizeLarge = new System.Windows.Forms.ToolStripButton();
+			this.imageListCursors = new System.Windows.Forms.ImageList(this.components);
 			this.scrollComment = new BadScrollBar();
 			this.txtComment = new BadTextBox();
 			this.btnCommentClear = new BadButton();
@@ -69,6 +71,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.dgvReviews)).BeginInit();
 			this.panelGrid.SuspendLayout();
 			this.panelComment.SuspendLayout();
+			this.panelMap.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picPaint)).BeginInit();
 			this.toolStripPaint.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -122,10 +126,24 @@
 			// 
 			// panelMap
 			// 
+			this.panelMap.Controls.Add(this.picPaint);
 			this.panelMap.Location = new System.Drawing.Point(15, 15);
 			this.panelMap.Name = "panelMap";
 			this.panelMap.Size = new System.Drawing.Size(300, 300);
 			this.panelMap.TabIndex = 20;
+			// 
+			// picPaint
+			// 
+			this.picPaint.BackColor = System.Drawing.Color.Transparent;
+			this.picPaint.Cursor = System.Windows.Forms.Cursors.Cross;
+			this.picPaint.Location = new System.Drawing.Point(0, 0);
+			this.picPaint.Name = "picPaint";
+			this.picPaint.Size = new System.Drawing.Size(300, 300);
+			this.picPaint.TabIndex = 0;
+			this.picPaint.TabStop = false;
+			this.picPaint.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picPaint_MouseDown);
+			this.picPaint.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picPaint_MouseMove);
+			this.picPaint.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picPaint_MouseUp);
 			// 
 			// toolStripPaint
 			// 
@@ -133,9 +151,8 @@
 			this.toolStripPaint.Dock = System.Windows.Forms.DockStyle.None;
 			this.toolStripPaint.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolStripPaint.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripButton2,
-            this.toolStripButton3,
+            this.mSave,
+            this.mClear,
             this.toolStripSeparator1,
             this.mPenWhite,
             this.mPenBlack,
@@ -145,6 +162,7 @@
             this.mPenGreen,
             this.mPenBlue,
             this.mPenPink,
+            this.mEraser,
             this.toolStripSeparator2,
             this.mSizeSmall,
             this.mSizeMedium,
@@ -156,35 +174,29 @@
 			this.toolStripPaint.Tag = "1";
 			this.toolStripPaint.Text = "toolStrip1";
 			// 
-			// toolStripButton1
+			// mSave
 			// 
-			this.toolStripButton1.AutoSize = false;
-			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(21, 22);
-			this.toolStripButton1.Text = "toolStripButton1";
+			this.mSave.AutoSize = false;
+			this.mSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mSave.Image = ((System.Drawing.Image)(resources.GetObject("mSave.Image")));
+			this.mSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mSave.Name = "mSave";
+			this.mSave.Size = new System.Drawing.Size(21, 22);
+			this.mSave.Text = "toolStripButton1";
+			this.mSave.ToolTipText = "Save";
+			this.mSave.Click += new System.EventHandler(this.mSave_Click);
 			// 
-			// toolStripButton2
+			// mClear
 			// 
-			this.toolStripButton2.AutoSize = false;
-			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(21, 22);
-			this.toolStripButton2.Text = "toolStripButton2";
-			// 
-			// toolStripButton3
-			// 
-			this.toolStripButton3.AutoSize = false;
-			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton3.Name = "toolStripButton3";
-			this.toolStripButton3.Size = new System.Drawing.Size(21, 22);
-			this.toolStripButton3.Text = "toolStripButton3";
+			this.mClear.AutoSize = false;
+			this.mClear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mClear.Image = ((System.Drawing.Image)(resources.GetObject("mClear.Image")));
+			this.mClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mClear.Name = "mClear";
+			this.mClear.Size = new System.Drawing.Size(21, 22);
+			this.mClear.Text = "toolStripButton2";
+			this.mClear.ToolTipText = "Clear";
+			this.mClear.Click += new System.EventHandler(this.mClear_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -201,7 +213,10 @@
 			this.mPenWhite.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenWhite.Name = "mPenWhite";
 			this.mPenWhite.Size = new System.Drawing.Size(19, 22);
+			this.mPenWhite.Tag = "FFFFFF";
 			this.mPenWhite.Text = "toolStripButton4";
+			this.mPenWhite.ToolTipText = "White pen color";
+			this.mPenWhite.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenBlack
 			// 
@@ -211,7 +226,10 @@
 			this.mPenBlack.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenBlack.Name = "mPenBlack";
 			this.mPenBlack.Size = new System.Drawing.Size(19, 22);
+			this.mPenBlack.Tag = "000000";
 			this.mPenBlack.Text = "toolStripButton5";
+			this.mPenBlack.ToolTipText = "Black pen color";
+			this.mPenBlack.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenRed
 			// 
@@ -221,7 +239,10 @@
 			this.mPenRed.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenRed.Name = "mPenRed";
 			this.mPenRed.Size = new System.Drawing.Size(19, 22);
+			this.mPenRed.Tag = "FF0000";
 			this.mPenRed.Text = "toolStripButton6";
+			this.mPenRed.ToolTipText = "Red pen color";
+			this.mPenRed.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenOrange
 			// 
@@ -231,7 +252,10 @@
 			this.mPenOrange.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenOrange.Name = "mPenOrange";
 			this.mPenOrange.Size = new System.Drawing.Size(19, 22);
+			this.mPenOrange.Tag = "FF6A00";
 			this.mPenOrange.Text = "toolStripButton7";
+			this.mPenOrange.ToolTipText = "Orange  pen color";
+			this.mPenOrange.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenYellow
 			// 
@@ -241,7 +265,10 @@
 			this.mPenYellow.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenYellow.Name = "mPenYellow";
 			this.mPenYellow.Size = new System.Drawing.Size(19, 22);
+			this.mPenYellow.Tag = "FFD800";
 			this.mPenYellow.Text = "toolStripButton8";
+			this.mPenYellow.ToolTipText = "Yellow pen color";
+			this.mPenYellow.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenGreen
 			// 
@@ -251,7 +278,10 @@
 			this.mPenGreen.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenGreen.Name = "mPenGreen";
 			this.mPenGreen.Size = new System.Drawing.Size(19, 22);
+			this.mPenGreen.Tag = "4CFF00";
 			this.mPenGreen.Text = "toolStripButton9";
+			this.mPenGreen.ToolTipText = "Green pen color";
+			this.mPenGreen.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenBlue
 			// 
@@ -261,7 +291,10 @@
 			this.mPenBlue.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenBlue.Name = "mPenBlue";
 			this.mPenBlue.Size = new System.Drawing.Size(19, 22);
+			this.mPenBlue.Tag = "0026FF";
 			this.mPenBlue.Text = "toolStripButton10";
+			this.mPenBlue.ToolTipText = "Blue pen color";
+			this.mPenBlue.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// mPenPink
 			// 
@@ -271,7 +304,23 @@
 			this.mPenPink.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mPenPink.Name = "mPenPink";
 			this.mPenPink.Size = new System.Drawing.Size(19, 22);
+			this.mPenPink.Tag = "FF00DC";
 			this.mPenPink.Text = "toolStripButton11";
+			this.mPenPink.ToolTipText = "Pink pen color";
+			this.mPenPink.Click += new System.EventHandler(this.PaintingPenColor_Click);
+			// 
+			// mEraser
+			// 
+			this.mEraser.AutoSize = false;
+			this.mEraser.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mEraser.Image = ((System.Drawing.Image)(resources.GetObject("mEraser.Image")));
+			this.mEraser.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mEraser.Name = "mEraser";
+			this.mEraser.Size = new System.Drawing.Size(21, 22);
+			this.mEraser.Tag = "FFFFFF";
+			this.mEraser.Text = "toolStripButton3";
+			this.mEraser.ToolTipText = "Eraser";
+			this.mEraser.Click += new System.EventHandler(this.PaintingPenColor_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -286,7 +335,10 @@
 			this.mSizeSmall.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mSizeSmall.Name = "mSizeSmall";
 			this.mSizeSmall.Size = new System.Drawing.Size(19, 22);
+			this.mSizeSmall.Tag = "1";
 			this.mSizeSmall.Text = "toolStripButton12";
+			this.mSizeSmall.ToolTipText = "Small pen size";
+			this.mSizeSmall.Click += new System.EventHandler(this.PaintingPenSize_Click);
 			// 
 			// mSizeMedium
 			// 
@@ -300,6 +352,8 @@
 			this.mSizeMedium.Size = new System.Drawing.Size(19, 22);
 			this.mSizeMedium.Tag = "2";
 			this.mSizeMedium.Text = "toolStripButton13";
+			this.mSizeMedium.ToolTipText = "Medium pen size";
+			this.mSizeMedium.Click += new System.EventHandler(this.PaintingPenSize_Click);
 			// 
 			// mSizeLarge
 			// 
@@ -311,6 +365,19 @@
 			this.mSizeLarge.Size = new System.Drawing.Size(19, 20);
 			this.mSizeLarge.Tag = "4";
 			this.mSizeLarge.Text = "toolStripButton14";
+			this.mSizeLarge.ToolTipText = "Large pen size";
+			this.mSizeLarge.Click += new System.EventHandler(this.PaintingPenSize_Click);
+			// 
+			// imageListCursors
+			// 
+			this.imageListCursors.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListCursors.ImageStream")));
+			this.imageListCursors.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageListCursors.Images.SetKeyName(0, "painting_5.png");
+			this.imageListCursors.Images.SetKeyName(1, "painting_7.png");
+			this.imageListCursors.Images.SetKeyName(2, "painting_9.png");
+			this.imageListCursors.Images.SetKeyName(3, "erasor_10.png");
+			this.imageListCursors.Images.SetKeyName(4, "erasor_20.png");
+			this.imageListCursors.Images.SetKeyName(5, "erasor_40.png");
 			// 
 			// scrollComment
 			// 
@@ -501,6 +568,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.dgvReviews)).EndInit();
 			this.panelGrid.ResumeLayout(false);
 			this.panelComment.ResumeLayout(false);
+			this.panelMap.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.picPaint)).EndInit();
 			this.toolStripPaint.ResumeLayout(false);
 			this.toolStripPaint.PerformLayout();
 			this.ResumeLayout(false);
@@ -528,9 +597,9 @@
 		private System.Windows.Forms.Panel panelComment;
 		private System.Windows.Forms.Panel panelMap;
 		private System.Windows.Forms.ToolStrip toolStripPaint;
-		private System.Windows.Forms.ToolStripButton toolStripButton1;
-		private System.Windows.Forms.ToolStripButton toolStripButton2;
-		private System.Windows.Forms.ToolStripButton toolStripButton3;
+		private System.Windows.Forms.ToolStripButton mSave;
+		private System.Windows.Forms.ToolStripButton mClear;
+		private System.Windows.Forms.ToolStripButton mEraser;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripButton mPenWhite;
 		private System.Windows.Forms.ToolStripButton mPenBlack;
@@ -544,5 +613,7 @@
 		private System.Windows.Forms.ToolStripButton mSizeSmall;
 		private System.Windows.Forms.ToolStripButton mSizeMedium;
 		private System.Windows.Forms.ToolStripButton mSizeLarge;
+		private System.Windows.Forms.PictureBox picPaint;
+		private System.Windows.Forms.ImageList imageListCursors;
 	}
 }
