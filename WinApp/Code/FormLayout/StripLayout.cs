@@ -92,4 +92,19 @@ namespace WinApp.Code
 		internal const uint MA_NOACTIVATE = 3;
 		internal const uint MA_NOACTIVATEANDEAT = 4;
 	}
+
+	public class StripRenderer : ToolStripProfessionalRenderer
+	{
+		public StripRenderer() : base(new Code.StripLayout())
+		{
+			this.RoundedEdges = false;
+		}
+
+		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+		{
+			base.OnRenderItemText(e);
+			e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
+		}
+	}
+
 }

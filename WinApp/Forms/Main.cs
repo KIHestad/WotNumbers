@@ -2749,7 +2749,7 @@ namespace WinApp.Forms
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			Form frm = new Forms.BattleDetail(battleId);
-			frm.ShowDialog();
+			frm.Show();
 		}
 
 		private void dataGridMainPopup_TankDetails_Click(object sender, EventArgs e)

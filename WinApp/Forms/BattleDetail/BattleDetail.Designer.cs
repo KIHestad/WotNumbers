@@ -776,6 +776,7 @@
 			this.ClientSize = new System.Drawing.Size(834, 661);
 			this.Controls.Add(this.BattleDetailTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(834, 661);
 			this.Name = "BattleDetail";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

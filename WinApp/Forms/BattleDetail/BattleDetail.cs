@@ -923,7 +923,7 @@ namespace WinApp.Forms
 			DataRow totalRow = dt.NewRow();
 			// Set 0 ad deafult
 			foreach (DataColumn dc in dt.Columns)
-				if (dc.DataType == System.Type.GetType("System.Int32"))
+				if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
 					totalRow[dc.ColumnName] = 0;
 			totalRow["Player"] = "Total";
 			Bitmap blankImg = new Bitmap(1, 1);
@@ -947,7 +947,7 @@ namespace WinApp.Forms
 				dr["TankImage"] = (Image)newImage;
 				foreach (DataColumn dc in dt.Columns)
 				{
-					if (dc.DataType == System.Type.GetType("System.Int32"))
+					if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
 					{
 						if (dc.ColumnName != "Dead" && dr[dc.ColumnName] != DBNull.Value && Convert.ToInt32(dr[dc.ColumnName]) == 0) 
 							dr[dc.ColumnName] = DBNull.Value;

@@ -231,6 +231,7 @@ namespace WinApp.Gadget
 							{
 								case "System.String": param[paramCount] = drParams["value"].ToString(); break;
 								case "System.Int32": param[paramCount] = Convert.ToInt32(drParams["value"]); break;
+								case "System.Int64": param[paramCount] = Convert.ToInt32(drParams["value"]); break;
 								case "System.Double": param[paramCount] = Convert.ToDouble(drParams["value"]); break;
 								case "System.Boolean": param[paramCount] = Convert.ToBoolean(drParams["value"]); break;
 							}
