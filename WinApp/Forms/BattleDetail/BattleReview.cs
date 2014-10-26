@@ -26,6 +26,9 @@ namespace WinApp.Forms
 
 		private void BattleMapAndComment_Load(object sender, EventArgs e)
 		{
+			// Paint toolstrip
+			toolStripPaint.Renderer = new CustomStripRenderer();
+			
 			// Fetch battle data data
 			string sql = 
 				"select map.*, battle.comment as battleComment, playerTank.tankId as tankId, map.id as mapId, " + 
@@ -40,7 +43,7 @@ namespace WinApp.Forms
 			if (dr["arena_id"] != DBNull.Value)
 			{
 				string arena_id = dr["arena_id"].ToString();
-				picMap.Image = ImageHelper.GetMap(arena_id);
+				panelMap.BackgroundImage = ImageHelper.GetMap(arena_id);
 				picIllustration.Image = ImageHelper.GetMap(arena_id, true);
 				lblMapDescription.Text = dr["description"].ToString();
 			}
@@ -163,5 +166,63 @@ namespace WinApp.Forms
 		{
 			GetOtherBattleReviews();
 		}
+
+		#region painting
+
+		Graphics g;
+		bool startPaint = false;
+		Color penColor = Color.White;
+		int penSize = 2;
+
+		private void panelMap_MouseDown(object sender, MouseEventArgs e)
+		{
+			startPaint = true;
+			Cursor.Hide();
+		}
+
+		private void panelMap_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (startPaint)
+			{
+				//Setting the Pen Color
+				SolidBrush sb = new SolidBrush(penColor);
+				// Draw
+				g.FillEllipse(sb, e.X - penSize, e.Y - penSize, penSize * 2, penSize * 2);
+			}
+		}
+
+		private void panelMap_MouseUp(object sender, MouseEventArgs e)
+		{
+			startPaint = false;
+			Cursor.Show();
+		}
+
+
+		private void PaintingPenColor_Click(object sender, EventArgs e)
+		{
+			mPenWhite.Checked = false;
+			mPenBlack.Checked = false;
+			mPenRed.Checked = false;
+			mPenOrange.Checked = false;
+			mPenYellow.Checked = false;
+			mPenGreen.Checked = false;
+			mPenBlue.Checked = false;
+			mPenPink.Checked = false;
+			ToolStripButton btn = (ToolStripButton)sender;
+			btn.Checked = true;
+			penColor = ColorTranslator.FromHtml(btn.Tag.ToString());
+		}
+
+		private void PaintingPenSize_Click(object sender, EventArgs e)
+		{
+			mSizeLarge.Checked = false;
+			mSizeMedium.Checked = false;
+			mSizeSmall.Checked = false;
+			ToolStripButton btn = (ToolStripButton)sender;
+			btn.Checked = true;
+			penSize = Convert.ToInt32(btn.Tag);
+		}
+
+		#endregion
 	}
 }

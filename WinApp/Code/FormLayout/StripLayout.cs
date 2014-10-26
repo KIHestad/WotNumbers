@@ -93,9 +93,9 @@ namespace WinApp.Code
 		internal const uint MA_NOACTIVATEANDEAT = 4;
 	}
 
-	public class StripRenderer : ToolStripProfessionalRenderer
+	public class CustomStripRenderer : ToolStripProfessionalRenderer
 	{
-		public StripRenderer() : base(new Code.StripLayout())
+		public CustomStripRenderer() : base(new Code.StripLayout())
 		{
 			this.RoundedEdges = false;
 		}
