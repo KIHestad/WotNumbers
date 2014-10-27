@@ -81,13 +81,13 @@ namespace WinApp.Code
 			string applicationId = "";
 			string server = Config.Settings.playerServer;
 			// override to EU server for not supported regions or if missing
-			if (server == "" || server == "RU" || server == "ASIA" || server == "KR")
+			if (server == "" || server == "ASIA" || server == "KR")
 				server = "EU";
 			switch (server)
 			{
 				case "EU": applicationId = "2a70055c41b7a6fff1e35a3ba9cadbf1"; break;
 				case "COM": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
-				case "RU": applicationId = ""; break;
+				case "NET": applicationId = "f53b88fef36646161ddfa4418fc5209c"; break;
 				case "ASIA": applicationId = ""; break;
 				case "KR": applicationId = ""; break;
 			}
