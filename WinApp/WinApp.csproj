@@ -144,9 +144,6 @@
     <Compile Include="Code\FormControl\Agauge.Designer.cs">
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\FormControl\ClearPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
@@ -158,6 +155,12 @@
     <Compile Include="Code\FormView\GridSortingHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
     <Compile Include="Code\PythonEngine.cs" />
+    <Compile Include="Code\FormControl\ToolStripEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Code\FormControl\ToolStripEx.Designer.cs">
+      <DependentUpon>ToolStripEx.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\DB.cs" />
@@ -165,9 +168,6 @@
     <Compile Include="Code\GrindingHelper.cs" />
     <Compile Include="Code\FormControl\PopupGrid.cs" />
     <Compile Include="Code\FormLayout\ColorTheme.cs" />
-    <Compile Include="Code\FormLayout\StripLayout.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Code\FormControl\MsgBox.cs" />
     <Compile Include="Code\Config.cs" />
     <Compile Include="Code\Dossier2json.cs" />
@@ -194,6 +194,12 @@
     </Compile>
     <Compile Include="Forms\BattleDetail\BattleReview.Designer.cs">
       <DependentUpon>BattleReview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BattleTimeFilterCustom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BattleTimeFilterCustom.Designer.cs">
+      <DependentUpon>BattleTimeFilterCustom.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
@@ -274,10 +280,10 @@
     <Compile Include="Forms\FavList\FavList.Designer.cs">
       <DependentUpon>FavList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Grinding\GrindingSetup.cs">
+    <Compile Include="Forms\GrindingSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Grinding\GrindingSetup.Designer.cs">
+    <Compile Include="Forms\GrindingSetup.Designer.cs">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\UpdateFromApi.cs">
@@ -465,6 +471,9 @@
     <EmbeddedResource Include="Forms\BattleDetail\BattleReview.resx">
       <DependentUpon>BattleReview.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BattleTimeFilterCustom.resx">
+      <DependentUpon>BattleTimeFilterCustom.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>
     </EmbeddedResource>
@@ -504,7 +513,7 @@
     <EmbeddedResource Include="Forms\FavList\FavList.resx">
       <DependentUpon>FavList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Grinding\GrindingSetup.resx">
+    <EmbeddedResource Include="Forms\GrindingSetup.resx">
       <DependentUpon>GrindingSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\UpdateFromApi.resx">

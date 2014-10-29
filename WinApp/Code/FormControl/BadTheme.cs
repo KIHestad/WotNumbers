@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -1398,6 +1399,7 @@ class BadTextBox : BadThemeControl
 		textBox.MouseHover += new EventHandler(textBox_MouseHover);
 		textBox.MouseLeave += new EventHandler(textBox_MouseLeave);
 		textBox.MouseDown += new MouseEventHandler(textBox_MouseDown);
+		textBox.Click += new EventHandler(textBox_Click);
 	}
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
@@ -1480,6 +1482,16 @@ class BadTextBox : BadThemeControl
 			base.OnMouseDown(e);
 		}
 		catch (Exception) {	}
+	}
+
+	protected void textBox_Click(object sender, EventArgs e)
+	{
+		base.OnClick(e);
+	}
+
+	public void SelectAll()
+	{
+		textBox.SelectAll();
 	}
 }
 
@@ -1903,4 +1915,46 @@ class BadScrollBarCorner : BadThemeControl
 		e.Graphics.DrawImage(bitmapObject, 0, 0);
 	}
 
+}
+
+[DebuggerNonUserCode]
+public class BadMonthCalendar : MonthCalendar
+{
+	[DllImportAttribute("uxtheme.dll")]
+	private static extern int SetWindowTheme(IntPtr hWnd, string appname, string idlist);
+
+	protected override void OnHandleCreated(EventArgs e)
+	{
+		SetWindowTheme(this.Handle, "", "");
+		base.OnHandleCreated(e);
+	}
+
+	private void InitializeComponent()
+	{
+		this.SuspendLayout();
+		this.ResumeLayout(false);
+	}
+	
+	protected static int WM_PAINT = 0x000F;
+
+	protected override void WndProc(ref System.Windows.Forms.Message m)
+	{
+		base.WndProc(ref m);
+		if (m.Msg == WM_PAINT)
+		{
+			Graphics graphics = Graphics.FromHwnd(this.Handle);
+			PaintEventArgs pe = new PaintEventArgs(graphics, new Rectangle(0, 0, this.Width, this.Height));
+			OnPaint(pe);
+		}
+	}
+
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		base.OnPaint(e);
+		Pen pen = new Pen(this.BackColor);
+		SolidBrush sb = new SolidBrush(ColorTheme.FormBack);
+		e.Graphics.DrawRectangle(pen, 0, 0, this.Width -1, this.Height -1);
+		e.Graphics.FillRectangle(sb, 0, 0, this.Width, 9);
+		e.Graphics.FillRectangle(sb, 0, this.Height-10, this.Width , 10 );
+	}
 }

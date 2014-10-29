@@ -114,21 +114,6 @@ namespace WinApp.Forms
 
 		#region Style
 
-		class StripRenderer : ToolStripProfessionalRenderer
-		{
-			public StripRenderer()
-				: base(new Code.StripLayout())
-			{
-				this.RoundedEdges = false;
-			}
-
-			protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
-			{
-				base.OnRenderItemText(e);
-				e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
-			}
-		}
-
 		private void dataGrid_Paint(object sender, PaintEventArgs e)
 		{
 			DataGridView dgv = (DataGridView)sender;

@@ -265,21 +265,6 @@ namespace WinApp.Forms
 			dataGridMain.ContextMenuStrip = dataGridMainPopup;
 		}
 
-		class StripRenderer : ToolStripProfessionalRenderer
-		{
-			public StripRenderer()
-				: base(new Code.StripLayout())
-			{
-				this.RoundedEdges = false;
-			}
-
-			protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
-			{
-				base.OnRenderItemText(e);
-				e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
-			}
-		}
-
 		private void AutoSetup()
 		{
 			// TODO:
@@ -1433,7 +1418,36 @@ namespace WinApp.Forms
 
 		#region Menu Items: Battle Time
 
-		private void toolItemBattlesSelected_Click(object sender, EventArgs e)
+		private void mBattleTime_Click(object sender, EventArgs e)
+		{
+			SelectBattleTimeMenu((ToolStripMenuItem)sender);
+		}
+
+		private void mBattleTimeCustomChange_Click(object sender, EventArgs e)
+		{
+			ShowCustomBattleTimeFilter();
+		}
+
+		private void ShowCustomBattleTimeFilter()
+		{
+			Form frm = new Forms.BattleTimeFilterCustom();
+			frm.ShowDialog();
+		}
+
+		private void mBattles_MouseDown(object sender, MouseEventArgs e)
+		{
+			// On right mouse click just display status message for current filter
+			if (e.Button == System.Windows.Forms.MouseButtons.Right)
+			{
+				ShowCustomBattleTimeFilter();
+				if (GridFilter.BattleTimeFilterCustomApply)
+				{
+					SelectBattleTimeMenu(mBattlesCustomUse);
+				}
+			}
+		}
+
+		private void SelectBattleTimeMenu(ToolStripMenuItem menuItem)
 		{
 			mBattles1d.Checked = false;
 			mBattles2d.Checked = false;
@@ -1447,9 +1461,12 @@ namespace WinApp.Forms
 			mBattles1y.Checked = false;
 			mBattles2y.Checked = false;
 			mBattlesAll.Checked = false;
-			ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+			mBattlesCustomUse.Checked = false;
 			menuItem.Checked = true;
-			mBattles.Text = menuItem.Text;
+			if (menuItem == mBattlesCustomUse)
+				mBattles.Text = menuItem.Tag.ToString(); // Different name on main tool item then menu name for battle time filter button
+			else
+				mBattles.Text = menuItem.Text; // Use menu name as main tool item name for battle time filter button
 			GridShowBattle("Selected battle time: " + menuItem.Text);
 		}
 
@@ -1977,13 +1994,11 @@ namespace WinApp.Forms
 				string battleTimeFilter = "";
 				if (!mBattlesAll.Checked)
 				{
-					if (mBattlesYesterday.Checked)
-						battleTimeFilter = " AND (battleTime>=@battleTime AND battleTime<=@battleFromTime) ";
-					else
-						battleTimeFilter = " AND battleTime>=@battleTime ";
 					DateTime dateFilter = new DateTime();
-					if (!mBattlesAll.Checked)
+					if (!mBattlesCustomUse.Checked)
 					{
+						// Normal predefined battle time filters
+						battleTimeFilter = " AND battleTime>=@battleTime ";
 						DateTime basedate = DateTime.Now; // current time
 						if (DateTime.Now.Hour < 7) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 07:00 AM
 						dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
@@ -2001,9 +2016,26 @@ namespace WinApp.Forms
 						{
 							DateTime dateFromYesterdayFilter = dateFilter;
 							dateFilter = dateFilter.AddDays(-1);
+							battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
 							DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
 						}
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					}
+					else
+					{
+						// Custom battle time filter
+						if (Config.Settings.customBattleTimeFilter.from != null)
+						{
+							battleTimeFilter = " AND battleTime>=@battleTime ";
+							dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.from);
+							DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						}
+						if (Config.Settings.customBattleTimeFilter.to != null)
+						{
+							battleTimeFilter += " AND battleTime<=@battleTime ";
+							dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
+							DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						}
 					}
 				}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -81,6 +82,21 @@ namespace WinApp.Code
 
 			//string value = Regex.Replace(text, " ", "\\s");
 			//return value;
+		}
+
+		public static void EnabledState(this BadMonthCalendar calendar, bool enabled)
+		{
+			calendar.Enabled = enabled;
+			if (enabled)
+			{
+				calendar.ForeColor = ColorTheme.ControlFont;
+				calendar.TitleBackColor = Color.FromArgb(255, 150, 150, 150);
+			}
+			else
+			{
+				calendar.ForeColor = ColorTheme.ControlDimmedFont;
+				calendar.TitleBackColor = ColorTheme.ControlDimmedFont;
+			}
 		}
 	}
 }

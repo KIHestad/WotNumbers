@@ -38,6 +38,12 @@ namespace WinApp.Code
 			public FormWindowState WindowState = FormWindowState.Normal;
 		}
 
+		public class CustomBattleTimeFilter
+		{
+			public DateTime? from = null;
+			public DateTime? to = null;
+		}
+
 		public dbType  databaseType { get; set; }				// SQLite or MS SQL Server
 		public string  databaseFileName { get; set; }			// SQLite Filename
 		public string  databaseServer { get; set; }				// MSSQL Servername
@@ -113,6 +119,7 @@ namespace WinApp.Code
 		public string wotGameRunBatchFile { get; set; }
 		public bool notifyIconUse { get; set; }                     // Notify icon settings - use notify icon insted of taskbar icon
 		public bool notifyIconFormExitToMinimize { get; set; }      // Override exit from form to minimize
+		public CustomBattleTimeFilter customBattleTimeFilter { get; set; } // Remember last used custom battle time filter
 	}
 
 	class Config
@@ -225,6 +232,8 @@ namespace WinApp.Code
 			Config.Settings.wotGameRunBatchFile = "";
 			Config.Settings.notifyIconUse = false;
 			Config.Settings.notifyIconFormExitToMinimize = false;
+			// custom battle filter
+			Config.Settings.customBattleTimeFilter = new ConfigData.CustomBattleTimeFilter();
 		}
 
 		

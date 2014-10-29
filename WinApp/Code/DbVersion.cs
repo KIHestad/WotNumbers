@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 189; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 190; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1890,6 +1890,10 @@ namespace WinApp.Code
 						"battleId integer NOT NULL, " +
 						"painting blob, " +
 						"foreign key (battleId) references battle (id) )";
+					break;
+				case 190:
+					Config.Settings.customBattleTimeFilter = new ConfigData.CustomBattleTimeFilter();
+					Config.SaveConfig(out msg);
 					break;
 
 			}

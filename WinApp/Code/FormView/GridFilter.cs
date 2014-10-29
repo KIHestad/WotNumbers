@@ -30,7 +30,6 @@ namespace WinApp.Code
 			RandomPlatoon = 10,
 			RandomPlatoon2 = 11,
 			RandomPlatoon3 = 12,
-
 		}
 
 		public class Settings
@@ -43,6 +42,8 @@ namespace WinApp.Code
 			public int TankId = -1; // Filter on explicit tank
 			public BattleModeType BattleMode = BattleModeType.All;
 		}
+
+		public static bool BattleTimeFilterCustomApply = false; // Used for form: BattleTimeFilterCustom
 
 		public static Settings GetDefault(GridView.Views gridView)
 		{

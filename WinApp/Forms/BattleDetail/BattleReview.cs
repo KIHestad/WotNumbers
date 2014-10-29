@@ -38,7 +38,7 @@ namespace WinApp.Forms
 		private void BattleMapAndComment_Load(object sender, EventArgs e)
 		{
 			// Paint toolstrip
-			toolStripPaint.Renderer = new CustomStripRenderer();
+			toolStripPaint.Renderer = new StripRenderer();
 			// Init paint area
 			bitmap = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
 			graphics = Graphics.FromImage(bitmap);
