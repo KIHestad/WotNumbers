@@ -20,5 +20,8 @@
     "UPDATE map SET name='Sacred Valley' WHERE id=1983;",
     "UPDATE map SET name='Sacred Valley' WHERE id=51;",
     "UPDATE map SET name='Training area' WHERE id=2021;"
+    ],
+   "193": [
+    "insert into tank (id, name, countryid, tier, tanktypeid) values (56097, 'M4A3E8 Fury', 2, 6, 2);"
     ]
 }

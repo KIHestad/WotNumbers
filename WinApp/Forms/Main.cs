@@ -1801,14 +1801,14 @@ namespace WinApp.Forms
 				sql =
 					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
 					"FROM     tank LEFT JOIN " + Environment.NewLine +
-					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
+					"         playerTank ON tank.id = playerTank.tankId AND playerTank.playerId=@playerid INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
 					"         country ON tank.countryId = country.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
-					"WHERE    (playerTank.playerId=@playerid OR playerTank.playerId is null) " + tankFilter + " " + Environment.NewLine +
+					"WHERE    tank.id > 0 " + tankFilter + " " + Environment.NewLine +
 					"ORDER BY " + sortOrder;
 			}
 			else
@@ -1817,14 +1817,14 @@ namespace WinApp.Forms
 				sql =
 					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
 					"FROM     tank LEFT JOIN " + Environment.NewLine +
-					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
+					"         playerTank ON tank.id = playerTank.tankId AND playerTank.playerId=@playerid INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
 					"         country ON tank.countryId = country.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         playerTankBattle ON playerTankBattle.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
-					"WHERE    (playerTank.playerId=@playerid OR playerTank.playerId is null) " + tankFilter + battleModeFilter + " " + Environment.NewLine +
+					"WHERE    tank.id > 0 " + tankFilter + battleModeFilter + " " + Environment.NewLine +
 					"ORDER BY " + sortOrder;
 			}
 			// Code.MsgBox.Show(sql, "sql"); // FOR DEBUG

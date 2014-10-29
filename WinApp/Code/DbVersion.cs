@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 190; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 193; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1895,6 +1895,59 @@ namespace WinApp.Code
 					Config.Settings.customBattleTimeFilter = new ConfigData.CustomBattleTimeFilter();
 					Config.SaveConfig(out msg);
 					break;
+				case 191:
+					mssql =
+						"insert into country (id, name, shortName) values (-1, 'Unknown', 'Unknown');" +
+						"insert into tankType (id, name, shortName) values (-1, 'Unknown', 'Unknown');" +
+						"insert into tank (id, name, countryid, tier, tanktypeid) values (-1, 'Unknown', -1, 0, -1);";
+					sqlite = mssql;
+					break;
+				case 192:
+					mssql = "";
+					sqlite =
+						"alter table battlePlayer rename to battlePlayerToChange; " +
+						"CREATE TABLE battlePlayer ( " +
+						" id integer primary key, " +
+						" battleId integer NOT NULL, accountId integer NOT NULL, " +
+						" name varchar (30) NOT NULL, team integer NOT NULL, tankId integer NOT NULL, clanDBID integer NULL, " +
+						" clanAbbrev varchar (10) NULL, platoonID integer NULL, xp integer NOT NULL, damageDealt integer NOT NULL, " +
+						" credits integer NOT NULL, capturePoints integer NOT NULL, damageReceived integer NOT NULL, deathReason integer NOT NULL, " +
+						" directHits integer NOT NULL, directHitsReceived integer NOT NULL, droppedCapturePoints integer NOT NULL, hits integer NOT NULL, " +
+						" kills integer NOT NULL, shots integer NOT NULL, shotsReceived integer NOT NULL, spotted integer NOT NULL, " +
+						" tkills integer NOT NULL, fortResource integer NULL, " +
+						" foreign key (battleId) references battle (id), " +
+						" foreign key (tankId) references tank (id) ); " +
+						"ALTER TABLE battlePlayer ADD potentialDamageReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD noDamageShotsReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD sniperDamageDealt integer NULL;" +
+						"ALTER TABLE battlePlayer ADD piercingsReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD pierced integer NULL;" +
+						"ALTER TABLE battlePlayer ADD mileage integer NULL;" +
+						"ALTER TABLE battlePlayer ADD lifeTime integer NULL;" +
+						"ALTER TABLE battlePlayer ADD killerID integer NULL;" +
+						"ALTER TABLE battlePlayer ADD isPrematureLeave integer NULL;" +
+						"ALTER TABLE battlePlayer ADD explosionHits integer NULL;" +
+						"ALTER TABLE battlePlayer ADD explosionHitsReceived integer NULL;" +
+						"ALTER TABLE battlePlayer ADD damageBlockedByArmor integer NULL;" +
+						"ALTER TABLE battlePlayer ADD damageAssistedTrack integer NULL;" +
+						"ALTER TABLE battlePlayer ADD damageAssistedRadio integer NULL;" +
+						"ALTER TABLE battlePlayer ADD isTeamKiller integer NULL;" +
+						"ALTER TABLE battlePlayer ADD killerName VARCHAR(30) NULL;" +
+						"INSERT INTO battlePlayer SELECT * FROM battlePlayerToChange; " +
+						"DROP TABLE battlePlayerToChange; ";
+					break;
+				case 193:
+					string sql_temp = "select id from tank where id = 56097;";
+					DataTable dt = DB.FetchData(sql_temp);
+					if (dt.Rows.Count == 0)
+					{
+						mssql = GetUpgradeSQL("193");
+						sqlite = mssql;
+					}
+					break;
+					
+				
+
 
 			}
 			string sql = "";
