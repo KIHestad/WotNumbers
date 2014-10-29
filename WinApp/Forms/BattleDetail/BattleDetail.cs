@@ -330,11 +330,11 @@ namespace WinApp.Forms
 				double spotted = Convert.ToDouble(dr["spotted"]);
 				double frags = Convert.ToDouble(dr["frags"]);
 				double def = Convert.ToDouble(dr["def"]);
-				double exp_dmg = Convert.ToDouble(dr["expDmg"]);
-				double exp_spotted = Convert.ToDouble(dr["expSpot"]);
-				double exp_frags = Convert.ToDouble(dr["expFrags"]);
-				double exp_def = Convert.ToDouble(dr["expDef"]);
-				double exp_wr = Convert.ToDouble(dr["expWR"]);
+				double exp_dmg = DbConvert.ToDouble(dr["expDmg"]);
+				double exp_spotted = DbConvert.ToDouble(dr["expSpot"]);
+				double exp_frags = DbConvert.ToDouble(dr["expFrags"]);
+				double exp_def = DbConvert.ToDouble(dr["expDef"]);
+				double exp_wr = DbConvert.ToDouble(dr["expWR"]);
 				//string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
 				double rWINc;
 				double rDAMAGEc;

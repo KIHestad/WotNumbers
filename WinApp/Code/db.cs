@@ -472,7 +472,5 @@ namespace WinApp.Code
 			return ok;
 		}
 
-
-
 	}
 }

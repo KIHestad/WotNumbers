@@ -133,6 +133,7 @@
     <Compile Include="Code\AutoSetupHelper.cs" />
     <Compile Include="Code\BattleHelper.cs" />
     <Compile Include="Code\CursorHelper.cs" />
+    <Compile Include="Code\DbConvert.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
     <Compile Include="Code\Battle2json.cs" />
     <Compile Include="Code\CheckForNewVersion.cs" />

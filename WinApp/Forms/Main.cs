@@ -1061,7 +1061,15 @@ namespace WinApp.Forms
 		{
 			string s = tankFilterFavListName;
 			if (s == "")
-				s = "All Tanks";
+			{
+				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+					s = "My Tanks";
+				else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
+					s = "All Tanks";
+				else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.UseCurrent)
+					s = mTankFilter.Text; // Use current menu text
+			}
+				
 			if (tankFilterManualFilter != "")
 				s += " - " + tankFilterManualFilter;
 			mTankFilter.Text = s;
@@ -1112,7 +1120,7 @@ namespace WinApp.Forms
 		{
 			// Deselect all tanks
 			mTankFilter_All.Checked = false;
-			
+			mTankFilter_All_NotOwned.Checked = false;
 			// Deselect all favlist
 			for (int i = 1; i <= 10; i++)
 			{
@@ -1134,6 +1142,22 @@ namespace WinApp.Forms
 			FavListMenuUncheck();
 			mTankFilter_All.Checked = true;
 			SetTankFilterMenuName();
+			// Set menu item and show grid
+			ShowView("Selected all tanks owned");
+		}
+
+		private void mTankFilter_All_NotOwned_Click(object sender, EventArgs e)
+		{
+			// Changed FavList
+			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
+			gf.FavListShow = GridFilter.FavListShowType.AllTanksNotOwned;
+			gf.BattleMode = GridFilter.BattleModeType.All;
+			MainSettings.UpdateCurrentGridFilter(gf);
+			// check fav list menu select
+			FavListMenuUncheck();
+			mTankFilter_All_NotOwned.Checked = true;
+			SetTankFilterMenuName();
+			SetBattleModeMenu();
 			// Set menu item and show grid
 			ShowView("Selected all tanks");
 		}
@@ -1483,6 +1507,11 @@ namespace WinApp.Forms
 			// Changed gridFilter
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.BattleMode = selectedMode;
+			if (gf.FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
+			{
+				gf.FavListShow = GridFilter.FavListShowType.AllTanks;
+				SetFavListMenu();
+			}
 			MainSettings.UpdateCurrentGridFilter(gf);
 			// Remove current menu checked
 			foreach (var dropDownItem in mMode.DropDownItems)
@@ -1573,6 +1602,7 @@ namespace WinApp.Forms
 			string message = "";
 			string newWhereSQL = "";
 			string newJoinSQL = "";
+			string tankOwnedWhereSQL = "";
 			// Check favlist
 			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
 			{
@@ -1581,7 +1611,18 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref newJoinSQL, "@favListId", MainSettings.GetCurrentGridFilter().FavListId, DB.SqlDataType.Int);
 			}
 			else
-				message = "All tanks";
+			{
+				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
+				{
+					message = "All tanks";
+				}
+				else
+				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+				{
+					message = "All tanks owned";
+					tankOwnedWhereSQL += " AND playerTank.id is not null ";
+				}
+			}
 			// Check if spesific tank is filtered
 			if (MainSettings.GetCurrentGridFilter().TankId != -1)
 			{
@@ -1625,7 +1666,8 @@ namespace WinApp.Forms
 				{
 					string tierId = tier;
 					tier = tier.Substring(0, tier.Length - 1);
-					newWhereSQL = " tank.tier IN (" + tierId.Substring(0, tierId.Length - 1) + ") ";
+					if (newWhereSQL != "") newWhereSQL += " AND ";
+					newWhereSQL += " tank.tier IN (" + tierId.Substring(0, tierId.Length - 1) + ") ";
 				}
 				if (nation.Length > 0)
 				{
@@ -1666,7 +1708,7 @@ namespace WinApp.Forms
 			}
 			// Show filtername in menu
 			SetTankFilterMenuName();
-			whereSQL = newWhereSQL;
+			whereSQL = tankOwnedWhereSQL + newWhereSQL;
 			joinSQL = newJoinSQL;
 			Status2Message = message;
 		}
@@ -1758,7 +1800,7 @@ namespace WinApp.Forms
 				// Get SUM for playerTankBattle as several battleModes might appear
 				sql =
 					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
-					"FROM     tank INNER JOIN " + Environment.NewLine +
+					"FROM     tank LEFT JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
 					"         country ON tank.countryId = country.id LEFT OUTER JOIN " + Environment.NewLine +
@@ -1766,7 +1808,7 @@ namespace WinApp.Forms
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
-					"WHERE    playerTank.playerId=@playerid " + tankFilter + " " + Environment.NewLine +
+					"WHERE    (playerTank.playerId=@playerid OR playerTank.playerId is null) " + tankFilter + " " + Environment.NewLine +
 					"ORDER BY " + sortOrder;
 			}
 			else
@@ -1774,7 +1816,7 @@ namespace WinApp.Forms
 				// Only gets one row from playerTankBattle for an explisit battleMode
 				sql =
 					"SELECT   " + select + " playerTank.Id as player_Tank_Id, tank.id as tank_id, tank.name as tank_name, playerTank.markOfMastery as mb_id " + Environment.NewLine +
-					"FROM     tank INNER JOIN " + Environment.NewLine +
+					"FROM     tank LEFT JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
 					"         country ON tank.countryId = country.id LEFT OUTER JOIN " + Environment.NewLine +
@@ -1782,7 +1824,7 @@ namespace WinApp.Forms
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + join + Environment.NewLine +
-					"WHERE    playerTank.playerId=@playerid " + tankFilter + battleModeFilter + " " + Environment.NewLine +
+					"WHERE    (playerTank.playerId=@playerid OR playerTank.playerId is null) " + tankFilter + battleModeFilter + " " + Environment.NewLine +
 					"ORDER BY " + sortOrder;
 			}
 			// Code.MsgBox.Show(sql, "sql"); // FOR DEBUG
@@ -1840,7 +1882,7 @@ namespace WinApp.Forms
 				// Fill with images
 				foreach (DataRow dr in dtTankData.Rows)
 				{
-					int mb_id = Convert.ToInt32(dr["mb_id"]);
+					int mb_id = DbConvert.ToInt32(dr["mb_id"]);
 					dr["Mastery Badge"] = ImageHelper.GetMasteryBadgeImage(mb_id);
 				}
 			}
@@ -2763,18 +2805,24 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_GrindingSetup_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.GrindingSetup(playerTankId);
-			frm.ShowDialog();
-			if (MainSettings.View == GridView.Views.Tank)
-				ShowView("Refreshed grid");
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+			{
+				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+				Form frm = new Forms.GrindingSetup(playerTankId);
+				frm.ShowDialog();
+				if (MainSettings.View == GridView.Views.Tank)
+					ShowView("Refreshed grid");
+			}
 		}
 
 		private void dataGridMainPopup_BattleChart_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.BattleChartTier(playerTankId);
-			FormHelper.OpenFormToRightOfParent(this, frm);
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+			{
+				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+				Form frm = new Forms.BattleChartTier(playerTankId);
+				FormHelper.OpenFormToRightOfParent(this, frm);
+			}
 		}
 
 		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)
@@ -2786,8 +2834,9 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_TankDetails_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			Form frm = new Forms.PlayerTankDetail(playerTankId);
+			int playerTankId = DbConvert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+			int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
+			Form frm = new Forms.PlayerTankDetail(playerTankId, tankId);
 			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 
@@ -2822,62 +2871,63 @@ namespace WinApp.Forms
 				
 		private void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			string sql =
-				"select t.id as tankId, ptb.battles as battles, ptb.dmg as dmg, ptb.spot as spot, ptb.frags as frags, " +
-				"  ptb.def as def, ptb.cap as cap, wins as wins, " +
-				"  t.expDmg as expDmg, t.expSpot as expSpot, t.expFrags as expFrags, t.expDef as expDef, t.expWR as expWR " +
-				"from playerTankBattle ptb left join " +
-				"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId and ptb.battleMode='15' left join " +
-				"  tank t on pt.tankId = t.id " +
-				"where t.expDmg is not null and ptb.battleMode='15' and pt.id=@playerTankId ";
-			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
-				DataRow dr = dt.Rows[0];
-				int tankId = Convert.ToInt32(dr["tankId"]);
-				double battlesCount = Convert.ToInt32(dr["battles"]);
-				double dmg = Convert.ToDouble(dr["dmg"]);
-				double spotted = Convert.ToDouble(dr["spot"]);
-				double frags = Convert.ToDouble(dr["frags"]);
-				double def = Convert.ToDouble(dr["def"]);
-				double wins = Convert.ToDouble(dr["Wins"]);
-				string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, wins), 0).ToString();
-				double rWINc;
-				double rDAMAGEc;
-				double rFRAGSc;
-				double rSPOTc;
-				double rDEFc;
-				dmg = dmg / battlesCount;
-				spotted = spotted / battlesCount;
-				frags = frags / battlesCount;
-				def = def / battlesCount;
-				double wr = wins / battlesCount * 100;
-				double exp_dmg = Convert.ToDouble(dr["expDmg"]);
-				double exp_spotted = Convert.ToDouble(dr["expSpot"]);
-				double exp_frags = Convert.ToDouble(dr["expFrags"]);
-				double exp_def = Convert.ToDouble(dr["expDef"]);
-				double exp_wr = Convert.ToDouble(dr["expWR"]);
-				Rating.UseWN8FormulaReturnResult(
-					dmg, spotted, frags, def, wr,
-					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
-					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
-				string message = "WN8 Rating for this tank in Random/TC: ";
-				message += wn8 + Environment.NewLine + Environment.NewLine;
-				message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8 result" + Environment.NewLine;
-				message += "-------------" + "\t  " + "----------" + "\t" + "------------" + "\t " + "----------------" + Environment.NewLine;
-				message += "Damage:" + "\t  " + Math.Round(dmg, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
-				message += "Frags:" + "\t  " + Math.Round(frags, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
-				message += "Spot:" + "\t  " + Math.Round(spotted, 1).ToString() + "\t" + Math.Round(exp_spotted, 1).ToString() + "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
-				message += "Defence:" + "\t  " + Math.Round(def, 1).ToString() + "\t" + Math.Round(exp_def, 1).ToString() + "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
-				message += "Win rate:" + "\t  " + Math.Round(wr, 1).ToString() + "%" + "\t" + Math.Round(exp_wr, 1).ToString() + "%" + "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
-				message += Environment.NewLine;
-				MsgBox.Show(message, "WN8 Tank Details");
+				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+				string sql =
+					"select t.id as tankId, ptb.battles as battles, ptb.dmg as dmg, ptb.spot as spot, ptb.frags as frags, " +
+					"  ptb.def as def, ptb.cap as cap, wins as wins, " +
+					"  t.expDmg as expDmg, t.expSpot as expSpot, t.expFrags as expFrags, t.expDef as expDef, t.expWR as expWR " +
+					"from playerTankBattle ptb left join " +
+					"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId and ptb.battleMode='15' left join " +
+					"  tank t on pt.tankId = t.id " +
+					"where t.expDmg is not null and ptb.battleMode='15' and pt.id=@playerTankId ";
+				DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+				DataTable dt = DB.FetchData(sql);
+				if (dt.Rows.Count > 0)
+				{
+					DataRow dr = dt.Rows[0];
+					int tankId = Convert.ToInt32(dr["tankId"]);
+					double battlesCount = Convert.ToInt32(dr["battles"]);
+					double dmg = Convert.ToDouble(dr["dmg"]);
+					double spotted = Convert.ToDouble(dr["spot"]);
+					double frags = Convert.ToDouble(dr["frags"]);
+					double def = Convert.ToDouble(dr["def"]);
+					double wins = Convert.ToDouble(dr["Wins"]);
+					string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, wins), 0).ToString();
+					double rWINc;
+					double rDAMAGEc;
+					double rFRAGSc;
+					double rSPOTc;
+					double rDEFc;
+					dmg = dmg / battlesCount;
+					spotted = spotted / battlesCount;
+					frags = frags / battlesCount;
+					def = def / battlesCount;
+					double wr = wins / battlesCount * 100;
+					double exp_dmg = Convert.ToDouble(dr["expDmg"]);
+					double exp_spotted = Convert.ToDouble(dr["expSpot"]);
+					double exp_frags = Convert.ToDouble(dr["expFrags"]);
+					double exp_def = Convert.ToDouble(dr["expDef"]);
+					double exp_wr = Convert.ToDouble(dr["expWR"]);
+					Rating.UseWN8FormulaReturnResult(
+						dmg, spotted, frags, def, wr,
+						exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
+						out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+					string message = "WN8 Rating for this tank in Random/TC: ";
+					message += wn8 + Environment.NewLine + Environment.NewLine;
+					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8 result" + Environment.NewLine;
+					message += "-------------" + "\t  " + "----------" + "\t" + "------------" + "\t " + "----------------" + Environment.NewLine;
+					message += "Damage:" + "\t  " + Math.Round(dmg, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
+					message += "Frags:" + "\t  " + Math.Round(frags, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
+					message += "Spot:" + "\t  " + Math.Round(spotted, 1).ToString() + "\t" + Math.Round(exp_spotted, 1).ToString() + "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
+					message += "Defence:" + "\t  " + Math.Round(def, 1).ToString() + "\t" + Math.Round(exp_def, 1).ToString() + "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
+					message += "Win rate:" + "\t  " + Math.Round(wr, 1).ToString() + "%" + "\t" + Math.Round(exp_wr, 1).ToString() + "%" + "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
+					message += Environment.NewLine;
+					MsgBox.Show(message, "WN8 Tank Details");
+				}
 			}
-
-
 		}
 
 		private void dataGridMainPopup_FilterOnTank_Click(object sender, EventArgs e)
@@ -2894,52 +2944,61 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankHelper.GetTankID(playerTankId);
-			Form frm = new Forms.FavListNewEdit(0, "", tankId);
-			frm.ShowDialog();
-			// After fav list changes reload menu
-			SetFavListMenu(); // Reload fav list items
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+			{
+				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+				int tankId = TankHelper.GetTankID(playerTankId);
+				Form frm = new Forms.FavListNewEdit(0, "", tankId);
+				frm.ShowDialog();
+				// After fav list changes reload menu
+				SetFavListMenu(); // Reload fav list items
+			}
 		}
 
 		private void dataGridMainPopup_FavListAddTank_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankHelper.GetTankID(playerTankId);
-			if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, true))
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
-				Form frm = new Forms.FavListAddRemoveTank(this, tankId, true);
-				frm.ShowDialog();
+				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+				int tankId = TankHelper.GetTankID(playerTankId);
+				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, true))
+				{
+					Form frm = new Forms.FavListAddRemoveTank(this, tankId, true);
+					frm.ShowDialog();
+				}
 			}
 		}
 
 		private void dataGridMainPopup_FavListRemoveTank_Click(object sender, EventArgs e)
 		{
-			int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-			int tankId = TankHelper.GetTankID(playerTankId);
-			if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, false))
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
-				Form frm = new Forms.FavListAddRemoveTank(this, tankId, false);
-				frm.ShowDialog();
-				// refresh if tank removed
-				if (FavListHelper.refreshGridAfterAddRemove)
+				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+				int tankId = TankHelper.GetTankID(playerTankId);
+				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, false))
 				{
-					try
+					Form frm = new Forms.FavListAddRemoveTank(this, tankId, false);
+					frm.ShowDialog();
+					// refresh if tank removed
+					if (FavListHelper.refreshGridAfterAddRemove)
 					{
-						int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
-						dataGridMain.Visible = false;
-						ShowView("Refresh after removed tank from favourite tank list");
-						dataGridMain.FirstDisplayedScrollingRowIndex = pos;
-						MoveScrollBar();
-						dataGridMain.Visible = true;
-						dataGridMain.Focus();
-						FavListHelper.refreshGridAfterAddRemove = false;
+						try
+						{
+							int pos = dataGridMain.FirstDisplayedScrollingRowIndex;
+							dataGridMain.Visible = false;
+							ShowView("Refresh after removed tank from favourite tank list");
+							dataGridMain.FirstDisplayedScrollingRowIndex = pos;
+							MoveScrollBar();
+							dataGridMain.Visible = true;
+							dataGridMain.Focus();
+							FavListHelper.refreshGridAfterAddRemove = false;
+						}
+						catch (Exception)
+						{
+							// Do nothing, just optional scrolling and refresh event
+						}
+
 					}
-					catch (Exception)
-					{
-						// Do nothing, just optional scrolling and refresh event
-					}
-					
 				}
 			}
 		}

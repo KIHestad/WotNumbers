@@ -14,6 +14,7 @@ namespace WinApp.Code
 			UseCurrent = -1,
 			AllTanks = -2,
 			FavList = 0,
+			AllTanksNotOwned = -3,
 		}
 		
 		public enum BattleModeType

@@ -18,10 +18,12 @@ namespace WinApp.Forms
 	public partial class PlayerTankDetail : Form
 	{
 		int initPlayerTankId = 0;
-		public PlayerTankDetail(int playerTankId = 0)
+		int initTankId = 0;
+		public PlayerTankDetail(int playerTankId = 0, int tankId = 0)
 		{
 			InitializeComponent();
 			initPlayerTankId = playerTankId;
+			initTankId = tankId;
 		}
 
 		// To be able to minimize from task bar
@@ -46,11 +48,17 @@ namespace WinApp.Forms
 			GridHelper.StyleDataGrid(dataGridTankDetail);
 			lblFooter.Text = "";
 			ResizeNow();
-			if (initPlayerTankId != 0)
+			if (initPlayerTankId != 0 || initTankId != 0)
 			{
 				// Get tank id and name
 				string sql = "SELECT * FROM tank INNER JOIN playerTank ON tank.id = playerTank.tankId WHERE playerTank.id=@id; ";
 				DB.AddWithValue(ref sql, "@id", initPlayerTankId, DB.SqlDataType.Int);
+				// If no playertank, get only tank data
+				if (initPlayerTankId == 0)
+				{
+					sql = "SELECT * FROM tank WHERE id=@id; ";
+					DB.AddWithValue(ref sql, "@id", initTankId, DB.SqlDataType.Int);
+				}
 				DataRow drTankData = DB.FetchData(sql).Rows[0];
 				string tankName = drTankData["name"].ToString();
 				int tankId = Convert.ToInt32(drTankData["id"]);
@@ -65,17 +73,26 @@ namespace WinApp.Forms
 				// Use playerTankBattleTotalsView in stead of playerTankBattle to show totals
 				select = select.Replace("playerTankBattle", "playerTankBattleTotalsView");
 				// Get Tank data to show in grid
+				string playerTankWhere = "";
+				string playerTankJoin = "";
+				if (initPlayerTankId != 0)
+				{
+					playerTankWhere = "playerTank.playerId=@playerId and ";
+					playerTankJoin = "playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = playerTank.id LEFT OUTER JOIN ";
+				}
+				else
+					playerTankJoin = "playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = -1 LEFT OUTER JOIN ";
 				sql =
 					"SELECT   " + select + " " + Environment.NewLine +
-					"FROM     tank INNER JOIN " + Environment.NewLine +
+					"FROM     tank LEFT JOIN " + Environment.NewLine +
 					"         playerTank ON tank.id = playerTank.tankId INNER JOIN " + Environment.NewLine +
 					"         tankType ON tank.tankTypeId = tankType.id INNER JOIN " + Environment.NewLine +
-					"         country ON tank.countryId = country.id INNER JOIN " + Environment.NewLine +
-					"         playerTankBattleTotalsView ON playerTankBattleTotalsView.playerTankId = playerTank.id LEFT OUTER JOIN " + Environment.NewLine +
+					"         country ON tank.countryId = country.id LEFT JOIN " + Environment.NewLine +
+					"         " + playerTankJoin + Environment.NewLine +
 					"         modTurret ON playerTank.modTurretId = modTurret.id LEFT OUTER JOIN " + Environment.NewLine +
 					"         modRadio ON modRadio.id = playerTank.modRadioId LEFT OUTER JOIN " + Environment.NewLine +
 					"         modGun ON playerTank.modGunId = modGun.id " + Environment.NewLine +
-					"WHERE    playerTank.playerId=@playerId and tank.id=@tankId ";
+					"WHERE    " + playerTankWhere + " tank.id=@tankId ";
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 				DataTable dtTankData = DB.FetchData(sql, Config.Settings.showDBErrors);
