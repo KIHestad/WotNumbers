@@ -47,13 +47,13 @@ namespace WinApp.Forms
 				{
 					int favListId = Convert.ToInt32(dr["defaultFavListId"]);
 					string favListName = "(Use Current)";
-					if (favListId == -2) favListName = "(All Tanks)";
+					if (favListId == -2) favListName = "(My Tanks)";
 					ddDefaultTankFilter.Text = favListName;
 				}
 				else
 					ddDefaultTankFilter.Text = dr["favListname"].ToString();
 			}
-			favListDD = "(Use Current),(All Tanks)";
+			favListDD = "(Use Current),(My Tanks)";
 			string favListSql = "select * from favList order by COALESCE(position,99), name";
 			DataTable dtFavList = DB.FetchData(favListSql);
 			if (dtFavList.Rows.Count > 0)
@@ -112,7 +112,7 @@ namespace WinApp.Forms
 					int defaultFavListId = -1; // Use current
 					if (selectedfavListName == "(Use Current)")
 						defaultFavListId = -1;
-					else if (selectedfavListName == "(All Tanks)")
+					else if (selectedfavListName == "(My Tanks)")
 						defaultFavListId = -2;
 					else
 					{

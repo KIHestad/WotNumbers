@@ -168,7 +168,7 @@ namespace WinApp.Forms
 				if (favList == -1)
 					row["Fav Tank List"] = "(Use Current)";
 				else if (favList == -2)
-					row["Fav Tank List"] = "(All Tanks)";
+					row["Fav Tank List"] = "(My Tanks)";
 				row.AcceptChanges();
 			}
 			// Show in grid
