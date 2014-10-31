@@ -418,7 +418,7 @@ namespace WinApp.Code
 										// Get values from vehicles section
 										fields +=", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
 										// typeCompDescr = tankId, might be missing in clan wars if player not spoddet
-										if (vechicleInfo.SelectToken("typeCompDescr") == null)
+										if (vechicleInfo.SelectToken("typeCompDescr").ToString() == "")
 											values += ", -1";
 										else
 											values += ", " + vechicleInfo.SelectToken("typeCompDescr");
