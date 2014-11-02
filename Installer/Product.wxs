@@ -36,7 +36,7 @@
 		<WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Wot Numbers now" />
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
-		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]WotNumbers.exe" />
+		<!--<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]WotNumbers.exe" />-->
 		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 		<UI>
 			<UIRef Id="WixUI_InstallDir" />
@@ -48,6 +48,7 @@
 		<!-- Installer content -->
 		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
 			<ComponentRef Id="ProductComponent_ShortCut"/>
+      <ComponentRef Id="DesktopShortcut"/>
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="ProductComponents_Bin" />
 			<ComponentGroupRef Id="ProductComponents_Lib" />
@@ -65,8 +66,10 @@
 			<Directory Id="ProgramMenuFolder">
 				<Directory Id="MyProgramFolder" Name="Wot Numbers" />
 			</Directory>
-			
-			<Directory Id="ProgramFilesFolder">
+
+      <Directory Id="DesktopFolder" SourceName="Desktop" />
+
+      <Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="Wot Numbers">
 					<Directory Id="INSTALLFOLDER_x64" Name="x64" />
 					<Directory Id="INSTALLFOLDER_x86" Name="x86" />
@@ -81,7 +84,7 @@
 		</Directory>
 	</Fragment>
 	
-	<!-- Shortcut -->
+	<!-- Startmenu Shortcut -->
 	
 	<Fragment>
 		<DirectoryRef Id="MyProgramFolder"> 
@@ -97,6 +100,25 @@
 			</Component> 
 		</DirectoryRef> 
 	</Fragment>
+
+  <!-- Desktop Shortcut-->
+
+  
+  <Fragment>
+    <Component Id="DesktopShortcut" Directory="INSTALLFOLDER" Guid="*">
+      <RegistryValue Id="RegShortcutDesktop" Root="HKCU"
+              Key="SOFTWARE\WotNumbers\settings" Name="DesktopSC" Value="1"
+              Type="integer" KeyPath="yes" />
+      <Shortcut Id="desktopSC"
+              Name="Wot Numbers"
+              Target="[INSTALLFOLDER]WotNumbers.exe"
+              Directory="DesktopFolder" 
+              Icon="icon.ico" 
+              IconIndex="0"
+              WorkingDirectory="INSTALLFOLDER" 
+              Advertise="no"/>
+    </Component>
+  </Fragment>
 	
 	<!-- Application -->
 
