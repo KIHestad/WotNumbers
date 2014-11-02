@@ -417,17 +417,14 @@ namespace WinApp.Forms
 			}
 		}
 		
-		private void RunInitialDossierFileCheck(string message = "")
+		private void RunInitialDossierFileCheck(string message)
 		{
 			if (DBVersion.RunWotApi)
 				RunWotApi(true);
 			if (DBVersion.RunRecalcBattleWN8)
 				RunRecalcBattleWN8(true);
 			// Check for dossier update
-			if (DBVersion.RunDossierFileCheckWithForceUpdate)
-				RunDossierFileCheckWithForceUpdate(message);
-			else
-				RunDossierFileCheck(message);
+			RunDossierFileCheck(message, DBVersion.RunDossierFileCheckWithForceUpdate);
 		}
 
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
@@ -527,6 +524,14 @@ namespace WinApp.Forms
 							RunInitialDossierFileCheck("New version found (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 					}
 				}
+				// Enable Settings menues
+				mSettingsRun.Enabled = true;
+				mSettingsRunBattleCheck.Enabled = true;
+				mUpdateDataFromAPI.Enabled = true;
+				mRecalcBattleWN8.Enabled = true;
+				mImportBattlesFromWotStat.Enabled = true;
+				mSettingsAppLayout.Enabled = true;
+				mSettingsApp.Enabled = true;
 			}
 		}
 
@@ -3333,8 +3338,22 @@ namespace WinApp.Forms
 
 		private void mRecalcBattleWN8_Click(object sender, EventArgs e)
 		{
+			// Stop file watchers if running
+			int runState = Config.Settings.dossierFileWathcherRun;
+			if (runState == 1)
+			{
+				Config.Settings.dossierFileWathcherRun = 0;
+				SetListener();
+			}
+			// Show dialog
 			Form frm = new Forms.RecalcBattleWN8();
 			frm.ShowDialog();
+			// Return to prev file watcher state
+			if (runState != Config.Settings.dossierFileWathcherRun)
+			{
+				Config.Settings.dossierFileWathcherRun = runState;
+				SetListener();
+			}
 		}
 
 		private void RunRecalcBattleWN8(bool autoRun = false)
@@ -3360,55 +3379,64 @@ namespace WinApp.Forms
 			SetListener();
 		}
 
-		private void toolItemSettingsRunManual_Click(object sender, EventArgs e)
+		private void mSettingsRunBattleCheck_Click(object sender, EventArgs e)
 		{
 			if (Dossier2db.dossierRunning)
-				MsgBox.Show("Dossier file check already running, cannot run twice at the same time.", "Dossier File Check already running", this);
+				MsgBox.Show("Battle check is already running, cannot run twice at the same time.", "Battle Check Already Running", this);
 			else
 			{
-				RunDossierFileCheck();
-				Log.WriteLogBuffer();
-			}
+				// Stop file watchers if running
+				int runState = Config.Settings.dossierFileWathcherRun;
+				if (runState == 1)
+				{
+					Config.Settings.dossierFileWathcherRun = 0;
+					SetListener();
+				}
+				// Whow dialog and run battle check if selected
+				RunBattleCheckHelper.CurrentBattleCheckMode = RunBattleCheckHelper.RunBattleCheckMode.Cancelled;
+				Form frm = new Forms.ManualCheckNewBattles();
+				frm.ShowDialog();
+				if (RunBattleCheckHelper.CurrentBattleCheckMode != RunBattleCheckHelper.RunBattleCheckMode.Cancelled)
+				{
+					bool forceUpdate = (RunBattleCheckHelper.CurrentBattleCheckMode == RunBattleCheckHelper.RunBattleCheckMode.ForceUpdateAll);
+					string message = "Running battle check...";
+					if (forceUpdate) message = "Running battle check with force update...";
+					RunDossierFileCheck(message, forceUpdate);
+				}
+				// Return to prev file watcher state
+				if (runState != Config.Settings.dossierFileWathcherRun)
+				{
+					Config.Settings.dossierFileWathcherRun = runState;
+					SetListener();
+				}
+			}				
 		}
 
-		private void RunDossierFileCheck(string message = "")
-		{
-			if (message == "") message = "Starting manual dossier check...";
-			SetStatus2(message);
-			dossier2json d2j = new dossier2json();
-			d2j.ManualRunInBackground("Running manual dossier file check...", false);
-		}
-
-		private void toolItemSettingsForceUpdateFromPrev_Click(object sender, EventArgs e)
+		private void RunDossierFileCheck(string message, bool forceUpdate)
 		{
 			if (Dossier2db.dossierRunning)
-				MsgBox.Show("Dossier file check already running, cannot run twice at the same time.", "Dossier File Check already running", this);
+				SetStatus2("Terminated new battle check, already running...");
 			else
 			{
-				RunDossierFileCheckWithForceUpdate();
+				SetStatus2(message);
+				Log.AddToLogBuffer("", false);
+				Log.AddToLogBuffer(message, true);
+				dossier2json d2j = new dossier2json();
+				d2j.ManualRunInBackground(message, forceUpdate);
 				Log.WriteLogBuffer();
 			}
-		}
-
-		private void RunDossierFileCheckWithForceUpdate(string message="")
-		{
-			if (message == "") message = "Starting dossier file check with force update...";
-			SetStatus2(message);
-			dossier2json d2j = new dossier2json();
-			d2j.ManualRunInBackground("Running dossier file check with force update...", true);
-		
 		}
 
 		private void toolItemShowDbTables_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.DatabaseTable();
-			FormHelper.OpenFormToRightOfParent(this, frm);
+			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
 		{
 			if (Dossier2db.dossierRunning)
-				MsgBox.Show("Dossier file check is running, cannot start import at the same time. Please wait some seconds until dossier file check is done." +
+				MsgBox.Show("Battle check is running, cannot start import at the same time. Please wait some seconds until battle check is done." +
 							Environment.NewLine + Environment.NewLine, "Cannot start import yet", this);
 			else
 			{
@@ -3483,21 +3511,6 @@ namespace WinApp.Forms
 			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
 			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
 			ChangeView(MainSettings.View, true);
-		}
-
-		private void mSettingsTestAddBattleResult_Click(object sender, EventArgs e)
-		{
-			if (Dossier2db.dossierRunning || PythonEngine.InUse)
-				MsgBox.Show("Dossier file check already running, battle result will be fetchen automatically in some seconds.", "Dossier File Check in progress", this);
-			else
-			{
-				Log.AddToLogBuffer("", false);
-				Log.AddToLogBuffer("Start manual check for battle result", true);
-				Log.AddToLogBuffer(" > Reading all battle files", true);
-				string result = Battle2json.RunBattleResultRead(true, true);
-				SetStatus2("Checked enhanced battle result - " + result);
-				Log.WriteLogBuffer();
-			}
 		}
 
 		private void mExit_Click(object sender, EventArgs e)

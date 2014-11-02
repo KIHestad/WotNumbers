@@ -98,7 +98,7 @@ namespace WinApp.Code
 		public static string ManualRun(bool ForceUpdate = false)
 		{
 			
-			string returVal = "Manual dossier file check started...";
+			string returVal = "Manual battle check started...";
 			Log.CheckLogFileSize();
 			List<string> logText = new List<string>();
 			bool ok = true;

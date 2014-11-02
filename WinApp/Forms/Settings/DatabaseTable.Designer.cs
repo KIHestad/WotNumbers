@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DatabaseTable));
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -55,6 +56,7 @@
 			this.DatabaseTableTheme.Controls.Add(this.scrollCorner);
 			this.DatabaseTableTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatabaseTableTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.DatabaseTableTheme.FormExitAsMinimize = false;
 			this.DatabaseTableTheme.FormFooter = false;
 			this.DatabaseTableTheme.FormFooterHeight = 26;
 			this.DatabaseTableTheme.FormInnerBorder = 0;
@@ -64,7 +66,7 @@
 			this.DatabaseTableTheme.MainArea = mainAreaClass1;
 			this.DatabaseTableTheme.Name = "DatabaseTableTheme";
 			this.DatabaseTableTheme.Resizable = true;
-			this.DatabaseTableTheme.Size = new System.Drawing.Size(448, 302);
+			this.DatabaseTableTheme.Size = new System.Drawing.Size(711, 423);
 			this.DatabaseTableTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("DatabaseTableTheme.SystemExitImage")));
 			this.DatabaseTableTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("DatabaseTableTheme.SystemMaximizeImage")));
 			this.DatabaseTableTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("DatabaseTableTheme.SystemMinimizeImage")));
@@ -109,20 +111,21 @@
 			// 
 			// btnRefresh
 			// 
+			this.btnRefresh.BlackButton = false;
+			this.btnRefresh.Checked = false;
 			this.btnRefresh.Image = null;
 			this.btnRefresh.Location = new System.Drawing.Point(350, 37);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.Size = new System.Drawing.Size(75, 23);
 			this.btnRefresh.TabIndex = 3;
 			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.ToolTipText = "";
 			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
 			// 
 			// badLabel1
 			// 
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
-			
-			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(15, 37);
 			this.badLabel1.Name = "badLabel1";
@@ -130,6 +133,7 @@
 			this.badLabel1.TabIndex = 1;
 			this.badLabel1.TabStop = false;
 			this.badLabel1.Text = "Select Table:";
+			this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// scrollY
 			// 
@@ -186,7 +190,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Fuchsia;
-			this.ClientSize = new System.Drawing.Size(448, 302);
+			this.ClientSize = new System.Drawing.Size(711, 423);
 			this.Controls.Add(this.DatabaseTableTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

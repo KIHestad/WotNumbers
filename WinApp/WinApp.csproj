@@ -162,6 +162,7 @@
     <Compile Include="Code\FormControl\ToolStripEx.Designer.cs">
       <DependentUpon>ToolStripEx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\RunBattleCheckHelper.cs" />
     <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\DB.cs" />
@@ -201,6 +202,12 @@
     </Compile>
     <Compile Include="Forms\BattleTimeFilterCustom.Designer.cs">
       <DependentUpon>BattleTimeFilterCustom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ManualCheckNewBattles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ManualCheckNewBattles.Designer.cs">
+      <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
@@ -474,6 +481,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleTimeFilterCustom.resx">
       <DependentUpon>BattleTimeFilterCustom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ManualCheckNewBattles.resx">
+      <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>
