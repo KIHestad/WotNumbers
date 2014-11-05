@@ -101,7 +101,7 @@ namespace WinApp.Gadget
 			serie1.IsXValueIndexed = true;
 			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
-			string sql = "select * from country order by id ";
+			string sql = "select * from country where id > -1 order by id ";
 			DataTable dt = DB.FetchData(sql);
 			foreach (DataRow dr in dt.Rows)
 			{
@@ -159,7 +159,7 @@ namespace WinApp.Gadget
 					"FROM   playerTankBattle INNER JOIN " +
 					"		playerTank ON playerTankBattle.playerTankId = playerTank.id INNER JOIN " +
 					"		tank ON playerTank.tankId = tank.id INNER JOIN " +
-					"       country ON tank.countryId = country.id " +
+					"       country ON tank.countryId = country.id AND country.id > -1 " +
 					"WHERE  (playerTank.playerId = @playerId) " + sqlBattlemode +
 					"GROUP BY country.shortName " +
 					"ORDER BY country.shortName ";
@@ -194,7 +194,7 @@ namespace WinApp.Gadget
 					"FROM   battle INNER JOIN " +
 					"       playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"       tank ON playerTank.tankId = tank.id INNER JOIN " +
-					"       country ON tank.countryId = country.id " +
+					"       country ON tank.countryId = country.id AND country.id > -1 " +
 					"WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) " + sqlBattlemode +
 					"GROUP BY country.shortName " +
 					"ORDER BY country.shortName ";

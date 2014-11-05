@@ -101,7 +101,7 @@ namespace WinApp.Gadget
 			serie1.IsXValueIndexed = true;
 			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
-			string sql = "select * from tankType order by id ";
+			string sql = "select * from tankType where id>0 order by id ";
 			DataTable dt = DB.FetchData(sql);
 			foreach (DataRow dr in dt.Rows)
 			{
