@@ -1160,7 +1160,7 @@ namespace WinApp.Forms
 				{
 					int posBefore = dgv.FirstDisplayedScrollingColumnIndex;
 					dgv.FirstDisplayedScrollingColumnIndex = scroll.ScrollPosition + 1; // adjust for frozen row
-					if (posBefore != dgv.FirstDisplayedScrollingColumnIndex) Refresh();
+					//if (posBefore != dgv.FirstDisplayedScrollingColumnIndex) Refresh();
 				}
 			}
 			catch (Exception ex)
