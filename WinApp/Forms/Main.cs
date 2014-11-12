@@ -1065,16 +1065,14 @@ namespace WinApp.Forms
 		private void SetTankFilterMenuName()
 		{
 			string s = tankFilterFavListName;
+			GridFilter.FavListShowType favListShowType = MainSettings.GetCurrentGridFilter().FavListShow;
 			if (s == "")
 			{
-				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+				if (favListShowType == GridFilter.FavListShowType.MyTanks)
 					s = "My Tanks";
-				else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
+				else if (favListShowType == GridFilter.FavListShowType.AllTanksNotOwned)
 					s = "All Tanks";
-				else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.UseCurrent)
-					s = mTankFilter.Text; // Use current menu text
 			}
-				
 			if (tankFilterManualFilter != "")
 				s += " - " + tankFilterManualFilter;
 			mTankFilter.Text = s;
@@ -1091,7 +1089,7 @@ namespace WinApp.Forms
 				menuItem.Visible = false;
 			}
 			// Add favlist to menu
-			GridFilter.FavListShowType newShowType = GridFilter.FavListShowType.AllTanks;
+			GridFilter.FavListShowType newShowType = GridFilter.FavListShowType.MyTanks;
 			string sql = "select * from favList where position is not null and name is not null order by position";
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
@@ -1115,7 +1113,7 @@ namespace WinApp.Forms
 			}
 			// If no faclist is visible, select all tanks
 			MainSettings.GetCurrentGridFilter().FavListShow = newShowType;
-			if (newShowType == GridFilter.FavListShowType.AllTanks)
+			if (newShowType == GridFilter.FavListShowType.MyTanks)
 				mTankFilter_All.Checked = true;
 			// Set menu name
 			SetTankFilterMenuName();
@@ -1141,7 +1139,7 @@ namespace WinApp.Forms
 		{
 			// Changed FavList
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
-			gf.FavListShow = GridFilter.FavListShowType.AllTanks;
+			gf.FavListShow = GridFilter.FavListShowType.MyTanks;
 			MainSettings.UpdateCurrentGridFilter(gf);
 			// check fav list menu select
 			FavListMenuUncheck();
@@ -1196,7 +1194,7 @@ namespace WinApp.Forms
 				case GridFilter.FavListShowType.UseCurrent:
 					// No action, use previous selected tanks filter
 					break;
-				case GridFilter.FavListShowType.AllTanks:
+				case GridFilter.FavListShowType.MyTanks:
 					// Remove all filters, select All Tanks
 					FavListMenuUncheck();
 					mTankFilter_All.Checked = true;
@@ -1514,7 +1512,7 @@ namespace WinApp.Forms
 			gf.BattleMode = selectedMode;
 			if (gf.FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
 			{
-				gf.FavListShow = GridFilter.FavListShowType.AllTanks;
+				gf.FavListShow = GridFilter.FavListShowType.MyTanks;
 				SetFavListMenu();
 			}
 			MainSettings.UpdateCurrentGridFilter(gf);
@@ -1622,7 +1620,7 @@ namespace WinApp.Forms
 					message = "All tanks";
 				}
 				else
-				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.MyTanks)
 				{
 					message = "All tanks owned";
 					tankOwnedWhereSQL += " AND playerTank.id is not null ";

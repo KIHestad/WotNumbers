@@ -40,7 +40,7 @@ namespace WinApp.Forms
 			ShowFavList();
 			ShowAllTanks();
 			// Select an initial fav list
-			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanks)
+			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.MyTanks)
 			{
 				if (dataGridFavList.RowCount > 0)
 				{
@@ -958,7 +958,7 @@ namespace WinApp.Forms
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 				gf.FavListId = 0;
 				gf.FavListName = "";
-				gf.FavListShow = GridFilter.FavListShowType.AllTanks;
+				gf.FavListShow = GridFilter.FavListShowType.MyTanks;
 				MainSettings.UpdateCurrentGridFilter(gf);
 			}
 			

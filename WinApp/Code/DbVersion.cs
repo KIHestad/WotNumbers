@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 193; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 194; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1945,10 +1945,15 @@ namespace WinApp.Code
 						sqlite = mssql;
 					}
 					break;
-					
+				case 194:
+					mssql =
+						"UPDATE battle SET gameplayName='Standard' WHERE gameplayName='ctf';" +
+						"UPDATE battle SET gameplayName='Encounter' WHERE gameplayName='domination';" +
+						"UPDATE battle SET gameplayName='Assault' WHERE gameplayName='assault';" +
+						"UPDATE columnSelection SET name='Game Mode', description='The game mode: Standard, Encounter or Assault' WHERE id = 511; ";
+					sqlite = mssql;
+					break;									
 				
-
-
 			}
 			string sql = "";
 			// get sql for correct dbtype

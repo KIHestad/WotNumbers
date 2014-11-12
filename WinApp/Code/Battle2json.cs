@@ -257,7 +257,15 @@ namespace WinApp.Code
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
-								battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + (string)token_common.SelectToken("gameplayName") + "'" });
+								string gammeplayId = (string)token_common.SelectToken("gameplayID");
+								string gameplayName = "";
+								switch (gammeplayId)
+								{
+									case "0": gameplayName = "Standard"; break;
+									case "1": gameplayName = "Encounter"; break;
+									case "2": gameplayName = "Assault"; break;
+								}
+								battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + gameplayName + "'" });
 								// personal - credits
 								battleValues.Add(new BattleValue() { colname = "originalCredits", value = (int)token_personel.SelectToken("originalCredits") });
 								battleValues.Add(new BattleValue() { colname = "credits", value = (int)token_personel.SelectToken("credits") });

@@ -12,7 +12,7 @@ namespace WinApp.Code
 		public enum FavListShowType
 		{
 			UseCurrent = -1,
-			AllTanks = -2,
+			MyTanks = -2,
 			FavList = 0,
 			AllTanksNotOwned = -3,
 		}
@@ -37,7 +37,7 @@ namespace WinApp.Code
 		{
 			public int ColListId = 0;
 			public string ColListName = ""; // Col showing in grid
-			public FavListShowType FavListShow = FavListShowType.AllTanks;
+			public FavListShowType FavListShow = FavListShowType.MyTanks;
 			public int FavListId = 0;
 			public string FavListName = "";
 			public int TankId = -1; // Filter on explicit tank
