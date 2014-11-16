@@ -1193,6 +1193,7 @@ namespace WinApp.Forms
 			{
 				case GridFilter.FavListShowType.UseCurrent:
 					// No action, use previous selected tanks filter
+					SetTankFilterMenuName();
 					break;
 				case GridFilter.FavListShowType.MyTanks:
 					// Remove all filters, select All Tanks

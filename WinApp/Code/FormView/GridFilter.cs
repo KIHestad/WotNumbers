@@ -78,7 +78,12 @@ namespace WinApp.Code
 					defaultGridFilter.FavListName = dr["favListName"].ToString();
 				}
 				else
+				{
 					defaultGridFilter.FavListShow = (FavListShowType)defaultFavListId;
+				}
+				// If used "Use Current" as startup fav list, override with appropiate fav list type
+				if (defaultGridFilter.FavListShow == FavListShowType.UseCurrent)
+					defaultGridFilter.FavListShow = FavListShowType.MyTanks;
 			}
 			if (gridView == GridView.Views.Tank)
 				defaultGridFilter.BattleMode = BattleModeType.RandomAndTankCompany;
