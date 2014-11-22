@@ -83,7 +83,7 @@ namespace WinApp.Gadget
 				string battleTimeFilter = "";
 				DateTime basedate = DateTime.Now; // current time
 				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 5, 0, 0); // datefilter = today
+				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
 				switch (GadgetHelper.SelectedTimeRangeWN7)
 				{
 					case GadgetHelper.TimeRange.Num1000:
