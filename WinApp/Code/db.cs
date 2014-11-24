@@ -243,6 +243,12 @@ namespace WinApp.Code
 			// Check database file location
 			bool fileLocationExsits = true;
 			fileLocation = fileLocation.Trim();
+			if (fileLocation.Length > 0)
+			{
+				string lastchar = fileLocation.Substring(fileLocation.Length - 1, 1);
+				if (lastchar != "/" && lastchar != "\\")
+					fileLocation += "\\";
+			}
 			if (!Directory.Exists(fileLocation))
 			{
 				DirectoryInfo prevPath = Directory.GetParent(fileLocation);
