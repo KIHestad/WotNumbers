@@ -181,6 +181,8 @@ namespace WinApp.Code
 								colListItem.colNameSelect = "SUM(" + colName + ")"; // Get sum battle count
 							else if (colName == "battle.eff" || colName == "battle.wn7" || colName == "battle.wn8")
 								colListItem.colNameSelect = "AVG(" + colName + ")"; // rating only use avg values
+							else if (colAlias == "Tier")
+								colListItem.colNameSelect = "AVG(" + colName + ")"; // only average value for tier
 							else
 							{
 								if (groupingSum)
