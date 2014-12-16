@@ -595,7 +595,7 @@ namespace WinApp.Code
 						{
 							Log.AddToLogBuffer(" > * New battle file not read, battle do not exists for JSON file: " + file);
 							// Battle do not exists, delete if old file file
-							if (battleTime < DateTime.Now.AddDays(-3))
+							if (battleTime < DateTime.Now.AddHours(-3))
 							{
 								deleteFileAfterRead = true;
 								Log.AddToLogBuffer(" > * Old battle found, schedule for delete for JSON file: " + file);
@@ -717,7 +717,7 @@ namespace WinApp.Code
 			{
 				Log.LogToFile(ex);
 				Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
-				"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
+					"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
 				PythonEngine.InUse = false;
 			}
 			return ok;

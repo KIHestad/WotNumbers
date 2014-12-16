@@ -785,6 +785,7 @@
     <Content Include="Docs\Database\createTableMSSQL.txt" />
     <Content Include="Docs\Database\insert.txt" />
     <None Include="Docs\Database\upgrade.json" />
+    <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

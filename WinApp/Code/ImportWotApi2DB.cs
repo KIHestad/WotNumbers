@@ -63,13 +63,13 @@ namespace WinApp.Code
 			string serverURL = "";
 			string server = Config.Settings.playerServer;
 			// override to EU server for not supported regions
-			if (server == "" || server == "RU" || server == "ASIA" || server == "KR")
+			if (server == "" || server == "ASIA" || server == "KR")
 				server = "EU";
 			switch (server)
 			{
 				case "EU": serverURL = "http://api.worldoftanks.eu";  break;
 				case "COM": serverURL = "http://api.worldoftanks.com"; break;
-				case "RU": serverURL = "http://api.worldoftanks.ru"; break;
+				case "NET": serverURL = "http://api.worldoftanks.ru"; break;
 				case "ASIA": serverURL = "http://api.worldoftanks-sea.com"; break;
 				case "KR": serverURL = "http://api.worldoftanks.kr"; break;
 			}

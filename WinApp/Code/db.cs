@@ -366,7 +366,8 @@ namespace WinApp.Code
 				}
 				else if (DataType == SqlDataType.Float)
 				{
-					var d = Convert.ToDecimal(Value).ToString();
+					string d = Convert.ToDecimal(Value).ToString();
+					d = d.Replace(",", ".");
 					Sql = ReplaceParameterWithValue(Sql, Parameter, d);
 				}
 				else if (DataType == SqlDataType.DateTime)

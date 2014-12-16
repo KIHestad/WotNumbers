@@ -50,7 +50,6 @@ namespace WinApp.Forms
 			string sql = 
 				"select battle.*, playerTank.tankId as tankId " +
 				"from battle inner join playerTank on battle.playerTankId = playerTank.id " +
-				"where battle.id = 31964 " +
 				"order by battle.battleTime";
 			DataTable dt = DB.FetchData(sql);
 			int tot = dt.Rows.Count;

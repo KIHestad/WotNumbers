@@ -25,12 +25,12 @@ namespace WinApp.Code
 		public static String UpdateWN8(Form parentForm)
 		{
 			string sql = "";
-			string tankId = "";
-			string expFrags = "";
-			string expDmg = "";
-			string expSpot = "";
-			string expDef = "";
-			string expWR = "";
+			int tankId = 0;
+			double expFrags = 0;
+			double expDmg = 0;
+			double expSpot = 0;
+			double expDef = 0;
+			double expWR = 0;
 			int WN8Version = 0;
 			// Get WN8 from API
 			try
@@ -68,24 +68,25 @@ namespace WinApp.Code
 							string tokenName = (string)((JProperty)jtoken).Name.ToString();
 							switch (tokenName)
 							{
-								case "IDNum": tankId = (string)((JProperty)jtoken).Value.ToString(); break;
-								case "expFrag": expFrags = (string)((JProperty)jtoken).Value.ToString(); break;
-								case "expDamage": expDmg = (string)((JProperty)jtoken).Value.ToString(); break;
-								case "expSpot": expSpot = (string)((JProperty)jtoken).Value.ToString(); break;
-								case "expDef": expDef = (string)((JProperty)jtoken).Value.ToString(); break;
-								case "expWinRate": expWR = (string)((JProperty)jtoken).Value.ToString(); break;
+								case "IDNum": tankId = (int)((JProperty)jtoken).Value; break;
+								case "expFrag": expFrags = (double)((JProperty)jtoken).Value; break;
+								case "expDamage": expDmg = (double)((JProperty)jtoken).Value; break;
+								case "expSpot": expSpot = (double)((JProperty)jtoken).Value; break;
+								case "expDef": expDef = (double)((JProperty)jtoken).Value; break;
+								case "expWinRate": expWR = (double)((JProperty)jtoken).Value; break;
 							}
 						}
 						jtoken = jtoken.Next;
 					}
-				
-					sql = sql + "update tank set expDmg = " + expDmg
-											+ ", expWR = " + expWR
-											+ ", expSpot = " + expSpot
-											+ ", expFrags = " + expFrags
-											+ ", expDef = " + expDef
-											+ " where id = " + tankId
-											+ "; ";
+
+					string newsql = "update tank set expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef where id = @id;";
+					DB.AddWithValue(ref newsql, "@expDmg", expDmg, DB.SqlDataType.Float);
+					DB.AddWithValue(ref newsql, "@expWR", expWR, DB.SqlDataType.Float);
+					DB.AddWithValue(ref newsql, "@expSpot", expSpot, DB.SqlDataType.Float);
+					DB.AddWithValue(ref newsql, "@expFrags", expFrags, DB.SqlDataType.Float);
+					DB.AddWithValue(ref newsql, "@expDef", expDef, DB.SqlDataType.Float);
+					DB.AddWithValue(ref newsql, "@id", tankId, DB.SqlDataType.Int);
+					sql += newsql;
 				}
 
 			}

@@ -3,7 +3,7 @@
 # by Phalynx www.vbaddict.net                     # 
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2014-09-10       #
+# Edited version by BadButton -> 2014-12-16       #
 ###################################################
 # IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
 import struct, json, time, sys, os, cPickle, StringIO
@@ -14,7 +14,7 @@ from itertools import izip
 BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie', 'fort_battle')
 FINISH_REASON_NAMES = ('extermination', 'base', 'timeout', 'failure', 'technical') 
 
-VERSIONS_LENGTH = (50, 52, 60, 62, 68, 70, 74, 81, 84, 92)
+VERSIONS_LENGTH = (50, 52, 60, 62, 68, 70, 74, 81, 84, 92, 117, 90)
 VERSIONS = dict(((value, index+1) for index, value in enumerate(VERSIONS_LENGTH)))
 
 VEHICLE_DEVICE_TYPE_NAMES = ('engine', 
@@ -63,14 +63,13 @@ def usage():
 def main(): 
 	import struct, json, time, sys, os, shutil, datetime
 	global numofkills, filename_source, filename_target, option_server, option_format
-    
-	parserversion = "0.9.4.0"
+	
+	parserversion = "0.9.5.0"
 	
 	option_raw = 0
 	option_format = 0
 	option_server = 0
 	option_frags = 1
-		  
 		  
 	if len(sys.argv) == 1: 
 		usage() 
@@ -131,6 +130,7 @@ def main():
 
 	bresult['personal']['won'] = True if bresult['common']['winnerTeam'] == bresult['personal']['team'] else False
 	bresult['personal']['achievementlist'] = list()
+	import DamageEvents
 		
 	for key, value in bresult['vehicles'].items(): 
 		
@@ -146,9 +146,18 @@ def main():
 				bresult['vehicles'][key]['details'][vehicleid]['critsDestroyedDevicesList'] = getDestroyedDevicesList(detail_values)
 				bresult['vehicles'][key]['details'][vehicleid]['critsCount'] = len(bresult['vehicles'][key]['details'][vehicleid]['critsDestroyedTankmenList']) + len(bresult['vehicles'][key]['details'][vehicleid]['critsDestroyedTankmenList']) + len(bresult['vehicles'][key]['details'][vehicleid]['critsDestroyedTankmenList'])
 
-
-
-
+		bresult['vehicles'][key]['damage_events'] = []
+		if 'damage_event_list' in bresult['vehicles'][key]:
+			for dmg_list in bresult['vehicles'][key]['damage_event_list']:
+				dmg_vehicleid, dmg_typecomp = dmg_list
+				for x in bresult['vehicles'][key]['damage_event_list'][dmg_list]:
+					dmg = dict(zip(x._fields, list(x))) 
+					dmg['typeComp'] = dmg_typecomp
+					dmg['tankID'] = dmg_typecomp >> 8 & 65535
+					dmg['countryID'] = dmg_typecomp >> 4 & 15
+					dmg['vehicleid'] = dmg_vehicleid
+			bresult['vehicles'][key]['damage_events'].append(dmg)
+			del(bresult['vehicles'][key]['damage_event_list'])
 		tanksource = bresult['vehicles'][key]['typeCompDescr'] 
 			  
 		if tanksource == None: 
@@ -478,9 +487,62 @@ def convertToFullForm(compactForm):
 		PLAYER_INFO_INDICES = dict(((x[1], x[0]) for x in enumerate(PLAYER_INFO)))
 		COMMON_RESULTS = ('arenaTypeID', 'arenaCreateTime', 'winnerTeam', 'finishReason', 'duration', 'bonusType', 'guiType', 'vehLockMode', 'sortieDivision')
 		COMMON_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(COMMON_RESULTS)))
-
 		handled = 1 
 
+	if len(compactForm[1])==117:  
+		_VEH_CELL_RESULTS_PUBLIC = ('health', 'credits', 'xp', 'achievementCredits', 'achievementXP', 'achievementFreeXP', 'shots', 'directHits', 'directTeamHits', 'explosionHits', 'piercings', 'damageDealt', 'sniperDamageDealt', 'damageAssistedRadio', 'damageAssistedTrack', 'damageReceived', 'damageBlockedByArmor', 'directHitsReceived', 'noDamageDirectHitsReceived', 'explosionHitsReceived', 'piercingsReceived', 'spotted', 'damaged', 'kills', 'tdamageDealt', 'tdestroyedModules', 'tkills', 'isTeamKiller', 'capturePoints', 'droppedCapturePoints', 'mileage', 'lifeTime', 'killerID', 'achievements', 'potentialDamageReceived', 'isPrematureLeave', 'fortResource', 'critsByType', 'innerModuleCritCount', 'innerModuleDestrCount', 'isAnyOurCrittedModules', 'killsAssistedTrack', 'killsAssistedRadio', 'assistedDamage', 'assistedKills', 'killedAndDamagedByAllSquadmates', 'damagedWhileMoving', 'damagedWhileEnemyMoving', 'damagedVehicleCntAssistedTrack', 'damagedVehicleCntAssistedRadio', 'isNotSpotted', 'spottedBeforeWeBecameSpotted', 'isAnyHitReceivedWhileCapturing', 'spottedAndDamagedSPG', 'damageAssistedRadioWhileInvisible', 'damageAssistedTrackWhileInvisible', 'damage_event_list', 'multi_damage_events', 'inBattleMaxSniperSeries', 'inBattleMaxKillingSeries', 'inBattleMaxPiercingSeries', 'damageBeforeTeamWasDamaged', 'killsBeforeTeamWasDamaged', 'percentFromTotalTeamDamage', 'percentFromSecondBestDamage', 'firstBlood')
+		_VEH_CELL_RESULTS_PRIVATE = ('repair', 'freeXP', 'details')
+		_VEH_CELL_RESULTS_SERVER = ('protoAchievements', 'potentialDamageDealt', 'soloHitsAssisted', 'isEnemyBaseCaptured', 'stucks', 'autoAimedShots', 'presenceTime', 'spot_list', 'damage_list', 'kill_list', 'ammo', 'crewActivityFlags', 'series', 'tkillRating', 'tkillLog', 'destroyedObjects', 'committedSuicide', 'discloseShots', 'guerrillaShots', 'critsCount', 'aimerSeries')
+		VEH_CELL_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_CELL_RESULTS_PRIVATE + _VEH_CELL_RESULTS_SERVER
+		VEH_CELL_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_CELL_RESULTS)))
+		_VEH_BASE_RESULTS_PUBLIC = ('accountDBID', 'team', 'typeCompDescr', 'gold', 'deathReason', 'fortBuilding')
+		_VEH_BASE_RESULTS_PRIVATE = ('xpPenalty', 'creditsPenalty', 'creditsContributionIn', 'creditsContributionOut', 'creditsToDraw')
+		_VEH_BASE_RESULTS_SERVER = ('eventIndices', 'vehLockTimeFactor', 'misc', 'cybersportRatingDeltas', 'clanDBID', 'vehsByClass')
+		VEH_BASE_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_BASE_RESULTS_PUBLIC + _VEH_CELL_RESULTS_PRIVATE + _VEH_BASE_RESULTS_PRIVATE + _VEH_CELL_RESULTS_SERVER + _VEH_BASE_RESULTS_SERVER
+		VEH_BASE_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_BASE_RESULTS)))
+		VEH_PUBLIC_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_BASE_RESULTS_PUBLIC
+		VEH_PUBLIC_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_PUBLIC_RESULTS)))
+		VEH_FULL_RESULTS_UPDATE = ('tmenXP', 'isPremium', 'eventCredits', 'eventGold', 'eventXP', 'eventFreeXP', 'eventTMenXP', 'autoRepairCost', 'autoLoadCost', 'autoEquipCost', 'histAmmoCost', 'premiumVehicleXP', 'premiumXPFactor10', 'premiumCreditsFactor10', 'dailyXPFactor10', 'igrXPFactor10', 'aogasFactor10', 'prevMarkOfMastery', 'markOfMastery', 'dossierPopUps', 'vehTypeLockTime', 'serviceProviderID', 'marksOnGun', 'movingAvgDamage', 'damageRating', 'orderCredits', 'orderXP', 'orderTMenXP', 'orderFreeXP', 'orderFortResource', 'fairplayViolations', 'refSystemXPFactor10', 'battleNum')
+		VEH_FULL_RESULTS_UPDATE_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_FULL_RESULTS_UPDATE)))
+		_VEH_FULL_RESULTS_PRIVATE = ('originalCredits', 'originalXP', 'originalFreeXP', 'questsProgress')
+		VEH_FULL_RESULTS_SERVER = ('eventGoldByEventID',)
+		VEH_FULL_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_BASE_RESULTS_PUBLIC + _VEH_CELL_RESULTS_PRIVATE + _VEH_BASE_RESULTS_PRIVATE + VEH_FULL_RESULTS_UPDATE + _VEH_FULL_RESULTS_PRIVATE
+		VEH_FULL_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_FULL_RESULTS)))
+		PLAYER_INFO = ('name', 'clanDBID', 'clanAbbrev', 'prebattleID', 'team', 'igrType')
+		PLAYER_INFO_INDICES = dict(((x[1], x[0]) for x in enumerate(PLAYER_INFO)))
+		COMMON_RESULTS = ('arenaTypeID', 'arenaCreateTime', 'winnerTeam', 'finishReason', 'duration', 'bonusType', 'guiType', 'vehLockMode', 'sortieDivision')
+		COMMON_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(COMMON_RESULTS)))
+		handled = 1 
+
+	if len(compactForm[1])==90:  
+		VEH_INTERACTION_DETAILS_NAMES = [ x[0] for x in VEH_INTERACTION_DETAILS ]
+		VEH_INTERACTION_DETAILS_MAX_VALUES = dict(((x[0], x[2]) for x in VEH_INTERACTION_DETAILS))
+		VEH_INTERACTION_DETAILS_INIT_VALUES = [ x[3] for x in VEH_INTERACTION_DETAILS ]
+		VEH_INTERACTION_DETAILS_LAYOUT = ''.join([ x[1] for x in VEH_INTERACTION_DETAILS ])
+		VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_INTERACTION_DETAILS)))
+		_VEH_CELL_RESULTS_PUBLIC = ('health', 'credits', 'xp', 'achievementCredits', 'achievementXP', 'achievementFreeXP', 'shots', 'directHits', 'directTeamHits', 'explosionHits', 'piercings', 'damageDealt', 'sniperDamageDealt', 'damageAssistedRadio', 'damageAssistedTrack', 'damageReceived', 'damageBlockedByArmor', 'directHitsReceived', 'noDamageDirectHitsReceived', 'explosionHitsReceived', 'piercingsReceived', 'spotted', 'damaged', 'kills', 'tdamageDealt', 'tdestroyedModules', 'tkills', 'isTeamKiller', 'capturePoints', 'droppedCapturePoints', 'mileage', 'lifeTime', 'killerID', 'achievements', 'potentialDamageReceived', 'isPrematureLeave', 'fortResource', 'healedHP', 'healedHPByMe')
+		_VEH_CELL_RESULTS_PRIVATE = ('repair', 'freeXP', 'details')
+		_VEH_CELL_RESULTS_SERVER = ('protoAchievements', 'potentialDamageDealt', 'soloHitsAssisted', 'isEnemyBaseCaptured', 'stucks', 'autoAimedShots', 'presenceTime', 'spot_list', 'damage_list', 'kill_list', 'ammo', 'crewActivityFlags', 'series', 'tkillRating', 'tkillLog', 'destroyedObjects', 'committedSuicide', 'discloseShots', 'guerrillaShots', 'critsCount', 'aimerSeries', 'critsByType', 'innerModuleCritCount', 'innerModuleDestrCount', 'isAnyOurCrittedModules', 'killsAssistedTrack', 'killsAssistedRadio', 'assistedDamage', 'assistedKills', 'killedAndDamagedByAllSquadmates', 'damagedWhileMoving', 'damagedWhileEnemyMoving', 'damagedVehicleCntAssistedTrack', 'damagedVehicleCntAssistedRadio', 'isNotSpotted', 'spottedBeforeWeBecameSpotted', 'isAnyHitReceivedWhileCapturing', 'spottedAndDamagedSPG', 'damageAssistedRadioWhileInvisible', 'damageAssistedTrackWhileInvisible', 'damage_event_list', 'multi_damage_events', 'inBattleMaxSniperSeries', 'inBattleMaxKillingSeries', 'inBattleMaxPiercingSeries', 'damageBeforeTeamWasDamaged', 'killsBeforeTeamWasDamaged', 'percentFromTotalTeamDamage', 'percentFromSecondBestDamage', 'firstBlood')
+		VEH_CELL_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_CELL_RESULTS_PRIVATE + _VEH_CELL_RESULTS_SERVER
+		VEH_CELL_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_CELL_RESULTS)))
+		_VEH_BASE_RESULTS_PUBLIC = ('accountDBID', 'team', 'typeCompDescr', 'gold', 'deathReason', 'fortBuilding')
+		_VEH_BASE_RESULTS_PRIVATE = ('xpPenalty', 'creditsPenalty', 'creditsContributionIn', 'creditsContributionOut', 'creditsToDraw')
+		_VEH_BASE_RESULTS_SERVER = ('eventIndices', 'vehLockTimeFactor', 'misc', 'cybersportRatingDeltas', 'clanDBID', 'vehsByClass')
+		VEH_BASE_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_BASE_RESULTS_PUBLIC + _VEH_CELL_RESULTS_PRIVATE + _VEH_BASE_RESULTS_PRIVATE + _VEH_CELL_RESULTS_SERVER + _VEH_BASE_RESULTS_SERVER
+		VEH_BASE_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_BASE_RESULTS)))
+		VEH_PUBLIC_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_BASE_RESULTS_PUBLIC
+		VEH_PUBLIC_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_PUBLIC_RESULTS)))
+		VEH_FULL_RESULTS_UPDATE = ('tmenXP', 'isPremium', 'eventCredits', 'eventGold', 'eventXP', 'eventFreeXP', 'eventTMenXP', 'autoRepairCost', 'autoLoadCost', 'autoEquipCost', 'histAmmoCost', 'premiumVehicleXP', 'premiumXPFactor10', 'premiumCreditsFactor10', 'dailyXPFactor10', 'igrXPFactor10', 'aogasFactor10', 'prevMarkOfMastery', 'markOfMastery', 'dossierPopUps', 'vehTypeLockTime', 'serviceProviderID', 'marksOnGun', 'movingAvgDamage', 'damageRating', 'orderCredits', 'orderXP', 'orderTMenXP', 'orderFreeXP', 'orderFortResource', 'fairplayViolations', 'refSystemXPFactor10', 'battleNum')
+		VEH_FULL_RESULTS_UPDATE_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_FULL_RESULTS_UPDATE)))
+		_VEH_FULL_RESULTS_PRIVATE = ('originalCredits', 'originalXP', 'originalFreeXP', 'questsProgress')
+		VEH_FULL_RESULTS_SERVER = ('eventGoldByEventID',)
+		VEH_FULL_RESULTS = _VEH_CELL_RESULTS_PUBLIC + _VEH_BASE_RESULTS_PUBLIC + _VEH_CELL_RESULTS_PRIVATE + _VEH_BASE_RESULTS_PRIVATE + VEH_FULL_RESULTS_UPDATE + _VEH_FULL_RESULTS_PRIVATE
+		VEH_FULL_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(VEH_FULL_RESULTS)))
+		PLAYER_INFO = ('name', 'clanDBID', 'clanAbbrev', 'prebattleID', 'team', 'igrType')
+		PLAYER_INFO_INDICES = dict(((x[1], x[0]) for x in enumerate(PLAYER_INFO)))
+		COMMON_RESULTS = ('arenaTypeID', 'arenaCreateTime', 'winnerTeam', 'finishReason', 'duration', 'bonusType', 'guiType', 'vehLockMode', 'sortieDivision')
+		COMMON_RESULTS_INDICES = dict(((x[1], x[0]) for x in enumerate(COMMON_RESULTS)))
+		handled = 1 
 
 	fullForm = dict()
 
@@ -517,7 +579,11 @@ def convertToFullForm(compactForm):
 	
 	# IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
 	#from SafeUnpickler import SafeUnpickler
-	commonAsList, playersAsList, vehiclesAsList = SafeUnpickler.loads(compactForm[2]) 
+	try:
+		commonAsList, playersAsList, vehiclesAsList = SafeUnpickler.loads(compactForm[2]) 
+	except Exception, e: 
+		exitwitherror("Error processing Battle Result: Length: " + str(len(compactForm[1])) + ' ' + str(e.message))
+
 	fullForm['common'] = listToDict(COMMON_RESULTS, commonAsList) 
 	for accountDBID, playerAsList in playersAsList.iteritems(): 
 		fullForm['players'][accountDBID] = listToDict(PLAYER_INFO, playerAsList) 
@@ -540,7 +606,7 @@ def getDestroyedTankmen(detail_values):
 				destroyedTankmenList.append(VEHICLE_TANKMAN_TYPE_NAMES[shift]) 
 		
 	return destroyedTankmenList  
-  
+
 def getCriticalDevicesList(detail_values):
 
 	criticalDevicesList = [] 
@@ -550,7 +616,7 @@ def getCriticalDevicesList(detail_values):
 		for shift in range(len(VEHICLE_DEVICE_TYPE_NAMES)): 
 			if 1 << shift & criticalDevices: 
 				criticalDevicesList.append(VEHICLE_DEVICE_TYPE_NAMES[shift]) 
-		  
+
 	return criticalDevicesList
 
 		
@@ -560,7 +626,7 @@ def getDestroyedDevicesList(detail_values):
 		destroyedDevices = detail_values['crits'] >> 12 & 4095
 		  
 		for shift in range(len(VEHICLE_DEVICE_TYPE_NAMES)): 
-	  
+
 			if 1 << shift & destroyedDevices: 
 				destroyedDevicesList.append(VEHICLE_DEVICE_TYPE_NAMES[shift]) 
 		

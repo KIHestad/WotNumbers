@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.6.6.0"?>
+<?define ProductVersion = "0.6.8.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -331,6 +331,9 @@
 			</Component>
 			<Component Id="cmpwotbr2j" Directory="INSTALLFOLDER_Dossier2json" Guid="{07EF3C67-0722-46A1-9405-7FB2ED97576F}">
 				<File Id="filwotbr2j" KeyPath="yes" Source="$(var.D2jSource)\wotbr2j.py" />
+			</Component>
+			<Component Id="cmpDamageEvents" Directory="INSTALLFOLDER_Dossier2json" Guid="{B7B6D606-C7FE-4A4E-A608-0C59644B504D}">
+				<File Id="filDamageEvents" KeyPath="yes" Source="$(var.D2jSource)\DamageEvents.py" />
 			</Component>
 
 		</ComponentGroup>

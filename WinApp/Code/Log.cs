@@ -20,7 +20,6 @@ namespace WinApp.Code
 		{
 			if (Config.Settings.showDBErrors)
 			{
-				CreateFileIfNotExist();
 				Application.DoEvents();
 				LogToFile(logBuffer, false);
 			}
@@ -50,23 +49,25 @@ namespace WinApp.Code
 		public static void LogToFile(Exception ex, string customErrorMsg = "")
 		{
 			// Add list og Strings
-			CreateFileIfNotExist();
-			using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+			if (CreateFileIfNotExist())
 			{
-				if (ex != null)
+				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 				{
-					string logtext = Environment.NewLine;
-					logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
-					logtext += "   Source:          " + ex.Source + Environment.NewLine;
-					logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
-					logtext += "   Data:            " + ex.Data + Environment.NewLine;
-					logtext += "   Message:         " + ex.Message + Environment.NewLine;
-					if (ex.InnerException != null && ex.InnerException.ToString() != "")
-						logtext += "   InnerException:  " + ex.InnerException + Environment.NewLine;
-					logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
-					if (customErrorMsg != "")
-						logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
-					sw.WriteLine(logtext);
+					if (ex != null)
+					{
+						string logtext = Environment.NewLine;
+						logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
+						logtext += "   Source:          " + ex.Source + Environment.NewLine;
+						logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
+						logtext += "   Data:            " + ex.Data + Environment.NewLine;
+						logtext += "   Message:         " + ex.Message + Environment.NewLine;
+						if (ex.InnerException != null && ex.InnerException.ToString() != "")
+							logtext += "   InnerException:  " + ex.InnerException + Environment.NewLine;
+						logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
+						if (customErrorMsg != "")
+							logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
+						sw.WriteLine(logtext);
+					}
 				}
 			}
 		}
@@ -77,11 +78,13 @@ namespace WinApp.Code
 			if (Config.Settings.showDBErrors)
 			{
 				// Add list og Strings
-				CreateFileIfNotExist();
-				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+				if (CreateFileIfNotExist())
 				{
-					if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
-					sw.WriteLine(logtext);
+					using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+					{
+						if (addDateTime) logtext = DateTime.Now + "\t" + logtext;
+						sw.WriteLine(logtext);
+					}
 				}
 			}
 		}
@@ -90,13 +93,15 @@ namespace WinApp.Code
 		{
 			if (Config.Settings.showDBErrors)
 			{
-				// Add list og Strings
-				CreateFileIfNotExist();
-				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+				// Add list of Strings
+				if (CreateFileIfNotExist())
 				{
-					foreach (var s in logtext)
+					using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 					{
-						sw.WriteLine(s);
+						foreach (var s in logtext)
+						{
+							sw.WriteLine(s);
+						}
 					}
 				}
 			}
@@ -123,20 +128,31 @@ namespace WinApp.Code
 			}
 		}
 
-		private static void CreateFileIfNotExist()
+		private static bool CreateFileIfNotExist()
 		{
+			bool ok = true;
 			// This text is added only once to the file. 
 			if (!File.Exists(Config.AppDataLogFolder + filename))
 			{
-				// Create a file to write to. 
-				using (StreamWriter sw = File.CreateText(Config.AppDataLogFolder + filename))
+				try
 				{
-					sw.WriteLine("**************************************************");
-					sw.WriteLine("Start logging: " + DateTime.Now.ToString());
-					sw.WriteLine("**************************************************");
-					sw.WriteLine("");
+					// Create a file to write to. 
+					using (StreamWriter sw = File.CreateText(Config.AppDataLogFolder + filename))
+					{
+						sw.WriteLine("**************************************************");
+						sw.WriteLine("Start logging: " + DateTime.Now.ToString());
+						sw.WriteLine("**************************************************");
+						sw.WriteLine("");
+					}
+				}
+				catch (Exception ex)
+				{
+					Code.MsgBox.Show("Error creating log file: " + Config.AppDataLogFolder + filename + Environment.NewLine + Environment.NewLine +
+						ex.Message + Environment.NewLine + Environment.NewLine, "Log file error");
+					ok = false;
 				}
 			}
+			return ok;
 		}
 		
 		public static void BattleResultDoneLog()
