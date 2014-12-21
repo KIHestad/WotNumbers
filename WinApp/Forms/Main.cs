@@ -191,7 +191,11 @@ namespace WinApp.Forms
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
 			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[4];
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
-			
+
+			ToolStripMenuItem dataGridMainPopup_FilterOnTankClear = new ToolStripMenuItem("Remove filter on tank");
+			dataGridMainPopup_FilterOnTankClear.Image = imageListToolStrip.Images[11];
+			dataGridMainPopup_FilterOnTankClear.Click += new EventHandler(dataGridMainPopup_FilterOnTankClear_Click);
+
 			ToolStripMenuItem dataGridMainPopup_FavListAddTank = new ToolStripMenuItem("Add tank to favourite tank list");
 			dataGridMainPopup_FavListAddTank.Image = imageListToolStrip.Images[5];
 			dataGridMainPopup_FavListAddTank.Click += new EventHandler(dataGridMainPopup_FavListAddTank_Click);
@@ -239,6 +243,9 @@ namespace WinApp.Forms
 					});
 					break;
 				case GridView.Views.Battle:
+					ToolStripMenuItem dataGridMainPopup_FilterOnTank_FilterOnTankClear = dataGridMainPopup_FilterOnTank; // Default add tank fiter
+					if (MainSettings.GetCurrentGridFilter().TankId != -1)
+						dataGridMainPopup_FilterOnTank_FilterOnTankClear = dataGridMainPopup_FilterOnTankClear; // If tank filter added, show remove tank filter
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
 						//TODO: Temp remove features
@@ -248,7 +255,7 @@ namespace WinApp.Forms
 						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup,
 						dataGridMainPopup_Separator1,
-						dataGridMainPopup_FilterOnTank,
+						dataGridMainPopup_FilterOnTank_FilterOnTankClear,
 						dataGridMainPopup_Separator2,
 						dataGridMainPopup_FavListAddTank,
 						dataGridMainPopup_FavListRemoveTank,
@@ -2940,10 +2947,18 @@ namespace WinApp.Forms
 			int tankId = TankHelper.GetTankID(playerTankId);
 			if (tankId != 0)
 			{
-				TankFilterMenuUncheck(true, true, true, false);
+				//TankFilterMenuUncheck(true, true, true, false);
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
 				ShowView("Filtered on tank: " + TankHelper.GetTankName(tankId));
 			}
+			CreateDataGridContextMenu(); // Recreate context menu
+		}
+
+		private void dataGridMainPopup_FilterOnTankClear_Click(object sender, EventArgs e)
+		{
+			MainSettings.GetCurrentGridFilter().TankId = -1;
+			ShowView("Filtered on tank removed");
+			CreateDataGridContextMenu(); // Recreate context menu
 		}
 
 		private void dataGridMainPopup_FavListCreateNew_Click(object sender, EventArgs e)
