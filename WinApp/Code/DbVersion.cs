@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 194; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 195; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1952,7 +1952,10 @@ namespace WinApp.Code
 						"UPDATE battle SET gameplayName='Assault' WHERE gameplayName='assault';" +
 						"UPDATE columnSelection SET name='Game Mode', description='The game mode: Standard, Encounter or Assault' WHERE id = 511; ";
 					sqlite = mssql;
-					break;									
+					break;	
+				case 195:
+					RunWotApi = true;
+					break;
 				
 			}
 			string sql = "";
