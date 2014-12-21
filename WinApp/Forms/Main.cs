@@ -1331,6 +1331,7 @@ namespace WinApp.Forms
 			MainSettings.UpdateCurrentGridFilter(gf);
 			// Done
 			ShowView("Tank filter cleared");
+			CreateDataGridContextMenu(); // Recreate context menu
 		}
 
 		private void toolItemTankFilter_Tier_Click(object sender, EventArgs e)
