@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 196; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 198; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1961,6 +1961,15 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("196");
 					sqlite = mssql;
 					break;
+				case 197:
+					// Missing tanks from API for WoT 9.5
+					AddMissingTank(593, "M2", 5, 2, 1, 0);
+					break;
+				case 198:
+					// Missing tanks from API for WoT 9.5
+					AddMissingTank(1361, "Stuart I-IV", 5, 3, 1, 0);
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -2019,6 +2028,8 @@ namespace WinApp.Code
 						sql = "update _version_ set version=" + DBVersionCurrentNumber.ToString() + " where id=1";
 						continueNext = DB.ExecuteNonQuery(sql);
 					}
+					// Perform new list update
+					TankHelper.GetAllLists();
 				}
 				// If anything went wrong (continueNext == false), supply error notification here
 				if (!continueNext)
@@ -2328,6 +2339,23 @@ namespace WinApp.Code
 			DB.ExecuteNonQuery(sql);
 			ColListHelper.ColListSort(2);
 			return id;
+		}
+
+		private static void AddMissingTank(int tankId, string name, int countryid, int tier, int tanktypeid, int premium)
+		{
+			DataRow dr = DB.FetchData("select count(id) from tank where id=" + tankId.ToString()).Rows[0];
+			string sql = "insert into tank (id, name, countryid, tier, tanktypeid, premium) values (@id, @name, @countryid, @tier, @tanktypeid, @premium);";
+			if (dr[0] != DBNull.Value && Convert.ToInt32(dr[0]) > 0)
+			{
+				sql = "update tank set name=@name, countryid=@countryid, tier=@tier, tanktypeid=@tanktypeid, premium=@premium where id=@id;";
+			}
+			DB.AddWithValue(ref sql, "@id", tankId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@countryid", countryid, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@tanktypeid", tanktypeid, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
+			DB.ExecuteNonQuery(sql);
 		}
 
 	}
