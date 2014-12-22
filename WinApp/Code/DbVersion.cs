@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 195; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 196; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1956,7 +1956,11 @@ namespace WinApp.Code
 				case 195:
 					RunWotApi = true;
 					break;
-				
+				case 196:
+					// New maps
+					mssql = GetUpgradeSQL("196");
+					sqlite = mssql;
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype

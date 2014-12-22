@@ -72,51 +72,84 @@ namespace WinApp.Code
 			LoadNationImages();
 		}
 
+		public static string tankIdDebug = "0";
+
 		public static void LoadTankImages()
 		{
-			if (DB.CheckConnection(false))
-			{ 
-				string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
-				string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
-				string sql = "select * from tank";
-				SQLiteConnection con = new SQLiteConnection(adminDbCon);
-				con.Open();
-				SQLiteCommand command = new SQLiteCommand(sql, con);
-				SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
-				DataTable dt = new DataTable();
-				adapter.Fill(dt);
-				con.Close();
-				TankImage.Clear();
-				foreach (DataRow dr in dt.Rows)
+			try
+			{
+				if (DB.CheckConnection(false))
 				{
-					DataRow tankImgNewDataRow = TankImage.NewRow();
-					// ID
-					tankImgNewDataRow["id"] = dr["id"];
-					// SmallImg
-					byte[] imgByte = (byte[])dr["smallImg"];
-					MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
-					ms.Write(imgByte, 0, imgByte.Length);
-					Image image = new Bitmap(ms);
-					tankImgNewDataRow["smallImg"] = image;
-					if (TankHelper.PlayerTankExists(Convert.ToInt32(dr["id"])))
+					string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+					string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
+					string sql = "select * from tank";
+					SQLiteConnection con = new SQLiteConnection(adminDbCon);
+					con.Open();
+					SQLiteCommand command = new SQLiteCommand(sql, con);
+					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+					DataTable dt = new DataTable();
+					adapter.Fill(dt);
+					con.Close();
+					TankImage.Clear();
+					foreach (DataRow dr in dt.Rows)
 					{
-						// Img Large
-						//imgByte = (byte[])dr["img"];
-						//ms = new MemoryStream(imgByte, 0, imgByte.Length);
-						//ms.Write(imgByte, 0, imgByte.Length);
-						//image = new Bitmap(ms);
-						//tankImgNewDataRow["img"] = image;
-						// ContourImg
-						imgByte = (byte[])dr["contourImg"];
-						ms = new MemoryStream(imgByte, 0, imgByte.Length);
-						ms.Write(imgByte, 0, imgByte.Length);
-						image = new Bitmap(ms);
-						tankImgNewDataRow["contourImg"] = image;
+						DataRow tankImgNewDataRow = TankImage.NewRow();
+						// ID
+						tankImgNewDataRow["id"] = dr["id"];
+						tankIdDebug = dr["id"].ToString();
+						// SmallImg
+						bool imgOK = true;
+						if (dr["smallImg"] == DBNull.Value)
+						{
+							// Missing image
+							Log.LogToFile("Missing image for tank: " + tankIdDebug);
+							imgOK = false;
+						}
+						if (imgOK)
+						{
+							byte[] imgByte = (byte[])dr["smallImg"];
+							MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
+							ms.Write(imgByte, 0, imgByte.Length);
+							Image image = new Bitmap(ms);
+							tankImgNewDataRow["smallImg"] = image;
+							if (TankHelper.PlayerTankExists(Convert.ToInt32(dr["id"])))
+							{
+								// Img Large
+								//imgByte = (byte[])dr["img"];
+								//ms = new MemoryStream(imgByte, 0, imgByte.Length);
+								//ms.Write(imgByte, 0, imgByte.Length);
+								//image = new Bitmap(ms);
+								//tankImgNewDataRow["img"] = image;
+								// ContourImg
+								if (dr["contourImg"] == DBNull.Value)
+								{
+									// Missing image
+									Log.LogToFile("Missing image for tank: " + tankIdDebug);
+									imgOK = false;
+								}
+								else
+								{
+									imgByte = (byte[])dr["contourImg"];
+									ms = new MemoryStream(imgByte, 0, imgByte.Length);
+									ms.Write(imgByte, 0, imgByte.Length);
+									image = new Bitmap(ms);
+									tankImgNewDataRow["contourImg"] = image;
+								}
+							}
+							// Add to dt
+							if (imgOK)
+							{
+								TankImage.Rows.Add(tankImgNewDataRow);
+								TankImage.AcceptChanges();
+							}
+						}
 					}
-					// Add to dt
-					TankImage.Rows.Add(tankImgNewDataRow);
-					TankImage.AcceptChanges();
 				}
+			}
+			catch (Exception ex)
+			{
+				if (Config.Settings.showDBErrors) 
+					Log.LogToFile(ex, "Error loading tank images for tank: " + tankIdDebug);
 			}
 		}
 

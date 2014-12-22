@@ -23,5 +23,11 @@
     ],
    "193": [
     "insert into tank (id, name, countryid, tier, tanktypeid) values (56097, 'M4A3E8 Fury', 2, 6, 2);"
+    ],
+   "196": [
+    "INSERT INTO map (id,name,arena_id) VALUES (66,'Stalingrad','92_stalingrad');",
+    "INSERT INTO map (id,name,arena_id) VALUES (67,'Mittengard','100_thepit');",
+    "INSERT INTO map (id,name,arena_id) VALUES (68,'Ghost Town','95_lost_city');",
+    "INSERT INTO map (id,name,arena_id) VALUES (69,'Winterberg','103_ruinberg_winter');"
     ]
 }
