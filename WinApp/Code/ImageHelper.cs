@@ -102,7 +102,7 @@ namespace WinApp.Code
 						if (dr["smallImg"] == DBNull.Value)
 						{
 							// Missing image
-							Log.LogToFile("Missing image for tank: " + tankIdDebug);
+							// Log.LogToFile("Missing image for tank: " + tankIdDebug);
 							imgOK = false;
 						}
 						if (imgOK)
@@ -124,7 +124,7 @@ namespace WinApp.Code
 								if (dr["contourImg"] == DBNull.Value)
 								{
 									// Missing image
-									Log.LogToFile("Missing image for tank: " + tankIdDebug);
+									// Log.LogToFile("Missing image for tank: " + tankIdDebug);
 									imgOK = false;
 								}
 								else

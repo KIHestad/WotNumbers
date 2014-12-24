@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 199; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 200; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1961,21 +1961,9 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("196");
 					sqlite = mssql;
 					break;
-				case 197:
-					// Missing tanks from API for WoT 9.5 - M2
-					AddMissingTank(593, "M2", 5, 2, 1, 0);
+				case 200:
+					RunWotApi = true;
 					break;
-				case 198:
-					// Missing tanks from API for WoT 9.5 - Stuart I-IV
-					AddMissingTank(1361, "Stuart I-IV", 5, 3, 1, 0);
-					break;
-				case 199:
-					// Missing tanks from API for WoT 9.5 - Grant
-					AddMissingTank(1617, "Grant", 5, 4, 2, 0);
-					break;
-
-
-				//1617
 
 			}
 			string sql = "";

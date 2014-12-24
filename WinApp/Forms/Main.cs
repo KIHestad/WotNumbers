@@ -71,7 +71,6 @@ namespace WinApp.Forms
 			// Log startup
 			Log.AddToLogBuffer("", false);
 			Log.AddToLogBuffer("********* Application startup *********", true);
-			Log.AddToLogBuffer("", false);
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
@@ -343,15 +342,11 @@ namespace WinApp.Forms
 				{
 					TankHelper.GetAllLists();
 				}
-				// Update file watchers
-				string result = dossier2json.UpdateDossierFileWatcher(this);
-				Battle2json.UpdateBattleResultFileWatcher();
 				// Check DB Version an dupgrade if needed
 				bool versionOK = DBVersion.CheckForDbUpgrade(this);
 				// Add init items to Form
 				SetFormTitle();
 				SetFavListMenu();
-				SetListener(false);
 				// Get Images
 				ImageHelper.CreateTankImageTable();
 				ImageHelper.LoadTankImages();
@@ -370,6 +365,8 @@ namespace WinApp.Forms
 				MainTheme.Cursor = Cursors.Default;
 				// Show status message
 				SetStatus2("Application started");
+				// Update file watchers to read dossier and battle result
+				SetListener(false);
 				// Check for new version
 				RunCheckForNewVersion();
 			}
