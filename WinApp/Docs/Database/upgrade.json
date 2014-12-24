@@ -29,5 +29,8 @@
     "INSERT INTO map (id,name,arena_id) VALUES (67,'Mittengard','100_thepit');",
     "INSERT INTO map (id,name,arena_id) VALUES (68,'Ghost Town','95_lost_city');",
     "INSERT INTO map (id,name,arena_id) VALUES (69,'Winterberg','103_ruinberg_winter');"
+    ],
+   "201": [
+    "INSERT INTO map (id,name,arena_id) VALUES (70,'Winter Showdown','109_battlecity_ny');"
     ]
 }
