@@ -184,11 +184,12 @@
 			this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
 			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
-			this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
 			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.mExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
@@ -207,7 +208,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1671,13 +1671,6 @@
 			this.mImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
 			this.mImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
 			// 
-			// mShowDbTables
-			// 
-			this.mShowDbTables.Name = "mShowDbTables";
-			this.mShowDbTables.Size = new System.Drawing.Size(263, 22);
-			this.mShowDbTables.Text = "Show Database Tables...";
-			this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
-			// 
 			// toolStripSeparator25
 			// 
 			this.toolStripSeparator25.Name = "toolStripSeparator25";
@@ -1706,6 +1699,18 @@
 			this.mSettingsApp.Size = new System.Drawing.Size(263, 22);
 			this.mSettingsApp.Text = "Application &Settings...";
 			this.mSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
+			// 
+			// mShowDbTables
+			// 
+			this.mShowDbTables.Name = "mShowDbTables";
+			this.mShowDbTables.Size = new System.Drawing.Size(263, 22);
+			this.mShowDbTables.Text = "Show Database Tables...";
+			this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
 			// 
 			// toolStripSeparator7
 			// 
@@ -1963,11 +1968,6 @@
 			this.lblStatus1.TabIndex = 14;
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
 			// 
 			// Main
 			// 

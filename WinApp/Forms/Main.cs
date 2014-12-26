@@ -1459,6 +1459,7 @@ namespace WinApp.Forms
 		private void mBattleTimeCustomChange_Click(object sender, EventArgs e)
 		{
 			ShowCustomBattleTimeFilter();
+			SelectBattleTimeMenu(mBattlesCustomUse);
 		}
 
 		private void ShowCustomBattleTimeFilter()
@@ -1472,11 +1473,18 @@ namespace WinApp.Forms
 			// On right mouse click just display status message for current filter
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
-				ShowCustomBattleTimeFilter();
-				if (GridFilter.BattleTimeFilterCustomApply)
+				string message = mBattles.Text; // Selected menu item
+				if (mBattlesCustomUse.Checked)
 				{
-					SelectBattleTimeMenu(mBattlesCustomUse);
+					// Custom battle time filter
+					message += " (";
+					if (Config.Settings.customBattleTimeFilter.from != null)
+						message += Config.Settings.customBattleTimeFilter.from + " -> ";
+					if (Config.Settings.customBattleTimeFilter.to != null)
+						message += " <- " + Config.Settings.customBattleTimeFilter.to;
+					message += ")";
 				}
+				SetStatus2("Current battle time filter: " + message);
 			}
 		}
 
