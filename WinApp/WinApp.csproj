@@ -197,6 +197,12 @@
     <Compile Include="Forms\BattleDetail\BattleReview.Designer.cs">
       <DependentUpon>BattleReview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BattleSummary\BattleSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BattleSummary\BattleSummary.Designer.cs">
+      <DependentUpon>BattleSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BattleTimeFilterCustom.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -479,6 +485,9 @@
     <EmbeddedResource Include="Forms\BattleDetail\BattleReview.resx">
       <DependentUpon>BattleReview.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BattleSummary\BattleSummary.resx">
+      <DependentUpon>BattleSummary.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleTimeFilterCustom.resx">
       <DependentUpon>BattleTimeFilterCustom.cs</DependentUpon>
     </EmbeddedResource>
@@ -755,6 +764,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\delete.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\filter.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\filter_clear.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\filter_clear2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\Gadgets.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\grouping.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\grouping2.png" />
@@ -764,6 +774,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\grouping6.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattle.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattle2.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconBattleSummary1.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattleTime.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconCharts.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconCharts_v2.png" />

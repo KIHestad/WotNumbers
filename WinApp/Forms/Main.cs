@@ -215,6 +215,10 @@ namespace WinApp.Forms
 			dataGridMainPopup_BattleDetails.Image = imageListToolStrip.Images[9];
 			dataGridMainPopup_BattleDetails.Click += new EventHandler(dataGridMainPopup_BattleDetails_Click);
 
+			ToolStripMenuItem dataGridMainPopup_BattleSummary = new ToolStripMenuItem("Battles Summary");
+			dataGridMainPopup_BattleSummary.Image = imageListToolStrip.Images[12];
+			dataGridMainPopup_BattleSummary.Click += new EventHandler(dataGridMainPopup_BattleSummary_Click);
+
 			ToolStripMenuItem dataGridMainPopup_TankWN8 = new ToolStripMenuItem("WN8 Tank Details");
 			dataGridMainPopup_TankWN8.Image = imageListToolStrip.Images[10];
 			dataGridMainPopup_TankWN8.Click += new EventHandler(dataGridMainPopup_TankWN8_Click);
@@ -247,8 +251,8 @@ namespace WinApp.Forms
 						dataGridMainPopup_FilterOnTank_FilterOnTankClear = dataGridMainPopup_FilterOnTankClear; // If tank filter added, show remove tank filter
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
-						//TODO: Temp remove features
 						dataGridMainPopup_BattleDetails,
+						dataGridMainPopup_BattleSummary,
 						dataGridMainPopup_TankDetails, 
 						dataGridMainPopup_Separator4,
 						dataGridMainPopup_BattleChart, 
@@ -2846,6 +2850,12 @@ namespace WinApp.Forms
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			Form frm = new Forms.BattleDetail(battleId, this);
+			FormHelper.OpenFormCenterOfParent(this, frm);
+		}
+
+		private void dataGridMainPopup_BattleSummary_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.BattleSummary();
 			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 
