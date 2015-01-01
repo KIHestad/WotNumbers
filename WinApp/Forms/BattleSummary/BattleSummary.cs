@@ -327,7 +327,7 @@ namespace WinApp.Forms
 			dgvWN8.AllowUserToResizeColumns = false;
 			// Get data
 			string sql =
-				"SELECT playerTank.tankId, battle.battlesCount, battle.dmg, battle.spotted, battle.frags, battle.def, " +
+				"SELECT playerTank.tankId, battle.battlesCount, battle.dmg, battle.spotted, battle.frags, battle.def, battle.victory, " +
 				"      tank.expDmg, tank.expSpot, tank.expFrags, tank.expDef, tank.expWR " +
 				"FROM    battle INNER JOIN " +
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
@@ -343,10 +343,12 @@ namespace WinApp.Forms
 			if (dt.Rows.Count > 0)
 			{
 				// Calc total WN 8 parameter values
+				//int battlesCount = 0;
 				double dmg = 0;
 				double spotted = 0;
 				double frags = 0;
 				double def = 0;
+				double wr = 0;
 				double exp_dmg = 0;
 				double exp_spotted = 0;
 				double exp_frags = 0;
@@ -354,10 +356,12 @@ namespace WinApp.Forms
 				double exp_wr = 0;
 				foreach (DataRow dr in dt.Rows)
 				{
+					//battlesCount = Convert.ToInt32(dr["battlesCount"]);
 					dmg += Convert.ToDouble(dr["dmg"]);
 					spotted += Convert.ToDouble(dr["spotted"]);
 					frags += Convert.ToDouble(dr["frags"]);
 					def += Convert.ToDouble(dr["def"]);
+					wr += Convert.ToDouble(dr["victory"]) / Convert.ToDouble(dr["battlesCount"]) * 100;
 					exp_dmg += DbConvert.ToDouble(dr["expDmg"]);
 					exp_spotted += DbConvert.ToDouble(dr["expSpot"]);
 					exp_frags += DbConvert.ToDouble(dr["expFrags"]);
@@ -371,7 +375,7 @@ namespace WinApp.Forms
 				double rSPOTc;
 				double rDEFc;
 				Rating.UseWN8FormulaReturnResult(
-						dmg, spotted, frags, def, exp_wr,
+						dmg, spotted, frags, def, wr,
 						exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 						out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 				
@@ -395,32 +399,32 @@ namespace WinApp.Forms
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Frags";
 				drWN8["Image"] = GetIndicator(frags, exp_frags);
-				drWN8["Result"] = frags.ToString("N0");
-				drWN8["Exp"] = exp_frags.ToString("N0");
+				drWN8["Result"] = frags.ToString("N1");
+				drWN8["Exp"] = exp_frags.ToString("N1");
 				drWN8["Value"] = Math.Round(rFRAGSc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Spot
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Spot";
 				drWN8["Image"] = GetIndicator(spotted, exp_spotted);
-				drWN8["Result"] = spotted.ToString("N0");
-				drWN8["Exp"] = exp_spotted.ToString("N0");
+				drWN8["Result"] = spotted.ToString("N1");
+				drWN8["Exp"] = exp_spotted.ToString("N1");
 				drWN8["Value"] = Math.Round(rSPOTc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Defence
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Defence";
 				drWN8["Image"] = GetIndicator(def, exp_def);
-				drWN8["Result"] = def.ToString("N0");
-				drWN8["Exp"] = exp_def.ToString("N0");
+				drWN8["Result"] = def.ToString("N1");
+				drWN8["Exp"] = exp_def.ToString("N1");
 				drWN8["Value"] = Math.Round(rDEFc, 1).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Win Rate
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Win Rate";
 				drWN8["Image"] = imgIndicators.Images[1];
-				drWN8["Result"] = "Fixed";
-				drWN8["Exp"] = exp_wr.ToString() + "%";
+				drWN8["Result"] = wr.ToString("N0") + "%";
+				drWN8["Exp"] = exp_wr.ToString("N0") + "%";
 				drWN8["Value"] = Math.Round(rWINc, 1).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Total
