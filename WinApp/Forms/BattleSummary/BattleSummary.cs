@@ -276,7 +276,7 @@ namespace WinApp.Forms
 					DataTable dtTotBattle = DB.FetchData(sql);
 					DataRow drTotBattle = dtTotBattle.Rows[0];
 					double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
-
+					double battleCount = Convert.ToInt32(dtRes.Rows[0]["battlesCount"]);
 					// Add Rows to credit grid
 					DataTable dtCredit = dt.Clone();
 					dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Income", "credits", Convert.ToInt32(totBattleCount)));
@@ -291,6 +291,7 @@ namespace WinApp.Forms
 						Convert.ToInt32(drTotBattle["autoEquipCost"]) +
 						Convert.ToInt32(drTotBattle["creditsContributionOut"]);
 					avgCost = avgCost / totBattleCount;
+					totalCost = totalCost / battleCount;
 					Image totalCostImg = GetIndicator(totalCost, avgCost, higherIsBest: false);
 					dtCredit.Rows.Add(GetValues(dtCredit, "-" + totalCost.ToString("# ### ###"), "-" + Math.Round(avgCost, 0).ToString("# ### ###"), "Cost", totalCostImg));
 					dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Result", "creditsNet", Convert.ToInt32(totBattleCount)));
