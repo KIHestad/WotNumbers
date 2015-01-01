@@ -198,8 +198,11 @@ namespace WinApp.Forms
 			scrollComment.Left = txtComment.Left + txtComment.Width;
 			scrollComment.Height = commentHeight;
 			// Grid Columns
-			dgvReviews.Columns[0].Width = 95;
-			dgvReviews.Columns[1].Width = dgvReviews.Width - dgvReviews.Columns[0].Width - 2;
+			if (dgvReviews.ColumnCount > 1)
+			{
+				dgvReviews.Columns[0].Width = 95;
+				dgvReviews.Columns[1].Width = dgvReviews.Width - dgvReviews.Columns[0].Width - 2;
+			}
 		}
 
 		private void dataGridViewFilterChanged(object sender, EventArgs e)

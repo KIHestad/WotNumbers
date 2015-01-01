@@ -688,6 +688,7 @@
     <Content Include="DevDocs\Img\FormIcons\Equipments_largeRepairkit.png" />
     <Content Include="DevDocs\Img\FormIcons\formadmin_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_battledetails_ico_6.ico" />
+    <Content Include="DevDocs\Img\FormIcons\form_battlesummary_ico_1.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_charts_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_details_ico_6.ico" />
     <Content Include="DevDocs\Img\FormIcons\form_ico_6.ico" />
@@ -775,6 +776,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattle.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattle2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattleSummary1.png" />
+    <Content Include="DevDocs\Img\ToolStripIcons\iconBattleSummary2.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconBattleTime.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconCharts.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\iconCharts_v2.png" />
