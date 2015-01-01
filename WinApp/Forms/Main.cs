@@ -215,7 +215,7 @@ namespace WinApp.Forms
 			dataGridMainPopup_BattleDetails.Image = imageListToolStrip.Images[9];
 			dataGridMainPopup_BattleDetails.Click += new EventHandler(dataGridMainPopup_BattleDetails_Click);
 
-			ToolStripMenuItem dataGridMainPopup_BattleSummary = new ToolStripMenuItem("Battles Summary");
+			ToolStripMenuItem dataGridMainPopup_BattleSummary = new ToolStripMenuItem("Summary of Battles");
 			dataGridMainPopup_BattleSummary.Image = imageListToolStrip.Images[12];
 			dataGridMainPopup_BattleSummary.Click += new EventHandler(dataGridMainPopup_BattleSummary_Click);
 
@@ -1048,9 +1048,8 @@ namespace WinApp.Forms
 					currentColListSettings.FavListShow = newColListSettings.FavListShow;
 				}
 				MainSettings.UpdateCurrentGridFilter(currentColListSettings);
-				Refresh();
+				CreateDataGridContextMenu(); // Recreate context menu
 				SelectFavMenuItem();
-				Refresh();
 				// Show grid
 				ShowView("Selected column setup: " + selectedMenu.Text);
 			}

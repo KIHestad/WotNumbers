@@ -69,9 +69,9 @@ namespace WinApp.Forms
 			{
 				// Show battle count in form title
 				if (battlesCount == 1)
-					BattleSummaryTheme.Text = "Battles Summary for one battle";
+					BattleSummaryTheme.Text = "Summary of Battle";
 				else
-					BattleSummaryTheme.Text = "Battles Summary for " + battlesCount.ToString() + " battles";
+					BattleSummaryTheme.Text = "Summary of " + battlesCount.ToString() + " Battles";
 				// Show battle mode
 				BattleSummaryTheme.Text += " - Average values based on Battle Mode: " + BattleHelper.GetBattleModeReadableName(battleMode);
 				// Get battle data

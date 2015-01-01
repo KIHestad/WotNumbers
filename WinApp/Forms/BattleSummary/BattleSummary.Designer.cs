@@ -130,7 +130,7 @@
 			this.BattleSummaryTheme.SystemMaximizeImage = null;
 			this.BattleSummaryTheme.SystemMinimizeImage = null;
 			this.BattleSummaryTheme.TabIndex = 0;
-			this.BattleSummaryTheme.Text = "Battles Summary";
+			this.BattleSummaryTheme.Text = "Summary of Battles";
 			this.BattleSummaryTheme.TitleHeight = 26;
 			// 
 			// panelMyResult
