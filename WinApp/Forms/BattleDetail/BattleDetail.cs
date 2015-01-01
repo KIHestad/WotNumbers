@@ -54,9 +54,6 @@ namespace WinApp.Forms
 			panelBattleReview.Width = panelMyResult.Width;
 			panelBattleReview.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
 			// My result
-			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
-			dgvWN8.GridColor = ColorTheme.GridHeaderBackLight;
-			dgvWN8.AllowUserToResizeColumns = false;
 			GetMyPersonalInfo();
 			// Teams
 			string sql = "select id from battlePlayer where battleId=@battleId";
@@ -314,6 +311,11 @@ namespace WinApp.Forms
 
 		private void GetWN8Details()
 		{
+			// Format
+			GridHelper.StyleDataGrid(dgvWN8, DataGridViewSelectionMode.CellSelect);
+			dgvWN8.GridColor = ColorTheme.GridHeaderBackLight;
+			dgvWN8.AllowUserToResizeColumns = false;
+			// Get data
 			string sql =
 				"SELECT playerTank.tankId, battle.battlesCount, battle.dmg, battle.spotted, battle.frags, battle.def, " +
 				"      tank.expDmg, tank.expSpot, tank.expFrags, tank.expDef, tank.expWR " +
@@ -324,8 +326,8 @@ namespace WinApp.Forms
 			if (dt.Rows.Count > 0)
 			{
 				DataRow dr = dt.Rows[0];
-				int tankId = Convert.ToInt32(dr["tankId"]);
-				int battlesCount = Convert.ToInt32(dr["battlesCount"]);
+				//int tankId = Convert.ToInt32(dr["tankId"]);
+				//int battlesCount = Convert.ToInt32(dr["battlesCount"]);
 				double dmg = Convert.ToDouble(dr["dmg"]);
 				double spotted = Convert.ToDouble(dr["spotted"]);
 				double frags = Convert.ToDouble(dr["frags"]);
@@ -552,7 +554,6 @@ namespace WinApp.Forms
 				FormatStandardDataGrid(dgvOther, "");
 
 				// Add rows to Ratings grid
-				// Add Rows to shooting grid
 				DataTable dtRating = dt.Clone();
 				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN8", "wn8", 1));
 				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN7", "wn7", 1));
@@ -591,7 +592,7 @@ namespace WinApp.Forms
 						"  SUM(real_xp) as real_xp, SUM(xpPenalty) * -1 as xpPenalty, SUM(freeXP) as freeXP, SUM(eventXP) as eventXP, SUM(eventFreeXP) as eventFreeXP, SUM(eventTMenXP) as eventTMenXP, " +
 						"  SUM(achievementXP) as achievementXP, SUM(achievementFreeXP) as achievementFreeXP " +
 						"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
-						"WHERE playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
+						"WHERE arenaUniqueID is not null AND playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
 					DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
@@ -663,18 +664,19 @@ namespace WinApp.Forms
 			dgvRating.Rows[2].Cells["Average"].Style.ForeColor = Rating.EffColor(effavg);
 		}
 
-		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int battleCount, bool higherIsBest = true, int decimals = 0)
+		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int avgBattleCount, bool higherIsBest = true, int decimals = 0)
 		{
+			int battleCount = Convert.ToInt32(drVal["battlesCount"]);
 			DataRow drNew = dt.NewRow();
 			drNew["Parameter"] = rowHeader;
-			int val = Convert.ToInt32(drVal[sqlField]);
+			double val = Convert.ToDouble(drVal[sqlField]) / battleCount;
 			double avg = 0;
-			if (battleCount > 0) avg = Convert.ToDouble(drAvg[sqlField]) / battleCount;
-			drNew["Image"] = GetIndicator(val, avg, (battleCount > 0), higherIsBest: higherIsBest);
-			drNew["Result"] = val.ToString("# ### ##0");
+			if (avgBattleCount > 0) avg = Convert.ToDouble(drAvg[sqlField]) / avgBattleCount;
+			drNew["Image"] = GetIndicator(val, avg, (avgBattleCount > 0), higherIsBest: higherIsBest);
 			string numFormat = "# ### ##0";
 			if (decimals > 0)
 				numFormat += ".0";
+			drNew["Result"] = Math.Round(val, decimals).ToString(numFormat);
 			drNew["Average"] = Math.Round(avg, decimals).ToString(numFormat);
 			return drNew;
 		}

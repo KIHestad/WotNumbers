@@ -31,5 +31,18 @@ namespace WinApp.Code
 			return "";
 		}
 
+		public static string GetBattleModeReadableName(string battleMode)
+		{
+			string battleModeReadableName = "";
+			switch (battleMode)
+			{
+				case "15": battleModeReadableName = "Random / TC"; break;
+				case "7": battleModeReadableName = "Team"; break;
+				case "Historical": battleModeReadableName = "Historical"; break;
+				case "Skirmishes": battleModeReadableName = "Skirmishes"; break;
+				case "": battleModeReadableName = "All Modes"; break;
+			}
+			return battleModeReadableName;
+		}
 	}
 }

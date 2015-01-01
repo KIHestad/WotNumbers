@@ -712,12 +712,12 @@ def getdata(name, startoffset, offsetlength):
 		structformat = 'I'
 
 	value = struct.unpack_from('<' + structformat, data, startoffset)[0]
- 	
- 	for x in range(0, offsetlength):
- 		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
+
+	for x in range(0, offsetlength):
+		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
 
 	
- 	return value
+	return value
 
 
 def load_structures():

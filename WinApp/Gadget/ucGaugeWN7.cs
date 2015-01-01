@@ -36,7 +36,7 @@ namespace WinApp.Gadget
 			aGauge1.ValueMin = 0;
 			aGauge1.ValueMax = 2500;
 			aGauge1.ValueScaleLinesMajorStepValue = 250;
-			aGauge1.CenterSubText = "WN7 Rating";
+			aGauge1.CenterSubText = "WN7: Random/TC";
 			// Colors 0-8
 			for (byte i = 0; i <= 8; i++)
 			{
@@ -54,28 +54,30 @@ namespace WinApp.Gadget
 			// Overall stats team
 			if (GadgetHelper.SelectedTimeRangeWN7 == GadgetHelper.TimeRange.Total)
 			{
-				string sql =
-					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-					"from playerTankBattle ptb left join " +
-					"  playerTank pt on ptb.playerTankId=pt.id left join " +
-					"  tank t on pt.tankId = t.id " +
-					"where pt.playerId=@playerId and ptb.battleMode='15'";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dt = DB.FetchData(sql);
-				if (dt.Rows.Count == 0) return;
-				DataRow stats = dt.Rows[0];
-				double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-				double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-				double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-				double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-				double DEF = Rating.ConvertDbVal2Double(stats["def"]);
-				double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-				double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-				double TIER = 0;
-				if (BATTLES > 0)
-					TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-				end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("15"));
+				//string sql =
+				//	"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+				//	"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+				//	"from playerTankBattle ptb left join " +
+				//	"  playerTank pt on ptb.playerTankId=pt.id left join " +
+				//	"  tank t on pt.tankId = t.id " +
+				//	"where pt.playerId=@playerId and ptb.battleMode='15'";
+				//DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+				//DataTable dt = DB.FetchData(sql);
+				//if (dt.Rows.Count == 0) return;
+				//DataRow stats = dt.Rows[0];
+				//double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+				//double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+				//double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+				//double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+				//double DEF = Rating.ConvertDbVal2Double(stats["def"]);
+				//double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+				//double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+				//double TIER = 0;
+				//if (BATTLES > 0)
+				//	TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+				//end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("15"));
+
+				end_val = Code.Rating.CalcTotalWN7();
 			}
 			else // Check time range
 			{

@@ -35,14 +35,7 @@ namespace WinApp.Gadget
 					int paramNum = Convert.ToInt32(dr["paramNum"]);
 					currentParameters[paramNum] = paramValue;
 				}
-				switch (currentParameters[0].ToString())
-				{
-					case "15": ddBattleMode.Text = "Random / TC"; break;
-					case "7": ddBattleMode.Text = "Team"; break;
-					case "Historical": ddBattleMode.Text = "Historical"; break;
-					case "Skirmishes": ddBattleMode.Text = "Skirmishes"; break;
-					case "": ddBattleMode.Text = "All Modes"; break;
-				}
+				ddBattleMode.Text = BattleHelper.GetBattleModeReadableName(currentParameters[0].ToString());
 			}
 		}
 

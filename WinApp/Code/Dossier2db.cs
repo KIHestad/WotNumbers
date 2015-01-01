@@ -574,7 +574,7 @@ namespace WinApp.Code
 			// Calculate WN8
 			sqlFields += ", wn8=" + Math.Round(Rating.CalculateTankWN8(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, wins),0).ToString();
 			// Calculate Eff
-			sqlFields += ", eff=" + Math.Round(Rating.CalculateTankEff(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, cap), 0).ToString();
+			sqlFields += ", eff=" + Math.Round(Rating.CalculateTankEFF(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, cap), 0).ToString();
 			foreach (DataColumn column in playerTankBattleOld.Columns)
 			{
 				// Get columns and values from NewPlayerTankRow direct
@@ -821,7 +821,7 @@ namespace WinApp.Code
 				sqlValues += ", " + Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
 				// Calc Eff
 				sqlFields += ", eff";
-				sqlValues += ", " + Math.Round(Rating.CalculateTankEff(tankId, battlesCount, dmg, spotted, frags, def, cap),0).ToString();
+				sqlValues += ", " + Math.Round(Rating.CalculateTankEFF(tankId, battlesCount, dmg, spotted, frags, def, cap),0).ToString();
 				// Add battle mode
 				sqlFields += ", battleMode";
 				sqlValues += ", @battleMode";

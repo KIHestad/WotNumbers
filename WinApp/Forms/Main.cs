@@ -1607,7 +1607,7 @@ namespace WinApp.Forms
 
 		#endregion
 					
-		#region Fav List and Tank Filter 
+		#region Filters 
 
 		private int tankFilterNation = 0;
 		private int tankFilterType = 0;
@@ -1732,6 +1732,113 @@ namespace WinApp.Forms
 			whereSQL = tankOwnedWhereSQL + newWhereSQL;
 			joinSQL = newJoinSQL;
 			Status2Message = message;
+		}
+
+		private void BattleModeFilter(out string battleModeFilter, out string battleMode)
+		{
+			battleModeFilter = "";
+			battleMode = "%";   	
+			if (MainSettings.GridFilterBattle.BattleMode != GridFilter.BattleModeType.All)
+			{
+				switch (MainSettings.GridFilterBattle.BattleMode)
+				{
+					case GridFilter.BattleModeType.RandomAndTankCompany:
+						battleModeFilter = " AND (battleMode = '15') ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.Team:
+						battleModeFilter = " AND (battleMode = '7') ";
+						battleMode = "7";
+						break;
+					case GridFilter.BattleModeType.Random:
+						battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.ClanWar:
+						battleModeFilter = " AND (battleMode = '15' AND modeClan > 0) ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.TankCompany:
+						battleModeFilter = " AND (battleMode = '15' AND modeCompany > 0) ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.Historical:
+						battleModeFilter = " AND (battleMode = 'Historical') ";
+						battleMode = "Historical";
+						break;
+					case GridFilter.BattleModeType.Skirmishes:
+						battleModeFilter = " AND (battleMode = 'Skirmishes') ";
+						battleMode = "Skirmishes";
+						break;
+					case GridFilter.BattleModeType.RandomPlatoon:
+						battleModeFilter = " AND (battleMode = '15' AND platoonParticipants > 0) ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.RandomPlatoon2:
+						battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 2) ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.RandomPlatoon3:
+						battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 3) ";
+						battleMode = "15";
+						break;
+					case GridFilter.BattleModeType.RandomSolo:
+						battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 0) ";
+						battleMode = "15";
+						break;
+				}
+			}
+		}
+
+		private void BattleTimeFilter(out string battleTimeFilter)
+		{
+			battleTimeFilter = "";
+			if (!mBattlesAll.Checked)
+			{
+				DateTime dateFilter = new DateTime();
+				if (!mBattlesCustomUse.Checked)
+				{
+					// Normal predefined battle time filters
+					battleTimeFilter = " AND battleTime>=@battleTime ";
+					DateTime basedate = DateTime.Now; // current time
+					if (DateTime.Now.Hour < 7) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 07:00 AM
+					dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
+					// Adjust time scale according to selected filter
+					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
+					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
+					else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
+					else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
+					else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
+					else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
+					else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
+					else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
+					else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
+					else if (mBattlesYesterday.Checked)
+					{
+						DateTime dateFromYesterdayFilter = dateFilter;
+						dateFilter = dateFilter.AddDays(-1);
+						battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
+						DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					}
+					DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+				}
+				else
+				{
+					// Custom battle time filter
+					if (Config.Settings.customBattleTimeFilter.from != null)
+					{
+						battleTimeFilter = " AND battleTime>=@battleTime ";
+						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.from);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					}
+					if (Config.Settings.customBattleTimeFilter.to != null)
+					{
+						battleTimeFilter += " AND battleTime<=@battleTime ";
+						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					}
+				}
+			}
 		}
 
 		#endregion
@@ -2053,110 +2160,14 @@ namespace WinApp.Forms
 					sortOrder = "ORDER BY " + sorting.lastSortColumn + " " + sortDirection + " ";
 				}
 				
-				// Create Battle Time filer
+				// Get Battle Time filer
 				string battleTimeFilter = "";
-				if (!mBattlesAll.Checked)
-				{
-					DateTime dateFilter = new DateTime();
-					if (!mBattlesCustomUse.Checked)
-					{
-						// Normal predefined battle time filters
-						battleTimeFilter = " AND battleTime>=@battleTime ";
-						DateTime basedate = DateTime.Now; // current time
-						if (DateTime.Now.Hour < 7) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 07:00 AM
-						dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
-						// Adjust time scale according to selected filter
-						if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
-						else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
-						else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
-						else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
-						else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
-						else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
-						else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
-						else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
-						else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
-						else if (mBattlesYesterday.Checked)
-						{
-							DateTime dateFromYesterdayFilter = dateFilter;
-							dateFilter = dateFilter.AddDays(-1);
-							battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
-							DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-						}
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-					}
-					else
-					{
-						// Custom battle time filter
-						if (Config.Settings.customBattleTimeFilter.from != null)
-						{
-							battleTimeFilter = " AND battleTime>=@battleTime ";
-							dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.from);
-							DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-						}
-						if (Config.Settings.customBattleTimeFilter.to != null)
-						{
-							battleTimeFilter += " AND battleTime<=@battleTime ";
-							dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
-							DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
-						}
-					}
-				}
+				BattleTimeFilter(out battleTimeFilter);
 
-				// Create Battle mode filter
+				// Get Battle mode filter
 				string battleModeFilter = "";
-				string battleMode = "%";
-				if (MainSettings.GridFilterBattle.BattleMode != GridFilter.BattleModeType.All)
-				{
-					switch (MainSettings.GridFilterBattle.BattleMode)
-					{
-						case GridFilter.BattleModeType.RandomAndTankCompany:
-							battleModeFilter = " AND (battleMode = '15') ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.Team:
-							battleModeFilter = " AND (battleMode = '7') ";
-							battleMode = "7";
-							break;
-						case GridFilter.BattleModeType.Random:
-							battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.ClanWar:
-							battleModeFilter = " AND (battleMode = '15' AND modeClan > 0) ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.TankCompany:
-							battleModeFilter = " AND (battleMode = '15' AND modeCompany > 0) ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.Historical:
-							battleModeFilter = " AND (battleMode = 'Historical') ";
-							battleMode = "Historical";
-							break;
-						case GridFilter.BattleModeType.Skirmishes:
-							battleModeFilter = " AND (battleMode = 'Skirmishes') ";
-							battleMode = "Skirmishes";
-							break;
-						case GridFilter.BattleModeType.RandomPlatoon:
-							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants > 0) ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.RandomPlatoon2:
-							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 2) ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.RandomPlatoon3:
-							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 3) ";
-							battleMode = "15";
-							break;
-						case GridFilter.BattleModeType.RandomSolo:
-							battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 0) ";
-							battleMode = "15";
-							break;
-						
-					}
-				}
-											
+				string battleMode = "";
+				BattleModeFilter(out battleModeFilter, out battleMode);
 				
 				// Get Tank filter
 				string tankFilterMessage = "";
@@ -2855,7 +2866,23 @@ namespace WinApp.Forms
 
 		private void dataGridMainPopup_BattleSummary_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.BattleSummary();
+			// Get Battle Time filer
+			string battleTimeFilter = "";
+			BattleTimeFilter(out battleTimeFilter);
+
+			// Get Battle mode filter
+			string battleModeFilter = "";
+			string battleMode = "";
+			BattleModeFilter(out battleModeFilter, out battleMode);
+
+			// Get Tank filter
+			string tankFilterMessage = "";
+			string tankFilter = "";
+			string tankJoin = "";
+			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
+
+			// Show form
+			Form frm = new Forms.BattleSummary(battleTimeFilter, battleModeFilter, battleMode, tankFilter, tankJoin);
 			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 

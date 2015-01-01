@@ -171,7 +171,7 @@ namespace WinApp.Forms
 								// Calc WN8
 								int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0));
 								// Calc EFF
-								int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEff(tankId, battlesCount, dmg, spotted, frags, def, cap),0));
+								int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEFF(tankId, battlesCount, dmg, spotted, frags, def, cap),0));
 								// Insert or update Battle table
 								string sqlInsertBattle = "";
 								int battleId = TankHelper.GetBattleIdForImportedWsBattle(wsId);

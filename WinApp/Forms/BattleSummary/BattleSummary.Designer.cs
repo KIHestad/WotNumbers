@@ -29,13 +29,10 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleSummary));
+			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+			this.imgIndicators = new System.Windows.Forms.ImageList(this.components);
 			this.BattleSummaryTheme = new BadForm();
-			this.btnEnemyTeam = new BadButton();
-			this.btnOurTeam = new BadButton();
-			this.btnPersonal = new BadButton();
-			this.grpMain = new BadGroupBox();
 			this.panelMyResult = new System.Windows.Forms.Panel();
 			this.label12 = new System.Windows.Forms.Label();
 			this.pictureBox11 = new System.Windows.Forms.PictureBox();
@@ -69,6 +66,10 @@
 			this.dgvDamage = new System.Windows.Forms.DataGridView();
 			this.dgvShooting = new System.Windows.Forms.DataGridView();
 			this.dgvPerformance = new System.Windows.Forms.DataGridView();
+			this.btnEnemyTeam = new BadButton();
+			this.btnOurTeam = new BadButton();
+			this.btnPersonal = new BadButton();
+			this.grpMain = new BadGroupBox();
 			this.BattleSummaryTheme.SuspendLayout();
 			this.panelMyResult.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
@@ -97,6 +98,14 @@
 			((System.ComponentModel.ISupportInitialize)(this.dgvPerformance)).BeginInit();
 			this.SuspendLayout();
 			// 
+			// imgIndicators
+			// 
+			this.imgIndicators.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgIndicators.ImageStream")));
+			this.imgIndicators.TransparentColor = System.Drawing.Color.Transparent;
+			this.imgIndicators.Images.SetKeyName(0, "indicator_up.png");
+			this.imgIndicators.Images.SetKeyName(1, "indicator_neutral.png");
+			this.imgIndicators.Images.SetKeyName(2, "indicator_down.png");
+			// 
 			// BattleSummaryTheme
 			// 
 			this.BattleSummaryTheme.Controls.Add(this.panelMyResult);
@@ -123,56 +132,6 @@
 			this.BattleSummaryTheme.TabIndex = 0;
 			this.BattleSummaryTheme.Text = "Battles Summary";
 			this.BattleSummaryTheme.TitleHeight = 26;
-			// 
-			// btnEnemyTeam
-			// 
-			this.btnEnemyTeam.BlackButton = false;
-			this.btnEnemyTeam.Checked = false;
-			this.btnEnemyTeam.Image = null;
-			this.btnEnemyTeam.Location = new System.Drawing.Point(256, 48);
-			this.btnEnemyTeam.Name = "btnEnemyTeam";
-			this.btnEnemyTeam.Size = new System.Drawing.Size(108, 23);
-			this.btnEnemyTeam.TabIndex = 9;
-			this.btnEnemyTeam.Text = "Enemy Team";
-			this.btnEnemyTeam.ToolTipText = "";
-			this.btnEnemyTeam.Visible = false;
-			// 
-			// btnOurTeam
-			// 
-			this.btnOurTeam.BlackButton = false;
-			this.btnOurTeam.Checked = false;
-			this.btnOurTeam.Image = null;
-			this.btnOurTeam.Location = new System.Drawing.Point(142, 48);
-			this.btnOurTeam.Name = "btnOurTeam";
-			this.btnOurTeam.Size = new System.Drawing.Size(108, 23);
-			this.btnOurTeam.TabIndex = 8;
-			this.btnOurTeam.Text = "Our Team";
-			this.btnOurTeam.ToolTipText = "";
-			this.btnOurTeam.Visible = false;
-			// 
-			// btnPersonal
-			// 
-			this.btnPersonal.BlackButton = false;
-			this.btnPersonal.Checked = true;
-			this.btnPersonal.Image = null;
-			this.btnPersonal.Location = new System.Drawing.Point(28, 48);
-			this.btnPersonal.Name = "btnPersonal";
-			this.btnPersonal.Size = new System.Drawing.Size(108, 23);
-			this.btnPersonal.TabIndex = 7;
-			this.btnPersonal.Text = "My Result";
-			this.btnPersonal.ToolTipText = "";
-			// 
-			// grpMain
-			// 
-			this.grpMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.grpMain.BackColor = System.Drawing.Color.Transparent;
-			this.grpMain.Image = null;
-			this.grpMain.Location = new System.Drawing.Point(28, 64);
-			this.grpMain.Name = "grpMain";
-			this.grpMain.Size = new System.Drawing.Size(796, 482);
-			this.grpMain.TabIndex = 6;
 			// 
 			// panelMyResult
 			// 
@@ -255,6 +214,7 @@
 			this.dgvRating.Size = new System.Drawing.Size(242, 89);
 			this.dgvRating.TabIndex = 67;
 			this.dgvRating.Visible = false;
+			this.dgvRating.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvRating_DataBindingComplete);
 			// 
 			// label11
 			// 
@@ -501,6 +461,7 @@
 			this.dgvWN8.Size = new System.Drawing.Size(242, 157);
 			this.dgvWN8.TabIndex = 36;
 			this.dgvWN8.Visible = false;
+			this.dgvWN8.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvWN8_DataBindingComplete);
 			// 
 			// dgvDamage
 			// 
@@ -529,6 +490,56 @@
 			this.dgvPerformance.TabIndex = 39;
 			this.dgvPerformance.Visible = false;
 			// 
+			// btnEnemyTeam
+			// 
+			this.btnEnemyTeam.BlackButton = false;
+			this.btnEnemyTeam.Checked = false;
+			this.btnEnemyTeam.Image = null;
+			this.btnEnemyTeam.Location = new System.Drawing.Point(256, 48);
+			this.btnEnemyTeam.Name = "btnEnemyTeam";
+			this.btnEnemyTeam.Size = new System.Drawing.Size(108, 23);
+			this.btnEnemyTeam.TabIndex = 9;
+			this.btnEnemyTeam.Text = "Enemy Team";
+			this.btnEnemyTeam.ToolTipText = "";
+			this.btnEnemyTeam.Visible = false;
+			// 
+			// btnOurTeam
+			// 
+			this.btnOurTeam.BlackButton = false;
+			this.btnOurTeam.Checked = false;
+			this.btnOurTeam.Image = null;
+			this.btnOurTeam.Location = new System.Drawing.Point(142, 48);
+			this.btnOurTeam.Name = "btnOurTeam";
+			this.btnOurTeam.Size = new System.Drawing.Size(108, 23);
+			this.btnOurTeam.TabIndex = 8;
+			this.btnOurTeam.Text = "Our Team";
+			this.btnOurTeam.ToolTipText = "";
+			this.btnOurTeam.Visible = false;
+			// 
+			// btnPersonal
+			// 
+			this.btnPersonal.BlackButton = false;
+			this.btnPersonal.Checked = true;
+			this.btnPersonal.Image = null;
+			this.btnPersonal.Location = new System.Drawing.Point(28, 48);
+			this.btnPersonal.Name = "btnPersonal";
+			this.btnPersonal.Size = new System.Drawing.Size(108, 23);
+			this.btnPersonal.TabIndex = 7;
+			this.btnPersonal.Text = "My Result";
+			this.btnPersonal.ToolTipText = "";
+			// 
+			// grpMain
+			// 
+			this.grpMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.grpMain.BackColor = System.Drawing.Color.Transparent;
+			this.grpMain.Image = null;
+			this.grpMain.Location = new System.Drawing.Point(28, 64);
+			this.grpMain.Name = "grpMain";
+			this.grpMain.Size = new System.Drawing.Size(796, 482);
+			this.grpMain.TabIndex = 6;
+			// 
 			// BattleSummary
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -539,8 +550,10 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "BattleSummary";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "BattleSummary";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
+			this.Load += new System.EventHandler(this.BattleSummary_Load);
 			this.BattleSummaryTheme.ResumeLayout(false);
 			this.panelMyResult.ResumeLayout(false);
 			this.panelMyResult.PerformLayout();
@@ -612,5 +625,6 @@
 		private System.Windows.Forms.DataGridView dgvDamage;
 		private System.Windows.Forms.DataGridView dgvShooting;
 		private System.Windows.Forms.DataGridView dgvPerformance;
+		private System.Windows.Forms.ImageList imgIndicators;
 	}
 }

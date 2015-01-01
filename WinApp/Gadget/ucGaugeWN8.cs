@@ -36,7 +36,7 @@ namespace WinApp.Gadget
 			aGauge1.ValueMin = 0;
 			aGauge1.ValueMax = 3250;
 			aGauge1.ValueScaleLinesMajorStepValue = 250;
-			aGauge1.CenterSubText = "WN8 Rating";
+			aGauge1.CenterSubText = "WN8: Random/TC";
 			// Colors 0-8
 			for (byte i = 0; i <= 8; i++)
 			{

@@ -32,6 +32,8 @@ namespace WinApp.Code
 		public static double CalcAvgBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double WN8 = 0;
+			if (battleMode == "")
+				battleMode = "%";
 			// Create an empty datatable with all tanks, no values
 			string sql =
 				"select t.id as tankId, 0 as battles, 0 as dmg, 0 as spot, 0 as frags, " +
@@ -267,9 +269,43 @@ namespace WinApp.Code
 
 		#region WN7
 
+
+		public static double CalcTotalWN7(string battleMode = "15")
+		{
+			string battleModeLike = battleMode;
+			if (battleModeLike == "")
+				battleModeLike = "%";
+			string sql =
+					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+					"from playerTankBattle ptb left join " +
+					"  playerTank pt on ptb.playerTankId=pt.id left join " +
+					"  tank t on pt.tankId = t.id " +
+					"where pt.playerId=@playerId and ptb.battleMode like @battleMode";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleModeLike, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count == 0) 
+				return 0;
+			DataRow stats = dt.Rows[0];
+			double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+			double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+			double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+			double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+			double DEF = Rating.ConvertDbVal2Double(stats["def"]);
+			double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+			double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+			double TIER = 0;
+			if (BATTLES > 0)
+				TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+			return CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier(battleMode));
+		}
+
 		public static double CalcBattleWN7(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double WN7 = 0;
+			if (battleMode == "")
+				battleMode = "%";
 			string sql =
 					"select battlesCount as battles, dmg, spotted as spot, frags, " +
 					"  def, cap, tank.tier as tier , victory as wins " +
@@ -344,9 +380,41 @@ namespace WinApp.Code
 
 		#region EFF
 
+		public static double CalcTotalEFF(string battleMode = "15")
+		{
+			if (battleMode == "")
+				battleMode = "%";
+			string sql =
+					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+					"from playerTankBattle ptb left join " +
+					"  playerTank pt on ptb.playerTankId=pt.id left join " +
+					"  tank t on pt.tankId = t.id " +
+					"where pt.playerId=@playerId and ptb.battleMode like @battleMode";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count == 0) 
+				return 0;
+			DataRow stats = dt.Rows[0];
+			double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
+			double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
+			double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
+			double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
+			double DEF = Rating.ConvertDbVal2Double(stats["def"]);
+			double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
+			double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
+			double TIER = 0;
+			if (BATTLES > 0)
+				TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
+			return CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, TIER);
+		}
+
 		public static double CalcBattleEFF(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "")
 		{
 			double EFF = 0;
+			if (battleMode == "")
+				battleMode = "%";
 			string sql =
 					"select battlesCount as battles, dmg, spotted as spot, frags, " +
 					"  def, cap, tank.tier as tier , victory as wins " +
@@ -390,7 +458,7 @@ namespace WinApp.Code
 			return EFF;
 		}
 
-		public static double CalculateTankEff(int tankId, double battleCount, double dmg, double spotted, double frags, double def, double cap)
+		public static double CalculateTankEFF(int tankId, double battleCount, double dmg, double spotted, double frags, double def, double cap)
 		{
 			// Get tankdata for current tank to get tier
 			DataRow tankInfo = TankHelper.TankInfo(tankId);
