@@ -323,7 +323,7 @@ namespace WinApp.Forms
 				// Startup settings
 				if (!LoadConfigOK)
 				{
-					Code.Log.LogToFile("> No config MsgBox", true);
+					Code.Log.LogToFile(" > No config MsgBox", true);
 					MsgBox.Button answer = Code.MsgBox.Show(
 						"Press 'OK' to create new SQLite database." +
 						Environment.NewLine + Environment.NewLine +

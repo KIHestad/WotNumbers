@@ -276,12 +276,12 @@ namespace WinApp.Code
 				// Check for new tanks, then load images
 				if (newTank)
 					ImageHelper.LoadTankImages(); // Load new image by reloading
-				return ("Battle check performed successfully - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+				return ("Dossier file check performed successfully - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 			}
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
-				return ("An error occured performing battle check, please check the log file");
+				return ("An error occured performing battle fetch, please check the log file");
 			}
 			
 		}

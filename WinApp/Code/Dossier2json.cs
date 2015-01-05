@@ -112,7 +112,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				Log.AddToLogBuffer(" > Dossier file found");
+				Log.AddToLogBuffer(" > Start analyze dossier file");
 			}
 			if (ok)
 			{
@@ -172,13 +172,13 @@ namespace WinApp.Code
 
 		private static string RunDossierRead(string dossierFile, bool forceUpdate = false)
 		{
-			List<string> logText = new List<string>();
 			string returVal = "";
 			if (!Dossier2db.dossierRunning)
 			{
 				Dossier2db.dossierRunning = true;
 				bool ok = true;
 				returVal = "Starting file handling...";
+				Log.AddToLogBuffer(" > > Dossier file handling started");
 				// Get player name and server from dossier
 				string playerName = GetPlayerName(dossierFile);
 				string playerServer = GetPlayerServer(dossierFile);
@@ -230,7 +230,7 @@ namespace WinApp.Code
 				if (playerId == 0)
 				{
 					ok = false;
-					logText.Add(" > Error identifying player");
+					Log.AddToLogBuffer(" > > Error identifying player, dossier file check terminated");
 					returVal = "Error identifying player";
 				}
 				// If dossier player is not current player change
@@ -252,16 +252,13 @@ namespace WinApp.Code
 					string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
 					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
 					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
-					string result = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
-					if (result != "") // error occured
+					ok = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
+					if (!ok) // error occured
 					{
-						logText.Add(result);
 						returVal = "Error converting dossier file to json - check log file";
-						ok = false;
 					}
 					else
 					{
-						logText.Add(" > Successfully convertet dossier file to json");
 						// Move new file as previos (copy and delete)
 						FileInfo fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
 						fileInfonew = new FileInfo(dossierDatNewFile); // the new dossier file
@@ -269,13 +266,13 @@ namespace WinApp.Code
 						try
 						{
 							fileInfonew.Delete();
-							logText.Add(" > Renamed copied dossierfile as previous file");
+							Log.AddToLogBuffer(" > > Renamed copied dossierfile as previous file");
 						}
 						catch (Exception ex)
 						{
+							Log.AddToLogBuffer(" > > Could not copy dossierfile, probably in use");
 							Log.LogToFile(ex);
 							// throw;
-							logText.Add(" > Could not copy dossierfile, probably in use");
 						}
 
 					}
@@ -284,11 +281,11 @@ namespace WinApp.Code
 						if (File.Exists(dossierJsonFile))
 						{
 							returVal = Dossier2db.ReadJson(dossierJsonFile, forceUpdate);
-							logText.Add(" > " + returVal);
+							Log.AddToLogBuffer(" > > " + returVal);
 						}
 						else
 						{
-							logText.Add(" > No json file found");
+							Log.AddToLogBuffer(" > > No json file found");
 							returVal = "No dossier file found - check log file";
 						}
 					}
@@ -315,14 +312,14 @@ namespace WinApp.Code
 			}
 			else
 			{
+				Log.AddToLogBuffer(" > > Dossier file check terminated, already running");
 				returVal = "Dossier file check already running";
 			}
-			Log.AddToLogBuffer(logText);
 			Log.WriteLogBuffer();
 			return returVal;
 		}
 
-		private static string ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
+		private static bool ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
 			// Use IronPython
 			try
@@ -333,22 +330,24 @@ namespace WinApp.Code
 
 				if (!PythonEngine.InUse)
 				{
+					Log.AddToLogBuffer(" > > Start converting Dossier DAT-file to json");
 					PythonEngine.InUse = true;
 					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
 					dynamic result = scope.GetVariable("main")();
 					PythonEngine.InUse = false;
+					Log.AddToLogBuffer(" > > Finish converted Dossier DAT-file to json");
 				}
 
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				Log.LogToFile(ex, "Dossier2json exception running: " + dossier2jsonScript);
 				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
 				PythonEngine.InUse = false;
-				return "Error converting dossier file to json";
+				return false;
 			}
-			return "";
+			return true;
 		}
 
 		private static bool FilesContentsAreEqual(FileInfo fileInfo1, FileInfo fileInfo2)

@@ -66,6 +66,7 @@
 			this.ApplicationSettingsTheme.Controls.Add(this.badGroupBox3);
 			this.ApplicationSettingsTheme.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ApplicationSettingsTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.ApplicationSettingsTheme.FormExitAsMinimize = false;
 			this.ApplicationSettingsTheme.FormFooter = false;
 			this.ApplicationSettingsTheme.FormFooterHeight = 26;
 			this.ApplicationSettingsTheme.FormInnerBorder = 3;
@@ -75,7 +76,7 @@
 			this.ApplicationSettingsTheme.MainArea = mainAreaClass1;
 			this.ApplicationSettingsTheme.Name = "ApplicationSettingsTheme";
 			this.ApplicationSettingsTheme.Resizable = false;
-			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(498, 408);
+			this.ApplicationSettingsTheme.Size = new System.Drawing.Size(498, 391);
 			this.ApplicationSettingsTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ApplicationSettingsTheme.SystemExitImage")));
 			this.ApplicationSettingsTheme.SystemMaximizeImage = null;
 			this.ApplicationSettingsTheme.SystemMinimizeImage = null;
@@ -88,7 +89,6 @@
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.badLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel1.Image = null;
 			this.badLabel1.Location = new System.Drawing.Point(44, 259);
 			this.badLabel1.Name = "badLabel1";
@@ -102,7 +102,7 @@
 			this.chkShowDBError.BackColor = System.Drawing.Color.Transparent;
 			this.chkShowDBError.Checked = false;
 			this.chkShowDBError.Image = ((System.Drawing.Image)(resources.GetObject("chkShowDBError.Image")));
-			this.chkShowDBError.Location = new System.Drawing.Point(25, 355);
+			this.chkShowDBError.Location = new System.Drawing.Point(26, 348);
 			this.chkShowDBError.Name = "chkShowDBError";
 			this.chkShowDBError.Size = new System.Drawing.Size(277, 23);
 			this.chkShowDBError.TabIndex = 17;
@@ -112,8 +112,6 @@
 			// 
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
-			
-			this.badLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.badLabel2.Image = null;
 			this.badLabel2.Location = new System.Drawing.Point(44, 288);
 			this.badLabel2.Name = "badLabel2";
@@ -127,7 +125,7 @@
 			this.Cancel.BlackButton = false;
 			this.Cancel.Checked = false;
 			this.Cancel.Image = null;
-			this.Cancel.Location = new System.Drawing.Point(401, 355);
+			this.Cancel.Location = new System.Drawing.Point(402, 348);
 			this.Cancel.Name = "Cancel";
 			this.Cancel.Size = new System.Drawing.Size(69, 23);
 			this.Cancel.TabIndex = 12;
@@ -189,7 +187,7 @@
 			this.btnSave.BlackButton = false;
 			this.btnSave.Checked = false;
 			this.btnSave.Image = null;
-			this.btnSave.Location = new System.Drawing.Point(320, 355);
+			this.btnSave.Location = new System.Drawing.Point(325, 348);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(71, 23);
 			this.btnSave.TabIndex = 11;
@@ -201,7 +199,6 @@
 			// 
 			this.lblDbSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.lblDbSettings.Dimmed = false;
-			this.lblDbSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
 			this.lblDbSettings.Image = null;
 			this.lblDbSettings.Location = new System.Drawing.Point(44, 173);
 			this.lblDbSettings.Name = "lblDbSettings";
@@ -215,9 +212,9 @@
 			// 
 			this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox1.Image = null;
-			this.badGroupBox1.Location = new System.Drawing.Point(25, 49);
+			this.badGroupBox1.Location = new System.Drawing.Point(27, 49);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(447, 86);
+			this.badGroupBox1.Size = new System.Drawing.Size(445, 86);
 			this.badGroupBox1.TabIndex = 1;
 			this.badGroupBox1.TabStop = false;
 			this.badGroupBox1.Text = "Dossier File Path";
@@ -226,9 +223,9 @@
 			// 
 			this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox2.Image = null;
-			this.badGroupBox2.Location = new System.Drawing.Point(25, 153);
+			this.badGroupBox2.Location = new System.Drawing.Point(27, 153);
 			this.badGroupBox2.Name = "badGroupBox2";
-			this.badGroupBox2.Size = new System.Drawing.Size(447, 71);
+			this.badGroupBox2.Size = new System.Drawing.Size(445, 71);
 			this.badGroupBox2.TabIndex = 4;
 			this.badGroupBox2.TabStop = false;
 			this.badGroupBox2.Text = "Database";
@@ -237,7 +234,7 @@
 			// 
 			this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
 			this.badGroupBox3.Image = null;
-			this.badGroupBox3.Location = new System.Drawing.Point(25, 240);
+			this.badGroupBox3.Location = new System.Drawing.Point(27, 240);
 			this.badGroupBox3.Name = "badGroupBox3";
 			this.badGroupBox3.Size = new System.Drawing.Size(445, 88);
 			this.badGroupBox3.TabIndex = 7;
@@ -248,7 +245,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(498, 408);
+			this.ClientSize = new System.Drawing.Size(498, 391);
 			this.Controls.Add(this.ApplicationSettingsTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
@@ -279,6 +276,6 @@
         private BadButton Cancel;
 		private BadLabel badLabel2;
 		private BadCheckBox chkShowDBError;
-        private BadLabel badLabel1;
+		private BadLabel badLabel1;
 	}
 }

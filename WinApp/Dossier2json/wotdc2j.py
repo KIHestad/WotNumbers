@@ -66,9 +66,10 @@ def main():
 	#	usage()
 	#	sys.exit(2)
 		
-	printmessage('############################################')
-	printmessage('###### WoTDC2J ' + parserversion)
-	
+	# printmessage('############################################')
+	printmessage('###### WoTDC2J ' + parserversion + ' DOSSIER FILE CONVERT TO JSON')
+	printmessage('Time: ' + str(datetime.datetime.now())) 
+	printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()))
 	working_directory = os.path.dirname(os.path.realpath(__file__))
 	
 	# IRONPYTHON MODIFIED: select current path as working directory

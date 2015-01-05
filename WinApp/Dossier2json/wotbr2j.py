@@ -85,9 +85,10 @@ def main():
 		
 	filename_source = str(sys.argv[1]) 
 
-	printmessage('###### WoTBR2J ' + parserversion, 0) 
+	printmessage('###### WoTBR2J ' + parserversion + ' BATTLE FILE CONVERT TO JSON', 0) 
+	printmessage('Time: ' + str(datetime.datetime.now()), 0) 
+	printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()), 0)
 	printmessage('Processing ' + filename_source, 0) 
-		  
 	if option_server == 0: 
 		tanksdata = get_json_data("tanks.json") 
 		mapdata = get_json_data("maps.json") 

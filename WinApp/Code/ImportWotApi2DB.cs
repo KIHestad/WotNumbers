@@ -33,7 +33,6 @@ namespace WinApp.Code
 		private static string updateSql;
 		private static DataTable itemsInDB;
 
-		private static List<string> log = new List<string>();
 		private static string logAddedItems;
 		private static int logAddedItemsCount;
 		private static string logItemExists;
@@ -171,26 +170,24 @@ namespace WinApp.Code
 		private static void updateLog(string itemType)
 		{
 			// Update log after import
-			log.Add("Import complete: (" + DateTime.Now.ToString() + ")");
+			Log.AddToLogBuffer("Import complete: (" + DateTime.Now.ToString() + ")");
 			if (logAddedItems != null)
 			{
 				logAddedItems = logAddedItems.Substring(0, logAddedItems.Length - 2);
-				log.Add("  Added " + logAddedItemsCount + " new " + itemType + ":");
-				log.Add("  " + logAddedItems);
+				Log.AddToLogBuffer("  Added " + logAddedItemsCount + " new " + itemType + ":");
+				Log.AddToLogBuffer("  " + logAddedItems);
 			}
 			else
 			{
-				log.Add("  No new " + itemType + " added");
+				Log.AddToLogBuffer("  No new " + itemType + " added");
 			}
 			if (logItemExists != null)
 			{
 				logItemExists = logItemExists.Substring(0, logItemExists.Length - 2);
-				log.Add("  Updated data on " + logItemExistsCount + " existing " + itemType + ":");
-				log.Add("  " + logItemExists);
+				Log.AddToLogBuffer("  Updated data on " + logItemExistsCount + " existing " + itemType + ":");
+				Log.AddToLogBuffer("  " + logItemExists);
 			}
-			Log.LogToFile(log);
-
-			log.Clear();
+			Log.WriteLogBuffer();
 			logAddedItems = null;
 			logAddedItemsCount = 0;
 			logItemExists = null;
@@ -215,7 +212,7 @@ namespace WinApp.Code
 				int premium = 0;
 				bool tankExists = false;
 
-				log.Add("Start checking tanks (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking tanks (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -311,7 +308,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -331,7 +327,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				log.Add("Start checking turrets (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking turrets (" + DateTime.Now.ToString() + ")");
 				string sqlTotal = "";
 				try
 				{
@@ -411,7 +407,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching turrets from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -431,7 +426,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				log.Add("Start checking guns (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking guns (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -553,7 +548,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching guns from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -573,7 +567,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				log.Add("Start checking radios (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking radios (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -655,7 +649,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching radios from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -675,7 +668,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				log.Add("Start checking maps (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking maps (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -715,8 +708,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
-					Code.MsgBox.Show(ex.Message, "Error fetching maps from WoT API", parentForm);
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
@@ -736,7 +727,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				log.Add("Start checking achievements (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking achievements (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -892,7 +883,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching acheivments from WoT API", parentForm);
 					//return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
@@ -909,7 +899,7 @@ namespace WinApp.Code
 			string json = FetchFromAPI(WotApiType.PlayersInGarageVehicles, 0, parentForm);
 			if (json != "")
 			{
-				log.Add("Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
@@ -936,7 +926,6 @@ namespace WinApp.Code
 				catch (Exception ex)
 				{
 					Log.LogToFile(ex);
-					log.Add(ex.Message + " (" + DateTime.Now.ToString() + ")");
 					Code.MsgBox.Show(ex.Message, "Error fetching tanks in garage from WoT API", parentForm);
 				}
 			}

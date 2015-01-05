@@ -21,7 +21,7 @@ namespace WinApp.Code
 			if (Config.Settings.showDBErrors)
 			{
 				Application.DoEvents();
-				LogToFile(logBuffer, false);
+				LogToFileLogBuffer(logBuffer, false);
 			}
 			logBuffer = new List<string>();
 		}
@@ -51,6 +51,9 @@ namespace WinApp.Code
 			// Add list og Strings
 			if (CreateFileIfNotExist())
 			{
+				// Write current logbuffer first
+				WriteLogBuffer();
+				// Log exception
 				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 				{
 					if (ex != null)
@@ -77,6 +80,8 @@ namespace WinApp.Code
 		{
 			if (Config.Settings.showDBErrors)
 			{
+				// Write current logbuffer first
+				WriteLogBuffer();
 				// Add list og Strings
 				if (CreateFileIfNotExist())
 				{
@@ -89,7 +94,8 @@ namespace WinApp.Code
 			}
 		}
 
-		public static void LogToFile(List<string> logtext, bool addDateTime = false)
+		// Used to write logbuffer
+		private static void LogToFileLogBuffer(List<string> logtext, bool addDateTime = false)
 		{
 			if (Config.Settings.showDBErrors)
 			{
