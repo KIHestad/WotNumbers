@@ -170,10 +170,7 @@ namespace WinApp.Forms
 			ContextMenuStrip dataGridMainPopup = new ContextMenuStrip();
 			dataGridMainPopup.Renderer = new StripRenderer();
 			dataGridMainPopup.BackColor = ColorTheme.ToolGrayMainBack;
-			ToolStripSeparator dataGridMainPopup_Separator1 = new ToolStripSeparator();
-			ToolStripSeparator dataGridMainPopup_Separator2 = new ToolStripSeparator();
-			ToolStripSeparator dataGridMainPopup_Separator3 = new ToolStripSeparator();
-			ToolStripSeparator dataGridMainPopup_Separator4 = new ToolStripSeparator();
+			ToolStripSeparator dataGridMainPopup_Separator = new ToolStripSeparator();
 			
 			ToolStripMenuItem dataGridMainPopup_TankDetails = new ToolStripMenuItem("Tank Details");
 			dataGridMainPopup_TankDetails.Image = imageListToolStrip.Images[1];
@@ -223,6 +220,10 @@ namespace WinApp.Forms
 			dataGridMainPopup_TankWN8.Image = imageListToolStrip.Images[10];
 			dataGridMainPopup_TankWN8.Click += new EventHandler(dataGridMainPopup_TankWN8_Click);
 
+			ToolStripMenuItem dataGridMainPopup_CopyRowToClipboard = new ToolStripMenuItem("Copy Row to Clipboard");
+			dataGridMainPopup_CopyRowToClipboard.Image = imageListToolStrip.Images[13];
+			dataGridMainPopup_CopyRowToClipboard.Click += new EventHandler(dataGridMainPopup_CopyRowToClipboard_Click);
+
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
@@ -236,13 +237,15 @@ namespace WinApp.Forms
 					{ 
 						dataGridMainPopup_TankDetails,
 						dataGridMainPopup_TankWN8,
-						dataGridMainPopup_Separator2,
+						new ToolStripSeparator(),
 						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup, 
-						dataGridMainPopup_Separator1,
+						new ToolStripSeparator(),
 						dataGridMainPopup_FavListAddTank,
 						dataGridMainPopup_FavListRemoveTank,
-						dataGridMainPopup_FavListCreateNew
+						dataGridMainPopup_FavListCreateNew,
+						new ToolStripSeparator(),
+						dataGridMainPopup_CopyRowToClipboard
 					});
 					break;
 				case GridView.Views.Battle:
@@ -254,16 +257,18 @@ namespace WinApp.Forms
 						dataGridMainPopup_BattleDetails,
 						dataGridMainPopup_BattleSummary,
 						dataGridMainPopup_TankDetails, 
-						dataGridMainPopup_Separator4,
+						new ToolStripSeparator(),
 						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup,
-						dataGridMainPopup_Separator1,
+						new ToolStripSeparator(),
 						dataGridMainPopup_FilterOnTank_FilterOnTankClear,
-						dataGridMainPopup_Separator2,
+						new ToolStripSeparator(),
 						dataGridMainPopup_FavListAddTank,
 						dataGridMainPopup_FavListRemoveTank,
 						dataGridMainPopup_FavListCreateNew,
-						dataGridMainPopup_Separator3,
+						new ToolStripSeparator(),
+						dataGridMainPopup_CopyRowToClipboard,
+						new ToolStripSeparator(),
 						dataGridMainPopup_DeleteBattle
 					});
 					break;
@@ -2921,7 +2926,23 @@ namespace WinApp.Forms
 				}
 			}
 		}
-				
+		
+		private void dataGridMainPopup_CopyRowToClipboard_Click(object sender, EventArgs e)
+		{
+			string s = "";
+			foreach (DataGridViewColumn col in dataGridMain.Columns)
+			{
+				if (col.Visible && col.ValueType.Name != "Image")
+				{
+					if (col.Name.Length > 12 && col.Name.Substring(0, 13) == " - Separator ")
+						s += Environment.NewLine;
+					else
+						s += col.Name + ": " + dataGridMain.Rows[dataGridRightClickRow].Cells[col.Name].Value + Environment.NewLine;
+				}
+			}
+			System.Windows.Forms.Clipboard.SetText(s);
+		}
+
 		private void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)

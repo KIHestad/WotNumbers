@@ -254,6 +254,7 @@
 			this.imageListToolStrip.Images.SetKeyName(10, "wn8_ver2.png");
 			this.imageListToolStrip.Images.SetKeyName(11, "filter_clear2.png");
 			this.imageListToolStrip.Images.SetKeyName(12, "iconBattleSummary2.png");
+			this.imageListToolStrip.Images.SetKeyName(13, "copyRowToClipboard.png");
 			// 
 			// imageGrid
 			// 
