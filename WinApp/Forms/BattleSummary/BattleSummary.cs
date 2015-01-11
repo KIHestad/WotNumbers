@@ -252,7 +252,10 @@ namespace WinApp.Forms
 					"WHERE   arenaUniqueID is not null AND playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				dtRes = DB.FetchData(sql);
-				if (dtRes.Rows.Count == 0)
+				int battleResultRowCount = 0;
+				if (dtRes.Rows.Count > 0 && dtRes.Rows[0][0] != DBNull.Value)
+					battleResultRowCount = Convert.ToInt32(dtRes.Rows[0][0]);
+				if (battleResultRowCount == 0)
 				{
 					// not fetched battle result
 					pictureBoxCredits.Visible = false;
