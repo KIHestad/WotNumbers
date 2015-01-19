@@ -98,7 +98,7 @@ namespace WinApp.Code
 			try
 			{
 				Log.CheckLogFileSize();
-				Log.LogToFile(Environment.NewLine + "Get data from WoT API: " + WotAPi.ToString());
+				Log.AddToLogBuffer(Environment.NewLine + "Get data from WoT API: " + WotAPi.ToString());
 				string url = WotServerApiUrl();
 				string applicationId = WotApplicationId();
 				if (WotAPi == WotApiType.Tank)
@@ -148,6 +148,7 @@ namespace WinApp.Code
 				string s = responseStream.ReadToEnd();
 				responseStream.Close();
 				webResponse.Close();
+				Log.WriteLogBuffer();
 				return s;
 			}
 			catch (Exception ex)

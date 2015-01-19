@@ -63,8 +63,13 @@ namespace WinApp.Code
 
 		private static void BattleResultFileChanged(object source, FileSystemEventArgs e)
 		{
-			RunBattleResultRead();
-			Log.WriteLogBuffer();
+			if (!Dossier2db.dossierRunning)
+			{
+				Log.AddToLogBuffer("New battle file detected");
+				RunBattleResultRead();
+			}
+			else
+				Log.LogToFile("New battle file detected, reading is terminated due to dossier file process is running");
 		}
 
 		public static void GetExistingBattleFiles()
@@ -128,6 +133,7 @@ namespace WinApp.Code
 				int totFilesDat = filesDatCopied.Count();
 				if (totFilesDat > 0)
 				{
+					WaitUntilIronPythonReady(10000); // Wait until IronPython Engine is available, max 10 seconds
 					Log.AddToLogBuffer(" > > Start converting " + totFilesDat.ToString() + " battle DAT-files to json");
 					foreach (string file in filesDatCopied)
 					{
@@ -154,11 +160,10 @@ namespace WinApp.Code
 			public int platoonNum;
 		}
 
-		public static string RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
+		public static void RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
 			try
 			{
-				string returVal = "";
 				Log.AddToLogBuffer(" > Start looking for battle result");
 				if (forceReadFiles)
 				{
@@ -169,10 +174,8 @@ namespace WinApp.Code
 				// Look for new files
 				ConvertBattleFilesToJson();
 				// Get all json files
+				Log.AddToLogBuffer(" > Start looking for converted json battle files");
 				string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
-				// Any files?
-				if (filesJson.Length == 0)
-					returVal = "No battle result available";
 				// count action
 				int processed = 0;
 				int added = 0;
@@ -623,19 +626,22 @@ namespace WinApp.Code
 				{
 					GridView.scheduleGridRefresh = false;
 					Log.BattleResultDoneLog();
-					Log.WriteLogBuffer();
 				}
-				// Return result
-				if (added == 0)
-					returVal = processed.ToString() + " files checked, no new battle result detected";
-				else
-					returVal = processed.ToString() + " files checked, " + added + " files added as battle result";
-				return returVal;
+				// Result logging
+				if (filesJson.Length == 0) // Any files?
+					Log.AddToLogBuffer(" > > No battle files available");
+				else // files converted
+				{
+					if (added == 0)
+						Log.AddToLogBuffer(" > > " + processed.ToString() + " files checked, no new battle result detected");
+					else
+						Log.AddToLogBuffer(" > > " + processed.ToString() + " files checked, " + added + " files added as battle result");
+				}
+				Log.WriteLogBuffer();
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
-				return "Battle result terminated due to error, see logfile";
+				Log.LogToFile(ex, "Battle result process terminated due to error");
 			}
 		}
 		
@@ -730,6 +736,22 @@ namespace WinApp.Code
 				PythonEngine.InUse = false;
 			}
 			return ok;
+		}
+
+		private static void WaitUntilIronPythonReady(int maxWaitTime)
+		{
+			// Checks if IronPython is ready
+			int waitInterval = 250; // time to wait in ms per read operation to check filesize
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+			while (stopWatch.ElapsedMilliseconds < maxWaitTime && PythonEngine.InUse)
+			{
+				TimeSpan ts = stopWatch.Elapsed;
+				Log.AddToLogBuffer(String.Format(" > > IronPython in use, waiting for process to finish (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
+				System.Threading.Thread.Sleep(waitInterval);
+			}
+			Log.AddToLogBuffer(String.Format(" > > IronPython ready to read battle files"));
+			stopWatch.Stop();
 		}
 	}
 }

@@ -85,6 +85,7 @@ def main():
 		
 	filename_source = str(sys.argv[1]) 
 
+	printmessage('', 0) 
 	printmessage('###### WoTBR2J ' + parserversion + ' BATTLE FILE CONVERT TO JSON', 0) 
 	printmessage('Time: ' + str(datetime.datetime.now()), 0) 
 	printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()), 0)
@@ -97,7 +98,7 @@ def main():
 		exitwitherror('Battle Result does not exists!') 
 		
 	filename_target = os.path.splitext(filename_source)[0] 
-	filename_target = filename_target + '.json'
+	filename_taarget = filename_target + '.json'
 		
 	cachefile = open(filename_source, 'rb') 
 				  
@@ -209,8 +210,7 @@ def main():
 	dumpjson(bresult) 
 		
 	printmessage('###### Done!', 0) 
-	printmessage('', 0) 
-
+	
 	# IRONPYTHON MODIFIED: close dossier input file
 	cachefile.close()
 	# IRONPYTHON MODIFIED: no need for exit, throws error when calling sys.exit

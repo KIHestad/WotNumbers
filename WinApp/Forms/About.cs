@@ -65,7 +65,6 @@ namespace WinApp.Forms
 				Log.LogToFile(ex, "CheckIronPythonDefaultEncoding exception");
 				Code.MsgBox.Show("Error: " + ex.Message + Environment.NewLine + Environment.NewLine +
 					"Inner Exception: " + ex.InnerException, "Error running IronPython Environment Check");
-				PythonEngine.InUse = false;
 			}
 		}
 

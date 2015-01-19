@@ -67,6 +67,7 @@ def main():
 	#	sys.exit(2)
 		
 	# printmessage('############################################')
+	printmessage('') 
 	printmessage('###### WoTDC2J ' + parserversion + ' DOSSIER FILE CONVERT TO JSON')
 	printmessage('Time: ' + str(datetime.datetime.now())) 
 	printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()))
@@ -482,7 +483,6 @@ def main():
 	cachefile.close()
 
 	printmessage('###### Done!')
-	printmessage('')
 
 	# IRONPYTHON MODIFIED: no need for exit, throws error when calling sys.exit
 	#sys.exit(0)

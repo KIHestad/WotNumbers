@@ -315,8 +315,6 @@ namespace WinApp.Forms
 				this.ShowInTaskbar = !Config.Settings.notifyIconUse;
 				MainTheme.FormExitAsMinimize = Config.Settings.notifyIconFormExitToMinimize;
 
-				// Log startup to file now
-				Log.WriteLogBuffer();
 				// Start WoT if autoRun is enabled
 				if (Config.Settings.wotGameAutoStart)
 					StartWoTGame();
@@ -328,7 +326,7 @@ namespace WinApp.Forms
 				// Startup settings
 				if (!LoadConfigOK)
 				{
-					Code.Log.LogToFile(" > No config MsgBox", true);
+					Log.AddToLogBuffer(" > No config MsgBox", true);
 					MsgBox.Button answer = Code.MsgBox.Show(
 						"Press 'OK' to create new SQLite database." +
 						Environment.NewLine + Environment.NewLine +
@@ -378,6 +376,7 @@ namespace WinApp.Forms
 				SetListener(false);
 				// Check for new version
 				RunCheckForNewVersion();
+				Log.WriteLogBuffer();
 			}
 			catch (Exception ex)
 			{
@@ -537,15 +536,15 @@ namespace WinApp.Forms
 							RunInitialDossierFileCheck("New version found (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
 					}
 				}
-				// Enable Settings menues
-				mSettingsRun.Enabled = true;
-				mSettingsRunBattleCheck.Enabled = true;
-				mUpdateDataFromAPI.Enabled = true;
-				mRecalcBattleWN8.Enabled = true;
-				mImportBattlesFromWotStat.Enabled = true;
-				mSettingsAppLayout.Enabled = true;
-				mSettingsApp.Enabled = true;
 			}
+			// Enable Settings menues
+			mSettingsRun.Enabled = true;
+			mSettingsRunBattleCheck.Enabled = true;
+			mUpdateDataFromAPI.Enabled = true;
+			mRecalcBattleWN8.Enabled = true;
+			mImportBattlesFromWotStat.Enabled = true;
+			mSettingsAppLayout.Enabled = true;
+			mSettingsApp.Enabled = true;
 		}
 
 		#endregion

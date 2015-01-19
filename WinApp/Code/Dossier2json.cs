@@ -34,7 +34,7 @@ namespace WinApp.Code
 				}
 				catch (Exception ex)
 				{
-					Log.LogToFile(ex);
+					Log.LogToFile(ex, "Error on: " + logtext);
 					Code.MsgBox.Show("Error in dossier file path, please check your application settings", "Error in dossier file path", parentForm);
 					run = false;
 				}
@@ -95,9 +95,9 @@ namespace WinApp.Code
 			}
 		}
 
+		// Always run in separate thread to avoid Main form application hang
 		public static string ManualRun(bool ForceUpdate = false)
 		{
-			
 			string returVal = "Manual battle check started...";
 			Log.CheckLogFileSize();
 			List<string> logText = new List<string>();
@@ -133,17 +133,16 @@ namespace WinApp.Code
 			string dossierFile = e.FullPath;
 			FileInfo file = new FileInfo(dossierFile);
 			// Wait until file is ready to read, 
-			List<string> logtextnew1 = WaitUntilFileReadyToRead(dossierFile, 4000);
+			WaitUntilFileReadyToRead(dossierFile, 4000);
 			// Perform file conversion from picle to json
 			string statusResult = RunDossierRead(dossierFile);
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
 		}
 
-		private static List<string> WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
+		private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
 		{
 			// Checks file is readable
-			List<string> logtext = new List<string>();
 			bool fileOK = false;
 			int waitInterval = 100; // time to wait in ms per read operation to check filesize
 			Stopwatch stopWatch = new Stopwatch();
@@ -167,7 +166,6 @@ namespace WinApp.Code
 				}
 			}
 			stopWatch.Stop();
-			return logtext;
 		}
 
 		private static string RunDossierRead(string dossierFile, bool forceUpdate = false)
@@ -299,6 +297,7 @@ namespace WinApp.Code
 					Config.SaveConfig(out msg);
 				}
 				// Check for battle result
+				Log.AddToLogBuffer(" > Reading battle files started after successfully dossier file check");
 				Battle2json.RunBattleResultRead(false);
 				// If new battle saved and not in process of reading battles, create alert file
 				if (Dossier2db.battleSaved || GridView.scheduleGridRefresh)

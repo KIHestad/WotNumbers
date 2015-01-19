@@ -16,9 +16,9 @@ namespace WinApp.Code
 
 		#region logBuffer
 		
-		public static void WriteLogBuffer()
+		public static void WriteLogBuffer(bool forceLogging = false)
 		{
-			if (Config.Settings.showDBErrors)
+			if (Config.Settings.showDBErrors || forceLogging)
 			{
 				Application.DoEvents();
 				LogToFileLogBuffer(logBuffer, false);
@@ -51,8 +51,8 @@ namespace WinApp.Code
 			// Add list og Strings
 			if (CreateFileIfNotExist())
 			{
-				// Write current logbuffer first
-				WriteLogBuffer();
+				// Write current logbuffer first, force log logbuffer to include recent logging
+				WriteLogBuffer(true);
 				// Log exception
 				using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 				{
