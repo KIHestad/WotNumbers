@@ -98,7 +98,7 @@ def main():
 		exitwitherror('Battle Result does not exists!') 
 		
 	filename_target = os.path.splitext(filename_source)[0] 
-	filename_taarget = filename_target + '.json'
+	filename_target = filename_target + '.json'
 		
 	cachefile = open(filename_source, 'rb') 
 				  
