@@ -138,12 +138,17 @@ namespace WinApp.Code
 					foreach (string file in filesDatCopied)
 					{
 						// Convert file to json
-						if (ConvertBattleUsingPython(file))
+						bool deleteFile = false;
+						bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
+						if (deleteFile)
 						{
 							// Success, json file is now created, clean up by delete dat file
 							FileInfo fileBattleDatCopied = new FileInfo(file); // the original dossier file
 							fileBattleDatCopied.Delete(); // delete original DAT file
-							Log.AddToLogBuffer(" > > > Deleted battle DAT-file: " + file);
+							if (okConvert)
+								Log.AddToLogBuffer(" > > > Deleted successfully converted battle DAT-file: " + file);
+							else
+								Log.AddToLogBuffer(" > > > Deleted faulty battle DAT-file: " + file);
 							Application.DoEvents();
 						}
 					}
@@ -179,6 +184,7 @@ namespace WinApp.Code
 				// count action
 				int processed = 0;
 				int added = 0;
+				bool deleteFileAfterRead = true;
 				foreach (string file in filesJson)
 				{
 					processed++;
@@ -192,7 +198,6 @@ namespace WinApp.Code
 					JToken token_common = token_root["common"];
 					string result = (string)token_common.SelectToken("result"); // Find unique id
 					// Check if ok
-					bool deleteFileAfterRead = false;
 					if (result == "ok")
 					{
 						double arenaUniqueID = (double)token_root.SelectToken("arenaUniqueID"); // Find unique id
@@ -215,12 +220,7 @@ namespace WinApp.Code
 						if (dt.Rows.Count > 0)
 						{
 							// Check if read
-							if (dt.Rows[0]["arenaUniqueID"] != DBNull.Value)
-							{
-								// Battle read, delete file
-								deleteFileAfterRead = true;
-							}
-							else
+							if (dt.Rows[0]["arenaUniqueID"] == DBNull.Value)
 							{
 								// New battle found, get battleId
 								int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
@@ -235,7 +235,7 @@ namespace WinApp.Code
 								battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
 								// Get clan
 								bool getEnemyClan = false;
-								if (bonusType == 3 || bonusType == 4 || bonusType == 10 )
+								if (bonusType == 3 || bonusType == 4 || bonusType == 10)
 									getEnemyClan = true;
 								// Get platoon
 								bool getPlatoon = false;
@@ -401,7 +401,7 @@ namespace WinApp.Code
 											enemyClanDBID[newPlayer.team] = 0;
 											enemyClanAbbrev[newPlayer.team] = "";
 										}
-										
+
 									}
 									if (getPlatoon && newPlayer.platoonID > 0)
 									{
@@ -434,7 +434,7 @@ namespace WinApp.Code
 										values += ", " + player.platoonID.ToString();
 										values += ", " + player.team.ToString();
 										// Get values from vehicles section
-										fields +=", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
+										fields += ", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
 										// typeCompDescr = tankId, might be missing in clan wars if player not spoddet
 										if (vechicleInfo.SelectToken("typeCompDescr").ToString() == "")
 											values += ", -1";
@@ -501,8 +501,8 @@ namespace WinApp.Code
 										values += ", " + vechicleInfo.SelectToken("damageBlockedByArmor");
 										values += ", " + vechicleInfo.SelectToken("damageAssistedTrack");
 										values += ", " + vechicleInfo.SelectToken("damageAssistedRadio");
-										
-										
+
+
 										// If this is current player remember for later save to battle
 										if (player.name == Config.Settings.playerName)
 										{
@@ -606,19 +606,26 @@ namespace WinApp.Code
 							Log.AddToLogBuffer(" > > New battle file not read, battle do not exists for JSON file: " + file);
 							// Battle do not exists, delete if old file file
 							if (battleTime < DateTime.Now.AddHours(-3))
-							{
-								deleteFileAfterRead = true;
-								Log.AddToLogBuffer(" > > Old battle found, schedule for delete for JSON file: " + file);
-							}
+								Log.AddToLogBuffer(" > > Old battle found, schedule for delete");
+							else
+								deleteFileAfterRead = false; // keep file for a while, dossier file might be read later and then battle can be handled
 						}
-						// Delete file if handled or old
-						if (deleteFileAfterRead)
-						{
-							// Done - delete file
-							FileInfo fileBattleJson = new FileInfo(file);
-							fileBattleJson.Delete();
-							Log.AddToLogBuffer(" > > Deleted read or old JSON file: " + file);
-						}
+					}
+					else
+					{
+						Log.AddToLogBuffer(" > > Battle file returned result: '" + result + "', could not process JSON file: " + file);
+						var message = token_common.SelectToken("message"); // get message
+						if (message != null)
+							Log.AddToLogBuffer(" > > > Message: " + message.ToString());
+						Log.AddToLogBuffer(" > > Faulty battle file schedule for delete");
+					}
+					// Delete file unless it OK but not found battle from dossier yet
+					if (deleteFileAfterRead)
+					{
+						// Done - delete file
+						FileInfo fileBattleJson = new FileInfo(file);
+						fileBattleJson.Delete();
+						Log.AddToLogBuffer(" > > Deleted read or old JSON file: " + file);
 					}
 				}
 				// Create alert file if new battle result added 
@@ -686,9 +693,10 @@ namespace WinApp.Code
 			DB.ExecuteNonQuery(sql);
 		}
 
-		private static bool ConvertBattleUsingPython(string filename)
+		private static bool ConvertBattleUsingPython(string filename, out bool deleteFile)
 		{
 			bool ok = false;
+			deleteFile = false;
 			// Locate Python script
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file
@@ -722,17 +730,26 @@ namespace WinApp.Code
 					Application.DoEvents();
 					Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
 					ok = true;
+					deleteFile = true;
 					PythonEngine.InUse = false;
 				}
 				else
+				{
 					Log.AddToLogBuffer(" > > IronPython Engine in use, not converted battle DAT-file to JSON file: " + filename);
+					ok = true;
+				}
 			}
 			catch (Exception ex)
 			{
 				Log.AddToLogBuffer(" > > IronPython exception thrown converted battle DAT-file to JSON file: " + filename);
 				Log.LogToFile(ex, "ConvertBattleUsingPython exception running: " + battle2jsonScript + " with args: " + filename + " -f");
-				Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
-					"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
+				
+				// Deactivated messagebox, battle file errors are just logged to file
+				// Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
+				//	"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
+				
+				// Cleanup
+				deleteFile = true;
 				PythonEngine.InUse = false;
 			}
 			return ok;

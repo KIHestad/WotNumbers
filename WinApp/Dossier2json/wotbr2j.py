@@ -62,7 +62,7 @@ def usage():
 
 def main(): 
 	import struct, json, time, sys, os, shutil, datetime
-	global numofkills, filename_source, filename_target, option_server, option_format
+	global numofkills, filename_source, filename_target, option_server, option_format, cachefile
 	
 	parserversion = "0.9.5.0"
 	
@@ -106,10 +106,14 @@ def main():
 		# IRONPYTHON MODIFIED: no use if SafeUnpickler
 		#from os.path import SafeUnpickler
 		battleresultversion, battleResults = SafeUnpickler.load(cachefile) 
-	except Exception, e: 
+	except Exception, e:
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
 		exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
 		
 	if not 'battleResults' in locals(): 
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
 		exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
 	if len(battleResults[1]) in VERSIONS_LENGTH:
@@ -222,7 +226,7 @@ def exitwitherror(message):
 	dossierheader['common'] = dict() 
 	dossierheader['common']['result'] = "error"
 	dossierheader['common']['message'] = message 
-	dumpjson(dossierheader) 
+	dumpjson(dossierheader)
 	sys.exit(1) 
 
 def dumpjson(bresult): 
@@ -849,19 +853,20 @@ class VehicleInteractionDetails_LEGACY(object):
 class SafeUnpickler(object):
 	PICKLE_SAFE = {}
 
-	@classmethod
-	def find_class(cls, module, name):
-		if not module in cls.PICKLE_SAFE:
-			raise cPickle.UnpicklingError('Attempting to unpickle unsafe module %s' % module)
+	# IRONPYTHON MODIFIED: close dossier input file
+	#@classmethod
+	#def find_class(cls, module, name):
+	#	if not module in cls.PICKLE_SAFE:
+	#		raise cPickle.UnpicklingError('Attempting to unpickle unsafe module %s' % module)
 		
-		__import__(module)
-		mod = sys.modules[module]
+	#	__import__(module)
+	#	mod = sys.modules[module]
 			
-		if not name in cls.PICKLE_SAFE[module]:
-			raise cPickle.UnpicklingError('Attempting to unpickle unsafe class %s' % name)
+	#	if not name in cls.PICKLE_SAFE[module]:
+	#		raise cPickle.UnpicklingError('Attempting to unpickle unsafe class %s' % name)
 			
-		klass = getattr(mod, name)
-		return klass
+	#	klass = getattr(mod, name)
+	#	return klass
 
 	@classmethod
 	def loads(cls, pickle_string):
@@ -871,6 +876,8 @@ class SafeUnpickler(object):
 			#safeUnpickler.find_global = cls.find_class
 			return safeUnpickler.load()
 		except Exception, e:
+			# IRONPYTHON MODIFIED: close dossier input file
+			cachefile.close()
 			raise cPickle.UnpicklingError('Unpickler Error')
 			
 	@classmethod
@@ -882,9 +889,13 @@ class SafeUnpickler(object):
 			return safeUnpickler.load()
 		
 		except EOFError, er:
+			# IRONPYTHON MODIFIED: close dossier input file
+			cachefile.close()
 			raise cPickle.UnpicklingError('Unpickler EOF Error')
 		
 		except Exception, e:
+			# IRONPYTHON MODIFIED: close dossier input file
+			cachefile.close()
 			raise cPickle.UnpicklingError('Unpickler Error')
 
 if __name__ == '__main__': 
