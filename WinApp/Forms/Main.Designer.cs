@@ -36,7 +36,6 @@
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.timerStatus2 = new System.Windows.Forms.Timer(this.components);
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-			this.timerPanelSlide = new System.Windows.Forms.Timer(this.components);
 			this.fileSystemWatcherNewBattle = new System.IO.FileSystemWatcher();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.imageGrid = new System.Windows.Forms.ImageList(this.components);
@@ -202,9 +201,6 @@
 			this.scrollCorner = new BadScrollBarCorner();
 			this.scrollY = new BadScrollBar();
 			this.dataGridMain = new System.Windows.Forms.DataGridView();
-			this.panelInfo = new System.Windows.Forms.Panel();
-			this.lblOverView = new System.Windows.Forms.Label();
-			this.picIS7 = new System.Windows.Forms.PictureBox();
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
@@ -213,8 +209,6 @@
 			this.toolMain.SuspendLayout();
 			this.panelMainArea.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).BeginInit();
-			this.panelInfo.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picIS7)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// timerStatus2
@@ -226,11 +220,6 @@
 			// 
 			this.toolStripSeparator11.Name = "toolStripSeparator11";
 			this.toolStripSeparator11.Size = new System.Drawing.Size(6, 6);
-			// 
-			// timerPanelSlide
-			// 
-			this.timerPanelSlide.Interval = 5;
-			this.timerPanelSlide.Tick += new System.EventHandler(this.timerPanelSlide_Tick);
 			// 
 			// fileSystemWatcherNewBattle
 			// 
@@ -1789,7 +1778,6 @@
 			this.panelMainArea.Controls.Add(this.scrollCorner);
 			this.panelMainArea.Controls.Add(this.scrollY);
 			this.panelMainArea.Controls.Add(this.dataGridMain);
-			this.panelMainArea.Controls.Add(this.panelInfo);
 			this.panelMainArea.Controls.Add(this.scrollX);
 			this.panelMainArea.Location = new System.Drawing.Point(9, 57);
 			this.panelMainArea.Name = "panelMainArea";
@@ -1810,7 +1798,7 @@
 			// 
 			this.scrollY.BackColor = System.Drawing.Color.Transparent;
 			this.scrollY.Image = null;
-			this.scrollY.Location = new System.Drawing.Point(621, 88);
+			this.scrollY.Location = new System.Drawing.Point(621, 16);
 			this.scrollY.Name = "scrollY";
 			this.scrollY.ScrollElementsTotals = 100;
 			this.scrollY.ScrollElementsVisible = 0;
@@ -1818,7 +1806,7 @@
 			this.scrollY.ScrollNecessary = true;
 			this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
 			this.scrollY.ScrollPosition = 0;
-			this.scrollY.Size = new System.Drawing.Size(17, 204);
+			this.scrollY.Size = new System.Drawing.Size(17, 276);
 			this.scrollY.TabIndex = 21;
 			this.scrollY.Text = "badScrollBar2";
 			this.scrollY.Visible = false;
@@ -1858,7 +1846,7 @@
 			this.dataGridMain.DefaultCellStyle = dataGridViewCellStyle2;
 			this.dataGridMain.EnableHeadersVisualStyles = false;
 			this.dataGridMain.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-			this.dataGridMain.Location = new System.Drawing.Point(14, 88);
+			this.dataGridMain.Location = new System.Drawing.Point(14, 16);
 			this.dataGridMain.Name = "dataGridMain";
 			this.dataGridMain.ReadOnly = true;
 			this.dataGridMain.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -1875,7 +1863,7 @@
 			this.dataGridMain.RowHeadersWidth = 25;
 			this.dataGridMain.ScrollBars = System.Windows.Forms.ScrollBars.None;
 			this.dataGridMain.ShowEditingIcon = false;
-			this.dataGridMain.Size = new System.Drawing.Size(601, 204);
+			this.dataGridMain.Size = new System.Drawing.Size(601, 276);
 			this.dataGridMain.TabIndex = 11;
 			this.dataGridMain.Visible = false;
 			this.dataGridMain.RowHeadersWidthChanged += new System.EventHandler(this.dataGridMain_RowHeadersWidthChanged);
@@ -1885,43 +1873,6 @@
 			this.dataGridMain.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridMain_ColumnHeaderMouseClick);
 			this.dataGridMain.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridMain_ColumnWidthChanged);
 			this.dataGridMain.SelectionChanged += new System.EventHandler(this.dataGridMain_SelectionChanged);
-			// 
-			// panelInfo
-			// 
-			this.panelInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-			this.panelInfo.Controls.Add(this.lblOverView);
-			this.panelInfo.Controls.Add(this.picIS7);
-			this.panelInfo.Cursor = System.Windows.Forms.Cursors.Arrow;
-			this.panelInfo.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panelInfo.Location = new System.Drawing.Point(0, 0);
-			this.panelInfo.Name = "panelInfo";
-			this.panelInfo.Size = new System.Drawing.Size(649, 72);
-			this.panelInfo.TabIndex = 18;
-			this.panelInfo.Visible = false;
-			// 
-			// lblOverView
-			// 
-			this.lblOverView.AutoSize = true;
-			this.lblOverView.BackColor = System.Drawing.Color.Transparent;
-			this.lblOverView.Cursor = System.Windows.Forms.Cursors.Arrow;
-			this.lblOverView.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblOverView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(96)))), ((int)(((byte)(127)))));
-			this.lblOverView.Location = new System.Drawing.Point(16, 34);
-			this.lblOverView.Name = "lblOverView";
-			this.lblOverView.Size = new System.Drawing.Size(123, 29);
-			this.lblOverView.TabIndex = 0;
-			this.lblOverView.Text = "Welcome...";
-			// 
-			// picIS7
-			// 
-			this.picIS7.Cursor = System.Windows.Forms.Cursors.Arrow;
-			this.picIS7.Dock = System.Windows.Forms.DockStyle.Right;
-			this.picIS7.Image = ((System.Drawing.Image)(resources.GetObject("picIS7.Image")));
-			this.picIS7.Location = new System.Drawing.Point(193, 0);
-			this.picIS7.Name = "picIS7";
-			this.picIS7.Size = new System.Drawing.Size(456, 72);
-			this.picIS7.TabIndex = 17;
-			this.picIS7.TabStop = false;
 			// 
 			// scrollX
 			// 
@@ -1998,9 +1949,6 @@
 			this.toolMain.PerformLayout();
 			this.panelMainArea.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridMain)).EndInit();
-			this.panelInfo.ResumeLayout(false);
-			this.panelInfo.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picIS7)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -2009,15 +1957,11 @@
 
 		private System.Windows.Forms.Timer timerStatus2;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-		private System.Windows.Forms.Label lblOverView;
-		private System.Windows.Forms.PictureBox picIS7;
-		private System.Windows.Forms.Timer timerPanelSlide;
 		private System.IO.FileSystemWatcher fileSystemWatcherNewBattle;
 		private BadForm MainTheme;
 		private System.Windows.Forms.Label lblStatus2;
 		private System.Windows.Forms.Label lblStatus1;
 		private System.Windows.Forms.Panel panelMainArea;
-		private System.Windows.Forms.Panel panelInfo;
 		private System.Windows.Forms.ImageList imageListToolStrip;
 		private System.Windows.Forms.Label lblStatusRowCount;
 		private System.Windows.Forms.DataGridView dataGridMain;

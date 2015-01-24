@@ -66,8 +66,6 @@ namespace WinApp.Forms
 			lblStatus1.Text = "";
 			lblStatus2.Text = "Application starting...";
 			lblStatusRowCount.Text = "";
-			// Hide info panel at startup
-			panelInfo.Height = 0;
 			// Log startup
 			Log.AddToLogBuffer("", false);
 			Log.AddToLogBuffer("********* Application startup *********", true);
@@ -113,8 +111,8 @@ namespace WinApp.Forms
 			scrollY.ScrollElementsTotals = 0;
 			scrollX.Left = 0;
 			// Grid init placement
-			int gridAreaTop = panelInfo.Height; // Start below info panel
-			int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+			int gridAreaTop = 0; // Start below info panel
+			int gridAreaHeight = panelMainArea.Height; // Grid height
 			dataGridMain.Top = gridAreaTop;
 			dataGridMain.Left = 0;
 			dataGridMain.Width = panelMainArea.Width - scrollY.Width;
@@ -338,7 +336,6 @@ namespace WinApp.Forms
 					if (!LoadConfigOK)
 					{
 						Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
-						lblOverView.Text = "";
 						Config.Settings.dossierFileWathcherRun = 0;
 						SetListener();
 						Form frm = new Forms.ApplicationSetting();
@@ -718,8 +715,8 @@ namespace WinApp.Forms
 				// Set scrollbars, size differs according to scrollbar visibility (ScrollNecessary)
 				RefreshScrollbars();
 				// Scroll and grid size
-				int gridAreaTop = panelInfo.Height; // Start below info panel
-				int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
+				int gridAreaTop = 0; // Start below info panel
+				int gridAreaHeight = panelMainArea.Height; // Grid height
 				dataGridMain.Top = gridAreaTop;
 				scrollCorner.Left = panelMainArea.Width - scrollCorner.Width;
 				scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
@@ -821,7 +818,6 @@ namespace WinApp.Forms
 						scrollX.Visible = false;
 						scrollY.Visible = false;
 						scrollCorner.Visible = false;
-						panelInfo.Height = 0;
 						// Show/Hide Tool Items
 						mBattles.Visible = true;
 						mGadget.Visible = true;
@@ -865,7 +861,6 @@ namespace WinApp.Forms
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
 						// Info slider hide
-						InfoPanelSlideStart(false);
 						this.ActiveControl = dataGridMain;
 						break;
 					case GridView.Views.Battle:
@@ -899,8 +894,7 @@ namespace WinApp.Forms
 						SetBattleModeMenu();
 						// Add datagrid context menu (right click on datagrid)
 						CreateDataGridContextMenu();
-						// Info slider hide
-						InfoPanelSlideStart(false);
+						// Default control
 						this.ActiveControl = dataGridMain;
 						break;
 				}
@@ -1851,7 +1845,7 @@ namespace WinApp.Forms
 		private void GridShowTank(string Status2Message)
 		{
 			// Grid init placement
-			int gridAreaTop = panelInfo.Height; // Start below info panel
+			int gridAreaTop = 0; // Start below info panel
 			dataGridMain.Top = gridAreaTop;
 			dataGridMain.Left = 0;
 			// Init
@@ -2083,7 +2077,7 @@ namespace WinApp.Forms
 			try
 			{
 				// Grid init placement
-				int gridAreaTop = panelInfo.Height; // Start below info panel
+				int gridAreaTop = 0; // Start below info panel
 				dataGridMain.Top = gridAreaTop;
 				dataGridMain.Left = 0;
 				// Init
@@ -3290,74 +3284,6 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Panel Info - Slider Events
-
-		private int infoPanelSlideSpeed;
-		
-		private void InfoPanelSlideStart(bool show)
-		{
-			if (show)
-			{
-				infoPanelSlideSpeed = 4;
-				panelInfo.Visible = true;
-			}
-			else if (!show)
-			{
-				infoPanelSlideSpeed = -4;
-			}
-			timerPanelSlide.Enabled = true;
-		}
-
-		private void timerPanelSlide_Tick(object sender, EventArgs e)
-		{
-			// Expand or collapse panel
-			int panelInfoMaxSize = 72;
-			// Change InfoPanel Height if within boundary
-			if (panelInfo.Height + infoPanelSlideSpeed < 0)
-			{
-				panelInfo.Height = 0;
-				timerPanelSlide.Enabled = false;
-				ResizeNow();
-			}
-			else if (panelInfo.Height + infoPanelSlideSpeed > panelInfoMaxSize)
-			{
-				panelInfo.Height = panelInfoMaxSize;
-				timerPanelSlide.Enabled = false;
-				ResizeNow();
-			}
-			else
-			{
-				panelInfo.Height += infoPanelSlideSpeed;
-				// Simple form resize, only focus on height
-				// Set Main Area Panel
-				panelMainArea.Height = MainTheme.MainArea.Height;
-				// Scroll and grid size
-				try
-				{
-					int gridAreaTop = panelInfo.Height; // Start below info panel
-					int gridAreaHeight = panelMainArea.Height - panelInfo.Height; // Grid height
-					dataGridMain.Top = gridAreaTop;
-					scrollCorner.Top = panelMainArea.Height - scrollCorner.Height;
-					scrollY.Top = gridAreaTop;
-					scrollX.Top = panelMainArea.Height - scrollX.Height;
-					// check if scrollbar is visible to determine width / height
-					int scrollXHeight = 0;
-					if (scrollX.ScrollNecessary) scrollXHeight = scrollX.Height;
-					dataGridMain.Height = gridAreaHeight - scrollXHeight;
-					scrollY.Height = dataGridMain.Height;
-				}
-				catch (Exception ex)
-				{
-					Log.LogToFile(ex);
-					// throw;
-				}
-				
-			}
-			
-		}
-
-		#endregion       
-		
 		#region App, DB and other Settings + Help/About + Chart
 
 		private void toolItemViewChart_Click(object sender, EventArgs e)
