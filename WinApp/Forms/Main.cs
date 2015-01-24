@@ -1797,9 +1797,7 @@ namespace WinApp.Forms
 				{
 					// Normal predefined battle time filters
 					battleTimeFilter = " AND battleTime>=@battleTime ";
-					DateTime basedate = DateTime.Now; // current time
-					if (DateTime.Now.Hour < 7) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 07:00 AM
-					dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
+					dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 					// Adjust time scale according to selected filter
 					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
 					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
@@ -1815,9 +1813,9 @@ namespace WinApp.Forms
 						DateTime dateFromYesterdayFilter = dateFilter;
 						dateFilter = dateFilter.AddDays(-1);
 						battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
-						DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter, DB.SqlDataType.DateTime);
 					}
-					DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+					DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 				}
 				else
 				{
@@ -1826,13 +1824,13 @@ namespace WinApp.Forms
 					{
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.from);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 					}
 					if (Config.Settings.customBattleTimeFilter.to != null)
 					{
 						battleTimeFilter += " AND battleTime<=@battleTime ";
 						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 					}
 				}
 			}

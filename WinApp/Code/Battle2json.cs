@@ -214,8 +214,8 @@ namespace WinApp.Code
 							"from battle b left join playerTank pt on b.playerTankId = pt.id " +
 							"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
 						DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-						DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
-						DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30).ToString("yyyy-MM-dd HH:mm:ss"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30), DB.SqlDataType.DateTime);
 						DataTable dt = DB.FetchData(sql);
 						if (dt.Rows.Count > 0)
 						{

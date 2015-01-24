@@ -163,7 +163,6 @@
       <DependentUpon>ToolStripEx.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\RunBattleCheckHelper.cs" />
-    <Compile Include="Code\_todelete_ImportWotDossier2DB.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\DB.cs" />
     <Compile Include="Code\FormControl\DropDownGrid.cs" />

@@ -353,38 +353,40 @@ namespace WinApp.Code
 			}
 			else
 			{
-				string StringValue = Value.ToString();
-				var byteArray = Value.ToString();
 				if (DataType == SqlDataType.VarChar)
 				{
-					StringValue = StringValue.Replace("'", "''");
-					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'");
+					string stringValue = Value.ToString();
+					stringValue = stringValue.Replace("'", "''");
+					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + stringValue + "'");
 				}
 				else if (DataType == SqlDataType.Int)
 				{
-					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue);
+					string stringValue = Value.ToString();
+					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
 				}
 				else if (DataType == SqlDataType.Float)
 				{
-					string d = Convert.ToDecimal(Value).ToString();
-					d = d.Replace(",", ".");
-					Sql = ReplaceParameterWithValue(Sql, Parameter, d);
+					string stringValue = Convert.ToDecimal(Value).ToString();
+					stringValue = stringValue.Replace(",", ".");
+					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
-					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + StringValue + "'"); // yyyy-DD-mm
+					DateTime dateTimeValue = (DateTime)Value;
+					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + dateTimeValue.ToString("yyyy-MM-dd HH:mm:ss") + "'"); // yyyy-DD-mm
 				}
 				else if (DataType == SqlDataType.Image)
 				{
 					// convert image to blob
-					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
+					string stringValue = Convert.ToDecimal(Value).ToString();
+					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue); // fails on ReplaceParameterWithValue
 				}
 				else if (DataType == SqlDataType.Boolean)
 				{
 					bool boolVal = Convert.ToBoolean(Value);
-					StringValue = "0";
-					if (boolVal) StringValue = "1";
-					Sql = ReplaceParameterWithValue(Sql, Parameter, StringValue); // fails on ReplaceParameterWithValue
+					string stringValue = "0";
+					if (boolVal) stringValue = "1";
+					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue); // fails on ReplaceParameterWithValue
 				}
 			}
 		}

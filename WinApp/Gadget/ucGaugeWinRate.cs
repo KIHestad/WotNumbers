@@ -100,9 +100,7 @@ namespace WinApp.Gadget
 			{
 				int battleRevert = 0;
 				string battleTimeFilter = "";
-				DateTime basedate = DateTime.Now; // current time
-				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
+				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 				switch (GadgetHelper.SelectedTimeRangeWR)
 				{
 					case GadgetHelper.TimeRange.Num1000:
@@ -115,17 +113,17 @@ namespace WinApp.Gadget
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					case GadgetHelper.TimeRange.TimeMonth:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddMonths(-1);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					case GadgetHelper.TimeRange.TimeToday:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					default:
 						break;

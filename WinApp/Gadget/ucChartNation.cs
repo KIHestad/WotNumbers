@@ -167,10 +167,7 @@ namespace WinApp.Gadget
 			else
 			{
 				// Create Battle Time filer
-				DateTime dateFilter = new DateTime();
-				DateTime basedate = DateTime.Now; // current time
-				if (DateTime.Now.Hour < 7) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 07:00 AM
-				dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
+				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 				// Adjust time scale according to selected filter
 				switch (selection)
 				{
@@ -198,7 +195,7 @@ namespace WinApp.Gadget
 					"WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) " + sqlBattlemode +
 					"GROUP BY country.shortName " +
 					"ORDER BY country.shortName ";
-				DB.AddWithValue(ref sql, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+				DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 			}
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);

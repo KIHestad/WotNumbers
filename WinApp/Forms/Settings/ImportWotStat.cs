@@ -200,7 +200,7 @@ namespace WinApp.Forms
 								DB.AddWithValue(ref sqlInsertBattle, "@draw", draw, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@defeat", defeat, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@battleResultId", battleResultId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+								DB.AddWithValue(ref sqlInsertBattle, "@battleTime", battleTime, DB.SqlDataType.DateTime);
 								DB.AddWithValue(ref sqlInsertBattle, "@shots", shots, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@hits", hits, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sqlInsertBattle, "@xp", xp, DB.SqlDataType.Int);

@@ -54,38 +54,13 @@ namespace WinApp.Gadget
 			// Overall stats team
 			if (GadgetHelper.SelectedTimeRangeWN7 == GadgetHelper.TimeRange.Total)
 			{
-				//string sql =
-				//	"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-				//	"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-				//	"from playerTankBattle ptb left join " +
-				//	"  playerTank pt on ptb.playerTankId=pt.id left join " +
-				//	"  tank t on pt.tankId = t.id " +
-				//	"where pt.playerId=@playerId and ptb.battleMode='15'";
-				//DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				//DataTable dt = DB.FetchData(sql);
-				//if (dt.Rows.Count == 0) return;
-				//DataRow stats = dt.Rows[0];
-				//double BATTLES = Rating.ConvertDbVal2Double(stats["battles"]);
-				//double DAMAGE = Rating.ConvertDbVal2Double(stats["dmg"]);
-				//double SPOT = Rating.ConvertDbVal2Double(stats["spot"]);
-				//double FRAGS = Rating.ConvertDbVal2Double(stats["frags"]);
-				//double DEF = Rating.ConvertDbVal2Double(stats["def"]);
-				//double CAP = Rating.ConvertDbVal2Double(stats["cap"]);
-				//double WINS = Rating.ConvertDbVal2Double(stats["wins"]);
-				//double TIER = 0;
-				//if (BATTLES > 0)
-				//	TIER = Rating.ConvertDbVal2Double(stats["tier"]) / BATTLES;
-				//end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, Rating.GetAverageBattleTier("15"));
-
 				end_val = Code.Rating.CalcTotalWN7();
 			}
 			else // Check time range
 			{
 				int battleRevert = 0;
 				string battleTimeFilter = "";
-				DateTime basedate = DateTime.Now; // current time
-				if (DateTime.Now.Hour < 5) basedate = DateTime.Now.AddDays(-1); // correct date according to server reset 05:00
-				DateTime dateFilter = new DateTime(basedate.Year, basedate.Month, basedate.Day, 7, 0, 0); // datefilter = today
+				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 				switch (GadgetHelper.SelectedTimeRangeWN7)
 				{
 					case GadgetHelper.TimeRange.Num1000:
@@ -98,62 +73,22 @@ namespace WinApp.Gadget
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					case GadgetHelper.TimeRange.TimeMonth:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddMonths(-1);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					case GadgetHelper.TimeRange.TimeToday:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter.ToString("yyyy-MM-dd HH:mm"), DB.SqlDataType.DateTime);
+						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					default:
 						break;
 				}
 				end_val = Rating.CalcBattleWN7(battleTimeFilter, battleRevert);
-				//string sql =
-				//	"select battlesCount as battles, dmg, spotted as spot, frags, " +
-				//	"  def, cap, t.tier as tier , victory as wins " +
-				//	"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
-				//	"  tank t on playerTank.tankId = t.id " +
-				//	"where playerId=@playerId and battleMode='15' " + battleTimeFilter + " order by battleTime DESC";
-				//DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				//DataTable dtBattles = DB.FetchData(sql);
-				//end_val = 0;
-				//if (dtBattles.Rows.Count > 0)
-				//{
-				//	if (battleRevert == 0) battleRevert = dtBattles.Rows.Count;
-				//	int count = 0;
-				//	double BATTLES = 0;
-				//	double DAMAGE = 0;
-				//	double SPOT = 0;
-				//	double FRAGS = 0;
-				//	double DEF = 0;
-				//	double CAP = 0;
-				//	double WINS = 0;
-				//	double TIER = 0;
-				//	foreach (DataRow stats in dtBattles.Rows)
-				//	{
-				//		double btl = Rating.ConvertDbVal2Double(stats["battles"]);
-				//		BATTLES += btl;
-				//		DAMAGE += Rating.ConvertDbVal2Double(stats["dmg"]) * btl;
-				//		SPOT += Rating.ConvertDbVal2Double(stats["spot"]) * btl;
-				//		FRAGS += Rating.ConvertDbVal2Double(stats["frags"]) * btl;
-				//		DEF += Rating.ConvertDbVal2Double(stats["def"]) * btl;
-				//		CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
-				//		WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
-				//		TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
-				//		count++;
-				//		if (count > battleRevert) break;
-				//	}
-				//	if (BATTLES > 0)
-				//		end_val = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, (TIER / BATTLES));
-				//	else
-				//		end_val = 0;
-				//}
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();
