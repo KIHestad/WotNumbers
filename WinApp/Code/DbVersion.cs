@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 206; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 209; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1976,11 +1976,8 @@ namespace WinApp.Code
 					break;
 				case 203:
 					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-							"VALUES (530, 2, 136, 'CAST(battle.survivedteam as varchar) + ' - ' + CAST(battle.survivedenemy as varchar)', 'Team Survival', 'Survival result per team (player team - enemy team)', 'Battle', 47, 'VarChar'); ";
+							"VALUES (530, 2, 136, 'CAST(battle.survivedteam as varchar) + '' - '' + CAST(battle.survivedenemy as varchar)', 'Team Survival', 'Survival result per team (player team - enemy team)', 'Battle', 47, 'VarChar'); ";
 					sqlite = mssql;
-					break;
-				case 204:
-					RecalcSurvivedTeamEnemy();
 					break;
 				case 205:
 					mssql = "ALTER TABLE columnSelection ADD colNameSort VARCHAR(255) NULL; ";
@@ -1989,6 +1986,19 @@ namespace WinApp.Code
 				case 206:
 					mssql = "UPDATE columnSelection SET colNameSort = 'battle.survivedteam' where id=530;";
 					sqlite = mssql;
+					break;
+				case 207:
+					mssql = "ALTER TABLE battle ADD fragsteam int NULL;" +
+							"ALTER TABLE battle ADD fragsenemy int NULL;";
+					sqlite = mssql;
+					break;
+				case 208:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+							"VALUES (531, 2, 137, 'CAST(battle.fragsteam as varchar) + '' - '' + CAST(battle.fragsenemy as varchar)', 'Team Frags', 'Frag result per team (frags done by player team - frags done ny enemy team)', 'Battle', 47, 'VarChar', 'battle.fragsteam'); ";
+					sqlite = mssql;
+					break;
+				case 209:
+					RecalcSurvivedAndFragsTeamEnemy();
 					break;
 
 			}
@@ -2379,14 +2389,14 @@ namespace WinApp.Code
 			DB.ExecuteNonQuery(sql);
 		}
 
-		private static void RecalcSurvivedTeamEnemy()
+		private static void RecalcSurvivedAndFragsTeamEnemy()
 		{
 			// Loop through all existing battles with battle players
 			string sql =
 				"SELECT DISTINCT battleId " +
 				"FROM battlePlayer  ";
 			DataTable dt = DB.FetchData(sql);
-			DataTable dtSurvivalCount;
+			DataTable dtCount;
 			string updatesql = "";
 			foreach (DataRow dr in dt.Rows)
 			{
@@ -2418,9 +2428,9 @@ namespace WinApp.Code
 					"FROM battlePlayer " +
 					"Where battleid = " + battleId + " and deathReason = '-1' and team=" + playerTeam + " " +
 					"group by battleId ";
-				dtSurvivalCount = DB.FetchData(sql);
-				if (dtSurvivalCount.Rows.Count > 0)
-					survivedteam = dtSurvivalCount.Rows[0][0].ToString();
+				dtCount = DB.FetchData(sql);
+				if (dtCount.Rows.Count > 0)
+					survivedteam = dtCount.Rows[0][0].ToString();
 				// Find survival count for enemy team
 				string survivedenemy = "0";
 				sql =
@@ -2428,13 +2438,34 @@ namespace WinApp.Code
 					"FROM battlePlayer " +
 					"Where battleid = " + battleId + " and deathReason = '-1' and team=" + enemyTeam + " " +
 					"group by battleId ";
-				dtSurvivalCount = DB.FetchData(sql);
-				if (dtSurvivalCount.Rows.Count > 0)
-					survivedenemy = dtSurvivalCount.Rows[0][0].ToString();
+				dtCount = DB.FetchData(sql);
+				if (dtCount.Rows.Count > 0)
+					survivedenemy = dtCount.Rows[0][0].ToString();
+				// Find frags count for battle for player team
+				string fragsteam = "0";
+				sql =
+					"SELECT COUNT(battleId) " +
+					"FROM battlePlayer " +
+					"Where battleid = " + battleId + " and deathReason <> '-1' and team=" + enemyTeam + " " +
+					"group by battleId ";
+				dtCount = DB.FetchData(sql);
+				if (dtCount.Rows.Count > 0)
+					fragsteam = dtCount.Rows[0][0].ToString();
+				// Find survival count for enemy team
+				string fragsenemy = "0";
+				sql =
+					"SELECT COUNT(battleId) " +
+					"FROM battlePlayer " +
+					"Where battleid = " + battleId + " and deathReason <> '-1' and team=" + playerTeam + " " +
+					"group by battleId ";
+				dtCount = DB.FetchData(sql);
+				if (dtCount.Rows.Count > 0)
+					fragsenemy = dtCount.Rows[0][0].ToString();
 				// Create update sql
 				updatesql += 
 					"UPDATE battle " +
-					"SET survivedteam=" + survivedteam + ", survivedenemy=" + survivedenemy + " " +
+					"SET survivedteam=" + survivedteam + ", survivedenemy=" + survivedenemy + ", " +
+					" fragsteam=" + fragsteam + ", fragsenemy=" + fragsenemy + " " +
 					"WHERE id = " + dr["battleId"].ToString() + ";";
 			}
 			DB.ExecuteNonQuery(updatesql, RunInBatch: true);

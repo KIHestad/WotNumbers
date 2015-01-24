@@ -361,11 +361,14 @@ namespace WinApp.Code
 								string[] enemyClanAbbrev = new string[3];
 								int playerFortResources = 0;
 								int[] teamFortResources = new int[3];
-								int[] survivalCount = new int[3];
+								int[] survivedCount = new int[3];
+								int[] fragsCount = new int[3];
 								teamFortResources[1] = 0;
 								teamFortResources[2] = 0;
-								survivalCount[1] = 0;
-								survivalCount[2] = 0;
+								survivedCount[1] = 0;
+								survivedCount[2] = 0;
+								fragsCount[1] = 0;
+								fragsCount[2] = 0;
 								int playerTeam = 0;
 								int enemyTeam = 0;
 								int killerID = 0;
@@ -513,9 +516,15 @@ namespace WinApp.Code
 											killerID = playerKillerId;
 											playerPlatoonId = player.platoonID;
 										}
-										// Count sum survival team/enemy remember for later save to battle
+										// Count sum frag/survival team/enemy remember for later save to battle
 										if (playerDeathReason == "-1") // if player survived
-											survivalCount[player.team]++;
+											survivedCount[player.team]++;
+										else
+										{
+											int playerEnemyTeam = 1;
+											if (player.team == 1) playerEnemyTeam = 2;
+											fragsCount[playerEnemyTeam]++;
+										}
 										// Add sum for team IR
 										teamFortResources[player.team] += fortResourceValue;
 										// Create SQL and update db
@@ -551,9 +560,11 @@ namespace WinApp.Code
 									"  killedByPlayerName=@killedByPlayerName, " +
 									"  killedByAccountId=@killedByAccountId, " +
 									"  platoonParticipants=@platoonParticipants, " +
-									"  battleResultMode=@battleResultMode " +
-									"  survivalteam=@survivalteam " +
-									"  survivalenemy=@survivalenemy " +
+									"  battleResultMode=@battleResultMode, " +
+									"  survivedteam=@survivedteam, " +
+									"  survivedenemy=@survivedenemy, " +
+									"  fragsteam=@fragsteam, " +
+									"  fragsenemy=@fragsenemy " +
 									"where id=@battleId;";
 								// Clan info
 								if (!getEnemyClan || enemyClanDBID[enemyTeam] == 0)
@@ -594,8 +605,11 @@ namespace WinApp.Code
 								DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@battleResultMode", battleResultMode, DB.SqlDataType.VarChar);
 								// Survaival team /enemy
-								DB.AddWithValue(ref sql, "@survivalteam", survivalCount[playerTeam], DB.SqlDataType.Int);
-								DB.AddWithValue(ref sql, "@survivalenemy", survivalCount[enemyTeam], DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@survivedteam", survivedCount[playerTeam], DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@survivedenemy", survivedCount[enemyTeam], DB.SqlDataType.Int);
+								// Frags team/enemy
+								DB.AddWithValue(ref sql, "@fragsteam", fragsCount[playerTeam], DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@fragsenemy", fragsCount[enemyTeam], DB.SqlDataType.Int);
 								// Add Battle ID and run sql if any values
 								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 								DB.ExecuteNonQuery(sql);
