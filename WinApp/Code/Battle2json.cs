@@ -361,8 +361,11 @@ namespace WinApp.Code
 								string[] enemyClanAbbrev = new string[3];
 								int playerFortResources = 0;
 								int[] teamFortResources = new int[3];
+								int[] survivalCount = new int[3];
 								teamFortResources[1] = 0;
 								teamFortResources[2] = 0;
+								survivalCount[1] = 0;
+								survivalCount[2] = 0;
 								int playerTeam = 0;
 								int enemyTeam = 0;
 								int killerID = 0;
@@ -445,7 +448,8 @@ namespace WinApp.Code
 										values += ", " + vechicleInfo.SelectToken("credits");
 										values += ", " + vechicleInfo.SelectToken("capturePoints");
 										values += ", " + vechicleInfo.SelectToken("damageReceived");
-										values += ", " + vechicleInfo.SelectToken("deathReason");
+										string playerDeathReason = vechicleInfo.SelectToken("deathReason").ToString();
+										values += ", " + playerDeathReason;
 										values += ", " + vechicleInfo.SelectToken("directHits");
 										fields += ", directHitsReceived, droppedCapturePoints, hits, kills, shots, shotsReceived, spotted, tkills, fortResource";
 										values += ", " + vechicleInfo.SelectToken("directHitsReceived");
@@ -501,8 +505,6 @@ namespace WinApp.Code
 										values += ", " + vechicleInfo.SelectToken("damageBlockedByArmor");
 										values += ", " + vechicleInfo.SelectToken("damageAssistedTrack");
 										values += ", " + vechicleInfo.SelectToken("damageAssistedRadio");
-
-
 										// If this is current player remember for later save to battle
 										if (player.name == Config.Settings.playerName)
 										{
@@ -511,6 +513,9 @@ namespace WinApp.Code
 											killerID = playerKillerId;
 											playerPlatoonId = player.platoonID;
 										}
+										// Count sum survival team/enemy remember for later save to battle
+										if (playerDeathReason == "-1") // if player survived
+											survivalCount[player.team]++;
 										// Add sum for team IR
 										teamFortResources[player.team] += fortResourceValue;
 										// Create SQL and update db
@@ -536,7 +541,6 @@ namespace WinApp.Code
 								// Get enemy team
 								enemyTeam = 1;
 								if (playerTeam == 1) enemyTeam = 2;
-								// Save values to battle
 								sql =
 									"update battle set " +
 									"  enemyClanAbbrev=@enemyClanAbbrev, " +
@@ -548,6 +552,8 @@ namespace WinApp.Code
 									"  killedByAccountId=@killedByAccountId, " +
 									"  platoonParticipants=@platoonParticipants, " +
 									"  battleResultMode=@battleResultMode " +
+									"  survivalteam=@survivalteam " +
+									"  survivalenemy=@survivalenemy " +
 									"where id=@battleId;";
 								// Clan info
 								if (!getEnemyClan || enemyClanDBID[enemyTeam] == 0)
@@ -587,6 +593,9 @@ namespace WinApp.Code
 								// Platoon
 								DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@battleResultMode", battleResultMode, DB.SqlDataType.VarChar);
+								// Survaival team /enemy
+								DB.AddWithValue(ref sql, "@survivalteam", survivalCount[playerTeam], DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@survivalenemy", survivalCount[enemyTeam], DB.SqlDataType.Int);
 								// Add Battle ID and run sql if any values
 								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 								DB.ExecuteNonQuery(sql);

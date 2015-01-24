@@ -91,6 +91,7 @@ namespace WinApp.Code
 			public string colGroup = "";
 			public int colWidth = 0;
 			public string colDataType = "";
+			public string colNameSort = "";
 		}
 
 		public static void GetSelectedColumnList(
@@ -98,7 +99,7 @@ namespace WinApp.Code
 			out int img, out int smallimg, out int contourimg, out int masterybadgeimg,
 			bool grouping = false, bool groupingSum = false)
 		{
-			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType  " +
+			string sql = "SELECT columnListSelection.sortorder, columnSelection.colName, columnSelection.colNameSQLite, columnSelection.name, columnListSelection.colWidth, columnSelection.colDataType, columnSelection.colNameSort " +
 						 "FROM   columnListSelection INNER JOIN " +
 						 "		 columnSelection ON columnListSelection.columnSelectionId = columnSelection.id " +
 						 "WHERE        (columnListSelection.columnListId = @columnListId) " +
@@ -133,6 +134,8 @@ namespace WinApp.Code
 					colListItem.colNameSelect = colListItem.colName;
 					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
 					colListItem.colType = dr["colDataType"].ToString();
+					if (dt.Rows[0]["colnameSort"] != DBNull.Value)
+						colListItem.colNameSort = dt.Rows[0]["colnameSort"].ToString();
 					selectColList.Add(colListItem);
 					// Check for alternative colName for SQLite
 					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
@@ -218,6 +221,8 @@ namespace WinApp.Code
 				colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
 				colListItem.colGroup = dr["colGroup"].ToString();
 				colListItem.colType = dr["colDataType"].ToString();
+				if (dt.Rows[0]["colnameSort"] != DBNull.Value)
+					colListItem.colNameSort = dt.Rows[0]["colnameSort"].ToString();
 				selectColList.Add(colListItem);
 				// Check for alternative colName for SQLite
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
@@ -249,6 +254,8 @@ namespace WinApp.Code
 				clc.colType = dt.Rows[0]["colType"].ToString();
 				clc.colWidth = Convert.ToInt32(dt.Rows[0]["colWidth"]);
 				clc.colDataType = dt.Rows[0]["colDataType"].ToString();
+				if (dt.Rows[0]["colnameSort"] != DBNull.Value)
+					clc.colNameSort = dt.Rows[0]["colnameSort"].ToString();
 			}
 			return clc;
 		}

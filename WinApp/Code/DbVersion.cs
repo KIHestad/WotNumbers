@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 201; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 206; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1969,6 +1969,27 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("201");
 					sqlite = mssql;
 					break;
+				case 202:
+					mssql = "ALTER TABLE battle ADD survivedteam int NULL;" +
+							"ALTER TABLE battle ADD survivedenemy int NULL;";
+					sqlite = mssql;
+					break;
+				case 203:
+					mssql = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+							"VALUES (530, 2, 136, 'CAST(battle.survivedteam as varchar) + ' - ' + CAST(battle.survivedenemy as varchar)', 'Team Survival', 'Survival result per team (player team - enemy team)', 'Battle', 47, 'VarChar'); ";
+					sqlite = mssql;
+					break;
+				case 204:
+					RecalcSurvivedTeamEnemy();
+					break;
+				case 205:
+					mssql = "ALTER TABLE columnSelection ADD colNameSort VARCHAR(255) NULL; ";
+					sqlite = mssql;
+					break;
+				case 206:
+					mssql = "UPDATE columnSelection SET colNameSort = 'battle.survivedteam' where id=530;";
+					sqlite = mssql;
+					break;
 
 			}
 			string sql = "";
@@ -2356,6 +2377,67 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@tanktypeid", tanktypeid, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
+		}
+
+		private static void RecalcSurvivedTeamEnemy()
+		{
+			// Loop through all existing battles with battle players
+			string sql =
+				"SELECT DISTINCT battleId " +
+				"FROM battlePlayer  ";
+			DataTable dt = DB.FetchData(sql);
+			DataTable dtSurvivalCount;
+			string updatesql = "";
+			foreach (DataRow dr in dt.Rows)
+			{
+				// Current battle to check
+				string battleId = dr["battleId"].ToString();
+				// Find players name for battle
+				sql = 
+					"SELECT player.name " +
+					"FROM player LEFT JOIN " +
+					"  playerTank ON player.id = playerTank.playerId LEFT JOIN " +
+					"  battle ON battle.PlayerTankId = playerTank.id " +
+					"WHERE battle.id=@battleId";
+				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+				string playerName = DB.FetchData(sql).Rows[0][0].ToString();
+				playerName = PlayerHelper.GetPlayerNameFromNameAndServer(playerName);
+				if (playerName == "")
+					playerName = Config.Settings.playerName;
+				// Find players team (1/2) and enemy team (1/2) for battle
+				sql = "SELECT team FROM battlePlayer WHERE battleid=@battleId AND name=@playerName";
+				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+				int playerTeam = Convert.ToInt32(DB.FetchData(sql).Rows[0][0]);
+				int enemyTeam = 1;
+				if (playerTeam == 1) enemyTeam = 2;
+				// Find survival count for battle for player team
+				string survivedteam = "0";
+				sql =
+					"SELECT COUNT(battleId) " +
+					"FROM battlePlayer " +
+					"Where battleid = " + battleId + " and deathReason = '-1' and team=" + playerTeam + " " +
+					"group by battleId ";
+				dtSurvivalCount = DB.FetchData(sql);
+				if (dtSurvivalCount.Rows.Count > 0)
+					survivedteam = dtSurvivalCount.Rows[0][0].ToString();
+				// Find survival count for enemy team
+				string survivedenemy = "0";
+				sql =
+					"SELECT COUNT(battleId) " +
+					"FROM battlePlayer " +
+					"Where battleid = " + battleId + " and deathReason = '-1' and team=" + enemyTeam + " " +
+					"group by battleId ";
+				dtSurvivalCount = DB.FetchData(sql);
+				if (dtSurvivalCount.Rows.Count > 0)
+					survivedenemy = dtSurvivalCount.Rows[0][0].ToString();
+				// Create update sql
+				updatesql += 
+					"UPDATE battle " +
+					"SET survivedteam=" + survivedteam + ", survivedenemy=" + survivedenemy + " " +
+					"WHERE id = " + dr["battleId"].ToString() + ";";
+			}
+			DB.ExecuteNonQuery(updatesql, RunInBatch: true);
 		}
 
 	}

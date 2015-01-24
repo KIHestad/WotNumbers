@@ -155,6 +155,7 @@
     <Compile Include="Code\FormView\StatusBarHelper.cs" />
     <Compile Include="Code\FormView\GridSortingHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
+    <Compile Include="Code\PlayerHelper.cs" />
     <Compile Include="Code\PythonEngine.cs" />
     <Compile Include="Code\FormControl\ToolStripEx.cs">
       <SubType>Component</SubType>

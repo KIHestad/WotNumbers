@@ -28,6 +28,9 @@ namespace WinApp.Code
 					sorting.lastColumn = dt.Rows[0]["lastSortColumn"].ToString();
 					ColListHelper.ColListClass clc = ColListHelper.GetColListItem(sorting.lastColumn, MainSettings.View);
 					sorting.lastSortColumn = clc.colName;
+					// special sort defined for columns
+					if (clc.colNameSort != "")
+						sorting.lastSortColumn = clc.colNameSort;
 					// special sort for image solumns
 					if (clc.colDataType == "Image")
 					{
