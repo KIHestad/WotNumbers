@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 215; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 218; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2022,7 +2022,26 @@ namespace WinApp.Code
 						"UPDATE columnSelection SET colNameSort = 'mb_id' where id IN (216,520);";
 					sqlite = mssql;
 					break;
-
+				case 216:
+					mssql = 
+						"UPDATE columnSelection SET colGroup='Battle' WHERE id=522;" +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (218, 2, 218, 'CAST(dmg AS FLOAT) / NULLIF(dmgReceived,0)', 'Dmg C/R', 'Damage Caused/Received = damage caused devided on damage received', 'Result', 47, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
+				case 217:
+					mssql =
+						"UPDATE columnSelection SET position=position+10 WHERE colType=1 and position>=211;" +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (219, 1, 211, 'cast(frags as float) / nullif(battles-survived,0)', 'K/D Ratio', 'Kill/Death Ratio = enemy tanks you have killed (frags) devided on battles you did not survive', 'Battle', 47, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
+				case 218:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (220, 1, 211, 'cast(dmg as float) / nullif(dmgReceived,0)', 'Dmg C/R', 'Damage Caused/Received = damage caused devided on damage received', 'Battle', 47, 'Float', NULL); ";
+					sqlite = mssql;
+					break;
 
 			}
 			string sql = "";

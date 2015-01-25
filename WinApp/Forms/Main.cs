@@ -2488,7 +2488,7 @@ namespace WinApp.Forms
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 						IEnumerable<string> showFloatValues = new List<string> 
 						{ 
-							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def"
+							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def", "Dmg C/R"
 						};
 						if (!showFloatValues.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
