@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 209; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 210; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1999,6 +1999,12 @@ namespace WinApp.Code
 					break;
 				case 209:
 					RecalcSurvivedAndFragsTeamEnemy();
+					break;
+				case 210:
+					mssql =
+						"UPDATE columnSelection SET colNameSqlite = 'CAST(battle.survivedteam as varchar) || '' - '' || CAST(battle.survivedenemy as varchar)' where id=530;" +
+						"UPDATE columnSelection SET colNameSqlite = 'CAST(battle.fragsteam as varchar) || '' - '' || CAST(battle.fragsenemy as varchar)' where id=531;";
+					sqlite = mssql;
 					break;
 
 			}
