@@ -2132,15 +2132,6 @@ namespace WinApp.Forms
 						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, 0 as arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as mb_id, 0 as battle_Id ";
 					groupBy = "GROUP BY tank.id, tank.Name, playerTank.Id ";
-					// Get sorting be finding calcultated fiels
-					foreach (ColListHelper.ColListClass col in colList)
-					{
-						if (col.colName == sorting.lastSortColumn)
-						{
-							if (col.colNameSelect != "''" && col.colNameSelect != "NULL")
-								sortOrder = "ORDER BY " + col.colNameSelect + " " + sortDirection + " ";
-						}
-					}
 				}
 				else
 				{
@@ -2152,9 +2143,17 @@ namespace WinApp.Forms
 						"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, " +
 						"  battle.markOfMastery as mb_id, battle.arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id ";
-					sortOrder = "ORDER BY " + sorting.lastSortColumn + " " + sortDirection + " ";
 				}
-				
+				sortOrder = "ORDER BY " + sorting.lastSortColumn + " " + sortDirection + " ";
+				// Get sorting by finding calcultated fiels
+				//foreach (ColListHelper.ColListClass col in colList)
+				//{
+				//	if (col.colName == sorting.lastSortColumn)
+				//	{
+				//		if (col.colNameSelect != "''" && col.colNameSelect != "NULL")
+				//			sortOrder = "ORDER BY " + col.colNameSort + " " + sortDirection + " ";
+				//	}
+				//}
 				// Get Battle Time filer
 				string battleTimeFilter = "";
 				BattleTimeFilter(out battleTimeFilter);

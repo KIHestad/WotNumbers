@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 212; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 215; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2011,6 +2011,18 @@ namespace WinApp.Code
 						"UPDATE columnSelection SET name = 'Team Result', description ='Number of tanks destroyed per team, including suicides (player team - enemy team)' where id=531;";
 					sqlite = mssql;
 					break;
+				case 214:
+					mssql =
+						"UPDATE columnSelection SET colNameSort = 'battle.battleTime' where id IN (8,163,164);";
+					sqlite = mssql;
+					break;
+				case 215:
+					mssql =
+						"UPDATE columnSelection SET colNameSort = 'tank_name' where id IN (183,180,181,184,185,182);" +
+						"UPDATE columnSelection SET colNameSort = 'mb_id' where id IN (216,520);";
+					sqlite = mssql;
+					break;
+
 
 			}
 			string sql = "";

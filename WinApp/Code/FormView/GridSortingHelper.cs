@@ -27,18 +27,25 @@ namespace WinApp.Code
 				{
 					sorting.lastColumn = dt.Rows[0]["lastSortColumn"].ToString();
 					ColListHelper.ColListClass clc = ColListHelper.GetColListItem(sorting.lastColumn, MainSettings.View);
-					sorting.lastSortColumn = clc.colName;
-					// special sort defined for columns
-					if (clc.colNameSort != "")
-						sorting.lastSortColumn = clc.colNameSort;
-					// special sort for image solumns
-					if (clc.colDataType == "Image")
+					// Check if found column
+					if (clc.name == "")
+						sorting.lastColumn = ""; // not found
+					else
 					{
-						if (clc.name == "Mastery Badge")
-							sorting.lastSortColumn = "mb_id";
-						else
-							sorting.lastSortColumn = "tank_name";
+						// found sorting column, get values
+						sorting.lastSortColumn = clc.colName;
+						// special sort defined for columns
+						if (clc.colNameSort != "")
+							sorting.lastSortColumn = clc.colNameSort;
 					}
+					// special sort for image columns
+					//if (clc.colDataType == "Image")
+					//{
+					//	if (clc.name == "Mastery Badge")
+					//		sorting.lastSortColumn = "mb_id";
+					//	else
+					//		sorting.lastSortColumn = "tank_name";
+					//}
 				}
 				sorting.lastSortDirectionAsc = Convert.ToBoolean(dt.Rows[0]["lastSortDirectionAsc"]);
 			}

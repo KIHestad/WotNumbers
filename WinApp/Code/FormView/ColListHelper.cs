@@ -134,8 +134,10 @@ namespace WinApp.Code
 					colListItem.colNameSelect = colListItem.colName;
 					colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
 					colListItem.colType = dr["colDataType"].ToString();
-					if (dt.Rows[0]["colnameSort"] != DBNull.Value)
-						colListItem.colNameSort = dt.Rows[0]["colnameSort"].ToString();
+					if (dr["colNameSort"] != DBNull.Value)
+						colListItem.colNameSort = dr["colnameSort"].ToString();
+					else
+						colListItem.colNameSort = colListItem.colName;
 					selectColList.Add(colListItem);
 					// Check for alternative colName for SQLite
 					if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
@@ -221,8 +223,10 @@ namespace WinApp.Code
 				colListItem.colWidth = Convert.ToInt32(dr["colWidth"]);
 				colListItem.colGroup = dr["colGroup"].ToString();
 				colListItem.colType = dr["colDataType"].ToString();
-				if (dt.Rows[0]["colnameSort"] != DBNull.Value)
-					colListItem.colNameSort = dt.Rows[0]["colnameSort"].ToString();
+				if (dr["colnameSort"] != DBNull.Value)
+					colListItem.colNameSort = dr["colnameSort"].ToString();
+				else
+					colListItem.colNameSort = colListItem.colName;
 				selectColList.Add(colListItem);
 				// Check for alternative colName for SQLite
 				if (Config.Settings.databaseType == ConfigData.dbType.SQLite && dr["colNameSQLite"] != DBNull.Value)
@@ -244,7 +248,7 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			ColListClass clc = new ColListClass();
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.Count > 0) 
 			{
 				clc.colName = dt.Rows[0]["colName"].ToString();
 				clc.colNameSelect = dt.Rows[0]["colName"].ToString() + " as " + dt.Rows[0]["name"].ToString();
@@ -256,6 +260,8 @@ namespace WinApp.Code
 				clc.colDataType = dt.Rows[0]["colDataType"].ToString();
 				if (dt.Rows[0]["colnameSort"] != DBNull.Value)
 					clc.colNameSort = dt.Rows[0]["colnameSort"].ToString();
+				else
+					clc.colNameSort = clc.colName;
 			}
 			return clc;
 		}
