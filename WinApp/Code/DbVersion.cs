@@ -19,7 +19,7 @@ namespace WinApp.Code
 		
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 211; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 212; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2005,6 +2005,11 @@ namespace WinApp.Code
 					break;
 				case 211:
 					RecalcSurvivedAndFragsTeamEnemy();
+					break;
+				case 212:
+					mssql =
+						"UPDATE columnSelection SET name = 'Team Result', description ='Number of tanks destroyed per team, including suicides (player team - enemy team)' where id=531;";
+					sqlite = mssql;
 					break;
 
 			}

@@ -359,7 +359,7 @@ namespace WinApp.Forms
 				drWN8["Parameter"] = "Damage";
 				drWN8["Image"] = GetIndicator(dmg, exp_dmg);
 				drWN8["Result"] = dmg.ToString("N0");
-				drWN8["Exp"] = exp_dmg.ToString("N0");
+				drWN8["Exp"] = exp_dmg.ToString("N1");
 				drWN8["Value"] = Math.Round(rDAMAGEc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Frags
@@ -367,7 +367,7 @@ namespace WinApp.Forms
 				drWN8["Parameter"] = "Frags";
 				drWN8["Image"] = GetIndicator(frags, exp_frags);
 				drWN8["Result"] = frags.ToString("N0");
-				drWN8["Exp"] = exp_frags.ToString("N0");
+				drWN8["Exp"] = exp_frags.ToString("N1");
 				drWN8["Value"] = Math.Round(rFRAGSc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Spot
@@ -375,7 +375,7 @@ namespace WinApp.Forms
 				drWN8["Parameter"] = "Spot";
 				drWN8["Image"] = GetIndicator(spotted, exp_spotted);
 				drWN8["Result"] = spotted.ToString("N0");
-				drWN8["Exp"] = exp_spotted.ToString("N0");
+				drWN8["Exp"] = exp_spotted.ToString("N1");
 				drWN8["Value"] = Math.Round(rSPOTc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Defence
@@ -383,7 +383,7 @@ namespace WinApp.Forms
 				drWN8["Parameter"] = "Defence";
 				drWN8["Image"] = GetIndicator(def, exp_def);
 				drWN8["Result"] = def.ToString("N0");
-				drWN8["Exp"] = exp_def.ToString("N0");
+				drWN8["Exp"] = exp_def.ToString("N1");
 				drWN8["Value"] = Math.Round(rDEFc, 1).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Win Rate
