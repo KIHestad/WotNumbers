@@ -16,10 +16,10 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 		public static bool RunWotApi = false;
 		public static bool RunRecalcBattleWN8 = false;
-		
+		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 218; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 220; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1629,7 +1629,6 @@ namespace WinApp.Code
 					Config.SaveConfig(out msg);
 					break;
 				case 152:
-					NewSystemTankColList();
 					NewSystemBattleColList();
 					break;
 				case 153:
@@ -2003,9 +2002,6 @@ namespace WinApp.Code
 						"UPDATE columnSelection SET colNameSqlite = 'CAST(battle.fragsteam as varchar) || '' - '' || CAST(battle.fragsenemy as varchar)' where id=531;";
 					sqlite = mssql;
 					break;
-				case 211:
-					RecalcSurvivedAndFragsTeamEnemy();
-					break;
 				case 212:
 					mssql =
 						"UPDATE columnSelection SET name = 'Team Result', description ='Number of tanks destroyed per team, including suicides (player team - enemy team)' where id=531;";
@@ -2041,6 +2037,12 @@ namespace WinApp.Code
 						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
 						"VALUES (220, 1, 211, 'cast(dmg as float) / nullif(dmgReceived,0)', 'Dmg C/R', 'Damage Caused/Received = damage caused devided on damage received', 'Battle', 47, 'Float', NULL); ";
 					sqlite = mssql;
+					break;
+				case 219:
+					RunRecalcBattleKDratioCRdmg = true;
+					break;
+				case 220:
+					NewSystemTankColList();
 					break;
 
 			}
@@ -2183,7 +2185,7 @@ namespace WinApp.Code
 
 		private static string NewSystemTankColList_Default(int position)
 		{
-			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 1, " + position.ToString() + ", 1, -1); ";
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
 			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='Default';";
@@ -2200,14 +2202,17 @@ namespace WinApp.Code
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",8,50);" + // Battles
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (95," + id + ",9,50);" + // Win Rate
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",10,3);" + //  - Separator 1 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (155," + id + ",11,50);" + // Frags Max
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (154," + id + ",12,50);" + // Dmg Max
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (156," + id + ",13,50);" + // XP Max
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",14,3);" + //  - Separator 2 -
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (216," + id + ",15,50);" + // Mastery Badge
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",16,50);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (187," + id + ",17,50);" + // WN7
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",18,50);"; // EFF
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (219," + id + ",11,47);" + // K/D Ratio
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (220," + id + ",12,47);" + // Dmg C/R
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",13,3);" + //  - Separator 3 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (155," + id + ",14,50);" + // Frags Max
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (154," + id + ",15,50);" + // Dmg Max
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (156," + id + ",16,50);" + // XP Max
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",17,3);" + //  - Separator 2 -
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (216," + id + ",18,50);" + // Mastery Badge
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",19,50);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (187," + id + ",20,50);" + // WN7
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",21,50);"; // EFF
 			DB.ExecuteNonQuery(sql);
 			return id;
 		}
@@ -2429,93 +2434,6 @@ namespace WinApp.Code
 			DB.AddWithValue(ref sql, "@tanktypeid", tanktypeid, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
-		}
-
-		private static void RecalcSurvivedAndFragsTeamEnemy()
-		{
-			// Loop through all existing battles with battle players
-			string sql =
-				"SELECT DISTINCT battleId " +
-				"FROM battlePlayer  ";
-			DataTable dt = DB.FetchData(sql);
-			DataTable dtTemp;
-			string updatesql = "";
-			foreach (DataRow dr in dt.Rows)
-			{
-				// Current battle to check
-				string battleId = dr["battleId"].ToString();
-				// Find players name for battle
-				sql = 
-					"SELECT player.name " +
-					"FROM player LEFT JOIN " +
-					"  playerTank ON player.id = playerTank.playerId LEFT JOIN " +
-					"  battle ON battle.PlayerTankId = playerTank.id " +
-					"WHERE battle.id=@battleId";
-				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-				string playerName = "";
-				dtTemp = DB.FetchData(sql);
-				if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-					playerName = dtTemp.Rows[0][0].ToString();
-				playerName = PlayerHelper.GetPlayerNameFromNameAndServer(playerName);
-				if (playerName == "")
-					playerName = Config.Settings.playerName;
-				// Find players team (1/2) and enemy team (1/2) for battle
-				sql = "SELECT team FROM battlePlayer WHERE battleid=" + battleId + " AND name=@playerName";
-				DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
-				int playerTeam = 1;
-				dtTemp = DB.FetchData(sql);
-				if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-					playerTeam = Convert.ToInt32(dtTemp.Rows[0][0]);
-				int enemyTeam = 1;
-				if (playerTeam == 1) enemyTeam = 2;
-				// Find survival count for battle for player team
-				string survivedteam = "0";
-				sql =
-					"SELECT COUNT(battleId) " +
-					"FROM battlePlayer " +
-					"Where battleid = " + battleId + " and deathReason = '-1' and team=" + playerTeam + " " +
-					"group by battleId ";
-				dtTemp = DB.FetchData(sql);
-				if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-					survivedteam = dtTemp.Rows[0][0].ToString();
-				// Find survival count for enemy team
-				string survivedenemy = "0";
-				sql =
-					"SELECT COUNT(battleId) " +
-					"FROM battlePlayer " +
-					"Where battleid = " + battleId + " and deathReason = '-1' and team=" + enemyTeam + " " +
-					"group by battleId ";
-				dtTemp = DB.FetchData(sql);
-				if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-					survivedenemy = dtTemp.Rows[0][0].ToString();
-				// Find frags count for battle for player team
-				string fragsteam = "0";
-				sql =
-					"SELECT COUNT(battleId) " +
-					"FROM battlePlayer " +
-					"Where battleid = " + battleId + " and deathReason <> '-1' and team=" + enemyTeam + " " +
-					"group by battleId ";
-				dtTemp = DB.FetchData(sql);
-				if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-					fragsteam = dtTemp.Rows[0][0].ToString();
-				// Find survival count for enemy team
-				string fragsenemy = "0";
-				sql =
-					"SELECT COUNT(battleId) " +
-					"FROM battlePlayer " +
-					"Where battleid = " + battleId + " and deathReason <> '-1' and team=" + playerTeam + " " +
-					"group by battleId ";
-				dtTemp = DB.FetchData(sql);
-				if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-					fragsenemy = dtTemp.Rows[0][0].ToString();
-				// Create update sql
-				updatesql += 
-					"UPDATE battle " +
-					"SET survivedteam=" + survivedteam + ", survivedenemy=" + survivedenemy + ", " +
-					" fragsteam=" + fragsteam + ", fragsenemy=" + fragsenemy + " " +
-					"WHERE id = " + dr["battleId"].ToString() + ";";
-			}
-			DB.ExecuteNonQuery(updatesql, RunInBatch: true);
 		}
 
 	}

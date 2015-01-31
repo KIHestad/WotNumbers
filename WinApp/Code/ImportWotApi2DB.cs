@@ -25,7 +25,6 @@ namespace WinApp.Code
 
 		private class LogItems
 		{
-			public string Type; // Name of the logging = what API is logged
 			public string Inserted; // name of items inserted = new items
 			public int InsertedCount;
 			public string Updated; // name of items updated = existing items
@@ -154,24 +153,24 @@ namespace WinApp.Code
 
 		#region update log file
 
-		private static void WriteApiLog(LogItems logItems)
+		private static void WriteApiLog(string apiType, LogItems logItems)
 		{
 			// Update log after import
-			Log.AddToLogBuffer("Import complete: (" + DateTime.Now.ToString() + ")");
+			Log.AddToLogBuffer(apiType + " import complete: (" + DateTime.Now.ToString() + ")");
 			if (logItems.Inserted != null)
 			{
 				logItems.Inserted = logItems.Inserted.Substring(0, logItems.Inserted.Length - 2);
-				Log.AddToLogBuffer("  Added " + logItems.InsertedCount + " new " + logItems.Type + ":");
+				Log.AddToLogBuffer("  Added " + logItems.InsertedCount + " new " + apiType + ":");
 				Log.AddToLogBuffer("  " + logItems.Inserted);
 			}
 			else
 			{
-				Log.AddToLogBuffer("  No new " + logItems.Type + " added");
+				Log.AddToLogBuffer("  No new " + apiType + " added");
 			}
 			if (logItems.Updated != null)
 			{
 				logItems.Updated = logItems.Updated.Substring(0, logItems.Updated.Length - 2);
-				Log.AddToLogBuffer("  Updated data on " + logItems.UpdatedCount + " existing " + logItems.Type + ":");
+				Log.AddToLogBuffer("  Updated data on " + logItems.UpdatedCount + " existing " + apiType + ":");
 				Log.AddToLogBuffer("  " + logItems.Updated);
 			}
 			Log.WriteLogBuffer();
@@ -281,7 +280,7 @@ namespace WinApp.Code
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
 						// Update log file after import
-						WriteApiLog(logItems);
+						WriteApiLog("Tanks ", logItems);
 					}
 
 					//Code.MsgBox.Show("Tank import complete");
@@ -382,7 +381,7 @@ namespace WinApp.Code
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
-						WriteApiLog(logItems);
+						WriteApiLog("Turrets", logItems);
 					}
 
 					//Code.MsgBox.Show("Turret import complete");
@@ -527,7 +526,7 @@ namespace WinApp.Code
 						}
 
 						// Update log file after import
-						WriteApiLog(logItems);
+						WriteApiLog("Guns", logItems);
 
 					}
 					DB.ExecuteNonQuery(sqlTotal, true, true);
@@ -632,7 +631,7 @@ namespace WinApp.Code
 						}
 
 						// Update log file after import
-						WriteApiLog(logItems);
+						WriteApiLog("Radios", logItems);
 					}
 					DB.ExecuteNonQuery(sqlTotal, true, true);
 					//Code.MsgBox.Show("Radio import complete");
@@ -693,7 +692,7 @@ namespace WinApp.Code
 						}
 
 						// Update log file after import
-						WriteApiLog(logItems);
+						WriteApiLog("Maps", logItems);
 					}
 					DB.ExecuteNonQuery(sqlTotal, true, true);
 					return ("Import Complete");
@@ -868,7 +867,7 @@ namespace WinApp.Code
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
-						WriteApiLog(logItems);
+						WriteApiLog("Achievments", logItems);
 					}
 
 					//Code.MsgBox.Show("Achievement import complete");

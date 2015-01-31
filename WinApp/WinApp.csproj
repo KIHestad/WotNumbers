@@ -215,6 +215,12 @@
     <Compile Include="Forms\ManualCheckNewBattles.Designer.cs">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\RecalcBattleKDratioCRdmg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\RecalcBattleKDratioCRdmg.Designer.cs">
+      <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -493,6 +499,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ManualCheckNewBattles.resx">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\RecalcBattleKDratioCRdmg.resx">
+      <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>

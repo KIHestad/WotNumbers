@@ -432,6 +432,9 @@ namespace WinApp.Forms
 				RunWotApi(true);
 			if (DBVersion.RunRecalcBattleWN8)
 				RunRecalcBattleWN8(true);
+			if (DBVersion.RunRecalcBattleKDratioCRdmg)
+				RunRecalcBattleKDratioCRdmg(true);
+
 			// Check for dossier update
 			RunDossierFileCheck(message, DBVersion.RunDossierFileCheckWithForceUpdate);
 		}
@@ -3358,8 +3361,15 @@ namespace WinApp.Forms
 		private void RunRecalcBattleWN8(bool autoRun = false)
 		{
 			Form frm = new Forms.RecalcBattleWN8(autoRun);
-			frm.ShowDialog();
+			frm.ShowDialog(this);
 		}
+
+		private void RunRecalcBattleKDratioCRdmg(bool autoRun = false)
+		{
+			Form frm = new Forms.RecalcBattleKDratioCRdmg(autoRun);
+			frm.ShowDialog(this);
+		}
+
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
 		{
