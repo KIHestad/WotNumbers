@@ -23,25 +23,14 @@ namespace WinApp.Code
 		 * Existing items will be updated
 		 */
 
-		#region variables
-
-		private static int itemCount;
-		private static JToken rootToken;
-		private static JToken itemToken;
-		private static int itemId;
-		private static string insertSql;
-		private static string updateSql;
-		private static DataTable itemsInDB;
-
-		private static string logAddedItems;
-		private static int logAddedItemsCount;
-		private static string logItemExists;
-		private static int logItemExistsCount;
-		//private static string logTanksWithoutDetails; // some special tanks have lacking vehicle details in API
-		//private static int logTanksWithoutDetailsCount;
-
-		#endregion
-
+		private class LogItems
+		{
+			public string Type; // Name of the logging = what API is logged
+			public string Inserted; // name of items inserted = new items
+			public int InsertedCount;
+			public string Updated; // name of items updated = existing items
+			public int UpdatedCount;
+		}
 
 		private enum WotApiType
 		{
@@ -108,17 +97,14 @@ namespace WinApp.Code
 				if (WotAPi == WotApiType.Turret)
 				{
 					url += "/wot/encyclopedia/tankturrets/?application_id=" + applicationId;
-					itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
 				}
 				else if (WotAPi == WotApiType.Gun)
 				{
 					url += "/wot/encyclopedia/tankguns/?application_id=" + applicationId;
-					itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
 				}
 				else if (WotAPi == WotApiType.Radio)
 				{
 					url += "/wot/encyclopedia/tankradios/?application_id=" + applicationId;
-					itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
 				}
 				else if (WotAPi == WotApiType.Achievement)
 				{
@@ -168,31 +154,27 @@ namespace WinApp.Code
 
 		#region update log file
 
-		private static void updateLog(string itemType)
+		private static void WriteApiLog(LogItems logItems)
 		{
 			// Update log after import
 			Log.AddToLogBuffer("Import complete: (" + DateTime.Now.ToString() + ")");
-			if (logAddedItems != null)
+			if (logItems.Inserted != null)
 			{
-				logAddedItems = logAddedItems.Substring(0, logAddedItems.Length - 2);
-				Log.AddToLogBuffer("  Added " + logAddedItemsCount + " new " + itemType + ":");
-				Log.AddToLogBuffer("  " + logAddedItems);
+				logItems.Inserted = logItems.Inserted.Substring(0, logItems.Inserted.Length - 2);
+				Log.AddToLogBuffer("  Added " + logItems.InsertedCount + " new " + logItems.Type + ":");
+				Log.AddToLogBuffer("  " + logItems.Inserted);
 			}
 			else
 			{
-				Log.AddToLogBuffer("  No new " + itemType + " added");
+				Log.AddToLogBuffer("  No new " + logItems.Type + " added");
 			}
-			if (logItemExists != null)
+			if (logItems.Updated != null)
 			{
-				logItemExists = logItemExists.Substring(0, logItemExists.Length - 2);
-				Log.AddToLogBuffer("  Updated data on " + logItemExistsCount + " existing " + itemType + ":");
-				Log.AddToLogBuffer("  " + logItemExists);
+				logItems.Updated = logItems.Updated.Substring(0, logItems.Updated.Length - 2);
+				Log.AddToLogBuffer("  Updated data on " + logItems.UpdatedCount + " existing " + logItems.Type + ":");
+				Log.AddToLogBuffer("  " + logItems.Updated);
 			}
 			Log.WriteLogBuffer();
-			logAddedItems = null;
-			logAddedItemsCount = 0;
-			logItemExists = null;
-			logItemExistsCount = 0;
 		}
 
 		#endregion
@@ -218,24 +200,24 @@ namespace WinApp.Code
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
-					rootToken = allTokens.First;   // returns status token
+					JToken rootToken = allTokens.First;   // returns status token
 
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
 
-						rootToken = rootToken.Next;   // start reading tanks
+						rootToken = rootToken.Next.Next;   // start reading tanks
 						JToken tanks = rootToken.Children().First();   // read all tokens in data token
 
-						//List<string> logtext = new List<string>();
+						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						string sqlTotal = "";
 						foreach (JProperty tank in tanks)   // tank = tankId + child tokens
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
-							itemToken = tank.First();   // First() returns only child tokens of tank
+							JToken itemToken = tank.First();   // First() returns only child tokens of tank
 
-							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
+							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
 							string type = itemToken["type"].ToString();
 							switch (type)
 							{
@@ -264,8 +246,8 @@ namespace WinApp.Code
 
 							// Write to db
 							tankExists = TankHelper.TankExists(itemId);
-							insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
-							updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id; " ;
+							string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
+							string updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id; " ;
 
 							// insert if tank does not exist
 							if (!tankExists)
@@ -278,8 +260,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(insertSql);  
 								sqlTotal += insertSql + Environment.NewLine;
-								logAddedItems = logAddedItems + name + ", ";
-								logAddedItemsCount++;
+								logItems.Inserted += name + ", ";
+								logItems.InsertedCount++;
 							}
 
 							// update if tank exists
@@ -293,13 +275,13 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@premium", premium, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(updateSql);  
 								sqlTotal += updateSql + Environment.NewLine; 
-								logItemExists = logItemExists + name + ", ";
-								logItemExistsCount++;
+								logItems.Updated += name + ", ";
+								logItems.UpdatedCount++;
 							}
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
 						// Update log file after import
-						updateLog("tanks");
+						WriteApiLog(logItems);
 					}
 
 					//Code.MsgBox.Show("Tank import complete");
@@ -333,22 +315,23 @@ namespace WinApp.Code
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
-					rootToken = allTokens.First;   // returns status token
+					JToken rootToken = allTokens.First;   // returns status token
 
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
 
-						rootToken = rootToken.Next;   // start reading modules
+						rootToken = rootToken.Next.Next;   // start reading modules
 						JToken turrets = rootToken.Children().First();   // read all tokens in data token
-
+						DataTable itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
+						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty turret in turrets)   // turret = turretId + child tokens
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
-							itemToken = turret.First();   // First() returns only child tokens of turret
+							JToken itemToken = turret.First();   // First() returns only child tokens of turret
 
-							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated turretId
+							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated turretId
 							JArray tanksArray = (JArray)itemToken["tanks"];
 							int tankId = Int32.Parse(tanksArray[0].ToString());   // fetch only the first tank in the array for now (all turrets are related to one tank)
 							string name = itemToken["name_i18n"].ToString();
@@ -358,10 +341,12 @@ namespace WinApp.Code
 							int armorSides = Int32.Parse(itemToken["armor_board"].ToString());
 							int armorRear = Int32.Parse(itemToken["armor_fedd"].ToString());
 
-							var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
-							insertSql = "INSERT INTO modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) VALUES "
-									  + "(@id, @tankId, @name, @tier, @viewRange, @armorFront, @armorSides, @armorRear); ";
-							updateSql = "UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear WHERE id=@id; ";
+							DataRow[] moduleExists = itemsInDB.Select("id = '" + itemId + "'");
+							string insertSql = 
+								"INSERT INTO modTurret (id, tankId, name, tier, viewRange, armorFront, armorSides, armorRear) VALUES "
+								+ "(@id, @tankId, @name, @tier, @viewRange, @armorFront, @armorSides, @armorRear); ";
+							string updateSql = 
+								"UPDATE modTurret set tankId=@tankId, name=@name, tier=@tier, viewRange=@viewRange, armorFront=@armorFront, armorSides=@armorSides, armorRear=@armorRear WHERE id=@id; ";
 
 							if (moduleExists.Length == 0)
 							{
@@ -375,8 +360,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@armorRear", armorRear, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(insertSql);
 								sqlTotal += insertSql + Environment.NewLine;
-								logAddedItems = logAddedItems + name + ", ";
-								logAddedItemsCount++;
+								logItems.Inserted += name + ", ";
+								logItems.InsertedCount++;
 							}
 
 							else
@@ -391,13 +376,13 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@armorRear", armorRear, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(updateSql);
 								sqlTotal += updateSql + Environment.NewLine;
-								logItemExists = logItemExists + name + ", ";
-								logItemExistsCount++;
+								logItems.Updated += name + ", ";
+								logItems.UpdatedCount++;
 							}
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
-						updateLog("turrets");
+						WriteApiLog(logItems);
 					}
 
 					//Code.MsgBox.Show("Turret import complete");
@@ -432,26 +417,28 @@ namespace WinApp.Code
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
-					rootToken = allTokens.First;
+					JToken rootToken = allTokens.First;
 					string sqlTotal = "";
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;
+						int itemCount = (int)((JProperty)rootToken).Value;
 
-						rootToken = rootToken.Next;
+						rootToken = rootToken.Next.Next;
 						JToken guns = rootToken.Children().First();
 
 						// Drop relations to turret and tank before import (new relations will be added)
 						string sql = "DELETE FROM modTankGun; DELETE FROM modTurretGun; ";
 						DB.ExecuteNonQuery(sql);
 
+						DataTable itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
+						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty gun in guns)
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
-							itemToken = gun.First();
+							JToken itemToken = gun.First();
 
-							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
+							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
 							string name = itemToken["name_i18n"].ToString();
 							int tier = Int32.Parse(itemToken["level"].ToString());
 							JArray dmgArray = (JArray)itemToken["damage"];
@@ -468,11 +455,13 @@ namespace WinApp.Code
 							if (penArray.Count > 2) pen3 = Int32.Parse(penArray[2].ToString());
 							string fireRate = ((itemToken["rate"].ToString())).Replace(",", ".");
 
-							var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
+							DataRow[] moduleExists = itemsInDB.Select("id = '" + itemId + "'");
 
-							insertSql = "INSERT INTO modGun (id, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) VALUES "
-									  + "(@id, @name, @tier, @dmg1, @dmg2, @dmg3, @pen1, @pen2, @pen3, @fireRate); ";
-							updateSql = "UPDATE modGun SET name=@name, tier=@tier, dmg1=@dmg1, dmg2=@dmg2, dmg3=@dmg3, pen1=@pen1, pen2=@pen2, pen3=@pen3, fireRate=@fireRate WHERE id=@id; ";
+							string insertSql = 
+								"INSERT INTO modGun (id, name, tier, dmg1, dmg2, dmg3, pen1, pen2, pen3, fireRate) VALUES "
+								+ "(@id, @name, @tier, @dmg1, @dmg2, @dmg3, @pen1, @pen2, @pen3, @fireRate); ";
+							string updateSql = 
+								"UPDATE modGun SET name=@name, tier=@tier, dmg1=@dmg1, dmg2=@dmg2, dmg3=@dmg3, pen1=@pen1, pen2=@pen2, pen3=@pen3, fireRate=@fireRate WHERE id=@id; ";
 
 							if (moduleExists.Length == 0)
 							{
@@ -488,8 +477,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@fireRate", fireRate, DB.SqlDataType.Int);
 								//ok = DB.ExecuteNonQuery(insertSql);
 								sqlTotal += insertSql + Environment.NewLine;
-								logAddedItems = logAddedItems + name + ", ";
-								logAddedItemsCount++;
+								logItems.Inserted += name + ", ";
+								logItems.InsertedCount++;
 							}
 
 							else
@@ -506,8 +495,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@fireRate", fireRate, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(updateSql);
 								sqlTotal += updateSql + Environment.NewLine;
-								logItemExists = logItemExists + name + ", ";
-								logItemExistsCount++;
+								logItems.Updated += name + ", ";
+								logItems.UpdatedCount++;
 							}
 
 							// Create relation to turret if possible (not all tanks have a turret)
@@ -538,7 +527,7 @@ namespace WinApp.Code
 						}
 
 						// Update log file after import
-						updateLog("guns");
+						WriteApiLog(logItems);
 
 					}
 					DB.ExecuteNonQuery(sqlTotal, true, true);
@@ -573,33 +562,36 @@ namespace WinApp.Code
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
-					rootToken = allTokens.First;
+					JToken rootToken = allTokens.First;
 					string sqlTotal = "";
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;
+						int itemCount = (int)((JProperty)rootToken).Value;
 
-						rootToken = rootToken.Next;
+						rootToken = rootToken.Next.Next;
 						JToken radios = rootToken.Children().First();
 
 						// Drop relations to tank before import (new relations will be added)
 						string sql = "DELETE FROM modTankRadio;";
 						DB.ExecuteNonQuery(sql);
 
+						DataTable itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
+						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
+
 						foreach (JProperty radio in radios)
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
-							itemToken = radio.First();
+							JToken itemToken = radio.First();
 
-							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
+							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);
 							string name = itemToken["name_i18n"].ToString();
 							int tier = Int32.Parse(itemToken["level"].ToString());
 							int signalRange = Int32.Parse(itemToken["distance"].ToString());
 
-							var moduleExists = itemsInDB.Select("id = '" + itemId + "'");
-							insertSql = "INSERT INTO modRadio (id, name, tier, signalRange) VALUES (@id, @name, @tier, @signalRange); ";
-							updateSql = "UPDATE modRadio SET name=@name, tier=@tier, signalRange=@signalRange WHERE id=@id; ";
+							DataRow[] moduleExists = itemsInDB.Select("id = '" + itemId + "'");
+							string insertSql = "INSERT INTO modRadio (id, name, tier, signalRange) VALUES (@id, @name, @tier, @signalRange); ";
+							string updateSql = "UPDATE modRadio SET name=@name, tier=@tier, signalRange=@signalRange WHERE id=@id; ";
 
 							if (moduleExists.Length == 0)
 							{
@@ -609,8 +601,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@signalRange", signalRange, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(insertSql);
 								sqlTotal += insertSql + Environment.NewLine;
-								logAddedItems = logAddedItems + name + ", ";
-								logAddedItemsCount++;
+								logItems.Inserted += name + ", ";
+								logItems.InsertedCount++;
 							}
 
 							else
@@ -621,8 +613,8 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@signalRange", signalRange, DB.SqlDataType.Int);
 								// ok = DB.ExecuteNonQuery(updateSql);
 								sqlTotal += updateSql + Environment.NewLine;
-								logItemExists = logItemExists + name + ", ";
-								logItemExistsCount++;
+								logItems.Updated += name + ", ";
+								logItems.UpdatedCount++;
 							}
 
 							// Create relation to tank
@@ -640,7 +632,7 @@ namespace WinApp.Code
 						}
 
 						// Update log file after import
-						updateLog("radios");
+						WriteApiLog(logItems);
 					}
 					DB.ExecuteNonQuery(sqlTotal, true, true);
 					//Code.MsgBox.Show("Radio import complete");
@@ -674,33 +666,34 @@ namespace WinApp.Code
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
-					rootToken = allTokens.First;
+					JToken rootToken = allTokens.First;
+					LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 					string sqlTotal = "";
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;
-						rootToken = rootToken.Next;
+						int itemCount = (int)((JProperty)rootToken).Value;
+						rootToken = rootToken.Next.Next;
 						JToken maps = rootToken.Children().First();
 						foreach (JProperty map in maps)
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
-							itemToken = map.First();
+							JToken itemToken = map.First();
 							string name = itemToken["name_i18n"].ToString();
 							name = name.Replace("'","");
 							string description = itemToken["description"].ToString();
 							string arena_id = itemToken["arena_id"].ToString();
-							updateSql = "UPDATE map SET description=@description, arena_id=@arena_id WHERE name=@name; " ;
+							string updateSql = "UPDATE map SET description=@description, arena_id=@arena_id WHERE name=@name; " ;
 							DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
 							DB.AddWithValue(ref updateSql, "@description", description, DB.SqlDataType.VarChar);
 							DB.AddWithValue(ref updateSql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
 							sqlTotal += updateSql + "\n" + Environment.NewLine;
-							logAddedItems = logAddedItems + name + ", ";
-							logAddedItemsCount++;
+							logItems.Inserted += name + ", ";
+							logItems.InsertedCount++;
 						}
 
 						// Update log file after import
-						updateLog("maps");
+						WriteApiLog(logItems);
 					}
 					DB.ExecuteNonQuery(sqlTotal, true, true);
 					return ("Import Complete");
@@ -740,13 +733,13 @@ namespace WinApp.Code
 						rootToken = rootToken.Next;
 						int achCount = (int)((JProperty)rootToken).Value;
 
-						rootToken = rootToken.Next;
+						rootToken = rootToken.Next.Next;
 						JToken achList = rootToken.Children().First();
-
+						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty ach in achList)
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
-							itemToken = ach.First();
+							JToken itemToken = ach.First();
 
 							// Check if ach already exists
 							if (!TankHelper.GetAchievmentExist(itemToken["name"].ToString()))
@@ -805,8 +798,8 @@ namespace WinApp.Code
 								}
 								// Insert to db now
 								sqlTotal += sql + Environment.NewLine;
-								logAddedItems = logAddedItems + itemToken["name"].ToString() + ", ";
-								logAddedItemsCount++;
+								logItems.Inserted += itemToken["name"].ToString() + ", ";
+								logItems.InsertedCount++;
 							}
 							else
 							{
@@ -869,13 +862,13 @@ namespace WinApp.Code
 								// Update db now
 								// if (!DB.ExecuteNonQuery(sql)) return;
 								sqlTotal = sql + Environment.NewLine;
-								logItemExists = logItemExists + itemToken["name"].ToString() + ", ";
-								logItemExistsCount++;
+								logItems.Updated += itemToken["name"].ToString() + ", ";
+								logItems.UpdatedCount++;
 							}
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
-						updateLog("achievements");
+						WriteApiLog(logItems);
 					}
 
 					//Code.MsgBox.Show("Achievement import complete");
@@ -909,7 +902,7 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
 						rootToken = rootToken.Next;   // set root to data element
 						JToken player = rootToken.Children().First();   // get player element
 						string jsonPlayerTanks = player.ToString();
@@ -920,7 +913,8 @@ namespace WinApp.Code
 							int tankId = Convert.ToInt32(tank["tank_id"]);
 							tanksInGarage.Add(tankId);
 						}
-						updateLog("Found " + tanksInGarage.Count + " tanks in garage");
+						Log.AddToLogBuffer("Found " + tanksInGarage.Count + " tanks in garage");
+						Log.WriteLogBuffer();
 					}
 				}
 
