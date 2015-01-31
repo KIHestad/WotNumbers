@@ -2289,11 +2289,13 @@ namespace WinApp.Forms
 								}
 								if (count > 0)
 									if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-										rowAverage[colListItem.name] = Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter);
+										rowAverage[colListItem.name] = Math.Round(Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter),1);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
-										rowAverage[colListItem.name] = Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter);
+										rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter),1);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
-										rowAverage[colListItem.name] = Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter);
+										rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter),1);
+									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation for EFF
+										rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter),1);
 									else
 										rowAverage[colListItem.name] = sum / count;
 								else
@@ -2339,7 +2341,7 @@ namespace WinApp.Forms
 					IEnumerable<string> nonTotalsCols = new List<string> 
 					{ 
 						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  
-						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID"
+						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R"
 					};
 					IEnumerable<string> countCols = new List<string> 
 					{ 
@@ -2536,6 +2538,28 @@ namespace WinApp.Forms
 				//throw;
 			}
 			
+		}
+
+		private double CalcAvgDmgCR(string battleTimeFilter, string battleMode, string tankFilter, string battleModeFilter)
+		{
+			double result = 0;
+			if (battleMode == "")
+				battleMode = "%";
+			string sql =
+					"select SUM(dmg) as dmg, SUM(dmgReceived) as dmgReceived " +
+					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id " +
+					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter;
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DataTable dtBattles = DB.FetchData(sql);
+			if (dtBattles.Rows.Count > 0)
+			{
+				double dmg = Convert.ToDouble(dtBattles.Rows[0]["dmg"]);
+				double dmgReceived = Convert.ToDouble(dtBattles.Rows[0]["dmgReceived"]);
+				if (dmgReceived > 0)
+					result = dmg / dmgReceived;
+			}
+			return result;
 		}
 
 		#endregion
