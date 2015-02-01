@@ -288,6 +288,11 @@ namespace WinApp.Forms
 						battleMode = "Skirmish Battle";
 						showFortResources = true; 
 						break;
+					case "Special":
+						mainBattleMode = BattleHelper.MainBattleMode.ModeSpecial;
+						battleMode = "Special Event Battle";
+						showFortResources = false; 
+						break;
 				}
 				// Battle mode text
 				if (dr["battleResultMode"] != DBNull.Value)

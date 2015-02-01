@@ -287,6 +287,7 @@ namespace WinApp.Code
 									case 3: battleResultMode = "Tank Company"; break;
 									case 4: battleResultMode = "Clan War"; break;
 									case 5: battleResultMode = "Tutorial"; break;
+									case 9: battleResultMode = "Special Event"; break;
 									case 10: battleResultMode = "Skimish"; break;
 								}
 								// Get other modes from battle
