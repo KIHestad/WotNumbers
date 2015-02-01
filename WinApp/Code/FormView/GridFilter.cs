@@ -31,6 +31,7 @@ namespace WinApp.Code
 			RandomPlatoon = 10,
 			RandomPlatoon2 = 11,
 			RandomPlatoon3 = 12,
+			Special = 13,
 		}
 
 		public class Settings

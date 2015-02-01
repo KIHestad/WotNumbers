@@ -123,9 +123,12 @@
 			this.mRandomPlatoon3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeCompany = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeClan = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparatorForBattleView = new System.Windows.Forms.ToolStripSeparator();
 			this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeSkrimishes = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+			this.mModeSpecial = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mBattles1d = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattlesYesterday = new System.Windows.Forms.ToolStripMenuItem();
@@ -1018,9 +1021,12 @@
             this.mModeRandomSoloPlatoon,
             this.mModeCompany,
             this.mModeClan,
+            this.toolStripSeparatorForBattleView,
             this.mModeHistorical,
             this.mModeTeam,
-            this.mModeSkrimishes});
+            this.mModeSkrimishes,
+            this.toolStripSeparator15,
+            this.mModeSpecial});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
 			this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.mMode.Name = "mMode";
@@ -1130,6 +1136,11 @@
 			this.mModeClan.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeClan.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
+			// toolStripSeparatorForBattleView
+			// 
+			this.toolStripSeparatorForBattleView.Name = "toolStripSeparatorForBattleView";
+			this.toolStripSeparatorForBattleView.Size = new System.Drawing.Size(203, 6);
+			// 
 			// mModeHistorical
 			// 
 			this.mModeHistorical.Name = "mModeHistorical";
@@ -1156,6 +1167,20 @@
 			this.mModeSkrimishes.Text = "Skirmishes";
 			this.mModeSkrimishes.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeSkrimishes.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolStripSeparator15
+			// 
+			this.toolStripSeparator15.Name = "toolStripSeparator15";
+			this.toolStripSeparator15.Size = new System.Drawing.Size(203, 6);
+			// 
+			// mModeSpecial
+			// 
+			this.mModeSpecial.Name = "mModeSpecial";
+			this.mModeSpecial.Size = new System.Drawing.Size(206, 22);
+			this.mModeSpecial.Tag = "Special";
+			this.mModeSpecial.Text = "Special Events";
+			this.mModeSpecial.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeSpecial.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mBattles
 			// 
@@ -2125,6 +2150,9 @@
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_All_NotOwned;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsRunBattleCheck;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorForBattleView;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+		private System.Windows.Forms.ToolStripMenuItem mModeSpecial;
 	}
 }
 

@@ -200,7 +200,7 @@ namespace WinApp.Code
 					// Check if ok
 					if (result == "ok")
 					{
-						double arenaUniqueID = (double)token_root.SelectToken("arenaUniqueID"); // Find unique id
+						Int64 arenaUniqueID = (Int64)token_root.SelectToken("arenaUniqueID"); // Find unique id
 						double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
 						double duration = (double)token_common.SelectToken("duration"); // Arena duration
 						double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
@@ -208,28 +208,60 @@ namespace WinApp.Code
 						// Personal token
 						JToken token_personel = token_root["personal"];
 						int tankId = (int)token_personel.SelectToken("typeCompDescr"); // tankId
-						// Now find battle
-						string sql =
-							"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID  " +
-							"from battle b left join playerTank pt on b.playerTankId = pt.id " +
-							"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
+						// Check for special tanks
+						List<int> specialTanks = new List<int>(new[] { 64801, 64769, 65089 }); // Mammoth, Arctic Fox, Polar Bear
+						bool specialTankFound = (specialTanks.Contains(tankId));
+						// Now find battle created from dossier, or create now if special tank = special Event
+						DataTable dt;
+						string sql = "";
+						if (specialTankFound) // Special tanks, no battle is created from dossier, check for existing battle mapping against arenaUniqueId
+						{
+							sql =
+								"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID  " +
+								"from battle b left join playerTank pt on b.playerTankId = pt.id " +
+								"where b.arenaUniqueID=@arenaUniqueID;";
+							DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Int);
+							dt = DB.FetchData(sql);
+							// check if battle exists
+							if (dt.Rows.Count == 0)
+							{
+								// Create battle, do not exists
+								int playerTankId = TankHelper.GetPlayerTankId(tankId);
+								sql =
+									"insert into battle " + 
+									"(playerTankId,  battleMode, battlesCount, battleTime,  battleResultId, battleSurviveId) values " +
+									"(@playerTankId, 'Special',  1,            @battleTime, 1,              1               );";
+								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+								DB.AddWithValue(ref sql, "@battleTime", battleTime, DB.SqlDataType.DateTime);
+								DB.ExecuteNonQuery(sql);
+							}
+						}
+						// Fetch battle
+						sql =
+								"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID  " +
+								"from battle b left join playerTank pt on b.playerTankId = pt.id " +
+								"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
 						DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 						DB.AddWithValue(ref sql, "@battleTimeFrom", battleTime.AddSeconds(-30), DB.SqlDataType.DateTime);
 						DB.AddWithValue(ref sql, "@battleTimeTo", battleTime.AddSeconds(30), DB.SqlDataType.DateTime);
-						DataTable dt = DB.FetchData(sql);
+						dt = DB.FetchData(sql);
+						// If battle found from DB add enhanced values from battle file now
 						if (dt.Rows.Count > 0)
 						{
-							// Check if read
+							// Check if already read, if nowt continue adding enhanced values
 							if (dt.Rows[0]["arenaUniqueID"] == DBNull.Value)
 							{
-								// New battle found, get battleId
+								// Battle without enchanced values found
 								int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
 								int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
 								int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
 								// Get values
 								List<BattleValue> battleValues = new List<BattleValue>();
-								// common
+								// common initial values
 								battleValues.Add(new BattleValue() { colname = "arenaTypeID", value = (int)token_common.SelectToken("arenaTypeID") });
+								int playerTeam = (int)token_personel.SelectToken("team");
+								int enemyTeam = 1;
+								if (playerTeam == 1) enemyTeam = 2;
 								// Find game type
 								int bonusType = (int)token_common.SelectToken("bonusType");
 								battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
@@ -343,6 +375,64 @@ namespace WinApp.Code
 								int arenaTypeID = (int)token_common.SelectToken("arenaTypeID");
 								int mapId = arenaTypeID & 32767;
 								battleValues.Add(new BattleValue() { colname = "mapId", value = mapId });
+								// Special tank extra data insert, not fetched from dossier file
+								if (specialTankFound)
+								{
+									// battle lifetime
+									battleValues.Add(new BattleValue() { colname = "battleLifeTime", value = (int)token_personel.SelectToken("lifeTime") });
+									// winning team
+									int winnerTeam = (int)token_common.SelectToken("winnerTeam");
+									if (winnerTeam == playerTeam)
+									{
+										battleValues.Add(new BattleValue() { colname = "victory", value = 1 });
+										battleValues.Add(new BattleValue() { colname = "battleResultId", value = 1 });
+									}
+									else if (winnerTeam == enemyTeam)
+									{
+										battleValues.Add(new BattleValue() { colname = "defeat", value = 1 });
+										battleValues.Add(new BattleValue() { colname = "battleResultId", value = 3 });
+									}
+									else 
+									{
+										battleValues.Add(new BattleValue() { colname = "draw", value = 1 });
+										battleValues.Add(new BattleValue() { colname = "battleResultId", value = 2 });
+									}
+									// survival
+									int playerDeathReason = (int)token_personel.SelectToken("deathReason");
+									if (playerDeathReason == -1)
+									{
+										battleValues.Add(new BattleValue() { colname = "killed", value = 1 });
+										battleValues.Add(new BattleValue() { colname = "battleSurviveId", value = 1 });
+									}
+									else
+									{
+										battleValues.Add(new BattleValue() { colname = "survived", value = 1 });
+										battleValues.Add(new BattleValue() { colname = "battleSurviveId", value = 3 });
+									}
+									// other
+									battleValues.Add(new BattleValue() { colname = "dmg", value = (int)token_personel.SelectToken("damageDealt") });
+									battleValues.Add(new BattleValue() { colname = "dmgReceived", value = (int)token_personel.SelectToken("damageReceived") });
+									battleValues.Add(new BattleValue() { colname = "assistSpot", value = (int)token_personel.SelectToken("damageAssistedRadio") });
+									battleValues.Add(new BattleValue() { colname = "assistTrack", value = (int)token_personel.SelectToken("damageAssistedTrack") });
+									battleValues.Add(new BattleValue() { colname = "cap", value = (int)token_personel.SelectToken("capturePoints") });
+									//battleValues.Add(new BattleValue() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") });
+									battleValues.Add(new BattleValue() { colname = "shots", value = (int)token_personel.SelectToken("shots") });
+									battleValues.Add(new BattleValue() { colname = "hits", value = (int)token_personel.SelectToken("hits") });
+									battleValues.Add(new BattleValue() { colname = "shotsReceived", value = (int)token_personel.SelectToken("shotsReceived") });
+									battleValues.Add(new BattleValue() { colname = "pierced", value = (int)token_personel.SelectToken("pierced") });
+									battleValues.Add(new BattleValue() { colname = "piercedReceived", value = (int)token_personel.SelectToken("piercedReceived") });
+									battleValues.Add(new BattleValue() { colname = "spotted", value = (int)token_personel.SelectToken("spotted") });
+									battleValues.Add(new BattleValue() { colname = "mileage", value = (int)token_personel.SelectToken("mileage") });
+									//battleValues.Add(new BattleValue() { colname = "treesCut", value = (int)token_personel.SelectToken("") });
+									battleValues.Add(new BattleValue() { colname = "xp", value = (int)token_personel.SelectToken("originalXP") });
+									battleValues.Add(new BattleValue() { colname = "heHitsReceived", value = (int)token_personel.SelectToken("heHitsReceived") });
+									battleValues.Add(new BattleValue() { colname = "noDmgShotsReceived", value = (int)token_personel.SelectToken("noDamageShotsReceived") });
+									battleValues.Add(new BattleValue() { colname = "heHits", value = (int)token_personel.SelectToken("he_hits") });
+									battleValues.Add(new BattleValue() { colname = "dmgBlocked", value = (int)token_personel.SelectToken("damageBlockedByArmor") });
+									battleValues.Add(new BattleValue() { colname = "potentialDmgReceived", value = (int)token_personel.SelectToken("potentialDamageReceived") });
+
+
+								}
 								// insert data
 								string fields = "";
 								foreach (var battleValue in battleValues)
@@ -369,8 +459,6 @@ namespace WinApp.Code
 								survivedCount[2] = 0;
 								fragsCount[1] = 0;
 								fragsCount[2] = 0;
-								int playerTeam = 0;
-								int enemyTeam = 0;
 								int killerID = 0;
 								List<Platoon> platoon = new List<Platoon>();
 								int playerPlatoonId = 0;
@@ -512,7 +600,6 @@ namespace WinApp.Code
 										if (player.name == Config.Settings.playerName)
 										{
 											playerFortResources = Convert.ToInt32(fortResource.Value);
-											playerTeam = player.team;
 											killerID = playerKillerId;
 											playerPlatoonId = player.platoonID;
 										}
@@ -547,9 +634,7 @@ namespace WinApp.Code
 								{
 									playerPlatoonParticipants = platoon.FindAll(p => p.platoonID == playerPlatoonId).Count;
 								}
-								// Get enemy team
-								enemyTeam = 1;
-								if (playerTeam == 1) enemyTeam = 2;
+								// Update battle with enhanced values from players veicle section
 								sql =
 									"update battle set " +
 									"  enemyClanAbbrev=@enemyClanAbbrev, " +

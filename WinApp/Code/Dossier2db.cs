@@ -306,6 +306,9 @@ namespace WinApp.Code
 				return false;
 			}
 			int tankId = Convert.ToInt32(playerTankNewRow["compactDescr"]);
+			// Detect special battle mode for some tanks
+			List<int> specialTanks = new List<int>( new[] {64801,64769,65089}); // Mammoth, Arctic Fox, Polar Bear
+			bool specialTankFound = (specialTanks.Contains(tankId));
 			// Get tank new battle count
 			int playerTankNewRow_battles15 = 0;
 			int playerTankNewRow_battles7 = 0;
@@ -347,8 +350,8 @@ namespace WinApp.Code
 			int battlesNewHistorical = playerTankNewRow_battlesHistorical - playerTankOldRow_battlesHistorical;
 			int battlesNewSkirmishes = playerTankNewRow_battlesSkirmishes - playerTankOldRow_battlesSkirmishes;
 			// Check if new battle on this tank then do db update, if force do it anyway
-			if (battlesNew15 > 0 || battlesNew7 > 0 || battlesNewHistorical > 0 || battlesNewSkirmishes > 0 ||
-				(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0 || playerTankOldRow_battlesSkirmishes > 0)))
+			if (battlesNew15 > 0 || battlesNew7 > 0 || battlesNewHistorical > 0 || battlesNewSkirmishes > 0 || specialTankFound ||
+				(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0 || playerTankOldRow_battlesSkirmishes > 0 || specialTankFound)))
 			{  
 				// Update playerTank
 				string sqlFields = "";
@@ -430,6 +433,12 @@ namespace WinApp.Code
 					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
 											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
+				}
+				if (specialTankFound)
+				{
+					// for special tanks no stats are reported from dossier, make sure playerTankBattle exists anyway for battle mode "Special"
+					// Get or create playerTank BattleResult
+					DataTable playerTankBattleOld = TankHelper.GetPlayerTankBattle(playerTankId, BattleHelper.MainBattleMode.ModeSpecial, true);
 				}
 			}
 			playerTankOldTable.Dispose();

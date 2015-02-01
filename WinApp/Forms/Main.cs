@@ -851,6 +851,7 @@ namespace WinApp.Forms
 						mModeRandom.Visible = false;
 						mModeRandomTankCompany.Visible = true;
 						mModeRandomSoloPlatoon.Visible = false;
+						toolStripSeparatorForBattleView.Visible = false;
 						mGadget.Visible = false;
 						mHomeEdit.Visible = false;
 						mBattleGroup.Visible = false;
@@ -885,6 +886,7 @@ namespace WinApp.Forms
 						mModeRandom.Visible = true;
 						mModeRandomTankCompany.Visible = false;
 						mModeRandomSoloPlatoon.Visible = true;
+						toolStripSeparatorForBattleView.Visible = true;
 						mBattleGroup.Visible = true;
 						mGadget.Visible = false;
 						mHomeEdit.Visible = false;
@@ -1528,11 +1530,11 @@ namespace WinApp.Forms
 			// Changed gridFilter
 			GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
 			gf.BattleMode = selectedMode;
-			if (gf.FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
-			{
-				gf.FavListShow = GridFilter.FavListShowType.MyTanks;
-				SetFavListMenu();
-			}
+			//if (gf.FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
+			//{
+			//	gf.FavListShow = GridFilter.FavListShowType.MyTanks;
+			//	SetFavListMenu();
+			//}
 			MainSettings.UpdateCurrentGridFilter(gf);
 			// Remove current menu checked
 			foreach (var dropDownItem in mMode.DropDownItems)
@@ -1786,6 +1788,10 @@ namespace WinApp.Forms
 						battleModeFilter = " AND (battleMode = '15' AND platoonParticipants = 0) ";
 						battleMode = "15";
 						break;
+					case GridFilter.BattleModeType.Special:
+						battleModeFilter = " AND (battleMode = 'Special') ";
+						battleMode = "Special";
+						break;
 				}
 			}
 		}
@@ -1890,6 +1896,9 @@ namespace WinApp.Forms
 					break;
 				case GridFilter.BattleModeType.Skirmishes:
 					battleModeFilter = " AND (playerTankBattle.battleMode = 'Skirmishes') ";
+					break;
+				case GridFilter.BattleModeType.Special:
+					battleModeFilter = " AND (playerTankBattle.battleMode = 'Special') ";
 					break;
 				default:
 					break;
