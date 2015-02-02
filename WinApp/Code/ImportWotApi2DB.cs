@@ -902,7 +902,7 @@ namespace WinApp.Code
 					{
 						rootToken = rootToken.Next;
 						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
-						rootToken = rootToken.Next;   // set root to data element
+						rootToken = rootToken.Next.Next;   // set root to data element
 						JToken player = rootToken.Children().First();   // get player element
 						string jsonPlayerTanks = player.ToString();
 						JObject o = JObject.Parse(jsonPlayerTanks);

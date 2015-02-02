@@ -177,7 +177,7 @@ namespace WinApp.Forms
 				}
 				else
 				{
-					Code.MsgBox.Show("Current 'In Garage' tank list is complete. No new tanks to add or sold tanks to remove", "No changes found", this);
+					Code.MsgBox.Show("Current 'In Garage' tank list is complete, no changes for tanks in garage found.", "No changes found", this);
 					this.Close();
 				}
 				
