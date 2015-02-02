@@ -553,13 +553,19 @@ namespace WinApp.Forms
 
 		private int status2DefaultColor = 200;
 		private int status2fadeColor = 200;
+		
 
 		private void NewBattleFileChanged(object source, FileSystemEventArgs e)
 		{
 			// New battle saved
-			ShowView("New battle data fetched, view refreshed");
-			if (notifyIcon.Visible)
-				notifyIcon.ShowBalloonTip(1000);
+			if (!GridView.refreshRunning)
+			{
+				GridView.refreshRunning = true;
+				ShowView("New battle data fetched, view refreshed");
+				if (notifyIcon.Visible)
+					notifyIcon.ShowBalloonTip(1000);
+				GridView.refreshRunning = false;
+			}
 		}
 
 		private void timerStatus2_Tick(object sender, EventArgs e)
@@ -759,9 +765,14 @@ namespace WinApp.Forms
 
 		private void toolItemRefresh_Click(object sender, EventArgs e)
 		{
-			SetFormTitle();
-			SetStatus2("Refreshing view...");
-			ShowView("View refreshed");
+			if (!GridView.refreshRunning)
+			{
+				GridView.refreshRunning = true;
+				SetFormTitle();
+				SetStatus2("Refreshing view...");
+				ShowView("View refreshed");
+				GridView.refreshRunning = false;
+			}
 		}
 
 		private void toolItemViewOverall_Click(object sender, EventArgs e)
@@ -2049,6 +2060,7 @@ namespace WinApp.Forms
 					dataGridMain.Columns[colListItem.name].MinimumWidth = 25;
 				// Sortmode - width
 				dataGridMain.Columns[colListItem.name].SortMode = DataGridViewColumnSortMode.Programmatic;
+				mainGridSaveColWidth = false;
 				dataGridMain.Columns[colListItem.name].Width = colListItem.colWidth;
 				// Format cells
 				if (colListItem.colType == "Int")
@@ -3121,7 +3133,7 @@ namespace WinApp.Forms
 			string colName = "";
 			try
 			{
-				if (mainGridSaveColWidth && MainSettings.View != GridView.Views.Overall)
+				if (mainGridSaveColWidth && e.Column.HeaderText != "" && MainSettings.View != GridView.Views.Overall)
 				{
 					colName = dataGridMain.Columns[e.Column.HeaderText].HeaderText;
 					int newWidth = e.Column.Width;
@@ -3423,7 +3435,7 @@ namespace WinApp.Forms
 
 		private void mSettingsRunBattleCheck_Click(object sender, EventArgs e)
 		{
-			if (Dossier2db.dossierRunning)
+			if (Dossier2db.Running)
 				MsgBox.Show("Battle check is already running, cannot run twice at the same time.", "Battle Check Already Running", this);
 			else
 			{
@@ -3456,7 +3468,7 @@ namespace WinApp.Forms
 
 		private void RunDossierFileCheck(string message, bool forceUpdate)
 		{
-			if (Dossier2db.dossierRunning)
+			if (Dossier2db.Running)
 				SetStatus2("Terminated new battle check, already running...");
 			else
 			{
@@ -3477,7 +3489,7 @@ namespace WinApp.Forms
 
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
 		{
-			if (Dossier2db.dossierRunning)
+			if (Dossier2db.Running)
 				MsgBox.Show("Battle check is running, cannot start import at the same time. Please wait some seconds until battle check is done." +
 							Environment.NewLine + Environment.NewLine, "Cannot start import yet", this);
 			else

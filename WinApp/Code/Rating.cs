@@ -80,13 +80,14 @@ namespace WinApp.Code
 					else
 					{
 						if (Config.Settings.showDBErrors)
-							Log.LogToFile("*** COULD NOT FIND TANK CALCULTATING WN8 RATING FOR GAUGE (" + tankId + ") ***");
+							Log.LogToFile("*** Could not find playerTank for battle mode '" + battleMode + "' for tank: " + tankId + " ***");
 					}
 					count++;
 					if (count > battleCount) break;
 				}
 				// Check for null values
-				WN8 = Code.Rating.CalculatePlayerTankTotalWN8(ptb);
+				if (ptb.Rows.Count > 0)
+					WN8 = Code.Rating.CalculatePlayerTankTotalWN8(ptb);
 			}
 			return WN8;
 		}
@@ -151,7 +152,8 @@ namespace WinApp.Code
 					}
 				}
 				// Use WN8 formula to calculate result
-				WN8 = UseWN8Formula(dmg, spotted, frags, def, avgWinRate, expDmg, expSpot, expFrag, expDef, (expWinRate / totalBattles));
+				if (totalBattles > 0)
+					WN8 = UseWN8Formula(dmg, spotted, frags, def, avgWinRate, expDmg, expSpot, expFrag, expDef, (expWinRate / totalBattles));
 			}
 			return WN8;
 		}

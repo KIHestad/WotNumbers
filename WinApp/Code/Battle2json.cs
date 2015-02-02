@@ -18,7 +18,7 @@ namespace WinApp.Code
 		private static List<string> battleResultDatFileCopied = new List<string>(); // List of dat-files copyied from wargaming battle folder, to avoid copy several times
 		private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
 		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
-
+		
 		private class BattlePlayer
 		{
 			public int accountId;
@@ -63,7 +63,7 @@ namespace WinApp.Code
 
 		private static void BattleResultFileChanged(object source, FileSystemEventArgs e)
 		{
-			if (!Dossier2db.dossierRunning)
+			if (!Dossier2db.Running)
 			{
 				Log.AddToLogBuffer("New battle file detected");
 				RunBattleResultRead();
@@ -335,7 +335,8 @@ namespace WinApp.Code
 								battleValues.Add(new BattleValue() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
 								battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
 								battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
-								battleValues.Add(new BattleValue() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") }); // override def - might be above 100
+								double def = (int)token_personel.SelectToken("droppedCapturePoints");
+								battleValues.Add(new BattleValue() { colname = "def", value = def }); // override def - might be above 100
 								// field returns null
 								if (token_personel.SelectToken("fortResource").HasValues)
 									battleValues.Add(new BattleValue() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
@@ -383,10 +384,12 @@ namespace WinApp.Code
 									battleValues.Add(new BattleValue() { colname = "battleLifeTime", value = (int)token_personel.SelectToken("lifeTime") });
 									// winning team
 									int winnerTeam = (int)token_common.SelectToken("winnerTeam");
+									double wins = 0;
 									if (winnerTeam == playerTeam)
 									{
 										battleValues.Add(new BattleValue() { colname = "victory", value = 1 });
 										battleValues.Add(new BattleValue() { colname = "battleResultId", value = 1 });
+										wins = 1;
 									}
 									else if (winnerTeam == enemyTeam)
 									{
@@ -411,18 +414,23 @@ namespace WinApp.Code
 										battleValues.Add(new BattleValue() { colname = "battleSurviveId", value = 3 });
 									}
 									// other
-									battleValues.Add(new BattleValue() { colname = "dmg", value = (int)token_personel.SelectToken("damageDealt") });
+									double dmg = (double)token_personel.SelectToken("damageDealt");
+									battleValues.Add(new BattleValue() { colname = "dmg", value = dmg });
+									double frags = (double)token_personel.SelectToken("kills");
+									battleValues.Add(new BattleValue() { colname = "frags", value = frags });
 									battleValues.Add(new BattleValue() { colname = "dmgReceived", value = (int)token_personel.SelectToken("damageReceived") });
 									battleValues.Add(new BattleValue() { colname = "assistSpot", value = (int)token_personel.SelectToken("damageAssistedRadio") });
 									battleValues.Add(new BattleValue() { colname = "assistTrack", value = (int)token_personel.SelectToken("damageAssistedTrack") });
-									battleValues.Add(new BattleValue() { colname = "cap", value = (int)token_personel.SelectToken("capturePoints") });
+									double cap = (double)token_personel.SelectToken("capturePoints");
+									battleValues.Add(new BattleValue() { colname = "cap", value = cap });
 									//battleValues.Add(new BattleValue() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") });
 									battleValues.Add(new BattleValue() { colname = "shots", value = (int)token_personel.SelectToken("shots") });
 									battleValues.Add(new BattleValue() { colname = "hits", value = (int)token_personel.SelectToken("hits") });
 									battleValues.Add(new BattleValue() { colname = "shotsReceived", value = (int)token_personel.SelectToken("shotsReceived") });
 									battleValues.Add(new BattleValue() { colname = "pierced", value = (int)token_personel.SelectToken("pierced") });
 									battleValues.Add(new BattleValue() { colname = "piercedReceived", value = (int)token_personel.SelectToken("piercedReceived") });
-									battleValues.Add(new BattleValue() { colname = "spotted", value = (int)token_personel.SelectToken("spotted") });
+									double spotted = (double)token_personel.SelectToken("spotted");
+									battleValues.Add(new BattleValue() { colname = "spotted", value = spotted });
 									battleValues.Add(new BattleValue() { colname = "mileage", value = (int)token_personel.SelectToken("mileage") });
 									//battleValues.Add(new BattleValue() { colname = "treesCut", value = (int)token_personel.SelectToken("") });
 									battleValues.Add(new BattleValue() { colname = "xp", value = (int)token_personel.SelectToken("originalXP") });
@@ -431,8 +439,14 @@ namespace WinApp.Code
 									battleValues.Add(new BattleValue() { colname = "heHits", value = (int)token_personel.SelectToken("he_hits") });
 									battleValues.Add(new BattleValue() { colname = "dmgBlocked", value = (int)token_personel.SelectToken("damageBlockedByArmor") });
 									battleValues.Add(new BattleValue() { colname = "potentialDmgReceived", value = (int)token_personel.SelectToken("potentialDamageReceived") });
-
-
+									//Ratings
+									double tier = TankHelper.GetTankTier(tankId);
+									double eff = Rating.CalculateEFF(1, dmg, spotted, frags, def, cap, tier);
+									battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
+									double wn7 = Rating.CalculateWN7(1, dmg, spotted, frags, def, cap, wins, tier, true);
+									battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
+									double wn8 = Rating.CalculateTankWN8(tankId, 1, dmg, spotted, frags, def, wins, true);
+									battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });
 								}
 								// insert data
 								string fields = "";

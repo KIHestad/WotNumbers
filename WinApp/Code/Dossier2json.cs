@@ -171,9 +171,9 @@ namespace WinApp.Code
 		private static string RunDossierRead(string dossierFile, bool forceUpdate = false)
 		{
 			string returVal = "";
-			if (!Dossier2db.dossierRunning)
+			if (!Dossier2db.Running)
 			{
-				Dossier2db.dossierRunning = true;
+				Dossier2db.Running = true;
 				bool ok = true;
 				returVal = "Starting file handling...";
 				Log.AddToLogBuffer(" > > Dossier file handling started");
@@ -289,7 +289,7 @@ namespace WinApp.Code
 					}
 				}
 				// Done analyzing dossier file
-				Dossier2db.dossierRunning = false;
+				Dossier2db.Running = false;
 				if (forceUpdate)
 				{
 					string msg = "";

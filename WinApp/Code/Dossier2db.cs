@@ -14,7 +14,7 @@ namespace WinApp.Code
 {
 	public class Dossier2db
 	{
-		public static bool dossierRunning = false; // Flag to avoid running several dossier actions at the same time
+		public static bool Running = false; // Flag to avoid running several dossier actions at the same time
 		public static bool battleSaved = false; // If new battle is saved
 		
 		public class JsonItem
