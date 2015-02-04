@@ -64,7 +64,7 @@ def main():
 	import struct, json, time, sys, os, shutil, datetime
 	global numofkills, filename_source, filename_target, option_server, option_format, cachefile
 	
-	parserversion = "0.9.5.0"
+	parserversion = "0.9.6.0"
 	
 	option_raw = 0
 	option_format = 0
