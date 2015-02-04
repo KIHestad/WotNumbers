@@ -1034,7 +1034,7 @@ namespace WinApp.Forms
 			// Selected a colList from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
 			// Get colListId for the selected colList
-			int newColListId = ColListHelper.GetColListId(selectedMenu.Text);
+			int newColListId = ColListHelper.GetColList(selectedMenu.Text);
 			// Check if changed
 			if (MainSettings.GetCurrentGridFilter().ColListId != newColListId)
 			{

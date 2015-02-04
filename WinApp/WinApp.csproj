@@ -146,6 +146,7 @@
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\FormLayout\GridHelper.cs" />
+    <Compile Include="Code\FormView\ColListSystemDefault.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />
     <Compile Include="Code\FormView\ColListHelper.cs" />

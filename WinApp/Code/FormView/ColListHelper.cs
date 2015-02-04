@@ -9,7 +9,7 @@ namespace WinApp.Code
 {
 	class ColListHelper
 	{
-		public static int GetColListId(string colListName)
+		public static int GetColList(string colListName)
 		{
 			int colListId = 0;
 			string sql = "select columnList.id as id " +
@@ -21,6 +21,38 @@ namespace WinApp.Code
 			if (dt.Rows.Count > 0)
 			{
 				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
+			}
+			return colListId;
+		}
+
+		public static string GetColListName(int colListId)
+		{
+			string colListName = "";
+			string sql = "select columnList.name " +
+						 "from columnList  " +
+						 "where columnList.id=@id";
+			DB.AddWithValue(ref sql, "@id", colListId, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				colListName = dt.Rows[0]["name"].ToString();
+			}
+			return colListName;
+		}
+
+		public static int GetColListStartup(GridView.Views view, out string colListName)
+		{
+			int colListId = 0;
+			colListName = "";
+			string sql = "select id, name " +
+						 "from columnList  " +
+						 "where columnList.colType=@colType and colDefault=1 ";
+			DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			if (dt.Rows.Count > 0)
+			{
+				colListId = Convert.ToInt32(dt.Rows[0]["id"]);
+				colListName = dt.Rows[0]["name"].ToString();
 			}
 			return colListId;
 		}
@@ -241,12 +273,25 @@ namespace WinApp.Code
 			colList = selectColList;
 		}
 
+		public static ColListClass GetColListItem(int id)
+		{
+			string sql = "SELECT * FROM columnSelection WHERE id=@id; ";
+			DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			return GetColListItem(dt);			
+		}
+
 		public static ColListClass GetColListItem(string name, GridView.Views view)
 		{
 			string sql = "SELECT * FROM columnSelection WHERE name=@name AND colType=@colType; ";
 			DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
+			return GetColListItem(dt);
+		}
+
+		public static ColListClass GetColListItem(DataTable dt)
+		{
 			ColListClass clc = new ColListClass();
 			if (dt.Rows.Count > 0) 
 			{

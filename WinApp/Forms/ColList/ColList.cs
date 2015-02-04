@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.FormView;
 
 namespace WinApp.Forms
 {
@@ -993,9 +994,18 @@ namespace WinApp.Forms
 		{
 			try
 			{
+				// Try to use selected collist from grid
+				int colListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
+				// Check if exists, might be deleted if reset system view
+				string colListName = ColListHelper.GetColListName(colListId);
+				if (colListName == "")
+				{
+					// Get statup list
+					colListId = ColListHelper.GetColListStartup(MainSettings.View, out colListName);
+				}
 				GridFilter.Settings gf = MainSettings.GetCurrentGridFilter();
-				gf.ColListId = Convert.ToInt32(dataGridColumnList.SelectedRows[0].Cells["id"].Value);
-				gf.ColListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
+				gf.ColListId = colListId;
+				gf.ColListName = colListName;
 				MainSettings.UpdateCurrentGridFilter(gf);
 			}
 			catch (Exception ex)
@@ -1090,6 +1100,31 @@ namespace WinApp.Forms
 			DB.AddWithValue(ref sql, "@colWidth", separatorDefaultColWidth, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 			ColListSort();
+		}
+
+		private void btnReset_Click(object sender, EventArgs e)
+		{
+			MsgBox.Button answer = MsgBox.Show("This will delete all system views, recreate them and move them to top.", "Reset system views", MsgBoxType.OKCancel, this);
+			if (answer == MsgBox.Button.OKButton)
+			{
+				switch (MainSettings.View)
+				{
+					case GridView.Views.Overall:
+						break;
+					case GridView.Views.Tank:
+						ColListSystemDefault.NewSystemTankColList();
+
+						this.Close();
+						break;
+					case GridView.Views.Battle:
+						ColListSystemDefault.NewSystemBattleColList();
+						this.Close();
+						break;
+					default:
+						break;
+				}
+				
+			}
 		}
 
 	}
