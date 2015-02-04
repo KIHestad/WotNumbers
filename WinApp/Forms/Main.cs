@@ -1917,15 +1917,15 @@ namespace WinApp.Forms
 			// Get soring
 			GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 			// Default values for painting glyph as sort order direction on column header
-			if (sorting.lastSortColumn == "")
+			if (sorting.ColumnName == "")
 			{
-				sorting.lastSortColumn = "playerTank.lastBattleTime";
-				sorting.lastColumn = "";
+				sorting.ColumnName = "playerTank.lastBattleTime";
+				sorting.ColumnHeader = "";
 			}
 			// Create sort order
-			string sortOrder = sorting.lastSortColumn + " ";
-			currentSortColName = sorting.lastColumn;
-			if (sorting.lastSortDirectionAsc)
+			string sortOrder = sorting.ColumnName + " ";
+			currentSortColName = sorting.ColumnHeader;
+			if (sorting.SortDirectionAsc)
 			{
 				sortOrder += " ASC ";
 				currentSortDirection = SortOrder.Ascending;
@@ -2123,15 +2123,15 @@ namespace WinApp.Forms
 				// Get soring
 				GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 				// Default values for painting glyph as sort order direction on column header
-				if (sorting.lastColumn == "")
+				if (sorting.ColumnHeader == "")
 				{
-					sorting.lastColumn = "battle.battleTime";
-					sorting.lastSortColumn = sorting.lastColumn;
+					sorting.ColumnHeader = "battle.battleTime";
+					sorting.ColumnName = sorting.ColumnHeader;
 				}
 				// Create sort order if no grouping 
 				string sortDirection = "";
-				currentSortColName = sorting.lastColumn;
-				if (sorting.lastSortDirectionAsc)
+				currentSortColName = sorting.ColumnHeader;
+				if (sorting.SortDirectionAsc)
 				{
 					sortDirection += " ASC ";
 					currentSortDirection = SortOrder.Ascending;
@@ -2156,6 +2156,7 @@ namespace WinApp.Forms
 						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, 0 as arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as mb_id, 0 as battle_Id ";
 					groupBy = "GROUP BY tank.id, tank.Name, playerTank.Id ";
+					sortOrder = "ORDER BY [" + sorting.ColumnHeader + "] " + sortDirection + " ";
 				}
 				else
 				{
@@ -2167,8 +2168,9 @@ namespace WinApp.Forms
 						"  battle.survived as survivedCountToolTip, battle.killed as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, " +
 						"  battle.markOfMastery as mb_id, battle.arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, battle.id as battle_Id ";
+					sortOrder = "ORDER BY " + sorting.ColumnName + " " + sortDirection + " ";
 				}
-				sortOrder = "ORDER BY " + sorting.lastSortColumn + " " + sortDirection + " ";
+				
 				// Get sorting by finding calcultated fiels
 				//foreach (ColListHelper.ColListClass col in colList)
 				//{
@@ -2568,7 +2570,7 @@ namespace WinApp.Forms
 				battleMode = "%";
 			string sql =
 					"select SUM(dmg) as dmg, SUM(dmgReceived) as dmgReceived " +
-					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id " +
+					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id INNER JOIN tank on playerTank.tankId = tank.id " +
 					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
@@ -2663,20 +2665,20 @@ namespace WinApp.Forms
 					if (sorting == null)
 						sorting = new GridSortingHelper.Sorting();
 					// Check if same same column as last
-					if (clc.name == sorting.lastColumn)
+					if (clc.name == sorting.ColumnHeader)
 					{
 						// same as last, reverse sort direction
-						sorting.lastSortDirectionAsc = !sorting.lastSortDirectionAsc;
+						sorting.SortDirectionAsc = !sorting.SortDirectionAsc;
 					}
 					else
 					{
 						// new column, get default sort direction
-						sorting.lastColumn = clc.name; // column name in header
-						sorting.lastSortColumn = clc.colName; // database field to sort on
+						sorting.ColumnHeader = clc.name; // column name in header
+						sorting.ColumnName = clc.colName; // database field to sort on
 						bool sortDirectionAsc = false;
 						if (dataGridMain.Columns[e.ColumnIndex].ValueType == typeof(string))
 							sortDirectionAsc = true;
-						sorting.lastSortDirectionAsc = sortDirectionAsc;
+						sorting.SortDirectionAsc = sortDirectionAsc;
 					}
 					// Save new sorting
 					GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
