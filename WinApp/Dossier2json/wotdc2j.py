@@ -3,7 +3,7 @@
 # Initial version by Phalynx www.vbaddict.net/wot #
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2014-09-10       #
+# Edited version by BadButton -> 2015-02-06       #
 ###################################################
 
 import struct, json, time, sys, os
@@ -21,7 +21,7 @@ def main():
 	
 	import struct, json, time, sys, os, shutil, datetime, base64, cPickle
 
-	parserversion = "0.9.3.0"
+	parserversion = "0.9.6.0"
 	
 	global rawdata, tupledata, data, structures, numoffrags, working_directory
 	global filename_source, filename_target
@@ -43,7 +43,6 @@ def main():
 	option_tanks = 0
 	
 	for argument in sys.argv:
-		#print "--+++++ " + str(argument)
 		if argument == "-s":
 			option_server = 1
 			#print '-- SERVER mode enabled'
@@ -233,6 +232,9 @@ def main():
 			if tankversion in [85, 87]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFort', 'fortSorties', 'maxSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
 
+			if tankversion == 88:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'inscriptions', 'emblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'uniqueAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7')
+				
 			blockcount = len(list(blocks))+1
 
 			newbaseoffset = (blockcount * 2)
@@ -279,7 +281,16 @@ def main():
 						tank_v2[blockname] = structureddata 
 
 				blocknumber +=1
-		
+			if contains_block('max15x15', tank_v2):
+				if 'maxXP' in tank_v2['max15x15']:
+					if tank_v2['max15x15']['maxXP']==0:
+						tank_v2['max15x15']['maxXP'] = 1
+						
+				if 'maxFrags' in tank_v2['max15x15']:
+					if tank_v2['max15x15']['maxFrags']==0:
+						tank_v2['max15x15']['maxFrags'] = 1
+
+				
 			if contains_block('company', tank_v2):
 				if 'battlesCount' in tank_v2['company']:
 					battleCount_company += tank_v2['company']['battlesCount']
@@ -332,7 +343,7 @@ def main():
 
 				try:
 					if numoffrags_list <> (numoffrags_a15x15 + numoffrags_a7x7 + numoffrags_historical + numoffrags_fortBattles + numoffrags_fortSorties):
-						write_to_log('Wrong number of frags for ' + str(tanktitle) + ': ' + str(numoffrags_list) + ' = ' + str(numoffrags_a15x15) + ' + ' + str(numoffrags_a7x7) + ' + ' + str(numoffrags_historical) + ' + ' + str(numoffrags_fortBattles) + ' + ' + str(numoffrags_fortSorties))
+						write_to_log('Wrong number of frags for ' + str(tanktitle) + ', ' + str(tankversion) + ': ' + str(numoffrags_list) + ' = ' + str(numoffrags_a15x15) + ' + ' + str(numoffrags_a7x7) + ' + ' + str(numoffrags_historical) + ' + ' + str(numoffrags_fortBattles) + ' + ' + str(numoffrags_fortSorties))
 				except Exception, e:
 						write_to_log('Error processing frags: ' + e.message)
 		
@@ -662,7 +673,7 @@ def get_tank_data(tanksdata, countryid, tankid, dataname):
 	if dataname == 'title':
 		return 'unknown_' + str(countryid) + '_' + str(tankid)
 	
-	return "-"
+	return 0
 
 
 def getdata_fragslist(tankversion, tanksdata, offset):
@@ -713,7 +724,7 @@ def getdata(name, startoffset, offsetlength):
 		structformat = 'I'
 
 	value = struct.unpack_from('<' + structformat, data, startoffset)[0]
-
+	
 	for x in range(0, offsetlength):
 		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
 
@@ -725,7 +736,7 @@ def load_structures():
 	
 	structures = dict()
 	
-	load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87];
+	load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87,88];
 	for version in load_versions:
 		jsondata = get_json_data('structures_'+str(version)+'.json')
 		structures[version] = dict()

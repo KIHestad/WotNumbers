@@ -664,6 +664,7 @@
     <None Include="Dossier2json\structures_81.json" />
     <None Include="Dossier2json\structures_85.json" />
     <None Include="Dossier2json\structures_87.json" />
+    <None Include="Dossier2json\structures_88.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
