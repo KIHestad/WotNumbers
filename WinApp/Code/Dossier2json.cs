@@ -249,7 +249,7 @@ namespace WinApp.Code
 					string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
 					string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
 					FileInfo fileDossierOriginal = new FileInfo(dossierFile); // the original dossier file
-					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier fil and rename it for analyze
+					fileDossierOriginal.CopyTo(dossierDatNewFile, true); // copy original dossier file and rename it for analyze
 					ok = dossier2json.ConvertDossierUsingPython(dossier2jsonScript, dossierDatNewFile); // convert to json
 					if (!ok) // error occured
 					{

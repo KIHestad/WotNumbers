@@ -140,23 +140,25 @@ namespace WinApp.Code
 						// Convert file to json
 						bool deleteFile = false;
 						bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
-						// Upload to vbAddict if OK
-						if (okConvert && Config.Settings.vbAddictUploadActive)
+						// Upload to vBAddict if OK
+						if (okConvert && Config.Settings.vBAddictUploadActive)
 						{
 							string msg = "";
-							bool uploadOK = vbAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vbAddictPlayerToken, out msg);
+							bool uploadOK = vBAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
 							if (uploadOK)
-								Log.AddToLogBuffer(" > > > Uploaded to vbAddict successfully");
+								Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully");
 							else
 							{
-								Log.AddToLogBuffer(" > > > Error uploading to vbAddict ");
+								Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
+								FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
+								fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
 								Log.AddToLogBuffer(msg);
 							}
 						}
 						if (deleteFile)
 						{
 							// Success, json file is now created, clean up by delete dat file
-							FileInfo fileBattleDatCopied = new FileInfo(file); // the original dossier file
+							FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
 							fileBattleDatCopied.Delete(); // delete original DAT file
 							if (okConvert)
 								Log.AddToLogBuffer(" > > > Deleted successfully converted battle DAT-file: " + file);

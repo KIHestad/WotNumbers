@@ -187,12 +187,13 @@
 			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
-			this.mSettingsUploadTovbAddict = new System.Windows.Forms.ToolStripMenuItem();
+			this.mSettingsUploadTovBAddict = new System.Windows.Forms.ToolStripMenuItem();
 			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
+			this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.mExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
@@ -208,7 +209,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1629,7 +1629,7 @@
             this.mRecalcBattleWN8,
             this.mImportBattlesFromWotStat,
             this.toolStripSeparator25,
-            this.mSettingsUploadTovbAddict,
+            this.mSettingsUploadTovBAddict,
             this.mWoTStartGameSettings,
             this.mSettingsAppLayout,
             this.mSettingsApp,
@@ -1696,12 +1696,12 @@
 			this.toolStripSeparator25.Name = "toolStripSeparator25";
 			this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
 			// 
-			// mSettingsUploadTovbAddict
+			// mSettingsUploadTovBAddict
 			// 
-			this.mSettingsUploadTovbAddict.Name = "mSettingsUploadTovbAddict";
-			this.mSettingsUploadTovbAddict.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsUploadTovbAddict.Text = "Upload to vbAddict...";
-			this.mSettingsUploadTovbAddict.Click += new System.EventHandler(this.mSettingsUploadTovbAddict_Click);
+			this.mSettingsUploadTovBAddict.Name = "mSettingsUploadTovBAddict";
+			this.mSettingsUploadTovBAddict.Size = new System.Drawing.Size(263, 22);
+			this.mSettingsUploadTovBAddict.Text = "Upload to vBAddict...";
+			this.mSettingsUploadTovBAddict.Click += new System.EventHandler(this.mSettingsUploadTovBAddict_Click);
 			// 
 			// mWoTStartGameSettings
 			// 
@@ -1738,6 +1738,13 @@
 			this.mShowDbTables.Size = new System.Drawing.Size(263, 22);
 			this.mShowDbTables.Text = "Show Database Tables...";
 			this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
+			// 
+			// mSettingsShowLogFiles
+			// 
+			this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
+			this.mSettingsShowLogFiles.Size = new System.Drawing.Size(263, 22);
+			this.mSettingsShowLogFiles.Text = "Show Log Files...";
+			this.mSettingsShowLogFiles.Click += new System.EventHandler(this.mSettingsShowLogFiles_Click);
 			// 
 			// toolStripSeparator7
 			// 
@@ -1958,13 +1965,6 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// mSettingsShowLogFiles
-			// 
-			this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
-			this.mSettingsShowLogFiles.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsShowLogFiles.Text = "Show Log Files...";
-			this.mSettingsShowLogFiles.Click += new System.EventHandler(this.mSettingsShowLogFiles_Click);
-			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2171,7 +2171,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorForBattleView;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
 		private System.Windows.Forms.ToolStripMenuItem mModeSpecial;
-		private System.Windows.Forms.ToolStripMenuItem mSettingsUploadTovbAddict;
+		private System.Windows.Forms.ToolStripMenuItem mSettingsUploadTovBAddict;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsShowLogFiles;
 	}
 }

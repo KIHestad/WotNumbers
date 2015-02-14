@@ -13,16 +13,16 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class UploadTovbAddict : Form
+	public partial class UploadTovBAddict : Form
 	{
-		public UploadTovbAddict()
+		public UploadTovBAddict()
 		{
 			InitializeComponent();
 		}
 
 		private void btnTestConnection_Click(object sender, EventArgs e)
 		{
-			MsgBox.Show(vbAddict.TestConnection(), "vbAddict commection test result");
+			MsgBox.Show(vBAddict.TestConnection(), "vBAddict connection test result");
 		}
 
 		private void btnUploadDossier_Click(object sender, EventArgs e)
@@ -30,28 +30,33 @@ namespace WinApp.Forms
 			string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
 			string token = token = txtToken.Text.Trim();
 			string msg = "";
-			bool result = vbAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg);
-			string msgHeader = "Success uploading dossier file to vbAddict";
+			bool result = vBAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg);
+			string msgHeader = "Success uploading dossier file to vBAddict";
 			if (!result)
-				msgHeader = "Error uploading dossier file to vbAddict";
+				msgHeader = "Error uploading dossier file to vBAddict";
 			MsgBox.Show(msg, msgHeader);
 		}
 
-		private void UploadTovbAddict_Load(object sender, EventArgs e)
+		private void UploadTovBAddict_Load(object sender, EventArgs e)
 		{
-			chkActivateAutoUpload.Checked = Config.Settings.vbAddictUploadActive;
-			txtToken.Text = Config.Settings.vbAddictPlayerToken;
+			chkActivateAutoUpload.Checked = Config.Settings.vBAddictUploadActive;
+			txtToken.Text = Config.Settings.vBAddictPlayerToken;
 		}
 
 		private void btnSaveSettings_Click(object sender, EventArgs e)
 		{
-			Config.Settings.vbAddictUploadActive = chkActivateAutoUpload.Checked;
-			Config.Settings.vbAddictPlayerToken = txtToken.Text;
+			Config.Settings.vBAddictUploadActive = chkActivateAutoUpload.Checked;
+			Config.Settings.vBAddictPlayerToken = txtToken.Text;
 			string msg = "";
 			if (!Config.SaveConfig(out msg))
 				MsgBox.Show("Error saving settings: " + msg, "Save result");
 			else
 				this.Close();
+		}
+
+		private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			System.Diagnostics.Process.Start("http://www.vbaddict.net/token.php");
 		}
 		
 	}

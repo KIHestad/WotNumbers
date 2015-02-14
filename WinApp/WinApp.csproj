@@ -179,7 +179,7 @@
     </Compile>
     <Compile Include="Code\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
-    <Compile Include="Code\vbAddict.cs" />
+    <Compile Include="Code\vBAddict.cs" />
     <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Code\XmlHelper.cs" />
     <Compile Include="Forms\About.cs">
@@ -380,11 +380,11 @@
     <Compile Include="Forms\Settings\WoTGameClientSettings.Designer.cs">
       <DependentUpon>WoTGameClientSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UploadTovbAddict.cs">
+    <Compile Include="Forms\UploadTovBAddict.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\UploadTovbAddict.Designer.cs">
-      <DependentUpon>UploadTovbAddict.cs</DependentUpon>
+    <Compile Include="Forms\UploadTovBAddict.Designer.cs">
+      <DependentUpon>UploadTovBAddict.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\paramBM_Color.cs">
       <SubType>Form</SubType>
@@ -587,8 +587,8 @@
     <EmbeddedResource Include="Forms\Settings\WoTGameClientSettings.resx">
       <DependentUpon>WoTGameClientSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UploadTovbAddict.resx">
-      <DependentUpon>UploadTovbAddict.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\UploadTovBAddict.resx">
+      <DependentUpon>UploadTovBAddict.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramBM_Color.resx">
       <DependentUpon>paramBM_Color.cs</DependentUpon>

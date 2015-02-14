@@ -2043,8 +2043,8 @@ namespace WinApp.Code
 					ColListSystemDefault.NewSystemTankColList();
 					break;
 				case 221:
-					Config.Settings.vbAddictUploadActive = false;
-					Config.Settings.vbAddictPlayerToken = "";
+					Config.Settings.vBAddictUploadActive = false;
+					Config.Settings.vBAddictPlayerToken = "";
 					Config.SaveConfig(out msg);
 					break;
 

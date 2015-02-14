@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class UploadTovbAddict
+	partial class UploadTovBAddict
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -30,8 +30,9 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UploadTovbAddict));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UploadTovBAddict));
 			this.badForm1 = new BadForm();
+			this.linkVbAddict = new System.Windows.Forms.LinkLabel();
 			this.txtToken = new BadTextBox();
 			this.badLabel1 = new BadLabel();
 			this.chkActivateAutoUpload = new BadCheckBox();
@@ -44,6 +45,7 @@
 			// 
 			// badForm1
 			// 
+			this.badForm1.Controls.Add(this.linkVbAddict);
 			this.badForm1.Controls.Add(this.txtToken);
 			this.badForm1.Controls.Add(this.badLabel1);
 			this.badForm1.Controls.Add(this.chkActivateAutoUpload);
@@ -63,24 +65,40 @@
 			this.badForm1.MainArea = mainAreaClass1;
 			this.badForm1.Name = "badForm1";
 			this.badForm1.Resizable = false;
-			this.badForm1.Size = new System.Drawing.Size(323, 203);
+			this.badForm1.Size = new System.Drawing.Size(331, 236);
 			this.badForm1.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("badForm1.SystemExitImage")));
 			this.badForm1.SystemMaximizeImage = null;
 			this.badForm1.SystemMinimizeImage = null;
 			this.badForm1.TabIndex = 0;
-			this.badForm1.Text = "Upload to vbAddict Settings";
+			this.badForm1.Text = "Upload to vBAddict Settings";
 			this.badForm1.TitleHeight = 26;
+			// 
+			// linkVbAddict
+			// 
+			this.linkVbAddict.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.linkVbAddict.AutoSize = true;
+			this.linkVbAddict.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.linkVbAddict.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+			this.linkVbAddict.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.linkVbAddict.Location = new System.Drawing.Point(48, 151);
+			this.linkVbAddict.Name = "linkVbAddict";
+			this.linkVbAddict.Size = new System.Drawing.Size(161, 13);
+			this.linkVbAddict.TabIndex = 13;
+			this.linkVbAddict.TabStop = true;
+			this.linkVbAddict.Text = "Create and view your token here";
+			this.linkVbAddict.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.linkVbAddict.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkVbAddict_LinkClicked);
 			// 
 			// txtToken
 			// 
 			this.txtToken.HasFocus = false;
 			this.txtToken.Image = null;
-			this.txtToken.Location = new System.Drawing.Point(106, 102);
+			this.txtToken.Location = new System.Drawing.Point(49, 122);
 			this.txtToken.MultilineAllow = false;
 			this.txtToken.Name = "txtToken";
 			this.txtToken.PasswordChar = '\0';
 			this.txtToken.ReadOnly = false;
-			this.txtToken.Size = new System.Drawing.Size(174, 23);
+			this.txtToken.Size = new System.Drawing.Size(236, 23);
 			this.txtToken.TabIndex = 6;
 			this.txtToken.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
 			this.txtToken.ToolTipText = "";
@@ -90,11 +108,11 @@
 			this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel1.Dimmed = false;
 			this.badLabel1.Image = null;
-			this.badLabel1.Location = new System.Drawing.Point(45, 102);
+			this.badLabel1.Location = new System.Drawing.Point(47, 101);
 			this.badLabel1.Name = "badLabel1";
 			this.badLabel1.Size = new System.Drawing.Size(66, 23);
 			this.badLabel1.TabIndex = 5;
-			this.badLabel1.Text = "My Token:";
+			this.badLabel1.Text = "Token:";
 			this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// chkActivateAutoUpload
@@ -106,14 +124,14 @@
 			this.chkActivateAutoUpload.Name = "chkActivateAutoUpload";
 			this.chkActivateAutoUpload.Size = new System.Drawing.Size(200, 23);
 			this.chkActivateAutoUpload.TabIndex = 4;
-			this.chkActivateAutoUpload.Text = "Activate Auto Upload to vbAddict";
+			this.chkActivateAutoUpload.Text = "Activate Auto Upload to vBAddict";
 			// 
 			// btnUploadDossier
 			// 
 			this.btnUploadDossier.BlackButton = false;
 			this.btnUploadDossier.Checked = false;
 			this.btnUploadDossier.Image = null;
-			this.btnUploadDossier.Location = new System.Drawing.Point(133, 154);
+			this.btnUploadDossier.Location = new System.Drawing.Point(133, 194);
 			this.btnUploadDossier.Name = "btnUploadDossier";
 			this.btnUploadDossier.Size = new System.Drawing.Size(97, 23);
 			this.btnUploadDossier.TabIndex = 3;
@@ -126,7 +144,7 @@
 			this.btnTestConnection.BlackButton = false;
 			this.btnTestConnection.Checked = false;
 			this.btnTestConnection.Image = null;
-			this.btnTestConnection.Location = new System.Drawing.Point(27, 154);
+			this.btnTestConnection.Location = new System.Drawing.Point(27, 194);
 			this.btnTestConnection.Name = "btnTestConnection";
 			this.btnTestConnection.Size = new System.Drawing.Size(100, 23);
 			this.btnTestConnection.TabIndex = 2;
@@ -139,9 +157,9 @@
 			this.btnSaveSettings.BlackButton = false;
 			this.btnSaveSettings.Checked = false;
 			this.btnSaveSettings.Image = null;
-			this.btnSaveSettings.Location = new System.Drawing.Point(236, 154);
+			this.btnSaveSettings.Location = new System.Drawing.Point(236, 194);
 			this.btnSaveSettings.Name = "btnSaveSettings";
-			this.btnSaveSettings.Size = new System.Drawing.Size(59, 23);
+			this.btnSaveSettings.Size = new System.Drawing.Size(69, 23);
 			this.btnSaveSettings.TabIndex = 1;
 			this.btnSaveSettings.Text = "Save";
 			this.btnSaveSettings.ToolTipText = "";
@@ -153,23 +171,24 @@
 			this.badGroupBox1.Image = null;
 			this.badGroupBox1.Location = new System.Drawing.Point(27, 49);
 			this.badGroupBox1.Name = "badGroupBox1";
-			this.badGroupBox1.Size = new System.Drawing.Size(268, 88);
+			this.badGroupBox1.Size = new System.Drawing.Size(278, 130);
 			this.badGroupBox1.TabIndex = 0;
 			this.badGroupBox1.Text = "Settings";
 			// 
-			// UploadTovbAddict
+			// UploadTovBAddict
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(323, 203);
+			this.ClientSize = new System.Drawing.Size(331, 236);
 			this.Controls.Add(this.badForm1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.Name = "UploadTovbAddict";
+			this.Name = "UploadTovBAddict";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Upload to vbAddict Settings";
-			this.Load += new System.EventHandler(this.UploadTovbAddict_Load);
+			this.Text = "Upload to vBAddict Settings";
+			this.Load += new System.EventHandler(this.UploadTovBAddict_Load);
 			this.badForm1.ResumeLayout(false);
+			this.badForm1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -184,5 +203,6 @@
 		private BadLabel badLabel1;
 		private BadCheckBox chkActivateAutoUpload;
 		private BadButton btnUploadDossier;
+		private System.Windows.Forms.LinkLabel linkVbAddict;
 	}
 }

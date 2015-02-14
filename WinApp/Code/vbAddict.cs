@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace WinApp.Code
 {
-	class vbAddict
+	class vBAddict
 	{
 		public static string TestConnection()
 		{
@@ -29,21 +29,21 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				return "Error connecting to vbAddict. Error message:" + Environment.NewLine + Environment.NewLine + ex.Message;
+				return "Error connecting to vBAddict. Error message:" + Environment.NewLine + Environment.NewLine + ex.Message;
 			}
 		}
 		
 		public static bool UploadDossier(string dossierFile, string playerName, string playerServer, string playerToken, out string msg)
 		{
-			msg = "Starting upload dossier file to vbAddict...";
+			msg = "Starting upload dossier file to vBAddict...";
 			bool result = true;
 			try
 			{
-				string url = "http://carius.vbaddict.net:82/upload_file/dossier/@SERVER/@USERNAME/@TOKEN/debug/";
+				string url = "http://carius.vbaddict.net:82/upload_file/dossier/@SERVER/@USERNAME/@TOKEN/xml/";
 				url = url.Replace("@USERNAME", playerName);
 				url = url.Replace("@SERVER", playerServer);
 				if (playerToken == "")
-					playerToken = "notoken";
+					playerToken = "-";
 				url = url.Replace("@TOKEN", playerToken);
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = 10000; // 10 secs
@@ -94,15 +94,15 @@ namespace WinApp.Code
 
 		public static bool UploadBattle(string battleFile, string playerName, string playerServer, string playerToken, out string msg)
 		{
-			msg = "Starting upload battle file to vbAddict...";
+			msg = "Starting upload battle file to vBAddict...";
 			bool result = true;
 			try
 			{
-				string url = "http://carius.vbaddict.net:82/upload_file/battleresult/@SERVER/@USERNAME/@TOKEN/debug/";
+				string url = "http://carius.vbaddict.net:82/upload_file/battleresult/@SERVER/@USERNAME/@TOKEN/xml/";
 				url = url.Replace("@USERNAME", playerName);
 				url = url.Replace("@SERVER", playerServer);
 				if (playerToken == "")
-					playerToken = "notoken";
+					playerToken = "-";
 				url = url.Replace("@TOKEN", playerToken);
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = 10000; // 10 secs
@@ -150,7 +150,6 @@ namespace WinApp.Code
 			}
 			return result;
 		}
-
 
 	}
 }

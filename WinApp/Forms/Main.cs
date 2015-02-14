@@ -3417,9 +3417,9 @@ namespace WinApp.Forms
 			frm.ShowDialog(this);
 		}
 
-		private void mSettingsUploadTovbAddict_Click(object sender, EventArgs e)
+		private void mSettingsUploadTovBAddict_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.UploadTovbAddict();
+			Form frm = new Forms.UploadTovBAddict();
 			frm.ShowDialog(this);
 
 		}
