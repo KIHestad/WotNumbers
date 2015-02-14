@@ -187,6 +187,7 @@
 			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+			this.mSettingsUploadTovbAddict = new System.Windows.Forms.ToolStripMenuItem();
 			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,6 +208,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1627,11 +1629,13 @@
             this.mRecalcBattleWN8,
             this.mImportBattlesFromWotStat,
             this.toolStripSeparator25,
+            this.mSettingsUploadTovbAddict,
             this.mWoTStartGameSettings,
             this.mSettingsAppLayout,
             this.mSettingsApp,
             this.toolStripSeparator1,
             this.mShowDbTables,
+            this.mSettingsShowLogFiles,
             this.toolStripSeparator7,
             this.mExit});
 			this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
@@ -1691,6 +1695,13 @@
 			// 
 			this.toolStripSeparator25.Name = "toolStripSeparator25";
 			this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
+			// 
+			// mSettingsUploadTovbAddict
+			// 
+			this.mSettingsUploadTovbAddict.Name = "mSettingsUploadTovbAddict";
+			this.mSettingsUploadTovbAddict.Size = new System.Drawing.Size(263, 22);
+			this.mSettingsUploadTovbAddict.Text = "Upload to vbAddict...";
+			this.mSettingsUploadTovbAddict.Click += new System.EventHandler(this.mSettingsUploadTovbAddict_Click);
 			// 
 			// mWoTStartGameSettings
 			// 
@@ -1947,6 +1958,13 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// mSettingsShowLogFiles
+			// 
+			this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
+			this.mSettingsShowLogFiles.Size = new System.Drawing.Size(263, 22);
+			this.mSettingsShowLogFiles.Text = "Show Log Files...";
+			this.mSettingsShowLogFiles.Click += new System.EventHandler(this.mSettingsShowLogFiles_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2153,6 +2171,8 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorForBattleView;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
 		private System.Windows.Forms.ToolStripMenuItem mModeSpecial;
+		private System.Windows.Forms.ToolStripMenuItem mSettingsUploadTovbAddict;
+		private System.Windows.Forms.ToolStripMenuItem mSettingsShowLogFiles;
 	}
 }
 

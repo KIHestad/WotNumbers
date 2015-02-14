@@ -120,6 +120,8 @@ namespace WinApp.Code
 		public bool notifyIconUse { get; set; }                     // Notify icon settings - use notify icon insted of taskbar icon
 		public bool notifyIconFormExitToMinimize { get; set; }      // Override exit from form to minimize
 		public CustomBattleTimeFilter customBattleTimeFilter { get; set; } // Remember last used custom battle time filter
+		public bool vbAddictUploadActive { get; set; }				// Activate upload to vbAddict
+		public string vbAddictPlayerToken { get; set; }				// player token
 	}
 
 	class Config
@@ -234,6 +236,9 @@ namespace WinApp.Code
 			Config.Settings.notifyIconFormExitToMinimize = false;
 			// custom battle filter
 			Config.Settings.customBattleTimeFilter = new ConfigData.CustomBattleTimeFilter();
+			// vbAddict
+			Config.Settings.vbAddictUploadActive = false;
+			Config.Settings.vbAddictPlayerToken = "";
 		}
 
 		

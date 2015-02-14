@@ -3417,6 +3417,12 @@ namespace WinApp.Forms
 			frm.ShowDialog(this);
 		}
 
+		private void mSettingsUploadTovbAddict_Click(object sender, EventArgs e)
+		{
+			Form frm = new Forms.UploadTovbAddict();
+			frm.ShowDialog(this);
+
+		}
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
 		{
@@ -3735,6 +3741,12 @@ namespace WinApp.Forms
 					this.WindowState = FormWindowState.Minimized;
 				}
 			}
+		}
+
+		private void mSettingsShowLogFiles_Click(object sender, EventArgs e)
+		{
+			// opens the folder in explorer
+			Process.Start("explorer.exe", Config.AppDataLogFolder);
 		}
 
 		#endregion
@@ -4250,6 +4262,8 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+
 
 	}
 }
