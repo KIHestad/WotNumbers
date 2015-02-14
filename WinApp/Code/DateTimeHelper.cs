@@ -28,7 +28,7 @@ namespace WinApp.Code
 		{
 			DateTime basedate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, ServerTimeReset, 0, 0); // base date = current date + server time reset
 			if (DateTime.Now.Hour + (DateTime.Now.Minute/60) < ServerTimeReset) // if hours+minues from current time is before server time reset
-				basedate = DateTime.Now.AddDays(-1); // current day = previous 
+				basedate = basedate.AddDays(-1); // current day = previous 
 			return basedate;
 		}
 	}
