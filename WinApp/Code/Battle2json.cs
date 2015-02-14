@@ -140,6 +140,19 @@ namespace WinApp.Code
 						// Convert file to json
 						bool deleteFile = false;
 						bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
+						// Upload to vbAddict if OK
+						if (okConvert && Config.Settings.vbAddictUploadActive)
+						{
+							string msg = "";
+							bool uploadOK = vbAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vbAddictPlayerToken, out msg);
+							if (uploadOK)
+								Log.AddToLogBuffer(" > > > Uploaded to vbAddict successfully");
+							else
+							{
+								Log.AddToLogBuffer(" > > > Error uploading to vbAddict ");
+								Log.AddToLogBuffer(msg);
+							}
+						}
 						if (deleteFile)
 						{
 							// Success, json file is now created, clean up by delete dat file

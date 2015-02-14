@@ -29,8 +29,12 @@ namespace WinApp.Forms
 		{
 			string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
 			string token = token = txtToken.Text.Trim();
-			string result = vbAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token);
-			MsgBox.Show(result, "vbAddict upload dossier file result");
+			string msg = "";
+			bool result = vbAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg);
+			string msgHeader = "Success uploading dossier file to vbAddict";
+			if (!result)
+				msgHeader = "Error uploading dossier file to vbAddict";
+			MsgBox.Show(msg, msgHeader);
 		}
 
 		private void UploadTovbAddict_Load(object sender, EventArgs e)
