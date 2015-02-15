@@ -32,6 +32,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UploadTovBAddict));
 			this.badForm1 = new BadForm();
+			this.badLabel2 = new BadLabel();
 			this.linkVbAddict = new System.Windows.Forms.LinkLabel();
 			this.txtToken = new BadTextBox();
 			this.badLabel1 = new BadLabel();
@@ -41,7 +42,6 @@
 			this.btnSaveSettings = new BadButton();
 			this.badGroupBox1 = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
-			this.badLabel2 = new BadLabel();
 			this.badForm1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -76,6 +76,19 @@
 			this.badForm1.TabIndex = 0;
 			this.badForm1.Text = "Upload to vBAddict Settings";
 			this.badForm1.TitleHeight = 26;
+			// 
+			// badLabel2
+			// 
+			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.badLabel2.Dimmed = false;
+			this.badLabel2.Image = null;
+			this.badLabel2.Location = new System.Drawing.Point(155, 217);
+			this.badLabel2.Name = "badLabel2";
+			this.badLabel2.Size = new System.Drawing.Size(180, 64);
+			this.badLabel2.TabIndex = 15;
+			this.badLabel2.Text = "For testing connection and upload to vBAddict. Returns an XML-formatted result to" +
+    " verify correct token and connection/upload result.";
+			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// linkVbAddict
 			// 
@@ -124,7 +137,7 @@
 			this.chkActivateAutoUpload.BackColor = System.Drawing.Color.Transparent;
 			this.chkActivateAutoUpload.Checked = false;
 			this.chkActivateAutoUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoUpload.Image")));
-			this.chkActivateAutoUpload.Location = new System.Drawing.Point(47, 132);
+			this.chkActivateAutoUpload.Location = new System.Drawing.Point(42, 132);
 			this.chkActivateAutoUpload.Name = "chkActivateAutoUpload";
 			this.chkActivateAutoUpload.Size = new System.Drawing.Size(200, 23);
 			this.chkActivateAutoUpload.TabIndex = 4;
@@ -135,7 +148,7 @@
 			this.btnUploadDossier.BlackButton = false;
 			this.btnUploadDossier.Checked = false;
 			this.btnUploadDossier.Image = null;
-			this.btnUploadDossier.Location = new System.Drawing.Point(45, 252);
+			this.btnUploadDossier.Location = new System.Drawing.Point(45, 253);
 			this.btnUploadDossier.Name = "btnUploadDossier";
 			this.btnUploadDossier.Size = new System.Drawing.Size(97, 23);
 			this.btnUploadDossier.TabIndex = 3;
@@ -148,7 +161,7 @@
 			this.btnTestConnection.BlackButton = false;
 			this.btnTestConnection.Checked = false;
 			this.btnTestConnection.Image = null;
-			this.btnTestConnection.Location = new System.Drawing.Point(45, 223);
+			this.btnTestConnection.Location = new System.Drawing.Point(45, 222);
 			this.btnTestConnection.Name = "btnTestConnection";
 			this.btnTestConnection.Size = new System.Drawing.Size(97, 23);
 			this.btnTestConnection.TabIndex = 2;
@@ -188,19 +201,6 @@
 			this.badGroupBox2.Size = new System.Drawing.Size(322, 102);
 			this.badGroupBox2.TabIndex = 14;
 			this.badGroupBox2.Text = "Test connection / upload";
-			// 
-			// badLabel2
-			// 
-			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.badLabel2.Dimmed = false;
-			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(160, 218);
-			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(180, 64);
-			this.badLabel2.TabIndex = 15;
-			this.badLabel2.Text = "For testing connection and upload to vBAddict. Returns an XML-formatted result to" +
-    " verify that token is correct and connection/upload works.";
-			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// UploadTovBAddict
 			// 
