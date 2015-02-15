@@ -25,7 +25,20 @@ namespace WinApp.Code
 				XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.LoadXml(xmlResult); // Load string into xml doc
 				string result = XmlHelper.XmlToString(xmlDoc);
-				return result + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                
+                XmlNode node = xmlDoc.GetElementsByTagName("status").Item(0);  // get status node from xml
+                string responseCode = node.FirstChild.Value.ToString();
+                node = xmlDoc.GetElementsByTagName("message").Item(0);   // get message node from xml
+                string responseText = node.FirstChild.Value.ToString();
+                
+				//return result + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                
+                if (responseCode == "0")
+                    return "Test successfully completed!";
+                else
+                    return "The connection could not be established. " + Environment.NewLine 
+                         + responseText + Environment.NewLine 
+                         + "Error code: " + responseCode + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 			}
 			catch (Exception ex)
 			{
