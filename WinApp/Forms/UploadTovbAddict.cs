@@ -28,7 +28,7 @@ namespace WinApp.Forms
 		private void btnUploadDossier_Click(object sender, EventArgs e)
 		{
 			string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
-			string token = token = txtToken.Text.Trim();
+			string token = txtToken.Text.Trim();
 			string msg = "";
 			bool result = vBAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg);
 			string msgHeader = "Success uploading dossier file to vBAddict";

@@ -308,6 +308,20 @@ namespace WinApp.Code
 				// Done
 				dt.Dispose();
 				dt.Clear();
+				// Upload to vBAddict
+				if (Config.Settings.vBAddictUploadActive)
+				{
+					string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
+					string msg = "";
+					bool uploadOK = vBAddict.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+					if (uploadOK)
+						Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
+					else
+					{
+						Log.AddToLogBuffer(" > Error uploading dossier file to vBAddict");
+						Log.AddToLogBuffer(msg);
+					}
+				}
 			}
 			else
 			{
