@@ -6,6 +6,10 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
+// API reference:
+// http://www.vbaddict.net/threads/5743-vBAddict-API-Uploading-Dossier-Battle-Results-and-Replays-to-vBAddict-net
+
+
 namespace WinApp.Code
 {
 	class vBAddict
@@ -90,12 +94,22 @@ namespace WinApp.Code
 				msg = XmlHelper.XmlToString(xmlDoc) + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 				// Check result
 				XmlNodeList response = xmlDoc.GetElementsByTagName("response");
-				string status = "";
-				foreach (XmlNode item in response[0].ChildNodes)
+                string status = "";
+				foreach (XmlNode item in response[0].ChildNodes)  // get status code
 				{
 					if (item.Name == "status") status = item.InnerText;
 				}
 				result = (status == "0");
+                foreach (XmlNode item in response[0].ChildNodes)  // get response message 
+                {
+                    if (item.Name == "message") msg = item.InnerText;
+                }
+                if (status == "0")
+                    msg = "Test successfully completed!";
+                else
+                    msg = "Error during upload test" + Environment.NewLine
+                        + msg + Environment.NewLine
+                        + "Error code: " + status + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 			}
 			catch (Exception ex)
 			{
