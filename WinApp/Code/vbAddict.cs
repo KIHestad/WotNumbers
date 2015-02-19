@@ -38,9 +38,9 @@ namespace WinApp.Code
 				//return result + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 				
 				if (responseCode == "0")
-					return "Test successfully completed!";
+					return "Connection test successfully completed!";
 				else
-					return "The connection could not be established. " + Environment.NewLine 
+					return "The connection could not be established. " + Environment.NewLine + Environment.NewLine
 						 + responseText + Environment.NewLine 
 						 + "Error code: " + responseCode + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 			}
@@ -50,7 +50,7 @@ namespace WinApp.Code
 			}
 		}
 		
-		public static bool UploadDossier(string dossierFile, string playerName, string playerServer, string playerToken, out string msg)
+		public static bool UploadDossier(string dossierFile, string playerName, string playerServer, string playerToken, out string msg, bool showResultAsXML = true)
 		{
 			msg = "Starting upload dossier file to vBAddict...";
 			bool result = true;
@@ -100,16 +100,20 @@ namespace WinApp.Code
 					if (item.Name == "status") status = item.InnerText;
 				}
 				result = (status == "0");
+				string message = "";
                 foreach (XmlNode item in response[0].ChildNodes)  // get response message 
                 {
-                    if (item.Name == "message") msg = item.InnerText;
+					if (item.Name == "message") message = item.InnerText;
                 }
                 if (status == "0")
-                    msg = "Test successfully completed!";
+                    msg = "Upload dossier file successfully completed!";
                 else
-                    msg = "Error during upload test" + Environment.NewLine
-                        + msg + Environment.NewLine
-                        + "Error code: " + status + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+					if (!showResultAsXML)
+					{
+						msg = "Error during dossier file upload." + Environment.NewLine + Environment.NewLine
+							+ message + Environment.NewLine
+							+ "Error code: " + status + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+					}
 			}
 			catch (Exception ex)
 			{

@@ -30,7 +30,7 @@ namespace WinApp.Forms
 			string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
 			string token = txtToken.Text.Trim();
 			string msg = "";
-			bool result = vBAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg);
+			bool result = vBAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg, false);
 			string msgHeader = "Success uploading dossier file to vBAddict";
 			if (!result)
 				msgHeader = "Error uploading dossier file to vBAddict";
