@@ -180,6 +180,8 @@ namespace WinApp.Code
 			public int platoonNum;
 		}
 
+		private static string lastFile = "";
+
 		public static void RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
 			try
@@ -202,6 +204,7 @@ namespace WinApp.Code
 				bool deleteFileAfterRead = true;
 				foreach (string file in filesJson)
 				{
+					lastFile = file;
 					processed++;
 					// Read content
 					StreamReader sr = new StreamReader(file, Encoding.UTF8);
@@ -786,7 +789,13 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex, "Battle result process terminated due to error");
+				Log.AddToLogBuffer(" > > Battle file analyze terminated due to faulty file structure or content: " + lastFile);
+				Log.LogToFile(ex, "Battle result file analyze process terminated due to faulty file structure or content");
+				FileInfo fi = new FileInfo(lastFile);
+				FileInfo fileBattleJson = new FileInfo(lastFile);
+				fileBattleJson.Delete();
+				Log.AddToLogBuffer(" > > Deleted faulty JSON file: " + lastFile);
+
 			}
 		}
 		
