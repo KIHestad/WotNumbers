@@ -48,7 +48,7 @@
 		<!-- Installer content -->
 		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
 			<ComponentRef Id="ProductComponent_ShortCut"/>
-	  <ComponentRef Id="DesktopShortcut"/>
+	  <!--<ComponentRef Id="DesktopShortcut"/>-->
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="ProductComponents_Bin" />
 			<ComponentGroupRef Id="ProductComponents_Lib" />
@@ -67,7 +67,7 @@
 				<Directory Id="MyProgramFolder" Name="Wot Numbers" />
 			</Directory>
 
-	  <Directory Id="DesktopFolder" SourceName="Desktop" />
+	  <!--<Directory Id="DesktopFolder" SourceName="Desktop" />-->
 
 	  <Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="Wot Numbers">
@@ -104,7 +104,7 @@
   <!-- Desktop Shortcut-->
 
   
-  <Fragment>
+  <!--<Fragment>
 	<Component Id="DesktopShortcut" Directory="INSTALLFOLDER" Guid="*">
 	  <RegistryValue Id="RegShortcutDesktop" Root="HKCU"
 			  Key="SOFTWARE\WotNumbers\settings" Name="DesktopSC" Value="1"
@@ -118,7 +118,7 @@
 			  WorkingDirectory="INSTALLFOLDER" 
 			  Advertise="no"/>
 	</Component>
-  </Fragment>
+  </Fragment>-->
 	
 	<!-- Application -->
 
