@@ -90,6 +90,11 @@ namespace WinApp.Code
 
 		public static void ConvertBattleFilesToJson()
 		{
+			// Upload prev unsuccsessful uploads to vBAddict 
+			if (Config.Settings.vBAddictUploadActive)
+			{
+				vBAddictBattleResultToUpload();
+			}
 			// Get WoT top level battle_result folder for getting dat-files
 			if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
 			{
@@ -170,6 +175,44 @@ namespace WinApp.Code
 				}
 				else
 					Log.AddToLogBuffer(" > No battle files found");
+			}
+		}
+
+		private static void vBAddictBattleResultToUpload()
+		{
+			try
+			{
+				// Loop through all dat-files copied to AppDataBattleResultToUpload folder from previous unsuccesful uploads
+				string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultToUpload, "*.dat");
+				int totFilesDat = filesDatCopied.Count();
+				if (totFilesDat > 0)
+				{
+					Log.AddToLogBuffer(" > > Start uploading previous unsuccessful vBAddict uploads, " + totFilesDat.ToString() + " battle DAT-files found");
+					foreach (string file in filesDatCopied)
+					{
+						string msg = "";
+						bool uploadOK = vBAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+						if (uploadOK)
+						{
+							Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully file: " + file);
+							// Success, dat file is now created, clean up by delete dat file
+							FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
+							fileBattleDatCopied.Delete();
+							Log.AddToLogBuffer(" > > > File removed from upload folder successfully");
+						}
+						else
+						{
+							Log.AddToLogBuffer(" > > > Error uploading to vBAddict, keep file for later upload");
+							FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
+							fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+							Log.AddToLogBuffer(msg);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex, "Function for uploaded previous unsuccessful vBAddict uploads failed.");
 			}
 		}
 

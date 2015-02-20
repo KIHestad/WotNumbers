@@ -82,12 +82,12 @@
 			this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
 			this.badLabel2.Dimmed = false;
 			this.badLabel2.Image = null;
-			this.badLabel2.Location = new System.Drawing.Point(155, 217);
+			this.badLabel2.Location = new System.Drawing.Point(166, 217);
 			this.badLabel2.Name = "badLabel2";
-			this.badLabel2.Size = new System.Drawing.Size(180, 64);
+			this.badLabel2.Size = new System.Drawing.Size(163, 64);
 			this.badLabel2.TabIndex = 15;
-			this.badLabel2.Text = "For testing connection and upload to vBAddict. Returns an XML-formatted result to" +
-    " verify correct token and connection/upload result.";
+			this.badLabel2.Text = "For testing connection and upload to vBAddict. Returns a result to verify correct" +
+    " token and connection/upload result.";
 			this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// linkVbAddict
