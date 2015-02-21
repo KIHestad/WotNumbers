@@ -228,7 +228,6 @@
 			// 
 			// fileSystemWatcherNewBattle
 			// 
-			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
 			// 
 			// imageListToolStrip

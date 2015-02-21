@@ -276,7 +276,7 @@ namespace WinApp.Code
 				// Check for new tanks, then load images
 				if (newTank)
 					ImageHelper.LoadTankImages(); // Load new image by reloading
-				return ("Dossier file check performed successfully - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
+				return "Battle fetch performed successfully"; // - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 			}
 			catch (Exception ex)
 			{

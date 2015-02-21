@@ -14,13 +14,15 @@ namespace WinApp.Code
 {
 	class vBAddict
 	{
+		private static int timeout = 15000; // milliseconds
+		
 		public static string TestConnection()
 		{
 			try
 			{
 				string url = "http://carius.vbaddict.net:82/upload_check/xml/";
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000;     // 10 secs
+				httpRequest.Timeout = timeout;    
 				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
 				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
@@ -63,7 +65,7 @@ namespace WinApp.Code
 					playerToken = "-";
 				url = url.Replace("@TOKEN", playerToken);
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000; // 10 secs
+				httpRequest.Timeout = timeout; 
 				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
 				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				// Get ready to pu file with request
@@ -94,20 +96,20 @@ namespace WinApp.Code
 				msg = XmlHelper.XmlToString(xmlDoc) + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
 				// Check result
 				XmlNodeList response = xmlDoc.GetElementsByTagName("response");
-                string status = "";
+				string status = "";
 				foreach (XmlNode item in response[0].ChildNodes)  // get status code
 				{
 					if (item.Name == "status") status = item.InnerText;
 				}
 				result = (status == "0");
 				string message = "";
-                foreach (XmlNode item in response[0].ChildNodes)  // get response message 
-                {
+				foreach (XmlNode item in response[0].ChildNodes)  // get response message 
+				{
 					if (item.Name == "message") message = item.InnerText;
-                }
-                if (status == "0")
-                    msg = "Upload dossier file successfully completed!";
-                else
+				}
+				if (status == "0")
+					msg = "Upload dossier file successfully completed!";
+				else
 					if (!showResultAsXML)
 					{
 						msg = "Error during dossier file upload." + Environment.NewLine + Environment.NewLine
@@ -136,7 +138,7 @@ namespace WinApp.Code
 					playerToken = "-";
 				url = url.Replace("@TOKEN", playerToken);
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000; // 10 secs
+				httpRequest.Timeout = timeout; 
 				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
 				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
 				// Get ready to pu file with request
