@@ -28,6 +28,7 @@ namespace WinApp.Code
 			public int platoonID;
 			public int team;
 			public int vehicleid;
+			public int playerTeam = 0; // default value = false -> 0=false, 1=true
 		}
 
 		private class BattleValue
@@ -519,7 +520,9 @@ namespace WinApp.Code
 								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@arenaUniqueID", arenaUniqueID, DB.SqlDataType.Float);
 								DB.ExecuteNonQuery(sql);
-								// Add Battle Players
+								
+								// Add Battle Players *******************************
+								
 								List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
 								JToken token_players = token_root["players"];
 								// Get values to save to battle
@@ -552,6 +555,8 @@ namespace WinApp.Code
 									newPlayer.name = (string)playerInfo.SelectToken("name");
 									newPlayer.platoonID = (int)playerInfo.SelectToken("platoonID");
 									newPlayer.team = (int)playerInfo.SelectToken("team");
+									if (newPlayer.team == playerTeam)
+										newPlayer.playerTeam = 1;
 									newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
 									battlePlayers.Add(newPlayer);
 									// Get values for saving to battle
@@ -596,13 +601,14 @@ namespace WinApp.Code
 										fields = "battleID";
 										string values = battleId.ToString();
 										// Get values from player section
-										fields += ", accountId, clanAbbrev, clanDBID, name, platoonID, team";
+										fields += ", accountId, clanAbbrev, clanDBID, name, platoonID, team, playerTeam";
 										values += ", " + player.accountId.ToString();
 										values += ", '" + player.clanAbbrev + "'";
 										values += ", " + player.clanDBID.ToString();
 										values += ", '" + player.name + "'";
 										values += ", " + player.platoonID.ToString();
 										values += ", " + player.team.ToString();
+										values += ", " + player.playerTeam.ToString();
 										// Get values from vehicles section
 										fields += ", tankId, xp , damageDealt, credits, capturePoints, damageReceived, deathReason, directHits";
 										// typeCompDescr = tankId, might be missing in clan wars if player not spoddet

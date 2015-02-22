@@ -939,7 +939,7 @@ namespace WinApp.Forms
 			totalRow["TankImage"] = (Image)blankImg;
 			dt.Rows.Add(totalRow);
 			int totRow = dt.Rows.Count -1;
-			// Add images
+			// Add images and calc total
 			for (int i = 0; i < dt.Rows.Count - 1; i++)
 			{
 				DataRow dr = dt.Rows[i];

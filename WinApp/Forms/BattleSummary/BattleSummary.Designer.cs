@@ -70,6 +70,8 @@
 			this.btnOurTeam = new BadButton();
 			this.btnPersonal = new BadButton();
 			this.grpMain = new BadGroupBox();
+			this.chkAvg = new BadCheckBox();
+			this.chkSum = new BadCheckBox();
 			this.BattleSummaryTheme.SuspendLayout();
 			this.panelMyResult.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
@@ -108,6 +110,8 @@
 			// 
 			// BattleSummaryTheme
 			// 
+			this.BattleSummaryTheme.Controls.Add(this.chkSum);
+			this.BattleSummaryTheme.Controls.Add(this.chkAvg);
 			this.BattleSummaryTheme.Controls.Add(this.panelMyResult);
 			this.BattleSummaryTheme.Controls.Add(this.btnEnemyTeam);
 			this.BattleSummaryTheme.Controls.Add(this.btnOurTeam);
@@ -502,6 +506,7 @@
 			this.btnEnemyTeam.Text = "Enemy Team";
 			this.btnEnemyTeam.ToolTipText = "";
 			this.btnEnemyTeam.Visible = false;
+			this.btnEnemyTeam.Click += new System.EventHandler(this.btnTab_Click);
 			// 
 			// btnOurTeam
 			// 
@@ -515,6 +520,7 @@
 			this.btnOurTeam.Text = "Our Team";
 			this.btnOurTeam.ToolTipText = "";
 			this.btnOurTeam.Visible = false;
+			this.btnOurTeam.Click += new System.EventHandler(this.btnTab_Click);
 			// 
 			// btnPersonal
 			// 
@@ -527,6 +533,7 @@
 			this.btnPersonal.TabIndex = 7;
 			this.btnPersonal.Text = "My Result";
 			this.btnPersonal.ToolTipText = "";
+			this.btnPersonal.Click += new System.EventHandler(this.btnTab_Click);
 			// 
 			// grpMain
 			// 
@@ -540,6 +547,32 @@
 			this.grpMain.Size = new System.Drawing.Size(796, 482);
 			this.grpMain.TabIndex = 6;
 			// 
+			// chkAvg
+			// 
+			this.chkAvg.BackColor = System.Drawing.Color.Transparent;
+			this.chkAvg.Checked = true;
+			this.chkAvg.Image = ((System.Drawing.Image)(resources.GetObject("chkAvg.Image")));
+			this.chkAvg.Location = new System.Drawing.Point(370, 48);
+			this.chkAvg.Name = "chkAvg";
+			this.chkAvg.Size = new System.Drawing.Size(75, 23);
+			this.chkAvg.TabIndex = 11;
+			this.chkAvg.Text = "Average";
+			this.chkAvg.Visible = false;
+			this.chkAvg.Click += new System.EventHandler(this.chkAvg_Click);
+			// 
+			// chkSum
+			// 
+			this.chkSum.BackColor = System.Drawing.Color.Transparent;
+			this.chkSum.Checked = false;
+			this.chkSum.Image = ((System.Drawing.Image)(resources.GetObject("chkSum.Image")));
+			this.chkSum.Location = new System.Drawing.Point(442, 48);
+			this.chkSum.Name = "chkSum";
+			this.chkSum.Size = new System.Drawing.Size(75, 23);
+			this.chkSum.TabIndex = 12;
+			this.chkSum.Text = "Sum";
+			this.chkSum.Visible = false;
+			this.chkSum.Click += new System.EventHandler(this.chkSum_Click);
+			// 
 			// BattleSummary
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -549,11 +582,13 @@
 			this.Controls.Add(this.BattleSummaryTheme);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MinimumSize = new System.Drawing.Size(850, 576);
 			this.Name = "BattleSummary";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "BattleSummary";
 			this.TransparencyKey = System.Drawing.Color.Fuchsia;
 			this.Load += new System.EventHandler(this.BattleSummary_Load);
+			this.Resize += new System.EventHandler(this.BattleSummary_Resize);
 			this.BattleSummaryTheme.ResumeLayout(false);
 			this.panelMyResult.ResumeLayout(false);
 			this.panelMyResult.PerformLayout();
@@ -626,5 +661,7 @@
 		private System.Windows.Forms.DataGridView dgvShooting;
 		private System.Windows.Forms.DataGridView dgvPerformance;
 		private System.Windows.Forms.ImageList imgIndicators;
+		private BadCheckBox chkSum;
+		private BadCheckBox chkAvg;
 	}
 }

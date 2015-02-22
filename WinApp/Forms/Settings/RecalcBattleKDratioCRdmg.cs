@@ -104,47 +104,7 @@ namespace WinApp.Forms
 				int fragsTeam = battlePlayers.Select("deathReason <> '-1' and team=" + enemyTeam).Length;
 				// Find frags count for enemy team
 				int fragsEnemy = battlePlayers.Select("deathReason <> '-1' and team=" + playerTeam).Length;
-
-				//// Find survival count for battle for player team
-				//string survivedteam = "0";
-				//sql =
-				//	"SELECT COUNT(battleId) " +
-				//	"FROM battlePlayer " +
-				//	"Where battleid = " + battleId + " and deathReason = '-1' and team=" + playerTeam + " " +
-				//	"group by battleId ";
-				//dtTemp = DB.FetchData(sql);
-				//if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-				//	survivedteam = dtTemp.Rows[0][0].ToString();
-				//// Find survival count for enemy team
-				//string survivedenemy = "0";
-				//sql =
-				//	"SELECT COUNT(battleId) " +
-				//	"FROM battlePlayer " +
-				//	"Where battleid = " + battleId + " and deathReason = '-1' and team=" + enemyTeam + " " +
-				//	"group by battleId ";
-				//dtTemp = DB.FetchData(sql);
-				//if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-				//	survivedenemy = dtTemp.Rows[0][0].ToString();
-				//// Find frags count for battle for player team
-				//string fragsteam = "0";
-				//sql =
-				//	"SELECT COUNT(battleId) " +
-				//	"FROM battlePlayer " +
-				//	"Where battleid = " + battleId + " and deathReason <> '-1' and team=" + enemyTeam + " " +
-				//	"group by battleId ";
-				//dtTemp = DB.FetchData(sql);
-				//if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-				//	fragsteam = dtTemp.Rows[0][0].ToString();
-				//// Find frags count for enemy team
-				//string fragsenemy = "0";
-				//sql =
-				//	"SELECT COUNT(battleId) " +
-				//	"FROM battlePlayer " +
-				//	"Where battleid = " + battleId + " and deathReason <> '-1' and team=" + playerTeam + " " +
-				//	"group by battleId ";
-				//dtTemp = DB.FetchData(sql);
-				//if (dtTemp.Rows.Count > 0 && dtTemp.Rows[0][0] != DBNull.Value)
-				//	fragsenemy = dtTemp.Rows[0][0].ToString();
+				
 				// Create update sql
 				updatesql +=
 					"UPDATE battle " +

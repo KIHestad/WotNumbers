@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -12,6 +13,8 @@ namespace WinApp.Forms
 {
 	public partial class BattleSummary : Form
 	{
+		#region init
+		
 		private string battleTimeFilter = "";
 		private string battleModeFilter = "";
 		private string battleMode = "";
@@ -23,6 +26,13 @@ namespace WinApp.Forms
 		private int wn7avg = 0;
 		private int eff = 0;
 		private int effavg = 0;
+		// team datagrid and scrollbar and params
+		private DataGridView dgvTeam1 = new DataGridView();
+		private BadScrollBar scroll = new BadScrollBar();
+		private bool showFortResources = false;
+		private int playerTeam = 0; // 1=My team | 0=Enemy team
+		private string lastOrderHeaderText = "Player";
+		private bool? lastOrderAscending = true;
 
 		public BattleSummary(string currentBattleTimeFilter, string currentBattleModeFilter,string currentBattleMode, string currentTankFilter, string currentTankJoin)
 		{
@@ -59,6 +69,7 @@ namespace WinApp.Forms
 			{
 				dr = dt.Rows[0];
 				battlesCount = Convert.ToInt32(dr[0]);
+				InitTeamsTabs();
 			}
 			if (battlesCount == 0)
 			{
@@ -78,7 +89,104 @@ namespace WinApp.Forms
 				GetStandardGridDetails();
 				GetWN8Details();
 			}
+			
 		}
+
+		private void InitTeamsTabs()
+		{
+			// Show team tabs and make ready datagrids
+			btnOurTeam.Visible = true;
+			btnEnemyTeam.Visible = true;
+			dgvTeam1.Visible = false;
+			GridHelper.StyleDataGrid(dgvTeam1);
+			dgvTeam1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+			dgvTeam1.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			dgvTeam1.ColumnHeadersHeight = 42;
+			dgvTeam1.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
+			dgvTeam1.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
+			dgvTeam1.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
+			dgvTeam1.Top = grpMain.Top + 8;
+			dgvTeam1.Left = grpMain.Left + 1;
+			this.Controls.Add(dgvTeam1);
+			dgvTeam1.RowTemplate.Height = 26;
+			// Add scrollbar
+			scroll.ScrollOrientation = ScrollOrientation.VerticalScroll;
+			scroll.Name = "scroll";
+			scroll.Width = 17;
+			scroll.Top = dgvTeam1.Top;
+			scroll.Visible = false;
+			this.Controls.Add(scroll);
+			// Add scrollbar events
+			scroll.MouseDown += new MouseEventHandler(scroll_MouseDown);
+			scroll.MouseUp += new MouseEventHandler(scroll_MouseUp);
+			scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
+			// Init placement
+			PlaceControl(dgvTeam1, GridLocation.Whole);
+		}
+
+		private void chkAvg_Click(object sender, EventArgs e)
+		{
+			chkAvg.Checked = true;
+			chkSum.Checked = false;
+			ShowTeam();
+		}
+
+		private void chkSum_Click(object sender, EventArgs e)
+		{
+			chkAvg.Checked = false;
+			chkSum.Checked = true;
+			ShowTeam();
+		}
+
+		private void btnTab_Click(object sender, EventArgs e)
+		{
+			// deselect tabs
+			btnEnemyTeam.Checked = false;
+			btnOurTeam.Checked = false;
+			btnPersonal.Checked = false;
+			// hide my result
+			panelMyResult.Visible = false;
+			// hide grids
+			dgvTeam1.Visible = false;
+			// hide scroll
+			scroll.Visible = false;
+			// select tab
+			BadButton btn = (BadButton)sender;
+			btn.Checked = true;
+			string selectedTab = btn.Name;
+			switch (selectedTab)
+			{
+				case "btnPersonal":
+					chkSum.Visible = false;
+					chkAvg.Visible = false;
+					dgvCredit.ClearSelection();
+					dgvDamage.ClearSelection();
+					dgvOther.ClearSelection();
+					dgvPerformance.ClearSelection();
+					dgvRating.ClearSelection();
+					dgvShooting.ClearSelection();
+					dgvWN8.ClearSelection();
+					dgvXP.ClearSelection();
+					panelMyResult.Visible = true;
+					break;
+				case "btnOurTeam":
+					chkSum.Visible = true;
+					chkAvg.Visible = true;
+					playerTeam = 1; // My team
+					ShowTeam();
+					break;
+				case "btnEnemyTeam":
+					chkSum.Visible = true;
+					chkAvg.Visible = true;
+					playerTeam = 0; // Enemy team
+					ShowTeam();
+					break;
+			}
+		}
+
+		#endregion
+
+		#region My result
 
 		private void GetStandardGridDetails()
 		{
@@ -588,6 +696,422 @@ namespace WinApp.Forms
 			dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = Rating.WN8color(wn8);
 		}
 
+		#endregion
+
+		#region Teams
+
+		private void ShowTeam()
+		{
+			dgvTeam1.DataSource = GetDataGridSource();
+			ResizeNow();
+			scroll.ScrollPosition = 0;
+			FormatDataGrid(dgvTeam1);
+			scroll.BringToFront();
+			dgvTeam1.BringToFront();
+			RefreshScrollbars(dgvTeam1);
+			MoveScrollBar();
+		}
+
+		private void dgvCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		{
+			DataGridView dgv = (DataGridView)sender;
+			string col = dgv.Columns[e.ColumnIndex].Name;
+			if (col.Equals("Player"))
+			{
+				if (dgv["Player", e.RowIndex].Value.ToString() == Config.Settings.playerName)
+				{
+					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
+					dgv.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+				}
+				else if (e.RowIndex == dgvTeam1.RowCount - 1)
+					dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
+			}
+			else if (col.Length > 9 && col.Substring(0, 9) == "separator")
+			{
+				e.CellStyle.BackColor = ColorTheme.GridHeaderBackLight;
+				e.CellStyle.SelectionBackColor = ColorTheme.GridSelectedHeaderColor;
+			}
+		}
+
+		private void dgvColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			// Sorting
+			DataGridView dgv = (DataGridView)sender;
+			DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
+			string columnName = column.HeaderText;
+			if (columnName == "") return; // No soring on image
+			var sortGlyph = column.HeaderCell.SortGlyphDirection;
+			if (columnName != "Tank" && columnName != "Clan" && columnName != "Player" && columnName != "Killed By")
+			{
+				// Descending sort
+				switch (sortGlyph)
+				{
+					case SortOrder.None:
+					case SortOrder.Ascending:
+						column.HeaderCell.SortGlyphDirection = SortOrder.Descending;
+						break;
+					case SortOrder.Descending:
+						column.HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+						break;
+				}
+			}
+			bool sortDirection = true;
+			if (column.HeaderCell.SortGlyphDirection == SortOrder.Descending)
+				sortDirection = false; ;
+			dgv.DataSource = GetDataGridSource(columnName, sortDirection);
+			if ((btnEnemyTeam.Checked || btnOurTeam.Checked) && scroll.ScrollPosition > 0)
+			{
+				Refresh();
+				dgv.FirstDisplayedScrollingRowIndex = scroll.ScrollPosition;
+			}
+			dgv.ClearSelection();
+		}
+
+		private void dgvColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+		{
+			if (scroll.ScrollPosition > 0 && (btnEnemyTeam.Checked || btnOurTeam.Checked))
+			{
+				DataGridView dgv = (DataGridView)sender;
+				dgv.FirstDisplayedScrollingRowIndex = scroll.ScrollPosition;
+			}
+		}
+
+		private string GetSortField(string headerText)
+		{
+			string sortField = "";
+			switch (headerText)
+			{
+				case "Battles": sortField = "battlePlayer.accountId"; break;
+				case "IR": sortField = "battlePlayer.fortResource"; break;
+				case "Player": sortField = "battlePlayer.name"; break;
+				case "Clan": sortField = "battlePlayer.clanAbbrev"; break;
+				case "Dmg": sortField = "battlePlayer.damageDealt"; break;
+				case "Frags": sortField = "battlePlayer.kills"; break;
+				case "XP": sortField = "battlePlayer.xp"; break;
+				case "Dmg Track": sortField = "battlePlayer.damageAssistedTrack"; break;
+				case "Dmg Spot": sortField = "battlePlayer.damageAssistedRadio"; break;
+				case "Dmg Sniper": sortField = "battlePlayer.sniperDamageDealt"; break;
+				case "Dmg Received": sortField = "battlePlayer.damageReceived"; break;
+				case "Dmg Blocked": sortField = "battlePlayer.damageBlockedByArmor"; break;
+				case "Spot": sortField = "battlePlayer.spotted"; break;
+				case "Cap": sortField = "battlePlayer.capturePoints"; break;
+				case "Decap": sortField = "battlePlayer.droppedCapturePoints"; break;
+				case "Shots": sortField = "battlePlayer.shots"; break;
+				case "Hits": sortField = "battlePlayer.hits"; break;
+				case "Pierced Hits": sortField = "battlePlayer.pierced"; break;
+				case "Explosion Hits": sortField = "battlePlayer.explosionHits"; break;
+				case "Hits Received": sortField = "battlePlayer.directHitsReceived"; break;
+				case "Piercings Received": sortField = "battlePlayer.piercingsReceived"; break;
+				case "Expl Hits Received": sortField = "battlePlayer.explosionHitsReceived"; break;
+				case "No Dmg Hits Received": sortField = "battlePlayer.noDamageShotsReceived"; break;
+				case "Milage": sortField = "battlePlayer.mileage"; break;
+				case "Life Time": sortField = "battlePlayer.lifeTime"; break;
+				case "Base Credit": sortField = "battlePlayer.credits"; break;
+				case "Premature Leave": sortField = "battlePlayer.isPrematureLeave"; break;
+				case "Team Killer": sortField = "battlePlayer.isTeamKiller"; break;
+				case "Team Kills": sortField = "battlePlayer.tkills"; break;
+			}
+			return sortField;
+		}
+
+
+		private DataTable GetDataGridSource(string orderHeaderText = "", bool? orderAscending = null)
+		{
+			if (orderHeaderText == "")
+				orderHeaderText = lastOrderHeaderText;
+			else
+				lastOrderHeaderText = orderHeaderText;
+			if (orderAscending == null)
+				orderAscending = lastOrderAscending;
+			else
+				lastOrderAscending = orderAscending;
+
+			string fortResourcesFields = "";
+			if (true) fortResourcesFields = ", @CALC(battlePlayer.fortResource) as 'IR' ";
+			string orderBy = GetSortField(orderHeaderText);
+			if (orderBy != "")
+			{
+				if (orderBy != "battlePlayer.name" && orderBy != "battlePlayer.clanAbbrev")
+				{
+					if (orderBy == "battlePlayer.accountId")
+						orderBy = "COUNT(" + orderBy + ")";
+					else
+						orderBy = "@CALC(" + orderBy + ")";
+				}
+				orderBy = " ORDER BY " + orderBy;
+				if (orderAscending == false)
+					orderBy += " DESC ";
+			}
+			string sql =
+				"select " +
+				"  battlePlayer.name as 'Player'" +
+				", battlePlayer.clanAbbrev as Clan" +
+
+				", '' as separator0 " +
+				
+				", COUNT(battlePlayer.accountId) as 'Battles'" +
+				fortResourcesFields +
+
+				", '' as separator1 " +
+
+				", @CALC(CAST(battlePlayer.kills AS FLOAT)) as 'Frags'" +
+				", @CALC(CAST(battlePlayer.spotted AS FLOAT)) as 'Spot' " +
+				", @CALC(CAST(battlePlayer.capturePoints AS FLOAT)) as 'Cap' " +
+				", @CALC(CAST(battlePlayer.droppedCapturePoints AS FLOAT)) as 'Decap' " +
+
+				", '' as separator8 " +
+				
+				", @CALC(battlePlayer.damageDealt) as 'Dmg'" +
+				", @CALC(battlePlayer.damageReceived) as 'Dmg Received' " +
+				", @CALC(battlePlayer.damageBlockedByArmor) as 'Dmg Blocked' " +
+
+
+				", '' as separator4 " +
+				", @CALC(CAST(battlePlayer.shots AS FLOAT)) as 'Shots' " +
+				", @CALC(CAST(battlePlayer.hits AS FLOAT)) as 'Hits' " +
+				", @CALC(CAST(battlePlayer.pierced AS FLOAT)) as 'Pierced Hits' " +
+
+				", '' as separator6 " +
+				", @CALC(battlePlayer.mileage) as 'Milage' " +
+				", @CALC(battlePlayer.lifeTime) as 'Life Time' " +
+
+				", '' as separator7 " +
+				", @CALC(battlePlayer.xp) as 'XP' " +
+				", @CALC(battlePlayer.credits) as 'Base Credit' " +
+
+				"FROM    battle INNER JOIN " +
+				"        battlePlayer ON battle.id = battlePlayer.battleId INNER JOIN " +	
+				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
+				"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
+				"        country ON tank.countryId = country.Id INNER JOIN " +
+				"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
+				"        map on battle.mapId = map.id INNER JOIN " +
+				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
+				"WHERE   playerTank.playerId=@playerid AND battlePlayer.playerTeam=@playerTeam " + battleTimeFilter + battleModeFilter + tankFilter +
+				"GROUP BY battlePlayer.name, battlePlayer.clanAbbrev " + 
+				orderBy;
+			//TODO
+			if (chkSum.Checked)
+				sql = sql.Replace("@CALC(", "SUM(");
+			else
+				sql = sql.Replace("@CALC(", "AVG(");
+			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			DB.AddWithValue(ref sql, "@playerTeam", playerTeam, DB.SqlDataType.Int);
+			DataTable dt = DB.FetchData(sql);
+			// Add Total Row
+			DataRow totalRow = dt.NewRow();
+			// Set 0 ad deafult
+			foreach (DataColumn dc in dt.Columns)
+				if (dc.DataType != System.Type.GetType("System.String"))
+					totalRow[dc.ColumnName] = 0;
+			totalRow["Player"] = "Total";
+			dt.Rows.Add(totalRow);
+			// Set blank value instead of 0 and calc total
+			int totRow = dt.Rows.Count - 1;
+			for (int i = 0; i < totRow; i++)
+			{
+				DataRow dr = dt.Rows[i];
+				foreach (DataColumn dc in dt.Columns)
+				{
+					if (dc.DataType != System.Type.GetType("System.String"))
+					{
+						if (dr[dc.ColumnName] != DBNull.Value && Convert.ToDouble(dr[dc.ColumnName]) == 0)
+							dr[dc.ColumnName] = DBNull.Value;
+						else
+						{
+							int total = Convert.ToInt32(dt.Rows[totRow][dc.ColumnName]);
+							double addvalue = 0;
+							if (dr[dc.ColumnName] != DBNull.Value) addvalue = Convert.ToDouble(dr[dc.ColumnName]);
+							dt.Rows[totRow][dc.ColumnName] = total + addvalue;
+						}
+					}
+				}
+			}
+			dt.AcceptChanges();
+			return dt;
+		}
+
+		private void FormatDataGrid(DataGridView dgv)
+		{
+			// Deselect
+			dgv.ClearSelection();
+			// Freeze first column
+			dgv.Columns[0].Frozen = true;
+			// Left align text col
+			dgv.Columns["Clan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dgv.Columns["Player"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			// Format
+			dgv.Columns["Dmg"].DefaultCellStyle.Format = "N0";
+			dgv.Columns["XP"].DefaultCellStyle.Format = "N0";
+			// Default width and set sorting
+			foreach (DataGridViewColumn dgvc in dgv.Columns)
+			{
+				if (dgvc.Name.Length > 9 && dgvc.Name.Substring(0, 9) == "separator")
+				{
+					dgvc.MinimumWidth = 2;
+					dgvc.Width = 3;
+					dgvc.HeaderText = "";
+					dgvc.Resizable = DataGridViewTriState.False;
+				}
+				else
+				{
+					dgvc.Width = 50;
+				}
+				// Sorting, set manual 
+				dgvc.SortMode = DataGridViewColumnSortMode.Programmatic;
+			}
+			// Calc width for rest of fields
+			// left part = player, clan, tank img, tank
+			int w = dgv.Width - 2; // total available width without img col
+			dgv.Columns["Player"].Width = 100;
+			if (true) dgv.Columns["IR"].Width = 40;
+			dgv.Columns["Battles"].Width = 45;
+			dgv.Columns["IR"].Width = 45;
+			dgv.Columns["Frags"].Width = 40;
+			dgv.Columns["Spot"].Width = 40;
+			dgv.Columns["Cap"].Width = 38;
+			dgv.Columns["Decap"].Width = 42;
+			dgv.Columns["Shots"].Width = 40;
+			dgv.Columns["Hits"].Width = 40;
+			dgv.Columns["Pierced Hits"].Width = 40;
+			
+			dgv.Columns["XP"].Width = 55;
+			dgv.Columns["Base Credit"].Width = 65;
+			dgv.Columns["Dmg Received"].Width = 65;
+			// Format
+			dgv.Columns["Base Credit"].DefaultCellStyle.Format = "N0";
+			dgv.Columns["Dmg Received"].DefaultCellStyle.Format = "N0";
+			dgv.Columns["Milage"].DefaultCellStyle.Format = "N0";
+
+			string format = "N0";
+			if (chkAvg.Checked) format = "N1";
+
+			dgv.Columns["Frags"].DefaultCellStyle.Format = format;
+			dgv.Columns["Spot"].DefaultCellStyle.Format = format;
+			dgv.Columns["Cap"].DefaultCellStyle.Format = format;
+			dgv.Columns["Decap"].DefaultCellStyle.Format = format;
+
+			dgv.Columns["Shots"].DefaultCellStyle.Format = format;
+			dgv.Columns["Hits"].DefaultCellStyle.Format = format;
+			dgv.Columns["Pierced Hits"].DefaultCellStyle.Format = format;
+			// Show
+			dgv.Visible = true;
+
+		}
+
+		#endregion
+
+		#region GridScrollbar
+
+		bool scrollingY = false;
+		private void scroll_MouseDown(object sender, MouseEventArgs e)
+		{
+			scrollingY = true;
+			ScrollY();
+		}
+
+		private void scroll_MouseUp(object sender, MouseEventArgs e)
+		{
+			scrollingY = false;
+		}
+
+		private void scroll_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (scrollingY) ScrollY();
+		}
+
+		private void ScrollY()
+		{
+			try
+			{
+				int posBefore = dgvTeam1.FirstDisplayedScrollingRowIndex;
+				dgvTeam1.FirstDisplayedScrollingRowIndex = scroll.ScrollPosition;
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				// throw;
+			}
+		}
+
+		private void dataGridMain_SelectionChanged(object sender, EventArgs e)
+		{
+			MoveScrollBar(); // Move scrollbar according to grid movements
+		}
+
+		private void RefreshScrollbars(DataGridView dgv)
+		{
+			// Scroll init
+			scroll.ScrollElementsVisible = dgv.DisplayedRowCount(false);
+			scroll.ScrollElementsTotals = dgv.RowCount; // subtract one for frozen row
+			scroll.Visible = scroll.ScrollNecessary;
+		}
+
+		private void MoveScrollBar()
+		{
+			try
+			{
+				scroll.ScrollPosition = dgvTeam1.FirstDisplayedScrollingRowIndex; 
+			}
+			catch (Exception)
+			{
+				// ignore errors, only affect scrollbar position
+			}
+		}
+
+		#endregion
+
+		#region resize
+
+		private void BattleSummary_Resize(object sender, EventArgs e)
+		{
+			ResizeNow();
+		}
+
+		private void ResizeNow()
+		{
+			if (btnOurTeam.Checked || btnEnemyTeam.Checked)
+			{
+				RefreshScrollbars(dgvTeam1);
+				PlaceControl(dgvTeam1, GridLocation.Whole);
+				FormatDataGrid(dgvTeam1);
+				PlaceScroll(dgvTeam1);
+			}
+		}
+
+		private enum GridLocation
+		{
+			Left = 1,
+			Right = 2,
+			Both = 3,
+			Whole = 4,
+		}
+
+		private void PlaceControl(Control ctrl, GridLocation location)
+		{
+			switch (location)
+			{
+				case GridLocation.Whole:
+					int w = grpMain.Width - 2;
+					if (scroll.ScrollNecessary) w -= 17;
+					ctrl.Width = w; 
+					ctrl.Height = grpMain.Height - 9; // group height - top padding and borders
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void PlaceScroll(Control grid)
+		{
+			scroll.Left = grid.Left + grid.Width;
+			scroll.Height = grid.Height;
+		}
+
+		#endregion
+
+		
 
 	}
 }
