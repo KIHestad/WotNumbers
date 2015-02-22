@@ -326,7 +326,7 @@ namespace WinApp.Code
 			else
 			{
 				Log.AddToLogBuffer(" > > Dossier file check terminated, already running");
-				returVal = "Dossier file check already running";
+				returVal = "Battle check already running";
 			}
 			Log.WriteLogBuffer();
 			return returVal;

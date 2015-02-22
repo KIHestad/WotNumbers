@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 221; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 223; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2047,7 +2047,13 @@ namespace WinApp.Code
 					Config.Settings.vBAddictPlayerToken = "";
 					Config.SaveConfig(out msg);
 					break;
-
+				case 222:
+					mssql = "ALTER TABLE battlePlayer ADD playerTeam bit NOT NULL DEFAULT 0;" ;
+					sqlite = mssql;
+					break;
+				case 223:
+					CalcPlayerTeam();
+					break;
 			}
 			string sql = "";
 			// get sql for correct dbtype
@@ -2156,7 +2162,40 @@ namespace WinApp.Code
 			return version;
 		}
 
-
+		private static void CalcPlayerTeam()
+		{
+			string sql = "";
+			//sql = "UPDATE battlePlayer SET playerTeam = 0";
+			//DB.ExecuteNonQuery(sql);
+			DataTable dtPlayer = DB.FetchData("SELECT * FROM player");
+			// Loop through each player
+			foreach (DataRow drPlayer in dtPlayer.Rows)
+			{
+				// Get player info
+				int playerId = Convert.ToInt32(drPlayer["id"]);
+				string PlayerNameAndServer = drPlayer["name"].ToString();
+				string playerName = PlayerHelper.GetPlayerNameFromNameAndServer(PlayerNameAndServer);
+				// Update for team 1 and 2 if this is players team
+				sql =
+					"UPDATE battlePlayer SET playerTeam = 1 WHERE team=1 AND battleId IN " +
+					"(SELECT        battle.id " +
+					"FROM            player INNER JOIN " +
+					"                         playerTank ON player.id = playerTank.playerId INNER JOIN " +
+					"                         battle ON playerTank.id = battle.playerTankId INNER JOIN " +
+					"                         battlePlayer ON battle.id = battlePlayer.battleId " +
+					"WHERE        (player.id = @playerId) AND (battlePlayer.name = @playerName) AND battlePlayer.team=1); " +
+					"UPDATE battlePlayer SET playerTeam = 1 WHERE team=2 AND battleId IN " +
+					"(SELECT        battle.id " +
+					"FROM            player INNER JOIN " +
+					"                         playerTank ON player.id = playerTank.playerId INNER JOIN " +
+					"                         battle ON playerTank.id = battle.playerTankId INNER JOIN " +
+					"                         battlePlayer ON battle.id = battlePlayer.battleId " +
+					"WHERE        (player.id = @playerId) AND (battlePlayer.name = @playerName) AND battlePlayer.team=2); ";
+				DB.AddWithValue(ref sql, "@playerId", playerId, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+				DB.ExecuteNonQuery(sql);
+			}
+		}
 
 	}
 }

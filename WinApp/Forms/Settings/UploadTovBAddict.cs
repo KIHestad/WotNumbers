@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,21 +21,41 @@ namespace WinApp.Forms
 			InitializeComponent();
 		}
 
+		private void TestStatus(bool testing = true)
+		{
+			btnTestConnection.Enabled = !testing;
+			btnUploadDossier.Enabled = !testing;
+			if (testing)
+				this.Cursor = Cursors.WaitCursor;
+			else
+				this.Cursor = Cursors.Default;
+			Application.DoEvents();
+		}
+
 		private void btnTestConnection_Click(object sender, EventArgs e)
 		{
+			TestStatus();
 			MsgBox.Show(vBAddict.TestConnection(), "vBAddict connection test result");
+			TestStatus(false);
 		}
 
 		private void btnUploadDossier_Click(object sender, EventArgs e)
 		{
+			TestStatus();
 			string dossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
 			string token = txtToken.Text.Trim();
 			string msg = "";
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
 			bool result = vBAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg, false);
+			sw.Stop();
+			double timeUsed = Convert.ToDouble(sw.ElapsedMilliseconds) / 1000;
+			msg += Environment.NewLine + Environment.NewLine + "Used " + timeUsed.ToString() + " sec" + Environment.NewLine + Environment.NewLine;
 			string msgHeader = "Success uploading dossier file to vBAddict";
 			if (!result)
 				msgHeader = "Error uploading dossier file to vBAddict";
 			MsgBox.Show(msg, msgHeader);
+			TestStatus(false);
 		}
 
 		private void UploadTovBAddict_Load(object sender, EventArgs e)

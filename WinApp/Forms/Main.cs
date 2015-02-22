@@ -335,44 +335,56 @@ namespace WinApp.Forms
 						AutoSetup();
 					if (!LoadConfigOK)
 					{
-						Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
 						Config.Settings.dossierFileWathcherRun = 0;
-						SetListener();
+						SetListener(false);
+						Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
 						Form frm = new Forms.ApplicationSetting();
 						frm.ShowDialog();
 					}
 				}
-				if (DB.CheckConnection())
-				{
-					TankHelper.GetAllLists();
-				}
-				// Check DB Version an dupgrade if needed
-				bool versionOK = DBVersion.CheckForDbUpgrade(this);
-				// Add init items to Form
+				// Init form
 				SetFormTitle();
-				SetFavListMenu();
-				// Get Images
-				ImageHelper.CreateTankImageTable();
-				ImageHelper.LoadTankImages();
-				ImageHelper.CreateMasteryBageImageTable();
-				ImageHelper.CreateTankTypeImageTable();
-				ImageHelper.CreateNationImageTable();
-				// Show view
-				ChangeView(GridView.Views.Overall, true);
-				// Battle result file watcher
+				SetListener(false);
+				// Update file watcher to read battle result file - trigger if new dossier or battle result is found
 				fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
 				fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
 				fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
 				fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
 				fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+				
+				if (DB.CheckConnection())
+				{
+					TankHelper.GetAllLists();
+					// Check DB Version an dupgrade if needed
+					bool versionOK = DBVersion.CheckForDbUpgrade(this);
+					// Add init items to Form
+					SetFavListMenu();
+					// Get Images
+					ImageHelper.CreateTankImageTable();
+					ImageHelper.LoadTankImages();
+					ImageHelper.CreateMasteryBageImageTable();
+					ImageHelper.CreateTankTypeImageTable();
+					ImageHelper.CreateNationImageTable();
+					// Show view
+					ChangeView(GridView.Views.Overall, true);
+					// Check for new version
+					RunCheckForNewVersion();
+					// Show status message
+					SetStatus2("Application started");
+				}
+				else
+				{
+					Config.Settings.dossierFileWathcherRun = 0;
+					SetListener(false);
+					mSettingsApp.Enabled = true;
+					mShowDbTables.Enabled = false;
+					StatusBarHelper.Message = "Database connection failed";
+					StatusBarHelper.ClearAfterNextShow = false;
+					SetStatus2("Application started with errors");
+				}
 				// Ready 
 				MainTheme.Cursor = Cursors.Default;
-				// Show status message
-				SetStatus2("Application started");
-				// Update file watchers to read dossier and battle result
-				SetListener(false);
-				// Check for new version
-				RunCheckForNewVersion();
+				// Write log
 				Log.WriteLogBuffer();
 			}
 			catch (Exception ex)
@@ -436,7 +448,8 @@ namespace WinApp.Forms
 				RunRecalcBattleKDratioCRdmg(true);
 
 			// Check for dossier update
-			RunDossierFileCheck(message, DBVersion.RunDossierFileCheckWithForceUpdate);
+			StatusBarHelper.Message = message;
+			RunDossierFileCheck("Runnning initial battle fetch...", DBVersion.RunDossierFileCheckWithForceUpdate);
 		}
 
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)

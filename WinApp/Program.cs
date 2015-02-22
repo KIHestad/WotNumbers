@@ -36,8 +36,8 @@ namespace WinApp
 			//	eventLog.Source = SourceName;
 			//	string message = string.Format("Exception: {0} \n\nStack: {1}", ex.Message, ex.StackTrace);
 			//	eventLog.WriteEntry(message, EventLogEntryType.Error);
-			//	MessageBox.Show("Wot Numbers has terminated due to an error. Check Event Viewer for details." + Environment.NewLine + Environment.NewLine + ex.Message, 
-			//		"Wot Numbers - Error", 
+			//	MessageBox.Show("Wot Numbers has terminated due to an error. Check Event Viewer for details." + Environment.NewLine + Environment.NewLine + ex.Message,
+			//		"Wot Numbers - Error",
 			//		buttons: MessageBoxButtons.OK,
 			//		icon: MessageBoxIcon.Error);
 			//	// throw;
