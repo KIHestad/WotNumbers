@@ -41,7 +41,7 @@ namespace WinApp.Gadget
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
 			// Create table structure, and get total number of used tanks to show in first row
 			string sql =
-				"Select 'Tanks used' as Data, cast(0 as float) as 'Random/TC', cast(0 as float) as 'Team', cast(0 as float) as 'Historical', cast(0 as float) as 'Skirmishes', cast(count(playerTank.tankId) as float) as Total " +
+				"Select 'Tanks used' as Data, cast(0 as float) as 'Random/TC', cast(0 as float) as 'Team', cast(0 as float) as 'Historical', cast(0 as float) as 'Skirmishes', cast(0 as float) as 'Stronghold', cast(count(playerTank.tankId) as float) as Total " +
 				"from playerTank " +
 				"where playerTank.playerId=@playerId and tankid in (" +
 				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)";
@@ -89,12 +89,23 @@ namespace WinApp.Gadget
 			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedSkirmishes = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedSkirmishes = Convert.ToInt32(dtValue.Rows[0][0]);
+			// Stronghold
+			sql =
+				"Select count(playerTank.tankId) " +
+				"from playerTank " +
+				"where playerTank.playerId=@playerId and tankid in (" +
+				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Stronghold')";
+			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+			int usedStronghold = 0;
+			if (dtValue.Rows[0][0] != DBNull.Value) usedStronghold = Convert.ToInt32(dtValue.Rows[0][0]);
 
 			// Add usage
 			dt.Rows[0]["Random/TC"] = usedRandom;
 			dt.Rows[0]["Team"] = usedTeam;
 			dt.Rows[0]["Historical"] = usedHistorical;
 			dt.Rows[0]["Skirmishes"] = usedSkirmishes;
+			dt.Rows[0]["Stronghold"] = usedStronghold;
 
 			// get overall stats all battles
 			double[] wr = new double[9];
@@ -193,6 +204,25 @@ namespace WinApp.Gadget
 					wr[4] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
 				}
 
+				// Overall stats Stronghold
+				sql =
+					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+					"from playerTankBattle ptb left join " +
+					"  playerTank pt on ptb.playerTankId=pt.id left join " +
+					"  tank t on pt.tankId = t.id " +
+					"where pt.playerId=@playerId and ptb.battleMode='Stronghold'";
+				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+				dtStats = DB.FetchData(sql);
+				stats = dtStats.Rows[0];
+				if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+				{
+					// Battle count
+					battleCount[5] = Convert.ToInt32(stats["battles"]);
+					// win rate
+					wr[5] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+				}
+
 				// Add Data to dataTable
 				DataRow dr = dt.NewRow();
 				dr["Data"] = "Battle count";
@@ -200,6 +230,7 @@ namespace WinApp.Gadget
 				dr["Team"] = ShowDBnullIfZero(battleCount[2], Convert.ToInt32(battleCount[2]));
 				dr["Historical"] = ShowDBnullIfZero(battleCount[3], Convert.ToInt32(battleCount[3]));
 				dr["Skirmishes"] = ShowDBnullIfZero(battleCount[4], Convert.ToInt32(battleCount[4]));
+				dr["Stronghold"] = ShowDBnullIfZero(battleCount[5], Convert.ToInt32(battleCount[5]));
 				dr["Total"] = battleCount[0].ToString();
 				dt.Rows.Add(dr);
 
@@ -210,6 +241,7 @@ namespace WinApp.Gadget
 				dr["Team"] = ShowDBnullIfZero(Math.Round(wr[2], 2), Convert.ToInt32(battleCount[2]));
 				dr["Historical"] = ShowDBnullIfZero(Math.Round(wr[3], 2), Convert.ToInt32(battleCount[3]));
 				dr["Skirmishes"] = ShowDBnullIfZero(Math.Round(wr[4], 2), Convert.ToInt32(battleCount[4]));
+				dr["Stronghold"] = ShowDBnullIfZero(Math.Round(wr[5], 2), Convert.ToInt32(battleCount[5]));
 				dr["Total"] = Math.Round(wr[0], 2);
 				dt.Rows.Add(dr);
 			}

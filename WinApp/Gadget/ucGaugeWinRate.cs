@@ -64,6 +64,7 @@ namespace WinApp.Gadget
 				case "7": capText = "Team"; break;
 				case "Historical": capText = "Historical Battles"; break;
 				case "Skirmishes": capText = "Skirmishes"; break;
+				case "Stronghold": capText = "Stronghold"; break;
 			}
 			string sqlBattlemode = "";
 			if (_battleMode != "")

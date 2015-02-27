@@ -23,6 +23,8 @@ namespace WinApp.Code
 					s = "Historical"; break;
 				case BattleHelper.MainBattleMode.ModeSkirmishes:
 					s = "Skirmishes"; break;
+				case BattleHelper.MainBattleMode.ModeStronghold:
+					s = "Stronghold"; break;
 				case BattleHelper.MainBattleMode.ModeSpecial:
 					s = "Special"; break;
 			}

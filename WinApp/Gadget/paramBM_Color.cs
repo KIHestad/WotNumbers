@@ -42,6 +42,7 @@ namespace WinApp.Gadget
 					case "7": ddBattleMode.Text = "Team"; break;
 					case "Historical": ddBattleMode.Text = "Historical"; break;
 					case "Skirmishes": ddBattleMode.Text = "Skirmishes"; break;
+					case "Stronghold": ddBattleMode.Text = "Stronghold"; break;
 					case "": ddBattleMode.Text = "All Modes"; break;
 				}
 				// Get Color
@@ -57,7 +58,7 @@ namespace WinApp.Gadget
 
 		private void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team,Historical,Skirmishes, All Modes");
+			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team,Historical,Skirmishes,Stronghold,All Modes");
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -75,6 +76,7 @@ namespace WinApp.Gadget
 					case "Team":        param = "7"; break;
 					case "Historical":  param = "Historical"; break;
 					case "Skirmishes":  param = "Skirmishes"; break;
+					case "Stronghold": param = "Stronghold"; break;
 					case "All Modes":   param = ""; break;
 				}
 				GadgetHelper.newParameters[0] = param;

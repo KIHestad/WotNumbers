@@ -1796,6 +1796,10 @@ namespace WinApp.Forms
 						battleModeFilter = " AND (battleMode = 'Skirmishes') ";
 						battleMode = "Skirmishes";
 						break;
+					case GridFilter.BattleModeType.Stronghold:
+						battleModeFilter = " AND (battleMode = 'Stronghold') ";
+						battleMode = "Stronghold";
+						break;
 					case GridFilter.BattleModeType.RandomPlatoon:
 						battleModeFilter = " AND (battleMode = '15' AND platoonParticipants > 0) ";
 						battleMode = "15";
@@ -1920,6 +1924,9 @@ namespace WinApp.Forms
 					break;
 				case GridFilter.BattleModeType.Skirmishes:
 					battleModeFilter = " AND (playerTankBattle.battleMode = 'Skirmishes') ";
+					break;
+				case GridFilter.BattleModeType.Stronghold:
+					battleModeFilter = " AND (playerTankBattle.battleMode = 'Stronghold') ";
 					break;
 				case GridFilter.BattleModeType.Special:
 					battleModeFilter = " AND (playerTankBattle.battleMode = 'Special') ";

@@ -209,6 +209,7 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
+			this.mModeBattleForStronghold = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -228,6 +229,7 @@
 			// 
 			// fileSystemWatcherNewBattle
 			// 
+			this.fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 			this.fileSystemWatcherNewBattle.SynchronizingObject = this;
 			// 
 			// imageListToolStrip
@@ -1026,6 +1028,7 @@
             this.mModeHistorical,
             this.mModeTeam,
             this.mModeSkrimishes,
+            this.mModeBattleForStronghold,
             this.toolStripSeparator15,
             this.mModeSpecial});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
@@ -1147,7 +1150,7 @@
 			this.mModeHistorical.Name = "mModeHistorical";
 			this.mModeHistorical.Size = new System.Drawing.Size(206, 22);
 			this.mModeHistorical.Tag = "Historical";
-			this.mModeHistorical.Text = "Historical";
+			this.mModeHistorical.Text = "Historical Battle";
 			this.mModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -1964,6 +1967,15 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
+			// mModeBattleForStronghold
+			// 
+			this.mModeBattleForStronghold.Name = "mModeBattleForStronghold";
+			this.mModeBattleForStronghold.Size = new System.Drawing.Size(206, 22);
+			this.mModeBattleForStronghold.Tag = "Stronghold";
+			this.mModeBattleForStronghold.Text = "Battle for Stronghold";
+			this.mModeBattleForStronghold.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeBattleForStronghold.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2172,6 +2184,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mModeSpecial;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsUploadTovBAddict;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsShowLogFiles;
+		private System.Windows.Forms.ToolStripMenuItem mModeBattleForStronghold;
 	}
 }
 

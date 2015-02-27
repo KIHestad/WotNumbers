@@ -86,6 +86,7 @@ namespace WinApp.Code
 				DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
 				DataRow NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
 				DataRow NewPlayerTankBattleSkirmishesRow = NewPlayerTankBattleTable.NewRow();
+				DataRow NewPlayerTankBattleStrongholdRow = NewPlayerTankBattleTable.NewRow();
 				string tankName = "";
 				JsonItem currentItem = new JsonItem();
 				string fragList = "";
@@ -173,6 +174,16 @@ namespace WinApp.Code
 											case "Int": NewPlayerTankBattleSkirmishesRow[dbField] = Convert.ToInt32(currentItem.value); break;
 										}
 									}
+									else if (dbPlayerTankMode.ToString() == "Stronghold")
+									{
+										// playerTankBattle mode Historical
+										switch (dataType)
+										{
+											case "String": NewPlayerTankBattleStrongholdRow[dbField] = currentItem.value.ToString(); break;
+											case "DateTime": NewPlayerTankBattleStrongholdRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
+											case "Int": NewPlayerTankBattleStrongholdRow[dbField] = Convert.ToInt32(currentItem.value); break;
+										}
+									}
 								}
 								else if (foundRows[0]["dbAch"] != DBNull.Value) // Found mapped achievement
 								{
@@ -226,7 +237,7 @@ namespace WinApp.Code
 									if (tankName != "")
 									{
 										// log.Add("  > Check for DB update - Tank: '" + tankName );
-										if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, NewPlayerTankBattleSkirmishesRow, fragList, achList, ForceUpdate, saveBattleResult))
+										if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, NewPlayerTankBattleSkirmishesRow, NewPlayerTankBattleStrongholdRow, fragList, achList, ForceUpdate, saveBattleResult))
 											battleSaved = true; // result if battle was detected and saved
 										// Reset all values
 										NewPlayerTankTable.Clear();
@@ -235,6 +246,7 @@ namespace WinApp.Code
 										NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
 										NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
 										NewPlayerTankBattleSkirmishesRow = NewPlayerTankBattleTable.NewRow();
+										NewPlayerTankBattleStrongholdRow = NewPlayerTankBattleTable.NewRow();
 										// clear frags and achievments
 										fragList = "";
 										achList.Clear();
@@ -260,7 +272,7 @@ namespace WinApp.Code
 				reader.Close();
 				// Also write last tank found
 				// log.Add("  > Check for DB update - Tank: '" + tankName );
-				if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, NewPlayerTankBattleSkirmishesRow, fragList, achList, ForceUpdate, saveBattleResult)) 
+				if (CheckTankDataResult(tankName, NewPlayerTankRow, NewPlayerTankBattle15Row, NewPlayerTankBattle7Row, NewPlayerTankBattleHistoricalRow, NewPlayerTankBattleSkirmishesRow, NewPlayerTankBattleStrongholdRow, fragList, achList, ForceUpdate, saveBattleResult)) 
 					battleSaved = true; // result if battle was detected and saved
 				// Done
 				TankHelper.ClearPlayerTankAchList();
@@ -292,6 +304,7 @@ namespace WinApp.Code
 												DataRow playerTankBattle7NewRow,
 												DataRow playerTankBattleHistoricalNewRow, 
 												DataRow PlayerTankBattleSkirmishesNewRow,
+												DataRow PlayerTankBattleStrongholdNewRow,
 												string fragList, 
 												List<AchItem> achList, 
 												bool forceUpdate = false, 
@@ -314,10 +327,12 @@ namespace WinApp.Code
 			int playerTankNewRow_battles7 = 0;
 			int playerTankNewRow_battlesHistorical = 0;
 			int playerTankNewRow_battlesSkirmishes = 0;
+			int playerTankNewRow_battlesStronghold = 0;
 			if (playerTankBattle15NewRow["battles"] != DBNull.Value) playerTankNewRow_battles15 = Convert.ToInt32(playerTankBattle15NewRow["battles"]);
 			if (playerTankBattle7NewRow["battles"] != DBNull.Value) playerTankNewRow_battles7 = Convert.ToInt32(playerTankBattle7NewRow["battles"]);
 			if (playerTankBattleHistoricalNewRow["battles"] != DBNull.Value) playerTankNewRow_battlesHistorical = Convert.ToInt32(playerTankBattleHistoricalNewRow["battles"]);
 			if (PlayerTankBattleSkirmishesNewRow["battles"] != DBNull.Value) playerTankNewRow_battlesSkirmishes = Convert.ToInt32(PlayerTankBattleSkirmishesNewRow["battles"]);
+			if (PlayerTankBattleStrongholdNewRow["battles"] != DBNull.Value) playerTankNewRow_battlesStronghold = Convert.ToInt32(PlayerTankBattleStrongholdNewRow["battles"]);
 			// Check if battle count has increased, get existing battle count
 			DataTable playerTankOldTable = TankHelper.GetPlayerTank(tankId); // Return Existing Player Tank Data
 			// Check if Player has this tank
@@ -335,23 +350,27 @@ namespace WinApp.Code
 			int playerTankOldRow_wins7 = 0;
 			int playerTankOldRow_winsHistorical = 0;
 			int playerTankOldRow_winsSkirmishes = 0;
+			int playerTankOldRow_winsStronghold = 0;
 			int playerTankOldRow_xp15 = 0;
 			int playerTankOldRow_xp7 = 0;
 			int playerTankOldRow_xpHistorical = 0;
 			int playerTankOldRow_xpSkirmishes = 0;
+			int playerTankOldRow_xpStronghold = 0;
 			int playerTankOldRow_battles15 = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeRandom_TC, out playerTankOldRow_wins15, out playerTankOldRow_xp15);
 			int playerTankOldRow_battles7 = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeTeam, out playerTankOldRow_wins7, out playerTankOldRow_xp7);
 			int playerTankOldRow_battlesHistorical = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeHistorical, out playerTankOldRow_winsHistorical, out playerTankOldRow_xpHistorical);
-			int playerTankOldRow_battlesSkirmishes = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeSkirmishes, out playerTankOldRow_winsSkirmishes, out playerTankOldRow_xpSkirmishes); 
+			int playerTankOldRow_battlesSkirmishes = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeSkirmishes, out playerTankOldRow_winsSkirmishes, out playerTankOldRow_xpSkirmishes);
+			int playerTankOldRow_battlesStronghold = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeStronghold, out playerTankOldRow_winsStronghold, out playerTankOldRow_xpStronghold); 
 				
 			// Calculate number of new battles 
 			int battlesNew15 = playerTankNewRow_battles15 - playerTankOldRow_battles15;
 			int battlesNew7 = playerTankNewRow_battles7 - playerTankOldRow_battles7;
 			int battlesNewHistorical = playerTankNewRow_battlesHistorical - playerTankOldRow_battlesHistorical;
 			int battlesNewSkirmishes = playerTankNewRow_battlesSkirmishes - playerTankOldRow_battlesSkirmishes;
+			int battlesNewStronghold = playerTankNewRow_battlesStronghold - playerTankOldRow_battlesStronghold;
 			// Check if new battle on this tank then do db update, if force do it anyway
-			if (battlesNew15 > 0 || battlesNew7 > 0 || battlesNewHistorical > 0 || battlesNewSkirmishes > 0 || specialTankFound ||
-				(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0 || playerTankOldRow_battlesSkirmishes > 0 || specialTankFound)))
+			if (battlesNew15 > 0 || battlesNew7 > 0 || battlesNewHistorical > 0 || battlesNewSkirmishes > 0 || battlesNewStronghold > 0 || specialTankFound ||
+				(forceUpdate && (playerTankOldRow_battles15 > 0 || playerTankOldRow_battles7 > 0 || playerTankOldRow_battlesHistorical > 0 || playerTankOldRow_battlesSkirmishes > 0 || playerTankOldRow_battlesStronghold > 0 || specialTankFound)))
 			{  
 				// Update playerTank
 				string sqlFields = "";
@@ -403,6 +422,7 @@ namespace WinApp.Code
 				if (battlesNew7 > 0) severalModes++;
 				if (battlesNewHistorical > 0) severalModes++;
 				if (battlesNewSkirmishes > 0) severalModes++;
+				if (battlesNewStronghold > 0) severalModes++;
 				if (severalModes > 1)
 				{
 					battleFragList.Clear();
@@ -432,6 +452,12 @@ namespace WinApp.Code
 				{
 					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
 											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
+					battleSave = true;
+				}
+				if (battlesNewStronghold > 0 || (forceUpdate && playerTankOldRow_battlesStronghold != 0))
+				{
+					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
+											playerTankNewRow_battlesStronghold, battlesNewStronghold, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (specialTankFound)

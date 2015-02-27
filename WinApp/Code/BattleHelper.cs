@@ -14,6 +14,7 @@ namespace WinApp.Code
 			ModeHistorical = 3,
 			ModeSkirmishes = 4,
 			ModeSpecial = 5,
+			ModeStronghold = 6,
 		}
 
 		public static string GetSQLMainBattleMode(MainBattleMode mainBattleMode)
@@ -30,6 +31,9 @@ namespace WinApp.Code
 					return "Skirmishes";
 				case MainBattleMode.ModeSpecial:
 					return "Special";
+				case MainBattleMode.ModeStronghold:
+					return "Stronghold";
+
 			}
 			return "";
 		}
@@ -44,6 +48,7 @@ namespace WinApp.Code
 				case "Historical": battleModeReadableName = "Historical"; break;
 				case "Skirmishes": battleModeReadableName = "Skirmishes"; break;
 				case "Special": battleModeReadableName = "Special"; break;
+				case "Stronghold": battleModeReadableName = "Stronghold"; break;
 				case "": battleModeReadableName = "All Modes"; break;
 			}
 			return battleModeReadableName;

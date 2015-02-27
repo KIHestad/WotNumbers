@@ -288,6 +288,11 @@ namespace WinApp.Forms
 						battleMode = "Skirmish Battle";
 						showFortResources = true; 
 						break;
+					case "Stronghold":
+						mainBattleMode = BattleHelper.MainBattleMode.ModeStronghold;
+						battleMode = "Battle for Stronghold";
+						showFortResources = true;
+						break;
 					case "Special":
 						mainBattleMode = BattleHelper.MainBattleMode.ModeSpecial;
 						battleMode = "Special Event Battle";

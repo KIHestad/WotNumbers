@@ -42,7 +42,7 @@ namespace WinApp.Gadget
 
 		private void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team,Historical,Skirmishes, All Modes");
+			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team,Historical,Skirmishes,Stronghold,All Modes");
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -60,6 +60,7 @@ namespace WinApp.Gadget
 					case "Team":        param = "7"; break;
 					case "Historical":  param = "Historical"; break;
 					case "Skirmishes":  param = "Skirmishes"; break;
+					case "Stronghold": param = "Stronghold"; break;
 					case "All Modes":   param = ""; break;
 				}
 				GadgetHelper.newParameters[0] = param;
