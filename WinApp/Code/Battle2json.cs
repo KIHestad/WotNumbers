@@ -329,7 +329,7 @@ namespace WinApp.Code
 								battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
 								// Get clan
 								bool getEnemyClan = false;
-								if (bonusType == 3 || bonusType == 4 || bonusType == 10)
+								if (bonusType == 3 || bonusType == 4 || bonusType == 10 || bonusType == 11)
 									getEnemyClan = true;
 								// Get platoon
 								bool getPlatoon = false;
@@ -350,7 +350,8 @@ namespace WinApp.Code
 									case 4: battleResultMode = "Clan War"; break;
 									case 5: battleResultMode = "Tutorial"; break;
 									case 9: battleResultMode = "Special Event"; break;
-									case 10: battleResultMode = "Skimish"; break;
+									case 10: battleResultMode = "Skirmishes"; break;
+									case 11: battleResultMode = "Stronghold"; break;
 								}
 								// Get other modes from battle
 								sql = "select battleMode from battle where id=" + battleId;

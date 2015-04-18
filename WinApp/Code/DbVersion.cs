@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 224; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 225; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2106,6 +2106,9 @@ namespace WinApp.Code
 							"INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) " +
 							"VALUES ('tanks_v2', 'fortBattles', 'xp', 'Int', 'xp', 'xp', 'tanks_v2.fortBattles.xp', 'Stronghold'); ";
 					sqlite = mssql;
+					break;
+				case 225:
+					RunWotApi = true;
 					break;
 			}
 			string sql = "";
