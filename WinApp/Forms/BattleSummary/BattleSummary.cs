@@ -29,7 +29,6 @@ namespace WinApp.Forms
 		// team datagrid and scrollbar and params
 		private DataGridView dgvTeam1 = new DataGridView();
 		private BadScrollBar scroll = new BadScrollBar();
-		private bool showFortResources = false;
 		private int playerTeam = 0; // 1=My team | 0=Enemy team
 		private string lastOrderHeaderText = "Player";
 		private bool? lastOrderAscending = true;

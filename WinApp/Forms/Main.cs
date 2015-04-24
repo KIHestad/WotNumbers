@@ -2146,6 +2146,8 @@ namespace WinApp.Forms
 				if (sorting.ColumnHeader == "")
 				{
 					sorting.ColumnHeader = "battle.battleTime";
+					if (groupingActive)
+						sorting.ColumnHeader = "tank_name";
 					sorting.ColumnName = sorting.ColumnHeader;
 				}
 				// Create sort order if no grouping 
@@ -2168,6 +2170,10 @@ namespace WinApp.Forms
 
 				if (groupingActive)
 				{
+					// Non allowed sorting
+					string groupBySort = sorting.ColumnHeader;
+					if (groupBySort == "Tank Image") groupBySort = "tank_name";
+					if (groupBySort == "Mastery Badge") groupBySort = "mb_id";
 					// grouping
 					selectFixed =
 						"  '#30A8FF' as battleResultColor,  '#30A8FF' as battleSurviveColor, " +
@@ -2176,7 +2182,7 @@ namespace WinApp.Forms
 						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, 0 as arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as mb_id, 0 as battle_Id ";
 					groupBy = "GROUP BY tank.id, tank.Name, playerTank.Id ";
-					sortOrder = "ORDER BY [" + sorting.ColumnHeader + "] " + sortDirection + " ";
+					sortOrder = "ORDER BY [" + groupBySort + "] " + sortDirection + " ";
 				}
 				else
 				{
