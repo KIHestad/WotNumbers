@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 225; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 228; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2107,8 +2107,18 @@ namespace WinApp.Code
 							"VALUES ('tanks_v2', 'fortBattles', 'xp', 'Int', 'xp', 'xp', 'tanks_v2.fortBattles.xp', 'Stronghold'); ";
 					sqlite = mssql;
 					break;
-				case 225:
+				case 226:
 					RunWotApi = true;
+					break;
+				case 227:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (700,'Winter Showdown','109_battlecity_ny'); " +
+						"UPDATE map SET name = 'Overlord', arena_id='101_dday' WHERE id=70; ";
+					sqlite = mssql;
+					break;
+				case 228:
+					mssql = "UPDATE battle SET mapId=700 WHERE mapId=70 AND battleTime < '3/1/2015'"; // Change map id for old battles
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";
