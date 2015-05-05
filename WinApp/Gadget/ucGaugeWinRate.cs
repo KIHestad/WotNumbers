@@ -61,7 +61,8 @@ namespace WinApp.Gadget
 			switch (_battleMode)
 			{
 				case "15": capText = "Random/TC"; break;
-				case "7": capText = "Team"; break;
+				case "7": capText = "Team: Unranked"; break;
+				case "7Ranked": capText = "Team: Ranked"; break;
 				case "Historical": capText = "Historical Battles"; break;
 				case "Skirmishes": capText = "Skirmishes"; break;
 				case "Stronghold": capText = "Stronghold"; break;

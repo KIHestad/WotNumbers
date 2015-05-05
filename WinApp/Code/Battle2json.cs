@@ -347,19 +347,15 @@ namespace WinApp.Code
 									case 1: battleResultMode = "Random"; break;
 									case 2: battleResultMode = "Trainig Room"; break;
 									case 3: battleResultMode = "Tank Company"; break;
-									case 4: battleResultMode = "Clan War"; break;
-									case 5: battleResultMode = "Tutorial"; break;
+									case 4: battleResultMode = "Tournament"; break;
+									case 5: battleResultMode = "Clan War"; break;
+									case 6: battleResultMode = "Tutorial"; break;
+									case 7: battleResultMode = "Team: Unranked Battles"; break;
+									case 8: battleResultMode = "Historical Battle"; break;
 									case 9: battleResultMode = "Special Event"; break;
 									case 10: battleResultMode = "Skirmishes"; break;
 									case 11: battleResultMode = "Stronghold"; break;
-								}
-								// Get other modes from battle
-								sql = "select battleMode from battle where id=" + battleId;
-								string battleModeFromBattle = DB.FetchData(sql).Rows[0][0].ToString();
-								switch (battleModeFromBattle)
-								{
-									case "7": battleResultMode = "Team"; break;
-									case "Historical": battleResultMode = "Historical"; break;
+									case 12: battleResultMode = "Team: Ranked Battles"; break;
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });

@@ -33,6 +33,7 @@ namespace WinApp.Code
 			RandomPlatoon3 = 12,
 			Special = 13,
 			Stronghold = 14,
+			TeamRanked = 15,
 		}
 
 		public class Settings

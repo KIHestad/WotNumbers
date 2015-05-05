@@ -15,6 +15,7 @@ namespace WinApp.Code
 			ModeSkirmishes = 4,
 			ModeSpecial = 5,
 			ModeStronghold = 6,
+			ModeTeamRanked = 7,
 		}
 
 		public static string GetSQLMainBattleMode(MainBattleMode mainBattleMode)
@@ -33,6 +34,8 @@ namespace WinApp.Code
 					return "Special";
 				case MainBattleMode.ModeStronghold:
 					return "Stronghold";
+				case MainBattleMode.ModeTeamRanked:
+					return "7Ranked";
 
 			}
 			return "";
@@ -44,7 +47,8 @@ namespace WinApp.Code
 			switch (battleMode)
 			{
 				case "15": battleModeReadableName = "Random / TC"; break;
-				case "7": battleModeReadableName = "Team"; break;
+				case "7": battleModeReadableName = "Team: Unranked"; break;
+				case "7Ranked": battleModeReadableName = "Team: Ranked"; break;
 				case "Historical": battleModeReadableName = "Historical"; break;
 				case "Skirmishes": battleModeReadableName = "Skirmishes"; break;
 				case "Special": battleModeReadableName = "Special"; break;

@@ -39,7 +39,8 @@ namespace WinApp.Gadget
 				switch (currentParameters[0].ToString())
 				{
 					case "15": ddBattleMode.Text = "Random / TC"; break;
-					case "7": ddBattleMode.Text = "Team"; break;
+					case "7": ddBattleMode.Text = "Team: Unranked"; break;
+					case "7Ranked": ddBattleMode.Text = "Team: Ranked"; break;
 					case "Historical": ddBattleMode.Text = "Historical"; break;
 					case "Skirmishes": ddBattleMode.Text = "Skirmishes"; break;
 					case "Stronghold": ddBattleMode.Text = "Stronghold"; break;
@@ -58,7 +59,7 @@ namespace WinApp.Gadget
 
 		private void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team,Historical,Skirmishes,Stronghold,All Modes");
+			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team: Unranked,Team: Ranked,Historical,Skirmishes,Stronghold,All Modes");
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -73,8 +74,9 @@ namespace WinApp.Gadget
 				switch (ddBattleMode.Text)
 				{
 					case "Random / TC": param = "15"; break;
-					case "Team":        param = "7"; break;
-					case "Historical":  param = "Historical"; break;
+					case "Team: Unranked": param = "7"; break;
+					case "Team: Ranked": param = "7Ranked"; break;
+					case "Historical": param = "Historical"; break;
 					case "Skirmishes":  param = "Skirmishes"; break;
 					case "Stronghold": param = "Stronghold"; break;
 					case "All Modes":   param = ""; break;

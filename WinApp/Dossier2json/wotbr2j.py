@@ -11,7 +11,7 @@ import struct, json, time, sys, os, cPickle, StringIO
 from itertools import izip 
   
 # BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie') 
-BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie', 'fort_battle')
+BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie', 'fort_battle', 'rated_cybersport')
 FINISH_REASON_NAMES = ('extermination', 'base', 'timeout', 'failure', 'technical') 
 
 VERSIONS_LENGTH = (50, 52, 60, 62, 68, 70, 74, 81, 84, 92, 117, 90, 89, 91)

@@ -1776,6 +1776,10 @@ namespace WinApp.Forms
 						battleModeFilter = " AND (battleMode = '7') ";
 						battleMode = "7";
 						break;
+					case GridFilter.BattleModeType.TeamRanked:
+						battleModeFilter = " AND (battleMode = '7Ranked') ";
+						battleMode = "7Ranked";
+						break;
 					case GridFilter.BattleModeType.Random:
 						battleModeFilter = " AND (battleMode = '15' AND modeClan = 0 AND modeCompany = 0) ";
 						battleMode = "15";
@@ -1909,6 +1913,9 @@ namespace WinApp.Forms
 					break;
 				case GridFilter.BattleModeType.Team:
 					battleModeFilter = " AND (playerTankBattle.battleMode = '7') ";
+					break;
+				case GridFilter.BattleModeType.TeamRanked:
+					battleModeFilter = " AND (playerTankBattle.battleMode = '7Ranked') ";
 					break;
 				case GridFilter.BattleModeType.Random:
 					battleModeFilter = " AND (playerTankBattle.battleMode = '15' AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";

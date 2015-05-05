@@ -19,6 +19,8 @@ namespace WinApp.Code
 					s = "15"; break;
 				case BattleHelper.MainBattleMode.ModeTeam:
 					s = "7"; break;
+				case BattleHelper.MainBattleMode.ModeTeamRanked:
+					s = "7Ranked"; break;
 				case BattleHelper.MainBattleMode.ModeHistorical:
 					s = "Historical"; break;
 				case BattleHelper.MainBattleMode.ModeSkirmishes:

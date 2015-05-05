@@ -277,7 +277,11 @@ namespace WinApp.Forms
 						break;
 					case "7": 
 						mainBattleMode = BattleHelper.MainBattleMode.ModeTeam;
-						battleMode = "Team Battle";
+						battleMode = "Team: Unranked Battle";
+						break;
+					case "7Ranked":
+						mainBattleMode = BattleHelper.MainBattleMode.ModeTeamRanked;
+						battleMode = "Team: Ranked Battle";
 						break;
 					case "Historical": 
 						mainBattleMode = BattleHelper.MainBattleMode.ModeHistorical;

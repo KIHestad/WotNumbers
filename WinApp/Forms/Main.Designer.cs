@@ -127,6 +127,7 @@
 			this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeSkrimishes = new System.Windows.Forms.ToolStripMenuItem();
+			this.mModeBattleForStronghold = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
 			this.mModeSpecial = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
@@ -209,7 +210,8 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.mModeBattleForStronghold = new System.Windows.Forms.ToolStripMenuItem();
+			this.mModeTeamRanked = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1025,11 +1027,13 @@
             this.mModeCompany,
             this.mModeClan,
             this.toolStripSeparatorForBattleView,
-            this.mModeHistorical,
             this.mModeTeam,
+            this.mModeTeamRanked,
+            this.toolStripSeparator13,
             this.mModeSkrimishes,
             this.mModeBattleForStronghold,
             this.toolStripSeparator15,
+            this.mModeHistorical,
             this.mModeSpecial});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
 			this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -1159,7 +1163,7 @@
 			this.mModeTeam.Name = "mModeTeam";
 			this.mModeTeam.Size = new System.Drawing.Size(206, 22);
 			this.mModeTeam.Tag = "Team";
-			this.mModeTeam.Text = "Team";
+			this.mModeTeam.Text = "Team: Unranked";
 			this.mModeTeam.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeTeam.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
@@ -1171,6 +1175,15 @@
 			this.mModeSkrimishes.Text = "Skirmishes";
 			this.mModeSkrimishes.Click += new System.EventHandler(this.toolItemMode_Click);
 			this.mModeSkrimishes.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// mModeBattleForStronghold
+			// 
+			this.mModeBattleForStronghold.Name = "mModeBattleForStronghold";
+			this.mModeBattleForStronghold.Size = new System.Drawing.Size(206, 22);
+			this.mModeBattleForStronghold.Tag = "Stronghold";
+			this.mModeBattleForStronghold.Text = "Battle for Stronghold";
+			this.mModeBattleForStronghold.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeBattleForStronghold.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// toolStripSeparator15
 			// 
@@ -1967,14 +1980,19 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// mModeBattleForStronghold
+			// mModeTeamRanked
 			// 
-			this.mModeBattleForStronghold.Name = "mModeBattleForStronghold";
-			this.mModeBattleForStronghold.Size = new System.Drawing.Size(206, 22);
-			this.mModeBattleForStronghold.Tag = "Stronghold";
-			this.mModeBattleForStronghold.Text = "Battle for Stronghold";
-			this.mModeBattleForStronghold.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.mModeBattleForStronghold.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			this.mModeTeamRanked.Name = "mModeTeamRanked";
+			this.mModeTeamRanked.Size = new System.Drawing.Size(206, 22);
+			this.mModeTeamRanked.Tag = "TeamRanked";
+			this.mModeTeamRanked.Text = "Team: Ranked";
+			this.mModeTeamRanked.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeTeamRanked.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
+			// toolStripSeparator13
+			// 
+			this.toolStripSeparator13.Name = "toolStripSeparator13";
+			this.toolStripSeparator13.Size = new System.Drawing.Size(203, 6);
 			// 
 			// Main
 			// 
@@ -2185,6 +2203,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mSettingsUploadTovBAddict;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsShowLogFiles;
 		private System.Windows.Forms.ToolStripMenuItem mModeBattleForStronghold;
+		private System.Windows.Forms.ToolStripMenuItem mModeTeamRanked;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
 	}
 }
 

@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 228; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 237; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2118,6 +2118,84 @@ namespace WinApp.Code
 					break;
 				case 228:
 					mssql = "UPDATE battle SET mapId=700 WHERE mapId=70 AND battleTime < '3/1/2015'"; // Change map id for old battles
+					sqlite = mssql;
+					break;
+				case 229:
+					// Drop default value (constraint) for playerTank.battleLifeTime
+					mssql = "DECLARE @ConstraintName nvarchar(200) " +
+							"SELECT @ConstraintName = Name FROM SYS.DEFAULT_CONSTRAINTS " +
+							"WHERE PARENT_OBJECT_ID = OBJECT_ID('playerTank') " +
+							"AND PARENT_COLUMN_ID = (SELECT column_id FROM sys.columns " +
+							"						WHERE NAME = N'battleLifeTime' " +
+							"						AND object_id = OBJECT_ID(N'playerTank')) " +
+							"IF @ConstraintName IS NOT NULL " +
+							"EXEC('ALTER TABLE playerTank DROP CONSTRAINT ' + @ConstraintName)";
+					break;
+				case 230:
+					// Change playerTank.battleLifeTime to bigint
+					mssql = "ALTER TABLE playerTank ALTER COLUMN battleLifeTime BIGINT NOT NULL;";
+					break;
+				case 231:
+					// Add default value
+					mssql = "ALTER TABLE playerTank ADD CONSTRAINT DF__playerTan__battleLifeTime DEFAULT 0 FOR battleLifeTime;";
+					break;
+				case 232:
+					// Change datatype for column
+					mssql = "UPDATE json2dbMapping SET dbDataType='BigInt' WHERE id IN (62,85);";
+					sqlite = mssql;
+					break;
+				case 233:
+					// Repeat for milage
+					mssql = "DECLARE @ConstraintName nvarchar(200) " +
+							"SELECT @ConstraintName = Name FROM SYS.DEFAULT_CONSTRAINTS " +
+							"WHERE PARENT_OBJECT_ID = OBJECT_ID('playerTank') " +
+							"AND PARENT_COLUMN_ID = (SELECT column_id FROM sys.columns " +
+							"						WHERE NAME = N'mileage' " +
+							"						AND object_id = OBJECT_ID(N'playerTank')) " +
+							"IF @ConstraintName IS NOT NULL " +
+							"EXEC('ALTER TABLE playerTank DROP CONSTRAINT ' + @ConstraintName)";
+					break;
+				case 234:
+					mssql = "ALTER TABLE playerTank ALTER COLUMN mileage BIGINT NOT NULL;";
+					break;
+				case 235:
+					mssql = "ALTER TABLE playerTank ADD CONSTRAINT DF__playerTan__mileage DEFAULT 0 FOR mileage;";
+					break;
+				case 236:
+					mssql = "UPDATE json2dbMapping SET dbDataType='BigInt' WHERE id IN (63,284);";
+					sqlite = mssql;
+					break;
+				case 237:
+					string ins = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
+					mssql =
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'battlesCount',  'Int',  'battles',  'battlesCount',  'tanks_v2.rated7x7.battlesCount', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'wins',  'Int',  'wins',  'victory',  'tanks_v2.rated7x7.wins', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'losses',  'Int',  'losses',  'defeat',  'tanks_v2.rated7x7.losses', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'survivedBattles',  'Int',  'survived',  'survived',  'tanks_v2.rated7x7.survivedBattles', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'frags',  'Int',  'frags',  'frags',  'tanks_v2.rated7x7.frags', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'frags8p',  'Int',  'frags8p',  NULL,  'tanks_v2.rated7x7.frags8p', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'damageDealt',  'Int',  'dmg',  'dmg',  'tanks_v2.rated7x7.damageDealt', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'damageReceived',  'Int',  'dmgReceived',  'dmgReceived',  'tanks_v2.rated7x7.damageReceived', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'damageAssistedRadio',  'Int',  'assistSpot',  'assistSpot',  'tanks_v2.rated7x7.damageAssistedRadio', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'damageAssistedTrack',  'Int',  'assistTrack',  'assistTrack',  'tanks_v2.rated7x7.damageAssistedTrack', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'capturePoints',  'Int',  'cap',  'cap',  'tanks_v2.rated7x7.capturePoints', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'droppedCapturePoints',  'Int',  'def',  'def',  'tanks_v2.rated7x7.droppedCapturePoints', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'spotted',  'Int',  'spot',  'spotted',  'tanks_v2.rated7x7.spotted', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'xp',  'Int',  'xp',  'xp',  'tanks_v2.rated7x7.xp', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'originalXP',  'Int',  'xpOriginal',  NULL,  'tanks_v2.rated7x7.originalXP', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'shots',  'Int',  'shots',  'shots',  'tanks_v2.rated7x7.shots', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'hits',  'Int',  'hits',  'hits',  'tanks_v2.rated7x7.hits', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'he_hits',  'Int',  'heHits',  NULL,  'tanks_v2.rated7x7.he_hits', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'piercings',  'Int',  'pierced',  'pierced',  'tanks_v2.rated7x7.piercings', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'shotsReceived',  'Int',  'shotsReceived',  'shotsReceived',  'tanks_v2.rated7x7.shotsReceived', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'piercingsReceived',  'Int',  'piercedReceived',  'piercedReceived',  'tanks_v2.rated7x7.piercingsReceived', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'heHitsReceived',  'Int',  'heHitsReceived',  NULL,  'tanks_v2.rated7x7.heHitsReceived', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'noDamageDirectHitsReceived',  'Int',  'noDmgShotsReceived',  'heHitsReceived',  'tanks_v2.rated7x7.noDamageDirectHitsReceived', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'potentialDamageReceived',  'Int',  'potentialDmgReceived',  'potentialDmgReceived',  'tanks_v2.rated7x7.potentialDamageReceived', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'rated7x7',  'damageBlockedByArmor',  'Int',  'dmgBlocked',  'dmgBlocked',  'tanks_v2.rated7x7.damageBlockedByArmor', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxDamage',  'Int',  'maxDmg',  'noDmgShotsReceived',  'tanks_v2.maxrated7x7.maxDamage', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxFrags',  'Int',  'maxFrags',  NULL,  'tanks_v2.maxrated7x7.maxFrags', '7Ranked'); " +
+						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxXP',  'Int',  'maxXp',  NULL,  'tanks_v2.maxrated7x7.maxXP', '7Ranked'); ";														
 					sqlite = mssql;
 					break;
 			}
