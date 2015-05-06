@@ -327,10 +327,6 @@ namespace WinApp.Code
 								// Find game type
 								int bonusType = (int)token_common.SelectToken("bonusType");
 								battleValues.Add(new BattleValue() { colname = "bonusType", value = bonusType });
-								// Get clan
-								bool getEnemyClan = false;
-								if (bonusType == 3 || bonusType == 4 || bonusType == 10 || bonusType == 11)
-									getEnemyClan = true;
 								// Get platoon
 								bool getPlatoon = false;
 								if (bonusType == 1)
@@ -339,22 +335,23 @@ namespace WinApp.Code
 								bool getFortResource = false;
 								if (bonusType == 10)
 									getFortResource = true;
-								// Get battle mode as text from bonus type
+								// Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
 								string battleResultMode = "";
+								bool getEnemyClan = false;
 								switch (bonusType)
 								{
 									case 0: battleResultMode = "Unknown"; break;
 									case 1: battleResultMode = "Random"; break;
 									case 2: battleResultMode = "Trainig Room"; break;
-									case 3: battleResultMode = "Tank Company"; break;
-									case 4: battleResultMode = "Tournament"; break;
-									case 5: battleResultMode = "Clan War"; break;
+									case 3: battleResultMode = "Tank Company"; getEnemyClan = true; break;
+									case 4: battleResultMode = "Tournament"; getEnemyClan = true; break;
+									case 5: battleResultMode = "Clan War"; getEnemyClan = true; break;
 									case 6: battleResultMode = "Tutorial"; break;
 									case 7: battleResultMode = "Team: Unranked Battles"; break;
 									case 8: battleResultMode = "Historical Battle"; break;
 									case 9: battleResultMode = "Special Event"; break;
-									case 10: battleResultMode = "Skirmishes"; break;
-									case 11: battleResultMode = "Stronghold"; break;
+									case 10: battleResultMode = "Skirmishes"; getEnemyClan = true; break;
+									case 11: battleResultMode = "Stronghold"; getEnemyClan = true; break;
 									case 12: battleResultMode = "Team: Ranked Battles"; break;
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });

@@ -102,9 +102,13 @@ def main():
 		# removed safeunpicler - from SafeUnpickler import SafeUnpickler
 		dossierversion, dossierCache = cPickle.load(cachefile)
 	except Exception, e:
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
 		exitwitherror('Dossier cannot be read (pickle could not be read) ' + e.message)
 
 	if not 'dossierCache' in locals():
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
 		exitwitherror('Dossier cannot be read (dossierCache does not exist)')
 
 	printmessage("Dossier version " + str(dossierversion))
@@ -228,14 +232,14 @@ def main():
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical') #, 'historicalAchievements', 'uniqueAchievements'
 
 			if tankversion == 81:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFort', 'fortSorties', 'maxSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements')
 
 			if tankversion in [85, 87]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
 
 			if tankversion == 88:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7')
-					
+				
 			blockcount = len(list(blocks))+1
 
 			newbaseoffset = (blockcount * 2)
@@ -340,7 +344,7 @@ def main():
 				
 				if 'frags' in tank_v2['fortSorties']:
 					numoffrags_fortSorties = int(tank_v2['fortSorties']['frags'])
-			
+
 			if contains_block('rated7x7', tank_v2):
 				
 				if 'battlesCount' in tank_v2['rated7x7']:
@@ -348,7 +352,7 @@ def main():
 				
 				if 'frags' in tank_v2['rated7x7']:
 					numoffrags_rated7x7 = int(tank_v2['rated7x7']['frags'])
-							
+					
 			if option_frags == 1:
 
 				try:
@@ -595,7 +599,7 @@ def write_to_log(logtext):
 	global working_directory, option_server
 	import datetime, os
 	
-	# printmessage(logtext)
+	printmessage(logtext)
 	now = datetime.datetime.now()
 	
 	if option_server == 1:

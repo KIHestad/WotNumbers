@@ -10,12 +10,12 @@ import struct, json, time, sys, os, cPickle, StringIO
 
 from itertools import izip 
   
-# BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie') 
-BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie', 'fort_battle', 'rated_cybersport')
+BONUS_TYPE_NAMES = ('regular', 'training', 'company', 'tournament', 'clan', 'tutorial', 'cybersport', 'historical', 'event_battles', 'sortie', 'fort_battle', 'rated_cybersport') 
 FINISH_REASON_NAMES = ('extermination', 'base', 'timeout', 'failure', 'technical') 
 
 VERSIONS_LENGTH = (50, 52, 60, 62, 68, 70, 74, 81, 84, 92, 117, 90, 89, 91)
 VERSIONS = dict(((value, index+1) for index, value in enumerate(VERSIONS_LENGTH)))
+
 
 VEHICLE_DEVICE_TYPE_NAMES = ('engine', 
  'ammoBay', 
@@ -30,8 +30,8 @@ VEHICLE_TANKMAN_TYPE_NAMES = ('commander',
  'radioman', 
  'gunner', 
  'loader') 
-  
-  
+
+
 VEH_INTERACTION_DETAILS_LEGACY = ('spotted', 'killed', 'hits', 'he_hits', 'pierced', 'damageDealt', 'damageAssisted', 'crits', 'fire') 
 VEH_INTERACTION_DETAILS_INDICES_LEGACY = dict(((x[1], x[0]) for x in enumerate(VEH_INTERACTION_DETAILS_LEGACY))) 
   
@@ -64,17 +64,17 @@ def main():
 	import struct, json, time, sys, os, shutil, datetime
 	global numofkills, filename_source, filename_target, option_server, option_format, cachefile
 	
-	parserversion = "0.9.7.0"
-	
+	parserversion = "0.9.7.1"
+
 	option_raw = 0
 	option_format = 0
 	option_server = 0
 	option_frags = 1
-		  
+			  
 	if len(sys.argv) == 1: 
 		usage() 
 		sys.exit(2) 
-		
+
 	for argument in sys.argv: 
 		if argument == "-r": 
 			option_raw = 1
@@ -82,7 +82,7 @@ def main():
 			option_format = 1
 		elif argument == "-s": 
 			option_server = 1
-		
+
 	filename_source = str(sys.argv[1]) 
 
 	printmessage('', 0) 
@@ -90,18 +90,20 @@ def main():
 	printmessage('Time: ' + str(datetime.datetime.now()), 0) 
 	printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()), 0)
 	printmessage('Processing ' + filename_source, 0) 
+	  
 	if option_server == 0: 
 		tanksdata = get_json_data("tanks.json") 
 		mapdata = get_json_data("maps.json") 
-		
+
+
 	if not os.path.exists(filename_source) or not os.path.isfile(filename_source) or not os.access(filename_source, os.R_OK): 
 		exitwitherror('Battle Result does not exists!') 
-		
+
 	filename_target = os.path.splitext(filename_source)[0] 
 	filename_target = filename_target + '.json'
-		
+
 	cachefile = open(filename_source, 'rb') 
-				  
+			  
 	try: 
 		# IRONPYTHON MODIFIED: no use if SafeUnpickler
 		#from os.path import SafeUnpickler
@@ -120,29 +122,30 @@ def main():
 		battleresultversion = VERSIONS[len(battleResults[1])]
 	else:
 		exitwitherror("Unknown Version, length: " + str(len(battleResults[1])))
-		
+	
 	printmessage("Processing Version: " + str(battleresultversion), 0)
+	  
 	bresult = convertToFullForm(battleResults) 
-		
+
 	if not 'personal' in bresult:
 		exitwitherror('Battle Result cannot be read (personal does not exist)')
-		
+
 	tanksource = bresult['personal']['typeCompDescr'] 
 	bresult['personal']['tankID'] = tanksource >> 8 & 65535
 	bresult['personal']['countryID'] = tanksource >> 4 & 15
-		  
+	  
 	if option_server == 0: 
 		bresult['personal']['tankName'] = get_tank_data(tanksdata, bresult['personal']['countryID'], bresult['personal']['tankID'], "title") 
 
 	bresult['personal']['won'] = True if bresult['common']['winnerTeam'] == bresult['personal']['team'] else False
 	bresult['personal']['achievementlist'] = list()
-	import DamageEvents
-		
+	import DamageEvents	  
+
 	for key, value in bresult['vehicles'].items(): 
-		
+
 		if len(battleResults[1]) < 60: 
 			bresult['vehicles'][key]['details'] = VehicleInteractionDetails_LEGACY.fromPacked(value['details']).toDict() 
-			
+		
 		if len(battleResults[1]) == 60: 
 			bresult['vehicles'][key]['details'] = VehicleInteractionDetails.fromPacked(value['details']).toDict() 
 
@@ -162,10 +165,13 @@ def main():
 					dmg['tankID'] = dmg_typecomp >> 8 & 65535
 					dmg['countryID'] = dmg_typecomp >> 4 & 15
 					dmg['vehicleid'] = dmg_vehicleid
-			bresult['vehicles'][key]['damage_events'].append(dmg)
+
+					bresult['vehicles'][key]['damage_events'].append(dmg)
+
 			del(bresult['vehicles'][key]['damage_event_list'])
+
 		tanksource = bresult['vehicles'][key]['typeCompDescr'] 
-			  
+		  
 		if tanksource == None: 
 			bresult['vehicles'][key]['tankID'] = -1
 			bresult['vehicles'][key]['countryID'] = -1
@@ -173,23 +179,23 @@ def main():
 		else:    
 			bresult['vehicles'][key]['tankID'] = tanksource >> 8 & 65535
 			bresult['vehicles'][key]['countryID'] = tanksource >> 4 & 15
-				  
+			  
 			if option_server == 0:   
 				bresult['vehicles'][key]['tankName'] = get_tank_data(tanksdata, bresult['vehicles'][key]['countryID'], bresult['vehicles'][key]['tankID'], "title") 
 			else: 
 				bresult['vehicles'][key]['tankName'] = "-"
-		
+
 	for key, value in bresult['players'].items(): 
 		bresult['players'][key]['platoonID'] = bresult['players'][key]['prebattleID'] 
 		del bresult['players'][key]['prebattleID'] 
-			  
+		  
 		for vkey, vvalue in bresult['vehicles'].items(): 
 			if bresult['vehicles'][vkey]['accountDBID'] == key: 
 				bresult['players'][key]['vehicleid'] = vkey 
 				break
 
 	bresult['common']['bonusTypeName'] = BONUS_TYPE_NAMES[bresult['common']['bonusType']-1]
-		
+
 	gameplayID = bresult['common']['arenaTypeID'] >> 16
 	mapID = ((bresult['common']['arenaTypeID'] & 32767))
 
@@ -197,22 +203,25 @@ def main():
 	bresult['common']['gameplayID'] = gameplayID 
 	bresult['common']['gameplayName'] = "" 
 	bresult['common']['arenaTypeID'] = mapID 
-		  
+	  
 	if option_server == 0: 
 		bresult['common']['arenaTypeName'] = get_map_data(mapdata, mapID, "mapname") 
 		bresult['common']['arenaTypeIcon'] = get_map_data(mapdata, mapID, "mapidname") 
-			  
+		  
 	bresult['parser'] = 'http://www.vbaddict.net'
 	bresult['parserversion'] = parserversion 
 	bresult['parsertime'] = time.mktime(time.localtime()) 
 	bresult['common']['arenaCreateTimeH'] = datetime.datetime.fromtimestamp(int(bresult['common']['arenaCreateTime'])).strftime('%Y-%m-%d %H:%M:%S') 
+	  
 	bresult['battleresultversion'] = battleresultversion 
+			
 	bresult['common']['finishReasonName'] = FINISH_REASON_NAMES[bresult['common']['finishReason']-1] 
-	
-	bresult['common']['result'] = 'ok'
 		  
+	bresult['common']['result'] = 'ok'
+	  
 	dumpjson(bresult) 
-		
+
+
 	printmessage('###### Done!', 0) 
 	
 	# IRONPYTHON MODIFIED: close dossier input file
@@ -226,7 +235,7 @@ def exitwitherror(message):
 	dossierheader['common'] = dict() 
 	dossierheader['common']['result'] = "error"
 	dossierheader['common']['message'] = message 
-	dumpjson(dossierheader)
+	dumpjson(dossierheader) 
 	sys.exit(1) 
 
 def dumpjson(bresult): 
