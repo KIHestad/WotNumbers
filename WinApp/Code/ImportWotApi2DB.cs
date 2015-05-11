@@ -204,9 +204,9 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						int itemCount = (int)((JProperty)rootToken.First.First).Value;   // returns count (not in use for now)
 
-						rootToken = rootToken.Next.Next;   // start reading tanks
+						rootToken = rootToken.Next;   // start reading tanks
 						JToken tanks = rootToken.Children().First();   // read all tokens in data token
 
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
@@ -319,9 +319,9 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
+						int itemCount = (int)((JProperty)rootToken.First.First).Value;   // returns count (not in use for now)
 
-						rootToken = rootToken.Next.Next;   // start reading modules
+						rootToken = rootToken.Next;   // start reading modules
 						JToken turrets = rootToken.Children().First();   // read all tokens in data token
 						DataTable itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
@@ -421,9 +421,9 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int itemCount = (int)((JProperty)rootToken).Value;
+						int itemCount = (int)((JProperty)rootToken.First.First).Value;
 
-						rootToken = rootToken.Next.Next;
+						rootToken = rootToken.Next;
 						JToken guns = rootToken.Children().First();
 
 						// Drop relations to turret and tank before import (new relations will be added)
@@ -566,9 +566,9 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int itemCount = (int)((JProperty)rootToken).Value;
+						int itemCount = (int)((JProperty)rootToken.First.First).Value;
 
-						rootToken = rootToken.Next.Next;
+						rootToken = rootToken.Next;
 						JToken radios = rootToken.Children().First();
 
 						// Drop relations to tank before import (new relations will be added)
@@ -671,8 +671,8 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int itemCount = (int)((JProperty)rootToken).Value;
-						rootToken = rootToken.Next.Next;
+						int itemCount = (int)((JProperty)rootToken.First.First).Value;
+						rootToken = rootToken.Next;
 						JToken maps = rootToken.Children().First();
 						foreach (JProperty map in maps)
 						{
@@ -730,9 +730,9 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int achCount = (int)((JProperty)rootToken).Value;
+						int achCount = (int)((JProperty)rootToken.First.First).Value;
 
-						rootToken = rootToken.Next.Next;
+						rootToken = rootToken.Next;
 						JToken achList = rootToken.Children().First();
 						LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 						foreach (JProperty ach in achList)
@@ -901,8 +901,8 @@ namespace WinApp.Code
 					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
-						int itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
-						rootToken = rootToken.Next.Next;   // set root to data element
+						int itemCount = (int)((JProperty)rootToken.First.First).Value;   // returns count (not in use for now)
+						rootToken = rootToken.Next;   // set root to data element
 						JToken player = rootToken.Children().First();   // get player element
 						string jsonPlayerTanks = player.ToString();
 						JObject o = JObject.Parse(jsonPlayerTanks);

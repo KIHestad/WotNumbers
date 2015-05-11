@@ -420,22 +420,39 @@ namespace WinApp.Code
 		// Gets the names of the player from name of dossier file
 		public static string GetPlayerName(string dossierFileName)
 		{
-			FileInfo fi = new FileInfo(dossierFileName);
-			var decodedFileName = DecodFileName(fi);
-			const char separator = ';';
-			return decodedFileName.Split(separator)[1];
+			try
+			{
+				FileInfo fi = new FileInfo(dossierFileName);
+				var decodedFileName = DecodFileName(fi);
+				const char separator = ';';
+				return decodedFileName.Split(separator)[1];
+			}
+			catch (Exception)
+			{
+				Log.AddToLogBuffer("Error getting player name from dossier file", true);
+				return "";
+			}
+			
 		}
 
 		public static string GetPlayerServer(string dossierFileName)
 		{
-			FileInfo fi = new FileInfo(dossierFileName);
-			var decodedFileName = DecodFileName(fi);
-			if (decodedFileName.Contains("worldoftanks"))
-				decodedFileName = decodedFileName.Substring(decodedFileName.IndexOf("worldoftanks"));
-			if (dossierFileName.Contains(":"))
-				decodedFileName = decodedFileName.Substring(0, decodedFileName.IndexOf(":"));
-			const char separator = '.';
-			return decodedFileName.Split(separator)[1].ToUpper();
+			try
+			{
+				FileInfo fi = new FileInfo(dossierFileName);
+				var decodedFileName = DecodFileName(fi);
+				if (decodedFileName.Contains("worldoftanks"))
+					decodedFileName = decodedFileName.Substring(decodedFileName.IndexOf("worldoftanks"));
+				if (dossierFileName.Contains(":"))
+					decodedFileName = decodedFileName.Substring(0, decodedFileName.IndexOf(":"));
+				const char separator = '.';
+				return decodedFileName.Split(separator)[1].ToUpper();
+			}
+			catch (Exception)
+			{
+				Log.AddToLogBuffer("Error getting player server (realm) from dossier file", true);
+				return "";
+			}
 		}
 
 		// Decods the name of the file.

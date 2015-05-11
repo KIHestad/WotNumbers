@@ -149,8 +149,8 @@ namespace WinAdmin
 					{
 						
 						rootToken = rootToken.Next;
-						itemCount = (int)((JProperty)rootToken).Value;   // returns count (not in use for now)
-						rootToken = rootToken.Next.Next;   // start reading tanks
+						itemCount = (int)((JProperty)rootToken.First.First).Value;   // returns count (not in use for now)
+						rootToken = rootToken.Next;   // start reading tanks
 						JToken tanks = rootToken.Children().First();   // read all tokens in data token
 
 						//List<string> logtext = new List<string>();
