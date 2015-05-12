@@ -121,6 +121,8 @@ def main():
 	if len(battleResults[1]) in VERSIONS_LENGTH:
 		battleresultversion = VERSIONS[len(battleResults[1])]
 	else:
+		# IRONPYTHON MODIFIED: close dossier input file
+		cachefile.close()
 		exitwitherror("Unknown Version, length: " + str(len(battleResults[1])))
 	
 	printmessage("Processing Version: " + str(battleresultversion), 0)

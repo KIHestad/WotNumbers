@@ -89,94 +89,104 @@ namespace WinApp.Code
 			}
 		}
 
-		public static void ConvertBattleFilesToJson()
+		public static bool ConvertBattleFilesToJson()
 		{
-			// Upload prev unsuccsessful uploads to vBAddict 
-			if (Config.Settings.vBAddictUploadActive)
+			bool ok = true;
+			try
 			{
-				vBAddictBattleResultToUpload();
-			}
-			// Get WoT top level battle_result folder for getting dat-files
-			if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
-			{
-				DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
-				DirectoryInfo[] folders = di.GetDirectories();
-				// testing one file
-				foreach (DirectoryInfo folder in folders)
+				// Upload prev unsuccsessful uploads to vBAddict 
+				if (Config.Settings.vBAddictUploadActive)
 				{
-					string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
-					int count = 0;
-					foreach (string file in filesDat)
-					{
-						string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
-						// Check if not copied previous (during this session), and that converted json file do not already exists (from previous sessions)
-						if (!battleResultDatFileCopied.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
-						{
-							// Copy
-							Log.AddToLogBuffer(" > > Start copying battle DAT-file: " + file);
-							FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
-							string filename = Path.GetFileName(file);
-							fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
-							Application.DoEvents();
-							// if successful copy remember it
-							if (File.Exists(Config.AppDataBattleResultFolder + filename))
-							{
-								battleResultDatFileCopied.Add(file);
-								Log.AddToLogBuffer(" > > > Copied successfully battle DAT-file: " + file);
-							}
-						}
-						else
-							count++;
-					}
-					if (count > 0)
-						Log.AddToLogBuffer(" > DAT-files skipped, read previous: " + count.ToString());
-					if (filesDat.Length == 0)
-						Log.AddToLogBuffer(" > No battle DAT-files found");
+					vBAddictBattleResultToUpload();
 				}
+				// Get WoT top level battle_result folder for getting dat-files
+				if (Directory.Exists(Path.GetDirectoryName(Config.Settings.battleFilePath)))
+				{
+					DirectoryInfo di = new DirectoryInfo(Config.Settings.battleFilePath);
+					DirectoryInfo[] folders = di.GetDirectories();
+					// testing one file
+					foreach (DirectoryInfo folder in folders)
+					{
+						string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
+						int count = 0;
+						foreach (string file in filesDat)
+						{
+							string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
+							// Check if not copied previous (during this session), and that converted json file do not already exists (from previous sessions)
+							if (!battleResultDatFileCopied.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
+							{
+								// Copy
+								Log.AddToLogBuffer(" > > Start copying battle DAT-file: " + file);
+								FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
+								string filename = Path.GetFileName(file);
+								fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
+								Application.DoEvents();
+								// if successful copy remember it
+								if (File.Exists(Config.AppDataBattleResultFolder + filename))
+								{
+									battleResultDatFileCopied.Add(file);
+									Log.AddToLogBuffer(" > > > Copied successfully battle DAT-file: " + file);
+								}
+							}
+							else
+								count++;
+						}
+						if (count > 0)
+							Log.AddToLogBuffer(" > DAT-files skipped, read previous: " + count.ToString());
+						if (filesDat.Length == 0)
+							Log.AddToLogBuffer(" > No battle DAT-files found");
+					}
 
-				// Loop through all dat-files copied to local folder
-				string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
-				int totFilesDat = filesDatCopied.Count();
-				if (totFilesDat > 0)
-				{
-					WaitUntilIronPythonReady(10000); // Wait until IronPython Engine is available, max 10 seconds
-					Log.AddToLogBuffer(" > > Start converting " + totFilesDat.ToString() + " battle DAT-files to json");
-					foreach (string file in filesDatCopied)
+					// Loop through all dat-files copied to local folder
+					string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
+					int totFilesDat = filesDatCopied.Count();
+					if (totFilesDat > 0)
 					{
-						// Convert file to json
-						bool deleteFile = false;
-						bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
-						// Upload to vBAddict if OK
-						if (okConvert && Config.Settings.vBAddictUploadActive)
+						WaitUntilIronPythonReady(10000); // Wait until IronPython Engine is available, max 10 seconds
+						Log.AddToLogBuffer(" > > Start converting " + totFilesDat.ToString() + " battle DAT-files to json");
+						foreach (string file in filesDatCopied)
 						{
-							string msg = "";
-							bool uploadOK = vBAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
-							if (uploadOK)
-								Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully");
-							else
+							// Convert file to json
+							bool deleteFile = false;
+							bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
+							// Upload to vBAddict if OK
+							if (okConvert && Config.Settings.vBAddictUploadActive)
 							{
-								Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
-								FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
-								fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
-								Log.AddToLogBuffer(msg);
+								string msg = "";
+								bool uploadOK = vBAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+								if (uploadOK)
+									Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully");
+								else
+								{
+									Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
+									FileInfo fileBattleDatCopied = new FileInfo(file); // the battle file
+									fileBattleDatCopied.CopyTo(Config.AppDataBattleResultToUpload + fileBattleDatCopied.Name);
+									Log.AddToLogBuffer(msg);
+								}
+							}
+							if (deleteFile)
+							{
+								// Success, json file is now created, clean up by delete dat file
+								FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
+								fileBattleDatCopied.Delete(); // delete original DAT file
+								if (okConvert)
+									Log.AddToLogBuffer(" > > > Deleted successfully converted battle DAT-file: " + file);
+								else
+									Log.AddToLogBuffer(" > > > Deleted faulty battle DAT-file: " + file);
+								Application.DoEvents();
 							}
 						}
-						if (deleteFile)
-						{
-							// Success, json file is now created, clean up by delete dat file
-							FileInfo fileBattleDatCopied = new FileInfo(file); // the original file
-							fileBattleDatCopied.Delete(); // delete original DAT file
-							if (okConvert)
-								Log.AddToLogBuffer(" > > > Deleted successfully converted battle DAT-file: " + file);
-							else
-								Log.AddToLogBuffer(" > > > Deleted faulty battle DAT-file: " + file);
-							Application.DoEvents();
-						}
 					}
+					else
+						Log.AddToLogBuffer(" > No battle files found");
 				}
-				else
-					Log.AddToLogBuffer(" > No battle files found");
 			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex," > Error converting battle file to json");
+				ok = false;
+			}
+			return ok;
 		}
 
 		private static void vBAddictBattleResultToUpload()
@@ -238,7 +248,7 @@ namespace WinApp.Code
 				}
 				bool refreshAfterUpdate = false;
 				// Look for new files
-				ConvertBattleFilesToJson();
+				bool convertOK = ConvertBattleFilesToJson();
 				// Get all json files
 				Log.AddToLogBuffer(" > Start looking for converted json battle files");
 				string[] filesJson = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.json");
@@ -891,6 +901,7 @@ namespace WinApp.Code
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file
 			// Use IronPython
+			PythonEngine.consoleTextBox.Text = ""; // remove text from console text
 			try
 			{
 				//var ipy = Python.CreateRuntime();
@@ -907,7 +918,6 @@ namespace WinApp.Code
 					PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
 					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
 					dynamic result = scope.GetVariable("main")();
-
 					//ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
 					//setup.DebugMode = true;
 					//setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
@@ -942,6 +952,9 @@ namespace WinApp.Code
 				deleteFile = true;
 				PythonEngine.InUse = false;
 			}
+			Log.AddToLogBuffer("Ironpython output:", true);
+			Log.AddToLogBuffer(PythonEngine.consoleTextBox.Text, false);
+			Log.WriteLogBuffer();
 			return ok;
 		}
 

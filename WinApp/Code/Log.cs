@@ -32,6 +32,17 @@ namespace WinApp.Code
 			logBuffer.Add(logtext);
 		}
 
+		private static string ReadFromStream(MemoryStream ms) {
+			int length = (int)ms.Length;
+			Byte[] bytes = new Byte[length];
+ 
+			ms.Seek(0, SeekOrigin.Begin);
+			ms.Read(bytes, 0, (int)ms.Length);
+ 
+			return Encoding.GetEncoding("utf-8").GetString(bytes, 0, (int)ms.Length);
+		}
+   
+
 		public static void AddToLogBuffer(List<string> logtext, bool addDateTime = true)
 		{
 			string d = "";

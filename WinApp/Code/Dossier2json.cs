@@ -335,6 +335,7 @@ namespace WinApp.Code
 		private static bool ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
 			// Use IronPython
+			PythonEngine.consoleTextBox.Text = ""; // remove text from console text
 			try
 			{
 				//var ipy = Python.CreateRuntime();
@@ -360,6 +361,9 @@ namespace WinApp.Code
 				PythonEngine.InUse = false;
 				return false;
 			}
+			Log.AddToLogBuffer("Ironpython output:", true);
+			Log.AddToLogBuffer(PythonEngine.consoleTextBox.Text, false);
+			Log.WriteLogBuffer();
 			return true;
 		}
 
