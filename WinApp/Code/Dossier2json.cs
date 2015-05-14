@@ -40,7 +40,7 @@ namespace WinApp.Code
 				}
 			}
 			dossierFileWatcher.EnableRaisingEvents = run;
-			Log.LogToFile(logtext, true);
+			Log.LogToFile("// " + logtext, true);
 			return logtext;
 		}
 
@@ -102,7 +102,7 @@ namespace WinApp.Code
 			Log.CheckLogFileSize();
 			List<string> logText = new List<string>();
 			bool ok = true;
-			Log.AddToLogBuffer("Manual run, looking for new dossier file");
+			Log.AddToLogBuffer("// Manual run, looking for new dossier file");
 			string dossierFile = GetLatestUpdatedDossierFile();
 			if (dossierFile == "")
 			{
@@ -124,7 +124,7 @@ namespace WinApp.Code
 		private static void DossierFileChanged(object source, FileSystemEventArgs e)
 		{
 			Log.CheckLogFileSize();
-			Log.AddToLogBuffer("Dossier file listener detected updated dossier file");
+			Log.AddToLogBuffer("// Dossier file listener detected updated dossier file");
 			// Dossier file automatic handling
 			// Stop listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = false;
@@ -335,7 +335,7 @@ namespace WinApp.Code
 		private static bool ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
 			// Use IronPython
-			PythonEngine.consoleTextBox.Text = ""; // remove text from console text
+			PythonEngine.ipyOutput = ""; // clear ipy output
 			try
 			{
 				//var ipy = Python.CreateRuntime();
@@ -361,8 +361,7 @@ namespace WinApp.Code
 				PythonEngine.InUse = false;
 				return false;
 			}
-			Log.AddToLogBuffer("Ironpython output:", true);
-			Log.AddToLogBuffer(PythonEngine.consoleTextBox.Text, false);
+			Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
 			Log.WriteLogBuffer();
 			return true;
 		}

@@ -12,7 +12,11 @@ namespace WinApp.Code
 	{
 		public static Microsoft.Scripting.Hosting.ScriptEngine Engine; // allow to run ironpython programs
 		public static bool InUse = false;
-		public static TextBox consoleTextBox = new TextBox();
+
+		// Fetch output
+		public static string ipyOutput;
+		public static MemoryStream ipyMemoryStream = new MemoryStream(1024);
+		public static EventRaisingStreamWriter outputWr;
 		
 		public static void CreateEngine()
 		{
@@ -23,7 +27,7 @@ namespace WinApp.Code
 
 			// Create Engine - Normal mode
 			Engine = Python.CreateEngine();
-			
+
 			// Remove old ipy log file
 			string ipyLogFile = Config.AppDataLogFolder + "ipy.txt";
 			if (File.Exists(ipyLogFile))
@@ -34,35 +38,77 @@ namespace WinApp.Code
 			Engine.Runtime.IO.SetOutput(fs, Encoding.UTF8); // write to file
 			*/
 
-			// Capture console to textwriter
-			Console.SetOut(TextWriter.Synchronized(new ConsoleTextBoxWriter(consoleTextBox)));
-
-			// Output to console
-			Engine.Runtime.IO.RedirectToConsole();
+			// Create handlers for fetching python output
+			outputWr = new EventRaisingStreamWriter(ipyMemoryStream);
+			outputWr.StringWritten += new EventHandler<MyEvtArgs<string>>(sWr_StringWritten);
+			Engine.Runtime.IO.SetOutput(ipyMemoryStream, outputWr);
 		}
-		
+
+		private static void sWr_StringWritten(object sender, MyEvtArgs<string> e)
+		{
+			ipyOutput += e.Value;
+		}
+
 	}
 
-	class ConsoleTextBoxWriter : TextWriter
+	// Used for ironpython redirect output
+	public class MyEvtArgs<T> : EventArgs
 	{
-		private TextBox _textBox;
-
-		public ConsoleTextBoxWriter(TextBox textbox)
+		public T Value
 		{
-			_textBox = textbox;
+			get;
+			private set;
 		}
+		public MyEvtArgs(T value)
+		{
+			this.Value = value;
+		}
+	}
 
+	public class EventRaisingStreamWriter : StreamWriter
+	{
+		#region Event
+		public event EventHandler<MyEvtArgs<string>> StringWritten;
+		#endregion
+
+		#region CTOR
+		public EventRaisingStreamWriter(Stream s)
+			: base(s)
+		{ }
+		#endregion
+
+		#region Private Methods
+		private void LaunchEvent(string txtWritten)
+		{
+			if (StringWritten != null)
+			{
+				StringWritten(this, new MyEvtArgs<string>(txtWritten));
+			}
+		}
+		#endregion
+
+		#region Overrides
 
 		public override void Write(char value)
 		{
 			base.Write(value);
-			// When character data is written, append it to the text box.
-			_textBox.AppendText(value.ToString());
+			LaunchEvent(value.ToString());
 		}
 
-		public override System.Text.Encoding Encoding
+		public override void Write(string value)
 		{
-			get { return System.Text.Encoding.UTF8; }
+			base.Write(value);
+			LaunchEvent(value);
 		}
+
+		public override void Write(bool value)
+		{
+			base.Write(value);
+			LaunchEvent(value.ToString());
+		}
+		// here override all writing methods...
+
+		#endregion
 	}
 }
+

@@ -66,11 +66,11 @@ namespace WinApp.Code
 		{
 			if (!Dossier2db.Running)
 			{
-				Log.AddToLogBuffer("New battle file detected");
+				Log.AddToLogBuffer("// New battle file detected");
 				RunBattleResultRead();
 			}
 			else
-				Log.LogToFile("New battle file detected, reading is terminated due to dossier file process is running");
+				Log.LogToFile("// New battle file detected, reading is terminated due to dossier file process is running");
 		}
 
 		public static void GetExistingBattleFiles()
@@ -901,7 +901,7 @@ namespace WinApp.Code
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file
 			// Use IronPython
-			PythonEngine.consoleTextBox.Text = ""; // remove text from console text
+			PythonEngine.ipyOutput = ""; // clear ipy output
 			try
 			{
 				//var ipy = Python.CreateRuntime();
@@ -952,8 +952,7 @@ namespace WinApp.Code
 				deleteFile = true;
 				PythonEngine.InUse = false;
 			}
-			Log.AddToLogBuffer("Ironpython output:", true);
-			Log.AddToLogBuffer(PythonEngine.consoleTextBox.Text, false);
+			Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
 			Log.WriteLogBuffer();
 			return ok;
 		}

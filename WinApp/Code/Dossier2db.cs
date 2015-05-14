@@ -267,7 +267,7 @@ namespace WinApp.Code
 										NewPlayerTankBattleHistoricalRow = NewPlayerTankBattleTable.NewRow();
 										NewPlayerTankBattleSkirmishesRow = NewPlayerTankBattleTable.NewRow();
 										NewPlayerTankBattleStrongholdRow = NewPlayerTankBattleTable.NewRow();
-										// clear frags and achievments
+										// clear frags and Achievements
 										fragList = "";
 										achList.Clear();
 									}
@@ -962,7 +962,7 @@ namespace WinApp.Code
 						// Add to database
 						DB.ExecuteNonQuery(battleFragSQL);
 					}
-					// Insert battle achievments
+					// Insert battle Achievements
 					if (battleAchList.Count > 0)
 					{
 						// Loop through new frags

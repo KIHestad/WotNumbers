@@ -68,7 +68,8 @@ namespace WinApp.Forms
 			lblStatusRowCount.Text = "";
 			// Log startup
 			Log.AddToLogBuffer("", false);
-			Log.AddToLogBuffer("********* Application startup *********", true);
+			Log.AddToLogBuffer("'********* Application startup *********'", true);
+			Log.AddToLogBuffer("", false);
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
 			this.MaximumSize = screen.WorkingArea.Size;
@@ -369,6 +370,7 @@ namespace WinApp.Forms
 					ChangeView(GridView.Views.Overall, true);
 					// Check for new version
 					RunCheckForNewVersion();
+					
 					// Show status message
 					SetStatus2("Application started");
 				}
@@ -449,7 +451,7 @@ namespace WinApp.Forms
 
 			// Check for dossier update
 			StatusBarHelper.Message = message;
-			RunDossierFileCheck("Runnning initial battle fetch...", DBVersion.RunDossierFileCheckWithForceUpdate);
+			RunDossierFileCheck("Running initial battle fetch...", DBVersion.RunDossierFileCheckWithForceUpdate);
 		}
 
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
@@ -698,7 +700,7 @@ namespace WinApp.Forms
 			string msg = "";
 			Config.SaveConfig(out msg);
 			// Log exit
-			Log.AddToLogBuffer("Application Exit", true);
+			Log.AddToLogBuffer("// Application Exit", true);
 			Log.WriteLogBuffer();
 		}
 
@@ -3491,18 +3493,18 @@ namespace WinApp.Forms
 				RunBattleCheckHelper.CurrentBattleCheckMode = RunBattleCheckHelper.RunBattleCheckMode.Cancelled;
 				Form frm = new Forms.ManualCheckNewBattles();
 				frm.ShowDialog();
+				// Return to prev file watcher state
+				if (runState != Config.Settings.dossierFileWathcherRun)
+				{
+					Config.Settings.dossierFileWathcherRun = runState;
+					SetListener();
+				}
 				if (RunBattleCheckHelper.CurrentBattleCheckMode != RunBattleCheckHelper.RunBattleCheckMode.Cancelled)
 				{
 					bool forceUpdate = (RunBattleCheckHelper.CurrentBattleCheckMode == RunBattleCheckHelper.RunBattleCheckMode.ForceUpdateAll);
 					string message = "Running battle check...";
 					if (forceUpdate) message = "Running battle check with force update...";
 					RunDossierFileCheck(message, forceUpdate);
-				}
-				// Return to prev file watcher state
-				if (runState != Config.Settings.dossierFileWathcherRun)
-				{
-					Config.Settings.dossierFileWathcherRun = runState;
-					SetListener();
 				}
 			}				
 		}
@@ -3514,8 +3516,7 @@ namespace WinApp.Forms
 			else
 			{
 				SetStatus2(message);
-				Log.AddToLogBuffer("", false);
-				Log.AddToLogBuffer(message, true);
+				Log.AddToLogBuffer("// " + message, true);
 				dossier2json d2j = new dossier2json();
 				d2j.ManualRunInBackground(message, forceUpdate);
 				Log.WriteLogBuffer();

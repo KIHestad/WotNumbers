@@ -32,6 +32,14 @@ namespace WinApp.Code
 			logBuffer.Add(logtext);
 		}
 
+		public static void AddIpyToLogBuffer(string logtext)
+		{
+			string ipyLog = "";
+			ipyLog += DateTime.Now + "\t" + " > > IronPython output:" + Environment.NewLine ;
+			ipyLog += logtext;
+			logBuffer.Add(ipyLog);
+		}
+
 		private static string ReadFromStream(MemoryStream ms) {
 			int length = (int)ms.Length;
 			Byte[] bytes = new Byte[length];
@@ -70,6 +78,7 @@ namespace WinApp.Code
 					if (ex != null)
 					{
 						string logtext = Environment.NewLine;
+						logtext += "{" + Environment.NewLine; 
 						logtext += DateTime.Now + " ### EXCEPTION ###" + Environment.NewLine;
 						logtext += "   Source:          " + ex.Source + Environment.NewLine;
 						logtext += "   TargetSite:      " + ex.TargetSite + Environment.NewLine;
@@ -81,6 +90,7 @@ namespace WinApp.Code
 						if (customErrorMsg != "")
 							logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
 						sw.WriteLine(logtext);
+						logtext += "}" + Environment.NewLine; 
 					}
 				}
 			}

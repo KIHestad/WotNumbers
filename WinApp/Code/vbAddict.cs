@@ -166,7 +166,7 @@ namespace WinApp.Code
 				string xmlResult = responseStream.ReadToEnd(); // Read result into string
 				XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.LoadXml(xmlResult); // Load string into xml doc
-				msg = XmlHelper.XmlToString(xmlDoc) + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+				msg = XmlHelper.XmlToString(xmlDoc);
 				// Check result
 				XmlNodeList response = xmlDoc.GetElementsByTagName("response");
 				string status = "";
@@ -179,7 +179,7 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				result = false;
-				msg = "Error uploading battle file. Error message:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine;
+				Log.LogToFile(ex, "Error uploading battle file. Error message:");
 			}
 			return result;
 		}

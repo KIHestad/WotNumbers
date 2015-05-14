@@ -86,7 +86,7 @@ namespace WinApp.Code
 			try
 			{
 				Log.CheckLogFileSize();
-				Log.AddToLogBuffer(Environment.NewLine + "Get data from WoT API: " + WotAPi.ToString());
+				Log.AddToLogBuffer("// Get data from WoT API: " + WotAPi.ToString());
 				string url = WotServerApiUrl();
 				string applicationId = WotApplicationId();
 				if (WotAPi == WotApiType.Tank)
@@ -156,22 +156,22 @@ namespace WinApp.Code
 		private static void WriteApiLog(string apiType, LogItems logItems)
 		{
 			// Update log after import
-			Log.AddToLogBuffer(apiType + " import complete: (" + DateTime.Now.ToString() + ")");
+			Log.AddToLogBuffer("// " + apiType + " import complete: (" + DateTime.Now.ToString() + ")");
 			if (logItems.Inserted != null)
 			{
 				logItems.Inserted = logItems.Inserted.Substring(0, logItems.Inserted.Length - 2);
-				Log.AddToLogBuffer("  Added " + logItems.InsertedCount + " new " + apiType + ":");
-				Log.AddToLogBuffer("  " + logItems.Inserted);
+				Log.AddToLogBuffer(" > Added " + logItems.InsertedCount + " new " + apiType + ":");
+				Log.AddToLogBuffer(" > " + logItems.Inserted);
 			}
 			else
 			{
-				Log.AddToLogBuffer("  No new " + apiType + " added");
+				Log.AddToLogBuffer(" > No new " + apiType + " added");
 			}
 			if (logItems.Updated != null)
 			{
 				logItems.Updated = logItems.Updated.Substring(0, logItems.Updated.Length - 2);
-				Log.AddToLogBuffer("  Updated data on " + logItems.UpdatedCount + " existing " + apiType + ":");
-				Log.AddToLogBuffer("  " + logItems.Updated);
+				Log.AddToLogBuffer(" > Updated data on " + logItems.UpdatedCount + " existing " + apiType + ":");
+				Log.AddToLogBuffer(" > " + logItems.Updated);
 			}
 			Log.WriteLogBuffer();
 		}
@@ -194,7 +194,7 @@ namespace WinApp.Code
 				int premium = 0;
 				bool tankExists = false;
 
-				Log.AddToLogBuffer("Start checking tanks (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking tanks (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -309,7 +309,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				Log.AddToLogBuffer("Start checking turrets (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking turrets (" + DateTime.Now.ToString() + ")");
 				string sqlTotal = "";
 				try
 				{
@@ -411,7 +411,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				Log.AddToLogBuffer("Start checking guns (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking guns (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -556,7 +556,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				Log.AddToLogBuffer("Start checking radios (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking radios (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -660,7 +660,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				Log.AddToLogBuffer("Start checking maps (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking maps (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -720,7 +720,7 @@ namespace WinApp.Code
 			}
 			else
 			{
-				Log.AddToLogBuffer("Start checking achievements (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking achievements (" + DateTime.Now.ToString() + ")");
 
 				try
 				{
@@ -867,7 +867,7 @@ namespace WinApp.Code
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true);
 						// Update log file after import
-						WriteApiLog("Achievments", logItems);
+						WriteApiLog("Achievements", logItems);
 					}
 
 					//Code.MsgBox.Show("Achievement import complete");
@@ -892,7 +892,7 @@ namespace WinApp.Code
 			string json = FetchFromAPI(WotApiType.PlayersInGarageVehicles, 0, parentForm);
 			if (json != "")
 			{
-				Log.AddToLogBuffer("Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");
+				Log.AddToLogBuffer("// Start checking players tanks in garage (" + DateTime.Now.ToString() + ")");
 				try
 				{
 					JObject allTokens = JObject.Parse(json);
@@ -912,7 +912,7 @@ namespace WinApp.Code
 							int tankId = Convert.ToInt32(tank["tank_id"]);
 							tanksInGarage.Add(tankId);
 						}
-						Log.AddToLogBuffer("Found " + tanksInGarage.Count + " tanks in garage");
+						Log.AddToLogBuffer("// Found " + tanksInGarage.Count + " tanks in garage");
 						Log.WriteLogBuffer();
 					}
 				}
