@@ -2994,6 +2994,7 @@ namespace WinApp.Forms
 					sql =
 						"delete from battleAch where battleId=@battleId; " +
 						"delete from battleFrag where battleId=@battleId; " +
+						"delete from battleplayer where battleId=@battleId; " +
 						"delete from battle where id=@battleId; ";
 					DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.VarChar);
 					DB.ExecuteNonQuery(sql);
