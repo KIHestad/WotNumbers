@@ -89,8 +89,8 @@ namespace WinApp.Code
 						logtext += "   Stack Trace: " + Environment.NewLine + ex.StackTrace + Environment.NewLine;
 						if (customErrorMsg != "")
 							logtext += "   Details: " + Environment.NewLine + "   " + customErrorMsg + Environment.NewLine;
+						logtext += "}" + Environment.NewLine + Environment.NewLine; 
 						sw.WriteLine(logtext);
-						logtext += "}" + Environment.NewLine; 
 					}
 				}
 			}

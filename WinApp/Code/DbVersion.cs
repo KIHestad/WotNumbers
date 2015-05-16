@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 238; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 240; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2197,6 +2197,16 @@ namespace WinApp.Code
 					break;
 				case 238:
 					RunWotApi = true;
+					break;
+				case 239:
+					// New maps
+					mssql = GetUpgradeSQL("239");
+					sqlite = mssql;
+					break;
+				case 240:
+					// New maps
+					mssql = GetUpgradeSQL("240");
+					sqlite = mssql;
 					break;
 			}
 			string sql = "";

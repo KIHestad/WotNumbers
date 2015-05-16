@@ -841,6 +841,7 @@ namespace WinApp.Code
 							if (playerTankBattleNewRow[playerTankField] != DBNull.Value) newvalue = Convert.ToInt32(playerTankBattleNewRow[playerTankField]);
 							if (playerTankBattleOldRow[playerTankField] != DBNull.Value) oldvalue = Convert.ToInt32(playerTankBattleOldRow[playerTankField]);
 							battleNewRow[battleField] = (Convert.ToInt32(battleNewRow[battleField]) + newvalue - oldvalue);
+							Debug.WriteLine("{1} : {2} -> {3}", battleField, oldvalue, newvalue);
 						}
 					}
 				}
