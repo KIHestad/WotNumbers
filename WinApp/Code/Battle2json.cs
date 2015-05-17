@@ -943,11 +943,6 @@ namespace WinApp.Code
 			{
 				Log.AddToLogBuffer(" > > IronPython exception thrown converted battle DAT-file to JSON file: " + filename);
 				Log.LogToFile(ex, "ConvertBattleUsingPython exception running: " + battle2jsonScript + " with args: " + filename + " -f");
-				
-				// Deactivated messagebox, battle file errors are just logged to file
-				// Code.MsgBox.Show("Error running Python script converting battle file: " + ex.Message + Environment.NewLine + Environment.NewLine +
-				//	"Inner Exception: " + ex.InnerException, "Error converting battle file to json");
-				
 				// Cleanup
 				deleteFile = true;
 				PythonEngine.InUse = false;

@@ -357,8 +357,6 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex, "Dossier2json exception running: " + dossier2jsonScript);
-				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
-				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
 				PythonEngine.InUse = false;
 				convertResult = false;
 			}
