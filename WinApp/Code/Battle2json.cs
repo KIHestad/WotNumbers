@@ -899,7 +899,7 @@ namespace WinApp.Code
 			deleteFile = false;
 			// Locate Python script
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-			string battle2jsonScript = appPath + "/dossier2json/wotbr2j.py"; // python-script for converting dossier file
+			string battle2jsonScript = appPath + "\\dossier2json\\wotbr2j.py"; // python-script for converting dossier file
 			// Use IronPython
 			PythonEngine.ipyOutput = ""; // clear ipy output
 			try

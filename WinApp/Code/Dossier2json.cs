@@ -244,7 +244,7 @@ namespace WinApp.Code
 				{
 					// Copy dossier file and perform file conversion to json format
 					string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
-					string dossier2jsonScript = appPath + "/dossier2json/wotdc2j.py"; // python-script for converting dossier file
+					string dossier2jsonScript = appPath + "\\dossier2json\\wotdc2j.py"; // python-script for converting dossier file
 					string dossierDatNewFile = Config.AppDataBaseFolder + "dossier.dat"; // new dossier file
 					string dossierDatPrevFile = Config.AppDataBaseFolder + "dossier_prev.dat"; // previous dossier file
 					string dossierJsonFile = Config.AppDataBaseFolder + "dossier.json"; // output file
@@ -335,6 +335,7 @@ namespace WinApp.Code
 		private static bool ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
 			// Use IronPython
+			bool convertResult = true;
 			PythonEngine.ipyOutput = ""; // clear ipy output
 			try
 			{
@@ -359,11 +360,11 @@ namespace WinApp.Code
 				Code.MsgBox.Show("Error running Python script converting dossier file: " + ex.Message + Environment.NewLine + Environment.NewLine +
 				"Inner Exception: " + ex.InnerException, "Error converting dossier file to json");
 				PythonEngine.InUse = false;
-				return false;
+				convertResult = false;
 			}
 			Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
 			Log.WriteLogBuffer();
-			return true;
+			return convertResult;
 		}
 
 		private static bool FilesContentsAreEqual(FileInfo fileInfo1, FileInfo fileInfo2)

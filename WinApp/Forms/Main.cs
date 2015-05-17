@@ -68,7 +68,7 @@ namespace WinApp.Forms
 			lblStatusRowCount.Text = "";
 			// Log startup
 			Log.AddToLogBuffer("", false);
-			Log.AddToLogBuffer("'********* Application startup *********'", true);
+			Log.AddToLogBuffer("'********* Application startup - Wot Numbers " + AppVersion.AssemblyVersion + " " + AppVersion.BuildVersion + " *********'", true);
 			Log.AddToLogBuffer("", false);
 			// Make sure borderless form do not cover task bar when maximized
 			Screen screen = Screen.FromControl(this);
@@ -3664,7 +3664,7 @@ namespace WinApp.Forms
 							msg = "Starting World of Tanks";
 							//Create process
 							System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
-							pProcess.StartInfo.FileName = workingDir + "/" + filename;
+							pProcess.StartInfo.FileName = workingDir + "\\" + filename;
 							pProcess.StartInfo.WorkingDirectory = workingDir;
 							pProcess.StartInfo.UseShellExecute = false;
 							pProcess.StartInfo.RedirectStandardOutput = true;
