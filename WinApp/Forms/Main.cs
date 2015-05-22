@@ -371,7 +371,23 @@ namespace WinApp.Forms
 					// Check BRR
 					if (Config.Settings.CheckForBrrOnStartup)
 					{
-						if (!BattleResultRetriever.Installed)
+						bool brrOK = true;
+						if (String.IsNullOrEmpty(Config.Settings.wotGameFolder))
+						{
+							brrOK = BattleResultRetriever.IsWoTGameFolderOK();
+							if (!brrOK)
+							{
+								MsgBox.Show(
+									"Check for WoT Battle Result Retriever is by default on. Please locate WoT game folder, or turn of check for Battle Result Retriever on startup." + Environment.NewLine + Environment.NewLine,
+									"Battle Result Retriver Settings",
+									this
+								);
+								Form frm = new Forms.WoTGameClientSettings();
+								frm.ShowDialog();
+							}
+						}
+
+						if (brrOK && !BattleResultRetriever.Installed)
 						{
 							MsgBox.Button result = MsgBox.Show(
 								"World of Tanks Battle Result Retriever mod is not installed, install now? " + Environment.NewLine + Environment.NewLine +

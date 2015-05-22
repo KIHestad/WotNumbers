@@ -11,14 +11,14 @@ namespace WinApp.Code
 	{
 		public static string BrrFile
 		{
-			get
-			{
-				string wotFile = Config.Settings.wotGameFolder;
-				if (wotFile.Substring(wotFile.Length - 1, 1) != "\\")
-					wotFile += "\\";
-				return wotFile += "res_mods\\0.9.7\\scripts\\client\\mods\\BRR.pyc";
-			}
+			get {return BrrFolder + "BRR.pyc";}
 			set {}
+		}
+
+		public static string InitFile
+		{
+			get {return BrrFolder + "__init__.pyc";}
+			set { }
 		}
 
 		public static string BrrFolder
@@ -26,18 +26,47 @@ namespace WinApp.Code
 			get
 			{
 				string wotFolder = Config.Settings.wotGameFolder;
-				if (wotFolder.Substring(wotFolder.Length - 1, 1) != "\\")
+				if (wotFolder != "" && wotFolder.Substring(wotFolder.Length - 1, 1) != "\\")
 					wotFolder += "\\";
 				return wotFolder += "res_mods\\0.9.7\\scripts\\client\\mods\\";
 			}
 			set {}
 		}
 
+		public static bool IsWoTGameFolderOK()
+		{
+			string msg = "";
+			bool woTGameFolderOK = false;
+			if (Config.Settings.wotGameFolder == "")
+			{
+				if (Directory.Exists("C:\\Games\\World_of_Tanks"))
+				{
+					Config.Settings.wotGameFolder = "C:\\Games\\World_of_Tanks";
+					Config.SaveConfig(out msg);
+					woTGameFolderOK = true;
+				}
+				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
+				{
+					Config.Settings.wotGameFolder = "D:\\Games\\World_of_Tanks";
+					Config.SaveConfig(out msg);
+					woTGameFolderOK = true;
+				}
+			}
+			if (!woTGameFolderOK)
+				woTGameFolderOK = Directory.Exists(Config.Settings.wotGameFolder);
+			return woTGameFolderOK;
+		}
+
 		public static bool Installed
 		{
 			get
 			{
-				return File.Exists(BattleResultRetriever.BrrFile);
+				int files = 0;
+				if (File.Exists(BattleResultRetriever.BrrFile))
+					files++;
+				if (File.Exists(BattleResultRetriever.InitFile))
+					files++;
+				return (files == 2);
 			}
 			set {}
 		}
@@ -51,8 +80,16 @@ namespace WinApp.Code
 			{
 				if (!Directory.Exists(BrrFolder))
 					Directory.CreateDirectory(BrrFolder);
-				string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\BRR.pyc";
-				File.Copy(fileToCopy, BrrFile);
+				if (!File.Exists(BrrFile))
+				{
+					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\BRR.pyc";
+					File.Copy(fileToCopy, BrrFile);
+				}
+				if (!File.Exists(InitFile))
+				{
+					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\__init__.pyc";
+					File.Copy(fileToCopy, InitFile);
+				}
 			}
 			catch (Exception ex)
 			{

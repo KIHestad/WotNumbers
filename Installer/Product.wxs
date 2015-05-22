@@ -48,11 +48,12 @@
 		<!-- Installer content -->
 		<Feature Id="ProductFeature" Title="Wot Numbers Setup" Level="1">
 			<ComponentRef Id="ProductComponent_ShortCut"/>
-	  <!--<ComponentRef Id="DesktopShortcut"/>-->
+			<!--<ComponentRef Id="DesktopShortcut"/>-->
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="ProductComponents_Bin" />
 			<ComponentGroupRef Id="ProductComponents_Lib" />
 			<ComponentGroupRef Id="ProductComponents_Dossier2json" />
+			<ComponentGroupRef Id="ProductComponents_Docs" />
 			<ComponentGroupRef Id="ProductComponents_Docs_Database" />
 		</Feature>
 
@@ -132,7 +133,21 @@
 			</Component>
 		</ComponentGroup>
 	</Fragment>
-		
+
+	<!-- Docs  -->
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents_Docs" Directory="INSTALLFOLDER_Docs">
+			<Component Id="cmpBRR" Guid="{042B7D17-CE6E-4CDC-ACA9-BA3367B7BDE3}">
+				<File Id="filBRR" Source="..\WinApp\Docs\BRR.pyc"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpinit" Guid="{FCE4843E-38FD-429E-B598-CA2AD0A93CC5}">
+				<File Id="filinit" Source="..\WinApp\Docs\__init__.pyc"  KeyPath="yes"></File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+
 	<!-- Docs Database -->
 
 	<Fragment>
@@ -151,9 +166,6 @@
 			</Component>
 			<Component Id="cmpupgrade" Guid="{42D6E6C4-0AF6-4000-B19F-76D56F5A75F2}">
 				<File Id="filupgrade" Source="..\WinApp\Docs\Database\upgrade.json"  KeyPath="yes"></File>
-			</Component>
-			<Component Id="cmpBRR" Guid="{042B7D17-CE6E-4CDC-ACA9-BA3367B7BDE3}">
-				<File Id="filBRR" Source="..\WinApp\Docs\BRR.pyc"  KeyPath="yes"></File>
 			</Component>
 		</ComponentGroup>
 	</Fragment>

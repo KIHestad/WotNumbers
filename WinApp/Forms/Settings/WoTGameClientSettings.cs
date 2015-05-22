@@ -113,6 +113,8 @@ namespace WinApp.Forms
 			}
 			Config.Settings.wotGameAffinity = wotGameAffinity;
 			Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
+			String msg = "";
+			Config.SaveConfig(out msg);
 			this.Close();
 		}
 
@@ -176,6 +178,8 @@ namespace WinApp.Forms
 		private void btnBrrInstall_Click(object sender, EventArgs e)
 		{
 			string msg = "";
+			Config.Settings.wotGameFolder = txtFolder.Text;
+			Config.SaveConfig(out msg);
 			CheckForBrr();
 			if (btnBrrInstall.Text == "Install")
 			{
