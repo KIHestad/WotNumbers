@@ -122,6 +122,7 @@ namespace WinApp.Code
 		public CustomBattleTimeFilter customBattleTimeFilter { get; set; } // Remember last used custom battle time filter
 		public bool vBAddictUploadActive { get; set; }				// Activate upload to vBAddict
 		public string vBAddictPlayerToken { get; set; }				// player token
+		public bool CheckForBrrOnStartup { get; set; }				// Perform check for BRR on startup
 	}
 
 	class Config
@@ -251,6 +252,7 @@ namespace WinApp.Code
 			// vBAddict
 			Config.Settings.vBAddictUploadActive = false;
 			Config.Settings.vBAddictPlayerToken = "";
+			Config.Settings.CheckForBrrOnStartup = true;
 		}
 
 		

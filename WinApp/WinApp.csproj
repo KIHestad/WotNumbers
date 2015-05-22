@@ -132,6 +132,7 @@
     <Compile Include="Code\AppVersion.cs" />
     <Compile Include="Code\AutoSetupHelper.cs" />
     <Compile Include="Code\BattleHelper.cs" />
+    <Compile Include="Code\BattleResultRetriever.cs" />
     <Compile Include="Code\CursorHelper.cs" />
     <Compile Include="Code\DbConvert.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
@@ -657,6 +658,7 @@
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.pdn" />
+    <None Include="Docs\BRR.pyc" />
     <None Include="Docs\Database\Admin.db" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\structures_10.json" />

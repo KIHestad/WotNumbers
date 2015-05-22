@@ -368,6 +368,27 @@ namespace WinApp.Forms
 					ImageHelper.CreateNationImageTable();
 					// Show view
 					ChangeView(GridView.Views.Overall, true);
+					// Check BRR
+					if (Config.Settings.CheckForBrrOnStartup)
+					{
+						if (!BattleResultRetriever.Installed)
+						{
+							MsgBox.Button result = MsgBox.Show(
+								"World of Tanks Battle Result Retriever mod is not installed, install now? " + Environment.NewLine + Environment.NewLine +
+								"To avoid this check on startup go to Settings + WoT Game Settings" + Environment.NewLine + Environment.NewLine,
+								"Install Battle Result Retriever",
+								MsgBoxType.OKCancel, this
+							);
+							if (result == MsgBox.Button.OKButton)
+							{
+								string msg = "";
+								if (!BattleResultRetriever.Install(out msg))
+								{
+									MsgBox.Show("Error installing BRR", msg);
+								}
+							}
+						}
+					}
 					// Check for new version
 					RunCheckForNewVersion();
 					

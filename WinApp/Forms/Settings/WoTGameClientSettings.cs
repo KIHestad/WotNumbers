@@ -44,6 +44,9 @@ namespace WinApp.Forms
 					txtFolder.Text = "C:\\Games\\World_of_Tanks";
 				else if (Directory.Exists("D:\\Games\\World_of_Tanks"))
 					txtFolder.Text = "D:\\Games\\World_of_Tanks";
+				Config.Settings.wotGameFolder = txtFolder.Text;
+				string msg = "";
+				Config.SaveConfig(out msg);
 			}
 			txtBatchFile.Text = Config.Settings.wotGameRunBatchFile;
 			chkAutoRun.Checked = Config.Settings.wotGameAutoStart;
@@ -73,7 +76,12 @@ namespace WinApp.Forms
 				}
 				core++;
 			}
+			// Check for BRR
+			CheckForBrr();
+			chkBrrStarupCheck.Checked = Config.Settings.CheckForBrrOnStartup;
 		}
+
+		
 
 		private void ddStartApp_Click(object sender, EventArgs e)
 		{
@@ -104,6 +112,7 @@ namespace WinApp.Forms
 				if (chkCore7.Checked) wotGameAffinity += 128;
 			}
 			Config.Settings.wotGameAffinity = wotGameAffinity;
+			Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
 			this.Close();
 		}
 
@@ -153,6 +162,32 @@ namespace WinApp.Forms
 			{
 				txtBatchFile.Text = openFileDialog1.FileName;
 			}
+		}
+
+		
+
+		private void CheckForBrr()
+		{
+			string btnBrrText = "Install";
+			if (BattleResultRetriever.Installed) btnBrrText = "Uninstall";
+			btnBrrInstall.Text = btnBrrText;
+		}
+
+		private void btnBrrInstall_Click(object sender, EventArgs e)
+		{
+			string msg = "";
+			CheckForBrr();
+			if (btnBrrInstall.Text == "Install")
+			{
+				if (!BattleResultRetriever.Install(out msg))
+					MsgBox.Show(msg, "Error installing BRR", this);
+			}
+			else
+			{
+				if (!BattleResultRetriever.Uninstall(out msg))
+					MsgBox.Show(msg, "Error uninstalling BRR", this);
+			}
+			CheckForBrr();
 		}
 	}
 }

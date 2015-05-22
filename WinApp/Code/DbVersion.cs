@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 240; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 241; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2207,6 +2207,10 @@ namespace WinApp.Code
 					// New maps
 					mssql = GetUpgradeSQL("240");
 					sqlite = mssql;
+					break;
+				case 241:
+					Config.Settings.CheckForBrrOnStartup = true;
+					Config.SaveConfig(out msg);
 					break;
 			}
 			string sql = "";
