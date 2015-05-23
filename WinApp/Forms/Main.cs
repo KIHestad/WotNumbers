@@ -3422,8 +3422,15 @@ namespace WinApp.Forms
 				SetListener();
 			}
 			
+			// If new database is selected make sure api run happens if required
+			DBVersion.RunWotApi = false;
+
 			Form frm = new Forms.ApplicationSetting();
 			frm.ShowDialog();
+
+			// Check for api update
+			if (DBVersion.RunWotApi)
+				RunWotApi(true);
 
 			// Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
