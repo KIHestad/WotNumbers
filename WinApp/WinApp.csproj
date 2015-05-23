@@ -659,6 +659,7 @@
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.pdn" />
     <None Include="Docs\BRR.pyc" />
+    <None Include="Docs\CameraNode.pyc" />
     <None Include="Docs\Database\Admin.db" />
     <None Include="Docs\__init__.pyc" />
     <None Include="Dossier2json\maps.json" />

@@ -141,8 +141,11 @@
 			<Component Id="cmpBRR" Guid="{042B7D17-CE6E-4CDC-ACA9-BA3367B7BDE3}">
 				<File Id="filBRR" Source="..\WinApp\Docs\BRR.pyc"  KeyPath="yes"></File>
 			</Component>
-			<Component Id="cmpinit" Guid="{FCE4843E-38FD-429E-B598-CA2AD0A93CC5}">
-				<File Id="filinit" Source="..\WinApp\Docs\__init__.pyc"  KeyPath="yes"></File>
+			<Component Id="cmpInit" Guid="{FCE4843E-38FD-429E-B598-CA2AD0A93CC5}">
+				<File Id="filInit" Source="..\WinApp\Docs\__init__.pyc"  KeyPath="yes"></File>
+			</Component>
+			<Component Id="cmpCameraNode" Guid="{C879DF39-B96E-44F2-9898-60267580E8A5}">
+				<File Id="filCameraNode" Source="..\WinApp\Docs\CameraNode.pyc"  KeyPath="yes"></File>
 			</Component>
 		</ComponentGroup>
 	</Fragment>
