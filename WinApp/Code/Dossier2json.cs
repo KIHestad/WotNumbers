@@ -158,10 +158,10 @@ namespace WinApp.Code
 						Log.AddToLogBuffer(String.Format(" > Dossierfile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
 					}
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
 					// could not read file - do not log as error, this is normal behavior
-					Log.AddToLogBuffer(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
+					Log.AddToLogBuffer(String.Format(" > Dossierfile not ready yet (waited: {0:0000}ms) - " + ex.Message, stopWatch.ElapsedMilliseconds.ToString()));
 					System.Threading.Thread.Sleep(waitInterval);
 				}
 			}

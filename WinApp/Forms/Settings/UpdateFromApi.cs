@@ -80,6 +80,7 @@ namespace WinApp.Forms
 			ImportWN8Api2DB.UpdateWN8(this);
 
 			// Done
+			DBVersion.RunWotApi = false;
 			UpdateProgressBar("");
 			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
 			btnStart.Enabled = true;

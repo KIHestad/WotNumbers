@@ -286,6 +286,7 @@ namespace WinApp.Forms
 			string dossierFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\wargaming.net\\WorldOfTanks\\dossier_cache";
 			if (Directory.Exists(dossierFolder))
 			{
+				// Autocreate new database
 				Config.Settings.dossierFilePath = dossierFolder;
 				Form frm = new Forms.DatabaseNew(true);
 				frm.ShowDialog();
@@ -488,7 +489,13 @@ namespace WinApp.Forms
 
 			// Check for dossier update
 			StatusBarHelper.Message = message;
-			RunDossierFileCheck("Running initial battle fetch...", DBVersion.RunDossierFileCheckWithForceUpdate);
+			if (Config.Settings.dossierFileWathcherRun == 1)
+			{
+				string msg = "Running initial battle fetch...";
+				if (DBVersion.RunDossierFileCheckWithForceUpdate)
+					msg = "Running initial battle fetch with force update all data...";
+				RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
+			}
 		}
 
 		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
@@ -979,9 +986,12 @@ namespace WinApp.Forms
 				if (Config.Settings.playerId == 0)
 				{
 					SetStatus2("No player selected, please check application settings");
+					panelMainArea.Visible = false;
 				}
 				else
 				{
+					if (panelMainArea.Visible != true)
+						panelMainArea.Visible = true;
 					if (currentPlayerId != Config.Settings.playerId)
 					{
 						// Stop file watchers if running
@@ -3421,33 +3431,61 @@ namespace WinApp.Forms
 				Config.Settings.dossierFileWathcherRun = 0;
 				SetListener();
 			}
-			
-			// If new database is selected make sure api run happens if required
-			DBVersion.RunWotApi = false;
+
+			string databaseFilename = Config.Settings.databaseFileName;
+			string databaseName = Config.Settings.databaseName;
+			ConfigData.dbType databateType = Config.Settings.databaseType;
 
 			Form frm = new Forms.ApplicationSetting();
 			frm.ShowDialog();
+
+			// Update main form title
+			currentPlayerId = Config.Settings.playerId;
+			SetFormTitle();
+			// Go to tank list, as home view with gauges fails if no data present?
+			ChangeView(GridView.Views.Overall, true);
+			SetStatus2("Refreshed grid");
 
 			// Check for api update
 			if (DBVersion.RunWotApi)
 				RunWotApi(true);
 
+			// Check if new database is created, database should be present but no player should exist
+			if (DB.CheckConnection(true))
+			{
+				bool runDossier = false;
+				// If no player selected, or changed db type run dosser check
+				runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType);
+				if (!runDossier)
+				{
+					// check if changed db according to dbtype
+					if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+						runDossier = (databaseFilename != Config.Settings.databaseFileName);
+					else
+						runDossier = (databaseName != Config.Settings.databaseName);
+				}
+				if (runDossier)
+				{
+					MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBoxType.OKCancel, this);
+					if (result == MsgBox.Button.OKButton)
+					{
+						RunInitialDossierFileCheck("Running initial battle fetch for new database...");
+					}
+				}
+			}
+
 			// Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
 			{
 				Config.Settings.dossierFileWathcherRun = runState;
-				SetListener();
 			}
-
 			// Update main form
+			SetListener();
 			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
 			SetFavListMenu(); // Reload fav list items
 			SetColListMenu(); // Refresh column setup list now
-			// After settings changed, go to overview
-			ChangeView(GridView.Views.Overall, true);
-			SetListener(false);
-			SetStatus2("Refreshed grid");
+			
 		}
 
 		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)

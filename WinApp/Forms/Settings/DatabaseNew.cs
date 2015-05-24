@@ -181,8 +181,13 @@ namespace WinApp.Forms
 						UpdateProgressBar("Retrieves WN8 expected values from API");
 						ImportWN8Api2DB.UpdateWN8(this);
 
+						// Update settings for API update runned
+						DBVersion.RunWotApi = false;
+						Config.Settings.doneRunWotApi = DateTime.Now;
+
 						// Reset player
 						Config.Settings.playerName = "";
+						Config.Settings.playerServer = "";
 						Config.Settings.playerId = 0;
 
 						// New Init after upgrade db
@@ -192,11 +197,6 @@ namespace WinApp.Forms
 						MainSettings.GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
 						MainSettings.GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
 
-						// Get initial dossier 
-						UpdateProgressBar("Running initial dossier file check");
-						dossier2json d2j = new dossier2json();
-						d2j.ManualRunInBackground("Initial dossier file check in progress, please wait...", false);
-						UpdateProgressBar("");
 					}
 				}
 			}

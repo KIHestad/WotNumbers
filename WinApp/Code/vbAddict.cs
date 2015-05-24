@@ -136,6 +136,7 @@ namespace WinApp.Code
 				url = url.Replace("@SERVER", playerServer);
 				if (playerToken == "")
 					playerToken = "-";
+				playerToken = playerToken.Trim();
 				url = url.Replace("@TOKEN", playerToken);
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = timeout; 
@@ -179,7 +180,7 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				result = false;
-				Log.LogToFile(ex, "Error uploading battle file. Error message:");
+				Log.LogToFile(ex, "Error uploading battle file.");
 			}
 			return result;
 		}

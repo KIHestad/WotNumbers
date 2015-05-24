@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 241; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 247; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1007,9 +1007,6 @@ namespace WinApp.Code
 				case 78:
 					Rating.RecalcBattlesWN7();
 					break;
-				case 79:
-					RunDossierFileCheckWithForceUpdate = true;
-					break;
 				case 80:
 					mssql = "UPDATE columnSelection SET position = position + 3 where position >= 132; " +
 							"UPDATE columnSelection SET description = 'Damage to enemy tanks done by others after you spotted them' where id = 129; " +
@@ -1069,7 +1066,6 @@ namespace WinApp.Code
 							"UPDATE json2dbMapping SET jsonMainSubProperty=jsonMain + '.' + jsonSub + '.' + jsonProperty; " +
 							"UPDATE battle SET piercedReceived = 0; ";
 					sqlite = mssql.Replace("+","||");
-					RunDossierFileCheckWithForceUpdate = true;
 					break;
 				case 91:
 					mssql = "ALTER TABLE columnList ALTER COLUMN lastSortColumn varchar(255) NULL; ";
@@ -1512,9 +1508,6 @@ namespace WinApp.Code
 						s + "VALUES ('tanks_v2','historical', 'potentialDamageReceived','Int','potentialDmgReceived','potentialDmgReceived', NULL,'tanks_v2.historical.potentialDamageReceived','7'); ";
 						sqlite = mssql;
 					break;
-				case 128:
-					RunDossierFileCheckWithForceUpdate = true;
-					break;
 				case 129:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
 					mssql =
@@ -1637,9 +1630,6 @@ namespace WinApp.Code
 					break;
 				case 154:
 					TankHelper.GetJson2dbMappingFromDB();
-					break;
-				case 155:
-					RunDossierFileCheckWithForceUpdate = true;
 					break;
 				case 156:
 					mssql =
@@ -2212,6 +2202,54 @@ namespace WinApp.Code
 					Config.Settings.CheckForBrrOnStartup = true;
 					Config.SaveConfig(out msg);
 					break;
+				case 242:
+					mssql = "ALTER TABLE playerTankBattle ADD damageRating float NOT NULL default 0; ";
+					sqlite = "ALTER TABLE playerTankBattle ADD damageRating real NOT NULL default 0; ";
+					break;
+				case 243:
+					mssql = "ALTER TABLE playerTankBattle ADD marksOnGun Int NOT NULL default 0; ";
+					sqlite = "ALTER TABLE playerTankBattle ADD marksOnGun Integer NOT NULL default 0; ";
+					break;
+				case 244:
+					mssql =
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (221, 1, 140, 'CAST(playerTankBattle.damageRating as FLOAT) / 100', 'Rank by avg dmg', 'Rank by average damage, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); " +
+						"INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+						"VALUES (222, 1, 141, 'playerTankBattle.marksOnGun', 'Marks on Gun', 'Marks on Gun according to Marks of Excellence', 'Rating', 47, 'Int', NULL); ";
+					sqlite = mssql;
+					break;
+				case 245:
+					mssql = "ALTER VIEW playerTankBattleTotalsView AS " +
+							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
+							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
+							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, " +
+							"						  MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun " +
+							"FROM            playerTankBattle " +
+							"GROUP BY playerTankId; ";
+					sqlite ="DROP VIEW playerTankBattleTotalsView;"+
+							"CREATE VIEW playerTankBattleTotalsView AS " +
+							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
+							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
+							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, " +
+							"						  MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun " +
+							"FROM            playerTankBattle " +
+							"GROUP BY playerTankId; ";
+					break;
+				case 246:
+					// Map new fields
+					mssql = GetUpgradeSQL("246");
+					sqlite = mssql;
+					break;
+				case 247:
+					RunDossierFileCheckWithForceUpdate = true;
+					break;
+
 			}
 			string sql = "";
 			// get sql for correct dbtype

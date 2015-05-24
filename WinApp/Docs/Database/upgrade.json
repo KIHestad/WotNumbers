@@ -346,5 +346,10 @@
     "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'rated7x7', 'damageBlockedByArmor', 'Int', 'dmgBlocked', 'dmgBlocked', NULL, 'tanks_v2.rated7x7.damageBlockedByArmor', '7Ranked');",
     "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'maxrated7x7', 'maxDamage', 'Int', 'maxDmg', 'noDmgShotsReceived', NULL, 'tanks_v2.maxrated7x7.maxDamage', '7Ranked');",
     "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'maxrated7x7', 'maxFrags', 'Int', 'maxFrags', NULL, NULL, 'tanks_v2.maxrated7x7.maxFrags', '7Ranked');",
-    "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'maxrated7x7', 'maxXP', 'Int', 'maxXp', NULL, NULL, 'tanks_v2.maxrated7x7.maxXP', '7Ranked');"  ]
+    "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'maxrated7x7', 'maxXP', 'Int', 'maxXp', NULL, NULL, 'tanks_v2.maxrated7x7.maxXP', '7Ranked');"  ],
+  "246": [
+    "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'achievements', 'damageRating', 'Int', 'damageRating', NULL, NULL, 'tanks_v2.achievements.damageRating', '15');",
+    "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, dbAch, jsonMainSubProperty, dbPlayerTankMode) VALUES ( 'tanks_v2', 'achievements', 'marksOnGun', 'Int', 'marksOnGun', NULL, NULL, 'tanks_v2.achievements.marksOnGun', '15');"
+  ]
+    
 }

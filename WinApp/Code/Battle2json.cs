@@ -48,7 +48,7 @@ namespace WinApp.Code
 					battleResultFileWatcher.Filter = "*.dat";
 					battleResultFileWatcher.IncludeSubdirectories = true;
 					battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
-					battleResultFileWatcher.Changed += new FileSystemEventHandler(BattleResultFileChanged);
+					battleResultFileWatcher.Created += new FileSystemEventHandler(BattleResultFileCreated);
 					battleResultFileWatcher.EnableRaisingEvents = run;
 				}
 				else
@@ -62,7 +62,7 @@ namespace WinApp.Code
 			
 		}
 
-		private static void BattleResultFileChanged(object source, FileSystemEventArgs e)
+		private static void BattleResultFileCreated(object source, FileSystemEventArgs e)
 		{
 			if (!Dossier2db.Running)
 			{
@@ -119,6 +119,7 @@ namespace WinApp.Code
 								Log.AddToLogBuffer(" > > Start copying battle DAT-file: " + file);
 								FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
 								string filename = Path.GetFileName(file);
+								WaitUntilFileReadyToRead(file, 4000);
 								fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
 								Application.DoEvents();
 								// if successful copy remember it
@@ -187,6 +188,34 @@ namespace WinApp.Code
 				ok = false;
 			}
 			return ok;
+		}
+
+		private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
+		{
+			// Checks file is readable
+			bool fileOK = false;
+			int waitInterval = 100; // time to wait in ms per read operation to check filesize
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+			while (stopWatch.ElapsedMilliseconds < maxWaitTime && !fileOK)
+			{
+				try
+				{
+					using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+					{
+						fileOK = true;
+						TimeSpan ts = stopWatch.Elapsed;
+						Log.AddToLogBuffer(String.Format(" > > > Battlefile read successful (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
+					}
+				}
+				catch (Exception ex)
+				{
+					// could not read file - do not log as error, this is normal behavior
+					Log.AddToLogBuffer(String.Format(" > > > Battlefile not ready yet (waited: {0:0000}ms) - " + ex.Message, stopWatch.ElapsedMilliseconds.ToString()));
+					System.Threading.Thread.Sleep(waitInterval);
+				}
+			}
+			stopWatch.Stop();
 		}
 
 		private static void vBAddictBattleResultToUpload()
