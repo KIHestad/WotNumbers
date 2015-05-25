@@ -47,7 +47,7 @@ namespace WinApp.Code
 					battleResultFileWatcher.Path = Path.GetDirectoryName(Config.Settings.battleFilePath);
 					battleResultFileWatcher.Filter = "*.dat";
 					battleResultFileWatcher.IncludeSubdirectories = true;
-					battleResultFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+					battleResultFileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
 					battleResultFileWatcher.Created += new FileSystemEventHandler(BattleResultFileCreated);
 					battleResultFileWatcher.EnableRaisingEvents = run;
 				}
@@ -267,6 +267,7 @@ namespace WinApp.Code
 
 		public static void RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
 		{
+			bool deleteLastFileOnError = false;
 			try
 			{
 				Log.AddToLogBuffer(" > Start looking for battle result");
@@ -290,9 +291,11 @@ namespace WinApp.Code
 					lastFile = file;
 					processed++;
 					// Read content
+					Application.DoEvents();
 					StreamReader sr = new StreamReader(file, Encoding.UTF8);
 					string json = sr.ReadToEnd();
 					sr.Close();
+					Application.DoEvents();
 					// Root token
 					JToken token_root = JObject.Parse(json);
 					// Common token
@@ -871,13 +874,23 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.AddToLogBuffer(" > > Battle file analyze terminated due to faulty file structure or content: " + lastFile);
+				Log.AddToLogBuffer(" > > Battle file analyze terminated for file: " + lastFile);
 				Log.LogToFile(ex, "Battle result file analyze process terminated due to faulty file structure or content");
-				FileInfo fi = new FileInfo(lastFile);
-				FileInfo fileBattleJson = new FileInfo(lastFile);
-				fileBattleJson.Delete();
-				Log.AddToLogBuffer(" > > Deleted faulty JSON file: " + lastFile);
-
+				deleteLastFileOnError = true;
+			}
+			try
+			{
+				if (deleteLastFileOnError)
+				{
+					FileInfo fi = new FileInfo(lastFile);
+					FileInfo fileBattleJson = new FileInfo(lastFile);
+					fileBattleJson.Delete();
+					Log.AddToLogBuffer(" > > Deleted faulty JSON file: " + lastFile);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.AddToLogBuffer(" > > Could not delete faulty JSON file: " + lastFile + " - Error: " + ex.Message);
 			}
 		}
 		

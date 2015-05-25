@@ -124,19 +124,19 @@ def main():
 	dossierheader['tankcount'] = len(tankitems)
 	
 
-	
-	base32name = "?;?"
-	if option_server == 0:
-		filename_base = os.path.splitext(os.path.basename(filename_source))[0]
-		try:
-			base32name = base64.b32decode(filename_base)
-		except Exception, e:
-			pass
-			#printmessage('cannot decode filename ' + filename_base + ': ' + e.message)
+	# IRONPYTHON MODIFIED - NOT IN USE
+	#base32name = "?;?"
+	#if option_server == 0:
+	#	filename_base = os.path.splitext(os.path.basename(filename_source))[0]
+	#	try:
+	#		base32name = base64.b32decode(filename_base)
+	#	except Exception, e:
+	#		pass
+	#		#printmessage('cannot decode filename ' + filename_base + ': ' + e.message)
 
 
-	dossierheader['server'] = base32name.split(';', 1)[0];
-	dossierheader['username'] = base32name.split(';', 1)[1];
+	dossierheader['server'] = '?' #base32name.split(';', 1)[0];
+	dossierheader['username'] = '?' #base32name.split(';', 1)[1];
 	
 	
 	if option_server == 0:
