@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 247; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 248; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2248,6 +2248,11 @@ namespace WinApp.Code
 					break;
 				case 247:
 					RunDossierFileCheckWithForceUpdate = true;
+					break;
+				case 248:
+					mssql =
+						"INSERT INTO map (id, name, arena_id) VALUES (71,'Icebound','111_paris'); ";
+					sqlite = mssql;
 					break;
 
 			}
