@@ -21,7 +21,7 @@ def main():
 	
 	import struct, json, time, sys, os, shutil, datetime, base64, cPickle
 
-	parserversion = "0.9.7.0"
+	parserversion = "0.9.8.0"
 	
 	global rawdata, tupledata, data, structures, numoffrags, working_directory
 	global filename_source, filename_target
@@ -124,7 +124,7 @@ def main():
 	dossierheader['tankcount'] = len(tankitems)
 	
 
-	# IRONPYTHON MODIFIED - NOT IN USE
+	#IRONPYTHON MODIFIED - NO NEED TO EXTRACT PLAYER NAME/SERVER
 	#base32name = "?;?"
 	#if option_server == 0:
 	#	filename_base = os.path.splitext(os.path.basename(filename_source))[0]
@@ -229,7 +229,7 @@ def main():
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7')
 
 			if tankversion == 77:
-				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical') #, 'historicalAchievements', 'uniqueAchievements'
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical')
 
 			if tankversion == 81:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements')
@@ -237,7 +237,7 @@ def main():
 			if tankversion in [85, 87]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
 
-			if tankversion == 88:
+			if tankversion >= 88:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7')
 				
 			blockcount = len(list(blocks))+1
@@ -551,8 +551,8 @@ def get_tank_details(compDescr, tanksdata):
 def printmessage(message):
 	global option_server
 	
-	if option_server == 0:
-		print message
+	#if option_server == 0: #IRONPYTHON MODIFIED, WRITE MESSAGE TO CONSOLE ANYWAY
+	print message
 
 
 def exitwitherror(message):
@@ -579,12 +579,13 @@ def dumpjson(dossier):
 			else:
 				finalfile.write(json.dumps(dossier))
 
-			# IRONPYTHON MODIFIED: close dossier input file
+			# IRONPYTHON MODIFIED: close dossier output file
 			finalfile.close()
 
 		else:
 			print json.dumps(dossier)
 	except Exception, e:
+		finalfile.close()
 		printmessage(e)
 		
 
@@ -738,19 +739,19 @@ def getdata(name, startoffset, offsetlength):
 		structformat = 'I'
 
 	value = struct.unpack_from('<' + structformat, data, startoffset)[0]
-	
-	for x in range(0, offsetlength):
-		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
+ 	
+ 	for x in range(0, offsetlength):
+ 		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
 
 	
-	return value
+ 	return value
 
 
 def load_structures():
 	
 	structures = dict()
 	
-	load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87,88];
+	load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87,88,89];
 	for version in load_versions:
 		jsondata = get_json_data('structures_'+str(version)+'.json')
 		structures[version] = dict()

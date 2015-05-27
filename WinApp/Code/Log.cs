@@ -18,12 +18,14 @@ namespace WinApp.Code
 		
 		public static void WriteLogBuffer(bool forceLogging = false)
 		{
+			bool loggingOk = true;
 			if (Config.Settings.showDBErrors || forceLogging)
 			{
 				Application.DoEvents();
-				LogToFileLogBuffer(logBuffer, false);
+				loggingOk = LogToFileLogBuffer(logBuffer, false);
 			}
-			logBuffer = new List<string>();
+			if (loggingOk)
+				logBuffer = new List<string>();
 		}
 
 		public static void AddToLogBuffer(string logtext, bool addDateTime = true)
@@ -116,22 +118,32 @@ namespace WinApp.Code
 		}
 
 		// Used to write logbuffer
-		private static void LogToFileLogBuffer(List<string> logtext, bool addDateTime = false)
+		private static bool LogToFileLogBuffer(List<string> logtext, bool addDateTime = false)
 		{
-			if (Config.Settings.showDBErrors)
+			bool loggingOK = true;
+			try
 			{
-				// Add list of Strings
-				if (CreateFileIfNotExist())
+				if (Config.Settings.showDBErrors)
 				{
-					using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
+					// Add list of Strings
+					if (CreateFileIfNotExist())
 					{
-						foreach (var s in logtext)
+						using (StreamWriter sw = File.AppendText(Config.AppDataLogFolder + filename))
 						{
-							sw.WriteLine(s);
+							foreach (var s in logtext)
+							{
+								sw.WriteLine(s);
+							}
 						}
 					}
 				}
 			}
+			catch (Exception)
+			{
+				// Ignore error
+				loggingOK = false;
+			}
+			return loggingOK;
 		}
 
 		#endregion

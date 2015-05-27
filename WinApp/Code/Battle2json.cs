@@ -137,7 +137,7 @@ namespace WinApp.Code
 						if (filesDat.Length == 0)
 							Log.AddToLogBuffer(" > No battle DAT-files found");
 					}
-
+					Log.WriteLogBuffer();
 					// Loop through all dat-files copied to local folder
 					string[] filesDatCopied = Directory.GetFiles(Config.AppDataBattleResultFolder, "*.dat");
 					int totFilesDat = filesDatCopied.Count();
@@ -298,11 +298,21 @@ namespace WinApp.Code
 					Application.DoEvents();
 					// Root token
 					JToken token_root = JObject.Parse(json);
-					// Common token
+					// Get version
+					int btlResultVer = 0;
+					JToken token_parser = token_root["parser"];
 					JToken token_common = token_root["common"];
-					string result = (string)token_common.SelectToken("result"); // Find unique id
-					// Check if ok
+					string result = (string)token_parser.SelectToken("result"); // Find if ok - battleresultversion >= 15, WoT 9.8 and higher
 					if (result == "ok")
+						btlResultVer = (int)token_parser.SelectToken("battleResultVersion");
+					else
+					{
+						result = (string)token_common.SelectToken("result"); // Find if ok - battleresultversion <= 14, Wot 9.7 and lower
+						if (result == "ok")
+							btlResultVer = (int)token_root.SelectToken("battleresultversion");
+					}
+					// Check if ok
+					if (btlResultVer != 0)
 					{
 						Int64 arenaUniqueID = (Int64)token_root.SelectToken("arenaUniqueID"); // Find unique id
 						double arenaCreateTime = (double)token_common.SelectToken("arenaCreateTime"); // Arena create time
@@ -310,7 +320,12 @@ namespace WinApp.Code
 						double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
 						DateTime battleTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battlefinishUnix)).AddSeconds(45);
 						// Personal token
-						JToken token_personel = token_root["personal"];
+						JToken token_personel;
+						if (btlResultVer >= 15)
+							token_personel = token_root["personal"].First.First;
+						else
+							token_personel = token_root["personal"];
+						// Get tank
 						int tankId = (int)token_personel.SelectToken("typeCompDescr"); // tankId
 						// Check for special tanks
 						List<int> specialTanks = new List<int>(new[] { 64801, 64769, 65089 }); // Mammoth, Arctic Fox, Polar Bear
@@ -589,11 +604,20 @@ namespace WinApp.Code
 									newPlayer.clanDBID = (int)playerInfo.SelectToken("clanDBID");
 									newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
 									newPlayer.name = (string)playerInfo.SelectToken("name");
-									newPlayer.platoonID = (int)playerInfo.SelectToken("platoonID");
+									if (btlResultVer >= 15)
+									{
+										newPlayer.platoonID = 0; // NOT SUPPORTED FOR NEW FILE STRUCT YET -> (int)playerInfo.SelectToken("platoonID");
+										newPlayer.vehicleid = 0; // NOT SUPPORTED FOR NEW FILE STRUCT YET ->
+									}
+									else
+									{
+										newPlayer.platoonID = (int)playerInfo.SelectToken("platoonID");
+										newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
+									}
 									newPlayer.team = (int)playerInfo.SelectToken("team");
 									if (newPlayer.team == playerTeam)
 										newPlayer.playerTeam = 1;
-									newPlayer.vehicleid = (int)playerInfo.SelectToken("vehicleid");
+									
 									battlePlayers.Add(newPlayer);
 									// Get values for saving to battle
 									if (getEnemyClan && newPlayer.clanDBID > 0)
