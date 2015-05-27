@@ -290,9 +290,6 @@
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Dossier2json">
-			<Component Id="cmp8540176488F077374645127C6834BCA8" Directory="INSTALLFOLDER_Dossier2json" Guid="{474FF12A-5345-4182-BEA0-A42716B74A4F}">
-				<File Id="fil43C93A51802E58A2266566EE76D87EF7" KeyPath="yes" Source="$(var.D2jSource)\maps.json" />
-			</Component>
 			<Component Id="cmpD5E8EB7A99336F8E29BB1D09D6C79C6C" Directory="INSTALLFOLDER_Dossier2json" Guid="{27CA70F1-C079-4BE0-92B7-DAA06B9D92D8}">
 				<File Id="filC756F9EC8BADF7738ED2A6DED5C6F62D" KeyPath="yes" Source="$(var.D2jSource)\structures_10.json" />
 			</Component>
@@ -344,17 +341,75 @@
 			<Component Id="cmpstructures88" Directory="INSTALLFOLDER_Dossier2json" Guid="{9E8A251C-56A8-4872-929E-46A2B506A30E}">
 				<File Id="filstructures88" KeyPath="yes" Source="$(var.D2jSource)\structures_88.json" />
 			</Component>
+			<Component Id="cmpstructures89" Directory="INSTALLFOLDER_Dossier2json" Guid="{29321199-BC72-4DED-999D-78ADA45FB363}">
+				<File Id="filstructures89" KeyPath="yes" Source="$(var.D2jSource)\structures_89.json" />
+			</Component>
+
+			<Component Id="cmpBRS_01" Directory="INSTALLFOLDER_Dossier2json" Guid="{A1CA32C2-66AA-4BBD-BA6B-0B2EC61343F2}">
+				<File Id="filBRS_01" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_01.py" />
+			</Component>
+			<Component Id="cmpBRS_02" Directory="INSTALLFOLDER_Dossier2json" Guid="{C7509F8D-DD33-4B49-8954-74F7278D6BCC}">
+				<File Id="filBRS_02" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_02.py" />
+			</Component>
+			<Component Id="cmpBRS_03" Directory="INSTALLFOLDER_Dossier2json" Guid="{864341BB-C69A-4801-BF81-5230E51223FA}">
+				<File Id="filBRS_03" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_03.py" />
+			</Component>
+			<Component Id="cmpBRS_04" Directory="INSTALLFOLDER_Dossier2json" Guid="{0EAB2E3B-C3E3-469A-874B-70216EA5D4D6}">
+				<File Id="filBRS_04" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_04.py" />
+			</Component>
+			<Component Id="cmpBRS_05" Directory="INSTALLFOLDER_Dossier2json" Guid="{95FE8006-DD98-4BFC-BCED-FCDBA6263E4F}">
+				<File Id="filBRS_05" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_05.py" />
+			</Component>
+			<Component Id="cmpBRS_06" Directory="INSTALLFOLDER_Dossier2json" Guid="{2C4FA785-986F-4147-ACEA-814265A36EEC}">
+				<File Id="filBRS_06" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_06.py" />
+			</Component>
+			<Component Id="cmpBRS_07" Directory="INSTALLFOLDER_Dossier2json" Guid="{E3D87CAF-9F7A-44D4-ABB5-AAE5F950C59E}">
+				<File Id="filBRS_07" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_07.py" />
+			</Component>
+			<Component Id="cmpBRS_08" Directory="INSTALLFOLDER_Dossier2json" Guid="{C1F90968-62F8-4088-9B21-E2F5785AC0EC}">
+				<File Id="filBRS_08" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_08.py" />
+			</Component>
+			<Component Id="cmpBRS_09" Directory="INSTALLFOLDER_Dossier2json" Guid="{E2A30B14-0652-4496-A8CD-57E11514C548}">
+				<File Id="filBRS_09" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_09.py" />
+			</Component>
+			<Component Id="cmpBRS_10" Directory="INSTALLFOLDER_Dossier2json" Guid="{CA887D0C-B5C9-41DB-AC22-6FED029EA3FA}">
+				<File Id="filBRS_10" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_10.py" />
+			</Component>
+			<Component Id="cmpBRS_11" Directory="INSTALLFOLDER_Dossier2json" Guid="{9C8CE772-69B3-43E6-A4ED-91B279A0F504}">
+				<File Id="filBRS_11" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_11.py" />
+			</Component>
+			<Component Id="cmpBRS_12" Directory="INSTALLFOLDER_Dossier2json" Guid="{89A80825-829A-4F1E-B0C7-DCFAAB39F5E3}">
+				<File Id="filBRS_12" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_12.py" />
+			</Component>
+			<Component Id="cmpBRS_13" Directory="INSTALLFOLDER_Dossier2json" Guid="{34176FA6-D4F5-4AB5-80FF-DEA1B7E3144D}">
+				<File Id="filBRS_13" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_13.py" />
+			</Component>
+			<Component Id="cmpBRS_14" Directory="INSTALLFOLDER_Dossier2json" Guid="{13351AC4-A448-41C4-BBB8-F92A2A6599DD}">
+				<File Id="filBRS_14" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_14.py" />
+			</Component>
+			<Component Id="cmpBRS_15" Directory="INSTALLFOLDER_Dossier2json" Guid="{D5C8FCDA-F843-4630-8505-35B15A3CE0C0}">
+				<File Id="filBRS_15" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_15.py" />
+			</Component>
+
 			<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
 				<File Id="fil658CC5357D27167A6EB1467EAE4317BF" KeyPath="yes" Source="$(var.D2jSource)\tanks.json" />
 			</Component>
+			<Component Id="cmp8540176488F077374645127C6834BCA8" Directory="INSTALLFOLDER_Dossier2json" Guid="{474FF12A-5345-4182-BEA0-A42716B74A4F}">
+				<File Id="fil43C93A51802E58A2266566EE76D87EF7" KeyPath="yes" Source="$(var.D2jSource)\maps.json" />
+			</Component>
+
+			<Component Id="cmpDamageEvents" Directory="INSTALLFOLDER_Dossier2json" Guid="{B7B6D606-C7FE-4A4E-A608-0C59644B504D}">
+				<File Id="filDamageEvents" KeyPath="yes" Source="$(var.D2jSource)\DamageEvents.py" />
+			</Component>
+			<Component Id="cmpdictpackers" Directory="INSTALLFOLDER_Dossier2json" Guid="{35718663-29CA-4E93-8C29-4F6014D191B0}">
+				<File Id="fildictpackers" KeyPath="yes" Source="$(var.D2jSource)\dictpackers.py" />
+			</Component>
+
 			<Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">
 				<File Id="fil65135394BD3BB3D345ACBA402F678618" KeyPath="yes" Source="$(var.D2jSource)\wotdc2j.py" />
 			</Component>
 			<Component Id="cmpwotbr2j" Directory="INSTALLFOLDER_Dossier2json" Guid="{07EF3C67-0722-46A1-9405-7FB2ED97576F}">
 				<File Id="filwotbr2j" KeyPath="yes" Source="$(var.D2jSource)\wotbr2j.py" />
-			</Component>
-			<Component Id="cmpDamageEvents" Directory="INSTALLFOLDER_Dossier2json" Guid="{B7B6D606-C7FE-4A4E-A608-0C59644B504D}">
-				<File Id="filDamageEvents" KeyPath="yes" Source="$(var.D2jSource)\DamageEvents.py" />
 			</Component>
 
 		</ComponentGroup>
