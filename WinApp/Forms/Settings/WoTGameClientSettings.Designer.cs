@@ -476,6 +476,7 @@
 			this.Controls.Add(this.badForm1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "WoTGameClientSettings";
+			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "WoTGameClientSettings";
 			this.Load += new System.EventHandler(this.WoTGameClientSettings_Load);

@@ -58,7 +58,7 @@ def main():
 		elif argument == "-t":
 			option_tanks = 0
 			#print '-- TANK info will be included'
-    else:
+	else:
 			# dossier file, if more than one get only first
 			if filename_source =='' and os.path.isfile(argument):
 				filename_source = argument
@@ -744,12 +744,12 @@ def getdata(name, startoffset, offsetlength):
 		structformat = 'I'
 
 	value = struct.unpack_from('<' + structformat, data, startoffset)[0]
- 	
- 	for x in range(0, offsetlength):
- 		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
+
+	for x in range(0, offsetlength):
+		rawdata[startoffset+x] = str(tupledata[startoffset+x]) + " / " + str(value) +  "; " + name
 
 	
- 	return value
+	return value
 
 
 def load_structures():

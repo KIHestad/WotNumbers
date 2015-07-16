@@ -115,9 +115,9 @@ def main():
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
 		parser['battleResultVersion'] = 16
 	
-  while parser['battleResultVersion']>0:  
-    printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
-	  issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
+	while parser['battleResultVersion']>0:  
+		printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
+		issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
 		
 		if issuccess==0:
 			printmessage("Iteration", str(parser['battleResultVersion']-1))
@@ -287,7 +287,7 @@ def convertToFullForm(compactForm, battleResultVersion):
 						fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
 						
 			except Exception, i: 
-        		return 0, {}
+				return 0, {}
 			except Exception, e: 
 				exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
 		else:	
@@ -318,7 +318,7 @@ def convertToFullForm(compactForm, battleResultVersion):
 			for vehicleID, vehicleAsList in vehiclesAsList.iteritems(): 
 				fullForm['vehicles'][vehicleID] = listToDict(battle_results_data.VEH_PUBLIC_RESULTS, vehicleAsList)
 
-	return 1, fullForm 
+	return 1, fullForm
 
 def handleDetailsCrits(details):
 
