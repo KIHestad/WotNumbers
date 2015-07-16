@@ -50,7 +50,7 @@ VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_I
   
   
 parser = dict()
-parser['version'] = "0.9.8.0"
+parser['version'] = "0.9.9.0"
 parser['name'] = 'http://www.vbaddict.net'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -109,19 +109,21 @@ def main():
 	if not 'battleResults' in locals(): 
 		exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
-	if len(battleResults[1])<=117:
-		if len(battleResults[1]) in LEGACY_VERSIONS_LENGTH:
-			parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
-		else:
-			exitwitherror("Unknown Version, length: " + str(len(battleResults[1])))
+	if len(battleResults[1]) in LEGACY_VERSIONS_LENGTH:
+		parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
 	else:
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
-		parser['battleResultVersion'] = 15
-			
-	printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
-	  
-	bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
-
+		parser['battleResultVersion'] = 16
+	
+  while parser['battleResultVersion']>0:  
+    printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
+	  issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
+		
+		if issuccess==0:
+			printmessage("Iteration", str(parser['battleResultVersion']-1))
+			issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']-1) 
+		break
+	
 	if not 'personal' in bresult:
 		exitwitherror('Battle Result cannot be read (personal does not exist)')
 
@@ -167,6 +169,16 @@ def prepareForJSON(bresult):
 					bresult['personal']['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
 		
 		if bresult['parser']['battleResultVersion'] >= 15:
+			for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
+				if 'club' in ownResults:	
+					if 'clubDossierPopUps' in ownResults['club']:
+						oldClubDossier = ownResults['club']['clubDossierPopUps'].copy()
+						ownResults['club']['clubDossierPopUps'] = dict()
+						for achievement, amount in oldClubDossier.iteritems():
+							bresult['personal'][vehTypeCompDescr]['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
+		
+			if len(bresult['personal'].copy())>1 and len(bresult['personal'].copy())<10 :
+				printmessage("Version 15 DOUBLE: " + str(bresult['arenaUniqueID']), 1)
 			for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
 				if 'details' in ownResults:
 					newdetails = detailsDictToString(ownResults['details'])
@@ -274,6 +286,8 @@ def convertToFullForm(compactForm, battleResultVersion):
 					for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
 						fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
 						
+			except Exception, i: 
+        		return 0, {}
 			except Exception, e: 
 				exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
 		else:	
@@ -304,7 +318,7 @@ def convertToFullForm(compactForm, battleResultVersion):
 			for vehicleID, vehicleAsList in vehiclesAsList.iteritems(): 
 				fullForm['vehicles'][vehicleID] = listToDict(battle_results_data.VEH_PUBLIC_RESULTS, vehicleAsList)
 
-	return fullForm 
+	return 1, fullForm 
 
 def handleDetailsCrits(details):
 

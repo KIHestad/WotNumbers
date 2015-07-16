@@ -3,7 +3,7 @@
 # Initial version by Phalynx www.vbaddict.net/wot #
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2015-02-06       #
+# Edited version by BadButton -> 2015-07-16       #
 ###################################################
 
 import struct, json, time, sys, os
@@ -21,7 +21,7 @@ def main():
 	
 	import struct, json, time, sys, os, shutil, datetime, base64, cPickle
 
-	parserversion = "0.9.8.0"
+	parserversion = "0.9.9.0"
 	
 	global rawdata, tupledata, data, structures, numoffrags, working_directory
 	global filename_source, filename_target
@@ -42,7 +42,7 @@ def main():
 	option_frags = 1
 	option_tanks = 0
 	
-	for argument in sys.argv:
+	for argument in sys.argv[1:]:
 		if argument == "-s":
 			option_server = 1
 			#print '-- SERVER mode enabled'
@@ -58,8 +58,10 @@ def main():
 		elif argument == "-t":
 			option_tanks = 0
 			#print '-- TANK info will be included'
-
-	# filename_source = sys.argv[1]
+    else:
+			# dossier file, if more than one get only first
+			if filename_source =='' and os.path.isfile(argument):
+				filename_source = argument
 	
 	#if filename_source == "":
 	#	usage()
@@ -237,8 +239,11 @@ def main():
 			if tankversion in [85, 87]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements')
 
-			if tankversion >= 88:
+			if tankversion in [88,89]:
 				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7')
+
+			if tankversion == 92:
+				blocks = ('a15x15', 'a15x15_2', 'clan', 'clan2', 'company', 'company2', 'a7x7', 'achievements', 'frags', 'total', 'max15x15', 'max7x7', 'playerInscriptions', 'playerEmblems', 'camouflages', 'compensation', 'achievements7x7', 'historical', 'maxHistorical', 'historicalAchievements', 'fortBattles', 'maxFortBattles', 'fortSorties', 'maxFortSorties', 'fortAchievements', 'singleAchievements', 'clanAchievements', 'rated7x7', 'maxRated7x7', 'globalMapCommon', 'maxGlobalMapCommon')
 				
 			blockcount = len(list(blocks))+1
 
@@ -751,9 +756,9 @@ def load_structures():
 	
 	structures = dict()
 	
-	load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87,88,89];
+	load_versions = [10,17,18,20,22,24,26,27,28,29,65,69,77,81,85,87,88,89,92];
 	for version in load_versions:
-		jsondata = get_json_data('structures_'+str(version)+'.json')
+		jsondata = get_json_data('structures_'+str(version)+'.json') # do not use sub folder for structures
 		structures[version] = dict()
 		for item in jsondata:
 			category = item['category']
@@ -768,7 +773,7 @@ def load_tanksdata():
 	
 	tanksdata = dict()
 	if option_server == 0 or option_tanks == 1:
-		jsondata = get_json_data("tanks.json")
+		jsondata = get_json_data("tanks.json") # do not use parent folder for tanks
 		for item in jsondata:
 			key = str(item["countryid"])+"."+str(item["tankid"])
 			tanksdata[key] = item

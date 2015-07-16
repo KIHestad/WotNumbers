@@ -21,7 +21,7 @@ namespace WinApp.Code
 		
 		private class BattlePlayer
 		{
-			public int accountId;
+			public int accountDBID;
 			public string clanAbbrev;
 			public int clanDBID;
 			public string name;
@@ -599,15 +599,15 @@ namespace WinApp.Code
 								{
 									BattlePlayer newPlayer = new BattlePlayer();
 									JProperty playerProperty = (JProperty)player;
-									newPlayer.accountId = Convert.ToInt32(playerProperty.Name);
+									newPlayer.accountDBID = Convert.ToInt32(playerProperty.Name);
 									JToken playerInfo = player.First;
 									newPlayer.clanDBID = (int)playerInfo.SelectToken("clanDBID");
 									newPlayer.clanAbbrev = (string)playerInfo.SelectToken("clanAbbrev");
 									newPlayer.name = (string)playerInfo.SelectToken("name");
 									if (btlResultVer >= 15)
 									{
-										newPlayer.platoonID = 0; // NOT SUPPORTED FOR NEW FILE STRUCT YET -> (int)playerInfo.SelectToken("platoonID");
-										newPlayer.vehicleid = 0; // NOT SUPPORTED FOR NEW FILE STRUCT YET ->
+										newPlayer.platoonID = (int)playerInfo.SelectToken("prebattleID");
+										newPlayer.vehicleid = 0; // NEW METHOD NOT SUPPORTED FOR NEW FILE STRUCT YET ->
 									}
 									else
 									{
@@ -649,20 +649,50 @@ namespace WinApp.Code
 								}
 								// Get results from vehiles section and add to db
 								JToken token_vehicles = token_root["vehicles"];
+								// First iteration to get vehiclesid to late be able to find player killed by
+								if (btlResultVer >= 15)
+								{
+									foreach (JToken vechicle in token_vehicles)
+									{
+										JProperty vProperty = (JProperty)vechicle;
+										int vid = Convert.ToInt32(vProperty.Name);
+										JValue accountDBID = (JValue)vechicle.First.First.SelectToken("accountDBID");
+										BattlePlayer player = battlePlayers.Find(p => p.accountDBID == Convert.ToInt32(accountDBID));
+										player.vehicleid = vid;
+									}
+								}
+								// Get battle player data
 								foreach (JToken vechicle in token_vehicles)
 								{
+									// Get json token vith vechicle data
 									JProperty vechicleProperty = (JProperty)vechicle;
-									int vehicleid = Convert.ToInt32(vechicleProperty.Name);
-									BattlePlayer player = battlePlayers.Find(p => p.vehicleid == vehicleid);
+									JToken vechicleInfo;
+									// Find player for mapping
+									BattlePlayer player = new BattlePlayer(); 
+									if (btlResultVer >= 15)
+									{
+										vechicleInfo = vechicle.First.First;
+										JValue accountDBID = (JValue)vechicleInfo.SelectToken("accountDBID");
+										if (accountDBID != null)
+											player = battlePlayers.Find(p => p.accountDBID == Convert.ToInt32(accountDBID));
+									}
+									else
+									{
+										vechicleInfo = vechicle.First;
+										int vehicleid = Convert.ToInt32(vechicleProperty.Name);
+										player = battlePlayers.Find(p => p.vehicleid == vehicleid);
+									}
+
 									if (player != null)
 									{
-										JToken vechicleInfo = vechicle.First;
+										
 										// Get fields and values, init adding battle id
 										fields = "battleID";
 										string values = battleId.ToString();
+										string jsonField = "";
 										// Get values from player section
 										fields += ", accountId, clanAbbrev, clanDBID, name, platoonID, team, playerTeam";
-										values += ", " + player.accountId.ToString();
+										values += ", " + player.accountDBID.ToString();
 										values += ", '" + player.clanAbbrev + "'";
 										values += ", " + player.clanDBID.ToString();
 										values += ", '" + player.name + "'";
@@ -687,10 +717,12 @@ namespace WinApp.Code
 										fields += ", directHitsReceived, droppedCapturePoints, hits, kills, shots, shotsReceived, spotted, tkills, fortResource";
 										values += ", " + vechicleInfo.SelectToken("directHitsReceived");
 										values += ", " + vechicleInfo.SelectToken("droppedCapturePoints");
-										values += ", " + vechicleInfo.SelectToken("hits");
+										if (btlResultVer >= 15) { jsonField = "directHits"; } else { jsonField = "hits"; } // CHANGED STRUCT FROM WOT 9.8
+										values += ", " + vechicleInfo.SelectToken(jsonField);
 										values += ", " + vechicleInfo.SelectToken("kills");
 										values += ", " + vechicleInfo.SelectToken("shots");
-										values += ", " + vechicleInfo.SelectToken("shotsReceived");
+										if (btlResultVer >= 15) { jsonField = "directHitsReceived"; } else { jsonField = "shotsReceived"; } // CHANGED STRUCT FROM WOT 9.8
+										values += ", " + vechicleInfo.SelectToken(jsonField);
 										values += ", " + vechicleInfo.SelectToken("spotted");
 										values += ", " + vechicleInfo.SelectToken("tkills");
 										JValue fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
@@ -707,10 +739,13 @@ namespace WinApp.Code
 										// Added more
 										fields += ", potentialDamageReceived, noDamageShotsReceived, sniperDamageDealt, piercingsReceived, pierced, isTeamKiller";
 										values += ", " + vechicleInfo.SelectToken("potentialDamageReceived");
-										values += ", " + vechicleInfo.SelectToken("noDamageShotsReceived");
+										if (btlResultVer >= 15) { jsonField = "noDamageDirectHitsReceived"; } else { jsonField = "noDamageShotsReceived"; } // CHANGED STRUCT FROM WOT 9.8
+										values += ", " + vechicleInfo.SelectToken(jsonField);
 										values += ", " + vechicleInfo.SelectToken("sniperDamageDealt");
 										values += ", " + vechicleInfo.SelectToken("piercingsReceived");
-										values += ", " + vechicleInfo.SelectToken("pierced");
+										if (btlResultVer >= 15) { jsonField = "piercings"; } else { jsonField = "pierced"; } // CHANGED STRUCT FROM WOT 9.8
+										values += ", " + vechicleInfo.SelectToken(jsonField);
+										
 										// Is Team Killer
 										bool isTeamKiller = Convert.ToBoolean(vechicleInfo.SelectToken("isTeamKiller"));
 										if (isTeamKiller) values += ", 1"; else values += ", 0";
@@ -722,7 +757,7 @@ namespace WinApp.Code
 										int playerKillerId = Convert.ToInt32(vechicleInfo.SelectToken("killerID"));
 										BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == playerKillerId);
 										if (killer != null)
-											values += ", " + killer.accountId;
+											values += ", " + killer.accountDBID;
 										else
 											values += ", 0";
 										if (killer != null)
@@ -766,7 +801,7 @@ namespace WinApp.Code
 										BattlePlayer killer = battlePlayers.Find(k => k.vehicleid == killerID);
 										if (killer != null)
 										{
-											killedByAccountId = killer.accountId;
+											killedByAccountId = killer.accountDBID;
 											killedByPlayerName = killer.name;
 										}
 									}

@@ -681,6 +681,7 @@
     <None Include="Dossier2json\structures_87.json" />
     <None Include="Dossier2json\structures_88.json" />
     <None Include="Dossier2json\structures_89.json" />
+    <None Include="Dossier2json\structures_92.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -895,6 +896,7 @@
     <Content Include="Dossier2json\battle_results_shared_13.py" />
     <Content Include="Dossier2json\battle_results_shared_14.py" />
     <Content Include="Dossier2json\battle_results_shared_15.py" />
+    <Content Include="Dossier2json\battle_results_shared_16.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\wotbr2j.py" />

@@ -753,10 +753,10 @@ abstract class BadThemeControl : Control
 			Invalidate();
 			base.OnSizeChanged(e);
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
-			Log.LogToFile(ex);
-			//throw;
+			// Log.LogToFile(ex);
+			// throw;
 		}
 		
 	}
