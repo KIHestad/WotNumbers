@@ -1963,19 +1963,24 @@ namespace WinApp.Forms
 			Tankfilter(out tankFilter, out join, out message);
 			// Create Battle mode filter
 			string battleModeFilter = "";
+			string battleModeSQL = "";
 			switch (MainSettings.GridFilterTank.BattleMode)
 			{
 				case GridFilter.BattleModeType.RandomAndTankCompany:
-					battleModeFilter = " AND (playerTankBattle.battleMode = '15') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeRandom_TC);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Team:
-					battleModeFilter = " AND (playerTankBattle.battleMode = '7') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeTeam);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.TeamRanked:
-					battleModeFilter = " AND (playerTankBattle.battleMode = '7Ranked') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeTeamRanked);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Random:
-					battleModeFilter = " AND (playerTankBattle.battleMode = '15' AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeRandom_TC);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
 					break;
 				case GridFilter.BattleModeType.ClanWar:
 					battleModeFilter = " AND (playerTank.hasClan = 1) ";
@@ -1984,16 +1989,24 @@ namespace WinApp.Forms
 					battleModeFilter = " AND (playerTank.hasCompany = 1) ";
 					break;
 				case GridFilter.BattleModeType.Historical:
-					battleModeFilter = " AND (playerTankBattle.battleMode = 'Historical') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeHistorical);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Skirmishes:
-					battleModeFilter = " AND (playerTankBattle.battleMode = 'Skirmishes') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeSkirmishes);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Stronghold:
-					battleModeFilter = " AND (playerTankBattle.battleMode = 'Stronghold') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeStronghold);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Special:
-					battleModeFilter = " AND (playerTankBattle.battleMode = 'Special') ";
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeSpecial);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+					break;
+				case GridFilter.BattleModeType.GlobalMap:
+					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeGlobalMap);
+					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				default:
 					break;
