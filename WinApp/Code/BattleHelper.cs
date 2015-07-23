@@ -16,6 +16,7 @@ namespace WinApp.Code
 			ModeSpecial = 5,
 			ModeStronghold = 6,
 			ModeTeamRanked = 7,
+			ModeGlobalMap = 8,
 		}
 
 		public static string GetSQLMainBattleMode(MainBattleMode mainBattleMode)
@@ -36,6 +37,8 @@ namespace WinApp.Code
 					return "Stronghold";
 				case MainBattleMode.ModeTeamRanked:
 					return "7Ranked";
+				case MainBattleMode.ModeGlobalMap:
+					return "GlobalMap";
 
 			}
 			return "";
@@ -53,6 +56,7 @@ namespace WinApp.Code
 				case "Skirmishes": battleModeReadableName = "Skirmishes"; break;
 				case "Special": battleModeReadableName = "Special"; break;
 				case "Stronghold": battleModeReadableName = "Stronghold"; break;
+				case "GlobalMap": battleModeReadableName = "Global Map"; break;
 				case "": battleModeReadableName = "All Modes"; break;
 			}
 			return battleModeReadableName;

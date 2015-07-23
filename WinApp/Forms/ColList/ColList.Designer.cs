@@ -33,6 +33,7 @@
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
 			this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
 			this.ColListTheme = new BadForm();
+			this.btnReset = new BadButton();
 			this.btnClose = new BadButton();
 			this.toolColList = new System.Windows.Forms.ToolStrip();
 			this.toolColListUp = new System.Windows.Forms.ToolStripButton();
@@ -90,7 +91,6 @@
 			this.groupTanks = new BadGroupBox();
 			this.badGroupBox2 = new BadGroupBox();
 			this.badLabel1 = new BadLabel();
-			this.btnReset = new BadButton();
 			this.ColListTheme.SuspendLayout();
 			this.toolColList.SuspendLayout();
 			this.toolSelectedColumns.SuspendLayout();
@@ -148,6 +148,20 @@
 			this.ColListTheme.TabIndex = 0;
 			this.ColListTheme.Text = "Edit Tank/Battle View";
 			this.ColListTheme.TitleHeight = 26;
+			// 
+			// btnReset
+			// 
+			this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnReset.BlackButton = false;
+			this.btnReset.Checked = false;
+			this.btnReset.Image = null;
+			this.btnReset.Location = new System.Drawing.Point(25, 590);
+			this.btnReset.Name = "btnReset";
+			this.btnReset.Size = new System.Drawing.Size(75, 23);
+			this.btnReset.TabIndex = 22;
+			this.btnReset.Text = "Reset";
+			this.btnReset.ToolTipText = "Reset all system views";
+			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
 			// 
 			// btnClose
 			// 
@@ -853,19 +867,6 @@
 			this.badLabel1.TabIndex = 73;
 			this.badLabel1.Text = "Type:";
 			this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-			// 
-			// btnReset
-			// 
-			this.btnReset.BlackButton = false;
-			this.btnReset.Checked = false;
-			this.btnReset.Image = null;
-			this.btnReset.Location = new System.Drawing.Point(25, 590);
-			this.btnReset.Name = "btnReset";
-			this.btnReset.Size = new System.Drawing.Size(75, 23);
-			this.btnReset.TabIndex = 22;
-			this.btnReset.Text = "Reset";
-			this.btnReset.ToolTipText = "Reset all system views";
-			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
 			// 
 			// ColList
 			// 

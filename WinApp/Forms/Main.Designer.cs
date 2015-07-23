@@ -124,13 +124,14 @@
 			this.mModeCompany = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeClan = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparatorForBattleView = new System.Windows.Forms.ToolStripSeparator();
+			this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeTeamRanked = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+			this.mModeGlobalMap = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeSkrimishes = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeBattleForStronghold = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
-			this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
 			this.mModeSpecial = new System.Windows.Forms.ToolStripMenuItem();
 			this.mBattles = new System.Windows.Forms.ToolStripDropDownButton();
 			this.mBattles1d = new System.Windows.Forms.ToolStripMenuItem();
@@ -186,12 +187,13 @@
 			this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
+			this.mSettingsUploadTovBAddict = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
 			this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
 			this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
-			this.mSettingsUploadTovBAddict = new System.Windows.Forms.ToolStripMenuItem();
-			this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -212,7 +214,6 @@
 			this.scrollX = new BadScrollBar();
 			this.lblStatus2 = new System.Windows.Forms.Label();
 			this.lblStatus1 = new System.Windows.Forms.Label();
-			this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
 			this.MainTheme.SuspendLayout();
 			this.toolMain.SuspendLayout();
@@ -1028,13 +1029,14 @@
             this.mModeCompany,
             this.mModeClan,
             this.toolStripSeparatorForBattleView,
+            this.mModeHistorical,
             this.mModeTeam,
             this.mModeTeamRanked,
             this.toolStripSeparator13,
+            this.mModeGlobalMap,
             this.mModeSkrimishes,
             this.mModeBattleForStronghold,
             this.toolStripSeparator15,
-            this.mModeHistorical,
             this.mModeSpecial});
 			this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
 			this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -1150,6 +1152,15 @@
 			this.toolStripSeparatorForBattleView.Name = "toolStripSeparatorForBattleView";
 			this.toolStripSeparatorForBattleView.Size = new System.Drawing.Size(203, 6);
 			// 
+			// mModeHistorical
+			// 
+			this.mModeHistorical.Name = "mModeHistorical";
+			this.mModeHistorical.Size = new System.Drawing.Size(206, 22);
+			this.mModeHistorical.Tag = "Historical";
+			this.mModeHistorical.Text = "Historical Battle";
+			this.mModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
 			// mModeTeam
 			// 
 			this.mModeTeam.Name = "mModeTeam";
@@ -1173,6 +1184,15 @@
 			this.toolStripSeparator13.Name = "toolStripSeparator13";
 			this.toolStripSeparator13.Size = new System.Drawing.Size(203, 6);
 			// 
+			// mModeGlobalMap
+			// 
+			this.mModeGlobalMap.Name = "mModeGlobalMap";
+			this.mModeGlobalMap.Size = new System.Drawing.Size(206, 22);
+			this.mModeGlobalMap.Tag = "GlobalMap";
+			this.mModeGlobalMap.Text = "Global Map";
+			this.mModeGlobalMap.Click += new System.EventHandler(this.toolItemMode_Click);
+			this.mModeGlobalMap.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+			// 
 			// mModeSkrimishes
 			// 
 			this.mModeSkrimishes.Name = "mModeSkrimishes";
@@ -1195,15 +1215,6 @@
 			// 
 			this.toolStripSeparator15.Name = "toolStripSeparator15";
 			this.toolStripSeparator15.Size = new System.Drawing.Size(203, 6);
-			// 
-			// mModeHistorical
-			// 
-			this.mModeHistorical.Name = "mModeHistorical";
-			this.mModeHistorical.Size = new System.Drawing.Size(206, 22);
-			this.mModeHistorical.Tag = "Historical";
-			this.mModeHistorical.Text = "Historical Battle";
-			this.mModeHistorical.Click += new System.EventHandler(this.toolItemMode_Click);
-			this.mModeHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
 			// 
 			// mModeSpecial
 			// 
@@ -1697,6 +1708,26 @@
 			this.toolStripSeparator24.Name = "toolStripSeparator24";
 			this.toolStripSeparator24.Size = new System.Drawing.Size(260, 6);
 			// 
+			// mWoTStartGameSettings
+			// 
+			this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
+			this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
+			this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
+			this.mWoTStartGameSettings.Text = "WoT Game Settings...";
+			this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
+			// 
+			// mSettingsUploadTovBAddict
+			// 
+			this.mSettingsUploadTovBAddict.Name = "mSettingsUploadTovBAddict";
+			this.mSettingsUploadTovBAddict.Size = new System.Drawing.Size(263, 22);
+			this.mSettingsUploadTovBAddict.Text = "Upload to vBAddict...";
+			this.mSettingsUploadTovBAddict.Click += new System.EventHandler(this.mSettingsUploadTovBAddict_Click);
+			// 
+			// toolStripSeparator14
+			// 
+			this.toolStripSeparator14.Name = "toolStripSeparator14";
+			this.toolStripSeparator14.Size = new System.Drawing.Size(260, 6);
+			// 
 			// mUpdateDataFromAPI
 			// 
 			this.mUpdateDataFromAPI.Enabled = false;
@@ -1726,21 +1757,6 @@
 			// 
 			this.toolStripSeparator25.Name = "toolStripSeparator25";
 			this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
-			// 
-			// mSettingsUploadTovBAddict
-			// 
-			this.mSettingsUploadTovBAddict.Name = "mSettingsUploadTovBAddict";
-			this.mSettingsUploadTovBAddict.Size = new System.Drawing.Size(263, 22);
-			this.mSettingsUploadTovBAddict.Text = "Upload to vBAddict...";
-			this.mSettingsUploadTovBAddict.Click += new System.EventHandler(this.mSettingsUploadTovBAddict_Click);
-			// 
-			// mWoTStartGameSettings
-			// 
-			this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
-			this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
-			this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
-			this.mWoTStartGameSettings.Text = "WoT Game Settings...";
-			this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
 			// 
 			// mSettingsAppLayout
 			// 
@@ -1996,11 +2012,6 @@
 			this.lblStatus1.Text = "Status";
 			this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// toolStripSeparator14
-			// 
-			this.toolStripSeparator14.Name = "toolStripSeparator14";
-			this.toolStripSeparator14.Size = new System.Drawing.Size(260, 6);
-			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2213,6 +2224,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mModeTeamRanked;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+		private System.Windows.Forms.ToolStripMenuItem mModeGlobalMap;
 	}
 }
 

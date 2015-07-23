@@ -302,6 +302,11 @@ namespace WinApp.Forms
 						battleMode = "Special Event Battle";
 						showFortResources = false; 
 						break;
+					case "GlobalMap":
+						mainBattleMode = BattleHelper.MainBattleMode.ModeGlobalMap;
+						battleMode = "Global Map";
+						showFortResources = false;
+						break;
 				}
 				// Battle mode text
 				if (dr["battleResultMode"] != DBNull.Value)

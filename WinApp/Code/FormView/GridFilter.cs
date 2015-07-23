@@ -34,6 +34,7 @@ namespace WinApp.Code
 			Special = 13,
 			Stronghold = 14,
 			TeamRanked = 15,
+			GlobalMap = 16,
 		}
 
 		public class Settings

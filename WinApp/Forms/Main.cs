@@ -480,21 +480,25 @@ namespace WinApp.Forms
 		
 		private void RunInitialDossierFileCheck(string message)
 		{
-			if (DBVersion.RunWotApi)
-				RunWotApi(true);
-			if (DBVersion.RunRecalcBattleWN8)
-				RunRecalcBattleWN8(true);
-			if (DBVersion.RunRecalcBattleKDratioCRdmg)
-				RunRecalcBattleKDratioCRdmg(true);
-
-			// Check for dossier update
-			StatusBarHelper.Message = message;
-			if (Config.Settings.dossierFileWathcherRun == 1)
+			// Debug option - avouid init dossier file check after startup
+			// if (false)
 			{
-				string msg = "Running initial battle fetch...";
-				if (DBVersion.RunDossierFileCheckWithForceUpdate)
-					msg = "Running initial battle fetch with force update all data...";
-				RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
+				if (DBVersion.RunWotApi)
+					RunWotApi(true);
+				if (DBVersion.RunRecalcBattleWN8)
+					RunRecalcBattleWN8(true);
+				if (DBVersion.RunRecalcBattleKDratioCRdmg)
+					RunRecalcBattleKDratioCRdmg(true);
+
+				// Check for dossier update
+				StatusBarHelper.Message = message;
+				if (Config.Settings.dossierFileWathcherRun == 1)
+				{
+					string msg = "Running initial battle fetch...";
+					if (DBVersion.RunDossierFileCheckWithForceUpdate)
+						msg = "Running initial battle fetch with force update all data...";
+					RunDossierFileCheck(msg, DBVersion.RunDossierFileCheckWithForceUpdate);
+				}
 			}
 		}
 
@@ -1872,6 +1876,10 @@ namespace WinApp.Forms
 					case GridFilter.BattleModeType.Special:
 						battleModeFilter = " AND (battleMode = 'Special') ";
 						battleMode = "Special";
+						break;
+					case GridFilter.BattleModeType.GlobalMap:
+						battleModeFilter = " AND (battleMode = 'GlobalMap') ";
+						battleMode = "GlobalMap";
 						break;
 				}
 			}

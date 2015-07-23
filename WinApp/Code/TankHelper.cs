@@ -10,29 +10,6 @@ namespace WinApp.Code
 {
 	public static class TankHelper
 	{
-		public static string DbBattleMode(BattleHelper.MainBattleMode mode)
-		{
-			string s = "";
-			switch (mode)
-			{
-				case BattleHelper.MainBattleMode.ModeRandom_TC:
-					s = "15"; break;
-				case BattleHelper.MainBattleMode.ModeTeam:
-					s = "7"; break;
-				case BattleHelper.MainBattleMode.ModeTeamRanked:
-					s = "7Ranked"; break;
-				case BattleHelper.MainBattleMode.ModeHistorical:
-					s = "Historical"; break;
-				case BattleHelper.MainBattleMode.ModeSkirmishes:
-					s = "Skirmishes"; break;
-				case BattleHelper.MainBattleMode.ModeStronghold:
-					s = "Stronghold"; break;
-				case BattleHelper.MainBattleMode.ModeSpecial:
-					s = "Special"; break;
-			}
-			return s;
-		}
-	
 		#region DatabaseLookup
 
 		public static void GetAllLists()
@@ -123,7 +100,7 @@ namespace WinApp.Code
 
 		public static DataTable GetPlayerTankBattle(int playerTankId, BattleHelper.MainBattleMode dossierBattleMode, bool CreateNewIfNotExists)
 		{
-			string battleMode = DbBattleMode(dossierBattleMode);
+			string battleMode = BattleHelper.GetSQLMainBattleMode(dossierBattleMode);
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
@@ -138,7 +115,7 @@ namespace WinApp.Code
 
 		public static int GetPlayerTankBattleCount(int playerTankId, BattleHelper.MainBattleMode dossierBattleMode, out int wins, out int xp)
 		{
-			string battleMode = DbBattleMode(dossierBattleMode);
+			string battleMode = BattleHelper.GetSQLMainBattleMode(dossierBattleMode);
 			string sql = "SELECT battles, wins, xp FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
@@ -250,7 +227,7 @@ namespace WinApp.Code
 
 		public static DataTable GetTankData2BattleMapping(BattleHelper.MainBattleMode dossierBattleMode)
 		{
-			string battleMode = DbBattleMode(dossierBattleMode);
+			string battleMode = BattleHelper.GetSQLMainBattleMode(dossierBattleMode);
 			string sql =
 				"SELECT  dbDataType, dbPlayerTank, dbPlayerTankMode, dbBattle " +
 				"FROM    json2dbMapping " +

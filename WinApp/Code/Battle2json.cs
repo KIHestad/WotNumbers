@@ -410,6 +410,7 @@ namespace WinApp.Code
 									case 10: battleResultMode = "Skirmishes"; getEnemyClan = true; break;
 									case 11: battleResultMode = "Stronghold"; getEnemyClan = true; break;
 									case 12: battleResultMode = "Team: Ranked Battles"; break;
+									case 13: battleResultMode = "Global Map"; getEnemyClan = true; break;
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
@@ -1008,6 +1009,7 @@ namespace WinApp.Code
 				//var ipy = Python.CreateRuntime();
 				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
 				//ipyrun.main();
+
 				if (!PythonEngine.InUse)
 				{
 					PythonEngine.InUse = true;

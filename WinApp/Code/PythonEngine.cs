@@ -28,11 +28,6 @@ namespace WinApp.Code
 			// Create Engine - Normal mode
 			Engine = Python.CreateEngine();
 
-			// Remove old ipy log file
-			string ipyLogFile = Config.AppDataLogFolder + "ipy.txt";
-			if (File.Exists(ipyLogFile))
-				File.Delete(ipyLogFile);
-			// Do not output to file any more
 			/*
 			System.IO.FileStream fs = new System.IO.FileStream(ipyLogFile, System.IO.FileMode.Create);
 			Engine.Runtime.IO.SetOutput(fs, Encoding.UTF8); // write to file
