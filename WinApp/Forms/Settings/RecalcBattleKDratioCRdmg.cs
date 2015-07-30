@@ -112,7 +112,8 @@ namespace WinApp.Forms
 					" fragsteam=" + fragsTeam.ToString() + ", fragsenemy=" + fragsEnemy.ToString() + " " +
 					"WHERE id = " + dr["battleId"].ToString() + ";";
 			}
-			DB.ExecuteNonQuery(updatesql, RunInBatch: true);
+			if (updatesql != "")
+				DB.ExecuteNonQuery(updatesql, RunInBatch: true);
 		}
 	}
 }
