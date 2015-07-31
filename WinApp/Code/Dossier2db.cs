@@ -239,8 +239,20 @@ namespace WinApp.Code
 									achList.Add(ach);
 								}
 							}
-							else if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills") // Check frags
-								fragList += currentItem.value.ToString() + ";";
+
+							// ****
+							// Fraglist for tanks is not used
+							// This method uses tank names, since IS-2 tank name is used for two tanks it cannot be used, have to use VBaddict tank ID to make perfect match
+							// ****
+
+							//else if (currentItem.subSection == "fragslist" || currentItem.subSection == "kills") // Check frags
+							//{
+							//	string newFraggedTank = currentItem.value.ToString() + ";";
+							//	// avoid duplicates, else add frag
+							//	if (!fragList.Contains(newFraggedTank))
+							//		fragList += newFraggedTank ;
+							//}
+
 							// Temp log all data
 							// log.Add("  " + currentItem.mainSection + "." + currentItem.tank + "." + currentItem.subSection + "." + currentItem.property + ":" + currentItem.value);
 							// log.Add(currentItem.mainSection + ";" + currentItem.subSection + ";" + currentItem.property );
@@ -459,8 +471,9 @@ namespace WinApp.Code
 					DB.ExecuteNonQuery(sql);
 				}
 					
+				// No longer in us
 				// Check fraglist to update playertank frags
-				List<FragItem> battleFragList = UpdatePlayerTankFrag(tankId, playerTankId, fragList);
+				List<FragItem> battleFragList = new List<FragItem>(); //  UpdatePlayerTankFrag(tankId, playerTankId, fragList);
 
 				// Check if achivment exists
 				List<AchItem> battleAchList = UpdatePlayerTankAch(tankId, playerTankId, achList);
@@ -978,19 +991,21 @@ namespace WinApp.Code
 					DataTable dt = DB.FetchData(sql);
 					if (dt.Rows.Count > 0)
 						battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
+					
+					// No longer in use
 					// Insert Battle Frags
-					if (battleFragList.Count > 0)
-					{
-						// Loop through new frags
-						string battleFragSQL = "";
-						foreach (var newFragItem in battleFragList)
-						{
-							battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
-											 "VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
-						}
-						// Add to database
-						DB.ExecuteNonQuery(battleFragSQL);
-					}
+					//if (battleFragList.Count > 0)
+					//{
+					//	// Loop through new frags
+					//	string battleFragSQL = "";
+					//	foreach (var newFragItem in battleFragList)
+					//	{
+					//		battleFragSQL += "INSERT INTO battleFrag (battleId, fraggedTankId, fragCount) " +
+					//						 "VALUES (" + battleId + ", " + newFragItem.tankId + ", " + newFragItem.fragCount.ToString() + "); ";
+					//	}
+					//	// Add to database
+					//	DB.ExecuteNonQuery(battleFragSQL);
+					//}
 					// Insert battle Achievements
 					if (battleAchList.Count > 0)
 					{
