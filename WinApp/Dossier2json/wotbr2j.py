@@ -286,7 +286,7 @@ def convertToFullForm(compactForm, battleResultVersion):
 					for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
 						fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
 						
-			except Exception, i: 
+			except IndexError, i:
 				return 0, {}
 			except Exception, e: 
 				exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
