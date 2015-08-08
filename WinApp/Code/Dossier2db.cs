@@ -454,7 +454,7 @@ namespace WinApp.Code
 								if (dateTime.Year == 1970)
 									sqlFields += "NULL";
 								else
-									sqlFields += "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+                                    sqlFields += "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"; 
 								break;
 							default: 
 								sqlFields += playerTankNewRow[colName]; 
@@ -705,7 +705,7 @@ namespace WinApp.Code
 							if (dateTime.Year == 1970)
 								sqlFields += "NULL";
 							else
-								sqlFields += "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+                                sqlFields += "'" + dateTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"; 
 							break;
 						default: 
 							sqlFields += playerTankBattleNewRow[colName]; 
@@ -907,7 +907,7 @@ namespace WinApp.Code
 								break;
 							case "DateTime":
 								DateTime dateTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow[colName]));
-								sqlValues += ", '" + dateTime.ToString("yyyy-MM-dd HH:mm:ss") + "'"; 
+                                sqlValues += ", '" + dateTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"; 
 								break;
 							default:
 								{
