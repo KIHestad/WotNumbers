@@ -662,6 +662,7 @@
     <None Include="Docs\CameraNode.pyc" />
     <None Include="Docs\Database\Admin.db" />
     <None Include="Docs\__init__.pyc" />
+    <None Include="Dossier2json\battle_results_shared_17.py" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_17.json" />

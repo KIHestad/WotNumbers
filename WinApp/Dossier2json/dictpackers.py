@@ -1,4 +1,6 @@
+# Embedded file name: scripts/common/DictPackers.py
 import copy
+#from debug_utils import *
 
 def roundToInt(val):
     return int(round(val))
@@ -37,6 +39,17 @@ class DeltaPacker(object):
             return ret
 
 
+class ValueReplayPacker:
+
+    def pack(self, value):
+        if isinstance(value, str):
+            return value
+        return value.pack()
+
+    def unpack(self, value):
+        return value
+
+
 class DictPacker(object):
 
     def __init__(self, *metaData):
@@ -62,7 +75,8 @@ class DictPacker(object):
                         v = None
                 l[index] = v
             except Exception as e:
-                LOG_DEBUG_DEV('error while packing:', index, metaEntry, str(e))
+                LOG_ERROR('error while packing:', index, metaEntry, str(e))
+                raise
 
         return l
 
@@ -83,7 +97,7 @@ class DictPacker(object):
 
 class SimpleDictPacker(object):
 
-    def __init__(self, packPredicate, *keys):
+    def __init__(self, packPredicate, keys):
         self.__packPredicate = packPredicate
         self.__keys = tuple(keys)
 

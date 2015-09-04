@@ -58,7 +58,7 @@ def main():
 		elif argument == "-t":
 			option_tanks = 0
 			#print '-- TANK info will be included'
-	else:
+		else:
 			# dossier file, if more than one get only first
 			if filename_source =='' and os.path.isfile(argument):
 				filename_source = argument

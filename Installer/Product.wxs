@@ -396,6 +396,9 @@
 			<Component Id="cmpBRS_16" Directory="INSTALLFOLDER_Dossier2json" Guid="{DC77D077-E7C4-49F7-AF40-6BBB26191B58}">
 				<File Id="filBRS_16" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_16.py" />
 			</Component>
+      <Component Id="cmpBRS_17" Directory="INSTALLFOLDER_Dossier2json" Guid="{281A9246-C51F-4512-9E97-22FB2294FDF9}">
+        <File Id="filBRS_17" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_17.py" />
+      </Component>
 
 			<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
 				<File Id="fil658CC5357D27167A6EB1467EAE4317BF" KeyPath="yes" Source="$(var.D2jSource)\tanks.json" />
