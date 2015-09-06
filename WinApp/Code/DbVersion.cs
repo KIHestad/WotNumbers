@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 250; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 251; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -1862,7 +1862,6 @@ namespace WinApp.Code
 				case 188:
 					mssql = GetUpgradeSQL("188");
 					sqlite = mssql;
-					RunWotApi = true;
 					break;
 				case 189:
 					mssql =
@@ -1940,17 +1939,13 @@ namespace WinApp.Code
 						"UPDATE columnSelection SET name='Game Mode', description='The game mode: Standard, Encounter or Assault' WHERE id = 511; ";
 					sqlite = mssql;
 					break;	
-				case 195:
-					RunWotApi = true;
-					break;
+				
 				case 196:
 					// New maps
 					mssql = GetUpgradeSQL("196");
 					sqlite = mssql;
 					break;
-				case 200:
-					RunWotApi = true;
-					break;
+				
 				case 201:
 					// New maps
 					mssql = GetUpgradeSQL("201");
@@ -2185,9 +2180,7 @@ namespace WinApp.Code
 						ins + "VALUES ('tanks_v2', 'maxrated7x7',  'maxXP',  'Int',  'maxXp',  NULL,  'tanks_v2.maxrated7x7.maxXP', '7Ranked'); ";														
 					sqlite = mssql;
 					break;
-				case 238:
-					RunWotApi = true;
-					break;
+				
 				case 239:
 					// New maps
 					mssql = GetUpgradeSQL("239");
@@ -2282,6 +2275,9 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("250");
 					sqlite = mssql;
 					break;
+                case 251:
+                    RunWotApi = true;
+                    break;
 			}
 			string sql = "";
 			// get sql for correct dbtype

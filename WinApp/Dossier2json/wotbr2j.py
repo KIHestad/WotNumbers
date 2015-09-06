@@ -50,7 +50,7 @@ VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_I
   
   
 parser = dict()
-parser['version'] = "0.9.10.1"
+parser['version'] = "0.9.10.2"
 parser['name'] = 'http://www.vbaddict.net'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -109,11 +109,11 @@ def main():
 	if not 'battleResults' in locals(): 
 		exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
-	if len(battleResults[1]) in LEGACY_VERSIONS_LENGTH:
-		parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
-	else:
+	# if len(battleResults[1]) in LEGACY_VERSIONS_LENGTH:
+		# "parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
+	#else:
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
-		parser['battleResultVersion'] = 17
+	parser['battleResultVersion'] = 17
 	
 	while parser['battleResultVersion']>0:  
 		printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
@@ -294,8 +294,8 @@ def convertToFullForm(compactForm, battleResultVersion):
 
 				for vehicleID, vehiclesInfo in vehiclesAsList.iteritems():
 					fullForm['vehicles'][vehicleID] = []
-				for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
-					fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
+					for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
+						fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
 			except IndexError, i:
 				return 0, {}
 			except KeyError, i:

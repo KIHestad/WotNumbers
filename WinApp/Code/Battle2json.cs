@@ -414,15 +414,6 @@ namespace WinApp.Code
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
-								string gammeplayId = (string)token_common.SelectToken("gameplayID");
-								string gameplayName = "";
-								switch (gammeplayId)
-								{
-									case "0": gameplayName = "Standard"; break;
-									case "1": gameplayName = "Encounter"; break;
-									case "2": gameplayName = "Assault"; break;
-								}
-								battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + gameplayName + "'" });
 								// personal - credits
 								battleValues.Add(new BattleValue() { colname = "originalCredits", value = (int)token_personel.SelectToken("originalCredits") });
 								battleValues.Add(new BattleValue() { colname = "credits", value = (int)token_personel.SelectToken("credits") });
@@ -445,9 +436,10 @@ namespace WinApp.Code
 								battleValues.Add(new BattleValue() { colname = "achievementXP", value = (int)token_personel.SelectToken("achievementXP") });
 								battleValues.Add(new BattleValue() { colname = "eventXP", value = (int)token_personel.SelectToken("eventXP") });
 								battleValues.Add(new BattleValue() { colname = "eventTMenXP", value = (int)token_personel.SelectToken("eventTMenXP") });
-								// personal others
-								battleValues.Add(new BattleValue() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") });
-								battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
+								// personal markOfMastery
+                                battleValues.Add(new BattleValue() { colname = "markOfMastery", value = (int)token_personel.SelectToken("markOfMastery") }); 
+								// Other
+                                battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
 								battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
 								double def = (int)token_personel.SelectToken("droppedCapturePoints");
 								battleValues.Add(new BattleValue() { colname = "def", value = def }); // override def - might be above 100
@@ -476,8 +468,9 @@ namespace WinApp.Code
 								int autoLoadCost = (int)array_autoload[0];
 								battleValues.Add(new BattleValue() { colname = "autoLoadCost", value = autoLoadCost });
 								// Get from array autoEquipCost
-								JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
-								int autoEquipCost = (int)array_autoequip[0];
+								// TODO: - changed from WoT 9.10 - only returns true/false
+                                // JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
+                                int autoEquipCost = 0; // (int)array_autoequip[0];
 								battleValues.Add(new BattleValue() { colname = "autoEquipCost", value = autoEquipCost });
 								// Calculated net credits
 								int creditsNet = (int)token_personel.SelectToken("credits");
@@ -490,7 +483,17 @@ namespace WinApp.Code
 								// map id
 								int arenaTypeID = (int)token_common.SelectToken("arenaTypeID");
 								int mapId = arenaTypeID & 32767;
-								battleValues.Add(new BattleValue() { colname = "mapId", value = mapId });
+                                battleValues.Add(new BattleValue() { colname = "mapId", value = mapId });
+                                // game mode
+                                int gammeplayId = arenaTypeID >> 16;
+                                string gameplayName = "";
+                                switch (gammeplayId)
+                                {
+                                    case 0: gameplayName = "Standard"; break;
+                                    case 1: gameplayName = "Encounter"; break;
+                                    case 2: gameplayName = "Assault"; break;
+                                }
+                                battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + gameplayName + "'" });
 								// Special tank extra data insert, not fetched from dossier file
 								if (specialTankFound)
 								{
