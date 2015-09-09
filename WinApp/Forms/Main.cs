@@ -1557,17 +1557,12 @@ namespace WinApp.Forms
 			if (e.Button == System.Windows.Forms.MouseButtons.Right)
 			{
 				string message = mBattles.Text; // Selected menu item
-				if (mBattlesCustomUse.Checked)
-				{
-					// Custom battle time filter
-					message += " (";
-					if (Config.Settings.customBattleTimeFilter.from != null)
-						message += Config.Settings.customBattleTimeFilter.from + " -> ";
-					if (Config.Settings.customBattleTimeFilter.to != null)
-						message += " <- " + Config.Settings.customBattleTimeFilter.to;
-					message += ")";
-				}
-				SetStatus2("Current battle time filter: " + message);
+                // Get Battle Time filer
+                string battleTimeFilter = "";
+                string battleTimeReadable = "";
+                BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
+                // Show info
+                SetStatus2("Current battle time filter: " + message + " (" + battleTimeReadable + ")");
 			}
 		}
 
@@ -1885,9 +1880,10 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void BattleTimeFilter(out string battleTimeFilter)
+		private void BattleTimeFilter(out string battleTimeFilter, out string battleTimeReadable)
 		{
 			battleTimeFilter = "";
+            battleTimeReadable = "";
 			if (!mBattlesAll.Checked)
 			{
 				DateTime dateFilter = new DateTime();
@@ -1895,6 +1891,7 @@ namespace WinApp.Forms
 				{
 					// Normal predefined battle time filters
 					battleTimeFilter = " AND battleTime>=@battleTime ";
+                    battleTimeReadable = "@battleTime ->";
 					dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 					// Adjust time scale according to selected filter
 					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
@@ -1911,9 +1908,11 @@ namespace WinApp.Forms
 						DateTime dateFromYesterdayFilter = dateFilter;
 						dateFilter = dateFilter.AddDays(-1);
 						battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
+                        battleTimeReadable = "@battleTime  -> <- " + dateFromYesterdayFilter.ToString();
 						DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter, DB.SqlDataType.DateTime);
 					}
 					DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                    battleTimeReadable = battleTimeReadable.Replace("@battleTime", dateFilter.ToString());
 				}
 				else
 				{
@@ -1930,6 +1929,10 @@ namespace WinApp.Forms
 						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 					}
+                    if (Config.Settings.customBattleTimeFilter.from != null)
+                        battleTimeReadable = Config.Settings.customBattleTimeFilter.from + " -> ";
+                    if (Config.Settings.customBattleTimeFilter.to != null)
+                        battleTimeReadable += " <- " + Config.Settings.customBattleTimeFilter.to;
 				}
 			}
 		}
@@ -2285,7 +2288,8 @@ namespace WinApp.Forms
 				//}
 				// Get Battle Time filer
 				string battleTimeFilter = "";
-				BattleTimeFilter(out battleTimeFilter);
+                string battleTimeReadable = "";
+				BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
 
 				// Get Battle mode filter
 				string battleModeFilter = "";
@@ -3015,7 +3019,8 @@ namespace WinApp.Forms
 		{
 			// Get Battle Time filer
 			string battleTimeFilter = "";
-			BattleTimeFilter(out battleTimeFilter);
+            string battleTimeReadable = "";
+			BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
 
 			// Get Battle mode filter
 			string battleModeFilter = "";

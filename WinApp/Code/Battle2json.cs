@@ -468,9 +468,9 @@ namespace WinApp.Code
 								int autoLoadCost = (int)array_autoload[0];
 								battleValues.Add(new BattleValue() { colname = "autoLoadCost", value = autoLoadCost });
 								// Get from array autoEquipCost
-								// TODO: - changed from WoT 9.10 - only returns true/false
-                                // JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
-                                int autoEquipCost = 0; // (int)array_autoequip[0];
+								// Get fro array autoEqipCost
+                                JArray array_autoequip = (JArray)token_personel.SelectToken("autoEquipCost");
+                                int autoEquipCost = (int)array_autoequip[0];
 								battleValues.Add(new BattleValue() { colname = "autoEquipCost", value = autoEquipCost });
 								// Calculated net credits
 								int creditsNet = (int)token_personel.SelectToken("credits");
