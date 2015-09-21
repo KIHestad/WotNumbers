@@ -2132,6 +2132,26 @@ namespace WinApp.Forms
 					dr["Mastery Badge"] = ImageHelper.GetMasteryBadgeImage(mb_id);
 				}
 			}
+            // If column "Battles Today" is added, calc values now
+            for (int i = 0; i < dtTankData.Columns.Count - 1; i++)
+            {
+                string colName = dtTankData.Columns[i].ColumnName;
+                if (colName == "Battles Day")
+                {
+                    // Create battle time filter for today
+                    string battleTimeFilter = " AND battleTime>=@battleTime ";
+                    DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                    DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                    // Calc here
+                    foreach (DataRow dr in dtTankData.Rows)
+                    {
+                        int playerTankId = Convert.ToInt32(dr["player_Tank_Id"]);
+                        dr["Battles Today"] = BattleHelper.GetBattleCount(playerTankId, battleTimeFilter);
+                    }
+                    dtTankData.AcceptChanges();
+                    continue;
+                }
+            }
 			// Assign datatable to grid
 			dataGridMain.Columns.Clear();
 			mainGridFormatting = true;
@@ -2370,6 +2390,8 @@ namespace WinApp.Forms
 						dr["Mastery Badge"] = ImageHelper.GetMasteryBadgeImage(mb_id);
 					}
 				}
+
+                // AddingNewEventArgs row count
 				int rowcount = dt.Rows.Count;
 				// Add footer
 				int totalBattleCount = 0;
@@ -2862,26 +2884,44 @@ namespace WinApp.Forms
 						}
 					}
 				}
-				else if (col.Equals("Remaining XP"))
-				{
-					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
-					{
-						int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-						if (val > 0)
-						{
-							Color color = ColorTheme.Rating_very_bad;
-							if (val <= 5000) color = ColorTheme.Rating_super_uniqum;
-							else if (val <= 10000) color = ColorTheme.Rating_uniqum;
-							else if (val <= 25000) color = ColorTheme.Rating_great;
-							else if (val <= 50000) color = ColorTheme.Rating_very_good;
-							else if (val <= 75000) color = ColorTheme.Rating_good;
-							else if (val <= 100000) color = ColorTheme.Rating_average;
-							else if (val <= 125000) color = ColorTheme.Rating_below_average;
-							else if (val <= 150000) color = ColorTheme.Rating_bad;
-							cell.Style.ForeColor = color;
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-						}
-					}
+                else if (MainSettings.View == GridView.Views.Tank)
+                { 
+				    if (col.Equals("Remaining XP"))
+				    {
+					    if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
+					    {
+						    int val = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+						    if (val > 0)
+						    {
+							    Color color = ColorTheme.Rating_very_bad;
+							    if (val <= 5000) color = ColorTheme.Rating_super_uniqum;
+							    else if (val <= 10000) color = ColorTheme.Rating_uniqum;
+							    else if (val <= 25000) color = ColorTheme.Rating_great;
+							    else if (val <= 50000) color = ColorTheme.Rating_very_good;
+							    else if (val <= 75000) color = ColorTheme.Rating_good;
+							    else if (val <= 100000) color = ColorTheme.Rating_average;
+							    else if (val <= 125000) color = ColorTheme.Rating_below_average;
+							    else if (val <= 150000) color = ColorTheme.Rating_bad;
+							    cell.Style.ForeColor = color;
+							    cell.Style.SelectionForeColor = cell.Style.ForeColor;
+						    }
+					    }
+                    }
+                    else if (col.Equals("Battles Today"))
+                    {
+                        int today = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
+                        int target = Convert.ToInt32(dataGridMain["Battles Day", e.RowIndex].Value);
+                        int diff = today - target;
+                        Color color = ColorTheme.Rating_very_good;
+                        if (diff < -3)
+                            color = ColorTheme.Rating_very_bad;
+                        else if (diff < 0)
+                            color = ColorTheme.Rating_bad;
+                        else if (diff < 2)
+                            color = ColorTheme.Rating_good;
+                        cell.Style.ForeColor = color;
+                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                    }
 				}
 				else if (MainSettings.View == GridView.Views.Battle)
 				{

@@ -359,9 +359,9 @@ namespace WinApp.Code
 			return exists;
 		}
 
-		public static DataRow TankInfo(int tankID)
+		public static DataRow TankInfo(int tankId)
 		{
-			string expression = "id = " + tankID.ToString();
+			string expression = "id = " + tankId.ToString();
 			DataRow[] foundRows = tankList.Select(expression);
 			if (foundRows.Length > 0)
 				return foundRows[0];

@@ -176,7 +176,7 @@ namespace WinApp.Code
 					{
 						colName = dr["colNameSQLite"].ToString();
 					}
-					// Check for datatypes
+                    // Check for datatypes
 					string colDataType = dr["colDataType"].ToString();
 					if (colDataType == "Image")
 					{
@@ -231,6 +231,19 @@ namespace WinApp.Code
 						}
 					}
 					colNum++;
+                    // Check for adding calculated column "Battles today" after column "Battles Day"
+                    if (colAlias == "Battles Day")
+                    {
+                        colListItem = new ColListClass();
+                        colListItem.name = "Battles Today";
+                        colListItem.colName = "Battles Today";
+                        colListItem.colNameSelect = "0";
+                        colListItem.colWidth = Convert.ToInt32(dr["colWidth"]); // Same as prev column = "Battles Day"
+                        colListItem.colType = "Int";
+                        colListItem.colNameSort = "Battles Today";
+                        selectColList.Add(colListItem);
+                        Select += "0 as 'Battles Today', ";
+                    }
 				}
 			}
 			colList = selectColList;
