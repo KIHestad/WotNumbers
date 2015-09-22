@@ -2922,6 +2922,15 @@ namespace WinApp.Forms
                         cell.Style.ForeColor = color;
                         cell.Style.SelectionForeColor = cell.Style.ForeColor;
                     }
+                    if (col.Equals("Win Rate"))
+                    {
+                        if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+                        {
+                            double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
+                            cell.Style.ForeColor = Rating.WinRateColor(wr);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
 				}
 				else if (MainSettings.View == GridView.Views.Battle)
 				{
@@ -2965,19 +2974,6 @@ namespace WinApp.Forms
 								"Killed: " + dataGridMain["killedcountToolTip", e.RowIndex].Value.ToString();
 						}
 					}
-				}
-				else if (MainSettings.View == GridView.Views.Tank)
-				{
-					if (col.Equals("Win Rate"))
-					{
-						if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
-						{
-							double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
-							cell.Style.ForeColor = Rating.WinRateColor(wr);
-							cell.Style.SelectionForeColor = cell.Style.ForeColor;
-						}
-					}
-					
 				}
 			}
 		}
