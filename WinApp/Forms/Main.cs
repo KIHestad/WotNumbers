@@ -2921,6 +2921,20 @@ namespace WinApp.Forms
                             color = ColorTheme.Rating_good;
                         cell.Style.ForeColor = color;
                         cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        // Add background color if victory
+                        // Create battle time filter for today
+                        string battleTimeFilter = " AND battleTime>=@battleTime ";
+                        DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        // Get values
+                        int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
+                        int victoryCount = BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
+                        // add back color
+                        if (victoryCount > 0)
+                        {
+                            cell.Style.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
+                            cell.Style.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+                        }
                     }
                     if (col.Equals("Win Rate"))
                     {

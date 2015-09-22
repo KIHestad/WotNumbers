@@ -66,10 +66,23 @@ namespace WinApp.Code
         public static int GetBattleCount(int playerTankId, string battleTimeFilter)
         {
             int count = 0;
-            string sql = "SELECT count(id) FROM battle WHERE playerTankId=@playerTankId " + battleTimeFilter;
+            string sql = "SELECT sum(battlesCount) FROM battle WHERE playerTankId=@playerTankId " + battleTimeFilter;
             DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
             DataTable dt = DB.FetchData(sql);
-            if (dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                count = Convert.ToInt32(dt.Rows[0][0]);
+            dt.Dispose();
+            dt.Clear();
+            return count;
+        }
+
+        public static int GetBattleVictoryCount(int playerTankId, string battleTimeFilter)
+        {
+            int count = 0;
+            string sql = "SELECT sum(victory) FROM battle WHERE playerTankId=@playerTankId " + battleTimeFilter;
+            DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+            DataTable dt = DB.FetchData(sql);
+            if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
                 count = Convert.ToInt32(dt.Rows[0][0]);
             dt.Dispose();
             dt.Clear();
