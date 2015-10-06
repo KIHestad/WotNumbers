@@ -2145,8 +2145,11 @@ namespace WinApp.Forms
                     // Calc here
                     foreach (DataRow dr in dtTankData.Rows)
                     {
-                        int playerTankId = Convert.ToInt32(dr["player_Tank_Id"]);
-                        dr["Battles Today"] = BattleHelper.GetBattleCount(playerTankId, battleTimeFilter);
+                        if (dr["player_Tank_Id"] != DBNull.Value)
+                        {
+                            int playerTankId = Convert.ToInt32(dr["player_Tank_Id"]);
+                            dr["Battles Today"] = BattleHelper.GetBattleCount(playerTankId, battleTimeFilter);
+                        }
                     }
                     dtTankData.AcceptChanges();
                     continue;
@@ -2910,30 +2913,33 @@ namespace WinApp.Forms
                     else if (col.Equals("Battles Today"))
                     {
                         int today = Convert.ToInt32(dataGridMain[col, e.RowIndex].Value);
-                        int target = Convert.ToInt32(dataGridMain["Battles Day", e.RowIndex].Value);
-                        int diff = today - target;
-                        Color color = ColorTheme.Rating_very_good;
-                        if (diff < -3)
-                            color = ColorTheme.Rating_very_bad;
-                        else if (diff < 0)
-                            color = ColorTheme.Rating_bad;
-                        else if (diff < 2)
-                            color = ColorTheme.Rating_good;
-                        cell.Style.ForeColor = color;
-                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
-                        // Add background color if victory
-                        // Create battle time filter for today
-                        string battleTimeFilter = " AND battleTime>=@battleTime ";
-                        DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
-                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
-                        // Get values
-                        int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
-                        int victoryCount = BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
-                        // add back color
-                        if (victoryCount > 0)
+                        if (dataGridMain["Battles Day", e.RowIndex].Value != DBNull.Value)
                         {
-                            cell.Style.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
-                            cell.Style.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+                            int target = Convert.ToInt32(dataGridMain["Battles Day", e.RowIndex].Value);
+                            int diff = today - target;
+                            Color color = ColorTheme.Rating_very_good;
+                            if (diff < -3)
+                                color = ColorTheme.Rating_very_bad;
+                            else if (diff < 0)
+                                color = ColorTheme.Rating_bad;
+                            else if (diff < 2)
+                                color = ColorTheme.Rating_good;
+                            cell.Style.ForeColor = color;
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                            // Add background color if victory
+                            // Create battle time filter for today
+                            string battleTimeFilter = " AND battleTime>=@battleTime ";
+                            DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                            DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                            // Get values
+                            int playerTankId = Convert.ToInt32(dataGridMain["player_Tank_Id", e.RowIndex].Value);
+                            int victoryCount = BattleHelper.GetBattleVictoryCount(playerTankId, battleTimeFilter);
+                            // add back color
+                            if (victoryCount > 0)
+                            {
+                                cell.Style.BackColor = ColorTheme.GridRowCurrentPlayerAlive;
+                                cell.Style.SelectionBackColor = ColorTheme.GridRowCurrentPlayerAliveSelected;
+                            }
                         }
                     }
                     if (col.Equals("Win Rate"))
