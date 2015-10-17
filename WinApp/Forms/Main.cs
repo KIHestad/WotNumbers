@@ -631,6 +631,7 @@ namespace WinApp.Forms
 			}
 		}
 
+        [DebuggerNonUserCode]
 		private void timerStatus2_Tick(object sender, EventArgs e)
 		{
 			if (timerStatus2.Interval > 100)
@@ -2444,13 +2445,13 @@ namespace WinApp.Forms
 								}
 								if (count > 0)
 									if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-										rowAverage[colListItem.name] = Math.Round(Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter),1);
+										rowAverage[colListItem.name] = Math.Round(Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin),1);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
-										rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter),1);
+                                        rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
-										rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter),1);
-									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation for EFF
-										rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter),1);
+                                        rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation Dmg C/R
+                                        rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else
 										rowAverage[colListItem.name] = sum / count;
 								else
@@ -2695,14 +2696,14 @@ namespace WinApp.Forms
 			
 		}
 
-		private double CalcAvgDmgCR(string battleTimeFilter, string battleMode, string tankFilter, string battleModeFilter)
+		private double CalcAvgDmgCR(string battleTimeFilter, string battleMode, string tankFilter, string battleModeFilter, string tankJoin = "")
 		{
 			double result = 0;
 			if (battleMode == "")
 				battleMode = "%";
 			string sql =
 					"select SUM(dmg) as dmg, SUM(dmgReceived) as dmgReceived " +
-					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id INNER JOIN tank on playerTank.tankId = tank.id " +
+					"from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id INNER JOIN tank on playerTank.tankId = tank.id " + tankJoin + " " +
 					"where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);

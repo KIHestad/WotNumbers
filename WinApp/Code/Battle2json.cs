@@ -409,7 +409,7 @@ namespace WinApp.Code
 									case 9: battleResultMode = "Special Event"; break;
 									case 10: battleResultMode = "Skirmishes"; getEnemyClan = true; break;
 									case 11: battleResultMode = "Stronghold"; getEnemyClan = true; break;
-									case 12: battleResultMode = "Team: Ranked Battles"; break;
+                                    case 12: battleResultMode = "Team: Ranked Battles"; getEnemyClan = true; break;
 									case 13: battleResultMode = "Global Map"; getEnemyClan = true; break;
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
@@ -624,7 +624,7 @@ namespace WinApp.Code
 									
 									battlePlayers.Add(newPlayer);
 									// Get values for saving to battle
-									if (getEnemyClan && newPlayer.clanDBID > 0)
+                                    if (getEnemyClan && newPlayer.clanDBID > 0 && newPlayer.team == enemyTeam) // Get enemy clan
 									{
 										// Found player with clan, continue and check that all enemy players belongs to same clan, if not cancel
 										if (enemyClanDBID[newPlayer.team] == 0)
@@ -642,7 +642,7 @@ namespace WinApp.Code
 										}
 
 									}
-									if (getPlatoon && newPlayer.platoonID > 0)
+									if (getPlatoon && newPlayer.platoonID > 0) // Get platoon info
 									{
 										Platoon p = new Platoon();
 										p.platoonID = newPlayer.platoonID;

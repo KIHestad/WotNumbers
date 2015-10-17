@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using IronPython.Hosting;
+using System.Diagnostics;
+
 
 namespace WinApp.Code
 {
-	class PythonEngine
+    class PythonEngine
 	{
 		public static Microsoft.Scripting.Hosting.ScriptEngine Engine; // allow to run ironpython programs
 		public static bool InUse = false;
@@ -47,7 +49,8 @@ namespace WinApp.Code
 	}
 
 	// Used for ironpython redirect output
-	public class MyEvtArgs<T> : EventArgs
+    [DebuggerNonUserCode]
+    public class MyEvtArgs<T> : EventArgs
 	{
 		public T Value
 		{
@@ -60,6 +63,7 @@ namespace WinApp.Code
 		}
 	}
 
+    [DebuggerNonUserCode]
 	public class EventRaisingStreamWriter : StreamWriter
 	{
 		#region Event
