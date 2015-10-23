@@ -25,6 +25,7 @@ namespace WinApp.Forms
 			eff = 2,
 			wn7 = 3,
 			wn8 = 4,
+            firstDividedOnNext = 5,
 		}
 
 		private class ChartTypeCols
@@ -168,15 +169,15 @@ namespace WinApp.Forms
 				return axisYminimum;
 		}
 
-		private double RoundOff(double val)
+		private double RoundOff(double min)
 		{
-			if (val <= 100)
-				return Convert.ToDouble(Convert.ToInt32(val * 10)) / 10;
-			else if (val <= 9999)
-				return Convert.ToDouble(Math.Truncate(val));
+			if (min <= 100)
+				return Convert.ToDouble(Convert.ToInt32(min * 10)) / 10;
+			else if (min <= 9999)
+				return Convert.ToDouble(Math.Truncate(min));
 			else
 			{
-				return val.RoundDown(1);
+				return min.RoundDown(1);
 			}
 				
 		}
@@ -223,22 +224,22 @@ namespace WinApp.Forms
 			// Add series
 			Series newSerie = new Series(chartSerie);
 			// Line type
-			if (chartValue.totals)
-				if (chkBullet.Checked)
-				{
-					newSerie.ChartType = SeriesChartType.Spline;
-					newSerie.MarkerStyle = MarkerStyle.Circle;
-				}
-				else
-				{
-					newSerie.ChartType = SeriesChartType.Spline;
-					newSerie.MarkerStyle = MarkerStyle.None;
-				}
-			else
-			{
-				newSerie.ChartType = SeriesChartType.Point;
-				newSerie.MarkerStyle = MarkerStyle.Circle;
-			}
+            if (chartValue.totals)
+            {
+                if (chkBullet.Checked)
+                    newSerie.MarkerStyle = MarkerStyle.Circle;
+                else
+                    newSerie.MarkerStyle = MarkerStyle.None;
+                if (chkSpline.Checked)
+                    newSerie.ChartType = SeriesChartType.Spline;
+                else
+                    newSerie.ChartType = SeriesChartType.Line;
+            }
+            else
+            {
+                newSerie.ChartType = SeriesChartType.Point;
+                newSerie.MarkerStyle = MarkerStyle.Circle;
+            }
 			if (ddXaxis.Text == "Date")
 			{
 				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
@@ -278,10 +279,13 @@ namespace WinApp.Forms
 				case CalculationType.standard:
 					result = values[0];
 					break;
-				case CalculationType.firstInPercentageOfNext:
-					result = values[0] * 100 / values[1];
-					break;
-				case CalculationType.eff:
+                case CalculationType.firstInPercentageOfNext:
+                    result = values[0] * 100 / values[1];
+                    break;
+                case CalculationType.firstDividedOnNext:
+                    result = values[0] / values[1];
+                    break;
+                case CalculationType.eff:
 					BATTLES = values[0]; 
 					DAMAGE = values[1]; 
 					SPOT = values[2]; 
@@ -478,8 +482,8 @@ namespace WinApp.Forms
 						if (chartType.totals)
 							chartVal = Math.Round(CalcChartSeriesPointValue(values, chartType.calcType, defaultTier), decimals); 
 						else
-							chartVal = Convert.ToDouble(dr[0]);
-						axisYminimum = SetYaxisLowestValue(chartVal);
+                            chartVal = Convert.ToDouble(dr[0]);
+                        //axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal);
 					}
 				}
@@ -487,7 +491,7 @@ namespace WinApp.Forms
 			dtChart.Clear();
 			dtCurrent.Clear();
 
-			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
+            //ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
 		}
 
 		private void DrawChartWN8(string tankName, string chartSerie, string chartOrder, string chartMode)
@@ -631,12 +635,12 @@ namespace WinApp.Forms
 					if (step % stepMod == 0 || step == 0)
 					{
 						chartVal = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), decimals);
-						axisYminimum = SetYaxisLowestValue(chartVal);
+						//axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal); // Use battle count
 					}
 				}
 			}
-			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
+			//ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
 			Cursor = Cursors.Default;
 		}
 
@@ -796,22 +800,6 @@ namespace WinApp.Forms
 			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
 			chartValues.Add(new ChartType() { name = "Win Rate", col = chartCol, calcType = CalculationType.firstInPercentageOfNext });
 
-			// Efficiency
-			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "dmg", firstValCol = "dmg", battleValCol = "dmg" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "spot", firstValCol = "spotted", battleValCol = "spotted" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "frags", firstValCol = "frags", battleValCol = "frags" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "def", firstValCol = "def", battleValCol = "def" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "cap", firstValCol = "cap", battleValCol = "cap" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "t.tier * ptb.battles", firstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
-			chartValues.Add(new ChartType() { name = "EFF", col = chartCol, calcType = CalculationType.eff });
-
-			// Efficiency per battle
-			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "eff" });
-			chartValues.Add(new ChartType() { name = "EFF per battle", col = chartCol, totals = false });
-
 			// WN8
 			chartCol = new List<ChartTypeCols>();
 			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
@@ -846,21 +834,54 @@ namespace WinApp.Forms
 			chartCol.Add(new ChartTypeCols() { currentValCol = "wn7" });
 			chartValues.Add(new ChartType() { name = "WN7 per battle", col = chartCol, totals=false });
 
-			// XP
+            // Efficiency
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "dmg", firstValCol = "dmg", battleValCol = "dmg" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "spot", firstValCol = "spotted", battleValCol = "spotted" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "frags", firstValCol = "frags", battleValCol = "frags" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "def", firstValCol = "def", battleValCol = "def" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "cap", firstValCol = "cap", battleValCol = "cap" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "t.tier * ptb.battles", firstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
+            chartValues.Add(new ChartType() { name = "EFF", col = chartCol, calcType = CalculationType.eff });
+
+            // Efficiency per battle
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { currentValCol = "eff" });
+            chartValues.Add(new ChartType() { name = "EFF per battle", col = chartCol, totals = false });
+
+            // XP
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { currentValCol = "xp" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+            chartValues.Add(new ChartType() { name = "XP Average", col = chartCol, calcType = CalculationType.firstDividedOnNext });
+			
+            // XP
 			chartCol = new List<ChartTypeCols>();
 			chartCol.Add(new ChartTypeCols() { currentValCol = "xp" });
-			chartValues.Add(new ChartType() { name = "XP", col = chartCol });
+			chartValues.Add(new ChartType() { name = "XP Total", col = chartCol });
 			
-			// Damage
-			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "dmg" });
-			chartValues.Add(new ChartType() { name = "Damage", col = chartCol });
-
 			// Average damage
 			chartCol = new List<ChartTypeCols>();
 			chartCol.Add(new ChartTypeCols() { currentValCol = "dmg" });
 			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
-			chartValues.Add(new ChartType() { name = "Damage Average", col = chartCol, calcType = CalculationType.firstInPercentageOfNext });
+			chartValues.Add(new ChartType() { name = "Damage Average", col = chartCol, calcType = CalculationType.firstDividedOnNext });
+
+            // Damage
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { currentValCol = "dmg" });
+            chartValues.Add(new ChartType() { name = "Damage Total", col = chartCol });
+
+            // Frag Average
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { currentValCol = "frags" });
+            chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+            chartValues.Add(new ChartType() { name = "Frags Average", col = chartCol, calcType = CalculationType.firstDividedOnNext });
+
+            // Frag Count
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { currentValCol = "frags" });
+            chartValues.Add(new ChartType() { name = "Frags Total", col = chartCol });
 
 			// Battle count
 			chartCol = new List<ChartTypeCols>();
@@ -882,10 +903,6 @@ namespace WinApp.Forms
 			chartCol.Add(new ChartTypeCols() { currentValCol = "losses", firstValCol = "defeat", battleValCol = "defeat" });
 			chartValues.Add(new ChartType() { name = "Defeat Count", col = chartCol });
 
-			// Frag Count
-			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "frags" });
-			chartValues.Add(new ChartType() { name = "Frag Count", col = chartCol });
 
 		}
 
@@ -897,6 +914,18 @@ namespace WinApp.Forms
         private void ddMode_TextChanged(object sender, EventArgs e)
         {
             CheckAddButton();
+        }
+
+        private void chkBullet_Click(object sender, EventArgs e)
+        {
+            if (btnAddChart.Text == "Refresh")
+                DrawChart();
+        }
+
+        private void chkSpline_Click(object sender, EventArgs e)
+        {
+            if (btnAddChart.Text == "Refresh")
+                DrawChart();
         }
 
 

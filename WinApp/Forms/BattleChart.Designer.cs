@@ -34,6 +34,7 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.BattleChartTheme = new BadForm();
+            this.chkSpline = new BadCheckBox();
             this.ddMode = new BadDropDownBox();
             this.badLabel5 = new BadLabel();
             this.chkBullet = new BadCheckBox();
@@ -56,6 +57,7 @@
             // BattleChartTheme
             // 
             this.BattleChartTheme.BackColor = System.Drawing.Color.Fuchsia;
+            this.BattleChartTheme.Controls.Add(this.chkSpline);
             this.BattleChartTheme.Controls.Add(this.ddMode);
             this.BattleChartTheme.Controls.Add(this.badLabel5);
             this.BattleChartTheme.Controls.Add(this.chkBullet);
@@ -83,13 +85,25 @@
             this.BattleChartTheme.MainArea = mainAreaClass1;
             this.BattleChartTheme.Name = "BattleChartTheme";
             this.BattleChartTheme.Resizable = true;
-            this.BattleChartTheme.Size = new System.Drawing.Size(895, 496);
+            this.BattleChartTheme.Size = new System.Drawing.Size(948, 496);
             this.BattleChartTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemExitImage")));
             this.BattleChartTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemMaximizeImage")));
             this.BattleChartTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("BattleChartTheme.SystemMinimizeImage")));
             this.BattleChartTheme.TabIndex = 0;
             this.BattleChartTheme.Text = "Chart";
             this.BattleChartTheme.TitleHeight = 26;
+            // 
+            // chkSpline
+            // 
+            this.chkSpline.BackColor = System.Drawing.Color.Transparent;
+            this.chkSpline.Checked = false;
+            this.chkSpline.Image = ((System.Drawing.Image)(resources.GetObject("chkSpline.Image")));
+            this.chkSpline.Location = new System.Drawing.Point(774, 38);
+            this.chkSpline.Name = "chkSpline";
+            this.chkSpline.Size = new System.Drawing.Size(66, 23);
+            this.chkSpline.TabIndex = 21;
+            this.chkSpline.Text = "Spline";
+            this.chkSpline.Click += new System.EventHandler(this.chkSpline_Click);
             // 
             // ddMode
             // 
@@ -124,6 +138,7 @@
             this.chkBullet.Size = new System.Drawing.Size(62, 23);
             this.chkBullet.TabIndex = 18;
             this.chkBullet.Text = "Bullet";
+            this.chkBullet.Click += new System.EventHandler(this.chkBullet_Click);
             // 
             // lblFooter
             // 
@@ -165,9 +180,9 @@
             this.btnClearChart.BlackButton = false;
             this.btnClearChart.Checked = false;
             this.btnClearChart.Image = null;
-            this.btnClearChart.Location = new System.Drawing.Point(833, 38);
+            this.btnClearChart.Location = new System.Drawing.Point(891, 38);
             this.btnClearChart.Name = "btnClearChart";
-            this.btnClearChart.Size = new System.Drawing.Size(47, 23);
+            this.btnClearChart.Size = new System.Drawing.Size(42, 23);
             this.btnClearChart.TabIndex = 14;
             this.btnClearChart.Text = "Clear";
             this.btnClearChart.ToolTipText = "";
@@ -223,9 +238,9 @@
             this.btnAddChart.BlackButton = false;
             this.btnAddChart.Checked = false;
             this.btnAddChart.Image = null;
-            this.btnAddChart.Location = new System.Drawing.Point(780, 38);
+            this.btnAddChart.Location = new System.Drawing.Point(843, 38);
             this.btnAddChart.Name = "btnAddChart";
-            this.btnAddChart.Size = new System.Drawing.Size(47, 23);
+            this.btnAddChart.Size = new System.Drawing.Size(42, 23);
             this.btnAddChart.TabIndex = 8;
             this.btnAddChart.Text = "Add";
             this.btnAddChart.ToolTipText = "";
@@ -264,6 +279,7 @@
             chartArea1.AxisX.LineColor = System.Drawing.Color.Silver;
             chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.DimGray;
             chartArea1.AxisX.TitleForeColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.IsStartedFromZero = false;
             chartArea1.AxisY.LabelStyle.ForeColor = System.Drawing.Color.Silver;
             chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
             chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.DimGray;
@@ -298,7 +314,7 @@
             this.ChartingMain.Legends.Add(legend1);
             this.ChartingMain.Location = new System.Drawing.Point(5, 67);
             this.ChartingMain.Name = "ChartingMain";
-            this.ChartingMain.Size = new System.Drawing.Size(883, 397);
+            this.ChartingMain.Size = new System.Drawing.Size(936, 397);
             this.ChartingMain.TabIndex = 0;
             this.ChartingMain.Text = "chart1";
             this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
@@ -308,7 +324,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Fuchsia;
-            this.ClientSize = new System.Drawing.Size(895, 496);
+            this.ClientSize = new System.Drawing.Size(948, 496);
             this.Controls.Add(this.BattleChartTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -344,6 +360,7 @@
 		private BadCheckBox chkBullet;
         private BadDropDownBox ddMode;
         private BadLabel badLabel5;
+        private BadCheckBox chkSpline;
 
 
 
