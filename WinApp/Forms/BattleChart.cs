@@ -42,13 +42,15 @@ namespace WinApp.Forms
 			public List<ChartTypeCols> col;							// witch columns to be used to calculate values
 		}
 
-		string ddTankList = "";
+        string ddTankList = "";
 		string ddChartList = "";
-		int initPlayerTankId = 0;
+        string ddModeList = "( All Modes ),";
+        int initPlayerTankId = 0;
 		int decimals = 3;
 		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
 		private double axisYminimum = 999999999;
 		private List<ChartType> chartValues = new List<ChartType>(); // List of all available chart types 
+        private List<BattleHelper.MainBattleModeItem> mainBattleModes = BattleHelper.GetMainBattleModes();
 
 		public BattleChartTier(int playerTankId = 0)
 		{
@@ -101,7 +103,13 @@ namespace WinApp.Forms
 				ddChartList += c.name + ",";
 			}
 			ddChartList = ddChartList.Substring(0, ddChartList.Length - 1); // Remove last comma
-			// Chart layou
+            // DropDown Modes
+            foreach (BattleHelper.MainBattleModeItem mode in mainBattleModes)
+            {
+                ddModeList += mode.ModeName + ",";
+            }
+            ddModeList = ddModeList.Substring(0, ddModeList.Length - 1); // Remove last comma
+			// Chart layout
 			Font letterType = new Font("MS Sans Serif", 10, GraphicsUnit.Pixel);
 			Color defaultColor = ColorTheme.ControlFont;
 			ChartArea area = ChartingMain.ChartAreas[0];
@@ -179,8 +187,13 @@ namespace WinApp.Forms
 			string tankName = ddTank.Text;
 			if (tankName == "( All Tanks )") tankName = "All Tanks";
 			string selectedChartValue = ddValue.Text;
-			string chartSerie = tankName + " - " + selectedChartValue;
+            string chartSerie = GetChartSeriesName();
 			string chartOrder = "";
+            // Get battle mode, set "" if unknown = "All Modes"
+            BattleHelper.MainBattleModeItem mainBattleModeItem = BattleHelper.GetMainBattleMode(ddMode.Text);
+            string chartMode = "";
+            if (mainBattleModeItem != null)
+                chartMode = BattleHelper.GetSQLMainBattleMode(mainBattleModeItem.Mode);
 			// Check if value selected
 			if (ddValue.Text == "")
 			{
@@ -243,10 +256,10 @@ namespace WinApp.Forms
 			// Special calculations for calculated columns
 			switch (selectedChartValue)
 			{
-				case "WN8": DrawChartWN8(tankName, chartSerie, chartOrder); return;
+				case "WN8": DrawChartWN8(tankName, chartSerie, chartOrder, chartMode); return;
 			}
 			// Draw series in chart now
-			DrawChartSerie(tankName, chartSerie, chartOrder, chartValue);
+			DrawChartSerie(tankName, chartSerie, chartOrder, chartValue, chartMode);
 		}
 
 		private static double CalcChartSeriesPointValue(List<double> values, CalculationType calcType, double defaultTier)
@@ -297,7 +310,7 @@ namespace WinApp.Forms
 			return result;
 		}
 
-		private void DrawChartSerie(string tankName, string chartSerie, string chartOrder, ChartType chartType)
+		private void DrawChartSerie(string tankName, string chartSerie, string chartOrder, ChartType chartType, string chartMode)
 		{
 			// Create sql select fields and to store values
 			string currentValCols = "";
@@ -327,7 +340,20 @@ namespace WinApp.Forms
 				bWhere = " where playerTankId=@playerTankId ";
 				DB.AddWithValue(ref ptWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref bWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+                if (chartMode != "")
+                {
+                    ptWhere += "and ptb.battleMode = '" + chartMode + "' ";
+                    bWhere += "and battleMode = '" + chartMode + "' ";
+                }
 			}
+            else
+            {
+                if (chartMode != "")
+                {
+                    ptWhere += "where ptb.battleMode = '" + chartMode + "' ";
+                    bWhere += "where battleMode = '" + chartMode + "' ";
+                }
+            }
 			// Get current values	
 			string sql =
 				"select " + currentValCols +
@@ -353,7 +379,7 @@ namespace WinApp.Forms
 					"from battle b inner join " +
 					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId inner join " +
 					"  tank t on pt.tankId = t.id " +
-					FilterPeriod(ptWhere);
+					FilterPeriod(bWhere);
 				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 				DataTable dtFirst = DB.FetchData(sql);
 				if (dtFirst.Rows.Count > 0)
@@ -464,14 +490,14 @@ namespace WinApp.Forms
 			ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
 		}
 
-		private void DrawChartWN8(string tankName, string chartSerie, string chartOrder)
+		private void DrawChartWN8(string tankName, string chartSerie, string chartOrder, string chartMode)
 		{
 			Cursor = Cursors.WaitCursor;
 			// Find playerTank current value or all tanks current value
 			string ptWhere = "";
 			string bSumWhere = "";
 			string bWhere = "";
-			if (tankName != "All Tanks")
+            if (tankName != "All Tanks")
 			{
 				int playerTankId = TankHelper.GetPlayerTankId(tankName);
 				ptWhere = " and pt.id=@playerTankId ";
@@ -481,20 +507,25 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref bSumWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 				DB.AddWithValue(ref bWhere, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			}
+            string battleModeWhere = "";
+            if (chartMode != "")
+                battleModeWhere = " and ptb.battleMode='" + chartMode + "' ";
 			string sql =
 				"select t.id as tankId, sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 				"  sum (ptb.def) as def, sum (ptb.cap) as cap, sum(wins) as wins " +
 				"from playerTankBattle ptb left join " +
-				"  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId and ptb.battleMode='15' left join " +
+                "  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId " + battleModeWhere + " left join " +
 				"  tank t on pt.tankId = t.id " +
-				"where t.expDmg is not null and ptb.battleMode='15' " + ptWhere + " " +
+				"where t.expDmg is not null " + ptWhere + " " + battleModeWhere +
 				"group by t.id ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable ptb = DB.FetchData(sql);
 			if (ddXaxis.Text == "Battle")
 			{
 				// Find first value by sutracting sum of recorded values
-				bSumWhere = "where t.expDmg is not null and b.battleMode='15'" + bSumWhere;
+                if (chartMode != "")
+                    battleModeWhere = " and b.battleMode='" + chartMode + "' ";
+				bSumWhere = "where t.expDmg is not null" + battleModeWhere + bSumWhere;
 				sql =
 					"select t.id as tankId, sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
 					"  sum (b.def) as def, sum (cap) as cap, sum(victory) as wins " +
@@ -525,10 +556,12 @@ namespace WinApp.Forms
 				}
 			}
 			// Find battles
+            if (chartMode != "")
+                battleModeWhere = " and battleMode='" + chartMode + "' ";
 			sql = 
 				"select battle.*, playerTank.tankId as tankId, battleTime as battle_time, battlesCount as battles_Count " + 
 				"from battle inner join " +
-				"  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId and battleMode='15'" +
+                "  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId " + battleModeWhere + 
 				FilterPeriod(bWhere) + " " + 
 				"order by battleTime " + chartOrder;
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
@@ -651,13 +684,21 @@ namespace WinApp.Forms
 			Code.DropDownGrid.Show(ddValue, Code.DropDownGrid.DropDownGridType.List, ddChartList);
 		}
 
+        public string GetChartSeriesName()
+        {
+            string tankName = ddTank.Text;
+            if (tankName == "( All Tanks )") tankName = "All Tanks";
+            string selectedChartValue = ddValue.Text;
+            string selectedModeValue = ddMode.Text;
+            if (selectedModeValue == "( All Modes )") selectedModeValue = "All Modes";
+            string chartSerie = tankName + " - " + selectedChartValue + " - " + selectedModeValue;
+            return chartSerie;
+        }
+
 		private void CheckAddButton()
 		{
-			string tankName = ddTank.Text;
-			if (tankName == "( All Tanks )") tankName = "All Tanks";
-			string selectedChartValue = ddValue.Text; 
-			string chartSerie = tankName + " - " + selectedChartValue;
-			// Check if already shown
+            string chartSerie = GetChartSeriesName();
+            // Check if already shown
 			string buttonText = "Add";
 			foreach (Series serie in ChartingMain.Series)
 			{
@@ -847,6 +888,16 @@ namespace WinApp.Forms
 			chartValues.Add(new ChartType() { name = "Frag Count", col = chartCol });
 
 		}
+
+        private void ddMode_Click(object sender, EventArgs e)
+        {
+            Code.DropDownGrid.Show(ddMode, Code.DropDownGrid.DropDownGridType.List, ddModeList);
+        }
+
+        private void ddMode_TextChanged(object sender, EventArgs e)
+        {
+            CheckAddButton();
+        }
 
 
 	}

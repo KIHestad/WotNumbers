@@ -11,14 +11,43 @@ namespace WinApp.Code
 		public enum MainBattleMode
 		{
 			ModeRandom_TC = 1,
-			ModeTeam = 2,
-			ModeHistorical = 3,
-			ModeSkirmishes = 4,
-			ModeSpecial = 5,
-			ModeStronghold = 6,
-			ModeTeamRanked = 7,
-			ModeGlobalMap = 8,
+            ModeHistorical = 3,
+            ModeTeam = 2,
+            ModeTeamRanked = 7,
+            ModeGlobalMap = 8,
+            ModeSkirmishes = 4,
+            ModeStronghold = 6,
+            ModeSpecial = 5,
 		}
+
+        public class MainBattleModeItem
+        {
+            public MainBattleMode Mode {get; set;}
+            public string ModeName {get; set;}
+        }
+
+        public static List<MainBattleModeItem> GetMainBattleModes()
+        {
+            List<MainBattleModeItem> manBattleModes = new List<MainBattleModeItem>();
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeRandom_TC, ModeName = "Random" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeHistorical, ModeName = "Historical" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeTeam, ModeName = "Team: Unranked" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeTeamRanked, ModeName = "Team: Ranked" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeGlobalMap, ModeName = "Global Map" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeSkirmishes, ModeName = "Skirmishes" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeStronghold, ModeName = "Stronghold" });
+            manBattleModes.Add(new MainBattleModeItem() { Mode = MainBattleMode.ModeSpecial, ModeName = "Special Events" });
+            return manBattleModes;
+        }
+
+        public static MainBattleModeItem GetMainBattleMode (string modeName)
+        {
+            MainBattleModeItem mainBattleMode = null;
+            List<MainBattleModeItem> mainBattleModes = GetMainBattleModes();
+            if (mainBattleModes.Where(b => b.ModeName == modeName).Count() > 0)
+                mainBattleMode = mainBattleModes.Where(b => b.ModeName == modeName).First();
+            return mainBattleMode;
+        }
 
 		public static string GetSQLMainBattleMode(MainBattleMode mainBattleMode)
 		{
@@ -26,21 +55,20 @@ namespace WinApp.Code
 			{
 				case MainBattleMode.ModeRandom_TC:
 					return "15";
-				case MainBattleMode.ModeTeam:
+                case MainBattleMode.ModeHistorical:
+                    return "Historical";
+                case MainBattleMode.ModeTeam:
 					return "7";
-				case MainBattleMode.ModeHistorical:
-					return "Historical";
-				case MainBattleMode.ModeSkirmishes:
+                case MainBattleMode.ModeTeamRanked:
+                    return "7Ranked";
+                case MainBattleMode.ModeGlobalMap:
+                    return "GlobalMap";
+                case MainBattleMode.ModeSkirmishes:
 					return "Skirmishes";
-				case MainBattleMode.ModeSpecial:
+                case MainBattleMode.ModeStronghold:
+                    return "Stronghold";
+                case MainBattleMode.ModeSpecial:
 					return "Special";
-				case MainBattleMode.ModeStronghold:
-					return "Stronghold";
-				case MainBattleMode.ModeTeamRanked:
-					return "7Ranked";
-				case MainBattleMode.ModeGlobalMap:
-					return "GlobalMap";
-
 			}
 			return "";
 		}
