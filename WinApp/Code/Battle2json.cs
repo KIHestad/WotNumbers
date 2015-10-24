@@ -1081,7 +1081,7 @@ namespace WinApp.Code
 			stopWatch.Stop();
 		}
 
-        private int? GetMaxBattleTier(int battleId)
+        private static int? GetMaxBattleTier(int battleId)
         {
             // TODO
             return null;
