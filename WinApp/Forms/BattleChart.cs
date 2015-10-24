@@ -928,6 +928,12 @@ namespace WinApp.Forms
                 DrawChart();
         }
 
+        private void ddPeriod_TextChanged(object sender, EventArgs e)
+        {
+            if (btnAddChart.Text == "Refresh")
+                DrawChart();
+        }
+
 
 	}
 }

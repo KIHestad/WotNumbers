@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 252; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 254; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2277,6 +2277,16 @@ namespace WinApp.Code
 					break;
                 case 252:
                     RunWotApi = true;
+                    break;
+                case 253:
+                    mssql = "ALTER TABLE battle ADD maxBattleTier int NULL;";
+					sqlite = mssql;
+                    break;
+                case 254:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+                        "VALUES (532, 2, 140, 'battle.maxBattleTier', 'Max Tier', 'Highest tier on any tank participated in battle', 'Battle', 47, 'Int', NULL); ";
+                    sqlite = mssql;
                     break;
 			}
 			string sql = "";

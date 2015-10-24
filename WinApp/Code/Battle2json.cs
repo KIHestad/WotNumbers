@@ -815,7 +815,7 @@ namespace WinApp.Code
 								{
 									playerPlatoonParticipants = platoon.FindAll(p => p.platoonID == playerPlatoonId).Count;
 								}
-								// Update battle with enhanced values from players veicle section
+                                // Update battle with enhanced values from players veicle section
 								sql =
 									"update battle set " +
 									"  enemyClanAbbrev=@enemyClanAbbrev, " +
@@ -830,7 +830,8 @@ namespace WinApp.Code
 									"  survivedteam=@survivedteam, " +
 									"  survivedenemy=@survivedenemy, " +
 									"  fragsteam=@fragsteam, " +
-									"  fragsenemy=@fragsenemy " +
+									"  fragsenemy=@fragsenemy, " +
+                                    "  maxBattleTier=@maxBattleTier " +
 									"where id=@battleId;";
 								// Clan info
 								if (!getEnemyClan || enemyClanDBID[enemyTeam] == 0)
@@ -867,6 +868,12 @@ namespace WinApp.Code
 									DB.AddWithValue(ref sql, "@killedByPlayerName", killedByPlayerName, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@killedByAccountId", killedByAccountId, DB.SqlDataType.Int);
 								}
+                                // Max Battle Tier
+                                int? maxBattleTier = GetMaxBattleTier(battleId);
+                                if (maxBattleTier == null)
+                                    DB.AddWithValue(ref sql, "@maxBattleTier", DBNull.Value, DB.SqlDataType.Int);
+                                else
+                                    DB.AddWithValue(ref sql, "@maxBattleTier", maxBattleTier, DB.SqlDataType.Int);
 								// Platoon
 								DB.AddWithValue(ref sql, "@platoonParticipants", playerPlatoonParticipants, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@battleResultMode", battleResultMode, DB.SqlDataType.VarChar);
@@ -1073,5 +1080,11 @@ namespace WinApp.Code
 			Log.AddToLogBuffer(String.Format(" > > IronPython ready to read battle files"));
 			stopWatch.Stop();
 		}
+
+        private int? GetMaxBattleTier(int battleId)
+        {
+            // TODO
+            return null;
+        }
 	}
 }

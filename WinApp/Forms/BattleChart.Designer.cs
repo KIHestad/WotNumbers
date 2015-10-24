@@ -161,6 +161,7 @@
             this.ddPeriod.Size = new System.Drawing.Size(75, 23);
             this.ddPeriod.TabIndex = 16;
             this.ddPeriod.Text = "( All )";
+            this.ddPeriod.TextChanged += new System.EventHandler(this.ddPeriod_TextChanged);
             this.ddPeriod.Click += new System.EventHandler(this.ddPeriod_Click);
             // 
             // badLabel4
