@@ -180,6 +180,7 @@
     </Compile>
     <Compile Include="Code\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
+    <Compile Include="Code\UtilSecurity.cs" />
     <Compile Include="Code\vBAddict.cs" />
     <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Code\XmlHelper.cs" />

@@ -34,11 +34,19 @@ namespace WinApp.Code
 		{
 			// Get json data from Wot Numbers Web server API
 			string result = "";
-			string url = "http://wotnumbers.com/Api/CheckForNewVersion.aspx?player=@player&server=@server&version=@version";
-			url = url.Replace("@player", Config.Settings.playerName);
-			url = url.Replace("@server", Config.Settings.playerServer);
-			url = url.Replace("@version", AppVersion.AssemblyVersion);
-			Application.DoEvents(); // TODO: testing freeze-problem running API requests
+			//OLD - clear text
+            //string url = "http://wotnumbers.com/Api/CheckForNewVersion.aspx?player=@player&server=@server&version=@version";
+            //url = url.Replace("@player", Config.Settings.playerName);
+			//url = url.Replace("@server", Config.Settings.playerServer);
+			//url = url.Replace("@version", AppVersion.AssemblyVersion);
+
+            //NEW - ENCRYPTED
+            //string url = "http://localhost:50509/Api/CheckForNewVersion.aspx?id=@id"; // FOR TEST
+            string url = "http://wotnumbers.com/Api/CheckForNewVersion.aspx?id=@id";
+            string id = Config.Settings.playerName + '&' + Config.Settings.playerServer + '&' + AppVersion.AssemblyVersion;
+            id = UtilSecurity.Encrypt(id);
+            url = url.Replace("@id", id);
+			Application.DoEvents(); 
 			try
 			{
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);

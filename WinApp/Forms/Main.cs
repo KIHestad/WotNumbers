@@ -2496,7 +2496,7 @@ namespace WinApp.Forms
 					rowTotals["killedCountToolTip"] = 0;
 					IEnumerable<string> nonTotalsCols = new List<string> 
 					{ 
-						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  
+						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  "Max Tier",
 						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R"
 					};
 					IEnumerable<string> countCols = new List<string> 

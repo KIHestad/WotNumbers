@@ -1084,7 +1084,15 @@ namespace WinApp.Code
         private static int? GetMaxBattleTier(int battleId)
         {
             // TODO
-            return null;
+            int? maxBattleTier = null;
+            string sql =
+                "select max(tank.tier) " +
+                "from battlePlayer left join tank on battleplayer.tankid=tank.id " +
+                "where battleid=" + battleId;
+            DataTable dt = DB.FetchData(sql);
+            if (dt.Rows.Count > 0)
+                maxBattleTier = Convert.ToInt32(dt.Rows[0][0]);
+            return maxBattleTier;
         }
 	}
 }
