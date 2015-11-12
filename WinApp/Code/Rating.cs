@@ -497,7 +497,73 @@ namespace WinApp.Code
 			// Return value
 			return EFF;
 		}
-		
+
+        public static double CalcBattleWR(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        {
+            double WR = 0;
+            if (battleMode == "")
+                battleMode = "%";
+            string sql =
+                "select battlesCount as battles, victory as wins " +
+                "from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
+                "  tank on playerTank.tankId = tank.id " +
+                tankJoin + " " +
+                "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+            DataTable dtBattles = DB.FetchData(sql);
+            if (dtBattles.Rows.Count > 0)
+            {
+                double BATTLES = 0;
+                double WINS = 0;
+                foreach (DataRow stats in dtBattles.Rows)
+                {
+                    BATTLES += Rating.ConvertDbVal2Double(stats["battles"]);
+                    WINS += Rating.ConvertDbVal2Double(stats["wins"]);
+                }
+                if (BATTLES > 0)
+                {
+                    WR = Math.Round(WINS / BATTLES * 100, 2);
+                }
+            }
+            return WR;
+        }
+
+        public static double CalcTankWR(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        {
+            double WR = 0;
+            if (battleMode == "")
+                battleMode = "%";
+            string sql = 
+                "select battles, wins " +
+                "from playerTankBattle " +
+                "where playerTankId IN " +
+                "  (select distinct playerTank.id " +
+                "  from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
+                "    tank on playerTank.tankId = tank.id " +
+                "  " + tankJoin + " " +
+                "  where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + ")";
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+            DataTable dtBattles = DB.FetchData(sql);
+            if (dtBattles.Rows.Count > 0)
+            {
+                double BATTLES = 0;
+                double WINS = 0;
+                foreach (DataRow stats in dtBattles.Rows)
+                {
+                    BATTLES += Rating.ConvertDbVal2Double(stats["battles"]);
+                    WINS += Rating.ConvertDbVal2Double(stats["wins"]);
+                }
+                if (BATTLES > 0)
+                {
+                    WR = Math.Round(WINS / BATTLES * 100, 2);
+                }
+            }
+            return WR;
+        }
+
+
 		#endregion
 					
 		#region Color

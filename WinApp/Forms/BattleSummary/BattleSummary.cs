@@ -26,6 +26,8 @@ namespace WinApp.Forms
 		private int wn7avg = 0;
 		private int eff = 0;
 		private int effavg = 0;
+        private double wr = 0;
+        private double wravg = 0;
 		// team datagrid and scrollbar and params
 		private DataGridView dgvTeam1 = new DataGridView();
 		private BadScrollBar scroll = new BadScrollBar();
@@ -121,6 +123,9 @@ namespace WinApp.Forms
 			scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
 			// Init placement
 			PlaceControl(dgvTeam1, GridLocation.Whole);
+            // Add right click menu to grid
+            dgvTeam1.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
+            CreateDataGridContextMenu();
 		}
 
 		private void chkAvg_Click(object sender, EventArgs e)
@@ -184,6 +189,87 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+        #region Grid Right Click
+
+        private void CreateDataGridContextMenu()
+        {
+            // Datagrid context menu (Right click on Grid)
+            ContextMenuStrip dataGridPopup = new ContextMenuStrip();
+            dataGridPopup.Renderer = new StripRenderer();
+            dataGridPopup.BackColor = ColorTheme.ToolGrayMainBack;
+
+            // Separator item
+            ToolStripSeparator toolStripItem_Separator = new ToolStripSeparator();
+
+            // Wargaming player profile item
+            ToolStripMenuItem toolStripItem_WargamingPlayerLookup = new ToolStripMenuItem("Wargaming Player Profile");
+            toolStripItem_WargamingPlayerLookup.Click += new EventHandler(ToolStripItem_WargamingPP_Click);
+
+            // WotLabs player profile item
+
+            ToolStripMenuItem toolStripItem_WotLabsPlayerLookup = new ToolStripMenuItem("WotLabs Player Profile");
+            toolStripItem_WotLabsPlayerLookup.Click += new EventHandler(ToolStripItem_WotLabsPP_Click);
+
+            // Add cancel events
+            dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
+
+            //Add to main context menu
+            dataGridPopup.Items.AddRange(new ToolStripItem[] 
+			{ 
+			    toolStripItem_WargamingPlayerLookup,
+                toolStripItem_WotLabsPlayerLookup
+			});
+            //Assign to datagridview
+            dgvTeam1.ContextMenuStrip = dataGridPopup;
+        }
+
+        private int dataGridRightClickCol = -1;
+        private int dataGridRightClickRow = -1;
+        private DataGridView dataGridRightClick = null;
+        private void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            try
+            {
+                dataGridRightClick = (DataGridView)sender;
+                if (e.RowIndex != -1 && e.ColumnIndex != -1)
+                {
+                    dataGridRightClickRow = e.RowIndex;
+                    dataGridRightClickCol = e.ColumnIndex;
+                    dataGridRightClick.CurrentCell = dataGridRightClick.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex);
+                if (Config.Settings.showDBErrors)
+                    MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
+            }
+        }
+
+        private void DataGridMainPopup_Opening(object sender, CancelEventArgs e)
+        {
+            if (dataGridRightClickRow == -1)
+            {
+                e.Cancel = true; // Close if no valid cell is clicked
+            }
+        }
+
+
+        private void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
+        {
+            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
+            ExternalPlayerProfile.Wargaming(playerName, playerAccountId);
+        }
+
+        private void ToolStripItem_WotLabsPP_Click(object sender, EventArgs e)
+        {
+            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+            ExternalPlayerProfile.WotLabs(playerName);
+        }
+
+        #endregion
 
 		#region My result
 
@@ -249,7 +335,8 @@ namespace WinApp.Forms
 				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", avgBattleCount));
 				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", avgBattleCount, false));
 				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", avgBattleCount, false));
-				// Damage done/received
+				
+                // Damage done/received
 				string dmgDoneReceived = "INF";
 				double dmgDR = Convert.ToDouble(drVal["dmgReceived"]);
 				Image dmgDRImage = new Bitmap(1, 1);
@@ -318,15 +405,18 @@ namespace WinApp.Forms
 				wn8avg = Convert.ToInt32(Rating.CalculatePlayerTotalWN8(battleMode));
 				wn7avg = Convert.ToInt32(Rating.CalcTotalWN7(battleMode));
 				effavg = Convert.ToInt32(Rating.CalcTotalEFF(battleMode));
+                wravg = Rating.CalcTankWR(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Calg current battle ratings
 				wn8 = Convert.ToInt32(Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
 				wn7 = Convert.ToInt32(Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
 				eff = Convert.ToInt32(Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wr = Rating.CalcBattleWR(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
 				dtRating.Rows.Add(GetValues(dtRating, wn8, wn8avg, "WN8"));
 				dtRating.Rows.Add(GetValues(dtRating, wn7, wn7avg, "WN7"));
 				dtRating.Rows.Add(GetValues(dtRating, eff, effavg, "EFF"));
+                dtRating.Rows.Add(GetValues(dtRating, wr, wravg, "Win Rate"));
 
 				// Done;
 				dtRating.AcceptChanges();
@@ -618,6 +708,21 @@ namespace WinApp.Forms
 			return drNew;
 		}
 
+        private DataRow GetValues(DataTable dt, double val, double avg, string rowHeader)
+        {
+            // Image number:
+            // 0 = higher (green)
+            // 1 = equal (orange)
+            // 2 = lower (red)
+            DataRow drNew = dt.NewRow();
+            drNew["Parameter"] = rowHeader;
+            drNew["Image"] = GetIndicator(val, avg);
+            drNew["Result"] = val.ToString();
+            drNew["Average"] = avg.ToString();
+            return drNew;
+        }
+
+
 		private Image GetIndicator(double value, double compareTo, bool showIcon = true, bool higherIsBest = true)
 		{
 			if (!showIcon)
@@ -685,8 +790,11 @@ namespace WinApp.Forms
 			dgvRating.Rows[0].Cells["Average"].Style.ForeColor = Rating.WN8color(wn8avg);
 			dgvRating.Rows[1].Cells["Result"].Style.ForeColor = Rating.WN7color(wn7);
 			dgvRating.Rows[1].Cells["Average"].Style.ForeColor = Rating.WN7color(wn7avg);
-			dgvRating.Rows[2].Cells["Result"].Style.ForeColor = Rating.EffColor(eff);
-			dgvRating.Rows[2].Cells["Average"].Style.ForeColor = Rating.EffColor(effavg);
+            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = Rating.EffColor(eff);
+            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = Rating.EffColor(effavg);
+            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = Rating.WinRateColor(wr);
+            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = Rating.WinRateColor(wravg);
+
 		}
 
 		private void dgvWN8_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -877,7 +985,8 @@ namespace WinApp.Forms
 				", '' as separator7 " +
 				", @CALC(battlePlayer.xp) as 'XP' " +
 				", @CALC(battlePlayer.credits) as 'Base Credit' " +
-
+                ", battlePlayer.accountId " +
+                
 				"FROM    battle INNER JOIN " +
 				"        battlePlayer ON battle.id = battlePlayer.battleId INNER JOIN " +	
 				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
@@ -888,7 +997,7 @@ namespace WinApp.Forms
 				"        map on battle.mapId = map.id INNER JOIN " +
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
 				"WHERE   playerTank.playerId=@playerid AND battlePlayer.playerTeam=@playerTeam " + battleTimeFilter + battleModeFilter + tankFilter +
-				"GROUP BY battlePlayer.name, battlePlayer.clanAbbrev " + 
+                "GROUP BY battlePlayer.name, battlePlayer.clanAbbrev, battlePlayer.accountId " + 
 				orderBy;
 			//TODO
 			if (chkSum.Checked)
@@ -913,7 +1022,7 @@ namespace WinApp.Forms
 				DataRow dr = dt.Rows[i];
 				foreach (DataColumn dc in dt.Columns)
 				{
-					if (dc.DataType != System.Type.GetType("System.String"))
+					if (dc.DataType != System.Type.GetType("System.String") && dc.ColumnName != "accountId")
 					{
 						if (dr[dc.ColumnName] != DBNull.Value && Convert.ToDouble(dr[dc.ColumnName]) == 0)
 							dr[dc.ColumnName] = DBNull.Value;

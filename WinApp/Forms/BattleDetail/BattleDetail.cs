@@ -110,6 +110,10 @@ namespace WinApp.Forms
 					team2 = 1;
 					if (team1 == 1) team2 = 2;
 				}
+                // Add right click menu to grid
+                dgvTeam1.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
+                dgvTeam2.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
+                CreateDataGridContextMenu();
 			}
 		}
 
@@ -165,6 +169,88 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+        #region Grid Right Click
+
+        private void CreateDataGridContextMenu()
+        {
+            // Datagrid context menu (Right click on Grid)
+            ContextMenuStrip dataGridPopup = new ContextMenuStrip();
+            dataGridPopup.Renderer = new StripRenderer();
+            dataGridPopup.BackColor = ColorTheme.ToolGrayMainBack;
+            
+            // Separator item
+            ToolStripSeparator toolStripItem_Separator = new ToolStripSeparator();
+
+            // Wargaming player profile item
+            ToolStripMenuItem toolStripItem_WargamingPlayerLookup = new ToolStripMenuItem("Wargaming Player Profile");
+            toolStripItem_WargamingPlayerLookup.Click += new EventHandler(ToolStripItem_WargamingPP_Click);
+
+            // WotLabs player profile item
+            
+            ToolStripMenuItem toolStripItem_WotLabsPlayerLookup = new ToolStripMenuItem("WotLabs Player Profile");
+            toolStripItem_WotLabsPlayerLookup.Click += new EventHandler(ToolStripItem_WotLabsPP_Click);
+
+            // Add cancel events
+            dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
+            
+            //Add to main context menu
+            dataGridPopup.Items.AddRange(new ToolStripItem[] 
+			{ 
+			    toolStripItem_WargamingPlayerLookup,
+                toolStripItem_WotLabsPlayerLookup
+			});
+            //Assign to datagridview
+            dgvTeam1.ContextMenuStrip = dataGridPopup;
+            dgvTeam2.ContextMenuStrip = dataGridPopup;
+        }
+
+		private int dataGridRightClickCol = -1;
+		private int dataGridRightClickRow = -1;
+        private DataGridView dataGridRightClick = null;
+		private void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			try
+			{
+                dataGridRightClick = (DataGridView)sender;
+                if (e.RowIndex != -1 && e.ColumnIndex != -1)
+				{
+					dataGridRightClickRow = e.RowIndex;
+					dataGridRightClickCol = e.ColumnIndex;
+                    dataGridRightClick.CurrentCell = dataGridRightClick.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.LogToFile(ex);
+				if (Config.Settings.showDBErrors)
+					MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
+			}
+		}
+
+		private void DataGridMainPopup_Opening(object sender, CancelEventArgs e)
+		{
+			if (dataGridRightClickRow == -1)
+			{
+				e.Cancel = true; // Close if no valid cell is clicked
+			}
+		}
+
+
+        private void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
+		{
+            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
+            ExternalPlayerProfile.Wargaming(playerName, playerAccountId);
+		}
+
+        private void ToolStripItem_WotLabsPP_Click(object sender, EventArgs e)
+        {
+            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+            ExternalPlayerProfile.WotLabs(playerName);
+        }
+
+        #endregion
 
 		#region My Result
 
@@ -929,7 +1015,7 @@ namespace WinApp.Forms
 					", tkills as 'Team Kills' ";
 
 			string sql =
-				"select battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
+                "select battlePlayer.accountId, battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
 				fortResourcesFields +
 				enhancedFields +
 				", deathReason as 'Dead', tank.id as 'TankId', " + team + " as 'Team' " +
@@ -997,6 +1083,7 @@ namespace WinApp.Forms
 			// Freeze first column
 			dgv.Columns[0].Frozen = true;
 			// Hide
+            dgv.Columns["AccountId"].Visible = false;
 			dgv.Columns["TankId"].Visible = false;
 			dgv.Columns["Dead"].Visible = false;
 			dgv.Columns["Team"].Visible = false;

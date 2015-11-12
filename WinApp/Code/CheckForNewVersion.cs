@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -14,13 +15,13 @@ namespace WinApp.Code
 	[Serializable()]
 	public class VersionInfo
 	{
-		public bool      maintenanceMode { get; set; }				// maintenance mode - currently not operative
+		public bool      maintenanceMode { get; set; }			// maintenance mode - currently not operative
 		public bool      error { get; set; }				    // true if fetch = OK
 		public string    errorMsg { get; set; }				    // error message
 		public string    version { get; set; }					// version in format X.X.X
-		public string    downloadURL { get; set; }					// Full URL path for download file
+		public string    id { get; set; }					    // Full URL path for download file
 		public string    downloadFile { get; set; }		        // File name for downloaded file to be created
-		public string    message { get; set; }						// message to display
+		public string    message { get; set; }					// message to display
 		public DateTime  messageDate	{ get; set; }			// message published date
 		public DateTime  runWotApi { get; set; }				// force run wot api
 		public DateTime  runForceDossierFileCheck { get; set; }	// force run full force dossier file check
@@ -45,7 +46,8 @@ namespace WinApp.Code
             string url = "http://wotnumbers.com/Api/CheckForNewVersion.aspx?id=@id";
             string id = Config.Settings.playerName + '&' + Config.Settings.playerServer + '&' + AppVersion.AssemblyVersion;
             id = UtilSecurity.Encrypt(id);
-            url = url.Replace("@id", id);
+            id = HttpUtility.UrlEncode(id);
+            url = url.Replace("@id",  id);
 			Application.DoEvents(); 
 			try
 			{

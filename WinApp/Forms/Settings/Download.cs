@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 using WinApp.Code;
 
@@ -41,11 +42,12 @@ namespace WinApp.Forms
 				File.Delete(filename);
 			try
 			{
-				webClient.DownloadFileAsync(new Uri(vi.downloadURL), filename);
+                string downloadURL = UtilSecurity.Decrypt(HttpUtility.UrlDecode(vi.id));
+                webClient.DownloadFileAsync(new Uri(downloadURL), filename);
 			}
 			catch (Exception ex)
 			{
-				Code.MsgBox.Show("Download prosess stopped due to error, or was terminated.","Download process stopped", this);
+				Code.MsgBox.Show("The download prosess was stopped due to an error, or it was terminated.","Download process stopped", this);
 				Log.LogToFile(ex);
 				this.Close();
 			}
