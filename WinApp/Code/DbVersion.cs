@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 255; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 257; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2291,6 +2291,16 @@ namespace WinApp.Code
                 case 255:
                     mssql =
                         "UPDATE columnSelection SET colName = 'CAST(battle.maxBattleTier AS FLOAT)', colDataType = 'Float' WHERE id = 532;";
+                    sqlite = mssql;
+                    break;
+                case 256:
+                    mssql = "ALTER TABLE battle ADD damageRating float NOT NULL default 0; ";
+                    sqlite = "ALTER TABLE battle ADD damageRating real NOT NULL default 0; ";
+                    break;
+                case 257:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+                        "VALUES (223, 2, 305, 'CAST(battle.damageRating as FLOAT) / 100', 'Rank Dmg Progress', 'Progress of rank by average damage, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
                     sqlite = mssql;
                     break;
 			}

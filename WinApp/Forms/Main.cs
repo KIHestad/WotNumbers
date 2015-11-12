@@ -2513,7 +2513,7 @@ namespace WinApp.Forms
 							if (!nonTotalsCols.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
 							{
 								// looping through datatable for every row per column and multiply with battlesCountToolTip to get correct sum when several battles recorded on one row
-								int sum = 0;
+								double sum = 0;
 								if (!countCols.Contains(colListItem.name))
 								{
 									foreach (DataRow dr in dt.Rows)
@@ -2521,7 +2521,7 @@ namespace WinApp.Forms
 
 										if (dr[colListItem.name] != DBNull.Value)
 										{
-											sum += Convert.ToInt32(dr[colListItem.name]) * Convert.ToInt32(dr["battlesCountToolTip"]);
+                                            sum += Convert.ToDouble(dr[colListItem.name]) * Convert.ToDouble(dr["battlesCountToolTip"]);
 										}
 									}
 								}
@@ -2531,7 +2531,7 @@ namespace WinApp.Forms
 									{
 										if (dr[colListItem.name] != DBNull.Value)
 										{
-											sum += Convert.ToInt32(dr[colListItem.name]);
+                                            sum += Convert.ToDouble(dr[colListItem.name]);
 										}
 									}
 								}
@@ -2649,7 +2649,7 @@ namespace WinApp.Forms
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         List<string> showFloatValues = new List<string> 
 						{ 
-							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def", "Dmg C/R"
+							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def", "Dmg C/R", "Rank Dmg Progress"
 						};
                         if (groupingActive)
                         {

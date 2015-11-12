@@ -187,9 +187,17 @@ namespace WinApp.Forms
             toolStripItem_WargamingPlayerLookup.Click += new EventHandler(ToolStripItem_WargamingPP_Click);
 
             // WotLabs player profile item
-            
             ToolStripMenuItem toolStripItem_WotLabsPlayerLookup = new ToolStripMenuItem("WotLabs Player Profile");
             toolStripItem_WotLabsPlayerLookup.Click += new EventHandler(ToolStripItem_WotLabsPP_Click);
+
+            // vBAddict player profile item
+            ToolStripMenuItem toolStripItem_vBAddictPlayerLookup = new ToolStripMenuItem("vBAddict Player Profile");
+            toolStripItem_vBAddictPlayerLookup.Click += new EventHandler(ToolStripItem_vBAddictPP_Click);
+
+            // Noobemeter player profile item
+            ToolStripMenuItem toolStripItem_NoobmeterPlayerLookup = new ToolStripMenuItem("Noobmeter Player Profile");
+            toolStripItem_NoobmeterPlayerLookup.Click += new EventHandler(ToolStripItem_NoobmeterPP_Click);
+
 
             // Add cancel events
             dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
@@ -198,7 +206,10 @@ namespace WinApp.Forms
             dataGridPopup.Items.AddRange(new ToolStripItem[] 
 			{ 
 			    toolStripItem_WargamingPlayerLookup,
-                toolStripItem_WotLabsPlayerLookup
+                toolStripItem_Separator,
+                toolStripItem_vBAddictPlayerLookup, 
+                toolStripItem_WotLabsPlayerLookup,
+                toolStripItem_NoobmeterPlayerLookup
 			});
             //Assign to datagridview
             dgvTeam1.ContextMenuStrip = dataGridPopup;
@@ -248,6 +259,19 @@ namespace WinApp.Forms
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
             ExternalPlayerProfile.WotLabs(playerName);
+        }
+
+        private void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
+        {
+            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+            ExternalPlayerProfile.vBAddict(playerName);
+        }
+
+        private void ToolStripItem_NoobmeterPP_Click(object sender, EventArgs e)
+        {
+            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
+            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
+            ExternalPlayerProfile.Noobmeter(playerName, playerAccountId);
         }
 
         #endregion
