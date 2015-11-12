@@ -220,6 +220,8 @@ namespace WinApp.Code
 								colListItem.colNameSelect = "AVG(" + colName + ")"; // rating only use avg values
 							else if (colAlias == "Tier")
 								colListItem.colNameSelect = "AVG(" + colName + ")"; // only average value for tier
+                            else if (colAlias == "Max Tier")
+                                colListItem.colNameSelect = "AVG(" + colName + ")"; // only average value for max tier
 							else
 							{
 								if (groupingSum)
