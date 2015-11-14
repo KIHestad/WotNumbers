@@ -978,13 +978,17 @@ namespace WinApp.Code
 				sqlValues += ", " + battleSurvive.ToString();
 				sqlFields += ", killed "; 
 				sqlValues += ", " + killedcount.ToString();
-                // Rank by avg damage progress, only for random battles
+                // Rank by avg damage and progress (delta value), only for random battles
                 if (battleMode == BattleHelper.MainBattleMode.ModeRandom_TC)
                 {
-                    double rankDmgProgress = Convert.ToDouble(playerTankBattleNewRow["damageRating"]);
-                    rankDmgProgress -= Convert.ToDouble(playerTankBattleOldRow["damageRating"]);
+                    // Total
+                    double rankDmg = Convert.ToDouble(playerTankBattleNewRow["damageRating"]);
+                    sqlFields += ", damageRatingTotal ";
+                    sqlValues += ", " + rankDmg.ToString().Replace(",", ".");
+                    // Progress
+                    rankDmg -= Convert.ToDouble(playerTankBattleOldRow["damageRating"]);
                     sqlFields += ", damageRating ";
-                    sqlValues += ", " + rankDmgProgress.ToString().Replace(",",".");
+                    sqlValues += ", " + rankDmg.ToString().Replace(",",".");
                 }
 				// Update database
 				if (sqlFields.Length > 0)

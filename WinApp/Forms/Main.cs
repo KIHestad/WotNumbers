@@ -2433,14 +2433,14 @@ namespace WinApp.Forms
 							
 							if (!nonAvgCols.Contains(colListItem.name))
 							{
-								int count = 0;
+								double count = 0;
 								double sum = 0;
 								foreach (DataRow dr in dt.Rows)
 								{
 									if (dr[colListItem.name] != DBNull.Value)
 									{
-										count += Convert.ToInt32(dr["battlesCountToolTip"]);
-										sum += Convert.ToInt32(dr[colListItem.name]) * Convert.ToInt32(dr["battlesCountToolTip"]);
+										count += Convert.ToDouble(dr["battlesCountToolTip"]);
+										sum += Convert.ToDouble(dr[colListItem.name]) * Convert.ToDouble(dr["battlesCountToolTip"]);
 									}
 								}
 								if (count > 0)
@@ -2496,7 +2496,7 @@ namespace WinApp.Forms
 					rowTotals["killedCountToolTip"] = 0;
 					IEnumerable<string> nonTotalsCols = new List<string> 
 					{ 
-						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  "Max Tier",
+						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  "Max Tier", "Dmg Rank", 
 						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R"
 					};
 					IEnumerable<string> countCols = new List<string> 
@@ -2649,7 +2649,7 @@ namespace WinApp.Forms
 						dataGridMain.Columns[colListItem.name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         List<string> showFloatValues = new List<string> 
 						{ 
-							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def", "Dmg C/R", "Rank Dmg Progress"
+							"Exp Dmg","Exp Win Rate","Exp Spot","Exp Frags","Exp Def", "Dmg C/R", "Dmg Rank Progress", "Dmg Rank"
 						};
                         if (groupingActive)
                         {

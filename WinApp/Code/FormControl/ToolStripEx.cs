@@ -113,8 +113,7 @@ namespace WinApp.Code
 	[DebuggerNonUserCode]
 	public class StripRenderer : ToolStripProfessionalRenderer
 	{
-		public StripRenderer()
-			: base(new Code.StripLayout())
+		public StripRenderer() : base(new Code.StripLayout())
 		{
 			this.RoundedEdges = false;
 		}
@@ -122,7 +121,16 @@ namespace WinApp.Code
 		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
 		{
 			base.OnRenderItemText(e);
-			e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
+            if (e.Item.ForeColor == ColorTheme.ToolLabelHeading)
+            {
+                e.Item.Font = new Font(e.Item.Font.FontFamily, 13, GraphicsUnit.Pixel);
+            }
+            else
+            {
+                e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
+            }
 		}
+                
+
 	}
 }

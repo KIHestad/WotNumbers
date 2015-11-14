@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 257; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 263; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2301,6 +2301,39 @@ namespace WinApp.Code
                     mssql =
                         "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
                         "VALUES (223, 2, 305, 'CAST(battle.damageRating as FLOAT) / 100', 'Rank Dmg Progress', 'Progress of rank by average damage, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
+                    sqlite = mssql;
+                    break;
+                case 258:
+                    mssql = "ALTER TABLE battle ADD damageRatingTotal float NOT NULL default 0; ";
+                    sqlite = "ALTER TABLE battle ADD damageRatingTotal real NOT NULL default 0; ";
+                    break;
+                case 259:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+                        "VALUES (224, 2, 306, 'CAST(battle.damageRatingTotal as FLOAT) / 100', 'Rank by avg dmg', 'Curernt total rank by average damage after battle done, used to determine marks of Excellence', 'Rating', 47, 'Float', NULL); ";
+                    sqlite = mssql;
+                    break;
+                case 260:
+                    mssql =
+                        "UPDATE columnSelection SET name = 'Rank by Avg Dmg' WHERE id IN (224, 221) ";
+                    sqlite = mssql;
+                    break;
+                case 261:
+                    mssql =
+                        "UPDATE columnSelection SET name = 'Dmg Rank' WHERE id IN (224, 221); " +
+                        "UPDATE columnSelection SET name = 'Dmg Rank Progress' WHERE id = 223; " +
+                        "UPDATE columnSelection SET description = ''Progress of rank by average damage, used to determine Marks of Excellence'' WHERE id = 224; ";
+                    sqlite = mssql;
+                    break;
+                case 262:
+                    mssql =
+                        "UPDATE columnSelection SET position = 296 WHERE id = 223; " +
+                        "UPDATE columnSelection SET position = 297 WHERE id = 224; ";
+                    sqlite = mssql;
+                    break;
+                case 263:
+                    mssql =
+                        "UPDATE columnSelection SET description = 'Progress of rank by average damage, used to determine Marks of Excellence' WHERE id = 223; ";
                     sqlite = mssql;
                     break;
 			}

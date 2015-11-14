@@ -174,61 +174,20 @@ namespace WinApp.Forms
 
         private void CreateDataGridContextMenu()
         {
-            // Datagrid context menu (Right click on Grid)
-            ContextMenuStrip dataGridPopup = new ContextMenuStrip();
-            dataGridPopup.Renderer = new StripRenderer();
-            dataGridPopup.BackColor = ColorTheme.ToolGrayMainBack;
-            
-            // Separator item
-            ToolStripSeparator toolStripItem_Separator = new ToolStripSeparator();
-
-            // Wargaming player profile item
-            ToolStripMenuItem toolStripItem_WargamingPlayerLookup = new ToolStripMenuItem("Wargaming Player Profile");
-            toolStripItem_WargamingPlayerLookup.Click += new EventHandler(ToolStripItem_WargamingPP_Click);
-
-            // WotLabs player profile item
-            ToolStripMenuItem toolStripItem_WotLabsPlayerLookup = new ToolStripMenuItem("WotLabs Player Profile");
-            toolStripItem_WotLabsPlayerLookup.Click += new EventHandler(ToolStripItem_WotLabsPP_Click);
-
-            // vBAddict player profile item
-            ToolStripMenuItem toolStripItem_vBAddictPlayerLookup = new ToolStripMenuItem("vBAddict Player Profile");
-            toolStripItem_vBAddictPlayerLookup.Click += new EventHandler(ToolStripItem_vBAddictPP_Click);
-
-            // Noobemeter player profile item
-            ToolStripMenuItem toolStripItem_NoobmeterPlayerLookup = new ToolStripMenuItem("Noobmeter Player Profile");
-            toolStripItem_NoobmeterPlayerLookup.Click += new EventHandler(ToolStripItem_NoobmeterPP_Click);
-
-
-            // Add cancel events
-            dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
-            
-            //Add to main context menu
-            dataGridPopup.Items.AddRange(new ToolStripItem[] 
-			{ 
-			    toolStripItem_WargamingPlayerLookup,
-                toolStripItem_Separator,
-                toolStripItem_vBAddictPlayerLookup, 
-                toolStripItem_WotLabsPlayerLookup,
-                toolStripItem_NoobmeterPlayerLookup
-			});
-            //Assign to datagridview
-            dgvTeam1.ContextMenuStrip = dataGridPopup;
-            dgvTeam2.ContextMenuStrip = dataGridPopup;
+            dgvTeam1.ContextMenuStrip = ExternalPlayerProfile.MenuItems();
+            dgvTeam2.ContextMenuStrip = ExternalPlayerProfile.MenuItems();
         }
 
-		private int dataGridRightClickCol = -1;
-		private int dataGridRightClickRow = -1;
-        private DataGridView dataGridRightClick = null;
 		private void DgvTeam_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			try
 			{
-                dataGridRightClick = (DataGridView)sender;
+                // Connect the current selected datagrid 
+                ExternalPlayerProfile.dataGridRightClick = (DataGridView)sender;
                 if (e.RowIndex != -1 && e.ColumnIndex != -1)
 				{
-					dataGridRightClickRow = e.RowIndex;
-					dataGridRightClickCol = e.ColumnIndex;
-                    dataGridRightClick.CurrentCell = dataGridRightClick.Rows[dataGridRightClickRow].Cells[dataGridRightClickCol];
+                    ExternalPlayerProfile.dataGridRightClickRow = e.RowIndex;
+                    ExternalPlayerProfile.dataGridRightClick.CurrentCell = ExternalPlayerProfile.dataGridRightClick.Rows[ExternalPlayerProfile.dataGridRightClickRow].Cells[e.ColumnIndex];
 				}
 			}
 			catch (Exception ex)
@@ -238,41 +197,6 @@ namespace WinApp.Forms
 					MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
 			}
 		}
-
-		private void DataGridMainPopup_Opening(object sender, CancelEventArgs e)
-		{
-			if (dataGridRightClickRow == -1)
-			{
-				e.Cancel = true; // Close if no valid cell is clicked
-			}
-		}
-
-
-        private void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
-		{
-            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
-            ExternalPlayerProfile.Wargaming(playerName, playerAccountId);
-		}
-
-        private void ToolStripItem_WotLabsPP_Click(object sender, EventArgs e)
-        {
-            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            ExternalPlayerProfile.WotLabs(playerName);
-        }
-
-        private void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
-        {
-            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            ExternalPlayerProfile.vBAddict(playerName);
-        }
-
-        private void ToolStripItem_NoobmeterPP_Click(object sender, EventArgs e)
-        {
-            string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
-            ExternalPlayerProfile.Noobmeter(playerName, playerAccountId);
-        }
 
         #endregion
 
