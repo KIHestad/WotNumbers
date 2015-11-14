@@ -127,7 +127,7 @@ namespace WinApp.Code
             toolStripItem_WotLabsPlayerLookup.Click += new EventHandler(ToolStripItem_WotLabsPP_Click);
 
             // WoTstats.org player profile item
-            ToolStripMenuItem toolStripItem_WoTstatsPlayerLookup = new ToolStripMenuItem("WoT Stats");
+            ToolStripMenuItem toolStripItem_WoTstatsPlayerLookup = new ToolStripMenuItem("WoT stats");
             toolStripItem_WoTstatsPlayerLookup.Click += new EventHandler(ToolStripItem_WoTstatsPP_Click);
 
             // WoT-Life.com player profile item

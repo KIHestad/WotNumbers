@@ -2322,7 +2322,7 @@ namespace WinApp.Code
                     mssql =
                         "UPDATE columnSelection SET name = 'Dmg Rank' WHERE id IN (224, 221); " +
                         "UPDATE columnSelection SET name = 'Dmg Rank Progress' WHERE id = 223; " +
-                        "UPDATE columnSelection SET description = ''Progress of rank by average damage, used to determine Marks of Excellence'' WHERE id = 224; ";
+                        "UPDATE columnSelection SET description = 'Current total rank by average damage after battle done, used to determine Marks of Excellence' WHERE id = 224; ";
                     sqlite = mssql;
                     break;
                 case 262:
