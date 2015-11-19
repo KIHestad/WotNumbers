@@ -20,7 +20,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 263; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 264; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2334,6 +2334,13 @@ namespace WinApp.Code
                 case 263:
                     mssql =
                         "UPDATE columnSelection SET description = 'Progress of rank by average damage, used to determine Marks of Excellence' WHERE id = 223; ";
+                    sqlite = mssql;
+                    break;
+                case 264:
+                    mssql =
+                        "INSERT INTO map (id, name, arena_id) VALUES (72,'Berlin','105_germany'); " +
+                        "INSERT INTO map (id, name, arena_id) VALUES (73,'Ravaged Capital','112_eiffel_tower'); " +
+                        "INSERT INTO map (id, name, arena_id) VALUES (65,'Tank Rally','102_deathtrack'); ";
                     sqlite = mssql;
                     break;
 			}

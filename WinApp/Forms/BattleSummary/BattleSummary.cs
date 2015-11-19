@@ -49,7 +49,11 @@ namespace WinApp.Forms
 
 		private void BattleSummary_Load(object sender, EventArgs e)
 		{
-			// Create SQL
+			// Reset list of valid vBAddict players, forces lookup
+            ExternalPlayerProfile.vBAddictPlayers = null;
+            ExternalPlayerProfile.vBAddictPlayersManualLookup = true;
+            
+            // Create SQL
 			string sql =
 				"SELECT sum(battle.battlescount) " +
 				"FROM    battle INNER JOIN " +
@@ -206,7 +210,7 @@ namespace WinApp.Forms
                 if (e.RowIndex != -1 && e.ColumnIndex != -1)
                 {
                     ExternalPlayerProfile.dataGridRightClickRow = e.RowIndex;
-                    ExternalPlayerProfile.dataGridRightClick.CurrentCell = ExternalPlayerProfile.dataGridRightClick.Rows[ExternalPlayerProfile.dataGridRightClickRow].Cells[e.ColumnIndex];
+                    //ExternalPlayerProfile.dataGridRightClick.CurrentCell = ExternalPlayerProfile.dataGridRightClick.Rows[ExternalPlayerProfile.dataGridRightClickRow].Cells[e.ColumnIndex];
                 }
             }
             catch (Exception ex)

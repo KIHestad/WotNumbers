@@ -313,7 +313,7 @@ namespace WinApp.Code
 				{
 					string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
 					string msg = "";
-					bool uploadOK = vBAddict.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+					bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
 					if (uploadOK)
 						Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
 					else

@@ -154,7 +154,7 @@ namespace WinApp.Code
 							if (okConvert && Config.Settings.vBAddictUploadActive)
 							{
 								string msg = "";
-								bool uploadOK = vBAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+								bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
 								if (uploadOK)
 									Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully");
 								else
@@ -231,7 +231,7 @@ namespace WinApp.Code
 					foreach (string file in filesDatCopied)
 					{
 						string msg = "";
-						bool uploadOK = vBAddict.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+						bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
 						if (uploadOK)
 						{
 							Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully file: " + file);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ namespace WinApp.Code
 {
     public class ExternalPlayerProfile
     {
-        private static string GetServer
+        public static string GetServer
         {
             get {
                 string server = Config.Settings.playerServer.ToLower();
@@ -141,7 +142,7 @@ namespace WinApp.Code
             // vBAddict player profile item
             ToolStripMenuItem toolStripItem_vBAddictPlayerLookup = new ToolStripMenuItem("vBAddict");
             toolStripItem_vBAddictPlayerLookup.Click += new EventHandler(ToolStripItem_vBAddictPP_Click);
-            toolStripItem_vBAddictPlayerLookup.ToolTipText = "Profile depends on players uploads to vBAddict, might not be present";
+            toolStripItem_vBAddictPlayerLookup.ToolTipText = "Profile depends on players uploads to vBAddict";
 
             // Add cancel events
             dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
@@ -174,14 +175,31 @@ namespace WinApp.Code
 
         private static void DataGridMainPopup_Opening(object sender, CancelEventArgs e)
         {
+            // Check if vBAddict PP exists
+            if (!vBAddictPlayersManualLookup)
+            {
+                // Check used prefilled list of users
+                ContextMenuStrip cms = (ContextMenuStrip)sender;
+                bool vBAddictEnabled = true;
+                vBAddictEnabled = vBAddictPlayers.Contains(dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString());
+                foreach (ToolStripItem item in cms.Items)
+                {
+                    if (item.Text == "vBAddict")
+                        item.Enabled = vBAddictEnabled;
+                }
+            }
+
+            // Close if no valid cell is clicked
             if (dataGridRightClickRow == -1)
             {
-                e.Cancel = true; // Close if no valid cell is clicked
+                e.Cancel = true; 
             }
         }
 
         public static DataGridView dataGridRightClick { get; set; }
         public static int dataGridRightClickRow { get; set; }
+        public static List<string> vBAddictPlayers { get; set; }
+        public static bool vBAddictPlayersManualLookup { get; set; }
 
         private static void ToolStripItem_WargamingPP_Click(object sender, EventArgs e)
         {
@@ -199,7 +217,21 @@ namespace WinApp.Code
         private static void ToolStripItem_vBAddictPP_Click(object sender, EventArgs e)
         {
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
-            ExternalPlayerProfile.vBAddict(playerName);
+            string playerAccountId = dataGridRightClick.Rows[dataGridRightClickRow].Cells["AccountId"].Value.ToString();
+            if (vBAddictPlayersManualLookup)
+            {
+                string error = "";
+                List<string> foundPlayer = vBAddictHelper.SearchForUser(playerAccountId, out error);
+                if (foundPlayer.Contains(playerAccountId))
+                    ExternalPlayerProfile.vBAddict(playerName);
+                else
+                    Code.MsgBox.Show("Player has no uploads to vBAddict, profile lookup is cancelled", "Player has no vBAddice profile");
+            }
+            else
+            {
+                ExternalPlayerProfile.vBAddict(playerName);
+            }
+                
         }
 
         private static void ToolStripItem_NoobmeterPP_Click(object sender, EventArgs e)
@@ -220,5 +252,30 @@ namespace WinApp.Code
             string playerName = dataGridRightClick.Rows[dataGridRightClickRow].Cells["Player"].Value.ToString();
             ExternalPlayerProfile.WoTstats(playerName);
         }
+
+        public static void GetvBAddictPlayers(int battleId)
+        {
+            List<string> allPlayers = new List<string>();
+            vBAddictPlayers = new List<string>();
+            string sql =
+                "select battlePlayer.accountId " +
+                "from battlePlayer " +
+                "where battleId=@battleId;";
+            DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+            DataTable dt = DB.FetchData(sql);
+            // Terminate if none found
+            if (dt.Rows.Count == 0)
+                return;
+            // Get all players
+            foreach (DataRow dr in dt.Rows)
+            {
+                allPlayers.Add(dr["accountId"].ToString());
+            }
+            // Get vBAddict players
+            string error = "";
+            vBAddictPlayers = vBAddictHelper.SearchForUser(allPlayers, out error);
+            vBAddictPlayersManualLookup = false;
+        }
+
     }
 }

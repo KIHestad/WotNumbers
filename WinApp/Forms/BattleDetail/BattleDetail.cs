@@ -36,7 +36,7 @@ namespace WinApp.Forms
 		// Map and Comment
 		private bool fetchedMapAndComment = false;
 		private Control controlBattleReview = null;
-
+        
 		public BattleDetail(int selectedBattleId, Form selectedParentForm)
 		{
 			InitializeComponent();
@@ -44,9 +44,15 @@ namespace WinApp.Forms
 			parentForm = selectedParentForm;
 		}
 
+        private void BattleDetail_Shown(object sender, EventArgs e)
+        {
+            // Get vbAddict players
+            ExternalPlayerProfile.GetvBAddictPlayers(battleId);
+        }
+
 		private void BattleDetail_Load(object sender, EventArgs e)
 		{
-			// BattleResult
+            // BattleResult
 			panelBattleReview.Visible = false;
 			panelBattleReview.Top = panelMyResult.Top;
 			panelBattleReview.Left = panelMyResult.Left;
@@ -187,7 +193,8 @@ namespace WinApp.Forms
                 if (e.RowIndex != -1 && e.ColumnIndex != -1)
 				{
                     ExternalPlayerProfile.dataGridRightClickRow = e.RowIndex;
-                    ExternalPlayerProfile.dataGridRightClick.CurrentCell = ExternalPlayerProfile.dataGridRightClick.Rows[ExternalPlayerProfile.dataGridRightClickRow].Cells[e.ColumnIndex];
+                    //ExternalPlayerProfile.dataGridRightClick.CurrentCell = ExternalPlayerProfile.dataGridRightClick.Rows[ExternalPlayerProfile.dataGridRightClickRow].Cells[e.ColumnIndex];
+                    
 				}
 			}
 			catch (Exception ex)
@@ -963,7 +970,7 @@ namespace WinApp.Forms
 					", tkills as 'Team Kills' ";
 
 			string sql =
-                "select battlePlayer.accountId, battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
+                "select battlePlayer.accountId, '' as 'vBAddict', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
 				fortResourcesFields +
 				enhancedFields +
 				", deathReason as 'Dead', tank.id as 'TankId', " + team + " as 'Team' " +
@@ -987,10 +994,11 @@ namespace WinApp.Forms
 			totalRow["TankImage"] = (Image)blankImg;
 			dt.Rows.Add(totalRow);
 			int totRow = dt.Rows.Count -1;
-			// Add images and calc total
+			// Add images and calc total and more
 			for (int i = 0; i < dt.Rows.Count - 1; i++)
 			{
-				DataRow dr = dt.Rows[i];
+                DataRow dr = dt.Rows[i];
+                // Tank img
 				int tankId = Convert.ToInt32(dr["TankId"]);
 				Image img = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
 				Bitmap newImage = new Bitmap(92,24);
@@ -1002,6 +1010,10 @@ namespace WinApp.Forms
 					gr.DrawImage(img, 0, 0, 92, 24);
 				}
 				dr["TankImage"] = (Image)newImage;
+                // vbAddict
+                if (ExternalPlayerProfile.vBAddictPlayers.Contains(dr["accountId"].ToString()))
+                    dr["vBAddict"] = "*";
+                // Totals
 				foreach (DataColumn dc in dt.Columns)
 				{
 					if (dc.DataType == System.Type.GetType("System.Int32") || dc.DataType == System.Type.GetType("System.Int64"))
@@ -1024,6 +1036,7 @@ namespace WinApp.Forms
 			return dt;
 		}
 
+        
 		private void FormatDataGrid(DataGridView dgv)
 		{
 			// Deselect
@@ -1036,6 +1049,7 @@ namespace WinApp.Forms
 			dgv.Columns["Dead"].Visible = false;
 			dgv.Columns["Team"].Visible = false;
 			dgv.Columns["TankImage"].HeaderText = "";
+            dgv.Columns["vBAddict"].HeaderText = "";
 			// Left align text col
 			dgv.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dgv.Columns["Clan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -1063,13 +1077,14 @@ namespace WinApp.Forms
 			// col fixed width
 			dgv.Columns["TankImage"].Width = 60;
 			dgv.Columns["TankImage"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgv.Columns["vBAddict"].Width = 12;
 			// Calc width for rest of fields
 			if (!showAllColumns)
 			{
 				// left part = player, clan, tank img, tank
 				int w = dgv.Width - 2; // total available width without img col
 				int left = Convert.ToInt32(w * 0.6);
-				int leftFreeArea = left - 60 - 50;
+				int leftFreeArea = left - 60 - 12 - 50;
 				dgv.Columns["Player"].Width = leftFreeArea / 2;
 				dgv.Columns["Tank"].Width = leftFreeArea - (leftFreeArea / 2);
 				// right part = dmg, frags, xp, IR

@@ -12,7 +12,7 @@ using System.Xml;
 
 namespace WinApp.Code
 {
-	class vBAddict
+	class vBAddictHelper
 	{
 		private static int timeout = 15000; // milliseconds
 		
@@ -185,5 +185,74 @@ namespace WinApp.Code
 			return result;
 		}
 
+        public static List<string> SearchForUser(string AccountId, out string error)
+        {
+            List<string> AccountIds = new List<string>();
+            AccountIds.Add(AccountId);
+            return SearchForUser(AccountIds, out error);
+        }
+        
+
+        public static List<string> SearchForUser(List<string> AccountIds, out string error)
+        {
+            // Default
+            error = "";
+            // Terminate if no data
+            if (AccountIds.Count == 0)
+            {
+                return null;
+            }
+            // Get API URL
+            List<string> foundUsers = new List<string>();
+            string accountIDList = "";
+            foreach (string accountId in AccountIds)
+            {
+                accountIDList += accountId + ",";
+            }
+            accountIDList = accountIDList.Substring(0, accountIDList.Length -1); // remove last comma
+            string url = string.Format("http://carius.vbaddict.net:82/player_info/search_accountid/{0}/{1}/xml", ExternalPlayerProfile.GetServer, accountIDList);
+            try
+            {
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpRequest.Timeout = timeout;
+                httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
+                httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+                StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+                string xmlResult = responseStream.ReadToEnd(); // Read result into string
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xmlResult); // Load string into xml doc
+                // Get status and message
+                XmlNode node = xmlDoc.GetElementsByTagName("status").Item(0);  // get status node from xml
+                string responseStatus = node.FirstChild.Value.ToString();
+                node = xmlDoc.GetElementsByTagName("message").Item(0);   // get message node from xml
+                string responseMessage = node.FirstChild.Value.ToString();
+                // Check if valid
+                if (responseStatus == "0" && responseMessage == "Success")
+                {
+                    // Read data
+                    int counter = 0;
+                    node = xmlDoc.GetElementsByTagName("item" + counter).Item(0);
+                    while (node != null)
+                    {
+                        foundUsers.Add(node.ChildNodes[0].InnerText);
+                        counter++;
+                        node = xmlDoc.GetElementsByTagName("item" + counter).Item(0);
+                    }
+                }
+                else
+                {
+                    error = "Returned message: " + responseMessage + " [Status:" + responseStatus + "] when searching for users at vBAddict";
+                    Log.LogToFile(error);
+                }
+                return foundUsers;
+            }
+            catch (Exception ex)
+            {
+                error = "Error running vBAddict API: " + url;
+                Log.LogToFile(ex, error);
+                return null;
+            }
+        }
 	}
 }

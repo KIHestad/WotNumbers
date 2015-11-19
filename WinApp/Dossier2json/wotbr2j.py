@@ -3,7 +3,7 @@
 # by Phalynx www.vbaddict.net                     # 
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2015-09-04       #
+# Edited version by BadButton -> 2015-11-17       #
 ###################################################
 # IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
 import struct, json, time, sys, os, zlib, cPickle, StringIO
@@ -50,7 +50,7 @@ VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_I
   
   
 parser = dict()
-parser['version'] = "0.9.10.2"
+parser['version'] = "0.9.12"
 parser['name'] = 'http://www.vbaddict.net'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -113,7 +113,7 @@ def main():
 		# "parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
 	#else:
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
-	parser['battleResultVersion'] = 17
+	parser['battleResultVersion'] = 18
 	
 	while parser['battleResultVersion']>0:  
 		printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
@@ -175,6 +175,9 @@ def prepareForJSON(bresult):
 		
 		if bresult['parser']['battleResultVersion'] >= 15:
 			for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
+				if vehTypeCompDescr == 'avatar':
+					if 'avatarDamageEventList' in bresult['personal'][vehTypeCompDescr]:
+						del bresult['personal'][vehTypeCompDescr]['avatarDamageEventList']
 				if 'club' in ownResults:	
 					if 'clubDossierPopUps' in ownResults['club']:
 						oldClubDossier = ownResults['club']['clubDossierPopUps'].copy()

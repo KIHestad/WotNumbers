@@ -183,7 +183,7 @@
     <Compile Include="Code\DbVersion.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\UtilSecurity.cs" />
-    <Compile Include="Code\vBAddict.cs" />
+    <Compile Include="Code\vBAddictHelper.cs" />
     <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Code\XmlHelper.cs" />
     <Compile Include="Forms\About.cs">
@@ -686,6 +686,7 @@
     <None Include="Dossier2json\structures_88.json" />
     <None Include="Dossier2json\structures_89.json" />
     <None Include="Dossier2json\structures_92.json" />
+    <None Include="Dossier2json\structures_94.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -901,8 +902,10 @@
     <Content Include="Dossier2json\battle_results_shared_14.py" />
     <Content Include="Dossier2json\battle_results_shared_15.py" />
     <Content Include="Dossier2json\battle_results_shared_16.py" />
+    <Content Include="Dossier2json\battle_results_shared_18.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
+    <Content Include="Dossier2json\dictpackers_18.py" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

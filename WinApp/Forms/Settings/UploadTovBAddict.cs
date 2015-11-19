@@ -35,7 +35,7 @@ namespace WinApp.Forms
 		private void btnTestConnection_Click(object sender, EventArgs e)
 		{
 			TestStatus();
-			MsgBox.Show(vBAddict.TestConnection(), "vBAddict connection test result");
+			MsgBox.Show(vBAddictHelper.TestConnection(), "vBAddict connection test result");
 			TestStatus(false);
 		}
 
@@ -47,7 +47,7 @@ namespace WinApp.Forms
 			string msg = "";
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			bool result = vBAddict.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg, false);
+			bool result = vBAddictHelper.UploadDossier(dossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), token, out msg, false);
 			sw.Stop();
 			double timeUsed = Convert.ToDouble(sw.ElapsedMilliseconds) / 1000;
 			msg += Environment.NewLine + Environment.NewLine + "Used " + timeUsed.ToString() + " sec" + Environment.NewLine + Environment.NewLine;
