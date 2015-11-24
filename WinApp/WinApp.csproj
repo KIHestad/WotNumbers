@@ -228,6 +228,12 @@
     <Compile Include="Forms\Settings\RecalcBattleKDratioCRdmg.Designer.cs">
       <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\RecalcBattleCreditPerTank.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\RecalcBattleCreditPerTank.Designer.cs">
+      <DependentUpon>RecalcBattleCreditPerTank.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -515,6 +521,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleKDratioCRdmg.resx">
       <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\RecalcBattleCreditPerTank.resx">
+      <DependentUpon>RecalcBattleCreditPerTank.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
       <DependentUpon>RecalcBattleWN8.cs</DependentUpon>

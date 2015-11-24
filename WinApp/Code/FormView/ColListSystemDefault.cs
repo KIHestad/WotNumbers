@@ -30,7 +30,8 @@ namespace WinApp.Code.FormView
 			string newDefaultColListId = "";
 			newDefaultColListId = NewSystemTankColList_Default(-10);
 			NewSystemTankColList_Grinding(-9);
-			NewSystemTankColList_WN8(-8);
+            NewSystemTankColList_Credit(-8);
+			NewSystemTankColList_WN8(-7);
 			// Sort lists
 			ColListHelper.ColListSort(1);
 			// Set default if missing
@@ -44,7 +45,7 @@ namespace WinApp.Code.FormView
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Default', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='Default';";
+			sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='Default';";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =
@@ -78,7 +79,7 @@ namespace WinApp.Code.FormView
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Grinding', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='Grinding';";
+			sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='Grinding';";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =
@@ -103,7 +104,7 @@ namespace WinApp.Code.FormView
 			DB.ExecuteNonQuery(sql);
 			Application.DoEvents();
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=1 and name='WN8';";
+			sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='WN8';";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =
@@ -127,6 +128,43 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",18,3);" + //  - Separator 4 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (204," + id + ",19,40);" + // Avg Def
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (196," + id + ",20,40);"; // Exp Def
+			DB.ExecuteNonQuery(sql);
+			return id;
+		}
+
+        private static string NewSystemTankColList_Credit(int position)
+		{
+			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (1,'Credits', 0, " + position.ToString() + ", 1, -1); ";
+			DB.ExecuteNonQuery(sql);
+			Application.DoEvents();
+			// Find id for new list
+            sql = "select min(id) from columnList where sysCol=1 and colType=1 and name='Credits';";
+			string id = DB.FetchData(sql).Rows[0][0].ToString();
+			// Insert columns
+            sql =
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" + // Tank Image
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,153);" + // Tank
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (44," + id + ",4,50);" + // Type
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (57," + id + ",5,50);" + // Nation
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,3);" + //  - Separator 0 -
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",7,50);" + // Battles
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (533," + id + ",8,56);" + // Credit Btl Count
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",9,3);" + //  - Separator 1 -
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (534," + id + ",10,56);" + // Average Income
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (535," + id + ",11,54);" + // Average Cost
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (536," + id + ",12,54);" + // Average Earned
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",13,3);" + //  - Separator 2 -
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (537," + id + ",14,60);" + // Max Income
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (538," + id + ",15,59);" + // Max Cost
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (539," + id + ",16,55);" + // Max Earned
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",17,3);" + //  - Separator 3 -
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (540," + id + ",18,76);" + // Tot Income
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (541," + id + ",19,75);" + // Tot Cost
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (542," + id + ",20,77);" + // Tot Earned
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",21,3);" + //  - Separator 4 -
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (543," + id + ",22,60);" + // Avg Btl Lifetime
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (544," + id + ",23,60);"; // Earned per min
 			DB.ExecuteNonQuery(sql);
 			return id;
 		}
@@ -196,7 +234,7 @@ namespace WinApp.Code.FormView
 			string sql = "insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'WN8', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='WN8';";
+			sql = "select min(id) from columnList where sysCol=1 and colType=2 and name='WN8';";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =
@@ -228,7 +266,7 @@ namespace WinApp.Code.FormView
 				"insert into columnList (colType,name,colDefault,position,sysCol,defaultFavListId) values (2,'Skirmish', 0, " + position.ToString() + ", 1, -1); ";
 			DB.ExecuteNonQuery(sql);
 			// Find id for new list
-			sql = "select max(id) from columnList where sysCol=1 and colType=2 and name='Skirmish';";
+			sql = "select min(id) from columnList where sysCol=1 and colType=2 and name='Skirmish';";
 			string id = DB.FetchData(sql).Rows[0][0].ToString();
 			// Insert columns
 			sql =

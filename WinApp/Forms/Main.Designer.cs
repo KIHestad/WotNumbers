@@ -214,6 +214,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1665,12 +1666,13 @@
             this.mSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mSettingsRun,
             this.mSettingsRunBattleCheck,
+            this.mUpdateDataFromAPI,
             this.toolStripSeparator24,
             this.mWoTStartGameSettings,
             this.mSettingsUploadTovBAddict,
             this.toolStripSeparator14,
-            this.mUpdateDataFromAPI,
             this.mRecalcBattleWN8,
+            this.mRecalcBattleCreditsPerTank,
             this.mImportBattlesFromWotStat,
             this.toolStripSeparator25,
             this.mSettingsAppLayout,
@@ -1690,7 +1692,7 @@
             // 
             this.mSettingsRun.Enabled = false;
             this.mSettingsRun.Name = "mSettingsRun";
-            this.mSettingsRun.Size = new System.Drawing.Size(263, 22);
+            this.mSettingsRun.Size = new System.Drawing.Size(264, 22);
             this.mSettingsRun.Text = "Automatically Fetch New Battles";
             this.mSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
             this.mSettingsRun.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1699,40 +1701,40 @@
             // 
             this.mSettingsRunBattleCheck.Enabled = false;
             this.mSettingsRunBattleCheck.Name = "mSettingsRunBattleCheck";
-            this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(263, 22);
+            this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(264, 22);
             this.mSettingsRunBattleCheck.Text = "Run Battle Check...";
             this.mSettingsRunBattleCheck.Click += new System.EventHandler(this.mSettingsRunBattleCheck_Click);
             // 
             // toolStripSeparator24
             // 
             this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(260, 6);
+            this.toolStripSeparator24.Size = new System.Drawing.Size(261, 6);
             // 
             // mWoTStartGameSettings
             // 
             this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
             this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
-            this.mWoTStartGameSettings.Size = new System.Drawing.Size(263, 22);
+            this.mWoTStartGameSettings.Size = new System.Drawing.Size(264, 22);
             this.mWoTStartGameSettings.Text = "WoT Game Settings...";
             this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
             // 
             // mSettingsUploadTovBAddict
             // 
             this.mSettingsUploadTovBAddict.Name = "mSettingsUploadTovBAddict";
-            this.mSettingsUploadTovBAddict.Size = new System.Drawing.Size(263, 22);
+            this.mSettingsUploadTovBAddict.Size = new System.Drawing.Size(264, 22);
             this.mSettingsUploadTovBAddict.Text = "Upload to vBAddict...";
             this.mSettingsUploadTovBAddict.Click += new System.EventHandler(this.mSettingsUploadTovBAddict_Click);
             // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(260, 6);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(261, 6);
             // 
             // mUpdateDataFromAPI
             // 
             this.mUpdateDataFromAPI.Enabled = false;
             this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
-            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(263, 22);
+            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
             this.mUpdateDataFromAPI.Text = "Update Data from API...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
             // 
@@ -1741,7 +1743,7 @@
             this.mRecalcBattleWN8.Enabled = false;
             this.mRecalcBattleWN8.Image = ((System.Drawing.Image)(resources.GetObject("mRecalcBattleWN8.Image")));
             this.mRecalcBattleWN8.Name = "mRecalcBattleWN8";
-            this.mRecalcBattleWN8.Size = new System.Drawing.Size(263, 22);
+            this.mRecalcBattleWN8.Size = new System.Drawing.Size(264, 22);
             this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
             this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleWN8_Click);
             // 
@@ -1749,20 +1751,20 @@
             // 
             this.mImportBattlesFromWotStat.Enabled = false;
             this.mImportBattlesFromWotStat.Name = "mImportBattlesFromWotStat";
-            this.mImportBattlesFromWotStat.Size = new System.Drawing.Size(263, 22);
+            this.mImportBattlesFromWotStat.Size = new System.Drawing.Size(264, 22);
             this.mImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
             this.mImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
             // 
             // toolStripSeparator25
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(260, 6);
+            this.toolStripSeparator25.Size = new System.Drawing.Size(261, 6);
             // 
             // mSettingsAppLayout
             // 
             this.mSettingsAppLayout.Enabled = false;
             this.mSettingsAppLayout.Name = "mSettingsAppLayout";
-            this.mSettingsAppLayout.Size = new System.Drawing.Size(263, 22);
+            this.mSettingsAppLayout.Size = new System.Drawing.Size(264, 22);
             this.mSettingsAppLayout.Text = "Application &Layout...";
             this.mSettingsAppLayout.Click += new System.EventHandler(this.mSettingsAppLayout_Click);
             // 
@@ -1770,38 +1772,38 @@
             // 
             this.mSettingsApp.Enabled = false;
             this.mSettingsApp.Name = "mSettingsApp";
-            this.mSettingsApp.Size = new System.Drawing.Size(263, 22);
+            this.mSettingsApp.Size = new System.Drawing.Size(264, 22);
             this.mSettingsApp.Text = "Application &Settings...";
             this.mSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(261, 6);
             // 
             // mShowDbTables
             // 
             this.mShowDbTables.Name = "mShowDbTables";
-            this.mShowDbTables.Size = new System.Drawing.Size(263, 22);
+            this.mShowDbTables.Size = new System.Drawing.Size(264, 22);
             this.mShowDbTables.Text = "Show Database Tables...";
             this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
             // 
             // mSettingsShowLogFiles
             // 
             this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
-            this.mSettingsShowLogFiles.Size = new System.Drawing.Size(263, 22);
+            this.mSettingsShowLogFiles.Size = new System.Drawing.Size(264, 22);
             this.mSettingsShowLogFiles.Text = "Show Log Files...";
             this.mSettingsShowLogFiles.Click += new System.EventHandler(this.mSettingsShowLogFiles_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(260, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(261, 6);
             // 
             // mExit
             // 
             this.mExit.Name = "mExit";
-            this.mExit.Size = new System.Drawing.Size(263, 22);
+            this.mExit.Size = new System.Drawing.Size(264, 22);
             this.mExit.Text = "Exit";
             this.mExit.Click += new System.EventHandler(this.mExit_Click);
             // 
@@ -2011,6 +2013,14 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // mRecalcBattleCreditsPerTank
+            // 
+            this.mRecalcBattleCreditsPerTank.Enabled = false;
+            this.mRecalcBattleCreditsPerTank.Name = "mRecalcBattleCreditsPerTank";
+            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
+            this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
             // 
             // Main
             // 
@@ -2225,6 +2235,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
 		private System.Windows.Forms.ToolStripMenuItem mModeGlobalMap;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleCreditsPerTank;
 	}
 }
 

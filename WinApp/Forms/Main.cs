@@ -480,19 +480,21 @@ namespace WinApp.Forms
 		
 		private void RunInitialDossierFileCheck(string message)
 		{
-			// Debug option - avouid init dossier file check after startup
+			// Debug option - avoid init dossier file check after startup
 			// if (false)
 			{
 				if (DBVersion.RunWotApi)
 					RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8)
 					RunRecalcBattleWN8(true);
-				if (DBVersion.RunRecalcBattleKDratioCRdmg)
+                if (DBVersion.RunRecalcBattleCreditPerTank)
+                    RunRecalcBattleCreditsPerTank(true);
+                if (DBVersion.RunRecalcBattleKDratioCRdmg)
 					RunRecalcBattleKDratioCRdmg(true);
 
 				// Check for dossier update
 				StatusBarHelper.Message = message;
-				if (Config.Settings.dossierFileWathcherRun == 1)
+                if (Config.Settings.dossierFileWathcherRun == 1 || DBVersion.RunDossierFileCheckWithForceUpdate)
 				{
 					string msg = "Running initial battle fetch...";
 					if (DBVersion.RunDossierFileCheckWithForceUpdate)
@@ -605,6 +607,7 @@ namespace WinApp.Forms
 			mSettingsRunBattleCheck.Enabled = true;
 			mUpdateDataFromAPI.Enabled = true;
 			mRecalcBattleWN8.Enabled = true;
+            mRecalcBattleCreditsPerTank.Enabled = true;
 			mImportBattlesFromWotStat.Enabled = true;
 			mSettingsAppLayout.Enabled = true;
 			mSettingsApp.Enabled = true;
@@ -3612,11 +3615,37 @@ namespace WinApp.Forms
 			}
 		}
 
+        private void mRecalcBattleCreditsPerTank_Click(object sender, EventArgs e)
+        {
+            // Stop file watchers if running
+            int runState = Config.Settings.dossierFileWathcherRun;
+            if (runState == 1)
+            {
+                Config.Settings.dossierFileWathcherRun = 0;
+                SetListener();
+            }
+            // Show dialog
+            Form frm = new Forms.RecalcBattleCreditPerTank();
+            frm.ShowDialog();
+            // Return to prev file watcher state
+            if (runState != Config.Settings.dossierFileWathcherRun)
+            {
+                Config.Settings.dossierFileWathcherRun = runState;
+                SetListener();
+            }
+        }
+
 		private void RunRecalcBattleWN8(bool autoRun = false)
 		{
 			Form frm = new Forms.RecalcBattleWN8(autoRun);
 			frm.ShowDialog(this);
 		}
+
+        private void RunRecalcBattleCreditsPerTank(bool autoRun = false)
+        {
+            Form frm = new Forms.RecalcBattleCreditPerTank(autoRun);
+            frm.ShowDialog(this);
+        }
 
 		private void RunRecalcBattleKDratioCRdmg(bool autoRun = false)
 		{
@@ -4469,7 +4498,6 @@ namespace WinApp.Forms
 
 		#endregion
 
-
-
+        
 	}
 }

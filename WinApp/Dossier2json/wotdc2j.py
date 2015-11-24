@@ -3,7 +3,7 @@
 # Initial version by Phalynx www.vbaddict.net/wot #
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2015-11-18       #
+# Edited version by BadButton -> 2015-11-20      #
 ###################################################
 
 import struct, json, time, sys, os
@@ -15,7 +15,6 @@ def usage():
 	print '-r Export all fields with their values and recognized names'
 	print '-k Dont export Frags'
 	print '-s Server Mode, disable writing of timestamp, enable logging'
-
 
 def main():
 	
@@ -77,8 +76,7 @@ def main():
 	# IRONPYTHON MODIFIED: select current path as working directory
 	os.chdir(working_directory)
 
-	printmessage('Processing ' + filename_source)
-	
+	printmessage('Processing ' + filename_source)	
 
 	if not os.path.exists(filename_source) or not os.path.isfile(filename_source) or not os.access(filename_source, os.R_OK):
 		catch_fatal('Dossier file does not exists')
@@ -136,10 +134,8 @@ def main():
 	#		pass
 	#		#printmessage('cannot decode filename ' + filename_base + ': ' + e.message)
 
-
 	dossierheader['server'] = '?' #base32name.split(';', 1)[0];
 	dossierheader['username'] = '?' #base32name.split(';', 1)[1];
-	
 	
 	if option_server == 0:
 		dossierheader['date'] = time.mktime(time.localtime())
@@ -380,7 +376,7 @@ def main():
 				
 				if 'frags' in tank_v2['fallout']:
 					numoffrags_fallout = int(tank_v2['fallout']['frags'])
-					
+				
 			if option_frags == 1:
 
 				try:

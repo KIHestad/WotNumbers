@@ -3,7 +3,7 @@
 # by Phalynx www.vbaddict.net                     # 
 #                                                 #
 # Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2015-11-17       #
+# Edited version by BadButton -> 2015-11-20     #
 ###################################################
 # IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
 import struct, json, time, sys, os, zlib, cPickle, StringIO
@@ -267,6 +267,47 @@ def convertToFullForm(compactForm, battleResultVersion):
 	if len(battle_results_data.VEH_FULL_RESULTS)==0:
 		exitwitherror("Unsupported Battle Result Version: " + str(battleResultVersion))
 	else:
+		if battleResultVersion >= 18:  
+	
+			arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
+			fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
+			avatarResults = SafeUnpickler.loads(zlib.decompress(avatarResults))
+			personal = {}
+			try:
+				fullForm = {'arenaUniqueID': arenaUniqueID,
+				'personal': personal,
+				'common': {},
+				'players': {},
+				'vehicles': {},
+				'avatars': {}}
+				personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpack(avatarResults)
+				for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
+					vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpack(ownResults)
+					vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
+					vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
+					vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
+					vehPersonal['club'] = avatarResults['club']
+					vehPersonal['enemyClub'] = avatarResults['enemyClub']
+				
+				commonAsList, playersAsList, vehiclesAsList, avatarsAsList = SafeUnpickler.loads(zlib.decompress(pickled))
+				fullForm['common'] = battle_results_data.COMMON_RESULTS.unpack(commonAsList)
+				for accountDBID, playerAsList in playersAsList.iteritems():
+					fullForm['players'][accountDBID] = battle_results_data.PLAYER_INFO.unpack(playerAsList)
+
+				for accountDBID, avatarAsList in avatarsAsList.iteritems():
+					fullForm['avatars'][accountDBID] = battle_results_data.AVATAR_PUBLIC_RESULTS.unpack(avatarAsList)
+
+				for vehicleID, vehiclesInfo in vehiclesAsList.iteritems():
+					fullForm['vehicles'][vehicleID] = []
+					for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
+						fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
+			except IndexError, i:
+				return 0, {}
+			except KeyError, i:
+				return 0, {}
+			except Exception, e: 
+				exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
+				
 		if battleResultVersion >= 17:  
 
 			arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm

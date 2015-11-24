@@ -17,10 +17,11 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 		public static bool RunWotApi = false;
 		public static bool RunRecalcBattleWN8 = false;
+        public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 264; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 281; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -28,6 +29,7 @@ namespace WinApp.Code
 			// first define sqlscript for both mssql and sqlite for all versions
 			string mssql = "";
 			string sqlite = "";
+            string temp = "";
 			switch (version)
 			{
 				case 1: 
@@ -1923,8 +1925,8 @@ namespace WinApp.Code
 						"DROP TABLE battlePlayerToChange; ";
 					break;
 				case 193:
-					string sql_temp = "select id from tank where id = 56097;";
-					DataTable dt = DB.FetchData(sql_temp);
+					temp = "select id from tank where id = 56097;";
+					DataTable dt = DB.FetchData(temp);
 					if (dt.Rows.Count == 0)
 					{
 						mssql = GetUpgradeSQL("193");
@@ -2023,9 +2025,6 @@ namespace WinApp.Code
 					break;
 				case 219:
 					RunRecalcBattleKDratioCRdmg = true;
-					break;
-				case 220:
-					ColListSystemDefault.NewSystemTankColList();
 					break;
 				case 221:
 					Config.Settings.vBAddictUploadActive = false;
@@ -2239,9 +2238,6 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("246");
 					sqlite = mssql;
 					break;
-				case 247:
-					RunDossierFileCheckWithForceUpdate = true;
-					break;
 				case 248:
 					mssql =
 						"INSERT INTO map (id, name, arena_id) VALUES (71,'Icebound','111_paris'); ";
@@ -2342,6 +2338,117 @@ namespace WinApp.Code
                         "INSERT INTO map (id, name, arena_id) VALUES (73,'Ravaged Capital','112_eiffel_tower'); " +
                         "INSERT INTO map (id, name, arena_id) VALUES (65,'Tank Rally','102_deathtrack'); ";
                     sqlite = mssql;
+                    break;
+                case 265:
+                    mssql =
+                        "UPDATE map SET name = 'Port', arena_id = '42_north_america' WHERE id = 36; " +
+                        "UPDATE map SET name = 'Himmelsdorf Championship', arena_id = '99_himmelball' WHERE id = 61; " ;
+                    sqlite = mssql;
+                    break;
+                case 266:
+                    RunDossierFileCheckWithForceUpdate = true;
+                    break;
+                case 267:
+                    mssql =
+                        "ALTER TABLE playerTankBattle ADD credBtlCount Int NOT NULL DEFAULT 0 ; " +
+                        "ALTER TABLE playerTankBattle ADD credAvgIncome Int NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credAvgCost Int NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credAvgResult Int NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credMaxIncome Int NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credMaxCost Int NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credMaxResult Int NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credTotIncome BigInt NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credTotCost BigInt NULL ; " +
+                        "ALTER TABLE playerTankBattle ADD credTotResult BigInt NULL ; ";
+                    sqlite = mssql.Replace("Int", "Integer");
+                    sqlite = mssql.Replace("BigInt", "Integer");
+                    break;
+                case 269:
+                    mssql = "UPDATE columnSelection SET position = position + 100 WHERE colType = 1 AND position > 323; ";
+                    sqlite = mssql;
+                    break;
+                case 270:
+                    mssql = "UPDATE columnSelection SET colGroup = 'Result', position = position - 110 WHERE colType = 1 AND colGroup = 'Max'; ";
+                    sqlite = mssql;
+                    break;
+                case 271:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql =
+                        temp + "VALUES (533, 1, 350, 'playerTankBattle.credBtlCount', 'Credit Btl Count', 'Number of battles where credits are recorded', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (534, 1, 351, 'playerTankBattle.credAvgIncome', 'Average Income', 'Average credit income for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (535, 1, 352, 'playerTankBattle.credAvgCost',   'Average Cost',   'Average credit cost for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (536, 1, 353, 'playerTankBattle.credAvgResult', 'Average Earned', 'Average credit earned (income - cost) for battles recorded (Credit Btl Count)', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (537, 1, 354, 'playerTankBattle.credMaxIncome', 'Max Income', 'Maximum credit income for any battles recorded', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (538, 1, 355, 'playerTankBattle.credMaxCost',   'Max Cost',   'Maximum credit cost for any battles recorded', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (539, 1, 356, 'playerTankBattle.credMaxResult', 'Max Earned', 'Maximum credit earned (income - cost) for any battles recorded', 'Credit', 50, 'Int'); " +
+                        temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+                        temp + "VALUES (541, 1, 358, 'playerTankBattle.credTotCost',   'Tot Cost',   'Total credit cost for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+                        temp + "VALUES (542, 1, 359, 'playerTankBattle.credTotResult', 'Tot Earned', 'Total credit earned (income - cost) for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); ";
+                    sqlite = mssql;
+                    break;
+                case 275:
+                    mssql =
+                        "ALTER TABLE playerTankBattle ADD credBtlLifetime BigInt NULL; ";
+                    sqlite = mssql.Replace("Int", "Integer");
+                    sqlite = mssql.Replace("BigInt", "Integer");
+                    break;
+                case 276:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql =
+                        temp + "VALUES (543, 1, 201, 'CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount * 10 AS FLOAT) / 600', 'Avg Btl Lifetime', 'Avg battle time in minutes for battles recorded', 'Battle', 60, 'Float'); ";
+                    sqlite = mssql;
+                    break;
+                case 277:
+                    temp =
+                        "SELECT playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+                        "   SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap, " +
+                        "   SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits, " +
+                        "   SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived, " +
+                        "   SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+                        "   MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, " +
+                        "	MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
+                        "   SUM(credBtlCount) AS credBtlCount, " +
+                        "   SUM(credTotIncome) / NULLIF(SUM(credBtlCount),0) as credAvgIncome, " +
+                        "   SUM(credTotCost)   / NULLIF(SUM(credBtlCount),0) as credAvgCost, " +
+                        "   SUM(credTotResult) / NULLIF(SUM(credBtlCount),0) as credAvgResult, " +
+                        "   MAX(credMaxIncome) as credMaxIncome, MAX(credMaxCost) as credMaxCost, MAX(credMaxResult) as credMaxResult, " +
+                        "   SUM(credTotIncome) as credTotIncome, SUM(credTotCost) as credTotCost, SUM(credTotResult) as credTotResult, " +
+                        "   SUM(credBtlLifetime) as credBtlLifetime " +
+                        "FROM  playerTankBattle " +
+                        "GROUP BY playerTankId; ";
+                    mssql =
+                        "ALTER VIEW playerTankBattleTotalsView AS " + temp;
+                    sqlite =
+                        "DROP VIEW playerTankBattleTotalsView; " +
+                        "CREATE VIEW playerTankBattleTotalsView AS " + temp;
+                    break;
+                case 278:
+                    // Change to estimates
+                    // temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    // temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+                    // temp + "VALUES (541, 1, 358, 'playerTankBattle.credTotCost',   'Tot Cost',   'Total credit cost for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
+                    // temp + "VALUES (542, 1, 359, 'playerTankBattle.credTotResult', 'Tot Earned', 'Total credit earned (income - cost) for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); ";
+                    mssql =
+                        "UPDATE columnSelection SET colName='playerTankBattle.credAvgIncome * playerTankBattle.battles' WHERE ID = 540; " +
+                        "UPDATE columnSelection SET colName='playerTankBattle.credAvgCost * playerTankBattle.battles' WHERE ID = 541; " +
+                        "UPDATE columnSelection SET colName='playerTankBattle.credAvgResult * playerTankBattle.battles' WHERE ID = 542; " +
+                        "UPDATE columnSelection SET description='Estimated total credit income for all tank battles (Avg credit income * actual battles for tank)' WHERE ID = 540; " +
+                        "UPDATE columnSelection SET description='Estimated total credit cost for all tank battles (Avg credit cost * actual battles for tank)' WHERE ID = 541; " +
+                        "UPDATE columnSelection SET description='Estimated total credit earned for all tank battles (Avg credit (income - cost) * actual battles for tank)' WHERE ID = 542; ";
+
+                    sqlite = mssql;
+                    break;
+                case 279:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql =
+                        temp + "VALUES (544, 1, 360, 'CAST(playerTankBattle.credAvgResult / CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60 AS FLOAT) AS INT)', 'Earned per min', 'Estimated credit earned per minute', 'Credit', 60, 'Int'); ";
+                    sqlite = mssql;
+                    break;
+                case 280:
+                    ColListSystemDefault.NewSystemTankColList();
+                    break;
+                case 281:
+                    RunRecalcBattleCreditPerTank = true;
                     break;
 			}
 			string sql = "";
