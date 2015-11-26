@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using System.Diagnostics;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Gadget
 {
@@ -44,11 +45,11 @@ namespace WinApp.Gadget
 				if (i == 0)
 					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
 				else
-					aGauge1.RangesStartValue[i] = (float)Rating.rangeWN8[i];
+					aGauge1.RangesStartValue[i] = (float)ColorValues.RangeWN8[i];
 				if (i == 8)
 					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
 				else
-					aGauge1.RangesEndValue[i] = (float)Rating.rangeWN8[i + 1];
+                    aGauge1.RangesEndValue[i] = (float)ColorValues.RangeWN8[i + 1];
 				aGauge1.RangeEnabled = true;
 			}
 			// Overall stats team
@@ -92,7 +93,7 @@ namespace WinApp.Gadget
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();
-			aGauge1.CenterTextColor = Rating.WN8color(end_val);
+            aGauge1.CenterTextColor = ColorValues.WN8color(end_val);
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick

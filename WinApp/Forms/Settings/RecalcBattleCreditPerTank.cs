@@ -83,47 +83,20 @@ namespace WinApp.Forms
 			sql = "";
 			foreach (DataRow dr in dt.Rows)
 			{
-                int playerTankId = Convert.ToInt32(dr["playerTankId"]);
-				double battleCount = Convert.ToDouble(dr["battlesCount"]);
-                double creditsIncome = Convert.ToDouble(dr["credits"]);
-                double creditsNet = Convert.ToDouble(dr["creditsNet"]);
-                double creditsCost = creditsIncome - creditsNet;
-                double maxcreditsIncome = Convert.ToDouble(dr["maxcredits"]);
-                double maxcreditsNet = Convert.ToDouble(dr["maxcreditsNet"]);
-                double maxcreditsCost = maxcreditsIncome - maxcreditsNet;
-                string battleMode = dr["battleMode"].ToString();
-                double battleLifeTime = Convert.ToDouble(dr["battleLifeTime"]);
-                UpdateProgressBar("Calc credits " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["tankName"].ToString() + " - " + battleMode);
+                TankCreditCalculation.TankCreditItem tci = new TankCreditCalculation.TankCreditItem();
+                tci.battleCount = Convert.ToDouble(dr["battlesCount"]);
+                tci.battleMode = dr["battleMode"].ToString();
+                UpdateProgressBar("Calc credits " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["tankName"].ToString() + " - " + tci.battleMode);
 				// Update
-                if (battleCount > 0)
+                if (tci.battleCount > 0)
                 {
-                    string newSQL =
-                        "UPDATE playerTankBattle SET " +
-                        "  credBtlCount=@battleCount, " +
-                        "  credAvgIncome=@credAvgIncome, " +
-                        "  credAvgCost=@credAvgCost, " +
-                        "  credAvgResult=@credAvgResult, " +
-                        "  credMaxIncome=@credMaxIncome, " +
-                        "  credMaxCost=@credMaxCost, " +
-                        "  credMaxResult=@credMaxResult, " +
-                        "  credTotIncome=@credTotIncome, " +
-                        "  credTotCost=@credTotCost, " +
-                        "  credTotResult=@credTotResult, " +
-                        "  credBtlLifetime=@credBtlLifetime " +
-                        "WHERE playerTankId=@playerTankId and battleMode=@battleMode;";
-                    DB.AddWithValue(ref newSQL, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref newSQL, "@battleCount", battleCount, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credAvgIncome", Convert.ToInt32(creditsIncome / battleCount), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credAvgCost", Convert.ToInt32(creditsCost / battleCount), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credAvgResult", Convert.ToInt32(creditsNet / battleCount), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credMaxIncome", Convert.ToInt32(maxcreditsIncome), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credMaxCost", Convert.ToInt32(maxcreditsCost), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credMaxResult", Convert.ToInt32(maxcreditsNet), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credTotIncome", Convert.ToInt64(creditsIncome), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credTotCost", Convert.ToInt64(creditsCost), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credTotResult", Convert.ToInt64(creditsNet), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newSQL, "@credBtlLifetime", Convert.ToInt32(battleLifeTime), DB.SqlDataType.Int);
+                    tci.playerTankId = Convert.ToInt32(dr["playerTankId"]);
+				    tci.creditsIncome = Convert.ToDouble(dr["credits"]);
+                    tci.creditsNet = Convert.ToDouble(dr["creditsNet"]);
+                    tci.maxcreditsIncome = Convert.ToDouble(dr["maxcredits"]);
+                    tci.maxcreditsNet = Convert.ToDouble(dr["maxcreditsNet"]);
+                    tci.battleLifeTime = Convert.ToDouble(dr["battleLifeTime"]);
+                    string newSQL = TankCreditCalculation.CreateSQL(tci);                    
                     sql += newSQL;
                     if (sql.Length >= 5000) // Approx 50 updates
                     {

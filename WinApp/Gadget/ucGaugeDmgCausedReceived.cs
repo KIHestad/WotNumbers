@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WinApp.Code;
 using System.Diagnostics;
 using WinApp.Gadget;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Gadget
 {
@@ -44,11 +45,11 @@ namespace WinApp.Gadget
 				if (i == 0)
 					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
 				else
-					aGauge1.RangesStartValue[i] = (float)Rating.rangeKillDeath[i];
+                    aGauge1.RangesStartValue[i] = (float)ColorValues.RangeKillDeath[i];
 				if (i == 8)
 					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
 				else
-					aGauge1.RangesEndValue[i] = (float)Rating.rangeKillDeath[i + 1];
+                    aGauge1.RangesEndValue[i] = (float)ColorValues.RangeKillDeath[i + 1];
 				aGauge1.RangeEnabled = true;
 			}
 			// Show battle mode
@@ -122,7 +123,7 @@ namespace WinApp.Gadget
 			lblLeft.Text = Shorten(dmg);
 			lblRight.Text = Shorten(dmgReceived);
 			lblCenter.Text = end_val.ToString();
-			lblCenter.ForeColor = Rating.KillDeathColor(end_val);
+            lblCenter.ForeColor = ColorValues.KillDeathColor(end_val);
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
 			move_speed = Math.Abs(end_val - aGauge1.Value) / 30;
 			timer1.Enabled = true;

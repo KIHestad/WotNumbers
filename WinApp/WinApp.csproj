@@ -148,6 +148,7 @@
     <Compile Include="Code\FormControl\Agauge.Designer.cs">
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\FormLayout\ColorValues.cs" />
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\ColListSystemDefault.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
@@ -181,6 +182,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Code\DbVersion.cs" />
+    <Compile Include="Code\TankCreditCalculation.cs" />
     <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\UtilSecurity.cs" />
     <Compile Include="Code\vBAddictHelper.cs" />

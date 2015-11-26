@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WinApp.Code;
 using System.Diagnostics;
 using WinApp.Gadget;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Gadget
 {
@@ -49,11 +50,11 @@ namespace WinApp.Gadget
 				if (i == 0)
 					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
 				else
-					aGauge1.RangesStartValue[i] = (float)Rating.rangeWR[i];
+                    aGauge1.RangesStartValue[i] = (float)ColorValues.RangeWR[i];
 				if (i == 8)
 					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
 				else
-					aGauge1.RangesEndValue[i] = (float)Rating.rangeWR[i + 1];
+                    aGauge1.RangesEndValue[i] = (float)ColorValues.RangeWR[i + 1];
 				aGauge1.RangeEnabled = true;
 			}
 			// Show battle mode
@@ -156,7 +157,7 @@ namespace WinApp.Gadget
 				end_val = wins / battles * 100; // end_val = Win Rate
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString() + " %";
-			aGauge1.CenterTextColor = Rating.WinRateColor(end_val);
+            aGauge1.CenterTextColor = ColorValues.WinRateColor(end_val);
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
 			if (end_val < aGauge1.ValueMin - outsideRange) end_val = aGauge1.ValueMin - outsideRange;

@@ -21,7 +21,7 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 281; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 285; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2444,13 +2444,27 @@ namespace WinApp.Code
                         temp + "VALUES (544, 1, 360, 'CAST(playerTankBattle.credAvgResult / CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60 AS FLOAT) AS INT)', 'Earned per min', 'Estimated credit earned per minute', 'Credit', 60, 'Int'); ";
                     sqlite = mssql;
                     break;
-                case 280:
-                    ColListSystemDefault.NewSystemTankColList();
-                    break;
                 case 281:
                     RunRecalcBattleCreditPerTank = true;
                     break;
-			}
+                case 284:
+                    mssql =
+                        "UPDATE columnSelection SET name='Avg Cred Income' WHERE id=534;" +
+                        "UPDATE columnSelection SET name='Avg Cred Cost' WHERE id=535;" +
+                        "UPDATE columnSelection SET name='Avg Cred Result' WHERE id=536;" +
+                        "UPDATE columnSelection SET name='Max Cred Income' WHERE id=537;" +
+                        "UPDATE columnSelection SET name='Max Cred Cost' WHERE id=538;" +
+                        "UPDATE columnSelection SET name='Max Cred Result' WHERE id=539;" +
+                        "UPDATE columnSelection SET name='Tot Cred Income' WHERE id=540;" +
+                        "UPDATE columnSelection SET name='Tot Cred Cost' WHERE id=541;" +
+                        "UPDATE columnSelection SET name='Tot Cred Result' WHERE id=542;" +
+                        "UPDATE columnSelection SET name='Cred Result per min' WHERE id=544;";
+                    sqlite = mssql;
+                    break;
+                case 285:
+                    ColListSystemDefault.NewSystemTankColList();
+                    break;
+            }
 			string sql = "";
 			// get sql for correct dbtype
 			if (dbType == ConfigData.dbType.MSSQLserver) 

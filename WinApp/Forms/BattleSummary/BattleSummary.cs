@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Forms
 {
@@ -739,21 +740,21 @@ namespace WinApp.Forms
 		private void dgvRating_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
 		{
 			// rating color
-			dgvRating.Rows[0].Cells["Result"].Style.ForeColor = Rating.WN8color(wn8);
-			dgvRating.Rows[0].Cells["Average"].Style.ForeColor = Rating.WN8color(wn8avg);
-			dgvRating.Rows[1].Cells["Result"].Style.ForeColor = Rating.WN7color(wn7);
-			dgvRating.Rows[1].Cells["Average"].Style.ForeColor = Rating.WN7color(wn7avg);
-            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = Rating.EffColor(eff);
-            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = Rating.EffColor(effavg);
-            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = Rating.WinRateColor(wr);
-            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = Rating.WinRateColor(wravg);
+            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorValues.WN8color(wn8);
+            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorValues.WN8color(wn8avg);
+            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorValues.WN7color(wn7);
+            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorValues.WN7color(wn7avg);
+            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorValues.EffColor(eff);
+            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorValues.EffColor(effavg);
+            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = ColorValues.WinRateColor(wr);
+            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = ColorValues.WinRateColor(wravg);
 
 		}
 
 		private void dgvWN8_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
 		{
 			// rating color
-			dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = Rating.WN8color(wn8);
+            dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = ColorValues.WN8color(wn8);
 		}
 
 		#endregion

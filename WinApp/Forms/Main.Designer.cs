@@ -183,15 +183,17 @@
             this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.mViewChart = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
+            this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsUploadTovBAddict = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
-            this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
@@ -214,7 +216,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -295,7 +296,7 @@
             this.MainTheme.MainArea = mainAreaClass1;
             this.MainTheme.Name = "MainTheme";
             this.MainTheme.Resizable = true;
-            this.MainTheme.Size = new System.Drawing.Size(872, 459);
+            this.MainTheme.Size = new System.Drawing.Size(963, 479);
             this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
             this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
             this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -325,11 +326,12 @@
             this.mHomeEdit,
             this.toolStripSeparator23,
             this.mViewChart,
+            this.toolStripSeparator16,
             this.mSettings,
             this.mHelp});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(863, 25);
+            this.toolMain.Size = new System.Drawing.Size(942, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 18;
             this.toolMain.Text = "toolStripEx1";
@@ -1648,15 +1650,19 @@
             // mViewChart
             // 
             this.mViewChart.AutoSize = false;
-            this.mViewChart.BackColor = System.Drawing.Color.Transparent;
-            this.mViewChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mViewChart.BackColor = System.Drawing.Color.Fuchsia;
             this.mViewChart.Image = ((System.Drawing.Image)(resources.GetObject("mViewChart.Image")));
             this.mViewChart.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mViewChart.Name = "mViewChart";
-            this.mViewChart.Size = new System.Drawing.Size(22, 22);
-            this.mViewChart.Text = "toolStripButton1";
-            this.mViewChart.ToolTipText = "Chart";
+            this.mViewChart.Size = new System.Drawing.Size(61, 22);
+            this.mViewChart.Text = "Charts";
+            this.mViewChart.ToolTipText = "Show Charts";
             this.mViewChart.Click += new System.EventHandler(this.toolItemViewChart_Click);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
             // 
             // mSettings
             // 
@@ -1705,6 +1711,14 @@
             this.mSettingsRunBattleCheck.Text = "Run Battle Check...";
             this.mSettingsRunBattleCheck.Click += new System.EventHandler(this.mSettingsRunBattleCheck_Click);
             // 
+            // mUpdateDataFromAPI
+            // 
+            this.mUpdateDataFromAPI.Enabled = false;
+            this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
+            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
+            this.mUpdateDataFromAPI.Text = "Update Data from API...";
+            this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
+            // 
             // toolStripSeparator24
             // 
             this.toolStripSeparator24.Name = "toolStripSeparator24";
@@ -1730,14 +1744,6 @@
             this.toolStripSeparator14.Name = "toolStripSeparator14";
             this.toolStripSeparator14.Size = new System.Drawing.Size(261, 6);
             // 
-            // mUpdateDataFromAPI
-            // 
-            this.mUpdateDataFromAPI.Enabled = false;
-            this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
-            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
-            this.mUpdateDataFromAPI.Text = "Update Data from API...";
-            this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
-            // 
             // mRecalcBattleWN8
             // 
             this.mRecalcBattleWN8.Enabled = false;
@@ -1747,12 +1753,20 @@
             this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
             this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleWN8_Click);
             // 
+            // mRecalcBattleCreditsPerTank
+            // 
+            this.mRecalcBattleCreditsPerTank.Enabled = false;
+            this.mRecalcBattleCreditsPerTank.Name = "mRecalcBattleCreditsPerTank";
+            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
+            this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
+            // 
             // mImportBattlesFromWotStat
             // 
             this.mImportBattlesFromWotStat.Enabled = false;
             this.mImportBattlesFromWotStat.Name = "mImportBattlesFromWotStat";
             this.mImportBattlesFromWotStat.Size = new System.Drawing.Size(264, 22);
-            this.mImportBattlesFromWotStat.Text = "Import battles from WoT Statistics...";
+            this.mImportBattlesFromWotStat.Text = "Import Battles from WoT Statistics...";
             this.mImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
             // 
             // toolStripSeparator25
@@ -1856,7 +1870,7 @@
             this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
             this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatusRowCount.Location = new System.Drawing.Point(783, 439);
+            this.lblStatusRowCount.Location = new System.Drawing.Point(874, 459);
             this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatusRowCount.Name = "lblStatusRowCount";
             this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -1992,7 +2006,7 @@
             this.lblStatus2.AutoSize = true;
             this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatus2.Location = new System.Drawing.Point(69, 439);
+            this.lblStatus2.Location = new System.Drawing.Point(69, 459);
             this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatus2.Name = "lblStatus2";
             this.lblStatus2.Size = new System.Drawing.Size(82, 13);
@@ -2006,7 +2020,7 @@
             this.lblStatus1.AutoSize = true;
             this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblStatus1.Location = new System.Drawing.Point(13, 439);
+            this.lblStatus1.Location = new System.Drawing.Point(13, 459);
             this.lblStatus1.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatus1.Name = "lblStatus1";
             this.lblStatus1.Size = new System.Drawing.Size(37, 13);
@@ -2014,20 +2028,12 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // mRecalcBattleCreditsPerTank
-            // 
-            this.mRecalcBattleCreditsPerTank.Enabled = false;
-            this.mRecalcBattleCreditsPerTank.Name = "mRecalcBattleCreditsPerTank";
-            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(264, 22);
-            this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
-            this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Fuchsia;
-            this.ClientSize = new System.Drawing.Size(872, 459);
+            this.ClientSize = new System.Drawing.Size(963, 479);
             this.Controls.Add(this.MainTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2236,6 +2242,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
 		private System.Windows.Forms.ToolStripMenuItem mModeGlobalMap;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleCreditsPerTank;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
 	}
 }
 

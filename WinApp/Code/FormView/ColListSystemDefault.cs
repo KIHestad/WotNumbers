@@ -144,27 +144,27 @@ namespace WinApp.Code.FormView
             sql =
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (12," + id + ",1,35);" + // Tier
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (181," + id + ",2,90);" + // Tank Image
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,153);" + // Tank
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (1," + id + ",3,140);" + // Tank
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (44," + id + ",4,50);" + // Type
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (57," + id + ",5,50);" + // Nation
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (900," + id + ",6,3);" + //  - Separator 0 -
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (50," + id + ",7,50);" + // Battles
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (533," + id + ",8,56);" + // Credit Btl Count
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (533," + id + ",8,50);" + // Credit Btl Count
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (901," + id + ",9,3);" + //  - Separator 1 -
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (534," + id + ",10,56);" + // Average Income
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (534," + id + ",10,54);" + // Average Income
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (535," + id + ",11,54);" + // Average Cost
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (536," + id + ",12,54);" + // Average Earned
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",13,3);" + //  - Separator 2 -
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (537," + id + ",14,60);" + // Max Income
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (538," + id + ",15,59);" + // Max Cost
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (539," + id + ",16,55);" + // Max Earned
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (537," + id + ",14,54);" + // Max Income
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (538," + id + ",15,54);" + // Max Cost
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (539," + id + ",16,54);" + // Max Earned
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",17,3);" + //  - Separator 3 -
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (540," + id + ",18,76);" + // Tot Income
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (541," + id + ",19,75);" + // Tot Cost
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (542," + id + ",20,77);" + // Tot Earned
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (540," + id + ",18,72);" + // Tot Income
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (541," + id + ",19,72);" + // Tot Cost
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (542," + id + ",20,72);" + // Tot Earned
                 "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (904," + id + ",21,3);" + //  - Separator 4 -
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (543," + id + ",22,60);" + // Avg Btl Lifetime
-                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (544," + id + ",23,60);"; // Earned per min
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (543," + id + ",22,54);" + // Avg Btl Lifetime
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (544," + id + ",23,54);"; // Earned per min
 			DB.ExecuteNonQuery(sql);
 			return id;
 		}

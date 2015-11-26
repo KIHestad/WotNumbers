@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Diagnostics;
 using WinApp.Gadget;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Forms
 {
@@ -54,7 +55,13 @@ namespace WinApp.Forms
 
 		private void Main_Load(object sender, EventArgs e)
 		{
-			// Get PosSize
+            if (DB.CheckConnection())
+            {
+                TankHelper.GetAllLists();
+                // Check DB Version an dupgrade if needed
+                bool versionOK = DBVersion.CheckForDbUpgrade(this);
+            }
+            // Get PosSize
 			if (mainFormPosSize != null)
 			{
 				this.Top = mainFormPosSize.Top;
@@ -223,6 +230,9 @@ namespace WinApp.Forms
 			dataGridMainPopup_CopyRowToClipboard.Image = imageListToolStrip.Images[13];
 			dataGridMainPopup_CopyRowToClipboard.Click += new EventHandler(dataGridMainPopup_CopyRowToClipboard_Click);
 
+            ToolStripMenuItem dataGridMainPopup_RecalculateTankCredit = new ToolStripMenuItem("Recalculate Tank Credits");
+            dataGridMainPopup_RecalculateTankCredit.Click += new EventHandler(dataGridMainPopup_RecalculateTankCredit_Click);
+
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
@@ -244,6 +254,8 @@ namespace WinApp.Forms
 						dataGridMainPopup_FavListRemoveTank,
 						dataGridMainPopup_FavListCreateNew,
 						new ToolStripSeparator(),
+                        dataGridMainPopup_RecalculateTankCredit,
+                        new ToolStripSeparator(),
 						dataGridMainPopup_CopyRowToClipboard
 					});
 					break;
@@ -344,22 +356,19 @@ namespace WinApp.Forms
 						frm.ShowDialog();
 					}
 				}
-				// Init form
+				
+                // Init form
 				SetFormTitle();
 				SetListener(false);
-				// Update file watcher to read battle result file - trigger if new dossier or battle result is found
-				fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
-				fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
-				fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
-				fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-				fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 				
 				if (DB.CheckConnection())
 				{
-					TankHelper.GetAllLists();
+					// Moved to Page Load - to run this and make sure db upgrades are done before app starts
+                    // TankHelper.GetAllLists();
 					// Check DB Version an dupgrade if needed
-					bool versionOK = DBVersion.CheckForDbUpgrade(this);
-					// Add init items to Form
+					// bool versionOK = DBVersion.CheckForDbUpgrade(this);
+					
+                    // Add init items to Form
 					SetFavListMenu();
 					// Get Images
 					ImageHelper.CreateTankImageTable();
@@ -422,6 +431,14 @@ namespace WinApp.Forms
 					StatusBarHelper.ClearAfterNextShow = false;
 					SetStatus2("Application started with errors");
 				}
+
+                // Update file watcher to read battle result file - trigger if new dossier or battle result is found
+                fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
+                fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
+                fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
+                fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
+                fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+
 				// Ready 
 				MainTheme.Cursor = Cursors.Default;
 				// Write log
@@ -2853,7 +2870,7 @@ namespace WinApp.Forms
 					if (dataGridMain["EFF", e.RowIndex].Value != DBNull.Value)
 					{
 						int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
-						cell.Style.ForeColor = Rating.EffColor(eff);
+                        cell.Style.ForeColor = ColorValues.EffColor(eff);
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
@@ -2862,7 +2879,7 @@ namespace WinApp.Forms
 					if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
 					{
 						int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
-						cell.Style.ForeColor = Rating.WN8color(wn8);
+                        cell.Style.ForeColor = ColorValues.WN8color(wn8);
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
@@ -2871,10 +2888,19 @@ namespace WinApp.Forms
 					if (dataGridMain["WN7", e.RowIndex].Value != DBNull.Value)
 					{
 						int wn7 = Convert.ToInt32(dataGridMain["WN7", e.RowIndex].Value);
-						cell.Style.ForeColor = Rating.WN7color(wn7);
+                        cell.Style.ForeColor = ColorValues.WN7color(wn7);
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
+                else if (col.Equals("Dmg Rank"))
+                {
+                    if (dataGridMain["Dmg Rank", e.RowIndex].Value != DBNull.Value)
+                    {
+                        int dmgRank = Convert.ToInt32(dataGridMain["Dmg Rank", e.RowIndex].Value);
+                        cell.Style.ForeColor = ColorValues.DmgRankColor(dmgRank);
+                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                    }
+                }
 				else if (col.Contains("%"))
 				{
 					if (dataGridMain[col, e.RowIndex].Value != DBNull.Value)
@@ -2957,7 +2983,7 @@ namespace WinApp.Forms
                         if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
                         {
                             double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
-                            cell.Style.ForeColor = Rating.WinRateColor(wr);
+                            cell.Style.ForeColor = ColorValues.WinRateColor(wr);
                             cell.Style.SelectionForeColor = cell.Style.ForeColor;
                         }
                     }
@@ -3157,6 +3183,15 @@ namespace WinApp.Forms
 			}
 			System.Windows.Forms.Clipboard.SetText(s);
 		}
+
+        private void dataGridMainPopup_RecalculateTankCredit_Click(object sender, EventArgs e)
+		{
+            int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+            TankCreditCalculation.RecalculateForTank(playerTankId);
+            ShowView("Refreshed grid");
+		}
+
+        
 
 		private void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
 		{

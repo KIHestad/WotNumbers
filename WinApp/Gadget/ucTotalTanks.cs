@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Gadget
 {
@@ -131,7 +132,7 @@ namespace WinApp.Gadget
 				{
 					if (cell.Value != DBNull.Value)
 					{
-						cell.Style.ForeColor = Rating.WinRateColor(Convert.ToDouble(cell.Value));
+                        cell.Style.ForeColor = ColorValues.WinRateColor(Convert.ToDouble(cell.Value));
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						cell.Style.Format = "0.00";
 					}

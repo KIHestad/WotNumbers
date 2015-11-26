@@ -98,17 +98,29 @@ namespace WinApp.Code
 		public static Color ChartBarGreenLight = ColorTranslator.FromHtml("#3A7030");
 		public static Color ChartBarPurpleLight = ColorTranslator.FromHtml("#683468");
 		public static Color ChartBarOcreLight = ColorTranslator.FromHtml("#755D2E");
-		
-		// Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
-		public static Color Rating_very_bad = ColorTranslator.FromHtml("#CE0000");		// dark red
-		public static Color Rating_bad = ColorTranslator.FromHtml("#FF0000");			// red
-		public static Color Rating_below_average = ColorTranslator.FromHtml("#FF8400");	// orange
-		public static Color Rating_average = ColorTranslator.FromHtml("#FFFF00");		// yellow
-		public static Color Rating_good = ColorTranslator.FromHtml("#4CFF00");			// green
-		public static Color Rating_very_good = ColorTranslator.FromHtml("#2F9E00");		// dark green
-		public static Color Rating_great = ColorTranslator.FromHtml("#30A8FF");			// blue
-		public static Color Rating_uniqum = ColorTranslator.FromHtml("#CC5EFF");		// purple
-		public static Color Rating_super_uniqum = ColorTranslator.FromHtml("#B200FF");	// deep purple
+
+        // Player rating colors - named
+        public static Color Rating_0_redDark = ColorTranslator.FromHtml("#CE0000");		// red dark
+        public static Color Rating_1_red = ColorTranslator.FromHtml("#FF0000");			// red
+        public static Color Rating_2_orange = ColorTranslator.FromHtml("#FF8400");	    // orange
+        public static Color Rating_3_yellow = ColorTranslator.FromHtml("#FFFF00");		// yellow
+        public static Color Rating_4_green = ColorTranslator.FromHtml("#4CFF00");		// green
+        public static Color Rating_5_greenDark = ColorTranslator.FromHtml("#2F9E00");	// green dark
+        public static Color Rating_6_blue = ColorTranslator.FromHtml("#60C7FF");		// blue
+        public static Color Rating_7_blueDark = ColorTranslator.FromHtml("#30A8FF");	// blue dark
+        public static Color Rating_8_purple = ColorTranslator.FromHtml("#CC5EFF");		// purple
+        public static Color Rating_9_purpleDark = ColorTranslator.FromHtml("#B200FF");	// purple dark
+
+        // Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
+        public static Color Rating_very_bad =       Rating_0_redDark;		
+		public static Color Rating_bad =            Rating_1_red;
+        public static Color Rating_below_average =  Rating_2_orange;
+        public static Color Rating_average =        Rating_3_yellow;
+        public static Color Rating_good =           Rating_4_green;
+        public static Color Rating_very_good =      Rating_5_greenDark;
+        public static Color Rating_great =          Rating_7_blueDark;
+        public static Color Rating_uniqum =         Rating_8_purple;
+        public static Color Rating_super_uniqum =   Rating_9_purpleDark;
 
 		public static int[] DefaultChartBarColors()
 		{

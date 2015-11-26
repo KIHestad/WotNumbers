@@ -357,7 +357,7 @@ namespace WinApp.Code
 						}
 						// Fetch battle
 						sql =
-								"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID  " +
+								"select b.id as battleId, pt.id as playerTankId, pt.gGrindXP, b.arenaUniqueID, b.battleMode  " +
 								"from battle b left join playerTank pt on b.playerTankId = pt.id " +
 								"where pt.tankId=@tankId and b.battleTime>@battleTimeFrom and b.battleTime<@battleTimeTo and b.battlesCount=1;";
 						DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
@@ -373,6 +373,7 @@ namespace WinApp.Code
 								// Battle without enchanced values found
 								int battleId = Convert.ToInt32(dt.Rows[0]["battleId"]);
 								int playerTankId = Convert.ToInt32(dt.Rows[0]["playerTankId"]);
+                                //string battleMode = dt.Rows[0]["battleMode"].ToString();
 								int grindXP = Convert.ToInt32(dt.Rows[0]["gGrindXP"]);
 								// Get values
 								List<BattleValue> battleValues = new List<BattleValue>();
@@ -890,6 +891,8 @@ namespace WinApp.Code
 								// If grinding, adjust grogress
 								if (grindXP > 0)
 									GrindingProgress(playerTankId, (int)token_personel.SelectToken("xp"));
+                                // Update Tank Credits
+                                TankCreditCalculation.RecalculateForTank(playerTankId);
 								// Done
 								deleteFileAfterRead = true;
 								refreshAfterUpdate = true;
