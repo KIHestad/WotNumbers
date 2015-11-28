@@ -130,6 +130,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\AppSettingsHelper.cs" />
     <Compile Include="Code\AppVersion.cs" />
     <Compile Include="Code\AutoSetupHelper.cs" />
     <Compile Include="Code\BattleHelper.cs" />
@@ -223,6 +224,36 @@
     </Compile>
     <Compile Include="Forms\ManualCheckNewBattles.Designer.cs">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsImport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsImport.Designer.cs">
+      <DependentUpon>AppSettingsImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsLayout.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsLayout.Designer.cs">
+      <DependentUpon>AppSettingsLayout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettings.Designer.cs">
+      <DependentUpon>AppSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsMain.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsMain.Designer.cs">
+      <DependentUpon>AppSettingsMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsWoT.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsWoT.Designer.cs">
+      <DependentUpon>AppSettingsWoT.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleKDratioCRdmg.cs">
       <SubType>Form</SubType>
@@ -380,6 +411,12 @@
     <Compile Include="Forms\BattleChart.Designer.cs">
       <DependentUpon>BattleChart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\AppSettingsvBAddict.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsvBAddict.Designer.cs">
+      <DependentUpon>AppSettingsvBAddict.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Test\ViewRange.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -521,6 +558,21 @@
     <EmbeddedResource Include="Forms\ManualCheckNewBattles.resx">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsImport.resx">
+      <DependentUpon>AppSettingsImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsLayout.resx">
+      <DependentUpon>AppSettingsLayout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettings.resx">
+      <DependentUpon>AppSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsMain.resx">
+      <DependentUpon>AppSettingsMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsWoT.resx">
+      <DependentUpon>AppSettingsWoT.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleKDratioCRdmg.resx">
       <DependentUpon>RecalcBattleKDratioCRdmg.cs</DependentUpon>
     </EmbeddedResource>
@@ -595,6 +647,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleChart.resx">
       <DependentUpon>BattleChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsvBAddict.resx">
+      <DependentUpon>AppSettingsvBAddict.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>

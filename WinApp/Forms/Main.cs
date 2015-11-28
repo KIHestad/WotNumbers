@@ -397,10 +397,13 @@ namespace WinApp.Forms
 							}
 						}
 
-						if (brrOK && !BattleResultRetriever.Installed)
+						if (brrOK && (!BattleResultRetriever.Installed || DBVersion.RunInstallNewBrrVersion))
 						{
-							MsgBox.Button result = MsgBox.Show(
-								"World of Tanks Battle Result Retriever mod is not installed, install now? " + Environment.NewLine + Environment.NewLine +
+							string s = "WoT Battle Result Retriever mod is not installed, install now? ";
+                            if (DBVersion.RunInstallNewBrrVersion)
+                                s = "New version of WoT Battle Result Retriever mod needs to be installed, install now? ";
+                            MsgBox.Button result = MsgBox.Show(
+								s + Environment.NewLine + Environment.NewLine +
 								"To avoid this check on startup go to Settings + WoT Game Settings" + Environment.NewLine + Environment.NewLine,
 								"Install Battle Result Retriever",
 								MsgBoxType.OKCancel, this
@@ -425,8 +428,9 @@ namespace WinApp.Forms
 				{
 					Config.Settings.dossierFileWathcherRun = 0;
 					SetListener(false);
-					mSettingsApp.Enabled = true;
-					mShowDbTables.Enabled = false;
+                    mAppSettings.Enabled = true;
+                    mSettingsApp.Enabled = true;
+                    mShowDbTables.Enabled = false;
 					StatusBarHelper.Message = "Database connection failed";
 					StatusBarHelper.ClearAfterNextShow = false;
 					SetStatus2("Application started with errors");
@@ -628,6 +632,7 @@ namespace WinApp.Forms
 			mImportBattlesFromWotStat.Enabled = true;
 			mSettingsAppLayout.Enabled = true;
 			mSettingsApp.Enabled = true;
+            mAppSettings.Enabled = true;
 		}
 
 		#endregion
@@ -2896,7 +2901,7 @@ namespace WinApp.Forms
                 {
                     if (dataGridMain["Dmg Rank", e.RowIndex].Value != DBNull.Value)
                     {
-                        int dmgRank = Convert.ToInt32(dataGridMain["Dmg Rank", e.RowIndex].Value);
+                        double dmgRank = Convert.ToDouble(dataGridMain["Dmg Rank", e.RowIndex].Value);
                         cell.Style.ForeColor = ColorValues.DmgRankColor(dmgRank);
                         cell.Style.SelectionForeColor = cell.Style.ForeColor;
                     }
@@ -3543,7 +3548,79 @@ namespace WinApp.Forms
 
 		#region App, DB and other Settings + Help/About + Chart
 
-		private void toolItemViewChart_Click(object sender, EventArgs e)
+        private void mAppSettings_Click(object sender, EventArgs e)
+        {
+            // Stop file watchers if running
+            int runState = Config.Settings.dossierFileWathcherRun;
+            if (runState == 1)
+            {
+                Config.Settings.dossierFileWathcherRun = 0;
+                SetListener();
+            }
+
+            string databaseFilename = Config.Settings.databaseFileName;
+            string databaseName = Config.Settings.databaseName;
+            ConfigData.dbType databateType = Config.Settings.databaseType;
+
+            // Show dialog
+            Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
+            frm.ShowDialog();
+
+            // Update main form title
+            currentPlayerId = Config.Settings.playerId;
+            SetFormTitle();
+
+            // Check for api update
+            if (DBVersion.RunWotApi)
+                RunWotApi(true);
+
+            // Check if new database is created, database should be present but no player should exist
+            if (DB.CheckConnection(true))
+            {
+                bool runDossier = false;
+                // If no player selected, or changed db type run dosser check
+                runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType);
+                if (!runDossier)
+                {
+                    // check if changed db according to dbtype
+                    if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+                        runDossier = (databaseFilename != Config.Settings.databaseFileName);
+                    else
+                        runDossier = (databaseName != Config.Settings.databaseName);
+                }
+                if (runDossier)
+                {
+                    MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBoxType.OKCancel, this);
+                    if (result == MsgBox.Button.OKButton)
+                    {
+                        RunInitialDossierFileCheck("Running initial battle fetch for new database...");
+                    }
+                }
+            }
+
+            // Set new Layout if changed
+            dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+            dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+            dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+
+            // Return to prev file watcher state
+            if (runState != Config.Settings.dossierFileWathcherRun)
+            {
+                Config.Settings.dossierFileWathcherRun = runState;
+            }
+            // Update main form
+            SetListener();
+            currentPlayerId = Config.Settings.playerId;
+            SetFormTitle();
+            SetFavListMenu(); // Reload fav list items
+            SetColListMenu(); // Refresh column setup list now
+
+            // Refresh data
+            SetStatus2("Refreshed grid");
+            ChangeView(MainSettings.View, true);
+        }
+        
+        private void toolItemViewChart_Click(object sender, EventArgs e)
 		{
 			Form frm = new Forms.BattleChartTier(0);
 			FormHelper.OpenFormToRightOfParent(this, frm);
@@ -3569,9 +3646,10 @@ namespace WinApp.Forms
 			// Update main form title
 			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
-			// Go to tank list, as home view with gauges fails if no data present?
-			ChangeView(GridView.Views.Overall, true);
-			SetStatus2("Refreshed grid");
+			
+            // Go to tank list, as home view with gauges fails if no data present?
+			// ChangeView(GridView.Views.Overall, true);
+			
 
 			// Check for api update
 			if (DBVersion.RunWotApi)
@@ -3601,18 +3679,23 @@ namespace WinApp.Forms
 				}
 			}
 
-			// Return to prev file watcher state
+            // Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
 			{
 				Config.Settings.dossierFileWathcherRun = runState;
 			}
+
 			// Update main form
 			SetListener();
 			currentPlayerId = Config.Settings.playerId;
 			SetFormTitle();
 			SetFavListMenu(); // Reload fav list items
 			SetColListMenu(); // Refresh column setup list now
-			
+
+            // Refresh data
+            SetStatus2("Refreshed grid");
+            ChangeView(MainSettings.View, true);
+
 		}
 
 		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)

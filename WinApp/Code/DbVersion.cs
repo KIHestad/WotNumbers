@@ -19,9 +19,10 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleWN8 = false;
         public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
+        public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 285; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 286; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2464,6 +2465,10 @@ namespace WinApp.Code
                 case 285:
                     ColListSystemDefault.NewSystemTankColList();
                     break;
+                case 286:
+                    RunInstallNewBrrVersion = true;
+                    break;
+
             }
 			string sql = "";
 			// get sql for correct dbtype
