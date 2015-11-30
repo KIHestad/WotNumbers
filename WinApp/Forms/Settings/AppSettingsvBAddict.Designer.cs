@@ -30,8 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsvBAddict));
-            this.badLabel2 = new BadLabel();
             this.linkVbAddict = new System.Windows.Forms.LinkLabel();
+            this.btnCancel = new BadButton();
+            this.badLabel2 = new BadLabel();
             this.txtToken = new BadTextBox();
             this.badLabel1 = new BadLabel();
             this.chkActivateAutoUpload = new BadCheckBox();
@@ -42,19 +43,6 @@
             this.badGroupBox2 = new BadGroupBox();
             this.SuspendLayout();
             // 
-            // badLabel2
-            // 
-            this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel2.Dimmed = false;
-            this.badLabel2.Image = null;
-            this.badLabel2.Location = new System.Drawing.Point(17, 174);
-            this.badLabel2.Name = "badLabel2";
-            this.badLabel2.Size = new System.Drawing.Size(312, 48);
-            this.badLabel2.TabIndex = 25;
-            this.badLabel2.Text = "For testing connection and upload to vBAddict. Returns a result to verify correct" +
-    " token and connection/upload result.";
-            this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
             // linkVbAddict
             // 
             this.linkVbAddict.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
@@ -62,7 +50,7 @@
             this.linkVbAddict.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.linkVbAddict.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkVbAddict.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkVbAddict.Location = new System.Drawing.Point(268, 32);
+            this.linkVbAddict.Location = new System.Drawing.Point(267, 164);
             this.linkVbAddict.Name = "linkVbAddict";
             this.linkVbAddict.Size = new System.Drawing.Size(161, 13);
             this.linkVbAddict.TabIndex = 23;
@@ -70,16 +58,43 @@
             this.linkVbAddict.Text = "Create and view your token here";
             this.linkVbAddict.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             // 
+            // btnCancel
+            // 
+            this.btnCancel.BlackButton = false;
+            this.btnCancel.Checked = false;
+            this.btnCancel.Image = null;
+            this.btnCancel.Location = new System.Drawing.Point(375, 271);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(70, 23);
+            this.btnCancel.TabIndex = 26;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.ToolTipText = "";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // badLabel2
+            // 
+            this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel2.Dimmed = false;
+            this.badLabel2.Image = null;
+            this.badLabel2.Location = new System.Drawing.Point(17, 22);
+            this.badLabel2.Name = "badLabel2";
+            this.badLabel2.Size = new System.Drawing.Size(428, 48);
+            this.badLabel2.TabIndex = 25;
+            this.badLabel2.Text = "Please test connection and dossier upload to vBAddict. A message box will display" +
+    " the result. If case you have enabled secure access to vBAddict, add token below" +
+    ".";
+            this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
             // txtToken
             // 
             this.txtToken.HasFocus = false;
             this.txtToken.Image = null;
-            this.txtToken.Location = new System.Drawing.Point(17, 48);
+            this.txtToken.Location = new System.Drawing.Point(17, 182);
             this.txtToken.MultilineAllow = false;
             this.txtToken.Name = "txtToken";
             this.txtToken.PasswordChar = '\0';
             this.txtToken.ReadOnly = false;
-            this.txtToken.Size = new System.Drawing.Size(410, 23);
+            this.txtToken.Size = new System.Drawing.Size(406, 23);
             this.txtToken.TabIndex = 22;
             this.txtToken.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtToken.ToolTipText = "";
@@ -89,7 +104,7 @@
             this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel1.Dimmed = false;
             this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(17, 27);
+            this.badLabel1.Location = new System.Drawing.Point(17, 159);
             this.badLabel1.Name = "badLabel1";
             this.badLabel1.Size = new System.Drawing.Size(66, 23);
             this.badLabel1.TabIndex = 21;
@@ -101,7 +116,7 @@
             this.chkActivateAutoUpload.BackColor = System.Drawing.Color.Transparent;
             this.chkActivateAutoUpload.Checked = false;
             this.chkActivateAutoUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoUpload.Image")));
-            this.chkActivateAutoUpload.Location = new System.Drawing.Point(13, 84);
+            this.chkActivateAutoUpload.Location = new System.Drawing.Point(12, 215);
             this.chkActivateAutoUpload.Name = "chkActivateAutoUpload";
             this.chkActivateAutoUpload.Size = new System.Drawing.Size(200, 23);
             this.chkActivateAutoUpload.TabIndex = 20;
@@ -112,9 +127,9 @@
             this.btnUploadDossier.BlackButton = false;
             this.btnUploadDossier.Checked = false;
             this.btnUploadDossier.Image = null;
-            this.btnUploadDossier.Location = new System.Drawing.Point(326, 249);
+            this.btnUploadDossier.Location = new System.Drawing.Point(325, 74);
             this.btnUploadDossier.Name = "btnUploadDossier";
-            this.btnUploadDossier.Size = new System.Drawing.Size(97, 23);
+            this.btnUploadDossier.Size = new System.Drawing.Size(103, 23);
             this.btnUploadDossier.TabIndex = 19;
             this.btnUploadDossier.Text = "Upload Dossier";
             this.btnUploadDossier.ToolTipText = "";
@@ -125,9 +140,9 @@
             this.btnTestConnection.BlackButton = false;
             this.btnTestConnection.Checked = false;
             this.btnTestConnection.Image = null;
-            this.btnTestConnection.Location = new System.Drawing.Point(208, 249);
+            this.btnTestConnection.Location = new System.Drawing.Point(210, 74);
             this.btnTestConnection.Name = "btnTestConnection";
-            this.btnTestConnection.Size = new System.Drawing.Size(97, 23);
+            this.btnTestConnection.Size = new System.Drawing.Size(109, 23);
             this.btnTestConnection.TabIndex = 18;
             this.btnTestConnection.Text = "Connection Test";
             this.btnTestConnection.ToolTipText = "";
@@ -138,9 +153,9 @@
             this.btnSaveSettings.BlackButton = false;
             this.btnSaveSettings.Checked = false;
             this.btnSaveSettings.Image = null;
-            this.btnSaveSettings.Location = new System.Drawing.Point(358, 84);
+            this.btnSaveSettings.Location = new System.Drawing.Point(298, 271);
             this.btnSaveSettings.Name = "btnSaveSettings";
-            this.btnSaveSettings.Size = new System.Drawing.Size(69, 23);
+            this.btnSaveSettings.Size = new System.Drawing.Size(70, 23);
             this.btnSaveSettings.TabIndex = 17;
             this.btnSaveSettings.Text = "Save";
             this.btnSaveSettings.ToolTipText = "";
@@ -150,19 +165,19 @@
             // 
             this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox1.Image = null;
-            this.badGroupBox1.Location = new System.Drawing.Point(1, 1);
+            this.badGroupBox1.Location = new System.Drawing.Point(1, 132);
             this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(445, 125);
+            this.badGroupBox1.Size = new System.Drawing.Size(445, 122);
             this.badGroupBox1.TabIndex = 16;
-            this.badGroupBox1.Text = "Auto Upload Settings";
+            this.badGroupBox1.Text = "Settings";
             // 
             // badGroupBox2
             // 
             this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox2.Image = null;
-            this.badGroupBox2.Location = new System.Drawing.Point(1, 144);
+            this.badGroupBox2.Location = new System.Drawing.Point(1, 1);
             this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(445, 152);
+            this.badGroupBox2.Size = new System.Drawing.Size(445, 115);
             this.badGroupBox2.TabIndex = 24;
             this.badGroupBox2.Text = "Test connection / upload";
             // 
@@ -171,6 +186,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.badLabel2);
             this.Controls.Add(this.linkVbAddict);
             this.Controls.Add(this.txtToken);
@@ -182,7 +198,7 @@
             this.Controls.Add(this.badGroupBox1);
             this.Controls.Add(this.badGroupBox2);
             this.Name = "AppSettingsvBAddict";
-            this.Size = new System.Drawing.Size(464, 317);
+            this.Size = new System.Drawing.Size(456, 307);
             this.Load += new System.EventHandler(this.vBAddict_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -201,5 +217,6 @@
         private BadButton btnSaveSettings;
         private BadGroupBox badGroupBox1;
         private BadGroupBox badGroupBox2;
+        private BadButton btnCancel;
     }
 }

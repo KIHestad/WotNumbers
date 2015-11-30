@@ -45,32 +45,41 @@ namespace WinApp.Forms.Settings
                     return;
                 }
             }
-            if (System.IO.File.Exists(txtWotStatDb.Text))
+            try
             {
-                // Connect to WoT Stat DB
-                String dbConnection = "Data Source=" + txtWotStatDb.Text;
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-                cnn.Open();
-                SQLiteCommand mycommand = new SQLiteCommand(cnn);
-                // Get count
-                String sql = "SELECT COUNT(1) AS rowcount FROM RecentBattles";
-                mycommand.CommandText = sql;
-                SQLiteDataReader reader = mycommand.ExecuteReader();
-                int rowcount = 0;
-                foreach (var item in reader)
+                if (System.IO.File.Exists(txtWotStatDb.Text))
                 {
-                    rowcount = Convert.ToInt32(reader["rowcount"]);
-                }
-                progressBarImport.ValueMax = rowcount;
-                progressBarImport.Value = 0;
-                ImportNow(toDate);
+                    // Connect to WoT Stat DB
+                    String dbConnection = "Data Source=" + txtWotStatDb.Text;
+                    SQLiteConnection cnn = new SQLiteConnection(dbConnection);
+                    cnn.Open();
+                    SQLiteCommand mycommand = new SQLiteCommand(cnn);
+                    // Get count
+                    String sql = "SELECT COUNT(1) AS rowcount FROM RecentBattles";
+                    mycommand.CommandText = sql;
+                    SQLiteDataReader reader = mycommand.ExecuteReader();
+                    int rowcount = 0;
+                    foreach (var item in reader)
+                    {
+                        rowcount = Convert.ToInt32(reader["rowcount"]);
+                    }
+                    progressBarImport.ValueMax = rowcount;
+                    progressBarImport.Value = 0;
+                    ImportNow(toDate);
 
-                // Done
-                cnn.Close();
+                    // Done
+                    cnn.Close();
+                }
+                else
+                {
+                    Code.MsgBox.Show("Please select a WOT Statistics database file", "Missing file", (Form)this.TopLevelControl);
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                Code.MsgBox.Show("Pleas select a WOT Statistics database file", "Missing file", (Form)this.TopLevelControl);
+                Code.MsgBox.Show("Error occured, are you sure you have selected a WOT Statistics database file?" + Environment.NewLine + Environment.NewLine + ex.Message, "Error accesing WOT Statistics database file", (Form)this.TopLevelControl);
+                // throw;
             }
         }
 

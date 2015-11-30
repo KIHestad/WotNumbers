@@ -192,9 +192,9 @@
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
-            this.mAppSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
+            this.mAppSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
@@ -215,6 +215,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1678,6 +1679,7 @@
             this.toolStripSeparator25,
             this.mSettingsShowLogFiles,
             this.mShowDbTables,
+            this.toolStripSeparator1,
             this.mAppSettings,
             this.toolStripSeparator7,
             this.mExit,
@@ -1743,14 +1745,6 @@
             this.toolStripSeparator25.Name = "toolStripSeparator25";
             this.toolStripSeparator25.Size = new System.Drawing.Size(261, 6);
             // 
-            // mAppSettings
-            // 
-            this.mAppSettings.Enabled = false;
-            this.mAppSettings.Name = "mAppSettings";
-            this.mAppSettings.Size = new System.Drawing.Size(264, 22);
-            this.mAppSettings.Text = "Application Settings...";
-            this.mAppSettings.Click += new System.EventHandler(this.mAppSettings_Click);
-            // 
             // mSettingsShowLogFiles
             // 
             this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
@@ -1764,6 +1758,14 @@
             this.mShowDbTables.Size = new System.Drawing.Size(264, 22);
             this.mShowDbTables.Text = "Show Database Tables...";
             this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
+            // 
+            // mAppSettings
+            // 
+            this.mAppSettings.Enabled = false;
+            this.mAppSettings.Name = "mAppSettings";
+            this.mAppSettings.Size = new System.Drawing.Size(264, 22);
+            this.mAppSettings.Text = "Application Settings...";
+            this.mAppSettings.Click += new System.EventHandler(this.mAppSettings_Click);
             // 
             // toolStripSeparator7
             // 
@@ -2028,6 +2030,11 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(261, 6);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2242,6 +2249,7 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleCreditsPerTank;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
         private System.Windows.Forms.ToolStripMenuItem mAppSettings;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 	}
 }
 

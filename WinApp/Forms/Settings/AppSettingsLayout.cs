@@ -26,6 +26,11 @@ namespace WinApp.Forms.Settings
 
         private void AppSettingsLayout_Load(object sender, EventArgs e)
         {
+            DataBind();
+        }
+
+        private void DataBind()
+        {
             chkBattleTotalsPosition.Checked = Config.Settings.gridBattlesTotalsTop;
             int fs = Config.Settings.gridFontSize;
             if (fs == 0) fs = 8;
@@ -37,9 +42,6 @@ namespace WinApp.Forms.Settings
             chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
             chkNotifyIconFormExitToMinimize.Checked = Config.Settings.notifyIconFormExitToMinimize;
             SetTextForChkNotifyIconFormExitToMinimize();
-            //if (!chkNotifyIconUse.Checked)
-            //	chkNotifyIconFormExitToMinimize.Enabled = false;
-
         }
 
         private void SetTextForChkNotifyIconFormExitToMinimize()
@@ -68,13 +70,12 @@ namespace WinApp.Forms.Settings
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            
+            DataBind();
         }
 
         private void chkNotifyIconUse_Click(object sender, EventArgs e)
         {
             SetTextForChkNotifyIconFormExitToMinimize();
-            // chkNotifyIconFormExitToMinimize.Enabled = chkNotifyIconUse.Checked;
         }
 
 

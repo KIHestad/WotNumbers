@@ -66,6 +66,7 @@ namespace WinApp.Forms.Settings
                     break;
                 case AppSettingsHelper.Tabs.vBAddict:
                     btnTab4.Checked = true;
+                    control = new Forms.Settings.AppSettingsvBAddict();
                     break;
                 case AppSettingsHelper.Tabs.Import:
                     btnTab5.Checked = true;
@@ -73,6 +74,7 @@ namespace WinApp.Forms.Settings
                     break;
                 case AppSettingsHelper.Tabs.Replay:
                     btnTab6.Checked = true;
+                    control = new Forms.Settings.AppSettingsReplay();
                     break;
             }
             // Load usercontorl = content if any defined

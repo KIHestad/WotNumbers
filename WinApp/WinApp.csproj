@@ -225,6 +225,12 @@
     <Compile Include="Forms\ManualCheckNewBattles.Designer.cs">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\AppSettingsReplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsReplay.Designer.cs">
+      <DependentUpon>AppSettingsReplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\AppSettingsImport.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -557,6 +563,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ManualCheckNewBattles.resx">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsReplay.resx">
+      <DependentUpon>AppSettingsReplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AppSettingsImport.resx">
       <DependentUpon>AppSettingsImport.cs</DependentUpon>

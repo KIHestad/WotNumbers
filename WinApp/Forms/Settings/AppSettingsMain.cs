@@ -23,10 +23,10 @@ namespace WinApp.Forms.Settings
 
         private void AppSettingsMain_Load(object sender, EventArgs e)
         {
-            UpdateSettings();
+            DataBind();
         }
         
-        private void UpdateSettings()
+        private void DataBind()
         {
             // Startup settings
             txtDossierFilePath.Text = Config.Settings.dossierFilePath;
@@ -98,7 +98,7 @@ namespace WinApp.Forms.Settings
             saveOk = Config.SaveConfig(out msg);
             if (saveOk)
             {
-                MsgBox.Show(msg, "Application settings saved", (Form)this.TopLevelControl);
+                // MsgBox.Show(msg, "Application settings saved", (Form)this.TopLevelControl);
                 //((Form)this.TopLevelControl).Close();
             }
             else
@@ -115,7 +115,7 @@ namespace WinApp.Forms.Settings
                 Config.Settings.dossierFilePath = txtDossierFilePath.Text;
                 Form frm = new Forms.DatabaseSetting();
                 frm.ShowDialog();
-                UpdateSettings();
+                DataBind();
                 Refresh();
             }
             else
@@ -132,7 +132,7 @@ namespace WinApp.Forms.Settings
 
         private void Cancel_Click(object sender, EventArgs e)
         {
-            //((Form)this.TopLevelControl).Close();
+            DataBind();
         }
 
         

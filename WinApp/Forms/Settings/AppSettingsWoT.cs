@@ -22,6 +22,11 @@ namespace WinApp.Forms.Settings
 
         private void AppSettingsWoT_Load(object sender, EventArgs e)
         {
+            DataBind();
+        }
+
+        private void DataBind()
+        {
             //Find num of cores
             int coreCount = Environment.ProcessorCount;
             if (coreCount > 0) chkCore0.Visible = true;
@@ -81,8 +86,6 @@ namespace WinApp.Forms.Settings
             chkBrrStarupCheck.Checked = Config.Settings.CheckForBrrOnStartup;
         }
 
-
-
         private void ddStartApp_Click(object sender, EventArgs e)
         {
             Code.DropDownGrid.Show(ddStartApp, Code.DropDownGrid.DropDownGridType.List, "Do not start WoT,WoT Launcher,Wot Game");
@@ -120,7 +123,7 @@ namespace WinApp.Forms.Settings
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            
+            DataBind();
         }
 
         private void chkOptimizeOn_Click(object sender, EventArgs e)
@@ -192,6 +195,17 @@ namespace WinApp.Forms.Settings
                     MsgBox.Show(msg, "Error uninstalling BRR", (Form)this.TopLevelControl);
             }
             CheckForBrr();
+        }
+
+        private void cmdHelp_Click(object sender, EventArgs e)
+        {
+            string msg =
+                "Battle Resut Retriver is a WoT mod that creates battle result automatically after a battle is done without having to inspect post battle stats ingame. " +
+                Environment.NewLine + Environment.NewLine +
+                "WoT Startup settings enables Wot Numbers to start WoT using the top left icon or automatically on startup. It is also possible to start another program, just add the path to the 'Run' text box." +
+                Environment.NewLine + Environment.NewLine +
+                "Optimization Mode sets high priority and affinity for WoT game client. Avoid using CPU 0 for best performance.";
+            MsgBox.Show(msg, "Help for WoT settings", (Form)this.TopLevelControl);
         }
 
         

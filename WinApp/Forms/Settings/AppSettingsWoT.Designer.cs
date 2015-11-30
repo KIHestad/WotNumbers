@@ -75,6 +75,7 @@
             this.cmdHelp.TabIndex = 55;
             this.cmdHelp.Text = "Help";
             this.cmdHelp.ToolTipText = "";
+            this.cmdHelp.Click += new System.EventHandler(this.cmdHelp_Click);
             // 
             // btnBrrInstall
             // 
@@ -94,7 +95,7 @@
             this.chkBrrStarupCheck.BackColor = System.Drawing.Color.Transparent;
             this.chkBrrStarupCheck.Checked = false;
             this.chkBrrStarupCheck.Image = ((System.Drawing.Image)(resources.GetObject("chkBrrStarupCheck.Image")));
-            this.chkBrrStarupCheck.Location = new System.Drawing.Point(17, 95);
+            this.chkBrrStarupCheck.Location = new System.Drawing.Point(15, 95);
             this.chkBrrStarupCheck.Name = "chkBrrStarupCheck";
             this.chkBrrStarupCheck.Size = new System.Drawing.Size(273, 23);
             this.chkBrrStarupCheck.TabIndex = 36;
@@ -155,7 +156,7 @@
             this.chkAutoRun.BackColor = System.Drawing.Color.Transparent;
             this.chkAutoRun.Checked = false;
             this.chkAutoRun.Image = ((System.Drawing.Image)(resources.GetObject("chkAutoRun.Image")));
-            this.chkAutoRun.Location = new System.Drawing.Point(17, 225);
+            this.chkAutoRun.Location = new System.Drawing.Point(15, 225);
             this.chkAutoRun.Name = "chkAutoRun";
             this.chkAutoRun.Size = new System.Drawing.Size(119, 23);
             this.chkAutoRun.TabIndex = 42;
@@ -193,7 +194,7 @@
             this.chkCore7.Checked = false;
             this.chkCore7.Enabled = false;
             this.chkCore7.Image = ((System.Drawing.Image)(resources.GetObject("chkCore7.Image")));
-            this.chkCore7.Location = new System.Drawing.Point(371, 223);
+            this.chkCore7.Location = new System.Drawing.Point(373, 223);
             this.chkCore7.Name = "chkCore7";
             this.chkCore7.Size = new System.Drawing.Size(65, 21);
             this.chkCore7.TabIndex = 51;
@@ -206,7 +207,7 @@
             this.chkCore6.Checked = false;
             this.chkCore6.Enabled = false;
             this.chkCore6.Image = ((System.Drawing.Image)(resources.GetObject("chkCore6.Image")));
-            this.chkCore6.Location = new System.Drawing.Point(371, 204);
+            this.chkCore6.Location = new System.Drawing.Point(373, 204);
             this.chkCore6.Name = "chkCore6";
             this.chkCore6.Size = new System.Drawing.Size(65, 21);
             this.chkCore6.TabIndex = 50;
@@ -219,7 +220,7 @@
             this.chkCore5.Checked = false;
             this.chkCore5.Enabled = false;
             this.chkCore5.Image = ((System.Drawing.Image)(resources.GetObject("chkCore5.Image")));
-            this.chkCore5.Location = new System.Drawing.Point(371, 184);
+            this.chkCore5.Location = new System.Drawing.Point(373, 184);
             this.chkCore5.Name = "chkCore5";
             this.chkCore5.Size = new System.Drawing.Size(65, 21);
             this.chkCore5.TabIndex = 49;
@@ -232,7 +233,7 @@
             this.chkCore4.Checked = false;
             this.chkCore4.Enabled = false;
             this.chkCore4.Image = ((System.Drawing.Image)(resources.GetObject("chkCore4.Image")));
-            this.chkCore4.Location = new System.Drawing.Point(371, 165);
+            this.chkCore4.Location = new System.Drawing.Point(373, 165);
             this.chkCore4.Name = "chkCore4";
             this.chkCore4.Size = new System.Drawing.Size(65, 21);
             this.chkCore4.TabIndex = 48;
@@ -247,7 +248,7 @@
             this.chkCore3.Image = ((System.Drawing.Image)(resources.GetObject("chkCore3.Image")));
             this.chkCore3.Location = new System.Drawing.Point(308, 223);
             this.chkCore3.Name = "chkCore3";
-            this.chkCore3.Size = new System.Drawing.Size(70, 21);
+            this.chkCore3.Size = new System.Drawing.Size(62, 21);
             this.chkCore3.TabIndex = 47;
             this.chkCore3.Text = "CPU 3";
             this.chkCore3.Visible = false;
@@ -260,7 +261,7 @@
             this.chkCore2.Image = ((System.Drawing.Image)(resources.GetObject("chkCore2.Image")));
             this.chkCore2.Location = new System.Drawing.Point(308, 204);
             this.chkCore2.Name = "chkCore2";
-            this.chkCore2.Size = new System.Drawing.Size(70, 21);
+            this.chkCore2.Size = new System.Drawing.Size(62, 21);
             this.chkCore2.TabIndex = 46;
             this.chkCore2.Text = "CPU 2";
             this.chkCore2.Visible = false;
@@ -273,7 +274,7 @@
             this.chkCore1.Image = ((System.Drawing.Image)(resources.GetObject("chkCore1.Image")));
             this.chkCore1.Location = new System.Drawing.Point(308, 185);
             this.chkCore1.Name = "chkCore1";
-            this.chkCore1.Size = new System.Drawing.Size(70, 21);
+            this.chkCore1.Size = new System.Drawing.Size(62, 21);
             this.chkCore1.TabIndex = 45;
             this.chkCore1.Text = "CPU 1";
             this.chkCore1.Visible = false;
@@ -286,7 +287,7 @@
             this.chkCore0.Image = ((System.Drawing.Image)(resources.GetObject("chkCore0.Image")));
             this.chkCore0.Location = new System.Drawing.Point(308, 165);
             this.chkCore0.Name = "chkCore0";
-            this.chkCore0.Size = new System.Drawing.Size(70, 21);
+            this.chkCore0.Size = new System.Drawing.Size(62, 21);
             this.chkCore0.TabIndex = 44;
             this.chkCore0.Text = "CPU 0";
             this.chkCore0.Visible = false;
@@ -404,20 +405,20 @@
             this.Controls.Add(this.chkCore6);
             this.Controls.Add(this.chkCore5);
             this.Controls.Add(this.chkCore4);
-            this.Controls.Add(this.chkCore3);
-            this.Controls.Add(this.chkCore2);
-            this.Controls.Add(this.chkCore1);
-            this.Controls.Add(this.chkCore0);
             this.Controls.Add(this.chkOptimizeOn);
-            this.Controls.Add(this.badGroupBox2);
             this.Controls.Add(this.btnFolder);
             this.Controls.Add(this.txtFolder);
             this.Controls.Add(this.badLabel1);
             this.Controls.Add(this.ddStartApp);
             this.Controls.Add(this.badGroupBox1);
             this.Controls.Add(this.badGroupBox3);
+            this.Controls.Add(this.chkCore3);
+            this.Controls.Add(this.chkCore2);
+            this.Controls.Add(this.chkCore1);
+            this.Controls.Add(this.chkCore0);
+            this.Controls.Add(this.badGroupBox2);
             this.Name = "AppSettingsWoT";
-            this.Size = new System.Drawing.Size(457, 316);
+            this.Size = new System.Drawing.Size(457, 312);
             this.Load += new System.EventHandler(this.AppSettingsWoT_Load);
             this.ResumeLayout(false);
 

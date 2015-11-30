@@ -23,6 +23,11 @@ namespace WinApp.Forms.Settings
 
         private void vBAddict_Load(object sender, EventArgs e)
         {
+            DataBind();
+        }
+
+        private void DataBind()
+        {
             chkActivateAutoUpload.Checked = Config.Settings.vBAddictUploadActive;
             txtToken.Text = Config.Settings.vBAddictPlayerToken;
         }
@@ -79,11 +84,10 @@ namespace WinApp.Forms.Settings
                 
         }
 
-        private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.vbaddict.net/token.php");
+            DataBind();
         }
-
 
 		
     }
