@@ -233,6 +233,11 @@ namespace WinApp.Forms
             ToolStripMenuItem dataGridMainPopup_RecalculateTankCredit = new ToolStripMenuItem("Recalculate Tank Credits");
             dataGridMainPopup_RecalculateTankCredit.Click += new EventHandler(dataGridMainPopup_RecalculateTankCredit_Click);
 
+            ToolStripMenuItem dataGridMainPopup_Replay = new ToolStripMenuItem("Search for Replay");
+            dataGridMainPopup_Replay.Image = imageListToolStrip.Images[14];
+            dataGridMainPopup_Replay.Click += new EventHandler(dataGridMainPopup_Replay_Click);
+
+
 			// Add events
 			dataGridMainPopup.Opening += new System.ComponentModel.CancelEventHandler(dataGridMainPopup_Opening);
 			//Add to main context menu
@@ -271,6 +276,7 @@ namespace WinApp.Forms
 						new ToolStripSeparator(),
 						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup,
+                        dataGridMainPopup_Replay,
 						new ToolStripSeparator(),
 						dataGridMainPopup_FilterOnTank_FilterOnTankClear,
 						new ToolStripSeparator(),
@@ -345,7 +351,7 @@ namespace WinApp.Forms
 						"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
 						Environment.NewLine + Environment.NewLine,
 						"Welcome to Wot Numbers", MsgBoxType.OKCancel, this);
-					if (answer == MsgBox.Button.OKButton)
+					if (answer == MsgBox.Button.OK)
 						AutoSetup();
 					if (!LoadConfigOK)
 					{
@@ -408,7 +414,7 @@ namespace WinApp.Forms
 								"Install Battle Result Retriever",
 								MsgBoxType.OKCancel, this
 							);
-							if (result == MsgBox.Button.OKButton)
+							if (result == MsgBox.Button.OK)
 							{
 								string msg = "";
 								if (!BattleResultRetriever.Install(out msg))
@@ -610,7 +616,7 @@ namespace WinApp.Forms
 						"You are currently running version: " + AppVersion.AssemblyVersion + "." + Environment.NewLine + Environment.NewLine +
 						"Press 'OK' to download the new version now." + Environment.NewLine + Environment.NewLine;
 					Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "New version avaliable for download", MsgBoxType.OKCancel, this);
-					if (answer == MsgBox.Button.OKButton)
+					if (answer == MsgBox.Button.OK)
 					{
 						Form frm = new Forms.Download();
 						frm.ShowDialog();
@@ -3158,7 +3164,7 @@ namespace WinApp.Forms
 				Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle:" + Environment.NewLine + Environment.NewLine +
 					"  Battle: " + battleTime + Environment.NewLine +
 					"  Tank:   " + tankName, "Delete battle", MsgBoxType.OKCancel, this);
-				if (answer == MsgBox.Button.OKButton)
+				if (answer == MsgBox.Button.OK)
 				{
 
 					sql =
@@ -3196,7 +3202,13 @@ namespace WinApp.Forms
             ShowView("Refreshed grid");
 		}
 
-        
+        private void dataGridMainPopup_Replay_Click(object sender, EventArgs e)
+		{
+            int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
+            Form frm = new Forms.Replay(battleId);
+            frm.ShowDialog();
+		}
+
 
 		private void dataGridMainPopup_TankWN8_Click(object sender, EventArgs e)
 		{
@@ -3591,7 +3603,7 @@ namespace WinApp.Forms
                 if (runDossier)
                 {
                     MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBoxType.OKCancel, this);
-                    if (result == MsgBox.Button.OKButton)
+                    if (result == MsgBox.Button.OK)
                     {
                         RunInitialDossierFileCheck("Running initial battle fetch for new database...");
                     }
@@ -3672,7 +3684,7 @@ namespace WinApp.Forms
 				if (runDossier)
 				{
 					MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBoxType.OKCancel, this);
-					if (result == MsgBox.Button.OKButton)
+					if (result == MsgBox.Button.OK)
 					{
 						RunInitialDossierFileCheck("Running initial battle fetch for new database...");
 					}
@@ -4593,7 +4605,7 @@ namespace WinApp.Forms
 		private void mGadgetRemoveAll_Click(object sender, EventArgs e)
 		{
 			MsgBox.Button answer = MsgBox.Show("This will remove all gadgets.", "Remove all gadgets", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 				GadgetHelper.RemoveGadgetAll();
 				HomeViewCreate("Removed all gadgets");
@@ -4603,7 +4615,7 @@ namespace WinApp.Forms
 		private void mGadgetReset_Click(object sender, EventArgs e)
 		{
 			MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 				GadgetHelper.RemoveGadgetAll();
 				GadgetHelper.DefaultSetup();

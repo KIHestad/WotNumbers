@@ -76,7 +76,7 @@ namespace WinApp.Forms
 					filename + Environment.NewLine + Environment.NewLine +
 					"Press 'OK' to close Wot Numbers and start the installation." + Environment.NewLine + Environment.NewLine;
 				Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "Start installation now", MsgBoxType.OKCancel, this);
-				if (answer == MsgBox.Button.OKButton)
+				if (answer == MsgBox.Button.OK)
 				{
 					Process.Start(filename);
 					Application.Exit();

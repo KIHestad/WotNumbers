@@ -307,7 +307,7 @@ namespace WinApp.Forms.Settings
         private void btnRemove_Click(object sender, EventArgs e)
         {
             Code.MsgBox.Button answer = Code.MsgBox.Show("Do you want to remove previously imported battles from WoT Statistics?", "Remove previously imported battles", MsgBoxType.OKCancel, (Form)this.TopLevelControl);
-            if (answer == MsgBox.Button.OKButton)
+            if (answer == MsgBox.Button.OK)
             {
                 string sql =
                     "delete from battleAch where battleId IN (select id from battle where wsId is not null); " +

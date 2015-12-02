@@ -11,7 +11,8 @@ namespace WinApp.Code
 	public enum MsgBoxType
 	{
 		Close = 0,
-		OKCancel = 1
+		OKCancel = 1,
+        YesNo = 2,
 	}
 	
 	class MsgBox
@@ -19,12 +20,14 @@ namespace WinApp.Code
 		
 		public enum Button
 		{
-			CloseButton = 0,
-			OKButton = 1,
-			CancelButton = 2
+			Close = 0,
+			OK = 1,
+			Cancel = 2,
+            Yes = 3,
+            No = 4,
 		}
 
-		private static Button _SelectedButton = Button.CloseButton;
+		private static Button _SelectedButton = Button.Close;
 		public static Button SelectedButton
 		{
 			get { return _SelectedButton; }

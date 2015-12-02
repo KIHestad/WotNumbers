@@ -240,9 +240,9 @@ namespace WinApp.Forms
 			{
 				folderBrowserDialogDBPath.SelectedPath = txtFileLocation.Text;
 			}
-			folderBrowserDialogDBPath.ShowDialog();
+            DialogResult result = folderBrowserDialogDBPath.ShowDialog();
 			// If file selected save config with new values
-			if (folderBrowserDialogDBPath.SelectedPath != "")
+            if (result == DialogResult.OK)
 			{
 				txtFileLocation.Text = folderBrowserDialogDBPath.SelectedPath;
 			}

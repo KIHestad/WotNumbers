@@ -169,6 +169,7 @@
     <Compile Include="Code\FormControl\ToolStripEx.Designer.cs">
       <DependentUpon>ToolStripEx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\ReplayHelper.cs" />
     <Compile Include="Code\RunBattleCheckHelper.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
     <Compile Include="Code\DB.cs" />
@@ -224,6 +225,12 @@
     </Compile>
     <Compile Include="Forms\ManualCheckNewBattles.Designer.cs">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Replay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Replay.Designer.cs">
+      <DependentUpon>Replay.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\AppSettingsReplay.cs">
       <SubType>UserControl</SubType>
@@ -563,6 +570,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ManualCheckNewBattles.resx">
       <DependentUpon>ManualCheckNewBattles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Replay.resx">
+      <DependentUpon>Replay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AppSettingsReplay.resx">
       <DependentUpon>AppSettingsReplay.cs</DependentUpon>

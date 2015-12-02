@@ -659,7 +659,7 @@ namespace WinApp.Forms
 				if (selectedXaxis != ddXaxis.Text)
 				{
 					Code.MsgBox.Button answer = MsgBox.Show("Changing x-axis require chart to be cleared", "Clear Chart?", MsgBoxType.OKCancel, this);
-					if (answer == MsgBox.Button.OKButton)
+					if (answer == MsgBox.Button.OK)
 					{
 						ResetChart();
 						btnAddChart.Text = "Add";

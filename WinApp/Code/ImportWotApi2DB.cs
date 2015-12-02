@@ -238,6 +238,7 @@ namespace WinApp.Code
 								case "japan": countryId = 6; break;
 							}
 							string name = itemToken["name_i18n"].ToString();
+                            string imgPath = itemToken["image"].ToString();
 							int tier = Int32.Parse(itemToken["level"].ToString());
 							bool isPremium = Convert.ToBoolean(itemToken["is_premium"]);
 							premium = 0;
@@ -245,8 +246,8 @@ namespace WinApp.Code
 
 							// Write to db
 							tankExists = TankHelper.TankExists(itemId);
-							string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
-							string updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium WHERE id=@id; " ;
+							string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium, imgPath) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium, @imgPath); ";
+                            string updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium, imgPath=@imgPath WHERE id=@id; ";
 
 							// insert if tank does not exist
 							if (!tankExists)
@@ -257,6 +258,7 @@ namespace WinApp.Code
 								DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
 								DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref insertSql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
 								// ok = DB.ExecuteNonQuery(insertSql);  
 								sqlTotal += insertSql + Environment.NewLine;
 								logItems.Inserted += name + ", ";
@@ -272,6 +274,7 @@ namespace WinApp.Code
 								DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
 								DB.AddWithValue(ref updateSql, "@premium", premium, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref updateSql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
 								// ok = DB.ExecuteNonQuery(updateSql);  
 								sqlTotal += updateSql + Environment.NewLine; 
 								logItems.Updated += name + ", ";

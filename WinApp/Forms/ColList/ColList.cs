@@ -274,7 +274,7 @@ namespace WinApp.Forms
 			string ColumnSetupListName = dataGridColumnList.SelectedRows[0].Cells[1].Value.ToString();
 			string message = "You are about to save the selected columns to column setup list: " + ColumnSetupListName;
 			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected columns to column setup list", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 				SaveSelectedColumnList();
 			}
@@ -856,7 +856,7 @@ namespace WinApp.Forms
 			string ColListName = dataGridColumnList.SelectedRows[0].Cells["Name"].Value.ToString();
 			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete selected column list: " + ColListName,
 				"Confirm deletion", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 
 				string sql = "delete from columnListSelection where columnListId=@id; delete from columnList where id=@id;";
@@ -1105,7 +1105,7 @@ namespace WinApp.Forms
 		private void btnReset_Click(object sender, EventArgs e)
 		{
 			MsgBox.Button answer = MsgBox.Show("This will delete all system views, recreate them and move them to top.", "Reset system views", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 				switch (MainSettings.View)
 				{

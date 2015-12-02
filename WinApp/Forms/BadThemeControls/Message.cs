@@ -14,18 +14,25 @@ namespace WinApp.Forms
 	
 	public partial class Message : Form
 	{
-		public Message(string title, string message, Code.MsgBoxType MessageType = Code.MsgBoxType.Close)
+        private static Code.MsgBoxType _MessageType { get; set; }
+        public Message(string title, string message, Code.MsgBoxType MessageType = Code.MsgBoxType.Close)
 		{
 			InitializeComponent();
 			txtMessage.Text = message;
 			txtMessage.SelectionStart = 0;
 			txtMessage.SelectionLength = 0;
 			MessageTheme.Text = title;
-			if (MessageType == Code.MsgBoxType.OKCancel)
+            _MessageType = MessageType;
+            if (MessageType == Code.MsgBoxType.OKCancel || MessageType == Code.MsgBoxType.YesNo)
 			{
 				btnClose.Visible = false;
 				btnCancel.Visible = true;
 				btnOK.Visible = true;
+                if (MessageType == Code.MsgBoxType.YesNo)
+                {
+                    btnCancel.Text = "No";
+                    btnOK.Text = "Yes";
+                }
 			}
 		}
 
@@ -68,19 +75,25 @@ namespace WinApp.Forms
 
 		private void cmdClose_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.SelectedButton = Code.MsgBox.Button.CloseButton;
+			if (_MessageType == Code.MsgBoxType.YesNo)
+                Code.MsgBox.SelectedButton = Code.MsgBox.Button.No;
+            else
+                Code.MsgBox.SelectedButton = Code.MsgBox.Button.Close;
 			this.Close();
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.SelectedButton = Code.MsgBox.Button.OKButton;
+            if (_MessageType == Code.MsgBoxType.YesNo)
+                Code.MsgBox.SelectedButton = Code.MsgBox.Button.Yes;
+            else
+                Code.MsgBox.SelectedButton = Code.MsgBox.Button.OK;
 			this.Close();
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			Code.MsgBox.SelectedButton = Code.MsgBox.Button.CancelButton;
+			Code.MsgBox.SelectedButton = Code.MsgBox.Button.Cancel;
 			this.Close();
 		}
 

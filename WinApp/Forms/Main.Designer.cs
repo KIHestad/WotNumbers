@@ -194,6 +194,7 @@
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.mShowDbTables = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mAppSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -215,7 +216,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -256,6 +256,7 @@
             this.imageListToolStrip.Images.SetKeyName(11, "filter_clear2.png");
             this.imageListToolStrip.Images.SetKeyName(12, "iconBattleSummary2.png");
             this.imageListToolStrip.Images.SetKeyName(13, "copyRowToClipboard.png");
+            this.imageListToolStrip.Images.SetKeyName(14, "replay2.png");
             // 
             // imageGrid
             // 
@@ -1759,6 +1760,11 @@
             this.mShowDbTables.Text = "Show Database Tables...";
             this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(261, 6);
+            // 
             // mAppSettings
             // 
             this.mAppSettings.Enabled = false;
@@ -2029,11 +2035,6 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(261, 6);
             // 
             // Main
             // 

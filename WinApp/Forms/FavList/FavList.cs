@@ -177,7 +177,7 @@ namespace WinApp.Forms
 			string FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
 			string message = "You are about to save selected tanks to favourite tank list: " + FavListName;
 			Code.MsgBox.Button answer = MsgBox.Show(message, "Save selected tanks to favourite tank list", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 				SaveFavList();
 			}
@@ -912,7 +912,7 @@ namespace WinApp.Forms
 			string FavListName = dataGridFavList.SelectedRows[0].Cells["Name"].Value.ToString();
 			Code.MsgBox.Button answer = MsgBox.Show("Are you sure you want to delete favourite tank list: " + FavListName,
 				"Confirm deletion", MsgBoxType.OKCancel, this);
-			if (answer == MsgBox.Button.OKButton)
+			if (answer == MsgBox.Button.OK)
 			{
 
 				string sql = "delete from favListTank where favListId=@id; delete from favList where id=@id;";

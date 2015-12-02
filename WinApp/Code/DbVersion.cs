@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 286; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 288; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2468,7 +2468,23 @@ namespace WinApp.Code
                 case 286:
                     RunInstallNewBrrVersion = true;
                     break;
-
+                case 287:
+                    mssql = 
+                        "CREATE TABLE replayFolder ( " +
+                        "id int IDENTITY(1,1) primary key, " + 
+                        "path varchar(max) NOT NULL, " + 
+                        "subfolder bit NOT NULL);";
+                    sqlite =
+                        "CREATE TABLE replayFolder ( " +
+                        "id integer primary key, " +
+                        "path varchar(999) NOT NULL, " +
+                        "subfolder bit NOT NULL);";
+                    break;
+                case 288:
+                    temp = ReplayHelper.GetWoTDefaultReplayFolder();
+                    if (temp != "")
+                        ReplayHelper.AddReplayFolder(temp, false);
+                    break;
             }
 			string sql = "";
 			// get sql for correct dbtype

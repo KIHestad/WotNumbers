@@ -133,7 +133,7 @@ namespace WinApp.Forms
 						Environment.NewLine + Environment.NewLine,
 						"Save 'In Garage' tanks", 
 						MsgBoxType.OKCancel, this);
-					if (answer == MsgBox.Button.OKButton)
+					if (answer == MsgBox.Button.OK)
 					{
 						// Find latest sort order
 						string sql = "select max(sortorder) from favListTank where favListId=@favListId;";

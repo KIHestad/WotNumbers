@@ -29,11 +29,53 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.dataGridReplayFolder = new System.Windows.Forms.DataGridView();
+            this.folderBrowserDialogDBPath = new System.Windows.Forms.FolderBrowserDialog();
+            this.scrollY = new BadScrollBar();
             this.btnRemove = new BadButton();
             this.btnAdd = new BadButton();
             this.badGroupBox2 = new BadGroupBox();
-            this.badLabel1 = new BadLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridReplayFolder)).BeginInit();
             this.SuspendLayout();
+            // 
+            // dataGridReplayFolder
+            // 
+            this.dataGridReplayFolder.AllowUserToAddRows = false;
+            this.dataGridReplayFolder.AllowUserToDeleteRows = false;
+            this.dataGridReplayFolder.AllowUserToOrderColumns = true;
+            this.dataGridReplayFolder.AllowUserToResizeRows = false;
+            this.dataGridReplayFolder.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridReplayFolder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridReplayFolder.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dataGridReplayFolder.Location = new System.Drawing.Point(19, 26);
+            this.dataGridReplayFolder.Margin = new System.Windows.Forms.Padding(0);
+            this.dataGridReplayFolder.Name = "dataGridReplayFolder";
+            this.dataGridReplayFolder.ReadOnly = true;
+            this.dataGridReplayFolder.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dataGridReplayFolder.RowHeadersVisible = false;
+            this.dataGridReplayFolder.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.dataGridReplayFolder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridReplayFolder.Size = new System.Drawing.Size(393, 209);
+            this.dataGridReplayFolder.TabIndex = 31;
+            // 
+            // scrollY
+            // 
+            this.scrollY.BackColor = System.Drawing.Color.Transparent;
+            this.scrollY.Image = null;
+            this.scrollY.Location = new System.Drawing.Point(412, 26);
+            this.scrollY.Margin = new System.Windows.Forms.Padding(0);
+            this.scrollY.Name = "scrollY";
+            this.scrollY.ScrollElementsTotals = 100;
+            this.scrollY.ScrollElementsVisible = 20;
+            this.scrollY.ScrollHide = false;
+            this.scrollY.ScrollNecessary = true;
+            this.scrollY.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+            this.scrollY.ScrollPosition = 0;
+            this.scrollY.Size = new System.Drawing.Size(17, 209);
+            this.scrollY.TabIndex = 32;
+            this.scrollY.Text = "badScrollBar1";
+            this.scrollY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseDown);
+            this.scrollY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollY_MouseMove);
             // 
             // btnRemove
             // 
@@ -46,6 +88,7 @@
             this.btnRemove.TabIndex = 30;
             this.btnRemove.Text = "Remove";
             this.btnRemove.ToolTipText = "";
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // btnAdd
             // 
@@ -58,6 +101,7 @@
             this.btnAdd.TabIndex = 28;
             this.btnAdd.Text = "Add";
             this.btnAdd.ToolTipText = "";
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // badGroupBox2
             // 
@@ -69,29 +113,20 @@
             this.badGroupBox2.TabIndex = 29;
             this.badGroupBox2.Text = "Folders cointaing replay files";
             // 
-            // badLabel1
-            // 
-            this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel1.Dimmed = false;
-            this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(159, 113);
-            this.badLabel1.Name = "badLabel1";
-            this.badLabel1.Size = new System.Drawing.Size(130, 23);
-            this.badLabel1.TabIndex = 31;
-            this.badLabel1.Text = "Not implemented yet";
-            this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // AppSettingsReplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.Controls.Add(this.badLabel1);
+            this.Controls.Add(this.scrollY);
+            this.Controls.Add(this.dataGridReplayFolder);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.badGroupBox2);
             this.Name = "AppSettingsReplay";
-            this.Size = new System.Drawing.Size(457, 306);
+            this.Size = new System.Drawing.Size(454, 304);
+            this.Load += new System.EventHandler(this.AppSettingsReplay_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridReplayFolder)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -101,6 +136,8 @@
         private BadButton btnRemove;
         private BadButton btnAdd;
         private BadGroupBox badGroupBox2;
-        private BadLabel badLabel1;
+        private System.Windows.Forms.DataGridView dataGridReplayFolder;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDBPath;
+        private BadScrollBar scrollY;
     }
 }
