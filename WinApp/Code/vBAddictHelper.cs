@@ -180,10 +180,71 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				result = false;
-				Log.LogToFile(ex, "Error uploading battle file.");
+				Log.LogToFile(ex, "Error uploading battle file to vBAddict.");
 			}
 			return result;
 		}
+
+        public static bool UploadReplay(string replayFile, string playerName, string playerServer, string playerToken, out string msg)
+        {
+            msg = "";
+            bool result = true;
+            try
+            {
+                string url = "http://carius.vbaddict.net:82/upload_file/replay/@SERVER/@USERNAME/@TOKEN/xml/";
+                url = url.Replace("@USERNAME", playerName);
+                url = url.Replace("@SERVER", playerServer);
+                if (playerToken == "")
+                    playerToken = "-";
+                playerToken = playerToken.Trim();
+                url = url.Replace("@TOKEN", playerToken);
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpRequest.Timeout = timeout;
+                httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
+                httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                // Get ready to pu file with request
+                httpRequest.Method = "PUT";
+                httpRequest.KeepAlive = false;
+                httpRequest.SendChunked = false;
+                httpRequest.AllowWriteStreamBuffering = true;
+                // Read file into stream
+                Stream reqStream = httpRequest.GetRequestStream();
+                string localFile = replayFile;
+                FileStream rdr = new FileStream(localFile, FileMode.Open, FileAccess.Read);
+                byte[] inData = new byte[4096];
+                int bytesRead = rdr.Read(inData, 0, inData.Length);
+                while (bytesRead > 0)
+                {
+                    reqStream.Write(inData, 0, bytesRead);
+                    bytesRead = rdr.Read(inData, 0, inData.Length);
+                }
+                reqStream.Close();
+                rdr.Close();
+                // Perform the web request
+                HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+                // Get result
+                StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
+                string xmlResult = responseStream.ReadToEnd(); // Read result into string
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xmlResult); // Load string into xml doc
+                // Check result
+                XmlNodeList response = xmlDoc.GetElementsByTagName("response");
+                string status = "";
+                foreach (XmlNode item in response[0].ChildNodes)
+                {
+                    if (item.Name == "status") status = item.InnerText;
+                    if (item.Name == "message") msg = item.InnerText;
+                }
+                result = (status == "0");
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                Log.LogToFile(ex, "Error uploading replay file to vBAddict.");
+                msg = ex.Message;
+            }
+            return result;
+        }
 
         public static List<string> SearchForUser(string AccountId, out string error)
         {

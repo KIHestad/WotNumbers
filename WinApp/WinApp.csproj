@@ -151,6 +151,7 @@
     </Compile>
     <Compile Include="Code\FormLayout\ColorValues.cs" />
     <Compile Include="Code\FormLayout\GridHelper.cs" />
+    <Compile Include="Code\FormView\BattleChartHelper.cs" />
     <Compile Include="Code\FormView\ColListSystemDefault.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
     <Compile Include="Code\FormView\BattleModeHelper.cs" />

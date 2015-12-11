@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class BattleChartTier
+	partial class BattleChart
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -30,7 +30,7 @@
 		{
             this.components = new System.ComponentModel.Container();
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleChartTier));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BattleChart));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.BattleChartTheme = new BadForm();
@@ -320,7 +320,7 @@
             this.ChartingMain.Text = "chart1";
             this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
             // 
-            // BattleChartTier
+            // BattleChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -330,12 +330,13 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(400, 300);
-            this.Name = "BattleChartTier";
+            this.Name = "BattleChart";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Battle Chart";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BattleChart_FormClosed);
             this.Load += new System.EventHandler(this.BattleChart_Load);
+            this.Shown += new System.EventHandler(this.BattleChart_Shown);
             this.BattleChartTheme.ResumeLayout(false);
             this.BattleChartTheme.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).EndInit();

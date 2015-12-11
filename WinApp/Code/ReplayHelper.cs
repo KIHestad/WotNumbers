@@ -57,8 +57,12 @@ namespace WinApp.Code
                 DateTime battleApproxStartTime = battleTime.AddSeconds(-battleLifeTime); // timestamp on file is apprix this, normally later
                 string mapArenaId = drBattle["mapArenaId"].ToString();
                 string tankImgPath = drBattle["imgPath"].ToString();
-                int pos = tankImgPath.LastIndexOf("/") + 1;
-                string tankFileName = tankImgPath.Substring(pos, tankImgPath.Length - pos - 4);
+                string tankFileName = "";
+                if (tankImgPath.Length > 10)
+                {
+                    int pos = tankImgPath.LastIndexOf("/") + 1;
+                    tankFileName = tankImgPath.Substring(pos, tankImgPath.Length - pos - 4);
+                }
                 string replayFileName = "_" + tankFileName + "_" + mapArenaId + ".wotreplay";
                 fi = GetReplayFile(battleApproxStartTime, replayFileName);
             }

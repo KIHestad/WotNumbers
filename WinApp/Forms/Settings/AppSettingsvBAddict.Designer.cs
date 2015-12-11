@@ -76,7 +76,7 @@
             this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel2.Dimmed = false;
             this.badLabel2.Image = null;
-            this.badLabel2.Location = new System.Drawing.Point(17, 22);
+            this.badLabel2.Location = new System.Drawing.Point(17, 24);
             this.badLabel2.Name = "badLabel2";
             this.badLabel2.Size = new System.Drawing.Size(428, 48);
             this.badLabel2.TabIndex = 25;
@@ -118,9 +118,9 @@
             this.chkActivateAutoUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoUpload.Image")));
             this.chkActivateAutoUpload.Location = new System.Drawing.Point(12, 215);
             this.chkActivateAutoUpload.Name = "chkActivateAutoUpload";
-            this.chkActivateAutoUpload.Size = new System.Drawing.Size(200, 23);
+            this.chkActivateAutoUpload.Size = new System.Drawing.Size(411, 23);
             this.chkActivateAutoUpload.TabIndex = 20;
-            this.chkActivateAutoUpload.Text = "Activate Auto Upload to vBAddict";
+            this.chkActivateAutoUpload.Text = "Auto upload to vBAddict (dossier and battle - replay only manual uploads)";
             // 
             // btnUploadDossier
             // 

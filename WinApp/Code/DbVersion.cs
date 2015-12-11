@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 288; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 289; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2272,9 +2272,6 @@ namespace WinApp.Code
 					mssql = GetUpgradeSQL("250");
 					sqlite = mssql;
 					break;
-                case 252:
-                    RunWotApi = true;
-                    break;
                 case 253:
                     mssql = "ALTER TABLE battle ADD maxBattleTier int NULL;";
 					sqlite = mssql;
@@ -2484,6 +2481,9 @@ namespace WinApp.Code
                     temp = ReplayHelper.GetWoTDefaultReplayFolder();
                     if (temp != "")
                         ReplayHelper.AddReplayFolder(temp, false);
+                    break;
+                case 289:
+                    RunWotApi = true;
                     break;
             }
 			string sql = "";

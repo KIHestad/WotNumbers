@@ -14,6 +14,7 @@ using System.Net;
 using System.Diagnostics;
 using WinApp.Gadget;
 using WinApp.Code.FormLayout;
+using WinApp.Code.FormView;
 
 namespace WinApp.Forms
 {
@@ -182,7 +183,7 @@ namespace WinApp.Forms
 			dataGridMainPopup_TankDetails.Image = imageListToolStrip.Images[1];
 			dataGridMainPopup_TankDetails.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
 			
-			ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart (Selected Tank)");
+			ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart");
 			dataGridMainPopup_BattleChart.Image = imageListToolStrip.Images[2];
 			dataGridMainPopup_BattleChart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
 			
@@ -366,7 +367,7 @@ namespace WinApp.Forms
                 // Init form
 				SetFormTitle();
 				SetListener(false);
-				
+                BattleChartHelper.SetBattleChartDefaultValues();
 				if (DB.CheckConnection())
 				{
 					// Moved to Page Load - to run this and make sure db upgrades are done before app starts
@@ -3106,7 +3107,7 @@ namespace WinApp.Forms
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				Form frm = new Forms.BattleChartTier(playerTankId);
+				Form frm = new Forms.BattleChart(playerTankId);
 				FormHelper.OpenFormToRightOfParent(this, frm);
 			}
 		}
@@ -3634,7 +3635,7 @@ namespace WinApp.Forms
         
         private void toolItemViewChart_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.BattleChartTier(0);
+			Form frm = new Forms.BattleChart(0);
 			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 	

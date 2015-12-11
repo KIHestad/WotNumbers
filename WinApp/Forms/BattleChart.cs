@@ -13,10 +13,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using WinApp.Code;
+using WinApp.Code.FormView;
 
 namespace WinApp.Forms
 {
-	public partial class BattleChartTier : Form
+	public partial class BattleChart : Form
 	{
 		public enum CalculationType
 		{
@@ -30,17 +31,17 @@ namespace WinApp.Forms
 
 		private class ChartTypeCols
 		{
-			public string currentValCol = "";
-			public string firstValCol = "";
-			public string battleValCol = "";
+			public string playerTankValCol = "";    // Column holding current value from playerTankBattle table
+            public string battleValCol = "";        // Column holding battle value
+            public string battleFirstValCol = "";   // Column holding the first battle value, normally same as battleValCol - exept for some special calculations
 		}
 
 		private class ChartType
 		{
 			public string name = "";									// Name of Chart VAlue in dropdown 
 			public CalculationType calcType = CalculationType.standard;	// Calculation Type
-			public bool totals = true;									// show totals, not actual battle values
-			public List<ChartTypeCols> col;							// witch columns to be used to calculate values
+			public bool totals = true;									// Show totals, not actual battle values
+			public List<ChartTypeCols> col;							    // What columns to be used to calculate values
 		}
 
         string ddTankList = "";
@@ -53,7 +54,7 @@ namespace WinApp.Forms
 		private List<ChartType> chartValues = new List<ChartType>(); // List of all available chart types 
         private List<BattleHelper.MainBattleModeItem> mainBattleModes = BattleHelper.GetMainBattleModes();
 
-		public BattleChartTier(int playerTankId = 0)
+		public BattleChart(int playerTankId = 0)
 		{
 			InitializeComponent();
 			initPlayerTankId = playerTankId;
@@ -75,7 +76,7 @@ namespace WinApp.Forms
 
 		private void BattleChart_Load(object sender, EventArgs e)
 		{
-			// Init showing tank or all tanks
+			// Init showing selected tank from grid or last tank or (All Tanks) if non selected yet
 			string sql = "";
 			if (initPlayerTankId != 0)
 			{
@@ -85,7 +86,10 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				ddTank.Text = "( All Tanks )";
+                if (BattleChartHelper.TankName != "")
+                    ddTank.Text = BattleChartHelper.TankName;
+                else
+                    ddTank.Text = "( All Tanks )";
 			}
 			// Available charts
 			AddChartValues();
@@ -110,6 +114,14 @@ namespace WinApp.Forms
                 ddModeList += mode.ModeName + ",";
             }
             ddModeList = ddModeList.Substring(0, ddModeList.Length - 1); // Remove last comma
+            // Add latest values or default values
+            ddMode.Text = BattleChartHelper.ChartMode;
+            ddValue.Text = BattleChartHelper.Value;
+            ddXaxis.Text = BattleChartHelper.Xaxis;
+            ddPeriod.Text = BattleChartHelper.Period;
+            chkBullet.Checked = BattleChartHelper.Bullet;
+            chkSpline.Checked = BattleChartHelper.Spline;
+
 			// Chart layout
 			Font letterType = new Font("MS Sans Serif", 10, GraphicsUnit.Pixel);
 			Color defaultColor = ColorTheme.ControlFont;
@@ -127,6 +139,14 @@ namespace WinApp.Forms
 			area.AxisX.LabelStyle.Angle = 20;
 			area.InnerPlotPosition = new System.Windows.Forms.DataVisualization.Charting.ElementPosition(6, 0, 96, 91);
 		}
+
+        private void BattleChart_Shown(object sender, EventArgs e)
+        {
+            // Show chart now if all values are selected
+            if (ddValue.Text != "")
+                DrawChart();
+        }
+
 
 		private void ddPeriod_Click(object sender, EventArgs e)
 		{
@@ -184,9 +204,17 @@ namespace WinApp.Forms
 
 		private void DrawChart()
 		{
-			// Init
+            // Remember choice for auto value at form load next time
+            BattleChartHelper.TankName = ddTank.Text;
+            BattleChartHelper.ChartMode = ddMode.Text;
+            BattleChartHelper.Value = ddValue.Text;
+            BattleChartHelper.Xaxis = ddXaxis.Text;
+            BattleChartHelper.Period = ddPeriod.Text;
+            BattleChartHelper.Bullet = chkBullet.Checked;
+            BattleChartHelper.Spline = chkSpline.Checked;
+            // Init
 			string tankName = ddTank.Text;
-			if (tankName == "( All Tanks )") tankName = "All Tanks";
+            if (tankName == "( All Tanks )") tankName = "All Tanks";
 			string selectedChartValue = ddValue.Text;
             string chartSerie = GetChartSeriesName();
 			string chartOrder = "";
@@ -195,7 +223,7 @@ namespace WinApp.Forms
             string chartMode = "";
             if (mainBattleModeItem != null)
                 chartMode = BattleHelper.GetSQLMainBattleMode(mainBattleModeItem.Mode);
-			// Check if value selected
+            // Check if value selected
 			if (ddValue.Text == "")
 			{
 				Code.MsgBox.Show("Please select a chart value, this is the data that shows up in the chart.", "Missing Chart Value", this);
@@ -240,7 +268,7 @@ namespace WinApp.Forms
                 newSerie.ChartType = SeriesChartType.Point;
                 newSerie.MarkerStyle = MarkerStyle.Circle;
             }
-			if (ddXaxis.Text == "Date")
+            if (ddXaxis.Text == "Date")
 			{
 				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
 				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -253,7 +281,8 @@ namespace WinApp.Forms
 				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
 				newSerie.XValueType = ChartValueType.Int32;
 			}
-			ChartingMain.Series.Add(newSerie);
+            // Add to chart
+            ChartingMain.Series.Add(newSerie);
 			// Special calculations for calculated columns
 			switch (selectedChartValue)
 			{
@@ -323,10 +352,10 @@ namespace WinApp.Forms
 			List<double> values = new List<double>();
 			foreach (ChartTypeCols col in chartType.col)
 			{
-				if (col.firstValCol == "") col.firstValCol = col.currentValCol; // If no value added it is the same col on all sql's
-				if (col.battleValCol == "") col.battleValCol = col.currentValCol; // If no value added it is the same col on all sql's
-				currentValCols += "SUM(" + col.currentValCol + "),";
-				firstValCols += "SUM(" + col.firstValCol + "),";
+                if (col.battleValCol == "") col.battleValCol = col.playerTankValCol; // If no value added it is the same col on all sql's
+                if (col.battleFirstValCol == "") col.battleFirstValCol = col.battleValCol; // If no value added use same as battle value col
+				currentValCols += "SUM(" + col.playerTankValCol + "),";
+                firstValCols += "SUM(" + col.battleFirstValCol + "),"; 
 				battleValCols += col.battleValCol + ",";
 				values.Add(0);
 			}
@@ -658,16 +687,20 @@ namespace WinApp.Forms
 			{
 				if (selectedXaxis != ddXaxis.Text)
 				{
-					Code.MsgBox.Button answer = MsgBox.Show("Changing x-axis require chart to be cleared", "Clear Chart?", MsgBoxType.OKCancel, this);
-					if (answer == MsgBox.Button.OK)
-					{
-						ResetChart();
-						btnAddChart.Text = "Add";
-					}
-					else
-					{
-						ddXaxis.Text = selectedXaxis;
-					}
+					// Disabled message, just redraw chart if changed
+                    // Code.MsgBox.Button answer = MsgBox.Show("Changing x-axis require chart to be cleared", "Clear Chart?", MsgBoxType.OKCancel, this);
+                    //if (answer == MsgBox.Button.OK)
+                    //{
+                    //    ResetChart();
+                    //    btnAddChart.Text = "Add";
+                    //}
+                    //else
+                    //{
+                    //    ddXaxis.Text = selectedXaxis;
+                    //}
+                    ResetChart();
+                    if (ddValue.Text != "")
+                        DrawChart();
 				}
 			}
 		}
@@ -796,111 +829,116 @@ namespace WinApp.Forms
 
 			// Win Rate
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "wins", firstValCol = "victory", battleValCol = "victory" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
-			chartValues.Add(new ChartType() { name = "Win Rate", col = chartCol, calcType = CalculationType.firstInPercentageOfNext });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "wins", battleValCol = "victory" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
+            chartValues.Add(new ChartType() { name = "Win Rate", col = chartCol, calcType = CalculationType.firstInPercentageOfNext });
+
+            // Damage Rating
+            chartCol = new List<ChartTypeCols>();
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "(damageRating / 100)", battleValCol = "(damageRating / 100)" });
+            chartValues.Add(new ChartType() { name = "Dmg Rating", col = chartCol, calcType = CalculationType.standard });
 
 			// WN8
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "dmg", firstValCol = "dmg", battleValCol = "dmg" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "spot", firstValCol = "spotted", battleValCol = "spotted" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "frags", firstValCol = "frags", battleValCol = "frags" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "def", firstValCol = "def", battleValCol = "def" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "cap", firstValCol = "cap", battleValCol = "cap" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "wins", firstValCol = "victory", battleValCol = "victory" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "t.tier * ptb.battles", firstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "spot", battleValCol = "spotted" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "frags", battleValCol = "frags" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "def", battleValCol = "def" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "cap", battleValCol = "cap" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wins", battleValCol = "victory" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "t.tier * ptb.battles", battleFirstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
 			chartValues.Add(new ChartType() { name = "WN8", col = chartCol, calcType = CalculationType.wn8 });
 			
 			// WN8 per battle
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "wn8" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wn8" });
 			chartValues.Add(new ChartType() { name = "WN8 per battle", col = chartCol, totals = false });
 
 			// WN 7
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "dmg", firstValCol = "dmg", battleValCol = "dmg" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "spot", firstValCol = "spotted", battleValCol = "spotted" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "frags", firstValCol = "frags", battleValCol = "frags" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "def", firstValCol = "def", battleValCol = "def" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "cap", firstValCol = "cap", battleValCol = "cap" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "wins", firstValCol = "victory", battleValCol = "victory" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "t.tier * ptb.battles", firstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "spot", battleValCol = "spotted" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "frags", battleValCol = "frags" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "def", battleValCol = "def" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "cap", battleValCol = "cap" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wins", battleValCol = "victory" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "t.tier * ptb.battles", battleFirstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
 			chartValues.Add(new ChartType() { name = "WN7", col = chartCol, calcType = CalculationType.wn7 });
 
 			// WN7 per battle
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "wn7" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wn7" });
 			chartValues.Add(new ChartType() { name = "WN7 per battle", col = chartCol, totals=false });
 
             // Efficiency
             chartCol = new List<ChartTypeCols>();
-            chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "dmg", firstValCol = "dmg", battleValCol = "dmg" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "spot", firstValCol = "spotted", battleValCol = "spotted" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "frags", firstValCol = "frags", battleValCol = "frags" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "def", firstValCol = "def", battleValCol = "def" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "cap", firstValCol = "cap", battleValCol = "cap" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "t.tier * ptb.battles", firstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "dmg", battleValCol = "dmg" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "spot", battleValCol = "spotted" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "frags", battleValCol = "frags" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "def", battleValCol = "def" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "cap", battleValCol = "cap" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "t.tier * ptb.battles", battleFirstValCol = "t.tier * b.battlesCount", battleValCol = "tier" });
             chartValues.Add(new ChartType() { name = "EFF", col = chartCol, calcType = CalculationType.eff });
 
             // Efficiency per battle
             chartCol = new List<ChartTypeCols>();
-            chartCol.Add(new ChartTypeCols() { currentValCol = "eff" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "eff" });
             chartValues.Add(new ChartType() { name = "EFF per battle", col = chartCol, totals = false });
 
             // XP
             chartCol = new List<ChartTypeCols>();
-            chartCol.Add(new ChartTypeCols() { currentValCol = "xp" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "xp" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
             chartValues.Add(new ChartType() { name = "XP Average", col = chartCol, calcType = CalculationType.firstDividedOnNext });
 			
             // XP
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "xp" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "xp" });
 			chartValues.Add(new ChartType() { name = "XP Total", col = chartCol });
 			
 			// Average damage
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "dmg" });
-			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "dmg" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
 			chartValues.Add(new ChartType() { name = "Damage Average", col = chartCol, calcType = CalculationType.firstDividedOnNext });
 
             // Damage
             chartCol = new List<ChartTypeCols>();
-            chartCol.Add(new ChartTypeCols() { currentValCol = "dmg" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "dmg" });
             chartValues.Add(new ChartType() { name = "Damage Total", col = chartCol });
 
             // Frag Average
             chartCol = new List<ChartTypeCols>();
-            chartCol.Add(new ChartTypeCols() { currentValCol = "frags" });
-            chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "frags" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
             chartValues.Add(new ChartType() { name = "Frags Average", col = chartCol, calcType = CalculationType.firstDividedOnNext });
 
             // Frag Count
             chartCol = new List<ChartTypeCols>();
-            chartCol.Add(new ChartTypeCols() { currentValCol = "frags" });
+            chartCol.Add(new ChartTypeCols() { playerTankValCol = "frags" });
             chartValues.Add(new ChartType() { name = "Frags Total", col = chartCol });
 
 			// Battle count
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "battles", firstValCol = "battlescount", battleValCol = "battlescount" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "battles", battleValCol = "battlescount" });
 			chartValues.Add(new ChartType() { name = "Battle Count", col = chartCol });
 
 			// Victory Count
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "wins", firstValCol = "victory", battleValCol = "victory" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wins", battleValCol = "victory" });
 			chartValues.Add(new ChartType() { name = "Victory Count", col = chartCol });
 
 			// Draw Count
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "(battles - wins - losses)", firstValCol = "draw", battleValCol = "draw" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "(battles - wins - losses)", battleValCol = "draw" });
 			chartValues.Add(new ChartType() { name = "Draw Count", col = chartCol });
 
 			// Defeat Count
 			chartCol = new List<ChartTypeCols>();
-			chartCol.Add(new ChartTypeCols() { currentValCol = "losses", firstValCol = "defeat", battleValCol = "defeat" });
+			chartCol.Add(new ChartTypeCols() { playerTankValCol = "losses", battleValCol = "defeat" });
 			chartValues.Add(new ChartType() { name = "Defeat Count", col = chartCol });
 
 
@@ -933,7 +971,6 @@ namespace WinApp.Forms
             if (btnAddChart.Text == "Refresh")
                 DrawChart();
         }
-
 
 	}
 }
