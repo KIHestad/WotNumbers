@@ -698,11 +698,10 @@
   </data>
   <data name="AboutTheme.SystemExitImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAACIAAAAaCAYAAADSbo4CAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADrwAAA68AZW8ckkAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAA
-        aElEQVRIS+3TQQoAIQgFUM8es28O0BzSEzQ4qMgQ7dLNfxCFLvxQEQAAVOv9nsw8ZdeS2/WOGOP5BrZ2
-        +UA5S016WsoRw5SFMBamNISwNyEr7V38xeuI16TtHKvfsaodtRuYHgYAwBG9DbCIYc7HSQcAAAAASUVO
-        RK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAACIAAAAaCAYAAADSbo4CAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAABZ0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMDvo9WkAAABoSURBVEhL7dNBCgAh
+        CAVQzx6zbw7QHNITNDioyBDt0s1/EIUu/FARAABU6/2ezDxl15Lb9Y4Y4/kGtnb5QDlLTXpayhHDlIUw
+        FqY0hLA3ISvtXfzF64jXpO0cq9+xqh21G5geBgDAEb0NsIhhzsdJBwAAAABJRU5ErkJggg==
 </value>
   </data>
 </root>

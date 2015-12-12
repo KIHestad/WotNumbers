@@ -24,6 +24,7 @@ namespace WinApp.Forms
 
         private void Replay_Shown(object sender, EventArgs e)
         {
+            GetvBAddictUploadInfo();
             FileInfo fi = ReplayHelper.GetReplayFile(_battleId);
             if (fi != null)
             {
@@ -60,21 +61,36 @@ namespace WinApp.Forms
             btnUploadReplayTovBAddict.Text = "Uploading...";
             Application.DoEvents();
             string resultText = "";
-            bool resultOK = vBAddictHelper.UploadReplay(_filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out resultText);
+            bool resultOK = vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out resultText);
             string msg = "Upload to vBAddict was successful.";
             if (!resultOK)
             {
                 msg = "Upload to vBAddict failed with message: " + resultText;
                 btnUploadReplayTovBAddict.Text = "Upload to vBAddict";
                 btnUploadReplayTovBAddict.Enabled = true;
+                MsgBox.Show(msg, "Upload to vBAddict result", this);
             }
             else
+            {
                 btnUploadReplayTovBAddict.Text = "Upload done";
+                GetvBAddictUploadInfo();
+            }
             Application.DoEvents();
-            MsgBox.Show(msg, "Upload to vBAddict result", this);
         }
 
-        
-                                
+        private void GetvBAddictUploadInfo()
+        {
+            linkvBAddictUpload.Text = vBAddictHelper.GetInfoUploadedvBAddict(_battleId);
+            toolTipvBAddictLink.SetToolTip(linkvBAddictUpload, "Go to player profile at vBAddict");
+        }
+
+        private void linkvBAddictUpload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (linkvBAddictUpload.Text != "")
+            {
+                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+                System.Diagnostics.Process.Start(serverURL);
+            }
+        }
     }
 }

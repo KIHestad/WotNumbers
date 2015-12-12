@@ -120,9 +120,10 @@ namespace WinApp.Code
 		public bool notifyIconUse { get; set; }                     // Notify icon settings - use notify icon insted of taskbar icon
 		public bool notifyIconFormExitToMinimize { get; set; }      // Override exit from form to minimize
 		public CustomBattleTimeFilter customBattleTimeFilter { get; set; } // Remember last used custom battle time filter
-		public bool vBAddictUploadActive { get; set; }				// Activate upload to vBAddict
+		public bool vBAddictUploadActive { get; set; }				// Activate auto dossier and battle upload to vBAddict
 		public string vBAddictPlayerToken { get; set; }				// player token
 		public bool CheckForBrrOnStartup { get; set; }				// Perform check for BRR on startup
+        public bool vBAddictUploadReplayActive { get; set; }	    // Activate auto replay upload to vBAddict
 	}
 
 	class Config
@@ -251,6 +252,7 @@ namespace WinApp.Code
 			Config.Settings.customBattleTimeFilter = new ConfigData.CustomBattleTimeFilter();
 			// vBAddict
 			Config.Settings.vBAddictUploadActive = false;
+            Config.Settings.vBAddictUploadReplayActive = false;
 			Config.Settings.vBAddictPlayerToken = "";
 			Config.Settings.CheckForBrrOnStartup = true;
 		}

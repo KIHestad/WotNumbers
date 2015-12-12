@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 289; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 291; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2484,6 +2484,14 @@ namespace WinApp.Code
                     break;
                 case 289:
                     RunWotApi = true;
+                    break;
+                case 290:
+                    mssql = "ALTER TABLE battle ADD uploadedvBAddict datetime NULL; ";
+                    sqlite = mssql;
+                    break;
+                case 291:
+                    Config.Settings.vBAddictUploadReplayActive = false;
+                    Config.SaveConfig(out msg);
                     break;
             }
 			string sql = "";

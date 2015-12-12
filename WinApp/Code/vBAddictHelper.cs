@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -185,10 +186,10 @@ namespace WinApp.Code
 			return result;
 		}
 
-        public static bool UploadReplay(string replayFile, string playerName, string playerServer, string playerToken, out string msg)
+        public static bool UploadReplay(int battleId, string replayFile, string playerName, string playerServer, string playerToken, out string msg)
         {
             msg = "";
-            bool result = true;
+            bool uploadOK = true;
             try
             {
                 string url = "http://carius.vbaddict.net:82/upload_file/replay/@SERVER/@USERNAME/@TOKEN/xml/";
@@ -235,15 +236,17 @@ namespace WinApp.Code
                     if (item.Name == "status") status = item.InnerText;
                     if (item.Name == "message") msg = item.InnerText;
                 }
-                result = (status == "0");
+                uploadOK = (status == "0");
+                if (uploadOK)
+                    UpdateInfoUploadedvBAddict(battleId);
             }
             catch (Exception ex)
             {
-                result = false;
+                uploadOK = false;
                 Log.LogToFile(ex, "Error uploading replay file to vBAddict.");
                 msg = ex.Message;
             }
-            return result;
+            return uploadOK;
         }
 
         public static List<string> SearchForUser(string AccountId, out string error)
@@ -314,6 +317,34 @@ namespace WinApp.Code
                 Log.LogToFile(ex, error);
                 return null;
             }
+        }
+
+        public static string GetInfoUploadedvBAddict(int battleId)
+        {
+            string sql = "select uploadedvBAddict from battle where id=@id";
+            DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
+            DataTable dt = DB.FetchData(sql);
+            string result = "";
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                if (dr[0] != DBNull.Value)
+                {
+                    DateTime uploadTime = Convert.ToDateTime(dr[0]);
+                    result = "Uploaded: " + uploadTime.ToShortDateString() + " " + uploadTime.ToShortTimeString();
+                }
+            }
+            return result;
+        }
+
+        public static string UpdateInfoUploadedvBAddict(int battleId)
+        {
+            string sql = "update battle set uploadedvBAddict=@uploadedvBAddict where id=@id";
+            DB.AddWithValue(ref sql, "@id", battleId, DB.SqlDataType.Int);
+            DateTime uploadTime = DateTime.Now;
+            DB.AddWithValue(ref sql, "@uploadedvBAddict", uploadTime, DB.SqlDataType.DateTime);
+            DB.ExecuteNonQuery(sql);
+            return GetInfoUploadedvBAddict(battleId);
         }
 	}
 }

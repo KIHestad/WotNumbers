@@ -29,6 +29,7 @@ namespace WinApp.Forms.Settings
         private void DataBind()
         {
             chkActivateAutoUpload.Checked = Config.Settings.vBAddictUploadActive;
+            chkActivateAutoReplayUpload.Checked = Config.Settings.vBAddictUploadReplayActive;
             txtToken.Text = Config.Settings.vBAddictPlayerToken;
         }
 
@@ -73,6 +74,7 @@ namespace WinApp.Forms.Settings
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
             Config.Settings.vBAddictUploadActive = chkActivateAutoUpload.Checked;
+            Config.Settings.vBAddictUploadReplayActive = chkActivateAutoReplayUpload.Checked;
             Config.Settings.vBAddictPlayerToken = txtToken.Text;
             string msg = "";
             if (!Config.SaveConfig(out msg))

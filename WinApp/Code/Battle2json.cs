@@ -150,13 +150,13 @@ namespace WinApp.Code
 							// Convert file to json
 							bool deleteFile = false;
 							bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
-							// Upload to vBAddict if OK
+							// Upload battle to vBAddict if OK
 							if (okConvert && Config.Settings.vBAddictUploadActive)
 							{
 								string msg = "";
 								bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
 								if (uploadOK)
-									Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully");
+									Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
 								else
 								{
 									Log.AddToLogBuffer(" > > > Error uploading to vBAddict, copy file for later upload");
@@ -899,6 +899,23 @@ namespace WinApp.Code
 								GridView.scheduleGridRefresh = true;
 								Log.AddToLogBuffer(" > > Done reading into DB JSON file: " + file);
 								added++;
+                                // Check for upload replay file to vBAddict
+                                if (Config.Settings.vBAddictUploadReplayActive)
+                                {
+                                    FileInfo fi = ReplayHelper.GetReplayFile(battleId);
+                                    if (fi != null)
+                                    {
+                                        string replayFilename = fi.FullName;
+                                        string msg = "";
+                                        bool uploadOK = vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+                                        if (uploadOK)
+                                            Log.AddToLogBuffer(" > > Uploaded replay to vBAddict successfully: " + msg);
+                                        else
+                                        {
+                                            Log.AddToLogBuffer(" > > Error uploading replay to vBAddict: " + msg);
+                                        }
+                                    }
+                                }
 							}
 						}
 						else

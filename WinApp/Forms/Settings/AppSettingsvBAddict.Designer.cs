@@ -41,6 +41,7 @@
             this.btnSaveSettings = new BadButton();
             this.badGroupBox1 = new BadGroupBox();
             this.badGroupBox2 = new BadGroupBox();
+            this.chkActivateAutoReplayUpload = new BadCheckBox();
             this.SuspendLayout();
             // 
             // linkVbAddict
@@ -50,7 +51,7 @@
             this.linkVbAddict.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.linkVbAddict.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkVbAddict.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkVbAddict.Location = new System.Drawing.Point(267, 164);
+            this.linkVbAddict.Location = new System.Drawing.Point(267, 154);
             this.linkVbAddict.Name = "linkVbAddict";
             this.linkVbAddict.Size = new System.Drawing.Size(161, 13);
             this.linkVbAddict.TabIndex = 23;
@@ -81,15 +82,14 @@
             this.badLabel2.Size = new System.Drawing.Size(428, 48);
             this.badLabel2.TabIndex = 25;
             this.badLabel2.Text = "Please test connection and dossier upload to vBAddict. A message box will display" +
-    " the result. If case you have enabled secure access to vBAddict, add token below" +
-    ".";
+    " the result. If you have enabled secure access to vBAddict, add token below.";
             this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // txtToken
             // 
             this.txtToken.HasFocus = false;
             this.txtToken.Image = null;
-            this.txtToken.Location = new System.Drawing.Point(17, 182);
+            this.txtToken.Location = new System.Drawing.Point(17, 172);
             this.txtToken.MultilineAllow = false;
             this.txtToken.Name = "txtToken";
             this.txtToken.PasswordChar = '\0';
@@ -104,7 +104,7 @@
             this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel1.Dimmed = false;
             this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(17, 159);
+            this.badLabel1.Location = new System.Drawing.Point(17, 149);
             this.badLabel1.Name = "badLabel1";
             this.badLabel1.Size = new System.Drawing.Size(66, 23);
             this.badLabel1.TabIndex = 21;
@@ -116,18 +116,18 @@
             this.chkActivateAutoUpload.BackColor = System.Drawing.Color.Transparent;
             this.chkActivateAutoUpload.Checked = false;
             this.chkActivateAutoUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoUpload.Image")));
-            this.chkActivateAutoUpload.Location = new System.Drawing.Point(12, 215);
+            this.chkActivateAutoUpload.Location = new System.Drawing.Point(12, 200);
             this.chkActivateAutoUpload.Name = "chkActivateAutoUpload";
             this.chkActivateAutoUpload.Size = new System.Drawing.Size(411, 23);
             this.chkActivateAutoUpload.TabIndex = 20;
-            this.chkActivateAutoUpload.Text = "Auto upload to vBAddict (dossier and battle - replay only manual uploads)";
+            this.chkActivateAutoUpload.Text = "Auto upload battle result to vBAddict (dossier and battle files)";
             // 
             // btnUploadDossier
             // 
             this.btnUploadDossier.BlackButton = false;
             this.btnUploadDossier.Checked = false;
             this.btnUploadDossier.Image = null;
-            this.btnUploadDossier.Location = new System.Drawing.Point(325, 74);
+            this.btnUploadDossier.Location = new System.Drawing.Point(325, 71);
             this.btnUploadDossier.Name = "btnUploadDossier";
             this.btnUploadDossier.Size = new System.Drawing.Size(103, 23);
             this.btnUploadDossier.TabIndex = 19;
@@ -140,7 +140,7 @@
             this.btnTestConnection.BlackButton = false;
             this.btnTestConnection.Checked = false;
             this.btnTestConnection.Image = null;
-            this.btnTestConnection.Location = new System.Drawing.Point(210, 74);
+            this.btnTestConnection.Location = new System.Drawing.Point(210, 71);
             this.btnTestConnection.Name = "btnTestConnection";
             this.btnTestConnection.Size = new System.Drawing.Size(109, 23);
             this.btnTestConnection.TabIndex = 18;
@@ -165,9 +165,9 @@
             // 
             this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox1.Image = null;
-            this.badGroupBox1.Location = new System.Drawing.Point(1, 132);
+            this.badGroupBox1.Location = new System.Drawing.Point(1, 125);
             this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(445, 122);
+            this.badGroupBox1.Size = new System.Drawing.Size(445, 129);
             this.badGroupBox1.TabIndex = 16;
             this.badGroupBox1.Text = "Settings";
             // 
@@ -177,15 +177,27 @@
             this.badGroupBox2.Image = null;
             this.badGroupBox2.Location = new System.Drawing.Point(1, 1);
             this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(445, 115);
+            this.badGroupBox2.Size = new System.Drawing.Size(445, 108);
             this.badGroupBox2.TabIndex = 24;
             this.badGroupBox2.Text = "Test connection / upload";
+            // 
+            // chkActivateAutoReplayUpload
+            // 
+            this.chkActivateAutoReplayUpload.BackColor = System.Drawing.Color.Transparent;
+            this.chkActivateAutoReplayUpload.Checked = false;
+            this.chkActivateAutoReplayUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoReplayUpload.Image")));
+            this.chkActivateAutoReplayUpload.Location = new System.Drawing.Point(12, 221);
+            this.chkActivateAutoReplayUpload.Name = "chkActivateAutoReplayUpload";
+            this.chkActivateAutoReplayUpload.Size = new System.Drawing.Size(411, 23);
+            this.chkActivateAutoReplayUpload.TabIndex = 27;
+            this.chkActivateAutoReplayUpload.Text = "Auto upload replays to vBAddict (replay files)";
             // 
             // AppSettingsvBAddict
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.chkActivateAutoReplayUpload);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.badLabel2);
             this.Controls.Add(this.linkVbAddict);
@@ -218,5 +230,6 @@
         private BadGroupBox badGroupBox1;
         private BadGroupBox badGroupBox2;
         private BadButton btnCancel;
+        private BadCheckBox chkActivateAutoReplayUpload;
     }
 }
