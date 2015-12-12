@@ -400,7 +400,8 @@ namespace WinApp.Forms
 			{
 				for (int i = 0; i < values.Count; i++)
 				{
-					values[i] = Convert.ToDouble(dtCurrent.Rows[0][i]);
+                    if (dtCurrent.Rows[0][i] != DBNull.Value)
+                        values[i] = Convert.ToDouble(dtCurrent.Rows[0][i]);
 				}
 			}
 			// If chart series per battle, loop back to find first values

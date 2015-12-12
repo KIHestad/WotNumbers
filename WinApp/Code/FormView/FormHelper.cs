@@ -23,6 +23,8 @@ namespace WinApp.Code
 			int newX = 0;
 			int newY = 0;
 			int newH = 0;
+            // Check for 9:16 format to keep window size normalized
+            int height9_16 = (openForm.Width / 16 * 9) + 50;
 			if (parentForm.WindowState == FormWindowState.Normal)
 			{
 				// Check if parent form has moved or resized width
@@ -47,7 +49,10 @@ namespace WinApp.Code
 					// Windowstate = normal -> Center location for new form
 					newX = parentForm.Location.X + 50 + (skewCountToRight * offsetToRight);
 					newY = parentForm.Location.Y + 100 + (skewCountToRight * offsetToRight);
-					newH = (parentForm.Height - 50) + (skewCountToRight * offsetToRight);
+					//newH = (parentForm.Height - 50) + (skewCountToRight * offsetToRight);
+                    // Check for 9:16 format to keep window size normalized
+                    //if (newH > height9_16) 
+                    newH = height9_16;
 				}
 				else
 				{
@@ -62,7 +67,10 @@ namespace WinApp.Code
 				// Windowstate = maximized -> Center location for new form
 				newX = parentForm.Location.X + 50 + (skewCountToRight * offsetToRight);
 				newY = parentForm.Location.Y + 100 + (skewCountToRight * offsetToRight);
-				newH = (parentForm.Height - 250) + (skewCountToRight * offsetToRight);
+				//newH = (parentForm.Height - 250) + (skewCountToRight * offsetToRight);
+                // Check for 9:16 format to keep window size normalized
+                //if (newH > height9_16) 
+                newH = height9_16;
 			}
 			// Show
 			openForm.SetDesktopLocation(newX, newY);
