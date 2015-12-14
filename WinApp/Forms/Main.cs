@@ -351,7 +351,7 @@ namespace WinApp.Forms
 						Environment.NewLine + Environment.NewLine +
 						"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
 						Environment.NewLine + Environment.NewLine,
-						"Welcome to Wot Numbers", MsgBoxType.OKCancel, this);
+                        "Welcome to Wot Numbers", MsgBox.Type.OKCancel, this);
 					if (answer == MsgBox.Button.OK)
 						AutoSetup();
 					if (!LoadConfigOK)
@@ -413,7 +413,7 @@ namespace WinApp.Forms
 								s + Environment.NewLine + Environment.NewLine +
 								"To avoid this check on startup go to Settings + WoT Game Settings" + Environment.NewLine + Environment.NewLine,
 								"Install Battle Result Retriever",
-								MsgBoxType.OKCancel, this
+                                MsgBox.Type.OKCancel, this
 							);
 							if (result == MsgBox.Button.OK)
 							{
@@ -616,7 +616,7 @@ namespace WinApp.Forms
 					string msg = "Wot Numbers version " + vi.version + " is available for download." + Environment.NewLine + Environment.NewLine +
 						"You are currently running version: " + AppVersion.AssemblyVersion + "." + Environment.NewLine + Environment.NewLine +
 						"Press 'OK' to download the new version now." + Environment.NewLine + Environment.NewLine;
-					Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "New version avaliable for download", MsgBoxType.OKCancel, this);
+                    Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "New version avaliable for download", MsgBox.Type.OKCancel, this);
 					if (answer == MsgBox.Button.OK)
 					{
 						Form frm = new Forms.Download();
@@ -3164,7 +3164,7 @@ namespace WinApp.Forms
 				string tankName = dt.Rows[0]["name"].ToString();
 				Code.MsgBox.Button answer = Code.MsgBox.Show("Do you really want to delete this battle:" + Environment.NewLine + Environment.NewLine +
 					"  Battle: " + battleTime + Environment.NewLine +
-					"  Tank:   " + tankName, "Delete battle", MsgBoxType.OKCancel, this);
+                    "  Tank:   " + tankName, "Delete battle", MsgBox.Type.OKCancel, this);
 				if (answer == MsgBox.Button.OK)
 				{
 
@@ -3603,7 +3603,7 @@ namespace WinApp.Forms
                 }
                 if (runDossier)
                 {
-                    MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBoxType.OKCancel, this);
+                    MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
                     if (result == MsgBox.Button.OK)
                     {
                         RunInitialDossierFileCheck("Running initial battle fetch for new database...");
@@ -3684,7 +3684,7 @@ namespace WinApp.Forms
 				}
 				if (runDossier)
 				{
-					MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBoxType.OKCancel, this);
+                    MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
 					if (result == MsgBox.Button.OK)
 					{
 						RunInitialDossierFileCheck("Running initial battle fetch for new database...");
@@ -4605,7 +4605,7 @@ namespace WinApp.Forms
 
 		private void mGadgetRemoveAll_Click(object sender, EventArgs e)
 		{
-			MsgBox.Button answer = MsgBox.Show("This will remove all gadgets.", "Remove all gadgets", MsgBoxType.OKCancel, this);
+            MsgBox.Button answer = MsgBox.Show("This will remove all gadgets.", "Remove all gadgets", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
 				GadgetHelper.RemoveGadgetAll();
@@ -4615,7 +4615,7 @@ namespace WinApp.Forms
 
 		private void mGadgetReset_Click(object sender, EventArgs e)
 		{
-			MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBoxType.OKCancel, this);
+            MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBox.Type.OKCancel, this);
 			if (answer == MsgBox.Button.OK)
 			{
 				GadgetHelper.RemoveGadgetAll();

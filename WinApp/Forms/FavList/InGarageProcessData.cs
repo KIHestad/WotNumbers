@@ -131,8 +131,8 @@ namespace WinApp.Forms
 						Environment.NewLine + Environment.NewLine + 
 						"Press 'OK' to update tank list: " + ddFavList.Text +
 						Environment.NewLine + Environment.NewLine,
-						"Save 'In Garage' tanks", 
-						MsgBoxType.OKCancel, this);
+						"Save 'In Garage' tanks",
+                        MsgBox.Type.OKCancel, this);
 					if (answer == MsgBox.Button.OK)
 					{
 						// Find latest sort order

@@ -68,7 +68,7 @@ namespace WinApp.Forms.Settings
             if (result == DialogResult.OK)
             {
                 string path = folderBrowserDialogDBPath.SelectedPath;
-                MsgBox.Button answer = MsgBox.Show("Does subfolders with replay files exists?", "Include subfolders?", MsgBoxType.YesNo);
+                MsgBox.Button answer = MsgBox.Show("Does subfolders with replay files exists?", "Include subfolders?", MsgBox.Type.YesNo);
                 bool subfolder = (answer == MsgBox.Button.Yes);
                 ReplayHelper.AddReplayFolder(path, subfolder);
                 ShowReplayFolders();

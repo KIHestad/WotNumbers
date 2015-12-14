@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 291; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 292; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2492,6 +2492,14 @@ namespace WinApp.Code
                 case 291:
                     Config.Settings.vBAddictUploadReplayActive = false;
                     Config.SaveConfig(out msg);
+                    break;
+                case 292:
+                    if (!DB.HasColumn("tank", "imgpath"))
+                    {
+                        mssql = "ALTER TABLE tank ADD imgPath varchar(255) NULL; ";
+                        sqlite = mssql;
+                        RunWotApi = true;
+                    }
                     break;
             }
 			string sql = "";

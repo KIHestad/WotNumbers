@@ -8,14 +8,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinApp.Code;
 
 namespace WinApp.Forms
 {
 	
 	public partial class Message : Form
 	{
-        private static Code.MsgBoxType _MessageType { get; set; }
-        public Message(string title, string message, Code.MsgBoxType MessageType = Code.MsgBoxType.Close)
+        private static MsgBox.Type _MessageType { get; set; }
+        public Message(string title, string message, MsgBox.Type MessageType = MsgBox.Type.Close)
 		{
 			InitializeComponent();
 			txtMessage.Text = message;
@@ -23,12 +24,12 @@ namespace WinApp.Forms
 			txtMessage.SelectionLength = 0;
 			MessageTheme.Text = title;
             _MessageType = MessageType;
-            if (MessageType == Code.MsgBoxType.OKCancel || MessageType == Code.MsgBoxType.YesNo)
+            if (MessageType == MsgBox.Type.OKCancel || MessageType == MsgBox.Type.YesNo)
 			{
 				btnClose.Visible = false;
 				btnCancel.Visible = true;
 				btnOK.Visible = true;
-                if (MessageType == Code.MsgBoxType.YesNo)
+                if (MessageType == MsgBox.Type.YesNo)
                 {
                     btnCancel.Text = "No";
                     btnOK.Text = "Yes";
@@ -75,7 +76,7 @@ namespace WinApp.Forms
 
 		private void cmdClose_Click(object sender, EventArgs e)
 		{
-			if (_MessageType == Code.MsgBoxType.YesNo)
+            if (_MessageType == MsgBox.Type.YesNo)
                 Code.MsgBox.SelectedButton = Code.MsgBox.Button.No;
             else
                 Code.MsgBox.SelectedButton = Code.MsgBox.Button.Close;
@@ -84,7 +85,7 @@ namespace WinApp.Forms
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-            if (_MessageType == Code.MsgBoxType.YesNo)
+            if (_MessageType == MsgBox.Type.YesNo)
                 Code.MsgBox.SelectedButton = Code.MsgBox.Button.Yes;
             else
                 Code.MsgBox.SelectedButton = Code.MsgBox.Button.OK;

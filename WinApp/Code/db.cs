@@ -67,6 +67,54 @@ namespace WinApp.Code
 			return dt;
 		}
 
+        public static bool HasColumn(string tableName, string columnName)
+        {
+            bool hasColumn = false;
+            DataTable dt = new DataTable();
+            int colNameIndex = 0;
+            try
+            {
+                if (Config.Settings.databaseType == ConfigData.dbType.MSSQLserver)
+                {
+                    SqlConnection con = new SqlConnection(Config.DatabaseConnection());
+                    con.Open();
+                    string sql = "SELECT Name FROM sys.columns WHERE Name = N'" + columnName + "' AND Object_ID = Object_ID(N'" + tableName + "'); ";
+                    SqlCommand command = new SqlCommand(sql, con);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(dt);
+                    con.Close();
+                    colNameIndex = 0;
+                }
+                else if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+                {
+                    SQLiteConnection con = new SQLiteConnection(Config.DatabaseConnection());
+                    con.Open();
+                    string sql = "PRAGMA table_info(" + tableName + ");";
+                    SQLiteCommand command = new SQLiteCommand(sql, con);
+                    SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
+                    adapter.Fill(dt);
+                    con.Close();
+                    colNameIndex = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, "Check if column exists in table");
+            }
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (dr[colNameIndex].ToString().ToLower() == columnName.ToLower())
+                    {
+                        hasColumn = true;
+                        break;
+                    }
+                }
+            }
+            return hasColumn;
+        }
+
 		public static bool ExecuteNonQuery(string sql, bool ShowError = true, bool RunInBatch = false)
 		{
 			string lastRunnedSQL = "";
