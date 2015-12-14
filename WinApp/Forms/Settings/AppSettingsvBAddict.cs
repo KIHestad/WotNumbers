@@ -91,6 +91,11 @@ namespace WinApp.Forms.Settings
             DataBind();
         }
 
+        private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.vbaddict.net/token.php");
+        }
+
 		
     }
 }

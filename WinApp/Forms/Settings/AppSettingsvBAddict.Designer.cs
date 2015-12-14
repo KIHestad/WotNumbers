@@ -58,6 +58,7 @@
             this.linkVbAddict.TabStop = true;
             this.linkVbAddict.Text = "Create and view your token here";
             this.linkVbAddict.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.linkVbAddict.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkVbAddict_LinkClicked);
             // 
             // btnCancel
             // 
