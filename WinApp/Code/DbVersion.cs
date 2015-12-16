@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 292; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 297; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2482,9 +2482,6 @@ namespace WinApp.Code
                     if (temp != "")
                         ReplayHelper.AddReplayFolder(temp, false);
                     break;
-                case 289:
-                    RunWotApi = true;
-                    break;
                 case 290:
                     mssql = "ALTER TABLE battle ADD uploadedvBAddict datetime NULL; ";
                     sqlite = mssql;
@@ -2498,9 +2495,31 @@ namespace WinApp.Code
                     {
                         mssql = "ALTER TABLE tank ADD imgPath varchar(255) NULL; ";
                         sqlite = mssql;
-                        RunWotApi = true;
                     }
                     break;
+                case 293:
+                    mssql = "INSERT INTO country (id, name, shortName) VALUES (7, 'Czechoslovakia', 'CZ'); ";
+                    sqlite = mssql;
+                    break;
+                case 295:
+                    mssql = "ALTER TABLE country ADD vBAddictName varchar(50) NULL; ";
+                    sqlite = mssql;
+                    break;
+                case 296:
+                    mssql =
+                        "UPDATE country SET vBAddictName = 'soviet_union' WHERE ID = 0; " +
+                        "UPDATE country SET vBAddictName = 'germany' WHERE ID = 1; " +
+                        "UPDATE country SET vBAddictName = 'usa' WHERE ID = 2; " +
+                        "UPDATE country SET vBAddictName = 'china' WHERE ID = 3; " +
+                        "UPDATE country SET vBAddictName = 'france' WHERE ID = 4; " +
+                        "UPDATE country SET vBAddictName = 'uk' WHERE ID = 5; " +
+                        "UPDATE country SET vBAddictName = 'japan' WHERE ID = 6; " +
+                        "UPDATE country SET vBAddictName = 'czechoslovakia' WHERE ID = 7; ";
+                    sqlite = mssql;
+                    break;
+                case 297:
+                    RunWotApi = true;
+                    break;                
             }
 			string sql = "";
 			// get sql for correct dbtype

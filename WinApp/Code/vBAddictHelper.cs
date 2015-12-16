@@ -346,5 +346,38 @@ namespace WinApp.Code
             DB.ExecuteNonQuery(sql);
             return GetInfoUploadedvBAddict(battleId);
         }
+
+        public static string GetReplayURLInfo(int battleId)
+        {
+            // return: map - nation - tankname - battleid
+            string replayURLInfo = "";
+            // Get Battle info
+            string sql =
+                "select map.name as mapName, country.vBAddictName as nationName, tank.name as tankName, battle.arenauniqueid " +
+                "from battle " +
+                "  inner join playerTank pt on battle.playerTankId = pt.id " + 
+                "  inner join tank on pt.tankId = tank.Id " + 
+                "  left join map on battle.mapId = map.id  " +
+                "  left join country on tank.countryId = country.id " +
+                "where battle.id=" + battleId.ToString();
+            DataTable dtBattle = DB.FetchData(sql);
+            if (dtBattle.Rows.Count > 0)
+            {
+                DataRow drBattle = dtBattle.Rows[0];
+                string mapName = drBattle["mapName"].ToString().ToLower();
+                string nation = drBattle["nationName"].ToString().ToLower();
+                string tankName = drBattle["tankName"].ToString().ToLower();
+                tankName = tankName.Replace(" ", "_");
+                tankName = tankName.Replace("-", "_");
+                tankName = tankName.Replace(".", "_");
+                string arenauniqueid = drBattle["arenauniqueid"].ToString().ToLower();
+                replayURLInfo = 
+                    mapName + "-" +
+                    nation + "-" +
+                    tankName + "-" +
+                    arenauniqueid;
+            }
+            return replayURLInfo;
+        }
 	}
 }

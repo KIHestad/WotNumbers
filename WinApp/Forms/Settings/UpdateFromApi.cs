@@ -42,7 +42,7 @@ namespace WinApp.Forms
 			this.Cursor = Cursors.WaitCursor;
 			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
 			btnStart.Enabled = false;
-			badProgressBar.ValueMax = 7;
+			badProgressBar.ValueMax = 4;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 
@@ -55,16 +55,16 @@ namespace WinApp.Forms
 			TankHelper.GetJson2dbMappingFromDB();
 
 			// Get turret
-			UpdateProgressBar("Retrieves tank turrets from Wargaming API");
-			ImportWotApi2DB.ImportTurrets(this);
+			// UpdateProgressBar("Retrieves tank turrets from Wargaming API");
+			// ImportWotApi2DB.ImportTurrets(this);
 
 			// Get guns
-			UpdateProgressBar("Retrieves tank guns from Wargaming API");
-			ImportWotApi2DB.ImportGuns(this);
+			// UpdateProgressBar("Retrieves tank guns from Wargaming API");
+			// ImportWotApi2DB.ImportGuns(this);
 
 			// Get radios
-			UpdateProgressBar("Retrieves tank radios from Wargaming API");
-			ImportWotApi2DB.ImportRadios(this);
+			// UpdateProgressBar("Retrieves tank radios from Wargaming API");
+			// ImportWotApi2DB.ImportRadios(this);
 
 			// Get achievements
 			UpdateProgressBar("Retrieves achievements from Wargaming API");

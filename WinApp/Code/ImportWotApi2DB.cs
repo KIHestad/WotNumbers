@@ -227,6 +227,7 @@ namespace WinApp.Code
 								case "SPG": tankTypeId = 5; break;
 							}
 							string country = itemToken["nation"].ToString();
+                            countryId = -1;
 							switch (country)
 							{
 								case "ussr": countryId = 0; break;
@@ -236,6 +237,7 @@ namespace WinApp.Code
 								case "france": countryId = 4; break;
 								case "uk": countryId = 5; break;
 								case "japan": countryId = 6; break;
+                                case "czech": countryId = 7; break;
 							}
 							string name = itemToken["name_i18n"].ToString();
                             string imgPath = itemToken["image"].ToString();
