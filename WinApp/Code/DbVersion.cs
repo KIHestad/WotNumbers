@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 299; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 300; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2521,7 +2521,9 @@ namespace WinApp.Code
                     mssql = "INSERT INTO map (id, name, arena_id) VALUES (74,'Pilsen','114_czech'); ";
                     sqlite = mssql;
                     break;
-                case 299:
+                case 300:
+                    mssql = "ALTER TABLE map ADD active BIT NOT NULL DEFAULT(0); ";
+                    sqlite = mssql;
                     RunWotApi = true;
                     break;
             }

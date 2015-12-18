@@ -62,7 +62,6 @@
 			this.MessageTheme.TabIndex = 17;
 			this.MessageTheme.Text = "Message";
 			this.MessageTheme.TitleHeight = 26;
-			this.MessageTheme.Resize += new System.EventHandler(this.badForm1_Resize);
 			// 
 			// btnClose
 			// 

@@ -359,7 +359,7 @@ namespace WinApp.Forms
 						Config.Settings.dossierFileWathcherRun = 0;
 						SetListener(false);
 						Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
-						Form frm = new Forms.ApplicationSetting();
+						Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
 						frm.ShowDialog();
 					}
 				}
@@ -399,7 +399,7 @@ namespace WinApp.Forms
 									"Battle Result Retriver Settings",
 									this
 								);
-								Form frm = new Forms.WoTGameClientSettings();
+								Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.WoTGameClient);
 								frm.ShowDialog();
 							}
 						}
@@ -436,7 +436,6 @@ namespace WinApp.Forms
 					Config.Settings.dossierFileWathcherRun = 0;
 					SetListener(false);
                     mAppSettings.Enabled = true;
-                    mSettingsApp.Enabled = true;
                     mShowDbTables.Enabled = false;
 					StatusBarHelper.Message = "Database connection failed";
 					StatusBarHelper.ClearAfterNextShow = false;
@@ -636,10 +635,7 @@ namespace WinApp.Forms
 			mUpdateDataFromAPI.Enabled = true;
 			mRecalcBattleWN8.Enabled = true;
             mRecalcBattleCreditsPerTank.Enabled = true;
-			mImportBattlesFromWotStat.Enabled = true;
-			mSettingsAppLayout.Enabled = true;
-			mSettingsApp.Enabled = true;
-            mAppSettings.Enabled = true;
+			mAppSettings.Enabled = true;
 		}
 
 		#endregion
@@ -1242,6 +1238,7 @@ namespace WinApp.Forms
                 // uncheck
                 mMapDefault.Checked = false;
                 mMapDescr.Checked = false;
+                mMapDescrLarge.Checked = false;
                 // select and set main menu title
                 selectedMenu.Checked = true;
                 mMapViewType.Text = selectedMenu.Text;
@@ -1257,13 +1254,23 @@ namespace WinApp.Forms
 
         private void mMapShowAll_Click(object sender, EventArgs e)
         {
-            // Selected a colList from toolbar
             ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
             // Toggle
             selectedMenu.Checked = !selectedMenu.Checked;
             string s = "only maps with recorded battles";
             if (selectedMenu.Checked)
-                s = "all maps";
+                s = "maps without recorded battles";
+            ShowView("Changed map view to show " + s);
+        }
+
+        private void mMapShowOld_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+            // Toggle
+            selectedMenu.Checked = !selectedMenu.Checked;
+            string s = "only maps currently in play";
+            if (selectedMenu.Checked)
+                s = "maps that are old / obsolete and no longer in play";
             ShowView("Changed map view to show " + s);
         }
 
@@ -2433,15 +2440,6 @@ namespace WinApp.Forms
 					sortOrder = "ORDER BY " + sorting.ColumnName + " " + sortDirection + " ";
 				}
 				
-				// Get sorting by finding calcultated fiels
-				//foreach (ColListHelper.ColListClass col in colList)
-				//{
-				//	if (col.colName == sorting.lastSortColumn)
-				//	{
-				//		if (col.colNameSelect != "''" && col.colNameSelect != "NULL")
-				//			sortOrder = "ORDER BY " + col.colNameSort + " " + sortDirection + " ";
-				//	}
-				//}
 				// Get Battle Time filer
 				string battleTimeFilter = "";
                 string battleTimeReadable = "";
@@ -2469,7 +2467,7 @@ namespace WinApp.Forms
 					"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
 					"        map on battle.mapId = map.id INNER JOIN " +
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter +
+					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + 
 					groupBy + " " +
 					sortOrder;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
@@ -2859,7 +2857,6 @@ namespace WinApp.Forms
         #endregion
 
         #region Data Grid - MAP VIEW                                       ***********************************************************************
-        private static bool betaFeatureShow = true;
         private static GridSortingHelper.Sorting mapSorting = new GridSortingHelper.Sorting
         {
             ColumnHeader = "Map",
@@ -2880,16 +2877,25 @@ namespace WinApp.Forms
                 dataGridMain.DataSource = null;
                 // Check
                 if (!DB.CheckConnection(false)) return;
-                
+
+                // Show old maps?
+                string sqlWhereOldMaps = "";
+                string sqlAndOldMaps = "";
+                if (!mMapShowOld.Checked)
+                {
+                    sqlWhereOldMaps = " WHERE map.active = 1 ";
+                    sqlAndOldMaps = " AND map.active = 1 ";
+                }
+
                 // Get Battle Time filer
-                string battleTimeFilter = "";
+                string sqlBattleTimeFilter = "";
                 string battleTimeReadable = "";
-                BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
+                BattleTimeFilter(out sqlBattleTimeFilter, out battleTimeReadable);
 
                 // Get Battle mode filter
-                string battleModeFilter = "";
+                string sqlBattleModeFilter = "";
                 string battleMode = "";
-                BattleModeFilter(out battleModeFilter, out battleMode);
+                BattleModeFilter(out sqlBattleModeFilter, out battleMode);
 
                 // Get sorting
                 string sortDirection = "";
@@ -2902,18 +2908,18 @@ namespace WinApp.Forms
                     mapSorting.ColumnName = "Map";
                     mapSorting.ColumnHeader = "Map";
                 }
-                string sortOrder = "ORDER BY [" + mapSorting.ColumnName + "] " + sortDirection + " ";
+                string sqlOrderBy = "ORDER BY [" + mapSorting.ColumnName + "] " + sortDirection + " ";
 
                 // Get Tank filter
                 string tankFilterMessage = "";
-                string tankFilter = "";
-                string playerTankFilter = "";
+                string sqlTankFilter = "";
+                string sqlPlayerTankFilter = "";
                 string tankJoin = "";
-                Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage, onlyTankFilter: true);
-                Tankfilter(out playerTankFilter, out tankJoin, out tankFilterMessage, onlyPlayerTankFilter: true);
+                Tankfilter(out sqlTankFilter, out tankJoin, out tankFilterMessage, onlyTankFilter: true);
+                Tankfilter(out sqlPlayerTankFilter, out tankJoin, out tankFilterMessage, onlyPlayerTankFilter: true);
 
                 // Get cols - Default
-                string selectCols =
+                string sqlSelect =
                     "map.name AS 'Map', " +
                     "MAX(battle.battleTime) AS 'Last Battle', " +
                     "COUNT(battle.battlesCount) AS 'Battles', " +
@@ -2921,7 +2927,7 @@ namespace WinApp.Forms
                     "AVG(CAST(tank.tier AS FLOAT)) AS 'Avg Tier', " +
                     "AVG(CAST(battle.maxBattleTier AS FLOAT)) AS 'Avg Max Tier', " +
                     "map.id AS 'Map_ID' ";
-                string selectRestCols =
+                string sqlSelectRemainingMaps =
                     "map.name AS 'Map', " +
                     "CAST(NULL AS DATETIME) AS 'Last Battle', " +
                     "0 AS 'Battles', " +
@@ -2929,33 +2935,34 @@ namespace WinApp.Forms
                     "CAST(NULL AS FLOAT) AS 'Avg Tier', " +
                     "CAST(NULL AS FLOAT) As 'Avg Max Tier', " +
                     "map.id AS 'Map_ID' ";
-                string groupBy = 
+                string sqlGroupBy = 
                     "map.id, map.name ";
                 // Other views
                 if (mMapDescr.Checked || mMapDescrLarge.Checked)
                 {
-                    selectCols = 
+                    sqlSelect = 
                         "map.name AS 'Map', " +
                         "map.description AS 'Description', " +
                         "map.id AS 'Map_ID' ";
-                    selectRestCols = selectCols;
-                    groupBy = 
+                    sqlSelectRemainingMaps = sqlSelect;
+                    sqlGroupBy = 
                         "map.id, map.name, map.description ";
                 }
 
                 // Create SQL
                 string sql =
-                    "SELECT " + selectCols +
+                    "SELECT " + sqlSelect +
                     "FROM    map " +
-                    "  INNER JOIN battle ON map.id = battle.mapId " + battleTimeFilter + battleModeFilter +
-                    "  INNER JOIN playerTank ON battle.playerTankId = playerTank.id AND playerTank.playerId=@playerid " + playerTankFilter +
-                    "  INNER JOIN tank ON playerTank.tankId = tank.id " + tankFilter +
+                    "  INNER JOIN battle ON map.id = battle.mapId " + sqlBattleTimeFilter + sqlBattleModeFilter +
+                    "  INNER JOIN playerTank ON battle.playerTankId = playerTank.id AND playerTank.playerId=@playerid " + sqlPlayerTankFilter +
+                    "  INNER JOIN tank ON playerTank.tankId = tank.id " + sqlTankFilter +
                     "  INNER JOIN tankType ON tank.tankTypeId = tankType.Id " +
                     "  INNER JOIN country ON tank.countryId = country.Id " +
                     "  INNER JOIN battleResult ON battle.battleResultId = battleResult.id " +
                     "  INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin.Replace("INNER JOIN", "LEFT JOIN") +
-                    "GROUP BY " + groupBy +
-                    sortOrder;
+                    sqlWhereOldMaps +
+                    "GROUP BY " + sqlGroupBy +
+                    sqlOrderBy;
                 DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 
                 DataTable dt = new DataTable();
@@ -2965,7 +2972,7 @@ namespace WinApp.Forms
                 if (mMapShowAll.Checked)
                 {
                     string existingMapID = "";
-                    string restWhere = "";
+                    string sqlWhereRemainingMaps = "";
                     if (dt.Rows.Count > 0)
                     {
                         foreach (DataRow dr in dt.Rows)
@@ -2973,14 +2980,18 @@ namespace WinApp.Forms
                             existingMapID += dr["Map_ID"].ToString() + ",";
                         }
                         existingMapID = existingMapID.Substring(0, existingMapID.Length - 1);
-                        restWhere = "WHERE id NOT IN (" + existingMapID + ")";
+                        sqlWhereRemainingMaps = "WHERE id NOT IN (" + existingMapID + ") " + sqlAndOldMaps;
                     }
-                    string sqlRestMaps =
-                        "SELECT " + selectRestCols +
+                    else
+                    {
+                        sqlWhereRemainingMaps = sqlWhereOldMaps;
+                    }
+                    string sqlRemainingMaps =
+                        "SELECT " + sqlSelectRemainingMaps +
                         "FROM map " +
-                        restWhere + 
-                        sortOrder;
-                    DataTable dtRest = DB.FetchData(sqlRestMaps);
+                        sqlWhereRemainingMaps + 
+                        sqlOrderBy;
+                    DataTable dtRest = DB.FetchData(sqlRemainingMaps);
                     if (dtRest.Rows.Count > 0)
                     {
                         dt.Merge(dtRest);
@@ -2993,40 +3004,38 @@ namespace WinApp.Forms
                 int imgWidth = 40;
 
                 // Set row height and image size before data is added
-                if (true || mMapDescr.Checked || mMapDescrLarge.Checked)
+                
+                int imageHeight = 0;
+                if (mMapDefault.Checked)
                 {
-                    int imageHeight = 0;
-                    if (mMapDefault.Checked)
-                    {
-                        imageHeight = 30; // Resize to smaller image
-                        dataGridMain.RowTemplate.Height = 32;
-                        imageIllustration = true;
-                    }
-                    else if (mMapDescr.Checked)
-                    {
-                        imageHeight = 100; // Resize to smaller image
-                        dataGridMain.RowTemplate.Height = 100;
-                    }
-                    else
-                    {
-                        imageHeight = 0; // use deafult size - no resizing = 300
-                        dataGridMain.RowTemplate.Height = 300;
-                    }
-
-                    dataGridMain.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-
-                    // Add map images
-                    dt.Columns.Add("Image", typeof(Image)).SetOrdinal(0);
-                    // Fill with images
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        int map_id = Convert.ToInt32(dr["Map_ID"]);
-                        Image img = ImageHelper.GetMap(map_id, imageIllustration, imageHeight);
-                        dr["Image"] = img;
-                        imgWidth = img.Width;
-                    }
+                    imageHeight = 30; // Resize to smaller image
+                    dataGridMain.RowTemplate.Height = 32;
+                    imageIllustration = true;
+                }
+                else if (mMapDescr.Checked)
+                {
+                    imageHeight = 100; // Resize to smaller image
+                    dataGridMain.RowTemplate.Height = 100;
+                }
+                else
+                {
+                    imageHeight = 0; // use deafult size - no resizing = 300
+                    dataGridMain.RowTemplate.Height = 300;
                 }
 
+                dataGridMain.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+                // Add map images
+                dt.Columns.Add("Image", typeof(Image)).SetOrdinal(0);
+                // Fill with images
+                foreach (DataRow dr in dt.Rows)
+                {
+                    int map_id = Convert.ToInt32(dr["Map_ID"]);
+                    Image img = ImageHelper.GetMap(map_id, imageIllustration, imageHeight);
+                    dr["Image"] = img;
+                    imgWidth = img.Width;
+                }
+            
                 // populate datagrid
                 dataGridMain.Columns.Clear();
                 mainGridFormatting = true;
@@ -3071,14 +3080,6 @@ namespace WinApp.Forms
                 mBattles.Visible = true;
                 SetStatus2(Status2Message);
                 lblStatusRowCount.Text = "Rows " + rowcount.ToString();
-
-                if (betaFeatureShow)
-                {
-                    Application.DoEvents();
-                    // SHow message
-                    MsgBox.Show("The Map view is a beta feature under development. It has limited functionality and bugs might appear." + Environment.NewLine + Environment.NewLine, "Beta Feature");
-                    betaFeatureShow = false;
-                }
 
             }
             catch (Exception ex)
@@ -4004,73 +4005,73 @@ namespace WinApp.Forms
 	
 		private void toolItemSettingsApp_Click(object sender, EventArgs e)
 		{
-			// Stop file watchers if running
-			int runState = Config.Settings.dossierFileWathcherRun;
-			if (runState == 1)
-			{
-				Config.Settings.dossierFileWathcherRun = 0;
-				SetListener();
-			}
+            //// Stop file watchers if running
+            //int runState = Config.Settings.dossierFileWathcherRun;
+            //if (runState == 1)
+            //{
+            //    Config.Settings.dossierFileWathcherRun = 0;
+            //    SetListener();
+            //}
 
-			string databaseFilename = Config.Settings.databaseFileName;
-			string databaseName = Config.Settings.databaseName;
-			ConfigData.dbType databateType = Config.Settings.databaseType;
+            //string databaseFilename = Config.Settings.databaseFileName;
+            //string databaseName = Config.Settings.databaseName;
+            //ConfigData.dbType databateType = Config.Settings.databaseType;
 
-			Form frm = new Forms.ApplicationSetting();
-			frm.ShowDialog();
+            //Form frm = new Forms.ApplicationSetting();
+            //frm.ShowDialog();
 
-			// Update main form title
-			currentPlayerId = Config.Settings.playerId;
-			SetFormTitle();
+            //// Update main form title
+            //currentPlayerId = Config.Settings.playerId;
+            //SetFormTitle();
 			
-            // Go to tank list, as home view with gauges fails if no data present?
-			// ChangeView(GridView.Views.Overall, true);
+            //// Go to tank list, as home view with gauges fails if no data present?
+            //// ChangeView(GridView.Views.Overall, true);
 			
 
-			// Check for api update
-			if (DBVersion.RunWotApi)
-				RunWotApi(true);
+            //// Check for api update
+            //if (DBVersion.RunWotApi)
+            //    RunWotApi(true);
 
-			// Check if new database is created, database should be present but no player should exist
-			if (DB.CheckConnection(true))
-			{
-				bool runDossier = false;
-				// If no player selected, or changed db type run dosser check
-				runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType);
-				if (!runDossier)
-				{
-					// check if changed db according to dbtype
-					if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-						runDossier = (databaseFilename != Config.Settings.databaseFileName);
-					else
-						runDossier = (databaseName != Config.Settings.databaseName);
-				}
-				if (runDossier)
-				{
-                    MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
-					if (result == MsgBox.Button.OK)
-					{
-						RunInitialDossierFileCheck("Running initial battle fetch for new database...");
-					}
-				}
-			}
+            //// Check if new database is created, database should be present but no player should exist
+            //if (DB.CheckConnection(true))
+            //{
+            //    bool runDossier = false;
+            //    // If no player selected, or changed db type run dosser check
+            //    runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType);
+            //    if (!runDossier)
+            //    {
+            //        // check if changed db according to dbtype
+            //        if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+            //            runDossier = (databaseFilename != Config.Settings.databaseFileName);
+            //        else
+            //            runDossier = (databaseName != Config.Settings.databaseName);
+            //    }
+            //    if (runDossier)
+            //    {
+            //        MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
+            //        if (result == MsgBox.Button.OK)
+            //        {
+            //            RunInitialDossierFileCheck("Running initial battle fetch for new database...");
+            //        }
+            //    }
+            //}
 
-            // Return to prev file watcher state
-			if (runState != Config.Settings.dossierFileWathcherRun)
-			{
-				Config.Settings.dossierFileWathcherRun = runState;
-			}
+            //// Return to prev file watcher state
+            //if (runState != Config.Settings.dossierFileWathcherRun)
+            //{
+            //    Config.Settings.dossierFileWathcherRun = runState;
+            //}
 
-			// Update main form
-			SetListener();
-			currentPlayerId = Config.Settings.playerId;
-			SetFormTitle();
-			SetFavListMenu(); // Reload fav list items
-			SetColListMenu(); // Refresh column setup list now
+            //// Update main form
+            //SetListener();
+            //currentPlayerId = Config.Settings.playerId;
+            //SetFormTitle();
+            //SetFavListMenu(); // Reload fav list items
+            //SetColListMenu(); // Refresh column setup list now
 
-            // Refresh data
-            SetStatus2("Refreshed grid");
-            ChangeView(MainSettings.View, true);
+            //// Refresh data
+            //SetStatus2("Refreshed grid");
+            //ChangeView(MainSettings.View, true);
 
 		}
 
@@ -4149,8 +4150,8 @@ namespace WinApp.Forms
 
 		private void mSettingsUploadTovBAddict_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.UploadTovBAddict();
-			frm.ShowDialog(this);
+            //Form frm = new Forms.UploadTovBAddict();
+            //frm.ShowDialog(this);
 
 		}
 
@@ -4226,30 +4227,30 @@ namespace WinApp.Forms
 
 		private void toolItemImportBattlesFromWotStat_Click(object sender, EventArgs e)
 		{
-			if (Dossier2db.Running)
-				MsgBox.Show("Battle check is running, cannot start import at the same time. Please wait some seconds until battle check is done." +
-							Environment.NewLine + Environment.NewLine, "Cannot start import yet", this);
-			else
-			{
-				// Stop file watchers if running
-				int runState = Config.Settings.dossierFileWathcherRun;
-				if (runState == 1)
-				{
-					Config.Settings.dossierFileWathcherRun = 0;
-					SetListener();
-					Application.DoEvents();
-				}
-				// Show import form
-				Form frm = new Forms.ImportWotStat();
-				frm.ShowDialog();
-				// Return to prev file watcher state
-				if (runState != Config.Settings.dossierFileWathcherRun)
-				{
-					Config.Settings.dossierFileWathcherRun = runState;
-					SetListener();
-					Application.DoEvents();
-				}
-			}
+            //if (Dossier2db.Running)
+            //    MsgBox.Show("Battle check is running, cannot start import at the same time. Please wait some seconds until battle check is done." +
+            //                Environment.NewLine + Environment.NewLine, "Cannot start import yet", this);
+            //else
+            //{
+            //    // Stop file watchers if running
+            //    int runState = Config.Settings.dossierFileWathcherRun;
+            //    if (runState == 1)
+            //    {
+            //        Config.Settings.dossierFileWathcherRun = 0;
+            //        SetListener();
+            //        Application.DoEvents();
+            //    }
+            //    // Show import form
+            //    Form frm = new Forms.ImportWotStat();
+            //    frm.ShowDialog();
+            //    // Return to prev file watcher state
+            //    if (runState != Config.Settings.dossierFileWathcherRun)
+            //    {
+            //        Config.Settings.dossierFileWathcherRun = runState;
+            //        SetListener();
+            //        Application.DoEvents();
+            //    }
+            //}
 			
 		}
 
@@ -4296,12 +4297,12 @@ namespace WinApp.Forms
 
 		private void mSettingsAppLayout_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.ApplicationLayout();
-			frm.ShowDialog();
-			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
-			ChangeView(MainSettings.View, true);
+            //Form frm = new Forms.ApplicationLayout();
+            //frm.ShowDialog();
+            //dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+            //dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+            //dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+            //ChangeView(MainSettings.View, true);
 		}
 
 		private void mExit_Click(object sender, EventArgs e)
@@ -4323,7 +4324,7 @@ namespace WinApp.Forms
 			{
 				if (Config.Settings.wotGameStartType == ConfigData.WoTGameStartType.NotConfigured)
 				{
-					Form frm = new Forms.WoTGameClientSettings();
+                    Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.WoTGameClient);
 					frm.ShowDialog();
 				}
 				else
@@ -4453,8 +4454,8 @@ namespace WinApp.Forms
 
 		private void mWoTStartGameSettings_Click(object sender, EventArgs e)
 		{
-			Form frm = new Forms.WoTGameClientSettings();
-			frm.ShowDialog();
+            //Form frm = new Forms.WoTGameClientSettings();
+            //frm.ShowDialog();
 		}
 
 		private void notifyIcon_MouseClick(object sender, MouseEventArgs e)

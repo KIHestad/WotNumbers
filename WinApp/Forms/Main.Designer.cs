@@ -72,8 +72,10 @@
             this.mMapViewType = new System.Windows.Forms.ToolStripDropDownButton();
             this.mMapDefault = new System.Windows.Forms.ToolStripMenuItem();
             this.mMapDescr = new System.Windows.Forms.ToolStripMenuItem();
+            this.mMapDescrLarge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.mMapShowAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mMapShowOld = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.mTankFilter_Country = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
@@ -205,11 +207,6 @@
             this.mAppSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mSettingsAppLayout = new System.Windows.Forms.ToolStripMenuItem();
-            this.mSettingsApp = new System.Windows.Forms.ToolStripMenuItem();
-            this.mImportBattlesFromWotStat = new System.Windows.Forms.ToolStripMenuItem();
-            this.mSettingsUploadTovBAddict = new System.Windows.Forms.ToolStripMenuItem();
-            this.mWoTStartGameSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.mHelpCheckVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
@@ -223,7 +220,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.mMapDescrLarge = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -610,13 +607,15 @@
             this.mMapDescr,
             this.mMapDescrLarge,
             this.toolStripSeparator14,
-            this.mMapShowAll});
+            this.mMapShowAll,
+            this.mMapShowOld});
             this.mMapViewType.Image = ((System.Drawing.Image)(resources.GetObject("mMapViewType.Image")));
             this.mMapViewType.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mMapViewType.Name = "mMapViewType";
             this.mMapViewType.ShowDropDownArrow = false;
             this.mMapViewType.Size = new System.Drawing.Size(65, 22);
             this.mMapViewType.Text = "Default";
+            this.mMapViewType.ToolTipText = "Select Map View";
             this.mMapViewType.Visible = false;
             // 
             // mMapDefault
@@ -624,7 +623,7 @@
             this.mMapDefault.Checked = true;
             this.mMapDefault.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mMapDefault.Name = "mMapDefault";
-            this.mMapDefault.Size = new System.Drawing.Size(171, 22);
+            this.mMapDefault.Size = new System.Drawing.Size(219, 22);
             this.mMapDefault.Text = "Default";
             this.mMapDefault.Click += new System.EventHandler(this.mMapViewType_Click);
             this.mMapDefault.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -632,23 +631,39 @@
             // mMapDescr
             // 
             this.mMapDescr.Name = "mMapDescr";
-            this.mMapDescr.Size = new System.Drawing.Size(171, 22);
+            this.mMapDescr.Size = new System.Drawing.Size(219, 22);
             this.mMapDescr.Text = "Map Description";
             this.mMapDescr.Click += new System.EventHandler(this.mMapViewType_Click);
             this.mMapDescr.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
+            // mMapDescrLarge
+            // 
+            this.mMapDescrLarge.Name = "mMapDescrLarge";
+            this.mMapDescrLarge.Size = new System.Drawing.Size(219, 22);
+            this.mMapDescrLarge.Text = "Map Large Images";
+            this.mMapDescrLarge.Click += new System.EventHandler(this.mMapViewType_Click);
+            this.mMapDescrLarge.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(216, 6);
             // 
             // mMapShowAll
             // 
             this.mMapShowAll.Name = "mMapShowAll";
-            this.mMapShowAll.Size = new System.Drawing.Size(171, 22);
-            this.mMapShowAll.Text = "Show all Maps";
+            this.mMapShowAll.Size = new System.Drawing.Size(219, 22);
+            this.mMapShowAll.Text = "Show Maps Without Battles";
             this.mMapShowAll.Click += new System.EventHandler(this.mMapShowAll_Click);
             this.mMapShowAll.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mMapShowOld
+            // 
+            this.mMapShowOld.Name = "mMapShowOld";
+            this.mMapShowOld.Size = new System.Drawing.Size(219, 22);
+            this.mMapShowOld.Text = "Show Old / Obsolete Maps";
+            this.mMapShowOld.Click += new System.EventHandler(this.mMapShowOld_Click);
+            this.mMapShowOld.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter
             // 
@@ -1757,8 +1772,9 @@
             this.mSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mSettingsRun,
             this.mSettingsRunBattleCheck,
-            this.mUpdateDataFromAPI,
             this.toolStripSeparator24,
+            this.mUpdateDataFromAPI,
+            this.toolStripSeparator18,
             this.mRecalcBattleWN8,
             this.mRecalcBattleCreditsPerTank,
             this.toolStripSeparator25,
@@ -1767,12 +1783,7 @@
             this.toolStripSeparator1,
             this.mAppSettings,
             this.toolStripSeparator7,
-            this.mExit,
-            this.mSettingsAppLayout,
-            this.mSettingsApp,
-            this.mImportBattlesFromWotStat,
-            this.mSettingsUploadTovBAddict,
-            this.mWoTStartGameSettings});
+            this.mExit});
             this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
             this.mSettings.Name = "mSettings";
             this.mSettings.ShowDropDownArrow = false;
@@ -1801,7 +1812,7 @@
             this.mUpdateDataFromAPI.Enabled = false;
             this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
             this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
-            this.mUpdateDataFromAPI.Text = "Update Data from API...";
+            this.mUpdateDataFromAPI.Text = "Update Data...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
             // 
             // toolStripSeparator24
@@ -1868,50 +1879,6 @@
             this.mExit.Size = new System.Drawing.Size(264, 22);
             this.mExit.Text = "Exit";
             this.mExit.Click += new System.EventHandler(this.mExit_Click);
-            // 
-            // mSettingsAppLayout
-            // 
-            this.mSettingsAppLayout.Enabled = false;
-            this.mSettingsAppLayout.Name = "mSettingsAppLayout";
-            this.mSettingsAppLayout.Size = new System.Drawing.Size(264, 22);
-            this.mSettingsAppLayout.Text = "Application &Layout... (OLD)";
-            this.mSettingsAppLayout.Visible = false;
-            this.mSettingsAppLayout.Click += new System.EventHandler(this.mSettingsAppLayout_Click);
-            // 
-            // mSettingsApp
-            // 
-            this.mSettingsApp.Enabled = false;
-            this.mSettingsApp.Name = "mSettingsApp";
-            this.mSettingsApp.Size = new System.Drawing.Size(264, 22);
-            this.mSettingsApp.Text = "Application &Settings... (OLD)";
-            this.mSettingsApp.Visible = false;
-            this.mSettingsApp.Click += new System.EventHandler(this.toolItemSettingsApp_Click);
-            // 
-            // mImportBattlesFromWotStat
-            // 
-            this.mImportBattlesFromWotStat.Enabled = false;
-            this.mImportBattlesFromWotStat.Name = "mImportBattlesFromWotStat";
-            this.mImportBattlesFromWotStat.Size = new System.Drawing.Size(264, 22);
-            this.mImportBattlesFromWotStat.Text = "Import Battles from WoT Statistics...";
-            this.mImportBattlesFromWotStat.Visible = false;
-            this.mImportBattlesFromWotStat.Click += new System.EventHandler(this.toolItemImportBattlesFromWotStat_Click);
-            // 
-            // mSettingsUploadTovBAddict
-            // 
-            this.mSettingsUploadTovBAddict.Name = "mSettingsUploadTovBAddict";
-            this.mSettingsUploadTovBAddict.Size = new System.Drawing.Size(264, 22);
-            this.mSettingsUploadTovBAddict.Text = "Upload to vBAddict...";
-            this.mSettingsUploadTovBAddict.Visible = false;
-            this.mSettingsUploadTovBAddict.Click += new System.EventHandler(this.mSettingsUploadTovBAddict_Click);
-            // 
-            // mWoTStartGameSettings
-            // 
-            this.mWoTStartGameSettings.Image = ((System.Drawing.Image)(resources.GetObject("mWoTStartGameSettings.Image")));
-            this.mWoTStartGameSettings.Name = "mWoTStartGameSettings";
-            this.mWoTStartGameSettings.Size = new System.Drawing.Size(264, 22);
-            this.mWoTStartGameSettings.Text = "WoT Game Settings...";
-            this.mWoTStartGameSettings.Visible = false;
-            this.mWoTStartGameSettings.Click += new System.EventHandler(this.mWoTStartGameSettings_Click);
             // 
             // mHelp
             // 
@@ -2120,13 +2087,10 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // mMapDescrLarge
+            // toolStripSeparator18
             // 
-            this.mMapDescrLarge.Name = "mMapDescrLarge";
-            this.mMapDescrLarge.Size = new System.Drawing.Size(171, 22);
-            this.mMapDescrLarge.Text = "Map Large Images";
-            this.mMapDescrLarge.Click += new System.EventHandler(this.mMapViewType_Click);
-            this.mMapDescrLarge.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
             // 
             // Main
             // 
@@ -2268,11 +2232,9 @@
 		private System.Windows.Forms.ToolStripDropDownButton mSettings;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsRun;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
-		private System.Windows.Forms.ToolStripMenuItem mUpdateDataFromAPI;
-		private System.Windows.Forms.ToolStripMenuItem mImportBattlesFromWotStat;
+        private System.Windows.Forms.ToolStripMenuItem mUpdateDataFromAPI;
 		private System.Windows.Forms.ToolStripMenuItem mShowDbTables;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
-		private System.Windows.Forms.ToolStripMenuItem mSettingsApp;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
 		private System.Windows.Forms.ToolStripButton mViewChart;
 		private System.Windows.Forms.ToolStripMenuItem mTankFilter_GetInGarage;
 		private System.Windows.Forms.ToolStripDropDownButton mHelp;
@@ -2280,8 +2242,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mHelpMessage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem mHelpAbout;
-		private System.Windows.Forms.ToolStripMenuItem mTankFilter_Clear;
-		private System.Windows.Forms.ToolStripMenuItem mSettingsAppLayout;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Clear;
 		private System.Windows.Forms.ToolStripMenuItem mModeSkrimishes;
 		private System.Windows.Forms.ToolStripMenuItem mBattles2d;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -2320,8 +2281,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon2;
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon3;
 		private System.Windows.Forms.ToolStripButton mWoT;
-		private System.Windows.Forms.Timer timerWoTAffnity;
-		private System.Windows.Forms.ToolStripMenuItem mWoTStartGameSettings;
+        private System.Windows.Forms.Timer timerWoTAffnity;
 		private System.Windows.Forms.NotifyIcon notifyIcon;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
 		private System.Windows.Forms.ToolStripMenuItem mExit;
@@ -2332,8 +2292,7 @@
         private System.Windows.Forms.ToolStripMenuItem mSettingsRunBattleCheck;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorForBattleView;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-		private System.Windows.Forms.ToolStripMenuItem mModeSpecial;
-		private System.Windows.Forms.ToolStripMenuItem mSettingsUploadTovBAddict;
+        private System.Windows.Forms.ToolStripMenuItem mModeSpecial;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsShowLogFiles;
 		private System.Windows.Forms.ToolStripMenuItem mModeBattleForStronghold;
 		private System.Windows.Forms.ToolStripMenuItem mModeTeamRanked;
@@ -2351,6 +2310,8 @@
         private System.Windows.Forms.ToolStripMenuItem mMapShowAll;
         private System.Windows.Forms.ToolStripMenuItem mMapDescr;
         private System.Windows.Forms.ToolStripMenuItem mMapDescrLarge;
+        private System.Windows.Forms.ToolStripMenuItem mMapShowOld;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
 	}
 }
 

@@ -69,11 +69,6 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void badForm1_Resize(object sender, EventArgs e)
-		{
-
-		}
-
 		private void cmdClose_Click(object sender, EventArgs e)
 		{
             if (_MessageType == MsgBox.Type.YesNo)
