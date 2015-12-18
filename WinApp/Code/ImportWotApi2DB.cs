@@ -687,7 +687,7 @@ namespace WinApp.Code
 							name = name.Replace("'","");
 							string description = itemToken["description"].ToString();
 							string arena_id = itemToken["arena_id"].ToString();
-							string updateSql = "UPDATE map SET description=@description, arena_id=@arena_id WHERE name=@name; " ;
+                            string updateSql = "UPDATE map SET description=@description, name=@name WHERE arena_id=@arena_id; ";
 							DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
 							DB.AddWithValue(ref updateSql, "@description", description, DB.SqlDataType.VarChar);
 							DB.AddWithValue(ref updateSql, "@arena_id", arena_id, DB.SqlDataType.VarChar);

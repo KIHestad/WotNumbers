@@ -38,14 +38,6 @@ namespace WinApp.Code
 						if (clc.colNameSort != "")
 							sorting.ColumnName = clc.colNameSort;
 					}
-					// special sort for image columns
-					//if (clc.colDataType == "Image")
-					//{
-					//	if (clc.name == "Mastery Badge")
-					//		sorting.lastSortColumn = "mb_id";
-					//	else
-					//		sorting.lastSortColumn = "tank_name";
-					//}
 				}
 				sorting.SortDirectionAsc = Convert.ToBoolean(dt.Rows[0]["lastSortDirectionAsc"]);
 			}

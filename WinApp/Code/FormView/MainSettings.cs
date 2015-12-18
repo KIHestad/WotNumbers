@@ -11,6 +11,7 @@ namespace WinApp.Code
 		public static GridView.Views View = GridView.Views.Overall;
 		public static GridFilter.Settings GridFilterTank = GridFilter.GetDefault(GridView.Views.Tank);
 		public static GridFilter.Settings GridFilterBattle = GridFilter.GetDefault(GridView.Views.Battle);
+        // public static GridFilter.Settings GridFilterMap = GridFilter.GetDefault(GridView.Views.Map); Use same as for battle
 
 		public static GridFilter.Settings GetCurrentGridFilter()
 		{
@@ -25,6 +26,9 @@ namespace WinApp.Code
 				case GridView.Views.Battle:
 					gf = GridFilterBattle;
 					break;
+                case GridView.Views.Map:
+                    gf = GridFilterBattle; // Use same as battle
+                    break;
 				default:
 					break;
 			}
@@ -40,10 +44,13 @@ namespace WinApp.Code
 				case GridView.Views.Tank:
 					GridFilterTank = GridFilter;
 					break;
-				case GridView.Views.Battle:
-					GridFilterBattle = GridFilter;
-					break;
-				default:
+                case GridView.Views.Battle:
+                    GridFilterBattle = GridFilter;
+                    break;
+                case GridView.Views.Map:
+                    GridFilterBattle = GridFilter; // Use same as battle
+                    break;
+                default:
 					break;
 			}
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -183,7 +184,7 @@ namespace WinApp.Code
 			return image;
 		}
 
-		public static Image GetMap(int mapId, bool getIllustation = false)
+        public static Image GetMap(int mapId, bool getIllustation = false, int reSize = 0)
 		{
 			string sql = "select arena_id from map where id=@mapId";
 			DB.AddWithValue(ref sql, "@mapId", mapId, DB.SqlDataType.Int);
@@ -193,10 +194,10 @@ namespace WinApp.Code
 			{
 				arena_id = dtArenaId.Rows[0][0].ToString();
 			}
-			return GetMap(arena_id, getIllustation);
+			return GetMap(arena_id, getIllustation, reSize);
 		}
 
-		public static Image GetMap(string arena_id, bool getIllustation = false)
+		public static Image GetMap(string arena_id, bool getIllustation = false, int heightSize = 0)
 		{
 			Bitmap img = new Bitmap(1, 1);
 			Image image = (Image)img;
@@ -223,6 +224,16 @@ namespace WinApp.Code
 					ms.Write(imgByte, 0, imgByte.Length);
 					image = new Bitmap(ms);
 				}
+                if (heightSize > 0)
+                {
+                    Image newImage = new Bitmap(image.Width * heightSize / image.Height, heightSize);
+                    using (Graphics graphicsHandle = Graphics.FromImage(newImage))
+                    {
+                        graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        graphicsHandle.DrawImage(image, 0, 0, image.Width * heightSize / image.Height, heightSize);
+                    }
+                    image = newImage;
+                }
 			}
 			return image;
 		}

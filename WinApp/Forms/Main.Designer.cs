@@ -48,6 +48,7 @@
             this.mViewOverall = new System.Windows.Forms.ToolStripButton();
             this.mViewTankInfo = new System.Windows.Forms.ToolStripButton();
             this.mViewBattles = new System.Windows.Forms.ToolStripButton();
+            this.mViewMaps = new System.Windows.Forms.ToolStripButton();
             this.mRefresh = new System.Windows.Forms.ToolStripButton();
             this.mRefreshSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mColumnSelect = new System.Windows.Forms.ToolStripDropDownButton();
@@ -68,6 +69,11 @@
             this.mColumnSelect_15 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.mColumnSelect_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mMapViewType = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mMapDefault = new System.Windows.Forms.ToolStripMenuItem();
+            this.mMapDescr = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.mMapShowAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.mTankFilter_Country = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
@@ -217,6 +223,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.mMapDescrLarge = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -317,9 +324,11 @@
             this.mViewOverall,
             this.mViewTankInfo,
             this.mViewBattles,
+            this.mViewMaps,
             this.mRefresh,
             this.mRefreshSeparator,
             this.mColumnSelect,
+            this.mMapViewType,
             this.mTankFilter,
             this.mMode,
             this.mBattles,
@@ -367,7 +376,7 @@
             this.mViewOverall.Size = new System.Drawing.Size(60, 22);
             this.mViewOverall.Text = "&Home";
             this.mViewOverall.ToolTipText = " Home View";
-            this.mViewOverall.Click += new System.EventHandler(this.toolItemViewOverall_Click);
+            this.mViewOverall.Click += new System.EventHandler(this.mViewOverall_Click);
             // 
             // mViewTankInfo
             // 
@@ -378,18 +387,29 @@
             this.mViewTankInfo.Size = new System.Drawing.Size(57, 22);
             this.mViewTankInfo.Text = "&Tanks";
             this.mViewTankInfo.ToolTipText = "Tank View";
-            this.mViewTankInfo.Click += new System.EventHandler(this.toolItemViewTankInfo_Click);
+            this.mViewTankInfo.Click += new System.EventHandler(this.mViewTankInfo_Click);
             // 
             // mViewBattles
             // 
             this.mViewBattles.BackColor = System.Drawing.Color.Fuchsia;
             this.mViewBattles.Image = ((System.Drawing.Image)(resources.GetObject("mViewBattles.Image")));
+            this.mViewBattles.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mViewBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mViewBattles.Name = "mViewBattles";
             this.mViewBattles.Size = new System.Drawing.Size(62, 22);
             this.mViewBattles.Text = "&Battles";
             this.mViewBattles.ToolTipText = "Battle View";
-            this.mViewBattles.Click += new System.EventHandler(this.toolItemViewBattles_Click);
+            this.mViewBattles.Click += new System.EventHandler(this.mViewBattles_Click);
+            // 
+            // mViewMaps
+            // 
+            this.mViewMaps.Image = ((System.Drawing.Image)(resources.GetObject("mViewMaps.Image")));
+            this.mViewMaps.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.mViewMaps.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mViewMaps.Name = "mViewMaps";
+            this.mViewMaps.Size = new System.Drawing.Size(51, 22);
+            this.mViewMaps.Text = "Maps";
+            this.mViewMaps.Click += new System.EventHandler(this.mViewMaps_Click);
             // 
             // mRefresh
             // 
@@ -437,6 +457,7 @@
             this.mColumnSelect.Size = new System.Drawing.Size(65, 22);
             this.mColumnSelect.Text = "Default";
             this.mColumnSelect.ToolTipText = "Select Tank/Battle View";
+            this.mColumnSelect.Visible = false;
             // 
             // mColumnSelect_01
             // 
@@ -582,6 +603,53 @@
             this.mColumnSelect_Edit.Text = "Edit Tank/Battle View...";
             this.mColumnSelect_Edit.Click += new System.EventHandler(this.toolItemColumnSelect_Edit_Click);
             // 
+            // mMapViewType
+            // 
+            this.mMapViewType.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mMapDefault,
+            this.mMapDescr,
+            this.mMapDescrLarge,
+            this.toolStripSeparator14,
+            this.mMapShowAll});
+            this.mMapViewType.Image = ((System.Drawing.Image)(resources.GetObject("mMapViewType.Image")));
+            this.mMapViewType.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mMapViewType.Name = "mMapViewType";
+            this.mMapViewType.ShowDropDownArrow = false;
+            this.mMapViewType.Size = new System.Drawing.Size(65, 22);
+            this.mMapViewType.Text = "Default";
+            this.mMapViewType.Visible = false;
+            // 
+            // mMapDefault
+            // 
+            this.mMapDefault.Checked = true;
+            this.mMapDefault.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mMapDefault.Name = "mMapDefault";
+            this.mMapDefault.Size = new System.Drawing.Size(171, 22);
+            this.mMapDefault.Text = "Default";
+            this.mMapDefault.Click += new System.EventHandler(this.mMapViewType_Click);
+            this.mMapDefault.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mMapDescr
+            // 
+            this.mMapDescr.Name = "mMapDescr";
+            this.mMapDescr.Size = new System.Drawing.Size(171, 22);
+            this.mMapDescr.Text = "Map Description";
+            this.mMapDescr.Click += new System.EventHandler(this.mMapViewType_Click);
+            this.mMapDescr.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(168, 6);
+            // 
+            // mMapShowAll
+            // 
+            this.mMapShowAll.Name = "mMapShowAll";
+            this.mMapShowAll.Size = new System.Drawing.Size(171, 22);
+            this.mMapShowAll.Text = "Show all Maps";
+            this.mMapShowAll.Click += new System.EventHandler(this.mMapShowAll_Click);
+            this.mMapShowAll.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
             // mTankFilter
             // 
             this.mTankFilter.BackColor = System.Drawing.Color.Transparent;
@@ -613,6 +681,7 @@
             this.mTankFilter.Size = new System.Drawing.Size(77, 22);
             this.mTankFilter.Text = "My Tanks";
             this.mTankFilter.ToolTipText = "Select Favourite Tank List";
+            this.mTankFilter.Visible = false;
             this.mTankFilter.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_MouseDown);
             // 
             // mTankFilter_Country
@@ -1061,6 +1130,7 @@
             this.mMode.Size = new System.Drawing.Size(80, 22);
             this.mMode.Text = "All modes";
             this.mMode.ToolTipText = "Select Battle Mode";
+            this.mMode.Visible = false;
             // 
             // mModeAll
             // 
@@ -1272,6 +1342,7 @@
             this.mBattles.Size = new System.Drawing.Size(105, 22);
             this.mBattles.Text = "Today\'s Battles";
             this.mBattles.ToolTipText = "Select Battle Time";
+            this.mBattles.Visible = false;
             this.mBattles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mBattles_MouseDown);
             // 
             // mBattles1d
@@ -1432,6 +1503,7 @@
             this.mBattleGroup.Size = new System.Drawing.Size(96, 22);
             this.mBattleGroup.Text = "No Grouping";
             this.mBattleGroup.ToolTipText = "Select Battle Grouping";
+            this.mBattleGroup.Visible = false;
             // 
             // mBattleGroup_No
             // 
@@ -2048,6 +2120,14 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // mMapDescrLarge
+            // 
+            this.mMapDescrLarge.Name = "mMapDescrLarge";
+            this.mMapDescrLarge.Size = new System.Drawing.Size(171, 22);
+            this.mMapDescrLarge.Text = "Map Large Images";
+            this.mMapDescrLarge.Click += new System.EventHandler(this.mMapViewType_Click);
+            this.mMapDescrLarge.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2264,6 +2344,13 @@
         private System.Windows.Forms.ToolStripMenuItem mAppSettings;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryCzechoslovakia;
+        private System.Windows.Forms.ToolStripButton mViewMaps;
+        private System.Windows.Forms.ToolStripDropDownButton mMapViewType;
+        private System.Windows.Forms.ToolStripMenuItem mMapDefault;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripMenuItem mMapShowAll;
+        private System.Windows.Forms.ToolStripMenuItem mMapDescr;
+        private System.Windows.Forms.ToolStripMenuItem mMapDescrLarge;
 	}
 }
 

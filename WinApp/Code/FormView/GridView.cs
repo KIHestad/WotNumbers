@@ -16,6 +16,7 @@ namespace WinApp.Code
 			Overall = 0,
 			Tank = 1,    // Same value used in database for colType in table columnList
 			Battle = 2,  // Same value used in database for colType in table columnList
+            Map = 3,
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 297; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 299; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2517,9 +2517,13 @@ namespace WinApp.Code
                         "UPDATE country SET vBAddictName = 'czechoslovakia' WHERE ID = 7; ";
                     sqlite = mssql;
                     break;
-                case 297:
+                case 298:
+                    mssql = "INSERT INTO map (id, name, arena_id) VALUES (74,'Pilsen','114_czech'); ";
+                    sqlite = mssql;
+                    break;
+                case 299:
                     RunWotApi = true;
-                    break;                
+                    break;
             }
 			string sql = "";
 			// get sql for correct dbtype

@@ -871,20 +871,25 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void toolItemViewOverall_Click(object sender, EventArgs e)
+		private void mViewOverall_Click(object sender, EventArgs e)
 		{
 			ChangeView(GridView.Views.Overall);
 		}
 
-		private void toolItemViewTankInfo_Click(object sender, EventArgs e)
+        private void mViewTankInfo_Click(object sender, EventArgs e)
 		{
 			ChangeView(GridView.Views.Tank);
 		}
 
-		private void toolItemViewBattles_Click(object sender, EventArgs e)
+        private void mViewBattles_Click(object sender, EventArgs e)
 		{
 			ChangeView(GridView.Views.Battle);
 		}
+
+        private void mViewMaps_Click(object sender, EventArgs e)
+        {
+            ChangeView(GridView.Views.Map);
+        }
 
 		private void ChangeView(GridView.Views newGridView, bool forceUpdate = false)
 		{
@@ -901,6 +906,9 @@ namespace WinApp.Forms
 						break;
 					case GridView.Views.Battle:
 						mViewBattles.Checked = false;
+						break;
+                    case GridView.Views.Map:
+                        mViewMaps.Checked = false;
 						break;
 				}
 				// Set new view as selected
@@ -933,6 +941,7 @@ namespace WinApp.Forms
 						mGadget.Visible = true;
 						mHomeEdit.Visible = true;
 						mBattles.Visible = false;
+                        mMapViewType.Visible = false;
 						mTankFilter.Visible = false;
 						mColumnSelect.Visible = false;
 						mMode.Visible = false;
@@ -950,6 +959,7 @@ namespace WinApp.Forms
 						dataGridMain.RowHeadersWidth = Config.Settings.mainGridTankRowWidht;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
+                        mMapViewType.Visible = false;
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
@@ -985,6 +995,7 @@ namespace WinApp.Forms
 						dataGridMain.RowHeadersWidth = Config.Settings.mainGridBattleRowWidht;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
+                        mMapViewType.Visible = false;
 						mTankFilter.Visible = true;
 						mColumnSelect.Visible = true;
 						mMode.Visible = true;
@@ -1009,6 +1020,42 @@ namespace WinApp.Forms
 						// Default control
 						this.ActiveControl = dataGridMain;
 						break;
+                    case GridView.Views.Map:
+                        // Select view
+                        mViewMaps.Checked = true;
+                        // Show grid
+                        dataGridMain.Visible = true;
+                        scrollX.Visible = true;
+                        scrollY.Visible = true;
+                        scrollCorner.Visible = true;
+                        dataGridMain.RowHeadersWidth = Config.Settings.mainGridBattleRowWidht;
+                        // Show/Hide Tool Items
+                        mMapViewType.Visible = true;
+                        mBattles.Visible = false;
+                        mTankFilter.Visible = true;
+                        mColumnSelect.Visible = false;
+                        mMode.Visible = true;
+                        mModeClan.Visible = true;
+                        mModeCompany.Visible = true;
+                        mModeRandom.Visible = true;
+                        mModeRandomTankCompany.Visible = false;
+                        mModeRandomSoloPlatoon.Visible = true;
+                        toolStripSeparatorForBattleView.Visible = true;
+                        mBattleGroup.Visible = false;
+                        mGadget.Visible = false;
+                        mHomeEdit.Visible = false;
+                        mRefreshSeparator.Visible = true;
+                        mColumnSelect_Edit.Text = "Edit Map View...";
+                        mColumnSelect.ToolTipText = "Select Map View";
+                        // Get Column Setup List  - also finds correct tank filter/fav list
+                        SetColListMenu();
+                        // Get Battle mode
+                        SetBattleModeMenu();
+                        // Add datagrid context menu (right click on datagrid)
+                        CreateDataGridContextMenu();
+                        // Default control
+                        this.ActiveControl = dataGridMain;
+                        break;
 				}
 				toolMain.Renderer = new StripRenderer();
 				ShowView(); // Changed view, no status message applied, sets in GridShow
@@ -1027,7 +1074,8 @@ namespace WinApp.Forms
 				}
 				else
 				{
-					if (panelMainArea.Visible != true)
+                    if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Map view selected";
+                    if (panelMainArea.Visible != true)
 						panelMainArea.Visible = true;
 					if (currentPlayerId != Config.Settings.playerId)
 					{
@@ -1072,6 +1120,10 @@ namespace WinApp.Forms
 							if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Battle view selected";
 							GridShowBattle(Status2Message);
 							break;
+                        case GridView.Views.Map:
+                            if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Map view selected";
+                            GridShowMap(Status2Message);
+                            break;
 						default:
 							break;
 					}
@@ -1178,9 +1230,48 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Menu Items: Tank Filter / Fav List 
+        #region Menu Items: Map View Alternatives
 
-		private string tankFilterFavListName = "";
+        private void mMapViewType_Click(object sender, EventArgs e)
+        {
+            // Selected a colList from toolbar
+			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+			// if not already selcted change
+            if (!selectedMenu.Checked)
+            {
+                // uncheck
+                mMapDefault.Checked = false;
+                mMapDescr.Checked = false;
+                // select and set main menu title
+                selectedMenu.Checked = true;
+                mMapViewType.Text = selectedMenu.Text;
+                // Reset sorting
+                mapSorting.ColumnName = "Map";
+                mapSorting.ColumnHeader = "Map";
+                mapSorting.SortDirectionAsc = true;
+                // Show grid
+                ShowView("Selected map view: " + selectedMenu.Text);
+            }
+
+        }
+
+        private void mMapShowAll_Click(object sender, EventArgs e)
+        {
+            // Selected a colList from toolbar
+            ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
+            // Toggle
+            selectedMenu.Checked = !selectedMenu.Checked;
+            string s = "only maps with recorded battles";
+            if (selectedMenu.Checked)
+                s = "all maps";
+            ShowView("Changed map view to show " + s);
+        }
+
+        #endregion
+
+        #region Menu Items: Tank Filter / Fav List
+
+        private string tankFilterFavListName = "";
 		private string tankFilterManualFilter = "";
 		private void SetTankFilterMenuName()
 		{
@@ -1621,7 +1712,7 @@ namespace WinApp.Forms
 				mBattles.Text = menuItem.Tag.ToString(); // Different name on main tool item then menu name for battle time filter button
 			else
 				mBattles.Text = menuItem.Text; // Use menu name as main tool item name for battle time filter button
-			GridShowBattle("Selected battle time: " + menuItem.Text);
+			ShowView("Selected battle time: " + menuItem.Text);
 		}
 
 		#endregion
@@ -1722,7 +1813,7 @@ namespace WinApp.Forms
 		private int tankFilterType = 0;
 		private int tankFilterTier = 0;
 
-		private void Tankfilter(out string whereSQL, out string joinSQL, out string Status2Message)
+		private void Tankfilter(out string whereSQL, out string joinSQL, out string status2Message, bool onlyTankFilter = false, bool onlyPlayerTankFilter = false)
 		{
 			string tier = "";
 			string nation = "";
@@ -1730,9 +1821,9 @@ namespace WinApp.Forms
 			string type = "";
 			string typeId = "";
 			string message = "";
-			string newWhereSQL = "";
-			string newJoinSQL = "";
-			string tankOwnedWhereSQL = "";
+            string newJoinSQL = "";
+            string tankWhereSQL = "";
+			string playerTankWhereSQL_Owned = "";
 			// Check favlist
 			if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.FavList)
 			{
@@ -1742,16 +1833,16 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
-				{
-					message = "All tanks";
-				}
-				else
-				if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.MyTanks)
-				{
-					message = "All tanks owned";
-					tankOwnedWhereSQL += " AND playerTank.id is not null ";
-				}
+                if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.AllTanksNotOwned)
+                {
+                    message = "All tanks";
+                }
+                else if (MainSettings.GetCurrentGridFilter().FavListShow == GridFilter.FavListShowType.MyTanks)
+                {
+                    message = "All tanks owned";
+                    if (!onlyTankFilter)
+                        playerTankWhereSQL_Owned += " AND playerTank.id is not null ";
+                }
 			}
 			// Check if spesific tank is filtered
 			if (MainSettings.GetCurrentGridFilter().TankId != -1)
@@ -1760,8 +1851,8 @@ namespace WinApp.Forms
 				string tankName = TankHelper.GetTankName(tankId);
 				tankFilterManualFilter = tankName;
 				message += " - Filtered on tank: " + tankName;
-				newWhereSQL = " AND tank.id=@tankId ";
-				DB.AddWithValue(ref newWhereSQL, "@tankId", tankId, DB.SqlDataType.Int);
+                tankWhereSQL = " AND tank.id=@tankId ";
+                DB.AddWithValue(ref tankWhereSQL, "@tankId", tankId, DB.SqlDataType.Int);
 			}
 			else
 			{
@@ -1792,27 +1883,27 @@ namespace WinApp.Forms
 				if (mTankFilter_TypeHT.Checked) { type += "Heavy,"; typeId += "3,"; manualFilterCount++; }
 				if (mTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; manualFilterCount++; }
 				if (mTankFilter_TypeSPG.Checked) { type += "SPG,"; typeId += "5,"; manualFilterCount++; }
-				// Compose status message
-				if (tier.Length > 0)
-				{
-					string tierId = tier;
-					tier = tier.Substring(0, tier.Length - 1);
-					if (newWhereSQL != "") newWhereSQL += " AND ";
-					newWhereSQL += " tank.tier IN (" + tierId.Substring(0, tierId.Length - 1) + ") ";
-				}
-				if (nation.Length > 0)
-				{
-					nation = nation.Substring(0, nation.Length - 1);
-					if (newWhereSQL != "") newWhereSQL += " AND ";
-					newWhereSQL += " tank.countryId IN (" + nationId.Substring(0, nationId.Length - 1) + ") ";
-				}
-				if (type.Length > 0)
-				{
-					type = type.Substring(0, type.Length - 1);
-					if (newWhereSQL != "") newWhereSQL += " AND ";
-					newWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
-				}
-				if (newWhereSQL != "") newWhereSQL = " AND (" + newWhereSQL + ") ";
+				// create tank filter
+                if (tier.Length > 0)
+                {
+                    string tierId = tier;
+                    tier = tier.Substring(0, tier.Length - 1);
+                    if (tankWhereSQL != "") tankWhereSQL += " AND ";
+                    tankWhereSQL += " tank.tier IN (" + tierId.Substring(0, tierId.Length - 1) + ") ";
+                }
+                if (nation.Length > 0)
+                {
+                    nation = nation.Substring(0, nation.Length - 1);
+                    if (tankWhereSQL != "") tankWhereSQL += " AND ";
+                    tankWhereSQL += " tank.countryId IN (" + nationId.Substring(0, nationId.Length - 1) + ") ";
+                }
+                if (type.Length > 0)
+                {
+                    type = type.Substring(0, type.Length - 1);
+                    if (tankWhereSQL != "") tankWhereSQL += " AND ";
+                    tankWhereSQL += " tank.tankTypeId IN (" + typeId.Substring(0, typeId.Length - 1) + ") ";
+                }
+                if (tankWhereSQL != "") tankWhereSQL = " AND (" + tankWhereSQL + ") ";
 				// Check if manual filter is selected, show in statusbar and as menu name
 				if (manualFilterCount > 0)
 				{
@@ -1839,9 +1930,15 @@ namespace WinApp.Forms
 			}
 			// Show filtername in menu
 			SetTankFilterMenuName();
-			whereSQL = tankOwnedWhereSQL + newWhereSQL;
+            // Return correct where sql part
+            if (onlyPlayerTankFilter)
+                whereSQL = playerTankWhereSQL_Owned;
+            else if (onlyTankFilter)
+                whereSQL = tankWhereSQL;
+            else
+    			whereSQL = playerTankWhereSQL_Owned + tankWhereSQL;
 			joinSQL = newJoinSQL;
-			Status2Message = message;
+			status2Message = message;
 		}
 
 		private void BattleModeFilter(out string battleModeFilter, out string battleMode)
@@ -2759,6 +2856,240 @@ namespace WinApp.Forms
 			return result;
 		}
 
+        #endregion
+
+        #region Data Grid - MAP VIEW                                       ***********************************************************************
+        private static bool betaFeatureShow = true;
+        private static GridSortingHelper.Sorting mapSorting = new GridSortingHelper.Sorting
+        {
+            ColumnHeader = "Map",
+            ColumnName = "Map",
+            SortDirectionAsc = true
+        };
+        private void GridShowMap(string Status2Message)
+        {
+            try
+            {
+                // Grid init placement
+                int gridAreaTop = 0; // Start below info panel
+                dataGridMain.Top = gridAreaTop;
+                dataGridMain.Left = 0;
+                // Init
+                mainGridSaveColWidth = false; // Do not save changing of colWidth when loading grid
+                mainGridFormatting = false;
+                dataGridMain.DataSource = null;
+                // Check
+                if (!DB.CheckConnection(false)) return;
+                
+                // Get Battle Time filer
+                string battleTimeFilter = "";
+                string battleTimeReadable = "";
+                BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
+
+                // Get Battle mode filter
+                string battleModeFilter = "";
+                string battleMode = "";
+                BattleModeFilter(out battleModeFilter, out battleMode);
+
+                // Get sorting
+                string sortDirection = "";
+                if (mapSorting.SortDirectionAsc)
+                    sortDirection += " ASC ";
+                else
+                    sortDirection += " DESC ";
+                if (mapSorting.ColumnName == "Image")
+                {
+                    mapSorting.ColumnName = "Map";
+                    mapSorting.ColumnHeader = "Map";
+                }
+                string sortOrder = "ORDER BY [" + mapSorting.ColumnName + "] " + sortDirection + " ";
+
+                // Get Tank filter
+                string tankFilterMessage = "";
+                string tankFilter = "";
+                string playerTankFilter = "";
+                string tankJoin = "";
+                Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage, onlyTankFilter: true);
+                Tankfilter(out playerTankFilter, out tankJoin, out tankFilterMessage, onlyPlayerTankFilter: true);
+
+                // Get cols - Default
+                string selectCols =
+                    "map.name AS 'Map', " +
+                    "MAX(battle.battleTime) AS 'Last Battle', " +
+                    "COUNT(battle.battlesCount) AS 'Battles', " +
+                    "SUM(battle.victory) * 100 / CAST(NULLIF(SUM(battle.battlesCount),0) AS FLOAT) AS 'Win Rate', " +
+                    "AVG(CAST(tank.tier AS FLOAT)) AS 'Avg Tier', " +
+                    "AVG(CAST(battle.maxBattleTier AS FLOAT)) AS 'Avg Max Tier', " +
+                    "map.id AS 'Map_ID' ";
+                string selectRestCols =
+                    "map.name AS 'Map', " +
+                    "CAST(NULL AS DATETIME) AS 'Last Battle', " +
+                    "0 AS 'Battles', " +
+                    "CAST(NULL AS FLOAT) AS 'Win Rate', "+
+                    "CAST(NULL AS FLOAT) AS 'Avg Tier', " +
+                    "CAST(NULL AS FLOAT) As 'Avg Max Tier', " +
+                    "map.id AS 'Map_ID' ";
+                string groupBy = 
+                    "map.id, map.name ";
+                // Other views
+                if (mMapDescr.Checked || mMapDescrLarge.Checked)
+                {
+                    selectCols = 
+                        "map.name AS 'Map', " +
+                        "map.description AS 'Description', " +
+                        "map.id AS 'Map_ID' ";
+                    selectRestCols = selectCols;
+                    groupBy = 
+                        "map.id, map.name, map.description ";
+                }
+
+                // Create SQL
+                string sql =
+                    "SELECT " + selectCols +
+                    "FROM    map " +
+                    "  INNER JOIN battle ON map.id = battle.mapId " + battleTimeFilter + battleModeFilter +
+                    "  INNER JOIN playerTank ON battle.playerTankId = playerTank.id AND playerTank.playerId=@playerid " + playerTankFilter +
+                    "  INNER JOIN tank ON playerTank.tankId = tank.id " + tankFilter +
+                    "  INNER JOIN tankType ON tank.tankTypeId = tankType.Id " +
+                    "  INNER JOIN country ON tank.countryId = country.Id " +
+                    "  INNER JOIN battleResult ON battle.battleResultId = battleResult.id " +
+                    "  INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin.Replace("INNER JOIN", "LEFT JOIN") +
+                    "GROUP BY " + groupBy +
+                    sortOrder;
+                DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+
+                DataTable dt = new DataTable();
+                dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+
+                // Add all maps
+                if (mMapShowAll.Checked)
+                {
+                    string existingMapID = "";
+                    string restWhere = "";
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            existingMapID += dr["Map_ID"].ToString() + ",";
+                        }
+                        existingMapID = existingMapID.Substring(0, existingMapID.Length - 1);
+                        restWhere = "WHERE id NOT IN (" + existingMapID + ")";
+                    }
+                    string sqlRestMaps =
+                        "SELECT " + selectRestCols +
+                        "FROM map " +
+                        restWhere + 
+                        sortOrder;
+                    DataTable dtRest = DB.FetchData(sqlRestMaps);
+                    if (dtRest.Rows.Count > 0)
+                    {
+                        dt.Merge(dtRest);
+                    }
+                }
+
+                // AddingNewEventArgs row count
+                int rowcount = dt.Rows.Count;
+                bool imageIllustration = false;
+                int imgWidth = 40;
+
+                // Set row height and image size before data is added
+                if (true || mMapDescr.Checked || mMapDescrLarge.Checked)
+                {
+                    int imageHeight = 0;
+                    if (mMapDefault.Checked)
+                    {
+                        imageHeight = 30; // Resize to smaller image
+                        dataGridMain.RowTemplate.Height = 32;
+                        imageIllustration = true;
+                    }
+                    else if (mMapDescr.Checked)
+                    {
+                        imageHeight = 100; // Resize to smaller image
+                        dataGridMain.RowTemplate.Height = 100;
+                    }
+                    else
+                    {
+                        imageHeight = 0; // use deafult size - no resizing = 300
+                        dataGridMain.RowTemplate.Height = 300;
+                    }
+
+                    dataGridMain.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+                    // Add map images
+                    dt.Columns.Add("Image", typeof(Image)).SetOrdinal(0);
+                    // Fill with images
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        int map_id = Convert.ToInt32(dr["Map_ID"]);
+                        Image img = ImageHelper.GetMap(map_id, imageIllustration, imageHeight);
+                        dr["Image"] = img;
+                        imgWidth = img.Width;
+                    }
+                }
+
+                // populate datagrid
+                dataGridMain.Columns.Clear();
+                mainGridFormatting = true;
+                frozenRows = 0;
+                
+                dataGridMain.DataSource = dt;
+                // Unfocus
+                dataGridMain.ClearSelection();
+                // Hide sys cols
+                dataGridMain.Columns["Map_ID"].Visible = false;
+                // Cell Formatting
+                dataGridMain.Columns["Map"].Width = 120;
+                dataGridMain.Columns["Image"].Width = imgWidth;
+                if (mMapDefault.Checked)
+                {
+                    dataGridMain.Columns["Battles"].Width = 65;
+                    dataGridMain.Columns["Battles"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridMain.Columns["Last Battle"].Width = 100;
+                    dataGridMain.Columns["Win Rate"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridMain.Columns["Win Rate"].DefaultCellStyle.Format = "N1";
+                    dataGridMain.Columns["Win Rate"].Width = 75;
+                    dataGridMain.Columns["Avg Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridMain.Columns["Avg Tier"].DefaultCellStyle.Format = "N1";
+                    dataGridMain.Columns["Avg Tier"].Width = 75;
+                    dataGridMain.Columns["Avg Max Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridMain.Columns["Avg Max Tier"].DefaultCellStyle.Format = "N1";
+                    dataGridMain.Columns["Avg Max Tier"].Width = 75;
+                }
+                else if (mMapDescr.Checked)
+                {
+                    dataGridMain.Columns["Image"].Width = 100;
+                    dataGridMain.Columns["Description"].Width = 400;
+                }
+                else if (mMapDescrLarge.Checked)
+                {
+                    dataGridMain.Columns["Image"].Width = 300;
+                    dataGridMain.Columns["Description"].Width = 300;
+                }
+                // Finish up
+                ResizeNow();
+                mainGridSaveColWidth = true;
+                mBattles.Visible = true;
+                SetStatus2(Status2Message);
+                lblStatusRowCount.Text = "Rows " + rowcount.ToString();
+
+                if (betaFeatureShow)
+                {
+                    Application.DoEvents();
+                    // SHow message
+                    MsgBox.Show("The Map view is a beta feature under development. It has limited functionality and bugs might appear." + Environment.NewLine + Environment.NewLine, "Beta Feature");
+                    betaFeatureShow = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex);
+                MsgBox.Show(ex.Message, "Error on Map beta feature");
+                //throw;
+            }
+
+        }
+
 		#endregion
 
 		#region Grid sorting and paint events
@@ -2800,12 +3131,22 @@ namespace WinApp.Forms
 					e.Handled = true;
 				}
 			}
-			// Add glyph to column headers
-			else if (MainSettings.View != GridView.Views.Overall && e.RowIndex < 0 && e.ColumnIndex > -1 && dataGridMain.Columns[e.ColumnIndex].HeaderText == currentSortColName) 
-			{
-				dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = currentSortDirection;
-			}
-			// Remove arrow on row headers
+			// Add glyph to column headers for tank and battle view
+            else if ((MainSettings.View == GridView.Views.Tank || MainSettings.View == GridView.Views.Battle) &&
+                        e.RowIndex < 0 && e.ColumnIndex > -1 && dataGridMain.Columns[e.ColumnIndex].HeaderText == currentSortColName)
+            {
+                dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = currentSortDirection;
+            }
+            // Add glyph to column headers for map view
+            else if (MainSettings.View == GridView.Views.Map &&
+                        e.RowIndex < 0 && e.ColumnIndex > -1 && dataGridMain.Columns[e.ColumnIndex].HeaderText == mapSorting.ColumnHeader)
+            {
+                SortOrder mapSortDirection = SortOrder.Descending;
+                if (mapSorting.SortDirectionAsc)
+                    mapSortDirection = SortOrder.Ascending;
+                dataGridMain.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = mapSortDirection;
+            }
+            // Remove arrow on row headers
 			else if (e.ColumnIndex == -1 && e.RowIndex > -1) 
 			{
 				e.PaintBackground(e.CellBounds, true);
@@ -2828,10 +3169,9 @@ namespace WinApp.Forms
 				if (e.ColumnIndex < 0)
 					return;
 				// Manual Sort for battle and tanks view
-				if (MainSettings.View != GridView.Views.Overall)
+				if (MainSettings.View != GridView.Views.Overall && MainSettings.View != GridView.Views.Map)
 				{
 					// Find colName
-
 					ColListHelper.ColListClass clc = ColListHelper.GetColListItem(dataGridMain.Columns[e.ColumnIndex].Name, MainSettings.View);
 					// Find current sort
 					GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
@@ -2856,9 +3196,29 @@ namespace WinApp.Forms
 					}
 					// Save new sorting
 					GridSortingHelper.SaveSorting(MainSettings.GetCurrentGridFilter().ColListId, sorting);
-					// Show grid
-					ShowView("Datagrid refreshed after sorting");
+                    // Show grid
+                    ShowView("Datagrid refreshed after sorting");
 				}
+                // Special sorting for map, just remember latest
+                else if (MainSettings.View == GridView.Views.Map)
+                {
+                    // Find colName
+                    string col = dataGridMain.Columns[e.ColumnIndex].Name;
+                    // check if same sort col, toggle dir
+                    if (col == mapSorting.ColumnHeader)
+                        mapSorting.SortDirectionAsc = !mapSorting.SortDirectionAsc;
+                    else
+                    {
+                        mapSorting.ColumnHeader = col;
+                        mapSorting.ColumnName = col;
+                        if (col == "Map" || col == "Description")
+                            mapSorting.SortDirectionAsc = true;
+                        else
+                            mapSorting.SortDirectionAsc = false;
+                    }
+                    // Show grid
+                    ShowView("Datagrid refreshed after sorting");
+                }
 			}
 			catch (Exception ex)
 			{
@@ -2938,7 +3298,7 @@ namespace WinApp.Forms
 						}
 					}
 				}
-                else if (MainSettings.View == GridView.Views.Tank)
+                else if (MainSettings.View == GridView.Views.Tank || MainSettings.View == GridView.Views.Map)
                 { 
 				    if (col.Equals("Remaining XP"))
 				    {
@@ -4632,6 +4992,5 @@ namespace WinApp.Forms
 
 		#endregion
 
-        
 	}
 }
