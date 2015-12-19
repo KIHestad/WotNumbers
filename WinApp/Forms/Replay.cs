@@ -81,7 +81,7 @@ namespace WinApp.Forms
         private void GetvBAddictUploadInfo()
         {
             linkvBAddictUpload.Text = vBAddictHelper.GetInfoUploadedvBAddict(_battleId);
-            toolTipvBAddictLink.SetToolTip(linkvBAddictUpload, "Go to player profile at vBAddict");
+            toolTipvBAddictLink.SetToolTip(linkvBAddictUpload, "Go to battle report at vBAddict");
         }
 
         private void linkvBAddictUpload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -89,12 +89,12 @@ namespace WinApp.Forms
             if (linkvBAddictUpload.Text != "")
             {
                 // http://www.vbaddict.net/battlereport/user-server/map-nation-tankname-battleId
-                //string serverURL = string.Format("http://www.vbaddict.net/battlereport/{0}-{1}/{2}", 
-                //    Config.Settings.playerName.ToLower(), // user
-                //    ExternalPlayerProfile.GetServer, // server
-                //    vBAddictHelper.GetReplayURLInfo(_battleId) // map - nation - tankname - battleid
-                //    );
-                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+                string serverURL = string.Format("http://www.vbaddict.net/battlereport/{0}-{1}/{2}",
+                    Config.Settings.playerName.ToLower(), // user
+                    ExternalPlayerProfile.GetServer, // server
+                    vBAddictHelper.GetReplayURLInfo(_battleId) // map - nation - tankname - battleid
+                    );
+                // string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
                 System.Diagnostics.Process.Start(serverURL);
             }
         }

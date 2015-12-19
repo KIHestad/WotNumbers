@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Xml;
 
 // API reference:
@@ -367,9 +369,9 @@ namespace WinApp.Code
                 string mapName = drBattle["mapName"].ToString().ToLower();
                 string nation = drBattle["nationName"].ToString().ToLower();
                 string tankName = drBattle["tankName"].ToString().ToLower();
-                tankName = tankName.Replace(" ", "_");
-                tankName = tankName.Replace("-", "_");
-                tankName = tankName.Replace(".", "_");
+                mapName = Regex.Replace(mapName, "[^a-z0-9]+", "_");
+                nation = Regex.Replace(nation, "[^a-z0-9]+", "_");
+                tankName = Regex.Replace(tankName, "[^a-z0-9]+", "_");
                 string arenauniqueid = drBattle["arenauniqueid"].ToString().ToLower();
                 replayURLInfo = 
                     mapName + "-" +

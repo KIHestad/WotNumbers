@@ -299,12 +299,6 @@
     <Compile Include="Forms\FavList\FavListAddRemoveTank.Designer.cs">
       <DependentUpon>FavListAddRemoveTank.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\ApplicationLayout.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\ApplicationLayout.Designer.cs">
-      <DependentUpon>ApplicationLayout.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\BadThemeControls\DropDownGrid.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -372,12 +366,6 @@
     <Compile Include="Forms\Settings\UpdateFromApi.Designer.cs">
       <DependentUpon>UpdateFromApi.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\ImportWotStat.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\ImportWotStat.Designer.cs">
-      <DependentUpon>ImportWotStat.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\BadThemeControls\Message.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -389,12 +377,6 @@
     </Compile>
     <Compile Include="Forms\Settings\DatabaseSetting.Designer.cs">
       <DependentUpon>DatabaseSetting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\ApplicationSetting.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\ApplicationSetting.Designer.cs">
-      <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Main.cs">
       <SubType>Form</SubType>
@@ -436,18 +418,6 @@
     </Compile>
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\WoTGameClientSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\WoTGameClientSettings.Designer.cs">
-      <DependentUpon>WoTGameClientSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\UploadTovBAddict.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\_OLD_TODELETE\UploadTovBAddict.Designer.cs">
-      <DependentUpon>UploadTovBAddict.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\paramBM_Color.cs">
       <SubType>Form</SubType>
@@ -608,9 +578,6 @@
     <EmbeddedResource Include="Forms\FavList\FavListAddRemoveTank.resx">
       <DependentUpon>FavListAddRemoveTank.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\_OLD_TODELETE\ApplicationLayout.resx">
-      <DependentUpon>ApplicationLayout.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\DropDownGrid.resx">
       <DependentUpon>DropDownGrid.cs</DependentUpon>
     </EmbeddedResource>
@@ -644,17 +611,11 @@
     <EmbeddedResource Include="Forms\Settings\UpdateFromApi.resx">
       <DependentUpon>UpdateFromApi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\_OLD_TODELETE\ImportWotStat.resx">
-      <DependentUpon>ImportWotStat.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\Message.resx">
       <DependentUpon>Message.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\DatabaseSetting.resx">
       <DependentUpon>DatabaseSetting.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\_OLD_TODELETE\ApplicationSetting.resx">
-      <DependentUpon>ApplicationSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
@@ -673,12 +634,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\_OLD_TODELETE\WoTGameClientSettings.resx">
-      <DependentUpon>WoTGameClientSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\_OLD_TODELETE\UploadTovBAddict.resx">
-      <DependentUpon>UploadTovBAddict.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramBM_Color.resx">
       <DependentUpon>paramBM_Color.cs</DependentUpon>
