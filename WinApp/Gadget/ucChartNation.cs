@@ -248,7 +248,7 @@ namespace WinApp.Gadget
 			for (int id = 0; id < imgControls.Count; id++)
 			{
 				Control c = imgControls[id];
-				double barWidth = chart1.Width / imgControls.Count + 0.75;
+				double barWidth = chart1.Width / imgControls.Count ;
 				c.Top = this.Height - (this.Height - lblChartType.Top + 18);
 				c.Left = Convert.ToInt32(barWidth / 2 - 7 + barWidth * id);
 			}
