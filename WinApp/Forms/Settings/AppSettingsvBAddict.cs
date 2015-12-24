@@ -30,7 +30,10 @@ namespace WinApp.Forms.Settings
         {
             chkActivateAutoUpload.Checked = Config.Settings.vBAddictUploadActive;
             chkActivateAutoReplayUpload.Checked = Config.Settings.vBAddictUploadReplayActive;
+            chkShowvbAddictIcon.Checked = Config.Settings.vBAddictShowToolBarMenu;
             txtToken.Text = Config.Settings.vBAddictPlayerToken;
+            toolTipShowvBAddictIcon.SetToolTip(chkShowvbAddictIcon, "Used to go to your profile on vBAddict website");
+            EditChangesApply(false);
         }
 
         private void TestStatus(bool testing = true)
@@ -73,27 +76,63 @@ namespace WinApp.Forms.Settings
 
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
+            SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
             Config.Settings.vBAddictUploadActive = chkActivateAutoUpload.Checked;
             Config.Settings.vBAddictUploadReplayActive = chkActivateAutoReplayUpload.Checked;
+            Config.Settings.vBAddictShowToolBarMenu = chkShowvbAddictIcon.Checked;
             Config.Settings.vBAddictPlayerToken = txtToken.Text;
             string msg = "";
             if (!Config.SaveConfig(out msg))
                 MsgBox.Show("Error saving settings: " + msg, "Save result");
             else
             {
-                // todo
-            }
-                
+                btnCancel.Enabled = false;
+                btnSaveSettings.Enabled = false;
+                EditChangesApply(false);
+            }                
         }
+
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DataBind();
+            EditChangesApply(false);
         }
 
         private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.vbaddict.net/token.php");
+        }
+
+        private void EditChangesApply(bool changesApplied)
+        {
+            AppSettingsHelper.ChangesApplied = changesApplied;
+            btnCancel.Enabled = changesApplied;
+            btnSaveSettings.Enabled = changesApplied;
+        }
+
+        private void txtToken_TextChanged(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkShowvbAddictIcon_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkActivateAutoReplayUpload_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkActivateAutoUpload_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
         }
 
 		

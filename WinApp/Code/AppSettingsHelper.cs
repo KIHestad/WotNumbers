@@ -9,6 +9,7 @@ namespace WinApp.Code
     {
         public enum Tabs
         {
+            NotSelected = 0,
             Main = 1,
             Layout = 2,
             WoTGameClient = 3,
@@ -16,5 +17,7 @@ namespace WinApp.Code
             Import = 5,
             Replay = 6,
         }
+
+        public static bool ChangesApplied { get; set; }
     }
 }

@@ -100,6 +100,7 @@
             this.chkBrrStarupCheck.Size = new System.Drawing.Size(273, 23);
             this.chkBrrStarupCheck.TabIndex = 36;
             this.chkBrrStarupCheck.Text = "Check for Battle Result Retriever on Startup";
+            this.chkBrrStarupCheck.Click += new System.EventHandler(this.chkBrrStarupCheck_Click);
             // 
             // badGroupBox4
             // 
@@ -138,6 +139,7 @@
             this.txtBatchFile.TabIndex = 40;
             this.txtBatchFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBatchFile.ToolTipText = "Additional batch file or program to run";
+            this.txtBatchFile.TextChanged += new System.EventHandler(this.txtBatchFile_TextChanged);
             // 
             // badLabel4
             // 
@@ -161,6 +163,7 @@
             this.chkAutoRun.Size = new System.Drawing.Size(119, 23);
             this.chkAutoRun.TabIndex = 42;
             this.chkAutoRun.Text = "Auto WoT startup";
+            this.chkAutoRun.Click += new System.EventHandler(this.chkAutoRun_Click);
             // 
             // btnCancel
             // 
@@ -200,6 +203,7 @@
             this.chkCore7.TabIndex = 51;
             this.chkCore7.Text = "CPU 7";
             this.chkCore7.Visible = false;
+            this.chkCore7.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore6
             // 
@@ -213,6 +217,7 @@
             this.chkCore6.TabIndex = 50;
             this.chkCore6.Text = "CPU 6";
             this.chkCore6.Visible = false;
+            this.chkCore6.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore5
             // 
@@ -226,6 +231,7 @@
             this.chkCore5.TabIndex = 49;
             this.chkCore5.Text = "CPU 5";
             this.chkCore5.Visible = false;
+            this.chkCore5.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore4
             // 
@@ -239,6 +245,7 @@
             this.chkCore4.TabIndex = 48;
             this.chkCore4.Text = "CPU 4";
             this.chkCore4.Visible = false;
+            this.chkCore4.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore3
             // 
@@ -252,6 +259,7 @@
             this.chkCore3.TabIndex = 47;
             this.chkCore3.Text = "CPU 3";
             this.chkCore3.Visible = false;
+            this.chkCore3.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore2
             // 
@@ -265,6 +273,7 @@
             this.chkCore2.TabIndex = 46;
             this.chkCore2.Text = "CPU 2";
             this.chkCore2.Visible = false;
+            this.chkCore2.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore1
             // 
@@ -278,6 +287,7 @@
             this.chkCore1.TabIndex = 45;
             this.chkCore1.Text = "CPU 1";
             this.chkCore1.Visible = false;
+            this.chkCore1.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkCore0
             // 
@@ -291,6 +301,7 @@
             this.chkCore0.TabIndex = 44;
             this.chkCore0.Text = "CPU 0";
             this.chkCore0.Visible = false;
+            this.chkCore0.Click += new System.EventHandler(this.chkCore_Click);
             // 
             // chkOptimizeOn
             // 
@@ -341,6 +352,7 @@
             this.txtFolder.TabIndex = 31;
             this.txtFolder.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtFolder.ToolTipText = "The folder where WoT game is installed";
+            this.txtFolder.TextChanged += new System.EventHandler(this.txtFolder_TextChanged);
             // 
             // badLabel1
             // 
@@ -362,6 +374,7 @@
             this.ddStartApp.Size = new System.Drawing.Size(202, 23);
             this.ddStartApp.TabIndex = 38;
             this.ddStartApp.Text = "Do not start WoT";
+            this.ddStartApp.TextChanged += new System.EventHandler(this.ddStartApp_TextChanged);
             this.ddStartApp.Click += new System.EventHandler(this.ddStartApp_Click);
             // 
             // badGroupBox1

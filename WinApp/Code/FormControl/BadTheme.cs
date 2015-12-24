@@ -915,7 +915,7 @@ class BadButton : BadThemeControl
 		}
 		if (MouseState == State.MouseDown)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
-		else if (MouseState == State.MouseOver)
+        else if (MouseState == State.MouseOver && Enabled)
 			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
 		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
 		if (!Enabled) fontColor = new SolidBrush(ColorTheme.ControlDisabledFont);

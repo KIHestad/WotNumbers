@@ -192,6 +192,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AppSettings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AppSettings_FormClosing);
             this.Load += new System.EventHandler(this.AppSettings_Load);
             this.AppSettingsTheme.ResumeLayout(false);
             this.ResumeLayout(false);

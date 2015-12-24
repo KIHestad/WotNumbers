@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsvBAddict));
             this.linkVbAddict = new System.Windows.Forms.LinkLabel();
+            this.toolTipShowvBAddictIcon = new System.Windows.Forms.ToolTip(this.components);
+            this.chkShowvbAddictIcon = new BadCheckBox();
+            this.chkActivateAutoReplayUpload = new BadCheckBox();
             this.btnCancel = new BadButton();
             this.badLabel2 = new BadLabel();
             this.txtToken = new BadTextBox();
@@ -41,7 +44,6 @@
             this.btnSaveSettings = new BadButton();
             this.badGroupBox1 = new BadGroupBox();
             this.badGroupBox2 = new BadGroupBox();
-            this.chkActivateAutoReplayUpload = new BadCheckBox();
             this.SuspendLayout();
             // 
             // linkVbAddict
@@ -60,10 +62,35 @@
             this.linkVbAddict.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.linkVbAddict.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkVbAddict_LinkClicked);
             // 
+            // chkShowvbAddictIcon
+            // 
+            this.chkShowvbAddictIcon.BackColor = System.Drawing.Color.Transparent;
+            this.chkShowvbAddictIcon.Checked = false;
+            this.chkShowvbAddictIcon.Image = ((System.Drawing.Image)(resources.GetObject("chkShowvbAddictIcon.Image")));
+            this.chkShowvbAddictIcon.Location = new System.Drawing.Point(12, 271);
+            this.chkShowvbAddictIcon.Name = "chkShowvbAddictIcon";
+            this.chkShowvbAddictIcon.Size = new System.Drawing.Size(213, 23);
+            this.chkShowvbAddictIcon.TabIndex = 28;
+            this.chkShowvbAddictIcon.Text = "Show vbAddict icon on main toolbar";
+            this.chkShowvbAddictIcon.Click += new System.EventHandler(this.chkShowvbAddictIcon_Click);
+            // 
+            // chkActivateAutoReplayUpload
+            // 
+            this.chkActivateAutoReplayUpload.BackColor = System.Drawing.Color.Transparent;
+            this.chkActivateAutoReplayUpload.Checked = false;
+            this.chkActivateAutoReplayUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoReplayUpload.Image")));
+            this.chkActivateAutoReplayUpload.Location = new System.Drawing.Point(12, 221);
+            this.chkActivateAutoReplayUpload.Name = "chkActivateAutoReplayUpload";
+            this.chkActivateAutoReplayUpload.Size = new System.Drawing.Size(411, 23);
+            this.chkActivateAutoReplayUpload.TabIndex = 27;
+            this.chkActivateAutoReplayUpload.Text = "Auto upload replays to vBAddict (replay files)";
+            this.chkActivateAutoReplayUpload.Click += new System.EventHandler(this.chkActivateAutoReplayUpload_Click);
+            // 
             // btnCancel
             // 
             this.btnCancel.BlackButton = false;
             this.btnCancel.Checked = false;
+            this.btnCancel.Enabled = false;
             this.btnCancel.Image = null;
             this.btnCancel.Location = new System.Drawing.Point(375, 271);
             this.btnCancel.Name = "btnCancel";
@@ -99,6 +126,7 @@
             this.txtToken.TabIndex = 22;
             this.txtToken.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtToken.ToolTipText = "";
+            this.txtToken.TextChanged += new System.EventHandler(this.txtToken_TextChanged);
             // 
             // badLabel1
             // 
@@ -122,6 +150,7 @@
             this.chkActivateAutoUpload.Size = new System.Drawing.Size(411, 23);
             this.chkActivateAutoUpload.TabIndex = 20;
             this.chkActivateAutoUpload.Text = "Auto upload battle result to vBAddict (dossier and battle files)";
+            this.chkActivateAutoUpload.Click += new System.EventHandler(this.chkActivateAutoUpload_Click);
             // 
             // btnUploadDossier
             // 
@@ -153,6 +182,7 @@
             // 
             this.btnSaveSettings.BlackButton = false;
             this.btnSaveSettings.Checked = false;
+            this.btnSaveSettings.Enabled = false;
             this.btnSaveSettings.Image = null;
             this.btnSaveSettings.Location = new System.Drawing.Point(298, 271);
             this.btnSaveSettings.Name = "btnSaveSettings";
@@ -182,22 +212,12 @@
             this.badGroupBox2.TabIndex = 24;
             this.badGroupBox2.Text = "Test connection / upload";
             // 
-            // chkActivateAutoReplayUpload
-            // 
-            this.chkActivateAutoReplayUpload.BackColor = System.Drawing.Color.Transparent;
-            this.chkActivateAutoReplayUpload.Checked = false;
-            this.chkActivateAutoReplayUpload.Image = ((System.Drawing.Image)(resources.GetObject("chkActivateAutoReplayUpload.Image")));
-            this.chkActivateAutoReplayUpload.Location = new System.Drawing.Point(12, 221);
-            this.chkActivateAutoReplayUpload.Name = "chkActivateAutoReplayUpload";
-            this.chkActivateAutoReplayUpload.Size = new System.Drawing.Size(411, 23);
-            this.chkActivateAutoReplayUpload.TabIndex = 27;
-            this.chkActivateAutoReplayUpload.Text = "Auto upload replays to vBAddict (replay files)";
-            // 
             // AppSettingsvBAddict
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.chkShowvbAddictIcon);
             this.Controls.Add(this.chkActivateAutoReplayUpload);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.badLabel2);
@@ -232,5 +252,7 @@
         private BadGroupBox badGroupBox2;
         private BadButton btnCancel;
         private BadCheckBox chkActivateAutoReplayUpload;
+        private BadCheckBox chkShowvbAddictIcon;
+        private System.Windows.Forms.ToolTip toolTipShowvBAddictIcon;
     }
 }

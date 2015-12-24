@@ -124,6 +124,7 @@ namespace WinApp.Code
 		public string vBAddictPlayerToken { get; set; }				// player token
 		public bool CheckForBrrOnStartup { get; set; }				// Perform check for BRR on startup
         public bool vBAddictUploadReplayActive { get; set; }	    // Activate auto replay upload to vBAddict
+        public bool vBAddictShowToolBarMenu { get; set; }	    // Activate auto replay upload to vBAddict
 	}
 
 	class Config
@@ -254,6 +255,9 @@ namespace WinApp.Code
 			Config.Settings.vBAddictUploadActive = false;
             Config.Settings.vBAddictUploadReplayActive = false;
 			Config.Settings.vBAddictPlayerToken = "";
+            Config.Settings.vBAddictUploadReplayActive = false;
+            Config.Settings.vBAddictShowToolBarMenu = false;
+            // Others
 			Config.Settings.CheckForBrrOnStartup = true;
 		}
 

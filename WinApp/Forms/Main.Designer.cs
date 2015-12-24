@@ -196,8 +196,9 @@
             this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
-            this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+            this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
@@ -212,6 +213,7 @@
             this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.lblStatusRowCount = new System.Windows.Forms.Label();
             this.panelMainArea = new System.Windows.Forms.Panel();
             this.scrollCorner = new BadScrollBarCorner();
@@ -220,7 +222,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -302,7 +303,7 @@
             this.MainTheme.MainArea = mainAreaClass1;
             this.MainTheme.Name = "MainTheme";
             this.MainTheme.Resizable = true;
-            this.MainTheme.Size = new System.Drawing.Size(963, 479);
+            this.MainTheme.Size = new System.Drawing.Size(952, 479);
             this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
             this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
             this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -335,11 +336,12 @@
             this.toolStripSeparator23,
             this.mViewChart,
             this.toolStripSeparator16,
+            this.mVBaddict,
             this.mSettings,
             this.mHelp});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(942, 25);
+            this.toolMain.Size = new System.Drawing.Size(932, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 18;
             this.toolMain.Text = "toolStripEx1";
@@ -1807,6 +1809,11 @@
             this.mSettingsRunBattleCheck.Text = "Run Battle Check...";
             this.mSettingsRunBattleCheck.Click += new System.EventHandler(this.mSettingsRunBattleCheck_Click);
             // 
+            // toolStripSeparator24
+            // 
+            this.toolStripSeparator24.Name = "toolStripSeparator24";
+            this.toolStripSeparator24.Size = new System.Drawing.Size(261, 6);
+            // 
             // mUpdateDataFromAPI
             // 
             this.mUpdateDataFromAPI.Enabled = false;
@@ -1815,10 +1822,10 @@
             this.mUpdateDataFromAPI.Text = "Update Data...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
             // 
-            // toolStripSeparator24
+            // toolStripSeparator18
             // 
-            this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
             // 
             // mRecalcBattleWN8
             // 
@@ -1924,12 +1931,24 @@
             this.mHelpAbout.Text = "About Wot Numbers...";
             this.mHelpAbout.Click += new System.EventHandler(this.mHelpAbout_Click);
             // 
+            // mVBaddict
+            // 
+            this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
+            this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mVBaddict.Name = "mVBaddict";
+            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
+            this.mVBaddict.Text = "toolStripButton1";
+            this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
+            this.mVBaddict.Visible = false;
+            this.mVBaddict.Click += new System.EventHandler(this.mVBaddict_Click);
+            // 
             // lblStatusRowCount
             // 
             this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
             this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatusRowCount.Location = new System.Drawing.Point(874, 459);
+            this.lblStatusRowCount.Location = new System.Drawing.Point(863, 459);
             this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatusRowCount.Name = "lblStatusRowCount";
             this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -2087,17 +2106,12 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // toolStripSeparator18
-            // 
-            this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Fuchsia;
-            this.ClientSize = new System.Drawing.Size(963, 479);
+            this.ClientSize = new System.Drawing.Size(952, 479);
             this.Controls.Add(this.MainTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2312,6 +2326,7 @@
         private System.Windows.Forms.ToolStripMenuItem mMapDescrLarge;
         private System.Windows.Forms.ToolStripMenuItem mMapShowOld;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+        private System.Windows.Forms.ToolStripButton mVBaddict;
 	}
 }
 

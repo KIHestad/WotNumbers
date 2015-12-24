@@ -33,7 +33,7 @@
             this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
             this.chkShowDBError = new BadCheckBox();
             this.badLabel2 = new BadLabel();
-            this.Cancel = new BadButton();
+            this.btnCancel = new BadButton();
             this.cboSelectPlayer = new BadDropDownBox();
             this.btnSelectDossierFilePath = new BadButton();
             this.txtDossierFilePath = new BadTextBox();
@@ -55,6 +55,7 @@
             this.chkShowDBError.Size = new System.Drawing.Size(277, 23);
             this.chkShowDBError.TabIndex = 30;
             this.chkShowDBError.Text = "Debug mode (show all errors / extended logging)";
+            this.chkShowDBError.Click += new System.EventHandler(this.chkShowDBError_Click);
             // 
             // badLabel2
             // 
@@ -68,18 +69,18 @@
             this.badLabel2.Text = "Select player:";
             this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
-            // Cancel
+            // btnCancel
             // 
-            this.Cancel.BlackButton = false;
-            this.Cancel.Checked = false;
-            this.Cancel.Image = null;
-            this.Cancel.Location = new System.Drawing.Point(375, 271);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(70, 23);
-            this.Cancel.TabIndex = 28;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.ToolTipText = "";
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            this.btnCancel.BlackButton = false;
+            this.btnCancel.Checked = false;
+            this.btnCancel.Image = null;
+            this.btnCancel.Location = new System.Drawing.Point(375, 271);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(70, 23);
+            this.btnCancel.TabIndex = 28;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.ToolTipText = "";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // cboSelectPlayer
             // 
@@ -88,6 +89,7 @@
             this.cboSelectPlayer.Name = "cboSelectPlayer";
             this.cboSelectPlayer.Size = new System.Drawing.Size(155, 23);
             this.cboSelectPlayer.TabIndex = 26;
+            this.cboSelectPlayer.TextChanged += new System.EventHandler(this.cboSelectPlayer_TextChanged);
             this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
             // 
             // btnSelectDossierFilePath
@@ -116,6 +118,7 @@
             this.txtDossierFilePath.TabIndex = 20;
             this.txtDossierFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtDossierFilePath.ToolTipText = "";
+            this.txtDossierFilePath.TextChanged += new System.EventHandler(this.txtDossierFilePath_TextChanged);
             // 
             // btnDbSetting
             // 
@@ -196,7 +199,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.Controls.Add(this.chkShowDBError);
             this.Controls.Add(this.badLabel2);
-            this.Controls.Add(this.Cancel);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.cboSelectPlayer);
             this.Controls.Add(this.btnSelectDossierFilePath);
             this.Controls.Add(this.txtDossierFilePath);
@@ -217,7 +220,7 @@
 
         private BadCheckBox chkShowDBError;
         private BadLabel badLabel2;
-        private BadButton Cancel;
+        private BadButton btnCancel;
         private BadDropDownBox cboSelectPlayer;
         private BadButton btnSelectDossierFilePath;
         private BadTextBox txtDossierFilePath;

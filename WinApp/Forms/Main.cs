@@ -339,6 +339,10 @@ namespace WinApp.Forms
 					StartWoTGame();
 				// Ready to draw form
 				Init = false;
+
+                // Show vbAddict Player Profil toolbar if upload activated
+                mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); 
+
 				// Create IronPython Engine
 				PythonEngine.CreateEngine();
 
@@ -1070,7 +1074,6 @@ namespace WinApp.Forms
 				}
 				else
 				{
-                    if (Status2Message == "" && ShowDefaultStatus2Message) Status2Message = "Map view selected";
                     if (panelMainArea.Visible != true)
 						panelMainArea.Visible = true;
 					if (currentPlayerId != Config.Settings.playerId)
@@ -3991,6 +3994,7 @@ namespace WinApp.Forms
             SetFormTitle();
             SetFavListMenu(); // Reload fav list items
             SetColListMenu(); // Refresh column setup list now
+            mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); // Show vbAddict Player Profil toolbar if upload activated
 
             // Refresh data
             SetStatus2("Refreshed grid");
@@ -4407,6 +4411,12 @@ namespace WinApp.Forms
 				MsgBox.Show(err + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine, "Error running programs", this);
 			}
 		}
+
+        private void mVBaddict_Click(object sender, EventArgs e)
+        {
+            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+            System.Diagnostics.Process.Start(serverURL);
+        }
 
 		private int timerWotAffnityCount = 0;
 		private void timerWoTAffnity_Tick(object sender, EventArgs e)
@@ -4992,6 +5002,8 @@ namespace WinApp.Forms
 		}
 
 		#endregion
+
+        
 
 	}
 }

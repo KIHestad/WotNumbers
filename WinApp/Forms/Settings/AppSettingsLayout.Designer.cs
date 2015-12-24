@@ -65,6 +65,7 @@
             this.chkNotifyIconFormExitToMinimize.Size = new System.Drawing.Size(268, 23);
             this.chkNotifyIconFormExitToMinimize.TabIndex = 22;
             this.chkNotifyIconFormExitToMinimize.Text = "Minimize  when closing application";
+            this.chkNotifyIconFormExitToMinimize.Click += new System.EventHandler(this.chkNotifyIconFormExitToMinimize_Click);
             // 
             // chkNotifyIconUse
             // 
@@ -98,6 +99,7 @@
             this.chkSmallMasteryBadgeIcons.Size = new System.Drawing.Size(193, 23);
             this.chkSmallMasteryBadgeIcons.TabIndex = 19;
             this.chkSmallMasteryBadgeIcons.Text = "Use small mastery badge icons ";
+            this.chkSmallMasteryBadgeIcons.Click += new System.EventHandler(this.chkSmallMasteryBadgeIcons_Click);
             // 
             // ddFontSize
             // 
@@ -106,6 +108,7 @@
             this.ddFontSize.Name = "ddFontSize";
             this.ddFontSize.Size = new System.Drawing.Size(86, 23);
             this.ddFontSize.TabIndex = 18;
+            this.ddFontSize.TextChanged += new System.EventHandler(this.ddFontSize_TextChanged);
             this.ddFontSize.Click += new System.EventHandler(this.ddFontSize_Click);
             // 
             // badLabel1
@@ -130,6 +133,7 @@
             this.chkBattleTotalsPosition.Size = new System.Drawing.Size(268, 23);
             this.chkBattleTotalsPosition.TabIndex = 16;
             this.chkBattleTotalsPosition.Text = "Show battle average and totals at grid top";
+            this.chkBattleTotalsPosition.Click += new System.EventHandler(this.chkBattleTotalsPosition_Click);
             // 
             // badGroupBox1
             // 

@@ -42,6 +42,7 @@ namespace WinApp.Forms.Settings
             cboSelectPlayer.Text = Config.Settings.playerNameAndServer;
             chkShowDBError.Checked = Config.Settings.showDBErrors;
             PlayerPanel();
+            EditChangesApply(false);
         }
 
         private void PlayerPanel()
@@ -73,6 +74,11 @@ namespace WinApp.Forms.Settings
 
         private void btnSave_Click_1(object sender, EventArgs e)
         {
+            SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
             // Dossier File path
             if (Directory.Exists(txtDossierFilePath.Text))
             {
@@ -100,6 +106,7 @@ namespace WinApp.Forms.Settings
             {
                 // MsgBox.Show(msg, "Application settings saved", (Form)this.TopLevelControl);
                 //((Form)this.TopLevelControl).Close();
+                EditChangesApply(false);
             }
             else
             {
@@ -116,7 +123,7 @@ namespace WinApp.Forms.Settings
                 Form frm = new Forms.DatabaseSetting();
                 frm.ShowDialog();
                 DataBind();
-                Refresh();
+                // Refresh();
             }
             else
             {
@@ -124,17 +131,40 @@ namespace WinApp.Forms.Settings
             }
         }
 
+        private static string currentSelectedPlayer = "";
         private void cboSelectPlayer_Click(object sender, EventArgs e)
         {
+            currentSelectedPlayer = cboSelectPlayer.Text;
             Code.DropDownGrid.Show(cboSelectPlayer, Code.DropDownGrid.DropDownGridType.Sql, "SELECT name FROM player ORDER BY name");
         }
 
-
-        private void Cancel_Click(object sender, EventArgs e)
+        private void EditChangesApply(bool changesApplied)
         {
-            DataBind();
+            AppSettingsHelper.ChangesApplied = changesApplied;
+            btnCancel.Enabled = changesApplied;
+            btnSave.Enabled = changesApplied;
         }
 
-        
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DataBind();
+            EditChangesApply(false);
+        }
+
+        private void txtDossierFilePath_TextChanged(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkShowDBError_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void cboSelectPlayer_TextChanged(object sender, EventArgs e)
+        {
+            if (currentSelectedPlayer != cboSelectPlayer.Text)
+                EditChangesApply(true);
+        }
     }
 }

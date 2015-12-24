@@ -65,43 +65,39 @@ namespace WinApp.Forms.Settings
             for (int i = wotGameAffinity.Length; i > 0; i--)
             {
                 string val = wotGameAffinity.Substring(i - 1, 1);
-                if (val == "1")
+                switch (core)
                 {
-                    switch (core)
-                    {
-                        case 0: chkCore0.Checked = true; break;
-                        case 1: chkCore1.Checked = true; break;
-                        case 2: chkCore2.Checked = true; break;
-                        case 3: chkCore3.Checked = true; break;
-                        case 4: chkCore4.Checked = true; break;
-                        case 5: chkCore5.Checked = true; break;
-                        case 6: chkCore6.Checked = true; break;
-                        case 7: chkCore7.Checked = true; break;
-                    }
+                    case 0: chkCore0.Checked = (val == "1"); break;
+                    case 1: chkCore1.Checked = (val == "1"); break;
+                    case 2: chkCore2.Checked = (val == "1"); break;
+                    case 3: chkCore3.Checked = (val == "1"); break;
+                    case 4: chkCore4.Checked = (val == "1"); break;
+                    case 5: chkCore5.Checked = (val == "1"); break;
+                    case 6: chkCore6.Checked = (val == "1"); break;
+                    case 7: chkCore7.Checked = (val == "1"); break;
                 }
                 core++;
             }
             // Check for BRR
             CheckForBrr();
             chkBrrStarupCheck.Checked = Config.Settings.CheckForBrrOnStartup;
+            EditChangesApply(false);
         }
 
+        private static string currentStartApp = "";
         private void ddStartApp_Click(object sender, EventArgs e)
         {
+            currentStartApp = ddStartApp.Text;
             Code.DropDownGrid.Show(ddStartApp, Code.DropDownGrid.DropDownGridType.List, "Do not start WoT,WoT Launcher,Wot Game");
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.None;
-            if (ddStartApp.Text == "Wot Game")
-                wotGameStartType = ConfigData.WoTGameStartType.Game;
-            if (ddStartApp.Text == "WoT Launcher")
-                wotGameStartType = ConfigData.WoTGameStartType.Launcher;
-            Config.Settings.wotGameStartType = wotGameStartType;
-            Config.Settings.wotGameFolder = txtFolder.Text;
-            Config.Settings.wotGameRunBatchFile = txtBatchFile.Text;
-            Config.Settings.wotGameAutoStart = chkAutoRun.Checked;
+            SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
             long wotGameAffinity = 0;
             if (chkOptimizeOn.Checked)
             {
@@ -114,21 +110,39 @@ namespace WinApp.Forms.Settings
                 if (chkCore6.Checked) wotGameAffinity += 64;
                 if (chkCore7.Checked) wotGameAffinity += 128;
             }
-            Config.Settings.wotGameAffinity = wotGameAffinity;
-            Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
-            String msg = "";
-            Config.SaveConfig(out msg);
-
+            if (wotGameAffinity == 0 && chkOptimizeOn.Checked)
+            {
+                MsgBox.Show("Optimization mode selected, but no CPU's selected. Settings are not saved.", "Save settings terminated");
+            }
+            else
+            {
+                ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.None;
+                if (ddStartApp.Text == "Wot Game")
+                    wotGameStartType = ConfigData.WoTGameStartType.Game;
+                if (ddStartApp.Text == "WoT Launcher")
+                    wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+                Config.Settings.wotGameStartType = wotGameStartType;
+                Config.Settings.wotGameFolder = txtFolder.Text;
+                Config.Settings.wotGameRunBatchFile = txtBatchFile.Text;
+                Config.Settings.wotGameAutoStart = chkAutoRun.Checked;
+                Config.Settings.wotGameAffinity = wotGameAffinity;
+                Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
+                String msg = "";
+                Config.SaveConfig(out msg);
+                EditChangesApply(false);
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DataBind();
+            EditChangesApply(false);
         }
 
         private void chkOptimizeOn_Click(object sender, EventArgs e)
         {
             UpdateCoreCheckBoxes();
+            EditChangesApply(true);
         }
 
         private void UpdateCoreCheckBoxes()
@@ -206,6 +220,44 @@ namespace WinApp.Forms.Settings
                 Environment.NewLine + Environment.NewLine +
                 "Optimization Mode sets high priority and affinity for WoT game client. Avoid using CPU 0 for best performance.";
             MsgBox.Show(msg, "Help for WoT settings", (Form)this.TopLevelControl);
+        }
+
+        private void EditChangesApply(bool changesApplied)
+        {
+            AppSettingsHelper.ChangesApplied = changesApplied;
+            btnCancel.Enabled = changesApplied;
+            btnSave.Enabled = changesApplied;
+        }
+
+        private void txtFolder_TextChanged(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkBrrStarupCheck_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void ddStartApp_TextChanged(object sender, EventArgs e)
+        {
+            if (currentStartApp != ddStartApp.Text)
+                EditChangesApply(true);
+        }
+
+        private void txtBatchFile_TextChanged(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkAutoRun_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void chkCore_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
         }
 
         
