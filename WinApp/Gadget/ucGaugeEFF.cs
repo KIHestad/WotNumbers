@@ -64,22 +64,28 @@ namespace WinApp.Gadget
 				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 				switch (GadgetHelper.SelectedTimeRangeEFF)
 				{
-					case GadgetHelper.TimeRange.Num1000:
-						battleRevert = 1000;
-						break;
-					case GadgetHelper.TimeRange.Num5000:
-						battleRevert = 5000;
-						break;
+                    //case GadgetHelper.TimeRange.Num1000:
+                    //    battleRevert = 1000;
+                    //    break;
+                    //case GadgetHelper.TimeRange.Num5000:
+                    //    battleRevert = 5000;
+                    //    break;
 					case GadgetHelper.TimeRange.TimeWeek:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
-					case GadgetHelper.TimeRange.TimeMonth:
+                    case GadgetHelper.TimeRange.TimeMonth:
+                        battleTimeFilter = " AND battleTime>=@battleTime ";
+                        // Adjust time scale according to selected filter
+                        dateFilter = dateFilter.AddMonths(-1);
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        break;
+					case GadgetHelper.TimeRange.TimeMonth3:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
-						dateFilter = dateFilter.AddMonths(-1);
+						dateFilter = dateFilter.AddMonths(-3);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
 					case GadgetHelper.TimeRange.TimeToday:
@@ -160,8 +166,7 @@ namespace WinApp.Gadget
 			switch (b.Name)
 			{
 				case "btnTotal": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.Total; break;
-				case "btn1000": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.Num1000; break;
-				case "btn5000": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.Num5000; break;
+                case "btnMonth3": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.TimeMonth3; break;
 				case "btnMonth": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.TimeMonth; break;
 				case "btnWeek": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.TimeWeek; break;
 				case "btnToday": GadgetHelper.SelectedTimeRangeEFF = GadgetHelper.TimeRange.TimeToday; break;
@@ -173,14 +178,14 @@ namespace WinApp.Gadget
 		private void SelectTimeRangeButton()
 		{
 			btnTotal.Checked = false;
-			btn1000.Checked = false;
+			btnMonth3.Checked = false;
 			btnMonth.Checked = false;
 			btnWeek.Checked = false;
 			btnToday.Checked = false;
 			switch (GadgetHelper.SelectedTimeRangeEFF)
 			{
 				case GadgetHelper.TimeRange.Total: btnTotal.Checked = true; break;
-				case GadgetHelper.TimeRange.Num1000: btn1000.Checked = true; break;
+				case GadgetHelper.TimeRange.TimeMonth3: btnMonth3.Checked = true; break;
 				case GadgetHelper.TimeRange.TimeMonth: btnMonth.Checked = true; break;
 				case GadgetHelper.TimeRange.TimeWeek: btnWeek.Checked = true; break;
 				case GadgetHelper.TimeRange.TimeToday: btnToday.Checked = true; break;

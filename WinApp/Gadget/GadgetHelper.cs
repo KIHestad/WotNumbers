@@ -17,8 +17,6 @@ namespace WinApp.Gadget
 			TimeMonth = 2,
 			TimeWeek = 3,
 			TimeToday = 4,
-			Num5000 = 5,
-			Num1000 = 1,
 		}
 
 		public static TimeRange SelectedTimeRangeEFF = TimeRange.Total;

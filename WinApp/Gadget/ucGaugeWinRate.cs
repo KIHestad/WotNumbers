@@ -59,15 +59,7 @@ namespace WinApp.Gadget
 			}
 			// Show battle mode
 			string capText = "Total";
-			switch (_battleMode)
-			{
-				case "15": capText = "Random/TC"; break;
-				case "7": capText = "Team: Unranked"; break;
-				case "7Ranked": capText = "Team: Ranked"; break;
-				case "Historical": capText = "Historical Battles"; break;
-				case "Skirmishes": capText = "Skirmishes"; break;
-				case "Stronghold": capText = "Stronghold"; break;
-			}
+            capText = BattleHelper.GetBattleModeReadableName(_battleMode);
 			string sqlBattlemode = "";
 			if (_battleMode != "")
 			{
@@ -106,25 +98,25 @@ namespace WinApp.Gadget
 				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 				switch (GadgetHelper.SelectedTimeRangeWR)
 				{
-					case GadgetHelper.TimeRange.Num1000:
-						battleRevert = 1000;
-						break;
-					case GadgetHelper.TimeRange.Num5000:
-						battleRevert = 5000;
-						break;
 					case GadgetHelper.TimeRange.TimeWeek:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
-					case GadgetHelper.TimeRange.TimeMonth:
-						battleTimeFilter = " AND battleTime>=@battleTime ";
-						// Adjust time scale according to selected filter
-						dateFilter = dateFilter.AddMonths(-1);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
-						break;
-					case GadgetHelper.TimeRange.TimeToday:
+                    case GadgetHelper.TimeRange.TimeMonth:
+                        battleTimeFilter = " AND battleTime>=@battleTime ";
+                        // Adjust time scale according to selected filter
+                        dateFilter = dateFilter.AddMonths(-1);
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        break;
+                    case GadgetHelper.TimeRange.TimeMonth3:
+                        battleTimeFilter = " AND battleTime>=@battleTime ";
+                        // Adjust time scale according to selected filter
+                        dateFilter = dateFilter.AddMonths(-3);
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        break;
+                    case GadgetHelper.TimeRange.TimeToday:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
@@ -226,8 +218,7 @@ namespace WinApp.Gadget
 			switch (b.Name)
 			{
 				case "btnTotal": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.Total; break;
-				case "btn1000": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.Num1000; break;
-				case "btn5000": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.Num5000; break;
+				case "btnMonth3": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeMonth3; break;
 				case "btnMonth": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeMonth; break;
 				case "btnWeek": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeWeek; break;
 				case "btnToday": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeToday; break;
@@ -239,14 +230,14 @@ namespace WinApp.Gadget
 		private void SelectTimeRangeButton()
 		{
 			btnTotal.Checked = false;
-			btn1000.Checked = false;
+			btnMonth3.Checked = false;
 			btnMonth.Checked = false;
 			btnWeek.Checked = false;
 			btnToday.Checked = false;
 			switch (GadgetHelper.SelectedTimeRangeWR)
 			{
 				case GadgetHelper.TimeRange.Total: btnTotal.Checked = true; break;
-				case GadgetHelper.TimeRange.Num1000: btn1000.Checked = true; break;
+				case GadgetHelper.TimeRange.TimeMonth3: btnMonth3.Checked = true; break;
 				case GadgetHelper.TimeRange.TimeMonth: btnMonth.Checked = true; break;
 				case GadgetHelper.TimeRange.TimeWeek: btnWeek.Checked = true; break;
 				case GadgetHelper.TimeRange.TimeToday: btnToday.Checked = true; break;

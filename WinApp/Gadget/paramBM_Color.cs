@@ -59,7 +59,7 @@ namespace WinApp.Gadget
 
 		private void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team: Unranked,Team: Ranked,Historical,Skirmishes,Stronghold,All Modes");
+			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team: Unranked,Team: Ranked,Historical,Global Map,Skirmishes,Stronghold,All Modes");
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -77,8 +77,9 @@ namespace WinApp.Gadget
 					case "Team: Unranked": param = "7"; break;
 					case "Team: Ranked": param = "7Ranked"; break;
 					case "Historical": param = "Historical"; break;
-					case "Skirmishes":  param = "Skirmishes"; break;
-					case "Stronghold": param = "Stronghold"; break;
+                    case "Global Map": param = "GlobalMap"; break;
+                    case "Skirmishes": param = "Skirmishes"; break;
+                    case "Stronghold": param = "Stronghold"; break;
 					case "All Modes":   param = ""; break;
 				}
 				GadgetHelper.newParameters[0] = param;
