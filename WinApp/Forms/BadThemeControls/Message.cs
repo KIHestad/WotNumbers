@@ -63,9 +63,12 @@ namespace WinApp.Forms
 					parentForm = lastForm;
 					lastForm = form;
 				}
-				string s = parentForm.Text;
-				this.Top = parentForm.Top + 40;
-				this.Left = parentForm.Left + (parentForm.Width / 2) - (this.Width / 2);
+                if (parentForm != null)
+                {
+                    string s = parentForm.Text;
+                    this.Top = parentForm.Top + 40;
+                    this.Left = parentForm.Left + (parentForm.Width / 2) - (this.Width / 2);
+                }
 			}
 		}
 

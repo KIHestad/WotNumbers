@@ -22,7 +22,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 302; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 303; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
@@ -2530,15 +2530,14 @@ namespace WinApp.Code
                     Config.Settings.vBAddictShowToolBarMenu = (Config.Settings.vBAddictPlayerToken != "" || Config.Settings.vBAddictUploadActive || Config.Settings.vBAddictUploadReplayActive);
                     Config.SaveConfig(out msg);
                     break;
-                case 302: // Recalculate max battle tier for all battles, also the one before this column was added
+                case 303: // Recalculate max battle tier for all battles, also the one before this column was added
                     mssql = 
                         "UPDATE battle " +
-                        "SET maxBattleTier = ( " +
-                        "   SELECT max(tank.tier) " +
-	                    "   from battle b2 " +
+                        "  SET maxBattleTier = ( " +
+                        "    SELECT max(tank.tier) " +
+	                    "    from battle b2 " +
 		                "        inner join battlePlayer on b2.id = battlePlayer.battleId " +
-		                "        inner join playerTank on b2.playerTankId = playerTank.id " +
-		                "        inner join tank on playerTank.tankId = tank.id  " +
+		                "        inner join tank on battlePlayer.tankId = tank.id  " +
 	                    "    where battle.id = b2.id " +
 	                    "    group by b2.id)";
                     sqlite = mssql;

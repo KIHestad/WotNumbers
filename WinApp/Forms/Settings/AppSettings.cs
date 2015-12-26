@@ -17,12 +17,14 @@ namespace WinApp.Forms.Settings
         public AppSettings(AppSettingsHelper.Tabs showTab)
         {
             InitializeComponent();
+            AppSettingsHelper.ChangesApplied = false;
+            lastSelectedTab = AppSettingsHelper.Tabs.NotSelected;
             SelectTab(showTab);
         }
 
         private void AppSettings_Load(object sender, EventArgs e)
         {
-            AppSettingsHelper.ChangesApplied = false;
+            
         }
 
         private void SelectTab_Click(object sender, EventArgs e)
