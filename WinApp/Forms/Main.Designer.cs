@@ -193,6 +193,7 @@
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.mViewChart = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
@@ -213,7 +214,6 @@
             this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.lblStatusRowCount = new System.Windows.Forms.Label();
             this.panelMainArea = new System.Windows.Forms.Panel();
             this.scrollCorner = new BadScrollBarCorner();
@@ -263,6 +263,8 @@
             this.imageListToolStrip.Images.SetKeyName(12, "iconBattleSummary2.png");
             this.imageListToolStrip.Images.SetKeyName(13, "copyRowToClipboard.png");
             this.imageListToolStrip.Images.SetKeyName(14, "replay2.png");
+            this.imageListToolStrip.Images.SetKeyName(15, "vbAddictSmall.png");
+            this.imageListToolStrip.Images.SetKeyName(16, "WoT_3.png");
             // 
             // imageGrid
             // 
@@ -1766,6 +1768,18 @@
             this.toolStripSeparator16.Name = "toolStripSeparator16";
             this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
             // 
+            // mVBaddict
+            // 
+            this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
+            this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mVBaddict.Name = "mVBaddict";
+            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
+            this.mVBaddict.Text = "toolStripButton1";
+            this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
+            this.mVBaddict.Visible = false;
+            this.mVBaddict.Click += new System.EventHandler(this.mVBaddict_Click);
+            // 
             // mSettings
             // 
             this.mSettings.AutoSize = false;
@@ -1930,18 +1944,6 @@
             this.mHelpAbout.Size = new System.Drawing.Size(286, 22);
             this.mHelpAbout.Text = "About Wot Numbers...";
             this.mHelpAbout.Click += new System.EventHandler(this.mHelpAbout_Click);
-            // 
-            // mVBaddict
-            // 
-            this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
-            this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
-            this.mVBaddict.Text = "toolStripButton1";
-            this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
-            this.mVBaddict.Visible = false;
-            this.mVBaddict.Click += new System.EventHandler(this.mVBaddict_Click);
             // 
             // lblStatusRowCount
             // 

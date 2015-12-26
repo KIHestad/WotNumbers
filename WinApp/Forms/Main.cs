@@ -453,6 +453,10 @@ namespace WinApp.Forms
                 fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
                 fileSystemWatcherNewBattle.EnableRaisingEvents = true;
 
+                // Set vbAddice icon image
+                ExternalPlayerProfile.image_vBAddict = imageListToolStrip.Images[15];
+                ExternalPlayerProfile.image_Wargaming = imageListToolStrip.Images[16];
+
 				// Ready 
 				MainTheme.Cursor = Cursors.Default;
 				// Write log

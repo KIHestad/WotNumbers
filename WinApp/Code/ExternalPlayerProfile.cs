@@ -4,12 +4,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 
 namespace WinApp.Code
 {
     public class ExternalPlayerProfile
     {
+        public static System.Drawing.Image image_vBAddict { get; set; }
+        public static System.Drawing.Image image_Wargaming { get; set; }
+        
         public static string GetServer
         {
             get {
@@ -122,6 +126,7 @@ namespace WinApp.Code
             // Wargaming player profile item
             ToolStripMenuItem toolStripItem_WargamingPlayerLookup = new ToolStripMenuItem("Wargaming");
             toolStripItem_WargamingPlayerLookup.Click += new EventHandler(ToolStripItem_WargamingPP_Click);
+            toolStripItem_WargamingPlayerLookup.Image = image_Wargaming;
 
             // WotLabs player profile item
             ToolStripMenuItem toolStripItem_WotLabsPlayerLookup = new ToolStripMenuItem("WoT Labs");
@@ -143,6 +148,7 @@ namespace WinApp.Code
             ToolStripMenuItem toolStripItem_vBAddictPlayerLookup = new ToolStripMenuItem("vBAddict");
             toolStripItem_vBAddictPlayerLookup.Click += new EventHandler(ToolStripItem_vBAddictPP_Click);
             toolStripItem_vBAddictPlayerLookup.ToolTipText = "Profile depends on players uploads to vBAddict";
+            toolStripItem_vBAddictPlayerLookup.Image = image_vBAddict;
 
             // Add cancel events
             dataGridPopup.Opening += new System.ComponentModel.CancelEventHandler(DataGridMainPopup_Opening);
@@ -153,6 +159,8 @@ namespace WinApp.Code
 			    toolStripItem_Label,
                 toolStripItem_Separator0,
                 toolStripItem_WargamingPlayerLookup,
+                toolStripItem_Separator2,
+                toolStripItem_vBAddictPlayerLookup,
                 toolStripItem_Separator1,
                 toolStripItem_WotLabsPlayerLookup,
 			});
@@ -166,8 +174,6 @@ namespace WinApp.Code
 			{ 
                 toolStripItem_WoTstatsPlayerLookup,
                 toolStripItem_NoobmeterPlayerLookup,
-                toolStripItem_Separator2,
-                toolStripItem_vBAddictPlayerLookup
 			});
 
             return dataGridPopup;

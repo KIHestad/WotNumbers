@@ -67,7 +67,7 @@
             this.chkShowvbAddictIcon.BackColor = System.Drawing.Color.Transparent;
             this.chkShowvbAddictIcon.Checked = false;
             this.chkShowvbAddictIcon.Image = ((System.Drawing.Image)(resources.GetObject("chkShowvbAddictIcon.Image")));
-            this.chkShowvbAddictIcon.Location = new System.Drawing.Point(12, 271);
+            this.chkShowvbAddictIcon.Location = new System.Drawing.Point(-4, 271);
             this.chkShowvbAddictIcon.Name = "chkShowvbAddictIcon";
             this.chkShowvbAddictIcon.Size = new System.Drawing.Size(213, 23);
             this.chkShowvbAddictIcon.TabIndex = 28;
