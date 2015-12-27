@@ -526,6 +526,8 @@ namespace WinApp.Forms
                     RunRecalcBattleCreditsPerTank(true);
                 if (DBVersion.RunRecalcBattleKDratioCRdmg)
 					RunRecalcBattleKDratioCRdmg(true);
+                if (DBVersion.RunRecalcBattleMaxTier)
+                    RunRecalcBattleMaxTier();
 
 				// Check for dossier update
 				StatusBarHelper.Message = message;
@@ -4155,6 +4157,12 @@ namespace WinApp.Forms
 			Form frm = new Forms.RecalcBattleKDratioCRdmg(autoRun);
 			frm.ShowDialog(this);
 		}
+
+        private void RunRecalcBattleMaxTier()
+        {
+            Form frm = new Forms.RecalcBattleMaxTier(true);
+            frm.ShowDialog(this);
+        }
 
 		private void mSettingsUploadTovBAddict_Click(object sender, EventArgs e)
 		{

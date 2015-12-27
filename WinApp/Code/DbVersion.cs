@@ -19,13 +19,14 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleWN8 = false;
         public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
+        public static bool RunRecalcBattleMaxTier = false;
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 303; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 304; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
-		private static string UpgradeSQL(int version, ConfigData.dbType dbType)
+		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
 		{
 			// first define sqlscript for both mssql and sqlite for all versions
 			string mssql = "";
@@ -2530,17 +2531,8 @@ namespace WinApp.Code
                     Config.Settings.vBAddictShowToolBarMenu = (Config.Settings.vBAddictPlayerToken != "" || Config.Settings.vBAddictUploadActive || Config.Settings.vBAddictUploadReplayActive);
                     Config.SaveConfig(out msg);
                     break;
-                case 303: // Recalculate max battle tier for all battles, also the one before this column was added
-                    mssql = 
-                        "UPDATE battle " +
-                        "  SET maxBattleTier = ( " +
-                        "    SELECT max(tank.tier) " +
-	                    "    from battle b2 " +
-		                "        inner join battlePlayer on b2.id = battlePlayer.battleId " +
-		                "        inner join tank on battlePlayer.tankId = tank.id  " +
-	                    "    where battle.id = b2.id " +
-	                    "    group by b2.id)";
-                    sqlite = mssql;
+                case 304: // Recalculate max battle tier for all battles, also the one before this column was added
+                    RunRecalcBattleMaxTier = true;
                     break;
             }
 			string sql = "";
@@ -2590,7 +2582,7 @@ namespace WinApp.Code
 					// Move to next upgrade number
 					DBVersionCurrentNumber++;
 					// Upgrade to next db version now
-					string sql = UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType); // Get upgrade script for this version and dbType 
+					string sql = UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType, parentForm); // Get upgrade script for this version and dbType 
 					if (sql != "")
 						continueNext = DB.ExecuteNonQuery(sql); // Run upgrade script
 					Application.DoEvents(); // To avoid freeze
