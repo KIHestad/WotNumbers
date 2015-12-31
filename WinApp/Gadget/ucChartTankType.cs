@@ -15,6 +15,7 @@ namespace WinApp.Gadget
 	{
 		private string _battleMode = "";
 		private string _barColorHTML = "";
+        private GadgetHelper.TimeRangeEnum _battleTimeSpan = GadgetHelper.TimeRangeEnum.Total;
 		
 		// slide chart
 		private int timerStep = 0;
@@ -26,15 +27,6 @@ namespace WinApp.Gadget
 		// image controls
 		List<Control> imgControls = new List<Control>();
 
-		private enum Selection
-		{
-			Total = 1,
-			Month3 = 2,
-			Month = 3,
-			Week = 4,
-			Today = 5,
-		}
-
 		private class TankTypeIndex
 		{
 			public int index;
@@ -43,13 +35,12 @@ namespace WinApp.Gadget
 
 		private List<TankTypeIndex> tankTypeIndex = new List<TankTypeIndex>();
 
-		private Selection selection = Selection.Total;
-
-		public ucChartTankType(string battleMode = "", string barColorHTML = "")
+        public ucChartTankType(string battleMode = "", string barColorHTML = "", GadgetHelper.TimeRangeEnum timeSpan = GadgetHelper.TimeRangeEnum.Total)
 		{
 			InitializeComponent();
 			_battleMode = battleMode;
 			_barColorHTML = barColorHTML;
+            _battleTimeSpan = timeSpan;
 		}
 
 		protected override void OnInvalidated(InvalidateEventArgs e)
@@ -68,11 +59,29 @@ namespace WinApp.Gadget
 			chart1.Top = 1;
 			chart1.Left = 1;
 			timerMaxStep = 20;
-			selection = Selection.Total;
 			lblChartType.ForeColor = ColorTheme.ControlFont;
 			CreateEmptyChart();
 			ReziseChart();
 			DrawChart();
+            // show correct timespan button as selected
+            switch (_battleTimeSpan)
+            {
+                case GadgetHelper.TimeRangeEnum.Total:
+                    btnTotal.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeMonth3:
+                    btnMonth3.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeMonth:
+                    btnMonth.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeWeek:
+                    btnWeek.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeToday:
+                    btnToday.Checked = true;
+                    break;
+            }
 		}
 
 		private void CreateEmptyChart()
@@ -140,10 +149,10 @@ namespace WinApp.Gadget
 		{
 			// Show battle mode
 			string battleModeText = "Total";
-            battleModeText = BattleHelper.GetBattleModeReadableName(_battleMode);
+            battleModeText = BattleMode.GetItemFromSqlName(_battleMode).Name;
 			string sqlBattlemode = "";
 			string sql = "";
-			if (selection == Selection.Total)
+            if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
 				if (_battleMode != "")
 				{
@@ -165,15 +174,15 @@ namespace WinApp.Gadget
 				// Create Battle Time filer
 				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 				// Adjust time scale according to selected filter
-				switch (selection)
+                switch (_battleTimeSpan)
 				{
-					case Selection.Week: 
+                    case GadgetHelper.TimeRangeEnum.TimeWeek: 
 						dateFilter = dateFilter.AddDays(-7);
 						break;
-					case Selection.Month:
+                    case GadgetHelper.TimeRangeEnum.TimeMonth:
 						dateFilter = dateFilter.AddMonths(-1);
 						break;
-					case Selection.Month3:
+                    case GadgetHelper.TimeRangeEnum.TimeMonth3:
 						dateFilter = dateFilter.AddMonths(-3);
 						break;
 				}
@@ -259,11 +268,11 @@ namespace WinApp.Gadget
 			btnTotal.Checked = false;
 			btnMonth3.Checked = false;
 			btnMonth.Checked = false;
-			btnYday.Checked = false;
+			btnWeek.Checked = false;
 			btnToday.Checked = false;
 			BadButton btn = (BadButton)sender;
 			btn.Checked = true;
-			selection = (Selection)Enum.Parse(typeof(Selection), btn.Tag.ToString());
+            _battleTimeSpan = GadgetHelper.GetTimeItemFromName(btn.Tag.ToString()).TimeRange;
 			DrawChart();
 		}
 

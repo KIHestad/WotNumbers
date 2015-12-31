@@ -8,9 +8,9 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	class GadgetHelper
+	public class GadgetHelper
 	{
-		public enum TimeRange
+		public enum TimeRangeEnum
 		{
 			Total = 0,
 			TimeMonth3 = 6,
@@ -19,10 +19,52 @@ namespace WinApp.Gadget
 			TimeToday = 4,
 		}
 
-		public static TimeRange SelectedTimeRangeEFF = TimeRange.Total;
-		public static TimeRange SelectedTimeRangeWN7 = TimeRange.Total;
-		public static TimeRange SelectedTimeRangeWN8 = TimeRange.Total;
-		public static TimeRange SelectedTimeRangeWR = TimeRange.Total;
+        public class TimeItem
+        {
+            public TimeRangeEnum TimeRange { get; set; }
+            public string Name { get; set; }
+            public string ButtonName { get; set; }
+        }
+
+        public static List<TimeItem> GetTime()
+        {
+            List<TimeItem> timeRanges = new List<TimeItem>();
+            timeRanges.Add(new TimeItem() { TimeRange = TimeRangeEnum.Total, Name = "Total", ButtonName = "Total" });
+            timeRanges.Add(new TimeItem() { TimeRange = TimeRangeEnum.TimeMonth3, Name = "3 Months", ButtonName = "3 Mth" });
+            timeRanges.Add(new TimeItem() { TimeRange = TimeRangeEnum.TimeMonth, Name = "Month", ButtonName = "Month" });
+            timeRanges.Add(new TimeItem() { TimeRange = TimeRangeEnum.TimeWeek, Name = "Week", ButtonName = "Week" });
+            timeRanges.Add(new TimeItem() { TimeRange = TimeRangeEnum.TimeToday, Name = "Today", ButtonName = "Today" });
+            return timeRanges;
+        }
+
+        public static string GetTimeDropDownList()
+        {
+            string timeList = "";
+            foreach (TimeItem ti in GetTime())
+            {
+                timeList += ti.Name + ",";
+            }
+            timeList = timeList.Substring(0, timeList.Length - 1);
+            return timeList;
+        }
+
+        public static TimeItem GetTimeItemFromTimeRange(TimeRangeEnum timeRange)
+        {
+            TimeItem ti = null;
+            List<TimeItem> tiList = GetTime();
+            if (tiList.Where(b => b.TimeRange == timeRange).Count() > 0)
+                ti = tiList.Where(b => b.TimeRange == timeRange).First();
+            return ti;
+        }
+
+        public static TimeItem GetTimeItemFromName(string name)
+        {
+            TimeItem ti = null;
+            List<TimeItem> tiList = GetTime();
+            if (tiList.Where(b => b.Name == name).Count() > 0)
+                ti = tiList.Where(b => b.Name == name).First();
+            return ti;
+        }
 
 		public class GadgetItem
 		{
@@ -276,28 +318,77 @@ namespace WinApp.Gadget
 			try
 			{
 				Control uc = null;
+                string param0 = "";
 				string param1 = "";
+                string param2 = "";
+                if (param[0] != null) param0 = param[0].ToString();
+                if (param[1] != null) param1 = param[1].ToString();
+                if (param[2] != null) param2 = param[2].ToString();
 				switch (name)
 				{
-					case "ucGaugeWinRate": uc = new Gadget.ucGaugeWinRate(param[0].ToString()); break;
-					case "ucGaugeWN8": uc = new Gadget.ucGaugeWN8(); break;
-					case "ucGaugeWN7": uc = new Gadget.ucGaugeWN7(); break;
-					case "ucGaugeEFF": uc = new Gadget.ucGaugeEFF(); break;
-					case "ucTotalTanks": uc = new Gadget.ucTotalTanks(); break;
+					// Gauges - Rating
+                    case "ucGaugeWN8":
+                        if (param0 == "")
+                            param0 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeWN8(GadgetHelper.GetTimeItemFromName(param0).TimeRange); 
+                        break;
+                    case "ucGaugeWN7":
+                        if (param0 == "")
+                            param0 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeWN7(GadgetHelper.GetTimeItemFromName(param0).TimeRange); 
+                        break;
+                    case "ucGaugeEFF":
+                        if (param0 == "")
+                            param0 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeEFF(GadgetHelper.GetTimeItemFromName(param0).TimeRange); 
+                        break;
+
+                    // Gauge - WR
+                    case "ucGaugeWinRate":
+                        if (param1 == "")
+                            param1 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeWinRate(param0, GadgetHelper.GetTimeItemFromName(param1).TimeRange); 
+                        break;
+
+                    // Gauges - K/D & D/R
+					case "ucGaugeKillDeath":
+                        if (param1 == "")
+                            param1 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeKillDeath(param0, GadgetHelper.GetTimeItemFromName(param1).TimeRange); 
+                        break;
+                    case "ucGaugeDmgCausedReceived":
+                        if (param1 == "")
+                            param1 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeDmgCausedReceived(param0, GadgetHelper.GetTimeItemFromName(param1).TimeRange); 
+                        break;
+                    
+                    // Grids
+                    case "ucTotalTanks": uc = new Gadget.ucTotalTanks(); break;
 					case "ucBattleTypes": uc = new Gadget.ucBattleTypes(); break;
 					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
-					case "ucChartBattle": uc = new Gadget.ucChartBattle(); break;
-					case "ucChartTier": 
-						if (param[1] != null) param1 = param[1].ToString();
-						uc = new Gadget.ucChartTier(param[0].ToString(), param1); break;
-					case "ucChartNation":
-						if (param[1] != null) param1 = param[1].ToString();
-						uc = new Gadget.ucChartNation(param[0].ToString(), param1); break;
-					case "ucChartTankType": 
-						if (param[1] != null) param1 = param[1].ToString();
-						uc = new Gadget.ucChartTankType(param[0].ToString(), param1); break;
-					case "ucGaugeKillDeath": uc = new Gadget.ucGaugeKillDeath(param[0].ToString()); break;
-					case "ucGaugeDmgCausedReceived": uc = new Gadget.ucGaugeDmgCausedReceived(param[0].ToString()); break;
+                    
+                    // Charts
+                    case "ucChartBattle": // Not in use
+                        uc = new Gadget.ucChartBattle(); 
+                        break; 
+					
+                    case "ucChartTier":
+                        if (param2 == "")
+                            param2 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+						uc = new Gadget.ucChartTier(param0, param1, GadgetHelper.GetTimeItemFromName(param2).TimeRange); 
+                        break;
+					
+                    case "ucChartNation":
+                        if (param2 == "")
+                            param2 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+						uc = new Gadget.ucChartNation(param0, param1, GadgetHelper.GetTimeItemFromName(param2).TimeRange); 
+                        break;
+					
+                    case "ucChartTankType":
+                        if (param2 == "")
+                            param2 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+						uc = new Gadget.ucChartTankType(param0, param1, GadgetHelper.GetTimeItemFromName(param2).TimeRange); 
+                        break;
 				}
 				return uc;
 			}
@@ -355,12 +446,17 @@ namespace WinApp.Gadget
 
 		public static void DefaultSetup()
 		{
-			string sql = "delete from gadgetParameter ; delete from gadget ;";
+			// Remove current gadgets
+            string sql = "delete from gadgetParameter ; delete from gadget ;";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			gadgets.Clear();
+            
+            // Add default gadgets
 			string s = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) ";
 			sql = "";
-			sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 152, 32, 200, 170) ; ";
+            
+            // Gadgets to insert
+            sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 152, 32, 200, 170) ; ";
 			sql += s + "VALUES ('ucGaugeWN8',     1, 2, 402, 32, 200, 170) ; ";
 			sql += s + "VALUES ('ucGaugeEFF',     1, 3, 652, 32, 200, 170) ; ";
 
@@ -371,28 +467,49 @@ namespace WinApp.Gadget
 			sql += s + "VALUES ('ucChartTankType', 1, 7, 462, 412, 200, 170) ; ";
 			sql += s + "VALUES ('ucChartNation',   1, 8, 712, 412, 250, 170) ; ";
 			
+            // Insert now
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";
+
+            // Add default parameters to gadgets
 			sql = "";
 			int gadgetId = 0;
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWinRate'").Rows[0][0]);
+            
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWinRate'").Rows[0][0]);
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', 'Total'); ";
 
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeDmgCausedReceived'").Rows[0][0]);
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWN8'").Rows[0][0]);
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', 'Total'); ";
+
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeEFF'").Rows[0][0]);
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', 'Total'); ";
+
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeKillDeath'").Rows[0][0]);
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', 'Total'); ";
+            
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeDmgCausedReceived'").Rows[0][0]);
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeKillDeath'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-			
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', 'Total'); ";
+
 			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTier'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#A31F1F'); ";
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartNation'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 2, 'System.String', 'Total'); ";
+
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTankType'").Rows[0][0]);
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1B8E30'); ";
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 2, 'System.String', 'Total'); ";
+            
+            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartNation'").Rows[0][0]);
+			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
 			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1F47A5'); ";
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTankType'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', ''); ";
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1B8E30'); ";
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+            sql += s + "VALUES (" + gadgetId.ToString() + ", 2, 'System.String', 'Total'); ";
+			
+            // Insert now
+            DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 		}
 
 		public static void DrawBorderOnGadget(object sender, PaintEventArgs e)

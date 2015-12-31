@@ -19,7 +19,7 @@ namespace WinApp.Code.FormView
         public static void SetBattleChartDefaultValues()
         {
             TankName = "( All Tanks )";
-            ChartMode = "Random";
+            ChartMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).Name;
             Value = "";
             Xaxis = "Date";
             Period = "( All )";

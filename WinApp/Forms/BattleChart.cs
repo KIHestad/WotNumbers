@@ -52,7 +52,7 @@ namespace WinApp.Forms
 		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
 		private double axisYminimum = 999999999;
 		private List<ChartType> chartValues = new List<ChartType>(); // List of all available chart types 
-        private List<BattleHelper.MainBattleModeItem> mainBattleModes = BattleHelper.GetMainBattleModes();
+        private List<BattleMode.Item> mainBattleModes = BattleMode.GetMainBattleModes();
 
 		public BattleChart(int playerTankId = 0)
 		{
@@ -109,9 +109,9 @@ namespace WinApp.Forms
 			}
 			ddChartList = ddChartList.Substring(0, ddChartList.Length - 1); // Remove last comma
             // DropDown Modes
-            foreach (BattleHelper.MainBattleModeItem mode in mainBattleModes)
+            foreach (BattleMode.Item mode in mainBattleModes)
             {
-                ddModeList += mode.ModeName + ",";
+                ddModeList += mode.Name + ",";
             }
             ddModeList = ddModeList.Substring(0, ddModeList.Length - 1); // Remove last comma
             // Add latest values or default values
@@ -219,10 +219,10 @@ namespace WinApp.Forms
             string chartSerie = GetChartSeriesName();
 			string chartOrder = "";
             // Get battle mode, set "" if unknown = "All Modes"
-            BattleHelper.MainBattleModeItem mainBattleModeItem = BattleHelper.GetMainBattleMode(ddMode.Text);
+            BattleMode.Item mainBattleModeItem = BattleMode.GetItemFromName(ddMode.Text);
             string chartMode = "";
             if (mainBattleModeItem != null)
-                chartMode = BattleHelper.GetSQLMainBattleMode(mainBattleModeItem.Mode);
+                chartMode = BattleMode.GetItemFromType(mainBattleModeItem.Type).SqlName;
             // Check if value selected
 			if (ddValue.Text == "")
 			{

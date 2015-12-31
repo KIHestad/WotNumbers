@@ -107,7 +107,7 @@
             // 
             this.btnTotal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.btnTotal.BlackButton = true;
-            this.btnTotal.Checked = true;
+            this.btnTotal.Checked = false;
             this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTotal.Image = null;
             this.btnTotal.Location = new System.Drawing.Point(7, 148);

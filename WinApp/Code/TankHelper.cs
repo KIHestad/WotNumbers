@@ -98,27 +98,27 @@ namespace WinApp.Code
 			return DB.FetchData(sql);
 		}
 
-		public static DataTable GetPlayerTankBattle(int playerTankId, BattleHelper.MainBattleMode dossierBattleMode, bool CreateNewIfNotExists)
+        public static DataTable GetPlayerTankBattle(int playerTankId, BattleMode.TypeEnum dossierBattleMode, bool CreateNewIfNotExists)
 		{
-			string battleMode = BattleHelper.GetSQLMainBattleMode(dossierBattleMode);
+            BattleMode.Item battleMode = BattleMode.GetItemFromType(dossierBattleMode);
 			string sql = "SELECT * FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode.SqlName, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			if (CreateNewIfNotExists && dt.Rows.Count == 0) // No battle recorded for this tank in this mode, create now and fetch once more
 			{
-				AddPlayerTankBattle(playerTankId, battleMode);
+				AddPlayerTankBattle(playerTankId, battleMode.SqlName);
 				dt = DB.FetchData(sql);
 			}
 			return dt;
 		}
 
-		public static int GetPlayerTankBattleCount(int playerTankId, BattleHelper.MainBattleMode dossierBattleMode, out int wins, out int xp)
+        public static int GetPlayerTankBattleCount(int playerTankId, BattleMode.TypeEnum dossierBattleMode, out int wins, out int xp)
 		{
-			string battleMode = BattleHelper.GetSQLMainBattleMode(dossierBattleMode);
+            BattleMode.Item battleMode = BattleMode.GetItemFromType(dossierBattleMode);
 			string sql = "SELECT battles, wins, xp FROM playerTankBattle WHERE playerTankId=@playerId AND battleMode=@battleMode; ";
 			DB.AddWithValue(ref sql, "@playerId", playerTankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@battleMode", battleMode.SqlName, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			int battles = 0;
 			xp = 0;
@@ -225,15 +225,15 @@ namespace WinApp.Code
 			json2dbMapping = DB.FetchData("SELECT * FROM json2dbMapping ORDER BY jsonMainSubProperty; ");
 		}
 
-		public static DataTable GetTankData2BattleMapping(BattleHelper.MainBattleMode dossierBattleMode)
+        public static DataTable GetTankData2BattleMapping(BattleMode.TypeEnum dossierBattleMode)
 		{
-			string battleMode = BattleHelper.GetSQLMainBattleMode(dossierBattleMode);
+            BattleMode.Item battleMode = BattleMode.GetItemFromType(dossierBattleMode);
 			string sql =
 				"SELECT  dbDataType, dbPlayerTank, dbPlayerTankMode, dbBattle " +
 				"FROM    json2dbMapping " +
 				"WHERE   (dbBattle IS NOT NULL) AND (dbPlayerTankMode IS NULL OR dbPlayerTankMode=@dbPlayerTankMode) " +
 				"GROUP BY dbDataType, dbPlayerTank, dbBattle, dbPlayerTankMode ";
-			DB.AddWithValue(ref sql, "@dbPlayerTankMode", battleMode, DB.SqlDataType.VarChar);
+			DB.AddWithValue(ref sql, "@dbPlayerTankMode", battleMode.SqlName, DB.SqlDataType.VarChar);
 			return DB.FetchData(sql);
 		}
 

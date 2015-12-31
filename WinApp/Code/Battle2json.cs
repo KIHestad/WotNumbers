@@ -394,7 +394,7 @@ namespace WinApp.Code
 								if (bonusType == 10)
 									getFortResource = true;
 								// Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
-								string battleResultMode = "";
+                                string battleResultMode = "";
 								bool getEnemyClan = false;
 								switch (bonusType)
 								{
@@ -405,13 +405,13 @@ namespace WinApp.Code
 									case 4: battleResultMode = "Tournament"; getEnemyClan = true; break;
 									case 5: battleResultMode = "Clan War"; getEnemyClan = true; break;
 									case 6: battleResultMode = "Tutorial"; break;
-									case 7: battleResultMode = "Team: Unranked Battles"; break;
-									case 8: battleResultMode = "Historical Battle"; break;
-									case 9: battleResultMode = "Special Event"; break;
-									case 10: battleResultMode = "Skirmishes"; getEnemyClan = true; break;
-									case 11: battleResultMode = "Stronghold"; getEnemyClan = true; break;
-                                    case 12: battleResultMode = "Team: Ranked Battles"; getEnemyClan = true; break;
-									case 13: battleResultMode = "Global Map"; getEnemyClan = true; break;
+									case 7: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeam).Name; break;
+                                    case 8: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeHistorical).Name; break;
+                                    case 9: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSpecial).Name; break;
+                                    case 10: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSkirmishes).Name; getEnemyClan = true; break;
+                                    case 11: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeStronghold).Name; getEnemyClan = true; break;
+                                    case 12: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeamRanked).Name; getEnemyClan = true; break;
+									case 13: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).Name; getEnemyClan = true; break;
 								}
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });

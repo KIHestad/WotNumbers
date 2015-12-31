@@ -80,7 +80,7 @@ namespace WinApp.Code
 
 				// Declare
 				DataTable NewPlayerTankTable = TankHelper.GetPlayerTank(-1); // Return no data, only empty database with structure
-				DataTable NewPlayerTankBattleTable = TankHelper.GetPlayerTankBattle(-1, BattleHelper.MainBattleMode.ModeRandom_TC, false); // Return no data, only empty database with structure
+                DataTable NewPlayerTankBattleTable = TankHelper.GetPlayerTankBattle(-1, BattleMode.TypeEnum.ModeRandom_TC, false); // Return no data, only empty database with structure
 				DataRow NewPlayerTankRow = NewPlayerTankTable.NewRow();
 				DataRow NewPlayerTankBattle15Row = NewPlayerTankBattleTable.NewRow();
 				DataRow NewPlayerTankBattle7Row = NewPlayerTankBattleTable.NewRow();
@@ -413,13 +413,13 @@ namespace WinApp.Code
 			int playerTankOldRow_xpSkirmishes = 0;
 			int playerTankOldRow_xpStronghold = 0;
 			int playerTankOldRow_xpGlobalMap = 0;
-			int playerTankOldRow_battles15 = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeRandom_TC, out playerTankOldRow_wins15, out playerTankOldRow_xp15);
-			int playerTankOldRow_battles7 = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeTeam, out playerTankOldRow_wins7, out playerTankOldRow_xp7);
-			int playerTankOldRow_battles7Ranked = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeTeamRanked, out playerTankOldRow_wins7Ranked, out playerTankOldRow_xp7Ranked);
-			int playerTankOldRow_battlesHistorical = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeHistorical, out playerTankOldRow_winsHistorical, out playerTankOldRow_xpHistorical);
-			int playerTankOldRow_battlesSkirmishes = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeSkirmishes, out playerTankOldRow_winsSkirmishes, out playerTankOldRow_xpSkirmishes);
-			int playerTankOldRow_battlesStronghold = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeStronghold, out playerTankOldRow_winsStronghold, out playerTankOldRow_xpStronghold);
-			int playerTankOldRow_battlesGlobalMap = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleHelper.MainBattleMode.ModeGlobalMap, out playerTankOldRow_winsGlobalMap, out playerTankOldRow_xpGlobalMap); 
+            int playerTankOldRow_battles15 = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeRandom_TC, out playerTankOldRow_wins15, out playerTankOldRow_xp15);
+            int playerTankOldRow_battles7 = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeTeam, out playerTankOldRow_wins7, out playerTankOldRow_xp7);
+            int playerTankOldRow_battles7Ranked = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeTeamRanked, out playerTankOldRow_wins7Ranked, out playerTankOldRow_xp7Ranked);
+            int playerTankOldRow_battlesHistorical = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeHistorical, out playerTankOldRow_winsHistorical, out playerTankOldRow_xpHistorical);
+            int playerTankOldRow_battlesSkirmishes = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeSkirmishes, out playerTankOldRow_winsSkirmishes, out playerTankOldRow_xpSkirmishes);
+            int playerTankOldRow_battlesStronghold = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeStronghold, out playerTankOldRow_winsStronghold, out playerTankOldRow_xpStronghold);
+            int playerTankOldRow_battlesGlobalMap = TankHelper.GetPlayerTankBattleCount(playerTankId, BattleMode.TypeEnum.ModeGlobalMap, out playerTankOldRow_winsGlobalMap, out playerTankOldRow_xpGlobalMap); 
 				
 			// Calculate number of new battles 
 			int battlesNew15 = playerTankNewRow_battles15 - playerTankOldRow_battles15;
@@ -497,43 +497,43 @@ namespace WinApp.Code
 				// Now update playerTank battle for different battle modes
 				if (battlesNew15 > 0 || (forceUpdate && playerTankOldRow_battles15 != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeRandom_TC, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle15NewRow,
 											playerTankNewRow_battles15, battlesNew15, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNew7 > 0 || (forceUpdate && playerTankOldRow_battles7 != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeam, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7NewRow,
 											playerTankNewRow_battles7, battlesNew7, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNew7Ranked > 0 || (forceUpdate && playerTankOldRow_battles7Ranked != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeTeamRanked, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7RankedNewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeTeamRanked, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattle7RankedNewRow,
 											playerTankNewRow_battles7Ranked, battlesNew7Ranked, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewHistorical > 0 || (forceUpdate && playerTankOldRow_battlesHistorical != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeHistorical, playerTankId, tankId, playerTankNewRow, playerTankOldRow, playerTankBattleHistoricalNewRow,
 											playerTankNewRow_battlesHistorical, battlesNewHistorical, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewSkirmishes > 0 || (forceUpdate && playerTankOldRow_battlesSkirmishes != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeSkirmishes, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleSkirmishesNewRow,
 											playerTankNewRow_battlesSkirmishes, battlesNewSkirmishes, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
 				if (battlesNewStronghold > 0 || (forceUpdate && playerTankOldRow_battlesStronghold != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeStronghold, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleStrongholdNewRow,
 											playerTankNewRow_battlesStronghold, battlesNewStronghold, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				} 
 				if (battlesNewGlobalMap > 0 || (forceUpdate && playerTankOldRow_battlesGlobalMap != 0))
 				{
-					UpdatePlayerTankBattle(BattleHelper.MainBattleMode.ModeGlobalMap, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGlobalMapNewRow,
+                    UpdatePlayerTankBattle(BattleMode.TypeEnum.ModeGlobalMap, playerTankId, tankId, playerTankNewRow, playerTankOldRow, PlayerTankBattleGlobalMapNewRow,
 											playerTankNewRow_battlesGlobalMap, battlesNewGlobalMap, battleFragList, battleAchList, saveBattleResult);
 					battleSave = true;
 				}
@@ -541,7 +541,7 @@ namespace WinApp.Code
 				{
 					// for special tanks no stats are reported from dossier, make sure playerTankBattle exists anyway for battle mode "Special"
 					// Get or create playerTank BattleResult
-					DataTable playerTankBattleOld = TankHelper.GetPlayerTankBattle(playerTankId, BattleHelper.MainBattleMode.ModeSpecial, true);
+                    DataTable playerTankBattleOld = TankHelper.GetPlayerTankBattle(playerTankId, BattleMode.TypeEnum.ModeSpecial, true);
 				}
 			}
 			playerTankOldTable.Dispose();
@@ -659,7 +659,7 @@ namespace WinApp.Code
 			return battleAchList;
 		}
 
-		private static void UpdatePlayerTankBattle(BattleHelper.MainBattleMode battleMode, 
+        private static void UpdatePlayerTankBattle(BattleMode.TypeEnum battleMode, 
 													int playerTankId, 
 													int tankId,
 													DataRow playerTankNewRow, DataRow playerTankOldRow,
@@ -718,7 +718,7 @@ namespace WinApp.Code
 			{
 				string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE playerTankId=@playerTankId AND battleMode=@battleMode; ";
 				DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(battleMode), DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(battleMode).SqlName, DB.SqlDataType.VarChar);
 				DB.ExecuteNonQuery(sql);
 			}
 			// Add battle, if any and not first run - then avoid
@@ -831,7 +831,7 @@ namespace WinApp.Code
 										 DataRow playerTankOldRow, 
 										 DataRow playerTankBattleNewRow, 
 										 DataRow playerTankBattleOldRow,
-										 BattleHelper.MainBattleMode battleMode, 
+                                         BattleMode.TypeEnum battleMode, 
 										 int tankId, 
 										 int playerTankId, 
 										 int battlesCount, 
@@ -938,7 +938,7 @@ namespace WinApp.Code
 				// Add battle mode
 				sqlFields += ", battleMode";
 				sqlValues += ", @battleMode";
-				DB.AddWithValue(ref sqlValues, "@battleMode", BattleHelper.GetSQLMainBattleMode(battleMode), DB.SqlDataType.VarChar); 
+                DB.AddWithValue(ref sqlValues, "@battleMode", BattleMode.GetItemFromType(battleMode).SqlName, DB.SqlDataType.VarChar); 
 				// Calculate battle result
 				int victorycount = Convert.ToInt32(battleNewRow["victory"]);
 				int defeatcount = Convert.ToInt32(battleNewRow["defeat"]);
@@ -979,7 +979,7 @@ namespace WinApp.Code
 				sqlFields += ", killed "; 
 				sqlValues += ", " + killedcount.ToString();
                 // Rank by avg damage and progress (delta value), only for random battles
-                if (battleMode == BattleHelper.MainBattleMode.ModeRandom_TC)
+                if (battleMode == BattleMode.TypeEnum.ModeRandom_TC)
                 {
                     // Total
                     double rankDmg = Convert.ToDouble(playerTankBattleNewRow["damageRating"]);

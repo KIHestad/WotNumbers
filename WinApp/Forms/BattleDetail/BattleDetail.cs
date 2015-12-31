@@ -26,7 +26,7 @@ namespace WinApp.Forms
 		private bool showAllColumns = false;
 		private Panel pnlBack = new Panel();
 		private BadScrollBar scroll = new BadScrollBar();
-		private BattleHelper.MainBattleMode mainBattleMode;
+		private BattleMode.TypeEnum mainBattleMode;
 		private int tankId = 0;
 		private int wn8 = 0;
 		private int wn8avg = 0;
@@ -313,39 +313,39 @@ namespace WinApp.Forms
 				string battleMode = "";
 				switch (mainMode)
 				{
-					case "15": 
-						mainBattleMode = BattleHelper.MainBattleMode.ModeRandom_TC;
+					case "15":
+                        mainBattleMode = BattleMode.TypeEnum.ModeRandom_TC;
 						battleMode = "Random Battle"; 
 						break;
-					case "7": 
-						mainBattleMode = BattleHelper.MainBattleMode.ModeTeam;
+					case "7":
+                        mainBattleMode = BattleMode.TypeEnum.ModeTeam;
 						battleMode = "Team: Unranked Battle";
 						break;
 					case "7Ranked":
-						mainBattleMode = BattleHelper.MainBattleMode.ModeTeamRanked;
+                        mainBattleMode = BattleMode.TypeEnum.ModeTeamRanked;
 						battleMode = "Team: Ranked Battle";
 						break;
-					case "Historical": 
-						mainBattleMode = BattleHelper.MainBattleMode.ModeHistorical;
+					case "Historical":
+                        mainBattleMode = BattleMode.TypeEnum.ModeHistorical;
 						battleMode = "Historical Battle";
 						break;
-					case "Skirmishes": 
-						mainBattleMode = BattleHelper.MainBattleMode.ModeSkirmishes;
+					case "Skirmishes":
+                        mainBattleMode = BattleMode.TypeEnum.ModeSkirmishes;
 						battleMode = "Skirmish Battle";
 						showFortResources = true; 
 						break;
 					case "Stronghold":
-						mainBattleMode = BattleHelper.MainBattleMode.ModeStronghold;
+                        mainBattleMode = BattleMode.TypeEnum.ModeStronghold;
 						battleMode = "Battle for Stronghold";
 						showFortResources = true;
 						break;
 					case "Special":
-						mainBattleMode = BattleHelper.MainBattleMode.ModeSpecial;
+                        mainBattleMode = BattleMode.TypeEnum.ModeSpecial;
 						battleMode = "Special Event Battle";
 						showFortResources = false; 
 						break;
 					case "GlobalMap":
-						mainBattleMode = BattleHelper.MainBattleMode.ModeGlobalMap;
+                        mainBattleMode = BattleMode.TypeEnum.ModeGlobalMap;
 						battleMode = "Global Map";
 						showFortResources = false;
 						break;
@@ -519,7 +519,7 @@ namespace WinApp.Forms
 				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode and playerTank.playerId=@playerId ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
+            DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
 			DataTable dtAvg = DB.FetchData(sql);
 			if (dtRes.Rows.Count > 0)
 			{
@@ -656,7 +656,7 @@ namespace WinApp.Forms
 						"WHERE arenaUniqueID is not null AND playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
 					DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
 					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-					DB.AddWithValue(ref sql, "@battleMode", BattleHelper.GetSQLMainBattleMode(mainBattleMode), DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
 					DataTable dtTotBattle = DB.FetchData(sql);
 					DataRow drTotBattle = dtTotBattle.Rows[0];
 					double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);

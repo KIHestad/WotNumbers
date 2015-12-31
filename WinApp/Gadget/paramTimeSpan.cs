@@ -10,11 +10,11 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramBattleMode : Form
+	public partial class paramTimeSpan : Form
 	{
 		int _gadgetId = -1;
-		
-		public paramBattleMode(int gadgetId = -1)
+
+        public paramTimeSpan(int gadgetId = -1)
 		{
 			InitializeComponent();
 			_gadgetId = gadgetId;
@@ -36,40 +36,23 @@ namespace WinApp.Gadget
 					currentParameters[paramNum] = paramValue;
 				}
                 if (currentParameters[0] != null)
-                    ddBattleMode.Text = BattleMode.GetItemFromSqlName(currentParameters[0].ToString()).Name;
-                if (currentParameters[1] != null)
-                    ddTimeSpan.Text = GadgetHelper.GetTimeItemFromName(currentParameters[1].ToString()).Name;
+                    ddTimeSpan.Text = GadgetHelper.GetTimeItemFromName(currentParameters[0].ToString()).Name;
 			}
-		}
-
-
-		private void ddBattleMode_Click(object sender, EventArgs e)
-		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
 		{
-			if (ddBattleMode.Text == "")
-			{
-				MsgBox.Show("Please select a battle mode", "Missing battle mode");
-			}
-            else if (ddTimeSpan.Text == "")
+			if (ddTimeSpan.Text == "")
             {
                 MsgBox.Show("Please select a time span", "Missing time span");
             }
 			else
 			{
-				string paramBattleMode = "";
-                BattleMode.Item battleMode = BattleMode.GetItemFromName(ddBattleMode.Text);
-                if (battleMode != null)
-                    paramBattleMode = battleMode.SqlName;
-                string paramTimeSpan = "";
+				string paramTimeSpan = "";
                 GadgetHelper.TimeItem ti = GadgetHelper.GetTimeItemFromName(ddTimeSpan.Text);
                 if (ti != null)
                     paramTimeSpan = ti.Name;
-				GadgetHelper.newParameters[0] = paramBattleMode;
-                GadgetHelper.newParameters[1] = paramTimeSpan;
+				GadgetHelper.newParameters[0] = paramTimeSpan;
 				GadgetHelper.newParametersOK = true;
 				this.Close();
 			}

@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Gadget
 {
-	partial class paramBattleMode
+	partial class paramTimeSpan
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -35,8 +35,6 @@
             this.badLabel2 = new BadLabel();
             this.btnCancel = new BadButton();
             this.btnSelect = new BadButton();
-            this.ddBattleMode = new BadDropDownBox();
-            this.badLabel1 = new BadLabel();
             this.badForm1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,8 +44,6 @@
             this.badForm1.Controls.Add(this.badLabel2);
             this.badForm1.Controls.Add(this.btnCancel);
             this.badForm1.Controls.Add(this.btnSelect);
-            this.badForm1.Controls.Add(this.ddBattleMode);
-            this.badForm1.Controls.Add(this.badLabel1);
             this.badForm1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.badForm1.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.badForm1.FormExitAsMinimize = false;
@@ -60,18 +56,18 @@
             this.badForm1.MainArea = mainAreaClass1;
             this.badForm1.Name = "badForm1";
             this.badForm1.Resizable = false;
-            this.badForm1.Size = new System.Drawing.Size(260, 167);
+            this.badForm1.Size = new System.Drawing.Size(260, 137);
             this.badForm1.SystemExitImage = null;
             this.badForm1.SystemMaximizeImage = null;
             this.badForm1.SystemMinimizeImage = null;
             this.badForm1.TabIndex = 0;
-            this.badForm1.Text = "Parameters";
+            this.badForm1.Text = "Timespan Parameter";
             this.badForm1.TitleHeight = 26;
             // 
             // ddTimeSpan
             // 
             this.ddTimeSpan.Image = null;
-            this.ddTimeSpan.Location = new System.Drawing.Point(103, 77);
+            this.ddTimeSpan.Location = new System.Drawing.Point(103, 48);
             this.ddTimeSpan.Name = "ddTimeSpan";
             this.ddTimeSpan.Size = new System.Drawing.Size(134, 23);
             this.ddTimeSpan.TabIndex = 5;
@@ -82,7 +78,7 @@
             this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel2.Dimmed = false;
             this.badLabel2.Image = null;
-            this.badLabel2.Location = new System.Drawing.Point(25, 77);
+            this.badLabel2.Location = new System.Drawing.Point(25, 48);
             this.badLabel2.Name = "badLabel2";
             this.badLabel2.Size = new System.Drawing.Size(76, 23);
             this.badLabel2.TabIndex = 4;
@@ -94,7 +90,7 @@
             this.btnCancel.BlackButton = false;
             this.btnCancel.Checked = false;
             this.btnCancel.Image = null;
-            this.btnCancel.Location = new System.Drawing.Point(173, 121);
+            this.btnCancel.Location = new System.Drawing.Point(173, 92);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(64, 23);
             this.btnCancel.TabIndex = 3;
@@ -107,7 +103,7 @@
             this.btnSelect.BlackButton = false;
             this.btnSelect.Checked = false;
             this.btnSelect.Image = null;
-            this.btnSelect.Location = new System.Drawing.Point(103, 121);
+            this.btnSelect.Location = new System.Drawing.Point(103, 92);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(64, 23);
             this.btnSelect.TabIndex = 2;
@@ -115,35 +111,14 @@
             this.btnSelect.ToolTipText = "";
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
-            // ddBattleMode
-            // 
-            this.ddBattleMode.Image = null;
-            this.ddBattleMode.Location = new System.Drawing.Point(103, 48);
-            this.ddBattleMode.Name = "ddBattleMode";
-            this.ddBattleMode.Size = new System.Drawing.Size(134, 23);
-            this.ddBattleMode.TabIndex = 1;
-            this.ddBattleMode.Click += new System.EventHandler(this.ddBattleMode_Click);
-            // 
-            // badLabel1
-            // 
-            this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel1.Dimmed = false;
-            this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(25, 48);
-            this.badLabel1.Name = "badLabel1";
-            this.badLabel1.Size = new System.Drawing.Size(76, 23);
-            this.badLabel1.TabIndex = 0;
-            this.badLabel1.Text = "Battle Mode:";
-            this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // paramBattleMode
+            // paramTimeSpan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(260, 167);
+            this.ClientSize = new System.Drawing.Size(260, 137);
             this.Controls.Add(this.badForm1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "paramBattleMode";
+            this.Name = "paramTimeSpan";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ucGaugeWinRateParameter";
@@ -157,9 +132,7 @@
 		#endregion
 
 		private BadForm badForm1;
-		private BadButton btnSelect;
-		private BadDropDownBox ddBattleMode;
-		private BadLabel badLabel1;
+        private BadButton btnSelect;
 		private BadButton btnCancel;
         private BadDropDownBox ddTimeSpan;
         private BadLabel badLabel2;

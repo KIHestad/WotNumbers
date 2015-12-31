@@ -16,11 +16,14 @@ namespace WinApp.Gadget
 	public partial class ucGaugeWinRate : UserControl
 	{
 		string _battleMode = "";
-		float outsideRange = 0;
-		public ucGaugeWinRate(string battleMode = "")
+		private GadgetHelper.TimeRangeEnum _battleTimeSpan = GadgetHelper.TimeRangeEnum.Total;
+        float outsideRange = 0;
+
+        public ucGaugeWinRate(string battleMode, GadgetHelper.TimeRangeEnum timeSpan)
 		{
 			InitializeComponent();
 			_battleMode = battleMode;
+            _battleTimeSpan = timeSpan;
 		}
 
 		private void ucGaugeWinRate_Load(object sender, EventArgs e)
@@ -43,6 +46,25 @@ namespace WinApp.Gadget
 			if (aGauge1.Value < 29) aGauge1.Value = 29;
 			aGauge1.ValueScaleLinesMajorStepValue = 5;
 			outsideRange = (aGauge1.ValueMax - aGauge1.ValueMin) * 3 / 100;
+            // show correct timespan button as selected
+            switch (_battleTimeSpan)
+            {
+                case GadgetHelper.TimeRangeEnum.Total:
+                    btnTotal.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeMonth3:
+                    btnMonth3.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeMonth:
+                    btnMonth.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeWeek:
+                    btnWeek.Checked = true;
+                    break;
+                case GadgetHelper.TimeRangeEnum.TimeToday:
+                    btnToday.Checked = true;
+                    break;
+            }
 			// Colors 0-8
 			for (byte i = 0; i <= 8; i++)
 			{
@@ -59,7 +81,7 @@ namespace WinApp.Gadget
 			}
 			// Show battle mode
 			string capText = "Total";
-            capText = BattleHelper.GetBattleModeReadableName(_battleMode);
+            capText = BattleMode.GetItemFromSqlName(_battleMode).Name;
 			string sqlBattlemode = "";
 			if (_battleMode != "")
 			{
@@ -70,7 +92,7 @@ namespace WinApp.Gadget
 			float battles = 0;
 			float wins = 0;
 			// Overall stats team
-			if (GadgetHelper.SelectedTimeRangeWR == GadgetHelper.TimeRange.Total)
+            if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
 				string sql =
 					"select sum(ptb.battles) as battles, sum(ptb.wins) as wins " +
@@ -95,28 +117,28 @@ namespace WinApp.Gadget
 			{
 				int battleRevert = 0;
 				string battleTimeFilter = "";
-				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
-				switch (GadgetHelper.SelectedTimeRangeWR)
+				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                switch (_battleTimeSpan)
 				{
-					case GadgetHelper.TimeRange.TimeWeek:
+					case GadgetHelper.TimeRangeEnum.TimeWeek:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						// Adjust time scale according to selected filter
 						dateFilter = dateFilter.AddDays(-7);
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
-                    case GadgetHelper.TimeRange.TimeMonth:
+                    case GadgetHelper.TimeRangeEnum.TimeMonth:
                         battleTimeFilter = " AND battleTime>=@battleTime ";
                         // Adjust time scale according to selected filter
                         dateFilter = dateFilter.AddMonths(-1);
                         DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
                         break;
-                    case GadgetHelper.TimeRange.TimeMonth3:
+                    case GadgetHelper.TimeRangeEnum.TimeMonth3:
                         battleTimeFilter = " AND battleTime>=@battleTime ";
                         // Adjust time scale according to selected filter
                         dateFilter = dateFilter.AddMonths(-3);
                         DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
                         break;
-                    case GadgetHelper.TimeRange.TimeToday:
+                    case GadgetHelper.TimeRangeEnum.TimeToday:
 						battleTimeFilter = " AND battleTime>=@battleTime ";
 						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 						break;
@@ -217,11 +239,11 @@ namespace WinApp.Gadget
 			BadButton b = (BadButton)sender;
 			switch (b.Name)
 			{
-				case "btnTotal": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.Total; break;
-				case "btnMonth3": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeMonth3; break;
-				case "btnMonth": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeMonth; break;
-				case "btnWeek": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeWeek; break;
-				case "btnToday": GadgetHelper.SelectedTimeRangeWR = GadgetHelper.TimeRange.TimeToday; break;
+                case "btnTotal": _battleTimeSpan = GadgetHelper.TimeRangeEnum.Total; break;
+                case "btnMonth3": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeMonth3; break;
+                case "btnMonth": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeMonth; break;
+                case "btnWeek": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeWeek; break;
+                case "btnToday": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeToday; break;
 			}
 			SelectTimeRangeButton();
 			DataBind();
@@ -234,13 +256,13 @@ namespace WinApp.Gadget
 			btnMonth.Checked = false;
 			btnWeek.Checked = false;
 			btnToday.Checked = false;
-			switch (GadgetHelper.SelectedTimeRangeWR)
+            switch (_battleTimeSpan)
 			{
-				case GadgetHelper.TimeRange.Total: btnTotal.Checked = true; break;
-				case GadgetHelper.TimeRange.TimeMonth3: btnMonth3.Checked = true; break;
-				case GadgetHelper.TimeRange.TimeMonth: btnMonth.Checked = true; break;
-				case GadgetHelper.TimeRange.TimeWeek: btnWeek.Checked = true; break;
-				case GadgetHelper.TimeRange.TimeToday: btnToday.Checked = true; break;
+				case GadgetHelper.TimeRangeEnum.Total: btnTotal.Checked = true; break;
+				case GadgetHelper.TimeRangeEnum.TimeMonth3: btnMonth3.Checked = true; break;
+				case GadgetHelper.TimeRangeEnum.TimeMonth: btnMonth.Checked = true; break;
+				case GadgetHelper.TimeRangeEnum.TimeWeek: btnWeek.Checked = true; break;
+				case GadgetHelper.TimeRangeEnum.TimeToday: btnToday.Checked = true; break;
 			}
 		}
 

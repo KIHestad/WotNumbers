@@ -154,7 +154,7 @@
     <Compile Include="Code\FormView\BattleChartHelper.cs" />
     <Compile Include="Code\FormView\ColListSystemDefault.cs" />
     <Compile Include="Code\FormView\FormHelper.cs" />
-    <Compile Include="Code\FormView\BattleModeHelper.cs" />
+    <Compile Include="Code\BattleMode.cs" />
     <Compile Include="Code\FormView\ColListHelper.cs" />
     <Compile Include="Code\FormView\FavListHelper.cs" />
     <Compile Include="Code\FormView\GridFilter.cs" />
@@ -425,6 +425,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\paramTimeSpan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramTimeSpan.Designer.cs">
+      <DependentUpon>paramTimeSpan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\paramBM_Color.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -643,6 +649,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramTimeSpan.resx">
+      <DependentUpon>paramTimeSpan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramBM_Color.resx">
       <DependentUpon>paramBM_Color.cs</DependentUpon>

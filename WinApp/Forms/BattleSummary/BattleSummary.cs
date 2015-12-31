@@ -90,7 +90,7 @@ namespace WinApp.Forms
 				else
 					BattleSummaryTheme.Text = "Summary of " + battlesCount.ToString() + " Battles";
 				// Show battle mode
-				BattleSummaryTheme.Text += " - Average values based on Battle Mode: " + BattleHelper.GetBattleModeReadableName(battleMode);
+                BattleSummaryTheme.Text += " - Average values based on Battle Mode: " + BattleMode.GetItemFromSqlName(battleMode).Name;
 				// Get battle data
 				GetStandardGridDetails();
 				GetWN8Details();

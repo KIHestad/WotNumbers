@@ -56,7 +56,7 @@ namespace WinApp.Forms
 
 		private void Main_Load(object sender, EventArgs e)
 		{
-            if (DB.CheckConnection())
+            if (DB.CheckConnection(false))
             {
                 TankHelper.GetAllLists();
                 // Check DB Version an dupgrade if needed
@@ -920,7 +920,7 @@ namespace WinApp.Forms
 				// Set new view as selected
 				MainSettings.View = newGridView;
 				// Default settings
-				dataGridMain.ColumnHeadersVisible = true;
+                dataGridMain.ColumnHeadersVisible = true;
 				dataGridMain.RowHeadersVisible = true;
 				scrollCorner.BringToFront();
 				scrollX.BringToFront();
@@ -942,6 +942,7 @@ namespace WinApp.Forms
 						scrollX.Visible = false;
 						scrollY.Visible = false;
 						scrollCorner.Visible = false;
+                        lblStatusRowCount.Visible = false;
 						// Show/Hide Tool Items
 						mBattles.Visible = true;
 						mGadget.Visible = true;
@@ -963,6 +964,7 @@ namespace WinApp.Forms
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
 						dataGridMain.RowHeadersWidth = Config.Settings.mainGridTankRowWidht;
+                        lblStatusRowCount.Visible = true;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
                         mMapViewType.Visible = false;
@@ -999,6 +1001,7 @@ namespace WinApp.Forms
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
 						dataGridMain.RowHeadersWidth = Config.Settings.mainGridBattleRowWidht;
+                        lblStatusRowCount.Visible = true;
 						// Show/Hide Tool Items
 						mBattles.Visible = false;
                         mMapViewType.Visible = false;
@@ -1035,6 +1038,7 @@ namespace WinApp.Forms
                         scrollY.Visible = true;
                         scrollCorner.Visible = true;
                         dataGridMain.RowHeadersWidth = Config.Settings.mainGridBattleRowWidht;
+                        lblStatusRowCount.Visible = true;
                         // Show/Hide Tool Items
                         mMapViewType.Visible = true;
                         mBattles.Visible = false;
@@ -2119,19 +2123,19 @@ namespace WinApp.Forms
 			switch (MainSettings.GridFilterTank.BattleMode)
 			{
 				case GridFilter.BattleModeType.RandomAndTankCompany:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeRandom_TC);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Team:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeTeam);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeam).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.TeamRanked:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeTeamRanked);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeamRanked).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Random:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeRandom_TC);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
 					break;
 				case GridFilter.BattleModeType.ClanWar:
@@ -2141,23 +2145,23 @@ namespace WinApp.Forms
 					battleModeFilter = " AND (playerTank.hasCompany = 1) ";
 					break;
 				case GridFilter.BattleModeType.Historical:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeHistorical);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeHistorical).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Skirmishes:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeSkirmishes);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSkirmishes).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Stronghold:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeStronghold);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeStronghold).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.Special:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeSpecial);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSpecial).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				case GridFilter.BattleModeType.GlobalMap:
-					battleModeSQL = BattleHelper.GetSQLMainBattleMode(BattleHelper.MainBattleMode.ModeGlobalMap);
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).SqlName;
 					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
 					break;
 				default:
@@ -4963,7 +4967,16 @@ namespace WinApp.Forms
 			Form frm = null;
 			switch (controlName)
 			{
-				case "ucGaugeWinRate":
+                case "ucGaugeWN8":
+                    frm = new Gadget.paramTimeSpan(gadgetId);
+                    break;
+                case "ucGaugeWN7":
+                    frm = new Gadget.paramTimeSpan(gadgetId);
+                    break;
+                case "ucGaugeEFF":
+                    frm = new Gadget.paramTimeSpan(gadgetId);
+                    break;
+                case "ucGaugeWinRate":
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
 				case "ucBattleListLargeImages":

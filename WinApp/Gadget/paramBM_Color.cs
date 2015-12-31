@@ -23,6 +23,7 @@ namespace WinApp.Gadget
 		private void param_Load(object sender, EventArgs e)
 		{
 			object[] currentParameters = new object[] { null, null, null, null, null };
+            Color barColor = ColorTheme.ChartBarBlue; // Default chart color
 			if (_gadgetId > -1)
 			{
 				// Lookup value for current gadget
@@ -36,30 +37,28 @@ namespace WinApp.Gadget
 					currentParameters[paramNum] = paramValue;
 				}
 				// Get battle mode
-				switch (currentParameters[0].ToString())
-				{
-					case "15": ddBattleMode.Text = "Random / TC"; break;
-					case "7": ddBattleMode.Text = "Team: Unranked"; break;
-					case "7Ranked": ddBattleMode.Text = "Team: Ranked"; break;
-					case "Historical": ddBattleMode.Text = "Historical"; break;
-					case "Skirmishes": ddBattleMode.Text = "Skirmishes"; break;
-					case "Stronghold": ddBattleMode.Text = "Stronghold"; break;
-					case "": ddBattleMode.Text = "All Modes"; break;
-				}
-				// Get Color
-				Color barColor = ColorTheme.ChartBarBlue;
+                if (currentParameters[0] != null)
+                {
+                    BattleMode.Item battleMode = BattleMode.GetItemFromSqlName(currentParameters[0].ToString());
+                    ddBattleMode.Text = "";
+                    if (battleMode != null)
+                        ddBattleMode.Text = battleMode.Name;
+                }
+                // Get Color
 				if (currentParameters[1] != null)
-				{
 					barColor = ColorTranslator.FromHtml(currentParameters[1].ToString());
-				}
-				panel1.BackColor = barColor;
+				// Get Timespan
+                if (currentParameters[2] != null)
+                    ddTimeSpan.Text = GadgetHelper.GetTimeItemFromName(currentParameters[2].ToString()).Name;
 			}
+            // Set color for both new and existing
+            panel1.BackColor = barColor;
 		}
 
 
 		private void ddBattleMode_Click(object sender, EventArgs e)
 		{
-			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, "Random / TC,Team: Unranked,Team: Ranked,Historical,Global Map,Skirmishes,Stronghold,All Modes");
+			DropDownGrid.Show(ddBattleMode, DropDownGrid.DropDownGridType.List, BattleMode.GetDropDownList(true));
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -68,23 +67,24 @@ namespace WinApp.Gadget
 			{
 				MsgBox.Show("Please select a battle mode", "Missing battle mode");
 			}
+            else if (ddTimeSpan.Text == "")
+            {
+                MsgBox.Show("Please select a time span", "Missing time span");
+            }
 			else
 			{
-				string param = "";
-				switch (ddBattleMode.Text)
-				{
-					case "Random / TC": param = "15"; break;
-					case "Team: Unranked": param = "7"; break;
-					case "Team: Ranked": param = "7Ranked"; break;
-					case "Historical": param = "Historical"; break;
-                    case "Global Map": param = "GlobalMap"; break;
-                    case "Skirmishes": param = "Skirmishes"; break;
-                    case "Stronghold": param = "Stronghold"; break;
-					case "All Modes":   param = ""; break;
-				}
-				GadgetHelper.newParameters[0] = param;
+                BattleMode.Item battleMolde = BattleMode.GetItemFromName(ddBattleMode.Text);
+                string paramBattleMode = "";
+                if (battleMolde != null)
+                    paramBattleMode = battleMolde.SqlName;
+                string paramTimeSpan = "";
+                GadgetHelper.TimeItem ti = GadgetHelper.GetTimeItemFromName(ddTimeSpan.Text);
+                if (ti != null)
+                    paramTimeSpan = ti.Name;
+				GadgetHelper.newParameters[0] = paramBattleMode;
 				Color c = panel1.BackColor;
 				GadgetHelper.newParameters[1] = System.Drawing.ColorTranslator.ToHtml(c);
+                GadgetHelper.newParameters[2] = paramTimeSpan;
 				GadgetHelper.newParametersOK = true;
 				this.Close();
 			}
@@ -110,6 +110,11 @@ namespace WinApp.Gadget
 			colorDialog1.ShowDialog();
 			panel1.BackColor = colorDialog1.Color;
 		}
+
+        private void ddTimeSpan_Click(object sender, EventArgs e)
+        {
+            DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
+        }
 
 
 	}
