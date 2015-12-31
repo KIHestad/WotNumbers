@@ -4914,11 +4914,19 @@ namespace WinApp.Forms
 
 		private void gadgetMainPopup_Remove_Click(object sender, EventArgs e)
 		{
-			if (selectedGadget != null)
-			{
-				GadgetHelper.RemoveGadget(selectedGadget);
-				panelMainArea.Controls.Remove(selectedGadget.control);
-			}
+            try
+            {
+                if (selectedGadget != null)
+                {
+                    GadgetHelper.RemoveGadget(selectedGadget);
+                    panelMainArea.Controls.Remove(selectedGadget.control);
+                }
+            }
+            catch (Exception)
+            {
+                // throw;
+            }
+            
 		}
 
 		private void gadgetMainPopup_Customize_Click(object sender, EventArgs e)
@@ -4999,6 +5007,9 @@ namespace WinApp.Forms
 					break;
                 case "ucTotalTanks":
                     frm = new Gadget.paramBattleModeOnly(gadgetId);
+                    break;
+                case "ucHeading":
+                    frm = new Gadget.paramText(gadgetId);
                     break;
 			}
 			if (frm != null)

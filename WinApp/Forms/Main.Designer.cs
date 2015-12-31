@@ -181,6 +181,7 @@
             this.mGadgetChartTier = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartTankType = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartNation = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetAddHeader = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
@@ -1561,6 +1562,7 @@
             this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mGadgetGauges,
             this.mGadgetCharts,
+            this.mGadgetAddHeader,
             this.mGadgetAddBattleModeStats,
             this.mGadgetAddTankTypeStats,
             this.mGadgetAddImage,
@@ -1678,6 +1680,14 @@
             this.mGadgetChartNation.Text = "Group by Nation";
             this.mGadgetChartNation.Click += new System.EventHandler(this.mGadgetAdd);
             // 
+            // mGadgetAddHeader
+            // 
+            this.mGadgetAddHeader.Name = "mGadgetAddHeader";
+            this.mGadgetAddHeader.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetAddHeader.Tag = "ucHeading";
+            this.mGadgetAddHeader.Text = "Header";
+            this.mGadgetAddHeader.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
             // mGadgetAddBattleModeStats
             // 
             this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
@@ -1774,7 +1784,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -2329,6 +2339,7 @@
         private System.Windows.Forms.ToolStripMenuItem mMapShowOld;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripButton mVBaddict;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddHeader;
 	}
 }
 

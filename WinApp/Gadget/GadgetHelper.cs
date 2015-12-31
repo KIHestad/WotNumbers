@@ -308,7 +308,7 @@ namespace WinApp.Gadget
 		public static bool IsGadgetRezisable(string gadgetName)
 		{
 			bool resizable = false;
-			if (gadgetName == "ucChartTier" || gadgetName == "ucChartNation" || gadgetName == "ucChartTankType")
+            if (gadgetName == "ucChartTier" || gadgetName == "ucChartNation" || gadgetName == "ucChartTankType" || gadgetName == "ucHeading")
 				resizable = true;
 			return resizable;
 		}
@@ -397,6 +397,12 @@ namespace WinApp.Gadget
                             param2 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
 						uc = new Gadget.ucChartTankType(param0, param1, GadgetHelper.GetTimeItemFromName(param2).TimeRange); 
                         break;
+
+                    // Heading
+                    case "ucHeading":
+                        uc = new Gadget.ucHeading(param0);
+                        break;
+
 				}
 				return uc;
 			}

@@ -431,6 +431,12 @@
     <Compile Include="Gadget\paramBattleModeOnly.Designer.cs">
       <DependentUpon>paramBattleModeOnly.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\paramText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramText.Designer.cs">
+      <DependentUpon>paramText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\paramTimeSpan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -527,6 +533,12 @@
     </Compile>
     <Compile Include="Gadget\ucBattleListLargeImages.Designer.cs">
       <DependentUpon>ucBattleListLargeImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gadget\ucHeading.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucHeading.Designer.cs">
+      <DependentUpon>ucHeading.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\ucTotalTanks.cs">
       <SubType>UserControl</SubType>
@@ -659,6 +671,9 @@
     <EmbeddedResource Include="Gadget\paramBattleModeOnly.resx">
       <DependentUpon>paramBattleModeOnly.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramText.resx">
+      <DependentUpon>paramText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramTimeSpan.resx">
       <DependentUpon>paramTimeSpan.cs</DependentUpon>
     </EmbeddedResource>
@@ -706,6 +721,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucBattleListLargeImages.resx">
       <DependentUpon>ucBattleListLargeImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucHeading.resx">
+      <DependentUpon>ucHeading.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTotalTanks.resx">
       <DependentUpon>ucTotalTanks.cs</DependentUpon>
