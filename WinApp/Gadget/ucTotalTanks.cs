@@ -13,9 +13,12 @@ namespace WinApp.Gadget
 {
 	public partial class ucTotalTanks : UserControl
 	{
-		public ucTotalTanks()
+        string _battleMode = "";
+        
+        public ucTotalTanks(string battleMode)
 		{
 			InitializeComponent();
+            _battleMode = battleMode;
 		}
 
 		protected override void OnInvalidated(InvalidateEventArgs e)
@@ -32,25 +35,48 @@ namespace WinApp.Gadget
 		private void DataBind()
 		{
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
-			string sql =
-				"SELECT  tankType.shortName AS Type, COUNT(playerTank.id) AS Tanks, SUM(playerTankBattleTotalsView.battles) AS Battles, SUM(playerTankBattleTotalsView.wins) As Victory " +
-				"FROM    playerTank INNER JOIN " +
-				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
-				"        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
-				"        playerTankBattleTotalsView ON playerTank.id = playerTankBattleTotalsView.playerTankId " +
-				"WHERE        (playerTank.playerId = @playerId) " +
-				"GROUP BY tankType.shortName ";
+            string sql = "";
+            if (_battleMode == "")
+            {
+                sql =
+                    "SELECT  tankType.shortName AS Type, COUNT(playerTank.id) AS Tanks, SUM(playerTankBattleTotalsView.battles) AS Battles, SUM(playerTankBattleTotalsView.wins) As Victory " +
+                    "FROM    playerTank INNER JOIN " +
+                    "        tank ON playerTank.tankId = tank.id INNER JOIN " +
+                    "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+                    "        playerTankBattleTotalsView ON playerTank.id = playerTankBattleTotalsView.playerTankId " +
+                    "WHERE        (playerTank.playerId = @playerId) " +
+                    "GROUP BY tankType.shortName ";
+            }
+            else
+            {
+                sql =
+                    "SELECT  tankType.shortName AS Type, COUNT(playerTank.id) AS Tanks, SUM(playerTankBattle.battles) AS Battles, SUM(playerTankBattle.wins) As Victory " +
+                    "FROM    playerTank INNER JOIN " +
+                    "        tank ON playerTank.tankId = tank.id INNER JOIN " +
+                    "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+                    "        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId  " +
+                    "WHERE        (playerTank.playerId = @playerId) AND playerTankBattle.battleMode = @battleMode " +
+                    "GROUP BY tankType.shortName ";
+            }
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@battleMode", _battleMode, DB.SqlDataType.VarChar);
 			DataTable dt = DB.FetchData(sql);
 			// create table structure
-			sql = "Select 'Tanks owned' as Data, CAST(0 AS FLOAT) as 'Light', CAST(0 AS FLOAT) as 'Medium', CAST(0 AS FLOAT) as 'Heavy', CAST(0 AS FLOAT) as 'TD', CAST(0 AS FLOAT) as 'SPG', CAST(0 AS FLOAT) as 'Total' ";
+            string battleModeText = "All Battle Modes";
+            string tankCountText = "Tanks Owned";
+            if (_battleMode != "")
+            {
+                battleModeText = BattleMode.GetItemFromSqlName(_battleMode).Name;
+                tankCountText = "Tanks Used";
+            }
+            sql = "Select '" + tankCountText + "' as '" + battleModeText + "', CAST(0 AS FLOAT) as 'Light', CAST(0 AS FLOAT) as 'Medium', CAST(0 AS FLOAT) as 'Heavy', CAST(0 AS FLOAT) as 'TD', CAST(0 AS FLOAT) as 'SPG', CAST(0 AS FLOAT) as 'Total' ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable dtResult = DB.FetchData(sql);
 			DataRow drBattles = dtResult.NewRow();
-			drBattles["Data"] = "Battle Count";
+            drBattles[battleModeText] = "Battle Count";
 			dtResult.Rows.Add(drBattles);
 			DataRow drWR = dtResult.NewRow();
-			drWR["Data"] = "Win Rate";
+            drWR[battleModeText] = "Win Rate";
 			dtResult.Rows.Add(drWR);
 			dtResult.AcceptChanges();
 			// Populate data into result table
@@ -91,8 +117,8 @@ namespace WinApp.Gadget
 			dataGridView1.DataSource = dtResult;
 
 			// Text cols
-			dataGridView1.Columns["Data"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridView1.Columns["Data"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns[battleModeText].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns[battleModeText].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			// No sorting
 			for (int i = 0; i < dataGridView1.Columns.Count; i++)
 			{
@@ -108,13 +134,13 @@ namespace WinApp.Gadget
 			// No resize and Right align numbers
 			dataGridView1.Columns[0].Resizable = DataGridViewTriState.False;
 			// Finish
-			dataGridView1.Columns[0].Width = 95;
-			dataGridView1.Columns[1].Width = 53;
-			dataGridView1.Columns[2].Width = 53;
-			dataGridView1.Columns[3].Width = 53;
-			dataGridView1.Columns[4].Width = 53;
-			dataGridView1.Columns[5].Width = 53;
-			dataGridView1.Columns[6].Width = 55;
+			dataGridView1.Columns[0].Width = 119;
+			dataGridView1.Columns[1].Width = 49;
+			dataGridView1.Columns[2].Width = 49;
+			dataGridView1.Columns[3].Width = 49;
+			dataGridView1.Columns[4].Width = 49;
+			dataGridView1.Columns[5].Width = 49;
+			dataGridView1.Columns[6].Width = 53;
 		}
 
 		private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

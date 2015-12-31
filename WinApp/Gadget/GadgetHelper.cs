@@ -363,9 +363,17 @@ namespace WinApp.Gadget
                         break;
                     
                     // Grids
-                    case "ucTotalTanks": uc = new Gadget.ucTotalTanks(); break;
-					case "ucBattleTypes": uc = new Gadget.ucBattleTypes(); break;
-					case "ucBattleListLargeImages": uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param[0]), Convert.ToInt32(param[1])); break;
+                    case "ucTotalTanks":
+                        uc = new Gadget.ucTotalTanks(param0); 
+                        break;
+
+					case "ucBattleTypes": 
+                        uc = new Gadget.ucBattleTypes(); 
+                        break;
+
+					case "ucBattleListLargeImages": 
+                        uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param0), Convert.ToInt32(param1)); 
+                        break;
                     
                     // Charts
                     case "ucChartBattle": // Not in use

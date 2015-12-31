@@ -425,6 +425,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\paramBattleModeOnly.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramBattleModeOnly.Designer.cs">
+      <DependentUpon>paramBattleModeOnly.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\paramTimeSpan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -649,6 +655,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramBattleModeOnly.resx">
+      <DependentUpon>paramBattleModeOnly.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramTimeSpan.resx">
       <DependentUpon>paramTimeSpan.cs</DependentUpon>

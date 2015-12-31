@@ -41,8 +41,22 @@ namespace WinApp.Gadget
 		{
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
 			// Create table structure, and get total number of used tanks to show in first row
+            string colRandom = "Random";
+            string colTeamUR = "Team-U";
+            string colTeamR = "Team-R";
+            string colSkirm = "Skirmish";
+            string colStrong = "Strongh";
+            string colGlbMap = "Glb-Map";
+            string colTotal = "Total";
 			string sql =
-				"Select 'Tanks used' as Data, cast(0 as float) as 'Random/TC', cast(0 as float) as 'Team', cast(0 as float) as 'Historical', cast(0 as float) as 'Skirmishes', cast(0 as float) as 'Stronghold', cast(count(playerTank.tankId) as float) as Total " +
+                "Select 'Tanks used' as Data, " +
+                "  cast(0 as float) as '" + colRandom + "', " +
+                "  cast(0 as float) as '" + colTeamUR + "', " +
+                "  cast(0 as float) as '" + colTeamR + "', " +
+                "  cast(0 as float) as '" + colSkirm + "', " +
+                "  cast(0 as float) as '" + colStrong + "', " +
+                "  cast(0 as float) as '" + colGlbMap + "', " +
+                "  cast(count(playerTank.tankId) as float) as '" + colTotal + "' " +
 				"from playerTank " +
 				"where playerTank.playerId=@playerId and tankid in (" +
 				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId)";
@@ -60,26 +74,26 @@ namespace WinApp.Gadget
 			DataTable dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedRandom = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedRandom = Convert.ToInt32(dtValue.Rows[0][0]);
-			// 7
-			sql =
-				"Select count(playerTank.tankId) " +
-				"from playerTank " +
-				"where playerTank.playerId=@playerId and tankid in (" +
-				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7')";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
-			int usedTeam = 0;
-			if (dtValue.Rows[0][0] != DBNull.Value) usedTeam = Convert.ToInt32(dtValue.Rows[0][0]);
-			// hist
-			sql =
-				"Select count(playerTank.tankId) " +
-				"from playerTank " +
-				"where playerTank.playerId=@playerId and tankid in (" +
-				"  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'Historical')";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
-			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
-			int usedHistorical = 0;
-			if (dtValue.Rows[0][0] != DBNull.Value) usedHistorical = Convert.ToInt32(dtValue.Rows[0][0]);
+            // 7
+            sql =
+                "Select count(playerTank.tankId) " +
+                "from playerTank " +
+                "where playerTank.playerId=@playerId and tankid in (" +
+                "  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7')";
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+            dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+            int usedTeam = 0;
+            if (dtValue.Rows[0][0] != DBNull.Value) usedTeam = Convert.ToInt32(dtValue.Rows[0][0]);
+            // 7Ranked
+            sql =
+                "Select count(playerTank.tankId) " +
+                "from playerTank " +
+                "where playerTank.playerId=@playerId and tankid in (" +
+                "  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = '7Ranked')";
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+            dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+            int usedTeamRanked = 0;
+            if (dtValue.Rows[0][0] != DBNull.Value) usedTeamRanked = Convert.ToInt32(dtValue.Rows[0][0]);
 			// Skirmishes
 			sql =
 				"Select count(playerTank.tankId) " +
@@ -100,13 +114,25 @@ namespace WinApp.Gadget
 			dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
 			int usedStronghold = 0;
 			if (dtValue.Rows[0][0] != DBNull.Value) usedStronghold = Convert.ToInt32(dtValue.Rows[0][0]);
+            // Global Map
+            sql =
+                "Select count(playerTank.tankId) " +
+                "from playerTank " +
+                "where playerTank.playerId=@playerId and tankid in (" +
+                "  select tankid from playerTankBattle ptb inner join playerTank pt on ptb.PlayerTankId = pt.id and pt.playerId=@playerId where ptb.battleMode = 'GlobalMap')";
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+            dtValue = DB.FetchData(sql, Config.Settings.showDBErrors);
+            int usedGlobalMap = 0;
+            if (dtValue.Rows[0][0] != DBNull.Value) usedGlobalMap = Convert.ToInt32(dtValue.Rows[0][0]);
+
 
 			// Add usage
-			dt.Rows[0]["Random/TC"] = usedRandom;
-			dt.Rows[0]["Team"] = usedTeam;
-			dt.Rows[0]["Historical"] = usedHistorical;
-			dt.Rows[0]["Skirmishes"] = usedSkirmishes;
-			dt.Rows[0]["Stronghold"] = usedStronghold;
+			dt.Rows[0][colRandom] = usedRandom;
+			dt.Rows[0][colTeamUR] = usedTeam;
+			dt.Rows[0][colTeamR] = usedTeamRanked;
+			dt.Rows[0][colSkirm] = usedSkirmishes;
+            dt.Rows[0][colStrong] = usedStronghold;
+            dt.Rows[0][colGlbMap] = usedGlobalMap;
 
 			// get overall stats all battles
 			double[] wr = new double[9];
@@ -148,7 +174,7 @@ namespace WinApp.Gadget
 					wr[1] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
 				}
 
-				// Overall stats team
+				// Overall stats team unranked
 				sql =
 					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
 					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
@@ -167,24 +193,25 @@ namespace WinApp.Gadget
 					wr[2] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
 				}
 
-				// Overall stats historical
-				sql =
-					"select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
-					"  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
-					"from playerTankBattle ptb left join " +
-					"  playerTank pt on ptb.playerTankId=pt.id left join " +
-					"  tank t on pt.tankId = t.id " +
-					"where pt.playerId=@playerId and ptb.battleMode='Historical'";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				dtStats = DB.FetchData(sql);
-				stats = dtStats.Rows[0];
-				if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
-				{
-					// Battle count
-					battleCount[3] = Convert.ToInt32(stats["battles"]);
-					// win rate
-					wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
-				}
+                // Overall stats team ranked
+                sql =
+                    "select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+                    "  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+                    "from playerTankBattle ptb left join " +
+                    "  playerTank pt on ptb.playerTankId=pt.id left join " +
+                    "  tank t on pt.tankId = t.id " +
+                    "where pt.playerId=@playerId and ptb.battleMode='7Ranked'";
+                DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                dtStats = DB.FetchData(sql);
+                stats = dtStats.Rows[0];
+                if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+                {
+                    // Battle count
+                    battleCount[3] = Convert.ToInt32(stats["battles"]);
+                    // win rate
+                    wr[3] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+                }
+
 
 				// Overall stats Skirmishes
 				sql =
@@ -224,26 +251,47 @@ namespace WinApp.Gadget
 					wr[5] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
 				}
 
+                // Overall stats Stronghold
+                sql =
+                    "select sum(ptb.battles) as battles, sum(ptb.dmg) as dmg, sum (ptb.spot) as spot, sum (ptb.frags) as frags, " +
+                    "  sum (ptb.def) as def, sum (cap) as cap, sum(t.tier * ptb.battles) as tier, sum(ptb.wins) as wins " +
+                    "from playerTankBattle ptb left join " +
+                    "  playerTank pt on ptb.playerTankId=pt.id left join " +
+                    "  tank t on pt.tankId = t.id " +
+                    "where pt.playerId=@playerId and ptb.battleMode='GlobalMap'";
+                DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                dtStats = DB.FetchData(sql);
+                stats = dtStats.Rows[0];
+                if (stats["battles"] != DBNull.Value && Convert.ToInt32(stats["battles"]) > 0)
+                {
+                    // Battle count
+                    battleCount[6] = Convert.ToInt32(stats["battles"]);
+                    // win rate
+                    wr[6] = (Convert.ToDouble(stats["wins"]) / Convert.ToDouble(stats["battles"]) * 100);
+                }
+
 				// Add Data to dataTable
 				DataRow dr = dt.NewRow();
 				dr["Data"] = "Battle count";
-				dr["Random/TC"] = battleCount[1];
-				dr["Team"] = ShowDBnullIfZero(battleCount[2], Convert.ToInt32(battleCount[2]));
-				dr["Historical"] = ShowDBnullIfZero(battleCount[3], Convert.ToInt32(battleCount[3]));
-				dr["Skirmishes"] = ShowDBnullIfZero(battleCount[4], Convert.ToInt32(battleCount[4]));
-				dr["Stronghold"] = ShowDBnullIfZero(battleCount[5], Convert.ToInt32(battleCount[5]));
-				dr["Total"] = battleCount[0].ToString();
+				dr[colRandom] = battleCount[1];
+				dr[colTeamUR] = ShowDBnullIfZero(battleCount[2], Convert.ToInt32(battleCount[2]));
+				dr[colTeamR] = ShowDBnullIfZero(battleCount[3], Convert.ToInt32(battleCount[3]));
+				dr[colSkirm] = ShowDBnullIfZero(battleCount[4], Convert.ToInt32(battleCount[4]));
+                dr[colStrong] = ShowDBnullIfZero(battleCount[5], Convert.ToInt32(battleCount[5]));
+                dr[colGlbMap] = ShowDBnullIfZero(battleCount[6], Convert.ToInt32(battleCount[6]));
+                dr[colTotal] = battleCount[0].ToString();
 				dt.Rows.Add(dr);
 
 				// Add Winrate
 				dr = dt.NewRow();
 				dr["Data"] = "Win rate";
-				dr["Random/TC"] = Math.Round(wr[1], 2);
-				dr["Team"] = ShowDBnullIfZero(Math.Round(wr[2], 2), Convert.ToInt32(battleCount[2]));
-				dr["Historical"] = ShowDBnullIfZero(Math.Round(wr[3], 2), Convert.ToInt32(battleCount[3]));
-				dr["Skirmishes"] = ShowDBnullIfZero(Math.Round(wr[4], 2), Convert.ToInt32(battleCount[4]));
-				dr["Stronghold"] = ShowDBnullIfZero(Math.Round(wr[5], 2), Convert.ToInt32(battleCount[5]));
-				dr["Total"] = Math.Round(wr[0], 2);
+                dr[colRandom] = Math.Round(wr[1], 2);
+                dr[colTeamUR] = ShowDBnullIfZero(Math.Round(wr[2], 2), Convert.ToInt32(battleCount[2]));
+                dr[colTeamR] = ShowDBnullIfZero(Math.Round(wr[3], 2), Convert.ToInt32(battleCount[3]));
+                dr[colSkirm] = ShowDBnullIfZero(Math.Round(wr[4], 2), Convert.ToInt32(battleCount[4]));
+                dr[colStrong] = ShowDBnullIfZero(Math.Round(wr[5], 2), Convert.ToInt32(battleCount[5]));
+                dr[colGlbMap] = ShowDBnullIfZero(Math.Round(wr[6], 2), Convert.ToInt32(battleCount[6]));
+                dr[colTotal] = Math.Round(wr[0], 2);
 				dt.Rows.Add(dr);
 			}
 			dataGridView1.DataSource = dt;
@@ -266,12 +314,13 @@ namespace WinApp.Gadget
 			// No resize and Right align numbers
 			dataGridView1.Columns[0].Resizable = DataGridViewTriState.False;
 			// Finish
-			dataGridView1.Columns[0].Width = 88;
-			dataGridView1.Columns[1].Width = 71;
-			dataGridView1.Columns[2].Width = 64;
-			dataGridView1.Columns[3].Width = 64;
-			dataGridView1.Columns[4].Width = 64;
-			dataGridView1.Columns[5].Width = 64;
+			dataGridView1.Columns[0].Width = 70;
+			dataGridView1.Columns[1].Width = 56;
+            dataGridView1.Columns[2].Width = 56;
+            dataGridView1.Columns[3].Width = 56;
+            dataGridView1.Columns[4].Width = 60;
+            dataGridView1.Columns[5].Width = 60;
+            dataGridView1.Columns[6].Width = 60;
 		}
 
 		private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

@@ -4997,6 +4997,9 @@ namespace WinApp.Forms
 				case "ucGaugeDmgCausedReceived":
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
+                case "ucTotalTanks":
+                    frm = new Gadget.paramBattleModeOnly(gadgetId);
+                    break;
 			}
 			if (frm != null)
 				frm.ShowDialog(this);
