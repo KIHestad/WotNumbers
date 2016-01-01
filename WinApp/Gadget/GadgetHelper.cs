@@ -308,8 +308,12 @@ namespace WinApp.Gadget
 		public static bool IsGadgetRezisable(string gadgetName)
 		{
 			bool resizable = false;
-            if (gadgetName == "ucChartTier" || gadgetName == "ucChartNation" || gadgetName == "ucChartTankType" || gadgetName == "ucHeading")
-				resizable = true;
+            if (gadgetName == "ucChartTier" || 
+                gadgetName == "ucChartNation" || 
+                gadgetName == "ucChartTankType" || 
+                gadgetName == "ucHeading" ||
+                gadgetName == "ucTotalStats")
+				    resizable = true;
 			return resizable;
 		}
 
@@ -374,6 +378,11 @@ namespace WinApp.Gadget
 					case "ucBattleListLargeImages": 
                         uc = new Gadget.ucBattleListLargeImages(Convert.ToInt32(param0), Convert.ToInt32(param1)); 
                         break;
+
+                    case "ucTotalStats":
+                        uc = new Gadget.ucTotalStats(param);
+                        break;
+
                     
                     // Charts
                     case "ucChartBattle": // Not in use
@@ -422,15 +431,16 @@ namespace WinApp.Gadget
 				case "ucGaugeWN8": name = "WN8 Gauge"; break;
 				case "ucGaugeWN7": name = "WN7 Gauge"; break;
 				case "ucGaugeEFF": name = "Efficiency Gauge"; break;
-				case "ucTotalTanks": name = "Total Type Stats Grid"; break;
-				case "ucBattleTypes": name = "Battle Mode Stats Grid"; break;
-				case "ucBattleListLargeImages": name = "Last Battles Large Images"; break;
-				case "ucChartBattle": name = "Chart per Battle"; break;
-				case "ucChartTier": name = "Chart per Battle"; break;
-				case "ucChartNation": name = "Chart per Nation"; break;
-				case "ucChartTankType": name = "Chart per Tank Type"; break;
+                case "ucTotalStats": name = "Total Stats Grid"; break;
+                case "ucTotalTanks": name = "Tank Type Grid"; break;
+				case "ucBattleTypes": name = "Battle Mode Grid"; break;
+				case "ucBattleListLargeImages": name = "Last Battles"; break;
+				case "ucChartBattle": name = "Battle Chart (demo)"; break;
+				case "ucChartTier": name = "Battle Count per Tier"; break;
+                case "ucChartNation": name = "Battle Count per Nation"; break;
+                case "ucChartTankType": name = "Battle Count per Tank Type"; break;
 				case "ucGaugeKillDeath": name = "Kill / Death Ratio Gauge"; break;
-				case "ucGaugeDmgCausedReceived": name = "Damage Caused / Received"; break;
+				case "ucGaugeDmgCausedReceived": name = "Damage Caused / Received Gauge"; break;
                 case "ucHeading": name = "Heading"; break;
 			}
 			return name;

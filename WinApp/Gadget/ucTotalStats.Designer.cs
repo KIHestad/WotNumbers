@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Gadget
 {
-    partial class ucHeading
+    partial class ucTotalStats
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,40 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.panelMain = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // label1
+            // panelMain
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.panelMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-            this.label1.Location = new System.Drawing.Point(1, 1);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(238, 24);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Heading";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.panelMain.Location = new System.Drawing.Point(1, 1);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(238, 118);
+            this.panelMain.TabIndex = 0;
             // 
-            // ucHeading
+            // ucTotalStats
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.Controls.Add(this.label1);
-            this.MinimumSize = new System.Drawing.Size(40, 26);
-            this.Name = "ucHeading";
-            this.Size = new System.Drawing.Size(240, 26);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucHeading_Paint);
+            this.Controls.Add(this.panelMain);
+            this.MinimumSize = new System.Drawing.Size(100, 40);
+            this.Name = "ucTotalStats";
+            this.Size = new System.Drawing.Size(240, 120);
+            this.Load += new System.EventHandler(this.ucTotalStats_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucTotalStats_Paint);
+            this.Resize += new System.EventHandler(this.ucTotalStats_Resize);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panelMain;
     }
 }

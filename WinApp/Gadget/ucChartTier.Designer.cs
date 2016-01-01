@@ -197,6 +197,7 @@
             this.Controls.Add(this.btnTotal);
             this.Controls.Add(this.lblChartType);
             this.Controls.Add(this.chart1);
+            this.MinimumSize = new System.Drawing.Size(100, 40);
             this.Name = "ucChartTier";
             this.Size = new System.Drawing.Size(300, 180);
             this.Load += new System.EventHandler(this.ucChart_Load);

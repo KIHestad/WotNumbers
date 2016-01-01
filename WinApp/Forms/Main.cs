@@ -4732,7 +4732,7 @@ namespace WinApp.Forms
 						// pointing on same gadget
 						actionText = " - Selected gadget: " + gadgetPontedAt.name.ToString();
 					}
-					// Check if resizable
+					// Check if resizable to show correct cursor
 					if (gadgetPontedAt.resizable)
 					{
 						if (e.X > gadgetPontedAt.control.Left + gadgetPontedAt.control.Width - 20 && e.Y > gadgetPontedAt.control.Top + gadgetPontedAt.control.Height - 20)
@@ -4760,7 +4760,7 @@ namespace WinApp.Forms
 			}
 			else if (!gadgetLockMode)
 			{
-				// Moving selected gadget
+				// Moving or rezising selected gadget
 				int gridSize = 10;
 				if (Cursor == Cursors.SizeAll)
 				{
@@ -4773,7 +4773,7 @@ namespace WinApp.Forms
 					actionText = " - Resize horizontal gadget: " + gadgetPontedAt.name.ToString();
 					gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
 					int newSize = gadgetPontedAt.width + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
-					if (newSize > 100) gadgetPontedAt.control.Width = newSize;
+					gadgetPontedAt.control.Width = newSize;
 					gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
 				}
 				else if (Cursor == Cursors.SizeNS)
@@ -4781,7 +4781,7 @@ namespace WinApp.Forms
 					actionText = " - Resize vertical gadget: " + gadgetPontedAt.name.ToString();
 					gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
 					int newSize = gadgetPontedAt.height + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
-					if (newSize > 100) gadgetPontedAt.control.Height = newSize;
+                    gadgetPontedAt.control.Height = newSize;
 					gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
 				}
 				else if (Cursor == Cursors.SizeNWSE)
@@ -4789,9 +4789,9 @@ namespace WinApp.Forms
 					actionText = " - Resize gadget: " + gadgetPontedAt.name.ToString();
 					gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
 					int newSize = gadgetPontedAt.height + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
-					if (newSize > 100) gadgetPontedAt.control.Height = newSize;
+					gadgetPontedAt.control.Height = newSize;
 					newSize = gadgetPontedAt.width + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
-					if (newSize > 100) gadgetPontedAt.control.Width = newSize;
+					gadgetPontedAt.control.Width = newSize;
 					gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
 				}
 			}
@@ -5028,6 +5028,9 @@ namespace WinApp.Forms
                     break;
                 case "ucHeading":
                     frm = new Gadget.paramText(gadgetId);
+                    break;
+                case "ucTotalStats":
+                    frm = new Gadget.paramTotalStats(gadgetId);
                     break;
 			}
 			if (frm != null)

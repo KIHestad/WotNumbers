@@ -31,10 +31,10 @@
             this.components = new System.ComponentModel.Container();
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             this.badForm1 = new BadForm();
+            this.txtText = new BadTextBox();
             this.btnCancel = new BadButton();
             this.btnSelect = new BadButton();
             this.badLabel1 = new BadLabel();
-            this.txtText = new BadTextBox();
             this.badForm1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +64,20 @@
             this.badForm1.Text = "Parameter";
             this.badForm1.TitleHeight = 26;
             // 
+            // txtText
+            // 
+            this.txtText.HasFocus = false;
+            this.txtText.Image = null;
+            this.txtText.Location = new System.Drawing.Point(62, 48);
+            this.txtText.MultilineAllow = false;
+            this.txtText.Name = "txtText";
+            this.txtText.PasswordChar = '\0';
+            this.txtText.ReadOnly = false;
+            this.txtText.Size = new System.Drawing.Size(175, 23);
+            this.txtText.TabIndex = 4;
+            this.txtText.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtText.ToolTipText = "";
+            // 
             // btnCancel
             // 
             this.btnCancel.BlackButton = false;
@@ -86,7 +100,7 @@
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(64, 23);
             this.btnSelect.TabIndex = 2;
-            this.btnSelect.Text = "Select";
+            this.btnSelect.Text = "Save";
             this.btnSelect.ToolTipText = "";
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
@@ -101,20 +115,6 @@
             this.badLabel1.TabIndex = 0;
             this.badLabel1.Text = "Text:";
             this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // txtText
-            // 
-            this.txtText.HasFocus = false;
-            this.txtText.Image = null;
-            this.txtText.Location = new System.Drawing.Point(62, 48);
-            this.txtText.MultilineAllow = false;
-            this.txtText.Name = "txtText";
-            this.txtText.PasswordChar = '\0';
-            this.txtText.ReadOnly = false;
-            this.txtText.Size = new System.Drawing.Size(175, 23);
-            this.txtText.TabIndex = 4;
-            this.txtText.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtText.ToolTipText = "";
             // 
             // paramText
             // 

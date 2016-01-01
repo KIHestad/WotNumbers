@@ -182,8 +182,6 @@
             this.mGadgetChartTankType = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartNation = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddHeader = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetRedraw = new System.Windows.Forms.ToolStripMenuItem();
@@ -223,6 +221,12 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.gridsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetTotalStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1562,9 +1566,8 @@
             this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mGadgetGauges,
             this.mGadgetCharts,
+            this.gridsToolStripMenuItem,
             this.mGadgetAddHeader,
-            this.mGadgetAddBattleModeStats,
-            this.mGadgetAddTankTypeStats,
             this.mGadgetAddImage,
             this.toolStripSeparator8,
             this.mGadgetRedraw,
@@ -1583,6 +1586,7 @@
             // 
             this.mGadgetGauges.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mGadgetWR,
+            this.toolStripSeparator27,
             this.mGadgetWN8,
             this.mGadgetWN7,
             this.mGadgetEFF,
@@ -1590,7 +1594,7 @@
             this.mGadgetKillDeath,
             this.mGadgetDamageCausedReceived});
             this.mGadgetGauges.Name = "mGadgetGauges";
-            this.mGadgetGauges.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetGauges.Size = new System.Drawing.Size(178, 22);
             this.mGadgetGauges.Text = "Gauges";
             // 
             // mGadgetWR
@@ -1653,93 +1657,77 @@
             this.mGadgetChartTankType,
             this.mGadgetChartNation});
             this.mGadgetCharts.Name = "mGadgetCharts";
-            this.mGadgetCharts.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetCharts.Size = new System.Drawing.Size(178, 22);
             this.mGadgetCharts.Text = "Charts";
             // 
             // mGadgetChartTier
             // 
             this.mGadgetChartTier.Name = "mGadgetChartTier";
-            this.mGadgetChartTier.Size = new System.Drawing.Size(179, 22);
+            this.mGadgetChartTier.Size = new System.Drawing.Size(216, 22);
             this.mGadgetChartTier.Tag = "ucChartTier";
-            this.mGadgetChartTier.Text = "Group by Tier";
+            this.mGadgetChartTier.Text = "Battle Count per Tier";
             this.mGadgetChartTier.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetChartTankType
             // 
             this.mGadgetChartTankType.Name = "mGadgetChartTankType";
-            this.mGadgetChartTankType.Size = new System.Drawing.Size(179, 22);
+            this.mGadgetChartTankType.Size = new System.Drawing.Size(216, 22);
             this.mGadgetChartTankType.Tag = "ucChartTankType";
-            this.mGadgetChartTankType.Text = "Group by Tank Type";
+            this.mGadgetChartTankType.Text = "Battle Count per Tank Type";
             this.mGadgetChartTankType.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetChartNation
             // 
             this.mGadgetChartNation.Name = "mGadgetChartNation";
-            this.mGadgetChartNation.Size = new System.Drawing.Size(179, 22);
+            this.mGadgetChartNation.Size = new System.Drawing.Size(216, 22);
             this.mGadgetChartNation.Tag = "ucChartNation";
-            this.mGadgetChartNation.Text = "Group by Nation";
+            this.mGadgetChartNation.Text = "Battle Count per Nation";
             this.mGadgetChartNation.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetAddHeader
             // 
             this.mGadgetAddHeader.Name = "mGadgetAddHeader";
-            this.mGadgetAddHeader.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetAddHeader.Size = new System.Drawing.Size(178, 22);
             this.mGadgetAddHeader.Tag = "ucHeading";
             this.mGadgetAddHeader.Text = "Header";
             this.mGadgetAddHeader.Click += new System.EventHandler(this.mGadgetAdd);
             // 
-            // mGadgetAddBattleModeStats
-            // 
-            this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
-            this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(221, 22);
-            this.mGadgetAddBattleModeStats.Tag = "ucBattleTypes";
-            this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
-            this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetAdd);
-            // 
-            // mGadgetAddTankTypeStats
-            // 
-            this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
-            this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(221, 22);
-            this.mGadgetAddTankTypeStats.Tag = "ucTotalTanks";
-            this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
-            this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetAdd);
-            // 
             // mGadgetAddImage
             // 
             this.mGadgetAddImage.Name = "mGadgetAddImage";
-            this.mGadgetAddImage.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetAddImage.Size = new System.Drawing.Size(178, 22);
             this.mGadgetAddImage.Tag = "ucBattleListLargeImages";
-            this.mGadgetAddImage.Text = "Recent Battles Large Images";
+            this.mGadgetAddImage.Text = "Recent Battles";
             this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(175, 6);
             // 
             // mGadgetRedraw
             // 
             this.mGadgetRedraw.Name = "mGadgetRedraw";
-            this.mGadgetRedraw.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetRedraw.Size = new System.Drawing.Size(178, 22);
             this.mGadgetRedraw.Text = "Redraw all Gadgets";
             this.mGadgetRedraw.Click += new System.EventHandler(this.mGadgetRedraw_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(175, 6);
             // 
             // mGadgetReset
             // 
             this.mGadgetReset.Name = "mGadgetReset";
-            this.mGadgetReset.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetReset.Size = new System.Drawing.Size(178, 22);
             this.mGadgetReset.Text = "Reset to Default";
             this.mGadgetReset.Click += new System.EventHandler(this.mGadgetReset_Click);
             // 
             // mGadgetRemoveAll
             // 
             this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
-            this.mGadgetRemoveAll.Size = new System.Drawing.Size(221, 22);
+            this.mGadgetRemoveAll.Size = new System.Drawing.Size(178, 22);
             this.mGadgetRemoveAll.Text = "Remove all Gadgets";
             this.mGadgetRemoveAll.Click += new System.EventHandler(this.mGadgetRemoveAll_Click);
             // 
@@ -2118,6 +2106,51 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // gridsToolStripMenuItem
+            // 
+            this.gridsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mGadgetTotalStats,
+            this.toolStripSeparator26,
+            this.mGadgetAddBattleModeStats,
+            this.mGadgetAddTankTypeStats});
+            this.gridsToolStripMenuItem.Name = "gridsToolStripMenuItem";
+            this.gridsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.gridsToolStripMenuItem.Text = "Grids";
+            // 
+            // mGadgetTotalStats
+            // 
+            this.mGadgetTotalStats.Name = "mGadgetTotalStats";
+            this.mGadgetTotalStats.Size = new System.Drawing.Size(166, 22);
+            this.mGadgetTotalStats.Tag = "ucTotalStats";
+            this.mGadgetTotalStats.Text = "Total Stats";
+            this.mGadgetTotalStats.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // mGadgetAddBattleModeStats
+            // 
+            this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
+            this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(166, 22);
+            this.mGadgetAddBattleModeStats.Tag = "ucBattleTypes";
+            this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
+            this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // mGadgetAddTankTypeStats
+            // 
+            this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
+            this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(166, 22);
+            this.mGadgetAddTankTypeStats.Tag = "ucTotalTanks";
+            this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
+            this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // toolStripSeparator26
+            // 
+            this.toolStripSeparator26.Name = "toolStripSeparator26";
+            this.toolStripSeparator26.Size = new System.Drawing.Size(163, 6);
+            // 
+            // toolStripSeparator27
+            // 
+            this.toolStripSeparator27.Name = "toolStripSeparator27";
+            this.toolStripSeparator27.Size = new System.Drawing.Size(215, 6);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2272,12 +2305,10 @@
 		private System.Windows.Forms.ToolStripMenuItem mModeSkrimishes;
 		private System.Windows.Forms.ToolStripMenuItem mBattles2d;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripDropDownButton mGadget;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
+        private System.Windows.Forms.ToolStripDropDownButton mGadget;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetAddImage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetReset;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetReset;
 		private System.Windows.Forms.ToolStripDropDownButton mBattleGroup;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_No;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankAverage;
@@ -2340,6 +2371,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripButton mVBaddict;
         private System.Windows.Forms.ToolStripMenuItem mGadgetAddHeader;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
+        private System.Windows.Forms.ToolStripMenuItem gridsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStats;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
 	}
 }
 

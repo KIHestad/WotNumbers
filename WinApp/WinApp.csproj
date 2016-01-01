@@ -425,6 +425,12 @@
     <Compile Include="Forms\Test\ViewRange.Designer.cs">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\paramTotalStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gadget\paramTotalStats.Designer.cs">
+      <DependentUpon>paramTotalStats.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\paramBattleModeOnly.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -539,6 +545,12 @@
     </Compile>
     <Compile Include="Gadget\ucHeading.Designer.cs">
       <DependentUpon>ucHeading.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gadget\ucTotalStats.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucTotalStats.Designer.cs">
+      <DependentUpon>ucTotalStats.cs</DependentUpon>
     </Compile>
     <Compile Include="Gadget\ucTotalTanks.cs">
       <SubType>UserControl</SubType>
@@ -668,6 +680,9 @@
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\paramTotalStats.resx">
+      <DependentUpon>paramTotalStats.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramBattleModeOnly.resx">
       <DependentUpon>paramBattleModeOnly.cs</DependentUpon>
     </EmbeddedResource>
@@ -724,6 +739,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucHeading.resx">
       <DependentUpon>ucHeading.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucTotalStats.resx">
+      <DependentUpon>ucTotalStats.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucTotalTanks.resx">
       <DependentUpon>ucTotalTanks.cs</DependentUpon>

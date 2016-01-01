@@ -86,7 +86,7 @@
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(64, 23);
             this.btnSelect.TabIndex = 2;
-            this.btnSelect.Text = "Select";
+            this.btnSelect.Text = "Save";
             this.btnSelect.ToolTipText = "";
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
