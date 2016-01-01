@@ -431,6 +431,7 @@ namespace WinApp.Gadget
 				case "ucChartTankType": name = "Chart per Tank Type"; break;
 				case "ucGaugeKillDeath": name = "Kill / Death Ratio Gauge"; break;
 				case "ucGaugeDmgCausedReceived": name = "Damage Caused / Received"; break;
+                case "ucHeading": name = "Heading"; break;
 			}
 			return name;
 		}

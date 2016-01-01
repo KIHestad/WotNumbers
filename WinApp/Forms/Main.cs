@@ -4696,14 +4696,16 @@ namespace WinApp.Forms
 		}
 
 		//private GadgetHelper.GadgetItem lastSelectedGadget = null;
-		private GadgetHelper.GadgetItem selectedGadget = null; // current selected gadget
-		private bool moveOrRezizeMode = false;
-		
+		private GadgetHelper.GadgetItem gadgetPontedAt = null; // current gadget mouse pointer at
+        private GadgetHelper.GadgetItem gadgetSelected = null; // current gadget selected with mouse click
+		private bool gadgetMoveOrRezizeMode = false;
+        private bool gadgetLockMode = false;
+
 		private void panelEditor_MouseMove(object sender, MouseEventArgs e)
 		{
 			string actionText = "";
 			// Check if move or resize mode
-			if (!moveOrRezizeMode)
+			if (!gadgetMoveOrRezizeMode && !gadgetLockMode)
 			{
 				// Not moving or resizing , just selecting area
 				GadgetHelper.GadgetItem newSelectedGadget = GadgetHelper.FindGadgetFromLocation(e.X, e.Y);
@@ -4711,43 +4713,43 @@ namespace WinApp.Forms
 				if (newSelectedGadget != null)
 				{
 					// Yes, poining on gadget - check if pointing on new gadget
-					if (newSelectedGadget != selectedGadget)
+					if (newSelectedGadget != gadgetPontedAt)
 					{
 						// New gadget selected
-						if (selectedGadget != null)
+						if (gadgetPontedAt != null)
 						{
-							selectedGadget.control.BackColor = ColorTheme.FormBack; // Remove selected border from previous selected gadget
+							gadgetPontedAt.control.BackColor = ColorTheme.FormBack; // Remove selected border from previous selected gadget
 						}
-						selectedGadget = newSelectedGadget;
-						selectedGadget.control.BackColor = ColorTheme.FormBackSelectedGadget;
-						bool hasParam = GadgetHelper.HasGadetParameter(selectedGadget);
+						gadgetPontedAt = newSelectedGadget;
+						gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
+						bool hasParam = GadgetHelper.HasGadetParameter(gadgetPontedAt);
 						CreateGadgetContextMenu(hasParam);
 						panelMainArea.Refresh(); // force paint event
-						actionText = " - Selected gadget: " + selectedGadget.name.ToString();
+						actionText = " - Selected gadget: " + gadgetPontedAt.name.ToString();
 					}
 					else
 					{
 						// pointing on same gadget
-						actionText = " - Selected gadget: " + selectedGadget.name.ToString();
+						actionText = " - Selected gadget: " + gadgetPontedAt.name.ToString();
 					}
 					// Check if resizable
-					if (selectedGadget.resizable)
+					if (gadgetPontedAt.resizable)
 					{
-						if (e.X > selectedGadget.control.Left + selectedGadget.control.Width - 20 && e.Y > selectedGadget.control.Top + selectedGadget.control.Height - 20)
+						if (e.X > gadgetPontedAt.control.Left + gadgetPontedAt.control.Width - 20 && e.Y > gadgetPontedAt.control.Top + gadgetPontedAt.control.Height - 20)
 							Cursor = Cursors.SizeNWSE;
-						else if (e.X > selectedGadget.control.Left + selectedGadget.control.Width - 10)
+						else if (e.X > gadgetPontedAt.control.Left + gadgetPontedAt.control.Width - 10)
 							Cursor = Cursors.SizeWE;
-						else if (e.Y > selectedGadget.control.Top + selectedGadget.control.Height - 10)
+						else if (e.Y > gadgetPontedAt.control.Top + gadgetPontedAt.control.Height - 10)
 							Cursor = Cursors.SizeNS;
 					}
 				}
 				else
 				{
 					// No, poining on background
-					if (selectedGadget != null)
+					if (gadgetPontedAt != null)
 					{
-						selectedGadget.control.BackColor = ColorTheme.FormBack;
-						selectedGadget = null;
+						gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
+						gadgetPontedAt = null;
 						panelMainArea.ContextMenuStrip = null;
 						panelMainArea.Refresh(); // force paint event
 					}
@@ -4756,41 +4758,41 @@ namespace WinApp.Forms
 						Cursor = Cursors.Default;
 				}
 			}
-			else
+			else if (!gadgetLockMode)
 			{
 				// Moving selected gadget
 				int gridSize = 10;
 				if (Cursor == Cursors.SizeAll)
 				{
-					selectedGadget.control.Top = selectedGadgetTop + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
-					selectedGadget.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
-					actionText = " - Moving gadget: " + selectedGadget.name.ToString();
+					gadgetPontedAt.control.Top = selectedGadgetTop + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
+					gadgetPontedAt.control.Left = selectedGadgetLeft + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
+					actionText = " - Moving gadget: " + gadgetPontedAt.name.ToString();
 				}
 				else if (Cursor == Cursors.SizeWE)
 				{
-					actionText = " - Resize horizontal gadget: " + selectedGadget.name.ToString();
-					selectedGadget.control.BackColor = ColorTheme.FormBack;
-					int newSize = selectedGadget.width + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
-					if (newSize > 100) selectedGadget.control.Width = newSize;
-					selectedGadget.control.BackColor = ColorTheme.FormBackSelectedGadget;
+					actionText = " - Resize horizontal gadget: " + gadgetPontedAt.name.ToString();
+					gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
+					int newSize = gadgetPontedAt.width + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
+					if (newSize > 100) gadgetPontedAt.control.Width = newSize;
+					gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
 				}
 				else if (Cursor == Cursors.SizeNS)
 				{
-					actionText = " - Resize vertical gadget: " + selectedGadget.name.ToString();
-					selectedGadget.control.BackColor = ColorTheme.FormBack;
-					int newSize = selectedGadget.height + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
-					if (newSize > 100) selectedGadget.control.Height = newSize;
-					selectedGadget.control.BackColor = ColorTheme.FormBackSelectedGadget;
+					actionText = " - Resize vertical gadget: " + gadgetPontedAt.name.ToString();
+					gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
+					int newSize = gadgetPontedAt.height + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
+					if (newSize > 100) gadgetPontedAt.control.Height = newSize;
+					gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
 				}
 				else if (Cursor == Cursors.SizeNWSE)
 				{
-					actionText = " - Resize gadget: " + selectedGadget.name.ToString();
-					selectedGadget.control.BackColor = ColorTheme.FormBack;
-					int newSize = selectedGadget.height + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
-					if (newSize > 100) selectedGadget.control.Height = newSize;
-					newSize = selectedGadget.width + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
-					if (newSize > 100) selectedGadget.control.Width = newSize;
-					selectedGadget.control.BackColor = ColorTheme.FormBackSelectedGadget;
+					actionText = " - Resize gadget: " + gadgetPontedAt.name.ToString();
+					gadgetPontedAt.control.BackColor = ColorTheme.FormBack;
+					int newSize = gadgetPontedAt.height + (Convert.ToInt32((Cursor.Position.Y - mouseDownY) / gridSize) * gridSize);
+					if (newSize > 100) gadgetPontedAt.control.Height = newSize;
+					newSize = gadgetPontedAt.width + (Convert.ToInt32((Cursor.Position.X - mouseDownX) / gridSize) * gridSize);
+					if (newSize > 100) gadgetPontedAt.control.Width = newSize;
+					gadgetPontedAt.control.BackColor = ColorTheme.FormBackSelectedGadget;
 				}
 			}
 			// Show mouse position
@@ -4804,17 +4806,17 @@ namespace WinApp.Forms
 		
 		private void panelEditor_MouseDown(object sender, MouseEventArgs e)
 		{
-			if (e.Button == System.Windows.Forms.MouseButtons.Left && selectedGadget != null)
+			if (e.Button == System.Windows.Forms.MouseButtons.Left && gadgetPontedAt != null)
 			{
 				// move or resize gadget mode
-				moveOrRezizeMode = true;
-				if (selectedGadget.resizable)
+				gadgetMoveOrRezizeMode = true;
+				if (gadgetPontedAt.resizable)
 				{
-					if (e.X > (selectedGadget.control.Left + selectedGadget.control.Width - 20) && e.Y > (selectedGadget.control.Top + selectedGadget.control.Height - 20))
+					if (e.X > (gadgetPontedAt.control.Left + gadgetPontedAt.control.Width - 20) && e.Y > (gadgetPontedAt.control.Top + gadgetPontedAt.control.Height - 20))
 						Cursor = Cursors.SizeNWSE;
-					else if (e.X > (selectedGadget.control.Left + selectedGadget.control.Width - 10))
+					else if (e.X > (gadgetPontedAt.control.Left + gadgetPontedAt.control.Width - 10))
 						Cursor = Cursors.SizeWE;
-					else if (e.Y > (selectedGadget.control.Top + selectedGadget.control.Height - 10))
+					else if (e.Y > (gadgetPontedAt.control.Top + gadgetPontedAt.control.Height - 10))
 						Cursor = Cursors.SizeNS;
 					else
 						Cursor = Cursors.SizeAll;
@@ -4826,39 +4828,39 @@ namespace WinApp.Forms
 				// Remeber position
 				mouseDownX = Cursor.Position.X;
 				mouseDownY = Cursor.Position.Y;
-				selectedGadgetTop = selectedGadget.control.Top;
-				selectedGadgetLeft = selectedGadget.control.Left;
-				selectedGadget.control.BringToFront();
+				selectedGadgetTop = gadgetPontedAt.control.Top;
+				selectedGadgetLeft = gadgetPontedAt.control.Left;
+				gadgetPontedAt.control.BringToFront();
 			}
-			if (e.Button == System.Windows.Forms.MouseButtons.Right && selectedGadget != null)
+			if (e.Button == System.Windows.Forms.MouseButtons.Right && gadgetPontedAt != null)
 			{
 				// move mode off
-				moveOrRezizeMode = false;
+				gadgetMoveOrRezizeMode = false;
 				Cursor = Cursors.Default;
 			}
 		}
 
 		private void panelEditor_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (selectedGadget != null)
+			if (gadgetPontedAt != null)
 			{
 				// Save new location if moved 
-				if (selectedGadget.posY != selectedGadget.control.Top || selectedGadget.posX != selectedGadget.control.Left)
+				if (gadgetPontedAt.posY != gadgetPontedAt.control.Top || gadgetPontedAt.posX != gadgetPontedAt.control.Left)
 				{
-					GadgetHelper.SaveGadgetPosition(selectedGadget.id, selectedGadget.control.Left, selectedGadget.control.Top);
-					selectedGadget.posY = selectedGadget.control.Top;
-					selectedGadget.posX = selectedGadget.control.Left;
+					GadgetHelper.SaveGadgetPosition(gadgetPontedAt.id, gadgetPontedAt.control.Left, gadgetPontedAt.control.Top);
+					gadgetPontedAt.posY = gadgetPontedAt.control.Top;
+					gadgetPontedAt.posX = gadgetPontedAt.control.Left;
 				}
 				// Save new size if resized
-				if (selectedGadget.width != selectedGadget.control.Width || selectedGadget.height != selectedGadget.control.Height)
+				if (gadgetPontedAt.width != gadgetPontedAt.control.Width || gadgetPontedAt.height != gadgetPontedAt.control.Height)
 				{
-					selectedGadget.height = selectedGadget.control.Height;
-					selectedGadget.width = selectedGadget.control.Width;
-					GadgetHelper.SaveGadgetSize(selectedGadget);
+					gadgetPontedAt.height = gadgetPontedAt.control.Height;
+					gadgetPontedAt.width = gadgetPontedAt.control.Width;
+					GadgetHelper.SaveGadgetSize(gadgetPontedAt);
 				}
 			}
 			// move mode off
-			moveOrRezizeMode = false;
+			gadgetMoveOrRezizeMode = false;
 		}
 		
 
@@ -4882,6 +4884,7 @@ namespace WinApp.Forms
 			gadgetMainPopup_Customize.Click += new EventHandler(gadgetMainPopup_Customize_Click);
 			// Add events
 			gadgetMainPopup.Opening += new System.ComponentModel.CancelEventHandler(gadgetMainPopup_Opening);
+            gadgetMainPopup.Closed += new ToolStripDropDownClosedEventHandler(gadgetMainPopup_Closing);
 			
 			// Add context menu
 			if (customizeAvailable)
@@ -4906,20 +4909,31 @@ namespace WinApp.Forms
 
 		private void gadgetMainPopup_Opening(object sender, CancelEventArgs e)
 		{
-			if (selectedGadget == null)
+			if (gadgetPontedAt == null)
 			{
 				e.Cancel = true; // Close if validation fails
 			}
+            else
+            {
+                gadgetLockMode = true; // lock selected gadget after popup opens
+                gadgetSelected = gadgetPontedAt;
+            }
 		}
 
+        private void gadgetMainPopup_Closing(object sender, ToolStripDropDownClosedEventArgs e)
+		{
+            gadgetLockMode = false; // free selected gadget after popup closed
+		}
+        
 		private void gadgetMainPopup_Remove_Click(object sender, EventArgs e)
 		{
             try
             {
-                if (selectedGadget != null)
+                if (gadgetSelected != null)
                 {
-                    GadgetHelper.RemoveGadget(selectedGadget);
-                    panelMainArea.Controls.Remove(selectedGadget.control);
+                    GadgetHelper.RemoveGadget(gadgetSelected);
+                    panelMainArea.Controls.Remove(gadgetSelected.control);
+                    gadgetSelected = null;
                 }
             }
             catch (Exception)
@@ -4931,41 +4945,45 @@ namespace WinApp.Forms
 
 		private void gadgetMainPopup_Customize_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.GadgetItem gadget = selectedGadget;
-			ShowGadgetParameter(gadget.controlName, gadget.id);
-			if (GadgetHelper.newParametersOK)
-			{
-				// Special gadgets customization
-				switch (gadget.controlName)
-				{
-					case "ucBattleListLargeImages":
-						gadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
-						gadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
-						GadgetHelper.SaveGadgetSize(gadget);
-						break;
-				}
-				// save new settings
-				GadgetHelper.SaveGadgetParameter(gadget);
-				// remove it
-				panelMainArea.Controls.Remove(gadget.control);
-				// get updated control
-				Control uc = GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
-				uc.Name = "uc" + gadget.id.ToString();
-				uc.Tag = gadget.name;
-				uc.Top = gadget.posY;
-				uc.Left = gadget.posX;
-				uc.Height = gadget.height;
-				uc.Width = gadget.width;
-				gadget.control = uc;
-				
-				// Add to panel and resize
-				panelMainArea.Controls.Add(gadget.control);
-				Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
-				c[0].Height = gadget.height;
-				c[0].Width = gadget.width;
-				c[0].BringToFront();
-				c[0].Enabled = false;
-			}
+            if (gadgetSelected != null)
+            {
+                GadgetHelper.GadgetItem gadget = gadgetSelected;
+                ShowGadgetParameter(gadget.controlName, gadget.id);
+                if (GadgetHelper.newParametersOK)
+                {
+                    // Special gadgets customization
+                    switch (gadget.controlName)
+                    {
+                        case "ucBattleListLargeImages":
+                            gadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
+                            gadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
+                            GadgetHelper.SaveGadgetSize(gadget);
+                            break;
+                    }
+                    // save new settings
+                    GadgetHelper.SaveGadgetParameter(gadget);
+                    // remove it
+                    panelMainArea.Controls.Remove(gadget.control);
+                    // get updated control
+                    Control uc = GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
+                    uc.Name = "uc" + gadget.id.ToString();
+                    uc.Tag = gadget.name;
+                    uc.Top = gadget.posY;
+                    uc.Left = gadget.posX;
+                    uc.Height = gadget.height;
+                    uc.Width = gadget.width;
+                    gadget.control = uc;
+
+                    // Add to panel and resize
+                    panelMainArea.Controls.Add(gadget.control);
+                    Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
+                    c[0].Height = gadget.height;
+                    c[0].Width = gadget.width;
+                    c[0].BringToFront();
+                    c[0].Enabled = false;
+                }
+                gadgetSelected = null;
+            }
 		}
 
 		private void ShowGadgetParameter(string controlName, int gadgetId = -1)
