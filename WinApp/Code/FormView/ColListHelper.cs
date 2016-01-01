@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WinApp.Code
 {
@@ -344,6 +345,53 @@ namespace WinApp.Code
 				DB.ExecuteNonQuery(sql);
 			}
 		}
+
+        public static ToolStrip SetToolStripColType(ToolStrip toolStripColType, GridView.Views view)
+        {
+            // Get colGroups to show in toolbar
+            string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL order by position; "; // First get all sorted by position
+            DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
+            DataTable dt = DB.FetchData(sql);
+            // Now get unique values based
+            List<string> colGroup = new List<string>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (!colGroup.Contains(dr[0].ToString())) colGroup.Add(dr[0].ToString());
+            }
+            int colGroupRow = -1; // Start on -1, first element will be -1 = All tanks, should be ignored, second = 0 -> first group button -> element [0] from select
+            foreach (ToolStripButton button in toolStripColType.Items)
+            {
+                if (colGroupRow >= 0 && colGroup.Count > colGroupRow)
+                {
+                    button.Visible = true;
+                    button.Checked = false;
+                    button.Text = colGroup[colGroupRow];
+                }
+                else
+                {
+                    if (colGroupRow >= 0) button.Visible = false;
+                }
+                colGroupRow++;
+            }
+            return toolStripColType;
+        }
+
+        public static DataTable GetDataGridColums(ToolStrip toolStripColType, GridView.Views view)
+        {
+
+            string sql = "SELECT name as 'Name', description as 'Description', id, colWidth FROM columnSelection WHERE colType=@colType ";
+            // Check filter
+            string colGroup = "All";
+            foreach (ToolStripButton button in toolStripColType.Items)
+            {
+                if (button.Checked) colGroup = button.Text;
+            }
+            if (colGroup != "All") sql += "AND colGroup=@colGroup ";
+            sql += "ORDER BY position; ";
+            DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@colGroup", colGroup, DB.SqlDataType.VarChar);
+            return DB.FetchData(sql);
+        }
 
 	}
 }

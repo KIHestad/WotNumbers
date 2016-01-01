@@ -35,13 +35,80 @@ namespace WinApp.Gadget
 					int paramNum = Convert.ToInt32(dr["paramNum"]);
 					currentParameters[paramNum] = paramValue;
 				}
+                // Settings values
                 if (currentParameters[0] != null)
                     ddBattleMode.Text = BattleMode.GetItemFromSqlName(currentParameters[0].ToString()).Name;
                 if (currentParameters[1] != null)
                     ddTimeSpan.Text = GadgetHelper.GetTimeItemFromName(currentParameters[1].ToString()).Name;
+                if (currentParameters[2] != null)
+                    ddGridCount.Text = currentParameters[2].ToString();
+                
+                // All colums section
+                // Style toolbar and set buttons
+                toolAllColumns.Renderer = new StripRenderer();
+                toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank);
+                toolAvailableCol_All.Checked = true;
+                // Style datagrid
+                GridHelper.StyleDataGrid(dataGridAllColumns);
+                // Get all columns data source
+                SetAllColumnsDataGrid();
+
+                // Selected columns section
+                // Style toolbar 
+                toolSelectedColumns.Renderer = new StripRenderer();
+                // Style datagrid
+                GridHelper.StyleDataGrid(dataGridSelectedColumns, DataGridViewSelectionMode.CellSelect);
+                // Get all columns data source
+                SetSelectedColumnsDataGrid();
+
 			}
 		}
 
+        private void SetAllColumnsDataGrid()
+        {
+            dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, GridView.Views.Tank);
+            dataGridAllColumns.Columns["Description"].Width = 300;
+            dataGridAllColumns.Columns["id"].Visible = false;
+            dataGridAllColumns.Columns["colWidth"].Visible = false;
+            // Connect to scrollbar
+            scrollAllColumns.ScrollElementsTotals = dataGridAllColumns.RowCount;
+            scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
+        }
+
+        private void SetSelectedColumnsDataGrid()
+        {
+            string sql = "";
+            int cols = Convert.ToInt32(ddGridCount.Text);
+            for (int i = 1; i < (cols+1); i++)
+			{
+			    sql += "CAST (null AS INT) as col" + i.ToString() +"_ID, CAST (null AS VARCHAR) as 'Column " + i.ToString() +"', ";
+			}
+            sql = sql.Substring(0, sql.Length-2);
+            sql = "select " + sql;
+            dataGridSelectedColumns.DataSource = DB.FetchData(sql, false);
+            int colCount = 0;
+            foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
+            {
+                colCount ++;
+                if (colCount == 1)
+                    col.Visible = false;
+                else
+                    colCount = 0;
+
+            }
+        }
+
+
+        private void toolAvaliableCol_Group_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripButton button in toolAllColumns.Items)
+			{
+				button.Checked = false;
+			}
+            ToolStripButton selectedButton = (ToolStripButton)sender;
+            selectedButton.Checked = true;
+            SetAllColumnsDataGrid();
+        }
 
 		private void ddBattleMode_Click(object sender, EventArgs e)
 		{
@@ -97,6 +164,30 @@ namespace WinApp.Gadget
         private void ddGridCount_Click(object sender, EventArgs e)
         {
             DropDownGrid.Show(ddGridCount, DropDownGrid.DropDownGridType.List, "1,2,3,4,5");
+        }
+
+        private void badForm1_Resize(object sender, EventArgs e)
+        {
+            // Size dataGridAllColumns
+            int totalWidth = groupRows.Width - 60;
+            int dataGridAllColumnsWidht = Convert.ToInt32(totalWidth * 0.30);
+            toolAllColumns.Width = dataGridAllColumnsWidht;
+            dataGridAllColumns.Width = dataGridAllColumnsWidht - scrollAllColumns.Width;
+            scrollAllColumns.Left = dataGridAllColumns.Left + dataGridAllColumns.Width;
+            // Size and position dataGridSelectedColumns
+            int pos = toolAllColumns.Left + toolAllColumns.Width + 20;
+            int dataGridSelectedColumnsWidht = Convert.ToInt32(totalWidth * 0.70);
+            lblSelectedColumns.Left = pos;
+            toolSelectedColumns.Left = pos;
+            dataGridSelectedColumns.Left = pos;
+            toolSelectedColumns.Width = dataGridSelectedColumnsWidht;
+            dataGridSelectedColumns.Width = dataGridSelectedColumnsWidht;
+
+        }
+
+        private void ddGridCount_TextChanged(object sender, EventArgs e)
+        {
+            SetSelectedColumnsDataGrid();
         }
 
 

@@ -49,7 +49,10 @@ namespace WinApp.Forms
 			// Show content
 			SelectedColListId = MainSettings.GetCurrentGridFilter().ColListId;
 			ShowColumnSetupList();
-			ShowAllColumn();
+            // Show available columns
+            toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, MainSettings.View);
+            toolAvailableCol_All.Checked = true;
+            SetAllColumnsDataGrid();
 			// Mouse scrolling
 			dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
 			dataGridSelectedColumns.MouseWheel += new MouseEventHandler(dataGridSelectedColumns_MouseWheel);
@@ -229,14 +232,6 @@ namespace WinApp.Forms
 			toolColListDelete.Enabled = !sysCol;
 			btnColumnListCancel.Enabled = !sysCol;
 			btnColumnListSave.Enabled = !sysCol;
-			// Move up/down
-			//toolSelectedTanks_MoveUp.Enabled = !sysCol;
-			//toolSelectedTanks_MoveDown.Enabled = !sysCol;
-			// Add/remove buttons
-			//btnRemoveAll.Enabled = !sysCol;
-			//btnRemoveSelected.Enabled = !sysCol;
-			//btnSelectAll.Enabled = !sysCol;
-			//btnSelectSelected.Enabled = !sysCol;
 			// Toggle show/hide
 			bool isHidden = (dataGridColumnList.SelectedRows[0].Cells["#"].Value == DBNull.Value);
 			string showButton = "Hide";
@@ -303,91 +298,29 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region All Columns
+		#region All Columns 
 
 		private bool allTanksColumnSetupDone = false;
-		private void ShowAllColumn()
+        private void SetAllColumnsDataGrid()
 		{
-			// Get colGroups to show in toolbar
-			string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL order by position; "; // First get all sorted by position
-			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			// Now get unique values based
-			List<string> colGroup = new List<string>();
-			foreach (DataRow dr in dt.Rows)
-			{
-				if (!colGroup.Contains(dr[0].ToString())) colGroup.Add(dr[0].ToString());
-			}
-			int colGroupRow = -1; // Start on -1, first element will be -1 = All tanks, should be ignored, second = 0 -> first group button -> element [0] from select
-			foreach (ToolStripButton button in toolAllColumns.Items)
-			{
-				if (colGroupRow >= 0 && colGroup.Count > colGroupRow)
-				{
-					button.Visible = true;
-					button.Text = colGroup[colGroupRow];
-				}
-				else
-				{
-					if (colGroupRow >= 0) button.Visible = false;
-				}
-				colGroupRow++;
-			}
-			// Select All button
-			toolAvailableCol_UnselectAll();
-			toolAvailableCol_All.Checked = true;
-			//toolAvaliableCol_All.Checked = true;
-			// Show content now
-			FilterAllColumn();
-		}
-
-		private void FilterAllColumn()
-		{
-			string sql = "SELECT name as 'Name', description as 'Description', id, colWidth FROM columnSelection WHERE colType=@colType ";
-			// Check filter
-			string colGroup = "All";
-			foreach (ToolStripButton button in toolAllColumns.Items)
-			{
-				if (button.Checked) colGroup = button.Text;
-			}
-			if (colGroup != "All") sql += "AND colGroup=@colGroup ";
-			sql += "ORDER BY position; ";
-			DB.AddWithValue(ref sql, "@colType", (int)MainSettings.View, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@colGroup", colGroup, DB.SqlDataType.VarChar);
-			DataTable dt = DB.FetchData(sql);
-			dataGridAllColumns.DataSource = dt;
-			if (!allTanksColumnSetupDone)
-			{
-				allTanksColumnSetupDone = true;
-				dataGridAllColumns.Columns["description"].Width = 300;
-				dataGridAllColumns.Columns["id"].Visible = false;
-				dataGridAllColumns.Columns["colWidth"].Visible = false;
-			}
-			// Connect to scrollbar
-			scrollAllColumns.ScrollElementsTotals = dt.Rows.Count;
-			scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
-		}
-
-		private void toolAvaliableCol_All_Click(object sender, EventArgs e)
-		{
-			toolAvailableCol_UnselectAll();
-			toolAvailableCol_All.Checked = true;
-			FilterAllColumn();
+            dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, MainSettings.View);
+            dataGridAllColumns.Columns["Description"].Width = 300;
+            dataGridAllColumns.Columns["id"].Visible = false;
+            dataGridAllColumns.Columns["colWidth"].Visible = false;
+            // Connect to scrollbar
+            scrollAllColumns.ScrollElementsTotals = dataGridAllColumns.RowCount;
+            scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
 		}
 
 		private void toolAvaliableCol_Group_Click(object sender, EventArgs e)
 		{
-			toolAvailableCol_UnselectAll();
-			ToolStripButton button = (ToolStripButton)sender;
-			button.Checked = true;
-			FilterAllColumn();
-		}
-
-		private void toolAvailableCol_UnselectAll()
-		{
-			foreach (ToolStripButton button in toolAllColumns.Items)
-			{
-				button.Checked = false;
-			}
+            foreach (ToolStripButton button in toolAllColumns.Items)
+            {
+                button.Checked = false;
+            } 
+            ToolStripButton selectedButton = (ToolStripButton)sender;
+            selectedButton.Checked = true;
+            SetAllColumnsDataGrid();
 		}
 
 		private bool scrollingAllColumns = false;
