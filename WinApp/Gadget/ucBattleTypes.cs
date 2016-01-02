@@ -302,7 +302,7 @@ namespace WinApp.Gadget
 			// No sorting
 			for (int i = 0; i < dataGridView1.Columns.Count; i++)
 			{
-				dataGridView1.Columns[i].SortMode = DataGridViewColumnSortMode.Programmatic;
+				dataGridView1.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
 			}
 			// Format
 			for (int i = 1; i < dataGridView1.Columns.Count; i++)

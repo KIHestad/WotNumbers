@@ -149,6 +149,7 @@
     <Compile Include="Code\FormControl\Agauge.Designer.cs">
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\FormControl\InputBox.cs" />
     <Compile Include="Code\FormLayout\ColorValues.cs" />
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\BattleChartHelper.cs" />
@@ -196,6 +197,12 @@
     </Compile>
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BadThemeControls\MessageInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BadThemeControls\MessageInput.Designer.cs">
+      <DependentUpon>MessageInput.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BattleDetail\BattleDetail.cs">
       <SubType>Form</SubType>
@@ -568,6 +575,9 @@
     <Compile Include="Code\TankHelper.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BadThemeControls\MessageInput.resx">
+      <DependentUpon>MessageInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleDetail\BattleDetail.resx">
       <DependentUpon>BattleDetail.cs</DependentUpon>

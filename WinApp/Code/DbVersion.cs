@@ -23,7 +23,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 304; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 306; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2533,6 +2533,19 @@ namespace WinApp.Code
                     break;
                 case 304: // Recalculate max battle tier for all battles, also the one before this column was added
                     RunRecalcBattleMaxTier = true;
+                    break;
+                case 305:
+                    mssql =
+                        "UPDATE columnSelection SET position = position + 13 WHERE position > 207 AND colType=1; ";
+                    sqlite = mssql;
+                    break;
+                case 306:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+                        "VALUES (99, 1, 208, 'CAST((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Draw Rate', 'Draw rate in percent of tank total battles', 'Battle', 50, 'Float', NULL); " +
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) " +
+                        "VALUES (100, 1, 209, 'CAST(playerTankBattle.losses*1000/nullif(playerTankBattle.battles,0) as FLOAT) / 10', 'Defeat Rate', 'Defeat rate in percent of tank total battles', 'Battle', 50, 'Float', NULL); ";
+                    sqlite = mssql;
                     break;
             }
 			string sql = "";

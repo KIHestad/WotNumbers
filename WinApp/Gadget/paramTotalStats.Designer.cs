@@ -32,6 +32,8 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(paramTotalStats));
             this.paramTotalStatsTheme = new BadForm();
+            this.btnRevert = new BadButton();
+            this.btnClearAll = new BadButton();
             this.toolAllColumns = new System.Windows.Forms.ToolStrip();
             this.toolAvailableCol_All = new System.Windows.Forms.ToolStripButton();
             this.toolAvailableCol_1 = new System.Windows.Forms.ToolStripButton();
@@ -45,8 +47,16 @@
             this.toolAvailableCol_9 = new System.Windows.Forms.ToolStripButton();
             this.toolAvailableCol_10 = new System.Windows.Forms.ToolStripButton();
             this.toolSelectedColumns = new System.Windows.Forms.ToolStrip();
-            this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
-            this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
+            this.tool_MoveUp = new System.Windows.Forms.ToolStripButton();
+            this.tool_MoveDown = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tool_InsertCell = new System.Windows.Forms.ToolStripButton();
+            this.tool_removeCell = new System.Windows.Forms.ToolStripButton();
+            this.tool_Clear = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tool_AddRowBottom = new System.Windows.Forms.ToolStripButton();
+            this.tool_AddRow = new System.Windows.Forms.ToolStripButton();
+            this.tool_RemoveRow = new System.Windows.Forms.ToolStripButton();
             this.dataGridSelectedColumns = new System.Windows.Forms.DataGridView();
             this.lblSelectedColumns = new BadLabel();
             this.scrollAllColumns = new BadScrollBar();
@@ -63,6 +73,8 @@
             this.badGroupBox1 = new BadGroupBox();
             this.lblAllColumns = new BadLabel();
             this.groupRows = new BadGroupBox();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tool_HeaderName = new System.Windows.Forms.ToolStripButton();
             this.paramTotalStatsTheme.SuspendLayout();
             this.toolAllColumns.SuspendLayout();
             this.toolSelectedColumns.SuspendLayout();
@@ -73,6 +85,8 @@
             // paramTotalStatsTheme
             // 
             this.paramTotalStatsTheme.BackColor = System.Drawing.SystemColors.Control;
+            this.paramTotalStatsTheme.Controls.Add(this.btnRevert);
+            this.paramTotalStatsTheme.Controls.Add(this.btnClearAll);
             this.paramTotalStatsTheme.Controls.Add(this.toolAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.toolSelectedColumns);
             this.paramTotalStatsTheme.Controls.Add(this.dataGridSelectedColumns);
@@ -111,6 +125,34 @@
             this.paramTotalStatsTheme.Text = "Total Stats Parameters";
             this.paramTotalStatsTheme.TitleHeight = 26;
             this.paramTotalStatsTheme.Resize += new System.EventHandler(this.badForm1_Resize);
+            // 
+            // btnRevert
+            // 
+            this.btnRevert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRevert.BlackButton = false;
+            this.btnRevert.Checked = false;
+            this.btnRevert.Image = null;
+            this.btnRevert.Location = new System.Drawing.Point(162, 436);
+            this.btnRevert.Name = "btnRevert";
+            this.btnRevert.Size = new System.Drawing.Size(64, 23);
+            this.btnRevert.TabIndex = 26;
+            this.btnRevert.Text = "Revert";
+            this.btnRevert.ToolTipText = "Cancel all changes and revert to last saved setup";
+            this.btnRevert.Click += new System.EventHandler(this.btnRevert_Click);
+            // 
+            // btnClearAll
+            // 
+            this.btnClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnClearAll.BlackButton = false;
+            this.btnClearAll.Checked = false;
+            this.btnClearAll.Image = null;
+            this.btnClearAll.Location = new System.Drawing.Point(92, 436);
+            this.btnClearAll.Name = "btnClearAll";
+            this.btnClearAll.Size = new System.Drawing.Size(64, 23);
+            this.btnClearAll.TabIndex = 25;
+            this.btnClearAll.Text = "Clear All";
+            this.btnClearAll.ToolTipText = "Clear all selected columns";
+            this.btnClearAll.Click += new System.EventHandler(this.btnClearAll_Click);
             // 
             // toolAllColumns
             // 
@@ -266,8 +308,18 @@
             this.toolSelectedColumns.Dock = System.Windows.Forms.DockStyle.None;
             this.toolSelectedColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolSelectedColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolSelectedTanks_MoveUp,
-            this.toolSelectedTanks_MoveDown});
+            this.tool_MoveUp,
+            this.tool_MoveDown,
+            this.toolStripSeparator2,
+            this.tool_InsertCell,
+            this.tool_removeCell,
+            this.tool_Clear,
+            this.toolStripSeparator1,
+            this.tool_AddRowBottom,
+            this.tool_AddRow,
+            this.tool_RemoveRow,
+            this.toolStripSeparator3,
+            this.tool_HeaderName});
             this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolSelectedColumns.Location = new System.Drawing.Point(304, 173);
             this.toolSelectedColumns.Name = "toolSelectedColumns";
@@ -277,25 +329,103 @@
             this.toolSelectedColumns.TabStop = true;
             this.toolSelectedColumns.Text = "toolStrip1";
             // 
-            // toolSelectedTanks_MoveUp
+            // tool_MoveUp
             // 
-            this.toolSelectedTanks_MoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolSelectedTanks_MoveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveUp.Image")));
-            this.toolSelectedTanks_MoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolSelectedTanks_MoveUp.Name = "toolSelectedTanks_MoveUp";
-            this.toolSelectedTanks_MoveUp.Size = new System.Drawing.Size(23, 22);
-            this.toolSelectedTanks_MoveUp.Text = "toolStripButton1";
-            this.toolSelectedTanks_MoveUp.ToolTipText = "Move selected column(s) up";
+            this.tool_MoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_MoveUp.Image = ((System.Drawing.Image)(resources.GetObject("tool_MoveUp.Image")));
+            this.tool_MoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_MoveUp.Name = "tool_MoveUp";
+            this.tool_MoveUp.Size = new System.Drawing.Size(23, 22);
+            this.tool_MoveUp.Text = "toolStripButton1";
+            this.tool_MoveUp.ToolTipText = "Move selected value up";
+            this.tool_MoveUp.Click += new System.EventHandler(this.tool_MoveUp_Click);
             // 
-            // toolSelectedTanks_MoveDown
+            // tool_MoveDown
             // 
-            this.toolSelectedTanks_MoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolSelectedTanks_MoveDown.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveDown.Image")));
-            this.toolSelectedTanks_MoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolSelectedTanks_MoveDown.Name = "toolSelectedTanks_MoveDown";
-            this.toolSelectedTanks_MoveDown.Size = new System.Drawing.Size(23, 22);
-            this.toolSelectedTanks_MoveDown.Text = "toolStripButton2";
-            this.toolSelectedTanks_MoveDown.ToolTipText = "Move selected column(s) down";
+            this.tool_MoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_MoveDown.Image = ((System.Drawing.Image)(resources.GetObject("tool_MoveDown.Image")));
+            this.tool_MoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_MoveDown.Name = "tool_MoveDown";
+            this.tool_MoveDown.Size = new System.Drawing.Size(23, 22);
+            this.tool_MoveDown.Text = "toolStripButton2";
+            this.tool_MoveDown.ToolTipText = "Move selected value down";
+            this.tool_MoveDown.Click += new System.EventHandler(this.tool_MoveDown_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tool_InsertCell
+            // 
+            this.tool_InsertCell.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_InsertCell.Image = ((System.Drawing.Image)(resources.GetObject("tool_InsertCell.Image")));
+            this.tool_InsertCell.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_InsertCell.Name = "tool_InsertCell";
+            this.tool_InsertCell.Size = new System.Drawing.Size(23, 22);
+            this.tool_InsertCell.Text = "toolStripButton1";
+            this.tool_InsertCell.ToolTipText = "Add space for new value";
+            this.tool_InsertCell.Click += new System.EventHandler(this.tool_InsertCell_Click);
+            // 
+            // tool_removeCell
+            // 
+            this.tool_removeCell.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_removeCell.Image = ((System.Drawing.Image)(resources.GetObject("tool_removeCell.Image")));
+            this.tool_removeCell.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_removeCell.Name = "tool_removeCell";
+            this.tool_removeCell.Size = new System.Drawing.Size(23, 22);
+            this.tool_removeCell.Text = "toolStripButton2";
+            this.tool_removeCell.ToolTipText = "Remove selected value";
+            this.tool_removeCell.Click += new System.EventHandler(this.tool_removeCell_Click);
+            // 
+            // tool_Clear
+            // 
+            this.tool_Clear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_Clear.Image = ((System.Drawing.Image)(resources.GetObject("tool_Clear.Image")));
+            this.tool_Clear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_Clear.Name = "tool_Clear";
+            this.tool_Clear.Size = new System.Drawing.Size(23, 22);
+            this.tool_Clear.Text = "toolStripButton1";
+            this.tool_Clear.ToolTipText = "Clear selected value";
+            this.tool_Clear.Click += new System.EventHandler(this.tool_Clear_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tool_AddRowBottom
+            // 
+            this.tool_AddRowBottom.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_AddRowBottom.Image = ((System.Drawing.Image)(resources.GetObject("tool_AddRowBottom.Image")));
+            this.tool_AddRowBottom.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_AddRowBottom.Name = "tool_AddRowBottom";
+            this.tool_AddRowBottom.Size = new System.Drawing.Size(23, 22);
+            this.tool_AddRowBottom.Text = "toolStripButton1";
+            this.tool_AddRowBottom.ToolTipText = "Add row at bottom";
+            this.tool_AddRowBottom.Click += new System.EventHandler(this.tool_AddRowBottom_Click);
+            // 
+            // tool_AddRow
+            // 
+            this.tool_AddRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_AddRow.Image = ((System.Drawing.Image)(resources.GetObject("tool_AddRow.Image")));
+            this.tool_AddRow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_AddRow.Name = "tool_AddRow";
+            this.tool_AddRow.Size = new System.Drawing.Size(23, 22);
+            this.tool_AddRow.Text = "Add Row";
+            this.tool_AddRow.ToolTipText = "Add row at selected position";
+            this.tool_AddRow.Click += new System.EventHandler(this.tool_AddRow_Click);
+            // 
+            // tool_RemoveRow
+            // 
+            this.tool_RemoveRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tool_RemoveRow.Image = ((System.Drawing.Image)(resources.GetObject("tool_RemoveRow.Image")));
+            this.tool_RemoveRow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_RemoveRow.Name = "tool_RemoveRow";
+            this.tool_RemoveRow.Size = new System.Drawing.Size(23, 22);
+            this.tool_RemoveRow.Text = "Remove Row";
+            this.tool_RemoveRow.ToolTipText = "Remove row as selected position";
+            this.tool_RemoveRow.Click += new System.EventHandler(this.tool_RemoveRow_Click);
             // 
             // dataGridSelectedColumns
             // 
@@ -311,6 +441,7 @@
             this.dataGridSelectedColumns.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridSelectedColumns.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridSelectedColumns.Location = new System.Drawing.Point(304, 198);
+            this.dataGridSelectedColumns.MultiSelect = false;
             this.dataGridSelectedColumns.Name = "dataGridSelectedColumns";
             this.dataGridSelectedColumns.ReadOnly = true;
             this.dataGridSelectedColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -386,16 +517,17 @@
             // 
             // btnDefault
             // 
-            this.btnDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDefault.BlackButton = false;
             this.btnDefault.Checked = false;
             this.btnDefault.Image = null;
-            this.btnDefault.Location = new System.Drawing.Point(482, 436);
+            this.btnDefault.Location = new System.Drawing.Point(22, 436);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(64, 23);
             this.btnDefault.TabIndex = 11;
             this.btnDefault.Text = "Default";
-            this.btnDefault.ToolTipText = "";
+            this.btnDefault.ToolTipText = "Clear current selected columns and add default setup";
+            this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
             // 
             // ddGridCount
             // 
@@ -461,7 +593,7 @@
             this.btnSelect.BlackButton = false;
             this.btnSelect.Checked = false;
             this.btnSelect.Image = null;
-            this.btnSelect.Location = new System.Drawing.Point(552, 436);
+            this.btnSelect.Location = new System.Drawing.Point(553, 436);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(64, 23);
             this.btnSelect.TabIndex = 2;
@@ -531,6 +663,21 @@
             this.groupRows.Text = "Rows";
             this.groupRows.DragOver += new System.Windows.Forms.DragEventHandler(this.groupRows_DragOver);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tool_HeaderName
+            // 
+            this.tool_HeaderName.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tool_HeaderName.Image = ((System.Drawing.Image)(resources.GetObject("tool_HeaderName.Image")));
+            this.tool_HeaderName.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_HeaderName.Name = "tool_HeaderName";
+            this.tool_HeaderName.Size = new System.Drawing.Size(84, 22);
+            this.tool_HeaderName.Text = "Header Name";
+            this.tool_HeaderName.Click += new System.EventHandler(this.tool_HeaderName_Click);
+            // 
             // paramTotalStats
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -576,8 +723,8 @@
         private BadLabel lblAllColumns;
         private BadGroupBox groupRows;
         private System.Windows.Forms.ToolStrip toolSelectedColumns;
-        private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveUp;
-        private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveDown;
+        private System.Windows.Forms.ToolStripButton tool_MoveUp;
+        private System.Windows.Forms.ToolStripButton tool_MoveDown;
         private System.Windows.Forms.DataGridView dataGridSelectedColumns;
         private BadLabel lblSelectedColumns;
         private System.Windows.Forms.ToolStrip toolAllColumns;
@@ -592,5 +739,17 @@
         private System.Windows.Forms.ToolStripButton toolAvailableCol_8;
         private System.Windows.Forms.ToolStripButton toolAvailableCol_9;
         private System.Windows.Forms.ToolStripButton toolAvailableCol_10;
+        private System.Windows.Forms.ToolStripButton tool_Clear;
+        private BadButton btnClearAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tool_AddRow;
+        private System.Windows.Forms.ToolStripButton tool_RemoveRow;
+        private System.Windows.Forms.ToolStripButton tool_AddRowBottom;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton tool_InsertCell;
+        private System.Windows.Forms.ToolStripButton tool_removeCell;
+        private BadButton btnRevert;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton tool_HeaderName;
 	}
 }
