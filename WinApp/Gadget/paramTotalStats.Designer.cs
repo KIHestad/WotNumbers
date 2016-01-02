@@ -32,11 +32,6 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(paramTotalStats));
             this.paramTotalStatsTheme = new BadForm();
-            this.toolSelectedColumns = new System.Windows.Forms.ToolStrip();
-            this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
-            this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
-            this.dataGridSelectedColumns = new System.Windows.Forms.DataGridView();
-            this.lblSelectedColumns = new BadLabel();
             this.toolAllColumns = new System.Windows.Forms.ToolStrip();
             this.toolAvailableCol_All = new System.Windows.Forms.ToolStripButton();
             this.toolAvailableCol_1 = new System.Windows.Forms.ToolStripButton();
@@ -47,8 +42,13 @@
             this.toolAvailableCol_6 = new System.Windows.Forms.ToolStripButton();
             this.toolAvailableCol_7 = new System.Windows.Forms.ToolStripButton();
             this.toolAvailableCol_8 = new System.Windows.Forms.ToolStripButton();
-            this.toolAvailableCol_10 = new System.Windows.Forms.ToolStripButton();
             this.toolAvailableCol_9 = new System.Windows.Forms.ToolStripButton();
+            this.toolAvailableCol_10 = new System.Windows.Forms.ToolStripButton();
+            this.toolSelectedColumns = new System.Windows.Forms.ToolStrip();
+            this.toolSelectedTanks_MoveUp = new System.Windows.Forms.ToolStripButton();
+            this.toolSelectedTanks_MoveDown = new System.Windows.Forms.ToolStripButton();
+            this.dataGridSelectedColumns = new System.Windows.Forms.DataGridView();
+            this.lblSelectedColumns = new BadLabel();
             this.scrollAllColumns = new BadScrollBar();
             this.dataGridAllColumns = new System.Windows.Forms.DataGridView();
             this.btnDefault = new BadButton();
@@ -64,19 +64,19 @@
             this.lblAllColumns = new BadLabel();
             this.groupRows = new BadGroupBox();
             this.paramTotalStatsTheme.SuspendLayout();
+            this.toolAllColumns.SuspendLayout();
             this.toolSelectedColumns.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).BeginInit();
-            this.toolAllColumns.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridAllColumns)).BeginInit();
             this.SuspendLayout();
             // 
             // paramTotalStatsTheme
             // 
-            this.paramTotalStatsTheme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.paramTotalStatsTheme.BackColor = System.Drawing.SystemColors.Control;
+            this.paramTotalStatsTheme.Controls.Add(this.toolAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.toolSelectedColumns);
             this.paramTotalStatsTheme.Controls.Add(this.dataGridSelectedColumns);
             this.paramTotalStatsTheme.Controls.Add(this.lblSelectedColumns);
-            this.paramTotalStatsTheme.Controls.Add(this.toolAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.scrollAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.dataGridAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.btnDefault);
@@ -112,78 +112,6 @@
             this.paramTotalStatsTheme.TitleHeight = 26;
             this.paramTotalStatsTheme.Resize += new System.EventHandler(this.badForm1_Resize);
             // 
-            // toolSelectedColumns
-            // 
-            this.toolSelectedColumns.AutoSize = false;
-            this.toolSelectedColumns.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolSelectedColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolSelectedColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolSelectedTanks_MoveUp,
-            this.toolSelectedTanks_MoveDown});
-            this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolSelectedColumns.Location = new System.Drawing.Point(304, 173);
-            this.toolSelectedColumns.Name = "toolSelectedColumns";
-            this.toolSelectedColumns.Size = new System.Drawing.Size(358, 25);
-            this.toolSelectedColumns.Stretch = true;
-            this.toolSelectedColumns.TabIndex = 22;
-            this.toolSelectedColumns.TabStop = true;
-            this.toolSelectedColumns.Text = "toolStrip1";
-            // 
-            // toolSelectedTanks_MoveUp
-            // 
-            this.toolSelectedTanks_MoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolSelectedTanks_MoveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveUp.Image")));
-            this.toolSelectedTanks_MoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolSelectedTanks_MoveUp.Name = "toolSelectedTanks_MoveUp";
-            this.toolSelectedTanks_MoveUp.Size = new System.Drawing.Size(23, 22);
-            this.toolSelectedTanks_MoveUp.Text = "toolStripButton1";
-            this.toolSelectedTanks_MoveUp.ToolTipText = "Move selected column(s) up";
-            // 
-            // toolSelectedTanks_MoveDown
-            // 
-            this.toolSelectedTanks_MoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolSelectedTanks_MoveDown.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveDown.Image")));
-            this.toolSelectedTanks_MoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolSelectedTanks_MoveDown.Name = "toolSelectedTanks_MoveDown";
-            this.toolSelectedTanks_MoveDown.Size = new System.Drawing.Size(23, 22);
-            this.toolSelectedTanks_MoveDown.Text = "toolStripButton2";
-            this.toolSelectedTanks_MoveDown.ToolTipText = "Move selected column(s) down";
-            // 
-            // dataGridSelectedColumns
-            // 
-            this.dataGridSelectedColumns.AllowUserToAddRows = false;
-            this.dataGridSelectedColumns.AllowUserToDeleteRows = false;
-            this.dataGridSelectedColumns.AllowUserToOrderColumns = true;
-            this.dataGridSelectedColumns.AllowUserToResizeRows = false;
-            this.dataGridSelectedColumns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.dataGridSelectedColumns.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridSelectedColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridSelectedColumns.Cursor = System.Windows.Forms.Cursors.Default;
-            this.dataGridSelectedColumns.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridSelectedColumns.Location = new System.Drawing.Point(304, 198);
-            this.dataGridSelectedColumns.Name = "dataGridSelectedColumns";
-            this.dataGridSelectedColumns.ReadOnly = true;
-            this.dataGridSelectedColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dataGridSelectedColumns.RowHeadersVisible = false;
-            this.dataGridSelectedColumns.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dataGridSelectedColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridSelectedColumns.Size = new System.Drawing.Size(358, 202);
-            this.dataGridSelectedColumns.TabIndex = 23;
-            // 
-            // lblSelectedColumns
-            // 
-            this.lblSelectedColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.lblSelectedColumns.Dimmed = false;
-            this.lblSelectedColumns.Image = null;
-            this.lblSelectedColumns.Location = new System.Drawing.Point(304, 151);
-            this.lblSelectedColumns.Name = "lblSelectedColumns";
-            this.lblSelectedColumns.Size = new System.Drawing.Size(149, 23);
-            this.lblSelectedColumns.TabIndex = 21;
-            this.lblSelectedColumns.TabStop = false;
-            this.lblSelectedColumns.Text = "Selected Columns:";
-            this.lblSelectedColumns.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
             // toolAllColumns
             // 
             this.toolAllColumns.AutoSize = false;
@@ -199,14 +127,14 @@
             this.toolAvailableCol_6,
             this.toolAvailableCol_7,
             this.toolAvailableCol_8,
-            this.toolAvailableCol_10,
-            this.toolAvailableCol_9});
+            this.toolAvailableCol_9,
+            this.toolAvailableCol_10});
             this.toolAllColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolAllColumns.Location = new System.Drawing.Point(39, 173);
             this.toolAllColumns.Name = "toolAllColumns";
             this.toolAllColumns.Size = new System.Drawing.Size(234, 25);
             this.toolAllColumns.Stretch = true;
-            this.toolAllColumns.TabIndex = 17;
+            this.toolAllColumns.TabIndex = 24;
             this.toolAllColumns.TabStop = true;
             this.toolAllColumns.Text = "toolStrip1";
             // 
@@ -220,6 +148,7 @@
             this.toolAvailableCol_All.Name = "toolAvailableCol_All";
             this.toolAvailableCol_All.Size = new System.Drawing.Size(25, 22);
             this.toolAvailableCol_All.Text = "All";
+            this.toolAvailableCol_All.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
             // 
             // toolAvailableCol_1
             // 
@@ -309,17 +238,6 @@
             this.toolAvailableCol_8.Visible = false;
             this.toolAvailableCol_8.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
             // 
-            // toolAvailableCol_10
-            // 
-            this.toolAvailableCol_10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolAvailableCol_10.Image = ((System.Drawing.Image)(resources.GetObject("toolAvailableCol_10.Image")));
-            this.toolAvailableCol_10.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolAvailableCol_10.Name = "toolAvailableCol_10";
-            this.toolAvailableCol_10.Size = new System.Drawing.Size(23, 22);
-            this.toolAvailableCol_10.Text = "X";
-            this.toolAvailableCol_10.Visible = false;
-            this.toolAvailableCol_10.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
-            // 
             // toolAvailableCol_9
             // 
             this.toolAvailableCol_9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -331,8 +249,95 @@
             this.toolAvailableCol_9.Visible = false;
             this.toolAvailableCol_9.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
             // 
+            // toolAvailableCol_10
+            // 
+            this.toolAvailableCol_10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolAvailableCol_10.Image = ((System.Drawing.Image)(resources.GetObject("toolAvailableCol_10.Image")));
+            this.toolAvailableCol_10.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolAvailableCol_10.Name = "toolAvailableCol_10";
+            this.toolAvailableCol_10.Size = new System.Drawing.Size(23, 22);
+            this.toolAvailableCol_10.Text = "X";
+            this.toolAvailableCol_10.Visible = false;
+            this.toolAvailableCol_10.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
+            // 
+            // toolSelectedColumns
+            // 
+            this.toolSelectedColumns.AutoSize = false;
+            this.toolSelectedColumns.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolSelectedColumns.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolSelectedColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolSelectedTanks_MoveUp,
+            this.toolSelectedTanks_MoveDown});
+            this.toolSelectedColumns.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolSelectedColumns.Location = new System.Drawing.Point(304, 173);
+            this.toolSelectedColumns.Name = "toolSelectedColumns";
+            this.toolSelectedColumns.Size = new System.Drawing.Size(358, 25);
+            this.toolSelectedColumns.Stretch = true;
+            this.toolSelectedColumns.TabIndex = 22;
+            this.toolSelectedColumns.TabStop = true;
+            this.toolSelectedColumns.Text = "toolStrip1";
+            // 
+            // toolSelectedTanks_MoveUp
+            // 
+            this.toolSelectedTanks_MoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolSelectedTanks_MoveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveUp.Image")));
+            this.toolSelectedTanks_MoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolSelectedTanks_MoveUp.Name = "toolSelectedTanks_MoveUp";
+            this.toolSelectedTanks_MoveUp.Size = new System.Drawing.Size(23, 22);
+            this.toolSelectedTanks_MoveUp.Text = "toolStripButton1";
+            this.toolSelectedTanks_MoveUp.ToolTipText = "Move selected column(s) up";
+            // 
+            // toolSelectedTanks_MoveDown
+            // 
+            this.toolSelectedTanks_MoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolSelectedTanks_MoveDown.Image = ((System.Drawing.Image)(resources.GetObject("toolSelectedTanks_MoveDown.Image")));
+            this.toolSelectedTanks_MoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolSelectedTanks_MoveDown.Name = "toolSelectedTanks_MoveDown";
+            this.toolSelectedTanks_MoveDown.Size = new System.Drawing.Size(23, 22);
+            this.toolSelectedTanks_MoveDown.Text = "toolStripButton2";
+            this.toolSelectedTanks_MoveDown.ToolTipText = "Move selected column(s) down";
+            // 
+            // dataGridSelectedColumns
+            // 
+            this.dataGridSelectedColumns.AllowDrop = true;
+            this.dataGridSelectedColumns.AllowUserToAddRows = false;
+            this.dataGridSelectedColumns.AllowUserToDeleteRows = false;
+            this.dataGridSelectedColumns.AllowUserToOrderColumns = true;
+            this.dataGridSelectedColumns.AllowUserToResizeRows = false;
+            this.dataGridSelectedColumns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dataGridSelectedColumns.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridSelectedColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridSelectedColumns.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dataGridSelectedColumns.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridSelectedColumns.Location = new System.Drawing.Point(304, 198);
+            this.dataGridSelectedColumns.Name = "dataGridSelectedColumns";
+            this.dataGridSelectedColumns.ReadOnly = true;
+            this.dataGridSelectedColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dataGridSelectedColumns.RowHeadersVisible = false;
+            this.dataGridSelectedColumns.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.dataGridSelectedColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridSelectedColumns.Size = new System.Drawing.Size(358, 202);
+            this.dataGridSelectedColumns.TabIndex = 23;
+            this.dataGridSelectedColumns.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragDrop);
+            this.dataGridSelectedColumns.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragOver);
+            // 
+            // lblSelectedColumns
+            // 
+            this.lblSelectedColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.lblSelectedColumns.Dimmed = false;
+            this.lblSelectedColumns.Image = null;
+            this.lblSelectedColumns.Location = new System.Drawing.Point(304, 151);
+            this.lblSelectedColumns.Name = "lblSelectedColumns";
+            this.lblSelectedColumns.Size = new System.Drawing.Size(149, 23);
+            this.lblSelectedColumns.TabIndex = 21;
+            this.lblSelectedColumns.TabStop = false;
+            this.lblSelectedColumns.Text = "Selected Columns:";
+            this.lblSelectedColumns.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
             // scrollAllColumns
             // 
+            this.scrollAllColumns.AllowDrop = true;
             this.scrollAllColumns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.scrollAllColumns.BackColor = System.Drawing.Color.Transparent;
@@ -349,9 +354,14 @@
             this.scrollAllColumns.TabIndex = 20;
             this.scrollAllColumns.TabStop = false;
             this.scrollAllColumns.Text = "badScrollBar1";
+            this.scrollAllColumns.DragOver += new System.Windows.Forms.DragEventHandler(this.scrollAllColumns_DragOver);
+            this.scrollAllColumns.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollAllColumns_MouseDown);
+            this.scrollAllColumns.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollAllColumns_MouseMove);
+            this.scrollAllColumns.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollAllColumns_MouseUp);
             // 
             // dataGridAllColumns
             // 
+            this.dataGridAllColumns.AllowDrop = true;
             this.dataGridAllColumns.AllowUserToAddRows = false;
             this.dataGridAllColumns.AllowUserToDeleteRows = false;
             this.dataGridAllColumns.AllowUserToOrderColumns = true;
@@ -362,6 +372,7 @@
             this.dataGridAllColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridAllColumns.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridAllColumns.Location = new System.Drawing.Point(39, 198);
+            this.dataGridAllColumns.MultiSelect = false;
             this.dataGridAllColumns.Name = "dataGridAllColumns";
             this.dataGridAllColumns.ReadOnly = true;
             this.dataGridAllColumns.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -370,6 +381,8 @@
             this.dataGridAllColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridAllColumns.Size = new System.Drawing.Size(217, 202);
             this.dataGridAllColumns.TabIndex = 19;
+            this.dataGridAllColumns.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridAllColumns_DragEnter);
+            this.dataGridAllColumns.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridAllColumns_MouseDown);
             // 
             // btnDefault
             // 
@@ -504,6 +517,7 @@
             // 
             // groupRows
             // 
+            this.groupRows.AllowDrop = true;
             this.groupRows.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -515,12 +529,13 @@
             this.groupRows.TabIndex = 16;
             this.groupRows.TabStop = false;
             this.groupRows.Text = "Rows";
+            this.groupRows.DragOver += new System.Windows.Forms.DragEventHandler(this.groupRows_DragOver);
             // 
             // paramTotalStats
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(713, 482);
             this.Controls.Add(this.paramTotalStatsTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -533,11 +548,11 @@
             this.Load += new System.EventHandler(this.paramTotalStats_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.paramBattleMode_Paint);
             this.paramTotalStatsTheme.ResumeLayout(false);
+            this.toolAllColumns.ResumeLayout(false);
+            this.toolAllColumns.PerformLayout();
             this.toolSelectedColumns.ResumeLayout(false);
             this.toolSelectedColumns.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridSelectedColumns)).EndInit();
-            this.toolAllColumns.ResumeLayout(false);
-            this.toolAllColumns.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridAllColumns)).EndInit();
             this.ResumeLayout(false);
 
@@ -556,6 +571,15 @@
         private BadLabel badLabel3;
         private BadButton btnDefault;
         private BadGroupBox badGroupBox1;
+        private BadScrollBar scrollAllColumns;
+        private System.Windows.Forms.DataGridView dataGridAllColumns;
+        private BadLabel lblAllColumns;
+        private BadGroupBox groupRows;
+        private System.Windows.Forms.ToolStrip toolSelectedColumns;
+        private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveUp;
+        private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveDown;
+        private System.Windows.Forms.DataGridView dataGridSelectedColumns;
+        private BadLabel lblSelectedColumns;
         private System.Windows.Forms.ToolStrip toolAllColumns;
         private System.Windows.Forms.ToolStripButton toolAvailableCol_All;
         private System.Windows.Forms.ToolStripButton toolAvailableCol_1;
@@ -568,14 +592,5 @@
         private System.Windows.Forms.ToolStripButton toolAvailableCol_8;
         private System.Windows.Forms.ToolStripButton toolAvailableCol_9;
         private System.Windows.Forms.ToolStripButton toolAvailableCol_10;
-        private BadScrollBar scrollAllColumns;
-        private System.Windows.Forms.DataGridView dataGridAllColumns;
-        private BadLabel lblAllColumns;
-        private BadGroupBox groupRows;
-        private System.Windows.Forms.ToolStrip toolSelectedColumns;
-        private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveUp;
-        private System.Windows.Forms.ToolStripButton toolSelectedTanks_MoveDown;
-        private System.Windows.Forms.DataGridView dataGridSelectedColumns;
-        private BadLabel lblSelectedColumns;
 	}
 }

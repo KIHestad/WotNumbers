@@ -116,6 +116,7 @@ namespace WinApp.Code
 		public StripRenderer() : base(new Code.StripLayout())
 		{
 			this.RoundedEdges = false;
+            
 		}
 
 		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)

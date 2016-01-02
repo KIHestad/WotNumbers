@@ -660,7 +660,7 @@
             this.toolAvailableCol_9.Image = ((System.Drawing.Image)(resources.GetObject("toolAvailableCol_9.Image")));
             this.toolAvailableCol_9.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAvailableCol_9.Name = "toolAvailableCol_9";
-            this.toolAvailableCol_9.Size = new System.Drawing.Size(23, 19);
+            this.toolAvailableCol_9.Size = new System.Drawing.Size(23, 22);
             this.toolAvailableCol_9.Text = "X";
             this.toolAvailableCol_9.Visible = false;
             this.toolAvailableCol_9.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
@@ -671,7 +671,7 @@
             this.toolAvailableCol_10.Image = ((System.Drawing.Image)(resources.GetObject("toolAvailableCol_10.Image")));
             this.toolAvailableCol_10.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAvailableCol_10.Name = "toolAvailableCol_10";
-            this.toolAvailableCol_10.Size = new System.Drawing.Size(23, 19);
+            this.toolAvailableCol_10.Size = new System.Drawing.Size(23, 22);
             this.toolAvailableCol_10.Text = "X";
             this.toolAvailableCol_10.Visible = false;
             this.toolAvailableCol_10.Click += new System.EventHandler(this.toolAvaliableCol_Group_Click);
@@ -872,6 +872,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(624, 633);
             this.Controls.Add(this.ColListTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

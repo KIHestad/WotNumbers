@@ -346,10 +346,13 @@ namespace WinApp.Code
 			}
 		}
 
-        public static ToolStrip SetToolStripColType(ToolStrip toolStripColType, GridView.Views view)
+        public static ToolStrip SetToolStripColType(ToolStrip toolStripColType, GridView.Views view, bool forGadget = false)
         {
             // Get colGroups to show in toolbar
-            string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL order by position; "; // First get all sorted by position
+            string forGadgetWhere = "";
+            if (forGadget)
+                forGadgetWhere = " AND colDataType NOT IN ('VarChar','Image') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
+            string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL " + forGadgetWhere + " order by position; "; // First get all sorted by position
             DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
             DataTable dt = DB.FetchData(sql);
             // Now get unique values based
@@ -376,10 +379,12 @@ namespace WinApp.Code
             return toolStripColType;
         }
 
-        public static DataTable GetDataGridColums(ToolStrip toolStripColType, GridView.Views view)
+        public static DataTable GetDataGridColums(ToolStrip toolStripColType, GridView.Views view, bool forGadget = false)
         {
-
-            string sql = "SELECT name as 'Name', description as 'Description', id, colWidth FROM columnSelection WHERE colType=@colType ";
+            string forGadgetWhere = "";
+            if (forGadget)
+                forGadgetWhere = " AND colDataType NOT IN ('VarChar','Image') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
+            string sql = "SELECT name as 'Name', description as 'Description', id, colWidth FROM columnSelection WHERE colType=@colType " + forGadgetWhere + " " ;
             // Check filter
             string colGroup = "All";
             foreach (ToolStripButton button in toolStripColType.Items)

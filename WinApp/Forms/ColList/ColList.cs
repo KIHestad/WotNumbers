@@ -124,27 +124,27 @@ namespace WinApp.Forms
 			e.Graphics.DrawRectangle(new Pen(ColorTheme.ScrollbarBack), 0, 0, dgv.Width - 1, dgv.Height - 1);
 		}
 
-		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
-		{
-			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-			if (menu.Checked)
-			{
-				if (menu.Image == null)
-				{
-					// Default checkbox
-					e.Graphics.DrawImage(imageListToolStrip.Images[0], 5, 3);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
-				}
-				else
-				{
-					// Border around picture
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
-					e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
-				}
+        //private void toolItem_Checked_paint(object sender, PaintEventArgs e)
+        //{
+        //    ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+        //    if (menu.Checked)
+        //    {
+        //        if (menu.Image == null)
+        //        {
+        //            // Default checkbox
+        //            e.Graphics.DrawImage(imageListToolStrip.Images[0], 5, 3);
+        //            e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+        //            e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 5, 3, 15, 15);
+        //        }
+        //        else
+        //        {
+        //            // Border around picture
+        //            e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 3, 1, 19, 19);
+        //            e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, ColorTheme.ToolGrayCheckBorder)), 4, 2, 17, 17);
+        //        }
 
-			}
-		}
+        //    }
+        //}
 
 		#endregion
 
@@ -300,8 +300,7 @@ namespace WinApp.Forms
 
 		#region All Columns 
 
-		private bool allTanksColumnSetupDone = false;
-        private void SetAllColumnsDataGrid()
+		private void SetAllColumnsDataGrid()
 		{
             dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, MainSettings.View);
             dataGridAllColumns.Columns["Description"].Width = 300;

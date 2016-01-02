@@ -13,6 +13,7 @@ namespace WinApp.Gadget
 	public partial class paramTotalStats : Form
 	{
 		int _gadgetId = -1;
+        object[] currentParameters = new object[20];
 
         public paramTotalStats(int gadgetId = -1)
 		{
@@ -22,7 +23,6 @@ namespace WinApp.Gadget
 
         private void paramTotalStats_Load(object sender, EventArgs e)
 		{
-			object[] currentParameters = new object[] { null, null, null, null, null };
 			if (_gadgetId > -1)
 			{
 				// Lookup value for current gadget
@@ -42,12 +42,15 @@ namespace WinApp.Gadget
                     ddTimeSpan.Text = GadgetHelper.GetTimeItemFromName(currentParameters[1].ToString()).Name;
                 if (currentParameters[2] != null)
                     ddGridCount.Text = currentParameters[2].ToString();
-                
+
                 // All colums section
                 // Style toolbar and set buttons
                 toolAllColumns.Renderer = new StripRenderer();
-                toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank);
+                //toolAllColumns.BackColor = ColorTheme.FormBack;
+                toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank, true);
                 toolAvailableCol_All.Checked = true;
+                // Mouse scrolling
+                dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
                 // Style datagrid
                 GridHelper.StyleDataGrid(dataGridAllColumns);
                 // Get all columns data source
@@ -61,15 +64,17 @@ namespace WinApp.Gadget
                 // Get all columns data source
                 SetSelectedColumnsDataGrid();
 
+                // Resize
+                ReziseNow();
 			}
 		}
 
         private void SetAllColumnsDataGrid()
         {
-            dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, GridView.Views.Tank);
-            dataGridAllColumns.Columns["Description"].Width = 300;
+            dataGridAllColumns.DataSource = ColListHelper.GetDataGridColums(toolAllColumns, GridView.Views.Tank, true);
             dataGridAllColumns.Columns["id"].Visible = false;
             dataGridAllColumns.Columns["colWidth"].Visible = false;
+            dataGridAllColumns.Columns["Description"].Width = 300;
             // Connect to scrollbar
             scrollAllColumns.ScrollElementsTotals = dataGridAllColumns.RowCount;
             scrollAllColumns.ScrollElementsVisible = dataGridAllColumns.DisplayedRowCount(false);
@@ -77,21 +82,50 @@ namespace WinApp.Gadget
 
         private void SetSelectedColumnsDataGrid()
         {
-            string sql = "";
+            // Add columns to datagrid
             int cols = Convert.ToInt32(ddGridCount.Text);
-            for (int i = 1; i < (cols+1); i++)
-			{
-			    sql += "CAST (null AS INT) as col" + i.ToString() +"_ID, CAST (null AS VARCHAR) as 'Column " + i.ToString() +"', ";
-			}
-            sql = sql.Substring(0, sql.Length-2);
-            sql = "select " + sql;
-            dataGridSelectedColumns.DataSource = DB.FetchData(sql, false);
+            dataGridSelectedColumns.Rows.Clear();
+            dataGridSelectedColumns.Columns.Clear();
+            for (int i = 1; i < (cols + 1); i++)
+            {
+                dataGridSelectedColumns.Columns.Add("id" + i.ToString(), "id" + i.ToString());
+                dataGridSelectedColumns.Columns.Add("Column " + i.ToString(), "Column " + i.ToString());
+            }
+            int datarows = currentParameters.Length - 3;
+            if (datarows > 0)
+            {
+                for (int i = 3; i < datarows; i++)
+                {
+                    if (currentParameters[i] != null)
+                    {
+                        string row = currentParameters[i].ToString();
+                        string[] rowItems = row.Split(new string[] { ";" }, StringSplitOptions.None);
+                        int rowId = dataGridSelectedColumns.Rows.Add();
+                        DataGridViewRow dgvr = dataGridSelectedColumns.Rows[rowId];
+                        int col = 0;
+                        foreach (DataGridViewCell dgvc in dgvr.Cells)
+                        {
+                            if (col <= rowItems.Length -1)
+                            {
+                                dgvc.Value = rowItems[col];
+                                col++;
+                            }
+                        }
+                    }
+                }
+            }
+            // Add blank rows to datagrid
+            dataGridSelectedColumns.Rows.Add();
+
+            // Hide id cols
             int colCount = 0;
             foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
             {
                 colCount ++;
                 if (colCount == 1)
+                {
                     col.Visible = false;
+                }
                 else
                     colCount = 0;
 
@@ -135,10 +169,30 @@ namespace WinApp.Gadget
                 GadgetHelper.TimeItem ti = GadgetHelper.GetTimeItemFromName(ddTimeSpan.Text);
                 if (ti != null)
                     paramTimeSpan = ti.Name;
+                // Create new param according to number of rows in datagrid
+                int paramCount = 3 + dataGridSelectedColumns.RowCount;
+                GadgetHelper.newParameters = new object[paramCount];
+                // Add settings
 				GadgetHelper.newParameters[0] = paramBattleMode;
                 GadgetHelper.newParameters[1] = paramTimeSpan;
                 GadgetHelper.newParameters[2] = Convert.ToInt32(ddGridCount.Text);
+                // Add colums
+                int paramId = 3;
+                foreach (DataGridViewRow dgvr in dataGridSelectedColumns.Rows)
+                {
+                    string paramValue = "";
+                    foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
+                    {
+                        paramValue += dgvr.Cells[col.Index].Value + ";";
+                    }
+                    if (paramValue.Replace(";", "").Length > 0)
+                    {
+                        GadgetHelper.newParameters[paramId] = paramValue;
+                        paramId++;
+                    }
+                }
 				GadgetHelper.newParametersOK = true;
+                GadgetHelper.DeleteGadgetParameter(_gadgetId);
 				this.Close();
 			}
 		}
@@ -168,28 +222,190 @@ namespace WinApp.Gadget
 
         private void badForm1_Resize(object sender, EventArgs e)
         {
+            ReziseNow();
+        }
+
+        private void ReziseNow()
+        {
             // Size dataGridAllColumns
             int totalWidth = groupRows.Width - 60;
-            int dataGridAllColumnsWidht = Convert.ToInt32(totalWidth * 0.30);
+            int dataGridAllColumnsWidht = Convert.ToInt32(totalWidth * 0.40);
             toolAllColumns.Width = dataGridAllColumnsWidht;
             dataGridAllColumns.Width = dataGridAllColumnsWidht - scrollAllColumns.Width;
             scrollAllColumns.Left = dataGridAllColumns.Left + dataGridAllColumns.Width;
             // Size and position dataGridSelectedColumns
             int pos = toolAllColumns.Left + toolAllColumns.Width + 20;
-            int dataGridSelectedColumnsWidht = Convert.ToInt32(totalWidth * 0.70);
+            int dataGridSelectedColumnsWidht = Convert.ToInt32(totalWidth * 0.60);
             lblSelectedColumns.Left = pos;
             toolSelectedColumns.Left = pos;
             dataGridSelectedColumns.Left = pos;
             toolSelectedColumns.Width = dataGridSelectedColumnsWidht;
             dataGridSelectedColumns.Width = dataGridSelectedColumnsWidht;
-
+            // Resize dataGridSelectedColumns col width
+            foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
+            {
+                col.Width = Convert.ToInt32(dataGridSelectedColumns.Width / Convert.ToDouble(ddGridCount.Text));
+            }
         }
+
 
         private void ddGridCount_TextChanged(object sender, EventArgs e)
         {
             SetSelectedColumnsDataGrid();
+            ReziseNow();
+        }
+
+        private bool scrollingAllColumns = false;
+        private void scrollAllColumns_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (dataGridAllColumns.RowCount > 0)
+            {
+                scrollingAllColumns = true;
+                dataGridAllColumns.FirstDisplayedScrollingRowIndex = scrollAllColumns.ScrollPosition;
+            }
+        }
+
+        private void scrollAllColumns_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dataGridAllColumns.RowCount > 0 && scrollingAllColumns)
+            {
+                int currentFirstRow = dataGridAllColumns.FirstDisplayedScrollingRowIndex;
+                dataGridAllColumns.FirstDisplayedScrollingRowIndex = scrollAllColumns.ScrollPosition;
+                if (currentFirstRow != dataGridAllColumns.FirstDisplayedScrollingRowIndex) Refresh();
+            }
+        }
+
+        private void scrollAllColumns_MouseUp(object sender, MouseEventArgs e)
+        {
+            scrollingAllColumns = false;
+        }
+
+        // Enable mouse wheel scrolling for datagrid
+        private void dataGridAllColumns_MouseWheel(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                // scroll in grid from mouse wheel
+                int currentIndex = this.dataGridAllColumns.FirstDisplayedScrollingRowIndex;
+                int scrollLines = SystemInformation.MouseWheelScrollLines;
+                if (e.Delta > 0)
+                {
+                    this.dataGridAllColumns.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
+                }
+                else if (e.Delta < 0)
+                {
+                    this.dataGridAllColumns.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
+                }
+                // move scrollbar
+                MoveAllColumnsScrollBar();
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex);
+                // throw;
+            }
+        }
+
+        private void MoveAllColumnsScrollBar()
+        {
+            scrollAllColumns.ScrollPosition = dataGridAllColumns.FirstDisplayedScrollingRowIndex;
+        }
+
+        private void dataGridAllTanks_SelectionChanged(object sender, EventArgs e)
+        {
+            MoveAllColumnsScrollBar();
+        }
+
+        #region drag and drop items to selected colums
+
+        private void dataGridAllColumns_MouseDown(object sender, MouseEventArgs e)
+        {
+            DataGridView.HitTestInfo info = dataGridAllColumns.HitTest(e.X, e.Y);
+            if (info.RowIndex >= 0)
+            {
+                if (info.RowIndex >= 0 && info.ColumnIndex >= 0)
+                {
+                    dataGridAllColumns.Rows[info.RowIndex].Selected = true;
+                    DataGridViewRow selectedRow = dataGridAllColumns.Rows[info.RowIndex];
+                    if (selectedRow != null)
+                        dataGridAllColumns.DoDragDrop(selectedRow, DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void dataGridAllColumns_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        #endregion 
+
+        
+
+        private void groupRows_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void scrollAllColumns_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void dataGridSelectedColumns_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void dataGridSelectedColumns_DragDrop(object sender, DragEventArgs e)
+        {
+            DataGridViewRow dgvr = e.Data.GetData(typeof(DataGridViewRow)) as DataGridViewRow;
+            string id = dgvr.Cells["id"].Value.ToString();
+            string name = dgvr.Cells["Name"].Value.ToString();
+            Point cursorLocation = this.PointToClient(new Point(e.X, e.Y));
+            Point gridLocation = new Point(cursorLocation.X - dataGridSelectedColumns.Left, cursorLocation.Y - dataGridSelectedColumns.Top);
+
+            System.Windows.Forms.DataGridView.HitTestInfo hittest = dataGridSelectedColumns.HitTest(gridLocation.X, gridLocation.Y);
+            // Check if valid cell is selected
+            if (hittest.ColumnIndex != -1 && hittest.RowIndex != -1)
+            {
+                // Check if new rows should be added if new value added to last row - to make room for new value
+                int lastRow = dataGridSelectedColumns.RowCount -1;
+                if (hittest.RowIndex == lastRow)
+                   dataGridSelectedColumns.Rows.Add();
+                // Check if value exists
+                if (dataGridSelectedColumns[hittest.ColumnIndex, hittest.RowIndex].Value != null)
+                {
+                    // Check if last row if empty to make room for moving other values down
+                    if (dataGridSelectedColumns.Rows[lastRow].Cells[hittest.ColumnIndex].Value != null)
+                        dataGridSelectedColumns.Rows.Add();
+                    // Move current values down
+                    for (int i = lastRow; i > hittest.RowIndex; i--)
+                    {
+                        dataGridSelectedColumns[hittest.ColumnIndex - 1, i].Value = dataGridSelectedColumns[hittest.ColumnIndex - 1, i - 1].Value; // id
+                        dataGridSelectedColumns[hittest.ColumnIndex, i].Value = dataGridSelectedColumns[hittest.ColumnIndex, i - 1].Value; // name
+                    }
+                    // Check if last row if empty to make room for new values
+                    if (dataGridSelectedColumns.Rows[lastRow].Cells[hittest.ColumnIndex].Value != null)
+                        dataGridSelectedColumns.Rows.Add();
+                }
+                // Insert at position
+                dataGridSelectedColumns[hittest.ColumnIndex - 1, hittest.RowIndex].Value = id;
+                dataGridSelectedColumns[hittest.ColumnIndex, hittest.RowIndex].Value = name;
+                
+            }
+                
         }
 
 
-	}
+
+        
+
+
+        
+
+        
+
+        
+    }
 }

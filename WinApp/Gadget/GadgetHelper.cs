@@ -83,7 +83,7 @@ namespace WinApp.Gadget
 
 		public static List<GadgetItem> gadgets = null;
 
-		public static object[] newParameters = { null, null, null, null, null };
+		public static object[] newParameters = new object[20];
 		public static bool newParametersOK = true;
 		
 		public static void SaveGadgetPosition(int gadgetId, int left, int top)
@@ -142,6 +142,11 @@ namespace WinApp.Gadget
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 		}
 
+        public static void DeleteGadgetParameter(int gadgetId)
+        {
+            string sql = "delete from gadgetParameter where gadgetId = " + gadgetId.ToString();
+            DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+        }
 
 		public static void RemoveGadget(GadgetItem gadget)
 		{
@@ -256,7 +261,7 @@ namespace WinApp.Gadget
 				foreach (DataRow dr in dt.Rows)
 				{
 					// get parameters
-					object[] param = { null, null, null, null, null };
+					object[] param = new object[20];
 					int gadgetId = Convert.ToInt32(dr["id"]);
 					string controlName = dr["controlName"].ToString();
 					if (dr["parameterCount"] != null && Convert.ToInt32(dr["parameterCount"]) > 0)
