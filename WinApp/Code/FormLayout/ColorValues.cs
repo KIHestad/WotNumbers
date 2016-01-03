@@ -48,11 +48,18 @@ namespace WinApp.Code.FormLayout
             return wn7RatingColor;
         }
 
-        public static double[] RangeWN8 = { 0, 300, 600, 900, 1250, 1600, 1900, 2350, 2900 };
+        //public static double[] RangeWN8 = { 0, 300, 600, 900, 1250, 1600, 1900, 2350, 2900 };
+        public static double[] RangeWN8 = { 0, 380, 860, 860, 1420, 2105, 2105, 2770, 2770 };
 
         public static Color WN8color(double wn8)
         {
-            // http://wiki.wnefficiency.net/pages/Color_Scale
+            //{ "value": 380,  "color": ${"def.colorRating.very_bad" } },  //    0 - 379  - very bad   (20% of players)
+            //{ "value": 860,  "color": ${"def.colorRating.bad"      } },  //  380 - 859  - bad        (better then 20% of players)
+            //{ "value": 1420, "color": ${"def.colorRating.normal"   } },  //  860 - 1419 - normal     (better then 60% of players)
+            //{ "value": 2105, "color": ${"def.colorRating.good"     } },  // 1420 - 2104 - good       (better then 90% of players)
+            //{ "value": 2770, "color": ${"def.colorRating.very_good"} },  // 2105 - 2769 - very good  (better then 99% of players)
+            //{ "value": 9999, "color": ${"def.colorRating.unique"   } }   // 2770 - *    - unique     (better then 99.9% of players)
+
             Color wn8RatingColor =                          ColorTheme.Rating_very_bad;
             if (wn8 >= RangeWN8[8]) wn8RatingColor =        ColorTheme.Rating_super_uniqum;
             else if (wn8 >= RangeWN8[7]) wn8RatingColor =   ColorTheme.Rating_uniqum;
@@ -65,11 +72,17 @@ namespace WinApp.Code.FormLayout
             return wn8RatingColor;
         }
 
-        public static double[] RangeWR = { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
+        //public static double[] RangeWR = { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
+        public static double[] RangeWR = { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 64.5, 64.5 };
 
         public static Color WinRateColor(double wr)
         {
-            // http://wiki.wnefficiency.net/pages/Color_Scale
+              //{ "value": 46.5, "color": ${"def.colorRating.very_bad" } },   //  0   - 46.5  - very bad   (20% of players)
+              //{ "value": 48.5, "color": ${"def.colorRating.bad"      } },   // 46.5 - 48.5  - bad        (better then 20% of players)
+              //{ "value": 52.5, "color": ${"def.colorRating.normal"   } },   // 48.5 - 52.5  - normal     (better then 60% of players)
+              //{ "value": 57.5, "color": ${"def.colorRating.good"     } },   // 52.5 - 57.5  - good       (better then 90% of players)
+              //{ "value": 64.5, "color": ${"def.colorRating.very_good"} },   // 57.5 - 64.5  - very good  (better then 99% of players)
+              //{ "value": 101,  "color": ${"def.colorRating.unique"   } }    // 64.5 - 100   - unique     (better then 99.9% of players)
             Color wrRatingColor =                       ColorTheme.Rating_very_bad;
             if (wr >= RangeWR[8]) wrRatingColor =       ColorTheme.Rating_super_uniqum;
             else if (wr >= RangeWR[7]) wrRatingColor =  ColorTheme.Rating_uniqum;
@@ -85,18 +98,18 @@ namespace WinApp.Code.FormLayout
         public static Color BattleCountColor(int battleCount)
         {
             //// Dynamic color by kilo-battles
-            //  { "value": 2,   "color": ${"def.colorRating.very_bad" } },   //  0 - 1
-            //  { "value": 5,   "color": ${"def.colorRating.bad"      } },   //  2 - 4
-            //  { "value": 9,   "color": ${"def.colorRating.normal"   } },   //  5 - 8
-            //  { "value": 14,  "color": ${"def.colorRating.good"     } },   //  9 - 13
-            //  { "value": 20,  "color": ${"def.colorRating.very_good"} },   // 14 - 19
-            //  { "value": 999, "color": ${"def.colorRating.unique"   } }    // 20 - *
+              //{ "value": 2,   "color": ${"def.colorRating.very_bad" } },   //  0 - 2
+              //{ "value": 6,   "color": ${"def.colorRating.bad"      } },   //  2 - 6
+              //{ "value": 16,  "color": ${"def.colorRating.normal"   } },   //  6 - 16
+              //{ "value": 30,  "color": ${"def.colorRating.good"     } },   // 16 - 30
+              //{ "value": 43,  "color": ${"def.colorRating.very_good"} },   // 30 - 43
+              //{ "value": 999, "color": ${"def.colorRating.unique"   } }    // 43 - *
             double kBattles =   Math.Round(Convert.ToDouble(battleCount / 1000), 0);
             Color battleCountRatingColor =                      ColorTheme.Rating_very_bad;
-            if (kBattles > 20) battleCountRatingColor =         ColorTheme.Rating_uniqum;
-            else if (kBattles > 14) battleCountRatingColor =    ColorTheme.Rating_great;
-            else if (kBattles > 9) battleCountRatingColor =     ColorTheme.Rating_good;
-            else if (kBattles > 5) battleCountRatingColor =     ColorTheme.Rating_below_average;
+            if (kBattles > 43) battleCountRatingColor =         ColorTheme.Rating_uniqum;
+            else if (kBattles > 30) battleCountRatingColor =    ColorTheme.Rating_great;
+            else if (kBattles > 16) battleCountRatingColor =     ColorTheme.Rating_good;
+            else if (kBattles > 6) battleCountRatingColor =     ColorTheme.Rating_below_average;
             else if (kBattles > 2) battleCountRatingColor =     ColorTheme.Rating_bad;
             return battleCountRatingColor;
         }

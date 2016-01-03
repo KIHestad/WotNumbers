@@ -32,6 +32,11 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(paramTotalStats));
             this.paramTotalStatsTheme = new BadForm();
+            this.txtHeader = new BadTextBox();
+            this.badLabel4 = new BadLabel();
+            this.ddBattleMode = new BadDropDownBox();
+            this.ddGridCount = new BadDropDownBox();
+            this.ddTimeSpan = new BadDropDownBox();
             this.btnRevert = new BadButton();
             this.btnClearAll = new BadButton();
             this.toolAllColumns = new System.Windows.Forms.ToolStrip();
@@ -57,24 +62,21 @@
             this.tool_AddRowBottom = new System.Windows.Forms.ToolStripButton();
             this.tool_AddRow = new System.Windows.Forms.ToolStripButton();
             this.tool_RemoveRow = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tool_HeaderName = new System.Windows.Forms.ToolStripButton();
             this.dataGridSelectedColumns = new System.Windows.Forms.DataGridView();
             this.lblSelectedColumns = new BadLabel();
             this.scrollAllColumns = new BadScrollBar();
             this.dataGridAllColumns = new System.Windows.Forms.DataGridView();
             this.btnDefault = new BadButton();
-            this.ddGridCount = new BadDropDownBox();
             this.badLabel3 = new BadLabel();
-            this.ddTimeSpan = new BadDropDownBox();
             this.badLabel2 = new BadLabel();
             this.btnCancel = new BadButton();
             this.btnSelect = new BadButton();
-            this.ddBattleMode = new BadDropDownBox();
             this.badLabel1 = new BadLabel();
             this.badGroupBox1 = new BadGroupBox();
             this.lblAllColumns = new BadLabel();
             this.groupRows = new BadGroupBox();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tool_HeaderName = new System.Windows.Forms.ToolStripButton();
             this.paramTotalStatsTheme.SuspendLayout();
             this.toolAllColumns.SuspendLayout();
             this.toolSelectedColumns.SuspendLayout();
@@ -85,6 +87,11 @@
             // paramTotalStatsTheme
             // 
             this.paramTotalStatsTheme.BackColor = System.Drawing.SystemColors.Control;
+            this.paramTotalStatsTheme.Controls.Add(this.txtHeader);
+            this.paramTotalStatsTheme.Controls.Add(this.badLabel4);
+            this.paramTotalStatsTheme.Controls.Add(this.ddBattleMode);
+            this.paramTotalStatsTheme.Controls.Add(this.ddGridCount);
+            this.paramTotalStatsTheme.Controls.Add(this.ddTimeSpan);
             this.paramTotalStatsTheme.Controls.Add(this.btnRevert);
             this.paramTotalStatsTheme.Controls.Add(this.btnClearAll);
             this.paramTotalStatsTheme.Controls.Add(this.toolAllColumns);
@@ -94,13 +101,10 @@
             this.paramTotalStatsTheme.Controls.Add(this.scrollAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.dataGridAllColumns);
             this.paramTotalStatsTheme.Controls.Add(this.btnDefault);
-            this.paramTotalStatsTheme.Controls.Add(this.ddGridCount);
             this.paramTotalStatsTheme.Controls.Add(this.badLabel3);
-            this.paramTotalStatsTheme.Controls.Add(this.ddTimeSpan);
             this.paramTotalStatsTheme.Controls.Add(this.badLabel2);
             this.paramTotalStatsTheme.Controls.Add(this.btnCancel);
             this.paramTotalStatsTheme.Controls.Add(this.btnSelect);
-            this.paramTotalStatsTheme.Controls.Add(this.ddBattleMode);
             this.paramTotalStatsTheme.Controls.Add(this.badLabel1);
             this.paramTotalStatsTheme.Controls.Add(this.badGroupBox1);
             this.paramTotalStatsTheme.Controls.Add(this.lblAllColumns);
@@ -117,7 +121,7 @@
             this.paramTotalStatsTheme.MainArea = mainAreaClass1;
             this.paramTotalStatsTheme.Name = "paramTotalStatsTheme";
             this.paramTotalStatsTheme.Resizable = true;
-            this.paramTotalStatsTheme.Size = new System.Drawing.Size(713, 482);
+            this.paramTotalStatsTheme.Size = new System.Drawing.Size(820, 506);
             this.paramTotalStatsTheme.SystemExitImage = null;
             this.paramTotalStatsTheme.SystemMaximizeImage = null;
             this.paramTotalStatsTheme.SystemMinimizeImage = null;
@@ -126,13 +130,74 @@
             this.paramTotalStatsTheme.TitleHeight = 26;
             this.paramTotalStatsTheme.Resize += new System.EventHandler(this.badForm1_Resize);
             // 
+            // txtHeader
+            // 
+            this.txtHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtHeader.HasFocus = false;
+            this.txtHeader.Image = null;
+            this.txtHeader.Location = new System.Drawing.Point(84, 71);
+            this.txtHeader.MultilineAllow = false;
+            this.txtHeader.Name = "txtHeader";
+            this.txtHeader.PasswordChar = '\0';
+            this.txtHeader.ReadOnly = false;
+            this.txtHeader.Size = new System.Drawing.Size(195, 23);
+            this.txtHeader.TabIndex = 28;
+            this.txtHeader.Text = "Total Statistics";
+            this.txtHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtHeader.ToolTipText = "";
+            // 
+            // badLabel4
+            // 
+            this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel4.Dimmed = false;
+            this.badLabel4.Image = null;
+            this.badLabel4.Location = new System.Drawing.Point(39, 71);
+            this.badLabel4.Name = "badLabel4";
+            this.badLabel4.Size = new System.Drawing.Size(47, 23);
+            this.badLabel4.TabIndex = 27;
+            this.badLabel4.Text = "Header:";
+            this.badLabel4.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // ddBattleMode
+            // 
+            this.ddBattleMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddBattleMode.Image = null;
+            this.ddBattleMode.Location = new System.Drawing.Point(371, 71);
+            this.ddBattleMode.Name = "ddBattleMode";
+            this.ddBattleMode.Size = new System.Drawing.Size(110, 23);
+            this.ddBattleMode.TabIndex = 1;
+            this.ddBattleMode.Click += new System.EventHandler(this.ddBattleMode_Click);
+            // 
+            // ddGridCount
+            // 
+            this.ddGridCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddGridCount.Image = null;
+            this.ddGridCount.Location = new System.Drawing.Point(725, 71);
+            this.ddGridCount.Name = "ddGridCount";
+            this.ddGridCount.Size = new System.Drawing.Size(52, 23);
+            this.ddGridCount.TabIndex = 7;
+            this.ddGridCount.Text = "3";
+            this.ddGridCount.TextChanged += new System.EventHandler(this.ddGridCount_TextChanged);
+            this.ddGridCount.Click += new System.EventHandler(this.ddGridCount_Click);
+            // 
+            // ddTimeSpan
+            // 
+            this.ddTimeSpan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddTimeSpan.Image = null;
+            this.ddTimeSpan.Location = new System.Drawing.Point(556, 71);
+            this.ddTimeSpan.Name = "ddTimeSpan";
+            this.ddTimeSpan.Size = new System.Drawing.Size(98, 23);
+            this.ddTimeSpan.TabIndex = 5;
+            this.ddTimeSpan.Click += new System.EventHandler(this.ddTimeSpan_Click);
+            // 
             // btnRevert
             // 
             this.btnRevert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnRevert.BlackButton = false;
             this.btnRevert.Checked = false;
             this.btnRevert.Image = null;
-            this.btnRevert.Location = new System.Drawing.Point(162, 436);
+            this.btnRevert.Location = new System.Drawing.Point(162, 460);
             this.btnRevert.Name = "btnRevert";
             this.btnRevert.Size = new System.Drawing.Size(64, 23);
             this.btnRevert.TabIndex = 26;
@@ -146,7 +211,7 @@
             this.btnClearAll.BlackButton = false;
             this.btnClearAll.Checked = false;
             this.btnClearAll.Image = null;
-            this.btnClearAll.Location = new System.Drawing.Point(92, 436);
+            this.btnClearAll.Location = new System.Drawing.Point(92, 460);
             this.btnClearAll.Name = "btnClearAll";
             this.btnClearAll.Size = new System.Drawing.Size(64, 23);
             this.btnClearAll.TabIndex = 25;
@@ -427,6 +492,21 @@
             this.tool_RemoveRow.ToolTipText = "Remove row as selected position";
             this.tool_RemoveRow.Click += new System.EventHandler(this.tool_RemoveRow_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tool_HeaderName
+            // 
+            this.tool_HeaderName.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tool_HeaderName.Image = ((System.Drawing.Image)(resources.GetObject("tool_HeaderName.Image")));
+            this.tool_HeaderName.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tool_HeaderName.Name = "tool_HeaderName";
+            this.tool_HeaderName.Size = new System.Drawing.Size(84, 22);
+            this.tool_HeaderName.Text = "Header Name";
+            this.tool_HeaderName.Click += new System.EventHandler(this.tool_HeaderName_Click);
+            // 
             // dataGridSelectedColumns
             // 
             this.dataGridSelectedColumns.AllowDrop = true;
@@ -448,7 +528,7 @@
             this.dataGridSelectedColumns.RowHeadersVisible = false;
             this.dataGridSelectedColumns.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridSelectedColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridSelectedColumns.Size = new System.Drawing.Size(358, 202);
+            this.dataGridSelectedColumns.Size = new System.Drawing.Size(358, 226);
             this.dataGridSelectedColumns.TabIndex = 23;
             this.dataGridSelectedColumns.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragDrop);
             this.dataGridSelectedColumns.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragOver);
@@ -481,7 +561,7 @@
             this.scrollAllColumns.ScrollNecessary = true;
             this.scrollAllColumns.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
             this.scrollAllColumns.ScrollPosition = 0;
-            this.scrollAllColumns.Size = new System.Drawing.Size(17, 202);
+            this.scrollAllColumns.Size = new System.Drawing.Size(17, 226);
             this.scrollAllColumns.TabIndex = 20;
             this.scrollAllColumns.TabStop = false;
             this.scrollAllColumns.Text = "badScrollBar1";
@@ -510,7 +590,7 @@
             this.dataGridAllColumns.RowHeadersVisible = false;
             this.dataGridAllColumns.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridAllColumns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridAllColumns.Size = new System.Drawing.Size(217, 202);
+            this.dataGridAllColumns.Size = new System.Drawing.Size(217, 226);
             this.dataGridAllColumns.TabIndex = 19;
             this.dataGridAllColumns.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridAllColumns_DragEnter);
             this.dataGridAllColumns.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridAllColumns_MouseDown);
@@ -521,7 +601,7 @@
             this.btnDefault.BlackButton = false;
             this.btnDefault.Checked = false;
             this.btnDefault.Image = null;
-            this.btnDefault.Location = new System.Drawing.Point(22, 436);
+            this.btnDefault.Location = new System.Drawing.Point(22, 460);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(64, 23);
             this.btnDefault.TabIndex = 11;
@@ -529,44 +609,26 @@
             this.btnDefault.ToolTipText = "Clear current selected columns and add default setup";
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
             // 
-            // ddGridCount
-            // 
-            this.ddGridCount.Image = null;
-            this.ddGridCount.Location = new System.Drawing.Point(610, 71);
-            this.ddGridCount.Name = "ddGridCount";
-            this.ddGridCount.Size = new System.Drawing.Size(52, 23);
-            this.ddGridCount.TabIndex = 7;
-            this.ddGridCount.Text = "3";
-            this.ddGridCount.TextChanged += new System.EventHandler(this.ddGridCount_TextChanged);
-            this.ddGridCount.Click += new System.EventHandler(this.ddGridCount_Click);
-            // 
             // badLabel3
             // 
+            this.badLabel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel3.Dimmed = false;
             this.badLabel3.Image = null;
-            this.badLabel3.Location = new System.Drawing.Point(553, 71);
+            this.badLabel3.Location = new System.Drawing.Point(672, 71);
             this.badLabel3.Name = "badLabel3";
             this.badLabel3.Size = new System.Drawing.Size(62, 23);
             this.badLabel3.TabIndex = 6;
             this.badLabel3.Text = "Columns:";
             this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
-            // ddTimeSpan
-            // 
-            this.ddTimeSpan.Image = null;
-            this.ddTimeSpan.Location = new System.Drawing.Point(372, 71);
-            this.ddTimeSpan.Name = "ddTimeSpan";
-            this.ddTimeSpan.Size = new System.Drawing.Size(134, 23);
-            this.ddTimeSpan.TabIndex = 5;
-            this.ddTimeSpan.Click += new System.EventHandler(this.ddTimeSpan_Click);
-            // 
             // badLabel2
             // 
+            this.badLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel2.Dimmed = false;
             this.badLabel2.Image = null;
-            this.badLabel2.Location = new System.Drawing.Point(304, 71);
+            this.badLabel2.Location = new System.Drawing.Point(497, 71);
             this.badLabel2.Name = "badLabel2";
             this.badLabel2.Size = new System.Drawing.Size(62, 23);
             this.badLabel2.TabIndex = 4;
@@ -579,7 +641,7 @@
             this.btnCancel.BlackButton = false;
             this.btnCancel.Checked = false;
             this.btnCancel.Image = null;
-            this.btnCancel.Location = new System.Drawing.Point(622, 436);
+            this.btnCancel.Location = new System.Drawing.Point(729, 460);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(64, 23);
             this.btnCancel.TabIndex = 3;
@@ -593,7 +655,7 @@
             this.btnSelect.BlackButton = false;
             this.btnSelect.Checked = false;
             this.btnSelect.Image = null;
-            this.btnSelect.Location = new System.Drawing.Point(553, 436);
+            this.btnSelect.Location = new System.Drawing.Point(660, 460);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(64, 23);
             this.btnSelect.TabIndex = 2;
@@ -601,21 +663,13 @@
             this.btnSelect.ToolTipText = "";
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
-            // ddBattleMode
-            // 
-            this.ddBattleMode.Image = null;
-            this.ddBattleMode.Location = new System.Drawing.Point(125, 71);
-            this.ddBattleMode.Name = "ddBattleMode";
-            this.ddBattleMode.Size = new System.Drawing.Size(134, 23);
-            this.ddBattleMode.TabIndex = 1;
-            this.ddBattleMode.Click += new System.EventHandler(this.ddBattleMode_Click);
-            // 
             // badLabel1
             // 
+            this.badLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel1.Dimmed = false;
             this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(47, 71);
+            this.badLabel1.Location = new System.Drawing.Point(300, 71);
             this.badLabel1.Name = "badLabel1";
             this.badLabel1.Size = new System.Drawing.Size(76, 23);
             this.badLabel1.TabIndex = 0;
@@ -630,7 +684,7 @@
             this.badGroupBox1.Image = null;
             this.badGroupBox1.Location = new System.Drawing.Point(22, 45);
             this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(664, 69);
+            this.badGroupBox1.Size = new System.Drawing.Size(771, 69);
             this.badGroupBox1.TabIndex = 8;
             this.badGroupBox1.Text = "Settings";
             // 
@@ -657,33 +711,18 @@
             this.groupRows.Image = null;
             this.groupRows.Location = new System.Drawing.Point(22, 131);
             this.groupRows.Name = "groupRows";
-            this.groupRows.Size = new System.Drawing.Size(664, 289);
+            this.groupRows.Size = new System.Drawing.Size(771, 313);
             this.groupRows.TabIndex = 16;
             this.groupRows.TabStop = false;
             this.groupRows.Text = "Rows";
             this.groupRows.DragOver += new System.Windows.Forms.DragEventHandler(this.groupRows_DragOver);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // tool_HeaderName
-            // 
-            this.tool_HeaderName.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tool_HeaderName.Image = ((System.Drawing.Image)(resources.GetObject("tool_HeaderName.Image")));
-            this.tool_HeaderName.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tool_HeaderName.Name = "tool_HeaderName";
-            this.tool_HeaderName.Size = new System.Drawing.Size(84, 22);
-            this.tool_HeaderName.Text = "Header Name";
-            this.tool_HeaderName.Click += new System.EventHandler(this.tool_HeaderName_Click);
             // 
             // paramTotalStats
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(713, 482);
+            this.ClientSize = new System.Drawing.Size(820, 506);
             this.Controls.Add(this.paramTotalStatsTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MinimumSize = new System.Drawing.Size(713, 482);
@@ -751,5 +790,7 @@
         private BadButton btnRevert;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton tool_HeaderName;
+        private BadTextBox txtHeader;
+        private BadLabel badLabel4;
 	}
 }

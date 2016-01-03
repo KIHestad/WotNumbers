@@ -351,7 +351,7 @@ namespace WinApp.Code
             // Get colGroups to show in toolbar
             string forGadgetWhere = "";
             if (forGadget)
-                forGadgetWhere = " AND colDataType NOT IN ('VarChar','Image') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
+                forGadgetWhere = " AND colDataType NOT IN ('VarChar', 'Image', 'DateTime') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
             string sql = "select colGroup from columnSelection WHERE colType=@colType AND colGroup IS NOT NULL " + forGadgetWhere + " order by position; "; // First get all sorted by position
             DB.AddWithValue(ref sql, "@colType", (int)view, DB.SqlDataType.Int);
             DataTable dt = DB.FetchData(sql);
@@ -383,7 +383,7 @@ namespace WinApp.Code
         {
             string forGadgetWhere = "";
             if (forGadget)
-                forGadgetWhere = " AND colDataType NOT IN ('VarChar','Image') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
+                forGadgetWhere = " AND colDataType NOT IN ('VarChar', 'Image', 'DateTime') AND colGroup NOT IN ('Module', 'Equip/Crew') "; 
             string sql = "SELECT name as 'Name', description as 'Description', id, colWidth FROM columnSelection WHERE colType=@colType " + forGadgetWhere + " " ;
             // Check filter
             string colGroup = "All";

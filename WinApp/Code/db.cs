@@ -157,7 +157,7 @@ namespace WinApp.Code
 					if (RunInBatch)
 					{
 						lastRunnedSQL = sql;
-						sql = "BEGIN TRANSACTION; " + sql + "END TRANSACTION; ";
+						sql = "BEGIN TRANSACTION; " + sql + "; END TRANSACTION; ";
 						SQLiteCommand command = new SQLiteCommand(sql, con);
 						command.ExecuteNonQuery();
 						Application.DoEvents(); 

@@ -33,6 +33,7 @@
             this.panelFooter = new System.Windows.Forms.Panel();
             this.lblTotalStats = new System.Windows.Forms.Label();
             this.lblBattleMode = new System.Windows.Forms.Label();
+            this.lblHeader = new System.Windows.Forms.Label();
             this.btnToday = new BadButton();
             this.btnWeek = new BadButton();
             this.btnMonth = new BadButton();
@@ -52,26 +53,27 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGrid.Location = new System.Drawing.Point(1, 1);
+            this.dataGrid.Location = new System.Drawing.Point(1, 25);
             this.dataGrid.Name = "dataGrid";
             this.dataGrid.ReadOnly = true;
             this.dataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGrid.ShowEditingIcon = false;
-            this.dataGrid.Size = new System.Drawing.Size(458, 177);
+            this.dataGrid.Size = new System.Drawing.Size(458, 152);
             this.dataGrid.TabIndex = 0;
+            this.dataGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGrid_CellPainting);
             // 
             // panelFooter
             // 
             this.panelFooter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
+            this.panelFooter.BackColor = System.Drawing.Color.Transparent;
+            this.panelFooter.Controls.Add(this.lblTotalStats);
+            this.panelFooter.Controls.Add(this.lblBattleMode);
             this.panelFooter.Controls.Add(this.btnToday);
             this.panelFooter.Controls.Add(this.btnWeek);
             this.panelFooter.Controls.Add(this.btnMonth);
             this.panelFooter.Controls.Add(this.btnMonth3);
             this.panelFooter.Controls.Add(this.btnTotal);
-            this.panelFooter.Controls.Add(this.lblBattleMode);
-            this.panelFooter.Controls.Add(this.lblTotalStats);
             this.panelFooter.Location = new System.Drawing.Point(1, 177);
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Size = new System.Drawing.Size(458, 22);
@@ -79,26 +81,44 @@
             // 
             // lblTotalStats
             // 
-            this.lblTotalStats.AutoSize = true;
-            this.lblTotalStats.BackColor = System.Drawing.Color.Transparent;
+            this.lblTotalStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.lblTotalStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalStats.ForeColor = System.Drawing.Color.Silver;
-            this.lblTotalStats.Location = new System.Drawing.Point(3, 5);
+            this.lblTotalStats.Location = new System.Drawing.Point(1, 3);
+            this.lblTotalStats.Margin = new System.Windows.Forms.Padding(10, 1, 10, 0);
             this.lblTotalStats.Name = "lblTotalStats";
-            this.lblTotalStats.Size = new System.Drawing.Size(61, 13);
+            this.lblTotalStats.Padding = new System.Windows.Forms.Padding(5, 1, 5, 0);
+            this.lblTotalStats.Size = new System.Drawing.Size(118, 16);
             this.lblTotalStats.TabIndex = 26;
             this.lblTotalStats.Text = "Footer Text";
             // 
             // lblBattleMode
             // 
-            this.lblBattleMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblBattleMode.BackColor = System.Drawing.Color.Transparent;
+            this.lblBattleMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.lblBattleMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBattleMode.ForeColor = System.Drawing.Color.Silver;
-            this.lblBattleMode.Location = new System.Drawing.Point(331, 4);
+            this.lblBattleMode.Location = new System.Drawing.Point(331, 3);
             this.lblBattleMode.Name = "lblBattleMode";
-            this.lblBattleMode.Size = new System.Drawing.Size(124, 14);
+            this.lblBattleMode.Padding = new System.Windows.Forms.Padding(5, 1, 5, 1);
+            this.lblBattleMode.Size = new System.Drawing.Size(124, 16);
             this.lblBattleMode.TabIndex = 27;
             this.lblBattleMode.Text = "Battle mode";
             this.lblBattleMode.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblHeader
+            // 
+            this.lblHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.lblHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
+            this.lblHeader.Location = new System.Drawing.Point(1, 1);
+            this.lblHeader.Name = "lblHeader";
+            this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.lblHeader.Size = new System.Drawing.Size(458, 22);
+            this.lblHeader.TabIndex = 22;
+            this.lblHeader.Text = "Heading";
+            this.lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnToday
             // 
@@ -181,6 +201,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.panelFooter);
             this.Controls.Add(this.dataGrid);
             this.MinimumSize = new System.Drawing.Size(100, 40);
@@ -191,7 +212,6 @@
             this.Resize += new System.EventHandler(this.ucTotalStats_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
             this.panelFooter.ResumeLayout(false);
-            this.panelFooter.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -207,6 +227,7 @@
         private BadButton btnTotal;
         private System.Windows.Forms.Label lblTotalStats;
         private System.Windows.Forms.Label lblBattleMode;
+        private System.Windows.Forms.Label lblHeader;
 
     }
 }

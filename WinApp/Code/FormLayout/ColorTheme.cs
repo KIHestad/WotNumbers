@@ -122,6 +122,16 @@ namespace WinApp.Code
         public static Color Rating_uniqum =         Rating_8_purple;
         public static Color Rating_super_uniqum =   Rating_9_purpleDark;
 
+        // XVM rating colors
+        public static Color Rating_XVM_very_bad = Rating_0_redDark;
+        public static Color Rating_XVM_bad = Rating_1_red;
+        public static Color Rating_XVM_normal = Rating_3_yellow;
+        public static Color Rating_XVM_good = Rating_4_green;
+        public static Color Rating_XVM_very_good = Rating_7_blueDark;
+        public static Color Rating_XVM_unique = Rating_8_purple;
+        
+
+
 		public static int[] DefaultChartBarColors()
 		{
 			int[] defaultColors = new int[16];

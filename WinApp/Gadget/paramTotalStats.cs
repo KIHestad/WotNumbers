@@ -16,6 +16,7 @@ namespace WinApp.Gadget
         string _lastSavedGridCount {  get; set; }
         object[] currentParameters = new object[20];
         string[] headers = new string[10];
+        int fixedParams = 5; // Number of fixed parameters before grid rows params starts
 
         public paramTotalStats(int gadgetId = -1)
 		{
@@ -52,7 +53,16 @@ namespace WinApp.Gadget
                     string headerList = currentParameters[3].ToString();
                     headers = headerList.Split(new string[] { ";" }, StringSplitOptions.None);
                 }
+                if (currentParameters[4] != null)
+                {
+                    txtHeader.Text = currentParameters[4].ToString();
+                }
+
             } 
+            else
+            {
+                _lastSavedGridCount = "3";
+            }
 
             // All colums section
             // Style toolbar and set buttons
@@ -121,13 +131,20 @@ namespace WinApp.Gadget
                 colCount++;
                 if (colCount == 1)
                 {
-                    col.Visible = false;
+                    // col 1 should not be visible, holds ID as hiddel col
+                    col.Visible = false; 
                 }
                 else
                 {
+                    // col 2 should be visible, holds col name
                     col.Visible = true;
-                    if (headers[visibleColCount] != null)
+                    // Check if header exists and add header name
+                    if (visibleColCount < headers.Length && headers[visibleColCount] != null & headers[visibleColCount] != "")
                         col.HeaderText = headers[visibleColCount];
+                    else
+                        col.HeaderText = "Column " + (visibleColCount + 1).ToString();
+                        
+                    // Get ready for next iteration
                     visibleColCount++;
                     colCount = 0;
                 }
@@ -137,25 +154,13 @@ namespace WinApp.Gadget
         private void SetSelectedColumnsDataGrid()
         {
             ClearSelectedColumnsDataGrid();
-            if (currentParameters.Length > 4)
+            if (currentParameters.Length > fixedParams)
             {
-                for (int i = 4; i < currentParameters.Length; i++)
+                for (int i = fixedParams; i < currentParameters.Length; i++)
                 {
                     if (currentParameters[i] != null)
                     {
-                        string row = currentParameters[i].ToString();
-                        string[] rowItems = row.Split(new string[] { ";" }, StringSplitOptions.None);
-                        int rowId = dataGridSelectedColumns.Rows.Add();
-                        DataGridViewRow dgvr = dataGridSelectedColumns.Rows[rowId];
-                        int col = 0;
-                        foreach (DataGridViewCell dgvc in dgvr.Cells)
-                        {
-                            if (col <= rowItems.Length -1)
-                            {
-                                dgvc.Value = rowItems[col];
-                                col++;
-                            }
-                        }
+                        ReadRowIntoSelectedColumnsDataGrid(currentParameters[i].ToString());
                     }
                 }
             }
@@ -163,6 +168,21 @@ namespace WinApp.Gadget
             dataGridSelectedColumns.Rows.Add();
         }
 
+        private void ReadRowIntoSelectedColumnsDataGrid(string row)
+        {
+            string[] rowItems = row.Split(new string[] { ";" }, StringSplitOptions.None);
+            int rowId = dataGridSelectedColumns.Rows.Add();
+            DataGridViewRow dgvr = dataGridSelectedColumns.Rows[rowId];
+            int col = 0;
+            foreach (DataGridViewCell dgvc in dgvr.Cells)
+            {
+                if (col <= rowItems.Length - 1)
+                {
+                    dgvc.Value = rowItems[col];
+                    col++;
+                }
+            }
+        }
 
         private void toolAvaliableCol_Group_Click(object sender, EventArgs e)
         {
@@ -182,10 +202,27 @@ namespace WinApp.Gadget
 
 		private void btnSelect_Click(object sender, EventArgs e)
 		{
-			if (ddBattleMode.Text == "")
-			{
-				MsgBox.Show("Please select a battle mode", "Missing battle mode");
-			}
+            string headerList = "";
+            bool headerListOK = true;
+            for (int i = 1; i < dataGridSelectedColumns.ColumnCount; i = i + 2)
+            {
+                string colHeader = dataGridSelectedColumns.Columns[i].HeaderText;
+                headerList += colHeader + ";";
+                if (colHeader == "")
+                    headerListOK = false;
+            }
+            if (!headerListOK)
+            {
+                MsgBox.Show("Please enter a column header for all columns", "Missing column header");
+            }
+            if (txtHeader.Text.Trim() == "")
+            {
+                MsgBox.Show("Please select a header text", "Missing header text");
+            }
+            if (ddBattleMode.Text == "")
+            {
+                MsgBox.Show("Please select a battle mode", "Missing battle mode");
+            }
             else if (ddTimeSpan.Text == "")
             {
                 MsgBox.Show("Please select a time span", "Missing time span");
@@ -201,20 +238,16 @@ namespace WinApp.Gadget
                 if (ti != null)
                     paramTimeSpan = ti.Name;
                 // Create new param according to number of rows in datagrid
-                int paramCount = 4 + dataGridSelectedColumns.RowCount;
+                int paramCount = fixedParams + dataGridSelectedColumns.RowCount;
                 GadgetHelper.newParameters = new object[paramCount];
                 // Add settings
 				GadgetHelper.newParameters[0] = paramBattleMode;
                 GadgetHelper.newParameters[1] = paramTimeSpan;
                 GadgetHelper.newParameters[2] = Convert.ToInt32(ddGridCount.Text);
-                string headerList = "";
-                for (int i = 1; i < dataGridSelectedColumns.ColumnCount; i = i + 2)
-                {
-                    headerList += dataGridSelectedColumns.Columns[i].HeaderText + ";";
-                }
                 GadgetHelper.newParameters[3] = headerList;
+                GadgetHelper.newParameters[4] = txtHeader.Text;
                 // Add colums
-                int paramId = 4;
+                int paramId = fixedParams;
                 foreach (DataGridViewRow dgvr in dataGridSelectedColumns.Rows)
                 {
                     string paramValue = "";
@@ -278,7 +311,6 @@ namespace WinApp.Gadget
                     string newColNum = (i + 1).ToString();
                     dataGridSelectedColumns.Columns.Add("id" + newColNum, "id" + newColNum);
                     dataGridSelectedColumns.Columns.Add("Column " + newColNum, "Column " + newColNum);
-
                 }
             }
             FormatSelectedColumnDataGrid();
@@ -548,7 +580,50 @@ namespace WinApp.Gadget
 
         private void btnDefault_Click(object sender, EventArgs e)
         {
+            // From table : SELECT * FROM gadgetParameter WHERE gadgetid = 1344
+            
+            //15
+            //Total
+            //4
+            //Battle count;Performance;Damage;XP / Credits;
+            //My Total Statistics
+            //50;Battles;131;Frags;128;Dmg;137;XP Tot;
+            //86;Victory;191;Avg Frags;188;Avg Dmg;156;XP Max;
+            //95;Win Rate;155;Frags Max;211;Dmg Assist;140;XP Avg;
+            //91;Draw;;;212;Avg Dmg Assist;;;
+            //99;Draw Rate;134;Cap;189;Avg Dmg Spot;533;Credit Btl Count;
+            //92;Defeat;203;Avg Cap;190;Avg Dmg Track;534;Avg Cred Income;
+            //100;Defeat Rate;135;Def;220;Dmg C/R;535;Avg Cred Cost;
+            //96;Survived;204;Avg Def;;;536;Avg Cred Result;
+            //98;Survival Rate;136;Spot;132;Received Damage;537;Max Cred Income;
+            //219;K/D Ratio;205;Avg Spot;210;Received Avg Dmg;540;Tot Cred Income;
 
+            ClearSelectedColumnsDataGrid();
+            txtHeader.Text = "Default Total Statistics";
+            ddBattleMode.Text = "Random";
+            ddTimeSpan.Text = "Total";
+            ddGridCount.Text = "4";
+            string[] rows = new string[10];
+            rows[0] = "50;Battles;131;Frags;128;Dmg;137;XP Tot;";
+            rows[1] = "86;Victory;191;Avg Frags;188;Avg Dmg;156;XP Max;";
+            rows[2] = "95;Win Rate;155;Frags Max;211;Dmg Assist;140;XP Avg;";
+            rows[3] = "91;Draw;;;212;Avg Dmg Assist;;;";
+            rows[4] = "99;Draw Rate;134;Cap;189;Avg Dmg Spot;533;Credit Btl Count;";
+            rows[5] = "92;Defeat;203;Avg Cap;190;Avg Dmg Track;534;Avg Cred Income;";
+            rows[6] = "100;Defeat Rate;135;Def;220;Dmg C/R;535;Avg Cred Cost;";
+            rows[7] = "96;Survived;204;Avg Def;;;536;Avg Cred Result;";
+            rows[8] = "98;Survival Rate;136;Spot;132;Received Damage;537;Max Cred Income;";
+            rows[9] = "219;K/D Ratio;205;Avg Spot;210;Received Avg Dmg;540;Tot Cred Income;";
+            foreach (string row in rows)
+            {
+                ReadRowIntoSelectedColumnsDataGrid(row);
+            }
+            dataGridSelectedColumns.Rows.Add();
+            dataGridSelectedColumns.Columns[1].HeaderText = "Battle count";
+            dataGridSelectedColumns.Columns[3].HeaderText = "Performance";
+            dataGridSelectedColumns.Columns[5].HeaderText = "Damage";
+            dataGridSelectedColumns.Columns[7].HeaderText = "XP / Credits";
+            ResizeNow();
         }
 
         private void btnClearAll_Click(object sender, EventArgs e)

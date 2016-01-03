@@ -39,9 +39,10 @@
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(206)))));
-            this.label1.Location = new System.Drawing.Point(1, 1);
+            this.label1.Location = new System.Drawing.Point(1, 7);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(238, 24);
+            this.label1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.label1.Size = new System.Drawing.Size(238, 22);
             this.label1.TabIndex = 0;
             this.label1.Text = "Heading";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -52,9 +53,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.Controls.Add(this.label1);
-            this.MinimumSize = new System.Drawing.Size(40, 26);
+            this.MinimumSize = new System.Drawing.Size(40, 20);
             this.Name = "ucHeading";
-            this.Size = new System.Drawing.Size(240, 26);
+            this.Size = new System.Drawing.Size(240, 30);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucHeading_Paint);
             this.ResumeLayout(false);
 
