@@ -155,6 +155,7 @@
             this.MinimumSize = new System.Drawing.Size(100, 40);
             this.Name = "ucChartBattle";
             this.Size = new System.Drawing.Size(200, 170);
+            this.Tag = "ucChartBattle";
             this.Load += new System.EventHandler(this.ucChartBattle_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucChartBattle_Paint);
             this.Resize += new System.EventHandler(this.ucChartBattle_Resize);

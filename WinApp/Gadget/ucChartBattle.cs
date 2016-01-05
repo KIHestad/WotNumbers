@@ -23,6 +23,11 @@ namespace WinApp.Gadget
 			chart1.Left = 1;
 		}
 
+        public void DataBind()
+        {
+
+        }
+
 		private void ucChartBattle_Resize(object sender, EventArgs e)
 		{
 			chart1.Width = this.Width - 2;

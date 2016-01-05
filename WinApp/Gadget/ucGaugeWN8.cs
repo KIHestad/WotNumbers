@@ -25,16 +25,9 @@ namespace WinApp.Gadget
 		private void ucGauge_Load(object sender, EventArgs e)
 		{
 			SelectTimeRangeButton(); 
-			DataBind();
 		}
 
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DataBind();
-			base.OnInvalidated(e);
-		}
-
-		private void DataBind()
+		public void DataBind()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;

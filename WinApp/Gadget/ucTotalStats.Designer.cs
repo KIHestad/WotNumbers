@@ -58,7 +58,7 @@
             this.dataGrid.ReadOnly = true;
             this.dataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGrid.ShowEditingIcon = false;
-            this.dataGrid.Size = new System.Drawing.Size(458, 152);
+            this.dataGrid.Size = new System.Drawing.Size(198, 112);
             this.dataGrid.TabIndex = 0;
             this.dataGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGrid_CellPainting);
             // 
@@ -67,16 +67,16 @@
             this.panelFooter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelFooter.BackColor = System.Drawing.Color.Transparent;
-            this.panelFooter.Controls.Add(this.lblTotalStats);
-            this.panelFooter.Controls.Add(this.lblBattleMode);
             this.panelFooter.Controls.Add(this.btnToday);
             this.panelFooter.Controls.Add(this.btnWeek);
             this.panelFooter.Controls.Add(this.btnMonth);
             this.panelFooter.Controls.Add(this.btnMonth3);
             this.panelFooter.Controls.Add(this.btnTotal);
-            this.panelFooter.Location = new System.Drawing.Point(1, 177);
+            this.panelFooter.Controls.Add(this.lblTotalStats);
+            this.panelFooter.Controls.Add(this.lblBattleMode);
+            this.panelFooter.Location = new System.Drawing.Point(1, 137);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Size = new System.Drawing.Size(458, 22);
+            this.panelFooter.Size = new System.Drawing.Size(198, 22);
             this.panelFooter.TabIndex = 21;
             // 
             // lblTotalStats
@@ -88,7 +88,7 @@
             this.lblTotalStats.Margin = new System.Windows.Forms.Padding(10, 1, 10, 0);
             this.lblTotalStats.Name = "lblTotalStats";
             this.lblTotalStats.Padding = new System.Windows.Forms.Padding(5, 1, 5, 0);
-            this.lblTotalStats.Size = new System.Drawing.Size(118, 16);
+            this.lblTotalStats.Size = new System.Drawing.Size(80, 16);
             this.lblTotalStats.TabIndex = 26;
             this.lblTotalStats.Text = "Footer Text";
             // 
@@ -97,10 +97,10 @@
             this.lblBattleMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
             this.lblBattleMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBattleMode.ForeColor = System.Drawing.Color.Silver;
-            this.lblBattleMode.Location = new System.Drawing.Point(331, 3);
+            this.lblBattleMode.Location = new System.Drawing.Point(284, 3);
             this.lblBattleMode.Name = "lblBattleMode";
             this.lblBattleMode.Padding = new System.Windows.Forms.Padding(5, 1, 5, 1);
-            this.lblBattleMode.Size = new System.Drawing.Size(124, 16);
+            this.lblBattleMode.Size = new System.Drawing.Size(80, 16);
             this.lblBattleMode.TabIndex = 27;
             this.lblBattleMode.Text = "Battle mode";
             this.lblBattleMode.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -115,7 +115,7 @@
             this.lblHeader.Location = new System.Drawing.Point(1, 1);
             this.lblHeader.Name = "lblHeader";
             this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.lblHeader.Size = new System.Drawing.Size(458, 22);
+            this.lblHeader.Size = new System.Drawing.Size(198, 22);
             this.lblHeader.TabIndex = 22;
             this.lblHeader.Text = "Heading";
             this.lblHeader.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -126,7 +126,7 @@
             this.btnToday.Checked = false;
             this.btnToday.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnToday.Image = null;
-            this.btnToday.Location = new System.Drawing.Point(285, 3);
+            this.btnToday.Location = new System.Drawing.Point(241, 3);
             this.btnToday.Margin = new System.Windows.Forms.Padding(0);
             this.btnToday.Name = "btnToday";
             this.btnToday.Size = new System.Drawing.Size(34, 16);
@@ -141,7 +141,7 @@
             this.btnWeek.Checked = false;
             this.btnWeek.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnWeek.Image = null;
-            this.btnWeek.Location = new System.Drawing.Point(247, 3);
+            this.btnWeek.Location = new System.Drawing.Point(203, 3);
             this.btnWeek.Margin = new System.Windows.Forms.Padding(0);
             this.btnWeek.Name = "btnWeek";
             this.btnWeek.Size = new System.Drawing.Size(34, 16);
@@ -156,7 +156,7 @@
             this.btnMonth.Checked = false;
             this.btnMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMonth.Image = null;
-            this.btnMonth.Location = new System.Drawing.Point(209, 3);
+            this.btnMonth.Location = new System.Drawing.Point(165, 3);
             this.btnMonth.Margin = new System.Windows.Forms.Padding(0);
             this.btnMonth.Name = "btnMonth";
             this.btnMonth.Size = new System.Drawing.Size(34, 16);
@@ -171,7 +171,7 @@
             this.btnMonth3.Checked = false;
             this.btnMonth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMonth3.Image = null;
-            this.btnMonth3.Location = new System.Drawing.Point(171, 3);
+            this.btnMonth3.Location = new System.Drawing.Point(127, 3);
             this.btnMonth3.Margin = new System.Windows.Forms.Padding(0);
             this.btnMonth3.Name = "btnMonth3";
             this.btnMonth3.Size = new System.Drawing.Size(34, 16);
@@ -187,7 +187,7 @@
             this.btnTotal.Checked = false;
             this.btnTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTotal.Image = null;
-            this.btnTotal.Location = new System.Drawing.Point(133, 3);
+            this.btnTotal.Location = new System.Drawing.Point(89, 3);
             this.btnTotal.Margin = new System.Windows.Forms.Padding(0);
             this.btnTotal.Name = "btnTotal";
             this.btnTotal.Size = new System.Drawing.Size(34, 16);
@@ -206,7 +206,7 @@
             this.Controls.Add(this.dataGrid);
             this.MinimumSize = new System.Drawing.Size(100, 40);
             this.Name = "ucTotalStats";
-            this.Size = new System.Drawing.Size(460, 200);
+            this.Size = new System.Drawing.Size(200, 160);
             this.Load += new System.EventHandler(this.ucTotalStats_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucTotalStats_Paint);
             this.Resize += new System.EventHandler(this.ucTotalStats_Resize);

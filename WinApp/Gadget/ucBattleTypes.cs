@@ -26,18 +26,12 @@ namespace WinApp.Gadget
 				return val;
 		}
 
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DataBind();
-			base.OnInvalidated(e);
-		}
-
 		private void ucBattleTypes_Load(object sender, EventArgs e)
 		{
-			DataBind();
+			
 		}
 
-		private void DataBind()
+		public void DataBind()
 		{
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
 			// Create table structure, and get total number of used tanks to show in first row

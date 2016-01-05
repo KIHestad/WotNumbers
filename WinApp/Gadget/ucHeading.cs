@@ -24,6 +24,10 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
         }
 
+        public void DataBind()
+        {
+
+        }
         
     }
 }

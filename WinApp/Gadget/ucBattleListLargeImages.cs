@@ -30,12 +30,6 @@ namespace WinApp.Gadget
 			_rows = rows;
 		}
 
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DataBind();
-			base.OnInvalidated(e);
-		}
-
 		private void ucImage_Load(object sender, EventArgs e)
 		{
 			// Resize
@@ -68,10 +62,9 @@ namespace WinApp.Gadget
 					newTank.battleResult.Parent = newTank.tankPic;
 				}
 			}
-			DataBind();
 		}
 
-		private void DataBind()
+		public void DataBind()
 		{
 			// Images are 160x100
 			// Get all tanks and show in imageGadget

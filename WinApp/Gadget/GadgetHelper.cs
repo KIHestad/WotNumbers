@@ -451,6 +451,80 @@ namespace WinApp.Gadget
 			return name;
 		}
 
+        public static void ControlDataBind(Control c)
+        {
+            if (c.Tag != null)
+            {
+                switch (c.Tag.ToString())
+                {
+                    case "ucGaugeWinRate":
+                        ucGaugeWinRate ucGaugeWinRate = (ucGaugeWinRate)c;
+                        ucGaugeWinRate.DataBind();
+                        break;
+                    case "ucGaugeWN8":
+                        ucGaugeWN8 ucGaugeWN8 = (ucGaugeWN8)c;
+                        ucGaugeWN8.DataBind();
+                        break;
+                    case "ucGaugeWN7":
+                        ucGaugeWN7 ucGaugeWN7 = (ucGaugeWN7)c;
+                        ucGaugeWN7.DataBind();
+                        break;
+                    case "ucGaugeEFF":
+                        ucGaugeEFF ucGaugeEFF = (ucGaugeEFF)c;
+                        ucGaugeEFF.DataBind();
+                        break;
+                    case "ucTotalStats":
+                        ucTotalStats ucTotalStats = (ucTotalStats)c;
+                        ucTotalStats.DataBind();
+                        break;
+                    case "ucTotalTanks":
+                        ucTotalTanks ucTotalTanks = (ucTotalTanks)c;
+                        ucTotalTanks.DataBind();
+                        break;
+                    case "ucBattleTypes":
+                        ucBattleTypes ucBattleTypes = (ucBattleTypes)c;
+                        ucBattleTypes.DataBind();
+                        break;
+                    case "ucBattleListLargeImages":
+                        ucBattleListLargeImages ucBattleListLargeImages = (ucBattleListLargeImages)c;
+                        ucBattleListLargeImages.DataBind();
+                        break;
+                    case "ucChartBattle":
+                        ucChartBattle ucChartBattle = (ucChartBattle)c;
+                        ucChartBattle.DataBind();
+                        break;
+                    case "ucChartTier":
+                        ucChartTier ucChartTier = (ucChartTier)c;
+                        ucChartTier.DataBind();
+                        break;
+                    case "ucChartNation":
+                        ucChartNation ucChartNation = (ucChartNation)c;
+                        ucChartNation.DataBind();
+                        break;
+                    case "ucChartTankType":
+                        ucChartTankType ucChartTankType = (ucChartTankType)c;
+                        ucChartTankType.DataBind();
+                        break;
+                    case "ucGaugeKillDeath":
+                        ucGaugeKillDeath ucGaugeKillDeath = (ucGaugeKillDeath)c;
+                        ucGaugeKillDeath.DataBind();
+                        break;
+                    case "ucGaugeDmgCausedReceived":
+                        ucGaugeDmgCausedReceived ucGaugeDmgCausedReceived = (ucGaugeDmgCausedReceived)c;
+                        ucGaugeDmgCausedReceived.DataBind();
+                        break;
+                    case "ucHeading":
+                        ucHeading ucHeading = (ucHeading)c;
+                        ucHeading.DataBind();
+                        break;
+                }
+            }
+            else
+            {
+                string s = c.Name;
+            }
+        }
+
 		public static GadgetItem FindGadgetFromLocation(int mouseLeft, int mouseTop)
 		{
 			GadgetItem foundGadgetArea = null;

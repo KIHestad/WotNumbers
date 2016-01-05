@@ -37,28 +37,20 @@ namespace WinApp.Gadget
             lblHeader.Text = (string)currentParameters[4];
         }
 
-        protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			//DataBind();
-			base.OnInvalidated(e);
-		}
-
         private void ucTotalStats_Load(object sender, EventArgs e)
 		{
-			DataBind();
-		}
-
-        private void DataBind()
-        {
             // Greate grid
             GridHelper.StyleGadgetDataGrid(dataGrid, DataGridViewSelectionMode.CellSelect);
             dataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.Transparent;
-            dataGrid.ColumnHeadersDefaultCellStyle.Padding = new Padding(0,0,0,6);
+            dataGrid.ColumnHeadersDefaultCellStyle.Padding = new Padding(0, 0, 0, 6);
             dataGrid.ColumnHeadersDefaultCellStyle.Font = new Font(dataGrid.DefaultCellStyle.Font.FontFamily, 9);
-            GetGridData();
             // show correct timespan button as selected
             SelectTimeRangeButton();
-            // Place grid to user control
+        }
+
+        public void DataBind()
+        {
+            GetGridData();
             ReziseNow();
         }
 
@@ -191,17 +183,31 @@ namespace WinApp.Gadget
                 {
                     if (item.columnSelectionID != "")
                     {
-                        item.cellValue.Value = drTotalStats["COL" + item.columnSelectionID];
-                        switch (item.cellName.Value.ToString())
+                        try
                         {
-                            case "Battles":
-                                item.cellValue.Style.ForeColor = ColorValues.BattleCountColor(Convert.ToInt32(item.cellValue.Value));
-                                break;
-                            case "Win Rate":
-                                item.cellValue.Style.ForeColor = ColorValues.WinRateColor(Convert.ToInt32(item.cellValue.Value));
-                                break;
+                            double val = Convert.ToDouble(drTotalStats["COL" + item.columnSelectionID]);
+                            if (val > 999999999)
+                                item.cellValue.Value = (val / 1000000).ToString("# ### ###") + " M"; 
+                            else if (val > 999999)
+                                item.cellValue.Value = (val / 1000000).ToString("# ### ###.##0") + " M";
+                            else
+                                item.cellValue.Value = val;
+                            switch (item.cellName.Value.ToString())
+                            {
+                                case "Battles":
+                                    item.cellValue.Style.ForeColor = ColorValues.BattleCountColor(Convert.ToInt32(item.cellValue.Value));
+                                    break;
+                                case "Win Rate":
+                                    item.cellValue.Style.ForeColor = ColorValues.WinRateColor(Convert.ToInt32(item.cellValue.Value));
+                                    break;
 
+                            }
                         }
+                        catch (Exception)
+                        {
+                            // throw;
+                        }
+                        
                     }
                 }
             }
@@ -258,7 +264,9 @@ namespace WinApp.Gadget
                 }
                 float colUsageWidth = (col0Width + col1Width + col2Width) * gridColums;
                 float restSpaceWidth = dataGrid.Width - colUsageWidth;
-                int col3Width = Convert.ToInt32(restSpaceWidth / (gridColums - 1)); // Separator
+                int col3Width = 0;
+                if (gridColums > 1) // Separator
+                    col3Width = Convert.ToInt32(restSpaceWidth / (gridColums - 1)); 
                 if (col3Width < 5)
                     col3Width = 5;
                 for (int i = 0; i < gridColums * step; i = i + step)

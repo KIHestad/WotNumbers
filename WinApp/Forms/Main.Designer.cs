@@ -171,6 +171,7 @@
             this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
             this.mGadgetGauges = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWR = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN7 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetEFF = new System.Windows.Forms.ToolStripMenuItem();
@@ -181,6 +182,11 @@
             this.mGadgetChartTier = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartTankType = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartNation = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetTotalStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
+            this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddHeader = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -221,12 +227,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.gridsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetTotalStats = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
+            this.mGadgetTotalStatsDefault = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1605,6 +1606,11 @@
             this.mGadgetWR.Text = "Win Rate";
             this.mGadgetWR.Click += new System.EventHandler(this.mGadgetAdd);
             // 
+            // toolStripSeparator27
+            // 
+            this.toolStripSeparator27.Name = "toolStripSeparator27";
+            this.toolStripSeparator27.Size = new System.Drawing.Size(215, 6);
+            // 
             // mGadgetWN8
             // 
             this.mGadgetWN8.Name = "mGadgetWN8";
@@ -1683,6 +1689,47 @@
             this.mGadgetChartNation.Tag = "ucChartNation";
             this.mGadgetChartNation.Text = "Battle Count per Nation";
             this.mGadgetChartNation.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // gridsToolStripMenuItem
+            // 
+            this.gridsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mGadgetTotalStatsDefault,
+            this.mGadgetTotalStats,
+            this.toolStripSeparator26,
+            this.mGadgetAddBattleModeStats,
+            this.mGadgetAddTankTypeStats});
+            this.gridsToolStripMenuItem.Name = "gridsToolStripMenuItem";
+            this.gridsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.gridsToolStripMenuItem.Text = "Grids";
+            // 
+            // mGadgetTotalStats
+            // 
+            this.mGadgetTotalStats.Name = "mGadgetTotalStats";
+            this.mGadgetTotalStats.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetTotalStats.Tag = "ucTotalStats";
+            this.mGadgetTotalStats.Text = "Total Stats - Empty";
+            this.mGadgetTotalStats.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // toolStripSeparator26
+            // 
+            this.toolStripSeparator26.Name = "toolStripSeparator26";
+            this.toolStripSeparator26.Size = new System.Drawing.Size(258, 6);
+            // 
+            // mGadgetAddBattleModeStats
+            // 
+            this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
+            this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetAddBattleModeStats.Tag = "ucBattleTypes";
+            this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
+            this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // mGadgetAddTankTypeStats
+            // 
+            this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
+            this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetAddTankTypeStats.Tag = "ucTotalTanks";
+            this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
+            this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetAddHeader
             // 
@@ -2106,50 +2153,13 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // gridsToolStripMenuItem
+            // mGadgetTotalStatsDefault
             // 
-            this.gridsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mGadgetTotalStats,
-            this.toolStripSeparator26,
-            this.mGadgetAddBattleModeStats,
-            this.mGadgetAddTankTypeStats});
-            this.gridsToolStripMenuItem.Name = "gridsToolStripMenuItem";
-            this.gridsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.gridsToolStripMenuItem.Text = "Grids";
-            // 
-            // mGadgetTotalStats
-            // 
-            this.mGadgetTotalStats.Name = "mGadgetTotalStats";
-            this.mGadgetTotalStats.Size = new System.Drawing.Size(166, 22);
-            this.mGadgetTotalStats.Tag = "ucTotalStats";
-            this.mGadgetTotalStats.Text = "Total Stats";
-            this.mGadgetTotalStats.Click += new System.EventHandler(this.mGadgetAdd);
-            // 
-            // mGadgetAddBattleModeStats
-            // 
-            this.mGadgetAddBattleModeStats.Name = "mGadgetAddBattleModeStats";
-            this.mGadgetAddBattleModeStats.Size = new System.Drawing.Size(166, 22);
-            this.mGadgetAddBattleModeStats.Tag = "ucBattleTypes";
-            this.mGadgetAddBattleModeStats.Text = "Battle Mode Stats";
-            this.mGadgetAddBattleModeStats.Click += new System.EventHandler(this.mGadgetAdd);
-            // 
-            // mGadgetAddTankTypeStats
-            // 
-            this.mGadgetAddTankTypeStats.Name = "mGadgetAddTankTypeStats";
-            this.mGadgetAddTankTypeStats.Size = new System.Drawing.Size(166, 22);
-            this.mGadgetAddTankTypeStats.Tag = "ucTotalTanks";
-            this.mGadgetAddTankTypeStats.Text = "Tank Type Stats";
-            this.mGadgetAddTankTypeStats.Click += new System.EventHandler(this.mGadgetAdd);
-            // 
-            // toolStripSeparator26
-            // 
-            this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(163, 6);
-            // 
-            // toolStripSeparator27
-            // 
-            this.toolStripSeparator27.Name = "toolStripSeparator27";
-            this.toolStripSeparator27.Size = new System.Drawing.Size(215, 6);
+            this.mGadgetTotalStatsDefault.Name = "mGadgetTotalStatsDefault";
+            this.mGadgetTotalStatsDefault.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetTotalStatsDefault.Tag = "ucTotalStatsDefault";
+            this.mGadgetTotalStatsDefault.Text = "Total Stats - Using Default Columns";
+            this.mGadgetTotalStatsDefault.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // Main
             // 
@@ -2377,6 +2387,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
         private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
         private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStatsDefault;
 	}
 }
 

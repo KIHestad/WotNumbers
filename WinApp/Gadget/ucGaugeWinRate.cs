@@ -29,13 +29,6 @@ namespace WinApp.Gadget
 		private void ucGaugeWinRate_Load(object sender, EventArgs e)
 		{
 			SelectTimeRangeButton();
-			DataBind();
-		}
-
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DataBind();
-			base.OnInvalidated(e);
 		}
 
 		public void DataBind()

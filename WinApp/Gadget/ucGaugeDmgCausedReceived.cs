@@ -27,13 +27,7 @@ namespace WinApp.Gadget
 
 		private void ucGauge_Load(object sender, EventArgs e)
 		{
-			DataBind();
-		}
-
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DataBind();
-			base.OnInvalidated(e);
+		
 		}
 
 		public void DataBind()

@@ -35,26 +35,14 @@ namespace WinApp.Gadget
             _battleTimeSpan = timeSpan;
 		}
 
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DrawChart();
-			base.OnInvalidated(e);
-		}
-
 		private void ucChart_Load(object sender, EventArgs e)
 		{
-			DataBind();
-		}
-
-		private void DataBind()
-		{
-			chart1.Top = 1;
-			chart1.Left = 1;
-			timerMaxStep = 20;
-			lblChartType.ForeColor = ColorTheme.ControlFont;
-			CreateEmptyChart();
-			ReziseChart();
-			DrawChart();
+            chart1.Top = 1;
+            chart1.Left = 1;
+            timerMaxStep = 20;
+            lblChartType.ForeColor = ColorTheme.ControlFont;
+            CreateEmptyChart();
+            ReziseChart();
             // show correct timespan button as selected
             switch (_battleTimeSpan)
             {
@@ -74,6 +62,11 @@ namespace WinApp.Gadget
                     btnToday.Checked = true;
                     break;
             }
+		}
+
+		public void DataBind()
+		{
+			DrawChart();
 		}
 
 		private void CreateEmptyChart()

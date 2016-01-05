@@ -939,6 +939,7 @@ namespace WinApp.Forms
 						// Select view
 						mViewOverall.Checked = true;
 						dataGridMain.Visible = false;
+                        Application.DoEvents();
 						scrollX.Visible = false;
 						scrollY.Visible = false;
 						scrollCorner.Visible = false;
@@ -4528,7 +4529,7 @@ namespace WinApp.Forms
 			List<Control> controlsRemove = new List<Control>();
 			foreach (Control c in panelMainArea.Controls)
 			{
-				if (c.Name.Length > 1 && c.Name.Substring(0, 2) == "uc")
+                if (c.Name.Length > 1 && c.Name.Substring(0, 2) == "uc" || c.Name == "userControlPicGrid")
 				{
 					controlsRemove.Add(c);
 				}
@@ -4555,7 +4556,7 @@ namespace WinApp.Forms
 			picGrid.Top = 2;
 			picGrid.Left = 2;
 			picGrid.Image = result;
-			picGrid.Name = "ucPicGrid";
+			picGrid.Name = "userControlPicGrid";
 			picGrid.Visible = false;
 			panelMainArea.Controls.Add(picGrid);
 			
@@ -4578,7 +4579,7 @@ namespace WinApp.Forms
 			{
 				if (c.Name.Substring(0, 2) == "uc")
 				{
-					c.Invalidate();
+                    GadgetHelper.ControlDataBind(c);
 				}
 			}
 			SetStatus2(Status2Message);
@@ -4595,45 +4596,8 @@ namespace WinApp.Forms
 			// Get gadget
 			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
 			string controlName = menu.Tag.ToString();
-			// Find popup form for controls with parameters
-			ShowGadgetParameter(controlName);
-			if (GadgetHelper.newParametersOK)
-			{
-				// Create new control
-				Control controlAdd = GadgetHelper.GetGadgetControl(menu.Tag.ToString(), GadgetHelper.newParameters);
-				// Save new control
-				GadgetHelper.GadgetItem newGadget = new GadgetHelper.GadgetItem();
-				newGadget.control = controlAdd;
-				newGadget.controlName = controlName;
-				newGadget.height = controlAdd.Height;
-				newGadget.width = controlAdd.Width;
-				newGadget.posX = 2;
-				newGadget.posY = 2;
-				newGadget.control.Top = newGadget.posX;
-				newGadget.control.Left = newGadget.posY;
-				newGadget.sortorder = -1;
-				newGadget.visible = true;
-				newGadget.resizable = GadgetHelper.IsGadgetRezisable(controlName);
-				// Special gadgets customization
-				switch (controlName)
-				{
-					case "ucBattleListLargeImages":
-						newGadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
-						newGadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
-						break;
-				}
-				newGadget.name = GadgetHelper.GetGadgetName(controlName);
-				int gadgetId = GadgetHelper.InsertNewGadget(newGadget);
-				newGadget.id = gadgetId;
-				// Add to panel and resize
-				controlAdd.Name = "uc" + gadgetId.ToString();
-				panelMainArea.Controls.Add(controlAdd);
-				Control[] c = panelMainArea.Controls.Find(controlAdd.Name, false);
-				c[0].Height = newGadget.height;
-				c[0].Width = newGadget.width;
-				c[0].BringToFront();
-				c[0].Enabled = false;
-			}
+			// Create new gadget
+			GadgetCreateOrEdit(controlName);
 		}
 
 		private void mHomeEdit_Click(object sender, EventArgs e)
@@ -4660,20 +4624,20 @@ namespace WinApp.Forms
 				// Disable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
-					if (c.Name.Substring(0, 2) == "uc")
+                    if (c.Name.Substring(0, 2) == "uc" || c.Name == "userControlPicGrid")
 					{
 						c.Enabled = false;
 					}
 				}
 				// Show grid
-				Control[] ucPicGrid = panelMainArea.Controls.Find("ucPicGrid", false);
-				ucPicGrid[0].Visible = true;
+                Control[] userControlPicGrid = panelMainArea.Controls.Find("userControlPicGrid", false);
+                userControlPicGrid[0].Visible = true;
 			}
 			else
 			{
 				// RemoveOwnedForm Grid
-				Control[] ucPicGrid = panelMainArea.Controls.Find("ucPicGrid", false);
-				ucPicGrid[0].Visible = false;
+                Control[] userControlPicGrid = panelMainArea.Controls.Find("userControlPicGrid", false);
+                userControlPicGrid[0].Visible = false;
 				// Remove mouse move event for main panel
 				panelMainArea.MouseMove -= panelEditor_MouseMove;
 				panelMainArea.MouseDown -= panelEditor_MouseDown;
@@ -4683,7 +4647,7 @@ namespace WinApp.Forms
 				// Enable all gadgets
 				foreach (Control c in panelMainArea.Controls)
 				{
-					if (c.Name.Substring(0, 2) == "uc")
+                    if (c.Name.Substring(0, 2) == "uc" || c.Name == "userControlPicGrid")
 					{
 						c.Enabled = true;
 					}
@@ -4867,6 +4831,7 @@ namespace WinApp.Forms
 		private void mGadgetRedraw_Click(object sender, EventArgs e)
 		{
 			HomeViewCreate("Redrawn gadgets");
+            HomeViewRefresh("Refresh redrawn gadgets");
 			GadgetEditModeChange();
 		}
 
@@ -4947,50 +4912,17 @@ namespace WinApp.Forms
 		{
             if (gadgetSelected != null)
             {
-                GadgetHelper.GadgetItem gadget = gadgetSelected;
-                ShowGadgetParameter(gadget.controlName, gadget.id);
-                if (GadgetHelper.newParametersOK)
-                {
-                    // Special gadgets customization
-                    switch (gadget.controlName)
-                    {
-                        case "ucBattleListLargeImages":
-                            gadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
-                            gadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
-                            GadgetHelper.SaveGadgetSize(gadget);
-                            break;
-                    }
-                    // save new settings
-                    GadgetHelper.SaveGadgetParameter(gadget);
-                    // remove it
-                    panelMainArea.Controls.Remove(gadget.control);
-                    // get updated control
-                    Control uc = GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
-                    uc.Name = "uc" + gadget.id.ToString();
-                    uc.Tag = gadget.name;
-                    uc.Top = gadget.posY;
-                    uc.Left = gadget.posX;
-                    uc.Height = gadget.height;
-                    uc.Width = gadget.width;
-                    gadget.control = uc;
-
-                    // Add to panel and resize
-                    panelMainArea.Controls.Add(gadget.control);
-                    Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
-                    c[0].Height = gadget.height;
-                    c[0].Width = gadget.width;
-                    c[0].BringToFront();
-                    c[0].Enabled = false;
-                }
-                gadgetSelected = null;
+                // Edit gadget
+                GadgetCreateOrEdit(gadgetSelected.controlName, gadgetSelected.id);
             }
 		}
 
-		private void ShowGadgetParameter(string controlName, int gadgetId = -1)
+		private void GadgetCreateOrEdit(string controlName, int gadgetId = -1) // if gadgetId == -1 then create new
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+			GadgetHelper.newParameters = new object[20];
 			GadgetHelper.newParametersOK = true;
-			Form frm = null;
+			// Get form to customize parameters
+            Form frm = null;
 			switch (controlName)
 			{
                 case "ucGaugeWN8":
@@ -5032,9 +4964,99 @@ namespace WinApp.Forms
                 case "ucTotalStats":
                     frm = new Gadget.paramTotalStats(gadgetId);
                     break;
+                case "ucTotalStatsDefault":
+                    controlName = "ucTotalStats";
+                    frm = new Gadget.paramTotalStats(gadgetId, true);
+                    break;
 			}
 			if (frm != null)
 				frm.ShowDialog(this);
+            // Check gadget (after params are added)
+            if (GadgetHelper.newParametersOK)
+            {
+                GadgetHelper.GadgetItem gadget = null;
+                Control gadgetControl = null;
+                // Create new gadget
+                if (gadgetId == -1)
+                {
+                    gadgetControl = GadgetHelper.GetGadgetControl(controlName, GadgetHelper.newParameters);
+                    gadget = new GadgetHelper.GadgetItem();
+                    gadget.control = gadgetControl;
+                    gadget.controlName = controlName;
+                    gadget.height = gadgetControl.Height;
+                    gadget.width = gadgetControl.Width;
+                    gadget.posX = 2;
+                    gadget.posY = 2;
+                    gadget.control.Top = gadget.posX;
+                    gadget.control.Left = gadget.posY;
+                    gadget.sortorder = -1;
+                    gadget.visible = true;
+                    gadget.resizable = GadgetHelper.IsGadgetRezisable(controlName);
+                    gadget.name = GadgetHelper.GetGadgetName(controlName);
+                    gadgetId = GadgetHelper.InsertNewGadget(gadget);
+                    gadget.id = gadgetId;
+                    gadgetControl.Name = "uc" + gadgetId.ToString();
+                }
+                // Edit gadget
+                else
+                {
+                    // Get selected gadget for saving
+                    gadget = gadgetSelected;
+                    // Remove Current added instance of gadget
+                    panelMainArea.Controls.Remove(gadget.control);
+                    // get updated control
+                    gadgetControl = GadgetHelper.GetGadgetControl(gadget.controlName, GadgetHelper.newParameters);
+                    gadgetControl.Name = "uc" + gadget.id.ToString();
+                    gadgetControl.Tag = gadget.name;
+                    gadgetControl.Top = gadget.posY;
+                    gadgetControl.Left = gadget.posX;
+                    gadgetControl.Height = gadget.height;
+                    gadgetControl.Width = gadget.width;
+                    gadget.control = gadgetControl;
+                }
+                // Save gadget parameters
+                GadgetHelper.SaveGadgetParameter(gadget);
+                // Special gadgets customization
+                switch (gadget.controlName)
+                {
+                    case "ucBattleListLargeImages":
+                        gadget.width = (Convert.ToInt32(GadgetHelper.newParameters[0]) * 170) - 10;
+                        gadget.height = (Convert.ToInt32(GadgetHelper.newParameters[1]) * 120) - 10;
+                        GadgetHelper.SaveGadgetSize(gadget);
+                        break;
+                    case "ucTotalStats":
+                        // calc new width = each col = 200px + separators = 40 if more than one col
+                        int newWidth = (Convert.ToInt32(GadgetHelper.newParameters[2]) * 200) + (Convert.ToInt32(GadgetHelper.newParameters[2]) - 1) * 40;
+                        // calc new height = 22px per row * num of grid lines = params - fixed params, 70px is header + gridheader + footer
+                        int newHeight = (22 * (GadgetHelper.newParameters.Length - 6)) + 75; 
+                        bool save = false;
+                        if (newWidth > gadget.width)
+                        {
+                            gadget.width = newWidth;
+                            save = true;
+                        }
+                        if (newHeight > gadget.height)
+                        {
+                            gadget.height = newHeight;
+                            save = true;
+                        }
+                        if (save)
+                            GadgetHelper.SaveGadgetSize(gadget);
+                        break;
+                }
+                // Add to panel and resize
+                panelMainArea.Controls.Add(gadget.control);
+                Control[] c = panelMainArea.Controls.Find(gadget.control.Name, false);
+                Control panelControl = c[0];
+                panelControl.Height = gadget.height;
+                panelControl.Width = gadget.width;
+                panelControl.BringToFront();
+                panelControl.Enabled = false;
+                panelControl.Tag = gadget.controlName;
+                // DataBind
+                GadgetHelper.ControlDataBind(panelControl);
+            }
+            gadgetSelected = null;
 		}
 
 		private void mGadgetRemoveAll_Click(object sender, EventArgs e)

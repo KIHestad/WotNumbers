@@ -21,18 +21,12 @@ namespace WinApp.Gadget
             _battleMode = battleMode;
 		}
 
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
-			DataBind();
-			base.OnInvalidated(e);
-		}
-
 		private void ucPlayerInfo_Load(object sender, EventArgs e)
 		{
-			DataBind();
-		}
 
-		private void DataBind()
+        }
+
+		public void DataBind()
 		{
 			GridHelper.StyleGadgetDataGrid(dataGridView1);
             string sql = "";

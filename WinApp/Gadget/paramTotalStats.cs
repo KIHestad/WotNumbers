@@ -13,22 +13,45 @@ namespace WinApp.Gadget
 	public partial class paramTotalStats : Form
 	{
 		int _gadgetId = -1;
+        bool _useDefault = false;
         string _lastSavedGridCount {  get; set; }
         object[] currentParameters = new object[20];
         string[] headers = new string[10];
         int fixedParams = 5; // Number of fixed parameters before grid rows params starts
 
-        public paramTotalStats(int gadgetId = -1)
+        public paramTotalStats(int gadgetId = -1, bool useDefault = false)
 		{
 			InitializeComponent();
 			_gadgetId = gadgetId;
+            _useDefault = useDefault;
 		}
 
         private void paramTotalStats_Load(object sender, EventArgs e)
 		{
-			if (_gadgetId > -1)
+            // All colums section
+            // Style toolbar and set buttons
+            toolAllColumns.Renderer = new StripRenderer();
+            //toolAllColumns.BackColor = ColorTheme.FormBack;
+            toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank, true);
+            toolAvailableCol_All.Checked = true;
+            // Mouse scrolling
+            dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
+            // Style datagrid
+            GridHelper.StyleDataGrid(dataGridAllColumns);
+            // Get all columns data source
+            SetAllColumnsDataGrid();
+
+            // Selected columns section
+            // Style toolbar 
+            toolSelectedColumns.Renderer = new StripRenderer();
+            // Style datagrid
+            GridHelper.StyleDataGrid(dataGridSelectedColumns, DataGridViewSelectionMode.CellSelect);
+
+            // Check if new or edit
+            if (_gadgetId > -1)
 			{
-				// Lookup value for current gadget
+                // Edit total stats gadget
+                // Lookup value for current gadget
 				string sql = "select * from gadgetParameter where gadgetId=@gadgetId order by paramNum;";
 				DB.AddWithValue(ref sql, "@gadgetId", _gadgetId, DB.SqlDataType.Int);
 				DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
@@ -57,37 +80,27 @@ namespace WinApp.Gadget
                 {
                     txtHeader.Text = currentParameters[4].ToString();
                 }
-
+                // Get selected columns data source
+                SetSelectedColumnsDataGrid();
+                ResizeNow();
             } 
             else
             {
-                _lastSavedGridCount = "3";
+                // New total stats gadget
+                btnRevert.Visible = false;
+                if (_useDefault)
+                {
+                    _lastSavedGridCount = "4"; // Should be the same as for default 
+                    UseDefault();
+                }
+                else
+                {
+                    _lastSavedGridCount = "3";
+                    ClearSelectedColumnsDataGrid();
+                    dataGridSelectedColumns.Rows.Add();
+                    ResizeNow();
+                }
             }
-
-            // All colums section
-            // Style toolbar and set buttons
-            toolAllColumns.Renderer = new StripRenderer();
-            //toolAllColumns.BackColor = ColorTheme.FormBack;
-            toolAllColumns = ColListHelper.SetToolStripColType(toolAllColumns, GridView.Views.Tank, true);
-            toolAvailableCol_All.Checked = true;
-            // Mouse scrolling
-            dataGridAllColumns.MouseWheel += new MouseEventHandler(dataGridAllColumns_MouseWheel);
-            // Style datagrid
-            GridHelper.StyleDataGrid(dataGridAllColumns);
-            // Get all columns data source
-            SetAllColumnsDataGrid();
-
-            // Selected columns section
-            // Style toolbar 
-            toolSelectedColumns.Renderer = new StripRenderer();
-            // Style datagrid
-            GridHelper.StyleDataGrid(dataGridSelectedColumns, DataGridViewSelectionMode.CellSelect);
-            // Get all columns data source
-            SetSelectedColumnsDataGrid();
-
-            // Resize
-            ResizeNow();
-			
 		}
 
         private void SetAllColumnsDataGrid()
@@ -580,40 +593,34 @@ namespace WinApp.Gadget
 
         private void btnDefault_Click(object sender, EventArgs e)
         {
+            UseDefault();
+        }
+
+        private void UseDefault()
+        {
             // From table : SELECT * FROM gadgetParameter WHERE gadgetid = 1344
-            
+
             //15
             //Total
             //4
             //Battle count;Performance;Damage;XP / Credits;
-            //My Total Statistics
-            //50;Battles;131;Frags;128;Dmg;137;XP Tot;
-            //86;Victory;191;Avg Frags;188;Avg Dmg;156;XP Max;
-            //95;Win Rate;155;Frags Max;211;Dmg Assist;140;XP Avg;
-            //91;Draw;;;212;Avg Dmg Assist;;;
-            //99;Draw Rate;134;Cap;189;Avg Dmg Spot;533;Credit Btl Count;
-            //92;Defeat;203;Avg Cap;190;Avg Dmg Track;534;Avg Cred Income;
-            //100;Defeat Rate;135;Def;220;Dmg C/R;535;Avg Cred Cost;
-            //96;Survived;204;Avg Def;;;536;Avg Cred Result;
-            //98;Survival Rate;136;Spot;132;Received Damage;537;Max Cred Income;
-            //219;K/D Ratio;205;Avg Spot;210;Received Avg Dmg;540;Tot Cred Income;
+            //50;Battles;131;Frags;128;Dmg;156;XP Max;
+            //95;Win Rate;97;Killed;132;Received Damage;534;Avg Cred Income;
+            //86;Victory;219;K/D Ratio;220;Dmg C/R;535;Avg Cred Cost;
+            //91;Draw;98;Survival Rate;188;Avg Dmg;536;Avg Cred Result;
+            //92;Defeat;155;Frags Max;212;Avg Dmg Assist;537;Max Cred Income;
 
             ClearSelectedColumnsDataGrid();
-            txtHeader.Text = "Default Total Statistics";
+            txtHeader.Text = "Total Statistics";
             ddBattleMode.Text = "Random";
             ddTimeSpan.Text = "Total";
             ddGridCount.Text = "4";
-            string[] rows = new string[10];
-            rows[0] = "50;Battles;131;Frags;128;Dmg;137;XP Tot;";
-            rows[1] = "86;Victory;191;Avg Frags;188;Avg Dmg;156;XP Max;";
-            rows[2] = "95;Win Rate;155;Frags Max;211;Dmg Assist;140;XP Avg;";
-            rows[3] = "91;Draw;;;212;Avg Dmg Assist;;;";
-            rows[4] = "99;Draw Rate;134;Cap;189;Avg Dmg Spot;533;Credit Btl Count;";
-            rows[5] = "92;Defeat;203;Avg Cap;190;Avg Dmg Track;534;Avg Cred Income;";
-            rows[6] = "100;Defeat Rate;135;Def;220;Dmg C/R;535;Avg Cred Cost;";
-            rows[7] = "96;Survived;204;Avg Def;;;536;Avg Cred Result;";
-            rows[8] = "98;Survival Rate;136;Spot;132;Received Damage;537;Max Cred Income;";
-            rows[9] = "219;K/D Ratio;205;Avg Spot;210;Received Avg Dmg;540;Tot Cred Income;";
+            string[] rows = new string[5];
+            rows[0] = "50;Battles;131;Frags;128;Dmg;156;XP Max;";
+            rows[1] = "95;Win Rate;97;Killed;132;Received Damage;534;Avg Cred Income;";
+            rows[2] = "86;Victory;219;K/D Ratio;220;Dmg C/R;535;Avg Cred Cost;";
+            rows[3] = "91;Draw;98;Survival Rate;188;Avg Dmg;536;Avg Cred Result;";
+            rows[4] = "92;Defeat;155;Frags Max;212;Avg Dmg Assist;537;Max Cred Income;";
             foreach (string row in rows)
             {
                 ReadRowIntoSelectedColumnsDataGrid(row);
