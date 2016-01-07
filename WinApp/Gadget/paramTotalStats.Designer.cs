@@ -531,7 +531,10 @@
             this.dataGridSelectedColumns.Size = new System.Drawing.Size(358, 226);
             this.dataGridSelectedColumns.TabIndex = 23;
             this.dataGridSelectedColumns.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragDrop);
-            this.dataGridSelectedColumns.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragOver);
+            this.dataGridSelectedColumns.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridSelectedColumns_DragEnter);
+            this.dataGridSelectedColumns.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridSelectedColumns_MouseClick);
+            this.dataGridSelectedColumns.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridSelectedColumns_MouseDown);
+            this.dataGridSelectedColumns.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridSelectedColumns_MouseMove);
             // 
             // lblSelectedColumns
             // 

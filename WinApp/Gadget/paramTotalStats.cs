@@ -352,10 +352,25 @@ namespace WinApp.Gadget
             toolSelectedColumns.Width = dataGridSelectedColumnsWidht;
             dataGridSelectedColumns.Width = dataGridSelectedColumnsWidht;
             // Resize dataGridSelectedColumns col width
-            foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
+            if (dataGridSelectedColumns.Columns.Count > 0)
             {
-                col.Width = Convert.ToInt32(dataGridSelectedColumns.Width / Convert.ToDouble(ddGridCount.Text));
+                int avgWidth = Convert.ToInt32((dataGridSelectedColumns.Width - 3) / Convert.ToDouble(ddGridCount.Text));
+                int totWidth = 0;
+                foreach (DataGridViewColumn col in dataGridSelectedColumns.Columns)
+                {
+                    if (col.Visible)
+                    {
+                        col.Width = avgWidth;
+                        totWidth += avgWidth;
+                    }
+                }
+                if (totWidth != (dataGridSelectedColumns.Width - 3))
+                {
+                    dataGridSelectedColumns.Columns[dataGridSelectedColumns.Columns.Count - 1].Width = dataGridSelectedColumns.Width - 3 - (avgWidth * (Convert.ToInt32(ddGridCount.Text) - 1));
+                }
+
             }
+
         }
 
 
@@ -424,6 +439,15 @@ namespace WinApp.Gadget
 
         #region drag and drop items to selected colums
 
+        private class DragDropValue
+        {
+            public string id {get; set;}
+            public string name {get; set;}
+            public DataGridViewCell cellDragFrom { get; set; }
+        }
+
+        private static DragDropEffects ddEffect = DragDropEffects.Copy;
+
         private void dataGridAllColumns_MouseDown(object sender, MouseEventArgs e)
         {
             DataGridView.HitTestInfo info = dataGridAllColumns.HitTest(e.X, e.Y);
@@ -434,74 +458,144 @@ namespace WinApp.Gadget
                     dataGridAllColumns.Rows[info.RowIndex].Selected = true;
                     DataGridViewRow selectedRow = dataGridAllColumns.Rows[info.RowIndex];
                     if (selectedRow != null)
-                        dataGridAllColumns.DoDragDrop(selectedRow, DragDropEffects.Copy);
+                    {
+                        DragDropValue ddv = new DragDropValue()
+                        {
+                            id = selectedRow.Cells["id"].Value.ToString(),
+                            name = selectedRow.Cells["Name"].Value.ToString(),
+                            cellDragFrom = selectedRow.Cells[info.ColumnIndex]
+                        };
+                        ddEffect = DragDropEffects.Copy;
+                        dataGridAllColumns.DoDragDrop(ddv, ddEffect);
+                    }
                 }
             }
+        }
+
+        private void dataGridSelectedColumns_MouseDown(object sender, MouseEventArgs e)
+        {
+            DataGridView.HitTestInfo info = dataGridSelectedColumns.HitTest(e.X, e.Y);
+            if (info.RowIndex >= 0)
+            {
+                if (info.RowIndex >= 0 && info.ColumnIndex >= 0)
+                {
+                    dataGridSelectedColumns.Rows[info.RowIndex].Selected = true;
+                    DataGridViewRow selectedRow = dataGridSelectedColumns.Rows[info.RowIndex];
+                    if (selectedRow != null)
+                    {
+                        if (selectedRow.Cells[info.ColumnIndex].Value != null && selectedRow.Cells[info.ColumnIndex].Value.ToString() != "")
+                        {
+                            DragDropValue ddv = new DragDropValue()
+                            {
+                                id = selectedRow.Cells[info.ColumnIndex - 1].Value.ToString(),
+                                name = selectedRow.Cells[info.ColumnIndex].Value.ToString(),
+                                cellDragFrom = selectedRow.Cells[info.ColumnIndex]
+                            };
+                            ddEffect = DragDropEffects.Move;
+                            dataGridSelectedColumns.DoDragDrop(ddv, ddEffect);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static DataGridViewCell DataGridSelectedColumnsSetSelected = null;
+        private void dataGridSelectedColumns_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (DataGridSelectedColumnsSetSelected != null)
+            {
+                DataGridSelectedColumnsSetSelected.Selected = true;
+                DataGridSelectedColumnsSetSelected = null;
+            }
+                
+        }
+
+        private void dataGridSelectedColumns_MouseClick(object sender, MouseEventArgs e)
+        {
+            
         }
 
         private void dataGridAllColumns_DragEnter(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Copy;
+            e.Effect = ddEffect;
         }
 
-        #endregion 
-
-        
+        private void dataGridSelectedColumns_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = ddEffect;
+        }
 
         private void groupRows_DragOver(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Copy;
+            e.Effect = ddEffect;
         }
 
         private void scrollAllColumns_DragOver(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Copy;
+            e.Effect = ddEffect;
         }
 
-        private void dataGridSelectedColumns_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-
+        
         private void dataGridSelectedColumns_DragDrop(object sender, DragEventArgs e)
         {
-            DataGridViewRow dgvr = e.Data.GetData(typeof(DataGridViewRow)) as DataGridViewRow;
-            string id = dgvr.Cells["id"].Value.ToString();
-            string name = dgvr.Cells["Name"].Value.ToString();
-            Point cursorLocation = this.PointToClient(new Point(e.X, e.Y));
-            Point gridLocation = new Point(cursorLocation.X - dataGridSelectedColumns.Left, cursorLocation.Y - dataGridSelectedColumns.Top);
-
-            System.Windows.Forms.DataGridView.HitTestInfo hittest = dataGridSelectedColumns.HitTest(gridLocation.X, gridLocation.Y);
-            // Check if valid cell is selected
-            if (hittest.ColumnIndex != -1 && hittest.RowIndex != -1)
+            DragDropValue ddv = e.Data.GetData(typeof(DragDropValue)) as DragDropValue;
+            if (ddv != null)
             {
-                // Check if new rows should be added if new value added to last row - to make room for new value
-                int lastRow = dataGridSelectedColumns.RowCount -1;
-                if (hittest.RowIndex == lastRow)
-                   dataGridSelectedColumns.Rows.Add();
-                // Check if value exists
-                if (dataGridSelectedColumns[hittest.ColumnIndex, hittest.RowIndex].Value != null)
+                Point cursorLocation = this.PointToClient(new Point(e.X, e.Y));
+                Point gridLocation = new Point(cursorLocation.X - dataGridSelectedColumns.Left, cursorLocation.Y - dataGridSelectedColumns.Top);
+
+                System.Windows.Forms.DataGridView.HitTestInfo hittest = dataGridSelectedColumns.HitTest(gridLocation.X, gridLocation.Y);
+                // Check if valid cell is selected
+                if (hittest.ColumnIndex != -1 && hittest.RowIndex != -1)
                 {
-                    // Check if last row if empty to make room for moving other values down
-                    if (dataGridSelectedColumns.Rows[lastRow].Cells[hittest.ColumnIndex].Value != null)
+                    // Get cell dropped at
+                    DataGridViewCell cellDrop = dataGridSelectedColumns[hittest.ColumnIndex, hittest.RowIndex];
+                    // Check that not moved to same cell
+                    if (ddEffect == DragDropEffects.Move && ddv.cellDragFrom != null && ddv.cellDragFrom == cellDrop)
+                      return;
+                    // Check if value exists
+                    if (ddv.cellDragFrom.Value == null)
+                        return;
+                    // Add new row at bottom if new value dropped to last row or last row is not empty
+                    int lastRow = dataGridSelectedColumns.RowCount - 1;
+                    if (hittest.RowIndex == lastRow || dataGridSelectedColumns.Rows[lastRow].Cells[hittest.ColumnIndex].Value != null)
                         dataGridSelectedColumns.Rows.Add();
-                    // Move current values down
-                    for (int i = lastRow; i > hittest.RowIndex; i--)
+                    lastRow = dataGridSelectedColumns.RowCount - 1;
+                    // Get ready to move current values down, default move all down if copy mode
+                    int lastRowToMoveDown = lastRow;
+                    bool moveup = false;
+                    // If move mode, and moved within same column, only move limited area
+                    if (ddEffect == DragDropEffects.Move && cellDrop.ColumnIndex == ddv.cellDragFrom.ColumnIndex)
+                    {
+                        if (cellDrop.RowIndex < ddv.cellDragFrom.RowIndex)
+                        {
+                            // move up
+                            moveup = true;
+                            lastRowToMoveDown = ddv.cellDragFrom.RowIndex;
+                        }
+                    }
+                    // Move now
+                    for (int i = lastRowToMoveDown; i > hittest.RowIndex; i--)
                     {
                         dataGridSelectedColumns[hittest.ColumnIndex - 1, i].Value = dataGridSelectedColumns[hittest.ColumnIndex - 1, i - 1].Value; // id
                         dataGridSelectedColumns[hittest.ColumnIndex, i].Value = dataGridSelectedColumns[hittest.ColumnIndex, i - 1].Value; // name
                     }
+                    // Check if move mode and not moved up within same column, then remove old value
+                    if (ddEffect == DragDropEffects.Move && !moveup)
+                        RemoveCellFromDataGridSelectedColumns(ddv.cellDragFrom);
+                    // Insert at position 
+                    dataGridSelectedColumns[hittest.ColumnIndex - 1, hittest.RowIndex].Value = ddv.id;
+                    dataGridSelectedColumns[hittest.ColumnIndex, hittest.RowIndex].Value = ddv.name;
                     // Check if last row if empty to make room for new values
                     if (dataGridSelectedColumns.Rows[lastRow].Cells[hittest.ColumnIndex].Value != null)
                         dataGridSelectedColumns.Rows.Add();
+                    // Set as selected
+                    DataGridSelectedColumnsSetSelected = cellDrop;
                 }
-                // Insert at position
-                dataGridSelectedColumns[hittest.ColumnIndex - 1, hittest.RowIndex].Value = id;
-                dataGridSelectedColumns[hittest.ColumnIndex, hittest.RowIndex].Value = name;
-                
             }
-                
         }
+
+        #endregion 
 
         private void tool_MoveUp_Click(object sender, EventArgs e)
         {
@@ -670,12 +764,28 @@ namespace WinApp.Gadget
 
         private void tool_removeCell_Click(object sender, EventArgs e)
         {
-            // Get selecected cell
-            int selectedCellCount = dataGridSelectedColumns.GetCellCount(DataGridViewElementStates.Selected);
-            if (selectedCellCount > 0)
+            RemoveCellFromDataGridSelectedColumns();
+        }
+
+        private void RemoveCellFromDataGridSelectedColumns(DataGridViewCell DataGridSelectedColumns_Cell = null)
+        {
+            DataGridViewCell cellToRemove = null;
+            if (DataGridSelectedColumns_Cell == null)
             {
-                int currentRow = dataGridSelectedColumns.SelectedCells[0].RowIndex;
-                int currentColumn = dataGridSelectedColumns.SelectedCells[0].ColumnIndex;
+                // Get current selecected cell if exists
+                if (dataGridSelectedColumns.GetCellCount(DataGridViewElementStates.Selected) > 0)
+                    cellToRemove = dataGridSelectedColumns.SelectedCells[0];
+            }
+            else
+            {
+                // Use spesified cell
+                cellToRemove = DataGridSelectedColumns_Cell;
+            }
+            // If any cell process
+            if (cellToRemove != null)
+            {
+                int currentRow = cellToRemove.RowIndex;
+                int currentColumn = cellToRemove.ColumnIndex;
                 for (int i = currentRow; i < dataGridSelectedColumns.RowCount - 1; i++)
                 {
                     dataGridSelectedColumns.Rows[i].Cells[currentColumn].Value = dataGridSelectedColumns.Rows[i + 1].Cells[currentColumn].Value;
@@ -709,16 +819,6 @@ namespace WinApp.Gadget
             }
 
         }
-
-
-
-        
-
-
-        
-
-        
-
         
     }
 }
