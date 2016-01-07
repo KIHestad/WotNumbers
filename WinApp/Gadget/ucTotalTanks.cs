@@ -152,7 +152,7 @@ namespace WinApp.Gadget
 				{
 					if (cell.Value != DBNull.Value)
 					{
-                        cell.Style.ForeColor = ColorValues.WinRateColor(Convert.ToDouble(cell.Value));
+                        cell.Style.ForeColor = ColorRangeScheme.WinRateColor(Convert.ToDouble(cell.Value));
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 						cell.Style.Format = "0.00";
 					}

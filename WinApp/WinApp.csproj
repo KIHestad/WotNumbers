@@ -150,7 +150,7 @@
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\FormControl\InputBox.cs" />
-    <Compile Include="Code\FormLayout\ColorValues.cs" />
+    <Compile Include="Code\FormLayout\ColorRangeScheme.cs" />
     <Compile Include="Code\FormLayout\GridHelper.cs" />
     <Compile Include="Code\FormView\BattleChartHelper.cs" />
     <Compile Include="Code\FormView\ColListSystemDefault.cs" />

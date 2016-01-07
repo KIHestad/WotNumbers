@@ -30,6 +30,19 @@ namespace WinApp.Forms
 		private bool mainGridFormatting = false; // Controls if grid should be formattet or not
 		private bool mainGridSaveColWidth = false; // Controls if change width on cols should be saved
 		private FormWindowState mainFormWindowsState = FormWindowState.Normal;
+        // To be able to minimize from task bar
+        const int WS_MINIMIZEBOX = 0x20000;
+        const int CS_DBLCLKS = 0x8;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.Style |= WS_MINIMIZEBOX;
+                cp.ClassStyle |= CS_DBLCLKS;
+                return cp;
+            }
+        }
 
 		public Main()
 		{
@@ -38,20 +51,6 @@ namespace WinApp.Forms
 			LoadConfigOK = Config.GetConfig(out LoadConfigMsg);
 			currentPlayerId = Config.Settings.playerId;
 			mainFormPosSize = Config.Settings.posSize;
-		}
-
-		// To be able to minimize from task bar
-		const int WS_MINIMIZEBOX = 0x20000;
-		const int CS_DBLCLKS = 0x8;
-		protected override CreateParams CreateParams
-		{
-			get
-			{
-				CreateParams cp = base.CreateParams;
-				cp.Style |= WS_MINIMIZEBOX;
-				cp.ClassStyle |= CS_DBLCLKS;
-				return cp;
-			}
 		}
 
 		private void Main_Load(object sender, EventArgs e)
@@ -148,8 +147,156 @@ namespace WinApp.Forms
 			dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
 			dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
 			dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", fontSize);
+            // Set Rating colors
+            ColorRangeScheme.SetRatingColors();
 		}
 
+        private void Main_Shown(object sender, EventArgs e)
+        {
+            try
+            {
+                // Systray icon with context menu
+                CreateNotifyIconContextMenu();
+                notifyIcon.ContextMenu = notifyIconContextMenu;
+                notifyIcon.Visible = Config.Settings.notifyIconUse;
+                this.ShowInTaskbar = !Config.Settings.notifyIconUse;
+                MainTheme.FormExitAsMinimize = Config.Settings.notifyIconFormExitToMinimize;
+
+                // Start WoT if autoRun is enabled
+                if (Config.Settings.wotGameAutoStart)
+                    StartWoTGame();
+                // Ready to draw form
+                Init = false;
+
+                // Show vbAddict Player Profil toolbar if upload activated
+                mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu);
+
+                // Create IronPython Engine
+                PythonEngine.CreateEngine();
+
+                // Startup settings
+                if (!LoadConfigOK)
+                {
+                    Log.AddToLogBuffer(" > No config MsgBox", true);
+                    MsgBox.Button answer = Code.MsgBox.Show(
+                        "Press 'OK' to create new SQLite database." +
+                        Environment.NewLine + Environment.NewLine +
+                        "Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
+                        Environment.NewLine + Environment.NewLine,
+                        "Welcome to Wot Numbers", MsgBox.Type.OKCancel, this);
+                    if (answer == MsgBox.Button.OK)
+                        AutoSetup();
+                    if (!LoadConfigOK)
+                    {
+                        Config.Settings.dossierFileWathcherRun = 0;
+                        SetListener(false);
+                        Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
+                        Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
+                        frm.ShowDialog();
+                    }
+                }
+
+                // Init form
+                SetFormTitle();
+                SetListener(false);
+                BattleChartHelper.SetBattleChartDefaultValues();
+                if (DB.CheckConnection())
+                {
+                    // Moved to Page Load - to run this and make sure db upgrades are done before app starts
+                    // TankHelper.GetAllLists();
+                    // Check DB Version an dupgrade if needed
+                    // bool versionOK = DBVersion.CheckForDbUpgrade(this);
+
+                    // Add init items to Form
+                    SetFavListMenu();
+                    // Get Images
+                    ImageHelper.CreateTankImageTable();
+                    ImageHelper.LoadTankImages();
+                    ImageHelper.CreateMasteryBageImageTable();
+                    ImageHelper.CreateTankTypeImageTable();
+                    ImageHelper.CreateNationImageTable();
+                    // Show view
+                    ChangeView(GridView.Views.Overall, true);
+                    // Check BRR
+                    if (Config.Settings.CheckForBrrOnStartup)
+                    {
+                        bool brrOK = true;
+                        if (String.IsNullOrEmpty(Config.Settings.wotGameFolder))
+                        {
+                            brrOK = BattleResultRetriever.IsWoTGameFolderOK();
+                            if (!brrOK)
+                            {
+                                MsgBox.Show(
+                                    "Check for WoT Battle Result Retriever is by default on. Please locate WoT game folder, or turn of check for Battle Result Retriever on startup." + Environment.NewLine + Environment.NewLine,
+                                    "Battle Result Retriver Settings",
+                                    this
+                                );
+                                Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.WoTGameClient);
+                                frm.ShowDialog();
+                            }
+                        }
+
+                        if (brrOK && (!BattleResultRetriever.Installed || DBVersion.RunInstallNewBrrVersion))
+                        {
+                            string s = "WoT Battle Result Retriever mod is not installed, install now? ";
+                            if (DBVersion.RunInstallNewBrrVersion)
+                                s = "New version of WoT Battle Result Retriever mod needs to be installed, install now? ";
+                            MsgBox.Button result = MsgBox.Show(
+                                s + Environment.NewLine + Environment.NewLine +
+                                "To avoid this check on startup go to Settings + WoT Game Settings" + Environment.NewLine + Environment.NewLine,
+                                "Install Battle Result Retriever",
+                                MsgBox.Type.OKCancel, this
+                            );
+                            if (result == MsgBox.Button.OK)
+                            {
+                                string msg = "";
+                                if (!BattleResultRetriever.Install(out msg))
+                                {
+                                    MsgBox.Show("Error installing BRR", msg);
+                                }
+                            }
+                        }
+                    }
+                    // Check for new version
+                    RunCheckForNewVersion();
+
+                    // Show status message
+                    SetStatus2("Application started");
+                }
+                else
+                {
+                    Config.Settings.dossierFileWathcherRun = 0;
+                    SetListener(false);
+                    mAppSettings.Enabled = true;
+                    mShowDbTables.Enabled = false;
+                    StatusBarHelper.Message = "Database connection failed";
+                    StatusBarHelper.ClearAfterNextShow = false;
+                    SetStatus2("Application started with errors");
+                }
+
+                // Update file watcher to read battle result file - trigger if new dossier or battle result is found
+                fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
+                fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
+                fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
+                fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
+                fileSystemWatcherNewBattle.EnableRaisingEvents = true;
+
+                // Set vbAddice icon image
+                ExternalPlayerProfile.image_vBAddict = imageListToolStrip.Images[15];
+                ExternalPlayerProfile.image_Wargaming = imageListToolStrip.Images[16];
+
+                // Ready 
+                MainTheme.Cursor = Cursors.Default;
+                // Write log
+                Log.WriteLogBuffer();
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex);
+                MsgBox.Show("Error occured initializing application:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine, "Startup error", this);
+            }
+
+        }
 
 		private ContextMenu notifyIconContextMenu;
 		private MenuItem notifyIconMenuItem1;
@@ -321,153 +468,6 @@ namespace WinApp.Forms
 			{
 				LoadConfigMsg = "Could not locate dossier file path, please select manually from Application Settings.";
 			}
-		}
-
-		private void Main_Shown(object sender, EventArgs e)
-		{
-			try
-			{
-				// Systray icon with context menu
-				CreateNotifyIconContextMenu();
-				notifyIcon.ContextMenu = notifyIconContextMenu;
-				notifyIcon.Visible = Config.Settings.notifyIconUse;
-				this.ShowInTaskbar = !Config.Settings.notifyIconUse;
-				MainTheme.FormExitAsMinimize = Config.Settings.notifyIconFormExitToMinimize;
-
-				// Start WoT if autoRun is enabled
-				if (Config.Settings.wotGameAutoStart)
-					StartWoTGame();
-				// Ready to draw form
-				Init = false;
-
-                // Show vbAddict Player Profil toolbar if upload activated
-                mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); 
-
-				// Create IronPython Engine
-				PythonEngine.CreateEngine();
-
-				// Startup settings
-				if (!LoadConfigOK)
-				{
-					Log.AddToLogBuffer(" > No config MsgBox", true);
-					MsgBox.Button answer = Code.MsgBox.Show(
-						"Press 'OK' to create new SQLite database." +
-						Environment.NewLine + Environment.NewLine +
-						"Press 'Cancel' for advanced setup to relocate previously used database or create MSSQL database." +
-						Environment.NewLine + Environment.NewLine,
-                        "Welcome to Wot Numbers", MsgBox.Type.OKCancel, this);
-					if (answer == MsgBox.Button.OK)
-						AutoSetup();
-					if (!LoadConfigOK)
-					{
-						Config.Settings.dossierFileWathcherRun = 0;
-						SetListener(false);
-						Code.MsgBox.Show(LoadConfigMsg, "Could not load config data", this);
-						Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.Main);
-						frm.ShowDialog();
-					}
-				}
-				
-                // Init form
-				SetFormTitle();
-				SetListener(false);
-                BattleChartHelper.SetBattleChartDefaultValues();
-				if (DB.CheckConnection())
-				{
-					// Moved to Page Load - to run this and make sure db upgrades are done before app starts
-                    // TankHelper.GetAllLists();
-					// Check DB Version an dupgrade if needed
-					// bool versionOK = DBVersion.CheckForDbUpgrade(this);
-					
-                    // Add init items to Form
-					SetFavListMenu();
-					// Get Images
-					ImageHelper.CreateTankImageTable();
-					ImageHelper.LoadTankImages();
-					ImageHelper.CreateMasteryBageImageTable();
-					ImageHelper.CreateTankTypeImageTable();
-					ImageHelper.CreateNationImageTable();
-					// Show view
-					ChangeView(GridView.Views.Overall, true);
-					// Check BRR
-					if (Config.Settings.CheckForBrrOnStartup)
-					{
-						bool brrOK = true;
-						if (String.IsNullOrEmpty(Config.Settings.wotGameFolder))
-						{
-							brrOK = BattleResultRetriever.IsWoTGameFolderOK();
-							if (!brrOK)
-							{
-								MsgBox.Show(
-									"Check for WoT Battle Result Retriever is by default on. Please locate WoT game folder, or turn of check for Battle Result Retriever on startup." + Environment.NewLine + Environment.NewLine,
-									"Battle Result Retriver Settings",
-									this
-								);
-								Form frm = new Forms.Settings.AppSettings(AppSettingsHelper.Tabs.WoTGameClient);
-								frm.ShowDialog();
-							}
-						}
-
-						if (brrOK && (!BattleResultRetriever.Installed || DBVersion.RunInstallNewBrrVersion))
-						{
-							string s = "WoT Battle Result Retriever mod is not installed, install now? ";
-                            if (DBVersion.RunInstallNewBrrVersion)
-                                s = "New version of WoT Battle Result Retriever mod needs to be installed, install now? ";
-                            MsgBox.Button result = MsgBox.Show(
-								s + Environment.NewLine + Environment.NewLine +
-								"To avoid this check on startup go to Settings + WoT Game Settings" + Environment.NewLine + Environment.NewLine,
-								"Install Battle Result Retriever",
-                                MsgBox.Type.OKCancel, this
-							);
-							if (result == MsgBox.Button.OK)
-							{
-								string msg = "";
-								if (!BattleResultRetriever.Install(out msg))
-								{
-									MsgBox.Show("Error installing BRR", msg);
-								}
-							}
-						}
-					}
-					// Check for new version
-					RunCheckForNewVersion();
-					
-					// Show status message
-					SetStatus2("Application started");
-				}
-				else
-				{
-					Config.Settings.dossierFileWathcherRun = 0;
-					SetListener(false);
-                    mAppSettings.Enabled = true;
-                    mShowDbTables.Enabled = false;
-					StatusBarHelper.Message = "Database connection failed";
-					StatusBarHelper.ClearAfterNextShow = false;
-					SetStatus2("Application started with errors");
-				}
-
-                // Update file watcher to read battle result file - trigger if new dossier or battle result is found
-                fileSystemWatcherNewBattle.Path = Path.GetDirectoryName(Log.BattleResultDoneLogFileName());
-                fileSystemWatcherNewBattle.Filter = Path.GetFileName(Log.BattleResultDoneLogFileName());
-                fileSystemWatcherNewBattle.NotifyFilter = NotifyFilters.LastWrite;
-                fileSystemWatcherNewBattle.Changed += new FileSystemEventHandler(NewBattleFileChanged);
-                fileSystemWatcherNewBattle.EnableRaisingEvents = true;
-
-                // Set vbAddice icon image
-                ExternalPlayerProfile.image_vBAddict = imageListToolStrip.Images[15];
-                ExternalPlayerProfile.image_Wargaming = imageListToolStrip.Images[16];
-
-				// Ready 
-				MainTheme.Cursor = Cursors.Default;
-				// Write log
-				Log.WriteLogBuffer();
-			}
-			catch (Exception ex)
-			{
-				Log.LogToFile(ex);
-				MsgBox.Show("Error occured initializing application:" + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine, "Startup error", this);
-			}
-			
 		}
 
 		private void toolItem_Checked_paint(object sender, PaintEventArgs e)
@@ -3260,7 +3260,7 @@ namespace WinApp.Forms
 					if (dataGridMain["EFF", e.RowIndex].Value != DBNull.Value)
 					{
 						int eff = Convert.ToInt32(dataGridMain["EFF", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorValues.EffColor(eff);
+                        cell.Style.ForeColor = ColorRangeScheme.EffColor(eff);
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
@@ -3269,7 +3269,7 @@ namespace WinApp.Forms
 					if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
 					{
 						int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorValues.WN8color(wn8);
+                        cell.Style.ForeColor = ColorRangeScheme.WN8color(wn8);
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
@@ -3278,7 +3278,7 @@ namespace WinApp.Forms
 					if (dataGridMain["WN7", e.RowIndex].Value != DBNull.Value)
 					{
 						int wn7 = Convert.ToInt32(dataGridMain["WN7", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorValues.WN7color(wn7);
+                        cell.Style.ForeColor = ColorRangeScheme.WN7color(wn7);
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
@@ -3287,7 +3287,7 @@ namespace WinApp.Forms
                     if (dataGridMain["Dmg Rank", e.RowIndex].Value != DBNull.Value)
                     {
                         double dmgRank = Convert.ToDouble(dataGridMain["Dmg Rank", e.RowIndex].Value);
-                        cell.Style.ForeColor = ColorValues.DmgRankColor(dmgRank);
+                        cell.Style.ForeColor = ColorRangeScheme.DmgRankColor(dmgRank);
                         cell.Style.SelectionForeColor = cell.Style.ForeColor;
                     }
                 }
@@ -3373,7 +3373,7 @@ namespace WinApp.Forms
                         if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
                         {
                             double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
-                            cell.Style.ForeColor = ColorValues.WinRateColor(wr);
+                            cell.Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
                             cell.Style.SelectionForeColor = cell.Style.ForeColor;
                         }
                     }
@@ -3993,6 +3993,7 @@ namespace WinApp.Forms
             dataGridMain.DefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
             dataGridMain.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
             dataGridMain.RowHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", Config.Settings.gridFontSize);
+            ColorRangeScheme.SetRatingColors();
 
             // Return to prev file watcher state
             if (runState != Config.Settings.dossierFileWathcherRun)

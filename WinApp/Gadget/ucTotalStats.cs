@@ -123,9 +123,9 @@ namespace WinApp.Gadget
         {
             // Get Columns for data lookup
             string sql =
-                "SELECT id, colName, colNameSum, description, colDataType " +
+                "SELECT id, name, colNameSum, description, colDataType " +
                 "FROM columnSelection " +
-                "WHERE colType=1 AND colDataType NOT IN ('VarChar', 'Image', 'DateTime') " +
+                "WHERE colType=1 AND colNameSum IS NOT NULL " +
                 "ORDER BY id";
             DataTable dtColumnSelection = DB.FetchData(sql);
             string sqlSelect = "";
@@ -139,15 +139,17 @@ namespace WinApp.Gadget
                     {
                         DataRow dr = drGet[0];
                         item.cellName.ToolTipText = dr["description"].ToString();
-                        if (dr["colDataType"].ToString() == "Float")
+                        if (dr["colDataType"].ToString() == "Float"
+                            || dr["name"].ToString() == "Tier"
+                            || dr["name"].ToString() == "WN8"
+                            || dr["name"].ToString() == "WN7"
+                            || dr["name"].ToString() == "EFF"
+                            )
                         {
                             item.cellValue.Style.Format = "N2";
                         }
                         // build select to get data
-                        if (dr["colNameSum"] == DBNull.Value)
-                            sqlSelect += "SUM(" + dr["colName"].ToString() + ") AS COL" + item.columnSelectionID + ", ";
-                        else
-                            sqlSelect += dr["colNameSum"].ToString() + " AS COL" + item.columnSelectionID + ", ";
+                        sqlSelect += dr["colNameSum"].ToString() + " AS COL" + item.columnSelectionID + ", ";
                     }
                 }
             }
@@ -185,20 +187,45 @@ namespace WinApp.Gadget
                     {
                         try
                         {
-                            double val = Convert.ToDouble(drTotalStats["COL" + item.columnSelectionID]);
-                            if (val > 999999999)
-                                item.cellValue.Value = (val / 1000000).ToString("# ### ###") + " M"; 
-                            else if (val > 999999)
-                                item.cellValue.Value = (val / 1000000).ToString("# ### ###.##0") + " M";
-                            else
-                                item.cellValue.Value = val;
-                            switch (item.cellName.Value.ToString())
+                            // Get cell value from sql
+                            string cellSQLFieldName = "COL" + item.columnSelectionID;
+                            if (drTotalStats[cellSQLFieldName] != DBNull.Value)
+                            {
+                                double val = Convert.ToDouble(drTotalStats[cellSQLFieldName]);
+                                if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total && val > 999999)
+                                {
+                                    if (val > 999999999)
+                                        item.cellValue.Value = (val / 1000000).ToString("# ### ###") + " M";
+                                    else 
+                                        item.cellValue.Value = (val / 1000000).ToString("# ### ###.##0") + " M";
+                                    item.cellValue.ToolTipText = val.ToString("N0");
+                                }
+                                else
+                                {
+                                    item.cellValue.Value = val;
+                                }
+                            }
+                            // Get cell name for special operations
+                            string cellName = item.cellName.Value.ToString().Trim();
+                            switch (cellName)
                             {
                                 case "Battles":
-                                    item.cellValue.Style.ForeColor = ColorValues.BattleCountColor(Convert.ToInt32(item.cellValue.Value));
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.BattleCountColor(Convert.ToInt32(item.cellValue.Value));
                                     break;
                                 case "Win Rate":
-                                    item.cellValue.Style.ForeColor = ColorValues.WinRateColor(Convert.ToInt32(item.cellValue.Value));
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WinRateColor(Convert.ToInt32(item.cellValue.Value));
+                                    break;
+                                case "WN8":
+                                    item.cellValue.Value = Code.Rating.CalculatePlayerTotalWN8(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN8color(Convert.ToInt32(item.cellValue.Value));
+                                    break;
+                                case "WN7":
+                                    item.cellValue.Value = Code.Rating.CalcTotalWN7(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN7color(Convert.ToInt32(item.cellValue.Value));
+                                    break;
+                                case "EFF":
+                                    item.cellValue.Value = Code.Rating.CalcTotalEFF(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.EffColor(Convert.ToInt32(item.cellValue.Value));
                                     break;
 
                             }

@@ -46,18 +46,18 @@
             this.chkCore6 = new BadCheckBox();
             this.chkCore5 = new BadCheckBox();
             this.chkCore4 = new BadCheckBox();
-            this.chkCore3 = new BadCheckBox();
-            this.chkCore2 = new BadCheckBox();
-            this.chkCore1 = new BadCheckBox();
-            this.chkCore0 = new BadCheckBox();
             this.chkOptimizeOn = new BadCheckBox();
-            this.badGroupBox2 = new BadGroupBox();
             this.btnFolder = new BadButton();
             this.txtFolder = new BadTextBox();
             this.badLabel1 = new BadLabel();
             this.ddStartApp = new BadDropDownBox();
             this.badGroupBox1 = new BadGroupBox();
             this.badGroupBox3 = new BadGroupBox();
+            this.chkCore3 = new BadCheckBox();
+            this.chkCore2 = new BadCheckBox();
+            this.chkCore1 = new BadCheckBox();
+            this.chkCore0 = new BadCheckBox();
+            this.badGroupBox2 = new BadGroupBox();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -82,7 +82,7 @@
             this.btnBrrInstall.BlackButton = false;
             this.btnBrrInstall.Checked = false;
             this.btnBrrInstall.Image = null;
-            this.btnBrrInstall.Location = new System.Drawing.Point(355, 95);
+            this.btnBrrInstall.Location = new System.Drawing.Point(356, 94);
             this.btnBrrInstall.Name = "btnBrrInstall";
             this.btnBrrInstall.Size = new System.Drawing.Size(75, 23);
             this.btnBrrInstall.TabIndex = 37;
@@ -95,7 +95,7 @@
             this.chkBrrStarupCheck.BackColor = System.Drawing.Color.Transparent;
             this.chkBrrStarupCheck.Checked = false;
             this.chkBrrStarupCheck.Image = ((System.Drawing.Image)(resources.GetObject("chkBrrStarupCheck.Image")));
-            this.chkBrrStarupCheck.Location = new System.Drawing.Point(15, 95);
+            this.chkBrrStarupCheck.Location = new System.Drawing.Point(16, 94);
             this.chkBrrStarupCheck.Name = "chkBrrStarupCheck";
             this.chkBrrStarupCheck.Size = new System.Drawing.Size(273, 23);
             this.chkBrrStarupCheck.TabIndex = 36;
@@ -106,7 +106,7 @@
             // 
             this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox4.Image = null;
-            this.badGroupBox4.Location = new System.Drawing.Point(0, 75);
+            this.badGroupBox4.Location = new System.Drawing.Point(1, 74);
             this.badGroupBox4.Name = "badGroupBox4";
             this.badGroupBox4.Size = new System.Drawing.Size(445, 55);
             this.badGroupBox4.TabIndex = 33;
@@ -118,7 +118,7 @@
             this.btnFile.BlackButton = false;
             this.btnFile.Checked = false;
             this.btnFile.Image = null;
-            this.btnFile.Location = new System.Drawing.Point(246, 198);
+            this.btnFile.Location = new System.Drawing.Point(247, 197);
             this.btnFile.Name = "btnFile";
             this.btnFile.Size = new System.Drawing.Size(24, 23);
             this.btnFile.TabIndex = 41;
@@ -130,7 +130,7 @@
             // 
             this.txtBatchFile.HasFocus = false;
             this.txtBatchFile.Image = null;
-            this.txtBatchFile.Location = new System.Drawing.Point(68, 198);
+            this.txtBatchFile.Location = new System.Drawing.Point(69, 197);
             this.txtBatchFile.MultilineAllow = false;
             this.txtBatchFile.Name = "txtBatchFile";
             this.txtBatchFile.PasswordChar = '\0';
@@ -146,7 +146,7 @@
             this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel4.Dimmed = false;
             this.badLabel4.Image = null;
-            this.badLabel4.Location = new System.Drawing.Point(17, 198);
+            this.badLabel4.Location = new System.Drawing.Point(18, 197);
             this.badLabel4.Name = "badLabel4";
             this.badLabel4.Size = new System.Drawing.Size(43, 23);
             this.badLabel4.TabIndex = 54;
@@ -158,7 +158,7 @@
             this.chkAutoRun.BackColor = System.Drawing.Color.Transparent;
             this.chkAutoRun.Checked = false;
             this.chkAutoRun.Image = ((System.Drawing.Image)(resources.GetObject("chkAutoRun.Image")));
-            this.chkAutoRun.Location = new System.Drawing.Point(15, 225);
+            this.chkAutoRun.Location = new System.Drawing.Point(16, 224);
             this.chkAutoRun.Name = "chkAutoRun";
             this.chkAutoRun.Size = new System.Drawing.Size(119, 23);
             this.chkAutoRun.TabIndex = 42;
@@ -197,7 +197,7 @@
             this.chkCore7.Checked = false;
             this.chkCore7.Enabled = false;
             this.chkCore7.Image = ((System.Drawing.Image)(resources.GetObject("chkCore7.Image")));
-            this.chkCore7.Location = new System.Drawing.Point(373, 223);
+            this.chkCore7.Location = new System.Drawing.Point(374, 222);
             this.chkCore7.Name = "chkCore7";
             this.chkCore7.Size = new System.Drawing.Size(65, 21);
             this.chkCore7.TabIndex = 51;
@@ -211,7 +211,7 @@
             this.chkCore6.Checked = false;
             this.chkCore6.Enabled = false;
             this.chkCore6.Image = ((System.Drawing.Image)(resources.GetObject("chkCore6.Image")));
-            this.chkCore6.Location = new System.Drawing.Point(373, 204);
+            this.chkCore6.Location = new System.Drawing.Point(374, 203);
             this.chkCore6.Name = "chkCore6";
             this.chkCore6.Size = new System.Drawing.Size(65, 21);
             this.chkCore6.TabIndex = 50;
@@ -225,7 +225,7 @@
             this.chkCore5.Checked = false;
             this.chkCore5.Enabled = false;
             this.chkCore5.Image = ((System.Drawing.Image)(resources.GetObject("chkCore5.Image")));
-            this.chkCore5.Location = new System.Drawing.Point(373, 184);
+            this.chkCore5.Location = new System.Drawing.Point(374, 183);
             this.chkCore5.Name = "chkCore5";
             this.chkCore5.Size = new System.Drawing.Size(65, 21);
             this.chkCore5.TabIndex = 49;
@@ -239,7 +239,7 @@
             this.chkCore4.Checked = false;
             this.chkCore4.Enabled = false;
             this.chkCore4.Image = ((System.Drawing.Image)(resources.GetObject("chkCore4.Image")));
-            this.chkCore4.Location = new System.Drawing.Point(373, 165);
+            this.chkCore4.Location = new System.Drawing.Point(374, 164);
             this.chkCore4.Name = "chkCore4";
             this.chkCore4.Size = new System.Drawing.Size(65, 21);
             this.chkCore4.TabIndex = 48;
@@ -247,91 +247,24 @@
             this.chkCore4.Visible = false;
             this.chkCore4.Click += new System.EventHandler(this.chkCore_Click);
             // 
-            // chkCore3
-            // 
-            this.chkCore3.BackColor = System.Drawing.Color.Transparent;
-            this.chkCore3.Checked = false;
-            this.chkCore3.Enabled = false;
-            this.chkCore3.Image = ((System.Drawing.Image)(resources.GetObject("chkCore3.Image")));
-            this.chkCore3.Location = new System.Drawing.Point(308, 223);
-            this.chkCore3.Name = "chkCore3";
-            this.chkCore3.Size = new System.Drawing.Size(62, 21);
-            this.chkCore3.TabIndex = 47;
-            this.chkCore3.Text = "CPU 3";
-            this.chkCore3.Visible = false;
-            this.chkCore3.Click += new System.EventHandler(this.chkCore_Click);
-            // 
-            // chkCore2
-            // 
-            this.chkCore2.BackColor = System.Drawing.Color.Transparent;
-            this.chkCore2.Checked = false;
-            this.chkCore2.Enabled = false;
-            this.chkCore2.Image = ((System.Drawing.Image)(resources.GetObject("chkCore2.Image")));
-            this.chkCore2.Location = new System.Drawing.Point(308, 204);
-            this.chkCore2.Name = "chkCore2";
-            this.chkCore2.Size = new System.Drawing.Size(62, 21);
-            this.chkCore2.TabIndex = 46;
-            this.chkCore2.Text = "CPU 2";
-            this.chkCore2.Visible = false;
-            this.chkCore2.Click += new System.EventHandler(this.chkCore_Click);
-            // 
-            // chkCore1
-            // 
-            this.chkCore1.BackColor = System.Drawing.Color.Transparent;
-            this.chkCore1.Checked = false;
-            this.chkCore1.Enabled = false;
-            this.chkCore1.Image = ((System.Drawing.Image)(resources.GetObject("chkCore1.Image")));
-            this.chkCore1.Location = new System.Drawing.Point(308, 185);
-            this.chkCore1.Name = "chkCore1";
-            this.chkCore1.Size = new System.Drawing.Size(62, 21);
-            this.chkCore1.TabIndex = 45;
-            this.chkCore1.Text = "CPU 1";
-            this.chkCore1.Visible = false;
-            this.chkCore1.Click += new System.EventHandler(this.chkCore_Click);
-            // 
-            // chkCore0
-            // 
-            this.chkCore0.BackColor = System.Drawing.Color.Transparent;
-            this.chkCore0.Checked = false;
-            this.chkCore0.Enabled = false;
-            this.chkCore0.Image = ((System.Drawing.Image)(resources.GetObject("chkCore0.Image")));
-            this.chkCore0.Location = new System.Drawing.Point(308, 165);
-            this.chkCore0.Name = "chkCore0";
-            this.chkCore0.Size = new System.Drawing.Size(62, 21);
-            this.chkCore0.TabIndex = 44;
-            this.chkCore0.Text = "CPU 0";
-            this.chkCore0.Visible = false;
-            this.chkCore0.Click += new System.EventHandler(this.chkCore_Click);
-            // 
             // chkOptimizeOn
             // 
             this.chkOptimizeOn.BackColor = System.Drawing.Color.Transparent;
             this.chkOptimizeOn.Checked = false;
             this.chkOptimizeOn.Image = ((System.Drawing.Image)(resources.GetObject("chkOptimizeOn.Image")));
-            this.chkOptimizeOn.Location = new System.Drawing.Point(133, 225);
+            this.chkOptimizeOn.Location = new System.Drawing.Point(134, 224);
             this.chkOptimizeOn.Name = "chkOptimizeOn";
             this.chkOptimizeOn.Size = new System.Drawing.Size(150, 23);
             this.chkOptimizeOn.TabIndex = 43;
             this.chkOptimizeOn.Text = "Use Optimization Mode";
             this.chkOptimizeOn.Click += new System.EventHandler(this.chkOptimizeOn_Click);
             // 
-            // badGroupBox2
-            // 
-            this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
-            this.badGroupBox2.Image = null;
-            this.badGroupBox2.Location = new System.Drawing.Point(299, 144);
-            this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(146, 111);
-            this.badGroupBox2.TabIndex = 39;
-            this.badGroupBox2.TabStop = false;
-            this.badGroupBox2.Text = "Optimization Settings";
-            // 
             // btnFolder
             // 
             this.btnFolder.BlackButton = false;
             this.btnFolder.Checked = false;
             this.btnFolder.Image = null;
-            this.btnFolder.Location = new System.Drawing.Point(406, 25);
+            this.btnFolder.Location = new System.Drawing.Point(407, 24);
             this.btnFolder.Name = "btnFolder";
             this.btnFolder.Size = new System.Drawing.Size(24, 23);
             this.btnFolder.TabIndex = 32;
@@ -343,7 +276,7 @@
             // 
             this.txtFolder.HasFocus = false;
             this.txtFolder.Image = null;
-            this.txtFolder.Location = new System.Drawing.Point(17, 25);
+            this.txtFolder.Location = new System.Drawing.Point(18, 24);
             this.txtFolder.MultilineAllow = false;
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.PasswordChar = '\0';
@@ -359,7 +292,7 @@
             this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel1.Dimmed = false;
             this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(17, 170);
+            this.badLabel1.Location = new System.Drawing.Point(18, 169);
             this.badLabel1.Name = "badLabel1";
             this.badLabel1.Size = new System.Drawing.Size(43, 23);
             this.badLabel1.TabIndex = 34;
@@ -369,7 +302,7 @@
             // ddStartApp
             // 
             this.ddStartApp.Image = null;
-            this.ddStartApp.Location = new System.Drawing.Point(68, 170);
+            this.ddStartApp.Location = new System.Drawing.Point(69, 169);
             this.ddStartApp.Name = "ddStartApp";
             this.ddStartApp.Size = new System.Drawing.Size(202, 23);
             this.ddStartApp.TabIndex = 38;
@@ -381,7 +314,7 @@
             // 
             this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox1.Image = null;
-            this.badGroupBox1.Location = new System.Drawing.Point(0, 144);
+            this.badGroupBox1.Location = new System.Drawing.Point(1, 143);
             this.badGroupBox1.Name = "badGroupBox1";
             this.badGroupBox1.Size = new System.Drawing.Size(291, 111);
             this.badGroupBox1.TabIndex = 30;
@@ -392,12 +325,79 @@
             // 
             this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox3.Image = null;
-            this.badGroupBox3.Location = new System.Drawing.Point(0, 0);
+            this.badGroupBox3.Location = new System.Drawing.Point(1, 1);
             this.badGroupBox3.Name = "badGroupBox3";
             this.badGroupBox3.Size = new System.Drawing.Size(445, 62);
             this.badGroupBox3.TabIndex = 29;
             this.badGroupBox3.TabStop = false;
             this.badGroupBox3.Text = "WoT Installation Folder";
+            // 
+            // chkCore3
+            // 
+            this.chkCore3.BackColor = System.Drawing.Color.Transparent;
+            this.chkCore3.Checked = false;
+            this.chkCore3.Enabled = false;
+            this.chkCore3.Image = ((System.Drawing.Image)(resources.GetObject("chkCore3.Image")));
+            this.chkCore3.Location = new System.Drawing.Point(309, 222);
+            this.chkCore3.Name = "chkCore3";
+            this.chkCore3.Size = new System.Drawing.Size(62, 21);
+            this.chkCore3.TabIndex = 47;
+            this.chkCore3.Text = "CPU 3";
+            this.chkCore3.Visible = false;
+            this.chkCore3.Click += new System.EventHandler(this.chkCore_Click);
+            // 
+            // chkCore2
+            // 
+            this.chkCore2.BackColor = System.Drawing.Color.Transparent;
+            this.chkCore2.Checked = false;
+            this.chkCore2.Enabled = false;
+            this.chkCore2.Image = ((System.Drawing.Image)(resources.GetObject("chkCore2.Image")));
+            this.chkCore2.Location = new System.Drawing.Point(309, 203);
+            this.chkCore2.Name = "chkCore2";
+            this.chkCore2.Size = new System.Drawing.Size(62, 21);
+            this.chkCore2.TabIndex = 46;
+            this.chkCore2.Text = "CPU 2";
+            this.chkCore2.Visible = false;
+            this.chkCore2.Click += new System.EventHandler(this.chkCore_Click);
+            // 
+            // chkCore1
+            // 
+            this.chkCore1.BackColor = System.Drawing.Color.Transparent;
+            this.chkCore1.Checked = false;
+            this.chkCore1.Enabled = false;
+            this.chkCore1.Image = ((System.Drawing.Image)(resources.GetObject("chkCore1.Image")));
+            this.chkCore1.Location = new System.Drawing.Point(309, 184);
+            this.chkCore1.Name = "chkCore1";
+            this.chkCore1.Size = new System.Drawing.Size(62, 21);
+            this.chkCore1.TabIndex = 45;
+            this.chkCore1.Text = "CPU 1";
+            this.chkCore1.Visible = false;
+            this.chkCore1.Click += new System.EventHandler(this.chkCore_Click);
+            // 
+            // chkCore0
+            // 
+            this.chkCore0.BackColor = System.Drawing.Color.Transparent;
+            this.chkCore0.Checked = false;
+            this.chkCore0.Enabled = false;
+            this.chkCore0.Image = ((System.Drawing.Image)(resources.GetObject("chkCore0.Image")));
+            this.chkCore0.Location = new System.Drawing.Point(309, 164);
+            this.chkCore0.Name = "chkCore0";
+            this.chkCore0.Size = new System.Drawing.Size(62, 21);
+            this.chkCore0.TabIndex = 44;
+            this.chkCore0.Text = "CPU 0";
+            this.chkCore0.Visible = false;
+            this.chkCore0.Click += new System.EventHandler(this.chkCore_Click);
+            // 
+            // badGroupBox2
+            // 
+            this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
+            this.badGroupBox2.Image = null;
+            this.badGroupBox2.Location = new System.Drawing.Point(300, 143);
+            this.badGroupBox2.Name = "badGroupBox2";
+            this.badGroupBox2.Size = new System.Drawing.Size(146, 111);
+            this.badGroupBox2.TabIndex = 39;
+            this.badGroupBox2.TabStop = false;
+            this.badGroupBox2.Text = "Optimization Settings";
             // 
             // AppSettingsWoT
             // 

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace WinApp.Code
 {
 	[DebuggerNonUserCode]
-	class ColorTheme
+	public class ColorTheme
 	{
 		// Forms
 		public static Color FormTranparency = Color.FromArgb(255, 1, 1, 1);

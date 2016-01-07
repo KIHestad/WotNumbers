@@ -7,23 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Forms.Settings
 {
     public partial class AppSettingsLayout : UserControl
     {
         private bool currentMasteryBadgeIcons;
+        private static string currentValue = "";
+        private static string currentRatingColorValue = "";
         
         public AppSettingsLayout()
         {
             InitializeComponent();
-        }
-
-        private static string currentValue = "";
-        private void ddFontSize_Click(object sender, EventArgs e)
-        {
-            currentValue = ddFontSize.Text;
-            Code.DropDownGrid.Show(ddFontSize, Code.DropDownGrid.DropDownGridType.List, "6,7,8,9,10,11,12,14");
         }
 
         private void AppSettingsLayout_Load(object sender, EventArgs e)
@@ -39,6 +35,7 @@ namespace WinApp.Forms.Settings
             if (fs < 6) fs = 6;
             if (fs > 14) fs = 14;
             ddFontSize.Text = fs.ToString();
+            ddRatingColor.Text = Config.Settings.RatingColors.ToString().Replace("_", " ");
             currentMasteryBadgeIcons = Config.Settings.useSmallMasteryBadgeIcons;
             chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
             chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
@@ -72,6 +69,8 @@ namespace WinApp.Forms.Settings
         {
             Config.Settings.gridBattlesTotalsTop = chkBattleTotalsPosition.Checked;
             Config.Settings.gridFontSize = Convert.ToInt32(ddFontSize.Text);
+            string ratingColorsEnumText = ddRatingColor.Text.Replace(" ", "_");
+            Config.Settings.RatingColors = (ColorRangeScheme.RatingColorScheme)Enum.Parse(typeof(ColorRangeScheme.RatingColorScheme), ratingColorsEnumText);
             Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
             Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
             Config.Settings.notifyIconFormExitToMinimize = chkNotifyIconFormExitToMinimize.Checked;
@@ -110,12 +109,34 @@ namespace WinApp.Forms.Settings
             EditChangesApply(true);
         }
 
+        private void ddFontSize_Click(object sender, EventArgs e)
+        {
+            currentValue = ddFontSize.Text;
+            Code.DropDownGrid.Show(ddFontSize, Code.DropDownGrid.DropDownGridType.List, "6,7,8,9,10,11,12,14");
+        }
+
         private void ddFontSize_TextChanged(object sender, EventArgs e)
         {
             if (currentValue != ddFontSize.Text)
                 EditChangesApply(true);
         }
 
+        private void ddRatingColor_Click(object sender, EventArgs e)
+        {
+            currentRatingColorValue = ddRatingColor.Text;
+            Code.DropDownGrid.Show(ddRatingColor, Code.DropDownGrid.DropDownGridType.List, "WN Official Colors,WoT Labs Colors,XVM Colors");
+        }
+
+        private void ddRatingColor_TextChanged(object sender, EventArgs e)
+        {
+            if (currentRatingColorValue != ddRatingColor.Text)
+                EditChangesApply(true);
+        }
+
+        private void ddRatingColor_TabStopChanged(object sender, EventArgs e)
+        {
+
+        }
 
     }
 }

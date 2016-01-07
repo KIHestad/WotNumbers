@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Code
 {
@@ -124,7 +125,8 @@ namespace WinApp.Code
 		public string vBAddictPlayerToken { get; set; }				// player token
 		public bool CheckForBrrOnStartup { get; set; }				// Perform check for BRR on startup
         public bool vBAddictUploadReplayActive { get; set; }	    // Activate auto replay upload to vBAddict
-        public bool vBAddictShowToolBarMenu { get; set; }	    // Activate auto replay upload to vBAddict
+        public bool vBAddictShowToolBarMenu { get; set; }	        // Activate auto replay upload to vBAddict
+        public ColorRangeScheme.RatingColorScheme RatingColors { get; set; }	// Rating Color Scheme
 	}
 
 	class Config
@@ -259,6 +261,7 @@ namespace WinApp.Code
             Config.Settings.vBAddictShowToolBarMenu = false;
             // Others
 			Config.Settings.CheckForBrrOnStartup = true;
+            Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
 		}
 
 		

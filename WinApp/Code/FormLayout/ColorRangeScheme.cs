@@ -6,19 +6,46 @@ using System.Text;
 
 namespace WinApp.Code.FormLayout
 {
-    public class ColorValues
+    public class ColorRangeScheme
     {
-        public static double[] RangeEFF = { 0, 305, 610, 850, 1145, 1300, 1475, 1775, 2000 };
+        public enum RatingColorScheme
+        {
+            WN_Official_Colors = 0,
+            WoT_Labs_Colors = 1,
+            XVM_Colors = 2
+        }
+        
+        public static void SetRatingColors()
+        {
+            switch (Config.Settings.RatingColors)
+            {
+                // http://wiki.wnefficiency.net/pages/Color_Scale
+                case RatingColorScheme.WN_Official_Colors:
+                    RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 };
+                    RangeWN8 = new double[] { 0, 300, 600, 900, 1250, 1600, 1900, 2350, 2900 };
+                    RangeWR = new double[]  { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
+                    break;
+
+                // http://wotlabs.net/
+                case RatingColorScheme.WoT_Labs_Colors:
+                    RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 }; // Same as WN official colors, has not own official values
+                    RangeWN8 = new double[] { 0, 300, 450, 650, 900, 1200, 1600, 2450, 2900 };
+                    RangeWR = new double[]  { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
+                    break;
+
+                // https://bitbucket.org/XVM/xvm/src/067589e31b0abeee26743043188b39fb05d683a1/release/configs/default/colors.xc?at=default&fileviewer=file-view-default
+                case RatingColorScheme.XVM_Colors:
+                    RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 }; // Same as WN official colors, has not own official values
+                    RangeWN8 = new double[] { 0, 380, 860, 860, 1420, 2105, 2105, 2770, 2770 };
+                    RangeWR = new double[]  { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 64.5, 64.5 };
+                    break;
+            }            
+        }
+
+        public static double[] RangeEFF = { 0, 305, 615, 870, 1175, 1300, 1525, 1850, 2000 }; // XVM Colors (january 2016)
 
         public static Color EffColor(double eff)
         {
-            // Dynamic color by efficiency
-            //  { "value": 610,  "color": ${"def.colorRating.very_bad" } },  //    0 - 609  - very bad   (20% of players)
-            //  { "value": 850,  "color": ${"def.colorRating.bad"      } },  //  610 - 849  - bad        (better then 20% of players)
-            //  { "value": 1145, "color": ${"def.colorRating.normal"   } },  //  850 - 1144 - normal     (better then 60% of players)
-            //  { "value": 1475, "color": ${"def.colorRating.good"     } },  // 1145 - 1474 - good       (better then 90% of players)
-            //  { "value": 1775, "color": ${"def.colorRating.very_good"} },  // 1475 - 1774 - very good  (better then 99% of players)
-            //  { "value": 9999, "color": ${"def.colorRating.unique"   } }   // 1775 - *    - unique     (better then 99.9% of players)
             Color effRatingColor =                          ColorTheme.Rating_very_bad;
             if (eff >= RangeEFF[8]) effRatingColor =        ColorTheme.Rating_super_uniqum;
             else if (eff >= RangeEFF[7]) effRatingColor =   ColorTheme.Rating_uniqum;
@@ -31,11 +58,10 @@ namespace WinApp.Code.FormLayout
             return effRatingColor;
         }
 
-        public static double[] RangeWN7 = { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 };
+        public static double[] RangeWN7 = { 0 }; // Set accoring to application layout settings - SetRatingColors()
 
         public static Color WN7color(double wn7)
         {
-            // http://wiki.wnefficiency.net/pages/Color_Scale
             Color wn7RatingColor =                          ColorTheme.Rating_very_bad;
             if (wn7 >= RangeWN7[8]) wn7RatingColor =        ColorTheme.Rating_super_uniqum;
             else if (wn7 >= RangeWN7[7]) wn7RatingColor =   ColorTheme.Rating_uniqum;
@@ -48,18 +74,10 @@ namespace WinApp.Code.FormLayout
             return wn7RatingColor;
         }
 
-        //public static double[] RangeWN8 = { 0, 300, 600, 900, 1250, 1600, 1900, 2350, 2900 };
-        public static double[] RangeWN8 = { 0, 380, 860, 860, 1420, 2105, 2105, 2770, 2770 };
-
+        public static double[] RangeWN8 = { 0 }; // Set accoring to application layout settings - SetRatingColors()
+        
         public static Color WN8color(double wn8)
         {
-            //{ "value": 380,  "color": ${"def.colorRating.very_bad" } },  //    0 - 379  - very bad   (20% of players)
-            //{ "value": 860,  "color": ${"def.colorRating.bad"      } },  //  380 - 859  - bad        (better then 20% of players)
-            //{ "value": 1420, "color": ${"def.colorRating.normal"   } },  //  860 - 1419 - normal     (better then 60% of players)
-            //{ "value": 2105, "color": ${"def.colorRating.good"     } },  // 1420 - 2104 - good       (better then 90% of players)
-            //{ "value": 2770, "color": ${"def.colorRating.very_good"} },  // 2105 - 2769 - very good  (better then 99% of players)
-            //{ "value": 9999, "color": ${"def.colorRating.unique"   } }   // 2770 - *    - unique     (better then 99.9% of players)
-
             Color wn8RatingColor =                          ColorTheme.Rating_very_bad;
             if (wn8 >= RangeWN8[8]) wn8RatingColor =        ColorTheme.Rating_super_uniqum;
             else if (wn8 >= RangeWN8[7]) wn8RatingColor =   ColorTheme.Rating_uniqum;
@@ -72,17 +90,10 @@ namespace WinApp.Code.FormLayout
             return wn8RatingColor;
         }
 
-        //public static double[] RangeWR = { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
-        public static double[] RangeWR = { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 64.5, 64.5 };
-
+        public static double[] RangeWR = { 0 }; // Set accoring to application layout settings - SetRatingColors()
+        
         public static Color WinRateColor(double wr)
         {
-              //{ "value": 46.5, "color": ${"def.colorRating.very_bad" } },   //  0   - 46.5  - very bad   (20% of players)
-              //{ "value": 48.5, "color": ${"def.colorRating.bad"      } },   // 46.5 - 48.5  - bad        (better then 20% of players)
-              //{ "value": 52.5, "color": ${"def.colorRating.normal"   } },   // 48.5 - 52.5  - normal     (better then 60% of players)
-              //{ "value": 57.5, "color": ${"def.colorRating.good"     } },   // 52.5 - 57.5  - good       (better then 90% of players)
-              //{ "value": 64.5, "color": ${"def.colorRating.very_good"} },   // 57.5 - 64.5  - very good  (better then 99% of players)
-              //{ "value": 101,  "color": ${"def.colorRating.unique"   } }    // 64.5 - 100   - unique     (better then 99.9% of players)
             Color wrRatingColor =                       ColorTheme.Rating_very_bad;
             if (wr >= RangeWR[8]) wrRatingColor =       ColorTheme.Rating_super_uniqum;
             else if (wr >= RangeWR[7]) wrRatingColor =  ColorTheme.Rating_uniqum;
@@ -95,15 +106,8 @@ namespace WinApp.Code.FormLayout
             return wrRatingColor;
         }
 
-        public static Color BattleCountColor(int battleCount)
+        public static Color BattleCountColor(int battleCount) // XVM Colors (january 2016)
         {
-            //// Dynamic color by kilo-battles
-              //{ "value": 2,   "color": ${"def.colorRating.very_bad" } },   //  0 - 2
-              //{ "value": 6,   "color": ${"def.colorRating.bad"      } },   //  2 - 6
-              //{ "value": 16,  "color": ${"def.colorRating.normal"   } },   //  6 - 16
-              //{ "value": 30,  "color": ${"def.colorRating.good"     } },   // 16 - 30
-              //{ "value": 43,  "color": ${"def.colorRating.very_good"} },   // 30 - 43
-              //{ "value": 999, "color": ${"def.colorRating.unique"   } }    // 43 - *
             double kBattles =   Math.Round(Convert.ToDouble(battleCount / 1000), 0);
             Color battleCountRatingColor =                      ColorTheme.Rating_very_bad;
             if (kBattles > 43) battleCountRatingColor =         ColorTheme.Rating_uniqum;
@@ -114,7 +118,7 @@ namespace WinApp.Code.FormLayout
             return battleCountRatingColor;
         }
 
-        public static double[] RangeKillDeath = { 0, 0.25, 0.5, 0.75, 1, 1.2, 1.4, 1.6, 1.8, 2 };
+        public static double[] RangeKillDeath = { 0, 0.25, 0.5, 0.75, 1, 1.2, 1.4, 1.6, 1.8, 2 }; // Custom for Wot Numbers
 
         public static Color KillDeathColor(double value)
         {
@@ -130,7 +134,7 @@ namespace WinApp.Code.FormLayout
             return killDeathRatingColor;
         }
 
-        public static double[] RangeDmgRank = { 0, 20, 40, 55, 65, 75, 85, 90, 95, 98 };
+        public static double[] RangeDmgRank = { 0, 20, 40, 55, 65, 75, 85, 90, 95, 98 }; // Custom for Wot Numbers
 
         public static Color DmgRankColor(double value)
         {

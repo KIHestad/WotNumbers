@@ -102,7 +102,7 @@
             // 
             this.progressBarImport.BackColor = System.Drawing.Color.Transparent;
             this.progressBarImport.Image = null;
-            this.progressBarImport.Location = new System.Drawing.Point(0, 230);
+            this.progressBarImport.Location = new System.Drawing.Point(1, 231);
             this.progressBarImport.Name = "progressBarImport";
             this.progressBarImport.ProgressBarColorMode = false;
             this.progressBarImport.ProgressBarMargins = 2;

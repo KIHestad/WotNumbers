@@ -740,21 +740,21 @@ namespace WinApp.Forms
 		private void dgvRating_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
 		{
 			// rating color
-            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorValues.WN8color(wn8);
-            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorValues.WN8color(wn8avg);
-            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorValues.WN7color(wn7);
-            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorValues.WN7color(wn7avg);
-            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorValues.EffColor(eff);
-            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorValues.EffColor(effavg);
-            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = ColorValues.WinRateColor(wr);
-            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = ColorValues.WinRateColor(wravg);
+            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
+            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN8color(wn8avg);
+            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN7color(wn7);
+            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN7color(wn7avg);
+            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorRangeScheme.EffColor(eff);
+            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorRangeScheme.EffColor(effavg);
+            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
+            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = ColorRangeScheme.WinRateColor(wravg);
 
 		}
 
 		private void dgvWN8_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
 		{
 			// rating color
-            dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = ColorValues.WN8color(wn8);
+            dgvWN8.Rows[5].Cells["Value"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
 		}
 
 		#endregion

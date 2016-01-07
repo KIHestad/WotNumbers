@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using WinApp.Gadget;
 using WinApp.Code.FormView;
+using WinApp.Code.FormLayout;
 
 namespace WinApp.Code
 {
@@ -23,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 311; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+		public static int ExpectedNumber = 316; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2593,6 +2594,42 @@ namespace WinApp.Code
                             "FROM            playerTankBattle " +
                             "GROUP BY playerTankId; ";
                     break;
+                case 312:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.shots),0)' WHERE id=145;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.shots) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=146;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=147;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.heHits) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=148;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.pierced) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=149;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.potentialDmgReceived) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=209;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.damageRating as FLOAT) / 100' WHERE id=221;";
+                    sqlite = mssql;
+                    break;
+                case 313:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = 'SUM(' + colName + ')' WHERE colType=1 and colDataType not in('VarChar','Image','DateTime') and colNameSum is null;";
+                    sqlite = mssql;
+                    break;
+                case 314:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = NULL WHERE id IN(12,46,48,49,53,55,56,60,61);" +
+                        "UPDATE columnSelection SET colNameSum = NULL WHERE colGroup IN ('Equip/Crew','Module');";
+                    sqlite = mssql;
+                    break;
+                case 315:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTank.gProgressXP) AS FLOAT) / SUM(playerTank.gGoalXP) * 100' WHERE id = 177;" +
+                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 48;" +
+                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 187;" +
+                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 49;" +
+                        "UPDATE columnSelection SET colNameSum = 'AVG(CAST(tank.Tier AS FLOAT))' WHERE id = 12;";
+                    sqlite = mssql;
+                    break;
+                case 316:
+                    Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
+                    Config.SaveConfig(out msg);
+                    break;
+
             }
 			string sql = "";
 			// get sql for correct dbtype
