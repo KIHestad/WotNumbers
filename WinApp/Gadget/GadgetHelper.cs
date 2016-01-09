@@ -633,10 +633,46 @@ namespace WinApp.Gadget
                 splitPos +=1;
                 DataTable dtGadget = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(0,splitPos));
                 DataTable dtGadgetParameter = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(splitPos + 1));
+                // When inserting gadgets, new id's will be assigned - create conversion column for old id
+                dtGadget.Columns.Add("newId", typeof(Int32));
+                foreach (DataRow dr in dtGadget.Rows)
+                {
+                    dr["newId"] = dr["id"];
+                }
                 // Remove current setup
                 GadgetHelper.RemoveGadgetAll();
                 // Store to the database from here
-
+                // Add gadgets
+                string sqlInsert = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) VALUES (@controlName, 1, @sortorder, @posX, @posY, @width, @height); ";
+                foreach (DataRow dr in dtGadget.Rows)
+                {
+                    string newsql = sqlInsert;
+                    DB.AddWithValue(ref newsql, "@controlName", dr["controlName"].ToString(), DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref newsql, "@sortorder", dr["sortorder"].ToString(), DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref newsql, "@posX", dr["posX"].ToString(), DB.SqlDataType.Int);
+                    DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
+                    DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
+                    DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
+                    DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
+                    // get new id from db and add to memory table
+                    string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
+                    dr["newId"] = newId;
+                }
+                
+                // Add gadget PARAMETERS
+                string sqlBatch = "";
+                sqlInsert = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) VALUES (@gadgetId, @paramNum, @dataType, @value); ";
+                foreach (DataRow dr in dtGadgetParameter.Rows)
+                {
+                    string sqlNew = sqlInsert;
+                    string gadgetId = dtGadget.Select("Id = " + dr["gadgetId"])[0]["newId"].ToString();
+                    DB.AddWithValue(ref sqlNew, "@gadgetId", gadgetId, DB.SqlDataType.Int);
+                    DB.AddWithValue(ref sqlNew, "@paramNum", dr["paramNum"].ToString(), DB.SqlDataType.Int);
+                    DB.AddWithValue(ref sqlNew, "@dataType", dr["dataType"].ToString(), DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sqlNew, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
+                    sqlBatch += sqlNew + Environment.NewLine;
+                }
+                DB.ExecuteNonQuery(sqlBatch, false, true);
             }
             
         }
@@ -649,25 +685,11 @@ namespace WinApp.Gadget
             jsonResult += Environment.NewLine;
             // Get gadgets parametes
             DataTable dtGadgetParameter = DB.FetchData("select * from gadgetParameter order by gadgetid,id;");
-            jsonResult += JsonConvert.SerializeObject(dtGadget, Newtonsoft.Json.Formatting.Indented);
+            jsonResult += JsonConvert.SerializeObject(dtGadgetParameter, Newtonsoft.Json.Formatting.Indented);
             // Save
             File.WriteAllText(fileName, jsonResult);
         }
 
-        private static List<string> GetDataTableRowsAsCSV(DataTable dt)
-        {
-            List<string> lines = new List<string>();
-            foreach (DataRow dr in dt.Rows)
-            {
-                string newline = "";
-                foreach(DataColumn dc in dt.Columns)
-                {
-                    newline += dr[dc.ColumnName].ToString() + ";";
-                }
-                lines.Add(newline.Substring(0, newline.Length - 1));
-            }
-            return lines;
-        }
 	}
 
 

@@ -55,6 +55,18 @@ namespace WinApp.Forms
 
 		private void Main_Load(object sender, EventArgs e)
 		{
+            // Style toolbar
+            toolMain.Renderer = new StripRenderer();
+            toolMain.ShowItemToolTips = true;
+            mBattles.Visible = false;
+            mTankFilter.Visible = false;
+            mRefreshSeparator.Visible = true;
+            mColumnSelect.Visible = false;
+            mMode.Visible = false;
+            mGadget.Visible = true;
+            mHomeEdit.Visible = true;
+            mBattleGroup.Visible = false;
+            // Check config
             if (DB.CheckConnection(false))
             {
                 TankHelper.GetAllLists();
@@ -98,17 +110,7 @@ namespace WinApp.Forms
 				// Move main toolbar to bottom of title height
 				toolMain.Top = MainTheme.TitleHeight - toolMain.Height + MainTheme.FormMargin + 2;
 			}
-			// Style toolbar
-			toolMain.Renderer = new StripRenderer();
-			toolMain.ShowItemToolTips = true;
-			mBattles.Visible = false;
-			mTankFilter.Visible = false;
-			mRefreshSeparator.Visible = true;
-			mColumnSelect.Visible = false;
-			mMode.Visible = false;
-			mGadget.Visible = true;
-			mHomeEdit.Visible = true;
-			mBattleGroup.Visible = false;
+			
 			// Mouse scrolling for datagrid
 			dataGridMain.MouseWheel += new MouseEventHandler(dataGridMain_MouseWheel);
 			// Main panel covering whole content area - contains (optional) infopanel at top, grid and scrollbars at bottom
@@ -5041,6 +5043,14 @@ namespace WinApp.Forms
                             gadget.height = newHeight;
                             save = true;
                         }
+                        // Check that height is aligned to grid (10)
+                        int addHeight = 10 - (gadget.height % 10);
+                        if (addHeight > 0 && addHeight < 10)
+                        {
+                            gadget.height += addHeight;
+                            save = true;
+                        }
+                        // Save
                         if (save)
                             GadgetHelper.SaveGadgetSize(gadget);
                         break;
@@ -5067,6 +5077,7 @@ namespace WinApp.Forms
 			{
 				GadgetHelper.RemoveGadgetAll();
 				HomeViewCreate("Removed all gadgets");
+                HomeViewRefresh("Refresh Home View");
 			}
 		}
 
@@ -5079,8 +5090,8 @@ namespace WinApp.Forms
 				GadgetHelper.DefaultSetup();
 				mHomeEdit.Checked = false;
 				GadgetEditModeChange();
-				HomeViewCreate("Reset to default gadgets");
-
+				HomeViewCreate("Reset to default Home View");
+                HomeViewRefresh("Refresh default Home View");
 			}
 		}
 
@@ -5107,6 +5118,8 @@ namespace WinApp.Forms
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 GadgetHelper.HomeViewLoadFromToFile(openFileDialog1.FileName);
+                HomeViewCreate("Redraw loaded Home View from file");
+                HomeViewRefresh("Refresh loaded Home View from file");
             }
             
         }

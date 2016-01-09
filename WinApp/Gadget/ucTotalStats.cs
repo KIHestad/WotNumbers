@@ -64,7 +64,6 @@ namespace WinApp.Gadget
 
         private static List<DataGridDataClass> dataGridData = null;
 
-        private BackgroundWorker bwGetGridData;
         private void GetGridData()
         {
             // Clear Grid
@@ -108,18 +107,10 @@ namespace WinApp.Gadget
                 }
             }
             dataGrid.ClearSelection();
-            // Get data in backgroundworker
-            bwGetGridData = new BackgroundWorker();
-            bwGetGridData.WorkerSupportsCancellation = false;
-            bwGetGridData.WorkerReportsProgress = false;
-            bwGetGridData.DoWork += new DoWorkEventHandler(GetData);
-            if (bwGetGridData.IsBusy != true)
-            {
-                bwGetGridData.RunWorkerAsync();
-            }
+            GetData();
         }
 
-        private void GetData(object sender, DoWorkEventArgs e)
+        private void GetData() //;object sender, DoWorkEventArgs e)
         {
             // Get Columns for data lookup
             string sql =

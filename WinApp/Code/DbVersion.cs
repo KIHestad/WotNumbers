@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 323; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 328; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2529,42 +2529,7 @@ namespace WinApp.Code
                     mssql = "ALTER TABLE columnSelection ADD colNameSum VARCHAR(255) NULL; ";
                     sqlite = mssql;
                     break;
-                case 308:
-                    mssql =
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.wins) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=95; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=99; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.losses) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=100; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.survived) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=98; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(frags) as float) / nullif(SUM(battles-survived),0)' WHERE id=219; " +
-                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.maxFrags)' WHERE id=155; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.frags) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=191; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.dmg) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=188; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.assistSpot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=189; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=190; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.frags) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=191; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.cap) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=203; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.def) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=204; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.spot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=205; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.dmgBlocked) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=207; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=212; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.credBtlLifetime) AS FLOAT) / SUM(playerTankBattle.credBtlCount) / 600' WHERE id=543; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(dmg) as float) / nullif(SUM(dmgReceived),0)' WHERE id=220; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.dmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=210; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.xp) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=140; " +
-                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.maxXp)' WHERE id=156; " +
-                        "UPDATE columnSelection SET colNameSum = null WHERE id=533; " +
-                        "UPDATE columnSelection SET colNameSum = 'SUM(playerTankBattle.credAvgIncome * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)' WHERE id=534; " +
-                        "UPDATE columnSelection SET colNameSum = 'SUM(playerTankBattle.credAvgCost * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)' WHERE id=535; " +
-                        "UPDATE columnSelection SET colNameSum = 'SUM(playerTankBattle.credAvgResult * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)' WHERE id=536; " +
-                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.credMaxIncome)' WHERE id=537; " +
-                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.credMaxCost)' WHERE id=538; " +
-                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.credMaxResult)' WHERE id=539; " +
-                        "UPDATE columnSelection SET colNameSum = null WHERE id=540; " +
-                        "UPDATE columnSelection SET colNameSum = null WHERE id=541; " +
-                        "UPDATE columnSelection SET colNameSum = null WHERE id=542; " +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.credAvgResult) AS FLOAT) / SUM(playerTankBattle.credBtlLifetime) / SUM(playerTankBattle.credBtlCount) / 60' WHERE id=544; ";
-                    sqlite = mssql;
-                    break;
+                
                 case 311:
                     mssql = "ALTER VIEW playerTankBattleTotalsView AS " +
                             "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
@@ -2594,49 +2559,61 @@ namespace WinApp.Code
                             "FROM            playerTankBattle " +
                             "GROUP BY playerTankId; ";
                     break;
-                case 312:
-                    mssql =
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.shots),0)' WHERE id=145;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.shots) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=146;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=147;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.heHits) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=148;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.pierced) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=149;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.damageRating as FLOAT) / 100' WHERE id=221;";
-                    sqlite = mssql;
-                    break;
-                case 313:
-                    mssql =
-                        "UPDATE columnSelection SET colNameSum = 'SUM(' + colName + ')' WHERE colType=1 and colDataType not in('VarChar','Image','DateTime') and colNameSum is null;";
-                    sqlite = mssql;
-                    break;
-                case 314:
-                    mssql =
-                        "UPDATE columnSelection SET colNameSum = NULL WHERE id IN(12,46,48,49,53,55,56,60,61);" +
-                        "UPDATE columnSelection SET colNameSum = NULL WHERE colGroup IN ('Equip/Crew','Module');";
-                    sqlite = mssql;
-                    break;
-                case 315:
-                    mssql =
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTank.gProgressXP) AS FLOAT) / SUM(playerTank.gGoalXP) * 100' WHERE id = 177;" +
-                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 48;" +
-                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 187;" +
-                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 49;" +
-                        "UPDATE columnSelection SET colNameSum = 'AVG(CAST(tank.Tier AS FLOAT))' WHERE id = 12;";
-                    sqlite = mssql;
-                    break;
                 case 316:
                     Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
                     Config.SaveConfig(out msg);
                     break;
-                case 323:
+                case 326:
                     mssql =
+                        "UPDATE columnSelection SET colNameSum = NULL; " +
+                        "UPDATE columnSelection SET colNameSum = 'SUM(' + colName + ')' WHERE colType=1 and colDataType not in('VarChar','Image','DateTime') and colNameSum is null;";
+                    sqlite =
+                        "UPDATE columnSelection SET colNameSum = NULL; " +
+                        "UPDATE columnSelection SET colNameSum = 'SUM(' || colName || ')' WHERE colType=1 and colDataType not in('VarChar','Image','DateTime') and colNameSum is null;";
+                    break;
+                case 328:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = NULL WHERE id IN(12,46,48,49,53,55,56,60,61);" +
+                        "UPDATE columnSelection SET colNameSum = NULL WHERE colGroup IN ('Equip/Crew','Module');" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.wins) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=95; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=99; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.losses) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=100; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.survived) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=98; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(frags) as float) / nullif(SUM(battles-survived),0)' WHERE id=219; " +
+                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.maxFrags)' WHERE id=155; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.dmg) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=188; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.assistSpot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=189; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=190; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.frags) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=191; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.cap) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=203; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.def) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=204; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.spot) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=205; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.dmgBlocked) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=207; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.assistSpot+playerTankBattle.assistTrack) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=212; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.credBtlLifetime) AS FLOAT) / SUM(playerTankBattle.credBtlCount) / 600' WHERE id=543; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(dmg) as float) / nullif(SUM(dmgReceived),0)' WHERE id=220; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.dmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=210; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.xp) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=140; " +
+                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.maxXp)' WHERE id=156; " +
+                        "UPDATE columnSelection SET colNameSum = 'SUM(playerTankBattle.credAvgIncome * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)' WHERE id=534; " +
+                        "UPDATE columnSelection SET colNameSum = 'SUM(playerTankBattle.credAvgCost * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)' WHERE id=535; " +
+                        "UPDATE columnSelection SET colNameSum = 'SUM(playerTankBattle.credAvgResult * playerTankBattle.credBtlCount) / SUM(playerTankBattle.credBtlCount)' WHERE id=536; " +
+                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.credMaxIncome)' WHERE id=537; " +
+                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.credMaxCost)' WHERE id=538; " +
+                        "UPDATE columnSelection SET colNameSum = 'MAX(playerTankBattle.credMaxResult)' WHERE id=539; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) * 100 AS FLOAT) / nullif(SUM(playerTankBattle.shots),0)' WHERE id=145;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTank.gProgressXP) AS FLOAT) / SUM(playerTank.gGoalXP) * 100' WHERE id = 177;" +
+                        "UPDATE columnSelection SET colNameSum = 'AVG(CAST(tank.Tier AS FLOAT))' WHERE id = 12;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.damageRating) as FLOAT) / 100' WHERE id=221;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.potentialDmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=209;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.credAvgResult) AS FLOAT) / SUM((playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60))' WHERE id=544; " +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.shots) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=146;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=147;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.heHits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=148;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.pierced) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=149;";
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.pierced) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=149;" +
+                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 48;" +
+                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 187;" +
+                        "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 49;";
                     sqlite = mssql;
                     break;
 
