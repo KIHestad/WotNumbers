@@ -157,6 +157,10 @@ namespace WinApp.Code
 					{
 						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\Log");
 					}
+                    if (!Directory.Exists(appdataFolder + wotnumFolder + "\\HomeView"))
+                    {
+                        Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\HomeView");
+                    }
 					if (!Directory.Exists(appdataFolder + wotnumFolder + "\\BattleResult"))
 					{
 						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\BattleResult");
@@ -182,6 +186,14 @@ namespace WinApp.Code
 				return AppDataBaseFolder + "Log\\";
 			}
 		}
+
+        public static string AppDataHomeViewFolder
+        {
+            get
+            {
+                return AppDataBaseFolder + "HomeView\\";
+            }
+        }
 
 		public static string AppDataDBFolder
 		{

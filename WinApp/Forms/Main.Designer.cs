@@ -183,6 +183,7 @@
             this.mGadgetChartTankType = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartNation = new System.Windows.Forms.ToolStripMenuItem();
             this.gridsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetTotalStatsDefault = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetTotalStats = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetAddBattleModeStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -227,7 +228,12 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.mGadgetTotalStatsDefault = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
+            this.mGadgetFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetFileLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetFileShowFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1570,6 +1576,10 @@
             this.gridsToolStripMenuItem,
             this.mGadgetAddHeader,
             this.mGadgetAddImage,
+            this.toolStripSeparator28,
+            this.mGadgetFileSave,
+            this.mGadgetFileLoad,
+            this.mGadgetFileShowFolder,
             this.toolStripSeparator8,
             this.mGadgetRedraw,
             this.toolStripSeparator4,
@@ -1701,6 +1711,14 @@
             this.gridsToolStripMenuItem.Name = "gridsToolStripMenuItem";
             this.gridsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.gridsToolStripMenuItem.Text = "Grids";
+            // 
+            // mGadgetTotalStatsDefault
+            // 
+            this.mGadgetTotalStatsDefault.Name = "mGadgetTotalStatsDefault";
+            this.mGadgetTotalStatsDefault.Size = new System.Drawing.Size(261, 22);
+            this.mGadgetTotalStatsDefault.Tag = "ucTotalStatsDefault";
+            this.mGadgetTotalStatsDefault.Text = "Total Stats - Using Default Columns";
+            this.mGadgetTotalStatsDefault.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetTotalStats
             // 
@@ -2153,13 +2171,35 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // mGadgetTotalStatsDefault
+            // toolStripSeparator28
             // 
-            this.mGadgetTotalStatsDefault.Name = "mGadgetTotalStatsDefault";
-            this.mGadgetTotalStatsDefault.Size = new System.Drawing.Size(261, 22);
-            this.mGadgetTotalStatsDefault.Tag = "ucTotalStatsDefault";
-            this.mGadgetTotalStatsDefault.Text = "Total Stats - Using Default Columns";
-            this.mGadgetTotalStatsDefault.Click += new System.EventHandler(this.mGadgetAdd);
+            this.toolStripSeparator28.Name = "toolStripSeparator28";
+            this.toolStripSeparator28.Size = new System.Drawing.Size(175, 6);
+            // 
+            // mGadgetFileSave
+            // 
+            this.mGadgetFileSave.Name = "mGadgetFileSave";
+            this.mGadgetFileSave.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileSave.Text = "Save to File...";
+            this.mGadgetFileSave.Click += new System.EventHandler(this.mGadgetFileSave_Click);
+            // 
+            // mGadgetFileLoad
+            // 
+            this.mGadgetFileLoad.Name = "mGadgetFileLoad";
+            this.mGadgetFileLoad.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileLoad.Text = "Load from File...";
+            this.mGadgetFileLoad.Click += new System.EventHandler(this.mGadgetFileLoad_Click);
+            // 
+            // mGadgetFileShowFolder
+            // 
+            this.mGadgetFileShowFolder.Name = "mGadgetFileShowFolder";
+            this.mGadgetFileShowFolder.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileShowFolder.Text = "Show Files...";
+            this.mGadgetFileShowFolder.Click += new System.EventHandler(this.mGadgetFileShowFolder_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // Main
             // 
@@ -2388,6 +2428,12 @@
         private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
         private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
         private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStatsDefault;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator28;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetFileSave;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetFileLoad;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetFileShowFolder;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 	}
 }
 

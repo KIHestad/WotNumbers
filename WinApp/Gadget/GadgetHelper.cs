@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -621,6 +623,51 @@ namespace WinApp.Gadget
 			UserControl uc = (UserControl)sender;
 			e.Graphics.DrawRectangle(new System.Drawing.Pen(ColorTheme.FormBorderBlue), 0, 0, uc.Width-1, uc.Height-1);
 		}
+
+        public static void HomeViewLoadFromToFile(string fileName)
+        {
+            string fileString = File.ReadAllText(fileName);
+            int splitPos = fileString.IndexOf("]" + Environment.NewLine + "[");
+            if (splitPos > 20)
+            {
+                splitPos +=1;
+                DataTable dtGadget = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(0,splitPos));
+                DataTable dtGadgetParameter = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(splitPos + 1));
+                // Remove current setup
+                GadgetHelper.RemoveGadgetAll();
+                // Store to the database from here
+
+            }
+            
+        }
+
+        public static void HomeViewSaveToFile(string fileName)
+        {
+            // Get gadgets
+            DataTable dtGadget = DB.FetchData("select * from gadget order by id;");
+            string jsonResult = JsonConvert.SerializeObject(dtGadget, Newtonsoft.Json.Formatting.Indented);
+            jsonResult += Environment.NewLine;
+            // Get gadgets parametes
+            DataTable dtGadgetParameter = DB.FetchData("select * from gadgetParameter order by gadgetid,id;");
+            jsonResult += JsonConvert.SerializeObject(dtGadget, Newtonsoft.Json.Formatting.Indented);
+            // Save
+            File.WriteAllText(fileName, jsonResult);
+        }
+
+        private static List<string> GetDataTableRowsAsCSV(DataTable dt)
+        {
+            List<string> lines = new List<string>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                string newline = "";
+                foreach(DataColumn dc in dt.Columns)
+                {
+                    newline += dr[dc.ColumnName].ToString() + ";";
+                }
+                lines.Add(newline.Substring(0, newline.Length - 1));
+            }
+            return lines;
+        }
 	}
 
 

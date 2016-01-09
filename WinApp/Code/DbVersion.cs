@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-		public static int ExpectedNumber = 316; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 323; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2601,7 +2601,6 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=147;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.heHits) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=148;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.pierced) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=149;" +
-                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.potentialDmgReceived) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=209;" +
                         "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.damageRating as FLOAT) / 100' WHERE id=221;";
                     sqlite = mssql;
                     break;
@@ -2629,6 +2628,18 @@ namespace WinApp.Code
                     Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
                     Config.SaveConfig(out msg);
                     break;
+                case 323:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.damageRating) as FLOAT) / 100' WHERE id=221;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.potentialDmgReceived) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=209;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.credAvgResult) AS FLOAT) / SUM((playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount / 60))' WHERE id=544; " +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.shots) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=146;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.hits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=147;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.heHits) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=148;" +
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.pierced) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)' WHERE id=149;";
+                    sqlite = mssql;
+                    break;
+
 
             }
 			string sql = "";

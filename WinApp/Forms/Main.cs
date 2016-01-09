@@ -5084,9 +5084,45 @@ namespace WinApp.Forms
 			}
 		}
 
+        private void mGadgetFileSave_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.FileName = "";
+            saveFileDialog1.DefaultExt = "*.json";
+            saveFileDialog1.Filter = "Wot Numbers Home View files (*.json)|*.json|All files (*.*)|*.*";
+            saveFileDialog1.InitialDirectory = Config.AppDataHomeViewFolder;
+            DialogResult result = saveFileDialog1.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                GadgetHelper.HomeViewSaveToFile(saveFileDialog1.FileName);
+            }
+            
+        }
+
+        private void mGadgetFileLoad_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = "*.json";
+            openFileDialog1.Filter = "Wot Numbers Home View files (*.json)|*.json|All files (*.*)|*.*";
+            openFileDialog1.InitialDirectory = Config.AppDataHomeViewFolder;
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                GadgetHelper.HomeViewLoadFromToFile(openFileDialog1.FileName);
+            }
+            
+        }
+
+        private void mGadgetFileShowFolder_Click(object sender, EventArgs e)
+        {
+            // opens the folder in explorer
+            Process.Start("explorer.exe", Config.AppDataHomeViewFolder);
+        }
+
 		#endregion
 
         
 
-	}
+
+
+
+    }
 }
