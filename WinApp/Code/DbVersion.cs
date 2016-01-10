@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 328; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 335; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2616,7 +2616,32 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameSum = 'NULL' WHERE id = 49;";
                     sqlite = mssql;
                     break;
-
+                case 329:
+                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSum VARCHAR(255) NULL; ";
+                    sqlite = mssql;
+                    break;
+                case 331:
+                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSumCalc BIT NOT NULL DEFAULT(0); ";
+                    sqlite = mssql;
+                    break;
+                case 332:
+                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSumTank VARCHAR(255) NULL; ";
+                    sqlite = mssql;
+                    break;
+                case 333:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = NULL WHERE id IN(192, 193, 194, 195, 196);";
+                    sqlite = mssql;
+                    break;
+                case 334:
+                    mssql =
+                        "UPDATE columnSelection SET colNameSum = 'CAST(SUM(playerTankBattle.credBtlLifetime) AS FLOAT) / SUM(playerTankBattle.credBtlCount) / 60' WHERE id=543; ";
+                    sqlite = mssql;
+                    break;
+                case 335:
+                    mssql = "ALTER TABLE columnSelection ADD colNameBattleSumReversePos BIT NOT NULL DEFAULT(0); ";
+                    sqlite = mssql;
+                    break;
 
             }
 			string sql = "";

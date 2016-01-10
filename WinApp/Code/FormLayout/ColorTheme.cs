@@ -104,6 +104,7 @@ namespace WinApp.Code
         public static Color Rating_1_red = ColorTranslator.FromHtml("#FF0000");			// red
         public static Color Rating_2_orange = ColorTranslator.FromHtml("#FF8400");	    // orange
         public static Color Rating_3_yellow = ColorTranslator.FromHtml("#FFFF00");		// yellow
+        public static Color Rating_4_greenLight = ColorTranslator.FromHtml("#AAFF00");	// green - to - yellow
         public static Color Rating_4_green = ColorTranslator.FromHtml("#4CFF00");		// green
         public static Color Rating_5_greenDark = ColorTranslator.FromHtml("#2F9E00");	// green dark
         public static Color Rating_6_blue = ColorTranslator.FromHtml("#60C7FF");		// blue
