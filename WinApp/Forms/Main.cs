@@ -3455,7 +3455,7 @@ namespace WinApp.Forms
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+				Log.LogToFile(ex, "Error on grid mouse down event");
 				if (Config.Settings.showDBErrors)
 					MsgBox.Show("Error on grid mouse down event, see log file", "Grid error", this);
 			}
@@ -5029,7 +5029,7 @@ namespace WinApp.Forms
                         break;
                     case "ucTotalStats":
                         // calc new width = each col = 200px + separators = 40 if more than one col
-                        int newWidth = (Convert.ToInt32(GadgetHelper.newParameters[2]) * 200) + (Convert.ToInt32(GadgetHelper.newParameters[2]) - 1) * 40;
+                        int newWidth = (Convert.ToInt32(GadgetHelper.newParameters[2]) * 200) + (Convert.ToInt32(GadgetHelper.newParameters[2]) - 1) * 20;
                         // calc new height = 22px per row * num of grid lines = params - fixed params, 70px is header + gridheader + footer
                         int newHeight = (22 * (GadgetHelper.newParameters.Length - 6)) + 75; 
                         bool save = false;

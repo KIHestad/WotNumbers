@@ -115,159 +115,159 @@ namespace WinApp.Gadget
 
         private void GetData() //;object sender, DoWorkEventArgs e)
         {
-            // Get Columns for data lookup
-            string sql =
-                "SELECT id, name, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos, description, colDataType " +
-                "FROM columnSelection " +
-                "WHERE colType=1 AND colNameSum IS NOT NULL " +
-                "ORDER BY id";
-            DataTable dtColumnSelection = DB.FetchData(sql);
-            string sqlSelectValue = ""; // The SQL to fetch calculated total stats value
-            string sqlSelectTrend = ""; // The SQL to fetch sum battle result for timespan to use for show in trend or use in trend calculation
-            string sqlSelectTotal = ""; // The SQL to fetch total result to use in in trend calculation
-            // Loop to build select and add tooltip
-            foreach (DataGridDataClass item in dataGridData)
+            try
             {
-                if (item.columnSelectionID != "")
-                {
-                    DataRow[] drGet = dtColumnSelection.Select("id = " + item.columnSelectionID);
-                    if (drGet.Length > 0)
-                    {
-                        // build select to get value data
-                        DataRow dr = drGet[0];
-                        item.cellName.ToolTipText = dr["description"].ToString();
-                        if (dr["colDataType"].ToString() == "Float"
-                            || dr["name"].ToString() == "Tier"
-                            || dr["name"].ToString() == "WN8"
-                            || dr["name"].ToString() == "WN7"
-                            || dr["name"].ToString() == "EFF"
-                            )
-                        {
-                            item.cellValue.Style.Format = "N2";
-                        }
-                        sqlSelectValue += dr["colNameSum"].ToString() + " AS COL" + item.columnSelectionID + ", ";
-                        // build select to get trend data
-                        item.trendExists = false;
-                        if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total &&  dr["colNameBattleSum"] != DBNull.Value)
-                        {
-                            item.trendExists = true;
-                            item.trendCalc = Convert.ToBoolean(dr["colNameBattleSumCalc"]);
-                            item.trendReversePos = Convert.ToBoolean(dr["colNameBattleSumReversePos"]);
-                            sqlSelectTrend += dr["colNameBattleSum"].ToString() + " AS COL" + item.columnSelectionID + ", ";
-                            if (item.trendCalc)
-                                sqlSelectTotal += dr["colNameBattleSumTank"].ToString() + " AS COL" + item.columnSelectionID + ", ";
-                        }
-                    }
-                }
-            }
-            // Get total data now if any values found
-            if (sqlSelectValue.Length > 2)
-            {
-                sqlSelectValue = sqlSelectValue.Substring(0, sqlSelectValue.Length - 2);
-                if (battleMode == "")
-                {
-                    sql =
-                        "SELECT " + sqlSelectValue + " " +
-                        "FROM    playerTank INNER JOIN " +
-                        "        tank ON playerTank.tankId = tank.id LEFT OUTER JOIN " +
-                        "        playerTankBattleTotalsView as playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-                        "WHERE        (playerTank.playerId = @playerId) ";
-                }
-                else
-                {
-                    sql =
-                        "SELECT " + sqlSelectValue + " " +
-                        "FROM    playerTank INNER JOIN " +
-                        "        tank ON playerTank.tankId = tank.id INNER JOIN " +
-                        "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
-                        "        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId  " +
-                        "WHERE        (playerTank.playerId = @playerId) AND playerTankBattle.battleMode = @battleMode ";
-                }
-                DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-                DataTable dtTotalStats = DB.FetchData(sql);
-                DataRow drTotalStats = dtTotalStats.Rows[0];
-                DataRow drTotalStatsTrend = null;
-                DataRow drTotalStatsTank = null;
-                // Get total trend now if any values found
-                if (sqlSelectTrend.Length > 2)
-                {
-                    // SQL to get battle for timespan
-                    sqlSelectTrend = sqlSelectTrend.Substring(0, sqlSelectTrend.Length - 2);
-                    sql =
-                        "SELECT SUM(battle.battlesCount) as battlesCount, " + sqlSelectTrend + " " +
-                        "FROM    battle INNER JOIN " +
-                        "        playerTank ON battle.playerTankId = playerTank.Id INNER JOIN " +
-                        "        tank ON playerTank.tankId = tank.id " +
-                        "WHERE   (playerTank.playerId = @playerId) ";
-                    DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                    // filter battlemode
-                    if (battleMode != "")
-                    {
-                        sql += "AND battleMode = @battleMode ";
-                        DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-                    }
-                    // filter timespan
-                    DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
-                    switch (_battleTimeSpan)
-                    {
-                        case GadgetHelper.TimeRangeEnum.TimeWeek:
-                            sql += " AND battleTime>=@battleTime ";
-                            dateFilter = dateFilter.AddDays(-7);
-                            break;
-                        case GadgetHelper.TimeRangeEnum.TimeMonth:
-                            sql += " AND battleTime>=@battleTime ";
-                            dateFilter = dateFilter.AddMonths(-1);
-                            break;
-                        case GadgetHelper.TimeRangeEnum.TimeMonth3:
-                            sql += " AND battleTime>=@battleTime ";
-                            dateFilter = dateFilter.AddMonths(-3);
-                            break;
-                        case GadgetHelper.TimeRangeEnum.TimeToday:
-                            sql += " AND battleTime>=@battleTime ";
-                            break;
-                    }
-                    DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
-                    // Get trend data
-                    DataTable dtTotalStatsTrend = DB.FetchData(sql);
-                    drTotalStatsTrend = dtTotalStatsTrend.Rows[0];
-                    // SQL to get total tanks stats
-                    if (sqlSelectTotal.Length > 2)
-                    {
-                        sqlSelectTotal = sqlSelectTotal.Substring(0, sqlSelectTotal.Length - 2);
-                        string sqlTotals = "";
-                        if (battleMode == "")
-                        {
-                            sqlTotals =
-                                "SELECT SUM(playerTankBattle.battles) as battlesCount, " + sqlSelectTotal + " " +
-                                "FROM    playerTank INNER JOIN " +
-                                "        tank ON playerTank.tankId = tank.id LEFT OUTER JOIN " +
-                                "        playerTankBattleTotalsView as playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-                                "WHERE        (playerTank.playerId = @playerId) ";
-                        }
-                        else
-                        {
-                            sqlTotals =
-                                "SELECT SUM(playerTankBattle.battles) as battlesCount, " + sqlSelectTotal + " " +
-                                "FROM    playerTank INNER JOIN " +
-                                "        tank ON playerTank.tankId = tank.id INNER JOIN " +
-                                "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
-                                "        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId  " +
-                                "WHERE        (playerTank.playerId = @playerId) AND playerTankBattle.battleMode = @battleMode ";
-                        }
-                        DB.AddWithValue(ref sqlTotals, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                        DB.AddWithValue(ref sqlTotals, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-                        // Get Totals data
-                        DataTable dtTotalStatsTank = DB.FetchData(sqlTotals);
-                        drTotalStatsTank = dtTotalStatsTank.Rows[0];
-                    }
-                }
-                // Loop to add values to grid
+                // Get Columns for data lookup
+                string sql =
+                    "SELECT id, name, colNameSum, colNameBattleSum, colNameBattleSumCalc, colNameBattleSumTank, colNameBattleSumReversePos, description, colDataType " +
+                    "FROM columnSelection " +
+                    "WHERE colType=1 AND colNameSum IS NOT NULL " +
+                    "ORDER BY id";
+                DataTable dtColumnSelection = DB.FetchData(sql);
+                string sqlSelectValue = ""; // The SQL to fetch calculated total stats value
+                string sqlSelectTrend = ""; // The SQL to fetch sum battle result for timespan to use for show in trend or use in trend calculation
+                string sqlSelectTotal = ""; // The SQL to fetch total result to use in in trend calculation
+                // Loop to build select and add tooltip
                 foreach (DataGridDataClass item in dataGridData)
                 {
                     if (item.columnSelectionID != "")
                     {
-                        try
+                        DataRow[] drGet = dtColumnSelection.Select("id = " + item.columnSelectionID);
+                        if (drGet.Length > 0)
+                        {
+                            // build select to get value data
+                            DataRow dr = drGet[0];
+                            item.cellName.ToolTipText = dr["description"].ToString();
+                            if (dr["colDataType"].ToString() == "Float"
+                                || dr["name"].ToString() == "Tier"
+                                || dr["name"].ToString() == "WN8"
+                                || dr["name"].ToString() == "WN7"
+                                || dr["name"].ToString() == "EFF"
+                                )
+                            {
+                                item.cellValue.Style.Format = "N2";
+                            }
+                            sqlSelectValue += dr["colNameSum"].ToString() + " AS COL" + item.columnSelectionID + ", ";
+                            // build select to get trend data
+                            item.trendExists = false;
+                            if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total &&  dr["colNameBattleSum"] != DBNull.Value)
+                            {
+                                item.trendExists = true;
+                                item.trendCalc = Convert.ToBoolean(dr["colNameBattleSumCalc"]);
+                                item.trendReversePos = Convert.ToBoolean(dr["colNameBattleSumReversePos"]);
+                                sqlSelectTrend += dr["colNameBattleSum"].ToString() + " AS COL" + item.columnSelectionID + ", ";
+                                if (item.trendCalc)
+                                    sqlSelectTotal += dr["colNameBattleSumTank"].ToString() + " AS COL" + item.columnSelectionID + ", ";
+                            }
+                        }
+                    }
+                }
+                // Get total data now if any values found
+                if (sqlSelectValue.Length > 2)
+                {
+                    sqlSelectValue = sqlSelectValue.Substring(0, sqlSelectValue.Length - 2);
+                    if (battleMode == "")
+                    {
+                        sql =
+                            "SELECT " + sqlSelectValue + " " +
+                            "FROM    playerTank INNER JOIN " +
+                            "        tank ON playerTank.tankId = tank.id LEFT OUTER JOIN " +
+                            "        playerTankBattleTotalsView as playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+                            "WHERE        (playerTank.playerId = @playerId) ";
+                    }
+                    else
+                    {
+                        sql =
+                            "SELECT " + sqlSelectValue + " " +
+                            "FROM    playerTank INNER JOIN " +
+                            "        tank ON playerTank.tankId = tank.id INNER JOIN " +
+                            "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+                            "        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId  " +
+                            "WHERE        (playerTank.playerId = @playerId) AND playerTankBattle.battleMode = @battleMode ";
+                    }
+                    DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                    DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+                    DataTable dtTotalStats = DB.FetchData(sql);
+                    DataRow drTotalStats = dtTotalStats.Rows[0];
+                    DataRow drTotalStatsTrend = null;
+                    DataRow drTotalStatsTank = null;
+                    // Get total trend now if any values found
+                    if (sqlSelectTrend.Length > 2)
+                    {
+                        // SQL to get battle for timespan
+                        sqlSelectTrend = sqlSelectTrend.Substring(0, sqlSelectTrend.Length - 2);
+                        sql =
+                            "SELECT SUM(battle.battlesCount) as battlesCount, " + sqlSelectTrend + " " +
+                            "FROM    battle INNER JOIN " +
+                            "        playerTank ON battle.playerTankId = playerTank.Id INNER JOIN " +
+                            "        tank ON playerTank.tankId = tank.id " +
+                            "WHERE   (playerTank.playerId = @playerId) ";
+                        DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                        // filter battlemode
+                        if (battleMode != "")
+                        {
+                            sql += "AND battleMode = @battleMode ";
+                            DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+                        }
+                        // filter timespan
+                        DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                        switch (_battleTimeSpan)
+                        {
+                            case GadgetHelper.TimeRangeEnum.TimeWeek:
+                                sql += " AND battleTime>=@battleTime ";
+                                dateFilter = dateFilter.AddDays(-7);
+                                break;
+                            case GadgetHelper.TimeRangeEnum.TimeMonth:
+                                sql += " AND battleTime>=@battleTime ";
+                                dateFilter = dateFilter.AddMonths(-1);
+                                break;
+                            case GadgetHelper.TimeRangeEnum.TimeMonth3:
+                                sql += " AND battleTime>=@battleTime ";
+                                dateFilter = dateFilter.AddMonths(-3);
+                                break;
+                            case GadgetHelper.TimeRangeEnum.TimeToday:
+                                sql += " AND battleTime>=@battleTime ";
+                                break;
+                        }
+                        DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        // Get trend data
+                        DataTable dtTotalStatsTrend = DB.FetchData(sql);
+                        drTotalStatsTrend = dtTotalStatsTrend.Rows[0];
+                        // SQL to get total tanks stats
+                        if (sqlSelectTotal.Length > 2)
+                        {
+                            sqlSelectTotal = sqlSelectTotal.Substring(0, sqlSelectTotal.Length - 2);
+                            string sqlTotals = "";
+                            if (battleMode == "")
+                            {
+                                sqlTotals =
+                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, " + sqlSelectTotal + " " +
+                                    "FROM    playerTank INNER JOIN " +
+                                    "        tank ON playerTank.tankId = tank.id LEFT OUTER JOIN " +
+                                    "        playerTankBattleTotalsView as playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+                                    "WHERE        (playerTank.playerId = @playerId) ";
+                            }
+                            else
+                            {
+                                sqlTotals =
+                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, " + sqlSelectTotal + " " +
+                                    "FROM    playerTank INNER JOIN " +
+                                    "        tank ON playerTank.tankId = tank.id INNER JOIN " +
+                                    "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+                                    "        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId  " +
+                                    "WHERE        (playerTank.playerId = @playerId) AND playerTankBattle.battleMode = @battleMode ";
+                            }
+                            DB.AddWithValue(ref sqlTotals, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sqlTotals, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+                            // Get Totals data
+                            DataTable dtTotalStatsTank = DB.FetchData(sqlTotals);
+                            drTotalStatsTank = dtTotalStatsTank.Rows[0];
+                        }
+                    }
+                    // Loop to add values to grid
+                    foreach (DataGridDataClass item in dataGridData)
+                    {
+                        if (item.columnSelectionID != "")
                         {
                             // Get cell value from sql
                             string cellSQLFieldName = "COL" + item.columnSelectionID;
@@ -280,7 +280,7 @@ namespace WinApp.Gadget
                                     if (val > 999999999)
                                         item.cellValue.Value = (val / 1000000).ToString("# ### ###").Trim() + " M";
                                     else 
-                                        item.cellValue.Value = (val / 1000000).ToString("# ### ###.##0").Trim() + " M";
+                                        item.cellValue.Value = (val / 1000000).ToString("# ### ##0.##0").Trim() + " M";
                                     item.cellValue.ToolTipText = val.ToString("N0");
                                 }
                                 else
@@ -309,10 +309,14 @@ namespace WinApp.Gadget
                                     // Format number
                                     if (trendValue > 9999)
                                     {
-                                        if (trendValue > 9999999)
-                                            item.cellTrend.Value = (trendValue / 1000000).ToString("# ### ###").Trim() + " M";
+                                        if (trendValue > 99999999)
+                                            item.cellTrend.Value = (trendValue / 1000000).ToString("#").Trim() + "M";
+                                        else if (trendValue > 9999999)
+                                            item.cellTrend.Value = (trendValue / 1000000).ToString("#.#").Trim() + "M";
+                                        else if (trendValue > 999999)
+                                            item.cellTrend.Value = (trendValue / 1000000).ToString("#.#0").Trim() + "M";
                                         else
-                                            item.cellTrend.Value = (trendValue / 1000).ToString("# ### ###").Trim() + " K";
+                                            item.cellTrend.Value = (trendValue / 1000).ToString("#").Trim() + "K";
                                     }
                                     else
                                     {
@@ -332,12 +336,12 @@ namespace WinApp.Gadget
                                         if (!item.trendReversePos)
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_green;
-                                            trendToolTipText = "Positive Trend" + Environment.NewLine;
+                                            trendToolTipText = "Positive Trend:" + Environment.NewLine;
                                         }
                                         else
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_1_red;
-                                            trendToolTipText = "Negative Trend" + Environment.NewLine;
+                                            trendToolTipText = "Negative Trend:" + Environment.NewLine;
                                         }
                                     }
                                     else if (trendValue > 0)
@@ -346,13 +350,13 @@ namespace WinApp.Gadget
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_greenLight;
                                             item.cellTrend.Value = "pos";
-                                            trendToolTipText = "Minor Positive Trend" + Environment.NewLine;
+                                            trendToolTipText = "Minor Positive Trend:" + Environment.NewLine;
                                         }
                                         else
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_2_orange;
                                             item.cellTrend.Value = "neg";
-                                            trendToolTipText = "Minor Negative Trend" + Environment.NewLine;
+                                            trendToolTipText = "Minor Negative Trend:" + Environment.NewLine;
                                         }
                                     }
                                     else if (trendValue <= -0.01)
@@ -360,12 +364,12 @@ namespace WinApp.Gadget
                                         if (!item.trendReversePos)
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_1_red;
-                                            trendToolTipText = "Negative Trend" + Environment.NewLine;
+                                            trendToolTipText = "Negative Trend:" + Environment.NewLine;
                                         }
                                         else
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_green;
-                                            trendToolTipText = "Positive Trend" + Environment.NewLine;
+                                            trendToolTipText = "Positive Trend:" + Environment.NewLine;
                                         }
                                     }
                                     else if (trendValue < 0)
@@ -374,13 +378,13 @@ namespace WinApp.Gadget
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_2_orange;
                                             item.cellTrend.Value = "neg";
-                                            trendToolTipText = "Minor Negative Trend" + Environment.NewLine;
+                                            trendToolTipText = "Minor Negative Trend:" + Environment.NewLine;
                                         }
                                         else
                                         {
                                             item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_greenLight;
                                             item.cellTrend.Value = "pos";
-                                            trendToolTipText = "Minor Positive Trend" + Environment.NewLine;
+                                            trendToolTipText = "Minor Positive Trend:" + Environment.NewLine;
                                         }
                                     }
                                     else
@@ -388,9 +392,12 @@ namespace WinApp.Gadget
                                         item.cellTrend.Style.ForeColor = ColorTheme.Rating_3_yellow;
                                         if (item.trendCalc)
                                             item.cellTrend.Value = "nul";
-                                        trendToolTipText = "No change" + Environment.NewLine;
+                                        trendToolTipText = "No Change" + Environment.NewLine;
                                     }
-                                    item.cellTrend.ToolTipText = trendToolTipText + trendValue.ToString();
+                                    if (trendValue != 0)
+                                        trendToolTipText += trendValue.ToString("# ### ##0.########");
+                                    item.cellTrend.ToolTipText = trendToolTipText;
+                                    item.cellTrend.Style.Font = new Font(dataGrid.Font.FontFamily, 7);
                                 }
                             }
                             // Get cell name for special operations
@@ -418,13 +425,14 @@ namespace WinApp.Gadget
 
                             }
                         }
-                        catch (Exception)
-                        {
-                            // throw;
-                        }
-                        
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, "Error getting daga to total stats gadget");
+                if (Config.Settings.showDBErrors)
+                    MsgBox.Show("Error getting daga to total stats gadget, see log file", "Home View Error");
             }
         }
 
@@ -634,13 +642,13 @@ namespace WinApp.Gadget
                     {
                         // Erase the cell.
                         e.Graphics.FillRectangle(brushBack, e.CellBounds);
-                        Brush b = new SolidBrush(ColorTheme.Rating_2_orange);
+                        Brush b = new SolidBrush(ColorTheme.Rating_1_red);
                         List<Point> points = new List<Point>();
                         int x = e.CellBounds.X;
                         int y = e.CellBounds.Y;
-                        points.Add(new Point(x + 18, y + 6));
-                        points.Add(new Point(x + 24, y + 16));
-                        points.Add(new Point(x + 30, y + 6));
+                        points.Add(new Point(x + 18, y + 7));
+                        points.Add(new Point(x + 23, y + 15));
+                        points.Add(new Point(x + 29, y + 7));
                         e.Graphics.FillPolygon(b, points.ToArray());
                         e.Handled = true;
                     }
@@ -648,13 +656,13 @@ namespace WinApp.Gadget
                     {
                         // Erase the cell.
                         e.Graphics.FillRectangle(brushBack, e.CellBounds);
-                        Brush b = new SolidBrush(ColorTheme.Rating_4_greenLight);
+                        Brush b = new SolidBrush(ColorTheme.Rating_4_green);
                         List<Point> points = new List<Point>();
                         int x = e.CellBounds.X;
                         int y = e.CellBounds.Y;
-                        points.Add(new Point(x + 17, y + 16));
-                        points.Add(new Point(x + 24, y + 5));
-                        points.Add(new Point(x + 31, y + 16));
+                        points.Add(new Point(x + 17, y + 15));
+                        points.Add(new Point(x + 23, y + 6));
+                        points.Add(new Point(x + 29, y + 15));
                         e.Graphics.FillPolygon(b, points.ToArray());
                         e.Handled = true;
                     }
@@ -665,7 +673,7 @@ namespace WinApp.Gadget
                         Brush b = new SolidBrush(ColorTheme.Rating_3_yellow);
                         int x = e.CellBounds.X;
                         int y = e.CellBounds.Y;
-                        e.Graphics.FillRectangle(b, (x + 25), y + 5, 12, 12);
+                        e.Graphics.FillRectangle(b, (x + 26), y + 6, 10, 10);
                         e.Handled = true;
                     }
                 }
