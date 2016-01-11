@@ -442,8 +442,10 @@ namespace WinApp.Code
 								// Other
                                 battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
 								battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
-								double def = (int)token_personel.SelectToken("droppedCapturePoints");
-								battleValues.Add(new BattleValue() { colname = "def", value = def }); // override def - might be above 100
+								// Rating values, more adds later
+                                Rating.RatingParameters rp = new Rating.RatingParameters();
+                                rp.DEF = (int)token_personel.SelectToken("droppedCapturePoints");
+								battleValues.Add(new BattleValue() { colname = "def", value = rp.DEF }); // override def - might be above 100
 								// field returns null
 								if (token_personel.SelectToken("fortResource").HasValues)
 									battleValues.Add(new BattleValue() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
@@ -502,12 +504,12 @@ namespace WinApp.Code
 									battleValues.Add(new BattleValue() { colname = "battleLifeTime", value = (int)token_personel.SelectToken("lifeTime") });
 									// winning team
 									int winnerTeam = (int)token_common.SelectToken("winnerTeam");
-									double wins = 0;
+									rp.WINS = 0;
 									if (winnerTeam == playerTeam)
 									{
 										battleValues.Add(new BattleValue() { colname = "victory", value = 1 });
 										battleValues.Add(new BattleValue() { colname = "battleResultId", value = 1 });
-										wins = 1;
+                                        rp.WINS = 1;
 									}
 									else if (winnerTeam == enemyTeam)
 									{
@@ -532,23 +534,23 @@ namespace WinApp.Code
 										battleValues.Add(new BattleValue() { colname = "battleSurviveId", value = 3 });
 									}
 									// other
-									double dmg = (double)token_personel.SelectToken("damageDealt");
-									battleValues.Add(new BattleValue() { colname = "dmg", value = dmg });
-									double frags = (double)token_personel.SelectToken("kills");
-									battleValues.Add(new BattleValue() { colname = "frags", value = frags });
+									rp.DAMAGE = (double)token_personel.SelectToken("damageDealt");
+									battleValues.Add(new BattleValue() { colname = "dmg", value = rp.DAMAGE });
+									rp.FRAGS = (double)token_personel.SelectToken("kills");
+									battleValues.Add(new BattleValue() { colname = "frags", value = rp.FRAGS });
 									battleValues.Add(new BattleValue() { colname = "dmgReceived", value = (int)token_personel.SelectToken("damageReceived") });
 									battleValues.Add(new BattleValue() { colname = "assistSpot", value = (int)token_personel.SelectToken("damageAssistedRadio") });
 									battleValues.Add(new BattleValue() { colname = "assistTrack", value = (int)token_personel.SelectToken("damageAssistedTrack") });
-									double cap = (double)token_personel.SelectToken("capturePoints");
-									battleValues.Add(new BattleValue() { colname = "cap", value = cap });
+									rp.CAP = (double)token_personel.SelectToken("capturePoints");
+									battleValues.Add(new BattleValue() { colname = "cap", value = rp.CAP });
 									//battleValues.Add(new BattleValue() { colname = "def", value = (int)token_personel.SelectToken("droppedCapturePoints") });
 									battleValues.Add(new BattleValue() { colname = "shots", value = (int)token_personel.SelectToken("shots") });
 									battleValues.Add(new BattleValue() { colname = "hits", value = (int)token_personel.SelectToken("hits") });
 									battleValues.Add(new BattleValue() { colname = "shotsReceived", value = (int)token_personel.SelectToken("shotsReceived") });
 									battleValues.Add(new BattleValue() { colname = "pierced", value = (int)token_personel.SelectToken("pierced") });
 									battleValues.Add(new BattleValue() { colname = "piercedReceived", value = (int)token_personel.SelectToken("piercedReceived") });
-									double spotted = (double)token_personel.SelectToken("spotted");
-									battleValues.Add(new BattleValue() { colname = "spotted", value = spotted });
+									rp.SPOT = (double)token_personel.SelectToken("spotted");
+									battleValues.Add(new BattleValue() { colname = "spotted", value = rp.SPOT });
 									battleValues.Add(new BattleValue() { colname = "mileage", value = (int)token_personel.SelectToken("mileage") });
 									//battleValues.Add(new BattleValue() { colname = "treesCut", value = (int)token_personel.SelectToken("") });
 									battleValues.Add(new BattleValue() { colname = "xp", value = (int)token_personel.SelectToken("originalXP") });
@@ -558,12 +560,13 @@ namespace WinApp.Code
 									battleValues.Add(new BattleValue() { colname = "dmgBlocked", value = (int)token_personel.SelectToken("damageBlockedByArmor") });
 									battleValues.Add(new BattleValue() { colname = "potentialDmgReceived", value = (int)token_personel.SelectToken("potentialDamageReceived") });
 									//Ratings
-									double tier = TankHelper.GetTankTier(tankId);
-									double eff = Rating.CalculateEFF(1, dmg, spotted, frags, def, cap, tier);
+									rp.TIER = TankHelper.GetTankTier(tankId);
+                                    rp.BATTLES = 1;
+									double eff = Rating.CalculateEFF(rp);
 									battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
-									double wn7 = Rating.CalculateWN7(1, dmg, spotted, frags, def, cap, wins, tier, true);
+									double wn7 = Rating.CalculateWN7(rp, rp.TIER, true);
 									battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
-									double wn8 = Rating.CalculateTankWN8(tankId, 1, dmg, spotted, frags, def, wins, true);
+                                    double wn8 = Rating.CalculateTankWN8(tankId, rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });
 								}
 								// insert data

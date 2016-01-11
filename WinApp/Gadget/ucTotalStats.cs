@@ -173,6 +173,7 @@ namespace WinApp.Gadget
                     }
                 }
                 // Get total data now if any values found
+                string battleTimeFilter = ""; 
                 if (sqlSelectValue.Length > 2)
                 {
                     sqlSelectValue = sqlSelectValue.Substring(0, sqlSelectValue.Length - 2);
@@ -207,8 +208,8 @@ namespace WinApp.Gadget
                         // SQL to get battle for timespan
                         sqlSelectTrend = sqlSelectTrend.Substring(0, sqlSelectTrend.Length - 2);
                         sql =
-                            "SELECT SUM(battle.battlesCount) as battlesCount, SUM(battle.dmgReceived) as dmgReceived, " + 
-                            "SUM(battle.killed) as killed, " +
+                            "SELECT SUM(battle.battlesCount) as battlesCount, SUM(battle.dmgReceived) as dmgReceived, " +
+                            "SUM(battle.killed) as killed, SUM(battle.shots) as shots, " +
                             sqlSelectTrend + " " +
                             "FROM    battle INNER JOIN " +
                             "        playerTank ON battle.playerTankId = playerTank.Id INNER JOIN " +
@@ -226,22 +227,24 @@ namespace WinApp.Gadget
                         switch (_battleTimeSpan)
                         {
                             case GadgetHelper.TimeRangeEnum.TimeWeek:
-                                sql += " AND battleTime>=@battleTime ";
+                                battleTimeFilter = " AND battleTime>=@battleTime ";
                                 dateFilter = dateFilter.AddDays(-7);
                                 break;
                             case GadgetHelper.TimeRangeEnum.TimeMonth:
-                                sql += " AND battleTime>=@battleTime ";
+                                battleTimeFilter = " AND battleTime>=@battleTime ";
                                 dateFilter = dateFilter.AddMonths(-1);
                                 break;
                             case GadgetHelper.TimeRangeEnum.TimeMonth3:
-                                sql += " AND battleTime>=@battleTime ";
+                                battleTimeFilter = " AND battleTime>=@battleTime ";
                                 dateFilter = dateFilter.AddMonths(-3);
                                 break;
                             case GadgetHelper.TimeRangeEnum.TimeToday:
-                                sql += " AND battleTime>=@battleTime ";
+                                battleTimeFilter = " AND battleTime>=@battleTime ";
                                 break;
                         }
-                        DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        sql += battleTimeFilter;
                         // Get trend data
                         DataTable dtTotalStatsTrend = DB.FetchData(sql);
                         drTotalStatsTrend = dtTotalStatsTrend.Rows[0];
@@ -254,7 +257,7 @@ namespace WinApp.Gadget
                             {
                                 sqlTotals =
                                     "SELECT SUM(playerTankBattle.battles) as battlesCount, SUM(playerTankBattle.dmgReceived) as dmgReceived, " +
-                                    "SUM(nullif(playerTankBattle.battles-playerTankBattle.survived,0)) as killed, " +
+                                    "SUM(playerTankBattle.battles-playerTankBattle.survived) as killed, SUM(playerTankBattle.shots) as shots, " +
                                     sqlSelectTotal + " " +
                                     "FROM    playerTank INNER JOIN " +
                                     "        tank ON playerTank.tankId = tank.id LEFT OUTER JOIN " +
@@ -264,8 +267,8 @@ namespace WinApp.Gadget
                             else
                             {
                                 sqlTotals =
-                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, SUM(playerTankBattle.dmgReceived) as dmgReceived, " + 
-                                    "SUM(nullif(playerTankBattle.battles-playerTankBattle.survived,0)) as killed, " +
+                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, SUM(playerTankBattle.dmgReceived) as dmgReceived, " +
+                                    "SUM(playerTankBattle.battles-playerTankBattle.survived) as killed, SUM(playerTankBattle.shots) as shots, " +
                                     sqlSelectTotal + " " +
                                     "FROM    playerTank INNER JOIN " +
                                     "        tank ON playerTank.tankId = tank.id INNER JOIN " +
@@ -283,6 +286,7 @@ namespace WinApp.Gadget
                     // Loop to add values to grid
                     foreach (DataGridDataClass item in dataGridData)
                     {
+                        string colName = item.cellName.Value.ToString();
                         if (item.columnSelectionID != "")
                         {
                             // Get cell value from sql
@@ -291,17 +295,47 @@ namespace WinApp.Gadget
                             {
                                 // Add total value to grid
                                 double val = Convert.ToDouble(drTotalStats[cellSQLFieldName]);
-                                if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total && val > 999999)
+                                // Get special calculations
+                                if (colName == "WN8")
                                 {
-                                    if (val > 999999999)
-                                        item.cellValue.Value = (val / 1000000).ToString("# ### ###").Trim() + " M";
-                                    else 
-                                        item.cellValue.Value = (val / 1000000).ToString("# ### ##0.##0").Trim() + " M";
-                                    item.cellValue.ToolTipText = val.ToString("N0");
+                                    item.cellValue.Value = Code.Rating.CalculatePlayerTotalWN8(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN8color(Convert.ToInt32(item.cellValue.Value));
+                                }
+                                else if (colName == "WN7" )
+                                {
+                                    item.cellValue.Value = Code.Rating.CalcTotalWN7(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN7color(Convert.ToInt32(item.cellValue.Value));
+                                }
+                                else if (colName == "EFF")
+                                {
+                                    item.cellValue.Value = Code.Rating.CalcTotalEFF(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.EffColor(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else
                                 {
-                                    item.cellValue.Value = val;
+                                    // Standard calculations
+                                    if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total && val > 999999)
+                                    {
+                                        if (val > 999999999)
+                                            item.cellValue.Value = (val / 1000000).ToString("# ### ###").Trim() + " M";
+                                        else
+                                            item.cellValue.Value = (val / 1000000).ToString("# ### ##0.##0").Trim() + " M";
+                                        item.cellValue.ToolTipText = val.ToString("N0");
+                                    }
+                                    else
+                                    {
+                                        item.cellValue.Value = val;
+                                    }
+                                }
+                                // special formatting
+                                switch (colName)
+                                {
+                                    case "Battles":
+                                        item.cellValue.Style.ForeColor = ColorRangeScheme.BattleCountColor(Convert.ToInt32(item.cellValue.Value));
+                                        break;
+                                    case "Win Rate":
+                                        item.cellValue.Style.ForeColor = ColorRangeScheme.WinRateColor(Convert.ToInt32(item.cellValue.Value));
+                                        break;
                                 }
                                 // Add trend to grid
                                 if (item.trendExists && drTotalStatsTrend[cellSQLFieldName] != DBNull.Value)
@@ -314,10 +348,11 @@ namespace WinApp.Gadget
                                     if (item.trendCalc) 
                                     {
                                         double trendTotalValue = Convert.ToDouble(drTotalStatsTank[cellSQLFieldName]);
-                                        int trendBattleCount = Convert.ToInt32(drTotalStatsTrend["battlesCount"]);
+                                        int trendBattleCount = 0;
+                                        if (drTotalStatsTrend["battlesCount"] != DBNull.Value)
+                                            trendBattleCount = Convert.ToInt32(drTotalStatsTrend["battlesCount"]);
                                         int trendTotalBattleCount = Convert.ToInt32(drTotalStatsTank["battlesCount"]);
                                         // Check for special trend calculations or use default
-                                        string colName = item.cellName.Value.ToString();
                                         if (colName == "Dmg C/R")
                                         {
                                             // Calc Damg C/R
@@ -347,6 +382,39 @@ namespace WinApp.Gadget
                                             {
                                                 trendValue = 999;
                                             }
+                                        }
+                                        else if (colName == "Hit Rate")
+                                        {
+                                            // Calc Damg C/R
+                                            int trendBattleShots = Convert.ToInt32(drTotalStatsTrend["shots"]);
+                                            int trendTotalShots = Convert.ToInt32(drTotalStatsTank["shots"]);
+                                            if ((trendTotalShots - trendBattleShots) != 0)
+                                            {
+                                                double prevValue = ((trendTotalValue - trendValue) * 100 / (trendTotalShots - trendBattleShots));
+                                                trendValue = val - prevValue;
+                                            }
+                                            else
+                                            {
+                                                trendValue = 999;
+                                            }
+                                        }
+                                        else if (colName == "EFF")
+                                        {
+                                            // Calc EFF
+                                            double prevValue = Rating.CalcBattleEFFReverse(battleTimeFilter, 0);
+                                            trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
+                                        }
+                                        else if (colName == "WN7")
+                                        {
+                                            // Calc WN7
+                                            double prevValue = Rating.CalcBattleWN7Reverse(battleTimeFilter, 0);
+                                            trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
+                                        }
+                                        else if (colName == "WN8")
+                                        {
+                                            // Calc WN8
+                                            double prevValue = Rating.CalcAvgBattleWN8Reverse(battleTimeFilter, 0);
+                                            trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else
                                         {
@@ -464,30 +532,6 @@ namespace WinApp.Gadget
                                     }
                                     
                                 }
-                            }
-                            // Get cell name for special operations
-                            string cellName = item.cellName.Value.ToString().Trim();
-                            switch (cellName)
-                            {
-                                case "Battles":
-                                    item.cellValue.Style.ForeColor = ColorRangeScheme.BattleCountColor(Convert.ToInt32(item.cellValue.Value));
-                                    break;
-                                case "Win Rate":
-                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WinRateColor(Convert.ToInt32(item.cellValue.Value));
-                                    break;
-                                case "WN8":
-                                    item.cellValue.Value = Code.Rating.CalculatePlayerTotalWN8(battleMode);
-                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN8color(Convert.ToInt32(item.cellValue.Value));
-                                    break;
-                                case "WN7":
-                                    item.cellValue.Value = Code.Rating.CalcTotalWN7(battleMode);
-                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN7color(Convert.ToInt32(item.cellValue.Value));
-                                    break;
-                                case "EFF":
-                                    item.cellValue.Value = Code.Rating.CalcTotalEFF(battleMode);
-                                    item.cellValue.Style.ForeColor = ColorRangeScheme.EffColor(Convert.ToInt32(item.cellValue.Value));
-                                    break;
-
                             }
                         }
                     }

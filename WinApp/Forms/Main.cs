@@ -3611,40 +3611,38 @@ namespace WinApp.Forms
 				{
 					DataRow dr = dt.Rows[0];
 					int tankId = Convert.ToInt32(dr["tankId"]);
-					double battlesCount = Convert.ToInt32(dr["battles"]);
-					double dmg = Convert.ToDouble(dr["dmg"]);
-					double spotted = Convert.ToDouble(dr["spot"]);
-					double frags = Convert.ToDouble(dr["frags"]);
-					double def = Convert.ToDouble(dr["def"]);
-					double wins = Convert.ToDouble(dr["Wins"]);
-					string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, wins), 0).ToString();
+                    Rating.RatingParameters rp = new Rating.RatingParameters();
+					rp.BATTLES = Convert.ToInt32(dr["battles"]);
+					rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
+					rp.SPOT = Convert.ToDouble(dr["spot"]);
+					rp.FRAGS = Convert.ToDouble(dr["frags"]);
+					rp.DEF = Convert.ToDouble(dr["def"]);
+					rp.WINS = Convert.ToDouble(dr["Wins"]);
+					string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, rp), 0).ToString();
 					double rWINc;
 					double rDAMAGEc;
 					double rFRAGSc;
 					double rSPOTc;
 					double rDEFc;
-					dmg = dmg / battlesCount;
-					spotted = spotted / battlesCount;
-					frags = frags / battlesCount;
-					def = def / battlesCount;
-					double wr = wins / battlesCount * 100;
+                    rp.DAMAGE = rp.DAMAGE / rp.BATTLES;
+                    rp.SPOT = rp.SPOT / rp.BATTLES;
+                    rp.FRAGS = rp.FRAGS / rp.BATTLES;
+                    rp.DEF = rp.DEF / rp.BATTLES;
+                    double wr = rp.WINS / rp.BATTLES * 100;
 					double exp_dmg = Convert.ToDouble(dr["expDmg"]);
 					double exp_spotted = Convert.ToDouble(dr["expSpot"]);
 					double exp_frags = Convert.ToDouble(dr["expFrags"]);
 					double exp_def = Convert.ToDouble(dr["expDef"]);
 					double exp_wr = Convert.ToDouble(dr["expWR"]);
-					Rating.UseWN8FormulaReturnResult(
-						dmg, spotted, frags, def, wr,
-						exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
-						out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+					Rating.UseWN8FormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 					string message = "WN8 Rating for this tank in Random/TC: ";
 					message += wn8 + Environment.NewLine + Environment.NewLine;
 					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8 result" + Environment.NewLine;
 					message += "-------------" + "\t  " + "----------" + "\t" + "------------" + "\t " + "----------------" + Environment.NewLine;
-					message += "Damage:" + "\t  " + Math.Round(dmg, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
-					message += "Frags:" + "\t  " + Math.Round(frags, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
-					message += "Spot:" + "\t  " + Math.Round(spotted, 1).ToString() + "\t" + Math.Round(exp_spotted, 1).ToString() + "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
-					message += "Defence:" + "\t  " + Math.Round(def, 1).ToString() + "\t" + Math.Round(exp_def, 1).ToString() + "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
+                    message += "Damage:" + "\t  " + Math.Round(rp.DAMAGE, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
+                    message += "Frags:" + "\t  " + Math.Round(rp.FRAGS, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
+                    message += "Spot:" + "\t  " + Math.Round(rp.SPOT, 1).ToString() + "\t" + Math.Round(exp_spotted, 1).ToString() + "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
+                    message += "Defence:" + "\t  " + Math.Round(rp.DEF, 1).ToString() + "\t" + Math.Round(exp_def, 1).ToString() + "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
 					message += "Win rate:" + "\t  " + Math.Round(wr, 1).ToString() + "%" + "\t" + Math.Round(exp_wr, 1).ToString() + "%" + "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
 					message += Environment.NewLine;
 					MsgBox.Show(message, "WN8 Tank Details");

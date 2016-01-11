@@ -675,18 +675,20 @@ namespace WinApp.Code
 			// Update playerTankBattle
 			string sqlFields = "";
 			// Get rating parameters
-			double dmg = Rating.ConvertDbVal2Double(playerTankBattleNewRow["dmg"]);
-			double spotted = Rating.ConvertDbVal2Double(playerTankBattleNewRow["spot"]);
-			double frags = Rating.ConvertDbVal2Double(playerTankBattleNewRow["frags"]);
-			double def = Rating.ConvertDbVal2Double(playerTankBattleNewRow["def"]);
-			double wins = Rating.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
-			double cap = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
+            Rating.RatingParameters rp = new Rating.RatingParameters();
+			rp.DAMAGE = Rating.ConvertDbVal2Double(playerTankBattleNewRow["dmg"]);
+			rp.SPOT = Rating.ConvertDbVal2Double(playerTankBattleNewRow["spot"]);
+			rp.FRAGS = Rating.ConvertDbVal2Double(playerTankBattleNewRow["frags"]);
+			rp.DEF = Rating.ConvertDbVal2Double(playerTankBattleNewRow["def"]);
+			rp.WINS = Rating.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
+			rp.CAP = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
+            rp.BATTLES = playerTankNewRow_battles;
 			// Calculate WN7
-			sqlFields += "wn7=" + Math.Round(Rating.CalculateWN7(playerTankNewRow_battles, dmg, spotted, frags, def, cap, wins, TankHelper.GetTankTier(tankId)), 0).ToString();
+            sqlFields += "wn7=" + Math.Round(Rating.CalculateWN7(rp, TankHelper.GetTankTier(tankId)), 0).ToString();
 			// Calculate WN8
-			sqlFields += ", wn8=" + Math.Round(Rating.CalculateTankWN8(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, wins),0).ToString();
+            sqlFields += ", wn8=" + Math.Round(Rating.CalculateTankWN8(tankId, rp), 0).ToString();
 			// Calculate Eff
-			sqlFields += ", eff=" + Math.Round(Rating.CalculateTankEFF(tankId, playerTankNewRow_battles, dmg, spotted, frags, def, cap), 0).ToString();
+			sqlFields += ", eff=" + Math.Round(Rating.CalculateTankEFF(tankId, rp), 0).ToString();
 			foreach (DataColumn column in playerTankBattleOld.Columns)
 			{
 				// Get columns and values from NewPlayerTankRow direct
@@ -920,21 +922,23 @@ namespace WinApp.Code
 					}
 				}
 				// Get rating parameters
-				double dmg = Rating.ConvertDbVal2Double(battleNewRow["dmg"]);
-				double spotted = Rating.ConvertDbVal2Double(battleNewRow["spotted"]);
-				double frags = Rating.ConvertDbVal2Double(battleNewRow["frags"]);
-				double def = Rating.ConvertDbVal2Double(battleNewRow["def"]);
-				double cap = Rating.ConvertDbVal2Double(battleNewRow["cap"]);
-				double wins = Rating.ConvertDbVal2Double(battleNewRow["victory"]);
+                Rating.RatingParameters rp = new Rating.RatingParameters();
+				rp.DAMAGE = Rating.ConvertDbVal2Double(battleNewRow["dmg"]);
+				rp.SPOT = Rating.ConvertDbVal2Double(battleNewRow["spotted"]);
+				rp.FRAGS = Rating.ConvertDbVal2Double(battleNewRow["frags"]);
+				rp.DEF = Rating.ConvertDbVal2Double(battleNewRow["def"]);
+				rp.CAP = Rating.ConvertDbVal2Double(battleNewRow["cap"]);
+				rp.WINS = Rating.ConvertDbVal2Double(battleNewRow["victory"]);
+                rp.BATTLES = battlesCount;
 				// Calculate WN7
 				sqlFields += ", wn7";
-				sqlValues += ", " + Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, wins, Rating.GetAverageBattleTier(), true), 0).ToString();
+                sqlValues += ", " + Math.Round(Rating.CalculateWN7(rp, Rating.GetAverageBattleTier(), true), 0).ToString();
 				// Calculate WN8
 				sqlFields += ", wn8";
-				sqlValues += ", " + Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
+                sqlValues += ", " + Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0).ToString();
 				// Calc Eff
 				sqlFields += ", eff";
-				sqlValues += ", " + Math.Round(Rating.CalculateTankEFF(tankId, battlesCount, dmg, spotted, frags, def, cap),0).ToString();
+				sqlValues += ", " + Math.Round(Rating.CalculateTankEFF(tankId, rp),0).ToString();
 				// Add battle mode
 				sqlFields += ", battleMode";
 				sqlValues += ", @battleMode";

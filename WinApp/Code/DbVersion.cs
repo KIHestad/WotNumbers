@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 337; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 339; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2646,7 +2646,7 @@ namespace WinApp.Code
                     mssql = "update json2dbMapping set dbBattle = dbPlayerTank where dbPlayerTank = 'heHits';";
                     sqlite = mssql;
                     break;
-                case 337:
+                case 339:
                     mssql =
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.mileage)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=63 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.treesCut)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=64 ; " +
@@ -2670,6 +2670,12 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.def)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=135 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.spotted)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=136 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.xp)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=137 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='MAX(battle.dmg / battle.battlesCount)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=154 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='MAX(battle.frags / battle.battlesCount)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=155 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='MAX(xp / battle.battlesCount)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=156 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='MAX(battle.credits)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=537 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='MAX(battle.credits-battle.creditsNet)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=538 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='MAX(battle.creditsNet)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=539 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(credits)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=540 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(credits - creditsNet)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=541 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(creditsNet)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 0 WHERE id=542 ; " +
@@ -2682,10 +2688,15 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.heHitsReceived)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 1 WHERE id=152 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.noDmgShotsReceived)', colNameBattleSumCalc=0, colNameBattleSumReversePos= 1 WHERE id=153 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(tank.Tier * battle.battlescount)', colNameBattleSumTank='SUM(tank.Tier * playerTankBattle.battles)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=12 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='0', colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=48 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='0', colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=187 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='0', colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=49 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.victory) * 100', colNameBattleSumTank='SUM(playerTankBattle.wins) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=95 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.draw) * 100', colNameBattleSumTank='SUM((playerTankBattle.battles-playerTankBattle.wins-playerTankBattle.losses)) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos= 1 WHERE id=99 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.defeat) * 100', colNameBattleSumTank='SUM(playerTankBattle.losses) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos= 1 WHERE id=100 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.survived)', colNameBattleSumTank='SUM(playerTankBattle.survived) * 100', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=98 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.frags)', colNameBattleSumTank='SUM(playerTankBattle.frags)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=219 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.dmg)', colNameBattleSumTank='SUM(playerTankBattle.dmg)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=220 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.assistSpot)', colNameBattleSumTank='SUM(playerTankBattle.assistSpot)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=189 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.assistTrack)', colNameBattleSumTank='SUM(playerTankBattle.assistTrack)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=190 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.dmg)', colNameBattleSumTank='SUM(playerTankBattle.dmg)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=188 ; " +
@@ -2698,6 +2709,7 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.def)', colNameBattleSumTank='SUM(playerTankBattle.def)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=204 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.spotted)', colNameBattleSumTank='SUM(playerTankBattle.spot) ', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=205 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.xp)', colNameBattleSumTank='SUM(playerTankBattle.xp)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=140 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.hits)', colNameBattleSumTank='SUM(playerTankBattle.hits)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=145 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.shots)', colNameBattleSumTank='SUM(playerTankBattle.shots)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=146 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.hits)', colNameBattleSumTank='SUM(playerTankBattle.hits)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=147 ; " +
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.hehits)', colNameBattleSumTank='SUM(playerTankBattle.heHits)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=148 ; " +

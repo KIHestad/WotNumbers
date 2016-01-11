@@ -114,6 +114,7 @@ namespace WinApp.Forms.Settings
                 // Write recentBattles to db
                 int i = 0;
                 progressBarImport.Visible = true;
+                double tier = Rating.GetAverageBattleTier();
                 while (i < recentBattles.Rows.Count)
                 {
                     progressBarImport.Value++;
@@ -139,12 +140,14 @@ namespace WinApp.Forms.Settings
                             {
                                 lblResult.Text = "Reading battle: " + battleTime.ToString();
                                 int wsId = Convert.ToInt32(recentBattles.Rows[i]["rbId"]);
-                                int frags = Convert.ToInt32(recentBattles.Rows[i]["rbKills"]) / 100;
-                                int dmg = Convert.ToInt32(recentBattles.Rows[i]["rbDamageDealt"]) / 100;
+                                Rating.RatingParameters rp = new Rating.RatingParameters();
+                                rp.BATTLES = battlesCount;
+                                rp.FRAGS = Convert.ToInt32(recentBattles.Rows[i]["rbKills"]) / 100;
+                                rp.DAMAGE = Convert.ToInt32(recentBattles.Rows[i]["rbDamageDealt"]) / 100;
+                                rp.SPOT = Convert.ToInt32(recentBattles.Rows[i]["rbSpotted"]) / 100;
+                                rp.CAP = Convert.ToInt32(recentBattles.Rows[i]["rbCapturePoints"]) / 100;
+                                rp.DEF = Convert.ToInt32(recentBattles.Rows[i]["rbDefencePoints"]) / 100;
                                 int dmgReceived = Convert.ToInt32(recentBattles.Rows[i]["rbDamageReceived"]) / 100;
-                                int spotted = Convert.ToInt32(recentBattles.Rows[i]["rbSpotted"]) / 100;
-                                int cap = Convert.ToInt32(recentBattles.Rows[i]["rbCapturePoints"]) / 100;
-                                int def = Convert.ToInt32(recentBattles.Rows[i]["rbDefencePoints"]) / 100;
                                 int survived = Convert.ToInt32(recentBattles.Rows[i]["rbSurvived"]);
                                 int killed = 1 - survived; // only one battle is imported, then this will work
                                 int battleSurviveId = 2; // Survived some
@@ -170,16 +173,17 @@ namespace WinApp.Forms.Settings
                                     battleResultId = 2; // draw
                                     draw = 1;
                                 }
+                                rp.WINS = victory;
                                 int shots = Convert.ToInt32(recentBattles.Rows[i]["rbShot"]) / 100;
                                 int hits = Convert.ToInt32(recentBattles.Rows[i]["rbHits"]) / 100;
                                 int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
                                 string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
                                 // Calc WN7
-                                int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(battlesCount, dmg, spotted, frags, def, cap, victory, Rating.GetAverageBattleTier(), true), 0));
+                                int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(rp, tier, true), 0));
                                 // Calc WN8
-                                int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0));
+                                int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0));
                                 // Calc EFF
-                                int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEFF(tankId, battlesCount, dmg, spotted, frags, def, cap), 0));
+                                int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEFF(tankId, rp), 0));
                                 // Insert or update Battle table
                                 string sqlInsertBattle = "";
                                 int battleId = TankHelper.GetBattleIdForImportedWsBattle(wsId);
@@ -195,12 +199,12 @@ namespace WinApp.Forms.Settings
                                 DB.AddWithValue(ref sqlInsertBattle, "@playerTankId", playerTankId, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@wsId", wsId, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@battlesCount", battlesCount, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sqlInsertBattle, "@frags", frags, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sqlInsertBattle, "@dmg", dmg, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sqlInsertBattle, "@frags", rp.FRAGS, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sqlInsertBattle, "@dmg", rp.DAMAGE, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@dmgReceived", dmgReceived, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sqlInsertBattle, "@spotted", spotted, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sqlInsertBattle, "@cap", cap, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sqlInsertBattle, "@def", def, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sqlInsertBattle, "@spotted", rp.SPOT, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sqlInsertBattle, "@cap", rp.CAP, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sqlInsertBattle, "@def", rp.DEF, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@survived", survived, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@killed", killed, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sqlInsertBattle, "@battleSurviveId", battleSurviveId, DB.SqlDataType.Int);

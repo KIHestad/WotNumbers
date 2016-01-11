@@ -294,15 +294,8 @@ namespace WinApp.Forms
 
 		private static double CalcChartSeriesPointValue(List<double> values, CalculationType calcType, double defaultTier)
 		{
-			double result = 0;
-			double BATTLES = 0;
-			double DAMAGE = 0;
-			double SPOT = 0;
-			double FRAGS = 0;
-			double DEF = 0;
-			double CAP = 0;
-			double TIER = 0;
-			double WINS = 0;
+            Rating.RatingParameters rp = new Rating.RatingParameters();
+            double result = 0;
 			switch (calcType)
 			{
 				case CalculationType.standard:
@@ -315,25 +308,25 @@ namespace WinApp.Forms
                     result = values[0] / values[1];
                     break;
                 case CalculationType.eff:
-					BATTLES = values[0]; 
-					DAMAGE = values[1]; 
-					SPOT = values[2]; 
-					FRAGS = values[3]; 
-					DEF = values[4]; 
-					CAP = values[5]; 
-					TIER = values[6]; 
-					result = Code.Rating.CalculateEFF(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, defaultTier);
+					rp.BATTLES = values[0];
+                    rp.DAMAGE = values[1];
+                    rp.SPOT = values[2];
+                    rp.FRAGS = values[3];
+                    rp.DEF = values[4];
+                    rp.CAP = values[5];
+                    rp.TIER = defaultTier; // values[6]; ???
+					result = Code.Rating.CalculateEFF(rp);
 					break;
 				case CalculationType.wn7:
-					BATTLES = values[0]; 
-					DAMAGE = values[1]; 
-					SPOT = values[2]; 
-					FRAGS = values[3]; 
-					DEF = values[4]; 
-					CAP = values[5]; 
-					WINS = values[6];
-					TIER = values[7]; 
-					result = Code.Rating.CalculateWN7(BATTLES, DAMAGE, SPOT, FRAGS, DEF, CAP, WINS, defaultTier);
+					rp.BATTLES = values[0];
+                    rp.DAMAGE = values[1];
+                    rp.SPOT = values[2];
+                    rp.FRAGS = values[3];
+                    rp.DEF = values[4];
+                    rp.CAP = values[5];
+                    rp.WINS = values[6];
+                    rp.TIER = defaultTier; // values[6]; ???
+                    result = Code.Rating.CalculateWN7(rp, defaultTier);
 					break;
 				case CalculationType.wn8:
 					break;

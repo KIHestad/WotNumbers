@@ -389,10 +389,11 @@ namespace WinApp.Forms
 				DataRow dr = dt.Rows[0];
 				//int tankId = Convert.ToInt32(dr["tankId"]);
 				//int battlesCount = Convert.ToInt32(dr["battlesCount"]);
-				double dmg = Convert.ToDouble(dr["dmg"]);
-				double spotted = Convert.ToDouble(dr["spotted"]);
-				double frags = Convert.ToDouble(dr["frags"]);
-				double def = Convert.ToDouble(dr["def"]);
+                Rating.RatingParameters rp = new Rating.RatingParameters();
+				rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
+				rp.SPOT = Convert.ToDouble(dr["spotted"]);
+				rp.FRAGS = Convert.ToDouble(dr["frags"]);
+				rp.DEF = Convert.ToDouble(dr["def"]);
 				double exp_dmg = DbConvert.ToDouble(dr["expDmg"]);
 				double exp_spotted = DbConvert.ToDouble(dr["expSpot"]);
 				double exp_frags = DbConvert.ToDouble(dr["expFrags"]);
@@ -405,7 +406,7 @@ namespace WinApp.Forms
 				double rSPOTc;
 				double rDEFc;
 				Rating.UseWN8FormulaReturnResult(
-					dmg, spotted, frags, def, exp_wr,
+					rp, exp_wr,
 					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 				DataTable dtWN8 = new DataTable();
@@ -418,32 +419,32 @@ namespace WinApp.Forms
 				// Damage
 				DataRow drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Damage";
-				drWN8["Image"] = GetIndicator(dmg, exp_dmg);
-				drWN8["Result"] = dmg.ToString("N0");
+				drWN8["Image"] = GetIndicator(rp.DAMAGE, exp_dmg);
+                drWN8["Result"] = rp.DAMAGE.ToString("N0");
 				drWN8["Exp"] = exp_dmg.ToString("N1");
 				drWN8["Value"] = Math.Round(rDAMAGEc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Frags
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Frags";
-				drWN8["Image"] = GetIndicator(frags, exp_frags);
-				drWN8["Result"] = frags.ToString("N0");
+				drWN8["Image"] = GetIndicator(rp.FRAGS, exp_frags);
+				drWN8["Result"] = rp.FRAGS.ToString("N0");
 				drWN8["Exp"] = exp_frags.ToString("N1");
 				drWN8["Value"] = Math.Round(rFRAGSc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Spot
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Spot";
-				drWN8["Image"] = GetIndicator(spotted, exp_spotted);
-				drWN8["Result"] = spotted.ToString("N0");
+				drWN8["Image"] = GetIndicator(rp.SPOT, exp_spotted);
+				drWN8["Result"] = rp.SPOT.ToString("N0");
 				drWN8["Exp"] = exp_spotted.ToString("N1");
 				drWN8["Value"] = Math.Round(rSPOTc, 0).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Defence
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Defence";
-				drWN8["Image"] = GetIndicator(def, exp_def);
-				drWN8["Result"] = def.ToString("N0");
+				drWN8["Image"] = GetIndicator(rp.DEF, exp_def);
+				drWN8["Result"] = rp.DEF.ToString("N0");
 				drWN8["Exp"] = exp_def.ToString("N1");
 				drWN8["Value"] = Math.Round(rDEFc, 1).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
