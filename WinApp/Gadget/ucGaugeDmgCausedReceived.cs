@@ -122,8 +122,10 @@ namespace WinApp.Gadget
 			{
 				dmg = Convert.ToDouble(dt.Rows[0]["dmg"]);
 				dmgReceived = Convert.ToDouble(dt.Rows[0]["dmgReceived"]);
-				if (dmgReceived > 0 )
-					end_val = Math.Round((dmg / dmgReceived), 2);
+                if (dmgReceived > 0)
+                    end_val = Math.Round((dmg / dmgReceived), 2);
+                else if (dmg > 0)
+                    end_val = 999;
 			}
 			lblLeft.Text = Shorten(dmg);
 			lblRight.Text = Shorten(dmgReceived);

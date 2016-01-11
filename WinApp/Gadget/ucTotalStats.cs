@@ -110,12 +110,22 @@ namespace WinApp.Gadget
                 }
             }
             dataGrid.ClearSelection();
-            GetData();
+            try
+            {
+                GetData();
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, "Error getting data for the total stats gadget");
+                if (Config.Settings.showDBErrors)
+                    MsgBox.Show("Error getting data for the total stats gadget, see log file", "Home View Error");
+            }
+            
         }
 
         private void GetData() //;object sender, DoWorkEventArgs e)
         {
-            try
+            //try
             {
                 // Get Columns for data lookup
                 string sql =
@@ -197,7 +207,9 @@ namespace WinApp.Gadget
                         // SQL to get battle for timespan
                         sqlSelectTrend = sqlSelectTrend.Substring(0, sqlSelectTrend.Length - 2);
                         sql =
-                            "SELECT SUM(battle.battlesCount) as battlesCount, " + sqlSelectTrend + " " +
+                            "SELECT SUM(battle.battlesCount) as battlesCount, SUM(battle.dmgReceived) as dmgReceived, " + 
+                            "SUM(battle.killed) as killed, " +
+                            sqlSelectTrend + " " +
                             "FROM    battle INNER JOIN " +
                             "        playerTank ON battle.playerTankId = playerTank.Id INNER JOIN " +
                             "        tank ON playerTank.tankId = tank.id " +
@@ -241,7 +253,9 @@ namespace WinApp.Gadget
                             if (battleMode == "")
                             {
                                 sqlTotals =
-                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, " + sqlSelectTotal + " " +
+                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, SUM(playerTankBattle.dmgReceived) as dmgReceived, " +
+                                    "SUM(nullif(playerTankBattle.battles-playerTankBattle.survived,0)) as killed, " +
+                                    sqlSelectTotal + " " +
                                     "FROM    playerTank INNER JOIN " +
                                     "        tank ON playerTank.tankId = tank.id LEFT OUTER JOIN " +
                                     "        playerTankBattleTotalsView as playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
@@ -250,7 +264,9 @@ namespace WinApp.Gadget
                             else
                             {
                                 sqlTotals =
-                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, " + sqlSelectTotal + " " +
+                                    "SELECT SUM(playerTankBattle.battles) as battlesCount, SUM(playerTankBattle.dmgReceived) as dmgReceived, " + 
+                                    "SUM(nullif(playerTankBattle.battles-playerTankBattle.survived,0)) as killed, " +
+                                    sqlSelectTotal + " " +
                                     "FROM    playerTank INNER JOIN " +
                                     "        tank ON playerTank.tankId = tank.id INNER JOIN " +
                                     "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
@@ -288,22 +304,62 @@ namespace WinApp.Gadget
                                     item.cellValue.Value = val;
                                 }
                                 // Add trend to grid
-                                if (item.trendExists)
+                                if (item.trendExists && drTotalStatsTrend[cellSQLFieldName] != DBNull.Value)
                                 {
+                                    // Common formatting
+                                    item.cellTrend.Style.Font = new Font(dataGrid.Font.FontFamily, 7);
+                                    // Get the trend value
                                     double trendValue = Convert.ToDouble(drTotalStatsTrend[cellSQLFieldName]);
-                                    if (item.trendCalc)
+                                    // Check for additinal calcultaions for trend value
+                                    if (item.trendCalc) 
                                     {
-                                        int trendBattlesCount = Convert.ToInt32(drTotalStatsTrend["battlesCount"]);
-                                        double totalValue = Convert.ToDouble(drTotalStatsTank[cellSQLFieldName]);
-                                        int totalBattlesCount = Convert.ToInt32(drTotalStatsTank["battlesCount"]);
-                                        if (totalBattlesCount - trendBattlesCount == 0)
+                                        double trendTotalValue = Convert.ToDouble(drTotalStatsTank[cellSQLFieldName]);
+                                        int trendBattleCount = Convert.ToInt32(drTotalStatsTrend["battlesCount"]);
+                                        int trendTotalBattleCount = Convert.ToInt32(drTotalStatsTank["battlesCount"]);
+                                        // Check for special trend calculations or use default
+                                        string colName = item.cellName.Value.ToString();
+                                        if (colName == "Dmg C/R")
                                         {
-                                            trendValue = 0;
+                                            // Calc Damg C/R
+                                            int trendBattleDmgReceived = Convert.ToInt32(drTotalStatsTrend["dmgReceived"]);
+                                            int trendTotalDmgReceived = Convert.ToInt32(drTotalStatsTank["dmgReceived"]);
+                                            if ((trendTotalDmgReceived - trendBattleDmgReceived) != 0)
+                                            {
+                                                double prevValue = ((trendTotalValue - trendValue) / (trendTotalDmgReceived - trendBattleDmgReceived));
+                                                trendValue = val - prevValue;
+                                            }
+                                            else
+                                            {
+                                                trendValue = 999;
+                                            }
+                                        }
+                                        else if (colName == "K/D Ratio")
+                                        {
+                                            // Calc Damg C/R
+                                            int trendBattleKilled = Convert.ToInt32(drTotalStatsTrend["killed"]);
+                                            int trendTotalKilled = Convert.ToInt32(drTotalStatsTank["killed"]);
+                                            if ((trendTotalKilled - trendBattleKilled) != 0)
+                                            {
+                                                double prevValue = ((trendTotalValue - trendValue) / (trendTotalKilled - trendBattleKilled));
+                                                trendValue = val - prevValue;
+                                            }
+                                            else
+                                            {
+                                                trendValue = 999;
+                                            }
                                         }
                                         else
                                         {
-                                            double prevValue = ((totalValue - trendValue) / (totalBattlesCount - trendBattlesCount));
-                                            trendValue = val - prevValue;
+                                            // Default calculation
+                                            if (trendTotalBattleCount - trendBattleCount == 0)
+                                            {
+                                                trendValue = 0;
+                                            }
+                                            else
+                                            {
+                                                double prevValue = ((trendTotalValue - trendValue) / (trendTotalBattleCount - trendBattleCount));
+                                                trendValue = val - prevValue;
+                                            }
                                         }
                                     }
                                     // Format number
@@ -329,75 +385,84 @@ namespace WinApp.Gadget
                                                 item.cellTrend.Style.Format = "N1";
                                         }
                                     }
-                                    // Trend colors and tooltip
+                                    // Trend colors and tooltip 
                                     string trendToolTipText = "";
-                                    if (trendValue >= 0.01)
+                                    if (!item.trendCalc)
                                     {
-                                        if (!item.trendReversePos)
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_green;
-                                            trendToolTipText = "Positive Trend:" + Environment.NewLine;
-                                        }
-                                        else
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_1_red;
-                                            trendToolTipText = "Negative Trend:" + Environment.NewLine;
-                                        }
-                                    }
-                                    else if (trendValue > 0)
-                                    {
-                                        if (!item.trendReversePos)
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_greenLight;
-                                            item.cellTrend.Value = "pos";
-                                            trendToolTipText = "Minor Positive Trend:" + Environment.NewLine;
-                                        }
-                                        else
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_2_orange;
-                                            item.cellTrend.Value = "neg";
-                                            trendToolTipText = "Minor Negative Trend:" + Environment.NewLine;
-                                        }
-                                    }
-                                    else if (trendValue <= -0.01)
-                                    {
-                                        if (!item.trendReversePos)
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_1_red;
-                                            trendToolTipText = "Negative Trend:" + Environment.NewLine;
-                                        }
-                                        else
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_green;
-                                            trendToolTipText = "Positive Trend:" + Environment.NewLine;
-                                        }
-                                    }
-                                    else if (trendValue < 0)
-                                    {
-                                        if (!item.trendReversePos)
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_2_orange;
-                                            item.cellTrend.Value = "neg";
-                                            trendToolTipText = "Minor Negative Trend:" + Environment.NewLine;
-                                        }
-                                        else
-                                        {
-                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_greenLight;
-                                            item.cellTrend.Value = "pos";
-                                            trendToolTipText = "Minor Positive Trend:" + Environment.NewLine;
-                                        }
+                                        item.cellTrend.Style.ForeColor = ColorTheme.Rating_6_blue;
+                                        trendToolTipText = "Sum for the selected period: " + trendValue.ToString("# ### ##0.########");
+                                        item.cellTrend.ToolTipText = trendToolTipText;
                                     }
                                     else
                                     {
-                                        item.cellTrend.Style.ForeColor = ColorTheme.Rating_3_yellow;
-                                        if (item.trendCalc)
-                                            item.cellTrend.Value = "nul";
-                                        trendToolTipText = "No Change" + Environment.NewLine;
+                                        if (trendValue >= 0.01)
+                                        {
+                                            if (!item.trendReversePos)
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_green;
+                                                trendToolTipText = "Positive Trend: " ;
+                                            }
+                                            else
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_1_red;
+                                                trendToolTipText = "Negative Trend: " ;
+                                            }
+                                        }
+                                        else if (trendValue > 0)
+                                        {
+                                            if (!item.trendReversePos)
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_greenLight;
+                                                item.cellTrend.Value = "pos";
+                                                trendToolTipText = "Minor Positive Trend: " ;
+                                            }
+                                            else
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_2_orange;
+                                                item.cellTrend.Value = "neg";
+                                                trendToolTipText = "Minor Negative Trend: " ;
+                                            }
+                                        }
+                                        else if (trendValue <= -0.01)
+                                        {
+                                            if (!item.trendReversePos)
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_1_red;
+                                                trendToolTipText = "Negative Trend: " ;
+                                            }
+                                            else
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_green;
+                                                trendToolTipText = "Positive Trend: " ;
+                                            }
+                                        }
+                                        else if (trendValue < 0)
+                                        {
+                                            if (!item.trendReversePos)
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_2_orange;
+                                                item.cellTrend.Value = "neg";
+                                                trendToolTipText = "Minor Negative Trend: " ;
+                                            }
+                                            else
+                                            {
+                                                item.cellTrend.Style.ForeColor = ColorTheme.Rating_4_greenLight;
+                                                item.cellTrend.Value = "pos";
+                                                trendToolTipText = "Minor Positive Trend: " ;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            item.cellTrend.Style.ForeColor = ColorTheme.Rating_3_yellow;
+                                            if (item.trendCalc)
+                                                item.cellTrend.Value = "nul";
+                                            trendToolTipText = "No Change" ;
+                                        }
+                                        if (trendValue != 0)
+                                            trendToolTipText += trendValue.ToString("# ### ##0.########");
+                                        item.cellTrend.ToolTipText = trendToolTipText;
                                     }
-                                    if (trendValue != 0)
-                                        trendToolTipText += trendValue.ToString("# ### ##0.########");
-                                    item.cellTrend.ToolTipText = trendToolTipText;
-                                    item.cellTrend.Style.Font = new Font(dataGrid.Font.FontFamily, 7);
+                                    
                                 }
                             }
                             // Get cell name for special operations
@@ -427,12 +492,6 @@ namespace WinApp.Gadget
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.LogToFile(ex, "Error getting daga to total stats gadget");
-                if (Config.Settings.showDBErrors)
-                    MsgBox.Show("Error getting daga to total stats gadget, see log file", "Home View Error");
             }
         }
 
@@ -638,14 +697,14 @@ namespace WinApp.Gadget
             {
                 if (e.Value != null)
                 {
+                    int x = e.CellBounds.X;
+                    int y = e.CellBounds.Y;
                     if (e.Value.ToString() == "neg")
                     {
                         // Erase the cell.
                         e.Graphics.FillRectangle(brushBack, e.CellBounds);
                         Brush b = new SolidBrush(ColorTheme.Rating_1_red);
                         List<Point> points = new List<Point>();
-                        int x = e.CellBounds.X;
-                        int y = e.CellBounds.Y;
                         points.Add(new Point(x + 18, y + 7));
                         points.Add(new Point(x + 23, y + 15));
                         points.Add(new Point(x + 29, y + 7));
@@ -658,8 +717,6 @@ namespace WinApp.Gadget
                         e.Graphics.FillRectangle(brushBack, e.CellBounds);
                         Brush b = new SolidBrush(ColorTheme.Rating_4_green);
                         List<Point> points = new List<Point>();
-                        int x = e.CellBounds.X;
-                        int y = e.CellBounds.Y;
                         points.Add(new Point(x + 17, y + 15));
                         points.Add(new Point(x + 23, y + 6));
                         points.Add(new Point(x + 29, y + 15));
@@ -671,8 +728,6 @@ namespace WinApp.Gadget
                         // Erase the cell.
                         e.Graphics.FillRectangle(brushBack, e.CellBounds);
                         Brush b = new SolidBrush(ColorTheme.Rating_3_yellow);
-                        int x = e.CellBounds.X;
-                        int y = e.CellBounds.Y;
                         e.Graphics.FillRectangle(b, (x + 26), y + 6, 10, 10);
                         e.Handled = true;
                     }
