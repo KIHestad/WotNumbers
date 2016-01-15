@@ -564,7 +564,7 @@ namespace WinApp.Code
                                     rp.BATTLES = 1;
 									double eff = Rating.CalculateEFF(rp);
 									battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
-									double wn7 = Rating.CalculateWN7(rp, rp.TIER, true);
+									double wn7 = Rating.CalculateWN7(rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
                                     double wn8 = Rating.CalculateTankWN8(tankId, rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });

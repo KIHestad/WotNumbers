@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 339; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 342; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -1008,9 +1008,6 @@ namespace WinApp.Code
 							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7 " +
 							"FROM            playerTankBattle " +
 							"GROUP BY playerTankId; ";
-					break;
-				case 78:
-					Rating.RecalcBattlesWN7();
 					break;
 				case 80:
 					mssql = "UPDATE columnSelection SET position = position + 3 where position >= 132; " +
@@ -2716,6 +2713,15 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.pierced)', colNameBattleSumTank='SUM(playerTankBattle.pierced)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=149 ; ";
                     sqlite = mssql;
                     break;
+                case 340:
+                    Rating.RecalcBattlesWN7();
+                    break;
+                case 342:
+                    mssql = "UPDATE columnSelection SET colNameSum='0' WHERE id IN (48,49,187); ";
+                    sqlite = mssql;
+                    break;
+                            
+                
             }
 			string sql = "";
 			// get sql for correct dbtype

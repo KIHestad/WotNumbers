@@ -326,7 +326,7 @@ namespace WinApp.Forms
                     rp.CAP = values[5];
                     rp.WINS = values[6];
                     rp.TIER = defaultTier; // values[6]; ???
-                    result = Code.Rating.CalculateWN7(rp, defaultTier);
+                    result = Code.Rating.CalculateWN7(rp);
 					break;
 				case CalculationType.wn8:
 					break;

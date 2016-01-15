@@ -114,7 +114,7 @@ namespace WinApp.Forms.Settings
                 // Write recentBattles to db
                 int i = 0;
                 progressBarImport.Visible = true;
-                double tier = Rating.GetAverageBattleTier();
+                double avgBattleTier = Rating.GetAverageBattleTier();
                 while (i < recentBattles.Rows.Count)
                 {
                     progressBarImport.Value++;
@@ -178,12 +178,14 @@ namespace WinApp.Forms.Settings
                                 int hits = Convert.ToInt32(recentBattles.Rows[i]["rbHits"]) / 100;
                                 int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
                                 string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
-                                // Calc WN7
-                                int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(rp, tier, true), 0));
                                 // Calc WN8
                                 int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0));
                                 // Calc EFF
                                 int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEFF(tankId, rp), 0));
+                                // Calc WN7
+                                // Special tier calc
+                                rp.TIER = avgBattleTier;
+                                int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(rp, true), 0));
                                 // Insert or update Battle table
                                 string sqlInsertBattle = "";
                                 int battleId = TankHelper.GetBattleIdForImportedWsBattle(wsId);
