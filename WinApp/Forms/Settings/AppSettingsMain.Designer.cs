@@ -31,19 +31,102 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsMain));
             this.folderBrowserDialogDossier = new System.Windows.Forms.FolderBrowserDialog();
+            this.txtDownloadFilePath = new BadTextBox();
+            this.chkCreateDownloadSubFolders = new BadCheckBox();
+            this.badLabel3 = new BadLabel();
+            this.btnSelectDownloadFilePath = new BadButton();
+            this.txtDossierFilePath = new BadTextBox();
+            this.badLabel1 = new BadLabel();
             this.chkShowDBError = new BadCheckBox();
             this.badLabel2 = new BadLabel();
             this.btnCancel = new BadButton();
             this.cboSelectPlayer = new BadDropDownBox();
             this.btnSelectDossierFilePath = new BadButton();
-            this.txtDossierFilePath = new BadTextBox();
             this.btnDbSetting = new BadButton();
             this.btnSave = new BadButton();
             this.lblDbSettings = new BadLabel();
             this.badGroupBox1 = new BadGroupBox();
             this.badGroupBox2 = new BadGroupBox();
-            this.badGroupBox3 = new BadGroupBox();
             this.SuspendLayout();
+            // 
+            // txtDownloadFilePath
+            // 
+            this.txtDownloadFilePath.HasFocus = false;
+            this.txtDownloadFilePath.Image = null;
+            this.txtDownloadFilePath.Location = new System.Drawing.Point(17, 100);
+            this.txtDownloadFilePath.MultilineAllow = false;
+            this.txtDownloadFilePath.Name = "txtDownloadFilePath";
+            this.txtDownloadFilePath.PasswordChar = '\0';
+            this.txtDownloadFilePath.ReadOnly = false;
+            this.txtDownloadFilePath.Size = new System.Drawing.Size(383, 23);
+            this.txtDownloadFilePath.TabIndex = 32;
+            this.txtDownloadFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtDownloadFilePath.ToolTipText = "";
+            this.txtDownloadFilePath.TextChanged += new System.EventHandler(this.txtDownloadFilePath_TextChanged);
+            // 
+            // chkCreateDownloadSubFolders
+            // 
+            this.chkCreateDownloadSubFolders.BackColor = System.Drawing.Color.Transparent;
+            this.chkCreateDownloadSubFolders.Checked = false;
+            this.chkCreateDownloadSubFolders.Image = ((System.Drawing.Image)(resources.GetObject("chkCreateDownloadSubFolders.Image")));
+            this.chkCreateDownloadSubFolders.Location = new System.Drawing.Point(125, 78);
+            this.chkCreateDownloadSubFolders.Name = "chkCreateDownloadSubFolders";
+            this.chkCreateDownloadSubFolders.Size = new System.Drawing.Size(263, 23);
+            this.chkCreateDownloadSubFolders.TabIndex = 35;
+            this.chkCreateDownloadSubFolders.Text = "Create Subfolder per version";
+            this.chkCreateDownloadSubFolders.Click += new System.EventHandler(this.chkCreateDownloadSubFolders_Click);
+            // 
+            // badLabel3
+            // 
+            this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel3.Dimmed = false;
+            this.badLabel3.Image = null;
+            this.badLabel3.Location = new System.Drawing.Point(17, 77);
+            this.badLabel3.Name = "badLabel3";
+            this.badLabel3.Size = new System.Drawing.Size(113, 23);
+            this.badLabel3.TabIndex = 34;
+            this.badLabel3.Text = "Download File Path:";
+            this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // btnSelectDownloadFilePath
+            // 
+            this.btnSelectDownloadFilePath.BlackButton = false;
+            this.btnSelectDownloadFilePath.Checked = false;
+            this.btnSelectDownloadFilePath.Image = null;
+            this.btnSelectDownloadFilePath.Location = new System.Drawing.Point(406, 100);
+            this.btnSelectDownloadFilePath.Name = "btnSelectDownloadFilePath";
+            this.btnSelectDownloadFilePath.Size = new System.Drawing.Size(22, 23);
+            this.btnSelectDownloadFilePath.TabIndex = 33;
+            this.btnSelectDownloadFilePath.Text = "...";
+            this.btnSelectDownloadFilePath.ToolTipText = "";
+            this.btnSelectDownloadFilePath.Click += new System.EventHandler(this.btnSelectDownloadFilePath_Click);
+            // 
+            // txtDossierFilePath
+            // 
+            this.txtDossierFilePath.HasFocus = false;
+            this.txtDossierFilePath.Image = null;
+            this.txtDossierFilePath.Location = new System.Drawing.Point(17, 44);
+            this.txtDossierFilePath.MultilineAllow = false;
+            this.txtDossierFilePath.Name = "txtDossierFilePath";
+            this.txtDossierFilePath.PasswordChar = '\0';
+            this.txtDossierFilePath.ReadOnly = false;
+            this.txtDossierFilePath.Size = new System.Drawing.Size(383, 23);
+            this.txtDossierFilePath.TabIndex = 20;
+            this.txtDossierFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtDossierFilePath.ToolTipText = "";
+            this.txtDossierFilePath.TextChanged += new System.EventHandler(this.txtDossierFilePath_TextChanged);
+            // 
+            // badLabel1
+            // 
+            this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel1.Dimmed = false;
+            this.badLabel1.Image = null;
+            this.badLabel1.Location = new System.Drawing.Point(17, 21);
+            this.badLabel1.Name = "badLabel1";
+            this.badLabel1.Size = new System.Drawing.Size(126, 23);
+            this.badLabel1.TabIndex = 31;
+            this.badLabel1.Text = "Dossier File Path:";
+            this.badLabel1.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // chkShowDBError
             // 
@@ -85,9 +168,9 @@
             // cboSelectPlayer
             // 
             this.cboSelectPlayer.Image = null;
-            this.cboSelectPlayer.Location = new System.Drawing.Point(273, 215);
+            this.cboSelectPlayer.Location = new System.Drawing.Point(286, 215);
             this.cboSelectPlayer.Name = "cboSelectPlayer";
-            this.cboSelectPlayer.Size = new System.Drawing.Size(155, 23);
+            this.cboSelectPlayer.Size = new System.Drawing.Size(142, 23);
             this.cboSelectPlayer.TabIndex = 26;
             this.cboSelectPlayer.TextChanged += new System.EventHandler(this.cboSelectPlayer_TextChanged);
             this.cboSelectPlayer.Click += new System.EventHandler(this.cboSelectPlayer_Click);
@@ -97,39 +180,24 @@
             this.btnSelectDossierFilePath.BlackButton = false;
             this.btnSelectDossierFilePath.Checked = false;
             this.btnSelectDossierFilePath.Image = null;
-            this.btnSelectDossierFilePath.Location = new System.Drawing.Point(340, 47);
+            this.btnSelectDossierFilePath.Location = new System.Drawing.Point(406, 44);
             this.btnSelectDossierFilePath.Name = "btnSelectDossierFilePath";
-            this.btnSelectDossierFilePath.Size = new System.Drawing.Size(88, 23);
+            this.btnSelectDossierFilePath.Size = new System.Drawing.Size(22, 23);
             this.btnSelectDossierFilePath.TabIndex = 21;
-            this.btnSelectDossierFilePath.Text = "Change Path";
+            this.btnSelectDossierFilePath.Text = "...";
             this.btnSelectDossierFilePath.ToolTipText = "";
             this.btnSelectDossierFilePath.Click += new System.EventHandler(this.btnSelectDossierFilePath_Click);
-            // 
-            // txtDossierFilePath
-            // 
-            this.txtDossierFilePath.HasFocus = false;
-            this.txtDossierFilePath.Image = null;
-            this.txtDossierFilePath.Location = new System.Drawing.Point(17, 25);
-            this.txtDossierFilePath.MultilineAllow = true;
-            this.txtDossierFilePath.Name = "txtDossierFilePath";
-            this.txtDossierFilePath.PasswordChar = '\0';
-            this.txtDossierFilePath.ReadOnly = false;
-            this.txtDossierFilePath.Size = new System.Drawing.Size(314, 45);
-            this.txtDossierFilePath.TabIndex = 20;
-            this.txtDossierFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtDossierFilePath.ToolTipText = "";
-            this.txtDossierFilePath.TextChanged += new System.EventHandler(this.txtDossierFilePath_TextChanged);
             // 
             // btnDbSetting
             // 
             this.btnDbSetting.BlackButton = false;
             this.btnDbSetting.Checked = false;
             this.btnDbSetting.Image = null;
-            this.btnDbSetting.Location = new System.Drawing.Point(340, 138);
+            this.btnDbSetting.Location = new System.Drawing.Point(286, 182);
             this.btnDbSetting.Name = "btnDbSetting";
-            this.btnDbSetting.Size = new System.Drawing.Size(88, 23);
+            this.btnDbSetting.Size = new System.Drawing.Size(142, 23);
             this.btnDbSetting.TabIndex = 24;
-            this.btnDbSetting.Text = "Settings";
+            this.btnDbSetting.Text = "Database Settings";
             this.btnDbSetting.ToolTipText = "";
             this.btnDbSetting.Click += new System.EventHandler(this.btnDbSetting_Click);
             // 
@@ -151,9 +219,9 @@
             this.lblDbSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblDbSettings.Dimmed = false;
             this.lblDbSettings.Image = null;
-            this.lblDbSettings.Location = new System.Drawing.Point(17, 125);
+            this.lblDbSettings.Location = new System.Drawing.Point(17, 175);
             this.lblDbSettings.Name = "lblDbSettings";
-            this.lblDbSettings.Size = new System.Drawing.Size(317, 36);
+            this.lblDbSettings.Size = new System.Drawing.Size(263, 36);
             this.lblDbSettings.TabIndex = 23;
             this.lblDbSettings.TabStop = false;
             this.lblDbSettings.Text = "Database:";
@@ -165,50 +233,43 @@
             this.badGroupBox1.Image = null;
             this.badGroupBox1.Location = new System.Drawing.Point(1, 1);
             this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(445, 86);
+            this.badGroupBox1.Size = new System.Drawing.Size(445, 137);
             this.badGroupBox1.TabIndex = 19;
             this.badGroupBox1.TabStop = false;
-            this.badGroupBox1.Text = "Dossier File Path";
+            this.badGroupBox1.Text = "File Paths";
             // 
             // badGroupBox2
             // 
             this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox2.Image = null;
-            this.badGroupBox2.Location = new System.Drawing.Point(1, 105);
+            this.badGroupBox2.Location = new System.Drawing.Point(1, 154);
             this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(445, 71);
+            this.badGroupBox2.Size = new System.Drawing.Size(445, 100);
             this.badGroupBox2.TabIndex = 22;
             this.badGroupBox2.TabStop = false;
-            this.badGroupBox2.Text = "Database";
-            // 
-            // badGroupBox3
-            // 
-            this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
-            this.badGroupBox3.Image = null;
-            this.badGroupBox3.Location = new System.Drawing.Point(1, 192);
-            this.badGroupBox3.Name = "badGroupBox3";
-            this.badGroupBox3.Size = new System.Drawing.Size(445, 62);
-            this.badGroupBox3.TabIndex = 25;
-            this.badGroupBox3.TabStop = false;
-            this.badGroupBox3.Text = "Player";
+            this.badGroupBox2.Text = "Database and Player";
             // 
             // AppSettingsMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.txtDownloadFilePath);
+            this.Controls.Add(this.chkCreateDownloadSubFolders);
+            this.Controls.Add(this.badLabel3);
+            this.Controls.Add(this.btnSelectDownloadFilePath);
+            this.Controls.Add(this.txtDossierFilePath);
+            this.Controls.Add(this.badLabel1);
             this.Controls.Add(this.chkShowDBError);
             this.Controls.Add(this.badLabel2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.cboSelectPlayer);
             this.Controls.Add(this.btnSelectDossierFilePath);
-            this.Controls.Add(this.txtDossierFilePath);
             this.Controls.Add(this.btnDbSetting);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.lblDbSettings);
             this.Controls.Add(this.badGroupBox1);
             this.Controls.Add(this.badGroupBox2);
-            this.Controls.Add(this.badGroupBox3);
             this.Name = "AppSettingsMain";
             this.Size = new System.Drawing.Size(460, 307);
             this.Load += new System.EventHandler(this.AppSettingsMain_Load);
@@ -229,7 +290,11 @@
         private BadLabel lblDbSettings;
         private BadGroupBox badGroupBox1;
         private BadGroupBox badGroupBox2;
-        private BadGroupBox badGroupBox3;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogDossier;
+        private BadLabel badLabel1;
+        private BadTextBox txtDownloadFilePath;
+        private BadLabel badLabel3;
+        private BadButton btnSelectDownloadFilePath;
+        private BadCheckBox chkCreateDownloadSubFolders;
     }
 }

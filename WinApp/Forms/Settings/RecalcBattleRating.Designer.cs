@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Forms
 {
-	partial class RecalcBattleWN8
+	partial class RecalcBattleRating
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -30,7 +30,7 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RecalcBattleWN8));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RecalcBattleRating));
 			this.RecalcBattleWN8Theme = new BadForm();
 			this.btnStart = new BadButton();
 			this.lblProgressStatus = new BadLabel();

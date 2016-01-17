@@ -556,7 +556,7 @@ namespace WinApp.Forms
 				// Message if debug mode or manual version check
 				if (Config.Settings.showDBErrors || _onlyCheckVersionWithMessage)
 				{
-					Code.MsgBox.Show("Could not check for new version, could be that you have no Internet access." + Environment.NewLine + Environment.NewLine +
+					Code.MsgBox.Show("Could not check for new version, remote server is not available or you have no Internet access." + Environment.NewLine + Environment.NewLine +
 										vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
 										"Version check failed",
 										this);
@@ -586,10 +586,16 @@ namespace WinApp.Forms
 				{
 					if (_onlyCheckVersionWithMessage)
 					{
-						// Message if debug mode
-						Code.MsgBox.Show("You are running the latest version: " + Environment.NewLine + Environment.NewLine +
-										"Wot Numbers " + AppVersion.AssemblyVersion + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine,
-										"Version checked", this);
+                        // Not found new versipn
+                        string msg = 
+                            "You are running the latest version: " + vi.version + Environment.NewLine + Environment.NewLine +
+                            "Do you want to download this version anyway?" + Environment.NewLine + Environment.NewLine;
+                        Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "Version Check", MsgBox.Type.YesNo, this);
+                        if (answer == MsgBox.Button.Yes)
+                        {
+                            Form frm = new Forms.Download();
+                            frm.ShowDialog();
+                        }
 					}
 					else
 					{
@@ -645,7 +651,11 @@ namespace WinApp.Forms
 			mSettingsRun.Enabled = true;
 			mSettingsRunBattleCheck.Enabled = true;
 			mUpdateDataFromAPI.Enabled = true;
+            mRecalcBattleRatings.Enabled = true;
 			mRecalcBattleWN8.Enabled = true;
+            mRecalcBattleWN7.Enabled = true;
+            mRecalcBattleEFF.Enabled = true;
+            mRecalcBattleAllRatings.Enabled = true;
             mRecalcBattleCreditsPerTank.Enabled = true;
 			mAppSettings.Enabled = true;
 		}
@@ -4019,78 +4029,6 @@ namespace WinApp.Forms
 			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 	
-		private void toolItemSettingsApp_Click(object sender, EventArgs e)
-		{
-            //// Stop file watchers if running
-            //int runState = Config.Settings.dossierFileWathcherRun;
-            //if (runState == 1)
-            //{
-            //    Config.Settings.dossierFileWathcherRun = 0;
-            //    SetListener();
-            //}
-
-            //string databaseFilename = Config.Settings.databaseFileName;
-            //string databaseName = Config.Settings.databaseName;
-            //ConfigData.dbType databateType = Config.Settings.databaseType;
-
-            //Form frm = new Forms.ApplicationSetting();
-            //frm.ShowDialog();
-
-            //// Update main form title
-            //currentPlayerId = Config.Settings.playerId;
-            //SetFormTitle();
-			
-            //// Go to tank list, as home view with gauges fails if no data present?
-            //// ChangeView(GridView.Views.Overall, true);
-			
-
-            //// Check for api update
-            //if (DBVersion.RunWotApi)
-            //    RunWotApi(true);
-
-            //// Check if new database is created, database should be present but no player should exist
-            //if (DB.CheckConnection(true))
-            //{
-            //    bool runDossier = false;
-            //    // If no player selected, or changed db type run dosser check
-            //    runDossier = (Config.Settings.playerId == 0 || databateType != Config.Settings.databaseType);
-            //    if (!runDossier)
-            //    {
-            //        // check if changed db according to dbtype
-            //        if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
-            //            runDossier = (databaseFilename != Config.Settings.databaseFileName);
-            //        else
-            //            runDossier = (databaseName != Config.Settings.databaseName);
-            //    }
-            //    if (runDossier)
-            //    {
-            //        MsgBox.Button result = MsgBox.Show("A new database is selected, perform initial battle fetch now?", "Start initial battle fetch", MsgBox.Type.OKCancel, this);
-            //        if (result == MsgBox.Button.OK)
-            //        {
-            //            RunInitialDossierFileCheck("Running initial battle fetch for new database...");
-            //        }
-            //    }
-            //}
-
-            //// Return to prev file watcher state
-            //if (runState != Config.Settings.dossierFileWathcherRun)
-            //{
-            //    Config.Settings.dossierFileWathcherRun = runState;
-            //}
-
-            //// Update main form
-            //SetListener();
-            //currentPlayerId = Config.Settings.playerId;
-            //SetFormTitle();
-            //SetFavListMenu(); // Reload fav list items
-            //SetColListMenu(); // Refresh column setup list now
-
-            //// Refresh data
-            //SetStatus2("Refreshed grid");
-            //ChangeView(MainSettings.View, true);
-
-		}
-
 		private void toolItemUpdateDataFromAPI_Click(object sender, EventArgs e)
 		{
 			RunWotApi();
@@ -4106,7 +4044,7 @@ namespace WinApp.Forms
 				RunRecalcBattleWN8(true);
 		}
 
-		private void mRecalcBattleWN8_Click(object sender, EventArgs e)
+		private void mRecalcBattleRatings_Click(object sender, EventArgs e)
 		{
 			// Stop file watchers if running
 			int runState = Config.Settings.dossierFileWathcherRun;
@@ -4115,8 +4053,13 @@ namespace WinApp.Forms
 				Config.Settings.dossierFileWathcherRun = 0;
 				SetListener();
 			}
-			// Show dialog
-			Form frm = new Forms.RecalcBattleWN8();
+            // Get What rating to recalc
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            bool WN8 = (menu.Tag.ToString() == "WN8" || menu.Tag.ToString() == "ALL");
+            bool WN7 = (menu.Tag.ToString() == "WN7" || menu.Tag.ToString() == "ALL");
+            bool EFF = (menu.Tag.ToString() == "EFF" || menu.Tag.ToString() == "ALL"); 
+            // Show dialog
+			Form frm = new Forms.RecalcBattleRating(false, WN8, WN7, EFF);
 			frm.ShowDialog();
 			// Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
@@ -4148,7 +4091,7 @@ namespace WinApp.Forms
 
 		private void RunRecalcBattleWN8(bool autoRun = false)
 		{
-			Form frm = new Forms.RecalcBattleWN8(autoRun);
+			Form frm = new Forms.RecalcBattleRating(autoRun);
 			frm.ShowDialog(this);
 		}
 

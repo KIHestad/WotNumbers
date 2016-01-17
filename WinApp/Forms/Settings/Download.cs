@@ -16,7 +16,9 @@ namespace WinApp.Forms
 {
 	public partial class Download : Form
 	{
-		public Download()
+		private string filename = ""; // path and filename for downloaded file
+        
+        public Download()
 		{
 			InitializeComponent();
 		}
@@ -37,7 +39,18 @@ namespace WinApp.Forms
 			webClient.Proxy = defaultWebProxy;
 			webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadNewVersionDone);
 			webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadNewVersionInProgress);
-			string filename = Config.AppDataDownloadFolder + vi.downloadFile;
+            string folder = Config.Settings.downloadFilePath;
+            if (!Directory.Exists(folder))
+                folder = Config.AppDataDownloadFolder;
+            folder = folder.Trim();
+            if (folder.Substring(folder.Length-1,1) != "\\")
+                folder += "\\";
+            if (Config.Settings.downloadFilePathAddSubfolder && Directory.Exists(folder))
+            {
+                folder += vi.version + "\\";
+                Directory.CreateDirectory(folder);
+            }
+			filename = folder + vi.downloadFile;
 			if (File.Exists(filename))
 				File.Delete(filename);
 			try
@@ -64,7 +77,6 @@ namespace WinApp.Forms
 		{
 			Application.DoEvents();
 			VersionInfo vi = CheckForNewVersion.versionInfo;
-			string filename = Config.AppDataDownloadFolder + vi.downloadFile;
 			if (e.Cancelled)
 			{
 				Code.MsgBox.Show("Download has been canceled","Download canceled", this);

@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 342; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 343; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2720,7 +2720,11 @@ namespace WinApp.Code
                     mssql = "UPDATE columnSelection SET colNameSum='0' WHERE id IN (48,49,187); ";
                     sqlite = mssql;
                     break;
-                            
+                case 343:
+                    Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
+                    Config.Settings.downloadFilePathAddSubfolder = false;
+                    Config.SaveConfig(out msg);
+                    break;
                 
             }
 			string sql = "";

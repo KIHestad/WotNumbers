@@ -294,11 +294,11 @@
     <Compile Include="Forms\Settings\RecalcBattleCreditPerTank.Designer.cs">
       <DependentUpon>RecalcBattleCreditPerTank.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Settings\RecalcBattleWN8.cs">
+    <Compile Include="Forms\Settings\RecalcBattleRating.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings\RecalcBattleWN8.Designer.cs">
-      <DependentUpon>RecalcBattleWN8.cs</DependentUpon>
+    <Compile Include="Forms\Settings\RecalcBattleRating.Designer.cs">
+      <DependentUpon>RecalcBattleRating.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\Download.cs">
       <SubType>Form</SubType>
@@ -624,8 +624,8 @@
     <EmbeddedResource Include="Forms\Settings\RecalcBattleCreditPerTank.resx">
       <DependentUpon>RecalcBattleCreditPerTank.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings\RecalcBattleWN8.resx">
-      <DependentUpon>RecalcBattleWN8.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Settings\RecalcBattleRating.resx">
+      <DependentUpon>RecalcBattleRating.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\Download.resx">
       <DependentUpon>Download.cs</DependentUpon>

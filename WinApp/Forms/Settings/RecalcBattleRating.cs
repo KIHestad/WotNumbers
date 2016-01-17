@@ -11,18 +11,34 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleWN8 : Form
+	public partial class RecalcBattleRating : Form
 	{
-		private static bool _autoRun = false;
-		public RecalcBattleWN8(bool autoRun = false)
+		private bool _autoRun = false;
+        private bool _forWN8 = true;
+        private bool _forWN7 = false;
+        private bool _forEFF = false;
+
+		public RecalcBattleRating(bool autoRun = false, bool forWN8 = true, bool forWN7 = false, bool forEFF = true)
 		{
 			InitializeComponent();
-			_autoRun = autoRun; 
+			_autoRun = autoRun;
+            _forWN8 = forWN8;
+            _forWN7 = forWN7;
+            _forEFF = forEFF;
 		}
 
 		private void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
-			if (_autoRun)
+            string ratings = "";
+            if (_forWN8)
+                ratings += "WN8, ";
+            if (_forWN7)
+                ratings += "WN7, ";
+            if (_forEFF)
+                ratings += "EFF, ";
+            ratings = ratings.Substring(0, ratings.Length - 2);
+            RecalcBattleWN8Theme.Text = "Recalculate battle " + ratings;
+            if (_autoRun)
 				RunNow();
 		}
 
@@ -57,7 +73,7 @@ namespace WinApp.Forms
 			sql = "";
 			foreach (DataRow dr in dt.Rows)
 			{
-				UpdateProgressBar("Calc WN8 for battle " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["battleTime"].ToString());
+				UpdateProgressBar("Calc for battle " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["battleTime"].ToString());
 				int tankId = Convert.ToInt32(dr["tankId"]);
                 Rating.RatingParameters rp = new Rating.RatingParameters();
 				rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
@@ -66,9 +82,32 @@ namespace WinApp.Forms
 				rp.FRAGS = Convert.ToDouble(dr["frags"]);
 				rp.DEF = Convert.ToDouble(dr["def"]);
 				rp.WINS = Convert.ToDouble(dr["victory"]);
-				double WN8 = Math.Round(Rating.CalculateTankWN8(tankId, rp, true),0);
-				string newSQL = "update battle set wn8=@wn8 where id=@id;";
-				DB.AddWithValue(ref newSQL, "@wn8", WN8, DB.SqlDataType.Int);
+                // Create sql and get ratings
+                double WN8 = 0;
+                double WN7 = 0;
+                double EFF = 0;
+                string newSQL = "update battle set ";
+                if (_forWN8)
+                {
+                    WN8 = Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0);
+                    newSQL += "wn8=@wn8, ";
+                    DB.AddWithValue(ref newSQL, "@wn8", WN8, DB.SqlDataType.Int);
+                }
+                if (_forEFF)
+                {
+                    EFF = Math.Round(Rating.CalculateTankEFF(tankId, rp), 0);
+                    newSQL += "eff=@eff, ";
+                    DB.AddWithValue(ref newSQL, "@eff", EFF, DB.SqlDataType.Int);
+                }
+                if (_forWN7)
+                {
+                    rp.TIER = Rating.GetAverageBattleTier();
+                    WN7 = Math.Round(Rating.CalculateWN7(rp, true), 0); 
+                    newSQL += "wn7=@wn7, ";
+                    DB.AddWithValue(ref newSQL, "@wn7", WN7, DB.SqlDataType.Int);
+                }
+                newSQL = newSQL.Substring(0, newSQL.Length - 2);
+                newSQL += " where id=@id;";
 				DB.AddWithValue(ref newSQL, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);
 				sql += newSQL;
 				if (sql.Length >= 4000) // Approx 100 updates

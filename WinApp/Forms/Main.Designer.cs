@@ -190,6 +190,10 @@
             this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddHeader = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
+            this.mGadgetFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetFileLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetFileShowFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetRedraw = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -206,6 +210,7 @@
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.mRecalcBattleRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
@@ -228,12 +233,12 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.toolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
-            this.mGadgetFileSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetFileLoad = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetFileShowFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.mRecalcBattleWN7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleEFF = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
+            this.mRecalcBattleAllRatings = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1765,6 +1770,32 @@
             this.mGadgetAddImage.Text = "Recent Battles";
             this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetAdd);
             // 
+            // toolStripSeparator28
+            // 
+            this.toolStripSeparator28.Name = "toolStripSeparator28";
+            this.toolStripSeparator28.Size = new System.Drawing.Size(175, 6);
+            // 
+            // mGadgetFileSave
+            // 
+            this.mGadgetFileSave.Name = "mGadgetFileSave";
+            this.mGadgetFileSave.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileSave.Text = "Save to File...";
+            this.mGadgetFileSave.Click += new System.EventHandler(this.mGadgetFileSave_Click);
+            // 
+            // mGadgetFileLoad
+            // 
+            this.mGadgetFileLoad.Name = "mGadgetFileLoad";
+            this.mGadgetFileLoad.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileLoad.Text = "Load from File...";
+            this.mGadgetFileLoad.Click += new System.EventHandler(this.mGadgetFileLoad_Click);
+            // 
+            // mGadgetFileShowFolder
+            // 
+            this.mGadgetFileShowFolder.Name = "mGadgetFileShowFolder";
+            this.mGadgetFileShowFolder.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileShowFolder.Text = "Show Files...";
+            this.mGadgetFileShowFolder.Click += new System.EventHandler(this.mGadgetFileShowFolder_Click);
+            // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
@@ -1854,7 +1885,7 @@
             this.toolStripSeparator24,
             this.mUpdateDataFromAPI,
             this.toolStripSeparator18,
-            this.mRecalcBattleWN8,
+            this.mRecalcBattleRatings,
             this.mRecalcBattleCreditsPerTank,
             this.toolStripSeparator25,
             this.mSettingsShowLogFiles,
@@ -1904,13 +1935,27 @@
             this.toolStripSeparator18.Name = "toolStripSeparator18";
             this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
             // 
+            // mRecalcBattleRatings
+            // 
+            this.mRecalcBattleRatings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mRecalcBattleWN8,
+            this.mRecalcBattleWN7,
+            this.mRecalcBattleEFF,
+            this.toolStripSeparator29,
+            this.mRecalcBattleAllRatings});
+            this.mRecalcBattleRatings.Enabled = false;
+            this.mRecalcBattleRatings.Name = "mRecalcBattleRatings";
+            this.mRecalcBattleRatings.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcBattleRatings.Text = "Recalculate Battle Ratings";
+            // 
             // mRecalcBattleWN8
             // 
             this.mRecalcBattleWN8.Enabled = false;
             this.mRecalcBattleWN8.Name = "mRecalcBattleWN8";
-            this.mRecalcBattleWN8.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcBattleWN8.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleWN8.Tag = "WN8";
             this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
-            this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleWN8_Click);
+            this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
             // 
             // mRecalcBattleCreditsPerTank
             // 
@@ -2171,35 +2216,42 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // toolStripSeparator28
-            // 
-            this.toolStripSeparator28.Name = "toolStripSeparator28";
-            this.toolStripSeparator28.Size = new System.Drawing.Size(175, 6);
-            // 
-            // mGadgetFileSave
-            // 
-            this.mGadgetFileSave.Name = "mGadgetFileSave";
-            this.mGadgetFileSave.Size = new System.Drawing.Size(178, 22);
-            this.mGadgetFileSave.Text = "Save to File...";
-            this.mGadgetFileSave.Click += new System.EventHandler(this.mGadgetFileSave_Click);
-            // 
-            // mGadgetFileLoad
-            // 
-            this.mGadgetFileLoad.Name = "mGadgetFileLoad";
-            this.mGadgetFileLoad.Size = new System.Drawing.Size(178, 22);
-            this.mGadgetFileLoad.Text = "Load from File...";
-            this.mGadgetFileLoad.Click += new System.EventHandler(this.mGadgetFileLoad_Click);
-            // 
-            // mGadgetFileShowFolder
-            // 
-            this.mGadgetFileShowFolder.Name = "mGadgetFileShowFolder";
-            this.mGadgetFileShowFolder.Size = new System.Drawing.Size(178, 22);
-            this.mGadgetFileShowFolder.Text = "Show Files...";
-            this.mGadgetFileShowFolder.Click += new System.EventHandler(this.mGadgetFileShowFolder_Click);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // mRecalcBattleWN7
+            // 
+            this.mRecalcBattleWN7.Enabled = false;
+            this.mRecalcBattleWN7.Name = "mRecalcBattleWN7";
+            this.mRecalcBattleWN7.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleWN7.Tag = "WN7";
+            this.mRecalcBattleWN7.Text = "Recalculate Battle WN7...";
+            this.mRecalcBattleWN7.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // mRecalcBattleEFF
+            // 
+            this.mRecalcBattleEFF.Enabled = false;
+            this.mRecalcBattleEFF.Name = "mRecalcBattleEFF";
+            this.mRecalcBattleEFF.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleEFF.Tag = "EFF";
+            this.mRecalcBattleEFF.Text = "Recalculate Battle EFF...";
+            this.mRecalcBattleEFF.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // toolStripSeparator29
+            // 
+            this.toolStripSeparator29.Name = "toolStripSeparator29";
+            this.toolStripSeparator29.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator29.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // mRecalcBattleAllRatings
+            // 
+            this.mRecalcBattleAllRatings.Enabled = false;
+            this.mRecalcBattleAllRatings.Name = "mRecalcBattleAllRatings";
+            this.mRecalcBattleAllRatings.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleAllRatings.Tag = "ALL";
+            this.mRecalcBattleAllRatings.Text = "Recalculate All Battle Ratings...";
+            this.mRecalcBattleAllRatings.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
             // 
             // Main
             // 
@@ -2380,8 +2432,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mGadgetChartTankType;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
 		private System.Windows.Forms.ToolStripMenuItem mGadgetKillDeath;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetDamageCausedReceived;
-		private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN8;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetDamageCausedReceived;
 		private System.Windows.Forms.ToolStripMenuItem mModeRandomSoloPlatoon;
 		private System.Windows.Forms.ToolStripMenuItem mModeRandomSolo;
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon;
@@ -2434,6 +2485,12 @@
         private System.Windows.Forms.ToolStripMenuItem mGadgetFileShowFolder;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleRatings;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN8;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN7;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleEFF;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator29;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleAllRatings;
 	}
 }
 

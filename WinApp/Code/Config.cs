@@ -127,6 +127,8 @@ namespace WinApp.Code
         public bool vBAddictUploadReplayActive { get; set; }	    // Activate auto replay upload to vBAddict
         public bool vBAddictShowToolBarMenu { get; set; }	        // Activate auto replay upload to vBAddict
         public ColorRangeScheme.RatingColorScheme RatingColors { get; set; }	// Rating Color Scheme
+        public string downloadFilePath { get; set; }                // File path for downloading new versions
+        public bool downloadFilePathAddSubfolder { get; set; }      // Flag for creating subfolder with version number when downloading
 	}
 
 	class Config
@@ -274,6 +276,8 @@ namespace WinApp.Code
             // Others
 			Config.Settings.CheckForBrrOnStartup = true;
             Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
+            Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
+            Config.Settings.downloadFilePathAddSubfolder = false;
 		}
 
 		
