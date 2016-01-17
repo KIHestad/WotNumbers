@@ -70,11 +70,11 @@ namespace WinApp.Gadget
 			// Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-				end_val = Code.Rating.CalcTotalEFF();
+				end_val = Code.Rating.EffTotal();
 			}
 			else // Check time range
 			{
-				int battleRevert = 0;
+				int maxBattles = 0;
 				string battleTimeFilter = "";
 				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
                 switch (_battleTimeSpan)
@@ -110,7 +110,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				end_val = Rating.CalcBattleEFF(battleTimeFilter, battleRevert);	
+				end_val = Rating.EffBattle(battleTimeFilter, maxBattles);	
 
 			}
 			// Show in gauge

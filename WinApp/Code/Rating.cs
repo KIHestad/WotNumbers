@@ -11,7 +11,9 @@ using WinApp.Code;
 namespace WinApp.Code
 {
 	class Rating
-	{
+    {
+        #region common
+
         public class RatingParameters
         {
             public RatingParameters()
@@ -24,6 +26,17 @@ namespace WinApp.Code
                 CAP = 0;
                 WINS = 0;
                 TIER = 0;
+            }
+            public RatingParameters(RatingParameters clone) // To be able to clone
+            {
+                BATTLES = clone.BATTLES;
+                DAMAGE = clone.DAMAGE;
+                SPOT = clone.SPOT;
+                FRAGS = clone.FRAGS;
+                DEF = clone.DEF;
+                CAP = clone.CAP;
+                WINS = clone.WINS;
+                TIER = clone.TIER;
             }
             public double BATTLES {get; set;}
             public double DAMAGE {get; set;}
@@ -93,8 +106,6 @@ namespace WinApp.Code
             return rp;
         }
 
-		#region Convert DB Value to Double
-
 		public static double ConvertDbVal2Double(object dbValue)
 		{
 			double value = 0;
@@ -150,16 +161,60 @@ namespace WinApp.Code
             return rpWN8;
         }
 
-        public static double CalculatePlayerTotalWN8(string battleMode = "")
+        public static double WN8total(string battleMode = "")
         {
             double WN8 = 0;
             RatingWN8Parameters rpWN8 = GetPlayerTotalWN8Params(battleMode);
             // Use WN8 formula to calculate result
-            WN8 = UseWN8Formula(rpWN8);
+            WN8 = WN8useFormula(rpWN8);
             return WN8;
         }
+
+        public static double WN8battle(int tankId, RatingParameters rpBattle, bool WN8WRx = false)
+        {
+            RatingParameters rp = new RatingParameters(rpBattle); // clone it to not affect input class
+            // If more than one battle recorded 
+            if (rp.BATTLES > 0)
+            {
+                rp.CAP = rp.BATTLES * rp.CAP;
+                rp.DAMAGE = rp.BATTLES * rp.DAMAGE;
+                rp.DEF = rp.BATTLES * rp.DEF;
+                rp.FRAGS = rp.BATTLES * rp.FRAGS;
+                rp.SPOT = rp.BATTLES * rp.SPOT;
+            }
+            return WN8tank(tankId, rp, WN8WRx);
+        }
         
-        public static double CalcAvgBattleWN8(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double WN8tank(int tankId, RatingParameters rpBattle, bool WN8WRx = false)
+        {
+            Double WN8 = 0;
+            RatingParameters rp = new RatingParameters(rpBattle); // clone it to not affect input class
+            RatingWN8Parameters rpWN8 = new RatingWN8Parameters();
+            rpWN8.rp = rp;
+            // get tankdata for current tank
+            DataRow tankInfo = TankHelper.TankInfo(tankId);
+            if (tankInfo != null && rp.BATTLES > 0 && tankInfo["expDmg"] != DBNull.Value)
+            {
+                // WN8 = Winrate for tank(s)
+                double avgWinRate = rp.WINS / rp.BATTLES * 100;
+                // WN8 WRx = Winrate is fixed to the expected winRate 
+                if (WN8WRx)
+                    avgWinRate = Convert.ToDouble(tankInfo["expWR"]);
+                rp.WINS = avgWinRate;
+                // get wn8 exp values for tank
+                rpWN8.expDmg = Convert.ToDouble(tankInfo["expDmg"]) * rp.BATTLES;
+                rpWN8.expSpot = Convert.ToDouble(tankInfo["expSpot"]) * rp.BATTLES;
+                rpWN8.expFrag = Convert.ToDouble(tankInfo["expFrags"]) * rp.BATTLES;
+                rpWN8.expDef = Convert.ToDouble(tankInfo["expDef"]) * rp.BATTLES;
+                rpWN8.expWinRate = Convert.ToDouble(tankInfo["expWR"]);
+                // Use WN8 formula to calculate result
+                WN8 = WN8useFormula(rpWN8);
+            }
+            return WN8;
+        }
+
+
+        public static double WN8battle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
 		{
 			double WN8 = 0;
 			if (battleMode == "")
@@ -190,17 +245,17 @@ namespace WinApp.Code
 			DataTable dtBattles = DB.FetchData(sql);
 			if (dtBattles.Rows.Count > 0)
 			{
-				if (battleCount == 0) battleCount = dtBattles.Rows.Count;
-				int count = 0;
+				int countBattles = 0;
 				foreach (DataRow stats in dtBattles.Rows)
 				{
-					double btl = Rating.ConvertDbVal2Double(stats["battles"]);
+					int btl = Convert.ToInt32(stats["battles"]);
+                    countBattles += btl;
 					// add to datatable
 					string tankId = stats["tankId"].ToString();
 					DataRow[] ptbRow = ptb.Select("tankId = " + tankId);
 					if (ptbRow.Length > 0)
 					{
-						ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) + Convert.ToInt32(stats["battles"]);
+                        ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) + btl;
 						ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(stats["dmg"]) * btl;
 						ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(stats["spot"]) * btl;
 						ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(stats["frags"]) * btl;
@@ -213,19 +268,18 @@ namespace WinApp.Code
 						if (Config.Settings.showDBErrors)
 							Log.LogToFile("*** Could not find playerTank for battle mode '" + battleMode + "' for tank: " + tankId + " ***");
 					}
-					count++;
-					if (count > battleCount) break;
+					countBattles++;
+					if (maxBattles > 0 && countBattles > maxBattles) break;
 				}
 				// Check for null values
 				if (ptb.Rows.Count > 0)
-					WN8 = Code.Rating.CalculatePlayerTankTotalWN8(ptb);
+					WN8 = Code.Rating.WN8playerTankBattle(ptb);
 			}
 			return WN8;
 		}
 
-        public static double CalcAvgBattleWN8Reverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double WN8Reverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
-            double WN8 = 0;
             if (battleMode == "")
                 battleMode = "%";
             // Create an datatable with all tanks and total stats
@@ -282,38 +336,11 @@ namespace WinApp.Code
                 }
                 // Check for null values
             }
-            return Code.Rating.CalculatePlayerTankTotalWN8(ptb);
+            return Code.Rating.WN8playerTankBattle(ptb);
         }
 				
-		//public static double CalculateTankWN8(int tankId, double battleCount, double dmg, double spotted, double frags, double def, double wins, bool WN8WRx = false)
-        public static double CalculateTankWN8(int tankId, RatingParameters rp, bool WN8WRx = false)
-		{
-			Double WN8 = 0;
-            RatingWN8Parameters rpWN8 = new RatingWN8Parameters();
-            rpWN8.rp = rp;
-			// get tankdata for current tank
-			DataRow tankInfo = TankHelper.TankInfo(tankId);
-			if (tankInfo != null && rp.BATTLES > 0 && tankInfo["expDmg"] != DBNull.Value)
-			{
-				// WN8 = Winrate for tank(s)
-				double avgWinRate = rp.WINS / rp.BATTLES * 100;
-				// WN8 WRx = Winrate is fixed to the expected winRate 
-				if (WN8WRx)
-					avgWinRate = Convert.ToDouble(tankInfo["expWR"]);
-                rp.WINS = avgWinRate;
-				// get wn8 exp values for tank
-                rpWN8.expDmg = Convert.ToDouble(tankInfo["expDmg"]) * rp.BATTLES;
-                rpWN8.expSpot = Convert.ToDouble(tankInfo["expSpot"]) * rp.BATTLES;
-                rpWN8.expFrag = Convert.ToDouble(tankInfo["expFrags"]) * rp.BATTLES;
-                rpWN8.expDef = Convert.ToDouble(tankInfo["expDef"]) * rp.BATTLES;
-                rpWN8.expWinRate = Convert.ToDouble(tankInfo["expWR"]);
-				// Use WN8 formula to calculate result
-                WN8 = UseWN8Formula(rpWN8);
-			}
-			return WN8;
-		}
 
-		public static double CalculatePlayerTankTotalWN8(DataTable playerTankBattle)
+		public static double WN8playerTankBattle(DataTable playerTankBattle)
 		{
 			double WN8 = 0;
 			// Get player totals from datatable
@@ -348,14 +375,14 @@ namespace WinApp.Code
 				if (rpWN8.rp.BATTLES > 0)
                 {
                     rpWN8.expWinRate = rpWN8.expWinRate / rpWN8.rp.BATTLES;
-                    WN8 = UseWN8Formula(rpWN8);
+                    WN8 = WN8useFormula(rpWN8);
                 }
 					
 			}
 			return WN8;
 		}
 		
-		private static double UseWN8Formula(RatingWN8Parameters rpWN8)
+		private static double WN8useFormula(RatingWN8Parameters rpWN8)
 		{
             double WN8 = 0;
             // Step 1
@@ -378,7 +405,7 @@ namespace WinApp.Code
 			return WN8;
 		}
 
-		public static void UseWN8FormulaReturnResult(
+		public static void WN8useFormulaReturnResult(
 			RatingParameters rp, double avgWinRate, double expDmg, double expSpot, double expFrag, double expDef, double expWinRate,
 			out double rWINc, out double rDAMAGEc, out double rFRAGc, out double rSPOTc, out double rDEFc)
 		{
@@ -408,16 +435,39 @@ namespace WinApp.Code
 
 		#region WN7
 
-		public static double CalcTotalWN7(string battleMode = "15")
+		public static double WN7total(string battleMode = "15")
 		{
             RatingParameters rp = GetRatingPlayerTankResults(battleMode);
             if (rp == null)
                 return 0;
             rp.TIER = Rating.GetAverageBattleTier(battleMode);
-            return CalculateWN7(rp);
+            return WN7useFormula(rp);
 		}
 
-		public static double CalcBattleWN7(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double WN7tank(RatingParameters tankRP, bool calcForBattle = false)
+        {
+            RatingParameters rp = new RatingParameters(tankRP); // clone
+            // Call method for calc rating
+            return WN7useFormula(rp, calcForBattle);
+        }
+
+        public static double WN7battle(RatingParameters battleRP, bool calcForBattle = false)
+        {
+            RatingParameters rp = new RatingParameters(battleRP); // clone
+            // If more than one battle recorded 
+            if (rp.BATTLES > 0)
+            {
+                rp.CAP = rp.BATTLES * rp.CAP;
+                rp.DAMAGE = rp.BATTLES * rp.DAMAGE;
+                rp.DEF = rp.BATTLES * rp.DEF;
+                rp.FRAGS = rp.BATTLES * rp.FRAGS;
+                rp.SPOT = rp.BATTLES * rp.SPOT;
+            }
+            // Call method for calc rating
+            return WN7useFormula(rp, calcForBattle);
+        }
+
+		public static double WN7battle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
 		{
 			double WN7 = 0;
 			if (battleMode == "")
@@ -434,9 +484,7 @@ namespace WinApp.Code
 			DataTable dtBattles = DB.FetchData(sql);
 			if (dtBattles.Rows.Count > 0)
 			{
-				if (battleCount == 0) battleCount = dtBattles.Rows.Count;
-				int count = 0;
-                RatingParameters rp = new RatingParameters();
+				RatingParameters rp = new RatingParameters();
 				foreach (DataRow stats in dtBattles.Rows)
 				{
 					double btl = Rating.ConvertDbVal2Double(stats["battles"]);
@@ -448,26 +496,25 @@ namespace WinApp.Code
                     rp.CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
                     rp.WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
                     rp.TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
-					count++;
-					if (count > battleCount) break;
+                    if (maxBattles > 0 && rp.BATTLES > maxBattles) break;
 				}
                 if (rp.BATTLES > 0)
                 {
                     rp.TIER = (rp.TIER / rp.BATTLES);
-                    WN7 = Code.Rating.CalculateWN7(rp);
+                    WN7 = WN7useFormula(rp);
                 }
 			}
 			return WN7;
 		}
 
-        public static double CalcBattleWN7Reverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double WN7reverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // Find current total EFF
             RatingParameters rp = GetRatingPlayerTankResults(battleMode);
             if (rp == null)
                 return 0;
             rp.TIER = Rating.GetAverageBattleTier(battleMode) * rp.BATTLES;
-            double totalWN7 = CalculateWN7(rp);
+            double totalWN7 = WN7useFormula(rp);
 
             // Find changes and subtract
             if (battleMode == "")
@@ -502,13 +549,14 @@ namespace WinApp.Code
                 }
             }
             rp.TIER = (rp.TIER / rp.BATTLES);
-            return Code.Rating.CalculateWN7(rp);
+            return WN7useFormula(rp);
         }
 
 
-		public static double CalculateWN7(RatingParameters rp, bool calcForBattle = false)
+		public static double WN7useFormula(RatingParameters rpInput, bool calcForBattle = false)
 		{
-			double WN7 = 0;
+            RatingParameters rp = new RatingParameters(rpInput);
+            double WN7 = 0;
 			if (rp.BATTLES > 0 && rp.TIER > 0)
 			{
 				// Calc average values
@@ -540,15 +588,53 @@ namespace WinApp.Code
 
 		#region EFF
 
-		public static double CalcTotalEFF(string battleMode = "15")
+		public static double EffTotal(string battleMode = "15")
 		{
             RatingParameters rp = GetRatingPlayerTankResults(battleMode);
             if (rp == null)
                 return 0;
-            return CalculateEFF(rp);
+            return EffUseFormula(rp);
 		}
 
-		public static double CalcBattleEFF(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double EffTank(int tankId, RatingParameters rpTank)
+        {
+            RatingParameters rp = new RatingParameters(rpTank); // clone it to not affect input class
+            // Get tankdata for current tank to get tier
+            DataRow tankInfo = TankHelper.TankInfo(tankId);
+            double tier = 0;
+            if (tankInfo != null)
+            {
+                tier = Convert.ToDouble(tankInfo["tier"]);
+            }
+            // Call method for calc EFF
+            return EffUseFormula(rp);
+        }
+
+        public static double EffBattle(int tankId, RatingParameters rpBattle)
+        {
+            RatingParameters rp = new RatingParameters(rpBattle); // clone it to not affect input class
+            // Get tankdata for current tank to get tier
+            DataRow tankInfo = TankHelper.TankInfo(tankId);
+            double tier = 0;
+            if (tankInfo != null)
+            {
+                tier = Convert.ToDouble(tankInfo["tier"]);
+            }
+            // If more than one battle recorded 
+            if (rp.BATTLES > 0)
+            {
+                rp.CAP = rp.BATTLES * rp.CAP;
+                rp.DAMAGE = rp.BATTLES * rp.DAMAGE;
+                rp.DEF = rp.BATTLES * rp.DEF;
+                rp.FRAGS = rp.BATTLES * rp.FRAGS;
+                rp.SPOT = rp.BATTLES * rp.SPOT;
+                rp.TIER = rp.BATTLES * tier;
+            }
+            // Call method for calc EFF
+            return EffUseFormula(rp);
+        }
+
+		public static double EffBattle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
 		{
 			double EFF = 0;
 			if (battleMode == "")
@@ -565,8 +651,6 @@ namespace WinApp.Code
 			DataTable dtBattles = DB.FetchData(sql);
 			if (dtBattles.Rows.Count > 0)
 			{
-				if (battleCount == 0) battleCount = dtBattles.Rows.Count;
-				int count = 0;
                 RatingParameters rp = new RatingParameters();
 				foreach (DataRow stats in dtBattles.Rows)
 				{
@@ -579,25 +663,24 @@ namespace WinApp.Code
                     rp.CAP += Rating.ConvertDbVal2Double(stats["cap"]) * btl;
                     rp.WINS += Rating.ConvertDbVal2Double(stats["wins"]) * btl;
                     rp.TIER += Rating.ConvertDbVal2Double(stats["tier"]) * btl;
-					count++;
-					if (count > battleCount) break;
+                    if (maxBattles > 0 && rp.BATTLES > maxBattles) break;
 				}
                 if (rp.BATTLES > 0)
 				{
-					EFF = Code.Rating.CalculateEFF(rp);
+					EFF = Code.Rating.EffUseFormula(rp);
 				}
 			}
 			return EFF;
 		}
 
         // Special calculation finds previous efficiency based on effiency parameters now - battle recorded parameters
-        public static double CalcBattleEFFReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double EffReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             // Find current total EFF
             RatingParameters rp = GetRatingPlayerTankResults(battleMode);
             if (rp == null)
                 return 0;
-            double totalEff = CalculateEFF(rp);
+            double totalEff = EffUseFormula(rp);
             
             // Find changes and subtract
             if (battleMode == "")
@@ -631,27 +714,14 @@ namespace WinApp.Code
                     if (count > battleCount) break;
                 }
             }
-            return Code.Rating.CalculateEFF(rp);
+            return Code.Rating.EffUseFormula(rp);
         }
-
-		public static double CalculateTankEFF(int tankId, RatingParameters rp)
-		{
-			// Get tankdata for current tank to get tier
-			DataRow tankInfo = TankHelper.TankInfo(tankId);
-			double tier = 0;
-			if (tankInfo != null)
-			{
-				tier = Convert.ToDouble(tankInfo["tier"]);
-			}
-            rp.TIER = tier;
-			// Call method for calc EFF
-			return CalculateEFF(rp);
-		}
 		
 		//public static double CalculateEFF(double battleCount, double dmg, double spotted, double frags, double def, double cap, double tier)
-        public static double CalculateEFF(RatingParameters rp)
+        public static double EffUseFormula(RatingParameters rpInput)
 		{
-			double EFF = 0;
+            RatingParameters rp = new RatingParameters(rpInput);
+            double EFF = 0;
 			if (rp.BATTLES > 0)
 			{
 				double DAMAGE = rp.DAMAGE / rp.BATTLES;
@@ -672,8 +742,13 @@ namespace WinApp.Code
 			return EFF;
 		}
 
-        public static double CalcBattleWR(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        #endregion
+
+        #region Win Rate
+
+        public static double WinrateBattle(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
+            // Calculate winrate for spesified battles
             double WR = 0;
             if (battleMode == "")
                 battleMode = "%";
@@ -703,8 +778,9 @@ namespace WinApp.Code
             return WR;
         }
 
-        public static double CalcTankWR(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static double WinrateTank(string battleTimeFilter, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
+            // calculate average winrate for all tanks included in filter
             double WR = 0;
             if (battleMode == "")
                 battleMode = "%";
@@ -738,7 +814,6 @@ namespace WinApp.Code
         }
         
         #endregion
-					
 		
 		#region Recalculate Battles
 
@@ -760,7 +835,7 @@ namespace WinApp.Code
 				rp.BATTLES = Rating.ConvertDbVal2Double(battle["battlesCount"]);
                 rp.TIER = Rating.GetAverageBattleTier();
 				// Calculate WN7
-				string wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(rp, true), 0)).ToString();
+                string wn7 = Convert.ToInt32(Math.Round(Rating.WN7battle(rp, true), 0)).ToString();
 				// Generate SQL to update WN7
 				sql = "UPDATE battle SET wn7=" + wn7 + " WHERE id = " + battleId;
 				DB.ExecuteNonQuery(sql);

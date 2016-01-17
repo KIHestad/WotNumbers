@@ -315,7 +315,7 @@ namespace WinApp.Forms
                     rp.DEF = values[4];
                     rp.CAP = values[5];
                     rp.TIER = defaultTier; // values[6]; ???
-					result = Code.Rating.CalculateEFF(rp);
+					result = Code.Rating.EffUseFormula(rp);
 					break;
 				case CalculationType.wn7:
 					rp.BATTLES = values[0];
@@ -326,7 +326,7 @@ namespace WinApp.Forms
                     rp.CAP = values[5];
                     rp.WINS = values[6];
                     rp.TIER = defaultTier; // values[6]; ???
-                    result = Code.Rating.CalculateWN7(rp);
+                    result = Code.Rating.WN7useFormula(rp);
 					break;
 				case CalculationType.wn8:
 					break;
@@ -612,7 +612,7 @@ namespace WinApp.Forms
 					DateTime thisDate = Convert.ToDateTime(dr["battle_time"]);
 					if (thisDate <= chartDate)
 					{
-						chartVal = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), decimals);
+						chartVal = Math.Round(Code.Rating.WN8playerTankBattle(ptb), decimals);
 						axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
 						chartDate = thisDate.AddHours(-hourInterval);
@@ -657,7 +657,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						chartVal = Math.Round(Code.Rating.CalculatePlayerTankTotalWN8(ptb), decimals);
+						chartVal = Math.Round(Code.Rating.WN8playerTankBattle(ptb), decimals);
 						//axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal); // Use battle count
 					}

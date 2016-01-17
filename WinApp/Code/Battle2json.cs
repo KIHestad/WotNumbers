@@ -562,11 +562,11 @@ namespace WinApp.Code
 									//Ratings
 									rp.TIER = TankHelper.GetTankTier(tankId);
                                     rp.BATTLES = 1;
-									double eff = Rating.CalculateEFF(rp);
+                                    double eff = Rating.EffBattle(tankId, rp);
 									battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
-									double wn7 = Rating.CalculateWN7(rp, true);
+                                    double wn7 = Rating.WN7battle(rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
-                                    double wn8 = Rating.CalculateTankWN8(tankId, rp, true);
+                                    double wn8 = Rating.WN8battle(tankId, rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });
 								}
 								// insert data

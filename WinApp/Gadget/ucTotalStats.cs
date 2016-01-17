@@ -298,17 +298,17 @@ namespace WinApp.Gadget
                                 // Get special calculations
                                 if (colName == "WN8")
                                 {
-                                    item.cellValue.Value = Code.Rating.CalculatePlayerTotalWN8(battleMode);
+                                    item.cellValue.Value = Code.Rating.WN8total(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN8color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "WN7" )
                                 {
-                                    item.cellValue.Value = Code.Rating.CalcTotalWN7(battleMode);
+                                    item.cellValue.Value = Code.Rating.WN7total(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN7color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "EFF")
                                 {
-                                    item.cellValue.Value = Code.Rating.CalcTotalEFF(battleMode);
+                                    item.cellValue.Value = Code.Rating.EffTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.EffColor(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else
@@ -401,19 +401,19 @@ namespace WinApp.Gadget
                                         else if (colName == "EFF")
                                         {
                                             // Calc EFF
-                                            double prevValue = Rating.CalcBattleEFFReverse(battleTimeFilter, 0);
+                                            double prevValue = Rating.EffReverse(battleTimeFilter, 0);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN7")
                                         {
                                             // Calc WN7
-                                            double prevValue = Rating.CalcBattleWN7Reverse(battleTimeFilter, 0);
+                                            double prevValue = Rating.WN7reverse(battleTimeFilter, 0);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN8")
                                         {
                                             // Calc WN8
-                                            double prevValue = Rating.CalcAvgBattleWN8Reverse(battleTimeFilter, 0);
+                                            double prevValue = Rating.WN8Reverse(battleTimeFilter, 0);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else

@@ -89,20 +89,20 @@ namespace WinApp.Forms
                 string newSQL = "update battle set ";
                 if (_forWN8)
                 {
-                    WN8 = Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0);
+                    WN8 = Math.Round(Rating.WN8battle(tankId, rp, true), 0);
                     newSQL += "wn8=@wn8, ";
                     DB.AddWithValue(ref newSQL, "@wn8", WN8, DB.SqlDataType.Int);
                 }
                 if (_forEFF)
                 {
-                    EFF = Math.Round(Rating.CalculateTankEFF(tankId, rp), 0);
+                    EFF = Math.Round(Rating.EffBattle(tankId, rp), 0);
                     newSQL += "eff=@eff, ";
                     DB.AddWithValue(ref newSQL, "@eff", EFF, DB.SqlDataType.Int);
                 }
                 if (_forWN7)
                 {
                     rp.TIER = Rating.GetAverageBattleTier();
-                    WN7 = Math.Round(Rating.CalculateWN7(rp, true), 0); 
+                    WN7 = Math.Round(Rating.WN7battle(rp, true), 0); 
                     newSQL += "wn7=@wn7, ";
                     DB.AddWithValue(ref newSQL, "@wn7", WN7, DB.SqlDataType.Int);
                 }

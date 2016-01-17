@@ -179,13 +179,13 @@ namespace WinApp.Forms.Settings
                                 int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
                                 string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
                                 // Calc WN8
-                                int wn8 = Convert.ToInt32(Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0));
+                                int wn8 = Convert.ToInt32(Math.Round(Rating.WN8battle(tankId, rp, true), 0));
                                 // Calc EFF
-                                int eff = Convert.ToInt32(Math.Round(Rating.CalculateTankEFF(tankId, rp), 0));
+                                int eff = Convert.ToInt32(Math.Round(Rating.EffBattle(tankId, rp), 0));
                                 // Calc WN7
                                 // Special tier calc
                                 rp.TIER = avgBattleTier;
-                                int wn7 = Convert.ToInt32(Math.Round(Rating.CalculateWN7(rp, true), 0));
+                                int wn7 = Convert.ToInt32(Math.Round(Rating.WN7battle(rp, true), 0));
                                 // Insert or update Battle table
                                 string sqlInsertBattle = "";
                                 int battleId = TankHelper.GetBattleIdForImportedWsBattle(wsId);

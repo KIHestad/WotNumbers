@@ -684,12 +684,12 @@ namespace WinApp.Code
 			rp.CAP = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
             rp.BATTLES = playerTankNewRow_battles;
 			// Calculate WN8
-            sqlFields += " wn8=" + Math.Round(Rating.CalculateTankWN8(tankId, rp), 0).ToString();
+            sqlFields += " wn8=" + Math.Round(Rating.WN8tank(tankId, rp), 0).ToString();
 			// Calculate Eff
-			sqlFields += ", eff=" + Math.Round(Rating.CalculateTankEFF(tankId, rp), 0).ToString();
+			sqlFields += ", eff=" + Math.Round(Rating.EffTank(tankId, rp), 0).ToString();
             // Calculate WN7 - use special tier
             rp.TIER = TankHelper.GetTankTier(tankId);
-            sqlFields += ", wn7=" + Math.Round(Rating.CalculateWN7(rp), 0).ToString();
+            sqlFields += ", wn7=" + Math.Round(Rating.WN7tank(rp), 0).ToString();
 			
 			foreach (DataColumn column in playerTankBattleOld.Columns)
 			{
@@ -934,15 +934,15 @@ namespace WinApp.Code
                 rp.BATTLES = battlesCount;
 				// Calculate WN8
 				sqlFields += ", wn8";
-                sqlValues += ", " + Math.Round(Rating.CalculateTankWN8(tankId, rp, true), 0).ToString();
+                sqlValues += ", " + Math.Round(Rating.WN8battle(tankId, rp, true), 0).ToString();
 				// Calc Eff
 				sqlFields += ", eff";
-				sqlValues += ", " + Math.Round(Rating.CalculateTankEFF(tankId, rp),0).ToString();
+				sqlValues += ", " + Math.Round(Rating.EffBattle(tankId, rp),0).ToString();
                 // Calculate WN7
                 // Special tier calc
                 sqlFields += ", wn7";
                 rp.TIER = Rating.GetAverageBattleTier();
-                sqlValues += ", " + Math.Round(Rating.CalculateWN7(rp, true), 0).ToString();
+                sqlValues += ", " + Math.Round(Rating.WN7battle(rp, true), 0).ToString();
 				
 				// Add battle mode
 				sqlFields += ", battleMode";

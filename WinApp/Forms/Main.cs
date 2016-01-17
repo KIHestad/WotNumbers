@@ -2601,11 +2601,11 @@ namespace WinApp.Forms
 								}
 								if (count > 0)
 									if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-										rowAverage[colListItem.name] = Math.Round(Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin),1);
+										rowAverage[colListItem.name] = Math.Round(Rating.WN8battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin),1);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
-                                        rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Math.Round(Rating.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
-                                        rowAverage[colListItem.name] = Math.Round(Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Math.Round(Rating.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation Dmg C/R
                                         rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else
@@ -3628,7 +3628,7 @@ namespace WinApp.Forms
 					rp.FRAGS = Convert.ToDouble(dr["frags"]);
 					rp.DEF = Convert.ToDouble(dr["def"]);
 					rp.WINS = Convert.ToDouble(dr["Wins"]);
-					string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, rp), 0).ToString();
+					string wn8 = Math.Round(Rating.WN8battle(tankId, rp), 0).ToString();
 					double rWINc;
 					double rDAMAGEc;
 					double rFRAGSc;
@@ -3644,7 +3644,7 @@ namespace WinApp.Forms
 					double exp_frags = Convert.ToDouble(dr["expFrags"]);
 					double exp_def = Convert.ToDouble(dr["expDef"]);
 					double exp_wr = Convert.ToDouble(dr["expWR"]);
-					Rating.UseWN8FormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+					Rating.WN8useFormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 					string message = "WN8 Rating for this tank in Random/TC: ";
 					message += wn8 + Environment.NewLine + Environment.NewLine;
 					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8 result" + Environment.NewLine;

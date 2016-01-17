@@ -405,7 +405,7 @@ namespace WinApp.Forms
 				double rFRAGSc;
 				double rSPOTc;
 				double rDEFc;
-				Rating.UseWN8FormulaReturnResult(
+				Rating.WN8useFormulaReturnResult(
 					rp, exp_wr,
 					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);

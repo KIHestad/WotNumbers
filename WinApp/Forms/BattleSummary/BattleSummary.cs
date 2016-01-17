@@ -356,15 +356,15 @@ namespace WinApp.Forms
 				FormatStandardDataGrid(dgvOther, "");
 
 				// Calculate avg ratings
-				wn8avg = Convert.ToInt32(Rating.CalculatePlayerTotalWN8(battleMode));
-				wn7avg = Convert.ToInt32(Rating.CalcTotalWN7(battleMode));
-				effavg = Convert.ToInt32(Rating.CalcTotalEFF(battleMode));
-                wravg = Rating.CalcTankWR(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
-				// Calg current battle ratings
-				wn8 = Convert.ToInt32(Rating.CalcAvgBattleWN8(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-				wn7 = Convert.ToInt32(Rating.CalcBattleWN7(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-				eff = Convert.ToInt32(Rating.CalcBattleEFF(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-                wr = Rating.CalcBattleWR(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
+				wn8avg = Convert.ToInt32(Rating.WN8total(battleMode));
+				wn7avg = Convert.ToInt32(Rating.WN7total(battleMode));
+				effavg = Convert.ToInt32(Rating.EffTotal(battleMode));
+                wravg = Rating.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
+				// Calc current battle ratings
+				wn8 = Convert.ToInt32(Rating.WN8battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+				wn7 = Convert.ToInt32(Rating.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+				eff = Convert.ToInt32(Rating.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wr = Rating.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
 				dtRating.Rows.Add(GetValues(dtRating, wn8, wn8avg, "WN8"));
@@ -525,7 +525,7 @@ namespace WinApp.Forms
 				double rFRAGSc;
 				double rSPOTc;
 				double rDEFc;
-				Rating.UseWN8FormulaReturnResult(
+				Rating.WN8useFormulaReturnResult(
 						rp, wr,
 						exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 						out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
