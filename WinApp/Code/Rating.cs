@@ -174,7 +174,7 @@ namespace WinApp.Code
         {
             RatingParameters rp = new RatingParameters(rpBattle); // clone it to not affect input class
             // If more than one battle recorded 
-            if (rp.BATTLES > 0)
+            if (rp.BATTLES > 1)
             {
                 rp.CAP = rp.BATTLES * rp.CAP;
                 rp.DAMAGE = rp.BATTLES * rp.DAMAGE;
@@ -199,7 +199,7 @@ namespace WinApp.Code
                 double avgWinRate = rp.WINS / rp.BATTLES * 100;
                 // WN8 WRx = Winrate is fixed to the expected winRate 
                 if (WN8WRx)
-                    avgWinRate = Convert.ToDouble(tankInfo["expWR"]);
+                    avgWinRate = Convert.ToDouble(tankInfo["expWR"]) / 100;
                 rp.WINS = avgWinRate;
                 // get wn8 exp values for tank
                 rpWN8.expDmg = Convert.ToDouble(tankInfo["expDmg"]) * rp.BATTLES;
@@ -391,8 +391,6 @@ namespace WinApp.Code
             double rFRAG = rpWN8.rp.FRAGS / rpWN8.expFrag;
             double rDEF = rpWN8.rp.DEF / rpWN8.expDef;
             double rWIN = (rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100) / rpWN8.expWinRate;
-            // WN8 = Winrate for tank(s)
-            double avgWinRate = rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100;
 			// Step 2
 			double rWINc = Math.Max(0, (rWIN - 0.71) / (1 - 0.71));
 			double rDAMAGEc = Math.Max(0, (rDAMAGE - 0.22) / (1 - 0.22));
@@ -455,7 +453,7 @@ namespace WinApp.Code
         {
             RatingParameters rp = new RatingParameters(battleRP); // clone
             // If more than one battle recorded 
-            if (rp.BATTLES > 0)
+            if (rp.BATTLES > 1)
             {
                 rp.CAP = rp.BATTLES * rp.CAP;
                 rp.DAMAGE = rp.BATTLES * rp.DAMAGE;
@@ -621,7 +619,7 @@ namespace WinApp.Code
                 tier = Convert.ToDouble(tankInfo["tier"]);
             }
             // If more than one battle recorded 
-            if (rp.BATTLES > 0)
+            if (rp.BATTLES > 1)
             {
                 rp.CAP = rp.BATTLES * rp.CAP;
                 rp.DAMAGE = rp.BATTLES * rp.DAMAGE;

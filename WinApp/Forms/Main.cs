@@ -383,6 +383,9 @@ namespace WinApp.Forms
             ToolStripMenuItem dataGridMainPopup_RecalculateTankCredit = new ToolStripMenuItem("Recalculate Tank Credits");
             dataGridMainPopup_RecalculateTankCredit.Click += new EventHandler(dataGridMainPopup_RecalculateTankCredit_Click);
 
+            ToolStripMenuItem dataGridMainPopup_RecalculateBattleRating = new ToolStripMenuItem("Recalculate Battle Rating");
+            dataGridMainPopup_RecalculateBattleRating.Click += new EventHandler(dataGridMainPopup_RecalculateBattleRating_Click);
+
             ToolStripMenuItem dataGridMainPopup_Replay = new ToolStripMenuItem("Search for Replay");
             dataGridMainPopup_Replay.Image = imageListToolStrip.Images[14];
             dataGridMainPopup_Replay.Click += new EventHandler(dataGridMainPopup_Replay_Click);
@@ -436,6 +439,7 @@ namespace WinApp.Forms
 						new ToolStripSeparator(),
 						dataGridMainPopup_CopyRowToClipboard,
 						new ToolStripSeparator(),
+                        dataGridMainPopup_RecalculateBattleRating,
 						dataGridMainPopup_DeleteBattle
 					});
 					break;
@@ -3500,6 +3504,13 @@ namespace WinApp.Forms
 				Form frm = new Forms.BattleChart(playerTankId);
 				FormHelper.OpenFormToRightOfParent(this, frm);
 			}
+		}
+
+        private void dataGridMainPopup_RecalculateBattleRating_Click(object sender, EventArgs e)
+		{
+			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
+			Form frm = new Forms.RecalcBattleRating(true, true, true, true, battleId);
+			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 
 		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)

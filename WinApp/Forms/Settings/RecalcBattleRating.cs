@@ -17,14 +17,16 @@ namespace WinApp.Forms
         private bool _forWN8 = true;
         private bool _forWN7 = false;
         private bool _forEFF = false;
+        private int _forBattleId = 0;
 
-		public RecalcBattleRating(bool autoRun = false, bool forWN8 = true, bool forWN7 = false, bool forEFF = true)
+		public RecalcBattleRating(bool autoRun = false, bool forWN8 = true, bool forWN7 = false, bool forEFF = true, int forBattleId = 0)
 		{
 			InitializeComponent();
 			_autoRun = autoRun;
             _forWN8 = forWN8;
             _forWN7 = forWN7;
             _forEFF = forEFF;
+            _forBattleId = forBattleId;
 		}
 
 		private void UpdateFromApi_Shown(object sender, EventArgs e)
@@ -63,9 +65,13 @@ namespace WinApp.Forms
 
 			// Get battles
 			UpdateProgressBar("Getting battle count");
+            string battleWhere = "";
+            if (_forBattleId != 0)
+                battleWhere = "WHERE battle.id = " + _forBattleId.ToString() + " ";
 			string sql = 
 				"select battle.*, playerTank.tankId as tankId " +
 				"from battle inner join playerTank on battle.playerTankId = playerTank.id " +
+                battleWhere +
 				"order by battle.battleTime";
 			DataTable dt = DB.FetchData(sql);
 			int tot = dt.Rows.Count;
