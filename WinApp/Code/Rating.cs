@@ -156,8 +156,6 @@ namespace WinApp.Code
                     rpWN8.expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
                 }
             }
-            if (rpWN8.rp.BATTLES > 0)
-                rpWN8.expWinRate = rpWN8.expWinRate / rpWN8.rp.BATTLES;
             return rpWN8;
         }
 
@@ -195,18 +193,15 @@ namespace WinApp.Code
             DataRow tankInfo = TankHelper.TankInfo(tankId);
             if (tankInfo != null && rp.BATTLES > 0 && tankInfo["expDmg"] != DBNull.Value)
             {
-                // WN8 = Winrate for tank(s)
-                double avgWinRate = rp.WINS / rp.BATTLES * 100;
                 // WN8 WRx = Winrate is fixed to the expected winRate 
                 if (WN8WRx)
-                    avgWinRate = Convert.ToDouble(tankInfo["expWR"]) / 100;
-                rp.WINS = avgWinRate;
+                    rp.WINS = Convert.ToDouble(tankInfo["expWR"]) / 100 * rp.BATTLES;
                 // get wn8 exp values for tank
                 rpWN8.expDmg = Convert.ToDouble(tankInfo["expDmg"]) * rp.BATTLES;
                 rpWN8.expSpot = Convert.ToDouble(tankInfo["expSpot"]) * rp.BATTLES;
                 rpWN8.expFrag = Convert.ToDouble(tankInfo["expFrags"]) * rp.BATTLES;
                 rpWN8.expDef = Convert.ToDouble(tankInfo["expDef"]) * rp.BATTLES;
-                rpWN8.expWinRate = Convert.ToDouble(tankInfo["expWR"]);
+                rpWN8.expWinRate = Convert.ToDouble(tankInfo["expWR"]) * rp.BATTLES;
                 // Use WN8 formula to calculate result
                 WN8 = WN8useFormula(rpWN8);
             }
@@ -324,7 +319,7 @@ namespace WinApp.Code
                         ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) - Convert.ToInt32(stats["frags"]) * btl;
                         ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) - Convert.ToInt32(stats["def"]) * btl;
                         ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) - Convert.ToInt32(stats["cap"]) * btl;
-                        ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) - Convert.ToInt32(stats["wins"]) * btl;
+                        ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) - Convert.ToInt32(stats["wins"]);
                     }
                     else
                     {
@@ -354,8 +349,7 @@ namespace WinApp.Code
                 rpWN8.rp.FRAGS = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])", ""));
                 rpWN8.rp.DEF = Convert.ToDouble(playerTankBattle.Compute("SUM([def])", ""));
                 rpWN8.rp.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
-                double avgWinRate = rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100;
-				// Get tanks with battle count per tank and expected values from db
+                // Get tanks with battle count per tank and expected values from db
 				foreach (DataRow ptbRow in playerTankBattle.Rows)
 				{
 					// Get tanks with battle count per tank and expected values
@@ -374,7 +368,6 @@ namespace WinApp.Code
 				// Use WN8 formula to calculate result
 				if (rpWN8.rp.BATTLES > 0)
                 {
-                    rpWN8.expWinRate = rpWN8.expWinRate / rpWN8.rp.BATTLES;
                     WN8 = WN8useFormula(rpWN8);
                 }
 					
@@ -390,7 +383,7 @@ namespace WinApp.Code
             double rSPOT = rpWN8.rp.SPOT / rpWN8.expSpot;
             double rFRAG = rpWN8.rp.FRAGS / rpWN8.expFrag;
             double rDEF = rpWN8.rp.DEF / rpWN8.expDef;
-            double rWIN = (rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100) / rpWN8.expWinRate;
+            double rWIN = (rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100) / (rpWN8.expWinRate / rpWN8.rp.BATTLES);
 			// Step 2
 			double rWINc = Math.Max(0, (rWIN - 0.71) / (1 - 0.71));
 			double rDAMAGEc = Math.Max(0, (rDAMAGE - 0.22) / (1 - 0.22));

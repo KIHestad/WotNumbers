@@ -683,7 +683,7 @@ namespace WinApp.Code
 			rp.WINS = Rating.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
 			rp.CAP = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
             rp.BATTLES = playerTankNewRow_battles;
-			// Calculate WN8
+            // Calculate WN8
             sqlFields += " wn8=" + Math.Round(Rating.WN8tank(tankId, rp), 0).ToString();
 			// Calculate Eff
 			sqlFields += ", eff=" + Math.Round(Rating.EffTank(tankId, rp), 0).ToString();
@@ -941,7 +941,7 @@ namespace WinApp.Code
                 // Calculate WN7
                 // Special tier calc
                 sqlFields += ", wn7";
-                rp.TIER = Rating.GetAverageBattleTier();
+                rp.TIER = Rating.GetAverageBattleTier(BattleMode.GetItemFromType(battleMode).SqlName);
                 sqlValues += ", " + Math.Round(Rating.WN7battle(rp, true), 0).ToString();
 				
 				// Add battle mode
