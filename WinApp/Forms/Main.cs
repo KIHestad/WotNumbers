@@ -654,6 +654,7 @@ namespace WinApp.Forms
 			// Enable Settings menues
 			mSettingsRun.Enabled = true;
 			mSettingsRunBattleCheck.Enabled = true;
+            mRecalcTankStatistics.Enabled = true;
 			mUpdateDataFromAPI.Enabled = true;
             mRecalcBattleRatings.Enabled = true;
 			mRecalcBattleWN8.Enabled = true;
@@ -4151,35 +4152,51 @@ namespace WinApp.Forms
 		private void mSettingsRunBattleCheck_Click(object sender, EventArgs e)
 		{
 			if (Dossier2db.Running)
-				MsgBox.Show("Battle check is already running, cannot run twice at the same time.", "Battle Check Already Running", this);
+				MsgBox.Show("Process is already running, cannot run twice at the same time.", "Process already Running", this);
 			else
 			{
-				// Stop file watchers if running
-				int runState = Config.Settings.dossierFileWathcherRun;
-				if (runState == 1)
-				{
-					Config.Settings.dossierFileWathcherRun = 0;
-					SetListener();
-				}
+				// Show dialog box
+                
+                // Stop file watchers if running
+                //int runState = Config.Settings.dossierFileWathcherRun;
+                //if (runState == 1)
+                //{
+                //    Config.Settings.dossierFileWathcherRun = 0;
+                //    SetListener();
+                //}
 				// Whow dialog and run battle check if selected
-				RunBattleCheckHelper.CurrentBattleCheckMode = RunBattleCheckHelper.RunBattleCheckMode.Cancelled;
-				Form frm = new Forms.ManualCheckNewBattles();
-				frm.ShowDialog();
+                //RunBattleCheckHelper.CurrentBattleCheckMode = RunBattleCheckHelper.RunBattleCheckMode.Cancelled;
+                //Form frm = new Forms.ManualCheckNewBattles();
+                //frm.ShowDialog();
 				// Return to prev file watcher state
-				if (runState != Config.Settings.dossierFileWathcherRun)
-				{
-					Config.Settings.dossierFileWathcherRun = runState;
-					SetListener();
-				}
-				if (RunBattleCheckHelper.CurrentBattleCheckMode != RunBattleCheckHelper.RunBattleCheckMode.Cancelled)
-				{
-					bool forceUpdate = (RunBattleCheckHelper.CurrentBattleCheckMode == RunBattleCheckHelper.RunBattleCheckMode.ForceUpdateAll);
-					string message = "Running battle check...";
-					if (forceUpdate) message = "Running battle check with force update...";
-					RunDossierFileCheck(message, forceUpdate);
-				}
+                //if (runState != Config.Settings.dossierFileWathcherRun)
+                //{
+                //    Config.Settings.dossierFileWathcherRun = runState;
+                //    SetListener();
+                //}
+                //if (RunBattleCheckHelper.CurrentBattleCheckMode != RunBattleCheckHelper.RunBattleCheckMode.Cancelled)
+                //{
+                //    bool forceUpdate = (RunBattleCheckHelper.CurrentBattleCheckMode == RunBattleCheckHelper.RunBattleCheckMode.ForceUpdateAll);
+                //    string message = "Running battle check...";
+                //    if (forceUpdate) message = "Running battle check with force update...";
+                //    RunDossierFileCheck(message, forceUpdate);
+                //}
+
+                // Immediate run dossier file check
+                RunDossierFileCheck("Check for new battle...", false);
 			}				
 		}
+
+        private void mRecalcTankStatistics_Click(object sender, EventArgs e)
+        {
+            if (Dossier2db.Running)
+                MsgBox.Show("Process is already running, cannot run twice at the same time.", "Process already Running", this);
+            else
+            {
+                // Immediate run dossier file check with force update
+                RunDossierFileCheck("Recalculate Tank Stats...", true);
+            }
+        }
 
 		private void RunDossierFileCheck(string message, bool forceUpdate)
 		{
@@ -5084,7 +5101,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-        
+             
 
 
 

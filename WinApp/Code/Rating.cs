@@ -431,7 +431,7 @@ namespace WinApp.Code
             RatingParameters rp = GetRatingPlayerTankResults(battleMode);
             if (rp == null)
                 return 0;
-            rp.TIER = Rating.GetAverageBattleTier(battleMode);
+            rp.TIER = Rating.GetAverageTier(battleMode);
             return WN7useFormula(rp);
 		}
 
@@ -504,7 +504,7 @@ namespace WinApp.Code
             RatingParameters rp = GetRatingPlayerTankResults(battleMode);
             if (rp == null)
                 return 0;
-            rp.TIER = Rating.GetAverageBattleTier(battleMode) * rp.BATTLES;
+            rp.TIER = Rating.GetAverageTier(battleMode) * rp.BATTLES;
             double totalWN7 = WN7useFormula(rp);
 
             // Find changes and subtract
@@ -592,10 +592,9 @@ namespace WinApp.Code
             RatingParameters rp = new RatingParameters(rpTank); // clone it to not affect input class
             // Get tankdata for current tank to get tier
             DataRow tankInfo = TankHelper.TankInfo(tankId);
-            double tier = 0;
             if (tankInfo != null)
             {
-                tier = Convert.ToDouble(tankInfo["tier"]);
+                rp.TIER = Convert.ToDouble(tankInfo["tier"]) * rp.BATTLES;
             }
             // Call method for calc EFF
             return EffUseFormula(rp);
@@ -808,34 +807,7 @@ namespace WinApp.Code
 		
 		#region Recalculate Battles
 
-		public static void RecalcBattlesWN7()
-		{
-			string sql = "select battle.*, playerTank.tankId as tankId from battle inner join playerTank on battle.playerTankId=playerTank.Id WHERE WN7 = 0 ORDER BY battle.id DESC";
-			DataTable dtBattles = DB.FetchData(sql);
-			foreach (DataRow battle in dtBattles.Rows)
-			{
-				// Get rating parameters
-                RatingParameters rp = new RatingParameters();
-				string battleId = Convert.ToInt32(battle["id"]).ToString();
-				rp.DAMAGE = Rating.ConvertDbVal2Double(battle["dmg"]);
-				rp.SPOT = Rating.ConvertDbVal2Double(battle["spotted"]);
-				rp.FRAGS = Rating.ConvertDbVal2Double(battle["frags"]);
-				rp.DEF = Rating.ConvertDbVal2Double(battle["def"]);
-				rp.CAP = Rating.ConvertDbVal2Double(battle["cap"]);
-				rp.WINS = Rating.ConvertDbVal2Double(battle["victory"]);
-				rp.BATTLES = Rating.ConvertDbVal2Double(battle["battlesCount"]);
-                rp.TIER = Rating.GetAverageBattleTier();
-				// Calculate WN7
-                string wn7 = Convert.ToInt32(Math.Round(Rating.WN7battle(rp, true), 0)).ToString();
-				// Generate SQL to update WN7
-				sql = "UPDATE battle SET wn7=" + wn7 + " WHERE id = " + battleId;
-				DB.ExecuteNonQuery(sql);
-			}
-			dtBattles.Dispose();
-			dtBattles.Clear();
-		}
-
-		public static double GetAverageBattleTier(string battleMode = "")
+		public static double GetAverageTier(string battleMode = "")
 		{
 			double tier = 0;
 			// Get average battle tier, used for total player WN7 and battle WN7

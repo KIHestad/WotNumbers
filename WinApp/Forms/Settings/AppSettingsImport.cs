@@ -114,7 +114,7 @@ namespace WinApp.Forms.Settings
                 // Write recentBattles to db
                 int i = 0;
                 progressBarImport.Visible = true;
-                double avgBattleTier = Rating.GetAverageBattleTier();
+                double avgBattleTier = Rating.GetAverageTier();
                 while (i < recentBattles.Rows.Count)
                 {
                     progressBarImport.Value++;

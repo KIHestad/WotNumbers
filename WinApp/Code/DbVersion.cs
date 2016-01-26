@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 343; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 344; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2319,9 +2319,6 @@ namespace WinApp.Code
                         "UPDATE map SET name = 'Himmelsdorf Championship', arena_id = '99_himmelball' WHERE id = 61; " ;
                     sqlite = mssql;
                     break;
-                case 266:
-                    RunDossierFileCheckWithForceUpdate = true;
-                    break;
                 case 267:
                     mssql =
                         "ALTER TABLE playerTankBattle ADD credBtlCount Int NOT NULL DEFAULT 0 ; " +
@@ -2713,9 +2710,6 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET colNameBattleSum='SUM(battle.pierced)', colNameBattleSumTank='SUM(playerTankBattle.pierced)', colNameBattleSumCalc=1, colNameBattleSumReversePos= 0 WHERE id=149 ; ";
                     sqlite = mssql;
                     break;
-                case 340:
-                    Rating.RecalcBattlesWN7();
-                    break;
                 case 342:
                     mssql = "UPDATE columnSelection SET colNameSum='0' WHERE id IN (48,49,187); ";
                     sqlite = mssql;
@@ -2724,6 +2718,9 @@ namespace WinApp.Code
                     Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
                     Config.Settings.downloadFilePathAddSubfolder = false;
                     Config.SaveConfig(out msg);
+                    break;
+                case 344:
+                    RunDossierFileCheckWithForceUpdate = true;
                     break;
                 
             }

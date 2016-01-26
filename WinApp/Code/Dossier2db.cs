@@ -941,7 +941,7 @@ namespace WinApp.Code
                 // Calculate WN7
                 // Special tier calc
                 sqlFields += ", wn7";
-                rp.TIER = Rating.GetAverageBattleTier(BattleMode.GetItemFromType(battleMode).SqlName);
+                rp.TIER = Rating.GetAverageTier(BattleMode.GetItemFromType(battleMode).SqlName);
                 sqlValues += ", " + Math.Round(Rating.WN7battle(rp, true), 0).ToString();
 				
 				// Add battle mode

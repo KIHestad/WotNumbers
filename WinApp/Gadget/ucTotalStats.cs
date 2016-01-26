@@ -772,7 +772,7 @@ namespace WinApp.Gadget
                         // Erase the cell.
                         e.Graphics.FillRectangle(brushBack, e.CellBounds);
                         Brush b = new SolidBrush(ColorTheme.Rating_3_yellow);
-                        e.Graphics.FillRectangle(b, (x + 26), y + 6, 10, 10);
+                        e.Graphics.FillRectangle(b, (x + 19), y + 6, 10, 10);
                         e.Handled = true;
                     }
                 }

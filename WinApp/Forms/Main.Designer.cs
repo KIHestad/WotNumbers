@@ -209,9 +209,14 @@
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcTankStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcBattleRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleWN7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleEFF = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
+            this.mRecalcBattleAllRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleCreditsPerTank = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.mSettingsShowLogFiles = new System.Windows.Forms.ToolStripMenuItem();
@@ -235,10 +240,6 @@
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.mRecalcBattleWN7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mRecalcBattleEFF = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
-            this.mRecalcBattleAllRatings = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1885,6 +1886,7 @@
             this.toolStripSeparator24,
             this.mUpdateDataFromAPI,
             this.toolStripSeparator18,
+            this.mRecalcTankStatistics,
             this.mRecalcBattleRatings,
             this.mRecalcBattleCreditsPerTank,
             this.toolStripSeparator25,
@@ -1914,7 +1916,7 @@
             this.mSettingsRunBattleCheck.Enabled = false;
             this.mSettingsRunBattleCheck.Name = "mSettingsRunBattleCheck";
             this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(264, 22);
-            this.mSettingsRunBattleCheck.Text = "Run Battle Check...";
+            this.mSettingsRunBattleCheck.Text = "Check for New Battle";
             this.mSettingsRunBattleCheck.Click += new System.EventHandler(this.mSettingsRunBattleCheck_Click);
             // 
             // toolStripSeparator24
@@ -1927,8 +1929,16 @@
             this.mUpdateDataFromAPI.Enabled = false;
             this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
             this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
-            this.mUpdateDataFromAPI.Text = "Update Data...";
+            this.mUpdateDataFromAPI.Text = "Download and Update Tanks...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
+            // 
+            // mRecalcTankStatistics
+            // 
+            this.mRecalcTankStatistics.Enabled = false;
+            this.mRecalcTankStatistics.Name = "mRecalcTankStatistics";
+            this.mRecalcTankStatistics.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcTankStatistics.Text = "Recalculate Tank Statistics";
+            this.mRecalcTankStatistics.Click += new System.EventHandler(this.mRecalcTankStatistics_Click);
             // 
             // toolStripSeparator18
             // 
@@ -1956,6 +1966,39 @@
             this.mRecalcBattleWN8.Tag = "WN8";
             this.mRecalcBattleWN8.Text = "Recalculate Battle WN8...";
             this.mRecalcBattleWN8.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // mRecalcBattleWN7
+            // 
+            this.mRecalcBattleWN7.Enabled = false;
+            this.mRecalcBattleWN7.Name = "mRecalcBattleWN7";
+            this.mRecalcBattleWN7.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleWN7.Tag = "WN7";
+            this.mRecalcBattleWN7.Text = "Recalculate Battle WN7...";
+            this.mRecalcBattleWN7.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // mRecalcBattleEFF
+            // 
+            this.mRecalcBattleEFF.Enabled = false;
+            this.mRecalcBattleEFF.Name = "mRecalcBattleEFF";
+            this.mRecalcBattleEFF.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleEFF.Tag = "EFF";
+            this.mRecalcBattleEFF.Text = "Recalculate Battle EFF...";
+            this.mRecalcBattleEFF.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // toolStripSeparator29
+            // 
+            this.toolStripSeparator29.Name = "toolStripSeparator29";
+            this.toolStripSeparator29.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator29.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
+            // mRecalcBattleAllRatings
+            // 
+            this.mRecalcBattleAllRatings.Enabled = false;
+            this.mRecalcBattleAllRatings.Name = "mRecalcBattleAllRatings";
+            this.mRecalcBattleAllRatings.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleAllRatings.Tag = "ALL";
+            this.mRecalcBattleAllRatings.Text = "Recalculate All Battle Ratings...";
+            this.mRecalcBattleAllRatings.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
             // 
             // mRecalcBattleCreditsPerTank
             // 
@@ -2220,39 +2263,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // mRecalcBattleWN7
-            // 
-            this.mRecalcBattleWN7.Enabled = false;
-            this.mRecalcBattleWN7.Name = "mRecalcBattleWN7";
-            this.mRecalcBattleWN7.Size = new System.Drawing.Size(235, 22);
-            this.mRecalcBattleWN7.Tag = "WN7";
-            this.mRecalcBattleWN7.Text = "Recalculate Battle WN7...";
-            this.mRecalcBattleWN7.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
-            // 
-            // mRecalcBattleEFF
-            // 
-            this.mRecalcBattleEFF.Enabled = false;
-            this.mRecalcBattleEFF.Name = "mRecalcBattleEFF";
-            this.mRecalcBattleEFF.Size = new System.Drawing.Size(235, 22);
-            this.mRecalcBattleEFF.Tag = "EFF";
-            this.mRecalcBattleEFF.Text = "Recalculate Battle EFF...";
-            this.mRecalcBattleEFF.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
-            // 
-            // toolStripSeparator29
-            // 
-            this.toolStripSeparator29.Name = "toolStripSeparator29";
-            this.toolStripSeparator29.Size = new System.Drawing.Size(232, 6);
-            this.toolStripSeparator29.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
-            // 
-            // mRecalcBattleAllRatings
-            // 
-            this.mRecalcBattleAllRatings.Enabled = false;
-            this.mRecalcBattleAllRatings.Name = "mRecalcBattleAllRatings";
-            this.mRecalcBattleAllRatings.Size = new System.Drawing.Size(235, 22);
-            this.mRecalcBattleAllRatings.Tag = "ALL";
-            this.mRecalcBattleAllRatings.Text = "Recalculate All Battle Ratings...";
-            this.mRecalcBattleAllRatings.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2469,7 +2479,6 @@
         private System.Windows.Forms.ToolStripMenuItem mMapDescr;
         private System.Windows.Forms.ToolStripMenuItem mMapDescrLarge;
         private System.Windows.Forms.ToolStripMenuItem mMapShowOld;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripButton mVBaddict;
         private System.Windows.Forms.ToolStripMenuItem mGadgetAddHeader;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
@@ -2491,6 +2500,8 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleEFF;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator29;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleAllRatings;
+        private System.Windows.Forms.ToolStripMenuItem mRecalcTankStatistics;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
 	}
 }
 

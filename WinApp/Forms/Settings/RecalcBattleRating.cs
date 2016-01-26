@@ -107,7 +107,7 @@ namespace WinApp.Forms
                 }
                 if (_forWN7)
                 {
-                    rp.TIER = Rating.GetAverageBattleTier();
+                    rp.TIER = Rating.GetAverageTier();
                     WN7 = Math.Round(Rating.WN7battle(rp, true), 0); 
                     newSQL += "wn7=@wn7, ";
                     DB.AddWithValue(ref newSQL, "@wn7", WN7, DB.SqlDataType.Int);

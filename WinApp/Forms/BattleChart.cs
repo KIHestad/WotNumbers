@@ -444,7 +444,7 @@ namespace WinApp.Forms
 				case CalculationType.wn7:
 					if (tankName == "All Tanks")
 						// The total tier is added in column number 6, the total number of battles in col num 0
-						defaultTier = Rating.GetAverageBattleTier();
+						defaultTier = Rating.GetAverageTier();
 					else
 						defaultTier = TankHelper.GetTankTier(tankName);
 					break;
