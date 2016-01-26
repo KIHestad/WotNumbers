@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 344; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 348; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2722,7 +2722,24 @@ namespace WinApp.Code
                 case 344:
                     RunDossierFileCheckWithForceUpdate = true;
                     break;
-                
+                case 346:
+                    mssql = "UPDATE columnSelection SET colNameBattleSumReversePos=1 WHERE id IN(96,98); ";
+                    sqlite = mssql;
+                    break;
+                case 347:
+                    mssql =
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.credits) / SUM(battle.battlesCount)', colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=534 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.credits-battle.creditsNet) / SUM(battle.battlesCount)', colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=1 WHERE id=535 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.creditsNet) / SUM(battle.battlesCount)', colNameBattleSumTank='0', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=536 ; ";
+                    sqlite = mssql;
+                    break;
+                case 348:
+                    mssql =
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.credits) / SUM(battle.battlesCount)', colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=534 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.credits-battle.creditsNet) / SUM(battle.battlesCount)', colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=1 WHERE id=535 ; " +
+                        "UPDATE columnSelection SET colNameBattleSum='SUM(battle.creditsNet) / SUM(battle.battlesCount)', colNameBattleSumTank=NULL, colNameBattleSumCalc=0, colNameBattleSumReversePos=0 WHERE id=536 ; ";
+                    sqlite = mssql;
+                    break;
             }
 			string sql = "";
 			// get sql for correct dbtype

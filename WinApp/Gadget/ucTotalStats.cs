@@ -459,6 +459,37 @@ namespace WinApp.Gadget
                                     {
                                         item.cellTrend.Style.ForeColor = ColorTheme.Rating_6_blue;
                                         trendToolTipText = "Sum for the selected period: " + trendValue.ToString("# ### ##0.########");
+                                        if (colName == "Avg Cred Income" || colName == "Avg Cred Cost" || colName == "Avg Cred Result")
+                                        {
+                                            double trendComparedToValue = trendValue - Convert.ToDouble(item.cellValue.Value);
+                                            if (trendComparedToValue != 0)
+                                            {
+                                                string compareText = "This is better than tot avg: ";
+                                                if (item.trendReversePos)
+                                                    compareText = "This is worse than tot avg: ";
+                                                if (trendComparedToValue < 0)
+                                                {
+                                                    compareText = "This is worse than tot avg: ";
+                                                    if (item.trendReversePos)
+                                                        compareText = "This is better than tot avg: ";
+                                                
+                                                }
+                                                trendToolTipText += Environment.NewLine + compareText + trendComparedToValue.ToString("# ### ##0.########");
+                                            }
+                                        }
+                                        if (colName == "Frags Max")
+                                        {
+                                            if (trendValue < 4)
+                                                trendToolTipText += Environment.NewLine + "You can do better - go for it!";
+                                            else if (trendValue > 10)
+                                                trendToolTipText += Environment.NewLine + "Wow, you are incredible - uniqum play!!!";
+                                            else if (trendValue > 7)
+                                                trendToolTipText += Environment.NewLine + "You play like a pro - this is great!!";
+                                            else if (trendValue > 5)
+                                                trendToolTipText += Environment.NewLine + "Nice, this is very good!";
+                                            else 
+                                                trendToolTipText += Environment.NewLine + "Not bad, can you do better?";
+                                        }
                                         item.cellTrend.ToolTipText = trendToolTipText;
                                     }
                                     else
