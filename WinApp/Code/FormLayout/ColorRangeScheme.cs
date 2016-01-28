@@ -138,17 +138,34 @@ namespace WinApp.Code.FormLayout
 
         public static Color DmgRankColor(double value)
         {
-            Color killDeathRatingColor =                              ColorTheme.Rating_0_redDark;
-            if      (value >= RangeDmgRank[9]) killDeathRatingColor = ColorTheme.Rating_9_purpleDark;
-            else if (value >= RangeDmgRank[8]) killDeathRatingColor = ColorTheme.Rating_8_purple;
-            else if (value >= RangeDmgRank[7]) killDeathRatingColor = ColorTheme.Rating_7_blueDark;
-            else if (value >= RangeDmgRank[6]) killDeathRatingColor = ColorTheme.Rating_6_blue;
-            else if (value >= RangeDmgRank[5]) killDeathRatingColor = ColorTheme.Rating_5_greenDark;
-            else if (value >= RangeDmgRank[4]) killDeathRatingColor = ColorTheme.Rating_4_green;
-            else if (value >= RangeDmgRank[3]) killDeathRatingColor = ColorTheme.Rating_3_yellow;
-            else if (value >= RangeDmgRank[2]) killDeathRatingColor = ColorTheme.Rating_2_orange;
-            else if (value >= RangeDmgRank[1]) killDeathRatingColor = ColorTheme.Rating_1_red;
-            return killDeathRatingColor;
+            Color col =                              ColorTheme.Rating_0_redDark;
+            if      (value >= RangeDmgRank[9]) col = ColorTheme.Rating_9_purpleDark;
+            else if (value >= RangeDmgRank[8]) col = ColorTheme.Rating_8_purple;
+            else if (value >= RangeDmgRank[7]) col = ColorTheme.Rating_7_blueDark;
+            else if (value >= RangeDmgRank[6]) col = ColorTheme.Rating_6_blue;
+            else if (value >= RangeDmgRank[5]) col = ColorTheme.Rating_5_greenDark;
+            else if (value >= RangeDmgRank[4]) col = ColorTheme.Rating_4_green;
+            else if (value >= RangeDmgRank[3]) col = ColorTheme.Rating_3_yellow;
+            else if (value >= RangeDmgRank[2]) col = ColorTheme.Rating_2_orange;
+            else if (value >= RangeDmgRank[1]) col = ColorTheme.Rating_1_red;
+            return col;
+        }
+
+        public static double[] RangeRWR = { -20, -15, -10, -5, 0, 5, 10, 15, 20, 25 }; // Custom for Wot Numbers
+
+        public static Color RWRColor(double value)
+        {
+            Color col = ColorTheme.Rating_0_redDark;
+            if (value >= RangeRWR[9]) col = ColorTheme.Rating_9_purpleDark;
+            else if (value >= RangeRWR[8]) col = ColorTheme.Rating_8_purple;
+            else if (value >= RangeRWR[7]) col = ColorTheme.Rating_7_blueDark;
+            else if (value >= RangeRWR[6]) col = ColorTheme.Rating_6_blue;
+            else if (value >= RangeRWR[5]) col = ColorTheme.Rating_5_greenDark;
+            else if (value >= RangeRWR[4]) col = ColorTheme.Rating_4_green;
+            else if (value >= RangeRWR[3]) col = ColorTheme.Rating_3_yellow;
+            else if (value >= RangeRWR[2]) col = ColorTheme.Rating_2_orange;
+            else if (value >= RangeRWR[1]) col = ColorTheme.Rating_1_red;
+            return col;
         }
 
 

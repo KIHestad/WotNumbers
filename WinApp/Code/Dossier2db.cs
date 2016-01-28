@@ -690,7 +690,8 @@ namespace WinApp.Code
             // Calculate WN7 - use special tier
             rp.TIER = TankHelper.GetTankTier(tankId);
             sqlFields += ", wn7=" + Math.Round(Rating.WN7tank(rp), 0).ToString();
-			
+			// Calculate RWR
+            sqlFields += ", rwr=" + Rating.RWRtank(tankId, rp);
 			foreach (DataColumn column in playerTankBattleOld.Columns)
 			{
 				// Get columns and values from NewPlayerTankRow direct

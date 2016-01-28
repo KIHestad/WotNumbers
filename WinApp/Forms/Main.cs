@@ -3394,6 +3394,15 @@ namespace WinApp.Forms
                             cell.Style.SelectionForeColor = cell.Style.ForeColor;
                         }
                     }
+                    if (col.Equals("RWR"))
+                    {
+                        if (dataGridMain["RWR", e.RowIndex].Value != DBNull.Value)
+                        {
+                            double RWR = Convert.ToDouble(dataGridMain["RWR", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.RWRColor(RWR);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
 				}
 				else if (MainSettings.View == GridView.Views.Battle)
 				{

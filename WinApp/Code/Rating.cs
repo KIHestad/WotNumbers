@@ -804,10 +804,47 @@ namespace WinApp.Code
         }
         
         #endregion
-		
-		#region Recalculate Battles
 
-		public static double GetAverageTier(string battleMode = "")
+        #region RWR
+
+        public static string RWRtank(int tankId, RatingParameters rpBattle)
+        {
+            Double? RWR = null;
+            RatingParameters rp = new RatingParameters(rpBattle); // clone it to not affect input class
+            RatingWN8Parameters rpWN8 = new RatingWN8Parameters();
+            rpWN8.rp = rp;
+            // get tankdata for current tank
+            DataRow tankInfo = TankHelper.TankInfo(tankId);
+            if (tankInfo != null && rp.BATTLES > 0 && tankInfo["expDmg"] != DBNull.Value)
+            {
+                // get wn8 exp values for tank
+                rpWN8.expWinRate = Convert.ToDouble(tankInfo["expWR"]) * rp.BATTLES;
+                // Use WN8 formula to calculate result
+                RWR = RWRuseFormula(rpWN8);
+            }
+            if (RWR == null)
+                return "NULL";
+            else
+            {
+                Double RWRvalue = Convert.ToDouble(RWR);
+                return Math.Round(RWRvalue, 2).ToString().Replace(",", ".");
+            }
+        }
+
+        private static double? RWRuseFormula(RatingWN8Parameters rpWN8)
+        {
+            double? RWR = null;
+            if (rpWN8.rp.BATTLES > 0)
+                RWR = (((rpWN8.rp.WINS / rpWN8.rp.BATTLES * 100) / (rpWN8.expWinRate / rpWN8.rp.BATTLES)) - 1) * 100;
+            return RWR;
+        }
+
+        #endregion
+
+
+        #region Recalculate Battles
+
+        public static double GetAverageTier(string battleMode = "")
 		{
 			double tier = 0;
 			// Get average battle tier, used for total player WN7 and battle WN7
