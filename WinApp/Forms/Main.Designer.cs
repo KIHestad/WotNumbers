@@ -171,6 +171,7 @@
             this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
             this.mGadgetGauges = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWR = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetRWR = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN7 = new System.Windows.Forms.ToolStripMenuItem();
@@ -209,8 +210,8 @@
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
-            this.mRecalcTankStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.mRecalcTankStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleRatings = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN7 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1603,6 +1604,7 @@
             // 
             this.mGadgetGauges.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mGadgetWR,
+            this.mGadgetRWR,
             this.toolStripSeparator27,
             this.mGadgetWN8,
             this.mGadgetWN7,
@@ -1621,6 +1623,14 @@
             this.mGadgetWR.Tag = "ucGaugeWinRate";
             this.mGadgetWR.Text = "Win Rate";
             this.mGadgetWR.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
+            // mGadgetRWR
+            // 
+            this.mGadgetRWR.Name = "mGadgetRWR";
+            this.mGadgetRWR.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetRWR.Tag = "ucGaugeRWR";
+            this.mGadgetRWR.Text = "RWR Rate";
+            this.mGadgetRWR.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // toolStripSeparator27
             // 
@@ -1869,7 +1879,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -1932,6 +1942,11 @@
             this.mUpdateDataFromAPI.Text = "Download and Update Tanks...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
             // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
+            // 
             // mRecalcTankStatistics
             // 
             this.mRecalcTankStatistics.Enabled = false;
@@ -1939,11 +1954,6 @@
             this.mRecalcTankStatistics.Size = new System.Drawing.Size(264, 22);
             this.mRecalcTankStatistics.Text = "Recalculate Tank Statistics";
             this.mRecalcTankStatistics.Click += new System.EventHandler(this.mRecalcTankStatistics_Click);
-            // 
-            // toolStripSeparator18
-            // 
-            this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
             // 
             // mRecalcBattleRatings
             // 
@@ -2502,6 +2512,7 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleAllRatings;
         private System.Windows.Forms.ToolStripMenuItem mRecalcTankStatistics;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetRWR;
 	}
 }
 

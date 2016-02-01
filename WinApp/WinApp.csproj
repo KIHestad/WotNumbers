@@ -523,6 +523,12 @@
     <Compile Include="Gadget\ucGaugeWN7.Designer.cs">
       <DependentUpon>ucGaugeWN7.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugeRWR.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugeRWR.Designer.cs">
+      <DependentUpon>ucGaugeRWR.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeWN8.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -734,6 +740,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeWN7.resx">
       <DependentUpon>ucGaugeWN7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugeRWR.resx">
+      <DependentUpon>ucGaugeRWR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeWN8.resx">
       <DependentUpon>ucGaugeWN8.cs</DependentUpon>

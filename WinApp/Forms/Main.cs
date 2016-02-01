@@ -3399,7 +3399,7 @@ namespace WinApp.Forms
                         if (dataGridMain["RWR", e.RowIndex].Value != DBNull.Value)
                         {
                             double RWR = Convert.ToDouble(dataGridMain["RWR", e.RowIndex].Value);
-                            cell.Style.ForeColor = ColorRangeScheme.RWRColor(RWR);
+                            cell.Style.ForeColor = ColorRangeScheme.RWRcolor(RWR);
                             cell.Style.SelectionForeColor = cell.Style.ForeColor;
                         }
                     }
@@ -4918,6 +4918,9 @@ namespace WinApp.Forms
                 case "ucGaugeWinRate":
 					frm = new Gadget.paramBattleMode(gadgetId);
 					break;
+                case "ucGaugeRWR":
+                    frm = new Gadget.paramBattleMode(gadgetId);
+                    break;
 				case "ucBattleListLargeImages":
 					frm = new Gadget.paramColsRows(gadgetId);
 					break;

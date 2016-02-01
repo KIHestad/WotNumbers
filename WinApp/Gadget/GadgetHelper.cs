@@ -361,6 +361,13 @@ namespace WinApp.Gadget
                         uc = new Gadget.ucGaugeWinRate(param0, GadgetHelper.GetTimeItemFromName(param1).TimeRange); 
                         break;
 
+                    // Gauge - RWR
+                    case "ucGaugeRWR":
+                        if (param1 == "")
+                            param1 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeRWR(param0, GadgetHelper.GetTimeItemFromName(param1).TimeRange);
+                        break;
+
                     // Gauges - K/D & D/R
 					case "ucGaugeKillDeath":
                         if (param1 == "")
@@ -435,6 +442,7 @@ namespace WinApp.Gadget
 			switch (controlName)
 			{
 				case "ucGaugeWinRate": name = "Win Rate Gauge"; break;
+                case "ucGaugeRWR": name = "RWR Gauge"; break;
 				case "ucGaugeWN8": name = "WN8 Gauge"; break;
 				case "ucGaugeWN7": name = "WN7 Gauge"; break;
 				case "ucGaugeEFF": name = "Efficiency Gauge"; break;
@@ -462,6 +470,10 @@ namespace WinApp.Gadget
                     case "ucGaugeWinRate":
                         ucGaugeWinRate ucGaugeWinRate = (ucGaugeWinRate)c;
                         ucGaugeWinRate.DataBind();
+                        break;
+                    case "ucGaugeRWR":
+                        ucGaugeRWR ucGaugeRWR = (ucGaugeRWR)c;
+                        ucGaugeRWR.DataBind();
                         break;
                     case "ucGaugeWN8":
                         ucGaugeWN8 ucGaugeWN8 = (ucGaugeWN8)c;

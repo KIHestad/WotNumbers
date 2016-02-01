@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 352; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 353; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2753,6 +2753,11 @@ namespace WinApp.Code
                             "              SUM(credAvgCost) ascredAvgCost " +
                             "FROM            playerTankBattle " +
                             "GROUP BY playerTankId; ";
+                    break;
+                case 353:
+                    mssql =
+                        "UPDATE columnSelection SET colNameBattleSum='0', colNameBattleSumTank='0', colNameBattleSumCalc=1 WHERE id=101 ; ";
+                    sqlite = mssql;
                     break;
 
             }

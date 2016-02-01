@@ -153,7 +153,7 @@ namespace WinApp.Code.FormLayout
 
         public static double[] RangeRWR = { -20, -15, -10, -5, 0, 5, 10, 15, 20, 25 }; // Custom for Wot Numbers
 
-        public static Color RWRColor(double value)
+        public static Color RWRcolor(double value)
         {
             Color col = ColorTheme.Rating_0_redDark;
             if (value >= RangeRWR[9]) col = ColorTheme.Rating_9_purpleDark;
