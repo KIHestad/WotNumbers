@@ -217,6 +217,10 @@ namespace WinApp.Forms
                     ImageHelper.CreateMasteryBageImageTable();
                     ImageHelper.CreateTankTypeImageTable();
                     ImageHelper.CreateNationImageTable();
+                    // Check if Home View has gadgets, if not setup default
+                    DataTable dtHomeView = DB.FetchData("select * from gadget");
+                    if (dtHomeView == null || dtHomeView.Rows.Count == 0)
+                        GadgetHelper.DefaultSetup("New_Default_Setup.json");
                     // Show view
                     ChangeView(GridView.Views.Overall, true);
                     // Check BRR
@@ -4412,7 +4416,7 @@ namespace WinApp.Forms
 
         private void mVBaddict_Click(object sender, EventArgs e)
         {
-            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer_vBAddict);
             System.Diagnostics.Process.Start(serverURL);
         }
 
@@ -5064,16 +5068,26 @@ namespace WinApp.Forms
 
 		private void mGadgetReset_Click(object sender, EventArgs e)
 		{
-            MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBox.Type.OKCancel, this);
-			if (answer == MsgBox.Button.OK)
-			{
-				GadgetHelper.RemoveGadgetAll();
-				GadgetHelper.DefaultSetup();
-				mHomeEdit.Checked = false;
-				GadgetEditModeChange();
-				HomeViewCreate("Reset to default Home View");
-                HomeViewRefresh("Refresh default Home View");
-			}
+            ToolStripMenuItem menuitem = (ToolStripMenuItem)sender;
+            // Check if file exists
+            string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + menuitem.Tag.ToString();
+            if (File.Exists(file))
+            {
+                MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBox.Type.OKCancel, this);
+                if (answer == MsgBox.Button.OK)
+                {
+                    GadgetHelper.RemoveGadgetAll();
+                    GadgetHelper.DefaultSetup(menuitem.Tag.ToString());
+                    mHomeEdit.Checked = false;
+                    GadgetEditModeChange();
+                    HomeViewCreate("Reset to default Home View");
+                    HomeViewRefresh("Refresh default Home View");
+                }
+            }
+            else
+            {
+                MsgBox.Show("Cannot locate file: " + file + Environment.NewLine + Environment.NewLine + "Please reinstall Wot Numbers", "Missing file", this);
+            }
 		}
 
         private void mGadgetFileSave_Click(object sender, EventArgs e)

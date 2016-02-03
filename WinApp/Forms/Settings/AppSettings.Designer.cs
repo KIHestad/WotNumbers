@@ -40,11 +40,13 @@
             this.btnTab3 = new BadButton();
             this.btnTab1 = new BadButton();
             this.grpMain = new BadGroupBox();
+            this.btnTab7 = new BadButton();
             this.AppSettingsTheme.SuspendLayout();
             this.SuspendLayout();
             // 
             // AppSettingsTheme
             // 
+            this.AppSettingsTheme.Controls.Add(this.btnTab7);
             this.AppSettingsTheme.Controls.Add(this.pnlMain);
             this.AppSettingsTheme.Controls.Add(this.btnTab6);
             this.AppSettingsTheme.Controls.Add(this.btnTab2);
@@ -89,9 +91,9 @@
             this.btnTab6.BlackButton = false;
             this.btnTab6.Checked = false;
             this.btnTab6.Image = null;
-            this.btnTab6.Location = new System.Drawing.Point(169, 47);
+            this.btnTab6.Location = new System.Drawing.Point(214, 47);
             this.btnTab6.Name = "btnTab6";
-            this.btnTab6.Size = new System.Drawing.Size(70, 23);
+            this.btnTab6.Size = new System.Drawing.Size(60, 23);
             this.btnTab6.TabIndex = 15;
             this.btnTab6.Tag = "6";
             this.btnTab6.Text = "Replays";
@@ -103,9 +105,9 @@
             this.btnTab2.BlackButton = false;
             this.btnTab2.Checked = false;
             this.btnTab2.Image = null;
-            this.btnTab2.Location = new System.Drawing.Point(94, 47);
+            this.btnTab2.Location = new System.Drawing.Point(149, 47);
             this.btnTab2.Name = "btnTab2";
-            this.btnTab2.Size = new System.Drawing.Size(70, 23);
+            this.btnTab2.Size = new System.Drawing.Size(60, 23);
             this.btnTab2.TabIndex = 13;
             this.btnTab2.Tag = "2";
             this.btnTab2.Text = "Layout";
@@ -117,9 +119,9 @@
             this.btnTab5.BlackButton = false;
             this.btnTab5.Checked = false;
             this.btnTab5.Image = null;
-            this.btnTab5.Location = new System.Drawing.Point(394, 47);
+            this.btnTab5.Location = new System.Drawing.Point(409, 47);
             this.btnTab5.Name = "btnTab5";
-            this.btnTab5.Size = new System.Drawing.Size(70, 23);
+            this.btnTab5.Size = new System.Drawing.Size(60, 23);
             this.btnTab5.TabIndex = 12;
             this.btnTab5.Tag = "5";
             this.btnTab5.Text = "Import";
@@ -131,9 +133,9 @@
             this.btnTab4.BlackButton = false;
             this.btnTab4.Checked = false;
             this.btnTab4.Image = null;
-            this.btnTab4.Location = new System.Drawing.Point(319, 47);
+            this.btnTab4.Location = new System.Drawing.Point(344, 47);
             this.btnTab4.Name = "btnTab4";
-            this.btnTab4.Size = new System.Drawing.Size(70, 23);
+            this.btnTab4.Size = new System.Drawing.Size(60, 23);
             this.btnTab4.TabIndex = 11;
             this.btnTab4.Tag = "4";
             this.btnTab4.Text = "vBAddict";
@@ -145,9 +147,9 @@
             this.btnTab3.BlackButton = false;
             this.btnTab3.Checked = false;
             this.btnTab3.Image = null;
-            this.btnTab3.Location = new System.Drawing.Point(244, 47);
+            this.btnTab3.Location = new System.Drawing.Point(279, 47);
             this.btnTab3.Name = "btnTab3";
-            this.btnTab3.Size = new System.Drawing.Size(70, 23);
+            this.btnTab3.Size = new System.Drawing.Size(60, 23);
             this.btnTab3.TabIndex = 10;
             this.btnTab3.Tag = "3";
             this.btnTab3.Text = "WoT";
@@ -161,7 +163,7 @@
             this.btnTab1.Image = null;
             this.btnTab1.Location = new System.Drawing.Point(19, 47);
             this.btnTab1.Name = "btnTab1";
-            this.btnTab1.Size = new System.Drawing.Size(70, 23);
+            this.btnTab1.Size = new System.Drawing.Size(60, 23);
             this.btnTab1.TabIndex = 9;
             this.btnTab1.Tag = "1";
             this.btnTab1.Text = "Main";
@@ -179,6 +181,20 @@
             this.grpMain.Name = "grpMain";
             this.grpMain.Size = new System.Drawing.Size(486, 340);
             this.grpMain.TabIndex = 8;
+            // 
+            // btnTab7
+            // 
+            this.btnTab7.BlackButton = false;
+            this.btnTab7.Checked = false;
+            this.btnTab7.Image = null;
+            this.btnTab7.Location = new System.Drawing.Point(84, 47);
+            this.btnTab7.Name = "btnTab7";
+            this.btnTab7.Size = new System.Drawing.Size(60, 23);
+            this.btnTab7.TabIndex = 17;
+            this.btnTab7.Tag = "7";
+            this.btnTab7.Text = "Options";
+            this.btnTab7.ToolTipText = "Import from WOT Statistics";
+            this.btnTab7.Click += new System.EventHandler(this.SelectTab_Click);
             // 
             // AppSettings
             // 
@@ -210,6 +226,7 @@
         private BadGroupBox grpMain;
         private BadButton btnTab6;
         private System.Windows.Forms.Panel pnlMain;
+        private BadButton btnTab7;
 
     }
 }

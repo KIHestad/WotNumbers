@@ -562,72 +562,19 @@ namespace WinApp.Gadget
 			return foundGadgetArea;
 		}
 
-		public static void DefaultSetup()
+		public static void DefaultSetup(string fileName)
 		{
-			// Remove current gadgets
-            string sql = "delete from gadgetParameter ; delete from gadget ;";
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
-			gadgets.Clear();
-            
-            // Add default gadgets
-			string s = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) ";
-			sql = "";
-            
-            // Gadgets to insert
-            sql += s + "VALUES ('ucGaugeWinRate', 1, 1, 152, 32, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeWN8',     1, 2, 402, 32, 200, 170) ; ";
-			sql += s + "VALUES ('ucGaugeEFF',     1, 3, 652, 32, 200, 170) ; ";
-
-			sql += s + "VALUES ('ucGaugeKillDeath',         1, 4, 272, 232, 200, 150) ; ";
-			sql += s + "VALUES ('ucGaugeDmgCausedReceived', 1, 5, 532, 232, 200, 150) ; ";
-			
-			sql += s + "VALUES ('ucChartTier',     1, 6, 32,  412, 370, 170) ; ";
-			sql += s + "VALUES ('ucChartTankType', 1, 7, 462, 412, 200, 170) ; ";
-			sql += s + "VALUES ('ucChartNation',   1, 8, 712, 412, 250, 170) ; ";
-			
-            // Insert now
-			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
-			s = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) ";
-
-            // Add default parameters to gadgets
-			sql = "";
-			int gadgetId = 0;
-            
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWinRate'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', 'Total'); ";
-
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeWN8'").Rows[0][0]);
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', 'Total'); ";
-
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeEFF'").Rows[0][0]);
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', 'Total'); ";
-
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeKillDeath'").Rows[0][0]);
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', 'Total'); ";
-            
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucGaugeDmgCausedReceived'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', 'Total'); ";
-
-			gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTier'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#A31F1F'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 2, 'System.String', 'Total'); ";
-
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartTankType'").Rows[0][0]);
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1B8E30'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 2, 'System.String', 'Total'); ";
-            
-            gadgetId = Convert.ToInt32(DB.FetchData("select id from gadget where controlName='ucChartNation'").Rows[0][0]);
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 0, 'System.String', '15'); ";
-			sql += s + "VALUES (" + gadgetId.ToString() + ", 1, 'System.String', '#1F47A5'); ";
-            sql += s + "VALUES (" + gadgetId.ToString() + ", 2, 'System.String', 'Total'); ";
-			
-            // Insert now
-            DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+            // Locate file
+            string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + fileName;
+            if (File.Exists(file))
+            {
+                // Remove current gadgets
+                string sql = "delete from gadgetParameter ; delete from gadget ;";
+                DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
+                gadgets = new List<GadgetItem>();
+                // Add from default file
+                GadgetHelper.HomeViewLoadFromToFile(file);
+            }
 		}
 
 		public static void DrawBorderOnGadget(object sender, PaintEventArgs e)

@@ -240,6 +240,12 @@
     <Compile Include="Forms\Replay.Designer.cs">
       <DependentUpon>Replay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Settings\AppSettingsOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\AppSettingsOptions.Designer.cs">
+      <DependentUpon>AppSettingsOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings\AppSettingsReplay.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -602,6 +608,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Replay.resx">
       <DependentUpon>Replay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\AppSettingsOptions.resx">
+      <DependentUpon>AppSettingsOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AppSettingsReplay.resx">
       <DependentUpon>AppSettingsReplay.cs</DependentUpon>

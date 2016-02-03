@@ -38,19 +38,7 @@ namespace WinApp.Forms.Settings
             ddRatingColor.Text = Config.Settings.RatingColors.ToString().Replace("_", " ");
             currentMasteryBadgeIcons = Config.Settings.useSmallMasteryBadgeIcons;
             chkSmallMasteryBadgeIcons.Checked = currentMasteryBadgeIcons;
-            chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
-            chkNotifyIconFormExitToMinimize.Checked = Config.Settings.notifyIconFormExitToMinimize;
-            SetTextForChkNotifyIconFormExitToMinimize();
             EditChangesApply(false);
-        }
-
-        private void SetTextForChkNotifyIconFormExitToMinimize()
-        {
-            string text = "Minimize to task bar when closing application";
-            if (chkNotifyIconUse.Checked)
-                text = "Minimize to sys tray when closing application";
-            chkNotifyIconFormExitToMinimize.Text = text;
-            Refresh();
         }
 
         private void EditChangesApply(bool changesApplied)
@@ -72,8 +60,6 @@ namespace WinApp.Forms.Settings
             string ratingColorsEnumText = ddRatingColor.Text.Replace(" ", "_");
             Config.Settings.RatingColors = (ColorRangeScheme.RatingColorScheme)Enum.Parse(typeof(ColorRangeScheme.RatingColorScheme), ratingColorsEnumText);
             Config.Settings.useSmallMasteryBadgeIcons = chkSmallMasteryBadgeIcons.Checked;
-            Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
-            Config.Settings.notifyIconFormExitToMinimize = chkNotifyIconFormExitToMinimize.Checked;
             string msg = "";
             Config.SaveConfig(out msg);
             // Load new mastery badge icons if changed
@@ -86,17 +72,6 @@ namespace WinApp.Forms.Settings
         {
             DataBind();
             EditChangesApply(false);
-        }
-
-        private void chkNotifyIconUse_Click(object sender, EventArgs e)
-        {
-            SetTextForChkNotifyIconFormExitToMinimize();
-            EditChangesApply(true);
-        }
-
-        private void chkNotifyIconFormExitToMinimize_Click(object sender, EventArgs e)
-        {
-            EditChangesApply(true);
         }
 
         private void chkBattleTotalsPosition_Click(object sender, EventArgs e)

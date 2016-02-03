@@ -27,6 +27,24 @@ namespace WinApp.Code
             set {
             }
         }
+
+        public static string GetServer_vBAddict
+        {
+            get
+            {
+                string server = Config.Settings.playerServer.ToLower();
+                if (server == "net")
+                    server = "ru";
+                if (server == "asia")
+                    server = "sea";
+                if (server == "com")
+                    server = "na";
+                return server;
+            }
+            set
+            {
+            }
+        }
         
         public static void Wargaming(string playerName, string playerAccountId)
         {
@@ -61,7 +79,7 @@ namespace WinApp.Code
         {
             try
             {
-                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", playerName.ToLower(), GetServer);
+                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", playerName.ToLower(), GetServer_vBAddict);
                 System.Diagnostics.Process.Start(serverURL);
             }
             catch (Exception ex)

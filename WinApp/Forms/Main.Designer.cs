@@ -241,6 +241,7 @@
             this.lblStatus1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.mGadgetResetNew = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1590,6 +1591,7 @@
             this.toolStripSeparator8,
             this.mGadgetRedraw,
             this.toolStripSeparator4,
+            this.mGadgetResetNew,
             this.mGadgetReset,
             this.mGadgetRemoveAll});
             this.mGadget.Image = ((System.Drawing.Image)(resources.GetObject("mGadget.Image")));
@@ -1613,7 +1615,7 @@
             this.mGadgetKillDeath,
             this.mGadgetDamageCausedReceived});
             this.mGadgetGauges.Name = "mGadgetGauges";
-            this.mGadgetGauges.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetGauges.Size = new System.Drawing.Size(184, 22);
             this.mGadgetGauges.Text = "Gauges";
             // 
             // mGadgetWR
@@ -1689,7 +1691,7 @@
             this.mGadgetChartTankType,
             this.mGadgetChartNation});
             this.mGadgetCharts.Name = "mGadgetCharts";
-            this.mGadgetCharts.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetCharts.Size = new System.Drawing.Size(184, 22);
             this.mGadgetCharts.Text = "Charts";
             // 
             // mGadgetChartTier
@@ -1725,7 +1727,7 @@
             this.mGadgetAddBattleModeStats,
             this.mGadgetAddTankTypeStats});
             this.gridsToolStripMenuItem.Name = "gridsToolStripMenuItem";
-            this.gridsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.gridsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.gridsToolStripMenuItem.Text = "Grids";
             // 
             // mGadgetTotalStatsDefault
@@ -1768,7 +1770,7 @@
             // mGadgetAddHeader
             // 
             this.mGadgetAddHeader.Name = "mGadgetAddHeader";
-            this.mGadgetAddHeader.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetAddHeader.Size = new System.Drawing.Size(184, 22);
             this.mGadgetAddHeader.Tag = "ucHeading";
             this.mGadgetAddHeader.Text = "Header";
             this.mGadgetAddHeader.Click += new System.EventHandler(this.mGadgetAdd);
@@ -1776,7 +1778,7 @@
             // mGadgetAddImage
             // 
             this.mGadgetAddImage.Name = "mGadgetAddImage";
-            this.mGadgetAddImage.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetAddImage.Size = new System.Drawing.Size(184, 22);
             this.mGadgetAddImage.Tag = "ucBattleListLargeImages";
             this.mGadgetAddImage.Text = "Recent Battles";
             this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetAdd);
@@ -1784,57 +1786,58 @@
             // toolStripSeparator28
             // 
             this.toolStripSeparator28.Name = "toolStripSeparator28";
-            this.toolStripSeparator28.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator28.Size = new System.Drawing.Size(181, 6);
             // 
             // mGadgetFileSave
             // 
             this.mGadgetFileSave.Name = "mGadgetFileSave";
-            this.mGadgetFileSave.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileSave.Size = new System.Drawing.Size(184, 22);
             this.mGadgetFileSave.Text = "Save to File...";
             this.mGadgetFileSave.Click += new System.EventHandler(this.mGadgetFileSave_Click);
             // 
             // mGadgetFileLoad
             // 
             this.mGadgetFileLoad.Name = "mGadgetFileLoad";
-            this.mGadgetFileLoad.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileLoad.Size = new System.Drawing.Size(184, 22);
             this.mGadgetFileLoad.Text = "Load from File...";
             this.mGadgetFileLoad.Click += new System.EventHandler(this.mGadgetFileLoad_Click);
             // 
             // mGadgetFileShowFolder
             // 
             this.mGadgetFileShowFolder.Name = "mGadgetFileShowFolder";
-            this.mGadgetFileShowFolder.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetFileShowFolder.Size = new System.Drawing.Size(184, 22);
             this.mGadgetFileShowFolder.Text = "Show Files...";
             this.mGadgetFileShowFolder.Click += new System.EventHandler(this.mGadgetFileShowFolder_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(181, 6);
             // 
             // mGadgetRedraw
             // 
             this.mGadgetRedraw.Name = "mGadgetRedraw";
-            this.mGadgetRedraw.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetRedraw.Size = new System.Drawing.Size(184, 22);
             this.mGadgetRedraw.Text = "Redraw all Gadgets";
             this.mGadgetRedraw.Click += new System.EventHandler(this.mGadgetRedraw_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(181, 6);
             // 
             // mGadgetReset
             // 
             this.mGadgetReset.Name = "mGadgetReset";
-            this.mGadgetReset.Size = new System.Drawing.Size(178, 22);
-            this.mGadgetReset.Text = "Reset to Default";
+            this.mGadgetReset.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetReset.Tag = "Old_Default_Setup.json";
+            this.mGadgetReset.Text = "Reset to Old Default";
             this.mGadgetReset.Click += new System.EventHandler(this.mGadgetReset_Click);
             // 
             // mGadgetRemoveAll
             // 
             this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
-            this.mGadgetRemoveAll.Size = new System.Drawing.Size(178, 22);
+            this.mGadgetRemoveAll.Size = new System.Drawing.Size(184, 22);
             this.mGadgetRemoveAll.Text = "Remove all Gadgets";
             this.mGadgetRemoveAll.Click += new System.EventHandler(this.mGadgetRemoveAll_Click);
             // 
@@ -1879,7 +1882,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -2273,6 +2276,14 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // mGadgetResetNew
+            // 
+            this.mGadgetResetNew.Name = "mGadgetResetNew";
+            this.mGadgetResetNew.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetResetNew.Tag = "New_Default_Setup.json";
+            this.mGadgetResetNew.Text = "Reset to New Default";
+            this.mGadgetResetNew.Click += new System.EventHandler(this.mGadgetReset_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2513,6 +2524,7 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcTankStatistics;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripMenuItem mGadgetRWR;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetResetNew;
 	}
 }
 

@@ -129,6 +129,7 @@ namespace WinApp.Code
         public ColorRangeScheme.RatingColorScheme RatingColors { get; set; }	// Rating Color Scheme
         public string downloadFilePath { get; set; }                // File path for downloading new versions
         public bool downloadFilePathAddSubfolder { get; set; }      // Flag for creating subfolder with version number when downloading
+        public int newDayAtHour { get; set; }                        // Hour when new day starts, normally at server time reset: 07:00
 	}
 
 	class Config
@@ -278,6 +279,7 @@ namespace WinApp.Code
             Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
             Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
             Config.Settings.downloadFilePathAddSubfolder = false;
+            Config.Settings.newDayAtHour = 7;
 		}
 
 		

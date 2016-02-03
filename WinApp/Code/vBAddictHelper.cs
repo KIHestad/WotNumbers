@@ -276,7 +276,7 @@ namespace WinApp.Code
                 accountIDList += accountId + ",";
             }
             accountIDList = accountIDList.Substring(0, accountIDList.Length -1); // remove last comma
-            string url = string.Format("http://carius.vbaddict.net:82/player_info/search_accountid/{0}/{1}/xml", ExternalPlayerProfile.GetServer, accountIDList);
+            string url = string.Format("http://carius.vbaddict.net:82/player_info/search_accountid/{0}/{1}/xml", ExternalPlayerProfile.GetServer_vBAddict, accountIDList);
             try
             {
                 HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);

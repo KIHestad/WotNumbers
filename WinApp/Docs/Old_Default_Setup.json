@@ -1,0 +1,203 @@
+[
+  {
+    "id": 1458,
+    "controlName": "ucGaugeWinRate",
+    "visible": true,
+    "sortorder": 1,
+    "posX": 152,
+    "posY": 32,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 1459,
+    "controlName": "ucGaugeWN8",
+    "visible": true,
+    "sortorder": 2,
+    "posX": 402,
+    "posY": 32,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 1460,
+    "controlName": "ucGaugeEFF",
+    "visible": true,
+    "sortorder": 3,
+    "posX": 652,
+    "posY": 32,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 1461,
+    "controlName": "ucGaugeKillDeath",
+    "visible": true,
+    "sortorder": 4,
+    "posX": 272,
+    "posY": 232,
+    "width": 200,
+    "height": 150
+  },
+  {
+    "id": 1462,
+    "controlName": "ucGaugeDmgCausedReceived",
+    "visible": true,
+    "sortorder": 5,
+    "posX": 532,
+    "posY": 232,
+    "width": 200,
+    "height": 150
+  },
+  {
+    "id": 1463,
+    "controlName": "ucChartTier",
+    "visible": true,
+    "sortorder": 6,
+    "posX": 32,
+    "posY": 412,
+    "width": 370,
+    "height": 170
+  },
+  {
+    "id": 1464,
+    "controlName": "ucChartTankType",
+    "visible": true,
+    "sortorder": 7,
+    "posX": 462,
+    "posY": 412,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 1465,
+    "controlName": "ucChartNation",
+    "visible": true,
+    "sortorder": 8,
+    "posX": 712,
+    "posY": 412,
+    "width": 250,
+    "height": 170
+  }
+]
+[
+  {
+    "id": 2554,
+    "gadgetId": 1458,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2555,
+    "gadgetId": 1458,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2556,
+    "gadgetId": 1459,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2557,
+    "gadgetId": 1460,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2558,
+    "gadgetId": 1461,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2559,
+    "gadgetId": 1461,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2560,
+    "gadgetId": 1462,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2561,
+    "gadgetId": 1462,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2562,
+    "gadgetId": 1463,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2563,
+    "gadgetId": 1463,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "#A31F1F"
+  },
+  {
+    "id": 2564,
+    "gadgetId": 1463,
+    "paramNum": 2,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2565,
+    "gadgetId": 1464,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2566,
+    "gadgetId": 1464,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "#1B8E30"
+  },
+  {
+    "id": 2567,
+    "gadgetId": 1464,
+    "paramNum": 2,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 2568,
+    "gadgetId": 1465,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2569,
+    "gadgetId": 1465,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "#1F47A5"
+  },
+  {
+    "id": 2570,
+    "gadgetId": 1465,
+    "paramNum": 2,
+    "dataType": "System.String",
+    "value": "Total"
+  }
+]

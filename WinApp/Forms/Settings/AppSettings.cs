@@ -58,6 +58,7 @@ namespace WinApp.Forms.Settings
                 btnTab4.Checked = false;
                 btnTab5.Checked = false;
                 btnTab6.Checked = false;
+                btnTab7.Checked = false;
                 // Remove current control
                 List<Control> cList = pnlMain.Controls.Find("ctrl", false).ToList();
                 foreach (Control c in cList)
@@ -92,6 +93,11 @@ namespace WinApp.Forms.Settings
                         btnTab6.Checked = true;
                         lastSelectedControl = new Forms.Settings.AppSettingsReplay();
                         break;
+                    case AppSettingsHelper.Tabs.Options:
+                        btnTab7.Checked = true;
+                        lastSelectedControl = new Forms.Settings.AppSettingsOptions();
+                        break;
+
                 }
                 // Load usercontorl = content if any defined
                 if (lastSelectedControl != null)
@@ -147,6 +153,11 @@ namespace WinApp.Forms.Settings
                     break;
                 case AppSettingsHelper.Tabs.Replay:
                     break;
+                case AppSettingsHelper.Tabs.Options:
+                    Forms.Settings.AppSettingsOptions controlAppSettingsOptions = (Forms.Settings.AppSettingsOptions)lastSelectedControl;
+                    controlAppSettingsOptions.SaveChanges();
+                    break;
+                
             }
         }
     }

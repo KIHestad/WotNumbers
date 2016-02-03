@@ -16,6 +16,7 @@ namespace WinApp.Code
             vBAddict = 4,
             Import = 5,
             Replay = 6,
+            Options = 7,
         }
 
         public static bool ChangesApplied { get; set; }

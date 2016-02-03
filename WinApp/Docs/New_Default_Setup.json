@@ -1,0 +1,290 @@
+[
+  {
+    "id": 1,
+    "controlName": "ucGaugeWinRate",
+    "visible": true,
+    "sortorder": 2,
+    "posX": 252,
+    "posY": 232,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 2,
+    "controlName": "ucGaugeWN8",
+    "visible": true,
+    "sortorder": 4,
+    "posX": 692,
+    "posY": 232,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 4,
+    "controlName": "ucGaugeKillDeath",
+    "visible": true,
+    "sortorder": 5,
+    "posX": 32,
+    "posY": 252,
+    "width": 200,
+    "height": 150
+  },
+  {
+    "id": 5,
+    "controlName": "ucGaugeDmgCausedReceived",
+    "visible": true,
+    "sortorder": 6,
+    "posX": 912,
+    "posY": 252,
+    "width": 200,
+    "height": 150
+  },
+  {
+    "id": 6,
+    "controlName": "ucChartTier",
+    "visible": true,
+    "sortorder": 7,
+    "posX": 32,
+    "posY": 432,
+    "width": 380,
+    "height": 170
+  },
+  {
+    "id": 7,
+    "controlName": "ucChartTankType",
+    "visible": true,
+    "sortorder": 8,
+    "posX": 472,
+    "posY": 432,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 8,
+    "controlName": "ucChartNation",
+    "visible": true,
+    "sortorder": 9,
+    "posX": 732,
+    "posY": 432,
+    "width": 340,
+    "height": 170
+  },
+  {
+    "id": 9,
+    "controlName": "ucGaugeRWR",
+    "visible": true,
+    "sortorder": 3,
+    "posX": 472,
+    "posY": 232,
+    "width": 200,
+    "height": 170
+  },
+  {
+    "id": 10,
+    "controlName": "ucTotalStats",
+    "visible": true,
+    "sortorder": 1,
+    "posX": 32,
+    "posY": 22,
+    "width": 1080,
+    "height": 190
+  }
+]
+[
+  {
+    "id": 1,
+    "gadgetId": 1,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 2,
+    "gadgetId": 1,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 3,
+    "gadgetId": 2,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 5,
+    "gadgetId": 4,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 6,
+    "gadgetId": 4,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 7,
+    "gadgetId": 5,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 8,
+    "gadgetId": 5,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 9,
+    "gadgetId": 6,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 10,
+    "gadgetId": 6,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "#A31F1F"
+  },
+  {
+    "id": 11,
+    "gadgetId": 6,
+    "paramNum": 2,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 12,
+    "gadgetId": 7,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 13,
+    "gadgetId": 7,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "#1B8E30"
+  },
+  {
+    "id": 14,
+    "gadgetId": 7,
+    "paramNum": 2,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 15,
+    "gadgetId": 8,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 16,
+    "gadgetId": 8,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "#1F47A5"
+  },
+  {
+    "id": 17,
+    "gadgetId": 8,
+    "paramNum": 2,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 18,
+    "gadgetId": 9,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 19,
+    "gadgetId": 9,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Total"
+  },
+  {
+    "id": 20,
+    "gadgetId": 10,
+    "paramNum": 0,
+    "dataType": "System.String",
+    "value": "15"
+  },
+  {
+    "id": 21,
+    "gadgetId": 10,
+    "paramNum": 1,
+    "dataType": "System.String",
+    "value": "Today"
+  },
+  {
+    "id": 22,
+    "gadgetId": 10,
+    "paramNum": 2,
+    "dataType": "System.Int32",
+    "value": "5"
+  },
+  {
+    "id": 23,
+    "gadgetId": 10,
+    "paramNum": 3,
+    "dataType": "System.String",
+    "value": "Battles;Result;Rating;Damage;XP/Cred;"
+  },
+  {
+    "id": 24,
+    "gadgetId": 10,
+    "paramNum": 4,
+    "dataType": "System.String",
+    "value": "Total Statistics"
+  },
+  {
+    "id": 25,
+    "gadgetId": 10,
+    "paramNum": 5,
+    "dataType": "System.String",
+    "value": "50;Battles;131;Frags;49;WN8;128;Dmg;156;XP Max;"
+  },
+  {
+    "id": 26,
+    "gadgetId": 10,
+    "paramNum": 6,
+    "dataType": "System.String",
+    "value": "86;Victory;97;Killed;187;WN7;132;Received Damage;534;Avg Cred Income;"
+  },
+  {
+    "id": 27,
+    "gadgetId": 10,
+    "paramNum": 7,
+    "dataType": "System.String",
+    "value": "91;Draw;219;K/D Ratio;48;EFF;220;Dmg C/R;535;Avg Cred Cost;"
+  },
+  {
+    "id": 28,
+    "gadgetId": 10,
+    "paramNum": 8,
+    "dataType": "System.String",
+    "value": "92;Defeat;155;Frags Max;101;RWR;188;Avg Dmg;536;Avg Cred Result;"
+  },
+  {
+    "id": 29,
+    "gadgetId": 10,
+    "paramNum": 9,
+    "dataType": "System.String",
+    "value": "96;Survived;98;Survival Rate;95;Win Rate;212;Avg Dmg Assist;537;Max Cred Income;"
+  }
+]
