@@ -802,7 +802,10 @@ namespace WinApp.Forms
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			notifyIcon.Visible = false;
+			// Run backup
+            Form frm = new Forms.DatabaseBackup(true);
+            frm.ShowDialog(this);
+            notifyIcon.Visible = false;
 			// Save config to save current screen pos and size
 			Config.Settings.posSize.WindowState = this.WindowState;
 			string msg = "";

@@ -29,6 +29,7 @@ namespace WinApp.Forms.Settings
         {
             chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
             chkNotifyIconFormExitToMinimize.Checked = Config.Settings.notifyIconFormExitToMinimize;
+            txtBackupFilePath.Text = Config.Settings.databaseBackupFilePath;
             ddHour.Text = Config.Settings.newDayAtHour.ToString("00");
             SetTextForChkNotifyIconFormExitToMinimize();
             EditChangesApply(false);
@@ -59,6 +60,7 @@ namespace WinApp.Forms.Settings
         {
             Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
             Config.Settings.notifyIconFormExitToMinimize = chkNotifyIconFormExitToMinimize.Checked;
+            Config.Settings.databaseBackupFilePath = txtBackupFilePath.Text;
             Config.Settings.newDayAtHour = Convert.ToInt32(ddHour.Text);
             string msg = "";
             Config.SaveConfig(out msg);
@@ -92,6 +94,34 @@ namespace WinApp.Forms.Settings
         {
             if (currentValue != ddHour.Text)
                 EditChangesApply(true);
+        }
+
+        private void btnSelectBackupFilePath_Click(object sender, EventArgs e)
+        {
+            // Select dossier file
+            folderBrowserDialogBackup.ShowNewFolderButton = true;
+
+            if (txtBackupFilePath.Text != "")
+            {
+                folderBrowserDialogBackup.SelectedPath = txtBackupFilePath.Text;
+            }
+            DialogResult result = folderBrowserDialogBackup.ShowDialog();
+            // If file selected save config with new values
+            if (folderBrowserDialogBackup.SelectedPath != "" && result != DialogResult.Cancel)
+            {
+                txtBackupFilePath.Text = folderBrowserDialogBackup.SelectedPath;
+            }
+        }
+
+        private void txtBackupFilePath_TextChanged(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
+
+        private void btnRunBackup_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.DatabaseBackup();
+            frm.ShowDialog(this);
         }
       
                 

@@ -136,6 +136,7 @@
     <Compile Include="Code\BattleHelper.cs" />
     <Compile Include="Code\BattleResultRetriever.cs" />
     <Compile Include="Code\CursorHelper.cs" />
+    <Compile Include="Code\CustomFileCopier.cs" />
     <Compile Include="Code\DbConvert.cs" />
     <Compile Include="Code\ExternalPlayerProfile.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
@@ -281,6 +282,12 @@
     </Compile>
     <Compile Include="Forms\Settings\AppSettingsWoT.Designer.cs">
       <DependentUpon>AppSettingsWoT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\DatabaseBackup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\DatabaseBackup.Designer.cs">
+      <DependentUpon>DatabaseBackup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\RecalcBattleMaxTier.cs">
       <SubType>Form</SubType>
@@ -629,6 +636,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AppSettingsWoT.resx">
       <DependentUpon>AppSettingsWoT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\DatabaseBackup.resx">
+      <DependentUpon>DatabaseBackup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleMaxTier.resx">
       <DependentUpon>RecalcBattleMaxTier.cs</DependentUpon>

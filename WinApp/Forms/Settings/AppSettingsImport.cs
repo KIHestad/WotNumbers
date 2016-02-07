@@ -92,7 +92,6 @@ namespace WinApp.Forms.Settings
             txtToDate.Enabled = false;
             txtWotStatDb.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
-            this.Cursor = Cursors.WaitCursor;
 
             string WSDB = txtWotStatDb.Text;
 
@@ -287,7 +286,6 @@ namespace WinApp.Forms.Settings
 
                 // Done
                 this.Cursor = Cursors.Default;
-                this.Cursor = Cursors.Default;
                 lblResult.Text = "All battles read";
                 Code.MsgBox.Show("Imported " + i.ToString() + " battles.", "Import completed", (Form)this.TopLevelControl);
                 //this.Close();
@@ -295,7 +293,6 @@ namespace WinApp.Forms.Settings
             else
             {
                 // Done
-                this.Cursor = Cursors.Default;
                 this.Cursor = Cursors.Default;
                 lblResult.Text = "No battles found";
                 Code.MsgBox.Show("The selected database contained no battles.", "Import completed", (Form)this.TopLevelControl);

@@ -129,7 +129,9 @@ namespace WinApp.Code
         public ColorRangeScheme.RatingColorScheme RatingColors { get; set; }	// Rating Color Scheme
         public string downloadFilePath { get; set; }                // File path for downloading new versions
         public bool downloadFilePathAddSubfolder { get; set; }      // Flag for creating subfolder with version number when downloading
-        public int newDayAtHour { get; set; }                        // Hour when new day starts, normally at server time reset: 07:00
+        public int newDayAtHour { get; set; }                       // Hour when new day starts, normally at server time reset: 07:00
+        public string databaseBackupFilePath { get; set; }	        // File path for database backup
+        public DateTime? databaseBackupLastPerformed { get; set; }	// Last database backup runned
 	}
 
 	class Config
@@ -274,12 +276,16 @@ namespace WinApp.Code
 			Config.Settings.vBAddictPlayerToken = "";
             Config.Settings.vBAddictUploadReplayActive = false;
             Config.Settings.vBAddictShowToolBarMenu = false;
+            // Database Backup settings
+            Config.Settings.databaseBackupFilePath = "";
+            Config.Settings.databaseBackupLastPerformed = null;
             // Others
 			Config.Settings.CheckForBrrOnStartup = true;
             Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;
             Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
             Config.Settings.downloadFilePathAddSubfolder = false;
             Config.Settings.newDayAtHour = 7;
+            
 		}
 
 		
