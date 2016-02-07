@@ -2560,7 +2560,7 @@ namespace WinApp.Forms
 					}
 				}
 
-                // AddingNewEventArgs row count
+                // Rrow count
 				int rowcount = dt.Rows.Count;
 				// Add footer
 				int totalBattleCount = 0;
@@ -2957,7 +2957,8 @@ namespace WinApp.Forms
                 string sqlSelect =
                     "map.name AS 'Map', " +
                     "MAX(battle.battleTime) AS 'Last Battle', " +
-                    "COUNT(battle.battlesCount) AS 'Battles', " +
+                    "SUM(battle.battlesCount) AS 'Battles', " +
+                    "CAST(SUM(battle.battlesCount) AS FLOAT) AS 'Frequency', " +
                     "SUM(battle.victory) * 100 / CAST(NULLIF(SUM(battle.battlesCount),0) AS FLOAT) AS 'Win Rate', " +
                     "AVG(CAST(tank.tier AS FLOAT)) AS 'Avg Tier', " +
                     "AVG(CAST(battle.maxBattleTier AS FLOAT)) AS 'Avg Max Tier', " +
@@ -2966,6 +2967,7 @@ namespace WinApp.Forms
                     "map.name AS 'Map', " +
                     "CAST(NULL AS DATETIME) AS 'Last Battle', " +
                     "0 AS 'Battles', " +
+                    "CAST(0 AS FLOAT) AS 'Frequency', " +
                     "CAST(NULL AS FLOAT) AS 'Win Rate', "+
                     "CAST(NULL AS FLOAT) AS 'Avg Tier', " +
                     "CAST(NULL AS FLOAT) As 'Avg Max Tier', " +
@@ -3003,7 +3005,20 @@ namespace WinApp.Forms
                 DataTable dt = new DataTable();
                 dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 
-                // Add all maps
+                // Row count, battle count and calc frequency
+                int rowcount = dt.Rows.Count;
+                int totalBattleCount = 0;
+                if (rowcount > 0 && mMapDefault.Checked)
+                {
+                    totalBattleCount = Convert.ToInt32(dt.Compute("Sum(Battles)", ""));
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        dr["Frequency"] = Math.Round((Convert.ToDouble(dr["Battles"]) / totalBattleCount * 100), 2);
+                    }
+                    dt.AcceptChanges();
+                }
+
+                // Add all maps and frequency
                 if (mMapShowAll.Checked)
                 {
                     string existingMapID = "";
@@ -3033,13 +3048,9 @@ namespace WinApp.Forms
                     }
                 }
 
-                // AddingNewEventArgs row count
-                int rowcount = dt.Rows.Count;
+                // Set row height and image size before data is added
                 bool imageIllustration = false;
                 int imgWidth = 40;
-
-                // Set row height and image size before data is added
-                
                 int imageHeight = 0;
                 if (mMapDefault.Checked)
                 {
@@ -3070,7 +3081,31 @@ namespace WinApp.Forms
                     dr["Image"] = img;
                     imgWidth = img.Width;
                 }
-            
+
+                // Add footer now
+                int rowTotalsIndex = 0;
+                if (rowcount > 0 && mMapDefault.Checked)
+                {
+                    DataRow rowTotals = dt.NewRow();
+                    rowTotals["Map"] = "Totals";
+                    rowTotals["Image"] = new Bitmap(1, 1);
+                    rowTotals["Battles"] = totalBattleCount;
+                    rowTotals["Frequency"] = 100;
+                    // Add row
+                    if (Config.Settings.gridBattlesTotalsTop)
+                    {
+                        // as header
+                        dt.Rows.InsertAt(rowTotals, 0);
+                        rowTotalsIndex = 1;
+                    }
+                    else
+                    {
+                        // as footer
+                        dt.Rows.Add(rowTotals);
+                        rowTotalsIndex = dt.Rows.Count - 1;
+                    }
+                }
+
                 // populate datagrid
                 dataGridMain.Columns.Clear();
                 mainGridFormatting = true;
@@ -3086,9 +3121,12 @@ namespace WinApp.Forms
                 dataGridMain.Columns["Image"].Width = imgWidth;
                 if (mMapDefault.Checked)
                 {
-                    dataGridMain.Columns["Battles"].Width = 65;
+                    dataGridMain.Columns["Battles"].Width = 60;
                     dataGridMain.Columns["Battles"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    dataGridMain.Columns["Last Battle"].Width = 100;
+                    dataGridMain.Columns["Frequency"].Width = 60;
+                    dataGridMain.Columns["Frequency"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridMain.Columns["Frequency"].DefaultCellStyle.Format = "N2";
+                    dataGridMain.Columns["Last Battle"].Width = 120;
                     dataGridMain.Columns["Win Rate"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     dataGridMain.Columns["Win Rate"].DefaultCellStyle.Format = "N1";
                     dataGridMain.Columns["Win Rate"].Width = 75;
@@ -3334,7 +3372,7 @@ namespace WinApp.Forms
 						}
 					}
 				}
-                else if (MainSettings.View == GridView.Views.Tank || MainSettings.View == GridView.Views.Map)
+                else if (MainSettings.View == GridView.Views.Tank)
                 { 
 				    if (col.Equals("Remaining XP"))
 				    {
@@ -3451,6 +3489,21 @@ namespace WinApp.Forms
 						}
 					}
 				}
+                else if (MainSettings.View == GridView.Views.Map)
+                {
+                    bool footer = (dataGridMain["Map", e.RowIndex].Value.ToString() == "Totals");
+                    if (footer)
+                        dataGridMain.Rows[e.RowIndex].DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
+                    if (col.Equals("Win Rate"))
+                    {
+                        if (dataGridMain["Win Rate", e.RowIndex].Value != DBNull.Value)
+                        {
+                            double wr = Convert.ToDouble(dataGridMain["Win Rate", e.RowIndex].Value);
+                            cell.Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
+                            cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                        }
+                    }
+                }
 			}
 		}
 
