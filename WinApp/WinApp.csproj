@@ -439,6 +439,12 @@
     <Compile Include="Forms\Settings\AppSettingsvBAddict.Designer.cs">
       <DependentUpon>AppSettingsvBAddict.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TankSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TankSearch.Designer.cs">
+      <DependentUpon>TankSearch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Test\ViewRange.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -711,6 +717,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AppSettingsvBAddict.resx">
       <DependentUpon>AppSettingsvBAddict.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TankSearch.resx">
+      <DependentUpon>TankSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Test\ViewRange.resx">
       <DependentUpon>ViewRange.cs</DependentUpon>

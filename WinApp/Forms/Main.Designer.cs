@@ -41,6 +41,8 @@
             this.imageGrid = new System.Windows.Forms.ImageList(this.components);
             this.timerWoTAffnity = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.MainTheme = new BadForm();
             this.toolMain = new WinApp.Code.ToolStripEx(this.components);
             this.mWoT = new System.Windows.Forms.ToolStripButton();
@@ -103,6 +105,7 @@
             this.mTankFilter_Tier8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Tier9 = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Tier10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_Search = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Clear = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_FavSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mTankFilter_All = new System.Windows.Forms.ToolStripMenuItem();
@@ -198,6 +201,7 @@
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetRedraw = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.mGadgetResetNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
@@ -239,9 +243,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.mGadgetResetNew = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -285,6 +286,7 @@
             this.imageListToolStrip.Images.SetKeyName(14, "replay2.png");
             this.imageListToolStrip.Images.SetKeyName(15, "vbAddictSmall.png");
             this.imageListToolStrip.Images.SetKeyName(16, "WoT_3.png");
+            this.imageListToolStrip.Images.SetKeyName(17, "iconFavs2.png");
             // 
             // imageGrid
             // 
@@ -304,6 +306,10 @@
             this.notifyIcon.Text = "Wot Numbers";
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // MainTheme
             // 
@@ -696,6 +702,7 @@
             this.mTankFilter_Country,
             this.mTankFilter_Type,
             this.mTankFilter_Tier,
+            this.mTankFilter_Search,
             this.mTankFilter_Clear,
             this.mTankFilter_FavSeparator,
             this.mTankFilter_All,
@@ -1001,8 +1008,17 @@
             this.mTankFilter_Tier10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Tier_MouseDown);
             this.mTankFilter_Tier10.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
+            // mTankFilter_Search
+            // 
+            this.mTankFilter_Search.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Search.Image")));
+            this.mTankFilter_Search.Name = "mTankFilter_Search";
+            this.mTankFilter_Search.Size = new System.Drawing.Size(233, 22);
+            this.mTankFilter_Search.Text = "Search for Tank...";
+            this.mTankFilter_Search.Click += new System.EventHandler(this.mTankFilter_Search_Click);
+            // 
             // mTankFilter_Clear
             // 
+            this.mTankFilter_Clear.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Clear.Image")));
             this.mTankFilter_Clear.Name = "mTankFilter_Clear";
             this.mTankFilter_Clear.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Clear.Text = "Clear Tank Filter";
@@ -1826,6 +1842,14 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(181, 6);
             // 
+            // mGadgetResetNew
+            // 
+            this.mGadgetResetNew.Name = "mGadgetResetNew";
+            this.mGadgetResetNew.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetResetNew.Tag = "New_Default_Setup.json";
+            this.mGadgetResetNew.Text = "Reset to New Default";
+            this.mGadgetResetNew.Click += new System.EventHandler(this.mGadgetReset_Click);
+            // 
             // mGadgetReset
             // 
             this.mGadgetReset.Name = "mGadgetReset";
@@ -2525,6 +2549,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripMenuItem mGadgetRWR;
         private System.Windows.Forms.ToolStripMenuItem mGadgetResetNew;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_Search;
 	}
 }
 

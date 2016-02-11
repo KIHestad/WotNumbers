@@ -345,8 +345,12 @@ namespace WinApp.Forms
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
 			
 			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
-			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[4];
+			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[17];
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
+
+            ToolStripMenuItem dataGridMainPopup_FilterOnTankSearch = new ToolStripMenuItem("Search for tank...");
+			dataGridMainPopup_FilterOnTankSearch.Image = imageListToolStrip.Images[4];
+            dataGridMainPopup_FilterOnTankSearch.Click += new EventHandler(dataGridMainPopup_FilterOnTankSearch_Click);
 
 			ToolStripMenuItem dataGridMainPopup_FilterOnTankClear = new ToolStripMenuItem("Remove filter on tank");
 			dataGridMainPopup_FilterOnTankClear.Image = imageListToolStrip.Images[11];
@@ -422,9 +426,6 @@ namespace WinApp.Forms
 					});
 					break;
 				case GridView.Views.Battle:
-					ToolStripMenuItem dataGridMainPopup_FilterOnTank_FilterOnTankClear = dataGridMainPopup_FilterOnTank; // Default add tank fiter
-					if (MainSettings.GetCurrentGridFilter().TankId != -1)
-						dataGridMainPopup_FilterOnTank_FilterOnTankClear = dataGridMainPopup_FilterOnTankClear; // If tank filter added, show remove tank filter
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
 						dataGridMainPopup_BattleDetails,
@@ -434,8 +435,19 @@ namespace WinApp.Forms
 						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup,
                         dataGridMainPopup_Replay,
-						new ToolStripSeparator(),
-						dataGridMainPopup_FilterOnTank_FilterOnTankClear,
+						new ToolStripSeparator()
+                    });
+                    if (MainSettings.GetCurrentGridFilter().TankId == -1)
+                    {
+                        dataGridMainPopup.Items.Add(dataGridMainPopup_FilterOnTank);
+                        dataGridMainPopup.Items.Add(dataGridMainPopup_FilterOnTankSearch);
+                    }
+                    else
+                    {
+                        dataGridMainPopup.Items.Add(dataGridMainPopup_FilterOnTankClear);
+                    }
+                    dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
+					{ 
 						new ToolStripSeparator(),
 						dataGridMainPopup_FavListAddTank,
 						dataGridMainPopup_FavListRemoveTank,
@@ -3750,9 +3762,30 @@ namespace WinApp.Forms
 				//TankFilterMenuUncheck(true, true, true, false);
 				MainSettings.GetCurrentGridFilter().TankId = tankId;
 				ShowView("Filtered on tank: " + TankHelper.GetTankName(tankId));
+      			CreateDataGridContextMenu(); // Recreate context menu
 			}
-			CreateDataGridContextMenu(); // Recreate context menu
 		}
+
+        private void dataGridMainPopup_FilterOnTankSearch_Click(object sender, EventArgs e)
+        {
+            SearchForTank();
+        }
+
+        private void mTankFilter_Search_Click(object sender, EventArgs e)
+        {
+            SearchForTank();
+        }
+
+        private void SearchForTank()
+        {
+            Form frm = new Forms.TankSearch();
+            frm.ShowDialog(this);
+            if (MainSettings.GetCurrentGridFilter().TankId != -1)
+            {
+                ShowView("Filtered on tank: " + TankHelper.GetTankName(MainSettings.GetCurrentGridFilter().TankId));
+                CreateDataGridContextMenu(); // Recreate context menu
+            }
+        }
 
 		private void dataGridMainPopup_FilterOnTankClear_Click(object sender, EventArgs e)
 		{
@@ -5182,6 +5215,8 @@ namespace WinApp.Forms
         }
 
 		#endregion
+
+        
 
              
 
