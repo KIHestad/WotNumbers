@@ -347,8 +347,7 @@
 		#endregion
 
 		private BadForm BattleChartTheme;
-		private System.Windows.Forms.DataVisualization.Charting.Chart ChartingMain;
-		private BadDropDownBox ddTank;
+        private System.Windows.Forms.DataVisualization.Charting.Chart ChartingMain;
 		private BadLabel badLabel1;
 		private BadDropDownBox ddXaxis;
 		private BadLabel badLabel3;
@@ -363,6 +362,7 @@
         private BadDropDownBox ddMode;
         private BadLabel badLabel5;
         private BadCheckBox chkSpline;
+        private BadDropDownBox ddTank;
 
 
 

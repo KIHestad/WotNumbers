@@ -44,7 +44,7 @@ namespace WinApp.Forms
 			public List<ChartTypeCols> col;							    // What columns to be used to calculate values
 		}
 
-        string ddTankList = "";
+        // string ddTankList = ""; // Replaced with tank search
 		string ddChartList = "";
         string ddModeList = "( All Modes ),";
         int initPlayerTankId = 0;
@@ -93,16 +93,18 @@ namespace WinApp.Forms
 			}
 			// Available charts
 			AddChartValues();
-			// DropDown Tank List
-			sql = "select tank.name from tank inner join playerTank on tank.id = playerTank.tankId where playerTank.playerId=@playerId order by tank.name";
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			ddTankList = "( All Tanks )";
-			foreach (DataRow dr in dt.Rows)
-			{
-				ddTankList += "," + dr["name"].ToString();
-			}
-			// DropDown Chart Values
+			
+            // DropDown Tank List replaced with tank search
+            //sql = "select tank.name from tank inner join playerTank on tank.id = playerTank.tankId where playerTank.playerId=@playerId order by tank.name";
+            //DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+            //DataTable dt = DB.FetchData(sql);
+            //ddTankList = "( All Tanks )";
+            //foreach (DataRow dr in dt.Rows)
+            //{
+            //    ddTankList += "," + dr["name"].ToString();
+            //}
+			
+            // DropDown Chart Values
 			foreach (ChartType c in chartValues)
 			{
 				ddChartList += c.name + ",";
@@ -705,10 +707,10 @@ namespace WinApp.Forms
 			DrawChart();
 		}
 
-		private void ddTank_Click(object sender, EventArgs e)
-		{
-			Code.DropDownGrid.Show(ddTank, Code.DropDownGrid.DropDownGridType.List, ddTankList);
-		}
+        private void ddTank_Click(object sender, EventArgs e)
+        {
+            Code.DropDownGrid.Show(ddTank, Code.DropDownGrid.DropDownGridType.List, "( All Tanks ),Search for Tank...");
+        }
 
 		private void ddValue_Click(object sender, EventArgs e)
 		{
@@ -802,10 +804,20 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void ddTank_TextChanged(object sender, EventArgs e)
-		{
-			CheckAddButton();
-		}
+        private void ddTank_TextChanged(object sender, EventArgs e)
+        {
+            // Check if search is selected
+            if (ddTank.Text == "Search for Tank...")
+            {
+                Form frm = new Forms.TankSearch();
+                frm.ShowDialog(this);
+                if (TankHelper.TankSearchResult == MsgBox.Button.OK && TankHelper.TankSearchSelectedTankId > 0)
+                {
+                    ddTank.Text = TankHelper.GetTankName(TankHelper.TankSearchSelectedTankId);
+                }
+            }
+            CheckAddButton();
+        }
 
 		private void ddValue_TextChanged(object sender, EventArgs e)
 		{

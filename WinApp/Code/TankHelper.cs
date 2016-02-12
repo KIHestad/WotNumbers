@@ -10,7 +10,11 @@ namespace WinApp.Code
 {
 	public static class TankHelper
 	{
-		#region DatabaseLookup
+        // Used as return values from tank search form
+        public static int TankSearchSelectedTankId = -1;
+        public static MsgBox.Button TankSearchResult = MsgBox.Button.Cancel;
+        
+        #region DatabaseLookup
 
 		public static void GetAllLists()
 		{

@@ -108,6 +108,7 @@
             // 
             // ColListTheme
             // 
+            this.ColListTheme.BackColor = System.Drawing.Color.Fuchsia;
             this.ColListTheme.Controls.Add(this.btnReset);
             this.ColListTheme.Controls.Add(this.btnClose);
             this.ColListTheme.Controls.Add(this.toolColList);
@@ -872,7 +873,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.Fuchsia;
             this.ClientSize = new System.Drawing.Size(624, 633);
             this.Controls.Add(this.ColListTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

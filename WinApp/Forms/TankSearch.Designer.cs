@@ -28,12 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TankSearch));
+            BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
+            this.imageListTierIcons = new System.Windows.Forms.ImageList(this.components);
             this.TankSearchTheme = new BadForm();
+            this.scrollAllTanks = new BadScrollBar();
+            this.dataGridTanks = new System.Windows.Forms.DataGridView();
             this.toolStripMain = new System.Windows.Forms.ToolStrip();
             this.mLabel = new System.Windows.Forms.ToolStripLabel();
             this.mTxtSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mNation0 = new System.Windows.Forms.ToolStripButton();
             this.mNation1 = new System.Windows.Forms.ToolStripButton();
             this.mNation2 = new System.Windows.Forms.ToolStripButton();
@@ -45,11 +50,30 @@
             this.mNationSelectMode = new System.Windows.Forms.ToolStripButton();
             this.mNationToggleAll = new System.Windows.Forms.ToolStripButton();
             this.TankSearchTheme.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTanks)).BeginInit();
             this.toolStripMain.SuspendLayout();
             this.SuspendLayout();
             // 
+            // imageListTierIcons
+            // 
+            this.imageListTierIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTierIcons.ImageStream")));
+            this.imageListTierIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListTierIcons.Images.SetKeyName(0, "1.png");
+            this.imageListTierIcons.Images.SetKeyName(1, "2.png");
+            this.imageListTierIcons.Images.SetKeyName(2, "3.png");
+            this.imageListTierIcons.Images.SetKeyName(3, "4.png");
+            this.imageListTierIcons.Images.SetKeyName(4, "5.png");
+            this.imageListTierIcons.Images.SetKeyName(5, "6.png");
+            this.imageListTierIcons.Images.SetKeyName(6, "7.png");
+            this.imageListTierIcons.Images.SetKeyName(7, "8.png");
+            this.imageListTierIcons.Images.SetKeyName(8, "9.png");
+            this.imageListTierIcons.Images.SetKeyName(9, "10.png");
+            // 
             // TankSearchTheme
             // 
+            this.TankSearchTheme.BackColor = System.Drawing.Color.Fuchsia;
+            this.TankSearchTheme.Controls.Add(this.scrollAllTanks);
+            this.TankSearchTheme.Controls.Add(this.dataGridTanks);
             this.TankSearchTheme.Controls.Add(this.toolStripMain);
             this.TankSearchTheme.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TankSearchTheme.FormBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -63,22 +87,61 @@
             this.TankSearchTheme.MainArea = mainAreaClass1;
             this.TankSearchTheme.Name = "TankSearchTheme";
             this.TankSearchTheme.Resizable = true;
-            this.TankSearchTheme.Size = new System.Drawing.Size(819, 411);
+            this.TankSearchTheme.Size = new System.Drawing.Size(855, 635);
             this.TankSearchTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("TankSearchTheme.SystemExitImage")));
             this.TankSearchTheme.SystemMaximizeImage = null;
             this.TankSearchTheme.SystemMinimizeImage = null;
             this.TankSearchTheme.TabIndex = 0;
-            this.TankSearchTheme.Text = "Search for tank";
+            this.TankSearchTheme.Text = "Search for Tank";
             this.TankSearchTheme.TitleHeight = 26;
+            // 
+            // scrollAllTanks
+            // 
+            this.scrollAllTanks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.scrollAllTanks.BackColor = System.Drawing.Color.Transparent;
+            this.scrollAllTanks.Image = null;
+            this.scrollAllTanks.Location = new System.Drawing.Point(826, 63);
+            this.scrollAllTanks.Name = "scrollAllTanks";
+            this.scrollAllTanks.ScrollElementsTotals = 100;
+            this.scrollAllTanks.ScrollElementsVisible = 20;
+            this.scrollAllTanks.ScrollHide = false;
+            this.scrollAllTanks.ScrollNecessary = true;
+            this.scrollAllTanks.ScrollOrientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+            this.scrollAllTanks.ScrollPosition = 0;
+            this.scrollAllTanks.Size = new System.Drawing.Size(17, 558);
+            this.scrollAllTanks.TabIndex = 9;
+            this.scrollAllTanks.Text = "badScrollBar1";
+            this.scrollAllTanks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseDown);
+            this.scrollAllTanks.MouseMove += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseMove);
+            this.scrollAllTanks.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scrollAllTanks_MouseUp);
+            // 
+            // dataGridTanks
+            // 
+            this.dataGridTanks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridTanks.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridTanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridTanks.Location = new System.Drawing.Point(12, 63);
+            this.dataGridTanks.Name = "dataGridTanks";
+            this.dataGridTanks.Size = new System.Drawing.Size(814, 558);
+            this.dataGridTanks.TabIndex = 8;
+            this.dataGridTanks.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTanks_CellContentDoubleClick);
+            this.dataGridTanks.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridTanks_CellPainting);
+            this.dataGridTanks.SelectionChanged += new System.EventHandler(this.dataGridAllTanks_SelectionChanged);
             // 
             // toolStripMain
             // 
+            this.toolStripMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.toolStripMain.AutoSize = false;
             this.toolStripMain.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStripMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mLabel,
             this.mTxtSearch,
+            this.toolStripSeparator1,
             this.mNation0,
             this.mNation1,
             this.mNation2,
@@ -90,9 +153,9 @@
             this.mNationSelectMode,
             this.mNationToggleAll});
             this.toolStripMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripMain.Location = new System.Drawing.Point(2, 27);
+            this.toolStripMain.Location = new System.Drawing.Point(12, 38);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(808, 25);
+            this.toolStripMain.Size = new System.Drawing.Size(831, 25);
             this.toolStripMain.Stretch = true;
             this.toolStripMain.TabIndex = 7;
             this.toolStripMain.Text = "toolStrip1";
@@ -107,11 +170,17 @@
             // mTxtSearch
             // 
             this.mTxtSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
+            this.mTxtSearch.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.mTxtSearch.ForeColor = System.Drawing.SystemColors.Window;
             this.mTxtSearch.Name = "mTxtSearch";
             this.mTxtSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.mTxtSearch.Size = new System.Drawing.Size(100, 25);
             this.mTxtSearch.TextChanged += new System.EventHandler(this.mTxtSearch_TextChanged);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // mNation0
             // 
@@ -200,12 +269,9 @@
             // 
             this.mNationToggleAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.mNationToggleAll.Image = ((System.Drawing.Image)(resources.GetObject("mNationToggleAll.Image")));
-            this.mNationToggleAll.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.mNationToggleAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mNationToggleAll.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.mNationToggleAll.Name = "mNationToggleAll";
-            this.mNationToggleAll.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.mNationToggleAll.Size = new System.Drawing.Size(33, 21);
+            this.mNationToggleAll.Size = new System.Drawing.Size(25, 22);
             this.mNationToggleAll.Text = "All";
             this.mNationToggleAll.ToolTipText = "Select or deselect all Nations";
             this.mNationToggleAll.Visible = false;
@@ -215,16 +281,20 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(819, 411);
+            this.BackColor = System.Drawing.Color.Fuchsia;
+            this.ClientSize = new System.Drawing.Size(855, 635);
             this.Controls.Add(this.TankSearchTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "TankSearch";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TankSearch";
+            this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.TankSearch_Load);
+            this.Shown += new System.EventHandler(this.TankSearch_Shown);
             this.Resize += new System.EventHandler(this.TankSearch_Resize);
             this.TankSearchTheme.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTanks)).EndInit();
             this.toolStripMain.ResumeLayout(false);
             this.toolStripMain.PerformLayout();
             this.ResumeLayout(false);
@@ -247,5 +317,9 @@
         private System.Windows.Forms.ToolStripButton mNation5;
         private System.Windows.Forms.ToolStripButton mNation6;
         private System.Windows.Forms.ToolStripButton mNationSelectMode;
+        private BadScrollBar scrollAllTanks;
+        private System.Windows.Forms.DataGridView dataGridTanks;
+        private System.Windows.Forms.ImageList imageListTierIcons;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
