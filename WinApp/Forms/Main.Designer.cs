@@ -733,12 +733,12 @@
             // mTankFilter_Country
             // 
             this.mTankFilter_Country.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mTankFilter_CountryUSSR,
             this.mTankFilter_CountryGermany,
+            this.mTankFilter_CountryUSSR,
             this.mTankFilter_CountryUSA,
-            this.mTankFilter_CountryChina,
             this.mTankFilter_CountryFrance,
             this.mTankFilter_CountryUK,
+            this.mTankFilter_CountryChina,
             this.mTankFilter_CountryJapan,
             this.mTankFilter_CountryCzechoslovakia});
             this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
@@ -2295,18 +2295,6 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // mGadgetResetNew
-            // 
-            this.mGadgetResetNew.Name = "mGadgetResetNew";
-            this.mGadgetResetNew.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetResetNew.Tag = "New_Default_Setup.json";
-            this.mGadgetResetNew.Text = "Reset to New Default";
-            this.mGadgetResetNew.Click += new System.EventHandler(this.mGadgetReset_Click);
             // 
             // Main
             // 

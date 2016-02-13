@@ -29,8 +29,9 @@ namespace WinApp.Gadget
 
 		private class CountryIndex
 		{
-			public int index;
-			public string countryName;
+			public int index {get; set;}
+            public int id { get; set; }
+            public string countryName { get; set; }
 		}
 
 		private List<CountryIndex> countryIndex = new List<CountryIndex>();
@@ -103,12 +104,13 @@ namespace WinApp.Gadget
 			serie1.IsXValueIndexed = true;
 			//serie1["MaxPixelPointWidth"] = "25";
 			// Add points
-			string sql = "select * from country where id > -1 order by id ";
+			string sql = "select * from country where id > -1 order by sortOrder ";
 			DataTable dt = DB.FetchData(sql);
+            int index = 0;
 			foreach (DataRow dr in dt.Rows)
 			{
 				int id = Convert.ToInt32(dr["id"]);
-				DataPoint p = new DataPoint();
+                DataPoint p = new DataPoint();
 				p.YValues[0] = 0;
 				p.AxisLabel = dr["shortName"].ToString();
 				p.Font = new Font("MS Sans Serif", 9, GraphicsUnit.Pixel);
@@ -116,9 +118,12 @@ namespace WinApp.Gadget
 				serie1.Points.Add(p);
 				// Add to index
 				CountryIndex ci = new CountryIndex();
-				ci.index = id;
+                ci.index = index;
+                ci.id = id;
 				ci.countryName = p.AxisLabel;
 				countryIndex.Add(ci);
+                // Get ready next index
+                index++;
 				// Add images as x-axis labels
 				Image img = ImageHelper.GetNationImage(id);
 				PictureBox pic = new PictureBox();
@@ -151,14 +156,14 @@ namespace WinApp.Gadget
 					DB.AddWithValue(ref sqlBattlemode, "@battleMode", _battleMode, DB.SqlDataType.VarChar);
 				}
 				sql =
-					"SELECT SUM(playerTankBattle.battles) AS battleCount, country.shortName as country " +
+                    "SELECT SUM(playerTankBattle.battles) AS battleCount, country.id as id, country.sortOrder " +
 					"FROM   playerTankBattle INNER JOIN " +
 					"		playerTank ON playerTankBattle.playerTankId = playerTank.id INNER JOIN " +
 					"		tank ON playerTank.tankId = tank.id INNER JOIN " +
 					"       country ON tank.countryId = country.id AND country.id > -1 " +
 					"WHERE  (playerTank.playerId = @playerId) " + sqlBattlemode +
-					"GROUP BY country.shortName " +
-					"ORDER BY country.shortName ";
+                    "GROUP BY country.id, country.sortOrder " +
+					"ORDER BY country.sortOrder ";
 			}
 			else
 			{
@@ -183,14 +188,14 @@ namespace WinApp.Gadget
 					DB.AddWithValue(ref sqlBattlemode, "@battleMode", _battleMode, DB.SqlDataType.VarChar);
 				}
 				sql =
-					"SELECT SUM(battle.battlesCount) AS battleCount, country.shortName as country " +
+                    "SELECT SUM(battle.battlesCount) AS battleCount, country.id as id, country.sortOrder " +
 					"FROM   battle INNER JOIN " +
 					"       playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"       tank ON playerTank.tankId = tank.id INNER JOIN " +
 					"       country ON tank.countryId = country.id AND country.id > -1 " +
 					"WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) " + sqlBattlemode +
-					"GROUP BY country.shortName " +
-					"ORDER BY country.shortName ";
+                    "GROUP BY country.id, country.sortOrder " +
+					"ORDER BY country.sortOrder ";
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
 			}
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
@@ -210,7 +215,7 @@ namespace WinApp.Gadget
 			{
 				foreach (DataRow dr in dt.Rows)
 				{
-					CountryIndex ci = countryIndex.Find(i => i.countryName == dr["country"].ToString());
+					CountryIndex ci = countryIndex.Find(i => i.id == Convert.ToInt32(dr["id"]));
 					double val = Convert.ToDouble(dr["battleCount"]);
 					tot += val;
 					newVal[ci.index] = val; 

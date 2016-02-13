@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 359; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 361; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2717,6 +2717,22 @@ namespace WinApp.Code
                 case 359:
                     Config.Settings.tankSearchMainModeAdvanced = true;
                     Config.SaveConfig(out msg);
+                    break;
+                case 360:
+                    mssql = "ALTER TABLE country ADD sortOrder int NOT NULL default(0); ";
+                    sqlite = "ALTER TABLE country ADD sortOrder integer NOT NULL default(0); ";
+                    break;
+                case 361:
+                    mssql =
+                        "UPDATE country SET sortOrder = 20 WHERE ID = 0; " +
+                        "UPDATE country SET sortOrder = 10 WHERE ID = 1; " +
+                        "UPDATE country SET sortOrder = 30 WHERE ID = 2; " +
+                        "UPDATE country SET sortOrder = 60 WHERE ID = 3; " +
+                        "UPDATE country SET sortOrder = 40 WHERE ID = 4; " +
+                        "UPDATE country SET sortOrder = 50 WHERE ID = 5; " +
+                        "UPDATE country SET sortOrder = 70 WHERE ID = 6; " +
+                        "UPDATE country SET sortOrder = 80 WHERE ID = 7; ";
+                    sqlite = mssql;
                     break;
             }
 			string sql = "";
