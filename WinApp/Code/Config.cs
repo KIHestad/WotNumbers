@@ -132,6 +132,7 @@ namespace WinApp.Code
         public int newDayAtHour { get; set; }                       // Hour when new day starts, normally at server time reset: 07:00
         public string databaseBackupFilePath { get; set; }	        // File path for database backup
         public DateTime? databaseBackupLastPerformed { get; set; }	// Last database backup runned
+        public bool tankSearchMainModeAdvanced { get; set; }        // Selected tank search main mode, true=advanced, fale=simple
 	}
 
 	class Config
@@ -285,6 +286,7 @@ namespace WinApp.Code
             Config.Settings.downloadFilePath = Config.AppDataDownloadFolder;
             Config.Settings.downloadFilePathAddSubfolder = false;
             Config.Settings.newDayAtHour = 7;
+            Config.Settings.tankSearchMainModeAdvanced = true;
             
 		}
 

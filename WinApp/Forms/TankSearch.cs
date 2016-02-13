@@ -13,6 +13,7 @@ namespace WinApp.Forms
     public partial class TankSearch : Form
     {
         private DataTable dt { get; set; }
+        private bool MainModeAdvanced { get; set; }
 
         #region Init
 
@@ -26,36 +27,48 @@ namespace WinApp.Forms
             // Style toolbar
             toolStripMain.Renderer = new StripRenderer();
             // Style datagrid
-            GridHelper.StyleDataGrid(dataGridTanks, DataGridViewSelectionMode.CellSelect);
+            GridHelper.StyleDataGrid(dataGridTanks, DataGridViewSelectionMode.RowHeaderSelect);
             dataGridTanks.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridTanks.RowTemplate.Height = 31;
             dataGridTanks.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            // Create table to hold data
-            dt = new DataTable();
-            dt.Columns.Add("LightID", typeof(Int32));
-            dt.Columns.Add("LightName", typeof(string));
-            dt.Columns.Add("Light", typeof(Image));
-            
-            dt.Columns.Add("MediumID", typeof(Int32));
-            dt.Columns.Add("MediumName", typeof(string));
-            dt.Columns.Add("Medium", typeof(Image));
-            
-            dt.Columns.Add("HeavyID", typeof(Int32));
-            dt.Columns.Add("HeavyName", typeof(string));
-            dt.Columns.Add("Heavy", typeof(Image));
-            
-            dt.Columns.Add("TDID", typeof(Int32));
-            dt.Columns.Add("TDName", typeof(string));
-            dt.Columns.Add("TD", typeof(Image));
-            
-            dt.Columns.Add("SPGID", typeof(Int32));
-            dt.Columns.Add("SPGName", typeof(string));
-            dt.Columns.Add("SPG", typeof(Image));
             // Mouse scrolling
             dataGridTanks.MouseWheel += new MouseEventHandler(dataGridTanks_MouseWheel);
             // Set result = cancel as default
-            TankHelper.TankSearchResult = MsgBox.Button.Cancel;
+            TankSearchHelper.Result = MsgBox.Button.Cancel;
+            // Get default / last settings
+            mTxtSearch.Text = TankSearchHelper.SearchText;
+            // Get MAin mode
+            MainModeAdvanced = Config.Settings.tankSearchMainModeAdvanced;
+            // Setup form and initial data structure
+            Setup();
+        }
+
+        private void Setup()
+        {
+            // Setup menu
+            mSeparator2.Visible = MainModeAdvanced;
+            mNationSelectMode.Visible = MainModeAdvanced;
+            for (int i = 0; i <= 7; i++)
+            {
+                ToolStripButton item = (ToolStripButton)toolStripMain.Items.Find("mNation" + i.ToString(), false)[0];
+                item.Checked = TankSearchHelper.SelectedNations[i];
+                item.Visible = MainModeAdvanced;
+            }
+            if (MainModeAdvanced)
+            {
+                SelectMode(TankSearchHelper.ModeSingle);
+                mNationToggleAll.Checked = (GetNationCheckedCount() == 8);
+                mMainMode.Image = imageListMainMode.Images[0];
+            }
+            else
+            {
+                mNationToggleAll.Visible = false;
+                mMainMode.Image = imageListMainMode.Images[1];
+            }
+            // Resize form
+            ResizeForm();
             // Show data
+            CreateEmptyResultSet();
             SearchNow();
             ResizeNow();
         }
@@ -64,41 +77,91 @@ namespace WinApp.Forms
 
         #region Grid Formatting
 
+        private void CreateEmptyResultSet()
+        {
+            // Create table to hold data
+            dt = new DataTable();
+            if (MainModeAdvanced)
+            {
+                // Advanced
+                dt.Columns.Add("LightID", typeof(Int32));
+                dt.Columns.Add("LightName", typeof(string));
+                dt.Columns.Add("Light", typeof(Image));
+
+                dt.Columns.Add("MediumID", typeof(Int32));
+                dt.Columns.Add("MediumName", typeof(string));
+                dt.Columns.Add("Medium", typeof(Image));
+
+                dt.Columns.Add("HeavyID", typeof(Int32));
+                dt.Columns.Add("HeavyName", typeof(string));
+                dt.Columns.Add("Heavy", typeof(Image));
+
+                dt.Columns.Add("TDID", typeof(Int32));
+                dt.Columns.Add("TDName", typeof(string));
+                dt.Columns.Add("TD", typeof(Image));
+
+                dt.Columns.Add("SPGID", typeof(Int32));
+                dt.Columns.Add("SPGName", typeof(string));
+                dt.Columns.Add("SPG", typeof(Image));
+            }
+            else
+            {
+                // Simple
+                dt.Columns.Add("ID", typeof(Int32));
+                dt.Columns.Add("Tier", typeof(string));
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Tank", typeof(Image));
+                dt.Columns.Add("Type", typeof(string));
+                dt.Columns.Add("Nation", typeof(string));
+            }
+        }
+
         private void FormatDataGrid()
         {
-            dataGridTanks.Columns["LightID"].Visible = false;
-            dataGridTanks.Columns["MediumID"].Visible = false;
-            dataGridTanks.Columns["HeavyID"].Visible = false;
-            dataGridTanks.Columns["TDID"].Visible = false;
-            dataGridTanks.Columns["SPGID"].Visible = false;
-
-            dataGridTanks.Columns["LightName"].Visible = false;
-            dataGridTanks.Columns["MediumName"].Visible = false;
-            dataGridTanks.Columns["HeavyName"].Visible = false;
-            dataGridTanks.Columns["TDName"].Visible = false;
-            dataGridTanks.Columns["SPGName"].Visible = false;
-
-            dataGridTanks.Columns["TD"].HeaderText = "T D";
-            dataGridTanks.Columns["SPG"].HeaderText = "S P G";
-            foreach (DataGridViewColumn column in dataGridTanks.Columns)
+            if (MainModeAdvanced)
             {
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-            foreach (DataGridViewRow row in dataGridTanks.Rows)
-            {
-                float newSize = 7;
-                if (row.Cells[0].Value != DBNull.Value && row.Cells[0].Value.ToString() == "-1")
+                // Advanced
+                dataGridTanks.Columns["LightID"].Visible = false;
+                dataGridTanks.Columns["MediumID"].Visible = false;
+                dataGridTanks.Columns["HeavyID"].Visible = false;
+                dataGridTanks.Columns["TDID"].Visible = false;
+                dataGridTanks.Columns["SPGID"].Visible = false;
+
+                dataGridTanks.Columns["LightName"].Visible = false;
+                dataGridTanks.Columns["MediumName"].Visible = false;
+                dataGridTanks.Columns["HeavyName"].Visible = false;
+                dataGridTanks.Columns["TDName"].Visible = false;
+                dataGridTanks.Columns["SPGName"].Visible = false;
+
+                dataGridTanks.Columns["TD"].HeaderText = "T D";
+                dataGridTanks.Columns["SPG"].HeaderText = "S P G";
+                foreach (DataGridViewColumn column in dataGridTanks.Columns)
                 {
-                    row.DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
-                    row.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    row.DefaultCellStyle.SelectionBackColor = row.DefaultCellStyle.BackColor;
-                    row.DefaultCellStyle.Font = new Font(dataGridTanks.DefaultCellStyle.Font.FontFamily, newSize);
-                    row.Height = 14;
+                    column.SortMode = DataGridViewColumnSortMode.NotSortable;
                 }
+                foreach (DataGridViewRow row in dataGridTanks.Rows)
+                {
+                    float newSize = 7;
+                    if (row.Cells[0].Value != DBNull.Value && row.Cells[0].Value.ToString() == "-1")
+                    {
+                        row.DefaultCellStyle.BackColor = ColorTheme.GridTotalsRow;
+                        row.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        row.DefaultCellStyle.SelectionBackColor = row.DefaultCellStyle.BackColor;
+                        row.DefaultCellStyle.Font = new Font(dataGridTanks.DefaultCellStyle.Font.FontFamily, newSize);
+                        row.Height = 14;
+                    }
+                }
+                dataGridTanks.ClearSelection();
+                scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
+                scrollAllTanks.ScrollElementsVisible = dataGridTanks.DisplayedRowCount(false);
             }
-            dataGridTanks.ClearSelection();
-            scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
-            scrollAllTanks.ScrollElementsVisible = dataGridTanks.DisplayedRowCount(false);
+            else
+            {
+                // Simple
+                dataGridTanks.Columns["ID"].Visible = false;
+                dataGridTanks.Columns["Name"].Visible = false;
+                dataGridTanks.Columns["Tier"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
         }
 
         private void TankSearch_Shown(object sender, EventArgs e)
@@ -107,6 +170,20 @@ namespace WinApp.Forms
         }
 
         #endregion
+
+        public void ResizeForm()
+        {
+            if (MainModeAdvanced)
+            {
+                this.Width = 855;
+                this.Height = 635;
+            }
+            else
+            {
+                this.Width = 400;
+                this.Height = 400;
+            }
+        }
 
         private void TankSearch_Resize(object sender, EventArgs e)
         {
@@ -117,12 +194,23 @@ namespace WinApp.Forms
         {
             try
             {
-                int colWidth = (dataGridTanks.Width - 2) / 5;
-                dataGridTanks.Columns[2].Width = colWidth;
-                dataGridTanks.Columns[5].Width = colWidth;
-                dataGridTanks.Columns[8].Width = colWidth;
-                dataGridTanks.Columns[11].Width = colWidth;
-                dataGridTanks.Columns[14].Width = (dataGridTanks.Width - 2) - (colWidth * 4);
+                if (MainModeAdvanced)
+                {
+                    // Advanced
+                    int colWidth = (dataGridTanks.Width - 2) / 5;
+                    dataGridTanks.Columns[2].Width = colWidth;
+                    dataGridTanks.Columns[5].Width = colWidth;
+                    dataGridTanks.Columns[8].Width = colWidth;
+                    dataGridTanks.Columns[11].Width = colWidth;
+                    dataGridTanks.Columns[14].Width = (dataGridTanks.Width - 2) - (colWidth * 4);
+                }
+                else
+                {
+                    dataGridTanks.Columns["Tier"].Width = 40;
+                    dataGridTanks.Columns["Type"].Width = 55;
+                    dataGridTanks.Columns["Nation"].Width = 55;
+                    dataGridTanks.Columns["Tank"].Width = (dataGridTanks.Width - 2) - 150;
+                }
                 scrollAllTanks.ScrollElementsVisible = dataGridTanks.DisplayedRowCount(false);
             }
             catch (Exception)
@@ -133,16 +221,8 @@ namespace WinApp.Forms
 
         private void mNationToggleAll_Click(object sender, EventArgs e)
         {
-            if (mNationToggleAll.Text == "All")
-            {
-                mNationToggleAll.Text = "None";
-                SelectAllNations(true);
-            }
-            else
-            {
-                mNationToggleAll.Text = "All";
-                SelectAllNations(false);
-            }
+            mNationToggleAll.Checked = !mNationToggleAll.Checked;
+            SelectAllNations(mNationToggleAll.Checked);
             SearchNow();
         }
 
@@ -152,6 +232,7 @@ namespace WinApp.Forms
             if (mNationSelectMode.Text == "Single" && !btn.Checked)
                 SelectAllNations(false);
             btn.Checked = !btn.Checked;
+            mNationToggleAll.Checked = (GetNationCheckedCount() == 8);
             SearchNow();
         }
 
@@ -167,9 +248,9 @@ namespace WinApp.Forms
             return count;
         }
 
-        private string GetSelectedNations()
+        private string GetSelectedNations(out int count)
         {
-            int count = 0;
+            count = 0;
             string countryId = "";
             for (int i = 0; i <= 7; i++)
             {
@@ -204,31 +285,50 @@ namespace WinApp.Forms
 
         private void mNationSelectMode_Click(object sender, EventArgs e)
         {
-            if (mNationSelectMode.Text == "Single")
-            {
-                mNationSelectMode.Text = "Multi";
-                mNationToggleAll.Visible = true;
-            }
-            else
+            SelectMode(mNationSelectMode.Text == "Multi");
+        }
+
+        private void SelectMode(bool setSingleMode)
+        {
+            if (setSingleMode)
             {
                 mNationSelectMode.Text = "Single";
+                mNationSelectMode.Image = imageListSelectionMode.Images[0];
                 mNationToggleAll.Visible = false;
                 mNationToggleAll.Text = "All";
                 if (GetNationCheckedCount() > 1)
                     SelectAllNations(false);
             }
+            else
+            {
+                mNationSelectMode.Text = "Multi";
+                mNationSelectMode.Image = imageListSelectionMode.Images[1];
+                mNationToggleAll.Visible = true;
+            }
         }
 
         private void dataGridTanks_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            int tankId = -1;
-            if (dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 2].Value != DBNull.Value)
-                tankId = Convert.ToInt32(dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 2].Value);
-            if (tankId > 0)
+            if (e.RowIndex >= 0)
             {
-                TankHelper.TankSearchSelectedTankId = tankId;
-                TankHelper.TankSearchResult = MsgBox.Button.OK;
-                this.Close();
+                int tankId = -1;
+                if (MainModeAdvanced)
+                {
+                    // Advanced
+                    if (dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 2].Value != DBNull.Value)
+                        tankId = Convert.ToInt32(dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 2].Value);
+                }
+                else
+                {
+                    // Simple
+                    tankId = Convert.ToInt32(dataGridTanks.Rows[e.RowIndex].Cells["ID"].Value);
+                }
+                if (tankId > 0)
+                {
+                    TankSearchHelper.SelectedTankId = tankId;
+                    TankSearchHelper.Result = MsgBox.Button.OK;
+                    this.Close();
+                }
             }
         }
 
@@ -236,81 +336,128 @@ namespace WinApp.Forms
         {
             try
             {
-                // Clear result datatable, get ready for retrieving tanks
-                dt.Clear();
                 // Search for tanks
                 string freeTextSearch = "";
                 if (mTxtSearch.Text.Trim() != "")
-                    freeTextSearch = "AND tank.name like '" + mTxtSearch.Text.Trim() + "%' ";
-                string nationFilter = GetSelectedNations();
-                // Check if any selection is made
-                if (freeTextSearch == "" && nationFilter == "")
                 {
-                    // No search to be performed, return empty result
-                    AddTierHeading(11, 1);
-                    dataGridTanks.DataSource = dt;
-                    FormatDataGrid();
-                    return;
+                    string searchText = mTxtSearch.Text.Trim();
+                    searchText = searchText.Replace(" ", "");
+                    searchText = searchText.Replace("/", "");
+                    searchText = searchText.Replace("-", "");
+                    searchText = searchText.Replace(".", "");
+                    freeTextSearch = "AND replace(replace(replace(replace(tank.name,' ',''),'/',''),'-',''),'.','') like '%" + searchText + "%' ";
                 }
-                // Get data from search / filter parameters
-                string sql =
-                    "select tank.id, tank.name, tank.tankTypeId, tank.countryId, tank.tier " +
-                    "from tank inner join playerTank on tank.id = playerTank.tankId " +
-                    "where playerTank.playerId = @playerId " +
-                    nationFilter +
-                    freeTextSearch +
-                    "order by tank.tier desc, tank.tankTypeId, tank.name; ";
-                DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                DataTable dtSearchTanks = DB.FetchData(sql);
+                if (MainModeAdvanced)
+                {
+                    // Advanced
+                    CreateEmptyResultSet();
+                    int nationCount = 0;
+                    string nationFilter = GetSelectedNations(out nationCount);
+                    // Check if any selection is made
+                    if (freeTextSearch == "" && nationFilter == "")
+                    {
+                        // No search to be performed, return empty result
+                        AddTierHeading(11, 1);
+                        dataGridTanks.DataSource = dt;
+                        FormatDataGrid();
+                        return;
+                    }
+                    // Get data from search / filter parameters
+                    string sql =
+                        "select tank.id, tank.name, tank.tankTypeId, tank.countryId, tank.tier, country.shortName " +
+                        "from tank inner join playerTank on tank.id = playerTank.tankId " +
+                        " inner join country on tank.countryId = country.id " +
+                        "where playerTank.playerId = @playerId " +
+                        nationFilter +
+                        freeTextSearch +
+                        "order by tank.tier desc, tank.tankTypeId, tank.name; ";
+                    DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                    DataTable dtSearchTanks = DB.FetchData(sql);
 
-                // Populate table
-                int currentTier = 11; // start one above max tier to force write first header
-                int tierRows = 0; // Number of rows added per tier
-                int[] tierRowsUsedPerTankType = new int[] { 0, 0, 0, 0, 0 }; // Number of rows userd per tier per tank type
-                int lastRowNum = 0; // Currently the last row added to the final datatable holding all tanks
-                foreach (DataRow dr in dtSearchTanks.Rows)
-                {
-                    // Check if tank tier is lower than current tier for adding header
-                    int tankTier = Convert.ToInt32(dr["tier"]);
-                    if (currentTier > tankTier)
+                    // Populate table
+                    int currentTier = 11; // start one above max tier to force write first header
+                    int tierRows = 0; // Number of rows added per tier
+                    int[] tierRowsUsedPerTankType = new int[] { 0, 0, 0, 0, 0 }; // Number of rows userd per tier per tank type
+                    int lastRowNum = 0; // Currently the last row added to the final datatable holding all tanks
+                    foreach (DataRow dr in dtSearchTanks.Rows)
                     {
-                        AddTierHeading(currentTier, tankTier);
-                        currentTier = tankTier;
-                        tierRows = 0;
-                        tierRowsUsedPerTankType = new int[] { 0, 0, 0, 0, 0 }; // 0 - 4
+                        // Check if tank tier is lower than current tier for adding header
+                        int tankTier = Convert.ToInt32(dr["tier"]);
+                        if (currentTier > tankTier)
+                        {
+                            AddTierHeading(currentTier, tankTier);
+                            currentTier = tankTier;
+                            tierRows = 0;
+                            tierRowsUsedPerTankType = new int[] { 0, 0, 0, 0, 0 }; // 0 - 4
+                        }
+                        // Get new tank info
+                        int tankType = Convert.ToInt32(dr["tankTypeId"]) - 1; // tankTypeId = 1 - 5, subtract one to align with tierRowsUsedPerTankType
+                        int tankId = Convert.ToInt32(dr["id"]);
+                        string tankName = dr["name"].ToString();
+                        if (nationCount != 1)
+                            tankName += " (" + dr["shortName"].ToString() + ")";
+                        tierRowsUsedPerTankType[tankType]++; // Add up one for needed rows to add this tank type to grid
+                        // Before adding tank to grid, first check if needed to create a new row
+                        if (tierRowsUsedPerTankType[tankType] > tierRows)
+                        {
+                            DataRow drTank = GetEmptyRow();
+                            dt.Rows.Add(drTank);
+                            dt.AcceptChanges();
+                            tierRows++;
+                            lastRowNum = dt.Rows.Count - 1;
+                        }
+                        // Now an available row exists, add tank to it
+                        int tankTypeCol = tankType * 3; // 3 cols per tank type in grid, first for id (hidden) second for name (hidden) last image
+                        dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol] = tankId;
+                        dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 1] = tankName;
+                        dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 2] = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.SmallImage);
                     }
-                    // Get new tank info
-                    int tankType = Convert.ToInt32(dr["tankTypeId"]) -1; // tankTypeId = 1 - 5, subtract one to align with tierRowsUsedPerTankType
-                    int tankId = Convert.ToInt32(dr["id"]);
-                    string tankName = dr["name"].ToString();
-                    tierRowsUsedPerTankType[tankType]++; // Add up one for needed rows to add this tank type to grid
-                    // Before adding tank to grid, first check if needed to create a new row
-                    if (tierRowsUsedPerTankType[tankType] > tierRows)
-                    {
-                        DataRow drTank = GetEmptyRow(); 
-                        dt.Rows.Add(drTank);
-                        dt.AcceptChanges();
-                        tierRows++;
-                        lastRowNum = dt.Rows.Count - 1;
-                    }
-                    // Now an available row exists, add tank to it
-                    int tankTypeCol = tankType * 3; // 3 cols per tank type in grid, first for id (hidden) second for name (hidden) last image
-                    dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol] = tankId;
-                    dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 1] = tankName;
-                    dt.Rows[lastRowNum - tierRows + tierRowsUsedPerTankType[tankType]][tankTypeCol + 2] = ImageHelper.GetTankImage(tankId,ImageHelper.TankImageType.SmallImage);
+                    // Add remaining headers if any
+                    if (currentTier >= 1)
+                        AddTierHeading(currentTier, 1, true);
                 }
-                // Add remaining headers if any
-                if (currentTier >= 1)
-                    AddTierHeading(currentTier, 1, true);
+                else
+                {
+                    // Simple
+                    // Check if any search is made
+                    if (freeTextSearch == "")
+                    {
+                        // No search to be performed, return empty result
+                        CreateEmptyResultSet();
+                        dataGridTanks.DataSource = dt;
+                        FormatDataGrid();
+                        return;
+                    }
+                    // Get data from search / filter parameters
+                    string sql =
+                        "select tank.id, tank.tier as Tier, tank.name, tankType.shortName as Type, country.shortName as Nation " +
+                        "from tank inner join playerTank on tank.id = playerTank.tankId " +
+                        " inner join country on tank.countryId = country.id " +
+                        " inner join tankType on tank.tankTypeId = tankType.id " +
+                        "where playerTank.playerId = @playerId " +
+                        freeTextSearch +
+                        "order by tank.name; ";
+                    DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                    dt = DB.FetchData(sql);
+                    // Add image column to datatable
+                    // Use ImageHelper to add columns in use
+                    ImageHelper.ImgColumns img = new ImageHelper.ImgColumns("Tank", 3);
+                    dt.Columns.Add(img.colName, typeof(Image)).SetOrdinal(img.colPosition);
+                    // Add images to table
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        dr["Tank"] = ImageHelper.GetTankImage(Convert.ToInt32(dr["id"]), ImageHelper.TankImageType.SmallImage);
+                    }
+                }
                 // Show Data
                 dataGridTanks.DataSource = dt;
                 FormatDataGrid();
-
+                dataGridTanks.ClearSelection();
             }
             catch (Exception ex)
             {
-                
-                throw;
+                MsgBox.Show("Error occured searching for tank: " + ex.Message, "Error");
+                //throw;
             }
         }
 
@@ -349,34 +496,60 @@ namespace WinApp.Forms
         private void dataGridTanks_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             // Add tank name on top of tank image
-            // Avoid header row
+            // Avoid header row and only if advanced main mode
             if (e.RowIndex > -1)
             {
-                // Avoid tier header rows
-                if (dataGridTanks.Rows[e.RowIndex].Cells[0].Value == DBNull.Value || dataGridTanks.Rows[e.RowIndex].Cells[0].Value.ToString() != "-1")
+                if (MainModeAdvanced)
                 {
-                    // Check for valid image cell, each 3rd cell
-                    if ((e.ColumnIndex + 1) % 3 == 0)
+                    // Avoid tier header rows
+                    if (dataGridTanks.Rows[e.RowIndex].Cells[0].Value == DBNull.Value || dataGridTanks.Rows[e.RowIndex].Cells[0].Value.ToString() != "-1")
                     {
-                        // Check if image exists, check for name in column to left
-                        if (dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 1].Value != DBNull.Value)
+                        // Check for valid image cell, each 3rd cell
+                        if ((e.ColumnIndex + 1) % 3 == 0)
                         {
-                            // Now found cell with tank image, now add tank name as text - name exists in cell to left
-                            string tankName = dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 1].Value.ToString();
-                            e.PaintBackground(e.ClipBounds, false); // no highlighting
-                            e.PaintContent(e.ClipBounds);
-                            SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
-                            SolidBrush fontColorBack = new SolidBrush(Color.Black);
-                            //SizeF stringSize = e.Graphics.MeasureString(tankName, dataGridTanks.DefaultCellStyle.Font, 200);
-                            //int x = e.CellBounds.Right - Convert.ToInt32(stringSize.Width); // - right align
-                            int x = e.CellBounds.Left + 60; // left align
-                            int y = e.CellBounds.Bottom - 18;
-                            e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColorBack, x + 1, y + 1);
-                            e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColorBack, x - 1, y - 1);
-                            e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColor, x, y);
-                            e.Handled = true; 
+                            // Check if image exists, check for name in column to left
+                            if (dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 1].Value != DBNull.Value)
+                            {
+                                // Now found cell with tank image, now add tank name as text
+                                string tankName = dataGridTanks.Rows[e.RowIndex].Cells[e.ColumnIndex - 1].Value.ToString();
+                                e.PaintBackground(e.ClipBounds, false); // no highlighting
+                                e.PaintContent(e.ClipBounds);
+                                SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
+                                SolidBrush fontColorBack = new SolidBrush(Color.Black);
+                                //SizeF stringSize = e.Graphics.MeasureString(tankName, dataGridTanks.DefaultCellStyle.Font, 200);
+                                //int x = e.CellBounds.Right - Convert.ToInt32(stringSize.Width); // - right align
+                                int x = e.CellBounds.Left + 60; // left align
+                                int y = e.CellBounds.Bottom - 18;
+                                e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColorBack, x + 1, y + 1);
+                                e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColorBack, x - 1, y - 1);
+                                e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColor, x, y);
+                                e.Handled = true;
 
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    // Simple
+                    // Locate image column
+                    if (e.ColumnIndex == 3)
+                    {
+                        // Now found cell with tank image, now add tank name as text
+                        string tankName = dataGridTanks.Rows[e.RowIndex].Cells["Name"].Value.ToString();
+                        e.PaintBackground(e.ClipBounds, false); // no highlighting
+                        e.PaintContent(e.ClipBounds);
+                        SolidBrush fontColor = new SolidBrush(ColorTheme.ControlFont);
+                        SolidBrush fontColorBack = new SolidBrush(Color.Black);
+                        //SizeF stringSize = e.Graphics.MeasureString(tankName, dataGridTanks.DefaultCellStyle.Font, 200);
+                        //int x = e.CellBounds.Right - Convert.ToInt32(stringSize.Width); // - right align
+                        int x = e.CellBounds.Left + 60; // left align
+                        int y = e.CellBounds.Bottom - 18;
+                        e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColorBack, x + 1, y + 1);
+                        e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColorBack, x - 1, y - 1);
+                        e.Graphics.DrawString(tankName, dataGridTanks.DefaultCellStyle.Font, fontColor, x, y);
+                        e.Handled = true;
+
                     }
                 }
             }
@@ -443,6 +616,57 @@ namespace WinApp.Forms
         private void dataGridAllTanks_SelectionChanged(object sender, EventArgs e)
         {
             MoveAllTanksScrollBar();
+        }
+
+        private void mResetSearch_Click(object sender, EventArgs e)
+        {
+            mTxtSearch.Text = "";
+            mTxtSearch.Focus();
+            if (MainModeAdvanced)
+            {
+                SelectAllNations(false);
+                mNationSelectMode.Text = "Single";
+                mNationToggleAll.Text = "All";
+                mNationToggleAll.Visible = false;
+            }
+            SearchNow();
+        }
+
+        private void TankSearch_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Remember latest search params
+            TankSearchHelper.SearchText = mTxtSearch.Text;
+            if (MainModeAdvanced)
+            {
+                TankSearchHelper.ModeSingle = (mNationSelectMode.Text == "Single");
+                for (int i = 0; i <= 7; i++)
+                {
+                    ToolStripButton item = (ToolStripButton)toolStripMain.Items.Find("mNation" + i.ToString(), false)[0];
+                    TankSearchHelper.SelectedNations[i] = item.Checked;
+                }
+            }
+            // Save mode if changed
+            if (MainModeAdvanced != Config.Settings.tankSearchMainModeAdvanced)
+            {
+                Config.Settings.tankSearchMainModeAdvanced = MainModeAdvanced;
+                string msg = "";
+                Config.SaveConfig(out msg);
+            }
+            
+        }
+
+        private void mMainMode_Click(object sender, EventArgs e)
+        {
+            MainModeAdvanced = !MainModeAdvanced;
+            if (MainModeAdvanced)
+            {
+                mMainMode.Image = imageListMainMode.Images[0];
+            }
+            else
+            {
+                mMainMode.Image = imageListMainMode.Images[1];
+            }
+            Setup();
         }
 
     }

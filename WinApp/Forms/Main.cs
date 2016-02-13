@@ -3778,11 +3778,10 @@ namespace WinApp.Forms
 
         private void SearchForTank()
         {
-            Form frm = new Forms.TankSearch();
-            frm.ShowDialog(this);
-            if (TankHelper.TankSearchResult == MsgBox.Button.OK && TankHelper.TankSearchSelectedTankId > 0)
+            TankSearchHelper.OpenTankSearch(this);
+            if (TankSearchHelper.Result == MsgBox.Button.OK && TankSearchHelper.SelectedTankId > 0)
             {
-                MainSettings.GetCurrentGridFilter().TankId = TankHelper.TankSearchSelectedTankId;
+                MainSettings.GetCurrentGridFilter().TankId = TankSearchHelper.SelectedTankId;
                 ShowView("Filtered on tank: " + TankHelper.GetTankName(MainSettings.GetCurrentGridFilter().TankId));
                 CreateDataGridContextMenu(); // Recreate context menu
             }

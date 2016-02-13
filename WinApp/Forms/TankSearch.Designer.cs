@@ -32,13 +32,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TankSearch));
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             this.imageListTierIcons = new System.Windows.Forms.ImageList(this.components);
+            this.imageListSelectionMode = new System.Windows.Forms.ImageList(this.components);
+            this.imageListMainMode = new System.Windows.Forms.ImageList(this.components);
             this.TankSearchTheme = new BadForm();
             this.scrollAllTanks = new BadScrollBar();
             this.dataGridTanks = new System.Windows.Forms.DataGridView();
             this.toolStripMain = new System.Windows.Forms.ToolStrip();
+            this.mMainMode = new System.Windows.Forms.ToolStripButton();
+            this.mSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mLabel = new System.Windows.Forms.ToolStripLabel();
             this.mTxtSearch = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mResetSearch = new System.Windows.Forms.ToolStripButton();
+            this.mSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mNationSelectMode = new System.Windows.Forms.ToolStripButton();
             this.mNation0 = new System.Windows.Forms.ToolStripButton();
             this.mNation1 = new System.Windows.Forms.ToolStripButton();
             this.mNation2 = new System.Windows.Forms.ToolStripButton();
@@ -47,7 +53,6 @@
             this.mNation5 = new System.Windows.Forms.ToolStripButton();
             this.mNation6 = new System.Windows.Forms.ToolStripButton();
             this.mNation7 = new System.Windows.Forms.ToolStripButton();
-            this.mNationSelectMode = new System.Windows.Forms.ToolStripButton();
             this.mNationToggleAll = new System.Windows.Forms.ToolStripButton();
             this.TankSearchTheme.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTanks)).BeginInit();
@@ -68,6 +73,20 @@
             this.imageListTierIcons.Images.SetKeyName(7, "8.png");
             this.imageListTierIcons.Images.SetKeyName(8, "9.png");
             this.imageListTierIcons.Images.SetKeyName(9, "10.png");
+            // 
+            // imageListSelectionMode
+            // 
+            this.imageListSelectionMode.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSelectionMode.ImageStream")));
+            this.imageListSelectionMode.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListSelectionMode.Images.SetKeyName(0, "modeSingle.png");
+            this.imageListSelectionMode.Images.SetKeyName(1, "modeMulti.png");
+            // 
+            // imageListMainMode
+            // 
+            this.imageListMainMode.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListMainMode.ImageStream")));
+            this.imageListMainMode.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListMainMode.Images.SetKeyName(0, "mode_grid.png");
+            this.imageListMainMode.Images.SetKeyName(1, "mode_list.png");
             // 
             // TankSearchTheme
             // 
@@ -139,9 +158,13 @@
             this.toolStripMain.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStripMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mMainMode,
+            this.mSeparator1,
             this.mLabel,
             this.mTxtSearch,
-            this.toolStripSeparator1,
+            this.mResetSearch,
+            this.mSeparator2,
+            this.mNationSelectMode,
             this.mNation0,
             this.mNation1,
             this.mNation2,
@@ -150,7 +173,6 @@
             this.mNation5,
             this.mNation6,
             this.mNation7,
-            this.mNationSelectMode,
             this.mNationToggleAll});
             this.toolStripMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripMain.Location = new System.Drawing.Point(12, 38);
@@ -159,6 +181,24 @@
             this.toolStripMain.Stretch = true;
             this.toolStripMain.TabIndex = 7;
             this.toolStripMain.Text = "toolStrip1";
+            // 
+            // mMainMode
+            // 
+            this.mMainMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mMainMode.Image = ((System.Drawing.Image)(resources.GetObject("mMainMode.Image")));
+            this.mMainMode.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.mMainMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mMainMode.Margin = new System.Windows.Forms.Padding(5, 1, 0, 2);
+            this.mMainMode.Name = "mMainMode";
+            this.mMainMode.Size = new System.Drawing.Size(23, 22);
+            this.mMainMode.Text = "toolStripButton1";
+            this.mMainMode.ToolTipText = "Select advanced or simple mode";
+            this.mMainMode.Click += new System.EventHandler(this.mMainMode_Click);
+            // 
+            // mSeparator1
+            // 
+            this.mSeparator1.Name = "mSeparator1";
+            this.mSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // mLabel
             // 
@@ -177,10 +217,33 @@
             this.mTxtSearch.Size = new System.Drawing.Size(100, 25);
             this.mTxtSearch.TextChanged += new System.EventHandler(this.mTxtSearch_TextChanged);
             // 
-            // toolStripSeparator1
+            // mResetSearch
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.mResetSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mResetSearch.Image = ((System.Drawing.Image)(resources.GetObject("mResetSearch.Image")));
+            this.mResetSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mResetSearch.Name = "mResetSearch";
+            this.mResetSearch.Size = new System.Drawing.Size(23, 22);
+            this.mResetSearch.Text = "toolStripButton1";
+            this.mResetSearch.ToolTipText = "Reset search";
+            this.mResetSearch.Click += new System.EventHandler(this.mResetSearch_Click);
+            // 
+            // mSeparator2
+            // 
+            this.mSeparator2.Name = "mSeparator2";
+            this.mSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // mNationSelectMode
+            // 
+            this.mNationSelectMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mNationSelectMode.Image = ((System.Drawing.Image)(resources.GetObject("mNationSelectMode.Image")));
+            this.mNationSelectMode.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.mNationSelectMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mNationSelectMode.Name = "mNationSelectMode";
+            this.mNationSelectMode.Size = new System.Drawing.Size(35, 22);
+            this.mNationSelectMode.Text = "Single";
+            this.mNationSelectMode.ToolTipText = "Toggle selection mode (Single / Multi)";
+            this.mNationSelectMode.Click += new System.EventHandler(this.mNationSelectMode_Click);
             // 
             // mNation0
             // 
@@ -254,24 +317,14 @@
             this.mNation7.Text = "Czech";
             this.mNation7.Click += new System.EventHandler(this.mNation_Click);
             // 
-            // mNationSelectMode
-            // 
-            this.mNationSelectMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mNationSelectMode.Image = ((System.Drawing.Image)(resources.GetObject("mNationSelectMode.Image")));
-            this.mNationSelectMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mNationSelectMode.Name = "mNationSelectMode";
-            this.mNationSelectMode.Size = new System.Drawing.Size(43, 22);
-            this.mNationSelectMode.Text = "Single";
-            this.mNationSelectMode.ToolTipText = "Toggle selection mode";
-            this.mNationSelectMode.Click += new System.EventHandler(this.mNationSelectMode_Click);
-            // 
             // mNationToggleAll
             // 
-            this.mNationToggleAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mNationToggleAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.mNationToggleAll.Image = ((System.Drawing.Image)(resources.GetObject("mNationToggleAll.Image")));
+            this.mNationToggleAll.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mNationToggleAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mNationToggleAll.Name = "mNationToggleAll";
-            this.mNationToggleAll.Size = new System.Drawing.Size(25, 22);
+            this.mNationToggleAll.Size = new System.Drawing.Size(35, 22);
             this.mNationToggleAll.Text = "All";
             this.mNationToggleAll.ToolTipText = "Select or deselect all Nations";
             this.mNationToggleAll.Visible = false;
@@ -290,6 +343,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TankSearch";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TankSearch_FormClosing);
             this.Load += new System.EventHandler(this.TankSearch_Load);
             this.Shown += new System.EventHandler(this.TankSearch_Shown);
             this.Resize += new System.EventHandler(this.TankSearch_Resize);
@@ -320,6 +374,11 @@
         private BadScrollBar scrollAllTanks;
         private System.Windows.Forms.DataGridView dataGridTanks;
         private System.Windows.Forms.ImageList imageListTierIcons;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator mSeparator1;
+        private System.Windows.Forms.ToolStripButton mResetSearch;
+        private System.Windows.Forms.ImageList imageListSelectionMode;
+        private System.Windows.Forms.ToolStripButton mMainMode;
+        private System.Windows.Forms.ToolStripSeparator mSeparator2;
+        private System.Windows.Forms.ImageList imageListMainMode;
     }
 }

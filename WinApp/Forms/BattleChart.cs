@@ -809,11 +809,10 @@ namespace WinApp.Forms
             // Check if search is selected
             if (ddTank.Text == "Search for Tank...")
             {
-                Form frm = new Forms.TankSearch();
-                frm.ShowDialog(this);
-                if (TankHelper.TankSearchResult == MsgBox.Button.OK && TankHelper.TankSearchSelectedTankId > 0)
+                TankSearchHelper.OpenTankSearch(this);
+                if (TankSearchHelper.Result == MsgBox.Button.OK && TankSearchHelper.SelectedTankId > 0)
                 {
-                    ddTank.Text = TankHelper.GetTankName(TankHelper.TankSearchSelectedTankId);
+                    ddTank.Text = TankHelper.GetTankName(TankSearchHelper.SelectedTankId);
                 }
             }
             CheckAddButton();
