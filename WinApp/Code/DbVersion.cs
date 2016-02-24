@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 361; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 365; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2496,7 +2496,6 @@ namespace WinApp.Code
                 case 300:
                     mssql = "ALTER TABLE map ADD active BIT NOT NULL DEFAULT(0); ";
                     sqlite = mssql;
-                    RunWotApi = true;
                     break;
                 case 301:
                     Config.Settings.vBAddictShowToolBarMenu = (Config.Settings.vBAddictPlayerToken != "" || Config.Settings.vBAddictUploadActive || Config.Settings.vBAddictUploadReplayActive);
@@ -2734,6 +2733,36 @@ namespace WinApp.Code
                         "UPDATE country SET sortOrder = 80 WHERE ID = 7; ";
                     sqlite = mssql;
                     break;
+                case 362:
+                    mssql = "ALTER TABLE tank ADD short_name varchar(255) NULL, description varchar(MAX) NULL, price_credit float NULL; ";
+                    sqlite = 
+                        "ALTER TABLE tank ADD short_name varchar(255) NULL; " +
+                        "ALTER TABLE tank ADD description varchar(10) NULL; " +
+                        "ALTER TABLE tank ADD price_credit real NULL; ";
+                    break;
+                case 363:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+                        "VALUES (102, 1, 5, 'tank.name', 'Tank Name', 'Tank full name', 'Tank', 120, 'VarChar'); " +
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+                        "VALUES (103, 1, 6, 'tank.description', 'Tank Description', 'Wargaming tank description', 'Tank', 250, 'VarChar'); " +
+                        "UPDATE columnSelection SET colName='tank.short_name', description = 'Tank short name' WHERE Id = 1";
+                    sqlite = mssql;
+                    break;
+                case 364:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+                        "VALUES (104, 2, 5, 'tank.name', 'Tank Name', 'Tank full name', 'Tank', 120, 'VarChar'); " +
+                        "UPDATE columnSelection SET colName='tank.short_name', description = 'Tank short name' WHERE Id = 58";
+                    sqlite = mssql;
+                    break;
+                case 365:
+                    mssql =
+                        "UPDATE tank SET short_name = name WHERE short_name IS NULL;";
+                    sqlite = mssql;
+                    RunWotApi = true;
+                    break;
+                
             }
 			string sql = "";
 			// get sql for correct dbtype

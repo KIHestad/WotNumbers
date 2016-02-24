@@ -41,6 +41,7 @@ namespace WinApp.Code
 			TankDetails = 6,
 			PlayersInGarageVehicles = 7,
 			Maps = 8,
+            TankList = 9,
 		}
 
 		#region fetchFromAPI
@@ -89,37 +90,39 @@ namespace WinApp.Code
 				Log.AddToLogBuffer("// Get data from WoT API: " + WotAPi.ToString());
 				string url = WotServerApiUrl();
 				string applicationId = WotApplicationId();
-				if (WotAPi == WotApiType.Tank)
-				{
-					url += "/wot/encyclopedia/tanks/?application_id=" + applicationId;
-				}
-				if (WotAPi == WotApiType.Turret)
-				{
-					url += "/wot/encyclopedia/tankturrets/?application_id=" + applicationId;
-				}
-				else if (WotAPi == WotApiType.Gun)
-				{
-					url += "/wot/encyclopedia/tankguns/?application_id=" + applicationId;
-				}
-				else if (WotAPi == WotApiType.Radio)
-				{
-					url += "/wot/encyclopedia/tankradios/?application_id=" + applicationId;
-				}
-				else if (WotAPi == WotApiType.Achievement)
-				{
-					url += "/wot/encyclopedia/achievements/?application_id=" + applicationId;
-				}
-				else if (WotAPi == WotApiType.Maps)
-				{
-					url += "/wot/encyclopedia/arenas/?application_id=" + applicationId;
-				}
-				else if (WotAPi == WotApiType.TankDetails)
-				{
-					url += "/wot/encyclopedia/tankinfo/?application_id=" + applicationId + "&tank_id=" + tankId;
-				}
-				else if (WotAPi == WotApiType.PlayersInGarageVehicles)
-				{
-					url += "/wot/tanks/stats/?application_id=" + applicationId + "&access_token=" + Forms.InGarageApiResult.access_token + "&account_id=" + Forms.InGarageApiResult.account_id + "&in_garage=1";
+                switch (WotAPi)
+                {
+                    case WotApiType.Tank:
+                        // NEW - get these fields: tank_id,name,short_name,is_premium_igr,type,nation,tier,description,price_credit,images
+                        url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_premium_igr%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages";
+                        break;
+                    case WotApiType.TankList:
+                        // OLD
+                        url += "/wot/encyclopedia/tanks/?application_id=" + applicationId; // old
+                        break;
+                    case WotApiType.Turret:
+                        url += "/wot/encyclopedia/tankturrets/?application_id=" + applicationId;
+                        break;
+                    case WotApiType.Gun:
+                        url += "/wot/encyclopedia/tankguns/?application_id=" + applicationId;
+                        break;
+                    case WotApiType.Radio:
+                        url += "/wot/encyclopedia/tankradios/?application_id=" + applicationId;
+                        break;
+                    case WotApiType.Achievement:
+                        url += "/wot/encyclopedia/achievements/?application_id=" + applicationId;
+                        break;
+                    case WotApiType.TankDetails:
+                        url += "/wot/encyclopedia/tankinfo/?application_id=" + applicationId + "&tank_id=" + tankId;
+                        break;
+                    case WotApiType.PlayersInGarageVehicles:
+                        url += "/wot/tanks/stats/?application_id=" + applicationId + "&access_token=" + Forms.InGarageApiResult.access_token + "&account_id=" + Forms.InGarageApiResult.account_id + "&in_garage=1";
+                        break;
+                    case WotApiType.Maps:
+                        url += "/wot/encyclopedia/arenas/?application_id=" + applicationId;
+                        break;
+                    default:
+                        break;
 				}
 				Application.DoEvents(); // TODO: testing freeze-problem running API requests
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -182,7 +185,8 @@ namespace WinApp.Code
 
 		public static String ImportTanks(Form parentForm)
 		{
-			string json = FetchFromAPI(WotApiType.Tank, 0, parentForm);
+			// New method: "Vehicles" gets enhanced tank data, problem not as updated as old "List of vehicles"
+            string json = FetchFromAPI(WotApiType.Tank, 0, parentForm);
 			if (json == "")
 			{
 				return "No data imported.";
@@ -216,8 +220,11 @@ namespace WinApp.Code
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = tank.First();   // First() returns only child tokens of tank
 
+                            // ID
 							int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
-							string type = itemToken["type"].ToString();
+							
+                            // Tank Type
+                            string type = itemToken["type"].ToString();
 							switch (type)
 							{
 								case "lightTank": tankTypeId = 1; break;
@@ -226,6 +233,8 @@ namespace WinApp.Code
 								case "AT-SPG": tankTypeId = 4; break;
 								case "SPG": tankTypeId = 5; break;
 							}
+
+                            // Nation
 							string country = itemToken["nation"].ToString();
                             countryId = -1;
 							switch (country)
@@ -239,49 +248,66 @@ namespace WinApp.Code
 								case "japan": countryId = 6; break;
                                 case "czech": countryId = 7; break;
 							}
-							string name = itemToken["name_i18n"].ToString();
-                            string imgPath = itemToken["image"].ToString();
-							int tier = Int32.Parse(itemToken["level"].ToString());
-							bool isPremium = Convert.ToBoolean(itemToken["is_premium"]);
+							
+                            // Tank name
+                            string name = itemToken["name"].ToString();
+                            string short_name = itemToken["short_name"].ToString();
+
+                            // Image as sub level
+                            JToken imageToken = itemToken["images"];
+                            string imgPath = imageToken["small_icon"].ToString();
+							
+                            // Tier
+                            int tier = Int32.Parse(itemToken["tier"].ToString());
+
+                            // premium
+							bool isPremium = Convert.ToBoolean(itemToken["is_premium_igr"]);
 							premium = 0;
 							if (isPremium) premium = 1;
 
+                            // Price credits
+                            string price_credit_str = itemToken["price_credit"].ToString();
+                            double? price_credit = null;
+                            double get_price_credit = 0;
+                            if (Double.TryParse(price_credit_str, out get_price_credit))
+                                price_credit = get_price_credit;
+                            
+                            // Description
+                            string description = itemToken["description"].ToString();
+
 							// Write to db
 							tankExists = TankHelper.TankExists(itemId);
-							string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium, imgPath) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium, @imgPath); ";
-                            string updateSql = "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, tier=@tier, premium=@premium, imgPath=@imgPath WHERE id=@id; ";
+                            string sql = "";
 
 							// insert if tank does not exist
 							if (!tankExists)
-							{
-								DB.AddWithValue(ref insertSql, "@id", itemId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref insertSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref insertSql, "@countryId", countryId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar);
-								DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
-								DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref insertSql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
-								// ok = DB.ExecuteNonQuery(insertSql);  
-								sqlTotal += insertSql + Environment.NewLine;
-								logItems.Inserted += name + ", ";
-								logItems.InsertedCount++;
-							}
-
-							// update if tank exists
-							else
-							{
-								DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref updateSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref updateSql, "@countryId", countryId, DB.SqlDataType.Int);
-								DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
-								DB.AddWithValue(ref updateSql, "@tier", tier, DB.SqlDataType.Int);
-								DB.AddWithValue(ref updateSql, "@premium", premium, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref updateSql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
-								// ok = DB.ExecuteNonQuery(updateSql);  
-								sqlTotal += updateSql + Environment.NewLine; 
+                            {
+							    sql = 
+                                    "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, description, tier, premium, imgPath, price_credit) " +
+                                    "VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @description, @tier, @premium, @imgPath, @price_credit); ";
 								logItems.Updated += name + ", ";
 								logItems.UpdatedCount++;
-							}
+                            }
+                            else
+                            {
+                                sql = 
+                                    "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, short_name=@short_name, description=@description, tier=@tier, " +
+                                    "premium=@premium, imgPath=@imgPath, price_credit=@price_credit WHERE id=@id; ";
+   								logItems.Inserted += name + ", ";
+								logItems.InsertedCount++;
+                            }
+                            // Add params    
+                            DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@countryId", countryId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@short_name", short_name, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
+                            sqlTotal += sql + Environment.NewLine;
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
 						// Update log file after import
@@ -300,6 +326,137 @@ namespace WinApp.Code
 				}
 			}
 		}
+
+        public static String ImportTankList(Form parentForm)
+        {
+            // Old method "List of vehicles", only get if tank is missing
+            string json = FetchFromAPI(WotApiType.TankList, 0, parentForm);
+            if (json == "")
+            {
+                return "No data imported.";
+            }
+            else
+            {
+                int tankTypeId = 0;
+                int countryId = 0;
+                int premium = 0;
+                bool tankExists = false;
+
+                Log.AddToLogBuffer("// Start checking tank list (" + DateTime.Now.ToString() + ")");
+
+                try
+                {
+                    JObject allTokens = JObject.Parse(json);
+                    JToken rootToken = allTokens.First;   // returns status token
+
+                    if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                    {
+                        rootToken = rootToken.Next;
+                        int itemCount = (int)((JProperty)rootToken.First.First).Value;   // returns count (not in use for now)
+
+                        rootToken = rootToken.Next;   // start reading tanks
+                        JToken tanks = rootToken.Children().First();   // read all tokens in data token
+
+                        LogItems logItems = new LogItems(); // Gather info of result, logged after runned
+                        string sqlTotal = "";
+                        foreach (JProperty tank in tanks)   // tank = tankId + child tokens
+                        {
+                            Application.DoEvents(); // TODO: testing freeze-problem running API requests
+                            JToken itemToken = tank.First();   // First() returns only child tokens of tank
+
+                            // ID
+                            int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
+
+                            // Tank Type
+                            string type = itemToken["type"].ToString();
+                            switch (type)
+                            {
+                                case "lightTank": tankTypeId = 1; break;
+                                case "mediumTank": tankTypeId = 2; break;
+                                case "heavyTank": tankTypeId = 3; break;
+                                case "AT-SPG": tankTypeId = 4; break;
+                                case "SPG": tankTypeId = 5; break;
+                            }
+
+                            // Nation
+                            string country = itemToken["nation"].ToString();
+                            countryId = -1;
+                            switch (country)
+                            {
+                                case "ussr": countryId = 0; break;
+                                case "germany": countryId = 1; break;
+                                case "usa": countryId = 2; break;
+                                case "china": countryId = 3; break;
+                                case "france": countryId = 4; break;
+                                case "uk": countryId = 5; break;
+                                case "japan": countryId = 6; break;
+                                case "czech": countryId = 7; break;
+                            }
+
+                            // Tank name
+                            string name = itemToken["name_i18n"].ToString();
+                            string short_name = itemToken["short_name_i18n"].ToString();
+
+                            // Image 
+                            string imgPath = itemToken["image"].ToString();
+
+                            // Tier
+                            int tier = Int32.Parse(itemToken["level"].ToString());
+
+                            // premium
+                            bool isPremium = Convert.ToBoolean(itemToken["is_premium"]);
+                            premium = 0;
+                            if (isPremium) premium = 1;
+
+                            // Price credits (not available from API)
+                            double? price_credit = null;
+
+                            // Description (not available from API)
+                            string description = "";
+
+                            // Write to db
+                            tankExists = TankHelper.TankExists(itemId);
+                            string sql = "";
+
+                            // insert if tank does not exist
+                            if (!tankExists)
+                            {
+                                sql =
+                                    "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, description, tier, premium, imgPath, price_credit) " +
+                                    "VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @description, @tier, @premium, @imgPath, @price_credit); ";
+                                logItems.Updated += name + ", ";
+                                logItems.UpdatedCount++;
+                                // Add params    
+                                DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sql, "@countryId", countryId, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref sql, "@short_name", short_name, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
+                                DB.AddWithValue(ref sql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
+                                DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
+                                sqlTotal += sql + Environment.NewLine;
+                            }
+                        }
+                        DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
+                        // Update log file after import
+                        WriteApiLog("Tank list ", logItems);
+                    }
+
+                    //Code.MsgBox.Show("Tank import complete");
+                    return ("Import Complete");
+                }
+
+                catch (Exception ex)
+                {
+                    Log.LogToFile(ex);
+                    Code.MsgBox.Show(ex.Message, "Error fetching tanks from WoT API", parentForm);
+                    return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
+                }
+            }
+        }
 
 		#endregion
 
