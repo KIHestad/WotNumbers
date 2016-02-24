@@ -345,7 +345,9 @@ namespace WinApp.Forms
                     searchText = searchText.Replace("/", "");
                     searchText = searchText.Replace("-", "");
                     searchText = searchText.Replace(".", "");
-                    freeTextSearch = "AND replace(replace(replace(replace(tank.name,' ',''),'/',''),'-',''),'.','') like '%" + searchText + "%' ";
+                    freeTextSearch =
+                        "AND (replace(replace(replace(replace(tank.name,' ',''),'/',''),'-',''),'.','') like '%" + searchText + "%' " +
+                        "OR replace(replace(replace(replace(tank.short_name,' ',''),'/',''),'-',''),'.','') like '%" + searchText + "%') ";
                 }
                 if (MainModeAdvanced)
                 {
@@ -364,13 +366,13 @@ namespace WinApp.Forms
                     }
                     // Get data from search / filter parameters
                     string sql =
-                        "select tank.id, tank.name, tank.tankTypeId, tank.countryId, tank.tier, country.shortName " +
+                        "select tank.id, tank.short_name as Name, tank.tankTypeId, tank.countryId, tank.tier, country.shortName " +
                         "from tank inner join playerTank on tank.id = playerTank.tankId " +
                         " inner join country on tank.countryId = country.id " +
                         "where playerTank.playerId = @playerId " +
                         nationFilter +
                         freeTextSearch +
-                        "order by tank.tier desc, tank.tankTypeId, tank.name; ";
+                        "order by tank.tier desc, tank.tankTypeId, tank.short_name; ";
                     DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
                     DataTable dtSearchTanks = DB.FetchData(sql);
 
@@ -430,13 +432,13 @@ namespace WinApp.Forms
                     }
                     // Get data from search / filter parameters
                     string sql =
-                        "select tank.id, tank.tier as Tier, tank.name, tankType.shortName as Type, country.shortName as Nation " +
+                        "select tank.id, tank.tier as Tier, tank.short_name as Name, tankType.shortName as Type, country.shortName as Nation " +
                         "from tank inner join playerTank on tank.id = playerTank.tankId " +
                         " inner join country on tank.countryId = country.id " +
                         " inner join tankType on tank.tankTypeId = tankType.id " +
                         "where playerTank.playerId = @playerId " +
                         freeTextSearch +
-                        "order by tank.name; ";
+                        "order by tank.short_name; ";
                     DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
                     dt = DB.FetchData(sql);
                     // Add image column to datatable
@@ -452,6 +454,8 @@ namespace WinApp.Forms
                 // Show Data
                 dataGridTanks.DataSource = dt;
                 FormatDataGrid();
+                scrollAllTanks.ScrollElementsVisible = dataGridTanks.DisplayedRowCount(false);
+                scrollAllTanks.ScrollElementsTotals = dt.Rows.Count;
                 dataGridTanks.ClearSelection();
             }
             catch (Exception ex)
@@ -558,23 +562,37 @@ namespace WinApp.Forms
         private bool scrollingAllTanks = false;
         private void scrollAllTanks_MouseDown(object sender, MouseEventArgs e)
         {
-            if (dataGridTanks.RowCount > 0)
+            try
             {
-                scrollingAllTanks = true;
-                dataGridTanks.FirstDisplayedScrollingRowIndex = scrollAllTanks.ScrollPosition;
+                if (dataGridTanks.RowCount > 0)
+                {
+                    scrollingAllTanks = true;
+                    dataGridTanks.FirstDisplayedScrollingRowIndex = scrollAllTanks.ScrollPosition;
+                }
             }
+            catch (Exception)
+            {
+                // throw;
+            }
+            
 
         }
 
         private void scrollAllTanks_MouseMove(object sender, MouseEventArgs e)
         {
-            if (dataGridTanks.RowCount > 0 && scrollingAllTanks)
+            try
             {
-                int currentFirstRow = dataGridTanks.FirstDisplayedScrollingRowIndex;
-                dataGridTanks.FirstDisplayedScrollingRowIndex = scrollAllTanks.ScrollPosition;
-                if (currentFirstRow != dataGridTanks.FirstDisplayedScrollingRowIndex) Refresh();
+                if (dataGridTanks.RowCount > 0 && scrollingAllTanks)
+                {
+                    int currentFirstRow = dataGridTanks.FirstDisplayedScrollingRowIndex;
+                    dataGridTanks.FirstDisplayedScrollingRowIndex = scrollAllTanks.ScrollPosition;
+                    if (currentFirstRow != dataGridTanks.FirstDisplayedScrollingRowIndex) Refresh();
+                }
             }
-
+            catch (Exception)
+            {
+                // throw;
+            }
         }
 
         private void scrollAllTanks_MouseUp(object sender, MouseEventArgs e)
