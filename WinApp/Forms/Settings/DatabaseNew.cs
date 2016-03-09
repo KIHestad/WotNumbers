@@ -155,10 +155,14 @@ namespace WinApp.Forms
 						// Get tanks, remember to init tankList first
 						UpdateProgressBar("Retrieves tanks from Wargaming API");
 						TankHelper.GetTankList();
+                        // NEW METHOD
 						ImportWotApi2DB.ImportTanks(this);
-                        TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
-                        ImportWotApi2DB.ImportTankList(this);
-						// Init after getting tanks and other basic data import
+                        
+                        // OLD METHOD
+                        //TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
+                        //ImportWotApi2DB.ImportTankList(this);
+
+                        // Init after getting tanks and other basic data import
 						TankHelper.GetTankList();
 						TankHelper.GetJson2dbMappingFromDB();
 

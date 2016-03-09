@@ -50,7 +50,7 @@ namespace WinApp.Forms
         private void btnPlayReplay_Click(object sender, EventArgs e)
         {
             Process[] p = Process.GetProcessesByName("WorldOfTanks");
-            if (p[0].ProcessName == "WorldOfTanks")
+            if (p.Length > 0 && p[0].ProcessName == "WorldOfTanks")
                 MsgBox.Show("It seems like World of Tanks is already running. Shut down WoT to be able to play replay", "WoT is running");
             Process.Start("explorer.exe", _filename);
         }

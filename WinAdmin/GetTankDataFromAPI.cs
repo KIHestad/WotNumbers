@@ -26,7 +26,8 @@ namespace WinAdmin
 			Gun = 3,
 			Radio = 4,
 			Achievement = 5,
-			TankDetails = 6
+			TankDetails = 6,
+            Vehicles = 7
 		}
 
 		#endregion
@@ -62,14 +63,23 @@ namespace WinAdmin
 		{
 			try
 			{
-				string url = "";
-				if (WotAPi == WotApiType.Tank)
+                string applicationId = "0a7f2eb79dce0dd45df9b8fedfed7530"; // EU
+                string url = "https://api.worldoftanks.eu";
+                if (server == "NA")
+                {
+                    applicationId = "417860beae5ef8a03e11520aaacbf123"; // NA
+                    url = "https://api.worldoftanks.com";
+                }
+                if (WotAPi == WotApiType.Tank)
 				{
-					if (server == "EU")
-						url = "https://api.worldoftanks.eu/wot/encyclopedia/tanks/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530"; // EU
-					else if (server == "NA")
-						url = "https://api.worldoftanks.com/wot/encyclopedia/tanks/?application_id=417860beae5ef8a03e11520aaacbf123"; // NA
+					// OLD
+                    url += "/wot/encyclopedia/tanks/?application_id=" + applicationId ; // EU
 				}
+                if (WotAPi == WotApiType.Vehicles)
+                {
+                    // NEW
+                    url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=short_name%2Cimages";
+                }
 				if (WotAPi == WotApiType.Turret)
 				{
 					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
@@ -130,7 +140,7 @@ namespace WinAdmin
 			Application.DoEvents();
 			string server = "EU";
 			if (rbNA.Checked) server = "NA";
-			string json = FetchFromAPI(WotApiType.Tank, 0, server);
+			string json = FetchFromAPI(WotApiType.Vehicles, 0, server);
 			if (json == "")
 			{
 				MessageBox.Show("No data imported, no json result from WoT API.","Error");
@@ -163,10 +173,11 @@ namespace WinAdmin
 							itemToken = tank.First();   // First() returns only child tokens of tank
 
 							itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
-							string name = itemToken["name_i18n"].ToString();
-							string imgPath = itemToken["image"].ToString();
-							string smallImgPath = itemToken["image_small"].ToString();
-							string contourImgPath = itemToken["contour_image"].ToString();
+                            string name = itemToken["short_name"].ToString();
+                            JToken imageToken = itemToken["images"];
+                            string imgPath = imageToken["big_icon"].ToString();
+                            string smallImgPath = imageToken["small_icon"].ToString();
+                            string contourImgPath = imageToken["contour_icon"].ToString();
 							// Write to db
 							string sql = "select 1 from tank where id=@id";
 							DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
