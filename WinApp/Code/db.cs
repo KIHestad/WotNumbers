@@ -405,6 +405,7 @@ namespace WinApp.Code
 				{
 					string stringValue = Value.ToString();
 					stringValue = stringValue.Replace("'", "''");
+                    stringValue = stringValue.Replace(";", ":");
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + stringValue + "'");
 				}
 				else if (DataType == SqlDataType.Int)

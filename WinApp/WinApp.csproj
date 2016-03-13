@@ -1055,9 +1055,11 @@
     <Content Include="Dossier2json\battle_results_shared_15.py" />
     <Content Include="Dossier2json\battle_results_shared_16.py" />
     <Content Include="Dossier2json\battle_results_shared_18.py" />
+    <Content Include="Dossier2json\battle_results_shared_19.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\dictpackers_18.py" />
+    <Content Include="Dossier2json\dictpackers_19.py" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

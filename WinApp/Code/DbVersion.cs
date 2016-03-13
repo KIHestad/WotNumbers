@@ -24,7 +24,7 @@ namespace WinApp.Code
         public static bool RunInstallNewBrrVersion = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 365; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 366; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2760,9 +2760,72 @@ namespace WinApp.Code
                     mssql =
                         "UPDATE tank SET short_name = name WHERE short_name IS NULL;";
                     sqlite = mssql;
+                    break;
+                case 366:
+                    mssql =
+                        "UPDATE map SET arena_id = '01_karelia' WHERE id = 1; " +
+                        "UPDATE map SET arena_id = '02_malinovka' WHERE id = 2; " +
+                        "UPDATE map SET arena_id = '04_himmelsdorf' WHERE id = 3; " +
+                        "UPDATE map SET arena_id = '05_prohorovka' WHERE id = 4; " +
+                        "UPDATE map SET arena_id = '07_lakeville' WHERE id = 5; " +
+                        "UPDATE map SET arena_id = '06_ensk' WHERE id = 6; " +
+                        "UPDATE map SET arena_id = '11_murovanka' WHERE id = 7; " +
+                        "UPDATE map SET arena_id = '13_erlenberg' WHERE id = 8; " +
+                        "UPDATE map SET arena_id = '10_hills' WHERE id = 9; " +
+                        "UPDATE map SET arena_id = '15_komarin' WHERE id = 10; " +
+                        "UPDATE map SET arena_id = '18_cliff' WHERE id = 11; " +
+                        "UPDATE map SET arena_id = '19_monastery' WHERE id = 12; " +
+                        "UPDATE map SET arena_id = '28_desert' WHERE id = 13; " +
+                        "UPDATE map SET arena_id = '35_steppes' WHERE id = 14; " +
+                        "UPDATE map SET arena_id = '37_caucasus' WHERE id = 15; " +
+                        "UPDATE map SET arena_id = '33_fjord' WHERE id = 16; " +
+                        "UPDATE map SET arena_id = '34_redshire' WHERE id = 17; " +
+                        "UPDATE map SET arena_id = '36_fishing_bay' WHERE id = 18; " +
+                        "UPDATE map SET arena_id = '38_mannerheim_line' WHERE id = 19; " +
+                        "UPDATE map SET arena_id = '08_ruinberg' WHERE id = 20; " +
+                        "UPDATE map SET arena_id = '14_siegfried_line' WHERE id = 21; " +
+                        "UPDATE map SET arena_id = '22_slough' WHERE id = 22; " +
+                        "UPDATE map SET arena_id = '23_westfeld' WHERE id = 23; " +
+                        "UPDATE map SET arena_id = '29_el_hallouf' WHERE id = 24; " +
+                        "UPDATE map SET arena_id = '31_airfield' WHERE id = 26; " +
+                        "UPDATE map SET arena_id = '03_campania' WHERE id = 27; " +
+                        "UPDATE map SET arena_id = '17_munchen' WHERE id = 28; " +
+                        "UPDATE map SET arena_id = '44_north_america' WHERE id = 31; " +
+                        "UPDATE map SET arena_id = '39_crimea' WHERE id = 32; " +
+                        "UPDATE map SET arena_id = '43_north_america' WHERE id = 33; " +
+                        "UPDATE map SET arena_id = '45_north_america' WHERE id = 34; " +
+                        "UPDATE map SET arena_id = '42_north_america' WHERE id = 36; " +
+                        "UPDATE map SET arena_id = '53_japan' WHERE id = 43; " +
+                        "UPDATE map SET arena_id = '51_asia' WHERE id = 44; " +
+                        "UPDATE map SET arena_id = '47_canada_a' WHERE id = 49; " +
+                        "UPDATE map SET arena_id = '85_winter' WHERE id = 50; " +
+                        "UPDATE map SET arena_id = '73_asia_korea' WHERE id = 51; " +
+                        "UPDATE map SET arena_id = '60_asia_miao' WHERE id = 52; " +
+                        "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 53; " +
+                        "UPDATE map SET arena_id = '63_tundra' WHERE id = 55; " +
+                        "UPDATE map SET arena_id = '84_winter' WHERE id = 56; " +
+                        "UPDATE map SET arena_id = '86_himmelsdorf_winter' WHERE id = 57; " +
+                        "UPDATE map SET arena_id = '87_ruinberg_on_fire' WHERE id = 58; " +
+                        "UPDATE map SET arena_id = '83_kharkiv' WHERE id = 60; " +
+                        "UPDATE map SET arena_id = '99_himmelball' WHERE id = 61; " +
+                        "UPDATE map SET arena_id = '96_prohorovka_defense' WHERE id = 62; " +
+                        "UPDATE map SET arena_id = '102_deathtrack' WHERE id = 65; " +
+                        "UPDATE map SET arena_id = '92_stalingrad' WHERE id = 66; " +
+                        "UPDATE map SET arena_id = '100_thepit' WHERE id = 67; " +
+                        "UPDATE map SET arena_id = '95_lost_city' WHERE id = 68; " +
+                        "UPDATE map SET arena_id = '103_ruinberg_winter' WHERE id = 69; " +
+                        "UPDATE map SET arena_id = '101_dday' WHERE id = 70; " +
+                        "UPDATE map SET arena_id = '111_paris' WHERE id = 71; " +
+                        "UPDATE map SET arena_id = '105_germany' WHERE id = 72; " +
+                        "UPDATE map SET arena_id = '112_eiffel_tower' WHERE id = 73; " +
+                        "UPDATE map SET arena_id = '114_czech' WHERE id = 74; " +
+                        "UPDATE map SET arena_id = '109_battlecity_ny' WHERE id = 700; " +
+                        "UPDATE map SET arena_id = '60_asia_miao' WHERE id = 1957; " +
+                        "UPDATE map SET arena_id = '73_asia_korea' WHERE id = 1983; " +
+                        "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 2021; ";
+                    sqlite = mssql;
                     RunWotApi = true;
                     break;
-                
             }
 			string sql = "";
 			// get sql for correct dbtype

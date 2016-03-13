@@ -63,7 +63,13 @@ namespace WinApp.Code
                     int pos = tankImgPath.LastIndexOf("/") + 1;
                     tankFileName = tankImgPath.Substring(pos, tankImgPath.Length - pos - 4);
                 }
-                string replayFileName = "_" + tankFileName + "_" + mapArenaId + ".wotreplay";
+                
+                // problem - tank name in images file name do not comply with tank name on reply files
+                //string replayFileName = "_" + tankFileName + "_" + mapArenaId + ".wotreplay"; 
+                
+                // Only use nation name from icon file name
+                string nationName = tankFileName.Substring(0, tankFileName.IndexOf("-"));
+                string replayFileName = "_" + nationName + "-*_" + mapArenaId + ".wotreplay";
                 fi = GetReplayFile(battleApproxStartTime, replayFileName);
             }
             return fi;
