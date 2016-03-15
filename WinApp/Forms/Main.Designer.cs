@@ -80,12 +80,12 @@
             this.mMapShowOld = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.mTankFilter_Country = new System.Windows.Forms.ToolStripMenuItem();
-            this.mTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryGermany = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_CountryUSSR = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryUSA = new System.Windows.Forms.ToolStripMenuItem();
-            this.mTankFilter_CountryChina = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryFrance = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryUK = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_CountryChina = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryJapan = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryCzechoslovakia = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Type = new System.Windows.Forms.ToolStripMenuItem();
@@ -205,7 +205,6 @@
             this.mGadgetReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.mViewChart = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.mVBaddict = new System.Windows.Forms.ToolStripButton();
@@ -235,6 +234,8 @@
             this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
+            this.mAd = new System.Windows.Forms.ToolStripButton();
             this.lblStatusRowCount = new System.Windows.Forms.Label();
             this.panelMainArea = new System.Windows.Forms.Panel();
             this.scrollCorner = new BadScrollBarCorner();
@@ -331,7 +332,7 @@
             this.MainTheme.MainArea = mainAreaClass1;
             this.MainTheme.Name = "MainTheme";
             this.MainTheme.Resizable = true;
-            this.MainTheme.Size = new System.Drawing.Size(952, 479);
+            this.MainTheme.Size = new System.Drawing.Size(1119, 631);
             this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
             this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
             this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -361,15 +362,16 @@
             this.mBattleGroup,
             this.mGadget,
             this.mHomeEdit,
-            this.toolStripSeparator23,
             this.mViewChart,
             this.toolStripSeparator16,
-            this.mVBaddict,
             this.mSettings,
-            this.mHelp});
+            this.mVBaddict,
+            this.toolStripSeparator30,
+            this.mHelp,
+            this.mAd});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(932, 25);
+            this.toolMain.Size = new System.Drawing.Size(1102, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 18;
             this.toolMain.Text = "toolStripEx1";
@@ -746,16 +748,6 @@
             this.mTankFilter_Country.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Country.Text = "Nation";
             // 
-            // mTankFilter_CountryUSSR
-            // 
-            this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
-            this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
-            this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(155, 22);
-            this.mTankFilter_CountryUSSR.Text = "U.S.S.R.";
-            this.mTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-            this.mTankFilter_CountryUSSR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-            this.mTankFilter_CountryUSSR.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-            // 
             // mTankFilter_CountryGermany
             // 
             this.mTankFilter_CountryGermany.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryGermany.Image")));
@@ -766,6 +758,16 @@
             this.mTankFilter_CountryGermany.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountryGermany.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
+            // mTankFilter_CountryUSSR
+            // 
+            this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
+            this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
+            this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryUSSR.Text = "U.S.S.R.";
+            this.mTankFilter_CountryUSSR.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
+            this.mTankFilter_CountryUSSR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
+            this.mTankFilter_CountryUSSR.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
             // mTankFilter_CountryUSA
             // 
             this.mTankFilter_CountryUSA.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSA.Image")));
@@ -775,16 +777,6 @@
             this.mTankFilter_CountryUSA.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryUSA.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountryUSA.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-            // 
-            // mTankFilter_CountryChina
-            // 
-            this.mTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryChina.Image")));
-            this.mTankFilter_CountryChina.Name = "mTankFilter_CountryChina";
-            this.mTankFilter_CountryChina.Size = new System.Drawing.Size(155, 22);
-            this.mTankFilter_CountryChina.Text = "China";
-            this.mTankFilter_CountryChina.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-            this.mTankFilter_CountryChina.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-            this.mTankFilter_CountryChina.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter_CountryFrance
             // 
@@ -806,6 +798,16 @@
             this.mTankFilter_CountryUK.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryUK.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountryUK.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mTankFilter_CountryChina
+            // 
+            this.mTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryChina.Image")));
+            this.mTankFilter_CountryChina.Name = "mTankFilter_CountryChina";
+            this.mTankFilter_CountryChina.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountryChina.Text = "China";
+            this.mTankFilter_CountryChina.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
+            this.mTankFilter_CountryChina.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
+            this.mTankFilter_CountryChina.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter_CountryJapan
             // 
@@ -1878,11 +1880,6 @@
             this.mHomeEdit.ToolTipText = "Gadget Edit Mode";
             this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
             // 
-            // toolStripSeparator23
-            // 
-            this.toolStripSeparator23.Name = "toolStripSeparator23";
-            this.toolStripSeparator23.Size = new System.Drawing.Size(6, 25);
-            // 
             // mViewChart
             // 
             this.mViewChart.AutoSize = false;
@@ -1902,11 +1899,12 @@
             // 
             // mVBaddict
             // 
+            this.mVBaddict.BackColor = System.Drawing.Color.Transparent;
             this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -1934,6 +1932,7 @@
             this.toolStripSeparator7,
             this.mExit});
             this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
+            this.mSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mSettings.Name = "mSettings";
             this.mSettings.ShowDropDownArrow = false;
             this.mSettings.Size = new System.Drawing.Size(22, 22);
@@ -2133,12 +2132,29 @@
             this.mHelpAbout.Text = "About Wot Numbers...";
             this.mHelpAbout.Click += new System.EventHandler(this.mHelpAbout_Click);
             // 
+            // toolStripSeparator30
+            // 
+            this.toolStripSeparator30.Name = "toolStripSeparator30";
+            this.toolStripSeparator30.Size = new System.Drawing.Size(6, 25);
+            // 
+            // mAd
+            // 
+            this.mAd.BackColor = System.Drawing.Color.Transparent;
+            this.mAd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mAd.Image = ((System.Drawing.Image)(resources.GetObject("mAd.Image")));
+            this.mAd.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mAd.Name = "mAd";
+            this.mAd.Size = new System.Drawing.Size(23, 22);
+            this.mAd.Text = "toolStripButton1";
+            this.mAd.ToolTipText = "Support Wot Numbers Team by watching an ad";
+            this.mAd.Click += new System.EventHandler(this.mAd_Click);
+            // 
             // lblStatusRowCount
             // 
             this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
             this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatusRowCount.Location = new System.Drawing.Point(863, 459);
+            this.lblStatusRowCount.Location = new System.Drawing.Point(1030, 611);
             this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatusRowCount.Name = "lblStatusRowCount";
             this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -2274,7 +2290,7 @@
             this.lblStatus2.AutoSize = true;
             this.lblStatus2.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus2.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatus2.Location = new System.Drawing.Point(69, 459);
+            this.lblStatus2.Location = new System.Drawing.Point(69, 611);
             this.lblStatus2.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatus2.Name = "lblStatus2";
             this.lblStatus2.Size = new System.Drawing.Size(82, 13);
@@ -2288,7 +2304,7 @@
             this.lblStatus1.AutoSize = true;
             this.lblStatus1.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblStatus1.Location = new System.Drawing.Point(13, 459);
+            this.lblStatus1.Location = new System.Drawing.Point(13, 611);
             this.lblStatus1.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatus1.Name = "lblStatus1";
             this.lblStatus1.Size = new System.Drawing.Size(37, 13);
@@ -2301,7 +2317,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Fuchsia;
-            this.ClientSize = new System.Drawing.Size(952, 479);
+            this.ClientSize = new System.Drawing.Size(1119, 631);
             this.Controls.Add(this.MainTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2431,8 +2447,7 @@
 		private System.Windows.Forms.ToolStripMenuItem mBattles1y;
 		private System.Windows.Forms.ToolStripMenuItem mBattles2y;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
-		private System.Windows.Forms.ToolStripMenuItem mBattlesAll;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesAll;
 		private System.Windows.Forms.ToolStripDropDownButton mSettings;
 		private System.Windows.Forms.ToolStripMenuItem mSettingsRun;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
@@ -2538,6 +2553,8 @@
         private System.Windows.Forms.ToolStripMenuItem mGadgetRWR;
         private System.Windows.Forms.ToolStripMenuItem mGadgetResetNew;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_Search;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator30;
+        private System.Windows.Forms.ToolStripButton mAd;
 	}
 }
 

@@ -212,6 +212,12 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Ad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ad.Designer.cs">
+      <DependentUpon>Ad.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BadThemeControls\MessageInput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -613,6 +619,9 @@
     <Compile Include="Code\TankHelper.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ad.resx">
+      <DependentUpon>Ad.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\MessageInput.resx">
       <DependentUpon>MessageInput.cs</DependentUpon>

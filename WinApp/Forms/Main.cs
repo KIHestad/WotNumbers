@@ -4580,6 +4580,12 @@ namespace WinApp.Forms
 			Process.Start("explorer.exe", Config.AppDataLogFolder);
 		}
 
+        private void mAd_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Ad();
+            frm.ShowDialog();
+        }
+
 		#endregion
 
 		#region Testing
@@ -5215,12 +5221,6 @@ namespace WinApp.Forms
         }
 
 		#endregion
-
-        
-
-             
-
-
 
 
     }
