@@ -4580,11 +4580,18 @@ namespace WinApp.Forms
 			Process.Start("explorer.exe", Config.AppDataLogFolder);
 		}
 
-        private void mAd_Click(object sender, EventArgs e)
+        private void mWotNumWebForum_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.Ad();
+            Form frm = new Forms.WebBrowser();
             frm.ShowDialog();
         }
+
+        private void mWotNumWebUserGuide_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.WebBrowser("http://wotnumbers.com/?menu=42&_User_Guide");
+            frm.ShowDialog();
+        }
+
 
 		#endregion
 
@@ -5222,6 +5229,6 @@ namespace WinApp.Forms
 
 		#endregion
 
-
+        
     }
 }

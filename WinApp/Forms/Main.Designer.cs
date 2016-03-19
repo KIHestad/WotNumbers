@@ -207,7 +207,6 @@
             this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
             this.mViewChart = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
@@ -230,12 +229,14 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mWotNumWebForum = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpCheckVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
-            this.mAd = new System.Windows.Forms.ToolStripButton();
+            this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.lblStatusRowCount = new System.Windows.Forms.Label();
             this.panelMainArea = new System.Windows.Forms.Panel();
             this.scrollCorner = new BadScrollBarCorner();
@@ -244,6 +245,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.mWotNumWebUserGuide = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -365,10 +367,9 @@
             this.mViewChart,
             this.toolStripSeparator16,
             this.mSettings,
-            this.mVBaddict,
-            this.toolStripSeparator30,
             this.mHelp,
-            this.mAd});
+            this.toolStripSeparator30,
+            this.mVBaddict});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(1102, 25);
@@ -1897,19 +1898,6 @@
             this.toolStripSeparator16.Name = "toolStripSeparator16";
             this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
             // 
-            // mVBaddict
-            // 
-            this.mVBaddict.BackColor = System.Drawing.Color.Transparent;
-            this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
-            this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
-            this.mVBaddict.Text = "toolStripButton1";
-            this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
-            this.mVBaddict.Visible = false;
-            this.mVBaddict.Click += new System.EventHandler(this.mVBaddict_Click);
-            // 
             // mSettings
             // 
             this.mSettings.AutoSize = false;
@@ -2094,6 +2082,9 @@
             this.mHelp.BackColor = System.Drawing.Color.Transparent;
             this.mHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.mHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mWotNumWebUserGuide,
+            this.mWotNumWebForum,
+            this.toolStripSeparator23,
             this.mHelpCheckVersion,
             this.mHelpMessage,
             this.toolStripSeparator2,
@@ -2105,6 +2096,18 @@
             this.mHelp.Size = new System.Drawing.Size(22, 22);
             this.mHelp.Text = "toolStripDropDownButton1";
             this.mHelp.ToolTipText = "Help";
+            // 
+            // mWotNumWebForum
+            // 
+            this.mWotNumWebForum.Name = "mWotNumWebForum";
+            this.mWotNumWebForum.Size = new System.Drawing.Size(286, 22);
+            this.mWotNumWebForum.Text = "Forum (Q&&A)...";
+            this.mWotNumWebForum.Click += new System.EventHandler(this.mWotNumWebForum_Click);
+            // 
+            // toolStripSeparator23
+            // 
+            this.toolStripSeparator23.Name = "toolStripSeparator23";
+            this.toolStripSeparator23.Size = new System.Drawing.Size(283, 6);
             // 
             // mHelpCheckVersion
             // 
@@ -2137,17 +2140,18 @@
             this.toolStripSeparator30.Name = "toolStripSeparator30";
             this.toolStripSeparator30.Size = new System.Drawing.Size(6, 25);
             // 
-            // mAd
+            // mVBaddict
             // 
-            this.mAd.BackColor = System.Drawing.Color.Transparent;
-            this.mAd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mAd.Image = ((System.Drawing.Image)(resources.GetObject("mAd.Image")));
-            this.mAd.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mAd.Name = "mAd";
-            this.mAd.Size = new System.Drawing.Size(23, 22);
-            this.mAd.Text = "toolStripButton1";
-            this.mAd.ToolTipText = "Support Wot Numbers Team by watching an ad";
-            this.mAd.Click += new System.EventHandler(this.mAd_Click);
+            this.mVBaddict.BackColor = System.Drawing.Color.Transparent;
+            this.mVBaddict.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
+            this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mVBaddict.Name = "mVBaddict";
+            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
+            this.mVBaddict.Text = "toolStripButton1";
+            this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
+            this.mVBaddict.Visible = false;
+            this.mVBaddict.Click += new System.EventHandler(this.mVBaddict_Click);
             // 
             // lblStatusRowCount
             // 
@@ -2311,6 +2315,13 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // mWotNumWebUserGuide
+            // 
+            this.mWotNumWebUserGuide.Name = "mWotNumWebUserGuide";
+            this.mWotNumWebUserGuide.Size = new System.Drawing.Size(286, 22);
+            this.mWotNumWebUserGuide.Text = "User Guide...";
+            this.mWotNumWebUserGuide.Click += new System.EventHandler(this.mWotNumWebUserGuide_Click);
             // 
             // Main
             // 
@@ -2554,7 +2565,9 @@
         private System.Windows.Forms.ToolStripMenuItem mGadgetResetNew;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_Search;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator30;
-        private System.Windows.Forms.ToolStripButton mAd;
+        private System.Windows.Forms.ToolStripMenuItem mWotNumWebForum;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
+        private System.Windows.Forms.ToolStripMenuItem mWotNumWebUserGuide;
 	}
 }
 

@@ -212,11 +212,11 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Ad.cs">
+    <Compile Include="Forms\WebBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Ad.Designer.cs">
-      <DependentUpon>Ad.cs</DependentUpon>
+    <Compile Include="Forms\WebBrowser.Designer.cs">
+      <DependentUpon>WebBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BadThemeControls\MessageInput.cs">
       <SubType>Form</SubType>
@@ -620,8 +620,8 @@
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Ad.resx">
-      <DependentUpon>Ad.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\WebBrowser.resx">
+      <DependentUpon>WebBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\MessageInput.resx">
       <DependentUpon>MessageInput.cs</DependentUpon>

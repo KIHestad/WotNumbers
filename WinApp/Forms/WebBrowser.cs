@@ -13,20 +13,28 @@ using WinApp.Code.CefBrowser;
 
 namespace WinApp.Forms
 {
-    public partial class Ad : Form
+    public partial class WebBrowser : Form
     {
         private ChromiumWebBrowser browser { get; set; }
-        private const string adPage = "http://wotnumbers.com/AdSense.aspx";
+        private string _address = "http://wotnumbers.com/Forum.aspx?menu=6&_Forum";
 
-        public Ad()
+        public WebBrowser(string address = "")
         {
             InitializeComponent();
+            if (address != "")
+                _address = address;
         }
 
-        private void Ad_Load(object sender, EventArgs e)
+        private void WebBrowser_Load(object sender, EventArgs e)
         {
+            // Position browser window panel
+            pnlBrowser.Top = WebBrowserTheme.TitleHeight;
+            pnlBrowser.Left = 1;
+            pnlBrowser.Width = WebBrowserTheme.Width - 2;
+            pnlBrowser.Height = WebBrowserTheme.Height - WebBrowserTheme.TitleHeight - WebBrowserTheme.FormFooterHeight;
+            
             // Create browser go to default page
-            browser = new ChromiumWebBrowser(adPage);
+            browser = new ChromiumWebBrowser(_address);
             // browser.LoadingStateChanged += OnLoadingStateChanged;
             browser.AddressChanged += OnAddressChanged;
             browser.Dock = DockStyle.Fill;
@@ -45,29 +53,12 @@ namespace WinApp.Forms
         {
             this.Invoke((MethodInvoker)delegate
             {
-                btnGoTo.Enabled = (browser.Address != adPage);
+                //btnGoTo.Enabled = (browser.Address != adPage);
             });
             
         }
 
-        // SHow next ad
-        private void btnNextAd_Click(object sender, EventArgs e)
-        {
-            // Refresh browser by requesting same page
-            browser.Load(adPage);
-        }
 
-        // Open default web browser at current page
-        private void btnGoTo_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(browser.Address);
-        }
-
-        // Close form
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
     }
 }
