@@ -162,7 +162,7 @@ namespace WinApp.Gadget
 		{
 			string sql = "delete from gadgetParameter ; delete from gadget ;";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
-			gadgets.Clear();
+            gadgets = new List<GadgetItem>();
 		}
 
 		public static int InsertNewGadget(GadgetItem gadget)
@@ -568,10 +568,6 @@ namespace WinApp.Gadget
             string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + fileName;
             if (File.Exists(file))
             {
-                // Remove current gadgets
-                string sql = "delete from gadgetParameter ; delete from gadget ;";
-                DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
-                gadgets = new List<GadgetItem>();
                 // Add from default file
                 GadgetHelper.HomeViewLoadFromToFile(file);
             }
@@ -601,37 +597,59 @@ namespace WinApp.Gadget
                 // Remove current setup
                 GadgetHelper.RemoveGadgetAll();
                 // Store to the database from here
+
                 // Add gadgets
-                string sqlInsert = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) VALUES (@controlName, 1, @sortorder, @posX, @posY, @width, @height); ";
-                foreach (DataRow dr in dtGadget.Rows)
+                string latestObject = "";
+                string sqlInsert = "";
+                string newsql = "";
+                try
                 {
-                    string newsql = sqlInsert;
-                    DB.AddWithValue(ref newsql, "@controlName", dr["controlName"].ToString(), DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref newsql, "@sortorder", dr["sortorder"].ToString(), DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref newsql, "@posX", dr["posX"].ToString(), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
-                    DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
-                    // get new id from db and add to memory table
-                    string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
-                    dr["newId"] = newId;
+                    sqlInsert = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) VALUES (@controlName, 1, @sortorder, @posX, @posY, @width, @height); ";
+                    foreach (DataRow dr in dtGadget.Rows)
+                    {
+                        newsql = sqlInsert;
+                        latestObject = dr["controlName"].ToString();
+                        DB.AddWithValue(ref newsql, "@controlName", dr["controlName"].ToString(), DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref newsql, "@sortorder", dr["sortorder"].ToString(), DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref newsql, "@posX", dr["posX"].ToString(), DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
+                        DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
+                        // get new id from db and add to memory table
+                        string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
+                        dr["newId"] = newId;
+                    }
                 }
-                
+                catch (Exception ex)
+                {
+                    MsgBox.Show("Error adding gadget " + latestObject + ": " + ex.Message, "Gadget Error");
+                    Log.LogToFile(ex, "Latest SQL query: " + newsql);
+                }
+
                 // Add gadget PARAMETERS
                 string sqlBatch = "";
-                sqlInsert = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) VALUES (@gadgetId, @paramNum, @dataType, @value); ";
-                foreach (DataRow dr in dtGadgetParameter.Rows)
+                string gadgetId = "";
+                try
                 {
-                    string sqlNew = sqlInsert;
-                    string gadgetId = dtGadget.Select("Id = " + dr["gadgetId"])[0]["newId"].ToString();
-                    DB.AddWithValue(ref sqlNew, "@gadgetId", gadgetId, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref sqlNew, "@paramNum", dr["paramNum"].ToString(), DB.SqlDataType.Int);
-                    DB.AddWithValue(ref sqlNew, "@dataType", dr["dataType"].ToString(), DB.SqlDataType.VarChar);
-                    DB.AddWithValue(ref sqlNew, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
-                    sqlBatch += sqlNew + Environment.NewLine;
+                    sqlInsert = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) VALUES (@gadgetId, @paramNum, @dataType, @value); ";
+                    foreach (DataRow dr in dtGadgetParameter.Rows)
+                    {
+                        newsql = sqlInsert;
+                        gadgetId = dtGadget.Select("Id = " + dr["gadgetId"])[0]["newId"].ToString();
+                        DB.AddWithValue(ref newsql, "@gadgetId", gadgetId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@paramNum", dr["paramNum"].ToString(), DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@dataType", dr["dataType"].ToString(), DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref newsql, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
+                        sqlBatch += newsql + Environment.NewLine;
+                    }
+                    DB.ExecuteNonQuery(sqlBatch, false, true);
                 }
-                DB.ExecuteNonQuery(sqlBatch, false, true);
+                catch (Exception ex)
+                {
+                    MsgBox.Show("Error adding gadget parameter id " + gadgetId + ": " + ex.Message, "Gadget Parameter Error");
+                    Log.LogToFile(ex, "Latest SQL query: " + sqlBatch);
+                }
             }
             
         }

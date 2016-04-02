@@ -405,7 +405,7 @@ namespace WinApp.Code
 				{
 					string stringValue = Value.ToString();
 					stringValue = stringValue.Replace("'", "''");
-                    stringValue = stringValue.Replace(";", ":");
+                    // stringValue = stringValue.Replace(";", ":"); makes total stats bug, since ; are used as data param separators
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + stringValue + "'");
 				}
 				else if (DataType == SqlDataType.Int)

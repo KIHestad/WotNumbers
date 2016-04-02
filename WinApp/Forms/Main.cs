@@ -4582,14 +4582,12 @@ namespace WinApp.Forms
 
         private void mWotNumWebForum_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.WebBrowser();
-            frm.ShowDialog();
+            System.Diagnostics.Process.Start("http://wotnumbers.com/Forum.aspx?menu=6&_Forum");
         }
 
         private void mWotNumWebUserGuide_Click(object sender, EventArgs e)
         {
-            Form frm = new Forms.WebBrowser("http://wotnumbers.com/?menu=42&_User_Guide");
-            frm.ShowDialog();
+            System.Diagnostics.Process.Start("http://wotnumbers.com/?menu=42&_User_Guide");
         }
 
 
@@ -5178,7 +5176,6 @@ namespace WinApp.Forms
                 MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBox.Type.OKCancel, this);
                 if (answer == MsgBox.Button.OK)
                 {
-                    GadgetHelper.RemoveGadgetAll();
                     GadgetHelper.DefaultSetup(menuitem.Tag.ToString());
                     mHomeEdit.Checked = false;
                     GadgetEditModeChange();

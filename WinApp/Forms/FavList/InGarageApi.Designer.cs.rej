@@ -1,0 +1,39 @@
+diff a/WinApp/Forms/FavList/InGarageApi.Designer.cs b/WinApp/Forms/FavList/InGarageApi.Designer.cs	(rejected hunks)
+@@ -85,34 +85,21 @@
+             this.txtAddress.Name = "txtAddress";
+             this.txtAddress.PasswordChar = '\0';
+             this.txtAddress.ReadOnly = true;
+-            this.txtAddress.Size = new System.Drawing.Size(792, 23);
++            this.txtAddress.Size = new System.Drawing.Size(580, 23);
+             this.txtAddress.TabIndex = 1;
+             this.txtAddress.Text = "Loading...";
+             this.txtAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+             this.txtAddress.ToolTipText = "Loading...";
+             // 
+-            // webBrowser1
+-            // 
+-            this.webBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+-            | System.Windows.Forms.AnchorStyles.Left) 
+-            | System.Windows.Forms.AnchorStyles.Right)));
+-            this.webBrowser1.Location = new System.Drawing.Point(12, 63);
+-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+-            this.webBrowser1.Name = "webBrowser1";
+-            this.webBrowser1.Size = new System.Drawing.Size(793, 811);
+-            this.webBrowser1.TabIndex = 0;
+-            this.webBrowser1.Url = new System.Uri("", System.UriKind.Relative);
+-            this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
+-            this.webBrowser1.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.webBrowser1_Navigated);
+-            // 
+             // InGarageApi
+             // 
+             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+             this.BackColor = System.Drawing.Color.Fuchsia;
+-            this.ClientSize = new System.Drawing.Size(818, 886);
++            this.ClientSize = new System.Drawing.Size(606, 678);
+             this.Controls.Add(this.badForm1);
+             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
++            this.MinimumSize = new System.Drawing.Size(380, 500);
+             this.Name = "InGarageApi";
+             this.ShowInTaskbar = false;
+             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

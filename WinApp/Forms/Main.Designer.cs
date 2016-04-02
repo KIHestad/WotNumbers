@@ -229,6 +229,7 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mWotNumWebUserGuide = new System.Windows.Forms.ToolStripMenuItem();
             this.mWotNumWebForum = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpCheckVersion = new System.Windows.Forms.ToolStripMenuItem();
@@ -245,7 +246,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.mWotNumWebUserGuide = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1865,7 +1865,7 @@
             // 
             this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
             this.mGadgetRemoveAll.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetRemoveAll.Text = "Remove all Gadgets";
+            this.mGadgetRemoveAll.Text = "Remove All Gadgets";
             this.mGadgetRemoveAll.Click += new System.EventHandler(this.mGadgetRemoveAll_Click);
             // 
             // mHomeEdit
@@ -2097,6 +2097,13 @@
             this.mHelp.Text = "toolStripDropDownButton1";
             this.mHelp.ToolTipText = "Help";
             // 
+            // mWotNumWebUserGuide
+            // 
+            this.mWotNumWebUserGuide.Name = "mWotNumWebUserGuide";
+            this.mWotNumWebUserGuide.Size = new System.Drawing.Size(286, 22);
+            this.mWotNumWebUserGuide.Text = "User Guide...";
+            this.mWotNumWebUserGuide.Click += new System.EventHandler(this.mWotNumWebUserGuide_Click);
+            // 
             // mWotNumWebForum
             // 
             this.mWotNumWebForum.Name = "mWotNumWebForum";
@@ -2315,13 +2322,6 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // mWotNumWebUserGuide
-            // 
-            this.mWotNumWebUserGuide.Name = "mWotNumWebUserGuide";
-            this.mWotNumWebUserGuide.Size = new System.Drawing.Size(286, 22);
-            this.mWotNumWebUserGuide.Text = "User Guide...";
-            this.mWotNumWebUserGuide.Click += new System.EventHandler(this.mWotNumWebUserGuide_Click);
             // 
             // Main
             // 
