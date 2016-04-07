@@ -22,9 +22,10 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
         public static bool RunRecalcBattleMaxTier = false;
         public static bool RunInstallNewBrrVersion = false;
+        public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 366; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 367; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2825,6 +2826,9 @@ namespace WinApp.Code
                         "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 2021; ";
                     sqlite = mssql;
                     RunWotApi = true;
+                    break;
+                case 367:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
             }
 			string sql = "";

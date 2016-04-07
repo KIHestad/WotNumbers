@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using WinApp.Code;
 
 namespace WinApp.Code
 {
@@ -81,7 +82,7 @@ namespace WinApp.Code
 			{
 				if (DB.CheckConnection(false))
 				{
-					string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+					string adminDB = Config.AppDataBaseFolder + "Admin.db";
 					string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
 					string sql = "select * from tank";
 					SQLiteConnection con = new SQLiteConnection(adminDbCon);
@@ -156,7 +157,7 @@ namespace WinApp.Code
 
 		private static Image GetLargeTankImage(int tankId)
 		{
-			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+            string adminDB = Config.AppDataBaseFolder + "Admin.db";
 			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
 			string sql = "select * from tank where id=@id";
 			DB.AddWithValue(ref sql, "@id", tankId, DB.SqlDataType.Int);
@@ -203,7 +204,7 @@ namespace WinApp.Code
 			Image image = (Image)img;
 			if (arena_id != "")
 			{
-				string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+                string adminDB = Config.AppDataBaseFolder + "Admin.db";
 				string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
 				string sql = "select * from map where name=@arena_id";
 				DB.AddWithValue(ref sql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
@@ -241,7 +242,7 @@ namespace WinApp.Code
 
 		public static void LoadMasteryBadgeImages()
 		{
-			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+            string adminDB = Config.AppDataBaseFolder + "Admin.db";
 			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
 			string sql = "select * from masterybadge";
 			SQLiteConnection con = new SQLiteConnection(adminDbCon);
@@ -281,7 +282,7 @@ namespace WinApp.Code
 
 		public static void LoadTankTypeImages()
 		{
-			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+			string adminDB = Config.AppDataBaseFolder + "Admin.db";
 			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
 			string sql = "select * from tanktype";
 			SQLiteConnection con = new SQLiteConnection(adminDbCon);
@@ -313,7 +314,7 @@ namespace WinApp.Code
 
 		public static void LoadNationImages()
 		{
-			string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+            string adminDB = Config.AppDataBaseFolder + "Admin.db";
 			string adminDbCon = "Data Source=" + adminDB + ";Version=3;PRAGMA foreign_keys = ON;";
 			string sql = "select * from nation";
 			SQLiteConnection con = new SQLiteConnection(adminDbCon);

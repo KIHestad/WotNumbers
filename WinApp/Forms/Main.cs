@@ -73,6 +73,12 @@ namespace WinApp.Forms
                 // Check DB Version an dupgrade if needed
                 bool versionOK = DBVersion.CheckForDbUpgrade(this);
             }
+            // Check for missing or new admin db
+            if (DBVersion.CopyAdminDB || !File.Exists(Config.AppDataBaseFolder + "Admin.db"))
+            {
+                string adminDB = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\Database\\Admin.db";
+                File.Copy(adminDB, Config.AppDataBaseFolder + "Admin.db", true);
+            }
             // Get PosSize
 			if (mainFormPosSize != null)
 			{
@@ -516,7 +522,7 @@ namespace WinApp.Forms
 
 		#endregion
 
-		#region Check For New Verion and Download
+		#region Check For New Version and Download
 
 		private BackgroundWorker bwCheckForNewVersion;
 		private bool _onlyCheckVersionWithMessage = false;
@@ -540,7 +546,7 @@ namespace WinApp.Forms
 			// Debug option - avoid init dossier file check after startup
 			// if (false)
 			{
-				if (DBVersion.RunWotApi)
+                if (DBVersion.RunWotApi)
 					RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8)
 					RunRecalcBattleWN8(true);
