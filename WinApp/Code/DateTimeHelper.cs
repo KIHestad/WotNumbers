@@ -8,7 +8,10 @@ namespace WinApp.Code
 {
 	class DateTimeHelper
 	{
-		public static DateTime ConvertFromUnixTimestamp(double timestamp)
+        public static DateTime DatePopupSelectedDate { get; set; }
+        public static bool DatePopupSelected { get; set; }
+        
+        public static DateTime ConvertFromUnixTimestamp(double timestamp)
 		{
 			DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 			return origin.AddSeconds(timestamp);

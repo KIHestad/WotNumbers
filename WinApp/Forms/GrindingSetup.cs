@@ -35,7 +35,7 @@ namespace WinApp.Forms
 		{
 			_init = true;
 			txtGrindComment.Focus();
-			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, tank.id as tankId " +
+			string sql = "SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, gCompleationDate, gProgressGoal, tank.id as tankId " +
 						 "FROM    tank INNER JOIN " +
 						 "        playerTank ON tank.id = playerTank.tankId " +
 						 "WHERE  (playerTank.id = @playerTankId) ";
@@ -51,6 +51,15 @@ namespace WinApp.Forms
 				txtGrindXP.Text = tank["gGrindXP"].ToString();
 				txtProgressXP.Text = tank["gProgressXP"].ToString();
 				txtBattlesPerDay.Text = tank["gBattlesDay"].ToString();
+                if (tank["gCompleationDate"] != DBNull.Value)
+                    txtCompletionDate.Text = Convert.ToDateTime(tank["gCompleationDate"]).ToString("d");
+                else
+                    txtCompletionDate.Text = "";
+                // Check progress goal
+                bool progGoalComplDate = (Convert.ToInt32(tank["gProgressGoal"]) == 1);
+                chkBtlPrDay.Checked = !progGoalComplDate;
+                chkComplDate.Checked = progGoalComplDate;
+                SetGrindingProcessControls();
 				int tankId = Convert.ToInt32(tank["tankId"]);
 				tankPic.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
 			}
@@ -85,6 +94,7 @@ namespace WinApp.Forms
 			}
 			_init = false;
 			CalcProgress();
+            SetGrindingProcessControls();
 		}
 
 		private void txtGrindGrindXP_TextChanged(object sender, EventArgs e)
@@ -124,9 +134,9 @@ namespace WinApp.Forms
 
 		private void txtBattlesPerDay_TextChanged(object sender, EventArgs e)
 		{
-			if (!_init)
+			if (!_init && chkBtlPrDay.Checked)
 			{
-				CalcProgress(false);
+				CalcProgress();
 				dataChanged = true;
 			}
 		}
@@ -143,6 +153,9 @@ namespace WinApp.Forms
 				txtBattlesPerDay.Text = "0";
 				txtRestDays.Text = "0";
 				txtRestBattles.Text = "0";
+                chkComplDate.Checked = false;
+                chkBtlPrDay.Checked = true;
+                txtCompletionDate.Text = "";
 			}
 		}
 
@@ -203,7 +216,7 @@ namespace WinApp.Forms
 			{
 				string sql = "UPDATE playerTank SET gGrindXP=@GrindXP, gProgressXP=@ProgressXP, " +
 							 "                      gBattlesDay=@BattlesDay, gComment=@Comment, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
-							 "					    gRestBattles=@RestBattles, gRestDays=@RestDays " +
+                             "					    gRestBattles=@RestBattles, gRestDays=@RestDays, gCompleationDate=@CompleationDate, gProgressGoal=@ProgressGoal " +
 							 "WHERE id=@id";
 				DB.AddWithValue(ref sql, "@GrindXP", txtGrindXP.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@ProgressXP", txtProgressXP.Text, DB.SqlDataType.Int);
@@ -213,6 +226,11 @@ namespace WinApp.Forms
 				DB.AddWithValue(ref sql, "@RestDays", txtRestDays.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@BattlesDay", txtBattlesPerDay.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@Comment", txtGrindComment.Text, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@CompleationDate", txtCompletionDate.Text, DB.SqlDataType.DateTime);
+                int progressGoal = 0;
+                if (chkComplDate.Checked)
+                    progressGoal = 1;
+                DB.AddWithValue(ref sql, "@ProgressGoal", progressGoal, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
 				if (DB.ExecuteNonQuery(sql))
 					dataChanged = false;
@@ -224,26 +242,59 @@ namespace WinApp.Forms
 
 		}
 
-		private void CalcProgress(bool Complete = true)
+		private void CalcProgress()
 		{
 			// Get parameters
 			int grind = 0;
 			Int32.TryParse(txtGrindXP.Text, out grind);
 			int progress = 0;
 			Int32.TryParse(txtProgressXP.Text, out progress);
-			int btlPerDay = 0;
-			Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-			// Calc values 
-			pbProgressPercent.Value = GrindingHelper.CalcProgressPercent(grind, progress);
+            // Calc values independent of progress type (completion date / battles per day)
+            pbProgressPercent.Value = GrindingHelper.CalcProgressPercent(grind, progress);
 			int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
-			txtRestXP.Text = restXP.ToString();
+            txtRestXP.Text = restXP.ToString();
+			// If grinding progress is dependent of completion calculate battles per day to reach goal
+            if (chkComplDate.Checked)
+            {
+                // Calc max days to complete before grinding progress goal
+                DateTime getComplDate;
+                if (DateTime.TryParse(txtCompletionDate.Text, out getComplDate))
+                {
+                    // Get max rest days
+                    int maxRestDays = (getComplDate - DateTime.Now).Days + 1;
+                    if (maxRestDays < 1)
+                        maxRestDays = 1;
+                    // Run a loop testing number of battles per day until goal is reached
+                    int testBtlPerDay = 1;
+                    int testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
+                    int testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
+                    while (GrindingHelper.CalcRestDays(restXP, testRealAvgXP, testBtlPerDay) > maxRestDays)
+                    {
+                        testBtlPerDay++;
+                        testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
+                        testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
+                    }
+                    txtBattlesPerDay.Text = testBtlPerDay.ToString();
+                }
+            }
+            // Get battles per day
+            int btlPerDay = 0;
+            Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
+			// Calc values dependent of battles per day
 			int realAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString());
 			txtRealAvgXP.Text = realAvgXP.ToString();
 			int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
 			txtRestBattles.Text = restBattles.ToString();
-			int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
-			txtRestDays.Text = restDays.ToString();
-			dataChanged = true;
+            // Calc completion date or rest days according to progress type
+            int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
+            txtRestDays.Text = restDays.ToString();
+            // If grinding progress is dependent of battles per day calculate compleation date to reach goal
+            if (chkBtlPrDay.Checked)
+            {
+                DateTime complDate = DateTime.Now.AddDays(restDays);
+                txtCompletionDate.Text = complDate.ToString("d");
+            }
+            dataChanged = true;
 		}
 
 		private void GrindingSetup_FormClosing(object sender, FormClosingEventArgs e)
@@ -312,6 +363,63 @@ namespace WinApp.Forms
 			// Stop the character from being entered into the control since it is illegal.
 			e.Handled = !(validChar || backSpace);
 		}
+
+        private void btnDatePopup_Click(object sender, EventArgs e)
+        {
+            DateTime? currentDate = null;
+            DateTime getDateTime;
+            if (DateTime.TryParse(txtCompletionDate.Text, out getDateTime))
+                currentDate = getDateTime;
+            Form frm = new Forms.DatePopup(currentDate);
+            frm.ShowDialog();
+            if (DateTimeHelper.DatePopupSelected)
+                txtCompletionDate.Text = DateTimeHelper.DatePopupSelectedDate.ToString("d");
+        }
+
+        private void chkComplDate_Click(object sender, EventArgs e)
+        {
+            chkComplDate.Checked = true;
+            if (chkBtlPrDay.Checked)
+            {
+                chkBtlPrDay.Checked = false;
+                SetGrindingProcessControls();
+                dataChanged = true;
+            }
+        }
+
+        private void chkBtlPrDay_Click(object sender, EventArgs e)
+        {
+            chkBtlPrDay.Checked = true;
+            if (chkComplDate.Checked)
+            {
+                chkComplDate.Checked = false;
+                SetGrindingProcessControls();
+                dataChanged = true;
+            }
+        }
+
+        private void SetGrindingProcessControls()
+        {
+            // Set enabled controls
+            btnDatePopup.Enabled = chkComplDate.Checked;
+            btnAddDay.Enabled = chkBtlPrDay.Checked;
+            btnSubtrDay.Enabled = chkBtlPrDay.Checked;
+            txtCompletionDate.Enabled = chkComplDate.Checked;
+            txtBattlesPerDay.Enabled = chkBtlPrDay.Checked;
+        }
+
+        private void txtCompletionDate_TextChanged(object sender, EventArgs e)
+        {
+            if (!_init)
+            {
+                DateTime getDateTime;
+                if (DateTime.TryParse(txtCompletionDate.Text, out getDateTime))
+                {
+                    CalcProgress();
+                    dataChanged = true;
+                }
+            }
+        }
 
 
 

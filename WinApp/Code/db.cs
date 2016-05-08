@@ -421,7 +421,7 @@ namespace WinApp.Code
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
-					DateTime dateTimeValue = (DateTime)Value;
+					DateTime dateTimeValue = Convert.ToDateTime(Value);
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + dateTimeValue.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"); // yyyy-DD-mm
 				}
 				else if (DataType == SqlDataType.Image)

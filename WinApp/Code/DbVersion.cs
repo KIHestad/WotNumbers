@@ -25,7 +25,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 367; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 370; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2825,10 +2825,15 @@ namespace WinApp.Code
                         "UPDATE map SET arena_id = '73_asia_korea' WHERE id = 1983; " +
                         "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 2021; ";
                     sqlite = mssql;
-                    RunWotApi = true;
                     break;
-                case 367:
+                case 369:
+                    RunWotApi = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 370:
+                    mssql = "ALTER TABLE playerTank ADD gProgressGoal int NOT NULL default 0; " +
+                            "ALTER TABLE playerTank ADD gCompleationDate datetime NULL; ";
+                    sqlite = mssql;
                     break;
             }
 			string sql = "";

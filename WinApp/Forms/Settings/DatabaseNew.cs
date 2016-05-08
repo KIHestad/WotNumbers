@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,8 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
-using Microsoft.SqlServer.Management.Smo;
-using Microsoft.SqlServer.Management.Common;
 
 namespace WinApp.Forms
 {

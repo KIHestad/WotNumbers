@@ -63,6 +63,7 @@ namespace WinAdmin
 		{
 			try
 			{
+                // Get app id
                 string applicationId = "0a7f2eb79dce0dd45df9b8fedfed7530"; // EU
                 string url = "https://api.worldoftanks.eu";
                 if (server == "NA")
@@ -70,40 +71,48 @@ namespace WinAdmin
                     applicationId = "417860beae5ef8a03e11520aaacbf123"; // NA
                     url = "https://api.worldoftanks.com";
                 }
+                
+                // Get correct api url per api type
                 if (WotAPi == WotApiType.Tank)
 				{
 					// OLD
-                    url += "/wot/encyclopedia/tanks/?application_id=" + applicationId ; // EU
+                    url += "/wot/encyclopedia/tanks/?application_id=" + applicationId + "&fields=short_name_i18n%2Cimage%2Cimage_small%2Ccontour_image"; // EU
 				}
-                if (WotAPi == WotApiType.Vehicles)
+                else if (WotAPi == WotApiType.Vehicles)
                 {
                     // NEW
                     url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=short_name%2Cimages";
                 }
-				if (WotAPi == WotApiType.Turret)
-				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-					// itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
-				}
-				else if (WotAPi == WotApiType.Gun)
-				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-					// itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
-				}
-				else if (WotAPi == WotApiType.Radio)
-				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankradios/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-					// itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
-				}
-				else if (WotAPi == WotApiType.Achievement)
-				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/achievements/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
-				}
-				else if (WotAPi == WotApiType.TankDetails)
-				{
-					url = "https://api.worldoftanks.eu/wot/encyclopedia/tankinfo/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530&tank_id=" + tankId;
-				}
-				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                
+                // NOT IN USE
+
+                //else if (WotAPi == WotApiType.TankDetails)
+                //{
+                //    // OLD
+                //    url = "/wot/encyclopedia/tankinfo/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530&tank_id=" + tankId;
+                //}
+                
+                //else if (WotAPi == WotApiType.Turret)
+                //{
+                //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankturrets/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+                //    // itemsInDB = DB.FetchData("select id from modTurret");   // Fetch id of turrets already existing in db
+                //}
+                //else if (WotAPi == WotApiType.Gun)
+                //{
+                //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankguns/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+                //    // itemsInDB = DB.FetchData("select id from modGun");   // Fetch id of guns already existing in db
+                //}
+                //else if (WotAPi == WotApiType.Radio)
+                //{
+                //    url = "https://api.worldoftanks.eu/wot/encyclopedia/tankradios/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+                //    // itemsInDB = DB.FetchData("select id from modRadio");   // Fetch id of radios already existing in db
+                //}
+                //else if (WotAPi == WotApiType.Achievement)
+                //{
+                //    url = "https://api.worldoftanks.eu/wot/encyclopedia/achievements/?application_id=0a7f2eb79dce0dd45df9b8fedfed7530";
+                //}
+				
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
 				httpRequest.Timeout = 10000;     // 10 secs
 				httpRequest.UserAgent = "Wot Numbers Admin";
 				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
@@ -224,6 +233,102 @@ namespace WinAdmin
 			}
 		}
 
+        private void ImportTanksOLD()
+        {
+            int itemCount;
+            JToken rootToken;
+            JToken itemToken;
+            int itemId;
+            string insertSql;
+            string updateSql;
+
+            lblStatus.Text = "Getting json data from Wot (OLD) API (" + DateTime.Now.ToString() + ")";
+            Application.DoEvents();
+            string server = "EU";
+            if (rbNA.Checked) server = "NA";
+            string json = FetchFromAPI(WotApiType.Tank, 0, server);
+            if (json == "")
+            {
+                MessageBox.Show("No data imported, no json result from WoT API.", "Error");
+            }
+            else
+            {
+                bool tankExists = false;
+                lblStatus.Text = "Start checking tanks (" + DateTime.Now.ToString() + ")";
+                Application.DoEvents();
+                try
+                {
+                    JObject allTokens = JObject.Parse(json);
+                    rootToken = allTokens.First;   // returns status token
+
+                    if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                    {
+
+                        rootToken = rootToken.Next;
+                        itemCount = (int)((JProperty)rootToken.First.First).Value;   // returns count (not in use for now)
+                        rootToken = rootToken.Next;   // start reading tanks
+                        JToken tanks = rootToken.Children().First();   // read all tokens in data token
+
+                        //List<string> logtext = new List<string>();
+                        string sqlTotal = "";
+                        DB.DBResult result = new DB.DBResult();
+                        int actualcount = 0;
+                        foreach (JProperty tank in tanks)   // tank = tankId + child tokens
+                        {
+                            actualcount++;
+                            itemToken = tank.First();   // First() returns only child tokens of tank
+
+                            itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
+                            string name = itemToken["short_name_i18n"].ToString();
+                            string imgPath = itemToken["image"].ToString();
+                            string smallImgPath = itemToken["image_small"].ToString();
+                            string contourImgPath = itemToken["contour_image"].ToString();
+                            // Write to db
+                            string sql = "select 1 from tank where id=@id";
+                            DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
+                            DataTable dt = DB.FetchData(sql, Settings.Config, out result);
+                            tankExists = (dt.Rows.Count > 0);
+                            insertSql = "INSERT INTO tank (id, name, imgPath, smallImgPath, contourImgPath) VALUES (@id, @name, @imgPath, @smallImgPath, @contourImgPath); ";
+                            updateSql = "UPDATE tank set name=@name, imgPath=@imgPath, smallImgPath=@smallImgPath, contourImgPath=@contourImgPath WHERE id=@id; ";
+
+                            // insert if tank does not exist
+                            if (!tankExists)
+                            {
+                                DB.AddWithValue(ref insertSql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
+                                DB.AddWithValue(ref insertSql, "@name", name, DB.SqlDataType.VarChar, Settings.Config);
+                                DB.AddWithValue(ref insertSql, "@imgPath", imgPath, DB.SqlDataType.VarChar, Settings.Config);
+                                DB.AddWithValue(ref insertSql, "@smallImgPath", smallImgPath, DB.SqlDataType.VarChar, Settings.Config);
+                                DB.AddWithValue(ref insertSql, "@contourImgPath", contourImgPath, DB.SqlDataType.VarChar, Settings.Config);
+                                sqlTotal += insertSql + Environment.NewLine;
+                            }
+
+                            // update if tank exists
+                            else
+                            {
+                                DB.AddWithValue(ref updateSql, "@id", itemId, DB.SqlDataType.Int, Settings.Config);
+                                DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar, Settings.Config);
+                                DB.AddWithValue(ref updateSql, "@imgPath", imgPath, DB.SqlDataType.VarChar, Settings.Config);
+                                DB.AddWithValue(ref updateSql, "@smallImgPath", smallImgPath, DB.SqlDataType.VarChar, Settings.Config);
+                                DB.AddWithValue(ref updateSql, "@contourImgPath", contourImgPath, DB.SqlDataType.VarChar, Settings.Config);
+                                sqlTotal += updateSql + Environment.NewLine;
+                            }
+                        }
+                        lblStatus.Text = "Saving to DB";
+                        Application.DoEvents();
+                        DB.ExecuteNonQuery(sqlTotal, Settings.Config, out result, true); // Run all SQL in batch
+                    }
+
+                    lblStatus.Text = "Tank import complete";
+                    Application.DoEvents();
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Import error occured: " + Environment.NewLine + Environment.NewLine + ex.Message, "Error");
+                }
+            }
+        }
+
 		#endregion
 
 		#region ImportImgLinks
@@ -324,6 +429,16 @@ namespace WinAdmin
 		}
 
 		#endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pbStatus.Value = 0;
+            pbStatus.Maximum = 100;
+            Refresh();
+            if (chkFetchNewTanks.Checked)
+                ImportTanksOLD();
+            ImportTankImg();
+        }
 
 		
 

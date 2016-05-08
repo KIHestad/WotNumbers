@@ -692,6 +692,8 @@
             // 
             // mMapShowOld
             // 
+            this.mMapShowOld.Checked = true;
+            this.mMapShowOld.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mMapShowOld.Name = "mMapShowOld";
             this.mMapShowOld.Size = new System.Drawing.Size(219, 22);
             this.mMapShowOld.Text = "Show Old / Obsolete Maps";

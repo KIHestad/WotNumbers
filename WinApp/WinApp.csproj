@@ -70,11 +70,13 @@
     <Reference Include="Base32">
       <HintPath>..\packages\Base32.1.0.0.13\lib\portable-win+net40+sl40\Base32.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -108,9 +110,21 @@
       <Private>True</Private>
       <HintPath>..\packages\IronPython.2.7.4\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.SqlServer.Smo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.Smo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -233,6 +247,12 @@
     </Compile>
     <Compile Include="Forms\BattleSummary\BattleSummary.Designer.cs">
       <DependentUpon>BattleSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DatePopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatePopup.Designer.cs">
+      <DependentUpon>DatePopup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BattleTimeFilterCustom.cs">
       <SubType>Form</SubType>
@@ -623,6 +643,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleSummary\BattleSummary.resx">
       <DependentUpon>BattleSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DatePopup.resx">
+      <DependentUpon>DatePopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BattleTimeFilterCustom.resx">
       <DependentUpon>BattleTimeFilterCustom.cs</DependentUpon>

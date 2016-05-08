@@ -300,7 +300,7 @@ namespace WinApp.Forms
 				"		tankType ON tank.tankTypeId = tankType.id INNER JOIN " +
 				"		favList ON favListTank.favListId = favList.id " +
 				"WHERE  (favList.id = @id) " +
-				"ORDER BY sortorder ";
+                "ORDER BY favListTank.sortorder ";
 			DB.AddWithValue(ref sql, "@id", SelectedFavListId, DB.SqlDataType.Int);
 			dtFavListTank = DB.FetchData(sql);
 			ShowSelectedTanks();
