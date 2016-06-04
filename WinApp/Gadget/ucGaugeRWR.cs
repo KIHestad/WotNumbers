@@ -76,7 +76,7 @@ namespace WinApp.Gadget
 			// Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-				double? RWR = Code.Rating.RWRtotal(_battleMode);
+				double? RWR = Code.Rating.RWR.RWRtotal(_battleMode);
                 if (RWR != null)
                     end_val = Convert.ToDouble(RWR);
 			}
@@ -112,7 +112,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				double? RWR = Rating.RWRbattle(battleTimeFilter, battleRevert, _battleMode);
+				double? RWR = Code.Rating.RWR.RWRbattle(battleTimeFilter, battleRevert, _battleMode);
                 if (RWR != null)
                     end_val = Convert.ToDouble(RWR);
 			}

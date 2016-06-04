@@ -196,6 +196,12 @@
     <Compile Include="Code\FormControl\ToolStripEx.Designer.cs">
       <DependentUpon>ToolStripEx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Rating\EFF.cs" />
+    <Compile Include="Code\Rating\RWR.cs" />
+    <Compile Include="Code\Rating\WN7.cs" />
+    <Compile Include="Code\Rating\WN8.cs" />
+    <Compile Include="Code\Rating\WN9.cs" />
+    <Compile Include="Code\Rating\WR.cs" />
     <Compile Include="Code\ReplayHelper.cs" />
     <Compile Include="Code\RunBattleCheckHelper.cs" />
     <Compile Include="Code\FormView\GridView.cs" />
@@ -457,7 +463,7 @@
     <Compile Include="Code\Dossier2db.cs" />
     <Compile Include="Code\Log.cs" />
     <Compile Include="Code\ImportWotApi2DB.cs" />
-    <Compile Include="Code\Rating.cs" />
+    <Compile Include="Code\Rating\WNHelper.cs" />
     <Compile Include="Forms\BattleChart.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -846,10 +852,13 @@
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3.pdn" />
     <None Include="DevDocs\Img\FormIcons\OLD\logo_org_icon3_details.pdn" />
-    <None Include="Docs\BRR.pyc" />
-    <None Include="Docs\CameraNode.pyc" />
+    <None Include="Docs\OLD_BRR\BRR.pyc" />
+    <None Include="Docs\OLD_BRR\CameraNode.pyc" />
     <None Include="Docs\Database\Admin.db" />
-    <None Include="Docs\__init__.pyc" />
+    <None Include="Docs\mod_BRR.pyc" />
+    <None Include="Docs\New_Default_Setup.json" />
+    <None Include="Docs\Old_Default_Setup.json" />
+    <None Include="Docs\OLD_BRR\__init__.pyc" />
     <None Include="Dossier2json\battle_results_shared_17.py" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\structures_10.json" />
@@ -1089,10 +1098,12 @@
     <Content Include="Dossier2json\battle_results_shared_16.py" />
     <Content Include="Dossier2json\battle_results_shared_18.py" />
     <Content Include="Dossier2json\battle_results_shared_19.py" />
+    <Content Include="Dossier2json\battle_results_shared_20.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\dictpackers_18.py" />
     <Content Include="Dossier2json\dictpackers_19.py" />
+    <Content Include="Dossier2json\dictpackers_20.py" />
     <Content Include="Dossier2json\wotbr2j.py" />
     <Content Include="Dossier2json\wotdc2j.py" />
     <Content Include="form_ico_6.ico" />

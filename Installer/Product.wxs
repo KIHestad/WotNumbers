@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.12.5.0"?>
+<?define ProductVersion = "0.13.3.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -148,15 +148,9 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Docs" Directory="INSTALLFOLDER_Docs">
-			<Component Id="cmpBRR" Guid="{042B7D17-CE6E-4CDC-ACA9-BA3367B7BDE3}">
-				<File Id="filBRR" Source="..\WinApp\Docs\BRR.pyc"  KeyPath="yes"></File>
-			</Component>
-			<Component Id="cmpInit" Guid="{FCE4843E-38FD-429E-B598-CA2AD0A93CC5}">
-				<File Id="filInit" Source="..\WinApp\Docs\__init__.pyc"  KeyPath="yes"></File>
-			</Component>
-			<Component Id="cmpCameraNode" Guid="{C879DF39-B96E-44F2-9898-60267580E8A5}">
-				<File Id="filCameraNode" Source="..\WinApp\Docs\CameraNode.pyc"  KeyPath="yes"></File>
-			</Component>
+      <Component Id="cmpmod_BRR" Guid="{4059006D-2378-4AFF-82FC-0194FF3F6AD4}">
+        <File Id="filmod_BRR" Source="..\WinApp\Docs\mod_BRR.pyc"  KeyPath="yes"></File>
+      </Component>
       <Component Id="cmpHomeViewOld" Guid="{2941A278-8B8D-4CF6-BED2-2EAA8C2F669D}">
         <File Id="filHomeViewOld" Source="..\WinApp\Docs\Old_Default_Setup.json"  KeyPath="yes"></File>
       </Component>
@@ -424,6 +418,9 @@
       <Component Id="cmpBRS_19" Directory="INSTALLFOLDER_Dossier2json" Guid="{F0863E3C-232B-44EB-9752-AE99A12712C8}">
         <File Id="filBRS_9" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_19.py" />
       </Component>
+      <Component Id="cmpBRS_20" Directory="INSTALLFOLDER_Dossier2json" Guid="{FFD13E2D-43DA-4310-BC8D-EDCB5352C25A}">
+        <File Id="filBRS_20" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_20.py" />
+      </Component>
 
 			<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
 				<File Id="fil658CC5357D27167A6EB1467EAE4317BF" KeyPath="yes" Source="$(var.D2jSource)\tanks.json" />
@@ -443,6 +440,9 @@
       </Component>
       <Component Id="cmpdictpackers_19" Directory="INSTALLFOLDER_Dossier2json" Guid="{B0507634-119F-4ECB-944D-355CDCC7FDE5}">
         <File Id="fildictpackers_19" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_19.py" />
+      </Component>
+      <Component Id="cmpdictpackers_20" Directory="INSTALLFOLDER_Dossier2json" Guid="{83509700-2F1D-4463-9571-FEDD8922D9D5}">
+        <File Id="fildictpackers_20" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_20.py" />
       </Component>
 
 			<Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">

@@ -11,41 +11,45 @@ namespace WinApp.Code
 {
 	class BattleResultRetriever
 	{
-		public static string BrrFile
+        private static string ClientGuiFolder
+        {
+            get
+            {
+                string wotFolder = Config.Settings.wotGameFolder;
+                if (wotFolder != "" && wotFolder.Substring(wotFolder.Length - 1, 1) != "\\")
+                    wotFolder += "\\";
+                return wotFolder += "res_mods\\0.9.15\\scripts\\client\\gui\\";
+            }
+            set { }
+        }
+        
+        private static string ModsFolder
+        {
+            get { return ClientGuiFolder += "mods\\"; }
+            set { }
+        }
+        
+        private static string BrrFile
 		{
-			get {return modsFolder + "BRR.pyc";}
+			get {return "mod_BRR.pyc";}
 			set {}
 		}
 
-		public static string InitFile
-		{
-			get {return modsFolder + "__init__.pyc";}
-			set { }
-		}
+        //public static string InitFile
+        //{
+        //    get {return modsFolder + "__init__.pyc";}
+        //    set { }
+        //}
 
-		public static string CameraNodeFile
-		{
-			get { return clientFolder + "CameraNode.pyc"; }
-			set { }
-		}
+        //public static string CameraNodeFile
+        //{
+        //    get { return clientFolder + "CameraNode.pyc"; }
+        //    set { }
+        //}
 
-		public static string clientFolder
-		{
-			get
-			{
-				string wotFolder = Config.Settings.wotGameFolder;
-				if (wotFolder != "" && wotFolder.Substring(wotFolder.Length - 1, 1) != "\\")
-					wotFolder += "\\";
-				return wotFolder += "res_mods\\0.9.14.1\\scripts\\client\\";
-			}
-			set { }
-		}
+		
 
-		public static string modsFolder
-		{
-			get {return clientFolder += "mods\\";}
-			set {}
-		}
+		
 
 		public static bool IsWoTGameFolderOK()
 		{
@@ -76,13 +80,14 @@ namespace WinApp.Code
 			get
 			{
 				int files = 0;
-				if (File.Exists(BattleResultRetriever.BrrFile))
+				if (File.Exists(ModsFolder + BrrFile))
 					files++;
-				if (File.Exists(BattleResultRetriever.InitFile))
-					files++;
-				if (File.Exists(BattleResultRetriever.CameraNodeFile))
-					files++;
-				return (files == 3);
+                //if (File.Exists(BattleResultRetriever.InitFile))
+                //    files++;
+                //if (File.Exists(BattleResultRetriever.CameraNodeFile))
+                //    files++;
+                //return true; // Temp deactivated for WoT 9.15 - not working
+				return (files == 1);
 			}
 			set {}
 		}
@@ -90,34 +95,38 @@ namespace WinApp.Code
 
 		public static bool Install(out string msg)
 		{
-			bool ok = true;
+            //msg = "BRR mod is currently not working for WoT 9.15";
+            //return false;
+            
+            
+            bool ok = true;
 			msg = "";
 			try
 			{
-				if (!Directory.Exists(modsFolder))
+				if (!Directory.Exists(ModsFolder))
 				{
-					Directory.CreateDirectory(modsFolder);
+					Directory.CreateDirectory(ModsFolder);
 				}
 				string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 				if (!File.Exists(BrrFile))
 				{
-					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\BRR.pyc";
-					File.Copy(fileToCopy, BrrFile);
+					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + BrrFile;
+                    File.Copy(fileToCopy, ModsFolder + BrrFile);
 				}
-				if (!File.Exists(InitFile))
-				{
-					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\__init__.pyc";
-					File.Copy(fileToCopy, InitFile);
-				}
-				if (!File.Exists(CameraNodeFile))
-				{
-					string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\CameraNode.pyc";
-					File.Copy(fileToCopy, CameraNodeFile);
-				}
+                //if (!File.Exists(InitFile))
+                //{
+                //    string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\__init__.pyc";
+                //    File.Copy(fileToCopy, InitFile);
+                //}
+                //if (!File.Exists(CameraNodeFile))
+                //{
+                //    string fileToCopy = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\CameraNode.pyc";
+                //    File.Copy(fileToCopy, CameraNodeFile);
+                //}
 				// Add the access control entry to the files
-				AddFileSecurity(BrrFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
-				AddFileSecurity(CameraNodeFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
-				AddFileSecurity(InitFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
+                AddFileSecurity(ModsFolder + BrrFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
+                //AddFileSecurity(CameraNodeFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
+                //AddFileSecurity(InitFile, userName, FileSystemRights.FullControl, AccessControlType.Allow);
 			}
 			catch (Exception ex)
 			{
@@ -133,7 +142,7 @@ namespace WinApp.Code
 			msg = "";
 			try
 			{
-				File.Delete(BrrFile);
+                File.Delete(ModsFolder + BrrFile);
 			}
 			catch (Exception ex)
 			{

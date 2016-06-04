@@ -443,7 +443,7 @@ namespace WinApp.Code
                                 battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
 								battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
 								// Rating values, more adds later
-                                Rating.RatingParameters rp = new Rating.RatingParameters();
+                                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
                                 rp.DEF = (int)token_personel.SelectToken("droppedCapturePoints");
 								battleValues.Add(new BattleValue() { colname = "def", value = rp.DEF }); // override def - might be above 100
 								// field returns null
@@ -562,12 +562,14 @@ namespace WinApp.Code
 									//Ratings
 									rp.TIER = TankHelper.GetTankTier(tankId);
                                     rp.BATTLES = 1;
-                                    double eff = Rating.EffBattle(tankId, rp);
+                                    double eff = Code.Rating.EFF.EffBattle(tankId, rp);
 									battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
-                                    double wn7 = Rating.WN7battle(rp, true);
+                                    double wn7 = Code.Rating.WN7.WN7battle(rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
-                                    double wn8 = Rating.WN8battle(tankId, rp, true);
+                                    double wn8 = Code.Rating.WN8.CalcBattle(tankId, rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });
+                                    double wn9 = Code.Rating.WN9.CalcBattle(tankId, rp, true);
+                                    battleValues.Add(new BattleValue() { colname = "WN9", value = Math.Round(wn9, 0) });
 								}
 								// insert data
 								string fields = "";

@@ -70,7 +70,7 @@ namespace WinApp.Gadget
 			// Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-				end_val = Code.Rating.WN8total("15");
+                end_val = Code.Rating.WN8.CalcPlayerTotal("15");
 			}
 			else // Check time range
 			{
@@ -104,7 +104,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				end_val = Rating.WN8battle(battleTimeFilter, battleRevert);			
+                end_val = Code.Rating.WN8.CalcBattleRange(battleTimeFilter, battleRevert);			
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();

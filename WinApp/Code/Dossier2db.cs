@@ -675,23 +675,25 @@ namespace WinApp.Code
 			// Update playerTankBattle
 			string sqlFields = "";
 			// Get rating parameters
-            Rating.RatingParameters rp = new Rating.RatingParameters();
-			rp.DAMAGE = Rating.ConvertDbVal2Double(playerTankBattleNewRow["dmg"]);
-			rp.SPOT = Rating.ConvertDbVal2Double(playerTankBattleNewRow["spot"]);
-			rp.FRAGS = Rating.ConvertDbVal2Double(playerTankBattleNewRow["frags"]);
-			rp.DEF = Rating.ConvertDbVal2Double(playerTankBattleNewRow["def"]);
-			rp.WINS = Rating.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
-			rp.CAP = Rating.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
+            Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
+            rp.DAMAGE = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["dmg"]);
+            rp.SPOT = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["spot"]);
+            rp.FRAGS = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["frags"]);
+            rp.DEF = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["def"]);
+            rp.WINS = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["wins"]);
+            rp.CAP = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
             rp.BATTLES = playerTankNewRow_battles;
+            // Calculate WN9
+            sqlFields += " wn9=" + Math.Round(Code.Rating.WN9.CalcTank(tankId, rp), 0).ToString();
             // Calculate WN8
-            sqlFields += " wn8=" + Math.Round(Rating.WN8tank(tankId, rp), 0).ToString();
+            sqlFields += ", wn8=" + Math.Round(Code.Rating.WN8.CalcTank(tankId, rp), 0).ToString();
 			// Calculate Eff
-			sqlFields += ", eff=" + Math.Round(Rating.EffTank(tankId, rp), 0).ToString();
+            sqlFields += ", eff=" + Math.Round(Code.Rating.EFF.EffTank(tankId, rp), 0).ToString();
             // Calculate WN7 - use special tier
             rp.TIER = TankHelper.GetTankTier(tankId);
-            sqlFields += ", wn7=" + Math.Round(Rating.WN7tank(rp), 0).ToString();
+            sqlFields += ", wn7=" + Math.Round(Code.Rating.WN7.WN7tank(rp), 0).ToString();
 			// Calculate RWR
-            sqlFields += ", rwr=" + Rating.RWRtank(tankId, rp);
+            sqlFields += ", rwr=" + Code.Rating.RWR.RWRtank(tankId, rp);
 			foreach (DataColumn column in playerTankBattleOld.Columns)
 			{
 				// Get columns and values from NewPlayerTankRow direct
@@ -925,25 +927,28 @@ namespace WinApp.Code
 					}
 				}
 				// Get rating parameters
-                Rating.RatingParameters rp = new Rating.RatingParameters();
-				rp.DAMAGE = Rating.ConvertDbVal2Double(battleNewRow["dmg"]);
-				rp.SPOT = Rating.ConvertDbVal2Double(battleNewRow["spotted"]);
-				rp.FRAGS = Rating.ConvertDbVal2Double(battleNewRow["frags"]);
-				rp.DEF = Rating.ConvertDbVal2Double(battleNewRow["def"]);
-				rp.CAP = Rating.ConvertDbVal2Double(battleNewRow["cap"]);
-				rp.WINS = Rating.ConvertDbVal2Double(battleNewRow["victory"]);
+                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
+                rp.DAMAGE = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["dmg"]);
+                rp.SPOT = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["spotted"]);
+                rp.FRAGS = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["frags"]);
+                rp.DEF = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["def"]);
+                rp.CAP = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["cap"]);
+                rp.WINS = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["victory"]);
                 rp.BATTLES = battlesCount;
-				// Calculate WN8
-				sqlFields += ", wn8";
-                sqlValues += ", " + Math.Round(Rating.WN8battle(tankId, rp, true), 0).ToString();
+                // Calculate WN9
+                sqlFields += ", wn9";
+                sqlValues += ", " + Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, true), 0).ToString();
+                // Calculate WN8
+                sqlFields += ", wn8";
+                sqlValues += ", " + Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp, true), 0).ToString();
 				// Calc Eff
 				sqlFields += ", eff";
-				sqlValues += ", " + Math.Round(Rating.EffBattle(tankId, rp),0).ToString();
+                sqlValues += ", " + Math.Round(Code.Rating.EFF.EffBattle(tankId, rp), 0).ToString();
                 // Calculate WN7
                 // Special tier calc
                 sqlFields += ", wn7";
-                rp.TIER = Rating.GetAverageTier(BattleMode.GetItemFromType(battleMode).SqlName);
-                sqlValues += ", " + Math.Round(Rating.WN7battle(rp, true), 0).ToString();
+                rp.TIER = Code.Rating.WNHelper.GetAverageTier(BattleMode.GetItemFromType(battleMode).SqlName);
+                sqlValues += ", " + Math.Round(Code.Rating.WN7.WN7battle(rp, true), 0).ToString();
 				
 				// Add battle mode
 				sqlFields += ", battleMode";

@@ -14,15 +14,17 @@ namespace WinApp.Forms
 	public partial class RecalcBattleRating : Form
 	{
 		private bool _autoRun = false;
+        private bool _forWN9 = true;
         private bool _forWN8 = true;
         private bool _forWN7 = false;
         private bool _forEFF = false;
         private int _forBattleId = 0;
 
-		public RecalcBattleRating(bool autoRun = false, bool forWN8 = true, bool forWN7 = false, bool forEFF = true, int forBattleId = 0)
+        public RecalcBattleRating(bool autoRun = false, bool forWN9 = true, bool forWN8 = true, bool forWN7 = false, bool forEFF = true, int forBattleId = 0)
 		{
 			InitializeComponent();
 			_autoRun = autoRun;
+            _forWN9 = forWN9;
             _forWN8 = forWN8;
             _forWN7 = forWN7;
             _forEFF = forEFF;
@@ -32,6 +34,8 @@ namespace WinApp.Forms
 		private void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
             string ratings = "";
+            if (_forWN9)
+                ratings += "WN9, ";
             if (_forWN8)
                 ratings += "WN8, ";
             if (_forWN7)
@@ -81,7 +85,7 @@ namespace WinApp.Forms
 			{
 				UpdateProgressBar("Calc for battle " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["battleTime"].ToString());
 				int tankId = Convert.ToInt32(dr["tankId"]);
-                Rating.RatingParameters rp = new Rating.RatingParameters();
+                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
 				rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
 				rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
 				rp.SPOT = Convert.ToDouble(dr["spotted"]);
@@ -89,26 +93,33 @@ namespace WinApp.Forms
 				rp.DEF = Convert.ToDouble(dr["def"]);
 				rp.WINS = Convert.ToDouble(dr["victory"]);
                 // Create sql and get ratings
+                double WN9 = 0;
                 double WN8 = 0;
                 double WN7 = 0;
                 double EFF = 0;
                 string newSQL = "update battle set ";
+                if (_forWN9)
+                {
+                    WN9 = Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, true), 0);
+                    newSQL += "wn9=@wn9, ";
+                    DB.AddWithValue(ref newSQL, "@wn9", WN8, DB.SqlDataType.Int);
+                }
                 if (_forWN8)
                 {
-                    WN8 = Math.Round(Rating.WN8battle(tankId, rp, true), 0);
+                    WN8 = Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp, true), 0);
                     newSQL += "wn8=@wn8, ";
                     DB.AddWithValue(ref newSQL, "@wn8", WN8, DB.SqlDataType.Int);
                 }
                 if (_forEFF)
                 {
-                    EFF = Math.Round(Rating.EffBattle(tankId, rp), 0);
+                    EFF = Math.Round(Code.Rating.EFF.EffBattle(tankId, rp), 0);
                     newSQL += "eff=@eff, ";
                     DB.AddWithValue(ref newSQL, "@eff", EFF, DB.SqlDataType.Int);
                 }
                 if (_forWN7)
                 {
-                    rp.TIER = Rating.GetAverageTier();
-                    WN7 = Math.Round(Rating.WN7battle(rp, true), 0); 
+                    rp.TIER = Code.Rating.WNHelper.GetAverageTier();
+                    WN7 = Math.Round(Code.Rating.WN7.WN7battle(rp, true), 0); 
                     newSQL += "wn7=@wn7, ";
                     DB.AddWithValue(ref newSQL, "@wn7", WN7, DB.SqlDataType.Int);
                 }

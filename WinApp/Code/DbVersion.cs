@@ -25,7 +25,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 370; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 374; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -989,27 +989,6 @@ namespace WinApp.Code
 							"UPDATE columnSelection SET description = 'Calculated battle WN8 rating (according to formula from vbAddict)' where id=49;";
 					sqlite = mssql;
 					break;
-				case 77:
-					mssql = "ALTER VIEW playerTankBattleTotalsView AS " +
-							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
-							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
-							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7 " +
-							"FROM            playerTankBattle " +
-							"GROUP BY playerTankId; ";
-					sqlite ="DROP VIEW playerTankBattleTotalsView;"+
-							"CREATE VIEW playerTankBattleTotalsView AS " +
-							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
-							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
-							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7 " +
-							"FROM            playerTankBattle " +
-							"GROUP BY playerTankId; ";
-					break;
 				case 80:
 					mssql = "UPDATE columnSelection SET position = position + 3 where position >= 132; " +
 							"UPDATE columnSelection SET description = 'Damage to enemy tanks done by others after you spotted them' where id = 129; " +
@@ -1526,31 +1505,6 @@ namespace WinApp.Code
 					break;
 				case 130:
 					TankHelper.GetJson2dbMappingFromDB();
-					break;
-				case 132:
-					mssql =
-						"ALTER VIEW playerTankBattleTotalsView AS " +
-						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-						"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
-						"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-						"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
-						"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-						"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(dmgBlocked) AS dmgBlocked,  " +
-						"                         SUM(potentialDmgReceived) AS potentialDmgReceived " +
-						"FROM            playerTankBattle " +
-						"GROUP BY playerTankId; ";
-					sqlite = 
-						"DROP VIEW playerTankBattleTotalsView;" +
-						"CREATE VIEW playerTankBattleTotalsView AS " +
-						"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-						"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
-						"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-						"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
-						"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-						"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(dmgBlocked) AS dmgBlocked,  " +
-						"                         SUM(potentialDmgReceived) AS potentialDmgReceived " +
-						"FROM            playerTankBattle " +
-						"GROUP BY playerTankId; ";
 					break;
 				case 133:
 					s = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
@@ -2210,29 +2164,6 @@ namespace WinApp.Code
 						"VALUES (222, 1, 141, 'playerTankBattle.marksOnGun', 'Marks on Gun', 'Marks on Gun according to Marks of Excellence', 'Rating', 47, 'Int', NULL); ";
 					sqlite = mssql;
 					break;
-				case 245:
-					mssql = "ALTER VIEW playerTankBattleTotalsView AS " +
-							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
-							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
-							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, " +
-							"						  MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun " +
-							"FROM            playerTankBattle " +
-							"GROUP BY playerTankId; ";
-					sqlite ="DROP VIEW playerTankBattleTotalsView;"+
-							"CREATE VIEW playerTankBattleTotalsView AS " +
-							"SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-							"                         SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap)  " +
-							"                         AS cap, SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-							"                         SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived)  " +
-							"                         AS heHitsReceived, SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-							"                         MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, " +
-							"						  MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun " +
-							"FROM            playerTankBattle " +
-							"GROUP BY playerTankId; ";
-					break;
 				case 246:
 					// Map new fields
 					mssql = GetUpgradeSQL("246");
@@ -2369,31 +2300,7 @@ namespace WinApp.Code
                         temp + "VALUES (543, 1, 201, 'CAST(playerTankBattle.credBtlLifetime / playerTankBattle.credBtlCount * 10 AS FLOAT) / 600', 'Avg Btl Lifetime', 'Avg battle time in minutes for battles recorded', 'Battle', 60, 'Float'); ";
                     sqlite = mssql;
                     break;
-                case 277:
-                    temp =
-                        "SELECT playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-                        "   SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap, " +
-                        "   SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits, " +
-                        "   SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived, " +
-                        "   SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-                        "   MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, " +
-                        "	MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
-                        "   SUM(credBtlCount) AS credBtlCount, " +
-                        "   SUM(credTotIncome) / NULLIF(SUM(credBtlCount),0) as credAvgIncome, " +
-                        "   SUM(credTotCost)   / NULLIF(SUM(credBtlCount),0) as credAvgCost, " +
-                        "   SUM(credTotResult) / NULLIF(SUM(credBtlCount),0) as credAvgResult, " +
-                        "   MAX(credMaxIncome) as credMaxIncome, MAX(credMaxCost) as credMaxCost, MAX(credMaxResult) as credMaxResult, " +
-                        "   SUM(credTotIncome) as credTotIncome, SUM(credTotCost) as credTotCost, SUM(credTotResult) as credTotResult, " +
-                        "   SUM(credBtlLifetime) as credBtlLifetime " +
-                        "FROM  playerTankBattle " +
-                        "GROUP BY playerTankId; ";
-                    mssql =
-                        "ALTER VIEW playerTankBattleTotalsView AS " + temp;
-                    sqlite =
-                        "DROP VIEW playerTankBattleTotalsView; " +
-                        "CREATE VIEW playerTankBattleTotalsView AS " + temp;
-                    break;
-                case 278:
+              case 278:
                     // Change to estimates
                     // temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
                     // temp + "VALUES (540, 1, 357, 'playerTankBattle.credTotIncome', 'Tot Income', 'Total credit income for all battles recorded (Credit Btl Count)', 'Credit', 60, 'Int'); " +
@@ -2569,36 +2476,7 @@ namespace WinApp.Code
                         "VALUES (101, 1, 207, 'playerTankBattle.rwr', 'RWR', 'Relative Win Rate is the tank win rate according to WN8 expected winrate', 'Battle', 50, 'Float', NULL); ";
                     sqlite = mssql;
                     break;
-                case 352:
-                    mssql = "ALTER VIEW playerTankBattleTotalsView AS " +
-                            "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-                            "              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap,  " +
-                            "              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-                            "              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
-                            "              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-                            "              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
-                            "			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
-                            "              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
-                            "              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
-                            "              SUM(credAvgCost) ascredAvgCost " +
-                            "FROM            playerTankBattle " +
-                            "GROUP BY playerTankId; ";
-                    sqlite = "DROP VIEW playerTankBattleTotalsView;" +
-                            "CREATE VIEW playerTankBattleTotalsView AS " +
-                            "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
-                            "              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap,  " +
-                            "              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
-                            "              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
-                            "              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
-                            "              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
-                            "			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
-                            "              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
-                            "              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
-                            "              SUM(credAvgCost) ascredAvgCost " +
-                            "FROM            playerTankBattle " +
-                            "GROUP BY playerTankId; ";
-                    break;
-                case 355:
+                 case 355:
                     //-- SQL SCRIPT TO GENERATE COMPLETE TOTAL STATS SETUP FROM MASTER DB
                     //SELECT '"UPDATE columnSelection SET colNameSum='''+colNameSum+''', colNameBattleSum='+
                     //  CASE WHEN colNameBattleSum IS NULL THEN 'NULL' ELSE '''' + colNameBattleSum + '''' END + ',colNameBattleSumTank='+
@@ -2834,6 +2712,44 @@ namespace WinApp.Code
                     mssql = "ALTER TABLE playerTank ADD gProgressGoal int NOT NULL default 0; " +
                             "ALTER TABLE playerTank ADD gCompleationDate datetime NULL; ";
                     sqlite = mssql;
+                    break;
+                case 371:
+                    mssql =
+                        "ALTER TABLE playerTankBattle ADD wn9 int NOT NULL default 0; " +
+                        "ALTER TABLE battle ADD wn9 int NOT NULL default 0; ";
+                    sqlite = mssql.Replace("int", "integer");
+					break;
+                case 372:
+                    mssql = "UPDATE columnSelection SET position=position+7 WHERE colType=1 AND position>118 AND position<140";
+                    sqlite = mssql;
+                    break;
+                case 373:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
+                        "VALUES (105, 1, 119, 'playerTankBattle.wn9', 'WN9', 'WN8 tank rating (experimental, according to info from WotLabs)', 'Rating', 50, 'Int', 1); " +
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+                        "VALUES (106, 2, 294, 'battle.wn9', 'WN9', 'WN8 tank rating (experimental, according to info from WotLabs)', 'Rating', 47, 'Int'); ";
+                    sqlite = mssql;
+                    break;
+                case 374:
+                    temp =
+                        "SELECT        playerTankId, SUM(battles) AS battles, SUM(wins) AS wins, SUM(battles8p) AS battles8p, SUM(losses) AS losses, SUM(survived) AS survived, SUM(frags) AS frags,  " +
+                            "              SUM(frags8p) AS frags8p, SUM(dmg) AS dmg, SUM(dmgReceived) AS dmgReceived, SUM(assistSpot) AS assistSpot, SUM(assistTrack) AS assistTrack, SUM(cap) AS cap,  " +
+                            "              SUM(def) AS def, SUM(spot) AS spot, SUM(xp) AS xp, SUM(xp8p) AS xp8p, SUM(xpOriginal) AS xpOriginal, SUM(shots) AS shots, SUM(hits) AS hits,  " +
+                            "              SUM(heHits) AS heHits, SUM(pierced) AS pierced, SUM(shotsReceived) AS shotsReceived, SUM(piercedReceived) AS piercedReceived, SUM(heHitsReceived) AS heHitsReceived,  " +
+                            "              SUM(noDmgShotsReceived) AS noDmgShotsReceived, MAX(maxDmg) AS maxDmg, MAX(maxFrags) AS maxFrags, MAX(maxXp) AS maxXp,  " +
+                            "              MAX(battlesCompany) AS battlesCompany, MAX(battlesClan) AS battlesClan, MAX(wn8) AS wn8, MAX(wn9) AS wn9, MAX(eff) AS eff, MAX(wn7) AS wn7, SUM(rwr) as rwr, " +
+                            "			   MAX(damageRating) AS damageRating, MAX(marksOnGun) AS marksOnGun, SUM(dmgBlocked) as dmgBlocked, SUM(potentialDmgReceived) as potentialDmgReceived, " +
+                            "              SUM(credBtlCount) AS credBtlCount, SUM(credBtlLifetime) as credBtlLifetime, SUM(credAvgIncome) as credAvgIncome,  SUM(credAvgCost) as credAvgCost, " +
+                            "              SUM(credAvgResult) as credAvgResult,  SUM(credMaxIncome) as credMaxIncome,  SUM(credMaxCost) as credMaxCost, SUM(credMaxResult) as credMaxResult,  " +
+                            "              SUM(credAvgCost) ascredAvgCost " +
+                            "FROM            playerTankBattle " +
+                            "GROUP BY playerTankId; ";
+                    mssql =
+                        "ALTER VIEW playerTankBattleTotalsView AS " + temp;
+                    sqlite =
+                        "DROP VIEW playerTankBattleTotalsView; " +
+                        "CREATE VIEW playerTankBattleTotalsView AS " + temp;
                     break;
             }
 			string sql = "";

@@ -1,13 +1,8 @@
-################################################### 
-# World of Tanks Battle Result to JSON            # 
-# by Phalynx www.vbaddict.net                     # 
-#                                                 #
-# Modified to run from c# using IronPhyton        #
-# Edited version by BadButton -> 2015-11-20     #
-###################################################
-# IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+################################################### #################################################
+# World of Tanks Battle Result to JSON            # # Modified to run from c# using IronPhyton      #
+# by Phalynx www.vbaddict.net                     # # Edited version by BadButton -> 2016-05-25     #
+################################################### #################################################
 import struct, json, time, sys, os, zlib, cPickle, StringIO
-
 from itertools import izip 
 
 LEGACY_VERSIONS_LENGTH = (50, 52, 60, 62, 68, 70, 74, 81, 84, 92, 117, 90, 89, 91)
@@ -50,7 +45,7 @@ VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_I
   
   
 parser = dict()
-parser['version'] = "0.9.14"
+parser['version'] = "0.9.15.0"
 parser['name'] = 'http://www.vbaddict.net'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -113,7 +108,7 @@ def main():
 		# "parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
 	#else:
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
-	parser['battleResultVersion'] = 19
+	parser['battleResultVersion'] = 20
 	
 	while parser['battleResultVersion']>0:  
 		printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
@@ -179,6 +174,8 @@ def prepareForJSON(bresult):
 				if vehTypeCompDescr == 'avatar':
 					if 'avatarDamageEventList' in bresult['personal'][vehTypeCompDescr]:
 						del bresult['personal'][vehTypeCompDescr]['avatarDamageEventList']
+					if 'squadBonusInfo' in bresult['personal'][vehTypeCompDescr]:
+						del bresult['personal'][vehTypeCompDescr]['squadBonusInfo']
 				if ownResults is not None:
 					if ownResults['club'] is not None:
 						if 'club' in ownResults:

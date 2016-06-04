@@ -70,7 +70,7 @@ namespace WinApp.Gadget
 			// Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-				end_val = Code.Rating.EffTotal();
+                end_val = Code.Rating.EFF.EffTotal();
 			}
 			else // Check time range
 			{
@@ -110,7 +110,7 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-				end_val = Rating.EffBattle(battleTimeFilter, maxBattles);	
+                end_val = Code.Rating.EFF.EffBattle(battleTimeFilter, maxBattles);	
 
 			}
 			// Show in gauge

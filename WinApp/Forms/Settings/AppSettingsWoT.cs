@@ -183,22 +183,30 @@ namespace WinApp.Forms.Settings
             }
         }
 
-
+        private bool BRRdeactivated = false;
 
         private void CheckForBrr()
         {
             string btnBrrText = "Install";
             if (BattleResultRetriever.Installed) btnBrrText = "Uninstall";
+            if (BRRdeactivated) btnBrrText = "Message";
             btnBrrInstall.Text = btnBrrText;
         }
 
         private void btnBrrInstall_Click(object sender, EventArgs e)
         {
             string msg = "";
-            Config.Settings.wotGameFolder = txtFolder.Text;
-            Config.SaveConfig(out msg);
-            CheckForBrr();
-            if (btnBrrInstall.Text == "Install")
+            if (!BRRdeactivated)
+            {
+                Config.Settings.wotGameFolder = txtFolder.Text;
+                Config.SaveConfig(out msg);
+                CheckForBrr();
+            }
+            if (BRRdeactivated)
+            {
+                MsgBox.Show("BRR is temporary deactivated, it does currently not support WoT 9.15", "Message", (Form)this.TopLevelControl);
+            }
+            else if (btnBrrInstall.Text == "Install")
             {
                 if (!BattleResultRetriever.Install(out msg))
                     MsgBox.Show(msg, "Error installing BRR", (Form)this.TopLevelControl);
@@ -208,7 +216,7 @@ namespace WinApp.Forms.Settings
                 if (!BattleResultRetriever.Uninstall(out msg))
                     MsgBox.Show(msg, "Error uninstalling BRR", (Form)this.TopLevelControl);
             }
-            CheckForBrr();
+            //CheckForBrr();
         }
 
         private void cmdHelp_Click(object sender, EventArgs e)

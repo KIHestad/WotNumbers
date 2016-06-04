@@ -389,7 +389,7 @@ namespace WinApp.Forms
 				DataRow dr = dt.Rows[0];
 				//int tankId = Convert.ToInt32(dr["tankId"]);
 				//int battlesCount = Convert.ToInt32(dr["battlesCount"]);
-                Rating.RatingParameters rp = new Rating.RatingParameters();
+                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
 				rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
 				rp.SPOT = Convert.ToDouble(dr["spotted"]);
 				rp.FRAGS = Convert.ToDouble(dr["frags"]);
@@ -405,7 +405,7 @@ namespace WinApp.Forms
 				double rFRAGSc;
 				double rSPOTc;
 				double rDEFc;
-				Rating.WN8useFormulaReturnResult(
+                Code.Rating.WN8.UseFormulaReturnResult(
 					rp, exp_wr,
 					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);

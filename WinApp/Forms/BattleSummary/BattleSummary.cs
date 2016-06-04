@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.Rating;
 using WinApp.Code.FormLayout;
 
 namespace WinApp.Forms
@@ -21,9 +22,11 @@ namespace WinApp.Forms
 		private string battleMode = "";
 		private string tankFilter = "";
 		private string tankJoin = "";
-		private int wn8 = 0;
-		private int wn8avg = 0;
-		private int wn7 = 0;
+        private int wn9 = 0;
+        private int wn9avg = 0;
+        private int wn8 = 0;
+        private int wn8avg = 0;
+        private int wn7 = 0;
 		private int wn7avg = 0;
 		private int eff = 0;
 		private int effavg = 0;
@@ -356,17 +359,20 @@ namespace WinApp.Forms
 				FormatStandardDataGrid(dgvOther, "");
 
 				// Calculate avg ratings
-				wn8avg = Convert.ToInt32(Rating.WN8total(battleMode));
-				wn7avg = Convert.ToInt32(Rating.WN7total(battleMode));
-				effavg = Convert.ToInt32(Rating.EffTotal(battleMode));
-                wravg = Rating.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
+                wn9avg = Convert.ToInt32(WN9.CalcPlayerTotal(battleMode));
+                wn8avg = Convert.ToInt32(WN8.CalcPlayerTotal(battleMode));
+				wn7avg = Convert.ToInt32(WN7.WN7total(battleMode));
+				effavg = Convert.ToInt32(EFF.EffTotal(battleMode));
+                wravg = Code.Rating.WR.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Calc current battle ratings
-				wn8 = Convert.ToInt32(Rating.WN8battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-				wn7 = Convert.ToInt32(Rating.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-				eff = Convert.ToInt32(Rating.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
-                wr = Rating.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
+                wn9 = Convert.ToInt32(WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wn8 = Convert.ToInt32(WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wn7 = Convert.ToInt32(WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                eff = Convert.ToInt32(EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wr = Code.Rating.WR.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
+                dtRating.Rows.Add(GetValues(dtRating, wn9, wn9avg, "WN9"));
 				dtRating.Rows.Add(GetValues(dtRating, wn8, wn8avg, "WN8"));
 				dtRating.Rows.Add(GetValues(dtRating, wn7, wn7avg, "WN7"));
 				dtRating.Rows.Add(GetValues(dtRating, eff, effavg, "EFF"));
@@ -499,7 +505,7 @@ namespace WinApp.Forms
 			{
 				// Calc total WN 8 parameter values
 				//int battlesCount = 0;
-                Rating.RatingParameters rp = new Rating.RatingParameters();
+                WNHelper.RatingParameters rp = new WNHelper.RatingParameters();
 				double exp_dmg = 0;
 				double exp_spotted = 0;
 				double exp_frags = 0;
@@ -525,7 +531,7 @@ namespace WinApp.Forms
 				double rFRAGSc;
 				double rSPOTc;
 				double rDEFc;
-				Rating.WN8useFormulaReturnResult(
+                WN8.UseFormulaReturnResult(
 						rp, wr,
 						exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 						out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);

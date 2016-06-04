@@ -297,24 +297,29 @@ namespace WinApp.Gadget
                                 // Add total value to grid
                                 double val = Convert.ToDouble(drTotalStats[cellSQLFieldName]);
                                 // Get special calculations
-                                if (colName == "WN8")
+                                if (colName == "WN9")
                                 {
-                                    item.cellValue.Value = Code.Rating.WN8total(battleMode);
+                                    item.cellValue.Value = Code.Rating.WN9.CalcPlayerTotal(battleMode);
+                                    item.cellValue.Style.ForeColor = ColorRangeScheme.WN9color(Convert.ToInt32(item.cellValue.Value));
+                                }
+                                else if (colName == "WN8")
+                                {
+                                    item.cellValue.Value = Code.Rating.WN8.CalcPlayerTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN8color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "WN7" )
                                 {
-                                    item.cellValue.Value = Code.Rating.WN7total(battleMode);
+                                    item.cellValue.Value = Code.Rating.WN7.WN7total(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN7color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "EFF")
                                 {
-                                    item.cellValue.Value = Code.Rating.EffTotal(battleMode);
+                                    item.cellValue.Value = Code.Rating.EFF.EffTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.EffColor(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "RWR")
                                 {
-                                    double? RWR = Code.Rating.RWRtotal(battleMode);
+                                    double? RWR = Code.Rating.RWR.RWRtotal(battleMode);
                                     item.cellValue.Value = RWR;
                                     if (RWR != null)
                                         item.cellValue.Style.ForeColor = ColorRangeScheme.RWRcolor(Convert.ToInt32(RWR));
@@ -409,25 +414,31 @@ namespace WinApp.Gadget
                                         else if (colName == "EFF")
                                         {
                                             // Calc EFF
-                                            double prevValue = Rating.EffReverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = Code.Rating.EFF.EffReverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN7")
                                         {
                                             // Calc WN7
-                                            double prevValue = Rating.WN7reverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = Code.Rating.WN7.WN7reverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "WN8")
                                         {
                                             // Calc WN8
-                                            double prevValue = Rating.WN8Reverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = Code.Rating.WN8.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
+                                            trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
+                                        }
+                                        else if (colName == "WN9")
+                                        {
+                                            // Calc WN9
+                                            double prevValue = Code.Rating.WN9.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "RWR")
                                         {
                                             // Calc RWR
-                                            double? prevValue = Rating.RWRReverse(battleTimeFilter, battleMode);
+                                            double? prevValue = Code.Rating.RWR.RWRReverse(battleTimeFilter, battleMode);
                                             if (prevValue != null)
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - Convert.ToDouble(prevValue);
                                         }

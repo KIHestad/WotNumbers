@@ -296,7 +296,7 @@ namespace WinApp.Forms
 
 		private static double CalcChartSeriesPointValue(List<double> values, CalculationType calcType, double defaultTier)
 		{
-            Rating.RatingParameters rp = new Rating.RatingParameters();
+            Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
             double result = 0;
 			switch (calcType)
 			{
@@ -317,7 +317,7 @@ namespace WinApp.Forms
                     rp.DEF = values[4];
                     rp.CAP = values[5];
                     rp.TIER = defaultTier; // values[6]; ???
-					result = Code.Rating.EffUseFormula(rp);
+                    result = Code.Rating.EFF.EffUseFormula(rp);
 					break;
 				case CalculationType.wn7:
 					rp.BATTLES = values[0];
@@ -328,7 +328,7 @@ namespace WinApp.Forms
                     rp.CAP = values[5];
                     rp.WINS = values[6];
                     rp.TIER = defaultTier; // values[6]; ???
-                    result = Code.Rating.WN7useFormula(rp);
+                    result = Code.Rating.WN7.WN7useFormula(rp);
 					break;
 				case CalculationType.wn8:
 					break;
@@ -446,7 +446,7 @@ namespace WinApp.Forms
 				case CalculationType.wn7:
 					if (tankName == "All Tanks")
 						// The total tier is added in column number 6, the total number of battles in col num 0
-						defaultTier = Rating.GetAverageTier();
+                        defaultTier = Code.Rating.WNHelper.GetAverageTier();
 					else
 						defaultTier = TankHelper.GetTankTier(tankName);
 					break;
@@ -614,7 +614,7 @@ namespace WinApp.Forms
 					DateTime thisDate = Convert.ToDateTime(dr["battle_time"]);
 					if (thisDate <= chartDate)
 					{
-						chartVal = Math.Round(Code.Rating.WN8playerTankBattle(ptb), decimals);
+                        chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
 						axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
 						chartDate = thisDate.AddHours(-hourInterval);
@@ -659,7 +659,7 @@ namespace WinApp.Forms
 					step++;
 					if (step % stepMod == 0 || step == 0)
 					{
-						chartVal = Math.Round(Code.Rating.WN8playerTankBattle(ptb), decimals);
+                        chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
 						//axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal); // Use battle count
 					}

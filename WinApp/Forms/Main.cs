@@ -1226,7 +1226,7 @@ namespace WinApp.Forms
 					}
 					// Stop after 15 menu items
 					menuItemNum++;
-					if (menuItemNum > 15) continue;
+					if (menuItemNum > 15) break;
 				}
 			}
 			SelectFavMenuItem();
@@ -2630,12 +2630,14 @@ namespace WinApp.Forms
 									}
 								}
 								if (count > 0)
-									if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-										rowAverage[colListItem.name] = Math.Round(Rating.WN8battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin),1);
+                                    if (count > 1 && colListItem.name == "WN9") // Special calculation for WN8
+                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                    else if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
+                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
-                                        rowAverage[colListItem.name] = Math.Round(Rating.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
-                                        rowAverage[colListItem.name] = Math.Round(Rating.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation Dmg C/R
                                         rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else
@@ -3344,15 +3346,24 @@ namespace WinApp.Forms
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
-				else if (col.Equals("WN8"))
-				{
-					if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
-					{
-						int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
+                else if (col.Equals("WN9"))
+                {
+                    if (dataGridMain["WN9", e.RowIndex].Value != DBNull.Value)
+                    {
+                        int wn9 = Convert.ToInt32(dataGridMain["WN9", e.RowIndex].Value);
+                        cell.Style.ForeColor = ColorRangeScheme.WN9color(wn9);
+                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                    }
+                }
+                else if (col.Equals("WN8"))
+                {
+                    if (dataGridMain["WN8", e.RowIndex].Value != DBNull.Value)
+                    {
+                        int wn8 = Convert.ToInt32(dataGridMain["WN8", e.RowIndex].Value);
                         cell.Style.ForeColor = ColorRangeScheme.WN8color(wn8);
-						cell.Style.SelectionForeColor = cell.Style.ForeColor;
-					}
-				}
+                        cell.Style.SelectionForeColor = cell.Style.ForeColor;
+                    }
+                }
 				else if (col.Equals("WN7"))
 				{
 					if (dataGridMain["WN7", e.RowIndex].Value != DBNull.Value)
@@ -3597,7 +3608,7 @@ namespace WinApp.Forms
         private void dataGridMainPopup_RecalculateBattleRating_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
-			Form frm = new Forms.RecalcBattleRating(true, true, true, true, battleId);
+			Form frm = new Forms.RecalcBattleRating(true, true, true, true, true, battleId);
 			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 
@@ -3720,15 +3731,15 @@ namespace WinApp.Forms
 				{
 					DataRow dr = dt.Rows[0];
 					int tankId = Convert.ToInt32(dr["tankId"]);
-                    Rating.RatingParameters rp = new Rating.RatingParameters();
+                    Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
 					rp.BATTLES = Convert.ToInt32(dr["battles"]);
 					rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
 					rp.SPOT = Convert.ToDouble(dr["spot"]);
 					rp.FRAGS = Convert.ToDouble(dr["frags"]);
 					rp.DEF = Convert.ToDouble(dr["def"]);
 					rp.WINS = Convert.ToDouble(dr["Wins"]);
-					string wn8 = Math.Round(Rating.WN8battle(tankId, rp), 0).ToString();
-					double rWINc;
+                    string wn8 = Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0).ToString();
+                    double rWINc;
 					double rDAMAGEc;
 					double rFRAGSc;
 					double rSPOTc;
@@ -3743,7 +3754,7 @@ namespace WinApp.Forms
 					double exp_frags = Convert.ToDouble(dr["expFrags"]);
 					double exp_def = Convert.ToDouble(dr["expDef"]);
 					double exp_wr = Convert.ToDouble(dr["expWR"]);
-					Rating.WN8useFormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
+                    Code.Rating.WN8.UseFormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 					string message = "WN8 Rating for this tank in Random/TC: ";
 					message += wn8 + Environment.NewLine + Environment.NewLine;
 					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8 result" + Environment.NewLine;
