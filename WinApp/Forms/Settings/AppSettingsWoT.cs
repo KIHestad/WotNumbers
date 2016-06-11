@@ -216,7 +216,7 @@ namespace WinApp.Forms.Settings
                 if (!BattleResultRetriever.Uninstall(out msg))
                     MsgBox.Show(msg, "Error uninstalling BRR", (Form)this.TopLevelControl);
             }
-            //CheckForBrr();
+            CheckForBrr();
         }
 
         private void cmdHelp_Click(object sender, EventArgs e)

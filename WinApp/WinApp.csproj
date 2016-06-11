@@ -30,7 +30,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>95dd9388</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -1099,6 +1100,7 @@
     <Content Include="Dossier2json\battle_results_shared_18.py" />
     <Content Include="Dossier2json\battle_results_shared_19.py" />
     <Content Include="Dossier2json\battle_results_shared_20.py" />
+    <Content Include="Dossier2json\battle_results_shared_21.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\dictpackers_18.py" />
