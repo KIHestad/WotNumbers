@@ -133,7 +133,8 @@ namespace WinApp.Code
         public string databaseBackupFilePath { get; set; }	        // File path for database backup
         public DateTime? databaseBackupLastPerformed { get; set; }	// Last database backup runned
         public bool tankSearchMainModeAdvanced { get; set; }        // Selected tank search main mode, true=advanced, fale=simple
-	}
+        public DateTime lastGrindingProgressRecalc { get; set; }    // When latest grinding progress recalc was run
+    }
 
 	class Config
 	{
@@ -287,8 +288,8 @@ namespace WinApp.Code
             Config.Settings.downloadFilePathAddSubfolder = false;
             Config.Settings.newDayAtHour = 7;
             Config.Settings.tankSearchMainModeAdvanced = true;
-            
-		}
+            Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
+        }
 
 		
 		public static bool SaveConfig(out string msg)

@@ -269,9 +269,12 @@ namespace WinApp.Forms
                             }
                         }
                     }
+                    // Check for recalc grinding progress
+                    GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+
                     // Check for new version
                     RunCheckForNewVersion();
-
+                    
                     // Show status message
                     SetStatus2("Application started");
                 }
@@ -349,8 +352,11 @@ namespace WinApp.Forms
 			ToolStripMenuItem dataGridMainPopup_GrindingSetup = new ToolStripMenuItem("Grinding Setup");
 			dataGridMainPopup_GrindingSetup.Image = imageListToolStrip.Images[3];
 			dataGridMainPopup_GrindingSetup.Click += new EventHandler(dataGridMainPopup_GrindingSetup_Click);
-			
-			ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
+
+            ToolStripMenuItem dataGridMainPopup_GrindingSetupRecalculate = new ToolStripMenuItem("Recalculate Grinding Progress");
+            dataGridMainPopup_GrindingSetupRecalculate.Click += new EventHandler(dataGridMainPopup_GrindingSetupRecalculate_Click);
+
+            ToolStripMenuItem dataGridMainPopup_FilterOnTank = new ToolStripMenuItem("Filter on this tank");
 			dataGridMainPopup_FilterOnTank.Image = imageListToolStrip.Images[17];
 			dataGridMainPopup_FilterOnTank.Click += new EventHandler(dataGridMainPopup_FilterOnTank_Click);
 
@@ -420,8 +426,9 @@ namespace WinApp.Forms
 						dataGridMainPopup_TankWN8,
 						new ToolStripSeparator(),
 						dataGridMainPopup_BattleChart, 
-						dataGridMainPopup_GrindingSetup, 
-						new ToolStripSeparator(),
+						dataGridMainPopup_GrindingSetup,
+                        dataGridMainPopup_GrindingSetupRecalculate,
+                        new ToolStripSeparator(),
 						dataGridMainPopup_FavListAddTank,
 						dataGridMainPopup_FavListRemoveTank,
 						dataGridMainPopup_FavListCreateNew,
@@ -3595,7 +3602,17 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void dataGridMainPopup_BattleChart_Click(object sender, EventArgs e)
+        private void dataGridMainPopup_GrindingSetupRecalculate_Click(object sender, EventArgs e)
+        {
+            GrindingHelper.RecalculateGrindingProgress();
+            if (MainSettings.View == GridView.Views.Tank)
+                ShowView("Recalculated Grinding Progress, refreshed grid");
+            else
+                SetStatus2("Recalculated Grinding Progress");                
+        }
+
+
+        private void dataGridMainPopup_BattleChart_Click(object sender, EventArgs e)
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
 			{
@@ -3738,7 +3755,7 @@ namespace WinApp.Forms
 					rp.FRAGS = Convert.ToDouble(dr["frags"]);
 					rp.DEF = Convert.ToDouble(dr["def"]);
 					rp.WINS = Convert.ToDouble(dr["Wins"]);
-                    string wn8 = Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0).ToString();
+                    double wn8 = Math.Round(Code.Rating.WN8.CalcTank(tankId, rp), 0);
                     double rWINc;
 					double rDAMAGEc;
 					double rFRAGSc;
@@ -3757,14 +3774,13 @@ namespace WinApp.Forms
                     Code.Rating.WN8.UseFormulaReturnResult(rp, wr, exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr, out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 					string message = "WN8 Rating for this tank in Random/TC: ";
 					message += wn8 + Environment.NewLine + Environment.NewLine;
-					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8 result" + Environment.NewLine;
-					message += "-------------" + "\t  " + "----------" + "\t" + "------------" + "\t " + "----------------" + Environment.NewLine;
-                    message += "Damage:" + "\t  " + Math.Round(rp.DAMAGE, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + Environment.NewLine;
-                    message += "Frags:" + "\t  " + Math.Round(rp.FRAGS, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + Environment.NewLine;
-                    message += "Spot:" + "\t  " + Math.Round(rp.SPOT, 1).ToString() + "\t" + Math.Round(exp_spotted, 1).ToString() + "\t " + Math.Round(rSPOTc, 2) + Environment.NewLine;
-                    message += "Defence:" + "\t  " + Math.Round(rp.DEF, 1).ToString() + "\t" + Math.Round(exp_def, 1).ToString() + "\t " + Math.Round(rDEFc, 2) + Environment.NewLine;
-					message += "Win rate:" + "\t  " + Math.Round(wr, 1).ToString() + "%" + "\t" + Math.Round(exp_wr, 1).ToString() + "%" + "\t " + Math.Round(rWINc, 2) + Environment.NewLine;
-					message += Environment.NewLine;
+					message += "Value" + "\t  " + "Result" + "\t" + "Expected" + "\t " + "WN8" + "\t " + "%" + Environment.NewLine;
+					message += "-------------" + "\t  " + "----------" + "\t" + "------------" + "\t " + "------------" + "\t " + "-------" + Environment.NewLine;
+                    message += "Damage:" + "\t  " + Math.Round(rp.DAMAGE, 1).ToString() + "\t" + Math.Round(exp_dmg, 1).ToString() + "\t " + Math.Round(rDAMAGEc, 2) + "\t " + Math.Round(rDAMAGEc/wn8*100, 1) + Environment.NewLine;
+                    message += "Frags:" + "\t  " + Math.Round(rp.FRAGS, 1).ToString() + "\t" + Math.Round(exp_frags, 1).ToString() + "\t " + Math.Round(rFRAGSc, 2) + "\t " + Math.Round(rFRAGSc / wn8 * 100, 1) + Environment.NewLine;
+                    message += "Spot:" + "\t  " + Math.Round(rp.SPOT, 1).ToString() + "\t" + Math.Round(exp_spotted, 1).ToString() + "\t " + Math.Round(rSPOTc, 2) + "\t " + Math.Round(rSPOTc / wn8 * 100, 1) + Environment.NewLine;
+                    message += "Defence:" + "\t  " + Math.Round(rp.DEF, 1).ToString() + "\t" + Math.Round(exp_def, 1).ToString() + "\t " + Math.Round(rDEFc, 2) + "\t " + Math.Round(rDEFc / wn8 * 100, 1) + Environment.NewLine;
+					message += "Win rate:" + "\t  " + Math.Round(wr, 1).ToString() + "%" + "\t" + Math.Round(exp_wr, 1).ToString() + "%" + "\t " + Math.Round(rWINc, 2) + "\t " + Math.Round(rWINc / wn8 * 100, 1) + Environment.NewLine;
 					MsgBox.Show(message, "WN8 Tank Details");
 				}
 			}

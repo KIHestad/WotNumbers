@@ -42,7 +42,7 @@
             this.pbProgressPercent = new BadProgressBar();
             this.btnClose = new BadButton();
             this.txtProgressXP = new BadTextBox();
-            this.txtRestXP = new BadTextBox();
+            this.txtRemainingXP = new BadTextBox();
             this.txtWinRate = new BadTextBox();
             this.badLabel16 = new BadLabel();
             this.txtWins = new BadTextBox();
@@ -58,7 +58,7 @@
             this.badLabel12 = new BadLabel();
             this.badLabel10 = new BadLabel();
             this.btnGrindReset = new BadButton();
-            this.txtGrindXP = new BadTextBox();
+            this.txtTargetXP = new BadTextBox();
             this.txtGrindComment = new BadTextBox();
             this.lblGrindXP = new BadLabel();
             this.badLabel4 = new BadLabel();
@@ -90,7 +90,7 @@
             this.GrindingSetupTheme.Controls.Add(this.pbProgressPercent);
             this.GrindingSetupTheme.Controls.Add(this.btnClose);
             this.GrindingSetupTheme.Controls.Add(this.txtProgressXP);
-            this.GrindingSetupTheme.Controls.Add(this.txtRestXP);
+            this.GrindingSetupTheme.Controls.Add(this.txtRemainingXP);
             this.GrindingSetupTheme.Controls.Add(this.txtWinRate);
             this.GrindingSetupTheme.Controls.Add(this.badLabel16);
             this.GrindingSetupTheme.Controls.Add(this.txtWins);
@@ -106,7 +106,7 @@
             this.GrindingSetupTheme.Controls.Add(this.badLabel12);
             this.GrindingSetupTheme.Controls.Add(this.badLabel10);
             this.GrindingSetupTheme.Controls.Add(this.btnGrindReset);
-            this.GrindingSetupTheme.Controls.Add(this.txtGrindXP);
+            this.GrindingSetupTheme.Controls.Add(this.txtTargetXP);
             this.GrindingSetupTheme.Controls.Add(this.txtGrindComment);
             this.GrindingSetupTheme.Controls.Add(this.lblGrindXP);
             this.GrindingSetupTheme.Controls.Add(this.badLabel4);
@@ -281,22 +281,22 @@
             this.txtProgressXP.TextChanged += new System.EventHandler(this.txtProgressXP_TextChanged);
             this.txtProgressXP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtProgressXP_KeyPress);
             // 
-            // txtRestXP
+            // txtRemainingXP
             // 
-            this.txtRestXP.Enabled = false;
-            this.txtRestXP.HasFocus = false;
-            this.txtRestXP.Image = null;
-            this.txtRestXP.Location = new System.Drawing.Point(141, 287);
-            this.txtRestXP.MultilineAllow = false;
-            this.txtRestXP.Name = "txtRestXP";
-            this.txtRestXP.PasswordChar = '\0';
-            this.txtRestXP.ReadOnly = false;
-            this.txtRestXP.Size = new System.Drawing.Size(76, 23);
-            this.txtRestXP.TabIndex = 26;
-            this.txtRestXP.TabStop = false;
-            this.txtRestXP.Text = "0";
-            this.txtRestXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtRestXP.ToolTipText = "";
+            this.txtRemainingXP.Enabled = false;
+            this.txtRemainingXP.HasFocus = false;
+            this.txtRemainingXP.Image = null;
+            this.txtRemainingXP.Location = new System.Drawing.Point(141, 287);
+            this.txtRemainingXP.MultilineAllow = false;
+            this.txtRemainingXP.Name = "txtRemainingXP";
+            this.txtRemainingXP.PasswordChar = '\0';
+            this.txtRemainingXP.ReadOnly = false;
+            this.txtRemainingXP.Size = new System.Drawing.Size(76, 23);
+            this.txtRemainingXP.TabIndex = 26;
+            this.txtRemainingXP.TabStop = false;
+            this.txtRemainingXP.Text = "0";
+            this.txtRemainingXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtRemainingXP.ToolTipText = "";
             // 
             // txtWinRate
             // 
@@ -510,22 +510,22 @@
             this.btnGrindReset.ToolTipText = "";
             this.btnGrindReset.Click += new System.EventHandler(this.btnGrindReset_Click);
             // 
-            // txtGrindXP
+            // txtTargetXP
             // 
-            this.txtGrindXP.HasFocus = false;
-            this.txtGrindXP.Image = null;
-            this.txtGrindXP.Location = new System.Drawing.Point(141, 231);
-            this.txtGrindXP.MultilineAllow = false;
-            this.txtGrindXP.Name = "txtGrindXP";
-            this.txtGrindXP.PasswordChar = '\0';
-            this.txtGrindXP.ReadOnly = false;
-            this.txtGrindXP.Size = new System.Drawing.Size(75, 23);
-            this.txtGrindXP.TabIndex = 22;
-            this.txtGrindXP.Text = "0";
-            this.txtGrindXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtGrindXP.ToolTipText = "";
-            this.txtGrindXP.TextChanged += new System.EventHandler(this.txtGrindGrindXP_TextChanged);
-            this.txtGrindXP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtGrindXP_KeyPress);
+            this.txtTargetXP.HasFocus = false;
+            this.txtTargetXP.Image = null;
+            this.txtTargetXP.Location = new System.Drawing.Point(141, 231);
+            this.txtTargetXP.MultilineAllow = false;
+            this.txtTargetXP.Name = "txtTargetXP";
+            this.txtTargetXP.PasswordChar = '\0';
+            this.txtTargetXP.ReadOnly = false;
+            this.txtTargetXP.Size = new System.Drawing.Size(75, 23);
+            this.txtTargetXP.TabIndex = 22;
+            this.txtTargetXP.Text = "0";
+            this.txtTargetXP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTargetXP.ToolTipText = "";
+            this.txtTargetXP.TextChanged += new System.EventHandler(this.txtGrindGrindXP_TextChanged);
+            this.txtTargetXP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtGrindXP_KeyPress);
             // 
             // txtGrindComment
             // 
@@ -759,10 +759,10 @@
 		private BadLabel badLabel1;
 		private BadLabel badLabel4;
 		private BadTextBox txtGrindComment;
-		private BadTextBox txtGrindXP;
+		private BadTextBox txtTargetXP;
 		private BadLabel lblGrindXP;
 		private BadButton btnGrindReset;
-		private BadTextBox txtRestXP;
+		private BadTextBox txtRemainingXP;
 		private BadTextBox txtProgressXP;
 		private BadLabel badLabel12;
 		private BadLabel badLabel10;

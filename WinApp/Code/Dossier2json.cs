@@ -138,9 +138,11 @@ namespace WinApp.Code
 			string statusResult = RunDossierRead(dossierFile);
 			// Continue listening to dossier file
 			dossierFileWatcher.EnableRaisingEvents = true;
-		}
+            // Check for recalc grinding progress
+            GrindingHelper.CheckForDailyRecalculateGrindingProgress();
+        }
 
-		private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
+        private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
 		{
 			// Checks file is readable
 			bool fileOK = false;

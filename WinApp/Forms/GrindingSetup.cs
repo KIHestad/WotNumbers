@@ -48,7 +48,7 @@ namespace WinApp.Forms
 				GrindingSetupTheme.Text = "Tank Grinding Setup - " + tank["name"].ToString();
 				// Add grinding value
 				txtGrindComment.Text = tank["gComment"].ToString();
-				txtGrindXP.Text = tank["gGrindXP"].ToString();
+				txtTargetXP.Text = tank["gGrindXP"].ToString();
 				txtProgressXP.Text = tank["gProgressXP"].ToString();
 				txtBattlesPerDay.Text = tank["gBattlesDay"].ToString();
                 if (tank["gCompleationDate"] != DBNull.Value)
@@ -102,10 +102,10 @@ namespace WinApp.Forms
 			if (!_init)
 			{
 				int i;
-				bool ok = Int32.TryParse(txtGrindXP.Text, out i);
+				bool ok = Int32.TryParse(txtTargetXP.Text, out i);
 				if (((ok && i > 0) || txtProgressXP.Text != "0") && txtBattlesPerDay.Text == "0")
 					txtBattlesPerDay.Text = "1";
-				else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
+				else if (txtProgressXP.Text == "0" && txtTargetXP.Text == "0")
 					txtBattlesPerDay.Text = "0";
 				CalcProgress();
 				dataChanged = true;
@@ -118,9 +118,9 @@ namespace WinApp.Forms
 			{
 				int i;
 				bool ok = Int32.TryParse(txtProgressXP.Text, out i);
-				if (((ok && i > 0) || txtGrindXP.Text != "0") && txtBattlesPerDay.Text == "0")
+				if (((ok && i > 0) || txtTargetXP.Text != "0") && txtBattlesPerDay.Text == "0")
 					txtBattlesPerDay.Text = "1";
-				else if (txtProgressXP.Text == "0" && txtGrindXP.Text == "0")
+				else if (txtProgressXP.Text == "0" && txtTargetXP.Text == "0")
 					txtBattlesPerDay.Text = "0";
 				CalcProgress();
 				dataChanged = true;
@@ -147,9 +147,9 @@ namespace WinApp.Forms
 			if (answer == MsgBox.Button.OK)
 			{
 				txtGrindComment.Text = "";
-				txtGrindXP.Text = "0";
+				txtTargetXP.Text = "0";
 				txtProgressXP.Text = "0";
-				txtRestXP.Text = "0";
+				txtRemainingXP.Text = "0";
 				txtBattlesPerDay.Text = "0";
 				txtRestDays.Text = "0";
 				txtRestBattles.Text = "0";
@@ -194,10 +194,10 @@ namespace WinApp.Forms
 			int grindXP = 0;
 			int ProgressXP = 0;
 			int btlprDay = 0;
-			if (txtGrindXP.Text == "") txtGrindXP.Text = "0";
+			if (txtTargetXP.Text == "") txtTargetXP.Text = "0";
 			if (txtProgressXP.Text == "") txtProgressXP.Text = "0";
 			if (txtBattlesPerDay.Text == "") txtBattlesPerDay.Text = "0";
-			ok = Int32.TryParse(txtGrindXP.Text, out grindXP);
+			ok = Int32.TryParse(txtTargetXP.Text, out grindXP);
 			if (ok) Int32.TryParse(txtProgressXP.Text, out ProgressXP);
 			if (ok) Int32.TryParse(txtBattlesPerDay.Text, out btlprDay);
 			if (!ok)
@@ -218,10 +218,10 @@ namespace WinApp.Forms
 							 "                      gBattlesDay=@BattlesDay, gComment=@Comment, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
                              "					    gRestBattles=@RestBattles, gRestDays=@RestDays, gCompleationDate=@CompleationDate, gProgressGoal=@ProgressGoal " +
 							 "WHERE id=@id";
-				DB.AddWithValue(ref sql, "@GrindXP", txtGrindXP.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@GrindXP", txtTargetXP.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@ProgressXP", txtProgressXP.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@ProgressPercent", pbProgressPercent.Value, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@RestXP", txtRestXP.Text, DB.SqlDataType.Int);
+				DB.AddWithValue(ref sql, "@RestXP", txtRemainingXP.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@RestBattles", txtRestBattles.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@RestDays", txtRestDays.Text, DB.SqlDataType.Int);
 				DB.AddWithValue(ref sql, "@BattlesDay", txtBattlesPerDay.Text, DB.SqlDataType.Int);
@@ -244,56 +244,84 @@ namespace WinApp.Forms
 
 		private void CalcProgress()
 		{
-			// Get parameters
-			int grind = 0;
-			Int32.TryParse(txtGrindXP.Text, out grind);
-			int progress = 0;
-			Int32.TryParse(txtProgressXP.Text, out progress);
-            // Calc values independent of progress type (completion date / battles per day)
-            pbProgressPercent.Value = GrindingHelper.CalcProgressPercent(grind, progress);
-			int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
-            txtRestXP.Text = restXP.ToString();
-			// If grinding progress is dependent of completion calculate battles per day to reach goal
-            if (chkComplDate.Checked)
-            {
-                // Calc max days to complete before grinding progress goal
-                DateTime getComplDate;
-                if (DateTime.TryParse(txtCompletionDate.Text, out getComplDate))
-                {
-                    // Get max rest days
-                    int maxRestDays = (getComplDate - DateTime.Now).Days + 1;
-                    if (maxRestDays < 1)
-                        maxRestDays = 1;
-                    // Run a loop testing number of battles per day until goal is reached
-                    int testBtlPerDay = 1;
-                    int testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
-                    int testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
-                    while (GrindingHelper.CalcRestDays(restXP, testRealAvgXP, testBtlPerDay) > maxRestDays)
-                    {
-                        testBtlPerDay++;
-                        testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
-                        testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
-                    }
-                    txtBattlesPerDay.Text = testBtlPerDay.ToString();
-                }
-            }
-            // Get battles per day
+            GrindingHelper.Progress progress = new GrindingHelper.Progress();
+            // Get grinding parameters
+			int targetXP = 0;
+			Int32.TryParse(txtTargetXP.Text, out targetXP);
+			int progressXP = 0;
+			Int32.TryParse(txtProgressXP.Text, out progressXP);
+            // Set progress parameters
+            progress.TargetXP = targetXP;
+            progress.ProgressXP = progressXP;
+            // Set tank stats
+            progress.Battles = Convert.ToInt32(txtBattles.Text);
+            progress.Wins = Convert.ToInt32(txtWins.Text);
+            progress.TotalXP = Convert.ToInt32(txtTotalXP.Text);
+            progress.AvgXP = Convert.ToInt32(txtAvgXP.Text);
+            // Set current progress
+            progress.ProgressGoal = (chkComplDate.Checked ? 1 : 0);
+            progress.CompleationDate = null;
+            DateTime getComplDate;
+            if (DateTime.TryParse(txtCompletionDate.Text, out getComplDate))
+                progress.CompleationDate = getComplDate;
             int btlPerDay = 0;
             Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-			// Calc values dependent of battles per day
-			int realAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString());
-			txtRealAvgXP.Text = realAvgXP.ToString();
-			int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
-			txtRestBattles.Text = restBattles.ToString();
-            // Calc completion date or rest days according to progress type
-            int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
-            txtRestDays.Text = restDays.ToString();
-            // If grinding progress is dependent of battles per day calculate compleation date to reach goal
-            if (chkBtlPrDay.Checked)
-            {
-                DateTime complDate = DateTime.Now.AddDays(restDays);
-                txtCompletionDate.Text = complDate.ToString("d");
-            }
+            progress.BtlPerDay = btlPerDay;
+            // Calc new progress
+            progress = GrindingHelper.CalcProgress(progress);
+            // Show result
+            txtRealAvgXP.Text = progress.RealAvgXP.ToString();
+            txtCompletionDate.Text = Convert.ToDateTime(progress.CompleationDate).ToString("d");
+            txtBattlesPerDay.Text = progress.BtlPerDay.ToString();
+            txtRestBattles.Text = progress.RestBattles.ToString();
+            txtRestDays.Text = progress.RestDays.ToString();
+
+            txtRemainingXP.Text = progress.RestXP.ToString();
+            pbProgressPercent.Value = progress.ProgressPercent;
+            
+            // TODO: Old code moved to GrindingHelper.CalcProgress - to be removed if OK
+            //         // If grinding progress is dependent of completion calculate battles per day to reach goal
+            //         if (chkComplDate.Checked)
+            //         {
+            //             // Calc max days to complete before grinding progress goal
+            //             DateTime getComplDate;
+            //             if (DateTime.TryParse(txtCompletionDate.Text, out getComplDate))
+            //             {
+            //                 // Get max rest days
+            //                 int maxRestDays = (getComplDate - DateTime.Now).Days + 1;
+            //                 if (maxRestDays < 1)
+            //                     maxRestDays = 1;
+            //                 // Run a loop testing number of battles per day until goal is reached
+            //                 int testBtlPerDay = 1;
+            //                 int testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
+            //                 int testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
+            //                 while (GrindingHelper.CalcRestDays(restXP, testRealAvgXP, testBtlPerDay) > maxRestDays)
+            //                 {
+            //                     testBtlPerDay++;
+            //                     testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
+            //                     testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
+            //                 }
+            //                 txtBattlesPerDay.Text = testBtlPerDay.ToString();
+            //             }
+            //         }
+            //         // Get battles per day
+            //         int btlPerDay = 0;
+            //         Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
+            //         // Calc values dependent of battles per day
+            //         int realAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString());
+            //         txtRealAvgXP.Text = realAvgXP.ToString();
+            //         int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
+            //         txtRestBattles.Text = restBattles.ToString();
+            //         // Calc completion date or rest days according to progress type
+            //         int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
+            //         txtRestDays.Text = restDays.ToString();
+            //         // If grinding progress is dependent of battles per day calculate compleation date to reach goal
+            //         if (chkBtlPrDay.Checked)
+            //         {
+            //             DateTime complDate = DateTime.Now.AddDays(restDays);
+            //             txtCompletionDate.Text = complDate.ToString("d");
+            //         }
+
             dataChanged = true;
 		}
 

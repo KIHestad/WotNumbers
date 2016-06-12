@@ -804,7 +804,22 @@ namespace WinApp.Code
 										teamFortResources[player.team] += fortResourceValue;
 										// Create SQL and update db
 										sql = "insert into battlePlayer (" + fields + ") values (" + values + ")";
-										DB.ExecuteNonQuery(sql);
+										bool success = DB.ExecuteNonQuery(sql,false);
+                                        if (!success)
+                                        {
+                                            // Add tank if missing
+                                            // TODO : NOT WORKING
+                                            string name = TankHelper.GetTankName(tankId);
+                                            if (name == "")
+                                            {
+                                                string newTank =
+                                                    "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium, short_name) " +
+                                                    "VALUES (" + tankId + ", 1, -1, 'Unknown', 0, 0, 'Unknown');";
+                                                success = DB.ExecuteNonQuery(sql, false);
+                                                if (success)
+                                                    DB.ExecuteNonQuery(sql, false);
+                                            }
+                                        }
 									}
 									// Get killer info
 									if (killerID > 0)
@@ -996,38 +1011,47 @@ namespace WinApp.Code
 			// Get grinding data
 			string sql = 
 				"SELECT tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, " +
-				"        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
+                "        gCompleationDate, gProgressGoal, " +
+                "        SUM(playerTankBattle.battles) as battles, SUM(playerTankBattle.wins) as wins, " +
 				"        MAX(playerTankBattle.maxXp) AS maxXP, SUM(playerTankBattle.xp) AS totalXP, " +
 				"        SUM(playerTankBattle.xp) / SUM(playerTankBattle.battles) AS avgXP " +
 				"FROM    tank INNER JOIN " +
 				"        playerTank ON tank.id = playerTank.tankId INNER JOIN " +
 				"        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
 				"WHERE  (playerTank.id = @playerTankId) " +
-				"GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime ";
+                "GROUP BY tank.name, gCurrentXP, gGrindXP, gGoalXP, gProgressXP, gBattlesDay, gComment, lastVictoryTime, gCompleationDate, gProgressGoal ";
 			DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 			DataRow grinding = DB.FetchData(sql).Rows[0];
-			// Get parameters for grinding calc
-			int progress = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
-			int grind = Convert.ToInt32(grinding["gGrindXP"]);
-			int btlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
-			// Calc values according to increased XP (progress)
-			int progressPercent = GrindingHelper.CalcProgressPercent(grind, progress);
-			int restXP = GrindingHelper.CalcProgressRestXP(grind, progress);
-			int realAvgXP = GrindingHelper.CalcRealAvgXP(grinding["battles"].ToString(), grinding["wins"].ToString(), grinding["totalXP"].ToString(),
-															grinding["avgXP"].ToString(), btlPerDay.ToString());
-			int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
-			int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
-			// Save to playerTank
+            // Get parameters for grinding calc
+            GrindingHelper.Progress progress = new GrindingHelper.Progress();
+            progress.ProgressXP = Convert.ToInt32(grinding["gProgressXP"]) + XP; // Added XP to previous progress
+            progress.TargetXP = Convert.ToInt32(grinding["gGrindXP"]);
+            progress.Battles = Convert.ToInt32(grinding["battles"]);
+            progress.Wins = Convert.ToInt32(grinding["wins"]);
+            progress.TotalXP = Convert.ToInt32(grinding["totalXP"]);
+            progress.AvgXP = Convert.ToInt32(grinding["avgXP"]);
+            // Set current progress
+            progress.ProgressGoal = Convert.ToInt32(grinding["gProgressGoal"]);
+            progress.CompleationDate = null;
+            if (grinding["gCompleationDate"] != DBNull.Value)
+                progress.CompleationDate = Convert.ToDateTime(grinding["gCompleationDate"]);
+            progress.BtlPerDay = Convert.ToInt32(grinding["gBattlesDay"]);
+            // Calc new progress
+            progress = GrindingHelper.CalcProgress(progress);
+            // Save to playerTank
 			sql = 
 				"UPDATE playerTank SET gProgressXP=@ProgressXP, gRestXP=@RestXP, gProgressPercent=@ProgressPercent, " +
-				"					   gRestBattles=@RestBattles, gRestDays=@RestDays  " +
+                "					   gRestBattles=@RestBattles, gRestDays=@RestDays, gCompleationDate=@CompleationDate, gBattlesDay=@BattlesDay " +
 				"WHERE id=@id; ";
-			DB.AddWithValue(ref sql, "@ProgressXP", progress, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@RestXP", restXP, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@ProgressPercent", progressPercent, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@RestBattles", restBattles, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@RestDays", restDays, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@ProgressXP", progress.ProgressXP, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@RestXP", progress.RestXP, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@ProgressPercent", progress.ProgressPercent, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@RestBattles", progress.RestBattles, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@RestDays", progress.RestDays, DB.SqlDataType.Int);
+            DateTime date = Convert.ToDateTime(progress.CompleationDate);
+            DB.AddWithValue(ref sql, "@CompleationDate", new DateTime(date.Year, date.Month, date.Day), DB.SqlDataType.DateTime);
+            DB.AddWithValue(ref sql, "@BattlesDay", progress.BtlPerDay, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@id", playerTankId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql);
 		}
 

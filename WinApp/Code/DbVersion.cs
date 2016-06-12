@@ -25,7 +25,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 374; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 376; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2750,6 +2750,16 @@ namespace WinApp.Code
                     sqlite =
                         "DROP VIEW playerTankBattleTotalsView; " +
                         "CREATE VIEW playerTankBattleTotalsView AS " + temp;
+                    break;
+                case 375:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
+                        "VALUES (225, 1, 491, 'playerTank.gCompleationDate', 'Compl Date', 'Grinding goal completion date ', 'Grinding', 80, 'DateTime'); ";
+                    sqlite = mssql;
+                    break;
+                case 376:
+                    Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
+                    Config.SaveConfig(out msg);
                     break;
             }
 			string sql = "";
