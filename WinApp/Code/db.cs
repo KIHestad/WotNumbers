@@ -397,7 +397,7 @@ namespace WinApp.Code
 		{
 			if (Value == DBNull.Value)
 			{
-				Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL"); ;
+				Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
 			}
 			else
 			{
@@ -421,8 +421,13 @@ namespace WinApp.Code
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{
-					DateTime dateTimeValue = Convert.ToDateTime(Value);
-					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + dateTimeValue.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"); // yyyy-DD-mm
+                    if (Value.ToString() == "")
+                        Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
+                    else
+                    {
+                        DateTime dateTimeValue = Convert.ToDateTime(Value);
+                        Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + dateTimeValue.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"); // yyyy-DD-mm
+                    }
 				}
 				else if (DataType == SqlDataType.Image)
 				{

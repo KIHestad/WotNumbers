@@ -10,6 +10,29 @@ namespace WinApp.Code
 {
 	public static class TankHelper
 	{
+        public static void CreateUnknownTank(int tankId, string tankName)
+        {
+            int tier = 0;
+            int countryId = -1; // Unknown nation
+            int premium = 0;
+            int tankTypeId = -1; // Unknown tank type
+            // Special tank
+            if (tankName == "unknown_1_234")
+            {
+                tankName = "Karl";
+                tankTypeId = 5;
+            }
+            // Add tank
+            string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
+            DB.AddWithValue(ref insertSql, "@id", tankId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref insertSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref insertSql, "@countryId", countryId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref insertSql, "@name", tankName, DB.SqlDataType.VarChar);
+            DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
+            DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
+            DB.ExecuteNonQuery(insertSql);
+        }
+        
         #region DatabaseLookup
 
 		public static void GetAllLists()
@@ -369,7 +392,7 @@ namespace WinApp.Code
 				return null;
 		}
 
-		#endregion
+        #endregion
 	   
 	}
 }

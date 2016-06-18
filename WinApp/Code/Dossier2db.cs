@@ -554,27 +554,7 @@ namespace WinApp.Code
 		{
 			// Check if this tank exists
 			if (!TankHelper.TankExists(tankId))
-			{
-				int tier = 1;
-				int countryId = 1;
-				int premium = 1;
-				int tankTypeId = 1;
-				// Special tank
-				if (tankName == "unknown_1_234")
-				{
-					tankName = "Karl";
-					tankTypeId = 5;
-				}
-				// Add tank
-				string insertSql = "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium) VALUES (@id, @tankTypeId, @countryId, @name, @tier, @premium); ";
-				DB.AddWithValue(ref insertSql, "@id", tankId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref insertSql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref insertSql, "@countryId", countryId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref insertSql, "@name", tankName, DB.SqlDataType.VarChar);
-				DB.AddWithValue(ref insertSql, "@tier", tier, DB.SqlDataType.Int);
-				DB.AddWithValue(ref insertSql, "@premium", premium, DB.SqlDataType.Int);
-				DB.ExecuteNonQuery(insertSql);  
-			}
+                TankHelper.CreateUnknownTank(tankId, tankName);
 
 			// Add to database
 			string sql = "INSERT INTO PlayerTank (tankId, playerId) VALUES (@tankId, @playerId); ";

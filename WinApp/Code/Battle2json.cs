@@ -808,16 +808,11 @@ namespace WinApp.Code
                                         if (!success)
                                         {
                                             // Add tank if missing
-                                            // TODO : NOT WORKING
-                                            string name = TankHelper.GetTankName(tankId);
-                                            if (name == "")
+                                            // TODO : Not sure if working
+                                            if (!TankHelper.TankExists(tankId))
                                             {
-                                                string newTank =
-                                                    "INSERT INTO tank (id, tankTypeId, countryId, name, tier, premium, short_name) " +
-                                                    "VALUES (" + tankId + ", 1, -1, 'Unknown', 0, 0, 'Unknown');";
-                                                success = DB.ExecuteNonQuery(sql, false);
-                                                if (success)
-                                                    DB.ExecuteNonQuery(sql, false);
+                                                TankHelper.CreateUnknownTank(tankId, "Unknown");
+                                                DB.ExecuteNonQuery(sql, false);
                                             }
                                         }
 									}
