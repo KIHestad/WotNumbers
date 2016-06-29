@@ -566,9 +566,9 @@ namespace WinApp.Code
 									battleValues.Add(new BattleValue() { colname = "EFF", value = Math.Round(eff,0) });
                                     double wn7 = Code.Rating.WN7.WN7battle(rp, true);
 									battleValues.Add(new BattleValue() { colname = "WN7", value = Math.Round(wn7, 0) });
-                                    double wn8 = Code.Rating.WN8.CalcBattle(tankId, rp, true);
+                                    double wn8 = Code.Rating.WN8.CalcBattle(tankId, rp);
 									battleValues.Add(new BattleValue() { colname = "WN8", value = Math.Round(wn8, 0) });
-                                    double wn9 = Code.Rating.WN9.CalcBattle(tankId, rp, true);
+                                    double wn9 = Code.Rating.WN9.CalcBattle(tankId, rp);
                                     battleValues.Add(new BattleValue() { colname = "WN9", value = Math.Round(wn9, 0) });
 								}
 								// insert data

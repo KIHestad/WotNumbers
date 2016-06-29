@@ -74,19 +74,19 @@ namespace WinApp.Code.FormLayout
             return wn7RatingColor;
         }
 
-        public static double[] RangeWN9 = { 0, 100, 125, 160, 200, 240, 295, 380, 420 }; // Set accoring to http://jaj22.org.uk/wotstats.html
+        public static double[] RangeWN9 = { 0, 200, 300, 400, 500, 600, 700, 900, 1000 }; // Set accoring to http://jaj22.org.uk/wotstats.html
 
         public static Color WN9color(double wn9)
         {
             Color wn9RatingColor = ColorTheme.Rating_very_bad;
-            if (wn9 >= RangeWN8[8]) wn9RatingColor = ColorTheme.Rating_super_uniqum;
-            else if (wn9 >= RangeWN8[7]) wn9RatingColor = ColorTheme.Rating_uniqum;
-            else if (wn9 >= RangeWN8[6]) wn9RatingColor = ColorTheme.Rating_great;
-            else if (wn9 >= RangeWN8[5]) wn9RatingColor = ColorTheme.Rating_very_good;
-            else if (wn9 >= RangeWN8[4]) wn9RatingColor = ColorTheme.Rating_good;
-            else if (wn9 >= RangeWN8[3]) wn9RatingColor = ColorTheme.Rating_average;
-            else if (wn9 >= RangeWN8[2]) wn9RatingColor = ColorTheme.Rating_below_average;
-            else if (wn9 >= RangeWN8[1]) wn9RatingColor = ColorTheme.Rating_bad;
+            if (wn9 >= RangeWN9[8]) wn9RatingColor = ColorTheme.Rating_super_uniqum;
+            else if (wn9 >= RangeWN9[7]) wn9RatingColor = ColorTheme.Rating_uniqum;
+            else if (wn9 >= RangeWN9[6]) wn9RatingColor = ColorTheme.Rating_great;
+            else if (wn9 >= RangeWN9[5]) wn9RatingColor = ColorTheme.Rating_very_good;
+            else if (wn9 >= RangeWN9[4]) wn9RatingColor = ColorTheme.Rating_good;
+            else if (wn9 >= RangeWN9[3]) wn9RatingColor = ColorTheme.Rating_average;
+            else if (wn9 >= RangeWN9[2]) wn9RatingColor = ColorTheme.Rating_below_average;
+            else if (wn9 >= RangeWN9[1]) wn9RatingColor = ColorTheme.Rating_bad;
             return wn9RatingColor;
         }
 

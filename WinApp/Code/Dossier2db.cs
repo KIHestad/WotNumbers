@@ -917,10 +917,10 @@ namespace WinApp.Code
                 rp.BATTLES = battlesCount;
                 // Calculate WN9
                 sqlFields += ", wn9";
-                sqlValues += ", " + Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, true), 0).ToString();
+                sqlValues += ", " + Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp), 0).ToString();
                 // Calculate WN8
                 sqlFields += ", wn8";
-                sqlValues += ", " + Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp, true), 0).ToString();
+                sqlValues += ", " + Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0).ToString();
 				// Calc Eff
 				sqlFields += ", eff";
                 sqlValues += ", " + Math.Round(Code.Rating.EFF.EffBattle(tankId, rp), 0).ToString();

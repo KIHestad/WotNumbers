@@ -67,9 +67,10 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (156," + id + ",16,50);" + // XP Max
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (902," + id + ",17,3);" + //  - Separator 2 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (216," + id + ",18,50);" + // Mastery Badge
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",19,50);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (187," + id + ",20,50);" + // WN7
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",21,50);"; // EFF
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (105," + id + ",19,50);" + // WN9
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (49," + id + ",20,50);" + // WN8
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (187," + id + ",21,50);" + // WN7
+				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (48," + id + ",22,50);"; // EFF
 			DB.ExecuteNonQuery(sql);
 			return id;
 		}
@@ -222,8 +223,9 @@ namespace WinApp.Code.FormView
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (508," + id + ",19,52);" + // Credits Result
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (903," + id + ",20,3);" + //  - Separator 3 -
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (520," + id + ",21,50);" + // Mastery Badge
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",22,47);" + // WN8
-				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (186," + id + ",23,47);" + // WN7
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (106," + id + ",22,47);" + // WN9
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (47," + id + ",23,47);" + // WN8
+                "insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (186," + id + ",24,47);" + // WN7
 				"insert into columnListSelection (columnSelectionId,columnListId,sortorder,colWidth) values (512," + id + ",25,97);"; // Map
 			DB.ExecuteNonQuery(sql);
 			return id;

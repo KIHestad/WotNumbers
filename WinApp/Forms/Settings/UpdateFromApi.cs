@@ -42,7 +42,7 @@ namespace WinApp.Forms
 			this.Cursor = Cursors.WaitCursor;
 			UpdateFromApiTheme.Cursor = Cursors.WaitCursor;
 			btnStart.Enabled = false;
-			badProgressBar.ValueMax = 4;
+			badProgressBar.ValueMax = 5;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 
@@ -81,8 +81,12 @@ namespace WinApp.Forms
 			UpdateProgressBar("Retrieves WN8 expected values from API");
 			ImportWN8Api2DB.UpdateWN8(this);
 
-			// Done
-			DBVersion.RunWotApi = false;
+            // Get WN9 ratings
+            UpdateProgressBar("Retrieves WN9 expected values from API");
+            ImportWN9Api2DB.UpdateWN9(this);
+
+            // Done
+            DBVersion.RunWotApi = false;
 			UpdateProgressBar("");
 			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
 			btnStart.Enabled = true;

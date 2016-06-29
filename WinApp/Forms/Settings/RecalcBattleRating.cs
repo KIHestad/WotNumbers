@@ -20,7 +20,7 @@ namespace WinApp.Forms
         private bool _forEFF = false;
         private int _forBattleId = 0;
 
-        public RecalcBattleRating(bool autoRun = false, bool forWN9 = true, bool forWN8 = true, bool forWN7 = false, bool forEFF = true, int forBattleId = 0)
+        public RecalcBattleRating(bool autoRun, bool forWN9, bool forWN8, bool forWN7, bool forEFF, int forBattleId = 0)
 		{
 			InitializeComponent();
 			_autoRun = autoRun;
@@ -83,7 +83,8 @@ namespace WinApp.Forms
 			sql = "";
 			foreach (DataRow dr in dt.Rows)
 			{
-				UpdateProgressBar("Calc for battle " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["battleTime"].ToString());
+                int battleId = Convert.ToInt32(dr["id"]);
+                UpdateProgressBar("Calc for battle " + badProgressBar.Value + "/" + tot.ToString() + " " + dr["battleTime"].ToString());
 				int tankId = Convert.ToInt32(dr["tankId"]);
                 Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
 				rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
@@ -100,13 +101,13 @@ namespace WinApp.Forms
                 string newSQL = "update battle set ";
                 if (_forWN9)
                 {
-                    WN9 = Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, true), 0);
+                    WN9 = Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp), 0);
                     newSQL += "wn9=@wn9, ";
-                    DB.AddWithValue(ref newSQL, "@wn9", WN8, DB.SqlDataType.Int);
+                    DB.AddWithValue(ref newSQL, "@wn9", WN9, DB.SqlDataType.Int);
                 }
                 if (_forWN8)
                 {
-                    WN8 = Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp, true), 0);
+                    WN8 = Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0);
                     newSQL += "wn8=@wn8, ";
                     DB.AddWithValue(ref newSQL, "@wn8", WN8, DB.SqlDataType.Int);
                 }
@@ -125,7 +126,7 @@ namespace WinApp.Forms
                 }
                 newSQL = newSQL.Substring(0, newSQL.Length - 2);
                 newSQL += " where id=@id;";
-				DB.AddWithValue(ref newSQL, "@id", Convert.ToInt32(dr["id"]), DB.SqlDataType.Int);
+				DB.AddWithValue(ref newSQL, "@id", battleId, DB.SqlDataType.Int);
 				sql += newSQL;
 				if (sql.Length >= 4000) // Approx 100 updates
 				{

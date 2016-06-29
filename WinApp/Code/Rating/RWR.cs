@@ -11,7 +11,7 @@ namespace WinApp.Code.Rating
         public static double? RWRtotal(string battleMode)
         {
             double? RWR = null;
-            WNHelper.RatingParametersWN rpWN8 = Rating.WNHelper.GetParamForPlayerTotal(battleMode);
+            WN8.RatingParametersWN8 rpWN8 = WN8.GetParamForPlayerTotal(battleMode);
             // Use WN8 formula to calculate result
             RWR = RWRuseFormula(rpWN8);
             return RWR;
@@ -21,7 +21,7 @@ namespace WinApp.Code.Rating
         {
             Double? RWR = null;
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(rpBattle); // clone it to not affect input class
-            WNHelper.RatingParametersWN rpWN8 = new WNHelper.RatingParametersWN();
+            WN8.RatingParametersWN8 rpWN8 = new WN8.RatingParametersWN8();
             rpWN8.rp = rp;
             // get tankdata for current tank
             DataRow tankInfo = TankHelper.TankInfo(tankId);
@@ -155,7 +155,7 @@ namespace WinApp.Code.Rating
             if (playerTankBattle.Rows.Count > 0)
             {
                 // Get player totals
-                WNHelper.RatingParametersWN rpWN8 = new WNHelper.RatingParametersWN();
+                WN8.RatingParametersWN8 rpWN8 = new WN8.RatingParametersWN8();
                 rpWN8.rp.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
                 rpWN8.rp.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
                 // Get tanks with battle count per tank and expected values from db
@@ -181,7 +181,7 @@ namespace WinApp.Code.Rating
         }
 
 
-        private static double? RWRuseFormula(WNHelper.RatingParametersWN rpWN8)
+        private static double? RWRuseFormula(WN8.RatingParametersWN8 rpWN8)
         {
             double? RWR = null;
             if (rpWN8.rp.BATTLES > 0)

@@ -18,6 +18,7 @@ namespace WinApp.Code
 		public static bool RunDossierFileCheckWithForceUpdate = false;
 		public static bool RunWotApi = false;
 		public static bool RunRecalcBattleWN8 = false;
+        public static bool RunRecalcBattleWN9 = false;
         public static bool RunRecalcBattleCreditPerTank = false;
 		public static bool RunRecalcBattleKDratioCRdmg = false;
         public static bool RunRecalcBattleMaxTier = false;
@@ -25,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 376; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 384; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -1753,12 +1754,6 @@ namespace WinApp.Code
 					Config.Settings.wotGameRunBatchFile = "";
 					Config.SaveConfig(out msg);
 					break;
-				case 178:
-					RunRecalcBattleWN8 = true;
-					break;
-				case 181:
-					ColListSystemDefault.NewSystemBattleColList();
-					break;
 				case 182:
 					mssql = "";
 					sqlite =
@@ -2339,9 +2334,6 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET name='Cred Result per min' WHERE id=544;";
                     sqlite = mssql;
                     break;
-                case 285:
-                    ColListSystemDefault.NewSystemTankColList();
-                    break;
                 case 286:
                     RunInstallNewBrrVersion = true;
                     break;
@@ -2761,8 +2753,56 @@ namespace WinApp.Code
                     Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
                     Config.SaveConfig(out msg);
                     break;
+                case 377:
+                    RunRecalcBattleWN8 = true;
+                    break;
+                case 378:
+                    mssql =
+                        "ALTER TABLE tank ADD mmrange int NULL; " +
+                        "ALTER TABLE tank ADD wn9exp float NULL; " +
+                        "ALTER TABLE tank ADD wn9scale float NULL; " +
+                        "ALTER TABLE tank ADD wn9nerf float NULL; ";
+                    sqlite = mssql.Replace(" int "," integer ");
+                    break;
+                case 379:
+                    mssql = "INSERT INTO _version_ (id, version, description) VALUES (3, 0, 'WN9 version'); ";
+                    sqlite = mssql;
+                    break;
+                case 380:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql =
+                        temp + "VALUES (107, 1, 10, 'tank.mmrange', 'MM Range', 'Match making range, fetched from WN9 API', 'Tank', 35, 'Int'); " +
+                        temp + "VALUES (108, 1, 131, 'tank.wn9exp', 'WN9 Exp', 'WN9 expected value', 'Rating', 80, 'Float'); " +
+                        temp + "VALUES (109, 1, 132, 'tank.wn9scale', 'WN9 Scale', 'WN9 scale parameter', 'Rating', 80, 'Float'); " +
+                        temp + "VALUES (110, 1, 133, 'tank.wn9nerf', 'WN9 Nerf', 'WN9 nerf parameter', 'Rating', 80, 'Float'); " +
+                        temp + "VALUES (111, 2, 10, 'CAST(tank.mmrange AS FLOAT)', 'MM Range', 'Match making range, fetched from WN9 API', 'Tank', 35, 'Float'); " +
+                        temp + "VALUES (112, 2, 310, 'tank.wn9exp', 'WN9 Exp', 'WN9 expected value', 'Rating', 80, 'Float'); " +
+                        temp + "VALUES (113, 2, 311, 'tank.wn9scale', 'WN9 Scale', 'WN9 scale parameter', 'Rating', 80, 'Float'); " +
+                        temp + "VALUES (114, 2, 312, 'tank.wn9nerf', 'WN9 Nerf', 'WN9 nerf parameter', 'Rating', 80, 'Float'); ";
+                    sqlite = mssql;
+                    break;
+                case 381:
+                    mssql = "UPDATE columnSelection SET description = 'WN9 tank rating according to http://jaj22.org.uk/wn9description.html' WHERE ID IN (105,106); ";
+                    sqlite = mssql;
+                    break;
+                case 382:
+                    RunWotApi = true; // Get new WN9 exp values
+                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9
+                    RunRecalcBattleWN9 = true;
+                    break;
+                case 383:
+                    ColListSystemDefault.NewSystemTankColList();
+                    break;
+                case 384:
+                    ColListSystemDefault.NewSystemBattleColList();
+                    break;
+
+
+
+
+
             }
-			string sql = "";
+    string sql = "";
 			// get sql for correct dbtype
 			if (dbType == ConfigData.dbType.MSSQLserver) 
 				sql = mssql;
@@ -2856,17 +2896,29 @@ namespace WinApp.Code
 			return version;
 		}
 
-		public static int GetWN8Version()
+		public static double GetWNVersion(int WNversion)
 		{
-			int version = 0;
-			string sql = "select version from _version_ where id=2; ";
+            int id = 0;
+            switch (WNversion)
+            {
+                case 8: id = 2; break;
+                case 9: id = 3; break;
+            }
+            double version = 0;
+			string sql = "select version from _version_ where id=@id; ";
+            DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			if (dt.Rows.Count > 0)
 			{
-				version = Convert.ToInt32(dt.Rows[0][0]);
+				version = Convert.ToDouble(dt.Rows[0][0]);
 			}
-			else version = 0;
-			return version;
+			else
+                version = 0;
+            switch (WNversion)
+            {
+                case 9: version = version / 100; break;
+            }
+            return version;
 		}
 
 		private static void CalcPlayerTeam()

@@ -117,7 +117,7 @@ namespace WinApp.Forms
 			txtFileLocation.Enabled = false;
 			// Create new db
 			bool ok = true;
-			badProgressBar.ValueMax = 10;
+			badProgressBar.ValueMax = 11;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
 			UpdateProgressBar("Creating new database");
@@ -187,8 +187,12 @@ namespace WinApp.Forms
 						UpdateProgressBar("Retrieves WN8 expected values from API");
 						ImportWN8Api2DB.UpdateWN8(this);
 
-						// Update settings for API update runned
-						DBVersion.RunWotApi = false;
+                        // Get WN8 ratings
+                        UpdateProgressBar("Retrieves WN9 expected values from API");
+                        ImportWN9Api2DB.UpdateWN9(this);
+
+                        // Update settings for API update runned
+                        DBVersion.RunWotApi = false;
 						Config.Settings.doneRunWotApi = DateTime.Now;
 
 						// Reset player

@@ -208,6 +208,7 @@ namespace WinApp.Forms
                 SetFormTitle();
                 SetListener(false);
                 BattleChartHelper.SetBattleChartDefaultValues();
+                Code.Rating.WN9.SetTierAvgList();
                 if (DB.CheckConnection())
                 {
                     // Moved to Page Load - to run this and make sure db upgrades are done before app starts
@@ -403,6 +404,9 @@ namespace WinApp.Forms
             ToolStripMenuItem dataGridMainPopup_RecalculateTankCredit = new ToolStripMenuItem("Recalculate Tank Credits");
             dataGridMainPopup_RecalculateTankCredit.Click += new EventHandler(dataGridMainPopup_RecalculateTankCredit_Click);
 
+            ToolStripMenuItem dataGridMainPopup_RecalculateTankRating = new ToolStripMenuItem("Recalculate Tank Ratings");
+            dataGridMainPopup_RecalculateTankRating.Click += new EventHandler(dataGridMainPopup_RecalculateTankRating_Click);
+
             ToolStripMenuItem dataGridMainPopup_RecalculateBattleRating = new ToolStripMenuItem("Recalculate Battle Rating");
             dataGridMainPopup_RecalculateBattleRating.Click += new EventHandler(dataGridMainPopup_RecalculateBattleRating_Click);
 
@@ -434,6 +438,7 @@ namespace WinApp.Forms
 						dataGridMainPopup_FavListCreateNew,
 						new ToolStripSeparator(),
                         dataGridMainPopup_RecalculateTankCredit,
+                        dataGridMainPopup_RecalculateTankRating,
                         new ToolStripSeparator(),
 						dataGridMainPopup_CopyRowToClipboard
 					});
@@ -555,8 +560,8 @@ namespace WinApp.Forms
 			{
                 if (DBVersion.RunWotApi)
 					RunWotApi(true);
-				if (DBVersion.RunRecalcBattleWN8)
-					RunRecalcBattleWN8(true);
+				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9)
+					RunRecalcBattleWN8or9(true, DBVersion.RunRecalcBattleWN8, DBVersion.RunRecalcBattleWN9);
                 if (DBVersion.RunRecalcBattleCreditPerTank)
                     RunRecalcBattleCreditsPerTank(true);
                 if (DBVersion.RunRecalcBattleKDratioCRdmg)
@@ -686,7 +691,8 @@ namespace WinApp.Forms
             mRecalcTankStatistics.Enabled = true;
 			mUpdateDataFromAPI.Enabled = true;
             mRecalcBattleRatings.Enabled = true;
-			mRecalcBattleWN8.Enabled = true;
+            mRecalcBattleWN9.Enabled = true;
+            mRecalcBattleWN8.Enabled = true;
             mRecalcBattleWN7.Enabled = true;
             mRecalcBattleEFF.Enabled = true;
             mRecalcBattleAllRatings.Enabled = true;
@@ -2144,6 +2150,62 @@ namespace WinApp.Forms
 		
 		#region Data Grid - TANK VIEW                                      ***********************************************************************
 
+        private void GetTankBattleMode(out string battleModeSQL, out string battleModeFilter)
+        {
+            // Default values are Random/TC
+            battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
+            battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+            switch (MainSettings.GridFilterTank.BattleMode)
+            {
+                case GridFilter.BattleModeType.RandomAndTankCompany:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.Team:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeam).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.TeamRanked:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeamRanked).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.Random:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
+                    break;
+                case GridFilter.BattleModeType.ClanWar:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
+                    battleModeFilter = " AND (playerTank.hasClan = 1) ";
+                    break;
+                case GridFilter.BattleModeType.TankCompany:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
+                    battleModeFilter = " AND (playerTank.hasCompany = 1) ";
+                    break;
+                case GridFilter.BattleModeType.Historical:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeHistorical).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.Skirmishes:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSkirmishes).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.Stronghold:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeStronghold).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.Special:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSpecial).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.GlobalMap:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                default:
+                    break;
+            }
+        }
+
 		private void GridShowTank(string Status2Message)
 		{
 			// Grid init placement
@@ -2170,53 +2232,7 @@ namespace WinApp.Forms
 			// Create Battle mode filter
 			string battleModeFilter = "";
 			string battleModeSQL = "";
-			switch (MainSettings.GridFilterTank.BattleMode)
-			{
-				case GridFilter.BattleModeType.RandomAndTankCompany:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.Team:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeam).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.TeamRanked:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeamRanked).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.Random:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeRandom_TC).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') AND playerTank.hasClan = 0 AND playerTank.hasCompany = 0) ";
-					break;
-				case GridFilter.BattleModeType.ClanWar:
-					battleModeFilter = " AND (playerTank.hasClan = 1) ";
-					break;
-				case GridFilter.BattleModeType.TankCompany:
-					battleModeFilter = " AND (playerTank.hasCompany = 1) ";
-					break;
-				case GridFilter.BattleModeType.Historical:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeHistorical).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.Skirmishes:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSkirmishes).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.Stronghold:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeStronghold).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.Special:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeSpecial).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				case GridFilter.BattleModeType.GlobalMap:
-                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).SqlName;
-					battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
-					break;
-				default:
-					break;
-			}
+            GetTankBattleMode(out battleModeSQL, out battleModeFilter);
 			// Get soring
 			GridSortingHelper.Sorting sorting = GridSortingHelper.GetSorting(MainSettings.GetCurrentGridFilter());
 			// Default values for painting glyph as sort order direction on column header
@@ -2638,13 +2654,13 @@ namespace WinApp.Forms
 								}
 								if (count > 0)
                                     if (count > 1 && colListItem.name == "WN9") // Special calculation for WN8
-                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Code.Rating.WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
                                     else if (count > 1 && colListItem.name == "WN8") // Special calculation for WN8
-                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Code.Rating.WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
 									else if (count > 1 && colListItem.name == "WN7") // Special calculation for WN7
-                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] =Code.Rating.WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
 									else if (count > 1 && colListItem.name == "EFF") // Special calculation for EFF
-                                        rowAverage[colListItem.name] = Math.Round(Code.Rating.EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
+                                        rowAverage[colListItem.name] = Code.Rating.EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter, tankJoin);
 									else if (count > 1 && colListItem.name == "Dmg C/R") // Special calculation Dmg C/R
                                         rowAverage[colListItem.name] = Math.Round(CalcAvgDmgCR(battleTimeFilter, battleMode, tankFilter, battleModeFilter, tankJoin), 1);
 									else
@@ -2691,7 +2707,7 @@ namespace WinApp.Forms
 					rowTotals["killedCountToolTip"] = 0;
 					IEnumerable<string> nonTotalsCols = new List<string> 
 					{ 
-						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "Hit Rate",  "Max Tier", "Dmg Rank", 
+						"Tier", "Premium", "ID", "Mastery Badge ID", "EFF", "WN7", "WN8", "WN9", "Hit Rate",  "Max Tier", "Dmg Rank", 
 						"Pierced Shots%", "Pierced Hits%", "HE Shots %", "HE Hts %", "Platoon", "Killed By Player ID", "Enemy Clan ID", "Dmg C/R"
 					};
 					IEnumerable<string> countCols = new List<string> 
@@ -3627,7 +3643,8 @@ namespace WinApp.Forms
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			Form frm = new Forms.RecalcBattleRating(true, true, true, true, true, battleId);
 			FormHelper.OpenFormCenterOfParent(this, frm);
-		}
+            ShowView("Refreshed grid");
+        }
 
 		private void dataGridMainPopup_BattleDetails_Click(object sender, EventArgs e)
 		{
@@ -3719,6 +3736,16 @@ namespace WinApp.Forms
             TankCreditCalculation.RecalculateForTank(playerTankId);
             ShowView("Refreshed grid");
 		}
+
+        private void dataGridMainPopup_RecalculateTankRating_Click(object sender, EventArgs e)
+        {
+            int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
+            string battleMode = "";
+            string temp = "";
+            GetTankBattleMode(out battleMode, out temp);
+            Code.Rating.WNHelper.RecalculateRatingForTank(playerTankId, battleMode);
+            ShowView("Refreshed grid");
+        }
 
         private void dataGridMainPopup_Replay_Click(object sender, EventArgs e)
 		{
@@ -4183,12 +4210,12 @@ namespace WinApp.Forms
 
 		private void RunWotApi(bool autoRun = false)
 		{
-			int WN8versionCurrent = DBVersion.GetWN8Version();
+            double WN8versionCurrent = DBVersion.GetWNVersion(8);
 			Form frm = new Forms.UpdateFromApi(autoRun);
 			frm.ShowDialog();
-			int WN8versionNew = DBVersion.GetWN8Version();
+            double WN8versionNew = DBVersion.GetWNVersion(8);
 			if (WN8versionNew > WN8versionCurrent)
-				RunRecalcBattleWN8(true);
+				RunRecalcBattleWN8or9(true, true, false);
 		}
 
 		private void mRecalcBattleRatings_Click(object sender, EventArgs e)
@@ -4202,11 +4229,12 @@ namespace WinApp.Forms
 			}
             // Get What rating to recalc
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            bool WN9 = (menu.Tag.ToString() == "WN9" || menu.Tag.ToString() == "ALL");
             bool WN8 = (menu.Tag.ToString() == "WN8" || menu.Tag.ToString() == "ALL");
             bool WN7 = (menu.Tag.ToString() == "WN7" || menu.Tag.ToString() == "ALL");
             bool EFF = (menu.Tag.ToString() == "EFF" || menu.Tag.ToString() == "ALL"); 
             // Show dialog
-			Form frm = new Forms.RecalcBattleRating(false, WN8, WN7, EFF);
+			Form frm = new Forms.RecalcBattleRating(false, WN9, WN8, WN7, EFF);
 			frm.ShowDialog();
 			// Return to prev file watcher state
 			if (runState != Config.Settings.dossierFileWathcherRun)
@@ -4236,9 +4264,9 @@ namespace WinApp.Forms
             }
         }
 
-		private void RunRecalcBattleWN8(bool autoRun = false)
+		private void RunRecalcBattleWN8or9(bool autoRun, bool wn8, bool wn9)
 		{
-			Form frm = new Forms.RecalcBattleRating(autoRun);
+			Form frm = new Forms.RecalcBattleRating(autoRun, wn9, wn8, false, false);
 			frm.ShowDialog(this);
 		}
 

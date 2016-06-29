@@ -32,6 +32,8 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.AboutTheme = new BadForm();
+            this.lblWN9ver = new BadLabel();
+            this.badLabel7 = new BadLabel();
             this.btnIronPythonEnvironment = new BadButton();
             this.linkWotNumbers = new System.Windows.Forms.LinkLabel();
             this.linkVbAddict = new System.Windows.Forms.LinkLabel();
@@ -51,6 +53,8 @@
             // 
             // AboutTheme
             // 
+            this.AboutTheme.Controls.Add(this.lblWN9ver);
+            this.AboutTheme.Controls.Add(this.badLabel7);
             this.AboutTheme.Controls.Add(this.btnIronPythonEnvironment);
             this.AboutTheme.Controls.Add(this.linkWotNumbers);
             this.AboutTheme.Controls.Add(this.linkVbAddict);
@@ -76,7 +80,7 @@
             this.AboutTheme.MainArea = mainAreaClass1;
             this.AboutTheme.Name = "AboutTheme";
             this.AboutTheme.Resizable = false;
-            this.AboutTheme.Size = new System.Drawing.Size(407, 376);
+            this.AboutTheme.Size = new System.Drawing.Size(407, 398);
             this.AboutTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("AboutTheme.SystemExitImage")));
             this.AboutTheme.SystemMaximizeImage = null;
             this.AboutTheme.SystemMinimizeImage = null;
@@ -84,12 +88,36 @@
             this.AboutTheme.Text = "About";
             this.AboutTheme.TitleHeight = 26;
             // 
+            // lblWN9ver
+            // 
+            this.lblWN9ver.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.lblWN9ver.Dimmed = false;
+            this.lblWN9ver.Image = null;
+            this.lblWN9ver.Location = new System.Drawing.Point(154, 192);
+            this.lblWN9ver.Name = "lblWN9ver";
+            this.lblWN9ver.Size = new System.Drawing.Size(121, 23);
+            this.lblWN9ver.TabIndex = 23;
+            this.lblWN9ver.Text = "Loading...";
+            this.lblWN9ver.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // badLabel7
+            // 
+            this.badLabel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel7.Dimmed = false;
+            this.badLabel7.Image = null;
+            this.badLabel7.Location = new System.Drawing.Point(48, 192);
+            this.badLabel7.Name = "badLabel7";
+            this.badLabel7.Size = new System.Drawing.Size(109, 26);
+            this.badLabel7.TabIndex = 22;
+            this.badLabel7.Text = "WN9 version:";
+            this.badLabel7.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
             // btnIronPythonEnvironment
             // 
             this.btnIronPythonEnvironment.BlackButton = false;
             this.btnIronPythonEnvironment.Checked = false;
             this.btnIronPythonEnvironment.Image = null;
-            this.btnIronPythonEnvironment.Location = new System.Drawing.Point(239, 330);
+            this.btnIronPythonEnvironment.Location = new System.Drawing.Point(239, 347);
             this.btnIronPythonEnvironment.Name = "btnIronPythonEnvironment";
             this.btnIronPythonEnvironment.Size = new System.Drawing.Size(141, 23);
             this.btnIronPythonEnvironment.TabIndex = 21;
@@ -104,7 +132,7 @@
             this.linkWotNumbers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.linkWotNumbers.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkWotNumbers.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkWotNumbers.Location = new System.Drawing.Point(48, 240);
+            this.linkWotNumbers.Location = new System.Drawing.Point(48, 257);
             this.linkWotNumbers.Name = "linkWotNumbers";
             this.linkWotNumbers.Size = new System.Drawing.Size(87, 13);
             this.linkWotNumbers.TabIndex = 13;
@@ -120,7 +148,7 @@
             this.linkVbAddict.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.linkVbAddict.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkVbAddict.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.linkVbAddict.Location = new System.Drawing.Point(48, 299);
+            this.linkVbAddict.Location = new System.Drawing.Point(48, 316);
             this.linkVbAddict.Name = "linkVbAddict";
             this.linkVbAddict.Size = new System.Drawing.Size(93, 13);
             this.linkVbAddict.TabIndex = 12;
@@ -134,7 +162,7 @@
             this.badLabel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel8.Dimmed = false;
             this.badLabel8.Image = null;
-            this.badLabel8.Location = new System.Drawing.Point(29, 273);
+            this.badLabel8.Location = new System.Drawing.Point(29, 290);
             this.badLabel8.Name = "badLabel8";
             this.badLabel8.Size = new System.Drawing.Size(351, 23);
             this.badLabel8.TabIndex = 10;
@@ -146,7 +174,7 @@
             this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel5.Dimmed = false;
             this.badLabel5.Image = null;
-            this.badLabel5.Location = new System.Drawing.Point(29, 214);
+            this.badLabel5.Location = new System.Drawing.Point(29, 231);
             this.badLabel5.Name = "badLabel5";
             this.badLabel5.Size = new System.Drawing.Size(301, 23);
             this.badLabel5.TabIndex = 8;
@@ -252,7 +280,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(407, 376);
+            this.ClientSize = new System.Drawing.Size(407, 398);
             this.Controls.Add(this.AboutTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "About";
@@ -283,5 +311,7 @@
 		private System.Windows.Forms.LinkLabel linkVbAddict;
 		private System.Windows.Forms.LinkLabel linkWotNumbers;
 		private BadButton btnIronPythonEnvironment;
-	}
+        private BadLabel lblWN9ver;
+        private BadLabel badLabel7;
+    }
 }

@@ -60,7 +60,7 @@
             this.UpdateFromApiTheme.SystemMaximizeImage = null;
             this.UpdateFromApiTheme.SystemMinimizeImage = null;
             this.UpdateFromApiTheme.TabIndex = 0;
-            this.UpdateFromApiTheme.Text = "Update Data using Wargaming and WN8 API";
+            this.UpdateFromApiTheme.Text = "Update Tank Data using Wargaming, WN8 and WN9 API";
             this.UpdateFromApiTheme.TitleHeight = 26;
             // 
             // btnStart

@@ -246,6 +246,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.mRecalcBattleWN9 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1974,6 +1975,7 @@
             // mRecalcBattleRatings
             // 
             this.mRecalcBattleRatings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mRecalcBattleWN9,
             this.mRecalcBattleWN8,
             this.mRecalcBattleWN7,
             this.mRecalcBattleEFF,
@@ -2325,6 +2327,15 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // mRecalcBattleWN9
+            // 
+            this.mRecalcBattleWN9.Enabled = false;
+            this.mRecalcBattleWN9.Name = "mRecalcBattleWN9";
+            this.mRecalcBattleWN9.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleWN9.Tag = "WN9";
+            this.mRecalcBattleWN9.Text = "Recalculate Battle WN9...";
+            this.mRecalcBattleWN9.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2570,6 +2581,7 @@
         private System.Windows.Forms.ToolStripMenuItem mWotNumWebForum;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
         private System.Windows.Forms.ToolStripMenuItem mWotNumWebUserGuide;
-	}
+        private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN9;
+    }
 }
 

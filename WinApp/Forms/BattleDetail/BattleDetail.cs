@@ -390,23 +390,27 @@ namespace WinApp.Forms
 				//int tankId = Convert.ToInt32(dr["tankId"]);
 				//int battlesCount = Convert.ToInt32(dr["battlesCount"]);
                 Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
-				rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
+                rp.BATTLES = Convert.ToDouble(dr["battlesCount"]);
+                rp.DAMAGE = Convert.ToDouble(dr["dmg"]);
 				rp.SPOT = Convert.ToDouble(dr["spotted"]);
 				rp.FRAGS = Convert.ToDouble(dr["frags"]);
 				rp.DEF = Convert.ToDouble(dr["def"]);
 				double exp_dmg = DbConvert.ToDouble(dr["expDmg"]);
 				double exp_spotted = DbConvert.ToDouble(dr["expSpot"]);
 				double exp_frags = DbConvert.ToDouble(dr["expFrags"]);
-				double exp_def = DbConvert.ToDouble(dr["expDef"]);
+                double exp_def = DbConvert.ToDouble(dr["expDef"]);
 				double exp_wr = DbConvert.ToDouble(dr["expWR"]);
-				//string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
-				double rWINc;
+                double wr = exp_wr;
+                if (rp.BATTLES > 1)
+                    wr = rp.WINS / rp.BATTLES;
+                //string wn8 = Math.Round(Rating.CalculateTankWN8(tankId, battlesCount, dmg, spotted, frags, def, 0, true), 0).ToString();
+                double rWINc;
 				double rDAMAGEc;
 				double rFRAGSc;
 				double rSPOTc;
 				double rDEFc;
                 Code.Rating.WN8.UseFormulaReturnResult(
-					rp, exp_wr,
+					rp, wr,
 					exp_dmg, exp_spotted, exp_frags, exp_def, exp_wr,
 					out rWINc, out rDAMAGEc, out rFRAGSc, out rSPOTc, out rDEFc);
 				DataTable dtWN8 = new DataTable();
@@ -452,8 +456,11 @@ namespace WinApp.Forms
 				drWN8 = dtWN8.NewRow();
 				drWN8["Parameter"] = "Win Rate";
 				drWN8["Image"] = imgIndicators.Images[1];
-				drWN8["Result"] = "Fixed";
-				drWN8["Exp"] = exp_wr.ToString() + "%";
+                if (rp.BATTLES == 1)
+				    drWN8["Result"] = "Fixed";
+                else
+                    drWN8["Result"] = Math.Round(wr, 1).ToString("N0");
+                drWN8["Exp"] = exp_wr.ToString() + "%";
 				drWN8["Value"] = Math.Round(rWINc, 1).ToString("N0");
 				dtWN8.Rows.Add(drWN8);
 				// Total
@@ -731,7 +738,7 @@ namespace WinApp.Forms
 			int battleCount = Convert.ToInt32(drVal["battlesCount"]);
 			DataRow drNew = dt.NewRow();
 			drNew["Parameter"] = rowHeader;
-			double val = Convert.ToDouble(drVal[sqlField]) / battleCount;
+            double val = Convert.ToDouble(drVal[sqlField]); 
 			double avg = 0;
 			if (avgBattleCount > 0) avg = Convert.ToDouble(drAvg[sqlField]) / avgBattleCount;
 			drNew["Image"] = GetIndicator(val, avg, (avgBattleCount > 0), higherIsBest: higherIsBest);
@@ -743,7 +750,7 @@ namespace WinApp.Forms
 			return drNew;
 		}
 
-		private DataRow GetValues(DataTable dt, string val, string avg, string rowHeader, Image image)
+        private DataRow GetValues(DataTable dt, string val, string avg, string rowHeader, Image image)
 		{
 			// Image number:
 			// 0 = higher (green)

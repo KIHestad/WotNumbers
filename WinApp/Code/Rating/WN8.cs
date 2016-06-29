@@ -8,27 +8,130 @@ namespace WinApp.Code.Rating
 {
     public class WN8
     {
-        
+
+        #region params
+
+        public class RatingParametersWN8
+        {
+            public RatingParametersWN8()
+            {
+                rp = new WNHelper.RatingParameters();
+                expDmg = 0;
+                expSpot = 0;
+                expFrag = 0;
+                expDef = 0;
+                expWinRate = 0;
+            }
+            public WNHelper.RatingParameters rp { get; set; }
+            public double expWinRate { get; set; }
+            public double expDmg { get; set; }
+            public double expFrag { get; set; }
+            public double expSpot { get; set; }
+            public double expDef { get; set; }
+        }
+
+
+
+        public static RatingParametersWN8 GetParamForPlayerTankBattle(DataTable playerTankBattle)
+        {
+            RatingParametersWN8 rpWN = null;
+            // Get player totals from datatable
+            if (playerTankBattle.Rows.Count > 0)
+            {
+                // Get player totals
+                rpWN = new RatingParametersWN8();
+                rpWN.rp.BATTLES = Convert.ToDouble(playerTankBattle.Compute("SUM([battles])", ""));
+                rpWN.rp.DAMAGE = Convert.ToDouble(playerTankBattle.Compute("SUM([dmg])", ""));
+                rpWN.rp.SPOT = Convert.ToDouble(playerTankBattle.Compute("SUM([spot])", ""));
+                rpWN.rp.FRAGS = Convert.ToDouble(playerTankBattle.Compute("SUM([frags])", ""));
+                rpWN.rp.DEF = Convert.ToDouble(playerTankBattle.Compute("SUM([def])", ""));
+                rpWN.rp.WINS = Convert.ToDouble(playerTankBattle.Compute("SUM([wins])", ""));
+                // Get tanks with battle count per tank and expected values from db
+                foreach (DataRow ptbRow in playerTankBattle.Rows)
+                {
+                    // Get tanks with battle count per tank and expected values
+                    int tankId = Convert.ToInt32(ptbRow["tankId"]);
+                    double battlecount = Convert.ToDouble(ptbRow["battles"]);
+                    DataRow expected = TankHelper.TankInfo(tankId);
+                    if (battlecount > 0 && expected != null && expected["expDmg"] != DBNull.Value)
+                    {
+                        rpWN.expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
+                        rpWN.expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
+                        rpWN.expFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
+                        rpWN.expDef += Convert.ToDouble(expected["expDef"]) * battlecount;
+                        rpWN.expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
+                    }
+                }
+            }
+            return rpWN;
+        }
+
+        public static RatingParametersWN8 GetParamForPlayerTotal(string battleMode)
+        {
+            RatingParametersWN8 rpWN = new RatingParametersWN8();
+            // Get player totals from db
+            rpWN.rp = WNHelper.GetParamForPlayerTankBattle(battleMode, true);
+            if (rpWN.rp == null)
+                return null;
+            // Get tanks with battle count per tank and expected values from db
+            string battleModeWhere = "";
+            if (battleMode != "")
+            {
+                battleModeWhere = " and ptb.battleMode=@battleMode ";
+                DB.AddWithValue(ref battleModeWhere, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+            }
+            string sql =
+                "select sum(ptb.battles) as battles, t.id, t.expDmg, t.expSpot, t.expFrags, t.expDef, t.expWR " +
+                "from playerTankBattle ptb left join " +
+                "  playerTank pt on ptb.playerTankId=pt.id left join " +
+                "  tank t on pt.tankId = t.id " +
+                "where t.expDmg is not null and pt.playerId=@playerId " + battleModeWhere +
+                "group by t.id, t.expDmg, t.expSpot, t.expFrags, t.expDef, t.expWR  ";
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+            DataTable expectedTable = DB.FetchData(sql);
+            foreach (DataRow expected in expectedTable.Rows)
+            {
+                // Get tanks with battle count per tank and expected values
+                double battlecount = Convert.ToDouble(expected["battles"]);
+                if (battlecount > 0 && expected["expDmg"] != DBNull.Value)
+                {
+                    rpWN.expDmg += Convert.ToDouble(expected["expDmg"]) * battlecount;
+                    rpWN.expSpot += Convert.ToDouble(expected["expSpot"]) * battlecount;
+                    rpWN.expFrag += Convert.ToDouble(expected["expFrags"]) * battlecount;
+                    rpWN.expDef += Convert.ToDouble(expected["expDef"]) * battlecount;
+                    rpWN.expWinRate += Convert.ToDouble(expected["expWR"]) * battlecount;
+                }
+            }
+            return rpWN;
+        }
+
+        #endregion
+
+        #region calc
+
         public static double CalcPlayerTotal(string battleMode = "")
         {
             double WN8 = 0;
-            WNHelper.RatingParametersWN rpWN = Code.Rating.WNHelper.GetParamForPlayerTotal(battleMode);
+            RatingParametersWN8 rpWN = GetParamForPlayerTotal(battleMode);
             // Use WN8 formula to calculate result
             WN8 = UseFormula(rpWN);
             return WN8;
         }
 
-        public static double CalcBattle(int tankId, WNHelper.RatingParameters ratingParameters, bool WN8WRx = false)
+        public static double CalcBattle(int tankId, WNHelper.RatingParameters ratingParameters)
         {
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(ratingParameters); // clone it to not affect input class
-            // If more than one battle recorded 
-            if (rp.BATTLES > 1)
+            bool WN8WRx = false;
+            if (rp.BATTLES == 1)
+                WN8WRx = true;
+            else
             {
-                rp.CAP = rp.BATTLES * rp.CAP;
-                rp.DAMAGE = rp.BATTLES * rp.DAMAGE;
-                rp.DEF = rp.BATTLES * rp.DEF;
-                rp.FRAGS = rp.BATTLES * rp.FRAGS;
-                rp.SPOT = rp.BATTLES * rp.SPOT;
+                rp.CAP = rp.CAP * rp.BATTLES;
+                rp.DAMAGE = rp.DAMAGE * rp.BATTLES;
+                rp.DEF = rp.DEF * rp.BATTLES;
+                rp.FRAGS = rp.FRAGS * rp.BATTLES;
+                rp.SPOT = rp.SPOT * rp.BATTLES;
+                rp.WINS = rp.WINS * rp.BATTLES;
             }
             return CalcTank(tankId, rp, WN8WRx);
         }
@@ -37,7 +140,7 @@ namespace WinApp.Code.Rating
         {
             Double WN8 = 0;
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(ratingParameters); // clone it to not affect input class
-            WNHelper.RatingParametersWN rpWN = new WNHelper.RatingParametersWN();
+            RatingParametersWN8 rpWN = new RatingParametersWN8();
             rpWN.rp = rp;
             // get tankdata for current tank
             DataRow tankInfo = TankHelper.TankInfo(tankId);
@@ -75,12 +178,12 @@ namespace WinApp.Code.Rating
         public static double CalcPlayerTankBattle(DataTable playerTankBattle)
         {
             // Get WN rating parameters using datatable containing playerTankBattle
-            WNHelper.RatingParametersWN rpWN = Rating.WNHelper.GetParamForPlayerTankBattle(playerTankBattle);
+            RatingParametersWN8 rpWN = GetParamForPlayerTankBattle(playerTankBattle);
             // Use WN8 formula to calculate result
             return UseFormula(rpWN);
         }
 
-        private static double UseFormula(WNHelper.RatingParametersWN rpWN)
+        private static double UseFormula(RatingParametersWN8 rpWN)
         {
             double WN8 = 0;
             if (rpWN != null && rpWN.rp.BATTLES > 0)
@@ -129,4 +232,6 @@ namespace WinApp.Code.Rating
 
         }
     }
+
+    #endregion
 }
