@@ -36,5 +36,5 @@ using System.Runtime.InteropServices;
 // - Second number = minor versjon
 // - Third number = not used
 // - Forth number = buid number (automaically)
-[assembly: AssemblyVersion("0.13.7.*")]
-[assembly: AssemblyFileVersion("0.13.7.0")]
+[assembly: AssemblyVersion("0.13.9.*")]
+[assembly: AssemblyFileVersion("0.13.9.0")]

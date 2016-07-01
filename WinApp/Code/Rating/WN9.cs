@@ -133,13 +133,16 @@ namespace WinApp.Code.Rating
                     }
                 }
                 // Get average values
-                double avg_mmrange = rpWN.mmrange / totalBattleCount;
-                rpWN.mmrange = Convert.ToInt32(Math.Round(avg_mmrange, 0));
-                rpWN.wn9exp = rpWN.wn9exp / totalBattleCount;
-                rpWN.wn9nerf = rpWN.wn9nerf / totalBattleCount;
-                rpWN.wn9scale = rpWN.wn9scale / totalBattleCount;
-                double avg_tier = rpWN.tier / totalBattleCount;
-                rpWN.tier = Convert.ToInt32(Math.Max(1,Math.Round(avg_tier, 0)));
+                if (totalBattleCount > 0)
+                {
+                    double avg_mmrange = rpWN.mmrange / totalBattleCount;
+                    rpWN.mmrange = Convert.ToInt32(Math.Round(avg_mmrange, 0));
+                    rpWN.wn9exp = rpWN.wn9exp / totalBattleCount;
+                    rpWN.wn9nerf = rpWN.wn9nerf / totalBattleCount;
+                    rpWN.wn9scale = rpWN.wn9scale / totalBattleCount;
+                    double avg_tier = rpWN.tier / totalBattleCount;
+                    rpWN.tier = Convert.ToInt32(Math.Max(1, Math.Round(avg_tier, 0)));
+                }
             }
             return rpWN;
         }
