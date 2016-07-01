@@ -299,7 +299,7 @@ namespace WinApp.Gadget
                                 // Get special calculations
                                 if (colName == "WN9")
                                 {
-                                    item.cellValue.Value = 0; // TODO: Code.Rating.WN9.CalcPlayerTotal(battleMode);
+                                    item.cellValue.Value = Code.Rating.WN9.CalcPlayerTotal(battleMode);
                                     item.cellValue.Style.ForeColor = ColorRangeScheme.WN9color(Convert.ToInt32(item.cellValue.Value));
                                 }
                                 else if (colName == "WN8")
@@ -432,7 +432,7 @@ namespace WinApp.Gadget
                                         else if (colName == "WN9")
                                         {
                                             // Calc WN9
-                                            double prevValue = 0; //TODO: Code.Rating.WN9.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
+                                            double prevValue = Code.Rating.WN9.CalcBattleRangeReverse(battleTimeFilter, 0, battleMode);
                                             trendValue = Convert.ToDouble(item.cellValue.Value) - prevValue;
                                         }
                                         else if (colName == "RWR")

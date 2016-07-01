@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 384; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 386; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2787,7 +2787,6 @@ namespace WinApp.Code
                     break;
                 case 382:
                     RunWotApi = true; // Get new WN9 exp values
-                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9
                     RunRecalcBattleWN9 = true;
                     break;
                 case 383:
@@ -2796,13 +2795,22 @@ namespace WinApp.Code
                 case 384:
                     ColListSystemDefault.NewSystemBattleColList();
                     break;
+                case 385:
+                    mssql = "ALTER TABLE playerTankBattle ADD wn9maxhist FLOAT NOT NULL default 0; ";
+                    sqlite = mssql;
+                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9maxhist
+                    break;
+                case 386:
+                    mssql = "UPDATE columnSelection SET colNameSum=0, colNameBattleSum=0, colNameBattleSumCalc=1, colNameBattleSumTank=0, colNameBattleSumReversePos=0 WHERE ID = 105; ";
+                    sqlite = mssql;
+                    break;
 
 
 
 
 
             }
-    string sql = "";
+            string sql = "";
 			// get sql for correct dbtype
 			if (dbType == ConfigData.dbType.MSSQLserver) 
 				sql = mssql;

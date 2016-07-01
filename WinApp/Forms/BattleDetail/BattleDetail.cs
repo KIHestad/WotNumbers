@@ -28,7 +28,9 @@ namespace WinApp.Forms
 		private BadScrollBar scroll = new BadScrollBar();
 		private BattleMode.TypeEnum mainBattleMode;
 		private int tankId = 0;
-		private int wn8 = 0;
+        private int wn9 = 0;
+        private int wn9avg = 0;
+        private int wn8 = 0;
 		private int wn8avg = 0;
 		private int wn7 = 0;
 		private int wn7avg = 0;
@@ -360,8 +362,9 @@ namespace WinApp.Forms
 					else if (Convert.ToInt32(dr["modeCompany"]) > 0)
 						battleMode = "Tank Company Battle";
 				}
-				// get WN8 to use as total in wn8 detail grid
-				wn8 = Convert.ToInt32(dr["wn8"]);
+                // get ratings 
+                wn9 = Convert.ToInt32(dr["wn9"]);
+                wn8 = Convert.ToInt32(dr["wn8"]);
 				wn7 = Convert.ToInt32(dr["wn7"]);
 				eff = Convert.ToInt32(dr["eff"]);
 				lblBattleMode.Text = battleMode;
@@ -510,7 +513,7 @@ namespace WinApp.Forms
 			string sql =
 				"SELECT battlesCount, dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, eff, wn7, wn8, " +
+				"  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, eff, wn7, wn8, wn9, " +
 				"  credits, creditsPenalty, creditsContributionIn, creditsContributionOut, creditsToDraw, autoRepairCost, autoLoadCost, autoEquipCost, " +
 				"    eventCredits , originalCredits, creditsNet, achievementCredits, premiumCreditsFactor10, dailyXPFactorTxt, " +
 				"  real_xp, (xpPenalty * -1) as xpPenalty, freeXP, dailyXPFactor10, premiumXPFactor10, eventXP, eventFreeXP, eventTMenXP, achievementXP, achievementFreeXP " +
@@ -522,7 +525,7 @@ namespace WinApp.Forms
 			sql =
 				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
 				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spot, cap, def, mileage, treesCut, eff, wn7, wn8 " +
+				"  frags, spot, cap, def, mileage, treesCut, eff, wn7, wn8, wn9 " +
 				"FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
 				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode and playerTank.playerId=@playerId ";
 			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
@@ -624,10 +627,12 @@ namespace WinApp.Forms
 
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
-				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN8", "wn8", 1));
+                dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN9", "wn9", 1));
+                dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN8", "wn8", 1));
 				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN7", "wn7", 1));
 				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "EFF", "eff", 1));
-				wn8avg = Convert.ToInt32(drAvg["wn8"]);
+                wn9avg = Convert.ToInt32(drAvg["wn9"]);
+                wn8avg = Convert.ToInt32(drAvg["wn8"]);
 				wn7avg = Convert.ToInt32(drAvg["wn7"]);
 				effavg = Convert.ToInt32(drAvg["eff"]);
 
@@ -635,12 +640,7 @@ namespace WinApp.Forms
 				dtRating.AcceptChanges();
 				dgvRating.DataSource = dtRating;
 				FormatStandardDataGrid(dgvRating, "");
-
-
-				//lblWN8.ForeColor = Rating.WN8color(wn8);
-				//lblWN7.ForeColor = Rating.WN7color(wn7);
-				//lblEFF.ForeColor = Rating.EffColor(eff);
-
+                                
 				// Enhanced battle result
 				if (drVal["arenaUniqueID"] == DBNull.Value)
 				{
@@ -724,13 +724,15 @@ namespace WinApp.Forms
 
 		private void dgvRating_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
 		{
-			// rating color
-            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
-            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN8color(wn8avg);
-            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN7color(wn7);
-            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN7color(wn7avg);
-            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorRangeScheme.EffColor(eff);
-            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorRangeScheme.EffColor(effavg);
+            // rating color
+            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN9color(wn9);
+            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN9color(wn9avg);
+            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
+            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN8color(wn8avg);
+            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN7color(wn7);
+            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN7color(wn7avg);
+            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = ColorRangeScheme.EffColor(eff);
+            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = ColorRangeScheme.EffColor(effavg);
 		}
 
 		private DataRow GetValues(DataTable dt, DataRow drVal, DataRow drAvg, string rowHeader, string sqlField, int avgBattleCount, bool higherIsBest = true, int decimals = 0)

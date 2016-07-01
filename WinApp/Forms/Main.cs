@@ -1156,7 +1156,7 @@ namespace WinApp.Forms
 						SetFormTitle();
 						MsgBox.Show("Current player is changed because new player data is fetched." +
 							Environment.NewLine + Environment.NewLine + "Player changed to: " + Config.Settings.playerNameAndServer +
-							Environment.NewLine + Environment.NewLine, "Current player chenged");
+							Environment.NewLine + Environment.NewLine, "Current player chenged", this);
 						// Return to prev file watcher state
 						if (runState != Config.Settings.dossierFileWathcherRun)
 						{
@@ -2868,7 +2868,7 @@ namespace WinApp.Forms
                             showFloatValues.Add("Frags");
                             showFloatValues.Add("Spot");
                         }
-						if (!showFloatValues.Contains(colListItem.name)) // Avoid calculate total EFF/WN8
+						if (!showFloatValues.Contains(colListItem.name)) // Decimals
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N0";
 						else
 							dataGridMain.Columns[colListItem.name].DefaultCellStyle.Format = "N1";
@@ -3416,7 +3416,7 @@ namespace WinApp.Forms
 							color = ColorTheme.Rating_very_bad;
 							if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
 							else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
-							else if (percentage >= 90) color = ColorTheme.Rating_great;
+							else if (percentage >= 90) color = ColorTheme.Rating_very_great;
 							else if (percentage >= 80) color = ColorTheme.Rating_very_good;
 							else if (percentage >= 65) color = ColorTheme.Rating_good;
 							else if (percentage >= 50) color = ColorTheme.Rating_average;
@@ -3439,7 +3439,7 @@ namespace WinApp.Forms
 							    Color color = ColorTheme.Rating_very_bad;
 							    if (val <= 5000) color = ColorTheme.Rating_super_uniqum;
 							    else if (val <= 10000) color = ColorTheme.Rating_uniqum;
-							    else if (val <= 25000) color = ColorTheme.Rating_great;
+							    else if (val <= 25000) color = ColorTheme.Rating_very_great;
 							    else if (val <= 50000) color = ColorTheme.Rating_very_good;
 							    else if (val <= 75000) color = ColorTheme.Rating_good;
 							    else if (val <= 100000) color = ColorTheme.Rating_average;
@@ -4210,12 +4210,14 @@ namespace WinApp.Forms
 
 		private void RunWotApi(bool autoRun = false)
 		{
-            double WN8versionCurrent = DBVersion.GetWNVersion(8);
-			Form frm = new Forms.UpdateFromApi(autoRun);
+            double WNcurrentVer8 = DBVersion.GetWNVersion(8);
+            double WNcurrentVer9 = DBVersion.GetWNVersion(9);
+            Form frm = new Forms.UpdateFromApi(autoRun);
 			frm.ShowDialog();
-            double WN8versionNew = DBVersion.GetWNVersion(8);
-			if (WN8versionNew > WN8versionCurrent)
-				RunRecalcBattleWN8or9(true, true, false);
+            bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
+            bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
+            if (WNnewVer8 || WNnewVer9)
+				RunRecalcBattleWN8or9(true, WNnewVer8, WNnewVer9);
 		}
 
 		private void mRecalcBattleRatings_Click(object sender, EventArgs e)
@@ -5071,6 +5073,9 @@ namespace WinApp.Forms
             Form frm = null;
 			switch (controlName)
 			{
+                case "ucGaugeWN9":
+                    frm = new Gadget.paramTimeSpan(gadgetId);
+                    break;
                 case "ucGaugeWN8":
                     frm = new Gadget.paramTimeSpan(gadgetId);
                     break;

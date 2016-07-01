@@ -81,8 +81,7 @@ namespace AGaugeApp
 
 		private const Byte ZERO = 0;
 		private const Byte NUMOFCAPS = 5;
-		private const Byte NUMOFRANGES = 10;
-
+		
 		private Single fontBoundY1;
 		private Single fontBoundY2;
 		private Boolean drawGaugeBackground = true;
@@ -90,7 +89,6 @@ namespace AGaugeApp
 
 		private Single m_value;
 		private Byte m_CapIdx = 1;
-		private Boolean[] m_valueIsInRange = { false, false, false, false, false, false, false, false, false, false };
 		private Color[] m_CapColor = { ColorTheme.ControlFont, ColorTheme.ControlFont, ColorTheme.ControlFont, ColorTheme.ControlFont, ColorTheme.ControlFont };
 		private Point[] m_CapPosition = { new Point(128, 90), new Point(10, 10), new Point(10, 10), new Point(10, 10), new Point(10, 10) };
 		private String[] m_CapText = { "", "", "", "", "" };
@@ -125,8 +123,11 @@ namespace AGaugeApp
 		private Int32 m_ScaleLinesMajorOuterRadius = 70;
 		private Int32 m_ScaleLinesMajorWidth = 2;
 
-		private Byte m_RangeIdx;
-		private Boolean[] m_RangeEnabled = { false, false, false, false, false, false, false, false, false, false };
+        // Colors
+        private const Byte NUMOFRANGES = 10; // max colors 
+        private Byte m_RangeIdx;
+        private Boolean[] m_valueIsInRange = { false, false, false, false, false, false, false, false, false, false };
+        private Boolean[] m_RangeEnabled = { false, false, false, false, false, false, false, false, false, false };
 		private Color[] m_RangeColor = 
 		{ 
 			ColorTheme.Rating_very_bad, 
@@ -135,11 +136,11 @@ namespace AGaugeApp
 			ColorTheme.Rating_average ,
 			ColorTheme.Rating_good ,
 			ColorTheme.Rating_very_good ,
-			ColorTheme.Rating_great ,
+            ColorTheme.Rating_great,
+            ColorTheme.Rating_very_great ,
 			ColorTheme.Rating_uniqum ,
-			ColorTheme.Rating_super_uniqum,
-			ColorTheme.FormBorderBlue
-		};
+			ColorTheme.Rating_super_uniqum
+        };
 		private Single[] m_RangeStartValue = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		private Single[] m_RangeEndValue =   { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		private Int32[] m_RangeInnerRadius = { 70, 70, 70, 70, 70, 70, 70, 70, 70, 70};
@@ -1021,39 +1022,41 @@ namespace AGaugeApp
 			}
 		}
 
-		[System.ComponentModel.Browsable(true),
-		System.ComponentModel.Category("AGauge"),
-		System.ComponentModel.Description("The color of the range.")]
-		public Color RangeColor
-		{
-			get
-			{
-				return m_RangeColor[m_RangeIdx];
-			}
-			set
-			{
-				if (m_RangeColor[m_RangeIdx] != value)
-				{
-					m_RangeColor[m_RangeIdx] = value;
-					RangesColor = m_RangeColor;
-					drawGaugeBackground = true;
-					Refresh();
-				}
-			}
-		}
 
-		[System.ComponentModel.Browsable(false)]
-		public Color[] RangesColor
-		{
-			get
-			{
-				return m_RangeColor;
-			}
-			set
-			{
-				m_RangeColor = value;
-			}
-		}
+        // Disabled custom colors per gauge, only use fixed values
+		//[System.ComponentModel.Browsable(true),
+		//System.ComponentModel.Category("AGauge"),
+		//System.ComponentModel.Description("The color of the range.")]
+		//public Color RangeColor
+		//{
+		//	get
+		//	{
+		//		return m_RangeColor[m_RangeIdx];
+		//	}
+		//	set
+		//	{
+		//		if (m_RangeColor[m_RangeIdx] != value)
+		//		{
+		//			m_RangeColor[m_RangeIdx] = value;
+		//			RangesColor = m_RangeColor;
+		//			drawGaugeBackground = true;
+		//			Refresh();
+		//		}
+		//	}
+		//}
+
+		//[System.ComponentModel.Browsable(false)]
+		//public Color[] RangesColor
+		//{
+		//	get
+		//	{
+		//		return m_RangeColor;
+		//	}
+		//	set
+		//	{
+		//		m_RangeColor = value;
+		//	}
+		//}
 
 		[System.ComponentModel.Browsable(true),
 		System.ComponentModel.Category("AGauge"),
@@ -1412,9 +1415,38 @@ namespace AGaugeApp
 				}
 			}
 		}
-		#endregion
+        #endregion
 
-		#region helper
+        #region helper
+
+        // Set color ramges on gauge according to color intervals
+        // Expected format is an array with start values per interval, ex: { 0, 25, 50, 75 }
+        // First interval gets overrided to gauge min value, ex: 0
+        // Last interval goes to gauge max value, ex: 100
+        // Maximum intervals = NUMOFRANGES (currently 10)
+        public void SetColorRanges(double[] colorIntervals)
+        {
+            // Calculate loop count according to color count
+            int colorLoop = colorIntervals.Length;
+            // Cap if more colors than max allowed
+            if (colorLoop > NUMOFRANGES)
+                colorLoop = NUMOFRANGES;
+            // Loop through color ranges
+            for (byte i = 0; i < colorLoop; i++)
+            {
+                Range_Idx = i;
+                if (i == 0)
+                    RangesStartValue[i] = ValueMin;
+                else
+                    RangesStartValue[i] = (float)colorIntervals[i];
+                if (i == NUMOFRANGES - 1)
+                    RangesEndValue[i] = ValueMax;
+                else
+                    RangesEndValue[i] = (float)colorIntervals[i + 1];
+                RangeEnabled = true;
+            }
+        }
+
 		private void FindFontBounds()
 		{
 			//find upper and lower bounds for numeric characters
@@ -1499,18 +1531,20 @@ namespace AGaugeApp
 				Single rangeStartAngle;
 				Single rangeSweepAngle;
 				int padding = 8;
-				for (Int32 counter = 0; counter < NUMOFRANGES; counter++)
-				{
-					if (m_RangeEndValue[counter] > m_RangeStartValue[counter]
-					&& m_RangeEnabled[counter])
-					{
-						rangeStartAngle = m_BaseArcStart + (m_RangeStartValue[counter] - m_MinValue) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
-						rangeSweepAngle = (m_RangeEndValue[counter] - m_RangeStartValue[counter]) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
-						grapichObject.DrawArc(new Pen(m_RangeColor[counter], 2), new Rectangle(m_Center.X - m_BaseArcRadius - (padding / 2), m_Center.Y - m_BaseArcRadius - (padding / 2), 2 * m_BaseArcRadius + padding, 2 * m_BaseArcRadius + padding), rangeStartAngle, rangeSweepAngle);
-					}
-				}
 
-				grapichObject.SetClip(ClientRectangle);
+                // Range colors
+                for (Int32 counter = 0; counter < NUMOFRANGES; counter++)
+                {
+                    if (m_RangeEndValue[counter] > m_RangeStartValue[counter]
+                    && m_RangeEnabled[counter])
+                    {
+                        rangeStartAngle = m_BaseArcStart + (m_RangeStartValue[counter] - m_MinValue) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
+                        rangeSweepAngle = (m_RangeEndValue[counter] - m_RangeStartValue[counter]) * m_BaseArcSweep / (m_MaxValue - m_MinValue);
+                        grapichObject.DrawArc(new Pen(m_RangeColor[counter], 2), new Rectangle(m_Center.X - m_BaseArcRadius - (padding / 2), m_Center.Y - m_BaseArcRadius - (padding / 2), 2 * m_BaseArcRadius + padding, 2 * m_BaseArcRadius + padding), rangeStartAngle, rangeSweepAngle);
+                    }
+                }
+
+                grapichObject.SetClip(ClientRectangle);
 				if (m_BaseArcRadius > 0)
 				{
 					grapichObject.DrawArc(new Pen(m_BaseArcColor, m_BaseArcWidth), new Rectangle(m_Center.X - m_BaseArcRadius, m_Center.Y - m_BaseArcRadius, 2 * m_BaseArcRadius, 2 * m_BaseArcRadius), m_BaseArcStart, m_BaseArcSweep);

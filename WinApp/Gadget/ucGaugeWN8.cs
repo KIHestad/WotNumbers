@@ -53,21 +53,9 @@ namespace WinApp.Gadget
                     btnToday.Checked = true;
                     break;
             }
-			// Colors 0-8
-			for (byte i = 0; i <= 8; i++)
-			{
-				aGauge1.Range_Idx = i;
-				if (i == 0)
-					aGauge1.RangesStartValue[i] = aGauge1.ValueMin;
-				else
-					aGauge1.RangesStartValue[i] = (float)ColorRangeScheme.RangeWN8[i];
-				if (i == 8)
-					aGauge1.RangesEndValue[i] = aGauge1.ValueMax;
-				else
-                    aGauge1.RangesEndValue[i] = (float)ColorRangeScheme.RangeWN8[i + 1];
-				aGauge1.RangeEnabled = true;
-			}
-			// Overall stats team
+            // Colors
+            aGauge1.SetColorRanges(ColorRangeScheme.RangeWN8);
+            // Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
                 end_val = Code.Rating.WN8.CalcPlayerTotal("15");

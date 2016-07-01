@@ -61,44 +61,44 @@ namespace WinApp.Code.Rating
             public double wn9nerf { get; set; }
         }
 
-        public static RatingParametersWN9 GetParamForPlayerTotal(string battleMode)
-        {
-            RatingParametersWN9 rpWN = new RatingParametersWN9();
-            // Get player totals from db
-            rpWN.rp = WNHelper.GetParamForPlayerTankBattle(battleMode, true);
-            if (rpWN.rp == null)
-                return null;
-            // Get tanks with battle count per tank and expected values from db
-            string battleModeWhere = "";
-            if (battleMode != "")
-            {
-                battleModeWhere = " and ptb.battleMode=@battleMode ";
-                DB.AddWithValue(ref battleModeWhere, "@battleMode", battleMode, DB.SqlDataType.VarChar);
-            }
-            string sql =
-                "select sum(ptb.battles) as battles, t.id, t.mmrange, t.wn9exp, t. wn9scale, t.wn9nerf " +
-                "from playerTankBattle ptb left join " +
-                "  playerTank pt on ptb.playerTankId=pt.id left join " +
-                "  tank t on pt.tankId = t.id " +
-                "where pt.playerId=@playerId " + battleModeWhere + // TODO: OK removing? t.expDmg is not null and 
-                "group by t.id, t.mmrange, t.wn9exp, t. wn9scale, t.wn9nerf ";
-            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DataTable expectedTable = DB.FetchData(sql);
-            foreach (DataRow expected in expectedTable.Rows)
-            {
-                // Get tanks with battle count per tank and expected values
-                double battlecount = Convert.ToDouble(expected["battles"]);
-                if (battlecount > 0 && expected["wn9exp"] != DBNull.Value)
-                {
-                    rpWN.mmrange += Convert.ToInt32(expected["mmrange"]);
-                    rpWN.wn9exp += Convert.ToDouble(expected["wn9exp"]) * battlecount;
-                    rpWN.wn9nerf += Convert.ToDouble(expected["wn9nerf"]) * battlecount;
-                    rpWN.wn9scale += Convert.ToDouble(expected["wn9scale"]) * battlecount;
-                    rpWN.tier += Convert.ToInt32(expected["tier"]); // Correct??
-                }
-            }
-            return rpWN;
-        }
+        //public static RatingParametersWN9 GetParamForPlayerTotal(string battleMode)
+        //{
+        //    RatingParametersWN9 rpWN = new RatingParametersWN9();
+        //    // Get player totals from db
+        //    rpWN.rp = WNHelper.GetParamForPlayerTankBattle(battleMode, excludeIfWN9ExpValIsNull: true);
+        //    if (rpWN.rp == null)
+        //        return null;
+        //    // Get tanks with battle count per tank and expected values from db
+        //    string battleModeWhere = "";
+        //    if (battleMode != "")
+        //    {
+        //        battleModeWhere = " and ptb.battleMode=@battleMode ";
+        //        DB.AddWithValue(ref battleModeWhere, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+        //    }
+        //    string sql =
+        //        "select sum(ptb.battles) as battles, t.id, t.mmrange, t.wn9exp, t. wn9scale, t.wn9nerf " +
+        //        "from playerTankBattle ptb left join " +
+        //        "  playerTank pt on ptb.playerTankId=pt.id left join " +
+        //        "  tank t on pt.tankId = t.id " +
+        //        "where pt.playerId=@playerId " + battleModeWhere + // TODO: OK removing? t.expDmg is not null and 
+        //        "group by t.id, t.mmrange, t.wn9exp, t. wn9scale, t.wn9nerf ";
+        //    DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+        //    DataTable expectedTable = DB.FetchData(sql);
+        //    foreach (DataRow expected in expectedTable.Rows)
+        //    {
+        //        // Get tanks with battle count per tank and expected values
+        //        double battlecount = Convert.ToDouble(expected["battles"]);
+        //        if (battlecount > 0 && expected["wn9exp"] != DBNull.Value)
+        //        {
+        //            rpWN.mmrange += Convert.ToInt32(expected["mmrange"]);
+        //            rpWN.wn9exp += Convert.ToDouble(expected["wn9exp"]) * battlecount;
+        //            rpWN.wn9nerf += Convert.ToDouble(expected["wn9nerf"]) * battlecount;
+        //            rpWN.wn9scale += Convert.ToDouble(expected["wn9scale"]) * battlecount;
+        //            rpWN.tier += Convert.ToInt32(expected["tier"]); // Correct??
+        //        }
+        //    }
+        //    return rpWN;
+        //}
 
         public static RatingParametersWN9 GetParamForPlayerTankBattle(DataTable playerTankBattle)
         {
@@ -148,36 +148,77 @@ namespace WinApp.Code.Rating
 
         #region calc
 
-        public static double CalcPlayerTotal(string battleMode = "")
+        private class tankListWn9
         {
-            double WN9 = 0;
-            RatingParametersWN9 rpWN = GetParamForPlayerTotal(battleMode);
-            // Use WN8 formula to calculate result
-            WN9 = UseFormula(rpWN);
-            return WN9;
+            public int wn9 { get; set; }
+            public int weight { get; set; }
         }
 
-        public static double CalcBattle(int tankId, WNHelper.RatingParameters ratingParameters)
+        public static DataTable GetPlayerTotalWN9TankStats(string battleMode = "")
+        {
+            // Get tanks by WN9 decreasing
+            string battleModeWhere = "";
+            if (battleMode != "")
+                battleModeWhere = " AND ptb.battleMode = '" + battleMode + "' ";
+            string sql =
+                "SELECT ptb.playerTankId, SUM(ptb.battles) as battles, SUM(ptb.wn9maxhist * ptb.battles) / NULLIF(SUM(ptb.battles), 0) as wn9 " +
+                "FROM playerTankBattle ptb INNER JOIN playerTank pt ON ptb.playerTankId = pt.id " +
+                "WHERE pt.playerId = @playerId AND " +
+                "ptb.wn9maxhist IS NOT NULL " + // don't use tanks with no expected values
+                battleModeWhere +
+                "GROUP BY playerTankId " +
+                "HAVING SUM(ptb.battles) > 0 " +
+                "ORDER BY SUM(ptb.wn9maxhist * ptb.battles) / NULLIF(SUM(ptb.battles), 0) DESC "; // sort tanks by WN9 decreasing
+            DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+            return DB.FetchData(sql);
+        }
+
+        public static double CalcPlayerTotal(string battleMode = "", DataTable tankStats = null)
+        {
+            // Get player total tank stats if not provided
+            if (tankStats == null)
+                tankStats = GetPlayerTotalWN9TankStats(battleMode);
+
+            // compile list of valid tanks with battles & WN9 
+            double totweight = 0;
+            List<tankListWn9> tanklist = new List<tankListWn9>();
+            foreach (DataRow dr in tankStats.Rows)
+            {
+                int wn9 = Convert.ToInt32(dr["wn9"]);
+                int weight = Math.Min(Convert.ToInt32(dr["battles"]), 300);
+                tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
+                totweight += weight;
+            }
+
+	        // add up account WN9 over top 65% of capped battles
+	        totweight *= 0.65;
+            double wn9tot = 0; double usedweight = 0; int i = 0;
+            for (; usedweight+tanklist[i].weight <= totweight; i++)
+	        {
+		        wn9tot += tanklist[i].wn9* tanklist[i].weight;
+		        usedweight += tanklist[i].weight;
+	        }
+            // last tank before cutoff uses remaining weight, not its battle count
+            wn9tot += tanklist[i].wn9* (totweight - usedweight);
+	        return wn9tot / totweight;
+        }
+
+        public static double CalcBattle(int tankId, WNHelper.RatingParameters ratingParameters, out double WN9maxhist)
         {
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(ratingParameters); // clone it to not affect input class
-            bool WN9WRx = false;
-            if (rp.BATTLES == 1)
-                WN9WRx = true;
-            else
-            {
-                rp.CAP = rp.CAP * rp.BATTLES;
-                rp.DAMAGE = rp.DAMAGE * rp.BATTLES;
-                rp.DEF = rp.DEF * rp.BATTLES;
-                rp.FRAGS = rp.FRAGS * rp.BATTLES;
-                rp.SPOT = rp.SPOT * rp.BATTLES;
-                rp.WINS = rp.WINS * rp.BATTLES;
-            }
-            return CalcTank(tankId, rp, WN9WRx);
+            rp.CAP = rp.CAP * rp.BATTLES;
+            rp.DAMAGE = rp.DAMAGE * rp.BATTLES;
+            rp.DEF = rp.DEF * rp.BATTLES;
+            rp.FRAGS = rp.FRAGS * rp.BATTLES;
+            rp.SPOT = rp.SPOT * rp.BATTLES;
+            rp.WINS = rp.WINS * rp.BATTLES;
+            return CalcTank(tankId, rp, out WN9maxhist);
         }
 
-        public static double CalcTank(int tankId, WNHelper.RatingParameters ratingParameters, bool WN9WRx = false)
+        public static double CalcTank(int tankId, WNHelper.RatingParameters ratingParameters, out double WN9maxhist)
         {
-            Double WN9 = 0;
+            double WN9 = 0;
+            WN9maxhist = 0;
             WNHelper.RatingParameters rp = new WNHelper.RatingParameters(ratingParameters); // clone it to not affect input class
             RatingParametersWN9 rpWN = new RatingParametersWN9();
             rpWN.rp = rp;
@@ -192,7 +233,8 @@ namespace WinApp.Code.Rating
                 rpWN.wn9scale = Convert.ToDouble(tankInfo["wn9scale"]);
                 rpWN.tier = Convert.ToInt32(tankInfo["tier"]);
                 // Use WN8 formula to calculate result
-                WN9 = UseFormula(rpWN);
+
+                WN9 = UseFormula(rpWN, out WN9maxhist);
             }
             return WN9;
         }
@@ -200,26 +242,74 @@ namespace WinApp.Code.Rating
 
         public static double CalcBattleRange(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
-            DataTable ptb = Rating.WNHelper.GetDataForBattle(battleTimeFilter, maxBattles, battleMode, tankFilter, battleModeFilter, tankJoin);
-            return CalcPlayerTankBattle(ptb);
+            DataTable ptb = WNHelper.GetDataForBattleRange(battleTimeFilter, maxBattles, battleMode, tankFilter, battleModeFilter, tankJoin);
+            double WN9maxhist = 0;
+            return CalcPlayerTankBattle(ptb, out WN9maxhist);
         }
 
         public static double CalcBattleRangeReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
-            DataTable ptb = Rating.WNHelper.GetDataForPlayerTankBattleReverse(battleTimeFilter, battleCount, battleMode, tankFilter, battleModeFilter, tankJoin);
-            return CalcPlayerTankBattle(ptb);
+            double wn9 = 0;
+            // get battle result for battle range to reverse
+            DataTable ptb = WNHelper.GetDataForBattleRange(battleTimeFilter, battleCount, battleMode, tankFilter, battleModeFilter, tankJoin);
+            // if any battles played calculate reverse
+            int ptbBattlesCount = Convert.ToInt32(ptb.Compute("SUM([battles])", ""));
+            if (ptbBattlesCount > 0)
+            {
+                // get players current total wn9 stats
+                DataTable playerTotalWN9TankStats = GetPlayerTotalWN9TankStats(battleMode);
+
+                // loop throgh battle range tank by tank and adjust the players current total wn9 stats
+                foreach (DataRow dr in ptb.Rows)
+                {
+                    // Check if battles is played for tank
+                    if (Convert.ToInt32(dr["battles"]) > 0)
+                    {
+                        // Get total stats for tank
+                        int tankId = Convert.ToInt32(dr["tankId"]);
+                        DataTable playerTotalTankStats = WNHelper.GetTotalTankStatsForPlayerTank(battleMode, tankJoin, tankId);
+                        RatingParametersWN9 rpWN9 = GetParamForPlayerTankBattle(playerTotalTankStats);
+                        // Subtract stats from range to find older totals = reversing the stats
+                        rpWN9.rp.BATTLES -= Convert.ToInt32(dr["battles"]);
+                        rpWN9.rp.CAP -= Convert.ToInt32(dr["cap"]);
+                        rpWN9.rp.DAMAGE -= Convert.ToInt32(dr["dmg"]);
+                        rpWN9.rp.DEF -= Convert.ToInt32(dr["def"]);
+                        rpWN9.rp.FRAGS -= Convert.ToInt32(dr["frags"]);
+                        rpWN9.rp.SPOT -= Convert.ToInt32(dr["spot"]);
+                        rpWN9.rp.WINS -= Convert.ToInt32(dr["wins"]);
+                        // Calc new WN9 for tank with adjusted stats
+                        double WN9adjMaxhist = 0;
+                        double WN9adj = CalcTank(tankId, rpWN9.rp, out WN9adjMaxhist);
+                        // Now adjust the wn9 stats for the tank
+                        DataRow[] drToAdjust = playerTotalWN9TankStats.Select("playerTankId = " + TankHelper.GetPlayerTankId(tankId));
+                        drToAdjust[0]["battles"] = rpWN9.rp.BATTLES;
+                        drToAdjust[0]["wn9"] = WN9adjMaxhist;
+                    }
+                }
+
+                // calc player overall wn with adjusted pløayer total wn9 stats
+                wn9 = CalcPlayerTotal(battleMode, playerTotalWN9TankStats);
+            }
+            else
+            {
+                // No battles found to reverse, return total player wn9
+                wn9 = CalcPlayerTotal(battleMode);
+            }
+
+
+            return wn9;
         }
 
 
-        public static double CalcPlayerTankBattle(DataTable playerTankBattle)
+        public static double CalcPlayerTankBattle(DataTable playerTankBattle, out double WN9maxhist)
         {
             // Get WN rating parameters using datatable containing playerTankBattle
             RatingParametersWN9 rpWN = GetParamForPlayerTankBattle(playerTankBattle);
             // Use WN9 formula to calculate result
-            return UseFormula(rpWN);
+            return UseFormula(rpWN, out WN9maxhist);
         }
 
-        private static double UseFormula(RatingParametersWN9 rpWN, bool maxhist = false)
+        private static double UseFormula(RatingParametersWN9 rpWN, out double WN9maxhist)
         {
             // inputs:
             // tank is object containing tank_id variable & "random" object
@@ -230,6 +320,7 @@ namespace WinApp.Code.Rating
             RatingParametersWN9 exp = rpWN; // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
 
             double WN9 = 0;
+            WN9maxhist = 0;
             if (rpWN != null && rpWN.rp.BATTLES > 0)
             {
                 // Array [0-9] corresponds with tier [1-10], subtract 1 from exp.tier to locate correct avg values from array
@@ -248,11 +339,13 @@ namespace WinApp.Code.Rating
                     wn9base += 0.14 * rfrag + 0.13 * Math.Sqrt(rspot) + 0.03 * Math.Sqrt(rdef);
                 else
                     wn9base += 0.25 * Math.Sqrt(rfrag * rspot) + 0.05 * Math.Sqrt(rfrag * Math.Sqrt(rdef));
-                // Adjust expected value if generating maximum historical value
-                double wn9exp = maxhist ? exp.wn9exp * (1 + exp.wn9nerf) : exp.wn9exp;
+
+                // Calc with maxhist, Adjust expected value when generating maximum historical value
+                double wn9expMaxhist = exp.wn9exp * (1 + exp.wn9nerf);
+                WN9maxhist = 666 * Math.Max(0, 1 + (wn9base / wn9expMaxhist - 1) / exp.wn9scale);
+
                 // Calculate final WN9 based on tank expected value & skill scaling 
-                double wn9 = 666 * Math.Max(0, 1 + (wn9base / wn9exp - 1) / exp.wn9scale);
-                WN9 =  Math.Max(0, wn9);
+                WN9 = 666 * Math.Max(0, 1 + (wn9base / exp.wn9exp - 1) / exp.wn9scale);
             }
             // Return value
             return WN9;

@@ -178,7 +178,8 @@ namespace WinApp.Forms.Settings
                                 int xp = Convert.ToInt32(recentBattles.Rows[i]["rbXPReceived"]) / 100;
                                 string battleMode = recentBattles.Rows[i]["rbBattleMode"].ToString();
                                 // Calc WN9
-                                int wn9 = Convert.ToInt32(Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp), 0));
+                                double wn9maxhist = 0; // not in use for battles
+                                int wn9 = Convert.ToInt32(Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, out wn9maxhist), 0));
                                 // Calc WN8
                                 int wn8 = Convert.ToInt32(Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0));
                                 // Calc EFF

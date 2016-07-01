@@ -73,7 +73,7 @@ namespace WinApp.Code
                     "Could not connect to http://jaj22.org.uk, please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
-				Code.MsgBox.Show(msg, "Problem connecting to http://jaj22.org.uk", parentForm);
+				MsgBox.Show(msg, "Problem connecting to http://jaj22.org.uk", parentForm);
 				return "";
 			}
 
@@ -88,7 +88,7 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
-				Code.MsgBox.Show(ex.Message, "Error occured", parentForm);
+				MsgBox.Show(ex.Message, "Error occured", parentForm);
 			}
 
 			return ("Import Complete");

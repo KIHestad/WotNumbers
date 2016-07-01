@@ -1,6 +1,6 @@
 ﻿namespace WinApp.Gadget
 {
-	partial class ucGaugeWN8
+	partial class ucGaugeWN9
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -161,7 +161,7 @@
             this.aGauge1.NeedleRadius = 58;
             this.aGauge1.NeedleType = 0;
             this.aGauge1.NeedleWidth = 2;
-            this.aGauge1.Range_Idx = ((byte)(9));
+            this.aGauge1.Range_Idx = ((byte)(0));
             this.aGauge1.RangeEnabled = false;
             this.aGauge1.RangeEndValue = 0F;
             this.aGauge1.RangeInnerRadius = 70;
@@ -264,7 +264,7 @@
             this.Name = "ucGaugeWN8";
             this.Size = new System.Drawing.Size(200, 170);
             this.Load += new System.EventHandler(this.ucGauge_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWN8_Paint);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ucGaugeWN9_Paint);
             this.ResumeLayout(false);
 
 		}

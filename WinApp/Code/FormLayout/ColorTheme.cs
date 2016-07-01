@@ -107,19 +107,20 @@ namespace WinApp.Code
         public static Color Rating_4_greenLight = ColorTranslator.FromHtml("#AAFF00");	// green - to - yellow
         public static Color Rating_4_green = ColorTranslator.FromHtml("#4CFF00");		// green
         public static Color Rating_5_greenDark = ColorTranslator.FromHtml("#2F9E00");	// green dark
-        public static Color Rating_6_blue = ColorTranslator.FromHtml("#60C7FF");		// blue
+        public static Color Rating_6_blue = ColorTranslator.FromHtml("#75C5FF");		// blue
         public static Color Rating_7_blueDark = ColorTranslator.FromHtml("#30A8FF");	// blue dark
         public static Color Rating_8_purple = ColorTranslator.FromHtml("#CC5EFF");		// purple
         public static Color Rating_9_purpleDark = ColorTranslator.FromHtml("#B200FF");	// purple dark
 
-        // Player rating colors - http://wiki.wnefficiency.net/pages/Color_Scale
+        // Player rating colors 
         public static Color Rating_very_bad =       Rating_0_redDark;		
 		public static Color Rating_bad =            Rating_1_red;
         public static Color Rating_below_average =  Rating_2_orange;
         public static Color Rating_average =        Rating_3_yellow;
         public static Color Rating_good =           Rating_4_green;
         public static Color Rating_very_good =      Rating_5_greenDark;
-        public static Color Rating_great =          Rating_7_blueDark;
+        public static Color Rating_great =          Rating_6_blue;
+        public static Color Rating_very_great =     Rating_7_blueDark;
         public static Color Rating_uniqum =         Rating_8_purple;
         public static Color Rating_super_uniqum =   Rating_9_purpleDark;
 

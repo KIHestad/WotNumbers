@@ -12,11 +12,11 @@ using WinApp.Code.FormLayout;
 
 namespace WinApp.Gadget
 {
-	public partial class ucGaugeWN7 : UserControl
+	public partial class ucGaugeWN9 : UserControl
 	{
         private GadgetHelper.TimeRangeEnum _battleTimeSpan = GadgetHelper.TimeRangeEnum.Total;
 
-        public ucGaugeWN7(GadgetHelper.TimeRangeEnum timeSpan)
+        public ucGaugeWN9(GadgetHelper.TimeRangeEnum timeSpan)
 		{
 			InitializeComponent();
             _battleTimeSpan = timeSpan;
@@ -24,16 +24,16 @@ namespace WinApp.Gadget
 
 		private void ucGauge_Load(object sender, EventArgs e)
 		{
-			SelectTimeRangeButton();
+			SelectTimeRangeButton(); 
 		}
 
 		public void DataBind()
 		{
 			// Init Gauge
 			aGauge1.ValueMin = 0;
-			aGauge1.ValueMax = 2500;
-			aGauge1.ValueScaleLinesMajorStepValue = 250;
-			aGauge1.CenterSubText = "WN7: Random/TC";
+			aGauge1.ValueMax = 1100;
+			aGauge1.ValueScaleLinesMajorStepValue = 100;
+			aGauge1.CenterSubText = "WN9: Random/TC";
             // show correct timespan button as selected
             switch (_battleTimeSpan)
             {
@@ -54,15 +54,15 @@ namespace WinApp.Gadget
                     break;
             }
             // Colors
-            aGauge1.SetColorRanges(ColorRangeScheme.RangeWN7);
-            // Overall stats team
+            aGauge1.SetColorRanges(ColorRangeScheme.RangeWN9);
+			// Overall stats team
             if (_battleTimeSpan == GadgetHelper.TimeRangeEnum.Total)
 			{
-                end_val = Code.Rating.WN7.WN7total();
+                end_val = Code.Rating.WN9.CalcPlayerTotal("15");
 			}
 			else // Check time range
 			{
-				int maxBattles = 0;
+				int battleRevert = 0;
 				string battleTimeFilter = "";
 				DateTime dateFilter = DateTimeHelper.GetTodayDateTimeStart();
                 switch (_battleTimeSpan)
@@ -92,18 +92,17 @@ namespace WinApp.Gadget
 					default:
 						break;
 				}
-                end_val = Code.Rating.WN7.WN7battle(battleTimeFilter, maxBattles);
+                end_val = Code.Rating.WN9.CalcBattleRange(battleTimeFilter, battleRevert);			
 			}
 			// Show in center text
 			aGauge1.CenterText = Math.Round(end_val, 2).ToString();
-            aGauge1.CenterTextColor = ColorRangeScheme.WN7color(end_val);
+            aGauge1.CenterTextColor = ColorRangeScheme.WN9color(end_val);
 			// CALC NEEDLE MOVEMENT
 			// AVG_STEP_VAL	= (END_VAL-START_VAL)/STEP_TOT
 			avg_step_val = (end_val - aGauge1.ValueMin) / step_tot; // Define average movements per timer tick
 			move_speed = Math.Abs(end_val - aGauge1.Value) / 30;
 			if (move_speed > 40) move_speed = 40;
 			timer1.Enabled = true;
-
 		}
 
 		double move_speed = 1;
@@ -161,7 +160,7 @@ namespace WinApp.Gadget
 			BadButton b = (BadButton)sender;
 			switch (b.Name)
 			{
-                case "btnTotal": _battleTimeSpan = GadgetHelper.TimeRangeEnum.Total; break;
+				case "btnTotal": _battleTimeSpan = GadgetHelper.TimeRangeEnum.Total; break;
                 case "btnMonth3": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeMonth3; break;
                 case "btnMonth": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeMonth; break;
                 case "btnWeek": _battleTimeSpan = GadgetHelper.TimeRangeEnum.TimeWeek; break;
@@ -188,7 +187,7 @@ namespace WinApp.Gadget
 			}
 		}
 
-		private void ucGaugeWN7_Paint(object sender, PaintEventArgs e)
+		private void ucGaugeWN9_Paint(object sender, PaintEventArgs e)
 		{
 			if (BackColor == ColorTheme.FormBackSelectedGadget)
 				GadgetHelper.DrawBorderOnGadget(sender, e);

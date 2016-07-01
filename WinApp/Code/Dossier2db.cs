@@ -664,7 +664,10 @@ namespace WinApp.Code
             rp.CAP = Code.Rating.WNHelper.ConvertDbVal2Double(playerTankBattleNewRow["cap"]);
             rp.BATTLES = playerTankNewRow_battles;
             // Calculate WN9
-            sqlFields += " wn9=" + Math.Round(Code.Rating.WN9.CalcTank(tankId, rp), 0).ToString();
+            double wn9maxhist = 0;
+            sqlFields += " wn9=" + Math.Round(Code.Rating.WN9.CalcTank(tankId, rp, out wn9maxhist), 0).ToString();
+            sqlFields += ", wn9maxhist=@wn9maxhist";
+            DB.AddWithValue(ref sqlFields, "@wn9maxhist", wn9maxhist, DB.SqlDataType.Float);
             // Calculate WN8
             sqlFields += ", wn8=" + Math.Round(Code.Rating.WN8.CalcTank(tankId, rp), 0).ToString();
 			// Calculate Eff
@@ -916,8 +919,10 @@ namespace WinApp.Code
                 rp.WINS = Code.Rating.WNHelper.ConvertDbVal2Double(battleNewRow["victory"]);
                 rp.BATTLES = battlesCount;
                 // Calculate WN9
+                double wn9maxhist = 0; // Not in use for battle
                 sqlFields += ", wn9";
-                sqlValues += ", " + Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp), 0).ToString();
+                sqlValues += ", " + Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, out wn9maxhist), 0).ToString();
+                
                 // Calculate WN8
                 sqlFields += ", wn8";
                 sqlValues += ", " + Math.Round(Code.Rating.WN8.CalcBattle(tankId, rp), 0).ToString();

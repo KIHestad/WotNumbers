@@ -101,7 +101,8 @@ namespace WinApp.Forms
                 string newSQL = "update battle set ";
                 if (_forWN9)
                 {
-                    WN9 = Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp), 0);
+                    double WN9maxhist = 0; // not in use for battles
+                    WN9 = Math.Round(Code.Rating.WN9.CalcBattle(tankId, rp, out WN9maxhist), 0);
                     newSQL += "wn9=@wn9, ";
                     DB.AddWithValue(ref newSQL, "@wn9", WN9, DB.SqlDataType.Int);
                 }

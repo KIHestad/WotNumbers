@@ -1196,7 +1196,7 @@ class BadProgressBar : BadThemeControl
 			color = ColorTheme.Rating_very_bad;
 			if (percentage >= 99) color = ColorTheme.Rating_super_uniqum;
 			else if (percentage >= 95) color = ColorTheme.Rating_uniqum;
-			else if (percentage >= 90) color = ColorTheme.Rating_great;
+			else if (percentage >= 90) color = ColorTheme.Rating_very_great;
 			else if (percentage >= 80) color = ColorTheme.Rating_very_good;
 			else if (percentage >= 65) color = ColorTheme.Rating_good;
 			else if (percentage >= 50) color = ColorTheme.Rating_average;

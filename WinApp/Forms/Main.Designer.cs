@@ -176,6 +176,7 @@
             this.mGadgetWR = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetRWR = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
+            this.mGadgetWN9 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN7 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetEFF = new System.Windows.Forms.ToolStripMenuItem();
@@ -215,6 +216,7 @@
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcTankStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleRatings = new System.Windows.Forms.ToolStripMenuItem();
+            this.mRecalcBattleWN9 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleWN7 = new System.Windows.Forms.ToolStripMenuItem();
             this.mRecalcBattleEFF = new System.Windows.Forms.ToolStripMenuItem();
@@ -246,7 +248,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.mRecalcBattleWN9 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1630,6 +1631,7 @@
             this.mGadgetWR,
             this.mGadgetRWR,
             this.toolStripSeparator27,
+            this.mGadgetWN9,
             this.mGadgetWN8,
             this.mGadgetWN7,
             this.mGadgetEFF,
@@ -1653,7 +1655,7 @@
             this.mGadgetRWR.Name = "mGadgetRWR";
             this.mGadgetRWR.Size = new System.Drawing.Size(218, 22);
             this.mGadgetRWR.Tag = "ucGaugeRWR";
-            this.mGadgetRWR.Text = "RWR Rate";
+            this.mGadgetRWR.Text = "RWR";
             this.mGadgetRWR.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // toolStripSeparator27
@@ -1661,12 +1663,20 @@
             this.toolStripSeparator27.Name = "toolStripSeparator27";
             this.toolStripSeparator27.Size = new System.Drawing.Size(215, 6);
             // 
+            // mGadgetWN9
+            // 
+            this.mGadgetWN9.Name = "mGadgetWN9";
+            this.mGadgetWN9.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetWN9.Tag = "ucGaugeWN9";
+            this.mGadgetWN9.Text = "WN9";
+            this.mGadgetWN9.Click += new System.EventHandler(this.mGadgetAdd);
+            // 
             // mGadgetWN8
             // 
             this.mGadgetWN8.Name = "mGadgetWN8";
             this.mGadgetWN8.Size = new System.Drawing.Size(218, 22);
             this.mGadgetWN8.Tag = "ucGaugeWN8";
-            this.mGadgetWN8.Text = "WN8 Rating";
+            this.mGadgetWN8.Text = "WN8";
             this.mGadgetWN8.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetWN7
@@ -1674,7 +1684,7 @@
             this.mGadgetWN7.Name = "mGadgetWN7";
             this.mGadgetWN7.Size = new System.Drawing.Size(218, 22);
             this.mGadgetWN7.Tag = "ucGaugeWN7";
-            this.mGadgetWN7.Text = "WN7 Rating";
+            this.mGadgetWN7.Text = "WN7";
             this.mGadgetWN7.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetEFF
@@ -1682,7 +1692,7 @@
             this.mGadgetEFF.Name = "mGadgetEFF";
             this.mGadgetEFF.Size = new System.Drawing.Size(218, 22);
             this.mGadgetEFF.Tag = "ucGaugeEFF";
-            this.mGadgetEFF.Text = "Efficiency Rating";
+            this.mGadgetEFF.Text = "Efficiency";
             this.mGadgetEFF.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // toolStripSeparator9
@@ -1985,6 +1995,15 @@
             this.mRecalcBattleRatings.Name = "mRecalcBattleRatings";
             this.mRecalcBattleRatings.Size = new System.Drawing.Size(264, 22);
             this.mRecalcBattleRatings.Text = "Recalculate Battle Ratings";
+            // 
+            // mRecalcBattleWN9
+            // 
+            this.mRecalcBattleWN9.Enabled = false;
+            this.mRecalcBattleWN9.Name = "mRecalcBattleWN9";
+            this.mRecalcBattleWN9.Size = new System.Drawing.Size(235, 22);
+            this.mRecalcBattleWN9.Tag = "WN9";
+            this.mRecalcBattleWN9.Text = "Recalculate Battle WN9...";
+            this.mRecalcBattleWN9.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
             // 
             // mRecalcBattleWN8
             // 
@@ -2327,15 +2346,6 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // mRecalcBattleWN9
-            // 
-            this.mRecalcBattleWN9.Enabled = false;
-            this.mRecalcBattleWN9.Name = "mRecalcBattleWN9";
-            this.mRecalcBattleWN9.Size = new System.Drawing.Size(235, 22);
-            this.mRecalcBattleWN9.Tag = "WN9";
-            this.mRecalcBattleWN9.Text = "Recalculate Battle WN9...";
-            this.mRecalcBattleWN9.Click += new System.EventHandler(this.mRecalcBattleRatings_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2582,6 +2592,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
         private System.Windows.Forms.ToolStripMenuItem mWotNumWebUserGuide;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN9;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetWN9;
     }
 }
 

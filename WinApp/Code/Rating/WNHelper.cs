@@ -49,20 +49,25 @@ namespace WinApp.Code.Rating
             public double TIER {get; set;}
         }
 
-        public static RatingParameters GetParamForPlayerTankBattle(string battleMode, bool excludeIfExpDmgIsNull = false, int playerTankId = 0)
+        public static RatingParameters GetParamForPlayerTankBattle(string battleMode, bool excludeIfWN8ExpDmgIsNull = false, bool excludeIfWN9ExpValIsNull = false, int playerTankId = 0)
         {
             RatingParameters rp = new RatingParameters();
             string battleModeWhere = "";
-            string excludeIfExpDmgIsNullWhere = "";
+            string excludeIfWN8ExpDmgIsNullWhere = "";
+            string excludeIfWN9ExpValIsNullWhere = "";
             string playerTankIdWhere = "";
             if (battleMode != "")
             {
                 battleModeWhere = " and ptb.battleMode=@battleMode ";
                 DB.AddWithValue(ref battleModeWhere, "@battleMode", battleMode, DB.SqlDataType.VarChar);
             }
-            if (excludeIfExpDmgIsNull)
+            if (excludeIfWN8ExpDmgIsNull)
             {
-                excludeIfExpDmgIsNullWhere = " and t.expDmg is not null ";
+                excludeIfWN8ExpDmgIsNullWhere = " and t.expDmg is not null ";
+            }
+            if (excludeIfWN9ExpValIsNull)
+            {
+                excludeIfWN9ExpValIsNullWhere = " and t.wn9exp is not null ";
             }
             if (playerTankId > 0)
             {
@@ -74,7 +79,7 @@ namespace WinApp.Code.Rating
                 "from playerTankBattle ptb left join " +
                 "  playerTank pt on ptb.playerTankId=pt.id left join " +
                 "  tank t on pt.tankId = t.id " +
-                "where pt.playerId=@playerId " + battleModeWhere + excludeIfExpDmgIsNullWhere + playerTankIdWhere;
+                "where pt.playerId=@playerId " + battleModeWhere + excludeIfWN8ExpDmgIsNullWhere + excludeIfWN9ExpValIsNullWhere + playerTankIdWhere;
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DataTable playerTotalsTable = DB.FetchData(sql);
             DataTable dt = DB.FetchData(sql);
@@ -96,10 +101,13 @@ namespace WinApp.Code.Rating
 
         #region get data to datatable for use to get wn params
 
-        public static DataTable GetDataForPlayerTankBattleReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static DataTable GetTotalTankStatsForPlayerTank(string battleMode = "15", string tankJoin = "", int tankID = 0)
         {
             if (battleMode == "")
                 battleMode = "%";
+            string tankIdWhere = "";
+            if (tankID > 0)
+                tankIdWhere = " and tank.id = " + tankID.ToString() + " ";
             // Create an datatable with all tanks and total stats
             string sql =
                 "select tank.id as tankId, SUM(battles) as battles, SUM(dmg) as dmg, SUM(spot) as spot, SUM(frags) as frags, " +
@@ -108,14 +116,19 @@ namespace WinApp.Code.Rating
                 "  playerTank pt on ptb.playerTankId=pt.id and pt.playerId=@playerId and ptb.battleMode like @battleMode left join " +
                 "  tank on pt.tankId = tank.id " +
                 tankJoin + " " +
-                "where tank.expDmg is not null and ptb.battleMode like @battleMode " + 
+                "where tank.expDmg is not null and ptb.battleMode like @battleMode " + tankIdWhere +
                 "group by tank.id ";
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
+            return DB.FetchData(sql);
+        }
 
-            DataTable ptb = DB.FetchData(sql);
+        public static DataTable GetDataForPlayerTankBattleReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        {
+            // Get datatable with all tanks and total stats
+            DataTable ptb = GetTotalTankStatsForPlayerTank(battleMode, tankJoin);
             // Get all battles and subtract from totals
-            sql =
+            string sql =
                 "select battlesCount as battles, dmg, spotted as spot, frags, " +
                 "  def, cap, tank.tier as tier , victory as wins, tank.id as tankId " +
                 "from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
@@ -158,7 +171,7 @@ namespace WinApp.Code.Rating
         }
 
         
-        public static DataTable GetDataForBattle(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
+        public static DataTable GetDataForBattleRange(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
             if (battleMode == "")
                 battleMode = "%";
@@ -266,7 +279,9 @@ namespace WinApp.Code.Rating
             RatingParameters rp = GetParamForPlayerTankBattle(battleMode, playerTankId: playerTankId);
             int tankId = TankHelper.GetTankID(playerTankId);
             // Calculate WN9
-            sqlFields += " wn9=" + Math.Round(WN9.CalcTank(tankId, rp), 0).ToString();
+            double WN9maxhist = 0;
+            sqlFields += " wn9=" + Math.Round(WN9.CalcTank(tankId, rp, out WN9maxhist), 0).ToString();
+            sqlFields += " wn9maxhist=" + Math.Round(WN9maxhist, 0).ToString();
             // Calculate WN8
             sqlFields += ", wn8=" + Math.Round(WN8.CalcTank(tankId, rp), 0).ToString();
             // Calculate Eff

@@ -21,50 +21,49 @@ namespace WinApp.Code.FormLayout
             {
                 // http://wiki.wnefficiency.net/pages/Color_Scale
                 case RatingColorScheme.WN_Official_Colors:
-                    RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 };
-                    RangeWN8 = new double[] { 0, 300, 600, 900, 1250, 1600, 1900, 2350, 2900 };
-                    RangeWR = new double[]  { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
+                    RangeWN8 = new double[] { 0, 300, 600, 900, 1250, 1600, 1900, 1900, 2350, 2900 };
+                    RangeWR = new double[]  { 0, 45, 47, 49, 52, 54, 56, 56, 60, 65 };
                     break;
 
                 // http://wotlabs.net/
                 case RatingColorScheme.WoT_Labs_Colors:
-                    RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 }; // Same as WN official colors, has not own official values
-                    RangeWN8 = new double[] { 0, 300, 450, 650, 900, 1200, 1600, 2450, 2900 };
-                    RangeWR = new double[]  { 0, 45, 47, 49, 52, 54, 56, 60, 65 };
+                    RangeWN8 = new double[] { 0, 300, 450, 650, 900, 1200, 1600, 2000, 2450, 2900 };
+                    RangeWR = new double[]  { 0, 46, 47, 48, 50, 52, 54, 56, 60, 65 };
                     break;
 
                 // https://bitbucket.org/XVM/xvm/src/067589e31b0abeee26743043188b39fb05d683a1/release/configs/default/colors.xc?at=default&fileviewer=file-view-default
                 case RatingColorScheme.XVM_Colors:
-                    RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1850, 2050 }; // Same as WN official colors, has not own official values
-                    RangeWN8 = new double[] { 0, 380, 860, 860, 1420, 2105, 2105, 2770, 2770 };
-                    RangeWR = new double[]  { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 64.5, 64.5 };
+                    RangeWN8 = new double[] { 0, 380, 620, 860, 1420, 1750, 2105, 2450, 2770, 2900 };
+                    RangeWR = new double[]  { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 57.5, 64.5, 64.5 };
                     break;
             }            
         }
 
-        public static double[] RangeEFF = { 0, 305, 615, 870, 1175, 1300, 1525, 1850, 2000 }; // XVM Colors (january 2016)
+        public static double[] RangeEFF = { 0, 615, 750, 870, 1175, 1350, 1525, 1700, 1850, 2000 }; // XVM Colors (july 2016)
 
         public static Color EffColor(double eff)
         {
-            Color effRatingColor =                          ColorTheme.Rating_very_bad;
-            if (eff >= RangeEFF[8]) effRatingColor =        ColorTheme.Rating_super_uniqum;
-            else if (eff >= RangeEFF[7]) effRatingColor =   ColorTheme.Rating_uniqum;
-            else if (eff >= RangeEFF[6]) effRatingColor =   ColorTheme.Rating_great;
-            else if (eff >= RangeEFF[5]) effRatingColor =   ColorTheme.Rating_very_good;
-            else if (eff >= RangeEFF[4]) effRatingColor =   ColorTheme.Rating_good;
-            else if (eff >= RangeEFF[3]) effRatingColor =   ColorTheme.Rating_average;
-            else if (eff >= RangeEFF[2]) effRatingColor =   ColorTheme.Rating_below_average;
-            else if (eff >= RangeEFF[1]) effRatingColor =   ColorTheme.Rating_bad;
+            Color effRatingColor =                          ColorTheme.Rating_very_bad; // 0 - 614
+            if (eff >= RangeEFF[9]) effRatingColor =        ColorTheme.Rating_super_uniqum; // 2000
+            else if (eff >= RangeEFF[8]) effRatingColor =   ColorTheme.Rating_uniqum; // 1850
+            else if (eff >= RangeEFF[7]) effRatingColor =   ColorTheme.Rating_very_great; // 1700
+            else if (eff >= RangeEFF[6]) effRatingColor =   ColorTheme.Rating_great; // 1525 
+            else if (eff >= RangeEFF[5]) effRatingColor =   ColorTheme.Rating_very_good; // 1350 
+            else if (eff >= RangeEFF[4]) effRatingColor =   ColorTheme.Rating_good; // 1175
+            else if (eff >= RangeEFF[3]) effRatingColor =   ColorTheme.Rating_average; // 870 
+            else if (eff >= RangeEFF[2]) effRatingColor =   ColorTheme.Rating_below_average; // 750
+            else if (eff >= RangeEFF[1]) effRatingColor =   ColorTheme.Rating_bad; // 615 
             return effRatingColor;
         }
 
-        public static double[] RangeWN7 = { 0 }; // Set accoring to application layout settings - SetRatingColors()
+        public static double[] RangeWN7 = new double[] { 0, 500, 700, 900, 1100, 1350, 1550, 1550, 1850, 2050 }; // http://wiki.wnefficiency.net/pages/Color_Scale
 
         public static Color WN7color(double wn7)
         {
             Color wn7RatingColor =                          ColorTheme.Rating_very_bad;
-            if (wn7 >= RangeWN7[8]) wn7RatingColor =        ColorTheme.Rating_super_uniqum;
-            else if (wn7 >= RangeWN7[7]) wn7RatingColor =   ColorTheme.Rating_uniqum;
+            if (wn7 >= RangeWN7[9]) wn7RatingColor =        ColorTheme.Rating_super_uniqum;
+            else if (wn7 >= RangeWN7[8]) wn7RatingColor =   ColorTheme.Rating_uniqum;
+            else if (wn7 >= RangeWN7[7]) wn7RatingColor =   ColorTheme.Rating_very_great;
             else if (wn7 >= RangeWN7[6]) wn7RatingColor =   ColorTheme.Rating_great;
             else if (wn7 >= RangeWN7[5]) wn7RatingColor =   ColorTheme.Rating_very_good;
             else if (wn7 >= RangeWN7[4]) wn7RatingColor =   ColorTheme.Rating_good;
@@ -74,13 +73,14 @@ namespace WinApp.Code.FormLayout
             return wn7RatingColor;
         }
 
-        public static double[] RangeWN9 = { 0, 200, 300, 400, 500, 600, 700, 900, 1000 }; // Set accoring to http://jaj22.org.uk/wotstats.html
+        public static double[] RangeWN9 = { 0, 200, 300, 400, 500, 600, 700, 800, 900, 1000 }; // Set accoring to http://jaj22.org.uk/wotstats.html
 
         public static Color WN9color(double wn9)
         {
             Color wn9RatingColor = ColorTheme.Rating_very_bad;
-            if (wn9 >= RangeWN9[8]) wn9RatingColor = ColorTheme.Rating_super_uniqum;
-            else if (wn9 >= RangeWN9[7]) wn9RatingColor = ColorTheme.Rating_uniqum;
+            if (wn9 >= RangeWN9[9]) wn9RatingColor = ColorTheme.Rating_super_uniqum;
+            else if (wn9 >= RangeWN9[8]) wn9RatingColor = ColorTheme.Rating_uniqum;
+            else if (wn9 >= RangeWN9[7]) wn9RatingColor = ColorTheme.Rating_very_great;
             else if (wn9 >= RangeWN9[6]) wn9RatingColor = ColorTheme.Rating_great;
             else if (wn9 >= RangeWN9[5]) wn9RatingColor = ColorTheme.Rating_very_good;
             else if (wn9 >= RangeWN9[4]) wn9RatingColor = ColorTheme.Rating_good;
@@ -96,9 +96,10 @@ namespace WinApp.Code.FormLayout
         public static Color WN8color(double wn8)
         {
             Color wn8RatingColor =                          ColorTheme.Rating_very_bad;
-            if (wn8 >= RangeWN8[8]) wn8RatingColor =        ColorTheme.Rating_super_uniqum;
-            else if (wn8 >= RangeWN8[7]) wn8RatingColor =   ColorTheme.Rating_uniqum;
-            else if (wn8 >= RangeWN8[6]) wn8RatingColor =   ColorTheme.Rating_great;
+            if (wn8 >= RangeWN8[9]) wn8RatingColor =        ColorTheme.Rating_super_uniqum;
+            else if (wn8 >= RangeWN8[8]) wn8RatingColor =   ColorTheme.Rating_uniqum;
+            else if (wn8 >= RangeWN8[7]) wn8RatingColor = ColorTheme.Rating_very_great;
+            else if (wn8 >= RangeWN8[6]) wn8RatingColor = ColorTheme.Rating_great;
             else if (wn8 >= RangeWN8[5]) wn8RatingColor =   ColorTheme.Rating_very_good;
             else if (wn8 >= RangeWN8[4]) wn8RatingColor =   ColorTheme.Rating_good;
             else if (wn8 >= RangeWN8[3]) wn8RatingColor =   ColorTheme.Rating_average;
@@ -112,9 +113,10 @@ namespace WinApp.Code.FormLayout
         public static Color WinRateColor(double wr)
         {
             Color wrRatingColor =                       ColorTheme.Rating_very_bad;
-            if (wr >= RangeWR[8]) wrRatingColor =       ColorTheme.Rating_super_uniqum;
-            else if (wr >= RangeWR[7]) wrRatingColor =  ColorTheme.Rating_uniqum;
-            else if (wr >= RangeWR[6]) wrRatingColor =  ColorTheme.Rating_great;
+            if (wr >= RangeWR[9]) wrRatingColor =       ColorTheme.Rating_super_uniqum;
+            else if (wr >= RangeWR[8]) wrRatingColor =  ColorTheme.Rating_uniqum;
+            else if (wr >= RangeWR[7]) wrRatingColor = ColorTheme.Rating_very_great;
+            else if (wr >= RangeWR[6]) wrRatingColor = ColorTheme.Rating_great;
             else if (wr >= RangeWR[5]) wrRatingColor =  ColorTheme.Rating_very_good;
             else if (wr >= RangeWR[4]) wrRatingColor =  ColorTheme.Rating_good;
             else if (wr >= RangeWR[3]) wrRatingColor =  ColorTheme.Rating_average;
@@ -128,7 +130,7 @@ namespace WinApp.Code.FormLayout
             double kBattles =   Math.Round(Convert.ToDouble(battleCount / 1000), 0);
             Color battleCountRatingColor =                      ColorTheme.Rating_very_bad;
             if (kBattles > 43) battleCountRatingColor =         ColorTheme.Rating_uniqum;
-            else if (kBattles > 30) battleCountRatingColor =    ColorTheme.Rating_great;
+            else if (kBattles > 30) battleCountRatingColor =    ColorTheme.Rating_very_great;
             else if (kBattles > 16) battleCountRatingColor =     ColorTheme.Rating_good;
             else if (kBattles > 6) battleCountRatingColor =     ColorTheme.Rating_below_average;
             else if (kBattles > 2) battleCountRatingColor =     ColorTheme.Rating_bad;
@@ -140,8 +142,9 @@ namespace WinApp.Code.FormLayout
         public static Color KillDeathColor(double value)
         {
             Color killDeathRatingColor =                                ColorTheme.Rating_very_bad;
-            if (value >= RangeKillDeath[8]) killDeathRatingColor =      ColorTheme.Rating_super_uniqum;
-            else if (value >= RangeKillDeath[7]) killDeathRatingColor = ColorTheme.Rating_uniqum;
+            if (value >= RangeKillDeath[9]) killDeathRatingColor =      ColorTheme.Rating_super_uniqum;
+            else if (value >= RangeKillDeath[8]) killDeathRatingColor = ColorTheme.Rating_uniqum;
+            else if (value >= RangeKillDeath[7]) killDeathRatingColor = ColorTheme.Rating_very_great;
             else if (value >= RangeKillDeath[6]) killDeathRatingColor = ColorTheme.Rating_great;
             else if (value >= RangeKillDeath[5]) killDeathRatingColor = ColorTheme.Rating_very_good;
             else if (value >= RangeKillDeath[4]) killDeathRatingColor = ColorTheme.Rating_good;

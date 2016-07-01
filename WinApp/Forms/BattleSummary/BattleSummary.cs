@@ -22,8 +22,8 @@ namespace WinApp.Forms
 		private string battleMode = "";
 		private string tankFilter = "";
 		private string tankJoin = "";
-        // TODO: private int wn9 = 0;
-        // TODO: private int wn9avg = 0;
+        private int wn9 = 0;
+        private int wn9avg = 0;
         private int wn8 = 0;
         private int wn8avg = 0;
         private int wn7 = 0;
@@ -359,20 +359,20 @@ namespace WinApp.Forms
 				FormatStandardDataGrid(dgvOther, "");
 
                 // Calculate avg ratings
-                // TODO:wn9avg = Convert.ToInt32(WN9.CalcPlayerTotal(battleMode));
+                wn9avg = Convert.ToInt32(WN9.CalcPlayerTotal(battleMode));
                 wn8avg = Convert.ToInt32(WN8.CalcPlayerTotal(battleMode));
 				wn7avg = Convert.ToInt32(WN7.WN7total(battleMode));
 				effavg = Convert.ToInt32(EFF.EffTotal(battleMode));
                 wravg = Code.Rating.WR.WinrateTank(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
                 // Calc current battle ratings
-                // TODO:wn9 = Convert.ToInt32(WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
+                wn9 = Convert.ToInt32(WN9.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 wn8 = Convert.ToInt32(WN8.CalcBattleRange(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 wn7 = Convert.ToInt32(WN7.WN7battle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 eff = Convert.ToInt32(EFF.EffBattle(battleTimeFilter, 0, battleMode, tankFilter, battleModeFilter));
                 wr = Code.Rating.WR.WinrateBattle(battleTimeFilter, battleMode, tankFilter, battleModeFilter);
 				// Add rows to Ratings grid
 				DataTable dtRating = dt.Clone();
-                // TODO: dtRating.Rows.Add(GetValues(dtRating, wn9, wn9avg, "WN9"));
+                dtRating.Rows.Add(GetValues(dtRating, wn9, wn9avg, "WN9"));
 				dtRating.Rows.Add(GetValues(dtRating, wn8, wn8avg, "WN8"));
 				dtRating.Rows.Add(GetValues(dtRating, wn7, wn7avg, "WN7"));
 				dtRating.Rows.Add(GetValues(dtRating, eff, effavg, "EFF"));
@@ -741,15 +741,17 @@ namespace WinApp.Forms
 
 		private void dgvRating_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
 		{
-			// rating color
-            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
-            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN8color(wn8avg);
-            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN7color(wn7);
-            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN7color(wn7avg);
-            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorRangeScheme.EffColor(eff);
-            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorRangeScheme.EffColor(effavg);
-            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
-            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = ColorRangeScheme.WinRateColor(wravg);
+            // rating color
+            dgvRating.Rows[0].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN9color(wn9);
+            dgvRating.Rows[0].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN9color(wn9avg);
+            dgvRating.Rows[1].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN8color(wn8);
+            dgvRating.Rows[1].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN8color(wn8avg);
+            dgvRating.Rows[2].Cells["Result"].Style.ForeColor = ColorRangeScheme.WN7color(wn7);
+            dgvRating.Rows[2].Cells["Average"].Style.ForeColor = ColorRangeScheme.WN7color(wn7avg);
+            dgvRating.Rows[3].Cells["Result"].Style.ForeColor = ColorRangeScheme.EffColor(eff);
+            dgvRating.Rows[3].Cells["Average"].Style.ForeColor = ColorRangeScheme.EffColor(effavg);
+            dgvRating.Rows[4].Cells["Result"].Style.ForeColor = ColorRangeScheme.WinRateColor(wr);
+            dgvRating.Rows[4].Cells["Average"].Style.ForeColor = ColorRangeScheme.WinRateColor(wravg);
 
 		}
 

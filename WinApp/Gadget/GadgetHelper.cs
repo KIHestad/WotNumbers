@@ -337,7 +337,12 @@ namespace WinApp.Gadget
                 if (param[2] != null) param2 = param[2].ToString();
 				switch (name)
 				{
-					// Gauges - Rating
+                    // Gauges - Rating
+                    case "ucGaugeWN9":
+                        if (param0 == "")
+                            param0 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
+                        uc = new Gadget.ucGaugeWN9(GadgetHelper.GetTimeItemFromName(param0).TimeRange);
+                        break;
                     case "ucGaugeWN8":
                         if (param0 == "")
                             param0 = GadgetHelper.GetTimeItemFromTimeRange(GadgetHelper.TimeRangeEnum.Total).Name;
@@ -474,6 +479,10 @@ namespace WinApp.Gadget
                     case "ucGaugeRWR":
                         ucGaugeRWR ucGaugeRWR = (ucGaugeRWR)c;
                         ucGaugeRWR.DataBind();
+                        break;
+                    case "ucGaugeWN9":
+                        ucGaugeWN9 ucGaugeWN9 = (ucGaugeWN9)c;
+                        ucGaugeWN9.DataBind();
                         break;
                     case "ucGaugeWN8":
                         ucGaugeWN8 ucGaugeWN8 = (ucGaugeWN8)c;

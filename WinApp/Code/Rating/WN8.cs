@@ -70,7 +70,7 @@ namespace WinApp.Code.Rating
         {
             RatingParametersWN8 rpWN = new RatingParametersWN8();
             // Get player totals from db
-            rpWN.rp = WNHelper.GetParamForPlayerTankBattle(battleMode, true);
+            rpWN.rp = WNHelper.GetParamForPlayerTankBattle(battleMode, excludeIfWN8ExpDmgIsNull: true);
             if (rpWN.rp == null)
                 return null;
             // Get tanks with battle count per tank and expected values from db
@@ -164,13 +164,13 @@ namespace WinApp.Code.Rating
 
         public static double CalcBattleRange(string battleTimeFilter, int maxBattles = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
-            DataTable ptb = Rating.WNHelper.GetDataForBattle(battleTimeFilter, maxBattles, battleMode, tankFilter, battleModeFilter, tankJoin);
+            DataTable ptb = WNHelper.GetDataForBattleRange(battleTimeFilter, maxBattles, battleMode, tankFilter, battleModeFilter, tankJoin);
             return CalcPlayerTankBattle(ptb);
         }
 
         public static double CalcBattleRangeReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
-            DataTable ptb = Rating.WNHelper.GetDataForPlayerTankBattleReverse(battleTimeFilter, battleCount, battleMode, tankFilter, battleModeFilter, tankJoin);
+            DataTable ptb = WNHelper.GetDataForPlayerTankBattleReverse(battleTimeFilter, battleCount, battleMode, tankFilter, battleModeFilter, tankJoin);
             return CalcPlayerTankBattle(ptb);
         }
 
