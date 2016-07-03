@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 386; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 387; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2803,6 +2803,9 @@ namespace WinApp.Code
                 case 386:
                     mssql = "UPDATE columnSelection SET colNameSum=0, colNameBattleSum=0, colNameBattleSumCalc=1, colNameBattleSumTank=0, colNameBattleSumReversePos=0 WHERE ID = 105; ";
                     sqlite = mssql;
+                    break;
+                case 387:
+                    RunWotApi = true; // WN9 version 0.2 available
                     break;
 
 

@@ -159,7 +159,7 @@ namespace WinApp.Code.Rating
 
         public static DataTable GetPlayerTotalWN9TankStats(string battleMode = "")
         {
-            // Get tanks by WN9 decreasing
+            // Get tanks by WN9 
             string battleModeWhere = "";
             if (battleMode != "")
                 battleModeWhere = " AND ptb.battleMode = '" + battleMode + "' ";
@@ -183,12 +183,13 @@ namespace WinApp.Code.Rating
                 tankStats = GetPlayerTotalWN9TankStats(battleMode);
 
             // compile list of valid tanks with battles & WN9 
+            int batcap = 200 + (Convert.ToInt32(tankStats.Compute("SUM([battles])","")) / 50);
             double totweight = 0;
             List<tankListWn9> tanklist = new List<tankListWn9>();
             foreach (DataRow dr in tankStats.Rows)
             {
                 int wn9 = Convert.ToInt32(dr["wn9"]);
-                int weight = Math.Min(Convert.ToInt32(dr["battles"]), 300);
+                int weight = Math.Min(Convert.ToInt32(dr["battles"]), batcap);
                 tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
                 totweight += weight;
             }

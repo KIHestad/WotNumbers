@@ -150,6 +150,7 @@ namespace WinApp.Gadget
                             item.cellName.ToolTipText = dr["description"].ToString();
                             if (dr["colDataType"].ToString() == "Float"
                                 || dr["name"].ToString() == "Tier"
+                                || dr["name"].ToString() == "WN9"
                                 || dr["name"].ToString() == "WN8"
                                 || dr["name"].ToString() == "WN7"
                                 || dr["name"].ToString() == "EFF"
