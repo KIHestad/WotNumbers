@@ -4244,7 +4244,8 @@ namespace WinApp.Forms
 				Config.Settings.dossierFileWathcherRun = runState;
 				SetListener();
 			}
-		}
+            ShowView("Refreshed grid");
+        }
 
         private void mRecalcBattleCreditsPerTank_Click(object sender, EventArgs e)
         {
@@ -4264,38 +4265,37 @@ namespace WinApp.Forms
                 Config.Settings.dossierFileWathcherRun = runState;
                 SetListener();
             }
+            ShowView("Refreshed grid");
         }
 
 		private void RunRecalcBattleWN8or9(bool autoRun, bool wn8, bool wn9)
 		{
 			Form frm = new Forms.RecalcBattleRating(autoRun, wn9, wn8, false, false);
 			frm.ShowDialog(this);
-		}
+            ShowView("Refreshed grid");
+        }
 
         private void RunRecalcBattleCreditsPerTank(bool autoRun = false)
         {
             Form frm = new Forms.RecalcBattleCreditPerTank(autoRun);
             frm.ShowDialog(this);
+            ShowView("Refreshed grid");
         }
 
 		private void RunRecalcBattleKDratioCRdmg(bool autoRun = false)
 		{
 			Form frm = new Forms.RecalcBattleKDratioCRdmg(autoRun);
 			frm.ShowDialog(this);
-		}
+            ShowView("Refreshed grid");
+        }
 
         private void RunRecalcBattleMaxTier()
         {
             Form frm = new Forms.RecalcBattleMaxTier(true);
             frm.ShowDialog(this);
+            ShowView("Refreshed grid");
         }
 
-		private void mSettingsUploadTovBAddict_Click(object sender, EventArgs e)
-		{
-            //Form frm = new Forms.UploadTovBAddict();
-            //frm.ShowDialog(this);
-
-		}
 
 		private void toolItemSettingsRun_Click(object sender, EventArgs e)
 		{
@@ -4320,33 +4320,6 @@ namespace WinApp.Forms
 				MsgBox.Show("Process is already running, cannot run twice at the same time.", "Process already Running", this);
 			else
 			{
-				// Show dialog box
-                
-                // Stop file watchers if running
-                //int runState = Config.Settings.dossierFileWathcherRun;
-                //if (runState == 1)
-                //{
-                //    Config.Settings.dossierFileWathcherRun = 0;
-                //    SetListener();
-                //}
-				// Whow dialog and run battle check if selected
-                //RunBattleCheckHelper.CurrentBattleCheckMode = RunBattleCheckHelper.RunBattleCheckMode.Cancelled;
-                //Form frm = new Forms.ManualCheckNewBattles();
-                //frm.ShowDialog();
-				// Return to prev file watcher state
-                //if (runState != Config.Settings.dossierFileWathcherRun)
-                //{
-                //    Config.Settings.dossierFileWathcherRun = runState;
-                //    SetListener();
-                //}
-                //if (RunBattleCheckHelper.CurrentBattleCheckMode != RunBattleCheckHelper.RunBattleCheckMode.Cancelled)
-                //{
-                //    bool forceUpdate = (RunBattleCheckHelper.CurrentBattleCheckMode == RunBattleCheckHelper.RunBattleCheckMode.ForceUpdateAll);
-                //    string message = "Running battle check...";
-                //    if (forceUpdate) message = "Running battle check with force update...";
-                //    RunDossierFileCheck(message, forceUpdate);
-                //}
-
                 // Immediate run dossier file check
                 RunDossierFileCheck("Check for new battle...", false);
 			}				

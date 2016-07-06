@@ -190,12 +190,23 @@ namespace WinApp.Code.Rating
 
             DataTable ptb = DB.FetchData(sql);
             // Get all battles
+            
+            // OLD - had to loop through all battles, instead of per tank - also removed multiplier on battles for each stat
+            //sql =
+            //    "select battlesCount as battles, dmg, spotted as spot, frags, " +
+            //    "  def, cap, tank.tier as tier , victory as wins, tank.id as tankId " +
+            //    "from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
+            //    "  tank on playerTank.tankId = tank.id " +
+            //    "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
+
             sql =
-                "select battlesCount as battles, dmg, spotted as spot, frags, " +
-                "  def, cap, tank.tier as tier , victory as wins, tank.id as tankId " +
-                "from battle INNER JOIN playerTank ON battle.playerTankId=playerTank.Id left join " +
-                "  tank on playerTank.tankId = tank.id " +
-                "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " order by battleTime DESC";
+                "select SUM(battlesCount) as battles, SUM(dmg * battlesCount) as dmg, SUM(spotted * battlesCount) as spot, SUM(frags * battlesCount) as frags, " +
+                "  SUM(def * battlesCount) as def, SUM(cap * battlesCount) as cap, SUM(victory * battlesCount) as wins, tank.id as tankId " +
+                "from battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id left join   tank on playerTank.tankId = tank.id " +
+                "where playerId=@playerId and battleMode like @battleMode " + battleTimeFilter + " " + tankFilter + " " + battleModeFilter + " " +
+                "group by tank.id";
+
+
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             DB.AddWithValue(ref sql, "@battleMode", battleMode, DB.SqlDataType.VarChar);
             DataTable dtBattles = DB.FetchData(sql);
@@ -211,12 +222,12 @@ namespace WinApp.Code.Rating
                     if (ptbRow.Length > 0)
                     {
                         ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) + btl;
-                        ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(stats["dmg"]) * btl;
-                        ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(stats["spot"]) * btl;
-                        ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(stats["frags"]) * btl;
-                        ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) + Convert.ToInt32(stats["def"]) * btl;
-                        ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(stats["cap"]) * btl;
-                        ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(stats["wins"]) * btl;
+                        ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(stats["dmg"]) ;
+                        ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(stats["spot"]) ;
+                        ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(stats["frags"]) ;
+                        ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) + Convert.ToInt32(stats["def"]) ;
+                        ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(stats["cap"]) ;
+                        ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(stats["wins"]) ;
                     }
                     else
                     {
@@ -227,7 +238,7 @@ namespace WinApp.Code.Rating
                     if (maxBattles > 0 && countBattles > maxBattles) break;
                 }
             }
-            return ptb;
+            return ptb.Select("battles > 0").CopyToDataTable();
         }
 
         #endregion
