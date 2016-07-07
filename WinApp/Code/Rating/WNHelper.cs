@@ -222,12 +222,12 @@ namespace WinApp.Code.Rating
                     if (ptbRow.Length > 0)
                     {
                         ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) + btl;
-                        ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(stats["dmg"]) ;
-                        ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(stats["spot"]) ;
-                        ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(stats["frags"]) ;
-                        ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) + Convert.ToInt32(stats["def"]) ;
-                        ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(stats["cap"]) ;
-                        ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(stats["wins"]) ;
+                        ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(stats["dmg"]);
+                        ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(stats["spot"]);
+                        ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(stats["frags"]);
+                        ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) + Convert.ToInt32(stats["def"]);
+                        ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(stats["cap"]);
+                        ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(stats["wins"]);
                     }
                     else
                     {
@@ -237,8 +237,15 @@ namespace WinApp.Code.Rating
                     countBattles++;
                     if (maxBattles > 0 && countBattles > maxBattles) break;
                 }
+                // Return playertanks with stats
+                return ptb.Select("battles > 0").CopyToDataTable();
             }
-            return ptb.Select("battles > 0").CopyToDataTable();
+            else
+            {
+                // No battles returns no data
+                return new DataTable();
+            }
+            
         }
 
         #endregion

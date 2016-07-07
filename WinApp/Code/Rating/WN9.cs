@@ -153,7 +153,7 @@ namespace WinApp.Code.Rating
 
         private class tankListWn9
         {
-            public int wn9 { get; set; }
+            public double wn9 { get; set; }
             public int weight { get; set; }
         }
 
@@ -169,9 +169,10 @@ namespace WinApp.Code.Rating
                 "WHERE pt.playerId = @playerId AND " +
                 "ptb.wn9maxhist IS NOT NULL " + // don't use tanks with no expected values
                 battleModeWhere +
-                "GROUP BY playerTankId " +
+                "GROUP BY playerTankId, ptb.wn9maxhist " +
                 "HAVING SUM(ptb.battles) > 0 " +
-                "ORDER BY SUM(ptb.wn9maxhist * ptb.battles) / NULLIF(SUM(ptb.battles), 0) DESC "; // sort tanks by WN9 decreasing
+                "ORDER BY ptb.wn9maxhist DESC "; // sort tanks by WN9 decreasing
+                                                                                                  //"ORDER BY SUM(ptb.wn9maxhist * ptb.battles) / NULLIF(SUM(ptb.battles), 0) DESC "; // sort tanks by WN9 decreasing
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             return DB.FetchData(sql);
         }
@@ -188,7 +189,7 @@ namespace WinApp.Code.Rating
             List<tankListWn9> tanklist = new List<tankListWn9>();
             foreach (DataRow dr in tankStats.Rows)
             {
-                int wn9 = Convert.ToInt32(dr["wn9"]);
+                double wn9 = Convert.ToDouble(dr["wn9"]);
                 int weight = Math.Min(Convert.ToInt32(dr["battles"]), batcap);
                 tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
                 totweight += weight;
@@ -199,11 +200,11 @@ namespace WinApp.Code.Rating
             double wn9tot = 0; double usedweight = 0; int i = 0;
             for (; usedweight+tanklist[i].weight <= totweight; i++)
 	        {
-		        wn9tot += tanklist[i].wn9* tanklist[i].weight;
+		        wn9tot += tanklist[i].wn9 * tanklist[i].weight;
 		        usedweight += tanklist[i].weight;
 	        }
             // last tank before cutoff uses remaining weight, not its battle count
-            wn9tot += tanklist[i].wn9* (totweight - usedweight);
+            wn9tot += tanklist[i].wn9 * (totweight - usedweight);
 	        return wn9tot / totweight;
         }
 
@@ -253,12 +254,10 @@ namespace WinApp.Code.Rating
 
         public static double CalcBattleRangeReverse(string battleTimeFilter, int battleCount = 0, string battleMode = "15", string tankFilter = "", string battleModeFilter = "", string tankJoin = "")
         {
-            double wn9 = 0;
             // get battle result for battle range to reverse
             DataTable ptb = WNHelper.GetDataForBattleRange(battleTimeFilter, battleCount, battleMode, tankFilter, battleModeFilter, tankJoin);
             // if any battles played calculate reverse
-            int ptbBattlesCount = Convert.ToInt32(ptb.Compute("SUM([battles])", ""));
-            if (ptbBattlesCount > 0)
+            if (ptb.Rows.Count > 0 && Convert.ToInt32(ptb.Compute("SUM([battles])", "")) > 0)
             {
                 // get players current total wn9 stats
                 DataTable playerTotalWN9TankStats = GetPlayerTotalWN9TankStats(battleMode);
@@ -290,18 +289,14 @@ namespace WinApp.Code.Rating
                         drToAdjust[0]["wn9"] = WN9adjMaxhist;
                     }
                 }
-
                 // calc player overall wn with adjusted pløayer total wn9 stats
-                wn9 = CalcPlayerTotal(battleMode, playerTotalWN9TankStats);
+                return CalcPlayerTotal(battleMode, playerTotalWN9TankStats);
             }
             else
             {
                 // No battles found to reverse, return total player wn9
-                wn9 = CalcPlayerTotal(battleMode);
+                return CalcPlayerTotal(battleMode);
             }
-
-
-            return wn9;
         }
 
 
@@ -320,13 +315,14 @@ namespace WinApp.Code.Rating
             //     "random" object contains battles, damage_dealt, frags, spotted and dropped_capture_points
             // expvals is array containing wn9exp/wn9scale/tier/mmrange for each tank, indexed by tank_id
             // maxhist should be false for current values and true for maximum historical values
-            WNHelper.RatingParameters tank = rpWN.rp; // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
-            RatingParametersWN9 exp = rpWN; // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
-
+           
             double WN9 = 0;
             WN9maxhist = 0;
             if (rpWN != null && rpWN.rp.BATTLES > 0)
             {
+                // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
+                WNHelper.RatingParameters tank = rpWN.rp; 
+                RatingParametersWN9 exp = rpWN; 
                 // Array [0-9] corresponds with tier [1-10], subtract 1 from exp.tier to locate correct avg values from array
                 int tierInArray = (exp.tier - 1);
                 // Select tier average from table, adding +1 to tier if tank has +3 tier MM.

@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 387; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 388; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2720,7 +2720,7 @@ namespace WinApp.Code
                         "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
                         "VALUES (105, 1, 119, 'playerTankBattle.wn9', 'WN9', 'WN8 tank rating (experimental, according to info from WotLabs)', 'Rating', 50, 'Int', 1); " +
                         "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) " +
-                        "VALUES (106, 2, 294, 'battle.wn9', 'WN9', 'WN8 tank rating (experimental, according to info from WotLabs)', 'Rating', 47, 'Int'); ";
+                        "VALUES (106, 2, 294, 'battle.wn9', 'WN9', 'WN9 tank rating (experimental, according to info from WotLabs)', 'Rating', 47, 'Int'); ";
                     sqlite = mssql;
                     break;
                 case 374:
@@ -2806,6 +2806,12 @@ namespace WinApp.Code
                     break;
                 case 387:
                     RunWotApi = true; // WN9 version 0.2 available
+                    break;
+                case 388:
+                    mssql =
+                        "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
+                        "VALUES (115, 1, 120, 'playerTankBattle.wn9maxhist', 'WN9 Max Hist', 'WN9 tank rating using max history calculation according to http://jaj22.org.uk/wn9description.html', 'Rating', 50, 'Float', 1); ";
+                    sqlite = mssql;
                     break;
 
 

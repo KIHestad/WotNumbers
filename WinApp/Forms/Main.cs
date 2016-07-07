@@ -3369,7 +3369,7 @@ namespace WinApp.Forms
 						cell.Style.SelectionForeColor = cell.Style.ForeColor;
 					}
 				}
-                else if (col.Equals("WN9"))
+                else if (col.Equals("WN9") || col.Equals("WN9 Max Hist"))
                 {
                     if (dataGridMain["WN9", e.RowIndex].Value != DBNull.Value)
                     {
