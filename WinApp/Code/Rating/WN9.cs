@@ -154,7 +154,7 @@ namespace WinApp.Code.Rating
         private class tankListWn9
         {
             public double wn9 { get; set; }
-            public int weight { get; set; }
+            public double weight { get; set; }
         }
 
         public static DataTable GetPlayerTotalWN9TankStats(string battleMode = "")
@@ -164,33 +164,41 @@ namespace WinApp.Code.Rating
             if (battleMode != "")
                 battleModeWhere = " AND ptb.battleMode = '" + battleMode + "' ";
             string sql =
-                "SELECT ptb.playerTankId, SUM(ptb.battles) as battles, SUM(ptb.wn9maxhist * ptb.battles) / NULLIF(SUM(ptb.battles), 0) as wn9 " +
-                "FROM playerTankBattle ptb INNER JOIN playerTank pt ON ptb.playerTankId = pt.id " +
+                "SELECT ptb.playerTankId, SUM(ptb.battles) as battles, SUM(ptb.wn9 * ptb.battles) / NULLIF(SUM(ptb.battles), 0) as wn9, " + 
+                "t.wn9exp as wn9exp, t.tier as tier, t.wn9nerf as wn9nerf " +
+                "FROM playerTankBattle ptb INNER JOIN playerTank pt ON ptb.playerTankId = pt.id INNER JOIN tank t ON pt.tankId = t.Id " +
                 "WHERE pt.playerId = @playerId AND " +
-                "ptb.wn9maxhist IS NOT NULL " + // don't use tanks with no expected values
+                "ptb.wn9maxhist IS NOT NULL AND t.tankTypeId <> 5 " + // don't use tanks with no expected values // don't use SPGs & missing tanks
                 battleModeWhere +
-                "GROUP BY playerTankId, ptb.wn9maxhist " +
+                "GROUP BY playerTankId, ptb.wn9maxhist, t.wn9exp, t.tier, t.wn9nerf " +
                 "HAVING SUM(ptb.battles) > 0 " +
                 "ORDER BY ptb.wn9maxhist DESC "; // sort tanks by WN9 decreasing
-                                                                                                  //"ORDER BY SUM(ptb.wn9maxhist * ptb.battles) / NULLIF(SUM(ptb.battles), 0) DESC "; // sort tanks by WN9 decreasing
+                                                                                                  
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             return DB.FetchData(sql);
         }
 
         public static double CalcPlayerTotal(string battleMode = "", DataTable tankStats = null)
         {
-            // Get player total tank stats if not provided
+            // compile list of valid tanks with battles & WN9
+            List<tankListWn9> tanklist = new List<tankListWn9>();
+            double totbat = 0;
+            // Replace loop in original formula, calling method to get player total tank stats if not provided
             if (tankStats == null)
                 tankStats = GetPlayerTotalWN9TankStats(battleMode);
-
-            // compile list of valid tanks with battles & WN9 
-            int batcap = 200 + (Convert.ToInt32(tankStats.Compute("SUM([battles])","")) / 50);
+            Convert.ToDouble(tankStats.Compute("SUM([battles])", ""));
+                        
+            // cap tank weight according to tier, total battles & nerf status
             double totweight = 0;
-            List<tankListWn9> tanklist = new List<tankListWn9>();
             foreach (DataRow dr in tankStats.Rows)
             {
+                double exp = Convert.ToDouble(dr["wn9exp"]);
+                double tier = Convert.ToDouble(dr["tier"]);
+                double batcap = tier * (40 + tier * totbat / 2000);
+                double nerf = Convert.ToDouble(dr["wn9nerf"]);
+                if (nerf > 0) batcap /= 2;
                 double wn9 = Convert.ToDouble(dr["wn9"]);
-                int weight = Math.Min(Convert.ToInt32(dr["battles"]), batcap);
+                double weight = Math.Min(Convert.ToDouble(dr["battles"]), batcap);
                 tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
                 totweight += weight;
             }
@@ -289,7 +297,7 @@ namespace WinApp.Code.Rating
                         drToAdjust[0]["wn9"] = WN9adjMaxhist;
                     }
                 }
-                // calc player overall wn with adjusted pløayer total wn9 stats
+                // calc player overall wn with adjusted player total wn9 stats
                 return CalcPlayerTotal(battleMode, playerTotalWN9TankStats);
             }
             else

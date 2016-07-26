@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 388; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 389; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2813,7 +2813,10 @@ namespace WinApp.Code
                         "VALUES (115, 1, 120, 'playerTankBattle.wn9maxhist', 'WN9 Max Hist', 'WN9 tank rating using max history calculation according to http://jaj22.org.uk/wn9description.html', 'Rating', 50, 'Float', 1); ";
                     sqlite = mssql;
                     break;
-
+                case 389:
+                    RunWotApi = true; // Get new WN9 exp values
+                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
+                    break;
 
 
 
