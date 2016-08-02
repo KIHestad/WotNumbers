@@ -33,13 +33,13 @@ namespace WinApp.Code.FormLayout
 
                 // https://bitbucket.org/XVM/xvm/src/067589e31b0abeee26743043188b39fb05d683a1/release/configs/default/colors.xc?at=default&fileviewer=file-view-default
                 case RatingColorScheme.XVM_Colors:
-                    RangeWN8 = new double[] { 0, 380, 620, 860, 1420, 1750, 2105, 2450, 2770, 3000 };
+                    RangeWN8 = new double[] { 0, 400, 620, 900, 1470, 1750, 2180, 2450, 2880, 3000 };
                     RangeWR = new double[]  { 0, 46.5, 48.5, 48.5, 52.5, 57.5, 57.5, 57.5, 64.5, 64.5 };
                     break;
             }            
         }
 
-        public static double[] RangeEFF = { 0, 615, 750, 870, 1175, 1350, 1525, 1700, 1850, 2000 }; // XVM Colors (july 2016)
+        public static double[] RangeEFF = { 0, 610, 750, 875, 1175, 1350, 1540, 1700, 1880, 2000 }; // XVM Colors (july 2016)
 
         public static Color EffColor(double eff)
         {

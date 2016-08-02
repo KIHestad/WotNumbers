@@ -197,9 +197,9 @@ namespace WinApp.Code
 							Select += colName + " as '" + colAlias + "', "; // return value
 						else
 						{
-							if (colName == "tank.name")
-								Select += colName + " as '" + colAlias + "', "; // return value
-							else
+							if (colName == "tank.name" || colName == "tank.short_name")
+                                Select += colName + " as '" + colAlias + "', "; // return value
+                            else
 							{
 								if (colDataType == "DateTime")
 									colListItem.colNameSelect = "NULL";

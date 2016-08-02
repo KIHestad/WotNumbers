@@ -2503,7 +2503,7 @@ namespace WinApp.Forms
 						"  SUM(battle.victory) as victoryToolTip, SUM(battle.draw) as drawToolTip, SUM(battle.defeat) as defeatToolTip, " +
 						"  SUM(battle.survived) as survivedCountToolTip, SUM(battle.killed) as killedCountToolTip, tank.id as tank_id, tank.name as tank_name, 0 as arenaUniqueID," +
 						"  0 as footer, playerTank.Id as player_Tank_Id, 0 as mb_id, 0 as battle_Id ";
-					groupBy = "GROUP BY tank.id, tank.Name, playerTank.Id ";
+					groupBy = "GROUP BY tank.id, tank.Name, tank.short_name, playerTank.Id ";
 					sortOrder = "ORDER BY [" + groupBySort + "] " + sortDirection + " ";
 				}
 				else

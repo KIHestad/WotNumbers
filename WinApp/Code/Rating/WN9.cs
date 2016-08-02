@@ -273,28 +273,33 @@ namespace WinApp.Code.Rating
                 // loop throgh battle range tank by tank and adjust the players current total wn9 stats
                 foreach (DataRow dr in ptb.Rows)
                 {
-                    // Check if battles is played for tank
-                    if (Convert.ToInt32(dr["battles"]) > 0)
+                    // Get the wn9 stats for the tank to reverse stats
+                    int tankId = Convert.ToInt32(dr["tankId"]);
+                    DataRow[] drToAdjust = playerTotalWN9TankStats.Select("playerTankId = " + TankHelper.GetPlayerTankId(tankId));
+                    // If tank is found continue to adjust (spgs are excluded)
+                    if (drToAdjust.Length > 0)
                     {
-                        // Get total stats for tank
-                        int tankId = Convert.ToInt32(dr["tankId"]);
-                        DataTable playerTotalTankStats = WNHelper.GetTotalTankStatsForPlayerTank(battleMode, tankJoin, tankId);
-                        RatingParametersWN9 rpWN9 = GetParamForPlayerTankBattle(playerTotalTankStats);
-                        // Subtract stats from range to find older totals = reversing the stats
-                        rpWN9.rp.BATTLES -= Convert.ToInt32(dr["battles"]);
-                        rpWN9.rp.CAP -= Convert.ToInt32(dr["cap"]);
-                        rpWN9.rp.DAMAGE -= Convert.ToInt32(dr["dmg"]);
-                        rpWN9.rp.DEF -= Convert.ToInt32(dr["def"]);
-                        rpWN9.rp.FRAGS -= Convert.ToInt32(dr["frags"]);
-                        rpWN9.rp.SPOT -= Convert.ToInt32(dr["spot"]);
-                        rpWN9.rp.WINS -= Convert.ToInt32(dr["wins"]);
-                        // Calc new WN9 for tank with adjusted stats
-                        double WN9adjMaxhist = 0;
-                        double WN9adj = CalcTank(tankId, rpWN9.rp, out WN9adjMaxhist);
-                        // Now adjust the wn9 stats for the tank
-                        DataRow[] drToAdjust = playerTotalWN9TankStats.Select("playerTankId = " + TankHelper.GetPlayerTankId(tankId));
-                        drToAdjust[0]["battles"] = rpWN9.rp.BATTLES;
-                        drToAdjust[0]["wn9"] = WN9adjMaxhist;
+                        // Check if battles is played for tank
+                        if (Convert.ToInt32(dr["battles"]) > 0)
+                        {
+                            // Get total stats for tank
+                            DataTable playerTotalTankStats = WNHelper.GetTotalTankStatsForPlayerTank(battleMode, tankJoin, tankId);
+                            RatingParametersWN9 rpWN9 = GetParamForPlayerTankBattle(playerTotalTankStats);
+                            // Subtract stats from range to find older totals = reversing the stats
+                            rpWN9.rp.BATTLES -= Convert.ToInt32(dr["battles"]);
+                            rpWN9.rp.CAP -= Convert.ToInt32(dr["cap"]);
+                            rpWN9.rp.DAMAGE -= Convert.ToInt32(dr["dmg"]);
+                            rpWN9.rp.DEF -= Convert.ToInt32(dr["def"]);
+                            rpWN9.rp.FRAGS -= Convert.ToInt32(dr["frags"]);
+                            rpWN9.rp.SPOT -= Convert.ToInt32(dr["spot"]);
+                            rpWN9.rp.WINS -= Convert.ToInt32(dr["wins"]);
+                            // Calc new WN9 for tank with adjusted stats
+                            double WN9adjMaxhist = 0;
+                            double WN9adj = CalcTank(tankId, rpWN9.rp, out WN9adjMaxhist);
+                            // Adjust now
+                            drToAdjust[0]["battles"] = rpWN9.rp.BATTLES;
+                            drToAdjust[0]["wn9"] = WN9adj;
+                        }
                     }
                 }
                 // calc player overall wn with adjusted player total wn9 stats
@@ -323,38 +328,55 @@ namespace WinApp.Code.Rating
             //     "random" object contains battles, damage_dealt, frags, spotted and dropped_capture_points
             // expvals is array containing wn9exp/wn9scale/tier/mmrange for each tank, indexed by tank_id
             // maxhist should be false for current values and true for maximum historical values
-           
             double WN9 = 0;
             WN9maxhist = 0;
-            if (rpWN != null && rpWN.rp.BATTLES > 0)
+            try
             {
-                // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
-                WNHelper.RatingParameters tank = rpWN.rp; 
-                RatingParametersWN9 exp = rpWN; 
-                // Array [0-9] corresponds with tier [1-10], subtract 1 from exp.tier to locate correct avg values from array
-                int tierInArray = (exp.tier - 1);
-                // Select tier average from table, adding +1 to tier if tank has +3 tier MM.
-                TierAvg avg = tierAvg[exp.mmrange >= 3 ? tierInArray + 1 : tierInArray];  
-                double rdmg = tank.DAMAGE / (tank.BATTLES * avg.dmg);
-                double rfrag = tank.FRAGS / (tank.BATTLES * avg.frag);
-                double rspot = tank.SPOT / (tank.BATTLES * avg.spot);
-                double rdef = tank.DEF / (tank.BATTLES * avg.def);
+                if (rpWN != null && rpWN.rp.BATTLES > 0)
+                {
+                    // Using same variable name as in formula description explained at http://jaj22.org.uk/wn9implement.html
+                    WNHelper.RatingParameters tank = rpWN.rp;
+                    RatingParametersWN9 exp = rpWN;
+                    // Array [0-9] corresponds with tier [1-10], subtract 1 from exp.tier to locate correct avg values from array
+                    int tierInArray = (exp.tier - 1);
+                    // Select tier average from table, adding +1 to tier if tank has +3 tier MM.
+                    TierAvg avg = tierAvg[exp.mmrange >= 3 ? tierInArray + 1 : tierInArray];
+                    double rdmg = tank.DAMAGE / (tank.BATTLES * avg.dmg);
+                    double rfrag = tank.FRAGS / (tank.BATTLES * avg.frag);
+                    double rspot = tank.SPOT / (tank.BATTLES * avg.spot);
+                    double rdef = tank.DEF / (tank.BATTLES * avg.def);
 
-                // Calculate raw winrate-correlated wn9base
-                // Use different formula for low battle counts
-                double wn9base = 0.7 * rdmg;
-                if (tank.BATTLES < 5)
-                    wn9base += 0.14 * rfrag + 0.13 * Math.Sqrt(rspot) + 0.03 * Math.Sqrt(rdef);
-                else
-                    wn9base += 0.25 * Math.Sqrt(rfrag * rspot) + 0.05 * Math.Sqrt(rfrag * Math.Sqrt(rdef));
+                    // Calculate raw winrate-correlated wn9base
+                    // Use different formula for low battle counts
+                    double wn9base = 0.7 * rdmg;
+                    if (tank.BATTLES < 5)
+                        wn9base += 0.14 * rfrag + 0.13 * Math.Sqrt(rspot) + 0.03 * Math.Sqrt(rdef);
+                    else
+                        wn9base += 0.25 * Math.Sqrt(rfrag * rspot) + 0.05 * Math.Sqrt(rfrag * Math.Sqrt(rdef));
 
-                // Calc with maxhist, Adjust expected value when generating maximum historical value
-                double wn9expMaxhist = exp.wn9exp * (1 + exp.wn9nerf);
-                WN9maxhist = 666 * Math.Max(0, 1 + (wn9base / wn9expMaxhist - 1) / exp.wn9scale);
+                    // Calc with maxhist, Adjust expected value when generating maximum historical value
+                    double wn9expMaxhist = exp.wn9exp * (1 + exp.wn9nerf);
+                    WN9maxhist = 666 * Math.Max(0, 1 + (wn9base / wn9expMaxhist - 1) / exp.wn9scale);
 
-                // Calculate final WN9 based on tank expected value & skill scaling 
-                WN9 = 666 * Math.Max(0, 1 + (wn9base / exp.wn9exp - 1) / exp.wn9scale);
+                    // Calculate final WN9 based on tank expected value & skill scaling 
+                    WN9 = 666 * Math.Max(0, 1 + (wn9base / exp.wn9exp - 1) / exp.wn9scale);
+                }
             }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, 
+                    "Error calculationg WN9, rating params: {" +
+                    " Battles:" + rpWN.rp.BATTLES +
+                    " Cap:" + rpWN.rp.CAP +
+                    " Dmg:" + rpWN.rp.DAMAGE +
+                    " Def:" + rpWN.rp.DEF +
+                    " Frags:" + rpWN.rp.FRAGS +
+                    " Spot:" + rpWN.rp.SPOT +
+                    " Tier:" + rpWN.rp.TIER +
+                    " Wins:" + rpWN.rp.WINS +
+                    " }"
+                );
+            }           
             // Return value
             return WN9;
         }
