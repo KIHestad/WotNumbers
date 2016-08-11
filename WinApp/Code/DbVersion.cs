@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 391; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 393; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2820,8 +2820,15 @@ namespace WinApp.Code
                         "DROP VIEW playerTankBattleTotalsView; " +
                         "CREATE VIEW playerTankBattleTotalsView AS " + temp;
                     break;
-
-
+                case 392:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql = temp + "VALUES (116, 2, 201, 'battle.id', 'Battle ID', 'Wot Numbers ID for the battle', 'Battle', 50, 'Int'); ";
+                    sqlite = mssql;
+                    break;
+                case 393:
+                    mssql = "update battle set spotted=0 where spotted < 0; ";
+                    sqlite = mssql;
+                    break;
 
             }
             string sql = "";

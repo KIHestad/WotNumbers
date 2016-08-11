@@ -163,20 +163,24 @@ namespace WinApp.Code
 			if (logItems.Inserted != null)
 			{
 				logItems.Inserted = logItems.Inserted.Substring(0, logItems.Inserted.Length - 2);
-				Log.AddToLogBuffer(" > Added " + logItems.InsertedCount + " new " + apiType + ":");
-				Log.AddToLogBuffer(" > " + logItems.Inserted);
+				Log.AddToLogBuffer(" > Added " + logItems.InsertedCount + " new items");
+				Log.AddToLogBuffer(" > > " + logItems.Inserted);
 			}
 			else
 			{
-				Log.AddToLogBuffer(" > No new " + apiType + " added");
+				Log.AddToLogBuffer(" > None added, no new items found");
 			}
 			if (logItems.Updated != null)
 			{
 				logItems.Updated = logItems.Updated.Substring(0, logItems.Updated.Length - 2);
-				Log.AddToLogBuffer(" > Updated data on " + logItems.UpdatedCount + " existing " + apiType + ":");
-				Log.AddToLogBuffer(" > " + logItems.Updated);
+				Log.AddToLogBuffer(" > Updated " + logItems.UpdatedCount + " existing items");
+				Log.AddToLogBuffer(" > > " + logItems.Updated);
 			}
-			Log.WriteLogBuffer();
+            else
+            {
+                Log.AddToLogBuffer(" > None updated, no existing items found");
+            }
+            Log.WriteLogBuffer();
 		}
 
 		#endregion
@@ -285,16 +289,16 @@ namespace WinApp.Code
 							    sql = 
                                     "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, description, tier, premium, imgPath, price_credit) " +
                                     "VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @description, @tier, @premium, @imgPath, @price_credit); ";
-								logItems.Updated += name + ", ";
-								logItems.UpdatedCount++;
+                                logItems.Inserted += name + ", ";
+                                logItems.InsertedCount++;
                             }
                             else
                             {
                                 sql = 
                                     "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, short_name=@short_name, description=@description, tier=@tier, " +
                                     "premium=@premium, imgPath=@imgPath, price_credit=@price_credit WHERE id=@id; ";
-   								logItems.Inserted += name + ", ";
-								logItems.InsertedCount++;
+                                logItems.Updated += name + ", ";
+                                logItems.UpdatedCount++;
                             }
                             // Add params    
                             DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int);
@@ -311,7 +315,7 @@ namespace WinApp.Code
 						}
 						DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
 						// Update log file after import
-						WriteApiLog("Tanks ", logItems);
+						WriteApiLog("Tanks", logItems);
 					}
 
 					//Code.MsgBox.Show("Tank import complete");
@@ -424,25 +428,33 @@ namespace WinApp.Code
                                 sql =
                                     "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, description, tier, premium, imgPath, price_credit) " +
                                     "VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @description, @tier, @premium, @imgPath, @price_credit); ";
+                                logItems.Inserted += name + ", ";
+                                logItems.InsertedCount++;
+                            }
+                            else
+                            {
+                                sql =
+                                    "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, short_name=@short_name, description=@description, tier=@tier, " +
+                                    "premium=@premium, imgPath=@imgPath, price_credit=@price_credit WHERE id=@id; ";
                                 logItems.Updated += name + ", ";
                                 logItems.UpdatedCount++;
-                                // Add params    
-                                DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sql, "@countryId", countryId, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
-                                DB.AddWithValue(ref sql, "@short_name", short_name, DB.SqlDataType.VarChar);
-                                DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
-                                DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
-                                DB.AddWithValue(ref sql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
-                                DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
-                                sqlTotal += sql + Environment.NewLine;
                             }
+                            // Add params    
+                            DB.AddWithValue(ref sql, "@id", itemId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@tankTypeId", tankTypeId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@countryId", countryId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@short_name", short_name, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@tier", tier, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref sql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
+                            sqlTotal += sql + Environment.NewLine;
                         }
                         DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
                         // Update log file after import
-                        WriteApiLog("Tank list ", logItems);
+                        WriteApiLog("Tank list", logItems);
                     }
 
                     //Code.MsgBox.Show("Tank import complete");
@@ -849,8 +861,8 @@ namespace WinApp.Code
 							DB.AddWithValue(ref updateSql, "@description", description, DB.SqlDataType.VarChar);
 							DB.AddWithValue(ref updateSql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
 							sqlTotal += updateSql + "\n" + Environment.NewLine;
-							logItems.Inserted += name + ", ";
-							logItems.InsertedCount++;
+							logItems.Updated += name + ", ";
+							logItems.UpdatedCount++;
 						}
 
 						// Update log file after import
@@ -905,9 +917,12 @@ namespace WinApp.Code
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
 							JToken itemToken = ach.First();
-
-							// Check if ach already exists
-							if (!TankHelper.GetAchievmentExist(itemToken["name"].ToString()))
+                            // Get description and crop at 255 chars
+                            string description = itemToken["description"].ToString();
+                            if (description.Length > 255)
+                                description = description.Substring(0, 255);
+                            // Check if ach already exists
+                            if (!TankHelper.GetAchievmentExist(itemToken["name"].ToString()))
 							{
 								string sql = "INSERT INTO ACH (name, section, section_order, name_i18n, type, ordernum, description) " +
 											"VALUES (@name, @section, 0, @name_i18n, @type, @ordernum, @description); ";
@@ -918,7 +933,7 @@ namespace WinApp.Code
 								DB.AddWithValue(ref sql, "@section_order", itemToken["section_order"].ToString(), DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@type", itemToken["type"].ToString(), DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref sql, "@ordernum", itemToken["order"].ToString(), DB.SqlDataType.Int);
-								DB.AddWithValue(ref sql, "@description", itemToken["description"].ToString(), DB.SqlDataType.VarChar);
+								DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
 								// Check if several medal alternatives, and get images and names, set NULL as default value
 								string options = itemToken["options"].ToString();
 								if (options == "") // no options, get default medal image and name
@@ -981,7 +996,7 @@ namespace WinApp.Code
 								DB.AddWithValue(ref sql, "@section_order", itemToken["section_order"].ToString(), DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@type", itemToken["type"].ToString(), DB.SqlDataType.VarChar);
 								DB.AddWithValue(ref sql, "@ordernum", itemToken["order"].ToString(), DB.SqlDataType.Int);
-								DB.AddWithValue(ref sql, "@description", itemToken["description"].ToString(), DB.SqlDataType.VarChar);
+								DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
 								// Check if several medal alternatives, and get images and names, set NULL as default value
 								string options = itemToken["options"].ToString();
 								if (options == "") // no options, get default medal image and name
@@ -1024,9 +1039,8 @@ namespace WinApp.Code
 									}
 								}
 
-								// Update db now
-								// if (!DB.ExecuteNonQuery(sql)) return;
-								sqlTotal = sql + Environment.NewLine;
+								// Update log
+								sqlTotal += sql + Environment.NewLine;
 								logItems.Updated += itemToken["name"].ToString() + ", ";
 								logItems.UpdatedCount++;
 							}

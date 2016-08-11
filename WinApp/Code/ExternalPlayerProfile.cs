@@ -45,7 +45,21 @@ namespace WinApp.Code
             {
             }
         }
-        
+
+        public static string GetServer_WotLabs
+        {
+            get
+            {
+                string server = Config.Settings.playerServer.ToLower();
+                if (server == "com")
+                    server = "na";
+                return server;
+            }
+            set
+            {
+            }
+        }
+
         public static void Wargaming(string playerName, string playerAccountId)
         {
             try
@@ -66,7 +80,7 @@ namespace WinApp.Code
         {
             try
             {
-                string serverURL = string.Format("http://wotlabs.net/{0}/player/{1}", GetServer, playerName);
+                string serverURL = string.Format("http://wotlabs.net/{0}/player/{1}", GetServer_WotLabs, playerName);
                 System.Diagnostics.Process.Start(serverURL);
             }
             catch (Exception ex)
