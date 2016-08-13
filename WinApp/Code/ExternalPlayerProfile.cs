@@ -16,20 +16,6 @@ namespace WinApp.Code
         
         public static string GetServer
         {
-            get {
-                string server = Config.Settings.playerServer.ToLower();
-                if (server == "net")
-                    server = "ru";
-                if (server == "asia")
-                    server = "sea";
-                return server;
-            }
-            set {
-            }
-        }
-
-        public static string GetServer_vBAddict
-        {
             get
             {
                 string server = Config.Settings.playerServer.ToLower();
@@ -37,20 +23,6 @@ namespace WinApp.Code
                     server = "ru";
                 if (server == "asia")
                     server = "sea";
-                if (server == "com")
-                    server = "na";
-                return server;
-            }
-            set
-            {
-            }
-        }
-
-        public static string GetServer_WotLabs
-        {
-            get
-            {
-                string server = Config.Settings.playerServer.ToLower();
                 if (server == "com")
                     server = "na";
                 return server;
@@ -80,7 +52,7 @@ namespace WinApp.Code
         {
             try
             {
-                string serverURL = string.Format("http://wotlabs.net/{0}/player/{1}", GetServer_WotLabs, playerName);
+                string serverURL = string.Format("http://wotlabs.net/{0}/player/{1}", GetServer, playerName);
                 System.Diagnostics.Process.Start(serverURL);
             }
             catch (Exception ex)
@@ -93,7 +65,7 @@ namespace WinApp.Code
         {
             try
             {
-                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", playerName.ToLower(), GetServer_vBAddict);
+                string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", playerName.ToLower(), GetServer);
                 System.Diagnostics.Process.Start(serverURL);
             }
             catch (Exception ex)

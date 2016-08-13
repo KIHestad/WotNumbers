@@ -4541,7 +4541,7 @@ namespace WinApp.Forms
 
         private void mVBaddict_Click(object sender, EventArgs e)
         {
-            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer_vBAddict);
+            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
             System.Diagnostics.Process.Start(serverURL);
         }
 
