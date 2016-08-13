@@ -13,8 +13,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class DatabaseSetting : Form
-	{
+	public partial class DatabaseSetting : FormCloseOnEsc
+    {
 		private ConfigData.dbType selectedDbType;
 		
 		public DatabaseSetting()

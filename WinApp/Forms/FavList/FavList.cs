@@ -12,8 +12,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class FavList : Form
-	{
+	public partial class FavList : FormCloseOnEsc
+    {
 		private int SelectedFavListId = 0;
 		public FavList()
 		{

@@ -10,9 +10,10 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramText : Form
-	{
-		int _gadgetId = -1;
+	public partial class paramText : FormCloseOnEsc
+    {
+        bool _saveOk = false;
+        int _gadgetId = -1;
 		
 		public paramText(int gadgetId = -1)
 		{
@@ -51,16 +52,24 @@ namespace WinApp.Gadget
 			{
                 GadgetHelper.newParameters[0] = txtText.Text;
                 GadgetHelper.newParametersOK = true;
+                _saveOk = true;
 				this.Close();
 			}
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
-			GadgetHelper.newParametersOK = false;
 			this.Close();
 		}
-        
-	}
+
+        private void paramText_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_saveOk)
+            {
+                // Cancel saving
+                GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+                GadgetHelper.newParametersOK = false;
+            }
+        }
+    }
 }

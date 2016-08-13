@@ -1,26 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class FavListAddRemoveTank : Form
-	{
+	public partial class FavListAddRemoveTank : FormCloseOnEsc
+    {
 		private bool _add = true;
 		private int _tankId = 0;
-		private Form _parentForm;
-		public FavListAddRemoveTank(Form parentForm, int tankId, bool add = true)
+		
+        public FavListAddRemoveTank(int tankId, bool add = true)
 		{
 			InitializeComponent();
 			_add = add;
 			_tankId = tankId;
-			_parentForm = parentForm;
 		}
 
 		private void FavListAddRemoveTank_Load(object sender, EventArgs e)
@@ -38,8 +32,9 @@ namespace WinApp.Forms
 			// Style datagrid
 			GridHelper.StyleDataGrid(dataGridFavList);
 
-			// Populate grid with data
-			ShowFavList();
+            // Populate grid with data
+            ShowFavList();
+
 		}
 
 		private void ShowFavList()

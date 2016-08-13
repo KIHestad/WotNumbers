@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinApp.Code;
 
 
 namespace WinApp.Forms
 {
-	public partial class GrindingSetup : Form
-	{
+	public partial class GrindingSetup : FormCloseOnEsc
+    {
 		private int playerTankId;
 		private bool dataChanged = false;
 		private bool _init = true;
@@ -237,11 +230,6 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void btnProgressReset_Click(object sender, EventArgs e)
-		{
-
-		}
-
 		private void CalcProgress()
 		{
             GrindingHelper.Progress progress = new GrindingHelper.Progress();
@@ -279,49 +267,6 @@ namespace WinApp.Forms
             txtRemainingXP.Text = progress.RestXP.ToString();
             pbProgressPercent.Value = progress.ProgressPercent;
             
-            // TODO: Old code moved to GrindingHelper.CalcProgress - to be removed if OK
-            //         // If grinding progress is dependent of completion calculate battles per day to reach goal
-            //         if (chkComplDate.Checked)
-            //         {
-            //             // Calc max days to complete before grinding progress goal
-            //             DateTime getComplDate;
-            //             if (DateTime.TryParse(txtCompletionDate.Text, out getComplDate))
-            //             {
-            //                 // Get max rest days
-            //                 int maxRestDays = (getComplDate - DateTime.Now).Days + 1;
-            //                 if (maxRestDays < 1)
-            //                     maxRestDays = 1;
-            //                 // Run a loop testing number of battles per day until goal is reached
-            //                 int testBtlPerDay = 1;
-            //                 int testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
-            //                 int testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
-            //                 while (GrindingHelper.CalcRestDays(restXP, testRealAvgXP, testBtlPerDay) > maxRestDays)
-            //                 {
-            //                     testBtlPerDay++;
-            //                     testRealAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, testBtlPerDay.ToString());
-            //                     testRestBattles = GrindingHelper.CalcRestBattles(restXP, testRealAvgXP);
-            //                 }
-            //                 txtBattlesPerDay.Text = testBtlPerDay.ToString();
-            //             }
-            //         }
-            //         // Get battles per day
-            //         int btlPerDay = 0;
-            //         Int32.TryParse(txtBattlesPerDay.Text, out btlPerDay);
-            //         // Calc values dependent of battles per day
-            //         int realAvgXP = GrindingHelper.CalcRealAvgXP(txtBattles.Text, txtWins.Text, txtTotalXP.Text, txtAvgXP.Text, btlPerDay.ToString());
-            //         txtRealAvgXP.Text = realAvgXP.ToString();
-            //         int restBattles = GrindingHelper.CalcRestBattles(restXP, realAvgXP);
-            //         txtRestBattles.Text = restBattles.ToString();
-            //         // Calc completion date or rest days according to progress type
-            //         int restDays = GrindingHelper.CalcRestDays(restXP, realAvgXP, btlPerDay);
-            //         txtRestDays.Text = restDays.ToString();
-            //         // If grinding progress is dependent of battles per day calculate compleation date to reach goal
-            //         if (chkBtlPrDay.Checked)
-            //         {
-            //             DateTime complDate = DateTime.Now.AddDays(restDays);
-            //             txtCompletionDate.Text = complDate.ToString("d");
-            //         }
-
             dataChanged = true;
 		}
 

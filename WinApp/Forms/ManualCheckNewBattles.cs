@@ -10,8 +10,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class ManualCheckNewBattles : Form
-	{
+	public partial class ManualCheckNewBattles : FormCloseOnEsc
+    {
 		public ManualCheckNewBattles()
 		{
 			InitializeComponent();

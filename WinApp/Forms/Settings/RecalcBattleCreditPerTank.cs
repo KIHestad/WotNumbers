@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleCreditPerTank : Form
-	{
+	public partial class RecalcBattleCreditPerTank : FormCloseOnEsc
+    {
 		private static bool _autoRun = false;
         public RecalcBattleCreditPerTank(bool autoRun = false)
 		{

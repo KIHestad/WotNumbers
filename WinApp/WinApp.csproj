@@ -175,6 +175,9 @@
     <Compile Include="Code\FormControl\Agauge.Designer.cs">
       <DependentUpon>AGauge.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\FormControl\FormCloseOnEsc.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Code\FormControl\InputBox.cs" />
     <Compile Include="Code\FormLayout\ColorRangeScheme.cs" />
     <Compile Include="Code\FormLayout\GridHelper.cs" />

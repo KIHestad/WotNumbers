@@ -10,9 +10,10 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramBM_Color : Form
-	{
-		int _gadgetId = -1;
+	public partial class paramBM_Color : FormCloseOnEsc
+    {
+        bool _saveOk = false;
+        int _gadgetId = -1;
 
 		public paramBM_Color(int gadgetId = -1)
 		{
@@ -86,14 +87,13 @@ namespace WinApp.Gadget
 				GadgetHelper.newParameters[1] = System.Drawing.ColorTranslator.ToHtml(c);
                 GadgetHelper.newParameters[2] = paramTimeSpan;
 				GadgetHelper.newParametersOK = true;
+                _saveOk = true;
 				this.Close();
 			}
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
-			GadgetHelper.newParametersOK = false;
 			this.Close();
 		}
 
@@ -116,6 +116,14 @@ namespace WinApp.Gadget
             DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
         }
 
-
-	}
+        private void paramBM_Color_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_saveOk)
+            {
+                // Cancel saving
+                GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+                GadgetHelper.newParametersOK = false;
+            }
+        }
+    }
 }

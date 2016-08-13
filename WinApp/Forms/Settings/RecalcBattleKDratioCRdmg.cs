@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleKDratioCRdmg : Form
-	{
+	public partial class RecalcBattleKDratioCRdmg : FormCloseOnEsc
+    {
 		private static bool _autoRun = false;
 		public RecalcBattleKDratioCRdmg(bool autoRun = true)
 		{

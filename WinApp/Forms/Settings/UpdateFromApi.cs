@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class UpdateFromApi : Form
-	{
+	public partial class UpdateFromApi : FormCloseOnEsc
+    {
 		private static bool _autoRun = false;
 		public UpdateFromApi(bool autoRun = false)
 		{

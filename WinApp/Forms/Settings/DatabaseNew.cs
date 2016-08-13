@@ -17,8 +17,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class DatabaseNew : Form
-	{
+	public partial class DatabaseNew : FormCloseOnEsc
+    {
 		private bool _autoSetup = false;
 		public DatabaseNew(bool autoSetup = false)
 		{

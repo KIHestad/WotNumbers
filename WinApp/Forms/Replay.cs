@@ -12,7 +12,7 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-    public partial class Replay : Form
+    public partial class Replay : FormCloseOnEsc
     {
         private int _battleId { get; set; }
         private string _filename { get; set; }

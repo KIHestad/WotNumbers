@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleRating : Form
-	{
+	public partial class RecalcBattleRating : FormCloseOnEsc
+    {
 		private bool _autoRun = false;
         private bool _forWN9 = true;
         private bool _forWN8 = true;

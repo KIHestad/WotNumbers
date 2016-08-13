@@ -13,8 +13,8 @@ using WinApp.Code.FormLayout;
 
 namespace WinApp.Forms
 {
-	public partial class BattleSummary : Form
-	{
+	public partial class BattleSummary : FormCloseOnEsc
+    {
 		#region init
 		
 		private string battleTimeFilter = "";

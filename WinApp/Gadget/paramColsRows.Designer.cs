@@ -159,6 +159,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "paramColsRows";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.paramColsRows_FormClosing);
             this.Load += new System.EventHandler(this.paramColsRows_Load);
             this.badForm1.ResumeLayout(false);
             this.ResumeLayout(false);

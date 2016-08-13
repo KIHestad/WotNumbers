@@ -10,11 +10,12 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramBattleModeOnly : Form
-	{
+	public partial class paramBattleModeOnly : FormCloseOnEsc
+    {
 		int _gadgetId = -1;
-		
-		public paramBattleModeOnly(int gadgetId = -1)
+        bool _saveOk = false;
+
+        public paramBattleModeOnly(int gadgetId = -1)
 		{
 			InitializeComponent();
 			_gadgetId = gadgetId;
@@ -60,14 +61,14 @@ namespace WinApp.Gadget
                     paramBattleMode = battleMode.SqlName;
                 GadgetHelper.newParameters[0] = paramBattleMode;
                 GadgetHelper.newParametersOK = true;
+                _saveOk = true;
 				this.Close();
 			}
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
-			GadgetHelper.newParametersOK = false;
+			
 			this.Close();
 		}
 
@@ -77,6 +78,14 @@ namespace WinApp.Gadget
 				GadgetHelper.DrawBorderOnGadget(sender, e);
 		}
 
-
-	}
+        private void paramBattleModeOnly_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_saveOk)
+            {
+                // Cancel saving
+                GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+                GadgetHelper.newParametersOK = false;
+            }
+        }
+    }
 }

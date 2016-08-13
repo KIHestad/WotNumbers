@@ -12,8 +12,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class DatabaseBackup : Form
-	{
+	public partial class DatabaseBackup : FormCloseOnEsc
+    {
         private bool cancelFlag = false;
         private static bool _autoRun = false;
         public DatabaseBackup(bool autoRun = false)

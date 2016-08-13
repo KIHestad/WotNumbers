@@ -10,8 +10,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class InGarageProcessData : Form
-	{
+	public partial class InGarageProcessData : FormCloseOnEsc
+    {
 		string favList = "";
 		List<int> tanksInGarage = new List<int>();
 

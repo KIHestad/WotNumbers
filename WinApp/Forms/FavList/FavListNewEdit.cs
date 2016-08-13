@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class FavListNewEdit : Form
-	{
+	public partial class FavListNewEdit : FormCloseOnEsc
+    {
 		string _copyFromDD = "";
 		int _favListId = 0;
 		string _prevName = "";

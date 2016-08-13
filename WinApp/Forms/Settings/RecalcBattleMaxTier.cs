@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class RecalcBattleMaxTier : Form
-	{
+	public partial class RecalcBattleMaxTier : FormCloseOnEsc
+    {
 		private static bool _autoRun = false;
         public RecalcBattleMaxTier(bool autoRun = false)
 		{

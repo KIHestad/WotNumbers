@@ -10,9 +10,10 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramBattleMode : Form
-	{
-		int _gadgetId = -1;
+	public partial class paramBattleMode : FormCloseOnEsc
+    {
+        bool _saveOk = false;
+        int _gadgetId = -1;
 		
 		public paramBattleMode(int gadgetId = -1)
 		{
@@ -71,14 +72,13 @@ namespace WinApp.Gadget
 				GadgetHelper.newParameters[0] = paramBattleMode;
                 GadgetHelper.newParameters[1] = paramTimeSpan;
 				GadgetHelper.newParametersOK = true;
-				this.Close();
+                _saveOk = true;
+                this.Close();
 			}
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
-			GadgetHelper.newParametersOK = false;
 			this.Close();
 		}
 
@@ -93,6 +93,14 @@ namespace WinApp.Gadget
             DropDownGrid.Show(ddTimeSpan, DropDownGrid.DropDownGridType.List, GadgetHelper.GetTimeDropDownList());
         }
 
-
-	}
+        private void paramBattleMode_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_saveOk)
+            {
+                // Cancel saving
+                GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+                GadgetHelper.newParametersOK = false;
+            }
+        }
+    }
 }

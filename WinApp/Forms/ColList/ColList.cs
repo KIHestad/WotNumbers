@@ -12,8 +12,8 @@ using WinApp.Code.FormView;
 
 namespace WinApp.Forms
 {
-	public partial class ColList : Form
-	{
+	public partial class ColList : FormCloseOnEsc
+    {
 		// The current selected col list
 		private int SelectedColListId = 0;
 		private int separatorDefaultColWidth = 3;

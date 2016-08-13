@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class PopupGrid : Form
-	{
+	public partial class PopupGrid : FormCloseOnEsc
+    {
 		
 		public PopupGrid(string title, DataTable dt)
 		{

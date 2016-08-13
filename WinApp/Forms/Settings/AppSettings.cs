@@ -10,7 +10,7 @@ using WinApp.Code;
 
 namespace WinApp.Forms.Settings
 {
-    public partial class AppSettings : Form
+    public partial class AppSettings : FormCloseOnEsc
     {
         private static AppSettingsHelper.Tabs tab { get; set; }
 

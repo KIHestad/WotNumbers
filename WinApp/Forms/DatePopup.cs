@@ -10,8 +10,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class DatePopup : Form
-	{
+	public partial class DatePopup : FormCloseOnEsc
+    {
         bool autoSelectDateOK = false;
         DateTime autoSelectDate; 
 

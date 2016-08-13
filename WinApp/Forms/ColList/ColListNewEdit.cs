@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class ColListNewEdit : Form
-	{
+	public partial class ColListNewEdit : FormCloseOnEsc
+    {
 		string favListDD = "";
 		string copyFromDD = "";
 		int colListId = 0;

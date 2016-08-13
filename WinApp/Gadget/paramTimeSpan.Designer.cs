@@ -122,6 +122,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ucGaugeWinRateParameter";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.paramTimeSpan_FormClosing);
             this.Load += new System.EventHandler(this.paramBattleMode_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.paramBattleMode_Paint);
             this.badForm1.ResumeLayout(false);

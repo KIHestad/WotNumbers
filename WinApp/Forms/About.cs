@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class About : Form
-	{
+	public partial class About : FormCloseOnEsc
+    {
 		public About()
 		{
 			InitializeComponent();

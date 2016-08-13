@@ -3875,7 +3875,7 @@ namespace WinApp.Forms
 				int tankId = TankHelper.GetTankID(playerTankId);
 				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, true))
 				{
-					Form frm = new Forms.FavListAddRemoveTank(this, tankId, true);
+					Form frm = new Forms.FavListAddRemoveTank(tankId, true);
 					frm.ShowDialog();
 				}
 			}
@@ -3889,7 +3889,7 @@ namespace WinApp.Forms
 				int tankId = TankHelper.GetTankID(playerTankId);
 				if (tankId != 0 && FavListHelper.CheckIfAnyFavList(this, tankId, false))
 				{
-					Form frm = new Forms.FavListAddRemoveTank(this, tankId, false);
+					Form frm = new FavListAddRemoveTank(tankId, false);
 					frm.ShowDialog();
 					// refresh if tank removed
 					if (FavListHelper.refreshGridAfterAddRemove)

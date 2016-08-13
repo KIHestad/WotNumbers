@@ -14,8 +14,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class Download : Form
-	{
+	public partial class Download : FormCloseOnEsc
+    {
 		private string filename = ""; // path and filename for downloaded file
         
         public Download()

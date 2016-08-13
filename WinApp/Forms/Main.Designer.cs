@@ -44,7 +44,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.MainTheme = new BadForm();
-            this.toolMain = new WinApp.Code.ToolStripEx(this.components);
+            this.toolMain = new Code.ToolStripEx(this.components);
             this.mWoT = new System.Windows.Forms.ToolStripButton();
             this.mViewLabel = new System.Windows.Forms.ToolStripLabel();
             this.mViewOverall = new System.Windows.Forms.ToolStripButton();

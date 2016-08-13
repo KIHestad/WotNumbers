@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class DropDownGrid : Form
-	{
+	public partial class DropDownGrid : FormCloseOnEsc
+    {
 		private Control SourceDropDown;
 		public DropDownGrid(DataTable dt, Control DropDown)
 		{

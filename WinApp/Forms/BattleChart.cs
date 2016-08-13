@@ -18,8 +18,8 @@ using WinApp.Code.Rating;
 
 namespace WinApp.Forms
 {
-	public partial class BattleChart : Form
-	{
+	public partial class BattleChart : FormCloseOnEsc
+    {
 		public enum CalculationType
 		{
 			standard = 0,
@@ -60,7 +60,13 @@ namespace WinApp.Forms
 		{
 			InitializeComponent();
 			initPlayerTankId = playerTankId;
-		}
+            // Add close form on pressing ESC
+            this.KeyPreview = true;
+            this.KeyDown += (sender, e) =>
+            {
+                if (e.KeyCode == Keys.Escape) this.Close();
+            };
+        }
 
 		// To be able to minimize from task bar
 		const int WS_MINIMIZEBOX = 0x20000;

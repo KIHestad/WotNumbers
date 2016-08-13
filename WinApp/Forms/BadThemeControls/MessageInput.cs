@@ -13,8 +13,8 @@ using WinApp.Code;
 namespace WinApp.Forms
 {
 	
-	public partial class MessageInput : Form
-	{
+	public partial class MessageInput : FormCloseOnEsc
+    {
         public MessageInput(string title = "", string message = "", string defaultText = "")
 		{
 			InitializeComponent();

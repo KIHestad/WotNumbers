@@ -10,10 +10,12 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramTotalStats : Form
-	{
-		int _gadgetId = -1;
+	public partial class paramTotalStats : FormCloseOnEsc
+    {
+        bool _saveOk = false;
+        int _gadgetId = -1;
         bool _useDefault = false;
+
         string _lastSavedGridCount {  get; set; }
         object[] currentParameters = new object[20];
         string[] headers = new string[10];
@@ -276,14 +278,13 @@ namespace WinApp.Gadget
                 }
 				GadgetHelper.newParametersOK = true;
                 GadgetHelper.DeleteGadgetParameter(_gadgetId);
+                _saveOk = true;
 				this.Close();
 			}
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
-			GadgetHelper.newParametersOK = false;
 			this.Close();
 		}
 
@@ -819,6 +820,15 @@ namespace WinApp.Gadget
             }
 
         }
-        
+
+        private void paramTotalStats_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_saveOk)
+            {
+                // Cancel saving
+                GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+                GadgetHelper.newParametersOK = false;
+            }
+        }
     }
 }

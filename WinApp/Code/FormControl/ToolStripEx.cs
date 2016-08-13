@@ -113,10 +113,9 @@ namespace WinApp.Code
 	[DebuggerNonUserCode]
 	public class StripRenderer : ToolStripProfessionalRenderer
 	{
-		public StripRenderer() : base(new Code.StripLayout())
+		public StripRenderer() : base(new StripLayout())
 		{
 			this.RoundedEdges = false;
-            
 		}
 
 		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)

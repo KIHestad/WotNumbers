@@ -11,8 +11,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class DatabaseTable : Form
-	{
+	public partial class DatabaseTable : FormCloseOnEsc
+    {
 		private string tableList = "";
 		
 		public DatabaseTable()

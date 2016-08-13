@@ -13,8 +13,8 @@ using WinApp.Code;
 namespace WinApp.Forms
 {
 	
-	public partial class Message : Form
-	{
+	public partial class Message : FormCloseOnEsc
+    {
         private static MsgBox.Type _MessageType { get; set; }
         public Message(string title, string message, MsgBox.Type MessageType = MsgBox.Type.Close)
 		{

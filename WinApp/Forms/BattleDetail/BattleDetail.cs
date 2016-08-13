@@ -12,8 +12,8 @@ using WinApp.Code.FormLayout;
 
 namespace WinApp.Forms
 {
-	public partial class BattleDetail : Form
-	{
+	public partial class BattleDetail : FormCloseOnEsc
+    {
 		#region Init
 		
 		private int battleId;

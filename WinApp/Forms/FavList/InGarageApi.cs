@@ -12,8 +12,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class InGarageApi : Form
-	{
+	public partial class InGarageApi : FormCloseOnEsc
+    {
 		public InGarageApi()
 		{
             SetBrowserFeatureControl();

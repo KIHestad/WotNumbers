@@ -15,8 +15,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class PlayerTankDetail : Form
-	{
+	public partial class PlayerTankDetail : FormCloseOnEsc
+    {
 		int initPlayerTankId = 0;
 		int initTankId = 0;
 		public PlayerTankDetail(int playerTankId = 0, int tankId = 0)
@@ -24,7 +24,7 @@ namespace WinApp.Forms
 			InitializeComponent();
 			initPlayerTankId = playerTankId;
 			initTankId = tankId;
-		}
+        }
 
 		// To be able to minimize from task bar
 		const int WS_MINIMIZEBOX = 0x20000;

@@ -10,9 +10,10 @@ using WinApp.Code;
 
 namespace WinApp.Gadget
 {
-	public partial class paramColsRows : Form
-	{
-		int _gadgetId = -1;
+	public partial class paramColsRows : FormCloseOnEsc
+    {
+        bool _saveOk = false;
+        int _gadgetId = -1;
 
 		public paramColsRows(int gadgetId = -1)
 		{
@@ -42,8 +43,6 @@ namespace WinApp.Gadget
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			GadgetHelper.newParameters = new object[] { null, null, null, null, null };
-			GadgetHelper.newParametersOK = false;
 			this.Close();			
 		}
 
@@ -65,8 +64,19 @@ namespace WinApp.Gadget
 				GadgetHelper.newParameters[0] = cols;
 				GadgetHelper.newParameters[1] = rows;
 				GadgetHelper.newParametersOK = true;
+                _saveOk = true;
 				this.Close();
 			}
 		}
-	}
+
+        private void paramColsRows_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_saveOk)
+            {
+                // Cancel saving
+                GadgetHelper.newParameters = new object[] { null, null, null, null, null };
+                GadgetHelper.newParametersOK = false;
+            }
+        }
+    }
 }

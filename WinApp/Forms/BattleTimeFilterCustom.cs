@@ -10,8 +10,8 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-	public partial class BattleTimeFilterCustom : Form
-	{
+	public partial class BattleTimeFilterCustom : FormCloseOnEsc
+    {
 		public BattleTimeFilterCustom()
 		{
 			InitializeComponent();

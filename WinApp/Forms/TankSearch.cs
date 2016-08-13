@@ -10,7 +10,7 @@ using WinApp.Code;
 
 namespace WinApp.Forms
 {
-    public partial class TankSearch : Form
+    public partial class TankSearch : FormCloseOnEsc
     {
         private DataTable dt { get; set; }
         private bool MainModeAdvanced { get; set; }
