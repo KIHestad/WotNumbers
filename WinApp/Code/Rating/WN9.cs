@@ -164,11 +164,11 @@ namespace WinApp.Code.Rating
             if (battleMode != "")
                 battleModeWhere = " AND ptb.battleMode = '" + battleMode + "' ";
             string sql =
-                "SELECT ptb.playerTankId, SUM(ptb.battles) as battles, SUM(ptb.wn9 * ptb.battles) / NULLIF(SUM(ptb.battles), 0) as wn9, " + 
-                "t.wn9exp as wn9exp, t.tier as tier, t.wn9nerf as wn9nerf " +
+                "SELECT ptb.playerTankId, SUM(ptb.battles) as battles, ISNULL(SUM(ptb.wn9 * ptb.battles) / NULLIF(SUM(ptb.battles), 0),0) as wn9, " + 
+                "ISNULL(t.wn9exp,0) as wn9exp, t.tier as tier, ISNULL(t.wn9nerf,0) as wn9nerf " +
                 "FROM playerTankBattle ptb INNER JOIN playerTank pt ON ptb.playerTankId = pt.id INNER JOIN tank t ON pt.tankId = t.Id " +
-                "WHERE pt.playerId = @playerId AND " +
-                "ptb.wn9maxhist IS NOT NULL AND t.tankTypeId <> 5 " + // don't use tanks with no expected values // don't use SPGs & missing tanks
+                "WHERE pt.playerId = @playerId AND t.wn9exp is not null AND " +
+                "ISNULL(ptb.wn9,0) <> 0 AND t.tankTypeId <> 5 " + // don't use tanks with no expected values // don't use SPGs & missing tanks
                 battleModeWhere +
                 "GROUP BY playerTankId, ptb.wn9maxhist, t.wn9exp, t.tier, t.wn9nerf " +
                 "HAVING SUM(ptb.battles) > 0 " +

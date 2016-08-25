@@ -299,7 +299,7 @@ namespace WinApp.Code.Rating
             // Calculate WN9
             double WN9maxhist = 0;
             sqlFields += " wn9=" + Math.Round(WN9.CalcTank(tankId, rp, out WN9maxhist), 0).ToString();
-            sqlFields += " wn9maxhist=" + Math.Round(WN9maxhist, 0).ToString();
+            sqlFields += ", wn9maxhist=" + Math.Round(WN9maxhist, 0).ToString();
             // Calculate WN8
             sqlFields += ", wn8=" + Math.Round(WN8.CalcTank(tankId, rp), 0).ToString();
             // Calculate Eff
@@ -310,7 +310,7 @@ namespace WinApp.Code.Rating
             // Calculate RWR
             sqlFields += ", rwr=" + RWR.RWRtank(tankId, rp);
             // Save
-            string sql = "UPDATE playerTank SET " + sqlFields + " WHERE playerTankId = " + playerTankId.ToString();
+            string sql = "UPDATE playerTankBattle SET " + sqlFields + " WHERE PlayerTankId = " + playerTankId.ToString() + " AND battleMode = '" + battleMode + "'";
             DB.ExecuteNonQuery(sql);
         }
 
