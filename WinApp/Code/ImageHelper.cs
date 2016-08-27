@@ -109,41 +109,23 @@ namespace WinApp.Code
 						}
 						if (imgOK)
 						{
-							byte[] imgByte = (byte[])dr["smallImg"];
+                            // small image (normal)
+                            byte[] imgByte = (byte[])dr["smallImg"];
 							MemoryStream ms = new MemoryStream(imgByte, 0, imgByte.Length);
 							ms.Write(imgByte, 0, imgByte.Length);
 							Image image = new Bitmap(ms);
 							tankImgNewDataRow["smallImg"] = image;
-							if (TankHelper.PlayerTankExists(Convert.ToInt32(dr["id"])))
-							{
-								// Img Large
-								//imgByte = (byte[])dr["img"];
-								//ms = new MemoryStream(imgByte, 0, imgByte.Length);
-								//ms.Write(imgByte, 0, imgByte.Length);
-								//image = new Bitmap(ms);
-								//tankImgNewDataRow["img"] = image;
-								// ContourImg
-								if (dr["contourImg"] == DBNull.Value)
-								{
-									// Missing image
-									// Log.LogToFile("Missing image for tank: " + tankIdDebug);
-									imgOK = false;
-								}
-								else
-								{
-									imgByte = (byte[])dr["contourImg"];
-									ms = new MemoryStream(imgByte, 0, imgByte.Length);
-									ms.Write(imgByte, 0, imgByte.Length);
-									image = new Bitmap(ms);
-									tankImgNewDataRow["contourImg"] = image;
-								}
-							}
-							// Add to dt
-							if (imgOK)
-							{
-								TankImage.Rows.Add(tankImgNewDataRow);
-								TankImage.AcceptChanges();
-							}
+                            
+                            // countor image (icon)
+                            imgByte = (byte[])dr["contourImg"];
+                            ms = new MemoryStream(imgByte, 0, imgByte.Length);
+                            ms.Write(imgByte, 0, imgByte.Length);
+                            image = new Bitmap(ms);
+                            tankImgNewDataRow["contourImg"] = image;
+
+                            // Add to dt
+							TankImage.Rows.Add(tankImgNewDataRow);
+							TankImage.AcceptChanges();
 						}
 					}
 				}
@@ -353,19 +335,27 @@ namespace WinApp.Code
 
 		public static Image GetTankImage(int tankId, string imageCol)
 		{
-			// Available types: contourimg, smallimg, img (icon, small, large)
-			if (imageCol == "img")
-			{
-				return GetLargeTankImage(tankId);
-			}
-			DataRow[] dr = TankImage.Select("id = " + tankId.ToString());
-			if (dr.Length > 0)
-				return (Image)dr[0][imageCol];
-			else
-			{
-				Bitmap img = new Bitmap(1, 1);
-				return img;
-			}
+            // Available types: contourimg, smallimg, img (icon, small, large)
+            try
+            {
+                if (imageCol == "img")
+                {
+                    return GetLargeTankImage(tankId);
+                }
+                DataRow[] dr = TankImage.Select("id = " + tankId.ToString());
+                if (dr.Length > 0)
+                    return (Image)dr[0][imageCol];
+                else
+                {
+                    Bitmap img = new Bitmap(1, 1);
+                    return img;
+                }
+            }
+            catch (Exception)
+            {
+                Bitmap img = new Bitmap(1, 1);
+                return img;
+            }
 		}
 
 		public static Image GetTankImage(int tankId, TankImageType imageType)

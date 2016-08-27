@@ -82,6 +82,7 @@ namespace WinAdmin
                 {
                     // NEW
                     url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=short_name%2Cimages";
+
                 }
                 
                 // NOT IN USE
@@ -338,14 +339,20 @@ namespace WinAdmin
 			lblStatus.Text = "Getting images (" + DateTime.Now.ToString() + ")";
 			Application.DoEvents();
 			DB.DBResult result = new DB.DBResult();
-			DataTable dtTanks = DB.FetchData("select * from tank", Settings.Config, out result);   // Fetch id of tanks in db
+            string sql = "select * from tank ";
+            if (txtTankId.Text != "")
+            {
+                sql += "where id=" + txtTankId.Text;
+            }
+            DataTable dtTanks = DB.FetchData(sql, Settings.Config, out result);   // Fetch id of tanks in db
 			pbStatus.Maximum = dtTanks.Rows.Count; // Two part impot, first tanks, then download img
 			foreach (DataRow dr in dtTanks.Rows)
 			{
 				pbStatus.Value++;
-				Application.DoEvents();
+                int tankId = Convert.ToInt32(dr["id"]);
+                Application.DoEvents();
 				bool imgExist = (dr["img"] != DBNull.Value && dr["smallImg"] != DBNull.Value && dr["contourImg"] != DBNull.Value);
-				if (!imgExist || !chkKeepExistingImg.Checked)
+				if (!imgExist || !chkKeepExistingImg.Checked || tankId.ToString() == txtTankId.Text)
 				{
 					lblStatus.Text = "Downloading images for tank: " + dr["id"].ToString();
 					byte[] img = getImageFromAPI(dr["imgPath"].ToString());
@@ -360,10 +367,10 @@ namespace WinAdmin
 						SQLiteConnection con = new SQLiteConnection(conString);
 						SQLiteCommand cmd = con.CreateCommand();
 						cmd.CommandText = "UPDATE tank SET img=@img, smallImg=@smallImg, contourImg=@contourImg WHERE id=@id";
-						SQLiteParameter imgParam = new SQLiteParameter("@img", System.Data.DbType.Binary);
-						SQLiteParameter smallImgParam = new SQLiteParameter("@smallImg", System.Data.DbType.Binary);
-						SQLiteParameter contourImgParam = new SQLiteParameter("@contourImg", System.Data.DbType.Binary);
-						SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+						SQLiteParameter imgParam = new SQLiteParameter("@img", DbType.Binary);
+						SQLiteParameter smallImgParam = new SQLiteParameter("@smallImg", DbType.Binary);
+						SQLiteParameter contourImgParam = new SQLiteParameter("@contourImg", DbType.Binary);
+						SQLiteParameter idParam = new SQLiteParameter("@id", DbType.Int32);
 						imgParam.Value = img;
 						smallImgParam.Value = smallImg;
 						contourImgParam.Value = contourImg;

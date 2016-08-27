@@ -36,11 +36,13 @@
             this.rbNA = new System.Windows.Forms.RadioButton();
             this.chkKeepExistingImg = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtTankId = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // pbStatus
             // 
-            this.pbStatus.Location = new System.Drawing.Point(25, 78);
+            this.pbStatus.Location = new System.Drawing.Point(24, 95);
             this.pbStatus.Name = "pbStatus";
             this.pbStatus.Size = new System.Drawing.Size(375, 23);
             this.pbStatus.TabIndex = 0;
@@ -48,7 +50,7 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(22, 116);
+            this.lblStatus.Location = new System.Drawing.Point(21, 133);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(113, 13);
             this.lblStatus.TabIndex = 1;
@@ -56,7 +58,7 @@
             // 
             // cmdStart
             // 
-            this.cmdStart.Location = new System.Drawing.Point(325, 111);
+            this.cmdStart.Location = new System.Drawing.Point(324, 128);
             this.cmdStart.Name = "cmdStart";
             this.cmdStart.Size = new System.Drawing.Size(75, 23);
             this.cmdStart.TabIndex = 2;
@@ -112,7 +114,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(244, 111);
+            this.button1.Location = new System.Drawing.Point(243, 128);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 7;
@@ -120,11 +122,29 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(22, 65);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "TankId";
+            // 
+            // txtTankId
+            // 
+            this.txtTankId.Location = new System.Drawing.Point(69, 62);
+            this.txtTankId.Name = "txtTankId";
+            this.txtTankId.Size = new System.Drawing.Size(100, 20);
+            this.txtTankId.TabIndex = 9;
+            // 
             // GetTankDataFromAPI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 149);
+            this.ClientSize = new System.Drawing.Size(421, 172);
+            this.Controls.Add(this.txtTankId);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chkKeepExistingImg);
             this.Controls.Add(this.rbNA);
@@ -157,5 +177,7 @@
 		private System.Windows.Forms.RadioButton rbNA;
 		private System.Windows.Forms.CheckBox chkKeepExistingImg;
         private System.Windows.Forms.Button button1;
-	}
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtTankId;
+    }
 }

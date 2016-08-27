@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 393; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 394; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
@@ -2698,7 +2698,6 @@ namespace WinApp.Code
                     break;
                 case 369:
                     RunWotApi = true;
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
                 case 370:
                     mssql = "ALTER TABLE playerTank ADD gProgressGoal int NOT NULL default 0; " +
@@ -2829,7 +2828,9 @@ namespace WinApp.Code
                     mssql = "update battle set spotted=0 where spotted < 0; ";
                     sqlite = mssql;
                     break;
-
+                case 394:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
             }
             string sql = "";
 			// get sql for correct dbtype
