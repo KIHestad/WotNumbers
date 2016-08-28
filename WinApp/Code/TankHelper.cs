@@ -287,7 +287,22 @@ namespace WinApp.Code
 			return tankName;
 		}
 
-		public static int GetTankID(string TankName)
+        public static DataRow GetTankInfo(int TankId)
+        {
+            string sql = @"
+select t.*, c.name as countryName, tt.name as tankTypeName
+from tank t 
+    left join country c on t.countryId = c.id 
+    left join tankType tt on t.tankTypeId = tt.id
+where t.id = " + TankId.ToString();
+            DataTable dt = DB.FetchData(sql);
+            if (dt.Rows.Count > 0)
+                return dt.Rows[0];
+            else
+                return null;
+       }
+
+        public static int GetTankID(string TankName)
 		{
 			int tankID = 0;
 			string expression = "name = '" + TankName + "'";

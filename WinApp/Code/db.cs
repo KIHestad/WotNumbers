@@ -44,14 +44,12 @@ namespace WinApp.Code
 				}
 				else if (SelecteDbType == ConfigData.dbType.SQLite)
 				{
-					
 					SQLiteConnection con = new SQLiteConnection(dbcon);
 					con.Open();
 					SQLiteCommand command = new SQLiteCommand(sql, con);
 					SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
 					adapter.Fill(dt);
 					con.Close();
-					
 				}
 			}
 			catch (Exception ex)

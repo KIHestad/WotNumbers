@@ -345,8 +345,11 @@ namespace WinApp.Forms
 			ToolStripMenuItem dataGridMainPopup_TankDetails = new ToolStripMenuItem("Tank Details");
 			dataGridMainPopup_TankDetails.Image = imageListToolStrip.Images[1];
 			dataGridMainPopup_TankDetails.Click += new EventHandler(dataGridMainPopup_TankDetails_Click);
-			
-			ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart");
+
+            ToolStripMenuItem dataGridMainPopup_EditTankInfo = new ToolStripMenuItem("Edit Tank Info");
+            dataGridMainPopup_EditTankInfo.Click += new EventHandler(dataGridMainPopup_EditTankInfo_Click);
+
+            ToolStripMenuItem dataGridMainPopup_BattleChart = new ToolStripMenuItem("Chart");
 			dataGridMainPopup_BattleChart.Image = imageListToolStrip.Images[2];
 			dataGridMainPopup_BattleChart.Click += new EventHandler(dataGridMainPopup_BattleChart_Click);
 			
@@ -427,7 +430,8 @@ namespace WinApp.Forms
 					dataGridMainPopup.Items.AddRange(new ToolStripItem[] 
 					{ 
 						dataGridMainPopup_TankDetails,
-						dataGridMainPopup_TankWN8,
+                        dataGridMainPopup_EditTankInfo,
+                        dataGridMainPopup_TankWN8,
 						new ToolStripSeparator(),
 						dataGridMainPopup_BattleChart, 
 						dataGridMainPopup_GrindingSetup,
@@ -3680,11 +3684,19 @@ namespace WinApp.Forms
 		{
 			int playerTankId = DbConvert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 			int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
-			Form frm = new Forms.PlayerTankDetail(playerTankId, tankId);
+			Form frm = new PlayerTankDetail(playerTankId, tankId);
 			FormHelper.OpenFormToRightOfParent(this, frm);
 		}
 
-		private void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
+        private void dataGridMainPopup_EditTankInfo_Click(object sender, EventArgs e)
+        {
+            int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
+            Form frm = new Forms.TankInfoEdit(tankId);
+            frm.ShowDialog(this);
+        }
+
+
+        private void dataGridMainPopup_DeleteBattle_Click(object sender, EventArgs e)
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			string sql = "select battle.battleTime, tank.name " +

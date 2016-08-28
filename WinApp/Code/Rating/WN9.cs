@@ -122,7 +122,7 @@ namespace WinApp.Code.Rating
                     int tankId = Convert.ToInt32(ptbRow["tankId"]);
                     double battlecount = Convert.ToDouble(ptbRow["battles"]);
                     DataRow expected = TankHelper.TankInfo(tankId);
-                    if (battlecount > 0 && expected["wn9exp"] != DBNull.Value)
+                    if (battlecount > 0 && expected != null && expected["wn9exp"] != DBNull.Value)
                     {
                         rpWN.mmrange += Convert.ToInt32(expected["mmrange"]) * Convert.ToInt32(battlecount);
                         rpWN.wn9exp += Convert.ToDouble(expected["wn9exp"]) * battlecount;
@@ -173,7 +173,8 @@ namespace WinApp.Code.Rating
                 "GROUP BY playerTankId, ptb.wn9maxhist, t.wn9exp, t.tier, t.wn9nerf " +
                 "HAVING SUM(ptb.battles) > 0 " +
                 "ORDER BY ptb.wn9maxhist DESC "; // sort tanks by WN9 decreasing
-                                                                                                  
+            if (Config.Settings.databaseType == ConfigData.dbType.SQLite)
+                sql = sql.Replace("ISNULL(", "IFNULL(");                                                                     
             DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
             return DB.FetchData(sql);
         }
@@ -186,34 +187,40 @@ namespace WinApp.Code.Rating
             // Replace loop in original formula, calling method to get player total tank stats if not provided
             if (tankStats == null)
                 tankStats = GetPlayerTotalWN9TankStats(battleMode);
-            Convert.ToDouble(tankStats.Compute("SUM([battles])", ""));
-                        
-            // cap tank weight according to tier, total battles & nerf status
-            double totweight = 0;
-            foreach (DataRow dr in tankStats.Rows)
+            // Calc WN9 if any tankstats found
+            if (tankStats != null & tankStats.Rows.Count > 0)
             {
-                double exp = Convert.ToDouble(dr["wn9exp"]);
-                double tier = Convert.ToDouble(dr["tier"]);
-                double batcap = tier * (40 + tier * totbat / 2000);
-                double nerf = Convert.ToDouble(dr["wn9nerf"]);
-                if (nerf > 0) batcap /= 2;
-                double wn9 = Convert.ToDouble(dr["wn9"]);
-                double weight = Math.Min(Convert.ToDouble(dr["battles"]), batcap);
-                tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
-                totweight += weight;
-            }
+                // cap tank weight according to tier, total battles & nerf status
+                double totweight = 0;
+                foreach (DataRow dr in tankStats.Rows)
+                {
+                    double exp = Convert.ToDouble(dr["wn9exp"]);
+                    double tier = Convert.ToDouble(dr["tier"]);
+                    double batcap = tier * (40 + tier * totbat / 2000);
+                    double nerf = Convert.ToDouble(dr["wn9nerf"]);
+                    if (nerf > 0) batcap /= 2;
+                    double wn9 = Convert.ToDouble(dr["wn9"]);
+                    double weight = Math.Min(Convert.ToDouble(dr["battles"]), batcap);
+                    tanklist.Add(new tankListWn9() { wn9 = wn9, weight = weight });
+                    totweight += weight;
+                }
 
-	        // add up account WN9 over top 65% of capped battles
-	        totweight *= 0.65;
-            double wn9tot = 0; double usedweight = 0; int i = 0;
-            for (; usedweight+tanklist[i].weight <= totweight; i++)
-	        {
-		        wn9tot += tanklist[i].wn9 * tanklist[i].weight;
-		        usedweight += tanklist[i].weight;
-	        }
-            // last tank before cutoff uses remaining weight, not its battle count
-            wn9tot += tanklist[i].wn9 * (totweight - usedweight);
-	        return wn9tot / totweight;
+                // add up account WN9 over top 65% of capped battles
+                totweight *= 0.65;
+                double wn9tot = 0; double usedweight = 0; int i = 0;
+                for (; usedweight + tanklist[i].weight <= totweight; i++)
+                {
+                    wn9tot += tanklist[i].wn9 * tanklist[i].weight;
+                    usedweight += tanklist[i].weight;
+                }
+                // last tank before cutoff uses remaining weight, not its battle count
+                wn9tot += tanklist[i].wn9 * (totweight - usedweight);
+                return wn9tot / totweight;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public static double CalcBattle(int tankId, WNHelper.RatingParameters ratingParameters, out double WN9maxhist)
