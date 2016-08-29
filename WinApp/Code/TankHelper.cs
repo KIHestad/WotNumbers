@@ -10,6 +10,16 @@ namespace WinApp.Code
 {
 	public static class TankHelper
 	{
+        public class BasicTankInfo
+        {
+            public string name { get; set; }
+            public string short_name { get; set; }
+            public string tier { get; set; }
+            public string nation { get; set; }
+            public string tankType { get; set; }
+            public bool customTankInfo { get; set; }
+        }
+
         public static void CreateUnknownTank(int tankId, string tankName)
         {
             int tier = 0;
@@ -99,17 +109,6 @@ namespace WinApp.Code
 			tankList.Dispose();
 			tankList.Clear();
 			tankList = DB.FetchData("SELECT * FROM tank");
-			foreach (DataRow dr in tankList.Rows)
-			{
-				// Replace WoT API tank name with Phalynx Dossier tank name
-				string tankName = dr["name"].ToString();
-				//tankName = tankName.Replace("ö", "o");
-				//tankName = tankName.Replace("ä", "a");
-				//tankName = tankName.Replace("â", "a");
-				//tankName = tankName.Replace("ß", "s");
-				dr["name"] = tankName;
-				dr.AcceptChanges();
-			}
 			tankList.AcceptChanges();
 		}
 
@@ -314,7 +313,19 @@ where t.id = " + TankId.ToString();
 			return tankID;
 		}
 
-		public static int GetTankTier(string TankName)
+        public static bool HasCustomTankInfo(int tankId)
+        {
+            bool hasCustomTankInfo = false;
+            string expression = "id = " + tankId ;
+            DataRow[] foundRows = tankList.Select(expression);
+            if (foundRows.Length > 0) // If tank exist in Tank table 
+            {
+                hasCustomTankInfo = Convert.ToBoolean(foundRows[0]["customTankInfo"]);
+            }
+            return hasCustomTankInfo;
+        }
+
+        public static int GetTankTier(string TankName)
 		{
 			int tankTier = 0;
 			string sql = "SELECT tier FROM tank WHERE name=@name; ";

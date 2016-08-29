@@ -3693,6 +3693,7 @@ namespace WinApp.Forms
             int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
             Form frm = new Forms.TankInfoEdit(tankId);
             frm.ShowDialog(this);
+            ShowView("Refresh view");
         }
 
 

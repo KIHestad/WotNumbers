@@ -32,6 +32,7 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TankInfoEdit));
             this.badForm1 = new BadForm();
+            this.btnReset = new BadButton();
             this.ddTankType = new BadDropDownBox();
             this.ddNation = new BadDropDownBox();
             this.txtTier = new BadTextBox();
@@ -52,6 +53,7 @@
             // 
             // badForm1
             // 
+            this.badForm1.Controls.Add(this.btnReset);
             this.badForm1.Controls.Add(this.ddTankType);
             this.badForm1.Controls.Add(this.ddNation);
             this.badForm1.Controls.Add(this.txtTier);
@@ -86,6 +88,19 @@
             this.badForm1.TabIndex = 0;
             this.badForm1.Text = "Edit Tank Info";
             this.badForm1.TitleHeight = 26;
+            // 
+            // btnReset
+            // 
+            this.btnReset.BlackButton = false;
+            this.btnReset.Checked = false;
+            this.btnReset.Image = null;
+            this.btnReset.Location = new System.Drawing.Point(17, 268);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(109, 23);
+            this.btnReset.TabIndex = 15;
+            this.btnReset.Text = "Get Default Values";
+            this.btnReset.ToolTipText = "Lookup default values using Wargaming API";
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // ddTankType
             // 
@@ -291,6 +306,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TankInfoEdit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TankInfoEdit_FormClosing);
             this.Load += new System.EventHandler(this.TankInfoEdit_Load);
             this.badForm1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -315,5 +331,6 @@
         private BadLabel badLabel1;
         private BadButton btnSave;
         private BadGroupBox badGroupBox1;
+        private BadButton btnReset;
     }
 }
