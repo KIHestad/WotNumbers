@@ -369,7 +369,7 @@ namespace WinApp.Forms
                         "select tank.id, tank.short_name as Name, tank.tankTypeId, tank.countryId, tank.tier, country.shortName " +
                         "from tank inner join playerTank on tank.id = playerTank.tankId " +
                         " inner join country on tank.countryId = country.id " +
-                        "where playerTank.playerId = @playerId " +
+                        "where playerTank.playerId = @playerId and tank.tier> 0 and tank.tier < 11 " +
                         nationFilter +
                         freeTextSearch +
                         "order by tank.tier desc, tank.tankTypeId, tank.short_name; ";

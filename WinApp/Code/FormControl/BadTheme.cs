@@ -1558,37 +1558,45 @@ class BadDropDownBox : BadThemeControl
 
 	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 	{
-		SolidBrush brushBackColor;
-		if (MouseState == State.MouseDown)
-			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
-		else if (MouseState == State.MouseOver)
-			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
-		else
-			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
-		grapichObject.FillRectangle(brushBackColor, ClientRectangle);
-		// Text
-		DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont));
-		// Overwrite text to right to avoid hiding dropdown icon
-		if (MouseState == State.MouseDown)
-			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
-		else if (MouseState == State.MouseOver)
-			brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
-		else
-			brushBackColor = new SolidBrush(ColorTheme.ControlBack);
-		// DropDows Arrow Area
-		grapichObject.FillRectangle(brushBackColor, Width - 22, 0, 22, Height);
-		// DropDown Arrow
-		brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
-		int ArrowY = (Height / 2) + 2;
+        // Removed button style dropdown
+        // SolidBrush brushBackColor;
+        //if (MouseState == State.MouseDown)
+        //	brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseDown);
+        //else if (MouseState == State.MouseOver)
+        //	brushBackColor = new SolidBrush(ColorTheme.ControlBackMouseOver);
+        //else
+        //	brushBackColor = new SolidBrush(ColorTheme.ControlBack);
+
+        // Background
+        SolidBrush BackColor = new SolidBrush(ColorTheme.FormBack);
+        grapichObject.FillRectangle(BackColor, ClientRectangle);
+
+        // Text
+        DrawText(HorizontalAlignment.Left, new SolidBrush(ColorTheme.ControlFont));
+        // Overwrite text to right to avoid hiding dropdown icon
+
+        // DropDows Arrow Area
+        grapichObject.FillRectangle(BackColor, Width - 22, 0, 22, Height);
+
+        // Outer Border, normal textbox style
+        Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width - 1, ClientRectangle.Height - 1);
+        grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorder), GroupBoxOuter);
+
+        // DropDown Arrow
+        SolidBrush brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrow);
+        if (MouseState == State.MouseOver)
+            brushBackColor = new SolidBrush(ColorTheme.ScrollbarArrowHighLigh);
+        int ArrowY = (Height / 2) + 2;
 		int ArrowX = 12;
 		grapichObject.FillRectangle(brushBackColor, Width - ArrowX, ArrowY, 1, 1); // Down Arrow last pixel
-		Pen penArrow = new Pen(ColorTheme.ScrollbarArrow);
+		Pen penArrow = new Pen(brushBackColor);
 		// grapichObject.FillRectangle(brushBackColor, 8, bottomArrowY, 1, 1); // Down Arrow last pixel
 		for (int i = 1; i <= 4; i++)
 		{
 			grapichObject.DrawLine(penArrow, Width - ArrowX - i, ArrowY - i, Width - ArrowX + i, ArrowY - i); // Bottom arrow
 		}
-		// Dropdown icon
+		
+        // Dropdown icon
 		DrawIcon(HorizontalAlignment.Right, 0, -2);
 		if (Focused)
 			grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorderFocused), 0, 0, ClientRectangle.Width - 1, ClientRectangle.Height - 1);

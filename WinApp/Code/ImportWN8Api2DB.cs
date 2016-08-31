@@ -22,7 +22,8 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
-		public static String UpdateWN8(Form parentForm)
+        // updates all WN8 expected values, or only for one tank if added
+		public static String UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
 		{
 			string sql = "";
 			int tankId = 0;
@@ -32,8 +33,9 @@ namespace WinApp.Code
 			double expDef = 0;
 			double expWR = 0;
 			int WN8Version = 0;
-			// Get WN8 from API
-			try
+            int updateCount = 0;
+            // Get WN8 from API
+            try
 			{
 				string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
 				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -79,14 +81,18 @@ namespace WinApp.Code
 						jtoken = jtoken.Next;
 					}
 
-					string newsql = "update tank set expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef where id = @id;";
-					DB.AddWithValue(ref newsql, "@expDmg", expDmg, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@expWR", expWR, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@expSpot", expSpot, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@expFrags", expFrags, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@expDef", expDef, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@id", tankId, DB.SqlDataType.Int);
-					sql += newsql;
+                    if (updateOnlyTankId == 0 || updateOnlyTankId == tankId)
+                    {
+                        string newsql = "update tank set expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef where id = @id;";
+                        DB.AddWithValue(ref newsql, "@expDmg", expDmg, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@expWR", expWR, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@expSpot", expSpot, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@expFrags", expFrags, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@expDef", expDef, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@id", tankId, DB.SqlDataType.Int);
+                        sql += newsql;
+                        updateCount++;
+                    }
 				}
 
 			}
@@ -97,7 +103,7 @@ namespace WinApp.Code
 					"Could not connect to http://www.wnefficiency.net, please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
-				Code.MsgBox.Show(msg, "Problem connecting to http://www.wnefficiency.net", parentForm);
+				MsgBox.Show(msg, "Problem connecting to http://www.wnefficiency.net", parentForm);
 				return "";
 			}
 
@@ -111,11 +117,18 @@ namespace WinApp.Code
 			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
-				Code.MsgBox.Show(ex.Message, "Error occured", parentForm);
-			}
+				MsgBox.Show(ex.Message, "Error occured", parentForm);
+                return "";
+            }
 
-			return ("Import Complete");
-		}
+            if (updateCount == 0)
+                return ("Did not find WN8 expected values for tank");
+            else if (updateCount == 1)
+                return ("WN8 expected values updated for tank");
+            else
+                return ("WN8 expected values updated for " + updateCount.ToString() + " tanks");
+
+        }
 
 	}
 }

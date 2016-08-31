@@ -85,6 +85,9 @@ namespace WinApp.Forms
             UpdateProgressBar("Retrieves WN9 expected values from API");
             ImportWN9Api2DB.UpdateWN9(this);
 
+            // New Init after upgrade db
+            TankHelper.GetAllLists();
+
             // Done
             DBVersion.RunWotApi = false;
 			UpdateProgressBar("");

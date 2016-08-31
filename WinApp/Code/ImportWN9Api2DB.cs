@@ -31,10 +31,11 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
-		public static String UpdateWN9(Form parentForm)
-		{
+		public static String UpdateWN9(Form parentForm, int updateOnlyTankId = 0)
+        {
             string sql = "";
             double WN9Version = 0;
+            int updateCount = 0;
             // Get WN8 from API
             try
 			{
@@ -57,13 +58,17 @@ namespace WinApp.Code
                 List<TankData> tankData = JsonConvert.DeserializeObject<List<TankData>>(allTokens["data"].ToString());
                 foreach (TankData item in tankData)
                 {
-					string newsql = "update tank set mmrange = @mmrange, wn9exp = @wn9exp, wn9scale = @wn9scale, wn9nerf = @wn9nerf where id = @id;";
-					DB.AddWithValue(ref newsql, "@mmrange", item.mmrange, DB.SqlDataType.Int);
-					DB.AddWithValue(ref newsql, "@wn9exp", item.wn9exp, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@wn9scale", item.wn9scale, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@wn9nerf", item.wn9nerf, DB.SqlDataType.Float);
-					DB.AddWithValue(ref newsql, "@id", item.id, DB.SqlDataType.Int);
-					sql += newsql;
+                    if (updateOnlyTankId == 0 || updateOnlyTankId == item.id)
+                    {
+                        string newsql = "update tank set mmrange = @mmrange, wn9exp = @wn9exp, wn9scale = @wn9scale, wn9nerf = @wn9nerf where id = @id;";
+                        DB.AddWithValue(ref newsql, "@mmrange", item.mmrange, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref newsql, "@wn9exp", item.wn9exp, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@wn9scale", item.wn9scale, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@wn9nerf", item.wn9nerf, DB.SqlDataType.Float);
+                        DB.AddWithValue(ref newsql, "@id", item.id, DB.SqlDataType.Int);
+                        sql += newsql;
+                        updateCount++;
+                    }
 				}
 			}
 			catch (Exception ex)
@@ -89,10 +94,16 @@ namespace WinApp.Code
 			{
 				Log.LogToFile(ex);
 				MsgBox.Show(ex.Message, "Error occured", parentForm);
-			}
+                return "";
+            }
 
-			return ("Import Complete");
-		}
+            if (updateCount == 0)
+                return ("Did not find WN9 expected values for tank");
+            else if (updateCount == 1)
+                return ("WN9 expected values updated for tank");
+            else
+                return ("WN9 expected values updated for " + updateCount.ToString() + " tanks");
+        }
 
 	}
 }

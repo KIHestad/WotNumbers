@@ -7,16 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
+using WinApp.Code.Rating;
 
 namespace WinApp.Forms
 {
     public partial class TankInfoEdit : Form
     {
         private int _tankId = 0;
-        private TankHelper.BasicTankInfo _defaultTankInfo = new TankHelper.BasicTankInfo();
+        private TankHelper.BasicTankInfo _defaultTankDetails = new TankHelper.BasicTankInfo();
+        private WN8.RatingParametersWN8 _defaultWN8 = new WN8.RatingParametersWN8();
+        private WN9.RatingParametersWN9 _defaultWN9 = new WN9.RatingParametersWN9();
         private string _nations = "";
         private string _tankTypes = "";
-
+        private bool _WN8Changed = false;
+        private bool _WN9Changed = false;
+        private bool _saveOnClosing = false;
         
 
         public TankInfoEdit(int tankID)
@@ -32,14 +37,19 @@ namespace WinApp.Forms
             if (dr != null)
             {
                 // Get default values
-                _defaultTankInfo.name = dr["name"].ToString();
-                _defaultTankInfo.short_name = dr["short_name"].ToString();
-                _defaultTankInfo.nation = dr["countryName"].ToString();
-                _defaultTankInfo.tankType = dr["tankTypeName"].ToString();
-                _defaultTankInfo.tier = dr["tier"].ToString();
-                _defaultTankInfo.customTankInfo = Convert.ToBoolean(dr["customTankInfo"]);
-                // Show values
-                SetDefaultTankInfo();
+                _defaultTankDetails.name = dr["name"].ToString();
+                _defaultTankDetails.short_name = dr["short_name"].ToString();
+                _defaultTankDetails.nation = dr["countryName"].ToString();
+                _defaultTankDetails.tankType = dr["tankTypeName"].ToString();
+                _defaultTankDetails.tier = dr["tier"].ToString();
+                _defaultTankDetails.customTankInfo = Convert.ToBoolean(dr["customTankInfo"]);
+                ShowTankDetails();
+                // WN8
+                ShowTankWN8(dr);
+                _WN8Changed = false;
+                // WN9
+                ShowTankWN9(dr);
+                _WN9Changed = false;
                 // Get dropdown values
                 DataTable dt = DB.FetchData("SELECT name FROM tankType ORDER BY id");
                 foreach (DataRow dr1 in dt.Rows)
@@ -59,23 +69,40 @@ namespace WinApp.Forms
             }
         }
 
-        private void SetDefaultTankInfo()
+        private void ShowTankDetails()
         {
-            txtName.Text = _defaultTankInfo.name;
-            txtShortName.Text = _defaultTankInfo.short_name;
-            txtTier.Text = _defaultTankInfo.tier;
-            ddNation.Text = _defaultTankInfo.nation;
-            ddTankType.Text = _defaultTankInfo.tankType;
+            txtName.Text = _defaultTankDetails.name;
+            txtShortName.Text = _defaultTankDetails.short_name;
+            txtTier.Text = _defaultTankDetails.tier;
+            ddNation.Text = _defaultTankDetails.nation;
+            ddTankType.Text = _defaultTankDetails.tankType;
         }
 
-        private bool CheckIfEditedValues()
+        private void ShowTankWN8(DataRow dr)
+        {
+            txtWN8dmg.Text = dr["expDmg"].ToString();
+            txtWN8wr.Text = dr["expWR"].ToString();
+            txtWN8spot.Text = dr["expSpot"].ToString();
+            txtWN8frags.Text = dr["expFrags"].ToString();
+            txtWN8def.Text = dr["expDef"].ToString();
+        }
+
+        private void ShowTankWN9(DataRow dr)
+        {
+            txtWN9mmrange.Text = dr["mmrange"].ToString();
+            txtWN9exp.Text = dr["wn9exp"].ToString();
+            txtWN9scale.Text = dr["wn9scale"].ToString();
+            txtWN9nerf.Text = dr["wn9nerf"].ToString();
+        }
+
+        private bool CheckIfEditedTankDetails()
         {
             return (
-                txtName.Text != _defaultTankInfo.name ||
-                txtShortName.Text != _defaultTankInfo.short_name ||
-                txtTier.Text != _defaultTankInfo.tier ||
-                ddNation.Text != _defaultTankInfo.nation ||
-                ddTankType.Text != _defaultTankInfo.tankType
+                txtName.Text != _defaultTankDetails.name ||
+                txtShortName.Text != _defaultTankDetails.short_name ||
+                txtTier.Text != _defaultTankDetails.tier ||
+                ddNation.Text != _defaultTankDetails.nation ||
+                ddTankType.Text != _defaultTankDetails.tankType
             );
         }
 
@@ -90,24 +117,28 @@ namespace WinApp.Forms
             return nationId;
         }
 
-        private bool TankInfoSave()
+        private bool TankDetailsSave()
         {
             try
             {
-                // Update default values
-                _defaultTankInfo.name = txtName.Text.Trim();
-                _defaultTankInfo.short_name = txtShortName.Text.Trim();
-                _defaultTankInfo.tier = txtTier.Text.Trim();
-                _defaultTankInfo.nation = ddNation.Text;
-                _defaultTankInfo.tankType = ddTankType.Text;
+                // Update default values from form
+                _defaultTankDetails.name = txtName.Text.Trim();
+                _defaultTankDetails.short_name = txtShortName.Text.Trim();
+                _defaultTankDetails.tier = txtTier.Text.Trim();
+                _defaultTankDetails.nation = ddNation.Text;
+                _defaultTankDetails.tankType = ddTankType.Text;
                 // Save now
-                string sql = "UPDATE tank SET name=@name, short_name=@short_name, tier=@tier, countryId=@countryId, tankTypeId=@tankTypeId, customTankInfo=@customTankInfo WHERE id=@id";
-                DB.AddWithValue(ref sql, "@name", _defaultTankInfo.name, DB.SqlDataType.VarChar);
-                DB.AddWithValue(ref sql, "@short_name", _defaultTankInfo.short_name, DB.SqlDataType.VarChar);
-                DB.AddWithValue(ref sql, "@tier", _defaultTankInfo.tier, DB.SqlDataType.Int);
-                DB.AddWithValue(ref sql, "@countryId", GetIdFromName("country", _defaultTankInfo.nation), DB.SqlDataType.Int);
-                DB.AddWithValue(ref sql, "@tankTypeId", GetIdFromName("tankType", _defaultTankInfo.tankType), DB.SqlDataType.Int);
-                DB.AddWithValue(ref sql, "@customTankInfo", _defaultTankInfo.customTankInfo, DB.SqlDataType.Boolean);
+                string sql = 
+                    "UPDATE tank " +
+                    "SET name=@name, short_name=@short_name, tier=@tier, countryId=@countryId, tankTypeId=@tankTypeId, customTankInfo=@customTankInfo " +
+                    "WHERE id=@id";
+                // Tank Details
+                DB.AddWithValue(ref sql, "@name", _defaultTankDetails.name, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@short_name", _defaultTankDetails.short_name, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@tier", _defaultTankDetails.tier, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@countryId", GetIdFromName("country", _defaultTankDetails.nation), DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@tankTypeId", GetIdFromName("tankType", _defaultTankDetails.tankType), DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@customTankInfo", _defaultTankDetails.customTankInfo, DB.SqlDataType.Boolean);
                 DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
                 DB.ExecuteNonQuery(sql);
                 // Update tankinfo
@@ -116,30 +147,105 @@ namespace WinApp.Forms
             }
             catch (Exception ex)
             {
-                MsgBox.Show("Error saving changes, probably caused by illegal values.\n\n" + ex.Message, "Error saving");
+                MsgBox.Show("Error saving tank details, probably caused by illegal values." + Environment.NewLine + Environment.NewLine + ex.Message, "Error saving");
                 return false;
             } 
         }
 
+        private bool TankRatingsSave()
+        {
+            try
+            {
+                // Check for valid values
+                int blankfields = 0;
+                // WN8
+                if (txtWN8dmg.Text.Trim() == "") blankfields++;
+                if (txtWN8wr.Text.Trim() == "") blankfields++;
+                if (txtWN8spot.Text.Trim() == "") blankfields++;
+                if (txtWN8frags.Text.Trim() == "") blankfields++;
+                if (txtWN8def.Text.Trim() == "") blankfields++;
+                if (blankfields > 0 && blankfields < 5)
+                {
+                    MsgBox.Show("Missing WN8 values", "Saving cancelled");
+                    return false;
+                }
+                blankfields = 0;
+                // WN9
+                if (txtWN9exp.Text.Trim() == "") blankfields++;
+                if (txtWN9mmrange.Text.Trim() == "") blankfields++;
+                if (txtWN9nerf.Text.Trim() == "") blankfields++;
+                if (txtWN9scale.Text.Trim() == "") blankfields++;
+                if (blankfields > 0 && blankfields < 4)
+                {
+                    MsgBox.Show("Missing WN9 values", "Saving cancelled");
+                    return false;
+                }
+                // Save now
+                string sql =
+                "UPDATE tank " +
+                "SET expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef, " +
+                "  mmrange=@mmrange, wn9exp=@wn9exp, wn9scale=@wn9scale, wn9nerf=@wn9nerf " +
+                "WHERE id=@id";
+                // WN8
+                DB.AddWithValue(ref sql, "@expDmg", txtWN8dmg.Text.Trim(), DB.SqlDataType.Float);
+                DB.AddWithValue(ref sql, "@expWR", txtWN8wr.Text.Trim(), DB.SqlDataType.Float);
+                DB.AddWithValue(ref sql, "@expSpot", txtWN8spot.Text.Trim(), DB.SqlDataType.Float);
+                DB.AddWithValue(ref sql, "@expFrags", txtWN8frags.Text.Trim(), DB.SqlDataType.Float);
+                DB.AddWithValue(ref sql, "@expDef", txtWN8def.Text.Trim(), DB.SqlDataType.Float);
+                // WN9
+                DB.AddWithValue(ref sql, "@mmrange", txtWN9mmrange.Text.Trim(), DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@wn9exp", txtWN9exp.Text.Trim(), DB.SqlDataType.Float);
+                DB.AddWithValue(ref sql, "@wn9scale", txtWN9scale.Text.Trim(), DB.SqlDataType.Float);
+                DB.AddWithValue(ref sql, "@wn9nerf", txtWN9nerf.Text.Trim(), DB.SqlDataType.Float);
+                // id
+                DB.AddWithValue(ref sql, "@id", _tankId, DB.SqlDataType.Int);
+                DB.ExecuteNonQuery(sql);
+                // Update tankinfo
+                TankHelper.GetTankList();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MsgBox.Show("Error saving expected values, probably caused by illegal values." + Environment.NewLine + Environment.NewLine + ex.Message, "Error saving");
+                return false;
+            }
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (CheckIfEditedValues())
-            {
-                _defaultTankInfo.customTankInfo = true;
-                if (TankInfoSave())
-                {
-                    this.Close(); // close form after saving if success
-                }
-            }
-            else
-            {
-                this.Close();
-            }
+            // Save when closing form
+            _saveOnClosing = true;
+            this.Close();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            // Close form
             this.Close();
+        }
+
+        private void TankInfoEdit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Check if tank details are changed
+            _defaultTankDetails.customTankInfo = CheckIfEditedTankDetails();
+            // Check for saving if changes are made and just closing form without pressing save
+            if (!_saveOnClosing && (_defaultTankDetails.customTankInfo || _WN8Changed || _WN9Changed))
+            {
+                MsgBox.Button answer = MsgBox.Show("Do you want to save changes?", "Save changes", MsgBox.Type.YesNo);
+                if (answer == MsgBox.Button.Yes)
+                    _saveOnClosing = true;
+            }
+
+            // Save now if saving is selected and any change found
+            if (_saveOnClosing)
+            {
+                bool saveOK = true;
+                if (_defaultTankDetails.customTankInfo)
+                    saveOK = TankDetailsSave();
+                if (saveOK && (_WN8Changed || _WN9Changed))
+                    saveOK = TankRatingsSave();
+                e.Cancel = !saveOK; // Cancel closing form if any saving has failed
+            }
         }
 
         private void ddNation_Click(object sender, EventArgs e)
@@ -151,21 +257,7 @@ namespace WinApp.Forms
         {
             Code.DropDownGrid.Show(ddTankType, Code.DropDownGrid.DropDownGridType.List, _tankTypes);
         }
-
-        private void TankInfoEdit_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (CheckIfEditedValues())
-            {
-                MsgBox.Button answer = MsgBox.Show("Do you want to save changes?", "Save changes", MsgBox.Type.YesNo);
-                if (answer == MsgBox.Button.Yes)
-                {
-                    if (!TankInfoSave())
-                    {
-                        e.Cancel = true; // Cancel closing form if saving fails
-                    }
-                }
-            }
-        }
+       
 
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -180,11 +272,60 @@ namespace WinApp.Forms
                 //MsgBox.Button answer = MsgBox.Show("Get default values from Wargaming API and save the tankInfo now", "Get Default values", MsgBox.Type.OKCancel);
                 //if (answer == MsgBox.Button.OK)
                 {
-                    _defaultTankInfo = getTankInfoFromApi;
-                    SetDefaultTankInfo();
-                    if (TankInfoSave())
+                    _defaultTankDetails = getTankInfoFromApi;
+                    ShowTankDetails();
+                    if (TankDetailsSave())
                         MsgBox.Show("Default tank info retrieved from Wargaming API", "Get Default Values");
                 }
+            }
+        }
+
+        private void cmdHelp_Click(object sender, EventArgs e)
+        {
+            string msg =
+                "When running from the settings menu: 'Download and Update Tank...' the custom tank details will not be overwritten. " +
+                "Pressing the button 'Get Default Values' the tank details will be reset back to default values using Wargaming API." +
+                Environment.NewLine + Environment.NewLine +
+                "If editing WN8 and WN9 expected values, these will be reset to default using 'Download and Update Tank...'. " +
+                "The only exception is for tanks where these values are missing (new tanks not got any official expected values yet'";
+            MsgBox.Show(msg, "Edit Tank Info Help");
+        }
+                
+        private void WN8Changed(object sender, EventArgs e)
+        {
+            _WN8Changed = true;
+        }
+
+        private void WN9Changed(object sender, EventArgs e)
+        {
+            _WN9Changed = true;
+        }
+
+
+        private void btnResetWN8_Click(object sender, EventArgs e)
+        {
+            string result = ImportWN8Api2DB.UpdateWN8(this, _tankId); // result is empty if any error
+            if (result != "")
+            {
+                TankHelper.GetTankList();
+                DataRow dr = TankHelper.GetTankInfo(_tankId);
+                ShowTankWN8(dr);
+                _WN8Changed = false;
+                MsgBox.Show(result, "Result getting WN8 expected values");
+            }
+            
+        }
+
+        private void btnResetWN9_Click(object sender, EventArgs e)
+        {
+            string result = ImportWN9Api2DB.UpdateWN9(this, _tankId); // result is empty if any error
+            if (result != "")
+            {
+                TankHelper.GetTankList();
+                DataRow dr = TankHelper.GetTankInfo(_tankId);
+                ShowTankWN9(dr);
+                _WN9Changed = false;
+                MsgBox.Show(result, "Result getting WN9 expected values");
             }
         }
     }

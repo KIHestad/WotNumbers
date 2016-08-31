@@ -19,7 +19,7 @@ namespace WinApp.Code
             public string tankType { get; set; }
             public bool customTankInfo { get; set; }
         }
-
+                
         public static void CreateUnknownTank(int tankId, string tankName)
         {
             int tier = 0;

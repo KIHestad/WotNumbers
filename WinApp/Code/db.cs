@@ -408,14 +408,24 @@ namespace WinApp.Code
 				}
 				else if (DataType == SqlDataType.Int)
 				{
-					string stringValue = Value.ToString();
-					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
+                    if (Value.ToString() == "")
+                        Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
+                    else
+                    {
+                        string stringValue = Value.ToString();
+                        Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
+                    }
 				}
 				else if (DataType == SqlDataType.Float)
 				{
-					string stringValue = Convert.ToDecimal(Value).ToString();
-					stringValue = stringValue.Replace(",", ".");
-					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
+                    if (Value.ToString() == "")
+                        Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
+                    else
+                    {
+                        string stringValue = Convert.ToDecimal(Value).ToString();
+                        stringValue = stringValue.Replace(",", ".");
+                        Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
+                    }
 				}
 				else if (DataType == SqlDataType.DateTime)
 				{

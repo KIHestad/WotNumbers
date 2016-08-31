@@ -85,9 +85,10 @@ namespace WinApp.Code
 		public static Color ScrollbarBack = Color.FromArgb(255, 65, 65, 69);
 		public static Color ScrollbarFront = Color.FromArgb(255, 102, 102, 106);
 		public static Color ScrollbarArrow = Color.FromArgb(255, 152, 152, 156);
+        public static Color ScrollbarArrowHighLigh = Color.FromArgb(255, 192, 192, 196);
 
-		// Charts
-		public static Color ChartBarBlue = ColorTranslator.FromHtml("#1F47A5");  
+        // Charts
+        public static Color ChartBarBlue = ColorTranslator.FromHtml("#1F47A5");  
 		public static Color ChartBarRed = ColorTranslator.FromHtml("#A31F1F");
 		public static Color ChartBarGreen = ColorTranslator.FromHtml("#1B8E30");
 		public static Color ChartBarPurple = ColorTranslator.FromHtml("#761E99");
