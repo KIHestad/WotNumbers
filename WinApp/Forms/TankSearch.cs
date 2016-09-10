@@ -345,9 +345,10 @@ namespace WinApp.Forms
                     searchText = searchText.Replace("/", "");
                     searchText = searchText.Replace("-", "");
                     searchText = searchText.Replace(".", "");
+                    searchText = searchText.Replace("Š", "S");
                     freeTextSearch =
-                        "AND (replace(replace(replace(replace(tank.name,' ',''),'/',''),'-',''),'.','') like '%" + searchText + "%' " +
-                        "OR replace(replace(replace(replace(tank.short_name,' ',''),'/',''),'-',''),'.','') like '%" + searchText + "%') ";
+                        "AND (replace(replace(replace(replace(replace(tank.name,' ',''),'/',''),'-',''),'.',''),'Š','S') like '%" + searchText + "%' " +
+                        "OR replace(replace(replace(replace(replace(tank.short_name,' ',''),'/',''),'-',''),'.',''),'Š','S') like '%" + searchText + "%') ";
                 }
                 if (MainModeAdvanced)
                 {

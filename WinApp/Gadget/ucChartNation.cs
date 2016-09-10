@@ -243,14 +243,15 @@ namespace WinApp.Gadget
 			// Chart
 			chart1.Width = this.Width - 2;
 			chart1.Height = this.Height - (this.Height - lblChartType.Top + 21);
-			// Images
-			for (int id = 0; id < imgControls.Count; id++)
-			{
-				Control c = imgControls[id];
-				double barWidth = chart1.Width / imgControls.Count ;
-				c.Top = this.Height - (this.Height - lblChartType.Top + 18);
-				c.Left = Convert.ToInt32(barWidth / 2 - 7 + barWidth * id);
-			}
+            // Images
+            double barWidth = ((chart1.Width) / Convert.ToDouble(8)); // chart size divided on number of nations
+            for (int id = 0; id < imgControls.Count; id++)
+            {
+                Control c = imgControls[id];
+                c.Top = this.Height - (this.Height - lblChartType.Top + 18);
+                double pos = (barWidth * id) + (barWidth / Convert.ToDouble(2)) - 8;
+                c.Left = Convert.ToInt32(pos) + 1; // add 1 for border
+            }
 		}
 
 		private void ucChart_Paint(object sender, PaintEventArgs e)

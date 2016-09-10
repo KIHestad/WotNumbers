@@ -99,7 +99,7 @@ namespace WinApp.Code
 		}
 
 
-		public static void LogToFile(string logtext, bool addDateTime = false)
+		public static void LogToFile(string logtext, bool addDateTime = true)
 		{
 			if (Config.Settings.showDBErrors)
 			{

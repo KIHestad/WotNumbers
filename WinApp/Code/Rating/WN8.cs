@@ -36,7 +36,7 @@ namespace WinApp.Code.Rating
         {
             RatingParametersWN8 rpWN = null;
             // Get player totals from datatable
-            if (playerTankBattle.Rows.Count > 0)
+            if (playerTankBattle != null && playerTankBattle.Rows.Count > 0)
             {
                 // Get player totals
                 rpWN = new RatingParametersWN8();

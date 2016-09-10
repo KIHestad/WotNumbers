@@ -44,6 +44,7 @@ namespace WinApp.Forms
 			public CalculationType calcType = CalculationType.standard;	// Calculation Type
 			public bool totals = true;									// Show totals, not actual battle values
 			public List<ChartTypeCols> col;							    // What columns to be used to calculate values
+            public SeriesChartType chartType = SeriesChartType.Line;    // Chart type, line = standard, spline er rounded, point = no line only dot
 		}
 
         // string ddTankList = ""; // Replaced with tank search
@@ -261,22 +262,23 @@ namespace WinApp.Forms
 			ChartType chartValue = chartValues.Find(c => c.name == selectedChartValue);
 			// Add series
 			Series newSerie = new Series(chartSerie);
-			// Line type
-            if (chartValue.totals)
+            // Line  and marker type
+            newSerie.ChartType = chartValue.chartType;
+            if (chartValue.chartType == SeriesChartType.Point) // Point = only dot shown
             {
+                // Default marker type for point type
+                newSerie.MarkerStyle = MarkerStyle.Circle;
+            }
+            else // Other chart type = line type
+            {
+                // Override to spline type if checked
+                if (chkSpline.Checked) 
+                    newSerie.ChartType = SeriesChartType.Spline;
+                // Set marker type
                 if (chkBullet.Checked)
                     newSerie.MarkerStyle = MarkerStyle.Circle;
                 else
                     newSerie.MarkerStyle = MarkerStyle.None;
-                if (chkSpline.Checked)
-                    newSerie.ChartType = SeriesChartType.Spline;
-                else
-                    newSerie.ChartType = SeriesChartType.Line;
-            }
-            else
-            {
-                newSerie.ChartType = SeriesChartType.Point;
-                newSerie.MarkerStyle = MarkerStyle.Circle;
             }
             if (ddXaxis.Text == "Date")
 			{
@@ -1099,7 +1101,7 @@ namespace WinApp.Forms
             // WN9 per battle
             chartCol = new List<ChartTypeCols>();
             chartCol.Add(new ChartTypeCols() { playerTankValCol = "wn9" });
-            chartValues.Add(new ChartType() { name = "WN9 per battle", col = chartCol, totals = false });
+            chartValues.Add(new ChartType() { name = "WN9 per battle", col = chartCol, totals = false, chartType = SeriesChartType.Point });
 
 
             // WN8
@@ -1117,7 +1119,7 @@ namespace WinApp.Forms
 			// WN8 per battle
 			chartCol = new List<ChartTypeCols>();
 			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wn8" });
-			chartValues.Add(new ChartType() { name = "WN8 per battle", col = chartCol, totals = false });
+			chartValues.Add(new ChartType() { name = "WN8 per battle", col = chartCol, totals = false, chartType = SeriesChartType.Point });
 
 			// WN 7
 			chartCol = new List<ChartTypeCols>();
@@ -1134,7 +1136,7 @@ namespace WinApp.Forms
 			// WN7 per battle
 			chartCol = new List<ChartTypeCols>();
 			chartCol.Add(new ChartTypeCols() { playerTankValCol = "wn7" });
-			chartValues.Add(new ChartType() { name = "WN7 per battle", col = chartCol, totals=false });
+			chartValues.Add(new ChartType() { name = "WN7 per battle", col = chartCol, totals=false, chartType = SeriesChartType.Point });
 
             // Efficiency
             chartCol = new List<ChartTypeCols>();
@@ -1150,7 +1152,7 @@ namespace WinApp.Forms
             // Efficiency per battle
             chartCol = new List<ChartTypeCols>();
             chartCol.Add(new ChartTypeCols() { playerTankValCol = "eff" });
-            chartValues.Add(new ChartType() { name = "EFF per battle", col = chartCol, totals = false });
+            chartValues.Add(new ChartType() { name = "EFF per battle", col = chartCol, totals = false, chartType = SeriesChartType.Point });
 
             // XP
             chartCol = new List<ChartTypeCols>();

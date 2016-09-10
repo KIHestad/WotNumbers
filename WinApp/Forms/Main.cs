@@ -63,8 +63,8 @@ namespace WinApp.Forms
             mRefreshSeparator.Visible = true;
             mColumnSelect.Visible = false;
             mMode.Visible = false;
-            mGadget.Visible = true;
-            mHomeEdit.Visible = true;
+            mHomeView.Visible = true;
+            mHomeViewEditMode.Visible = true;
             mBattleGroup.Visible = false;
             // Check config
             if (DB.CheckConnection(false))
@@ -224,10 +224,32 @@ namespace WinApp.Forms
                     ImageHelper.CreateMasteryBageImageTable();
                     ImageHelper.CreateTankTypeImageTable();
                     ImageHelper.CreateNationImageTable();
-                    // Check if Home View has gadgets, if not setup default
+                    // Home view recent list
+                    GetHomeViewRecentList();
+                    mHomeView.Text = Config.Settings.currentHomeView;
+                    // Check if current Home View has gadgets, if not use default
                     DataTable dtHomeView = DB.FetchData("select * from gadget");
                     if (dtHomeView == null || dtHomeView.Rows.Count == 0)
-                        GadgetHelper.DefaultSetup("New_Default_Setup.json");
+                    {
+                        string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\New_Default_Setup.json";
+                        bool ok = GadgetHelper.HomeViewLoadFromFile(file, false);
+                        if (ok)
+                        {
+                            mHomeView.Text = "Default";
+                            Config.Settings.currentHomeView = mHomeView.Text;
+                            string msg = "";
+                            Config.SaveConfig(out msg);
+                        }
+                        else
+                        {
+                            GadgetHelper.RemoveGadgetAll();
+                            HomeViewCreate("Could not load Home View");
+                            HomeViewRefresh("Refresh Home View");
+                        }
+                    }
+                    // Set current submenu checked
+                    CheckCurrentHomeViewSubMenu();
+
                     // Show view
                     ChangeView(GridView.Views.Overall, true);
                     // Check BRR
@@ -986,9 +1008,9 @@ namespace WinApp.Forms
 				scrollY.BringToFront();
 				dataGridMain.BringToFront();
 				// Remove home view edit mode if enabled
-				if (mHomeEdit.Checked)
+				if (mHomeViewEditMode.Checked)
 				{
-					mHomeEdit.Checked = false;
+					mHomeViewEditMode.Checked = false;
 					GadgetEditModeChange();
 				}
 				// Set new values according to new selected view
@@ -1005,8 +1027,8 @@ namespace WinApp.Forms
                         lblStatusRowCount.Visible = false;
 						// Show/Hide Tool Items
 						mBattles.Visible = true;
-						mGadget.Visible = true;
-						mHomeEdit.Visible = true;
+						mHomeView.Visible = true;
+						mHomeViewEdit.Visible = true;
 						mBattles.Visible = false;
                         mMapViewType.Visible = false;
 						mTankFilter.Visible = false;
@@ -1037,8 +1059,8 @@ namespace WinApp.Forms
 						mModeRandomTankCompany.Visible = true;
 						mModeRandomSoloPlatoon.Visible = false;
 						toolStripSeparatorForBattleView.Visible = false;
-						mGadget.Visible = false;
-						mHomeEdit.Visible = false;
+						mHomeView.Visible = false;
+						mHomeViewEdit.Visible = false;
 						mBattleGroup.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Tank View...";
@@ -1075,8 +1097,8 @@ namespace WinApp.Forms
 						mModeRandomSoloPlatoon.Visible = true;
 						toolStripSeparatorForBattleView.Visible = true;
 						mBattleGroup.Visible = true;
-						mGadget.Visible = false;
-						mHomeEdit.Visible = false;
+						mHomeView.Visible = false;
+						mHomeViewEdit.Visible = false;
 						mRefreshSeparator.Visible = true;
 						mColumnSelect_Edit.Text = "Edit Battle View...";
 						mColumnSelect.ToolTipText = "Select Battle View";
@@ -1112,8 +1134,8 @@ namespace WinApp.Forms
                         mModeRandomSoloPlatoon.Visible = true;
                         toolStripSeparatorForBattleView.Visible = true;
                         mBattleGroup.Visible = false;
-                        mGadget.Visible = false;
-                        mHomeEdit.Visible = false;
+                        mHomeView.Visible = false;
+                        mHomeViewEditMode.Visible = false;
                         mRefreshSeparator.Visible = true;
                         mColumnSelect_Edit.Text = "Edit Map View...";
                         mColumnSelect.ToolTipText = "Select Map View";
@@ -1721,11 +1743,44 @@ namespace WinApp.Forms
 			ShowView("Refreshed grid after fovourite tank list change"); // Refresh grid now
 		}
 
-		#endregion
+        #endregion
 
-		#region Battle Grouping
+        #region Menu Items: Home View / Recent List
 
-		private void toolItemGroupingSelected_Click(object sender, EventArgs e)
+        private void GetHomeViewRecentList()
+        {
+            string sql = "SELECT * FROM homeViewRecent ORDER BY id DESC;";
+            DataTable dt = DB.FetchData(sql);
+            int recentItemsCount = dt.Rows.Count;
+            mHomeViewRecent1.Visible = (recentItemsCount > 0);
+            mHomeViewRecent2.Visible = (recentItemsCount > 1);
+            mHomeViewRecent3.Visible = (recentItemsCount > 2);
+            mHomeViewRecent4.Visible = (recentItemsCount > 3);
+            mHomeViewRecent5.Visible = (recentItemsCount > 4);
+            mHomeViewRecentSeparator.Visible = (recentItemsCount > 0);
+            if (recentItemsCount > 0)
+            {
+                int i = 1;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ToolStripMenuItem m = (ToolStripMenuItem)mHomeView.DropDownItems["mHomeViewRecent" + i.ToString()] as ToolStripMenuItem;
+                    if (m != null)
+                    {
+                        string fileName = dr["fileName"].ToString();
+                        string folder = dr["folder"].ToString();
+                        m.Text = fileName.Replace(".json", ""); // remove file extension for menu name
+                        m.Tag = folder + "\\" + fileName;
+                        i++;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Battle Grouping
+
+        private void toolItemGroupingSelected_Click(object sender, EventArgs e)
 		{
 			mBattleGroup_No.Checked = false;
 			mBattleGroup_TankAverage.Checked = false;
@@ -2107,8 +2162,8 @@ namespace WinApp.Forms
                     battleTimeReadable = "@battleTime ->";
 					dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
 					// Adjust time scale according to selected filter
-					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-3);
-					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-2);
+					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-2);
+					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-1);
 					else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
 					else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
 					else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
@@ -4231,6 +4286,7 @@ namespace WinApp.Forms
             bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
             if (WNnewVer8 || WNnewVer9)
 				RunRecalcBattleWN8or9(true, WNnewVer8, WNnewVer9);
+            ShowView("Refreshed view");
 		}
 
 		private void mRecalcBattleRatings_Click(object sender, EventArgs e)
@@ -4656,7 +4712,7 @@ namespace WinApp.Forms
 
 		#region Gadgets
 
-		private void HomeViewCreate(string Status2Message)
+        private void HomeViewCreate(string Status2Message)
 		{
 			ResizeNow();
 			// First remove current controls
@@ -4722,9 +4778,9 @@ namespace WinApp.Forms
 		private void mGadgetAdd(object sender, EventArgs e)
 		{
 			// Enable edit mode if not
-			if (!mHomeEdit.Checked)
+			if (!mHomeViewEditMode.Checked)
 			{
-				mHomeEdit.Checked = true;
+				mHomeViewEditMode.Checked = true;
 				GadgetEditModeChange();
 			}
 			// Get gadget
@@ -4736,13 +4792,13 @@ namespace WinApp.Forms
 
 		private void mHomeEdit_Click(object sender, EventArgs e)
 		{
-			mHomeEdit.Checked = !mHomeEdit.Checked;
+			mHomeViewEditMode.Checked = !mHomeViewEditMode.Checked;
 			GadgetEditModeChange();
 		}
 
 		private void GadgetEditModeChange()
 		{
-			if (mHomeEdit.Checked)
+			if (mHomeViewEditMode.Checked)
 			{
 				// Enable edit style
 				Status2AutoEnabled = false;
@@ -4962,7 +5018,7 @@ namespace WinApp.Forms
 		}
 		
 
-		private void mGadgetRedraw_Click(object sender, EventArgs e)
+		private void mHomeViewRefresh_Click(object sender, EventArgs e)
 		{
 			HomeViewCreate("Redrawn gadgets");
             HomeViewRefresh("Refresh redrawn gadgets");
@@ -5217,66 +5273,169 @@ namespace WinApp.Forms
                 HomeViewRefresh("Refresh Home View");
 			}
 		}
-
-		private void mGadgetReset_Click(object sender, EventArgs e)
+        
+        private void mHomeViewDefaults_Click(object sender, EventArgs e)
 		{
             ToolStripMenuItem menuitem = (ToolStripMenuItem)sender;
-            // Check if file exists
             string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + menuitem.Tag.ToString();
             if (File.Exists(file))
             {
-                MsgBox.Button answer = MsgBox.Show("This will remove all current gadgets, and reset to default setup.", "Reset to default gadgets", MsgBox.Type.OKCancel, this);
-                if (answer == MsgBox.Button.OK)
-                {
-                    GadgetHelper.DefaultSetup(menuitem.Tag.ToString());
-                    mHomeEdit.Checked = false;
-                    GadgetEditModeChange();
-                    HomeViewCreate("Reset to default Home View");
-                    HomeViewRefresh("Refresh default Home View");
-                }
+                LoadHomeViewFile(menuitem, file);
             }
             else
             {
-                MsgBox.Show("Cannot locate file: " + file + Environment.NewLine + Environment.NewLine + "Please reinstall Wot Numbers", "Missing file", this);
+                MsgBox.Show("Cannot locate file: " + file + Environment.NewLine + Environment.NewLine + "Please reinstall Wot Numbers" + Environment.NewLine + Environment.NewLine, "Missing file", this);
             }
-		}
+        }
 
-        private void mGadgetFileSave_Click(object sender, EventArgs e)
+        private void mHomeViewRecent_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuitem = (ToolStripMenuItem)sender;
+            string file = menuitem.Tag.ToString();
+            if (File.Exists(file))
+            {
+                LoadHomeViewFile(menuitem, file);
+            }
+            else
+            {
+                MsgBox.Show("Cannot locate file: " + file + Environment.NewLine + Environment.NewLine + "The menu item will be removed." + Environment.NewLine + Environment.NewLine, "Missing file", this);
+                GadgetHelper.RemoveRecentHomeView(file);
+                GetHomeViewRecentList();
+            }
+        }
+
+        private void LoadHomeViewFile(ToolStripMenuItem menuitem, string file)
+        {
+            bool changeHomeView = true;
+            if (!GadgetHelper.HomeViewSaved)
+            {
+                MsgBox.Button answer = MsgBox.Show("Du you want to save current home view before changing to: '" + menuitem.Text + "' home view?", "Save home view", MsgBox.Type.YesNo, this);
+                if (answer == MsgBox.Button.Yes)
+                {
+                    changeHomeView = SaveHomeView();
+                }
+            }
+            if (changeHomeView)
+            {
+                if (GadgetHelper.HomeViewLoadFromFile(file, true))
+                {
+                    mHomeViewEditMode.Checked = false;
+                    GadgetEditModeChange();
+                    RemoveHomeViewSelectedMenuItems();
+                    menuitem.Checked = true;
+                    mHomeView.Text = menuitem.Text;
+                    Config.Settings.currentHomeView = mHomeView.Text;
+                    string msg = "";
+                    Config.SaveConfig(out msg);
+                    HomeViewCreate("Change to: '" + menuitem.Text + "' home view");
+                    HomeViewRefresh("Refreshed home view");
+                }
+                
+            }
+        }
+
+        private void mHomeViewFileSave_Click(object sender, EventArgs e)
+        {
+            SaveHomeView();
+        }
+
+        private bool SaveHomeView()
         {
             saveFileDialog1.FileName = "";
             saveFileDialog1.DefaultExt = "*.json";
             saveFileDialog1.Filter = "Wot Numbers Home View files (*.json)|*.json|All files (*.*)|*.*";
             saveFileDialog1.InitialDirectory = Config.AppDataHomeViewFolder;
             DialogResult result = saveFileDialog1.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
+            if (result == DialogResult.OK)
             {
-                GadgetHelper.HomeViewSaveToFile(saveFileDialog1.FileName);
+                string fileName = Path.GetFileName(saveFileDialog1.FileName);
+                GadgetHelper.HomeViewSaveToFile(fileName);
+                bool updatedRecentList = GadgetHelper.UpdateRecentHomeView(fileName);
+                if (updatedRecentList)
+                    GetHomeViewRecentList();
+                mHomeView.Text = fileName.Replace(".json", "");
+                Config.Settings.currentHomeView = mHomeView.Text;
+                CheckCurrentHomeViewSubMenu();
+                string msg = "";
+                Config.SaveConfig(out msg);
+                return true;
             }
-            
+            return false;
         }
 
-        private void mGadgetFileLoad_Click(object sender, EventArgs e)
+        private void mHomeViewFileLoad_Click(object sender, EventArgs e)
         {
-            openFileDialog1.FileName = "*.json";
-            openFileDialog1.Filter = "Wot Numbers Home View files (*.json)|*.json|All files (*.*)|*.*";
-            openFileDialog1.InitialDirectory = Config.AppDataHomeViewFolder;
-            DialogResult result = openFileDialog1.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
+            bool changeHomeView = true;
+            if (!GadgetHelper.HomeViewSaved)
             {
-                GadgetHelper.HomeViewLoadFromToFile(openFileDialog1.FileName);
-                HomeViewCreate("Redraw loaded Home View from file");
-                HomeViewRefresh("Refresh loaded Home View from file");
+                MsgBox.Button answer = MsgBox.Show("Du you want to save current home view loading new home view from file?", "Save home view", MsgBox.Type.YesNo, this);
+                if (answer == MsgBox.Button.Yes)
+                {
+                    changeHomeView = SaveHomeView();
+                }
+            }
+            if (changeHomeView)
+            {
+                openFileDialog1.FileName = "*.json";
+                openFileDialog1.Filter = "Wot Numbers Home View files (*.json)|*.json|All files (*.*)|*.*";
+                openFileDialog1.InitialDirectory = Config.AppDataHomeViewFolder;
+                DialogResult result = openFileDialog1.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    GadgetHelper.HomeViewLoadFromFile(openFileDialog1.FileName, true);
+                    bool updatedRecentList = GadgetHelper.UpdateRecentHomeView(openFileDialog1.FileName);
+                    if (updatedRecentList)
+                        GetHomeViewRecentList();
+                    string fileName = Path.GetFileName(openFileDialog1.FileName);
+                    mHomeView.Text = fileName.Replace(".json", "");
+                    Config.Settings.currentHomeView = mHomeView.Text;
+                    CheckCurrentHomeViewSubMenu();
+                    string msg = "";
+                    Config.SaveConfig(out msg);
+                    HomeViewCreate("Redraw loaded Home View from file");
+                    HomeViewRefresh("Refresh loaded Home View from file");
+                }
             }
             
         }
 
-        private void mGadgetFileShowFolder_Click(object sender, EventArgs e)
+        private void mHomeViewClearRecentList_Click(object sender, EventArgs e)
+        {
+            GadgetHelper.RemoveRecentHomeView("");
+            GetHomeViewRecentList();
+        }
+
+        private void RemoveHomeViewSelectedMenuItems()
+        {
+            mHomeViewDefault.Checked = false;
+            mHomeViewClassic.Checked = false;
+            mHomeViewRecent1.Checked = false;
+            mHomeViewRecent2.Checked = false;
+            mHomeViewRecent3.Checked = false;
+            mHomeViewRecent4.Checked = false;
+            mHomeViewRecent5.Checked = false;
+        }
+
+        private void CheckCurrentHomeViewSubMenu()
+        {
+            RemoveHomeViewSelectedMenuItems();
+            if (mHomeView.Text == mHomeViewDefault.Text) mHomeViewDefault.Checked = true;
+            else if (mHomeView.Text == mHomeViewClassic.Text) mHomeViewClassic.Checked = true;
+            else if (mHomeView.Text == mHomeViewRecent1.Text) mHomeViewRecent1.Checked = true;
+            else if (mHomeView.Text == mHomeViewRecent2.Text) mHomeViewRecent2.Checked = true;
+            else if (mHomeView.Text == mHomeViewRecent3.Text) mHomeViewRecent3.Checked = true;
+            else if (mHomeView.Text == mHomeViewRecent4.Text) mHomeViewRecent4.Checked = true;
+            else if (mHomeView.Text == mHomeViewRecent5.Text) mHomeViewRecent5.Checked = true;
+        }
+
+        private void mHomeViewFileShowFolder_Click(object sender, EventArgs e)
         {
             // opens the folder in explorer
             Process.Start("explorer.exe", Config.AppDataHomeViewFolder);
         }
 
-		#endregion
+
+        #endregion
 
         
     }

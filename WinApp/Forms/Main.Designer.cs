@@ -44,7 +44,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.MainTheme = new BadForm();
-            this.toolMain = new Code.ToolStripEx(this.components);
+            this.toolMain = new WinApp.Code.ToolStripEx(this.components);
             this.mWoT = new System.Windows.Forms.ToolStripButton();
             this.mViewLabel = new System.Windows.Forms.ToolStripLabel();
             this.mViewOverall = new System.Windows.Forms.ToolStripButton();
@@ -171,7 +171,24 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.mBattleGroup_TankAverage = new System.Windows.Forms.ToolStripMenuItem();
             this.mBattleGroup_TankSum = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadget = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mHomeView = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripSeparator31 = new System.Windows.Forms.ToolStripSeparator();
+            this.mHomeViewDefault = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewClassic = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewRecentSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.mHomeViewRecent1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewRecent2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewRecent3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewRecent4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewRecent5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
+            this.mHomeViewFileLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.mHomeViewRedraw = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewClearRecentList = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewEdit = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mHomeViewEditMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
             this.mGadgetGauges = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWR = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetRWR = new System.Windows.Forms.ToolStripMenuItem();
@@ -187,7 +204,7 @@
             this.mGadgetChartTier = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartTankType = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetChartNation = new System.Windows.Forms.ToolStripMenuItem();
-            this.gridsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGadgetGrids = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetTotalStatsDefault = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetTotalStats = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
@@ -195,17 +212,12 @@
             this.mGadgetAddTankTypeStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddHeader = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetAddImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
-            this.mGadgetFileSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetFileLoad = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetFileShowFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.mGadgetRedraw = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator33 = new System.Windows.Forms.ToolStripSeparator();
+            this.mHomeViewFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHomeViewFileShowFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.mGadgetResetNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.mGadgetReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.mHomeEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator34 = new System.Windows.Forms.ToolStripSeparator();
             this.mViewChart = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.mSettings = new System.Windows.Forms.ToolStripDropDownButton();
@@ -364,8 +376,9 @@
             this.mMode,
             this.mBattles,
             this.mBattleGroup,
-            this.mGadget,
-            this.mHomeEdit,
+            this.mHomeView,
+            this.mHomeViewEdit,
+            this.toolStripSeparator34,
             this.mViewChart,
             this.toolStripSeparator16,
             this.mSettings,
@@ -1435,6 +1448,7 @@
             this.mBattles2d.Name = "mBattles2d";
             this.mBattles2d.Size = new System.Drawing.Size(198, 22);
             this.mBattles2d.Text = "Battles Last 2 Days";
+            this.mBattles2d.ToolTipText = "Battles today and yesterday";
             this.mBattles2d.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles2d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
@@ -1443,6 +1457,7 @@
             this.mBattles3d.Name = "mBattles3d";
             this.mBattles3d.Size = new System.Drawing.Size(198, 22);
             this.mBattles3d.Text = "Battles Last 3 Days";
+            this.mBattles3d.ToolTipText = "Battles today and the two previous days";
             this.mBattles3d.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles3d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
@@ -1598,32 +1613,166 @@
             this.mBattleGroup_TankSum.Click += new System.EventHandler(this.toolItemGroupingSelected_Click);
             this.mBattleGroup_TankSum.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // mGadget
+            // mHomeView
             // 
-            this.mGadget.BackColor = System.Drawing.Color.Transparent;
-            this.mGadget.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mHomeView.BackColor = System.Drawing.Color.Transparent;
+            this.mHomeView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator31,
+            this.mHomeViewDefault,
+            this.mHomeViewClassic,
+            this.mHomeViewRecentSeparator,
+            this.mHomeViewRecent1,
+            this.mHomeViewRecent2,
+            this.mHomeViewRecent3,
+            this.mHomeViewRecent4,
+            this.mHomeViewRecent5,
+            this.toolStripSeparator28,
+            this.mHomeViewFileLoad,
+            this.toolStripSeparator8,
+            this.mHomeViewRedraw,
+            this.mHomeViewClearRecentList});
+            this.mHomeView.Image = ((System.Drawing.Image)(resources.GetObject("mHomeView.Image")));
+            this.mHomeView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mHomeView.Name = "mHomeView";
+            this.mHomeView.ShowDropDownArrow = false;
+            this.mHomeView.Size = new System.Drawing.Size(65, 22);
+            this.mHomeView.Text = "Default";
+            this.mHomeView.ToolTipText = "Select Home VIew";
+            // 
+            // toolStripSeparator31
+            // 
+            this.toolStripSeparator31.Name = "toolStripSeparator31";
+            this.toolStripSeparator31.Size = new System.Drawing.Size(174, 6);
+            // 
+            // mHomeViewDefault
+            // 
+            this.mHomeViewDefault.Name = "mHomeViewDefault";
+            this.mHomeViewDefault.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewDefault.Tag = "New_Default_Setup.json";
+            this.mHomeViewDefault.Text = "Default";
+            this.mHomeViewDefault.Click += new System.EventHandler(this.mHomeViewDefaults_Click);
+            this.mHomeViewDefault.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mHomeViewClassic
+            // 
+            this.mHomeViewClassic.Name = "mHomeViewClassic";
+            this.mHomeViewClassic.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewClassic.Tag = "Old_Default_Setup.json";
+            this.mHomeViewClassic.Text = "Classic";
+            this.mHomeViewClassic.Click += new System.EventHandler(this.mHomeViewDefaults_Click);
+            this.mHomeViewClassic.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mHomeViewRecentSeparator
+            // 
+            this.mHomeViewRecentSeparator.Name = "mHomeViewRecentSeparator";
+            this.mHomeViewRecentSeparator.Size = new System.Drawing.Size(174, 6);
+            // 
+            // mHomeViewRecent1
+            // 
+            this.mHomeViewRecent1.Name = "mHomeViewRecent1";
+            this.mHomeViewRecent1.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewRecent1.Text = "Recent1";
+            this.mHomeViewRecent1.Click += new System.EventHandler(this.mHomeViewRecent_Click);
+            this.mHomeViewRecent1.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mHomeViewRecent2
+            // 
+            this.mHomeViewRecent2.Name = "mHomeViewRecent2";
+            this.mHomeViewRecent2.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewRecent2.Text = "Recent2";
+            this.mHomeViewRecent2.Click += new System.EventHandler(this.mHomeViewRecent_Click);
+            this.mHomeViewRecent2.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mHomeViewRecent3
+            // 
+            this.mHomeViewRecent3.Name = "mHomeViewRecent3";
+            this.mHomeViewRecent3.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewRecent3.Text = "Recent3";
+            this.mHomeViewRecent3.Click += new System.EventHandler(this.mHomeViewRecent_Click);
+            this.mHomeViewRecent3.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mHomeViewRecent4
+            // 
+            this.mHomeViewRecent4.Name = "mHomeViewRecent4";
+            this.mHomeViewRecent4.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewRecent4.Text = "Recent4";
+            this.mHomeViewRecent4.Click += new System.EventHandler(this.mHomeViewRecent_Click);
+            this.mHomeViewRecent4.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mHomeViewRecent5
+            // 
+            this.mHomeViewRecent5.Name = "mHomeViewRecent5";
+            this.mHomeViewRecent5.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewRecent5.Text = "Recent5";
+            this.mHomeViewRecent5.Click += new System.EventHandler(this.mHomeViewRecent_Click);
+            this.mHomeViewRecent5.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // toolStripSeparator28
+            // 
+            this.toolStripSeparator28.Name = "toolStripSeparator28";
+            this.toolStripSeparator28.Size = new System.Drawing.Size(174, 6);
+            // 
+            // mHomeViewFileLoad
+            // 
+            this.mHomeViewFileLoad.Name = "mHomeViewFileLoad";
+            this.mHomeViewFileLoad.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewFileLoad.Text = "Load from File...";
+            this.mHomeViewFileLoad.Click += new System.EventHandler(this.mHomeViewFileLoad_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(174, 6);
+            // 
+            // mHomeViewRedraw
+            // 
+            this.mHomeViewRedraw.Name = "mHomeViewRedraw";
+            this.mHomeViewRedraw.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewRedraw.Text = "Refresh Home View";
+            this.mHomeViewRedraw.Click += new System.EventHandler(this.mHomeViewRefresh_Click);
+            // 
+            // mHomeViewClearRecentList
+            // 
+            this.mHomeViewClearRecentList.Name = "mHomeViewClearRecentList";
+            this.mHomeViewClearRecentList.Size = new System.Drawing.Size(177, 22);
+            this.mHomeViewClearRecentList.Text = "Clear Recent List";
+            this.mHomeViewClearRecentList.Click += new System.EventHandler(this.mHomeViewClearRecentList_Click);
+            // 
+            // mHomeViewEdit
+            // 
+            this.mHomeViewEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mHomeViewEditMode,
+            this.toolStripSeparator32,
             this.mGadgetGauges,
             this.mGadgetCharts,
-            this.gridsToolStripMenuItem,
+            this.mGadgetGrids,
             this.mGadgetAddHeader,
             this.mGadgetAddImage,
-            this.toolStripSeparator28,
-            this.mGadgetFileSave,
-            this.mGadgetFileLoad,
-            this.mGadgetFileShowFolder,
-            this.toolStripSeparator8,
-            this.mGadgetRedraw,
+            this.toolStripSeparator33,
+            this.mHomeViewFileSave,
+            this.mHomeViewFileShowFolder,
             this.toolStripSeparator4,
-            this.mGadgetResetNew,
-            this.mGadgetReset,
             this.mGadgetRemoveAll});
-            this.mGadget.Image = ((System.Drawing.Image)(resources.GetObject("mGadget.Image")));
-            this.mGadget.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mGadget.Name = "mGadget";
-            this.mGadget.ShowDropDownArrow = false;
-            this.mGadget.Size = new System.Drawing.Size(70, 22);
-            this.mGadget.Text = "Gadgets";
-            this.mGadget.ToolTipText = "Select Gadget";
+            this.mHomeViewEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeViewEdit.Image")));
+            this.mHomeViewEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mHomeViewEdit.Name = "mHomeViewEdit";
+            this.mHomeViewEdit.ShowDropDownArrow = false;
+            this.mHomeViewEdit.Size = new System.Drawing.Size(70, 22);
+            this.mHomeViewEdit.Text = "Gadgets";
+            this.mHomeViewEdit.ToolTipText = "Edit Home View";
+            // 
+            // mHomeViewEditMode
+            // 
+            this.mHomeViewEditMode.Name = "mHomeViewEditMode";
+            this.mHomeViewEditMode.Size = new System.Drawing.Size(180, 22);
+            this.mHomeViewEditMode.Text = "Edit Mode";
+            this.mHomeViewEditMode.Click += new System.EventHandler(this.mHomeEdit_Click);
+            this.mHomeViewEditMode.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // toolStripSeparator32
+            // 
+            this.toolStripSeparator32.Name = "toolStripSeparator32";
+            this.toolStripSeparator32.Size = new System.Drawing.Size(177, 6);
             // 
             // mGadgetGauges
             // 
@@ -1639,7 +1788,7 @@
             this.mGadgetKillDeath,
             this.mGadgetDamageCausedReceived});
             this.mGadgetGauges.Name = "mGadgetGauges";
-            this.mGadgetGauges.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetGauges.Size = new System.Drawing.Size(180, 22);
             this.mGadgetGauges.Text = "Gauges";
             // 
             // mGadgetWR
@@ -1723,7 +1872,7 @@
             this.mGadgetChartTankType,
             this.mGadgetChartNation});
             this.mGadgetCharts.Name = "mGadgetCharts";
-            this.mGadgetCharts.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetCharts.Size = new System.Drawing.Size(180, 22);
             this.mGadgetCharts.Text = "Charts";
             // 
             // mGadgetChartTier
@@ -1750,17 +1899,17 @@
             this.mGadgetChartNation.Text = "Battle Count per Nation";
             this.mGadgetChartNation.Click += new System.EventHandler(this.mGadgetAdd);
             // 
-            // gridsToolStripMenuItem
+            // mGadgetGrids
             // 
-            this.gridsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mGadgetGrids.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mGadgetTotalStatsDefault,
             this.mGadgetTotalStats,
             this.toolStripSeparator26,
             this.mGadgetAddBattleModeStats,
             this.mGadgetAddTankTypeStats});
-            this.gridsToolStripMenuItem.Name = "gridsToolStripMenuItem";
-            this.gridsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.gridsToolStripMenuItem.Text = "Grids";
+            this.mGadgetGrids.Name = "mGadgetGrids";
+            this.mGadgetGrids.Size = new System.Drawing.Size(180, 22);
+            this.mGadgetGrids.Text = "Grids";
             // 
             // mGadgetTotalStatsDefault
             // 
@@ -1802,7 +1951,7 @@
             // mGadgetAddHeader
             // 
             this.mGadgetAddHeader.Name = "mGadgetAddHeader";
-            this.mGadgetAddHeader.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetAddHeader.Size = new System.Drawing.Size(180, 22);
             this.mGadgetAddHeader.Tag = "ucHeading";
             this.mGadgetAddHeader.Text = "Header";
             this.mGadgetAddHeader.Click += new System.EventHandler(this.mGadgetAdd);
@@ -1810,89 +1959,46 @@
             // mGadgetAddImage
             // 
             this.mGadgetAddImage.Name = "mGadgetAddImage";
-            this.mGadgetAddImage.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetAddImage.Size = new System.Drawing.Size(180, 22);
             this.mGadgetAddImage.Tag = "ucBattleListLargeImages";
             this.mGadgetAddImage.Text = "Recent Battles";
             this.mGadgetAddImage.Click += new System.EventHandler(this.mGadgetAdd);
             // 
-            // toolStripSeparator28
+            // toolStripSeparator33
             // 
-            this.toolStripSeparator28.Name = "toolStripSeparator28";
-            this.toolStripSeparator28.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator33.Name = "toolStripSeparator33";
+            this.toolStripSeparator33.Size = new System.Drawing.Size(177, 6);
             // 
-            // mGadgetFileSave
+            // mHomeViewFileSave
             // 
-            this.mGadgetFileSave.Name = "mGadgetFileSave";
-            this.mGadgetFileSave.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetFileSave.Text = "Save to File...";
-            this.mGadgetFileSave.Click += new System.EventHandler(this.mGadgetFileSave_Click);
+            this.mHomeViewFileSave.Name = "mHomeViewFileSave";
+            this.mHomeViewFileSave.Size = new System.Drawing.Size(180, 22);
+            this.mHomeViewFileSave.Text = "Save to File...";
+            this.mHomeViewFileSave.Click += new System.EventHandler(this.mHomeViewFileSave_Click);
             // 
-            // mGadgetFileLoad
+            // mHomeViewFileShowFolder
             // 
-            this.mGadgetFileLoad.Name = "mGadgetFileLoad";
-            this.mGadgetFileLoad.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetFileLoad.Text = "Load from File...";
-            this.mGadgetFileLoad.Click += new System.EventHandler(this.mGadgetFileLoad_Click);
-            // 
-            // mGadgetFileShowFolder
-            // 
-            this.mGadgetFileShowFolder.Name = "mGadgetFileShowFolder";
-            this.mGadgetFileShowFolder.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetFileShowFolder.Text = "Show Files...";
-            this.mGadgetFileShowFolder.Click += new System.EventHandler(this.mGadgetFileShowFolder_Click);
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(181, 6);
-            // 
-            // mGadgetRedraw
-            // 
-            this.mGadgetRedraw.Name = "mGadgetRedraw";
-            this.mGadgetRedraw.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetRedraw.Text = "Redraw all Gadgets";
-            this.mGadgetRedraw.Click += new System.EventHandler(this.mGadgetRedraw_Click);
+            this.mHomeViewFileShowFolder.Name = "mHomeViewFileShowFolder";
+            this.mHomeViewFileShowFolder.Size = new System.Drawing.Size(180, 22);
+            this.mHomeViewFileShowFolder.Text = "Show Files...";
+            this.mHomeViewFileShowFolder.Click += new System.EventHandler(this.mHomeViewFileShowFolder_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(181, 6);
-            // 
-            // mGadgetResetNew
-            // 
-            this.mGadgetResetNew.Name = "mGadgetResetNew";
-            this.mGadgetResetNew.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetResetNew.Tag = "New_Default_Setup.json";
-            this.mGadgetResetNew.Text = "Reset to New Default";
-            this.mGadgetResetNew.Click += new System.EventHandler(this.mGadgetReset_Click);
-            // 
-            // mGadgetReset
-            // 
-            this.mGadgetReset.Name = "mGadgetReset";
-            this.mGadgetReset.Size = new System.Drawing.Size(184, 22);
-            this.mGadgetReset.Tag = "Old_Default_Setup.json";
-            this.mGadgetReset.Text = "Reset to Old Default";
-            this.mGadgetReset.Click += new System.EventHandler(this.mGadgetReset_Click);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // mGadgetRemoveAll
             // 
             this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
-            this.mGadgetRemoveAll.Size = new System.Drawing.Size(184, 22);
+            this.mGadgetRemoveAll.Size = new System.Drawing.Size(180, 22);
             this.mGadgetRemoveAll.Text = "Remove All Gadgets";
             this.mGadgetRemoveAll.Click += new System.EventHandler(this.mGadgetRemoveAll_Click);
             // 
-            // mHomeEdit
+            // toolStripSeparator34
             // 
-            this.mHomeEdit.AutoSize = false;
-            this.mHomeEdit.BackColor = System.Drawing.Color.Transparent;
-            this.mHomeEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mHomeEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeEdit.Image")));
-            this.mHomeEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mHomeEdit.Name = "mHomeEdit";
-            this.mHomeEdit.Size = new System.Drawing.Size(22, 22);
-            this.mHomeEdit.Text = "toolStripButton1";
-            this.mHomeEdit.ToolTipText = "Gadget Edit Mode";
-            this.mHomeEdit.Click += new System.EventHandler(this.mHomeEdit_Click);
+            this.toolStripSeparator34.Name = "toolStripSeparator34";
+            this.toolStripSeparator34.Size = new System.Drawing.Size(6, 25);
             // 
             // mViewChart
             // 
@@ -2499,32 +2605,16 @@
 		private System.Windows.Forms.ToolStripMenuItem mModeSkrimishes;
 		private System.Windows.Forms.ToolStripMenuItem mBattles2d;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripDropDownButton mGadget;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetAddImage;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetReset;
+        private System.Windows.Forms.ToolStripDropDownButton mHomeView;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewClassic;
 		private System.Windows.Forms.ToolStripDropDownButton mBattleGroup;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_No;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankAverage;
 		private System.Windows.Forms.ToolStripMenuItem mBattleGroup_TankSum;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetGauges;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetWR;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetWN8;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetWN7;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetEFF;
-		private System.Windows.Forms.ToolStripButton mHomeEdit;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetRedraw;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetRemoveAll;
+		private System.Windows.Forms.ToolStripMenuItem mHomeViewRedraw;
 		private System.Windows.Forms.ImageList imageGrid;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetCharts;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetChartNation;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetChartTier;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetChartTankType;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-		private System.Windows.Forms.ToolStripMenuItem mGadgetKillDeath;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetDamageCausedReceived;
 		private System.Windows.Forms.ToolStripMenuItem mModeRandomSoloPlatoon;
 		private System.Windows.Forms.ToolStripMenuItem mModeRandomSolo;
 		private System.Windows.Forms.ToolStripMenuItem mRandomPlatoon;
@@ -2562,18 +2652,8 @@
         private System.Windows.Forms.ToolStripMenuItem mMapDescrLarge;
         private System.Windows.Forms.ToolStripMenuItem mMapShowOld;
         private System.Windows.Forms.ToolStripButton mVBaddict;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetAddHeader;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
-        private System.Windows.Forms.ToolStripMenuItem gridsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStats;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStatsDefault;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator28;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetFileSave;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetFileLoad;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetFileShowFolder;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewFileLoad;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleRatings;
@@ -2584,15 +2664,53 @@
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleAllRatings;
         private System.Windows.Forms.ToolStripMenuItem mRecalcTankStatistics;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetRWR;
-        private System.Windows.Forms.ToolStripMenuItem mGadgetResetNew;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewDefault;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_Search;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator30;
         private System.Windows.Forms.ToolStripMenuItem mWotNumWebForum;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
         private System.Windows.Forms.ToolStripMenuItem mWotNumWebUserGuide;
         private System.Windows.Forms.ToolStripMenuItem mRecalcBattleWN9;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator31;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewRecent1;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewRecent5;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewRecent4;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewRecent3;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewRecent2;
+        private System.Windows.Forms.ToolStripDropDownButton mHomeViewEdit;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewEditMode;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator32;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetGauges;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetWR;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetRWR;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
         private System.Windows.Forms.ToolStripMenuItem mGadgetWN9;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetWN8;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetWN7;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetEFF;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetKillDeath;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetDamageCausedReceived;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetCharts;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetChartTier;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetChartTankType;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetChartNation;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetGrids;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStatsDefault;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetTotalStats;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddBattleModeStats;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddTankTypeStats;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddHeader;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetAddImage;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator33;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewFileSave;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem mGadgetRemoveAll;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewFileShowFolder;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator34;
+        private System.Windows.Forms.ToolStripSeparator mHomeViewRecentSeparator;
+        private System.Windows.Forms.ToolStripMenuItem mHomeViewClearRecentList;
     }
 }
 

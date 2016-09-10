@@ -94,7 +94,9 @@ namespace WinApp.Code
                 {
                     case WotApiType.Tank:
                         // NEW - get these fields: tank_id,name,short_name,is_premium_igr,type,nation,tier,description,price_credit,images
-                        url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_premium_igr%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages";
+                        url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_premium%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages";
+                        if (tankId != 0)
+                            url += "&tank_id=" + tankId;
                         break;
                     case WotApiType.TankList:
                         // OLD
@@ -181,15 +183,15 @@ namespace WinApp.Code
                 Log.AddToLogBuffer(" > None updated, no existing items found");
             }
             Log.WriteLogBuffer();
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region importTanks
+        #region importTanks
 
-		public static String ImportTanks(Form parentForm)
+        // New method: "Vehicles" gets enhanced tank data, problem not as updated as old "List of vehicles"
+        public static String ImportTanks(Form parentForm, bool overwriteCustomTankDetails = false)
 		{
-			// New method: "Vehicles" gets enhanced tank data, problem not as updated as old "List of vehicles"
             string json = FetchFromAPI(WotApiType.Tank, 0, parentForm);
 			if (json == "")
 			{
@@ -227,8 +229,8 @@ namespace WinApp.Code
                             // ID
                             int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
 
-                            // Check for custom tank info, skip update if exists
-                            if (!TankHelper.HasCustomTankInfo(itemId))
+                            // Check for custom tank info, skip update if exists unless spesified
+                            if (!TankHelper.HasCustomTankInfo(itemId) || overwriteCustomTankDetails)
                             {
 
                                 // Tank Type
@@ -269,7 +271,7 @@ namespace WinApp.Code
                                 int tier = Int32.Parse(itemToken["tier"].ToString());
 
                                 // premium
-                                bool isPremium = Convert.ToBoolean(itemToken["is_premium_igr"]);
+                                bool isPremium = Convert.ToBoolean(itemToken["is_premium"]);
                                 premium = 0;
                                 if (isPremium) premium = 1;
 
@@ -317,11 +319,11 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
                                 sqlTotal += sql + Environment.NewLine;
                             }
-                            DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
-                                                                      // Update log file after import
-                            WriteApiLog("Tanks", logItems);
                         }
-					}
+                        DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
+                        // Update log file after import
+                        WriteApiLog("Tanks", logItems);
+                    }
 
 					//Code.MsgBox.Show("Tank import complete");
 					return ("Import Complete");
@@ -334,11 +336,11 @@ namespace WinApp.Code
 					return ("ERROR - Import incomplete!" + Environment.NewLine + Environment.NewLine + ex);
 				}
 			}
-		}
+        }
 
-        public static String ImportTankList(Form parentForm)
+        // Old method "List of vehicles", only get if tank is missing
+        public static String ImportTankList(Form parentForm, bool overwriteCustomTankDetails = false)
         {
-            // Old method "List of vehicles", only get if tank is missing
             string json = FetchFromAPI(WotApiType.TankList, 0, parentForm);
             if (json == "")
             {
@@ -376,8 +378,8 @@ namespace WinApp.Code
                             // ID
                             int itemId = Int32.Parse(((JProperty)itemToken.Parent).Name);   // step back to parent to fetch the isolated tankId
 
-                            // Check for custom tank info, skip update if exists
-                            if (!TankHelper.HasCustomTankInfo(itemId))
+                            // Check for custom tank info, skip update if exists unless specified
+                            if (!TankHelper.HasCustomTankInfo(itemId) || overwriteCustomTankDetails)
                             {
 
                                 // Tank Type
@@ -409,6 +411,7 @@ namespace WinApp.Code
                                 // Tank name
                                 string name = itemToken["name_i18n"].ToString();
                                 string short_name = itemToken["short_name_i18n"].ToString();
+                                short_name = short_name.Replace(" short", ""); // fix for removing subfix added to short name
 
                                 // Image 
                                 string imgPath = itemToken["image"].ToString();
@@ -461,10 +464,10 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
                                 sqlTotal += sql + Environment.NewLine;
                             }
-                            DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
-                            // Update log file after import
-                            WriteApiLog("Tank list", logItems);
                         }
+                        DB.ExecuteNonQuery(sqlTotal, true, true); // Run all SQL in batch
+                        // Update log file after import
+                        WriteApiLog("Tank list", logItems);
                     }
 
                     //Code.MsgBox.Show("Tank import complete");
@@ -480,11 +483,12 @@ namespace WinApp.Code
             }
         }
 
+        // Tank Details, returned as TankHelper.BasicTankInfo
         public static TankHelper.BasicTankInfo ImportTanksDetails(Form parentForm, int tankId, out string message)
         {
             message = "";
             TankHelper.BasicTankInfo foundTankInfo = new TankHelper.BasicTankInfo();
-            string json = FetchFromAPI(WotApiType.TankDetails, tankId, parentForm);
+            string json = FetchFromAPI(WotApiType.Tank, tankId, parentForm);
             if (json == "")
             {
                 message =  "No data imported, no tank details found at Wargaming API for download for tank ID: " + tankId.ToString();
@@ -543,11 +547,11 @@ namespace WinApp.Code
                                 }
 
                                 // Tank name
-                                foundTankInfo.name = itemToken["localized_name"].ToString();
-                                foundTankInfo.short_name = itemToken["short_name_i18n"].ToString();
+                                foundTankInfo.name = itemToken["name"].ToString();
+                                foundTankInfo.short_name = itemToken["short_name"].ToString();
 
                                 // Tier
-                                foundTankInfo.tier = itemToken["level"].ToString();
+                                foundTankInfo.tier = itemToken["tier"].ToString();
 
                                 // Set as default stats
                                 foundTankInfo.customTankInfo = false;
@@ -565,8 +569,6 @@ namespace WinApp.Code
                 }
             }
         }
-
-
 
         #endregion
 

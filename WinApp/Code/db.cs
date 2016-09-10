@@ -393,63 +393,54 @@ namespace WinApp.Code
 		
 		public static void AddWithValue(ref string Sql, string Parameter, object Value, DB.SqlDataType DataType)
 		{
-			if (Value == DBNull.Value)
+			if (Value == null || Value == DBNull.Value)
 			{
 				Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
 			}
 			else
 			{
-				if (DataType == SqlDataType.VarChar)
+                // Varchar - allow empty string value
+                if (DataType == SqlDataType.VarChar)
 				{
 					string stringValue = Value.ToString();
 					stringValue = stringValue.Replace("'", "''");
                     // stringValue = stringValue.Replace(";", ":"); makes total stats bug, since ; are used as data param separators
 					Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + stringValue + "'");
 				}
-				else if (DataType == SqlDataType.Int)
-				{
-                    if (Value.ToString() == "")
-                        Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
-                    else
-                    {
-                        string stringValue = Value.ToString();
-                        Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
-                    }
-				}
-				else if (DataType == SqlDataType.Float)
-				{
-                    if (Value.ToString() == "")
-                        Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
-                    else
-                    {
-                        string stringValue = Convert.ToDecimal(Value).ToString();
-                        stringValue = stringValue.Replace(",", ".");
-                        Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
-                    }
-				}
-				else if (DataType == SqlDataType.DateTime)
-				{
-                    if (Value.ToString() == "")
-                        Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
-                    else
-                    {
-                        DateTime dateTimeValue = Convert.ToDateTime(Value);
-                        Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + dateTimeValue.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"); // yyyy-DD-mm
-                    }
-				}
-				else if (DataType == SqlDataType.Image)
-				{
-					// convert image to blob
-					string stringValue = Convert.ToDecimal(Value).ToString();
-					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue); // fails on ReplaceParameterWithValue
-				}
-				else if (DataType == SqlDataType.Boolean)
-				{
-					bool boolVal = Convert.ToBoolean(Value);
-					string stringValue = "0";
-					if (boolVal) stringValue = "1";
-					Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue); // fails on ReplaceParameterWithValue
-				}
+                // Other datatypes do not allow empty valyu, change to null
+                if (Value.ToString() == "")
+                {
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, "NULL");
+                }
+                else if (DataType == SqlDataType.Int)
+                {
+                    string stringValue = Value.ToString();
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
+                }
+                else if (DataType == SqlDataType.Float)
+                {
+                    string stringValue = Convert.ToDecimal(Value).ToString();
+                    stringValue = stringValue.Replace(",", ".");
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue);
+                }
+                else if (DataType == SqlDataType.DateTime)
+                {
+                    DateTime dateTimeValue = Convert.ToDateTime(Value);
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, "'" + dateTimeValue.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'"); // yyyy-DD-mm
+                }
+                else if (DataType == SqlDataType.Image)
+                {
+                    // convert image to blob
+                    string stringValue = Convert.ToDecimal(Value).ToString();
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue); // fails on ReplaceParameterWithValue
+                }
+                else if (DataType == SqlDataType.Boolean)
+                {
+                    bool boolVal = Convert.ToBoolean(Value);
+                    string stringValue = "0";
+                    if (boolVal) stringValue = "1";
+                    Sql = ReplaceParameterWithValue(Sql, Parameter, stringValue); // fails on ReplaceParameterWithValue
+                }
 			}
 		}
 

@@ -71,6 +71,7 @@ namespace WinApp.Code.Rating
             if (dtBattles.Rows.Count > 0)
             {
                 int countBattles = 0;
+                string error = "";
                 foreach (DataRow stats in dtBattles.Rows)
                 {
                     int btl = Convert.ToInt32(stats["battles"]);
@@ -85,8 +86,7 @@ namespace WinApp.Code.Rating
                     }
                     else
                     {
-                        if (Config.Settings.showDBErrors)
-                            Log.LogToFile("*** Could not find playerTank for battle mode '" + battleMode + "' for tank: " + tankId + " ***");
+                        error += tankId.ToString() + ",";
                     }
                     countBattles++;
                     if (maxBattles > 0 && countBattles > maxBattles) break;
@@ -94,6 +94,8 @@ namespace WinApp.Code.Rating
                 // Check for null values
                 if (ptb.Rows.Count > 0)
                     RWR = RWRplayerTankBattle(ptb);
+                if (error != "" && Config.Settings.showDBErrors)
+                    Log.LogToFile("RWRbattle() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
             }
             return RWR;
         }
@@ -126,6 +128,7 @@ namespace WinApp.Code.Rating
             DataTable dtBattles = DB.FetchData(sql);
             if (dtBattles.Rows.Count > 0)
             {
+                string error = "";
                 foreach (DataRow stats in dtBattles.Rows)
                 {
                     double btl = WNHelper.ConvertDbVal2Double(stats["battles"]);
@@ -139,11 +142,12 @@ namespace WinApp.Code.Rating
                     }
                     else
                     {
-                        if (Config.Settings.showDBErrors)
-                            Log.LogToFile("*** Could not find playerTank for battle mode '" + battleMode + "' for tank: " + tankId + " ***");
+                        error += tankId.ToString() + ",";
                     }
                 }
-                // Check for null values
+                if (error != "" && Config.Settings.showDBErrors)
+                    Log.LogToFile("RWRReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+
             }
             return RWR.RWRplayerTankBattle(ptb);
         }

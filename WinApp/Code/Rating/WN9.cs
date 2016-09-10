@@ -104,7 +104,7 @@ namespace WinApp.Code.Rating
         {
             RatingParametersWN9 rpWN = null;
             // Get player totals from datatable
-            if (playerTankBattle.Rows.Count > 0)
+            if (playerTankBattle != null && playerTankBattle.Rows.Count > 0)
             {
                 // Get player totals
                 rpWN = new RatingParametersWN9();
@@ -272,7 +272,7 @@ namespace WinApp.Code.Rating
             // get battle result for battle range to reverse
             DataTable ptb = WNHelper.GetDataForBattleRange(battleTimeFilter, battleCount, battleMode, tankFilter, battleModeFilter, tankJoin);
             // if any battles played calculate reverse
-            if (ptb.Rows.Count > 0 && Convert.ToInt32(ptb.Compute("SUM([battles])", "")) > 0)
+            if (ptb != null && ptb.Rows.Count > 0 && Convert.ToInt32(ptb.Compute("SUM([battles])", "")) > 0)
             {
                 // get players current total wn9 stats
                 DataTable playerTotalWN9TankStats = GetPlayerTotalWN9TankStats(battleMode);

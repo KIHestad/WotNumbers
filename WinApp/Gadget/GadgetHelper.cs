@@ -12,7 +12,9 @@ namespace WinApp.Gadget
 {
 	public class GadgetHelper
 	{
-		public enum TimeRangeEnum
+        public static bool HomeViewSaved = true;
+
+        public enum TimeRangeEnum
 		{
 			Total = 0,
 			TimeMonth3 = 6,
@@ -95,7 +97,8 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@posY", top, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", gadgetId, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
-		}
+            HomeViewSaved = false;
+        }
 
 		public static void SaveGadgetSize(GadgetItem gadget)
 		{
@@ -104,10 +107,11 @@ namespace WinApp.Gadget
 			DB.AddWithValue(ref sql, "@height", gadget.height, DB.SqlDataType.Int);
 			DB.AddWithValue(ref sql, "@id", gadget.id, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
-		}
+            HomeViewSaved = false;
+        }
 
 
-		public static void SaveGadgetParameter(GadgetItem gadget)
+        public static void SaveGadgetParameter(GadgetItem gadget)
 		{
 			int paramNum = 0;
 			string sql = "";
@@ -142,30 +146,33 @@ namespace WinApp.Gadget
 				}
 			}
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-		}
+            HomeViewSaved = false;
+        }
 
         public static void DeleteGadgetParameter(int gadgetId)
         {
             string sql = "delete from gadgetParameter where gadgetId = " + gadgetId.ToString();
             DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
+            HomeViewSaved = false;
         }
 
-		public static void RemoveGadget(GadgetItem gadget)
+        public static void RemoveGadget(GadgetItem gadget)
 		{
 			string sql = "delete from gadgetParameter where gadgetId=@id; delete from gadget where id=@id;";
 			DB.AddWithValue(ref sql, "@id", gadget.id, DB.SqlDataType.Int);
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
 			gadgets.Remove(gadget);
-		}
+            HomeViewSaved = false;
+        }
 
-		public static void RemoveGadgetAll()
+        public static void RemoveGadgetAll()
 		{
 			string sql = "delete from gadgetParameter ; delete from gadget ;";
 			DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors);
             gadgets = new List<GadgetItem>();
-		}
+        }
 
-		public static int InsertNewGadget(GadgetItem gadget)
+        public static int InsertNewGadget(GadgetItem gadget)
 		{
 			int gadgetId = 0;
 			string sql = 
@@ -202,7 +209,8 @@ namespace WinApp.Gadget
 			if (sql != "")
 				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
 			gadgets.Insert(0,gadget);
-			return gadgetId;
+            HomeViewSaved = false;
+            return gadgetId;
 		}
 
 
@@ -228,8 +236,8 @@ namespace WinApp.Gadget
 					sortOrder++;
 				}
 				DB.ExecuteNonQuery(sql, Config.Settings.showDBErrors, true);
-			}
-		}
+            }
+        }
 
 		public static bool HasGadetParameter(GadgetItem gadget)
 		{
@@ -570,97 +578,96 @@ namespace WinApp.Gadget
 			}
 			return foundGadgetArea;
 		}
-
-		public static void DefaultSetup(string fileName)
-		{
-            // Locate file
-            string file = Path.GetDirectoryName(Application.ExecutablePath) + "\\Docs\\" + fileName;
-            if (File.Exists(file))
-            {
-                // Add from default file
-                GadgetHelper.HomeViewLoadFromToFile(file);
-            }
-		}
-
+        		
 		public static void DrawBorderOnGadget(object sender, PaintEventArgs e)
 		{
 			UserControl uc = (UserControl)sender;
 			e.Graphics.DrawRectangle(new System.Drawing.Pen(ColorTheme.FormBorderBlue), 0, 0, uc.Width-1, uc.Height-1);
 		}
 
-        public static void HomeViewLoadFromToFile(string fileName)
+        public static bool HomeViewLoadFromFile(string fileName, bool showErrorMessage)
         {
-            string fileString = File.ReadAllText(fileName);
-            int splitPos = fileString.IndexOf("]" + Environment.NewLine + "[");
-            if (splitPos > 20)
+            bool ok = false;
+            if (File.Exists(fileName))
             {
-                splitPos +=1;
-                DataTable dtGadget = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(0,splitPos));
-                DataTable dtGadgetParameter = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(splitPos + 1));
-                // When inserting gadgets, new id's will be assigned - create conversion column for old id
-                dtGadget.Columns.Add("newId", typeof(Int32));
-                foreach (DataRow dr in dtGadget.Rows)
+                string fileString = File.ReadAllText(fileName);
+                int splitPos = fileString.IndexOf("]" + Environment.NewLine + "[");
+                if (splitPos > 20)
                 {
-                    dr["newId"] = dr["id"];
-                }
-                // Remove current setup
-                GadgetHelper.RemoveGadgetAll();
-                // Store to the database from here
-
-                // Add gadgets
-                string latestObject = "";
-                string sqlInsert = "";
-                string newsql = "";
-                try
-                {
-                    sqlInsert = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) VALUES (@controlName, 1, @sortorder, @posX, @posY, @width, @height); ";
+                    splitPos += 1;
+                    DataTable dtGadget = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(0, splitPos));
+                    DataTable dtGadgetParameter = JsonConvert.DeserializeObject<DataTable>(fileString.Substring(splitPos + 1));
+                    // When inserting gadgets, new id's will be assigned - create conversion column for old id
+                    dtGadget.Columns.Add("newId", typeof(Int32));
                     foreach (DataRow dr in dtGadget.Rows)
                     {
-                        newsql = sqlInsert;
-                        latestObject = dr["controlName"].ToString();
-                        DB.AddWithValue(ref newsql, "@controlName", dr["controlName"].ToString(), DB.SqlDataType.VarChar);
-                        DB.AddWithValue(ref newsql, "@sortorder", dr["sortorder"].ToString(), DB.SqlDataType.VarChar);
-                        DB.AddWithValue(ref newsql, "@posX", dr["posX"].ToString(), DB.SqlDataType.Int);
-                        DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
-                        DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
-                        DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
-                        DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
-                        // get new id from db and add to memory table
-                        string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
-                        dr["newId"] = newId;
+                        dr["newId"] = dr["id"];
                     }
-                }
-                catch (Exception ex)
-                {
-                    MsgBox.Show("Error adding gadget " + latestObject + ": " + ex.Message, "Gadget Error");
-                    Log.LogToFile(ex, "Latest SQL query: " + newsql);
-                }
+                    // Remove current setup
+                    GadgetHelper.RemoveGadgetAll();
+                    // Store to the database from here
 
-                // Add gadget PARAMETERS
-                string sqlBatch = "";
-                string gadgetId = "";
-                try
-                {
-                    sqlInsert = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) VALUES (@gadgetId, @paramNum, @dataType, @value); ";
-                    foreach (DataRow dr in dtGadgetParameter.Rows)
+                    // Add gadgets
+                    string latestObject = "";
+                    string sqlInsert = "";
+                    string newsql = "";
+                    try
                     {
-                        newsql = sqlInsert;
-                        gadgetId = dtGadget.Select("Id = " + dr["gadgetId"])[0]["newId"].ToString();
-                        DB.AddWithValue(ref newsql, "@gadgetId", gadgetId, DB.SqlDataType.Int);
-                        DB.AddWithValue(ref newsql, "@paramNum", dr["paramNum"].ToString(), DB.SqlDataType.Int);
-                        DB.AddWithValue(ref newsql, "@dataType", dr["dataType"].ToString(), DB.SqlDataType.VarChar);
-                        DB.AddWithValue(ref newsql, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
-                        sqlBatch += newsql + Environment.NewLine;
+                        sqlInsert = "INSERT INTO gadget (controlName, visible, sortorder, posX, posY, width, height) VALUES (@controlName, 1, @sortorder, @posX, @posY, @width, @height); ";
+                        foreach (DataRow dr in dtGadget.Rows)
+                        {
+                            newsql = sqlInsert;
+                            latestObject = dr["controlName"].ToString();
+                            DB.AddWithValue(ref newsql, "@controlName", dr["controlName"].ToString(), DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref newsql, "@sortorder", dr["sortorder"].ToString(), DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref newsql, "@posX", dr["posX"].ToString(), DB.SqlDataType.Int);
+                            DB.AddWithValue(ref newsql, "@posY", dr["posY"].ToString(), DB.SqlDataType.Int);
+                            DB.AddWithValue(ref newsql, "@width", dr["width"].ToString(), DB.SqlDataType.Int);
+                            DB.AddWithValue(ref newsql, "@height", dr["height"].ToString(), DB.SqlDataType.Int);
+                            DB.ExecuteNonQuery(newsql, Config.Settings.showDBErrors, true);
+                            // get new id from db and add to memory table
+                            string newId = DB.FetchData("select max(id) as newId from gadget").Rows[0]["newId"].ToString();
+                            dr["newId"] = newId;
+                        }
                     }
-                    DB.ExecuteNonQuery(sqlBatch, false, true);
+                    catch (Exception ex)
+                    {
+                        if (showErrorMessage)
+                            MsgBox.Show("Error adding gadget " + latestObject + ": " + ex.Message, "Gadget Error");
+                        Log.LogToFile(ex, "Latest SQL query: " + newsql);
+                        return false;
+                    }
+
+                    // Add gadget PARAMETERS
+                    string sqlBatch = "";
+                    string gadgetId = "";
+                    try
+                    {
+                        sqlInsert = "INSERT INTO gadgetParameter (gadgetId, paramNum, dataType, value) VALUES (@gadgetId, @paramNum, @dataType, @value); ";
+                        foreach (DataRow dr in dtGadgetParameter.Rows)
+                        {
+                            newsql = sqlInsert;
+                            gadgetId = dtGadget.Select("Id = " + dr["gadgetId"])[0]["newId"].ToString();
+                            DB.AddWithValue(ref newsql, "@gadgetId", gadgetId, DB.SqlDataType.Int);
+                            DB.AddWithValue(ref newsql, "@paramNum", dr["paramNum"].ToString(), DB.SqlDataType.Int);
+                            DB.AddWithValue(ref newsql, "@dataType", dr["dataType"].ToString(), DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref newsql, "@value", dr["value"].ToString(), DB.SqlDataType.VarChar);
+                            sqlBatch += newsql + Environment.NewLine;
+                        }
+                        DB.ExecuteNonQuery(sqlBatch, false, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (showErrorMessage)
+                            MsgBox.Show("Error adding gadget parameter id " + gadgetId + ": " + ex.Message, "Gadget Parameter Error");
+                        Log.LogToFile(ex, "Latest SQL query: " + sqlBatch);
+                        return false;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MsgBox.Show("Error adding gadget parameter id " + gadgetId + ": " + ex.Message, "Gadget Parameter Error");
-                    Log.LogToFile(ex, "Latest SQL query: " + sqlBatch);
-                }
+                HomeViewSaved = true;
+                ok = true;
             }
-            
+            return ok;
         }
 
         public static void HomeViewSaveToFile(string fileName)
@@ -674,9 +681,66 @@ namespace WinApp.Gadget
             jsonResult += JsonConvert.SerializeObject(dtGadgetParameter, Newtonsoft.Json.Formatting.Indented);
             // Save
             File.WriteAllText(fileName, jsonResult);
+            HomeViewSaved = true;
         }
 
-	}
+        public static bool UpdateRecentHomeView(string fileNameWithPath)
+        {
+            // Retun true if updated
+            bool updated = false;
+            // Get parameters
+            string fileName = Path.GetFileName(fileNameWithPath);
+            string folder = Path.GetDirectoryName(fileNameWithPath);
+            DateTime used = DateTime.Now;
+            // Check if item already exists
+            string sql = "SELECT * FROM homeViewRecent WHERE filename=@filename AND folder=@folder;";
+            DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
+            DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
+            DataTable dt = DB.FetchData(sql);
+            if (dt.Rows.Count == 0)
+            {
+                // Check if need to remove recent item
+                sql = "SELECT * FROM homeViewRecent ORDER BY id DESC;";
+                dt = DB.FetchData(sql);
+                sql = "";
+                if (dt.Rows.Count > 4)
+                {
+                    string ids = "";
+                    for (int i = 0; i < (dt.Rows.Count); i++)
+                    {
+                        if (i > 3)
+                            ids += dt.Rows[i]["id"].ToString() + ",";
+                    }
+                    ids = ids.Substring(0, ids.Length - 1);
+                    sql = "DELETE FROM homeViewRecent WHERE id IN (" + ids + "); ";
+                }
+                // Add new recent item
+                sql += "INSERT INTO homeViewRecent (filename, folder, used) VALUES (@filename, @folder, @used);";
+                DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@used", used, DB.SqlDataType.DateTime);
+                DB.ExecuteNonQuery(sql);
+                updated = true;
+            }
+            return updated;
+        }
+
+        public static void RemoveRecentHomeView(string fileNameWithPath)
+        {
+            string sql = "DELETE FROM homeViewRecent ";
+            if (fileNameWithPath != "")
+            {
+                // Get parameters
+                string fileName = Path.GetFileName(fileNameWithPath);
+                string folder = Path.GetDirectoryName(fileNameWithPath);
+                sql += "WHERE filename=@filename AND folder=@folder;";
+                DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);
+            }
+            DB.ExecuteNonQuery(sql);
+        }
+
+    }
 
 
 

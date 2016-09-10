@@ -141,6 +141,7 @@ namespace WinApp.Code.Rating
             {
                 if (battleCount == 0) battleCount = dtBattles.Rows.Count;
                 int count = 0;
+                string error = "";
                 foreach (DataRow stats in dtBattles.Rows)
                 {
                     double btl = WNHelper.ConvertDbVal2Double(stats["battles"]);
@@ -159,14 +160,16 @@ namespace WinApp.Code.Rating
                     }
                     else
                     {
-                        if (Config.Settings.showDBErrors)
-                            Log.LogToFile("*** Could not find playerTank for battle mode '" + battleMode + "' for tank: " + tankId + " ***");
+                        error += tankId.ToString() + ",";
                     }
                     count++;
                     if (count > battleCount) break;
                 }
-                // Check for null values
+                if (error != "" && Config.Settings.showDBErrors)
+                    Log.LogToFile("GetDataForPlayerTankBattleReverse() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+
             }
+
             return ptb;
         }
 
@@ -213,6 +216,7 @@ namespace WinApp.Code.Rating
             if (dtBattles.Rows.Count > 0)
             {
                 int countBattles = 0;
+                string error = "";
                 foreach (DataRow stats in dtBattles.Rows)
                 {
                     int btl = Convert.ToInt32(stats["battles"]);
@@ -231,14 +235,20 @@ namespace WinApp.Code.Rating
                     }
                     else
                     {
-                        if (Config.Settings.showDBErrors)
-                            Log.LogToFile("*** Could not find playerTank for battle mode '" + battleMode + "' for tank: " + tankId + " ***");
+                        error += tankId.ToString() + ",";
                     }
                     countBattles++;
                     if (maxBattles > 0 && countBattles > maxBattles) break;
                 }
+                if (error != "" && Config.Settings.showDBErrors)
+                    Log.LogToFile("GetDataForBattleRange() - Could not find playerTank for battle mode '" + battleMode + "' for tank: " + error);
+
                 // Return playertanks with stats
-                return ptb.Select("battles > 0").CopyToDataTable();
+                DataRow[] dr = ptb.Select("battles > 0");
+                if (dr.Length > 0)
+                    return dr.CopyToDataTable();
+                else
+                    return null;
             }
             else
             {

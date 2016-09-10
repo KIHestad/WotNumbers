@@ -121,6 +121,18 @@ namespace WinApp.Forms
         {
             try
             {
+                // Check for valid values
+                int blankfields = 0;
+                if (txtName.Text.Trim() == "") blankfields++;
+                if (txtShortName.Text.Trim() == "") blankfields++;
+                if (txtTier.Text.Trim() == "") blankfields++;
+                if (ddNation.Text.Trim() == "") blankfields++;
+                if (ddTankType.Text.Trim() == "") blankfields++;
+                if (blankfields > 0 && blankfields < 5)
+                {
+                    MsgBox.Show("Missing values", "Saving cancelled");
+                    return false;
+                }
                 // Update default values from form
                 _defaultTankDetails.name = txtName.Text.Trim();
                 _defaultTankDetails.short_name = txtShortName.Text.Trim();

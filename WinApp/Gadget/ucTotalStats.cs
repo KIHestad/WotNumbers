@@ -69,49 +69,49 @@ namespace WinApp.Gadget
 
         private void GetGridData()
         {
-            // Clear Grid
-            ClearSelectedColumnsDataGrid();
-            // Prepare data fetch
-            dataGridData = new List<DataGridDataClass>();
-            // Check if any data rows
-            if (currentParameters.Length > fixedParams)
+            try
             {
-                // Loop through each row
-                for (int i = fixedParams; i < currentParameters.Length; i++)
+                // Clear Grid
+                ClearSelectedColumnsDataGrid();
+                // Prepare data fetch
+                dataGridData = new List<DataGridDataClass>();
+                // Check if any data rows
+                if (currentParameters.Length > fixedParams)
                 {
-                    // Check if data exists
-                    if (currentParameters[i] != null)
+                    // Loop through each row
+                    for (int i = fixedParams; i < currentParameters.Length; i++)
                     {
-                        // Get parameter data as splitted string array
-                        string row = currentParameters[i].ToString();
-                        string[] rowItems = row.Split(new string[] { ";" }, StringSplitOptions.None);
-                        // Add row to datagrid
-                        int rowId = dataGrid.Rows.Add();
-                        DataGridViewRow dgvr = dataGrid.Rows[rowId];
-                        // Add values for each columd for the new row
-                        for (int sectionCol = 0; sectionCol < gridColums; sectionCol++)
+                        // Check if data exists
+                        if (currentParameters[i] != null)
                         {
-                            dgvr.Cells["Data" + sectionCol].Value = rowItems[(sectionCol * 2) + 1];
-                            DataGridViewCell cellTrendLookup = null;
-                            if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
-                                cellTrendLookup = dgvr.Cells["Trend" + sectionCol];
-                            dataGridData.Add(new DataGridDataClass() {
-                                cellName = dgvr.Cells["Data" + sectionCol],
-                                cellValue = dgvr.Cells["Value" + sectionCol],
-                                cellTrend = cellTrendLookup,
-                                columnSelectionID = rowItems[(sectionCol * 2)] 
-                            });
+                            // Get parameter data as splitted string array
+                            string row = currentParameters[i].ToString();
+                            string[] rowItems = row.Split(new string[] { ";" }, StringSplitOptions.None);
+                            // Add row to datagrid
+                            int rowId = dataGrid.Rows.Add();
+                            DataGridViewRow dgvr = dataGrid.Rows[rowId];
+                            // Add values for each columd for the new row
+                            for (int sectionCol = 0; sectionCol < gridColums; sectionCol++)
+                            {
+                                dgvr.Cells["Data" + sectionCol].Value = rowItems[(sectionCol * 2) + 1];
+                                DataGridViewCell cellTrendLookup = null;
+                                if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                                    cellTrendLookup = dgvr.Cells["Trend" + sectionCol];
+                                dataGridData.Add(new DataGridDataClass() {
+                                    cellName = dgvr.Cells["Data" + sectionCol],
+                                    cellValue = dgvr.Cells["Value" + sectionCol],
+                                    cellTrend = cellTrendLookup,
+                                    columnSelectionID = rowItems[(sectionCol * 2)] 
+                                });
 
-                            //dgvr.Cells["Value" + sectionCol].Value = rowItems[(sectionCol * 2)];
-                            //if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
-                            //    dgvr.Cells["Trend" + sectionCol].Value = 0;
+                                //dgvr.Cells["Value" + sectionCol].Value = rowItems[(sectionCol * 2)];
+                                //if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                                //    dgvr.Cells["Trend" + sectionCol].Value = 0;
+                            }
                         }
                     }
                 }
-            }
-            dataGrid.ClearSelection();
-            try
-            {
+                dataGrid.ClearSelection();
                 GetData();
             }
             catch (Exception ex)
@@ -599,88 +599,103 @@ namespace WinApp.Gadget
 
         private void ClearSelectedColumnsDataGrid()
         {
-            // Add columns to datagrid
-            dataGrid.Rows.Clear();
-            dataGrid.Columns.Clear();
-            for (int i = 0; i < gridColums; i++)
+            try
             {
-                dataGrid.Columns.Add("Data" + i.ToString(), gridHeaders[i]);
-                dataGrid.Columns.Add("Value" + i.ToString(), "Value");
-                if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
-                    dataGrid.Columns.Add("Trend" + i.ToString(), "Trend");
-                dataGrid.Columns.Add("Separator" + i.ToString(), "");
-            }
-            // No sorting and format
-            for (int i = 0; i < dataGrid.Columns.Count; i++)
-            {
-                dataGrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
-                dataGrid.Columns[i].Resizable = DataGridViewTriState.False;
-            }
-            // Format
-            for (int i = 0; i < gridColums; i++)
-            {
-                dataGrid.Columns["Value" + i.ToString()].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dataGrid.Columns["Value" + i.ToString()].DefaultCellStyle.Format = "N0";
-                dataGrid.Columns["Value" + i.ToString()].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-                if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                // Add columns to datagrid
+                dataGrid.Rows.Clear();
+                dataGrid.Columns.Clear();
+                for (int i = 0; i < gridColums; i++)
                 {
-                    dataGrid.Columns["Trend" + i.ToString()].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    dataGrid.Columns["Trend" + i.ToString()].DefaultCellStyle.Format = "N0";
+                    dataGrid.Columns.Add("Data" + i.ToString(), gridHeaders[i]);
+                    dataGrid.Columns.Add("Value" + i.ToString(), "Value");
+                    if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                        dataGrid.Columns.Add("Trend" + i.ToString(), "Trend");
+                    dataGrid.Columns.Add("Separator" + i.ToString(), "");
                 }
-                dataGrid.Columns["Separator" + i.ToString()].HeaderCell.Style.BackColor = Color.Transparent;
+                // No sorting and format
+                for (int i = 0; i < dataGrid.Columns.Count; i++)
+                {
+                    dataGrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGrid.Columns[i].Resizable = DataGridViewTriState.False;
+                }
+                // Format
+                for (int i = 0; i < gridColums; i++)
+                {
+                    dataGrid.Columns["Value" + i.ToString()].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGrid.Columns["Value" + i.ToString()].DefaultCellStyle.Format = "N0";
+                    dataGrid.Columns["Value" + i.ToString()].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                    {
+                        dataGrid.Columns["Trend" + i.ToString()].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        dataGrid.Columns["Trend" + i.ToString()].DefaultCellStyle.Format = "N0";
+                    }
+                    dataGrid.Columns["Separator" + i.ToString()].HeaderCell.Style.BackColor = Color.Transparent;
+                }
             }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex);
+            }
+            
         }
 
         private void ReziseNow()
         {
-            if (dataGrid.ColumnCount > 0)
+            try
             {
-                int step = 3;
-                int col0Width = 120; // Data
-                int col1Width = 80; // Value
-                int col2Width = 0; // Trend
-                if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                if (dataGrid.ColumnCount > 0)
                 {
-                    col0Width = 100; // Data
-                    col1Width = 60; // Value
-                    col2Width = 40; // Trend
-                    step = 4;
-                }
-                float colUsageWidth = (col0Width + col1Width + col2Width) * gridColums;
-                float restSpaceWidth = dataGrid.Width - colUsageWidth;
-                int col3Width = 0;
-                if (gridColums > 1) // Separator
-                    col3Width = Convert.ToInt32(restSpaceWidth / (gridColums - 1)); 
-                if (col3Width < 5)
-                    col3Width = 5;
-                for (int i = 0; i < gridColums * step; i = i + step)
-                {
-                    dataGrid.Columns[i + 0].Width = col0Width; // Data
-                    dataGrid.Columns[i + 1].Width = col1Width; // Value
+                    int step = 3;
+                    int col0Width = 120; // Data
+                    int col1Width = 80; // Value
+                    int col2Width = 0; // Trend
                     if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
                     {
-                        dataGrid.Columns[i + 2].Width = col2Width; // Trend
-                        dataGrid.Columns[i + 3].Width = col3Width; // Separator
+                        col0Width = 100; // Data
+                        col1Width = 60; // Value
+                        col2Width = 40; // Trend
+                        step = 4;
                     }
-                    else
-                        dataGrid.Columns[i + 2].Width = col3Width; // Separator
+                    float colUsageWidth = (col0Width + col1Width + col2Width) * gridColums;
+                    float restSpaceWidth = dataGrid.Width - colUsageWidth;
+                    int col3Width = 0;
+                    if (gridColums > 1) // Separator
+                        col3Width = Convert.ToInt32(restSpaceWidth / (gridColums - 1));
+                    if (col3Width < 5)
+                        col3Width = 5;
+                    for (int i = 0; i < gridColums * step; i = i + step)
+                    {
+                        dataGrid.Columns[i + 0].Width = col0Width; // Data
+                        dataGrid.Columns[i + 1].Width = col1Width; // Value
+                        if (_battleTimeSpan != GadgetHelper.TimeRangeEnum.Total)
+                        {
+                            dataGrid.Columns[i + 2].Width = col2Width; // Trend
+                            dataGrid.Columns[i + 3].Width = col3Width; // Separator
+                        }
+                        else
+                            dataGrid.Columns[i + 2].Width = col3Width; // Separator
+                    }
+                    // buttons in footer
+                    int middleButtonX = (panelFooter.Width / 2) - (btnMonth.Width / 2);
+                    int distance = btnMonth.Width + 5;
+                    btnTotal.Left = middleButtonX - (distance * 2);
+                    btnMonth3.Left = middleButtonX - distance;
+                    btnMonth.Left = middleButtonX;
+                    btnWeek.Left = middleButtonX + distance;
+                    btnToday.Left = middleButtonX + (distance * 2);
+                    // Hide labels if small
+                    bool showLabels = (panelFooter.Width > (distance * 5) + 150);
+                    lblBattleMode.Visible = showLabels;
+                    lblTotalStats.Visible = showLabels;
+                    lblTotalStats.Width = btnTotal.Left - 5;
+                    lblBattleMode.Left = btnToday.Left + distance - 1;
+                    lblBattleMode.Width = panelFooter.Width - btnToday.Right - 4;
+                    ShowFooterText();
                 }
-                // buttons in footer
-                int middleButtonX = (panelFooter.Width / 2) - (btnMonth.Width / 2);
-                int distance = btnMonth.Width + 5;
-                btnTotal.Left = middleButtonX - (distance * 2);
-                btnMonth3.Left = middleButtonX - distance;
-                btnMonth.Left = middleButtonX;
-                btnWeek.Left = middleButtonX + distance;
-                btnToday.Left = middleButtonX + (distance * 2);
-                // Hide labels if small
-                bool showLabels = (panelFooter.Width > (distance * 5) + 150);
-                lblBattleMode.Visible = showLabels;
-                lblTotalStats.Visible = showLabels;
-                lblTotalStats.Width = btnTotal.Left - 5;
-                lblBattleMode.Left = btnToday.Left + distance - 1;
-                lblBattleMode.Width = panelFooter.Width - btnToday.Right - 4;
-                ShowFooterText();
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex);
             }
         }
 

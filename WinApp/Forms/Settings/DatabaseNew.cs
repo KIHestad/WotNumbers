@@ -150,18 +150,19 @@ namespace WinApp.Forms
 					{
 						// Upgrade to latest version
 						UpdateProgressBar("Upgrading database");
-						DBVersion.CheckForDbUpgrade(this);
+						DBVersion.CheckForDbUpgrade(this, true);
 						
 						// Get tanks, remember to init tankList first
 						UpdateProgressBar("Retrieves tanks from Wargaming API");
 						TankHelper.GetTankList();
-                        // NEW METHOD
-						ImportWotApi2DB.ImportTanks(this);
-                        
-                        // OLD METHOD
-                        //TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
-                        //ImportWotApi2DB.ImportTankList(this);
 
+                        // OLD METHOD, still in use because some tanks are missing from the new method
+                        ImportWotApi2DB.ImportTankList(this);
+                        TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
+                        // NEW METHOD
+                        ImportWotApi2DB.ImportTanks(this);
+                        
+                        
                         // Init after getting tanks and other basic data import
 						TankHelper.GetTankList();
 						TankHelper.GetJson2dbMappingFromDB();

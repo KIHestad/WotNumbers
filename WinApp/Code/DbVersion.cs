@@ -26,10 +26,10 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 395; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 398; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
-		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm)
+		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
 		{
 			// first define sqlscript for both mssql and sqlite for all versions
 			string mssql = "";
@@ -2696,9 +2696,6 @@ namespace WinApp.Code
                         "UPDATE map SET arena_id = '00_tank_tutorial' WHERE id = 2021; ";
                     sqlite = mssql;
                     break;
-                case 369:
-                    RunWotApi = true;
-                    break;
                 case 370:
                     mssql = "ALTER TABLE playerTank ADD gProgressGoal int NOT NULL default 0; " +
                             "ALTER TABLE playerTank ADD gCompleationDate datetime NULL; ";
@@ -2765,7 +2762,6 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 382:
-                    RunWotApi = true; // Get new WN9 exp values
                     RunRecalcBattleWN9 = true;
                     break;
                 case 383:
@@ -2783,9 +2779,6 @@ namespace WinApp.Code
                     mssql = "UPDATE columnSelection SET colNameSum=0, colNameBattleSum=0, colNameBattleSumCalc=1, colNameBattleSumTank=0, colNameBattleSumReversePos=0 WHERE ID = 105; ";
                     sqlite = mssql;
                     break;
-                case 387:
-                    RunWotApi = true; // WN9 version 0.2 available
-                    break;
                 case 388:
                     mssql =
                         "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
@@ -2793,11 +2786,7 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 389:
-                    RunWotApi = true; // Get new WN9 exp values
                     RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
-                    break;
-                case 390:
-                    RunWotApi = true; // Get new tanks (Lorr -> Bat-Chat 25t AP)
                     break;
                 case 391:
                     temp =
@@ -2835,6 +2824,42 @@ namespace WinApp.Code
                     mssql = "ALTER TABLE tank ADD customTankInfo BIT NOT NULL DEFAULT(0); ";
                     sqlite = mssql;
                     break;
+                case 396:
+                    RunWotApi = true;
+                    break;
+                case 397:
+                    mssql =
+                        "CREATE TABLE homeViewRecent ( " +
+                        "id int IDENTITY(1,1) primary key, " +
+                        "filename varchar(MAX) NOT NULL, " +
+                        "folder varchar(MAX) NOT NULL, " +
+                        "used datetime NOT NULL);";
+                    sqlite =
+                        "CREATE TABLE homeViewRecent ( " +
+                        "id integer primary key, " +
+                        "filename varchar(999) NOT NULL, " +
+                        "folder varchar(999) NOT NULL, " +
+                        "used datetime NOT NULL);";
+                    break;
+                case 398: // Autosave current home view, not if new database is created
+                    if (!newDatabase)
+                    {
+                        string filename = "Custom";
+                        if (File.Exists(Config.AppDataHomeViewFolder + filename + ".json"))
+                        {
+                            int i = 1;
+                            while (File.Exists(Config.AppDataHomeViewFolder + filename + " " + i.ToString() + ".json"))
+                            {
+                                i++;
+                            }
+                            filename = filename + " " + i.ToString();
+                        }
+                        GadgetHelper.HomeViewSaveToFile(Config.AppDataHomeViewFolder + filename + ".json");
+                        GadgetHelper.UpdateRecentHomeView(Config.AppDataHomeViewFolder + filename + ".json");
+                        Config.Settings.currentHomeView = filename;
+                        Config.SaveConfig(out msg);
+                    }
+                    break;
             }
             string sql = "";
 			// get sql for correct dbtype
@@ -2867,8 +2892,8 @@ namespace WinApp.Code
 			return sql;
 		}
 
-		// Procedure upgrading DB to latest version
-		public static bool CheckForDbUpgrade(Form parentForm)
+        // Procedure upgrading DB to latest version
+        public static bool CheckForDbUpgrade(Form parentForm, bool newDatabase = false)
 		{
 			bool upgradeOK = true;
 			int DBVersionCurrentNumber = GetDBVersion(); // Get current DB version
@@ -2883,7 +2908,7 @@ namespace WinApp.Code
 					// Move to next upgrade number
 					DBVersionCurrentNumber++;
 					// Upgrade to next db version now
-					string sql = UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType, parentForm); // Get upgrade script for this version and dbType 
+					string sql = UpgradeSQL(DBVersionCurrentNumber, Config.Settings.databaseType, parentForm, newDatabase); // Get upgrade script for this version and dbType 
 					if (sql != "")
 						continueNext = DB.ExecuteNonQuery(sql); // Run upgrade script
 					Application.DoEvents(); // To avoid freeze

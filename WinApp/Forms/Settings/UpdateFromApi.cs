@@ -45,15 +45,21 @@ namespace WinApp.Forms
 			badProgressBar.ValueMax = 5;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
+            bool overwriteCustom = (chkOverwriteCustom.Checked);
 
 			// Get tanks, remember to init tankList first
 			UpdateProgressBar("Retrieves tanks from Wargaming API");
-			TankHelper.GetTankList();
-			ImportWotApi2DB.ImportTanks(this);
+
+            // old method
             TankHelper.GetTankList(); // Init after getting tanks before next tank list fetch
-            ImportWotApi2DB.ImportTankList(this);
-			// Init after getting tanks and other basic data import
-			TankHelper.GetTankList();
+            ImportWotApi2DB.ImportTankList(this, overwriteCustom);
+
+            // New method
+            TankHelper.GetTankList();
+            ImportWotApi2DB.ImportTanks(this, overwriteCustom);
+            
+            // Init after getting tanks and other basic data import
+            TankHelper.GetTankList();
 			TankHelper.GetJson2dbMappingFromDB();
 
 			// Get turret

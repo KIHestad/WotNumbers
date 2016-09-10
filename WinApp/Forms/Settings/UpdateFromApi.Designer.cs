@@ -32,6 +32,7 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateFromApi));
             this.UpdateFromApiTheme = new BadForm();
+            this.chkOverwriteCustom = new BadCheckBox();
             this.btnStart = new BadButton();
             this.lblProgressStatus = new BadLabel();
             this.badProgressBar = new BadProgressBar();
@@ -40,6 +41,7 @@
             // 
             // UpdateFromApiTheme
             // 
+            this.UpdateFromApiTheme.Controls.Add(this.chkOverwriteCustom);
             this.UpdateFromApiTheme.Controls.Add(this.btnStart);
             this.UpdateFromApiTheme.Controls.Add(this.lblProgressStatus);
             this.UpdateFromApiTheme.Controls.Add(this.badProgressBar);
@@ -62,6 +64,17 @@
             this.UpdateFromApiTheme.TabIndex = 0;
             this.UpdateFromApiTheme.Text = "Update Tank Data using Wargaming, WN8 and WN9 API";
             this.UpdateFromApiTheme.TitleHeight = 26;
+            // 
+            // chkOverwriteCustom
+            // 
+            this.chkOverwriteCustom.BackColor = System.Drawing.Color.Transparent;
+            this.chkOverwriteCustom.Checked = false;
+            this.chkOverwriteCustom.Image = global::WinApp.Properties.Resources.checkboxcheck;
+            this.chkOverwriteCustom.Location = new System.Drawing.Point(20, 83);
+            this.chkOverwriteCustom.Name = "chkOverwriteCustom";
+            this.chkOverwriteCustom.Size = new System.Drawing.Size(228, 23);
+            this.chkOverwriteCustom.TabIndex = 3;
+            this.chkOverwriteCustom.Text = "Overwrite manually edited tank details";
             // 
             // btnStart
             // 
@@ -127,5 +140,6 @@
 		private BadButton btnStart;
 		private BadLabel lblProgressStatus;
 		private BadProgressBar badProgressBar;
-	}
+        private BadCheckBox chkOverwriteCustom;
+    }
 }
