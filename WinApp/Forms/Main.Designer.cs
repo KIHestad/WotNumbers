@@ -406,6 +406,7 @@
             // 
             // mViewLabel
             // 
+            this.mViewLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mViewLabel.Name = "mViewLabel";
             this.mViewLabel.Size = new System.Drawing.Size(35, 22);
             this.mViewLabel.Text = "View:";
@@ -415,6 +416,7 @@
             this.mViewOverall.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
             this.mViewOverall.Checked = true;
             this.mViewOverall.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mViewOverall.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mViewOverall.Image = ((System.Drawing.Image)(resources.GetObject("mViewOverall.Image")));
             this.mViewOverall.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mViewOverall.Name = "mViewOverall";
@@ -426,6 +428,7 @@
             // mViewTankInfo
             // 
             this.mViewTankInfo.BackColor = System.Drawing.Color.Fuchsia;
+            this.mViewTankInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mViewTankInfo.Image = ((System.Drawing.Image)(resources.GetObject("mViewTankInfo.Image")));
             this.mViewTankInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mViewTankInfo.Name = "mViewTankInfo";
@@ -437,6 +440,7 @@
             // mViewBattles
             // 
             this.mViewBattles.BackColor = System.Drawing.Color.Fuchsia;
+            this.mViewBattles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mViewBattles.Image = ((System.Drawing.Image)(resources.GetObject("mViewBattles.Image")));
             this.mViewBattles.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mViewBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -448,6 +452,7 @@
             // 
             // mViewMaps
             // 
+            this.mViewMaps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mViewMaps.Image = ((System.Drawing.Image)(resources.GetObject("mViewMaps.Image")));
             this.mViewMaps.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mViewMaps.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -495,6 +500,7 @@
             this.mColumnSelect_15,
             this.toolStripSeparator5,
             this.mColumnSelect_Edit});
+            this.mColumnSelect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mColumnSelect.Image = ((System.Drawing.Image)(resources.GetObject("mColumnSelect.Image")));
             this.mColumnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mColumnSelect.Name = "mColumnSelect";
@@ -657,6 +663,7 @@
             this.toolStripSeparator14,
             this.mMapShowAll,
             this.mMapShowOld});
+            this.mMapViewType.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mMapViewType.Image = ((System.Drawing.Image)(resources.GetObject("mMapViewType.Image")));
             this.mMapViewType.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mMapViewType.Name = "mMapViewType";
@@ -740,6 +747,7 @@
             this.toolStripSeparator12,
             this.mTankFilter_GetInGarage,
             this.mTankFilter_EditFavList});
+            this.mTankFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter.Image")));
             this.mTankFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mTankFilter.Name = "mTankFilter";
@@ -1198,21 +1206,23 @@
             this.mModeBattleForStronghold,
             this.toolStripSeparator15,
             this.mModeSpecial});
+            this.mMode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mMode.Image = ((System.Drawing.Image)(resources.GetObject("mMode.Image")));
             this.mMode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mMode.Name = "mMode";
             this.mMode.ShowDropDownArrow = false;
             this.mMode.Size = new System.Drawing.Size(80, 22);
-            this.mMode.Text = "All modes";
+            this.mMode.Text = "All Modes";
             this.mMode.ToolTipText = "Select Battle Mode";
             this.mMode.Visible = false;
             // 
             // mModeAll
             // 
+            this.mModeAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeAll.Name = "mModeAll";
             this.mModeAll.Size = new System.Drawing.Size(205, 22);
             this.mModeAll.Tag = "All";
-            this.mModeAll.Text = "All modes";
+            this.mModeAll.Text = "All Modes";
             this.mModeAll.Click += new System.EventHandler(this.toolItemMode_Click);
             this.mModeAll.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
@@ -1223,6 +1233,7 @@
             // 
             // mModeRandomTankCompany
             // 
+            this.mModeRandomTankCompany.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeRandomTankCompany.Name = "mModeRandomTankCompany";
             this.mModeRandomTankCompany.Size = new System.Drawing.Size(205, 22);
             this.mModeRandomTankCompany.Tag = "RandomAndTankCompany";
@@ -1232,6 +1243,7 @@
             // 
             // mModeRandom
             // 
+            this.mModeRandom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeRandom.Name = "mModeRandom";
             this.mModeRandom.Size = new System.Drawing.Size(205, 22);
             this.mModeRandom.Tag = "Random";
@@ -1247,6 +1259,7 @@
             this.mRandomPlatoon,
             this.mRandomPlatoon2,
             this.mRandomPlatoon3});
+            this.mModeRandomSoloPlatoon.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeRandomSoloPlatoon.Name = "mModeRandomSoloPlatoon";
             this.mModeRandomSoloPlatoon.Size = new System.Drawing.Size(205, 22);
             this.mModeRandomSoloPlatoon.Text = "Random - Solo / Platoon";
@@ -1290,6 +1303,7 @@
             // 
             // mModeCompany
             // 
+            this.mModeCompany.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeCompany.Name = "mModeCompany";
             this.mModeCompany.Size = new System.Drawing.Size(205, 22);
             this.mModeCompany.Tag = "TankCompany";
@@ -1300,6 +1314,7 @@
             // 
             // mModeClan
             // 
+            this.mModeClan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeClan.Name = "mModeClan";
             this.mModeClan.Size = new System.Drawing.Size(205, 22);
             this.mModeClan.Tag = "ClanWar";
@@ -1315,6 +1330,7 @@
             // 
             // mModeHistorical
             // 
+            this.mModeHistorical.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeHistorical.Name = "mModeHistorical";
             this.mModeHistorical.Size = new System.Drawing.Size(205, 22);
             this.mModeHistorical.Tag = "Historical";
@@ -1324,6 +1340,7 @@
             // 
             // mModeTeam
             // 
+            this.mModeTeam.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeTeam.Name = "mModeTeam";
             this.mModeTeam.Size = new System.Drawing.Size(205, 22);
             this.mModeTeam.Tag = "Team";
@@ -1333,6 +1350,7 @@
             // 
             // mModeTeamRanked
             // 
+            this.mModeTeamRanked.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeTeamRanked.Name = "mModeTeamRanked";
             this.mModeTeamRanked.Size = new System.Drawing.Size(205, 22);
             this.mModeTeamRanked.Tag = "TeamRanked";
@@ -1347,6 +1365,7 @@
             // 
             // mModeGlobalMap
             // 
+            this.mModeGlobalMap.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeGlobalMap.Name = "mModeGlobalMap";
             this.mModeGlobalMap.Size = new System.Drawing.Size(205, 22);
             this.mModeGlobalMap.Tag = "GlobalMap";
@@ -1356,6 +1375,7 @@
             // 
             // mModeSkrimishes
             // 
+            this.mModeSkrimishes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeSkrimishes.Name = "mModeSkrimishes";
             this.mModeSkrimishes.Size = new System.Drawing.Size(205, 22);
             this.mModeSkrimishes.Tag = "Skirmishes";
@@ -1365,6 +1385,7 @@
             // 
             // mModeBattleForStronghold
             // 
+            this.mModeBattleForStronghold.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeBattleForStronghold.Name = "mModeBattleForStronghold";
             this.mModeBattleForStronghold.Size = new System.Drawing.Size(205, 22);
             this.mModeBattleForStronghold.Tag = "Stronghold";
@@ -1379,6 +1400,7 @@
             // 
             // mModeSpecial
             // 
+            this.mModeSpecial.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeSpecial.Name = "mModeSpecial";
             this.mModeSpecial.Size = new System.Drawing.Size(205, 22);
             this.mModeSpecial.Tag = "Special";
@@ -1410,6 +1432,7 @@
             this.mBattlesCustomChange,
             this.toolStripSeparator10,
             this.mBattlesAll});
+            this.mBattles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles.Image = ((System.Drawing.Image)(resources.GetObject("mBattles.Image")));
             this.mBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mBattles.Name = "mBattles";
@@ -1573,6 +1596,7 @@
             this.toolStripSeparator6,
             this.mBattleGroup_TankAverage,
             this.mBattleGroup_TankSum});
+            this.mBattleGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleGroup.Image = ((System.Drawing.Image)(resources.GetObject("mBattleGroup.Image")));
             this.mBattleGroup.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mBattleGroup.Name = "mBattleGroup";
@@ -1631,6 +1655,7 @@
             this.toolStripSeparator8,
             this.mHomeViewRedraw,
             this.mHomeViewClearRecentList});
+            this.mHomeView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeView.Image = ((System.Drawing.Image)(resources.GetObject("mHomeView.Image")));
             this.mHomeView.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mHomeView.Name = "mHomeView";
@@ -1753,6 +1778,7 @@
             this.mHomeViewFileShowFolder,
             this.toolStripSeparator4,
             this.mGadgetRemoveAll});
+            this.mHomeViewEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewEdit.Image = ((System.Drawing.Image)(resources.GetObject("mHomeViewEdit.Image")));
             this.mHomeViewEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mHomeViewEdit.Name = "mHomeViewEdit";
@@ -2004,6 +2030,7 @@
             // 
             this.mViewChart.AutoSize = false;
             this.mViewChart.BackColor = System.Drawing.Color.Fuchsia;
+            this.mViewChart.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mViewChart.Image = ((System.Drawing.Image)(resources.GetObject("mViewChart.Image")));
             this.mViewChart.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mViewChart.Name = "mViewChart";

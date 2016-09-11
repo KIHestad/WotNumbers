@@ -6,25 +6,36 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using System.Reflection;
 
 namespace WinApp.Code
 {
 	[DebuggerNonUserCode]
 	public partial class ToolStripEx : ToolStrip
 	{
-		public ToolStripEx()
+        private void SetStyle()
+        {
+            this.GripStyle = ToolStripGripStyle.Hidden;
+            this.Dock = DockStyle.None;
+            this.AutoSize = false;
+            this.ShowItemToolTips = true;
+            this.Renderer = new StripRenderer();
+        }
+
+        public ToolStripEx()
 		{
-			
-		}
+            SetStyle();
+        }
 
 		public ToolStripEx(IContainer container)
 		{
-			container.Add(this);
-
+            SetStyle();
+            container.Add(this);
 			InitializeComponent();
-		}
-		
-		protected override void WndProc(ref Message m)
+        }
+
+        protected override void WndProc(ref Message m)
 		{
 			base.WndProc(ref m);
 
@@ -33,7 +44,9 @@ namespace WinApp.Code
 				m.Result = (IntPtr)NativeConstants.MA_ACTIVATE;
 			}
 		}
-	}
+    }
+
+    
 
 	[DebuggerNonUserCode]
 	public class StripLayout : ProfessionalColorTable
@@ -110,7 +123,7 @@ namespace WinApp.Code
 		internal const uint MA_NOACTIVATEANDEAT = 4;
 	}
 
-	[DebuggerNonUserCode]
+	// [DebuggerNonUserCode]
 	public class StripRenderer : ToolStripProfessionalRenderer
 	{
 		public StripRenderer() : base(new StripLayout())
@@ -130,7 +143,6 @@ namespace WinApp.Code
                 e.Item.ForeColor = ColorTheme.ToolWhiteToolStrip;
             }
 		}
-                
 
-	}
+    }
 }

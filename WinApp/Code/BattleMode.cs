@@ -31,6 +31,15 @@ namespace WinApp.Code
         public static List<Item> GetMainBattleModes(bool includeAllModes = false)
         {
             List<Item> manBattleModes = new List<Item>();
+            if (includeAllModes)
+            {
+                manBattleModes.Add(new Item()
+                {
+                    Type = TypeEnum.AllModes,
+                    Name = "All Modes",
+                    SqlName = ""
+                });
+            }
             manBattleModes.Add(new Item() { 
                 Type = TypeEnum.ModeRandom_TC, 
                 Name = "Random",
@@ -71,15 +80,7 @@ namespace WinApp.Code
                 Name = "Special Events",
                 SqlName = "Special" 
             });
-            if (includeAllModes)
-            {
-                manBattleModes.Add(new Item()
-                {
-                    Type = TypeEnum.AllModes,
-                    Name = "All Modes",
-                    SqlName = ""
-                });
-            }
+            
             return manBattleModes;
         }
 

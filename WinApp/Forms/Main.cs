@@ -56,8 +56,8 @@ namespace WinApp.Forms
 		private void Main_Load(object sender, EventArgs e)
 		{
             // Style toolbar
-            toolMain.Renderer = new StripRenderer();
-            toolMain.ShowItemToolTips = true;
+            //toolMain.Renderer = new StripRenderer();
+            //toolMain.ShowItemToolTips = true;
             mBattles.Visible = false;
             mTankFilter.Visible = false;
             mRefreshSeparator.Visible = true;
@@ -207,7 +207,7 @@ namespace WinApp.Forms
                 // Init form
                 SetFormTitle();
                 SetListener(false);
-                BattleChartHelper.SetBattleChartDefaultValues();
+                BattleChartHelper.Settings = new BattleChartHelper.BattleChartSettings(); // Set default battle chart settings
                 Code.Rating.WN9.SetTierAvgList();
                 if (DB.CheckConnection())
                 {
@@ -224,6 +224,7 @@ namespace WinApp.Forms
                     ImageHelper.CreateMasteryBageImageTable();
                     ImageHelper.CreateTankTypeImageTable();
                     ImageHelper.CreateNationImageTable();
+                    ImageHelper.CheckedMenuIcon = imageListToolStrip.Images[0];
                     // Home view recent list
                     GetHomeViewRecentList();
                     mHomeView.Text = Config.Settings.currentHomeView;
@@ -3689,7 +3690,7 @@ namespace WinApp.Forms
 
         private void dataGridMainPopup_BattleChart_Click(object sender, EventArgs e)
 		{
-			if (dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value != DBNull.Value)
+			if (dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value != DBNull.Value)
 			{
 				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
 				Form frm = new Forms.BattleChart(playerTankId);

@@ -15,12 +15,14 @@ namespace WinApp.Code
 {
 	class ImageHelper
 	{
-		public static DataTable TankImage = new DataTable();
+        public static Image CheckedMenuIcon;
+
+        public static DataTable TankImage = new DataTable();
 		public static DataTable MasteryBadgeImage = new DataTable();
 		public static DataTable TankTypeImage = new DataTable();
 		public static DataTable NationImage = new DataTable();
 
-		public class ImgColumns : IComparable<ImgColumns>
+        public class ImgColumns : IComparable<ImgColumns>
 		{
 			public string colName { get; set; }
 			public int colPosition { get; set; }

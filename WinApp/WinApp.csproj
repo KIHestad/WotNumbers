@@ -235,6 +235,18 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Chart\ChartLineAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Chart\ChartLineAdd.Designer.cs">
+      <DependentUpon>ChartLineAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Chart\ChartLineRemove.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Chart\ChartLineRemove.Designer.cs">
+      <DependentUpon>ChartLineRemove.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BadThemeControls\MessageInput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -469,10 +481,10 @@
     <Compile Include="Code\Log.cs" />
     <Compile Include="Code\ImportWotApi2DB.cs" />
     <Compile Include="Code\Rating\WNHelper.cs" />
-    <Compile Include="Forms\BattleChart.cs">
+    <Compile Include="Forms\Chart\BattleChart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BattleChart.Designer.cs">
+    <Compile Include="Forms\Chart\BattleChart.Designer.cs">
       <DependentUpon>BattleChart.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\AppSettingsvBAddict.cs">
@@ -667,6 +679,9 @@
     <EmbeddedResource Include="Forms\BattleSummary\BattleSummary.resx">
       <DependentUpon>BattleSummary.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chart\ChartLineAdd.resx">
+      <DependentUpon>ChartLineAdd.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DatePopup.resx">
       <DependentUpon>DatePopup.cs</DependentUpon>
     </EmbeddedResource>
@@ -769,7 +784,7 @@
     <EmbeddedResource Include="Forms\Settings\DatabaseTable.resx">
       <DependentUpon>DatabaseTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BattleChart.resx">
+    <EmbeddedResource Include="Forms\Chart\BattleChart.resx">
       <DependentUpon>BattleChart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\AppSettingsvBAddict.resx">
