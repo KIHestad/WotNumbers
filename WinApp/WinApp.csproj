@@ -271,6 +271,18 @@
     <Compile Include="Forms\BattleSummary\BattleSummary.Designer.cs">
       <DependentUpon>BattleSummary.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Chart\FavouriteEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Chart\FavouriteEdit.Designer.cs">
+      <DependentUpon>FavouriteEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Chart\FavouriteSave.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Chart\FavouriteSave.Designer.cs">
+      <DependentUpon>FavouriteSave.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DatePopup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -682,6 +694,15 @@
     <EmbeddedResource Include="Forms\Chart\ChartLineAdd.resx">
       <DependentUpon>ChartLineAdd.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chart\ChartLineRemove.resx">
+      <DependentUpon>ChartLineRemove.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chart\FavouriteEdit.resx">
+      <DependentUpon>FavouriteEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chart\FavouriteSave.resx">
+      <DependentUpon>FavouriteSave.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DatePopup.resx">
       <DependentUpon>DatePopup.cs</DependentUpon>
     </EmbeddedResource>
@@ -1009,6 +1030,7 @@
     <Content Include="DevDocs\Img\ToolStripIcons\Chart_new1.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\check.png" />
     <Content Include="DevDocs\DatabaseLog\createProc.txt" />
+    <Content Include="DevDocs\Img\ToolStripIcons\check_menu.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\color_black.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\color_blue.png" />
     <Content Include="DevDocs\Img\ToolStripIcons\color_green.png" />
@@ -1637,6 +1659,7 @@
     <Content Include="Lib\__phello__.foo.py" />
     <Content Include="logo_org_icon2.ico" />
     <Content Include="logo_org_icon3.ico" />
+    <None Include="Resources\menucheck.bmp" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

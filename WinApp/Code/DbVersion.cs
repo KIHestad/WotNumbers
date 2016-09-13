@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 398; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 400; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2859,6 +2859,24 @@ namespace WinApp.Code
                         Config.Settings.currentHomeView = filename;
                         Config.SaveConfig(out msg);
                     }
+                    break;
+                case 399:
+                    mssql =
+                        "CREATE TABLE chartFavourite ( " +
+                        "id int IDENTITY(1,1) primary key, " +
+                        "favouriteName varchar(MAX) NOT NULL, " +
+                        "tankId int NOT NULL, " +
+                        "chartTypeName varchar(MAX) NOT NULL);";
+                    sqlite =
+                        "CREATE TABLE chartFavourite ( " +
+                        "id integer primary key, " +
+                        "favouriteName varchar(999) NOT NULL, " +
+                        "tankId integer NOT NULL, " +
+                        "chartTypeName varchar(999) NOT NULL);";
+                    break;
+                case 400:
+                    Config.Settings.currentChartFavourite = "";
+                    Config.SaveConfig(out msg);
                     break;
             }
             string sql = "";

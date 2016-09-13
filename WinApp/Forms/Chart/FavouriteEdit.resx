@@ -117,44 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolStripEx1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mTankClearFilter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACFSURBVDhPYxg64NKlc/9B+OLFsw1nzpwRgQoTD2AGgPCF
-        C+cekmwISANQYyZIM8wlUCnSAMgQmEugQqQBkEtIMgDkVJDiy5fPxoL4QHYLhgEwRSCM7Dd8mlHCACYI
-        wyAxZEOx4E0osYCuACSGywCQOEYUIitGdhpMHOYFsgBVDBnMgIEBABvh5ZhR9xrtAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="mTankShowSelected.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB2SURBVDhP1Y7RCYAwDES7i7P50an8dIrQZjJtSg7SYDX+
-        6YOjhctdkr5FKWX1UisGMx9easWQjTb8+gIBJQgT0SLqZhSc3kqyuSZ3M0KtdZcX4ZluS+32UAC07ZsP
-        esmMjo9EwtBlCc5+evHX2Igdmmka/iMpnQULA7ejPrl6AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="mTankSearchAndSelect.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB2SURBVDhP1Y7RCcAgDAXdpdN1Cj86SCcRzQJdyRJ4AQ1G
-        09KfHjyMmouGTzmuWDnYPuf1ABF1cL1mJHNw7WckppQ2DrZz9ICc805ElcM1jv2IbGU6tH3dJQillFOL
-        OtyD9h6PLBkOkW+vVqmh9bRNVkz5j4RwA7yGALZT0pFZAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="mTankUnselect.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACwSURBVDhPzZKxEcIwDEVdMBa70NpZwuooOSbwALBcxAAh
-        P5awFdtcOnh3KiL9/y9R5P4PjtN5pnCVxwbMoJFHCwZMlxfTtDCFm7Q/oJdnq6YXwuRTFmiVkGLW8klG
-        hSXG00z+YYUwWjM00IrN0g85aFZGIYfMyvra930AejL+Truwutq/Y2gWFsMTVfeGIduRVEL95t5OusdW
-        H9J+YTZkcEggh/jU2zZ627GNzD/AuTfd6QuKKxPWJgAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="ChartLineAddTheme.SystemExitImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="FavouriteEditTheme.SystemExitImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACIAAAAaCAYAAADSbo4CAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         wwAADsMBx2+oZAAAABZ0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMDvo9WkAAABoSURBVEhL7dNBCgAh

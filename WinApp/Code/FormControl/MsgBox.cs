@@ -53,7 +53,12 @@ namespace WinApp.Code
 			return ShowNow(Message, Title, Type.Close, null);
 		}
 
-		private static Button ShowNow(string Message, string Title, Type MessageType, Form owner)
+        public static Button Show(string Message)
+        {
+            return ShowNow(Message, "Message", Type.Close, null);
+        }
+
+        private static Button ShowNow(string Message, string Title, Type MessageType, Form owner)
 		{
             try
             {

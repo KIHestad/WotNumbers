@@ -8,53 +8,63 @@ namespace WinApp.Code.FormView
 {
     public class BattleChartHelper
     {
-        public static BattleChartSettings Settings { get; set; }
-        public static BattleChartAddChartLine AddChartLine { get; set; }
+        // Result from Favourite save
+        public static string SaveFavouriteNewFavName = "";
+        public static bool SaveFavouriteSaved = false;
 
+        // Rsult form Favourite edit
+        public static string EditFavouriteEdited = "";
+        public static bool EditFavouriteDeleted = false;
+
+        // Rsult form Removing chart values
+        public static int RemovedChartValues = 0;
+
+        #region Settings class = current settings for displaying chart
+
+        public static BattleChartSettings Settings { get; set; }
+        
         // Stores choices for values for charts at form load, and sets default values
         public class BattleChartSettings
         {
             public BattleChartSettings()
             {
-                TankId = 0;
-                TankName = "( All Tanks )";
-                ChartTypeName = "";
-                BattleModeName = "Random";
                 BattleMode = "15";
-                BattleTimeFilterName = "All Battles";
-                BattleTimeFilter = "ALL";
+                BattleTime = "ALL";
                 Xaxis = "Date";
                 Bullet = false;
                 Spline = false;
             }
-
-            public int TankId { get; set; }
-            public string TankName { get; set; }
-            public string ChartTypeName { get; set; }
-            public string BattleModeName { get; set; }
             public string BattleMode { get; set; }
-            public string BattleTimeFilterName { get; set; }
-            public string BattleTimeFilter { get; set; }
+            public string BattleTime { get; set; }
             public string Xaxis { get; set; }
             public bool Bullet { get; set; }
             public bool Spline { get; set; }
             
         }
 
-        public class BattleChartAddChartLine
+        #endregion
+
+        #region Chart items
+
+        public static List<BattleChartItem> NewChartItem { get; set; }
+        public static List<BattleChartItem> CurrentChartView { get; set; }
+
+        public class BattleChartItem 
         {
-            public BattleChartAddChartLine()
+            public BattleChartItem()
             {
                 tankId = 0;
                 chartTypeName = "";
             }
-
+            
             public int tankId { get; set; }
             public string tankName { get; set; }
             public string chartTypeName { get; set; }
         }
 
-    
+        #endregion
+
+        #region Chart Types = All available chart definitions for showing in menu and for calculations
 
         public enum CalculationType
         {
@@ -96,8 +106,8 @@ namespace WinApp.Code.FormView
 
             // Damage Rating
             chartTypeColList = new List<ChartTypeCols>();
-            chartTypeColList.Add(new ChartTypeCols() { playerTankValCol = "(damageRating / 100)", battleValCol = "(damageRating / 100)" });
-            chartTypeList.Add(new ChartType() { name = "Dmg Rating", col = chartTypeColList, calcType = CalculationType.standard });
+            chartTypeColList.Add(new ChartTypeCols() { playerTankValCol = "(damageRating / 100)", battleValCol = "(damageRatingTotal / 100)" });
+            chartTypeList.Add(new ChartType() { name = "Dmg Rating", col = chartTypeColList, totals = false, calcType = CalculationType.standard });
 
             // WN9
             chartTypeColList = new List<ChartTypeCols>();
@@ -223,5 +233,7 @@ namespace WinApp.Code.FormView
             // Done
             return chartTypeList;
         }
+
+        #endregion
     }
 }

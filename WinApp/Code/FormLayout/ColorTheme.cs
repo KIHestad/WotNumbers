@@ -38,7 +38,8 @@ namespace WinApp.Code
 		public static Color ControlBackMouseOver = Color.FromArgb(255, 68, 68, 72);
 		public static Color ControlBackMouseDown = Color.FromArgb(255, 82, 82, 86);
 		public static Color ControlFont = Color.FromArgb(255, 200, 200, 206);
-		public static Color ControlFontHighLight = Color.FromArgb(255, 220, 220, 226);
+        public static Color ControlFontWarning = Color.FromArgb(255, 255, 174, 94);
+        public static Color ControlFontHighLight = Color.FromArgb(255, 220, 220, 226);
 		public static Color ControlDarkFont = Color.FromArgb(255, 130, 130, 136);
 		public static Color ControlDisabledFont = Color.FromArgb(255, 100, 100, 106);
 		public static Color ControlDimmedFont = Color.FromArgb(255, 85, 85, 89);

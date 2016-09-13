@@ -135,6 +135,7 @@ namespace WinApp.Code
         public bool tankSearchMainModeAdvanced { get; set; }        // Selected tank search main mode, true=advanced, fale=simple
         public DateTime lastGrindingProgressRecalc { get; set; }    // When latest grinding progress recalc was run
         public string currentHomeView { get; set; }                 // The last used home view menu name, to show on restart
+        public string currentChartFavourite { get; set; }           // The last used cahrt favourite, to show on restart
     }
 
 	class Config
@@ -291,6 +292,7 @@ namespace WinApp.Code
             Config.Settings.tankSearchMainModeAdvanced = true;
             Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
             Config.Settings.currentHomeView = "Default";
+            Config.Settings.currentChartFavourite= "";
         }
 
 		

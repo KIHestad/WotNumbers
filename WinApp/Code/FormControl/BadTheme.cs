@@ -1356,7 +1356,14 @@ class BadTextBox : BadThemeControl
 		set { _PasswordChar = value; }
 	}
 
-	private bool _ReadOnly;
+    private bool _HideBorder = false;
+    public bool HideBorder
+    {
+        get { return _HideBorder; }
+        set { _HideBorder = value; }
+    }
+
+    private bool _ReadOnly;
 	public bool ReadOnly
 	{
 		get { return _ReadOnly; }
@@ -1406,10 +1413,13 @@ class BadTextBox : BadThemeControl
 	{
 		// Outer Border
 		SolidBrush BackColor = new SolidBrush(ColorTheme.FormBack);
-		Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width -1, ClientRectangle.Height -1);
-		grapichObject.FillRectangle(BackColor, GroupBoxOuter);
-		grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorder), GroupBoxOuter);
-		textBox.Multiline = MultilineAllow;
+        Rectangle GroupBoxOuter = new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height);
+        grapichObject.FillRectangle(BackColor, GroupBoxOuter);
+        if (!HideBorder)
+        {
+            grapichObject.DrawRectangle(new Pen(ColorTheme.ControlBorder), 0, 0, ClientRectangle.Width-1, ClientRectangle.Height-1);
+        }
+        textBox.Multiline = MultilineAllow;
 		textBox.Height = Height - 7;
 		textBox.Width = Width - 12;
 		textBox.PasswordChar = PasswordChar;

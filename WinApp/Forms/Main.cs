@@ -208,6 +208,8 @@ namespace WinApp.Forms
                 SetFormTitle();
                 SetListener(false);
                 BattleChartHelper.Settings = new BattleChartHelper.BattleChartSettings(); // Set default battle chart settings
+                // TODO: Set new blank current view, add feature for getting latest used favourite from config settings
+                BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>(); 
                 Code.Rating.WN9.SetTierAvgList();
                 if (DB.CheckConnection())
                 {
@@ -3692,8 +3694,8 @@ namespace WinApp.Forms
 		{
 			if (dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value != DBNull.Value)
 			{
-				int playerTankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["player_Tank_Id"].Value);
-				Form frm = new Forms.BattleChart(playerTankId);
+				int tankId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["tank_Id"].Value);
+				Form frm = new Forms.BattleChart(tankId);
 				FormHelper.OpenFormToRightOfParent(this, frm);
 			}
 		}

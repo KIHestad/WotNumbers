@@ -274,16 +274,15 @@ namespace WinApp.Code
 			return s;
 		}
 
-		public static string GetTankName(int TankId)
+        public static string GetTankName(int TankId, bool short_name = false)
 		{
-			string sql = "SELECT name FROM tank WHERE tank.Id=@tankId; ";
-			DB.AddWithValue(ref sql, "@tankId", TankId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			string tankName = "";
-			if (dt.Rows.Count > 0) tankName = dt.Rows[0]["name"].ToString();
-			dt.Dispose();
-			dt.Clear();
-			return tankName;
+            DataRow[] dr = tankList.Select("id = " + TankId.ToString());
+            if (dr.Length == 0)
+                return "";
+            if (short_name)
+                return dr[0]["short_name"].ToString();
+            else
+                return dr[0]["name"].ToString();
 		}
 
         public static DataRow GetTankInfo(int TankId)

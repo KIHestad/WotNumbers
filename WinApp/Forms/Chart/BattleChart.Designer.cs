@@ -35,7 +35,24 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.BattleChartTheme = new BadForm();
             this.mMain = new WinApp.Code.ToolStripEx(this.components);
-            this.mFavourites = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mFavourite = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mFavourite01 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite02 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite03 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite04 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite05 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite06 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite07 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite08 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite09 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite11 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite12 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite13 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite14 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavourite15 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mFavouriteEdit = new System.Windows.Forms.ToolStripButton();
+            this.mFavouriteSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.mChartAdd = new System.Windows.Forms.ToolStripButton();
             this.mChartRemove = new System.Windows.Forms.ToolStripButton();
@@ -77,6 +94,7 @@
             this.mSpline = new System.Windows.Forms.ToolStripButton();
             this.lblFooter = new System.Windows.Forms.Label();
             this.ChartingMain = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.imageListToolStrip = new System.Windows.Forms.ImageList(this.components);
             this.BattleChartTheme.SuspendLayout();
             this.mMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChartingMain)).BeginInit();
@@ -110,11 +128,15 @@
             // 
             // mMain
             // 
+            this.mMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.mMain.AutoSize = false;
             this.mMain.Dock = System.Windows.Forms.DockStyle.None;
             this.mMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.mMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mFavourites,
+            this.mFavourite,
+            this.mFavouriteEdit,
+            this.mFavouriteSave,
             this.toolStripSeparator6,
             this.mChartAdd,
             this.mChartRemove,
@@ -138,16 +160,204 @@
             this.mMain.TabIndex = 22;
             this.mMain.Text = "toolStripEx1";
             // 
-            // mFavourites
+            // mFavourite
             // 
-            this.mFavourites.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mFavourites.Image = ((System.Drawing.Image)(resources.GetObject("mFavourites.Image")));
-            this.mFavourites.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mFavourites.Name = "mFavourites";
-            this.mFavourites.ShowDropDownArrow = false;
-            this.mFavourites.Size = new System.Drawing.Size(81, 22);
-            this.mFavourites.Text = "Favourites";
-            this.mFavourites.ToolTipText = "Select Chart from Favourites";
+            this.mFavourite.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mFavourite01,
+            this.mFavourite02,
+            this.mFavourite03,
+            this.mFavourite04,
+            this.mFavourite05,
+            this.mFavourite06,
+            this.mFavourite07,
+            this.mFavourite08,
+            this.mFavourite09,
+            this.mFavourite10,
+            this.mFavourite11,
+            this.mFavourite12,
+            this.mFavourite13,
+            this.mFavourite14,
+            this.mFavourite15});
+            this.mFavourite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite.Image = ((System.Drawing.Image)(resources.GetObject("mFavourite.Image")));
+            this.mFavourite.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mFavourite.Name = "mFavourite";
+            this.mFavourite.ShowDropDownArrow = false;
+            this.mFavourite.Size = new System.Drawing.Size(20, 22);
+            this.mFavourite.ToolTipText = "Select Chart from Favourites";
+            // 
+            // mFavourite01
+            // 
+            this.mFavourite01.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite01.Name = "mFavourite01";
+            this.mFavourite01.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite01.Text = "Fav01";
+            this.mFavourite01.Visible = false;
+            this.mFavourite01.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite01.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite02
+            // 
+            this.mFavourite02.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite02.Name = "mFavourite02";
+            this.mFavourite02.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite02.Text = "Fav02";
+            this.mFavourite02.Visible = false;
+            this.mFavourite02.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite02.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite03
+            // 
+            this.mFavourite03.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite03.Name = "mFavourite03";
+            this.mFavourite03.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite03.Text = "Fav03";
+            this.mFavourite03.Visible = false;
+            this.mFavourite03.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite03.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite04
+            // 
+            this.mFavourite04.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite04.Name = "mFavourite04";
+            this.mFavourite04.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite04.Text = "Fav04";
+            this.mFavourite04.Visible = false;
+            this.mFavourite04.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite04.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite05
+            // 
+            this.mFavourite05.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite05.Name = "mFavourite05";
+            this.mFavourite05.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite05.Text = "Fav05";
+            this.mFavourite05.Visible = false;
+            this.mFavourite05.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite05.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite06
+            // 
+            this.mFavourite06.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite06.Name = "mFavourite06";
+            this.mFavourite06.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite06.Text = "Fav06";
+            this.mFavourite06.Visible = false;
+            this.mFavourite06.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite06.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite07
+            // 
+            this.mFavourite07.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite07.Name = "mFavourite07";
+            this.mFavourite07.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite07.Text = "Fav07";
+            this.mFavourite07.Visible = false;
+            this.mFavourite07.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite07.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite08
+            // 
+            this.mFavourite08.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite08.Name = "mFavourite08";
+            this.mFavourite08.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite08.Text = "Fav08";
+            this.mFavourite08.Visible = false;
+            this.mFavourite08.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite08.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite09
+            // 
+            this.mFavourite09.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite09.Name = "mFavourite09";
+            this.mFavourite09.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite09.Text = "Fav09";
+            this.mFavourite09.Visible = false;
+            this.mFavourite09.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite09.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite10
+            // 
+            this.mFavourite10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite10.Name = "mFavourite10";
+            this.mFavourite10.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite10.Text = "Fav10";
+            this.mFavourite10.Visible = false;
+            this.mFavourite10.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite10.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite11
+            // 
+            this.mFavourite11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite11.Name = "mFavourite11";
+            this.mFavourite11.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite11.Text = "Fav11";
+            this.mFavourite11.Visible = false;
+            this.mFavourite11.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite11.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite12
+            // 
+            this.mFavourite12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite12.Name = "mFavourite12";
+            this.mFavourite12.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite12.Text = "Fav12";
+            this.mFavourite12.Visible = false;
+            this.mFavourite12.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite12.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite13
+            // 
+            this.mFavourite13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite13.Name = "mFavourite13";
+            this.mFavourite13.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite13.Text = "Fav13";
+            this.mFavourite13.Visible = false;
+            this.mFavourite13.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite13.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite14
+            // 
+            this.mFavourite14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite14.Name = "mFavourite14";
+            this.mFavourite14.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite14.Text = "Fav14";
+            this.mFavourite14.Visible = false;
+            this.mFavourite14.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite14.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavourite15
+            // 
+            this.mFavourite15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mFavourite15.Name = "mFavourite15";
+            this.mFavourite15.Size = new System.Drawing.Size(152, 22);
+            this.mFavourite15.Text = "Fav15";
+            this.mFavourite15.Visible = false;
+            this.mFavourite15.Click += new System.EventHandler(this.mFavouriteSelect_Click);
+            this.mFavourite15.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
+            // 
+            // mFavouriteEdit
+            // 
+            this.mFavouriteEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mFavouriteEdit.Enabled = false;
+            this.mFavouriteEdit.Image = ((System.Drawing.Image)(resources.GetObject("mFavouriteEdit.Image")));
+            this.mFavouriteEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mFavouriteEdit.Name = "mFavouriteEdit";
+            this.mFavouriteEdit.Size = new System.Drawing.Size(23, 22);
+            this.mFavouriteEdit.Text = "toolStripButton1";
+            this.mFavouriteEdit.ToolTipText = "Edit or Delete Selected Favourite";
+            this.mFavouriteEdit.Click += new System.EventHandler(this.mFavouriteEdit_Click);
+            // 
+            // mFavouriteSave
+            // 
+            this.mFavouriteSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mFavouriteSave.Image = ((System.Drawing.Image)(resources.GetObject("mFavouriteSave.Image")));
+            this.mFavouriteSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mFavouriteSave.Name = "mFavouriteSave";
+            this.mFavouriteSave.Size = new System.Drawing.Size(23, 22);
+            this.mFavouriteSave.Text = "Save Favourite";
+            this.mFavouriteSave.ToolTipText = "Update or Save as new Favourite";
+            this.mFavouriteSave.Click += new System.EventHandler(this.mFavouriteSave_Click);
             // 
             // toolStripSeparator6
             // 
@@ -162,7 +372,7 @@
             this.mChartAdd.Name = "mChartAdd";
             this.mChartAdd.Size = new System.Drawing.Size(49, 22);
             this.mChartAdd.Text = "Add";
-            this.mChartAdd.ToolTipText = "Add new chart line";
+            this.mChartAdd.ToolTipText = "Add new chart value";
             this.mChartAdd.Click += new System.EventHandler(this.mChartAdd_Click);
             // 
             // mChartRemove
@@ -173,7 +383,8 @@
             this.mChartRemove.Name = "mChartRemove";
             this.mChartRemove.Size = new System.Drawing.Size(70, 22);
             this.mChartRemove.Text = "Remove";
-            this.mChartRemove.ToolTipText = "Remove chart line";
+            this.mChartRemove.ToolTipText = "Remove chart value";
+            this.mChartRemove.Click += new System.EventHandler(this.mChartRemove_Click);
             // 
             // mChartClear
             // 
@@ -183,7 +394,7 @@
             this.mChartClear.Name = "mChartClear";
             this.mChartClear.Size = new System.Drawing.Size(54, 22);
             this.mChartClear.Text = "Clear";
-            this.mChartClear.ToolTipText = "Clear chart by removing all chart lines";
+            this.mChartClear.ToolTipText = "Clear chart by removing all chart values";
             this.mChartClear.Click += new System.EventHandler(this.mChartClear_Click);
             // 
             // toolStripSeparator11
@@ -230,15 +441,17 @@
             this.mBattleModes.ShowDropDownArrow = false;
             this.mBattleModes.Size = new System.Drawing.Size(80, 22);
             this.mBattleModes.Text = "All Modes";
-            this.mBattleModes.ToolTipText = "Select battle modes";
+            this.mBattleModes.ToolTipText = "Select battle mode";
             // 
             // mBattleModesAll
             // 
             this.mBattleModesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattleModesAll.Name = "mBattleModesAll";
             this.mBattleModesAll.Size = new System.Drawing.Size(160, 22);
+            this.mBattleModesAll.Tag = "ALL";
             this.mBattleModesAll.Text = "All Modes";
             this.mBattleModesAll.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesAll.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator8
             // 
@@ -253,6 +466,7 @@
             this.mBattleModesRandom.Tag = "15";
             this.mBattleModesRandom.Text = "Random";
             this.mBattleModesRandom.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesRandom.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleModesHistorical
             // 
@@ -262,6 +476,7 @@
             this.mBattleModesHistorical.Tag = "Historical";
             this.mBattleModesHistorical.Text = "Historical";
             this.mBattleModesHistorical.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesHistorical.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleModesTeamUnranked
             // 
@@ -271,6 +486,7 @@
             this.mBattleModesTeamUnranked.Tag = "7";
             this.mBattleModesTeamUnranked.Text = "Team: Unranked";
             this.mBattleModesTeamUnranked.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesTeamUnranked.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleModesTeamRanked
             // 
@@ -280,6 +496,7 @@
             this.mBattleModesTeamRanked.Tag = "7Ranked";
             this.mBattleModesTeamRanked.Text = "Team: Ranked";
             this.mBattleModesTeamRanked.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesTeamRanked.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator9
             // 
@@ -294,6 +511,7 @@
             this.mBattleModesGlobalMap.Tag = "GlobalMap";
             this.mBattleModesGlobalMap.Text = "Global Map";
             this.mBattleModesGlobalMap.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesGlobalMap.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleModesSkirmishes
             // 
@@ -303,6 +521,7 @@
             this.mBattleModesSkirmishes.Tag = "Skirmishes";
             this.mBattleModesSkirmishes.Text = "Skirmishes";
             this.mBattleModesSkirmishes.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesSkirmishes.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleModesStronghold
             // 
@@ -312,6 +531,7 @@
             this.mBattleModesStronghold.Tag = "Stronghold";
             this.mBattleModesStronghold.Text = "Stronghold";
             this.mBattleModesStronghold.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesStronghold.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator10
             // 
@@ -326,6 +546,7 @@
             this.mBattleModesSpecial.Tag = "Special";
             this.mBattleModesSpecial.Text = "Special Events";
             this.mBattleModesSpecial.Click += new System.EventHandler(this.mBattleModesChanged_Click);
+            this.mBattleModesSpecial.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleTimeFilter
             // 
@@ -358,6 +579,7 @@
             this.mBattleTimeAll.Tag = "ALL";
             this.mBattleTimeAll.Text = "All Battles";
             this.mBattleTimeAll.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTimeAll.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator3
             // 
@@ -372,6 +594,7 @@
             this.battlesLast2YearsToolStripMenuItem.Tag = "Y2";
             this.battlesLast2YearsToolStripMenuItem.Text = "Battles Last 2 Years";
             this.battlesLast2YearsToolStripMenuItem.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.battlesLast2YearsToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleTime1Y
             // 
@@ -381,6 +604,7 @@
             this.mBattleTime1Y.Tag = "Y1";
             this.mBattleTime1Y.Text = "Battles Last Year";
             this.mBattleTime1Y.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime1Y.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator5
             // 
@@ -395,6 +619,7 @@
             this.mBattleTime6M.Tag = "M6";
             this.mBattleTime6M.Text = "Battles Last 6 Months";
             this.mBattleTime6M.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime6M.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleTime3M
             // 
@@ -404,6 +629,7 @@
             this.mBattleTime3M.Tag = "M3";
             this.mBattleTime3M.Text = "Battles Last 3 Months";
             this.mBattleTime3M.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime3M.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleTime1M
             // 
@@ -413,6 +639,7 @@
             this.mBattleTime1M.Tag = "M1";
             this.mBattleTime1M.Text = "Battles Last Month";
             this.mBattleTime1M.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime1M.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator4
             // 
@@ -427,6 +654,7 @@
             this.mBattleTime2W.Tag = "W2";
             this.mBattleTime2W.Text = "Battles Last 2 Weeks";
             this.mBattleTime2W.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime2W.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // mBattleTime1W
             // 
@@ -436,6 +664,7 @@
             this.mBattleTime1W.Tag = "W1";
             this.mBattleTime1W.Text = "Battles Last Week";
             this.mBattleTime1W.Click += new System.EventHandler(this.mBattleTimeChanged_Click);
+            this.mBattleTime1W.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
             // toolStripSeparator2
             // 
@@ -568,6 +797,13 @@
             this.ChartingMain.Text = "chart1";
             this.ChartingMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartingMain_MouseMove);
             // 
+            // imageListToolStrip
+            // 
+            this.imageListToolStrip.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolStrip.ImageStream")));
+            this.imageListToolStrip.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListToolStrip.Images.SetKeyName(0, "save.png");
+            this.imageListToolStrip.Images.SetKeyName(1, "saveUnsaved.png");
+            // 
             // BattleChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -582,6 +818,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Battle Chart";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BattleChart_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BattleChart_FormClosed);
             this.Load += new System.EventHandler(this.BattleChart_Load);
             this.Shown += new System.EventHandler(this.BattleChart_Shown);
@@ -616,7 +853,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem mBattleTime2W;
         private System.Windows.Forms.ToolStripMenuItem mBattleTime1W;
-        private System.Windows.Forms.ToolStripDropDownButton mFavourites;
+        private System.Windows.Forms.ToolStripDropDownButton mFavourite;
         private System.Windows.Forms.ToolStripButton mRefresh;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripButton mSpline;
@@ -640,5 +877,23 @@
         private System.Windows.Forms.ToolStripButton mChartRemove;
         private System.Windows.Forms.ToolStripButton mChartClear;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite01;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite02;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite03;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite04;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite05;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite06;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite07;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite08;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite09;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite10;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite11;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite12;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite13;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite14;
+        private System.Windows.Forms.ToolStripMenuItem mFavourite15;
+        private System.Windows.Forms.ToolStripButton mFavouriteEdit;
+        private System.Windows.Forms.ToolStripButton mFavouriteSave;
+        private System.Windows.Forms.ImageList imageListToolStrip;
     }
 }
