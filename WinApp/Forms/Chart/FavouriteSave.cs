@@ -56,10 +56,13 @@ namespace WinApp.Forms.Chart
             sql = "";
             foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
             {
-                string newsql = "INSERT INTO chartFavourite (favouriteName, tankId, chartTypeName) VALUES (@favouriteName, @tankId, @chartTypeName);";
+                string newsql =
+                    "INSERT INTO chartFavourite (favouriteName, tankId, chartTypeName, use2ndYaxis) " +
+                    "VALUES (@favouriteName, @tankId, @chartTypeName, @use2ndYaxis);";
                 DB.AddWithValue(ref newsql, "@favouriteName", favName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref newsql, "@tankId", item.tankId, DB.SqlDataType.Int);
                 DB.AddWithValue(ref newsql, "@chartTypeName", item.chartTypeName, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref newsql, "@use2ndYaxis", item.use2ndYaxis, DB.SqlDataType.Boolean);
                 sql += newsql;
             }
             DB.ExecuteNonQuery(sql, true, true);

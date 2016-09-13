@@ -17,7 +17,6 @@ namespace WinApp.Forms
         int initTankId = 0;
 		int decimals = 3;
 		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
-		private double axisYminimum = 999999999;
 
         // List of all available chart types 
         private List<BattleChartHelper.ChartType> chartTypeList = BattleChartHelper.GetChartTypeList(); 
@@ -58,7 +57,7 @@ namespace WinApp.Forms
             // Battle Time Filter, set menu
             SetBattleTimeFilterMenu();
 
-            // Set x-acis
+            // Set x-axis
             mXaxisDate.Checked = (BattleChartHelper.Settings.Xaxis == mXaxisDate.Text);
             mXaxisBattle.Checked = (BattleChartHelper.Settings.Xaxis == mXaxisBattle.Text);
             
@@ -80,8 +79,12 @@ namespace WinApp.Forms
 				axis.LabelAutoFitMaxFontSize = (int)letterType.Size;
 			}
 			area.AxisX.LabelStyle.Angle = 20;
-			area.InnerPlotPosition = new ElementPosition(6, 0, 96, 91);
 
+            ChartingMain.ChartAreas[0].AxisY2.IsStartedFromZero = ChartingMain.ChartAreas[0].AxisY.IsStartedFromZero;
+            //ChartingMain.ChartAreas[0].AxisY2.LineDashStyle = ChartDashStyle.Dash;
+            //ChartingMain.ChartAreas[0].AxisY2.LineColor = Color.Black;
+            //ChartingMain.ChartAreas[0].AxisY2.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
+            ChartingMain.ChartAreas[0].AxisY2.MajorGrid.LineColor = Color.Transparent;
             // Get favourites
             SetFavouritMenu();
 
@@ -137,14 +140,6 @@ namespace WinApp.Forms
 			return newWhere;
 		}
 
-		private double SetYaxisLowestValue(double val)
-		{
-			if (val < axisYminimum)
-				return val;
-			else
-				return axisYminimum;
-		}
-
 		private double RoundOff(double min)
 		{
 			if (min <= 100)
@@ -160,17 +155,34 @@ namespace WinApp.Forms
 
         private void DrawCurrentChartView()
         {
-            ClearChartArea();
+            // Check if 2 Yaxis
+            bool yAxix1 = false;
+            bool yAxix2 = false;
             foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
             {
-                AddChartItemToChart(item.tankId, item.tankName, item.chartTypeName);
+                if (item.use2ndYaxis == false)
+                    yAxix1 = true;
+                if (item.use2ndYaxis == true)
+                    yAxix2 = true;
+            }
+            // Clear chart and prepare for yaxis
+            ClearChartArea(yAxix1 && yAxix2);
+            // Add chart values as series
+            foreach (BattleChartHelper.BattleChartItem item in BattleChartHelper.CurrentChartView)
+            {
+                if (yAxix1 && yAxix2)
+                    AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, item.use2ndYaxis); // Both Y-axis in use
+                else
+                    AddChartValuesToChart(item.tankId, item.tankName, item.chartTypeName, false); // Only one Y-axis
             }
         }
 
-        private void AddChartItemToChart(int tankId, string tankName, string chartTypeName)
+        private void AddChartValuesToChart(int tankId, string tankName, string chartTypeName, bool use2ndYaxis)
 		{
             // Init
             string chartSerie = tankName + " - " + chartTypeName;
+            if (use2ndYaxis)
+                chartSerie += " *";
             string chartOrder = "";
             // Get battle mode item, set param = "" if set as "ALL" Modes
             string chartMode = BattleChartHelper.Settings.BattleMode;
@@ -188,6 +200,9 @@ namespace WinApp.Forms
 			BattleChartHelper.ChartType chartType = chartTypeList.Find(c => c.name == chartTypeName);
 			// Add series
 			Series newSerie = new Series(chartSerie);
+            // Check for 2nd Y-axis
+            if (use2ndYaxis)
+                newSerie.YAxisType = AxisType.Secondary;
             // Line  and marker type
             newSerie.ChartType = chartType.seriesStyle;
             if (chartType.seriesStyle == SeriesChartType.Point) // Point = only dot shown
@@ -209,7 +224,7 @@ namespace WinApp.Forms
             if (BattleChartHelper.Settings.Xaxis == "Date")
 			{
 				ChartingMain.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
-				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
 				newSerie.XValueType = ChartValueType.DateTime;
 				chartOrder = "DESC";
 			}
@@ -219,9 +234,11 @@ namespace WinApp.Forms
 				ChartingMain.RightToLeft = System.Windows.Forms.RightToLeft.No;
 				newSerie.XValueType = ChartValueType.Int32;
 			}
-            // Add to chart
+            
+            // Add series to chart
             ChartingMain.Series.Add(newSerie);
-			// Special calculations for calculated columns
+            
+            // Special calculations for calculated columns
 			switch (chartTypeName)
 			{
 				case "WN8":
@@ -423,7 +440,6 @@ namespace WinApp.Forms
 							chartVal = Math.Round(CalcChartSeriesPointValue(values, chartType.calcType, defaultTier), decimals);
 						else
 							chartVal = Convert.ToDouble(dr[0]);
-						axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
 						chartDate = thisDate.AddHours(-hourInterval);
 					}
@@ -456,15 +472,12 @@ namespace WinApp.Forms
 							chartVal = Math.Round(CalcChartSeriesPointValue(values, chartType.calcType, defaultTier), decimals); 
 						else
                             chartVal = Convert.ToDouble(dr[0]);
-                        //axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal);
 					}
 				}
 			}
 			dtChart.Clear();
 			dtCurrent.Clear();
-
-            //ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
 		}
 
 		private void DrawChartSeriesWN8(int tankId, string chartSerie, string chartOrder, string chartMode)
@@ -567,7 +580,6 @@ namespace WinApp.Forms
 					if (thisDate <= chartDate)
 					{
                         chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
-						axisYminimum = SetYaxisLowestValue(chartVal);
 						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
 						chartDate = thisDate.AddHours(-hourInterval);
 					}
@@ -717,7 +729,6 @@ namespace WinApp.Forms
                     {
                         double wn9maxhist = 0;
                         chartVal = Math.Round(WN9.CalcPlayerTankBattle(ptb, out wn9maxhist), decimals);
-                        axisYminimum = SetYaxisLowestValue(chartVal);
                         ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
                         chartDate = thisDate.AddHours(-hourInterval);
                     }
@@ -761,12 +772,10 @@ namespace WinApp.Forms
                     {
                         double wn9maxhist = 0;
                         chartVal = Math.Round(Code.Rating.WN9.CalcPlayerTankBattle(ptb, out wn9maxhist), decimals);
-                        //axisYminimum = SetYaxisLowestValue(chartVal);
                         ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal); // Use battle count
                     }
                 }
             }
-            //ChartingMain.ChartAreas[0].AxisY.Minimum = RoundOff(axisYminimum);
             Cursor = Cursors.Default;
         }
 
@@ -806,16 +815,19 @@ namespace WinApp.Forms
                         {
                             var pointXPixel = result.ChartArea.AxisX.ValueToPixelPosition(prop.XValue);
                             var pointYPixel = result.ChartArea.AxisY.ValueToPixelPosition(prop.YValues[0]);
+                            var pointY2Pixel = result.ChartArea.AxisY2.ValueToPixelPosition(prop.YValues[0]);
 
                             // check if the cursor is really close to the point (2 pixels around the point)
-                            if (Math.Abs(pos.X - pointXPixel) < 2 &&
-                                Math.Abs(pos.Y - pointYPixel) < 2)
+                            if (Math.Abs(pos.X - pointXPixel) < 2 && 
+                                (Math.Abs(pos.Y - pointYPixel) < 2 || Math.Abs(pos.Y - pointY2Pixel) < 2))
                             {
                                 string TankName = result.Series.Name;
                                 string YValue = prop.YValues[0].ToString();
                                 string XValue = prop.XValue.ToString();
                                 if (BattleChartHelper.Settings.Xaxis == "Date")
+                                {
                                     XValue = DateTime.FromOADate((double)prop.XValue).ToString("dd.MM.yyyy");
+                                }
                                 tooltip.Show(
                                     TankName + Environment.NewLine +
                                     XLabel + XValue + Environment.NewLine + 
@@ -933,11 +945,20 @@ namespace WinApp.Forms
             lblFooter.Text = "Selected Battle Mode: " + menu.Text;
         }
 
-        private void ClearChartArea()
+        private void ClearChartArea(bool useTwoYaxis)
         {
             ChartingMain.Series.Clear();
             ChartingMain.ResetAutoValues();
-            axisYminimum = 999999999;
+            if (useTwoYaxis)
+            {
+                ChartingMain.ChartAreas[0].AxisY2.Enabled = AxisEnabled.True;
+                ChartingMain.ChartAreas[0].InnerPlotPosition = new ElementPosition(4, 0, 92, 91); // not so wide to allow 2nd Yxis to right
+            }
+            else
+            {
+                ChartingMain.ChartAreas[0].AxisY2.Enabled = AxisEnabled.False;
+                ChartingMain.ChartAreas[0].InnerPlotPosition = new ElementPosition(4, 0, 96, 91); // wide
+            }
         }
 
         // Close form
@@ -950,7 +971,7 @@ namespace WinApp.Forms
         private void mChartClear_Click(object sender, EventArgs e)
         {
             BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>();
-            ClearChartArea();
+            ClearChartArea(false);
             lblFooter.Text = "Chart cleared";
         }
 
@@ -1066,7 +1087,6 @@ namespace WinApp.Forms
         {
             // Clear current charts
             BattleChartHelper.CurrentChartView = new List<BattleChartHelper.BattleChartItem>();
-            ClearChartArea();
             // Get favourite
             string sql = "SELECT * FROM chartFavourite WHERE favouriteName = @favouriteName ORDER BY tankId, chartTypeName;";
             DB.AddWithValue(ref sql, "@favouriteName", favName, DB.SqlDataType.VarChar);
@@ -1080,11 +1100,16 @@ namespace WinApp.Forms
                     item.chartTypeName = dr["chartTypeName"].ToString();
                     item.tankId = Convert.ToInt32(dr["tankId"]);
                     item.tankName = TankHelper.GetTankName(item.tankId, true);
+                    item.use2ndYaxis = Convert.ToBoolean(dr["use2ndYaxis"]);
                     BattleChartHelper.CurrentChartView.Add(item);
                 }
                 DrawCurrentChartView();
                 mFavourite.Text = favName;
                 mFavouriteEdit.Enabled = true;
+            }
+            else
+            {
+                ClearChartArea(false);
             }
             // Set menu checked
             for (int i = 1; i <= 15; i++)

@@ -29,6 +29,7 @@ namespace WinApp.Forms
         {
             public bool Select { get; set; }
             public string ChartTypeName { get; set; }
+            public bool Use2ndYaxis { get; set; }
         }
 
         private List<ChartTypeItem> ChartTypeList = new List<ChartTypeItem>();
@@ -166,6 +167,7 @@ namespace WinApp.Forms
                     newChartItemAllTanks.tankId = 0;
                     newChartItemAllTanks.tankName = "All Tanks";
                     newChartItemAllTanks.chartTypeName = chartTypeItem.ChartTypeName;
+                    newChartItemAllTanks.use2ndYaxis = chartTypeItem.Use2ndYaxis;
                     BattleChartHelper.NewChartItem.Add(newChartItemAllTanks);
                 }
                 // Check if tanks any selected
@@ -176,6 +178,7 @@ namespace WinApp.Forms
                     newChartItem.tankId = tankItem.Id;
                     newChartItem.tankName = tankItem.TankName;
                     newChartItem.chartTypeName = chartTypeItem.ChartTypeName;
+                    newChartItem.use2ndYaxis = chartTypeItem.Use2ndYaxis;
                     BattleChartHelper.NewChartItem.Add(newChartItem);
                 }
             }
@@ -440,9 +443,14 @@ namespace WinApp.Forms
             dataGridChartTypes.Columns["Select"].Width = 40;
             dataGridChartTypes.Columns["Select"].ReadOnly = false;
 
-            dataGridChartTypes.Columns["ChartTypeName"].Width = 94;
+            dataGridChartTypes.Columns["ChartTypeName"].Width = 96;
             dataGridChartTypes.Columns["ChartTypeName"].ReadOnly = true;
             dataGridChartTypes.Columns["ChartTypeName"].HeaderText = "Chart Type";
+
+            dataGridChartTypes.Columns["Use2ndYaxis"].DefaultCellStyle.Padding = new Padding(24, 0, 0, 0);
+            dataGridChartTypes.Columns["Use2ndYaxis"].Width = 64;
+            dataGridChartTypes.Columns["Use2ndYaxis"].ReadOnly = false;
+            dataGridChartTypes.Columns["Use2ndYaxis"].HeaderText = "2nd Y-axis";
         }
 
         private void dataGridTanks_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -504,9 +512,19 @@ namespace WinApp.Forms
                 bool select = Convert.ToBoolean(dataGridChartTypes.Rows[e.RowIndex].Cells["Select"].Value);
                 select = !select;
                 dataGridChartTypes.Rows[e.RowIndex].Cells["Select"].Value = select;
-
             }
+            // Check for select 2nd Y-Row
+            if (e.RowIndex >= 0 && e.ColumnIndex == 2)
+            {
+                // Change selected status for tank
+                //string chartTypeName = dataGridChartTypes.Rows[e.RowIndex].Cells["ID"].Value.ToString();
+                bool use2ndYaxis = Convert.ToBoolean(dataGridChartTypes.Rows[e.RowIndex].Cells["Use2ndYaxis"].Value);
+                use2ndYaxis = !use2ndYaxis;
+                dataGridChartTypes.Rows[e.RowIndex].Cells["Use2ndYaxis"].Value = use2ndYaxis;
+            }
+
         }
+
 
         private void dataGridChartTypes_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

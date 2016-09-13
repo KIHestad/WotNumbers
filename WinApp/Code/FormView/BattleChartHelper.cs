@@ -49,17 +49,19 @@ namespace WinApp.Code.FormView
         public static List<BattleChartItem> NewChartItem { get; set; }
         public static List<BattleChartItem> CurrentChartView { get; set; }
 
-        public class BattleChartItem 
+        public class BattleChartItem
         {
             public BattleChartItem()
             {
                 tankId = 0;
                 chartTypeName = "";
+                use2ndYaxis = false;
             }
-            
+
             public int tankId { get; set; }
             public string tankName { get; set; }
             public string chartTypeName { get; set; }
+            public bool use2ndYaxis { get; set; }
         }
 
         #endregion

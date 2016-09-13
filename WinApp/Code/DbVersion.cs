@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 400; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 401; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2877,6 +2877,10 @@ namespace WinApp.Code
                 case 400:
                     Config.Settings.currentChartFavourite = "";
                     Config.SaveConfig(out msg);
+                    break;
+                case 401:
+                    mssql = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
+                    sqlite = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
                     break;
             }
             string sql = "";

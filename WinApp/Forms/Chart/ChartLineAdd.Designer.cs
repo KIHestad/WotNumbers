@@ -79,7 +79,7 @@
             this.ChartLineAddTheme.MainArea = mainAreaClass1;
             this.ChartLineAddTheme.Name = "ChartLineAddTheme";
             this.ChartLineAddTheme.Resizable = true;
-            this.ChartLineAddTheme.Size = new System.Drawing.Size(650, 417);
+            this.ChartLineAddTheme.Size = new System.Drawing.Size(700, 417);
             this.ChartLineAddTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("ChartLineAddTheme.SystemExitImage")));
             this.ChartLineAddTheme.SystemMaximizeImage = null;
             this.ChartLineAddTheme.SystemMinimizeImage = null;
@@ -93,7 +93,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrollChartTypes.BackColor = System.Drawing.Color.Transparent;
             this.scrollChartTypes.Image = null;
-            this.scrollChartTypes.Location = new System.Drawing.Point(595, 68);
+            this.scrollChartTypes.Location = new System.Drawing.Point(645, 68);
             this.scrollChartTypes.Name = "scrollChartTypes";
             this.scrollChartTypes.ScrollElementsTotals = 100;
             this.scrollChartTypes.ScrollElementsVisible = 20;
@@ -122,13 +122,13 @@
             this.dataGridChartTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridChartTypes.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridChartTypes.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridChartTypes.Location = new System.Drawing.Point(458, 68);
+            this.dataGridChartTypes.Location = new System.Drawing.Point(442, 68);
             this.dataGridChartTypes.Name = "dataGridChartTypes";
             this.dataGridChartTypes.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dataGridChartTypes.RowHeadersVisible = false;
             this.dataGridChartTypes.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridChartTypes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridChartTypes.Size = new System.Drawing.Size(139, 269);
+            this.dataGridChartTypes.Size = new System.Drawing.Size(205, 269);
             this.dataGridChartTypes.TabIndex = 25;
             this.dataGridChartTypes.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridChartTypes_CellClick);
             this.dataGridChartTypes.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridChartTypes_CellFormatting);
@@ -281,7 +281,7 @@
             this.cmdCancel.BlackButton = false;
             this.cmdCancel.Checked = false;
             this.cmdCancel.Image = null;
-            this.cmdCancel.Location = new System.Drawing.Point(555, 374);
+            this.cmdCancel.Location = new System.Drawing.Point(605, 374);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(75, 23);
             this.cmdCancel.TabIndex = 3;
@@ -295,7 +295,7 @@
             this.cmdSelect.BlackButton = false;
             this.cmdSelect.Checked = false;
             this.cmdSelect.Image = null;
-            this.cmdSelect.Location = new System.Drawing.Point(474, 374);
+            this.cmdSelect.Location = new System.Drawing.Point(524, 374);
             this.cmdSelect.Name = "cmdSelect";
             this.cmdSelect.Size = new System.Drawing.Size(75, 23);
             this.cmdSelect.TabIndex = 2;
@@ -309,9 +309,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.badGroupBox2.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox2.Image = null;
-            this.badGroupBox2.Location = new System.Drawing.Point(440, 44);
+            this.badGroupBox2.Location = new System.Drawing.Point(423, 44);
             this.badGroupBox2.Name = "badGroupBox2";
-            this.badGroupBox2.Size = new System.Drawing.Size(190, 313);
+            this.badGroupBox2.Size = new System.Drawing.Size(257, 313);
             this.badGroupBox2.TabIndex = 1;
             this.badGroupBox2.Text = "Select Chart Type";
             // 
@@ -331,7 +331,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(650, 417);
+            this.ClientSize = new System.Drawing.Size(700, 417);
             this.Controls.Add(this.ChartLineAddTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ChartLineAdd";
