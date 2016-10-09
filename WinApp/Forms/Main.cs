@@ -1563,7 +1563,9 @@ namespace WinApp.Forms
 				mTankFilter_CountryUSA.Checked = false;
 				mTankFilter_CountryUSSR.Checked = false;
                 mTankFilter_CountryCzechoslovakia.Checked = false;
-				mTankFilter_Country.Text = "Nation";
+                mTankFilter_CountrySweden.Checked = false;
+
+                mTankFilter_Country.Text = "Nation";
 			}
 			if (type)
 			{
@@ -1583,8 +1585,9 @@ namespace WinApp.Forms
 			if (mTankFilter_CountryUSSR.Checked) tankFilterNation++;
 			if (mTankFilter_CountryJapan.Checked) tankFilterNation++;
             if (mTankFilter_CountryCzechoslovakia.Checked) tankFilterNation++;
+            if (mTankFilter_CountrySweden.Checked) tankFilterNation++;
 
-			if (mTankFilter_TypeLT.Checked) tankFilterType++;
+            if (mTankFilter_TypeLT.Checked) tankFilterType++;
 			if (mTankFilter_TypeMT.Checked) tankFilterType++;
 			if (mTankFilter_TypeHT.Checked) tankFilterType++;
 			if (mTankFilter_TypeTD.Checked) tankFilterType++;
@@ -2015,8 +2018,9 @@ namespace WinApp.Forms
 				if (mTankFilter_CountryUSSR.Checked) { nation += "USSR,"; nationId += "0,"; manualFilterCount++; }
 				if (mTankFilter_CountryJapan.Checked) { nation += "Japan,"; nationId += "6,"; manualFilterCount++; }
                 if (mTankFilter_CountryCzechoslovakia.Checked) { nation += "Czechoslovakia,"; nationId += "7,"; manualFilterCount++; }
+                if (mTankFilter_CountrySweden.Checked) { nation += "Sweden,"; nationId += "8,"; manualFilterCount++; }
 
-				if (mTankFilter_TypeLT.Checked) { type += "Light,"; typeId += "1,"; manualFilterCount++; }
+                if (mTankFilter_TypeLT.Checked) { type += "Light,"; typeId += "1,"; manualFilterCount++; }
 				if (mTankFilter_TypeMT.Checked) { type += "Medium,"; typeId += "2,"; manualFilterCount++; }
 				if (mTankFilter_TypeHT.Checked) { type += "Heavy,"; typeId += "3,"; manualFilterCount++; }
 				if (mTankFilter_TypeTD.Checked) { type += "TD,"; typeId += "4,"; manualFilterCount++; }

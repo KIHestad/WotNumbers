@@ -54,7 +54,7 @@ namespace WinApp.Code
                 DataRow drBattle = dtBattle.Rows[0];
                 DateTime battleTime = Convert.ToDateTime(drBattle["battleTime"]);
                 int battleLifeTime = Convert.ToInt32(drBattle["battleLifeTime"]);
-                DateTime battleApproxStartTime = battleTime.AddSeconds(-battleLifeTime); // timestamp on file is apprix this, normally later
+                DateTime battleApproxStartTime = battleTime.AddSeconds(-battleLifeTime); // timestamp on file is approx this, normally later
                 string mapArenaId = drBattle["mapArenaId"].ToString();
                 string tankImgPath = drBattle["imgPath"].ToString();
                 string tankFileName = "";

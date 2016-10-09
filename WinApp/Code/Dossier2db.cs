@@ -990,8 +990,17 @@ namespace WinApp.Code
                     sqlFields += ", damageRating ";
                     sqlValues += ", " + rankDmg.ToString().Replace(",",".");
                 }
-				// Update database
-				if (sqlFields.Length > 0)
+                // Calc battle start time
+                sqlFields += ", battleTimeStart ";
+                // Get the battle end time, subtract lifetime to estimate start time - will be overwritten with actual start time from battle result
+                DateTime battleDateTime = DateTimeHelper.AdjustForTimeZone(Convert.ToDateTime(battleNewRow["battletime"]));
+                int lifetime = Convert.ToInt32(battleNewRow["battleLifeTime"]);
+                if (lifetime > 180)
+                    lifetime -= 120; // Normally lifetime is more than actually lifetime, probably because of loading time is included?
+                sqlValues += ", '" + battleDateTime.AddSeconds(-lifetime).ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'";
+
+                // Update database
+                if (sqlFields.Length > 0)
 				{
 					// Insert Battle
 					string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";

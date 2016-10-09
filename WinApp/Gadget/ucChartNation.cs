@@ -244,7 +244,7 @@ namespace WinApp.Gadget
 			chart1.Width = this.Width - 2;
 			chart1.Height = this.Height - (this.Height - lblChartType.Top + 21);
             // Images
-            double barWidth = ((chart1.Width) / Convert.ToDouble(8)); // chart size divided on number of nations
+            double barWidth = ((chart1.Width) / Convert.ToDouble(imgControls.Count)); // chart size divided on number of nations
             for (int id = 0; id < imgControls.Count; id++)
             {
                 Control c = imgControls[id];

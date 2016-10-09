@@ -19,6 +19,13 @@ namespace WinApp.Code
 		private static List<string> battleResultJsonFileExists = new List<string>(); // List of json-files already existing in battle folder, to avoid converting several times
 		public static FileSystemWatcher battleResultFileWatcher = new FileSystemWatcher();
 		
+        private class ClanInfo
+        {
+            public int clanDBID { get; set; }
+            public string clanAbbrev { get; set;  }
+            public int count { get; set; }
+        }
+
 		private class BattlePlayer
 		{
 			public int accountDBID;
@@ -319,8 +326,9 @@ namespace WinApp.Code
 						double duration = (double)token_common.SelectToken("duration"); // Arena duration
 						double battlefinishUnix = arenaCreateTime + duration; // Battle finish time
 						DateTime battleTime = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(battlefinishUnix)).AddSeconds(45);
-						// Personal token
-						JToken token_personel;
+                        DateTime battleTimeStart = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(arenaCreateTime));
+                        // Personal token
+                        JToken token_personel;
 						if (btlResultVer >= 15)
 							token_personel = token_root["personal"].First.First;
 						else
@@ -347,12 +355,13 @@ namespace WinApp.Code
 								// Create battle, do not exists
 								int playerTankId = TankHelper.GetPlayerTankId(tankId);
 								sql =
-									"insert into battle " + 
-									"(playerTankId,  battleMode, battlesCount, battleTime,  battleResultId, battleSurviveId) values " +
-									"(@playerTankId, 'Special',  1,            @battleTime, 1,              1               );";
+									"insert into battle " +
+                                    "(playerTankId,  battleMode, battlesCount, battleTime,  battleTimeStart, battleResultId, battleSurviveId) values " +
+                                    "(@playerTankId, 'Special',  1,            @battleTime, @battleTimeStart,1,              1               );";
 								DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 								DB.AddWithValue(ref sql, "@battleTime", battleTime, DB.SqlDataType.DateTime);
-								DB.ExecuteNonQuery(sql);
+                                DB.AddWithValue(ref sql, "@battleTimeStart", battleTimeStart, DB.SqlDataType.DateTime);
+                                DB.ExecuteNonQuery(sql);
 							}
 						}
 						// Fetch battle
@@ -497,8 +506,10 @@ namespace WinApp.Code
                                     case 2: gameplayName = "Assault"; break;
                                 }
                                 battleValues.Add(new BattleValue() { colname = "gameplayName", value = "'" + gameplayName + "'" });
-								// Special tank extra data insert, not fetched from dossier file
-								if (specialTankFound)
+                                // Correct battle start time
+                                battleValues.Add(new BattleValue() { colname = "battleTimeStart", value = battleTimeStart});
+                                // Special tank extra data insert, not fetched from dossier file
+                                if (specialTankFound)
 								{
 									// battle lifetime
 									battleValues.Add(new BattleValue() { colname = "battleLifeTime", value = (int)token_personel.SelectToken("lifeTime") });
@@ -576,7 +587,14 @@ namespace WinApp.Code
 								string fields = "";
 								foreach (var battleValue in battleValues)
 								{
-									fields += battleValue.colname + " = " + battleValue.value.ToString() + ", ";
+                                    if (battleValue.value.GetType() == typeof(DateTime))
+                                    {
+                                        string temp = "@datetimevalue";
+                                        DB.AddWithValue(ref temp, "@datetimevalue", battleValue.value, DB.SqlDataType.DateTime);
+                                        fields += battleValue.colname + " = " + temp + ", ";
+                                    }
+                                    else
+                                        fields += battleValue.colname + " = " + battleValue.value.ToString() + ", ";
 								}
 								sql = "update battle set " + fields + " arenaUniqueID=@arenaUniqueID where id=@battleId";
 								DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
@@ -588,8 +606,6 @@ namespace WinApp.Code
 								List<BattlePlayer> battlePlayers = new List<BattlePlayer>();
 								JToken token_players = token_root["players"];
 								// Get values to save to battle
-								int[] enemyClanDBID = new int[3];
-								string[] enemyClanAbbrev = new string[3];
 								int playerFortResources = 0;
 								int[] teamFortResources = new int[3];
 								int[] survivedCount = new int[3];
@@ -606,6 +622,7 @@ namespace WinApp.Code
 								int playerPlatoonParticipants = 0;
 								int killedByAccountId = 0;
 								string killedByPlayerName = "";
+                                List<ClanInfo> clanCount = new List<ClanInfo>();
 								foreach (JToken player in token_players)
 								{
 									BattlePlayer newPlayer = new BattlePlayer();
@@ -633,21 +650,24 @@ namespace WinApp.Code
 									// Get values for saving to battle
                                     if (getEnemyClan && newPlayer.clanDBID > 0 && newPlayer.team == enemyTeam) // Get enemy clan
 									{
-										// Found player with clan, continue and check that all enemy players belongs to same clan, if not cancel
-										if (enemyClanDBID[newPlayer.team] == 0)
-										{
-											// First player clan found, fetch it
-											enemyClanDBID[newPlayer.team] = newPlayer.clanDBID;
-											enemyClanAbbrev[newPlayer.team] = newPlayer.clanAbbrev;
-										}
-										else if (enemyClanDBID[newPlayer.team] != newPlayer.clanDBID)
-										{
-											// Found a different clan, cancel
-											getEnemyClan = false;
-											enemyClanDBID[newPlayer.team] = 0;
-											enemyClanAbbrev[newPlayer.team] = "";
-										}
-
+                                        // Found player with clan, add to clan count
+                                        bool foundPlayerClan = false;
+                                        foreach (ClanInfo item in clanCount)
+                                        {
+                                            if (item.clanDBID == newPlayer.clanDBID)
+                                            {
+                                                item.count++;
+                                                foundPlayerClan = true;
+                                            }
+                                        }
+                                        if (!foundPlayerClan)
+                                        {
+                                            clanCount.Add(new ClanInfo() {
+                                                clanDBID = newPlayer.clanDBID,
+                                                clanAbbrev = newPlayer.clanAbbrev,
+                                                count = 1
+                                            });
+                                        }
 									}
 									if (getPlatoon && newPlayer.platoonID > 0) // Get platoon info
 									{
@@ -851,16 +871,26 @@ namespace WinApp.Code
 									"  fragsenemy=@fragsenemy, " +
                                     "  maxBattleTier=@maxBattleTier " +
 									"where id=@battleId;";
-								// Clan info
-								if (!getEnemyClan || enemyClanDBID[enemyTeam] == 0)
-								{
-									DB.AddWithValue(ref sql, "@enemyClanAbbrev", DBNull.Value, DB.SqlDataType.VarChar);
+                                // Clan info
+                                bool found = false;
+                                ClanInfo foundClan = new ClanInfo();
+                                foreach (ClanInfo item in clanCount)
+                                {
+                                    if (item.count > 9)
+                                    {
+                                        found = true;
+                                        foundClan = item;
+                                    }
+                                }
+								if (getEnemyClan && found)
+                                {
+                                    DB.AddWithValue(ref sql, "@enemyClanAbbrev", foundClan.clanAbbrev, DB.SqlDataType.VarChar);
+                                    DB.AddWithValue(ref sql, "@enemyClanDBID", foundClan.clanDBID, DB.SqlDataType.Int);
+                                }
+                                else
+                                {
+                                    DB.AddWithValue(ref sql, "@enemyClanAbbrev", DBNull.Value, DB.SqlDataType.VarChar);
 									DB.AddWithValue(ref sql, "@enemyClanDBID", DBNull.Value, DB.SqlDataType.Int);
-								}
-								else
-								{
-									DB.AddWithValue(ref sql, "@enemyClanAbbrev", enemyClanAbbrev[enemyTeam], DB.SqlDataType.VarChar);
-									DB.AddWithValue(ref sql, "@enemyClanDBID", enemyClanDBID[enemyTeam], DB.SqlDataType.Int);
 								}
 								// Industrial Resources
 								if (!getFortResource)

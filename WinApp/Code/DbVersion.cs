@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 401; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 411; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2817,15 +2817,9 @@ namespace WinApp.Code
                     mssql = "update battle set spotted=0 where spotted < 0; ";
                     sqlite = mssql;
                     break;
-                case 394:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
                 case 395:
                     mssql = "ALTER TABLE tank ADD customTankInfo BIT NOT NULL DEFAULT(0); ";
                     sqlite = mssql;
-                    break;
-                case 396:
-                    RunWotApi = true;
                     break;
                 case 397:
                     mssql =
@@ -2882,6 +2876,44 @@ namespace WinApp.Code
                     mssql = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
                     sqlite = "ALTER TABLE chartFavourite ADD use2ndYaxis BIT NOT NULL DEFAULT(0);";
                     break;
+                case 402:
+                    mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (8, 'Sweden', 'SE', 'sweden', 90); ";
+                    sqlite = mssql;
+                    break;
+                case 403:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    RunWotApi = true;
+                    break;
+                case 404:
+                    mssql = "ALTER TABLE battle ADD battleTimeStart datetime NOT NULL DEFAULT GETDATE(); ";
+                    sqlite = "ALTER TABLE battle ADD battleTimeStart datetime NULL;";
+                    break;
+                case 405:
+                    mssql = "UPDATE battle SET battleTimeStart=DATEADD(second, ISNULL(-battleLifeTime,-180), battleTime); ";
+                    sqlite = "UPDATE battle SET battleTimeStart=DATETIME(battleTime, '-' || IFNULL(battleLifeTime,180) || ' seconds'); ";
+                    break;
+                case 406:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameSort) ";
+                    mssql = temp + "VALUES (117, 2, 110, 'CAST(battle.battleTimeStart AS datetime)', 'Start Time', 'Battle date and time, the date/time the battle started', 'Battle', 100, 'DateTime', 'battle.battleTimeStart'); ";
+                    sqlite = mssql;
+                    break;
+                case 408:
+                    mssql = "UPDATE columnSelection SET colName='battle.battleTimeStart' WHERE id = 117; ";
+                    sqlite = mssql;
+                    break;
+                case 409:
+                    mssql = "UPDATE columnSelection SET colName='battle.battleTime' WHERE id = 8; ";
+                    sqlite = mssql;
+                    break;
+                case 411:
+                    mssql =
+                        "UPDATE columnSelection SET name='Finish Date' WHERE id = 163; " +
+                        "UPDATE columnSelection SET name='Finish Time' WHERE id = 164; " +
+                        "UPDATE columnSelection SET name='Finished' WHERE id = 8; " +
+                        "UPDATE columnSelection SET name='Started' WHERE id = 117; ";
+                    sqlite = mssql;
+                    break;
+
             }
             string sql = "";
 			// get sql for correct dbtype

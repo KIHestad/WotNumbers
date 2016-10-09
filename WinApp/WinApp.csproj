@@ -1160,6 +1160,8 @@
     <Content Include="Dossier2json\battle_results_shared_19.py" />
     <Content Include="Dossier2json\battle_results_shared_20.py" />
     <Content Include="Dossier2json\battle_results_shared_21.py" />
+    <Content Include="Dossier2json\battle_results_shared_22.py" />
+    <Content Include="Dossier2json\battle_results_shared_23.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\dictpackers_18.py" />

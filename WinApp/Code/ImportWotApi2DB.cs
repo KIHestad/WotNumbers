@@ -257,6 +257,7 @@ namespace WinApp.Code
                                     case "uk": countryId = 5; break;
                                     case "japan": countryId = 6; break;
                                     case "czech": countryId = 7; break;
+                                    case "sweden": countryId = 8; break;
                                 }
 
                                 // Tank name
@@ -406,6 +407,7 @@ namespace WinApp.Code
                                     case "uk": countryId = 5; break;
                                     case "japan": countryId = 6; break;
                                     case "czech": countryId = 7; break;
+                                    case "sweden": countryId = 8; break;
                                 }
 
                                 // Tank name
@@ -544,6 +546,7 @@ namespace WinApp.Code
                                     case "uk": foundTankInfo.nation = "UK"; break;
                                     case "japan": foundTankInfo.nation = "Japan"; break;
                                     case "czech": foundTankInfo.nation = "Czechoslovakia"; break;
+                                    case "sweden": foundTankInfo.nation = "Sweden"; break; // TODO: Check 9.16
                                 }
 
                                 // Tank name
@@ -942,12 +945,15 @@ namespace WinApp.Code
 					JToken rootToken = allTokens.First;
 					LogItems logItems = new LogItems(); // Gather info of result, logged after runned
 					string sqlTotal = "";
-					if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
+                    List<string> newMaps = new List<string>();
+                    if (((JProperty)rootToken).Name.ToString() == "status" && ((JProperty)rootToken).Value.ToString() == "ok")
 					{
 						rootToken = rootToken.Next;
 						int itemCount = (int)((JProperty)rootToken.First.First).Value;
 						rootToken = rootToken.Next;
 						JToken maps = rootToken.Children().First();
+                        // Get all current maps into list for checking if exits
+                        DataTable currentMaps = DB.FetchData("SELECT * FROM map");
 						foreach (JProperty map in maps)
 						{
 							Application.DoEvents(); // TODO: testing freeze-problem running API requests
@@ -956,22 +962,56 @@ namespace WinApp.Code
 							name = name.Replace("'","");
 							string description = itemToken["description"].ToString();
 							string arena_id = itemToken["arena_id"].ToString();
-                            string updateSql = "UPDATE map SET description=@description, name=@name, active=1 WHERE arena_id=@arena_id; ";
-							DB.AddWithValue(ref updateSql, "@name", name, DB.SqlDataType.VarChar);
-							DB.AddWithValue(ref updateSql, "@description", description, DB.SqlDataType.VarChar);
-							DB.AddWithValue(ref updateSql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
-							sqlTotal += updateSql + "\n" + Environment.NewLine;
-							logItems.Updated += name + ", ";
-							logItems.UpdatedCount++;
+                            if (name.Trim() == "")
+                                name = arena_id;
+                            string sql = "";
+                            bool newMap = (currentMaps.Select("arena_id = '" + arena_id + "'").Count() == 0);
+                            if (newMap)
+                                sql = "INSERT INTO map (id, description, name, active, arena_id) VALUES (@id, @description, @name, 1, @arena_id); ";
+                            else
+                                sql = "UPDATE map SET description=@description, name=@name, active=1 WHERE arena_id=@arena_id; ";
+                            DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@description", description, DB.SqlDataType.VarChar);
+                            DB.AddWithValue(ref sql, "@arena_id", arena_id, DB.SqlDataType.VarChar);
+                            if (newMap)
+                            {
+                                newMaps.Add(sql);
+                                logItems.Inserted += name + ", ";
+                                logItems.InsertedCount++;
+                            }
+                            else
+                            {
+                                sqlTotal += sql + "\n" + Environment.NewLine;
+                                logItems.Updated += name + ", ";
+                                logItems.UpdatedCount++;
+                            }
 						}
-
 						// Update log file after import
 						WriteApiLog("Maps", logItems);
 					}
+                    // Update existing maps
                     if (sqlTotal.Length > 0)
                     {
                         sqlTotal = "UPDATE map SET active=0;" + sqlTotal; // Remove active flag before updates
                         DB.ExecuteNonQuery(sqlTotal, true, true);
+                    }
+                    // Add new maps
+                    if (newMaps.Count > 0)
+                    {
+                        sqlTotal = "";
+                        DataTable currentMaps = DB.FetchData("SELECT MAX(id) FROM map");
+                        int newId = 0;
+                        if (currentMaps.Rows.Count > 0)
+                            newId = Convert.ToInt32(currentMaps.Rows[0][0]);
+                        foreach (string sql  in newMaps)
+                        {
+                            newId++;
+                            string newSQL = sql;
+                            DB.AddWithValue(ref newSQL, "@id", newId , DB.SqlDataType.Int);
+                            sqlTotal += newSQL + "\n" + Environment.NewLine;
+                        }
+                        if (sqlTotal.Length > 0)
+                            DB.ExecuteNonQuery(sqlTotal, true, true);
                     }
 					return ("Import Complete");
 				}

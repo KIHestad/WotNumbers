@@ -163,12 +163,17 @@ namespace WinApp.Forms
                 // Add All tanks chart item selected
                 if (chkAllTanks.Checked)
                 {
+                    if (chartTypeItem.ChartTypeName == "WN9")
+                    {
+                        MsgBox.Show("WN9 for all tanks is not supported, this chart value is ignored");
+                        continue;
+                    }
                     BattleChartHelper.BattleChartItem newChartItemAllTanks = new BattleChartHelper.BattleChartItem();
                     newChartItemAllTanks.tankId = 0;
                     newChartItemAllTanks.tankName = "All Tanks";
                     newChartItemAllTanks.chartTypeName = chartTypeItem.ChartTypeName;
                     newChartItemAllTanks.use2ndYaxis = chartTypeItem.Use2ndYaxis;
-                    BattleChartHelper.NewChartItem.Add(newChartItemAllTanks);
+                    AddToNewChartItemIfNotExists(newChartItemAllTanks);
                 }
                 // Check if tanks any selected
 
@@ -179,11 +184,18 @@ namespace WinApp.Forms
                     newChartItem.tankName = tankItem.TankName;
                     newChartItem.chartTypeName = chartTypeItem.ChartTypeName;
                     newChartItem.use2ndYaxis = chartTypeItem.Use2ndYaxis;
-                    BattleChartHelper.NewChartItem.Add(newChartItem);
+                    AddToNewChartItemIfNotExists(newChartItem);
                 }
             }
             // OK, close now and continue
             this.Close();
+        }
+
+        private void AddToNewChartItemIfNotExists(BattleChartHelper.BattleChartItem newChartItem)
+        {
+            // Check if exists
+            if (!BattleChartHelper.CurrentChartView.Exists(x => x.tankId == newChartItem.tankId && x.chartTypeName == newChartItem.chartTypeName))
+                BattleChartHelper.NewChartItem.Add(newChartItem);
         }
 
         private void mTankSearchAndSelect_Click(object sender, EventArgs e)
@@ -191,8 +203,8 @@ namespace WinApp.Forms
             TankSearchHelper.OpenTankSearch(this);
             if (TankSearchHelper.Result == MsgBox.Button.OK && TankSearchHelper.SelectedTankId > 0)
             {
-                _tankId = TankSearchHelper.SelectedTankId;
-                List<TankItem> selectedTank = TankList.Where(t => t.Id == _tankId).ToList();
+                int tankId = TankSearchHelper.SelectedTankId;
+                List<TankItem> selectedTank = TankList.Where(t => t.Id == tankId).ToList();
                 foreach (TankItem item in selectedTank)
                 {
                     item.Select = true;

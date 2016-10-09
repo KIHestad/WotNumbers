@@ -88,6 +88,7 @@
             this.mTankFilter_CountryChina = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryJapan = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryCzechoslovakia = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_CountrySweden = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Type = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_TypeLT = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_TypeMT = new System.Windows.Forms.ToolStripMenuItem();
@@ -768,7 +769,9 @@
             this.mTankFilter_CountryUK,
             this.mTankFilter_CountryChina,
             this.mTankFilter_CountryJapan,
-            this.mTankFilter_CountryCzechoslovakia});
+            this.mTankFilter_CountryCzechoslovakia,
+            this.mTankFilter_CountrySweden});
+            this.mTankFilter_Country.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Country.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Country.Image")));
             this.mTankFilter_Country.Name = "mTankFilter_Country";
             this.mTankFilter_Country.Size = new System.Drawing.Size(233, 22);
@@ -776,6 +779,7 @@
             // 
             // mTankFilter_CountryGermany
             // 
+            this.mTankFilter_CountryGermany.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryGermany.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryGermany.Image")));
             this.mTankFilter_CountryGermany.Name = "mTankFilter_CountryGermany";
             this.mTankFilter_CountryGermany.Size = new System.Drawing.Size(155, 22);
@@ -786,6 +790,7 @@
             // 
             // mTankFilter_CountryUSSR
             // 
+            this.mTankFilter_CountryUSSR.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryUSSR.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSSR.Image")));
             this.mTankFilter_CountryUSSR.Name = "mTankFilter_CountryUSSR";
             this.mTankFilter_CountryUSSR.Size = new System.Drawing.Size(155, 22);
@@ -796,6 +801,7 @@
             // 
             // mTankFilter_CountryUSA
             // 
+            this.mTankFilter_CountryUSA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryUSA.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUSA.Image")));
             this.mTankFilter_CountryUSA.Name = "mTankFilter_CountryUSA";
             this.mTankFilter_CountryUSA.Size = new System.Drawing.Size(155, 22);
@@ -807,6 +813,7 @@
             // mTankFilter_CountryFrance
             // 
             this.mTankFilter_CountryFrance.BackColor = System.Drawing.SystemColors.Control;
+            this.mTankFilter_CountryFrance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryFrance.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryFrance.Image")));
             this.mTankFilter_CountryFrance.Name = "mTankFilter_CountryFrance";
             this.mTankFilter_CountryFrance.Size = new System.Drawing.Size(155, 22);
@@ -817,6 +824,7 @@
             // 
             // mTankFilter_CountryUK
             // 
+            this.mTankFilter_CountryUK.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryUK.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryUK.Image")));
             this.mTankFilter_CountryUK.Name = "mTankFilter_CountryUK";
             this.mTankFilter_CountryUK.Size = new System.Drawing.Size(155, 22);
@@ -827,6 +835,7 @@
             // 
             // mTankFilter_CountryChina
             // 
+            this.mTankFilter_CountryChina.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryChina.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryChina.Image")));
             this.mTankFilter_CountryChina.Name = "mTankFilter_CountryChina";
             this.mTankFilter_CountryChina.Size = new System.Drawing.Size(155, 22);
@@ -837,6 +846,7 @@
             // 
             // mTankFilter_CountryJapan
             // 
+            this.mTankFilter_CountryJapan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryJapan.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryJapan.Image")));
             this.mTankFilter_CountryJapan.Name = "mTankFilter_CountryJapan";
             this.mTankFilter_CountryJapan.Size = new System.Drawing.Size(155, 22);
@@ -847,6 +857,7 @@
             // 
             // mTankFilter_CountryCzechoslovakia
             // 
+            this.mTankFilter_CountryCzechoslovakia.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_CountryCzechoslovakia.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountryCzechoslovakia.Image")));
             this.mTankFilter_CountryCzechoslovakia.Name = "mTankFilter_CountryCzechoslovakia";
             this.mTankFilter_CountryCzechoslovakia.Size = new System.Drawing.Size(155, 22);
@@ -854,6 +865,17 @@
             this.mTankFilter_CountryCzechoslovakia.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryCzechoslovakia.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountryCzechoslovakia.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mTankFilter_CountrySweden
+            // 
+            this.mTankFilter_CountrySweden.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mTankFilter_CountrySweden.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountrySweden.Image")));
+            this.mTankFilter_CountrySweden.Name = "mTankFilter_CountrySweden";
+            this.mTankFilter_CountrySweden.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountrySweden.Text = "Sweden";
+            this.mTankFilter_CountrySweden.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
+            this.mTankFilter_CountrySweden.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
+            this.mTankFilter_CountrySweden.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter_Type
             // 
@@ -863,6 +885,7 @@
             this.mTankFilter_TypeHT,
             this.mTankFilter_TypeTD,
             this.mTankFilter_TypeSPG});
+            this.mTankFilter_Type.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Type.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Type.Image")));
             this.mTankFilter_Type.Name = "mTankFilter_Type";
             this.mTankFilter_Type.Size = new System.Drawing.Size(233, 22);
@@ -931,6 +954,7 @@
             this.mTankFilter_Tier8,
             this.mTankFilter_Tier9,
             this.mTankFilter_Tier10});
+            this.mTankFilter_Tier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Tier.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Tier.Image")));
             this.mTankFilter_Tier.Name = "mTankFilter_Tier";
             this.mTankFilter_Tier.Size = new System.Drawing.Size(233, 22);
@@ -1038,6 +1062,7 @@
             // 
             // mTankFilter_Search
             // 
+            this.mTankFilter_Search.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Search.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Search.Image")));
             this.mTankFilter_Search.Name = "mTankFilter_Search";
             this.mTankFilter_Search.Size = new System.Drawing.Size(233, 22);
@@ -1046,6 +1071,7 @@
             // 
             // mTankFilter_Clear
             // 
+            this.mTankFilter_Clear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Clear.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_Clear.Image")));
             this.mTankFilter_Clear.Name = "mTankFilter_Clear";
             this.mTankFilter_Clear.Size = new System.Drawing.Size(233, 22);
@@ -1062,6 +1088,7 @@
             this.mTankFilter_All.BackColor = System.Drawing.Color.Transparent;
             this.mTankFilter_All.Checked = true;
             this.mTankFilter_All.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mTankFilter_All.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_All.Name = "mTankFilter_All";
             this.mTankFilter_All.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_All.Text = "My Tanks";
@@ -1070,6 +1097,7 @@
             // 
             // mTankFilter_All_NotOwned
             // 
+            this.mTankFilter_All_NotOwned.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_All_NotOwned.Name = "mTankFilter_All_NotOwned";
             this.mTankFilter_All_NotOwned.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_All_NotOwned.Text = "All Tanks";
@@ -1078,6 +1106,7 @@
             // 
             // mTankFilter_Fav01
             // 
+            this.mTankFilter_Fav01.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav01.Name = "mTankFilter_Fav01";
             this.mTankFilter_Fav01.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav01.Text = "Favourite item #1";
@@ -1087,6 +1116,7 @@
             // 
             // mTankFilter_Fav02
             // 
+            this.mTankFilter_Fav02.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav02.Name = "mTankFilter_Fav02";
             this.mTankFilter_Fav02.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav02.Text = "Favourite item #2";
@@ -1096,6 +1126,7 @@
             // 
             // mTankFilter_Fav03
             // 
+            this.mTankFilter_Fav03.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav03.Name = "mTankFilter_Fav03";
             this.mTankFilter_Fav03.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav03.Text = "Favourite item #3";
@@ -1105,6 +1136,7 @@
             // 
             // mTankFilter_Fav04
             // 
+            this.mTankFilter_Fav04.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav04.Name = "mTankFilter_Fav04";
             this.mTankFilter_Fav04.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav04.Text = "Favourite item #4";
@@ -1114,6 +1146,7 @@
             // 
             // mTankFilter_Fav05
             // 
+            this.mTankFilter_Fav05.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav05.Name = "mTankFilter_Fav05";
             this.mTankFilter_Fav05.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav05.Text = "Favourite item #5";
@@ -1123,6 +1156,7 @@
             // 
             // mTankFilter_Fav06
             // 
+            this.mTankFilter_Fav06.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav06.Name = "mTankFilter_Fav06";
             this.mTankFilter_Fav06.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav06.Text = "Favourite item #6";
@@ -1132,6 +1166,7 @@
             // 
             // mTankFilter_Fav07
             // 
+            this.mTankFilter_Fav07.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav07.Name = "mTankFilter_Fav07";
             this.mTankFilter_Fav07.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav07.Text = "Favourite item #7";
@@ -1141,6 +1176,7 @@
             // 
             // mTankFilter_Fav08
             // 
+            this.mTankFilter_Fav08.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav08.Name = "mTankFilter_Fav08";
             this.mTankFilter_Fav08.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav08.Text = "Favourite item #8";
@@ -1150,6 +1186,7 @@
             // 
             // mTankFilter_Fav09
             // 
+            this.mTankFilter_Fav09.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav09.Name = "mTankFilter_Fav09";
             this.mTankFilter_Fav09.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav09.Text = "Favourite item #9";
@@ -1159,6 +1196,7 @@
             // 
             // mTankFilter_Fav10
             // 
+            this.mTankFilter_Fav10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_Fav10.Name = "mTankFilter_Fav10";
             this.mTankFilter_Fav10.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_Fav10.Text = "Favourite item #10";
@@ -1173,6 +1211,7 @@
             // 
             // mTankFilter_GetInGarage
             // 
+            this.mTankFilter_GetInGarage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_GetInGarage.Name = "mTankFilter_GetInGarage";
             this.mTankFilter_GetInGarage.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_GetInGarage.Text = "Update \"In Garage\" Tank List...";
@@ -1180,6 +1219,7 @@
             // 
             // mTankFilter_EditFavList
             // 
+            this.mTankFilter_EditFavList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mTankFilter_EditFavList.Name = "mTankFilter_EditFavList";
             this.mTankFilter_EditFavList.Size = new System.Drawing.Size(233, 22);
             this.mTankFilter_EditFavList.Text = "Edit Favourite Tank List...";
@@ -1447,6 +1487,7 @@
             // 
             this.mBattles1d.Checked = true;
             this.mBattles1d.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mBattles1d.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1d.Name = "mBattles1d";
             this.mBattles1d.Size = new System.Drawing.Size(198, 22);
             this.mBattles1d.Text = "Today\'s Battles";
@@ -1455,6 +1496,7 @@
             // 
             // mBattlesYesterday
             // 
+            this.mBattlesYesterday.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesYesterday.Name = "mBattlesYesterday";
             this.mBattlesYesterday.Size = new System.Drawing.Size(198, 22);
             this.mBattlesYesterday.Text = "Yesterday\'s Battles";
@@ -1468,6 +1510,7 @@
             // 
             // mBattles2d
             // 
+            this.mBattles2d.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles2d.Name = "mBattles2d";
             this.mBattles2d.Size = new System.Drawing.Size(198, 22);
             this.mBattles2d.Text = "Battles Last 2 Days";
@@ -1477,6 +1520,7 @@
             // 
             // mBattles3d
             // 
+            this.mBattles3d.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles3d.Name = "mBattles3d";
             this.mBattles3d.Size = new System.Drawing.Size(198, 22);
             this.mBattles3d.Text = "Battles Last 3 Days";
@@ -1491,6 +1535,7 @@
             // 
             // mBattles1w
             // 
+            this.mBattles1w.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1w.Name = "mBattles1w";
             this.mBattles1w.Size = new System.Drawing.Size(198, 22);
             this.mBattles1w.Text = "Battles Last Week";
@@ -1499,6 +1544,7 @@
             // 
             // mBattles2w
             // 
+            this.mBattles2w.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles2w.Name = "mBattles2w";
             this.mBattles2w.Size = new System.Drawing.Size(198, 22);
             this.mBattles2w.Text = "Battles Last 2 Weeks";
@@ -1512,6 +1558,7 @@
             // 
             // mBattles1m
             // 
+            this.mBattles1m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1m.Name = "mBattles1m";
             this.mBattles1m.Size = new System.Drawing.Size(198, 22);
             this.mBattles1m.Text = "Battles Last Month";
@@ -1520,6 +1567,7 @@
             // 
             // mBattles3m
             // 
+            this.mBattles3m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles3m.Name = "mBattles3m";
             this.mBattles3m.Size = new System.Drawing.Size(198, 22);
             this.mBattles3m.Text = "Battles Last 3 Months";
@@ -1528,6 +1576,7 @@
             // 
             // mBattles6m
             // 
+            this.mBattles6m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles6m.Name = "mBattles6m";
             this.mBattles6m.Size = new System.Drawing.Size(198, 22);
             this.mBattles6m.Text = "Battles Last 6 Months";
@@ -1541,6 +1590,7 @@
             // 
             // mBattles1y
             // 
+            this.mBattles1y.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1y.Name = "mBattles1y";
             this.mBattles1y.Size = new System.Drawing.Size(198, 22);
             this.mBattles1y.Text = "Battles Last Year";
@@ -1549,6 +1599,7 @@
             // 
             // mBattles2y
             // 
+            this.mBattles2y.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles2y.Name = "mBattles2y";
             this.mBattles2y.Size = new System.Drawing.Size(198, 22);
             this.mBattles2y.Text = "Battles Last 2 Years";
@@ -1562,6 +1613,7 @@
             // 
             // mBattlesCustomUse
             // 
+            this.mBattlesCustomUse.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesCustomUse.Name = "mBattlesCustomUse";
             this.mBattlesCustomUse.Size = new System.Drawing.Size(198, 22);
             this.mBattlesCustomUse.Tag = "Custom Filter";
@@ -1571,6 +1623,7 @@
             // 
             // mBattlesCustomChange
             // 
+            this.mBattlesCustomChange.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesCustomChange.Name = "mBattlesCustomChange";
             this.mBattlesCustomChange.Size = new System.Drawing.Size(198, 22);
             this.mBattlesCustomChange.Text = "Change Custom Filter...";
@@ -1583,6 +1636,7 @@
             // 
             // mBattlesAll
             // 
+            this.mBattlesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesAll.Name = "mBattlesAll";
             this.mBattlesAll.Size = new System.Drawing.Size(198, 22);
             this.mBattlesAll.Text = "All Battles";
@@ -1671,6 +1725,7 @@
             // 
             // mHomeViewDefault
             // 
+            this.mHomeViewDefault.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewDefault.Name = "mHomeViewDefault";
             this.mHomeViewDefault.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewDefault.Tag = "New_Default_Setup.json";
@@ -1680,6 +1735,7 @@
             // 
             // mHomeViewClassic
             // 
+            this.mHomeViewClassic.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewClassic.Name = "mHomeViewClassic";
             this.mHomeViewClassic.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewClassic.Tag = "Old_Default_Setup.json";
@@ -1694,6 +1750,7 @@
             // 
             // mHomeViewRecent1
             // 
+            this.mHomeViewRecent1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewRecent1.Name = "mHomeViewRecent1";
             this.mHomeViewRecent1.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewRecent1.Text = "Recent1";
@@ -1702,6 +1759,7 @@
             // 
             // mHomeViewRecent2
             // 
+            this.mHomeViewRecent2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewRecent2.Name = "mHomeViewRecent2";
             this.mHomeViewRecent2.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewRecent2.Text = "Recent2";
@@ -1710,6 +1768,7 @@
             // 
             // mHomeViewRecent3
             // 
+            this.mHomeViewRecent3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewRecent3.Name = "mHomeViewRecent3";
             this.mHomeViewRecent3.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewRecent3.Text = "Recent3";
@@ -1718,6 +1777,7 @@
             // 
             // mHomeViewRecent4
             // 
+            this.mHomeViewRecent4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewRecent4.Name = "mHomeViewRecent4";
             this.mHomeViewRecent4.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewRecent4.Text = "Recent4";
@@ -1726,6 +1786,7 @@
             // 
             // mHomeViewRecent5
             // 
+            this.mHomeViewRecent5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewRecent5.Name = "mHomeViewRecent5";
             this.mHomeViewRecent5.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewRecent5.Text = "Recent5";
@@ -1739,6 +1800,7 @@
             // 
             // mHomeViewFileLoad
             // 
+            this.mHomeViewFileLoad.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewFileLoad.Name = "mHomeViewFileLoad";
             this.mHomeViewFileLoad.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewFileLoad.Text = "Load from File...";
@@ -1751,6 +1813,7 @@
             // 
             // mHomeViewRedraw
             // 
+            this.mHomeViewRedraw.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewRedraw.Name = "mHomeViewRedraw";
             this.mHomeViewRedraw.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewRedraw.Text = "Refresh Home View";
@@ -1758,6 +1821,7 @@
             // 
             // mHomeViewClearRecentList
             // 
+            this.mHomeViewClearRecentList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewClearRecentList.Name = "mHomeViewClearRecentList";
             this.mHomeViewClearRecentList.Size = new System.Drawing.Size(177, 22);
             this.mHomeViewClearRecentList.Text = "Clear Recent List";
@@ -1789,6 +1853,7 @@
             // 
             // mHomeViewEditMode
             // 
+            this.mHomeViewEditMode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewEditMode.Name = "mHomeViewEditMode";
             this.mHomeViewEditMode.Size = new System.Drawing.Size(180, 22);
             this.mHomeViewEditMode.Text = "Edit Mode";
@@ -1813,6 +1878,7 @@
             this.toolStripSeparator9,
             this.mGadgetKillDeath,
             this.mGadgetDamageCausedReceived});
+            this.mGadgetGauges.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetGauges.Name = "mGadgetGauges";
             this.mGadgetGauges.Size = new System.Drawing.Size(180, 22);
             this.mGadgetGauges.Text = "Gauges";
@@ -1897,6 +1963,7 @@
             this.mGadgetChartTier,
             this.mGadgetChartTankType,
             this.mGadgetChartNation});
+            this.mGadgetCharts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetCharts.Name = "mGadgetCharts";
             this.mGadgetCharts.Size = new System.Drawing.Size(180, 22);
             this.mGadgetCharts.Text = "Charts";
@@ -1933,6 +2000,7 @@
             this.toolStripSeparator26,
             this.mGadgetAddBattleModeStats,
             this.mGadgetAddTankTypeStats});
+            this.mGadgetGrids.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetGrids.Name = "mGadgetGrids";
             this.mGadgetGrids.Size = new System.Drawing.Size(180, 22);
             this.mGadgetGrids.Text = "Grids";
@@ -1976,6 +2044,7 @@
             // 
             // mGadgetAddHeader
             // 
+            this.mGadgetAddHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetAddHeader.Name = "mGadgetAddHeader";
             this.mGadgetAddHeader.Size = new System.Drawing.Size(180, 22);
             this.mGadgetAddHeader.Tag = "ucHeading";
@@ -1984,6 +2053,7 @@
             // 
             // mGadgetAddImage
             // 
+            this.mGadgetAddImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetAddImage.Name = "mGadgetAddImage";
             this.mGadgetAddImage.Size = new System.Drawing.Size(180, 22);
             this.mGadgetAddImage.Tag = "ucBattleListLargeImages";
@@ -1997,6 +2067,7 @@
             // 
             // mHomeViewFileSave
             // 
+            this.mHomeViewFileSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewFileSave.Name = "mHomeViewFileSave";
             this.mHomeViewFileSave.Size = new System.Drawing.Size(180, 22);
             this.mHomeViewFileSave.Text = "Save to File...";
@@ -2004,6 +2075,7 @@
             // 
             // mHomeViewFileShowFolder
             // 
+            this.mHomeViewFileShowFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHomeViewFileShowFolder.Name = "mHomeViewFileShowFolder";
             this.mHomeViewFileShowFolder.Size = new System.Drawing.Size(180, 22);
             this.mHomeViewFileShowFolder.Text = "Show Files...";
@@ -2016,6 +2088,7 @@
             // 
             // mGadgetRemoveAll
             // 
+            this.mGadgetRemoveAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetRemoveAll.Name = "mGadgetRemoveAll";
             this.mGadgetRemoveAll.Size = new System.Drawing.Size(180, 22);
             this.mGadgetRemoveAll.Text = "Remove All Gadgets";
@@ -2738,6 +2811,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator34;
         private System.Windows.Forms.ToolStripSeparator mHomeViewRecentSeparator;
         private System.Windows.Forms.ToolStripMenuItem mHomeViewClearRecentList;
+        private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountrySweden;
     }
 }
 

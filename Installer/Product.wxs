@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.14.19.0"?>
+<?define ProductVersion = "0.16.00.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -423,6 +423,12 @@
       </Component>
       <Component Id="cmpBRS_21" Directory="INSTALLFOLDER_Dossier2json" Guid="{BD7E7E93-E068-42C5-A613-148EBF294067}">
         <File Id="filBRS_21" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_21.py" />
+      </Component>
+      <Component Id="cmpBRS_22" Directory="INSTALLFOLDER_Dossier2json" Guid="{C96268D5-2A9C-46E7-9251-96DC371BCA6E}">
+        <File Id="filBRS_22" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_22.py" />
+      </Component>
+      <Component Id="cmpBRS_23" Directory="INSTALLFOLDER_Dossier2json" Guid="{4AD4C6ED-5238-405C-8942-659229CE081B}">
+        <File Id="filBRS_23" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_23.py" />
       </Component>
 
 			<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">

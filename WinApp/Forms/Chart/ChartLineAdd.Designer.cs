@@ -165,7 +165,7 @@
             this.mTxtSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(49)))));
             this.mTxtSearch.ForeColor = System.Drawing.SystemColors.Window;
             this.mTxtSearch.Name = "mTxtSearch";
-            this.mTxtSearch.Size = new System.Drawing.Size(120, 25);
+            this.mTxtSearch.Size = new System.Drawing.Size(70, 25);
             this.mTxtSearch.TextChanged += new System.EventHandler(this.mTxtSearch_TextChanged);
             // 
             // mTankClearFilter

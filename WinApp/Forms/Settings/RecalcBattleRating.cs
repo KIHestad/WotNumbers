@@ -76,7 +76,7 @@ namespace WinApp.Forms
 				"select battle.*, playerTank.tankId as tankId " +
 				"from battle inner join playerTank on battle.playerTankId = playerTank.id " +
                 battleWhere +
-				"order by battle.battleTime";
+				"order by battle.id";
 			DataTable dt = DB.FetchData(sql);
 			int tot = dt.Rows.Count;
 			badProgressBar.ValueMax = tot + 1;

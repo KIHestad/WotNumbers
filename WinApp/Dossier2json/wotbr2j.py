@@ -45,7 +45,7 @@ VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_I
   
   
 parser = dict()
-parser['version'] = "0.9.15.1"
+parser['version'] = "0.9.16.8"
 parser['name'] = 'http://www.vbaddict.net'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -108,7 +108,7 @@ def main():
 		# "parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
 	#else:
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
-	parser['battleResultVersion'] = 21
+	parser['battleResultVersion'] = 23
 	
 	while parser['battleResultVersion']>0:  
 		printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
@@ -186,10 +186,12 @@ def prepareForJSON(bresult):
 									bresult['personal'][vehTypeCompDescr]['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
 		
 			if len(bresult['personal'].copy())>1 and len(bresult['personal'].copy())<10 :
-				#printmessage("Version 15 DOUBLE: " + str(bresult['arenaUniqueID']), 1)
 				pass
 			for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
 				if ownResults is not None:
+					for detail in ownResults:
+						if (type(ownResults[detail]) is str): # MC: This is a hack to remove suspicious entries. The resulting string is not a valid number.
+							ownResults[detail] = 0
 					if 'details' in ownResults:
 						newdetails = detailsDictToString(ownResults['details'])
 						bresult['personal'][vehTypeCompDescr]['details'] = newdetails
@@ -288,7 +290,10 @@ def convertToFullForm(compactForm, battleResultVersion):
 				for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
 					vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpack(ownResults)
 					if type(vehPersonal) is dict:
-						vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
+						try:
+							vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
+						except Exception: 
+							pass
 						vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
 						vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
 						vehPersonal['club'] = avatarResults['club']
