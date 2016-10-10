@@ -15,10 +15,7 @@ namespace WinApp.Code
         {
             get
             {
-                string wotFolder = Config.Settings.wotGameFolder;
-                if (wotFolder != "" && wotFolder.Substring(wotFolder.Length - 1, 1) != "\\")
-                    wotFolder += "\\";
-                return wotFolder += "res_mods\\0.9.16\\scripts\\client\\gui\\";
+                return WoThelper.GetFullResModsPath() + "\\scripts\\client\\gui\\";
             }
             set { }
         }

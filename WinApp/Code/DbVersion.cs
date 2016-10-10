@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 415; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 416; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2927,6 +2927,10 @@ namespace WinApp.Code
                         DB.AddWithValue(ref mssql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
                         sqlite = mssql;
                     }
+                    break;
+                case 416:
+                    Config.Settings.res_mods_subfolder = "0.9.16";
+                    Config.SaveConfig(out msg);
                     break;
             }
             string sql = "";

@@ -228,6 +228,7 @@
     <Compile Include="Code\UtilSecurity.cs" />
     <Compile Include="Code\vBAddictHelper.cs" />
     <Compile Include="Code\ViewRange.cs" />
+    <Compile Include="Code\WoThelper.cs" />
     <Compile Include="Code\XmlHelper.cs" />
     <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>

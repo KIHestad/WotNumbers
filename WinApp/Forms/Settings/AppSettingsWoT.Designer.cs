@@ -32,10 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsWoT));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lblBRRStatus = new BadLabel();
+            this.badLabel5 = new BadLabel();
+            this.badLabel3 = new BadLabel();
+            this.txtResModsSubFolder = new BadTextBox();
+            this.badLabel2 = new BadLabel();
             this.cmdHelp = new BadButton();
             this.btnBrrInstall = new BadButton();
             this.chkBrrStarupCheck = new BadCheckBox();
-            this.badGroupBox4 = new BadGroupBox();
             this.btnFile = new BadButton();
             this.txtBatchFile = new BadTextBox();
             this.badLabel4 = new BadLabel();
@@ -52,17 +56,82 @@
             this.badLabel1 = new BadLabel();
             this.ddStartApp = new BadDropDownBox();
             this.badGroupBox1 = new BadGroupBox();
-            this.badGroupBox3 = new BadGroupBox();
             this.chkCore3 = new BadCheckBox();
             this.chkCore2 = new BadCheckBox();
             this.chkCore1 = new BadCheckBox();
             this.chkCore0 = new BadCheckBox();
             this.badGroupBox2 = new BadGroupBox();
+            this.badSeperator1 = new BadSeperator();
+            this.badGroupBox3 = new BadGroupBox();
             this.SuspendLayout();
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // lblBRRStatus
+            // 
+            this.lblBRRStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.lblBRRStatus.Dimmed = false;
+            this.lblBRRStatus.Image = null;
+            this.lblBRRStatus.Location = new System.Drawing.Point(19, 95);
+            this.lblBRRStatus.Name = "lblBRRStatus";
+            this.lblBRRStatus.Size = new System.Drawing.Size(109, 23);
+            this.lblBRRStatus.TabIndex = 61;
+            this.lblBRRStatus.Text = "BRR Status";
+            this.lblBRRStatus.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // badLabel5
+            // 
+            this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel5.Dimmed = false;
+            this.badLabel5.Image = null;
+            this.badLabel5.Location = new System.Drawing.Point(55, 279);
+            this.badLabel5.Name = "badLabel5";
+            this.badLabel5.Size = new System.Drawing.Size(75, 23);
+            this.badLabel5.TabIndex = 60;
+            this.badLabel5.Text = "badLabel5";
+            this.badLabel5.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // badLabel3
+            // 
+            this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel3.Dimmed = false;
+            this.badLabel3.Image = null;
+            this.badLabel3.Location = new System.Drawing.Point(18, 24);
+            this.badLabel3.Name = "badLabel3";
+            this.badLabel3.Size = new System.Drawing.Size(74, 23);
+            this.badLabel3.TabIndex = 58;
+            this.badLabel3.Text = "Install Folder:";
+            this.badLabel3.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // txtResModsSubFolder
+            // 
+            this.txtResModsSubFolder.HasFocus = false;
+            this.txtResModsSubFolder.HideBorder = false;
+            this.txtResModsSubFolder.Image = null;
+            this.txtResModsSubFolder.Location = new System.Drawing.Point(134, 53);
+            this.txtResModsSubFolder.MultilineAllow = false;
+            this.txtResModsSubFolder.Name = "txtResModsSubFolder";
+            this.txtResModsSubFolder.PasswordChar = '\0';
+            this.txtResModsSubFolder.ReadOnly = false;
+            this.txtResModsSubFolder.Size = new System.Drawing.Size(73, 23);
+            this.txtResModsSubFolder.TabIndex = 57;
+            this.txtResModsSubFolder.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtResModsSubFolder.ToolTipText = "Current subfolder to res_mods-folder, normally the same as WoT version";
+            this.txtResModsSubFolder.TextChanged += new System.EventHandler(this.EditChangesApply);
+            // 
+            // badLabel2
+            // 
+            this.badLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel2.Dimmed = false;
+            this.badLabel2.Image = null;
+            this.badLabel2.Location = new System.Drawing.Point(19, 53);
+            this.badLabel2.Name = "badLabel2";
+            this.badLabel2.Size = new System.Drawing.Size(116, 23);
+            this.badLabel2.TabIndex = 56;
+            this.badLabel2.Text = "res_mods - Subfolder:";
+            this.badLabel2.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // cmdHelp
             // 
@@ -82,9 +151,9 @@
             this.btnBrrInstall.BlackButton = false;
             this.btnBrrInstall.Checked = false;
             this.btnBrrInstall.Image = null;
-            this.btnBrrInstall.Location = new System.Drawing.Point(356, 94);
+            this.btnBrrInstall.Location = new System.Drawing.Point(134, 95);
             this.btnBrrInstall.Name = "btnBrrInstall";
-            this.btnBrrInstall.Size = new System.Drawing.Size(75, 23);
+            this.btnBrrInstall.Size = new System.Drawing.Size(73, 23);
             this.btnBrrInstall.TabIndex = 37;
             this.btnBrrInstall.Text = "Install";
             this.btnBrrInstall.ToolTipText = "";
@@ -95,23 +164,12 @@
             this.chkBrrStarupCheck.BackColor = System.Drawing.Color.Transparent;
             this.chkBrrStarupCheck.Checked = false;
             this.chkBrrStarupCheck.Image = ((System.Drawing.Image)(resources.GetObject("chkBrrStarupCheck.Image")));
-            this.chkBrrStarupCheck.Location = new System.Drawing.Point(16, 94);
+            this.chkBrrStarupCheck.Location = new System.Drawing.Point(277, 95);
             this.chkBrrStarupCheck.Name = "chkBrrStarupCheck";
-            this.chkBrrStarupCheck.Size = new System.Drawing.Size(273, 23);
+            this.chkBrrStarupCheck.Size = new System.Drawing.Size(157, 23);
             this.chkBrrStarupCheck.TabIndex = 36;
-            this.chkBrrStarupCheck.Text = "Check for Battle Result Retriever on Startup";
-            this.chkBrrStarupCheck.Click += new System.EventHandler(this.chkBrrStarupCheck_Click);
-            // 
-            // badGroupBox4
-            // 
-            this.badGroupBox4.BackColor = System.Drawing.Color.Transparent;
-            this.badGroupBox4.Image = null;
-            this.badGroupBox4.Location = new System.Drawing.Point(1, 74);
-            this.badGroupBox4.Name = "badGroupBox4";
-            this.badGroupBox4.Size = new System.Drawing.Size(445, 55);
-            this.badGroupBox4.TabIndex = 33;
-            this.badGroupBox4.TabStop = false;
-            this.badGroupBox4.Text = "Battle Result Retriever";
+            this.chkBrrStarupCheck.Text = "Check for BRR on Startup";
+            this.chkBrrStarupCheck.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // btnFile
             // 
@@ -129,6 +187,7 @@
             // txtBatchFile
             // 
             this.txtBatchFile.HasFocus = false;
+            this.txtBatchFile.HideBorder = false;
             this.txtBatchFile.Image = null;
             this.txtBatchFile.Location = new System.Drawing.Point(69, 197);
             this.txtBatchFile.MultilineAllow = false;
@@ -139,7 +198,7 @@
             this.txtBatchFile.TabIndex = 40;
             this.txtBatchFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBatchFile.ToolTipText = "Additional batch file or program to run";
-            this.txtBatchFile.TextChanged += new System.EventHandler(this.txtBatchFile_TextChanged);
+            this.txtBatchFile.TextChanged += new System.EventHandler(this.EditChangesApply);
             // 
             // badLabel4
             // 
@@ -163,7 +222,7 @@
             this.chkAutoRun.Size = new System.Drawing.Size(119, 23);
             this.chkAutoRun.TabIndex = 42;
             this.chkAutoRun.Text = "Auto WoT startup";
-            this.chkAutoRun.Click += new System.EventHandler(this.chkAutoRun_Click);
+            this.chkAutoRun.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // btnCancel
             // 
@@ -203,7 +262,7 @@
             this.chkCore7.TabIndex = 51;
             this.chkCore7.Text = "CPU 7";
             this.chkCore7.Visible = false;
-            this.chkCore7.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore7.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkCore6
             // 
@@ -217,7 +276,7 @@
             this.chkCore6.TabIndex = 50;
             this.chkCore6.Text = "CPU 6";
             this.chkCore6.Visible = false;
-            this.chkCore6.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore6.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkCore5
             // 
@@ -231,7 +290,7 @@
             this.chkCore5.TabIndex = 49;
             this.chkCore5.Text = "CPU 5";
             this.chkCore5.Visible = false;
-            this.chkCore5.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore5.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkCore4
             // 
@@ -245,7 +304,7 @@
             this.chkCore4.TabIndex = 48;
             this.chkCore4.Text = "CPU 4";
             this.chkCore4.Visible = false;
-            this.chkCore4.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore4.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkOptimizeOn
             // 
@@ -275,17 +334,18 @@
             // txtFolder
             // 
             this.txtFolder.HasFocus = false;
+            this.txtFolder.HideBorder = false;
             this.txtFolder.Image = null;
-            this.txtFolder.Location = new System.Drawing.Point(18, 24);
+            this.txtFolder.Location = new System.Drawing.Point(134, 24);
             this.txtFolder.MultilineAllow = false;
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.PasswordChar = '\0';
             this.txtFolder.ReadOnly = false;
-            this.txtFolder.Size = new System.Drawing.Size(383, 23);
+            this.txtFolder.Size = new System.Drawing.Size(267, 23);
             this.txtFolder.TabIndex = 31;
             this.txtFolder.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtFolder.ToolTipText = "The folder where WoT game is installed";
-            this.txtFolder.TextChanged += new System.EventHandler(this.txtFolder_TextChanged);
+            this.txtFolder.TextChanged += new System.EventHandler(this.EditChangesApply);
             // 
             // badLabel1
             // 
@@ -321,17 +381,6 @@
             this.badGroupBox1.TabStop = false;
             this.badGroupBox1.Text = "WoT Startup Settings";
             // 
-            // badGroupBox3
-            // 
-            this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
-            this.badGroupBox3.Image = null;
-            this.badGroupBox3.Location = new System.Drawing.Point(1, 1);
-            this.badGroupBox3.Name = "badGroupBox3";
-            this.badGroupBox3.Size = new System.Drawing.Size(445, 62);
-            this.badGroupBox3.TabIndex = 29;
-            this.badGroupBox3.TabStop = false;
-            this.badGroupBox3.Text = "WoT Installation Folder";
-            // 
             // chkCore3
             // 
             this.chkCore3.BackColor = System.Drawing.Color.Transparent;
@@ -344,7 +393,7 @@
             this.chkCore3.TabIndex = 47;
             this.chkCore3.Text = "CPU 3";
             this.chkCore3.Visible = false;
-            this.chkCore3.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore3.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkCore2
             // 
@@ -358,7 +407,7 @@
             this.chkCore2.TabIndex = 46;
             this.chkCore2.Text = "CPU 2";
             this.chkCore2.Visible = false;
-            this.chkCore2.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore2.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkCore1
             // 
@@ -372,7 +421,7 @@
             this.chkCore1.TabIndex = 45;
             this.chkCore1.Text = "CPU 1";
             this.chkCore1.Visible = false;
-            this.chkCore1.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore1.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // chkCore0
             // 
@@ -386,7 +435,7 @@
             this.chkCore0.TabIndex = 44;
             this.chkCore0.Text = "CPU 0";
             this.chkCore0.Visible = false;
-            this.chkCore0.Click += new System.EventHandler(this.chkCore_Click);
+            this.chkCore0.Click += new System.EventHandler(this.EditChangesApply);
             // 
             // badGroupBox2
             // 
@@ -399,15 +448,40 @@
             this.badGroupBox2.TabStop = false;
             this.badGroupBox2.Text = "Optimization Settings";
             // 
+            // badSeperator1
+            // 
+            this.badSeperator1.BackColor = System.Drawing.Color.Transparent;
+            this.badSeperator1.Direction = System.Windows.Forms.Orientation.Horizontal;
+            this.badSeperator1.Image = null;
+            this.badSeperator1.Location = new System.Drawing.Point(19, 76);
+            this.badSeperator1.Name = "badSeperator1";
+            this.badSeperator1.Size = new System.Drawing.Size(412, 23);
+            this.badSeperator1.TabIndex = 59;
+            // 
+            // badGroupBox3
+            // 
+            this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
+            this.badGroupBox3.Image = null;
+            this.badGroupBox3.Location = new System.Drawing.Point(1, 1);
+            this.badGroupBox3.Name = "badGroupBox3";
+            this.badGroupBox3.Size = new System.Drawing.Size(445, 129);
+            this.badGroupBox3.TabIndex = 29;
+            this.badGroupBox3.TabStop = false;
+            this.badGroupBox3.Text = "WoT folders and Battle Result Retriever (BRR)";
+            // 
             // AppSettingsWoT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.lblBRRStatus);
+            this.Controls.Add(this.badLabel5);
+            this.Controls.Add(this.badLabel3);
+            this.Controls.Add(this.txtResModsSubFolder);
+            this.Controls.Add(this.badLabel2);
             this.Controls.Add(this.cmdHelp);
             this.Controls.Add(this.btnBrrInstall);
             this.Controls.Add(this.chkBrrStarupCheck);
-            this.Controls.Add(this.badGroupBox4);
             this.Controls.Add(this.btnFile);
             this.Controls.Add(this.txtBatchFile);
             this.Controls.Add(this.badLabel4);
@@ -424,12 +498,13 @@
             this.Controls.Add(this.badLabel1);
             this.Controls.Add(this.ddStartApp);
             this.Controls.Add(this.badGroupBox1);
-            this.Controls.Add(this.badGroupBox3);
             this.Controls.Add(this.chkCore3);
             this.Controls.Add(this.chkCore2);
             this.Controls.Add(this.chkCore1);
             this.Controls.Add(this.chkCore0);
             this.Controls.Add(this.badGroupBox2);
+            this.Controls.Add(this.badSeperator1);
+            this.Controls.Add(this.badGroupBox3);
             this.Name = "AppSettingsWoT";
             this.Size = new System.Drawing.Size(457, 312);
             this.Load += new System.EventHandler(this.AppSettingsWoT_Load);
@@ -441,7 +516,6 @@
 
         private BadButton btnBrrInstall;
         private BadCheckBox chkBrrStarupCheck;
-        private BadGroupBox badGroupBox4;
         private BadButton btnFile;
         private BadTextBox txtBatchFile;
         private BadLabel badLabel4;
@@ -467,5 +541,11 @@
         private BadButton cmdHelp;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private BadLabel badLabel2;
+        private BadTextBox txtResModsSubFolder;
+        private BadLabel badLabel3;
+        private BadSeperator badSeperator1;
+        private BadLabel badLabel5;
+        private BadLabel lblBRRStatus;
     }
 }

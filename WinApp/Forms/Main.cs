@@ -220,6 +220,8 @@ namespace WinApp.Forms
 
                     // Add init items to Form
                     SetFavListMenu();
+                    // Check for res_mods folder
+                    WoThelper.CheckForNewResModsFolder();
                     // Get vBAddict settings
                     vBAddictHelper.GetSettings();
                     // Get Images

@@ -78,6 +78,9 @@ namespace WinApp.Forms.Settings
                 }
                 core++;
             }
+            // Res mods subfolder
+            txtResModsSubFolder.Text = Config.Settings.res_mods_subfolder;
+
             // Check for BRR
             CheckForBrr();
             chkBrrStarupCheck.Checked = Config.Settings.CheckForBrrOnStartup;
@@ -113,24 +116,30 @@ namespace WinApp.Forms.Settings
             if (wotGameAffinity == 0 && chkOptimizeOn.Checked)
             {
                 MsgBox.Show("Optimization mode selected, but no CPU's selected. Settings are not saved.", "Save settings terminated");
+                return;
             }
-            else
+            // Check for valid res_mods folder
+            if (txtResModsSubFolder.Text.Trim() == "" || !Directory.Exists(WoThelper.GetFullResModsPath(txtResModsSubFolder.Text.Trim())))
             {
-                ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.None;
-                if (ddStartApp.Text == "Wot Game")
-                    wotGameStartType = ConfigData.WoTGameStartType.Game;
-                if (ddStartApp.Text == "WoT Launcher")
-                    wotGameStartType = ConfigData.WoTGameStartType.Launcher;
-                Config.Settings.wotGameStartType = wotGameStartType;
-                Config.Settings.wotGameFolder = txtFolder.Text;
-                Config.Settings.wotGameRunBatchFile = txtBatchFile.Text;
-                Config.Settings.wotGameAutoStart = chkAutoRun.Checked;
-                Config.Settings.wotGameAffinity = wotGameAffinity;
-                Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
-                String msg = "";
-                Config.SaveConfig(out msg);
-                EditChangesApply(false);
+                MsgBox.Show("Illegal res_mods folder. Settings are not saved.", "Save settings terminated");
+                return;
             }
+
+            ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.None;
+            if (ddStartApp.Text == "Wot Game")
+                wotGameStartType = ConfigData.WoTGameStartType.Game;
+            if (ddStartApp.Text == "WoT Launcher")
+                wotGameStartType = ConfigData.WoTGameStartType.Launcher;
+            Config.Settings.wotGameStartType = wotGameStartType;
+            Config.Settings.wotGameFolder = txtFolder.Text;
+            Config.Settings.wotGameRunBatchFile = txtBatchFile.Text;
+            Config.Settings.wotGameAutoStart = chkAutoRun.Checked;
+            Config.Settings.wotGameAffinity = wotGameAffinity;
+            Config.Settings.CheckForBrrOnStartup = chkBrrStarupCheck.Checked;
+            Config.Settings.res_mods_subfolder = txtResModsSubFolder.Text.Trim();
+            String msg = "";
+            Config.SaveConfig(out msg);
+            EditChangesApply(false);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -187,10 +196,16 @@ namespace WinApp.Forms.Settings
 
         private void CheckForBrr()
         {
-            string btnBrrText = "Install";
-            if (BattleResultRetriever.Installed) btnBrrText = "Uninstall";
-            if (BRRdeactivated) btnBrrText = "Message";
-            btnBrrInstall.Text = btnBrrText;
+            string BRRbutton = "Install";
+            string BRRstatus = "BRR Not Installed";
+            if (BattleResultRetriever.Installed)
+            {
+                BRRbutton = "Uninstall";
+                BRRstatus = "BRR Installed";
+            }
+            if (BRRdeactivated) BRRbutton = "Message";
+            btnBrrInstall.Text = BRRbutton;
+            lblBRRStatus.Text = BRRstatus;
         }
 
         private void btnBrrInstall_Click(object sender, EventArgs e)
@@ -237,12 +252,7 @@ namespace WinApp.Forms.Settings
             btnSave.Enabled = changesApplied;
         }
 
-        private void txtFolder_TextChanged(object sender, EventArgs e)
-        {
-            EditChangesApply(true);
-        }
-
-        private void chkBrrStarupCheck_Click(object sender, EventArgs e)
+        private void EditChangesApply(object sender, EventArgs e)
         {
             EditChangesApply(true);
         }
@@ -253,21 +263,5 @@ namespace WinApp.Forms.Settings
                 EditChangesApply(true);
         }
 
-        private void txtBatchFile_TextChanged(object sender, EventArgs e)
-        {
-            EditChangesApply(true);
-        }
-
-        private void chkAutoRun_Click(object sender, EventArgs e)
-        {
-            EditChangesApply(true);
-        }
-
-        private void chkCore_Click(object sender, EventArgs e)
-        {
-            EditChangesApply(true);
-        }
-
-        
     }
 }
