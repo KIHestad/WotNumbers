@@ -231,7 +231,7 @@ namespace WinApp.Code.Rating
             rp.DEF = rp.DEF * rp.BATTLES;
             rp.FRAGS = rp.FRAGS * rp.BATTLES;
             rp.SPOT = rp.SPOT * rp.BATTLES;
-            rp.WINS = rp.WINS * rp.BATTLES;
+            rp.WINS = rp.WINS ;
             return CalcTank(tankId, rp, out WN9maxhist);
         }
 

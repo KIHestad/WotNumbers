@@ -61,7 +61,7 @@ namespace WinApp.Forms
             btnUploadReplayTovBAddict.Text = "Uploading...";
             Application.DoEvents();
             string resultText = "";
-            bool resultOK = vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out resultText);
+            bool resultOK = vBAddictHelper.UploadReplay(_battleId, _filename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out resultText);
             string msg = "Upload to vBAddict was successful.";
             if (!resultOK)
             {

@@ -220,6 +220,8 @@ namespace WinApp.Forms
 
                     // Add init items to Form
                     SetFavListMenu();
+                    // Get vBAddict settings
+                    vBAddictHelper.GetSettings();
                     // Get Images
                     ImageHelper.CreateTankImageTable();
                     ImageHelper.LoadTankImages();
@@ -3708,7 +3710,7 @@ namespace WinApp.Forms
 		{
 			int battleId = Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["battle_Id"].Value);
 			Form frm = new Forms.RecalcBattleRating(true, true, true, true, true, battleId);
-			FormHelper.OpenFormCenterOfParent(this, frm);
+			frm.ShowDialog(this);
             ShowView("Refreshed grid");
         }
 

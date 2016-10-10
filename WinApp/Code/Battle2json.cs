@@ -102,7 +102,7 @@ namespace WinApp.Code
 			try
 			{
 				// Upload prev unsuccsessful uploads to vBAddict 
-				if (Config.Settings.vBAddictUploadActive)
+				if (vBAddictHelper.Settings.UploadActive)
 				{
 					vBAddictBattleResultToUpload();
 				}
@@ -158,10 +158,10 @@ namespace WinApp.Code
 							bool deleteFile = false;
 							bool okConvert = ConvertBattleUsingPython(file, out deleteFile);
 							// Upload battle to vBAddict if OK
-							if (okConvert && Config.Settings.vBAddictUploadActive)
+							if (okConvert && vBAddictHelper.Settings.UploadActive)
 							{
 								string msg = "";
-								bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+								bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
 								if (uploadOK)
 									Log.AddToLogBuffer(" > > > Uploaded battle to vBAddict successfully");
 								else
@@ -238,7 +238,7 @@ namespace WinApp.Code
 					foreach (string file in filesDatCopied)
 					{
 						string msg = "";
-						bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+						bool uploadOK = vBAddictHelper.UploadBattle(file, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
 						if (uploadOK)
 						{
 							Log.AddToLogBuffer(" > > > Uploaded to vBAddict successfully file: " + file);
@@ -872,17 +872,17 @@ namespace WinApp.Code
                                     "  maxBattleTier=@maxBattleTier " +
 									"where id=@battleId;";
                                 // Clan info
-                                bool found = false;
+                                int maxClanCount = 0;
                                 ClanInfo foundClan = new ClanInfo();
                                 foreach (ClanInfo item in clanCount)
                                 {
-                                    if (item.count > 9)
+                                    if (item.count > maxClanCount)
                                     {
-                                        found = true;
+                                        maxClanCount = item.count;
                                         foundClan = item;
                                     }
                                 }
-								if (getEnemyClan && found)
+								if (getEnemyClan && maxClanCount > 0)
                                 {
                                     DB.AddWithValue(ref sql, "@enemyClanAbbrev", foundClan.clanAbbrev, DB.SqlDataType.VarChar);
                                     DB.AddWithValue(ref sql, "@enemyClanDBID", foundClan.clanDBID, DB.SqlDataType.Int);
@@ -946,14 +946,14 @@ namespace WinApp.Code
 								Log.AddToLogBuffer(" > > Done reading into DB JSON file: " + file);
 								added++;
                                 // Check for upload replay file to vBAddict
-                                if (Config.Settings.vBAddictUploadReplayActive)
+                                if (vBAddictHelper.Settings.UploadReplayActive)
                                 {
                                     FileInfo fi = ReplayHelper.GetReplayFile(battleId);
                                     if (fi != null)
                                     {
                                         string replayFilename = fi.FullName;
                                         string msg = "";
-                                        bool uploadOK = vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+                                        bool uploadOK = vBAddictHelper.UploadReplay(battleId, replayFilename, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
                                         if (uploadOK)
                                             Log.AddToLogBuffer(" > > Uploaded replay to vBAddict successfully: " + msg);
                                         else

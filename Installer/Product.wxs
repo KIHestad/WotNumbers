@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.16.00.0"?>
+<?define ProductVersion = "0.16.1.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -300,7 +300,10 @@
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="ProductComponents_Dossier2json">
-			<Component Id="cmpD5E8EB7A99336F8E29BB1D09D6C79C6C" Directory="INSTALLFOLDER_Dossier2json" Guid="{27CA70F1-C079-4BE0-92B7-DAA06B9D92D8}">
+			
+      <!-- Dossier Structs -->
+      <!--
+      <Component Id="cmpD5E8EB7A99336F8E29BB1D09D6C79C6C" Directory="INSTALLFOLDER_Dossier2json" Guid="{27CA70F1-C079-4BE0-92B7-DAA06B9D92D8}">
 				<File Id="filC756F9EC8BADF7738ED2A6DED5C6F62D" KeyPath="yes" Source="$(var.D2jSource)\structures_10.json" />
 			</Component>
 			<Component Id="cmp524E39FCDF23A71A87D4BFA283163A67" Directory="INSTALLFOLDER_Dossier2json" Guid="{22D32AB9-3077-4945-ADB1-C374306E1B6A}">
@@ -354,6 +357,8 @@
 			<Component Id="cmpstructures89" Directory="INSTALLFOLDER_Dossier2json" Guid="{29321199-BC72-4DED-999D-78ADA45FB363}">
 				<File Id="filstructures89" KeyPath="yes" Source="$(var.D2jSource)\structures_89.json" />
 			</Component>
+      -->
+      
 			<Component Id="cmpstructures92" Directory="INSTALLFOLDER_Dossier2json" Guid="{1063934C-AC4F-4E0E-89DE-73032CD53467}">
 				<File Id="filstructures92" KeyPath="yes" Source="$(var.D2jSource)\structures_92.json" />
 			</Component>
@@ -361,7 +366,10 @@
         <File Id="filstructures94" KeyPath="yes" Source="$(var.D2jSource)\structures_94.json" />
       </Component>
 
-			<Component Id="cmpBRS_01" Directory="INSTALLFOLDER_Dossier2json" Guid="{A1CA32C2-66AA-4BBD-BA6B-0B2EC61343F2}">
+      <!-- Battle Structs -->
+
+      <!--
+      <Component Id="cmpBRS_01" Directory="INSTALLFOLDER_Dossier2json" Guid="{A1CA32C2-66AA-4BBD-BA6B-0B2EC61343F2}">
 				<File Id="filBRS_01" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_01.py" />
 			</Component>
 			<Component Id="cmpBRS_02" Directory="INSTALLFOLDER_Dossier2json" Guid="{C7509F8D-DD33-4B49-8954-74F7278D6BCC}">
@@ -424,6 +432,8 @@
       <Component Id="cmpBRS_21" Directory="INSTALLFOLDER_Dossier2json" Guid="{BD7E7E93-E068-42C5-A613-148EBF294067}">
         <File Id="filBRS_21" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_21.py" />
       </Component>
+      -->
+
       <Component Id="cmpBRS_22" Directory="INSTALLFOLDER_Dossier2json" Guid="{C96268D5-2A9C-46E7-9251-96DC371BCA6E}">
         <File Id="filBRS_22" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_22.py" />
       </Component>
@@ -431,13 +441,16 @@
         <File Id="filBRS_23" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_23.py" />
       </Component>
 
+      <!-- Maps and tanks, not in use -->
+      <!--
 			<Component Id="cmpDF0EF76EB93E25B92E3B35AE06A47377" Directory="INSTALLFOLDER_Dossier2json" Guid="{17D2D4F8-236A-4997-84A4-0165AE27CF97}">
 				<File Id="fil658CC5357D27167A6EB1467EAE4317BF" KeyPath="yes" Source="$(var.D2jSource)\tanks.json" />
 			</Component>
 			<Component Id="cmp8540176488F077374645127C6834BCA8" Directory="INSTALLFOLDER_Dossier2json" Guid="{474FF12A-5345-4182-BEA0-A42716B74A4F}">
 				<File Id="fil43C93A51802E58A2266566EE76D87EF7" KeyPath="yes" Source="$(var.D2jSource)\maps.json" />
 			</Component>
-
+      -->
+      
 			<Component Id="cmpDamageEvents" Directory="INSTALLFOLDER_Dossier2json" Guid="{B7B6D606-C7FE-4A4E-A608-0C59644B504D}">
 				<File Id="filDamageEvents" KeyPath="yes" Source="$(var.D2jSource)\DamageEvents.py" />
 			</Component>

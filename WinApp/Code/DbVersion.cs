@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 411; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 415; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -1975,11 +1975,6 @@ namespace WinApp.Code
 				case 219:
 					RunRecalcBattleKDratioCRdmg = true;
 					break;
-				case 221:
-					Config.Settings.vBAddictUploadActive = false;
-					Config.Settings.vBAddictPlayerToken = "";
-					Config.SaveConfig(out msg);
-					break;
 				case 222:
 					mssql = "ALTER TABLE battlePlayer ADD playerTeam bit NOT NULL DEFAULT 0;" ;
 					sqlite = mssql;
@@ -2358,10 +2353,6 @@ namespace WinApp.Code
                     mssql = "ALTER TABLE battle ADD uploadedvBAddict datetime NULL; ";
                     sqlite = mssql;
                     break;
-                case 291:
-                    Config.Settings.vBAddictUploadReplayActive = false;
-                    Config.SaveConfig(out msg);
-                    break;
                 case 292:
                     if (!DB.HasColumn("tank", "imgpath"))
                     {
@@ -2398,7 +2389,7 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 301:
-                    Config.Settings.vBAddictShowToolBarMenu = (Config.Settings.vBAddictPlayerToken != "" || Config.Settings.vBAddictUploadActive || Config.Settings.vBAddictUploadReplayActive);
+                    Config.Settings.vBAddictShowToolBarMenu = false; 
                     Config.SaveConfig(out msg);
                     break;
                 case 304: // Recalculate max battle tier for all battles, also the one before this column was added
@@ -2913,7 +2904,30 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET name='Started' WHERE id = 117; ";
                     sqlite = mssql;
                     break;
-
+                case 412:
+                    mssql = "ALTER TABLE player ADD vbaddictToken varchar(500) NULL; ";
+                    sqlite = mssql;
+                    break;
+                case 414:
+                    mssql =
+                        "ALTER TABLE player ADD vbaddictUploadActive BIT NOT NULL DEFAULT(0); " +
+                        "ALTER TABLE player ADD vbaddictUploadReplayActive BIT NOT NULL DEFAULT(0); ";
+                    sqlite = mssql;
+                    break;
+                case 415:
+                    if (vBAddictHelper.Settings.Token != "")
+                    {
+                        mssql = 
+                            "UPDATE player " +
+                            "SET vbaddictToken=@vbaddictToken, vbaddictUploadActive=@vbaddictUploadActive, vbaddictUploadReplayActive=@vbaddictUploadReplayActive " +
+                            "WHERE id=@id;";
+                        DB.AddWithValue(ref mssql, "@vbaddictToken", vBAddictHelper.Settings.Token, DB.SqlDataType.VarChar);
+                        DB.AddWithValue(ref mssql, "@vbaddictUploadActive", vBAddictHelper.Settings.UploadActive, DB.SqlDataType.Boolean);
+                        DB.AddWithValue(ref mssql, "@vbaddictUploadReplayActive", vBAddictHelper.Settings.UploadReplayActive, DB.SqlDataType.Boolean);
+                        DB.AddWithValue(ref mssql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
+                        sqlite = mssql;
+                    }
+                    break;
             }
             string sql = "";
 			// get sql for correct dbtype

@@ -311,11 +311,11 @@ namespace WinApp.Code
 				dt.Dispose();
 				dt.Clear();
 				// Upload to vBAddict
-				if (Config.Settings.vBAddictUploadActive)
+				if (vBAddictHelper.Settings.UploadActive)
 				{
 					string prevDossierFile = Config.AppDataBaseFolder + "dossier_prev.dat";
 					string msg = "";
-					bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), Config.Settings.vBAddictPlayerToken, out msg);
+					bool uploadOK = vBAddictHelper.UploadDossier(prevDossierFile, Config.Settings.playerName, Config.Settings.playerServer.ToLower(), vBAddictHelper.Settings.Token, out msg);
 					if (uploadOK)
 						Log.AddToLogBuffer(" > Success uploading dossier file to vBAddict");
 					else

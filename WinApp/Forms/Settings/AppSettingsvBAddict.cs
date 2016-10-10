@@ -28,10 +28,11 @@ namespace WinApp.Forms.Settings
 
         private void DataBind()
         {
-            chkActivateAutoUpload.Checked = Config.Settings.vBAddictUploadActive;
-            chkActivateAutoReplayUpload.Checked = Config.Settings.vBAddictUploadReplayActive;
+            group_vBAddict_Settings.Text = "Settings for current player: " + Config.Settings.playerNameAndServer;
+            chkActivateAutoUpload.Checked = vBAddictHelper.Settings.UploadActive;
+            chkActivateAutoReplayUpload.Checked = vBAddictHelper.Settings.UploadReplayActive;
+            txtToken.Text = vBAddictHelper.Settings.Token;
             chkShowvbAddictIcon.Checked = Config.Settings.vBAddictShowToolBarMenu;
-            txtToken.Text = Config.Settings.vBAddictPlayerToken;
             toolTipShowvBAddictIcon.SetToolTip(chkShowvbAddictIcon, "Used to go to your profile on vBAddict website");
             EditChangesApply(false);
         }
@@ -81,10 +82,11 @@ namespace WinApp.Forms.Settings
 
         public void SaveChanges()
         {
-            Config.Settings.vBAddictUploadActive = chkActivateAutoUpload.Checked;
-            Config.Settings.vBAddictUploadReplayActive = chkActivateAutoReplayUpload.Checked;
+            vBAddictHelper.Settings.Token = txtToken.Text;
+            vBAddictHelper.Settings.UploadActive = chkActivateAutoUpload.Checked;
+            vBAddictHelper.Settings.UploadReplayActive = chkActivateAutoReplayUpload.Checked;
+            vBAddictHelper.SaveSettings();
             Config.Settings.vBAddictShowToolBarMenu = chkShowvbAddictIcon.Checked;
-            Config.Settings.vBAddictPlayerToken = txtToken.Text;
             string msg = "";
             if (!Config.SaveConfig(out msg))
                 MsgBox.Show("Error saving settings: " + msg, "Save result");

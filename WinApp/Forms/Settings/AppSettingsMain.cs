@@ -100,6 +100,8 @@ namespace WinApp.Forms.Settings
                     playerId = Convert.ToInt32(dt.Rows[0][0]);
                 Config.Settings.playerId = playerId;
             }
+            // vBAddict settings
+            vBAddictHelper.GetSettings();
             // Download file path and settings
             // Download path and settings
             Config.Settings.downloadFilePath = txtDownloadFilePath.Text;

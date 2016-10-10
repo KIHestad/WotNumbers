@@ -18,7 +18,50 @@ namespace WinApp.Code
 	class vBAddictHelper
 	{
 		private static int timeout = 15000; // milliseconds
-		
+
+        public static SettingsItem Settings = new SettingsItem(); 
+
+        public class SettingsItem
+        {
+            public string Token { get; set; }
+            public bool UploadActive { get; set; }
+            public bool UploadReplayActive { get; set; }
+        }
+
+        public static void GetSettings()
+        {
+            string sql = "SELECT * FROM player WHERE id=@id";
+            DB.AddWithValue(ref sql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
+            DataTable dt = DB.FetchData(sql);
+            string token = "";
+            bool uploadActive = false;
+            bool uploadReplayActive = false;
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                if (dr["vbaddictToken"] != DBNull.Value)
+                    token = dr["vbaddictToken"].ToString();
+                uploadActive = Convert.ToBoolean(dr["vbaddictUploadActive"]);
+                uploadReplayActive = Convert.ToBoolean(dr["vbaddictUploadReplayActive"]);
+            }
+            Settings.Token = token;
+            Settings.UploadActive = uploadActive;
+            Settings.UploadReplayActive = uploadReplayActive;
+        }
+
+        public static void SaveSettings()
+        {
+            string sql =
+                "UPDATE player " +
+                "SET vbaddictToken=@vbaddictToken, vbaddictUploadActive=@vbaddictUploadActive, vbaddictUploadReplayActive=@vbaddictUploadReplayActive " +
+                "WHERE id=@id; ";
+            DB.AddWithValue(ref sql, "@id", Config.Settings.playerId, DB.SqlDataType.Int);
+            DB.AddWithValue(ref sql, "@vbaddictToken", Settings.Token, DB.SqlDataType.VarChar);
+            DB.AddWithValue(ref sql, "@vbaddictUploadActive", Settings.UploadActive, DB.SqlDataType.Boolean);
+            DB.AddWithValue(ref sql, "@vbaddictUploadReplayActive", Settings.UploadReplayActive, DB.SqlDataType.Boolean);
+            DB.ExecuteNonQuery(sql);
+        }
+
 		public static string TestConnection()
 		{
 			try

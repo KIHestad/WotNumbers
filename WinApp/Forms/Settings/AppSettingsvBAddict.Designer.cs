@@ -42,7 +42,7 @@
             this.btnUploadDossier = new BadButton();
             this.btnTestConnection = new BadButton();
             this.btnSaveSettings = new BadButton();
-            this.badGroupBox1 = new BadGroupBox();
+            this.group_vBAddict_Settings = new BadGroupBox();
             this.badGroupBox2 = new BadGroupBox();
             this.SuspendLayout();
             // 
@@ -116,6 +116,7 @@
             // txtToken
             // 
             this.txtToken.HasFocus = false;
+            this.txtToken.HideBorder = false;
             this.txtToken.Image = null;
             this.txtToken.Location = new System.Drawing.Point(17, 172);
             this.txtToken.MultilineAllow = false;
@@ -192,15 +193,15 @@
             this.btnSaveSettings.ToolTipText = "";
             this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
             // 
-            // badGroupBox1
+            // group_vBAddict_Settings
             // 
-            this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
-            this.badGroupBox1.Image = null;
-            this.badGroupBox1.Location = new System.Drawing.Point(1, 125);
-            this.badGroupBox1.Name = "badGroupBox1";
-            this.badGroupBox1.Size = new System.Drawing.Size(445, 129);
-            this.badGroupBox1.TabIndex = 16;
-            this.badGroupBox1.Text = "Settings";
+            this.group_vBAddict_Settings.BackColor = System.Drawing.Color.Transparent;
+            this.group_vBAddict_Settings.Image = null;
+            this.group_vBAddict_Settings.Location = new System.Drawing.Point(1, 125);
+            this.group_vBAddict_Settings.Name = "group_vBAddict_Settings";
+            this.group_vBAddict_Settings.Size = new System.Drawing.Size(445, 129);
+            this.group_vBAddict_Settings.TabIndex = 16;
+            this.group_vBAddict_Settings.Text = "Settings for current player";
             // 
             // badGroupBox2
             // 
@@ -228,7 +229,7 @@
             this.Controls.Add(this.btnUploadDossier);
             this.Controls.Add(this.btnTestConnection);
             this.Controls.Add(this.btnSaveSettings);
-            this.Controls.Add(this.badGroupBox1);
+            this.Controls.Add(this.group_vBAddict_Settings);
             this.Controls.Add(this.badGroupBox2);
             this.Name = "AppSettingsvBAddict";
             this.Size = new System.Drawing.Size(456, 307);
@@ -248,7 +249,7 @@
         private BadButton btnUploadDossier;
         private BadButton btnTestConnection;
         private BadButton btnSaveSettings;
-        private BadGroupBox badGroupBox1;
+        private BadGroupBox group_vBAddict_Settings;
         private BadGroupBox badGroupBox2;
         private BadButton btnCancel;
         private BadCheckBox chkActivateAutoReplayUpload;
