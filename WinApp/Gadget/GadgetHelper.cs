@@ -733,6 +733,8 @@ namespace WinApp.Gadget
                 // Get parameters
                 string fileName = Path.GetFileName(fileNameWithPath);
                 string folder = Path.GetDirectoryName(fileNameWithPath);
+                if (folder == "\\")
+                    folder = "";
                 sql += "WHERE filename=@filename AND folder=@folder;";
                 DB.AddWithValue(ref sql, "@filename", fileName, DB.SqlDataType.VarChar);
                 DB.AddWithValue(ref sql, "@folder", folder, DB.SqlDataType.VarChar);

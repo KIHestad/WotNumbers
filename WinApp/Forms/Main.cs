@@ -5352,16 +5352,17 @@ namespace WinApp.Forms
 
         private bool SaveHomeView()
         {
+
             saveFileDialog1.FileName = "";
             saveFileDialog1.DefaultExt = "*.json";
             saveFileDialog1.Filter = "Wot Numbers Home View files (*.json)|*.json|All files (*.*)|*.*";
             saveFileDialog1.InitialDirectory = Config.AppDataHomeViewFolder;
-            DialogResult result = saveFileDialog1.ShowDialog();
+            DialogResult result = saveFileDialog1.ShowDialog(); // dialogbox checks for overwrite
             if (result == DialogResult.OK)
             {
                 string fileName = Path.GetFileName(saveFileDialog1.FileName);
-                GadgetHelper.HomeViewSaveToFile(fileName);
-                bool updatedRecentList = GadgetHelper.UpdateRecentHomeView(fileName);
+                GadgetHelper.HomeViewSaveToFile(saveFileDialog1.FileName);
+                bool updatedRecentList = GadgetHelper.UpdateRecentHomeView(saveFileDialog1.FileName);
                 if (updatedRecentList)
                     GetHomeViewRecentList();
                 mHomeView.Text = fileName.Replace(".json", "");

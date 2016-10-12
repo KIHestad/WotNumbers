@@ -62,7 +62,11 @@ namespace WinApp.Forms
         private void UpdateFromApi_Shown(object sender, EventArgs e)
 		{
 			if (_autoRun)
-				RunNow();
+            {
+                btnStart.Text = "Cancel";
+                RunNow();
+            }
+				
 		}
 
 		private void UpdateProgressBar(int value, string statusText)
@@ -125,11 +129,6 @@ namespace WinApp.Forms
             
 		}
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            cancelFlag = true;
-        }
-
         private class BackupFiles
         {
             public DateTime created { get; set; }
@@ -170,49 +169,70 @@ namespace WinApp.Forms
 
         private bool Copy(DateTime backupTime)
         {
-            try
+            byte[] buffer = new byte[1024 * 512]; // 0.5MB buffer
+            string backupFile = Config.Settings.databaseBackupFilePath;
+            if (backupFile.Substring(backupFile.Length - 1, 1) != "\\")
+                backupFile += "\\";
+            backupFile += Path.GetFileNameWithoutExtension(Config.Settings.databaseFileName) + "_";
+            backupFile += string.Format("{0:yyyy-MM-dd_HH-mm-ss}", backupTime);
+            backupFile += Path.GetExtension(Config.Settings.databaseFileName);
+            // Read database file
+            FileStream source = null;
+            int readTry = 1;
+            bool readOK = false;
+            while (!cancelFlag && !readOK && readTry < 30)
             {
-                byte[] buffer = new byte[1024 * 512]; // 0.5MB buffer
-                string backupFile = Config.Settings.databaseBackupFilePath;
-                if (backupFile.Substring(backupFile.Length - 1, 1) != "\\")
-                    backupFile += "\\";
-                backupFile += Path.GetFileNameWithoutExtension(Config.Settings.databaseFileName) + "_";
-                backupFile += string.Format("{0:yyyy-MM-dd_HH-mm-ss}", backupTime);
-                backupFile += Path.GetExtension(Config.Settings.databaseFileName);
-
-                using (FileStream source = new FileStream(Config.Settings.databaseFileName, FileMode.Open, FileAccess.Read))
+                System.Threading.Thread.Sleep(1000);
+                UpdateProgressBar(readTry, "Waiting for database read access...");
+                try
+                {
+                    readTry++;
+                    source = new FileStream(Config.Settings.databaseFileName, FileMode.Open, FileAccess.Read);
+                    readOK = true;
+                }
+                catch (Exception)
+                {
+                    
+                }
+            }
+            if (source == null)
+            {
+                if (!cancelFlag)
+                    MsgBox.Show("Error performing database backup, could not get read access to database file.", "Database Backup Terminated");
+                return false;
+            }
+            else
+            {
+                UpdateProgressBar(40, "Creating backup file...");
+                // Create destination
+                try
                 {
                     long fileLength = source.Length;
-                    using (FileStream dest = new FileStream(backupFile, FileMode.CreateNew, FileAccess.Write))
-                    {
-                        long totalBytes = 0;
-                        int currentBlockSize = 0;
+                    FileStream dest = new FileStream(backupFile, FileMode.CreateNew, FileAccess.Write);
+                    long totalBytes = 0;
+                    int currentBlockSize = 0;
 
-                        while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            totalBytes += currentBlockSize;
-                            double persentage = (double)totalBytes * 100.0 / fileLength;
-                            dest.Write(buffer, 0, currentBlockSize);
-                            UpdateProgressBar(Convert.ToInt32(persentage), "File copy in progress...");
-                            if (cancelFlag)
-                                break;
-                        }
+                    while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        totalBytes += currentBlockSize;
+                        double persentage = (double)totalBytes * 100.0 / fileLength;
+                        dest.Write(buffer, 0, currentBlockSize);
+                        UpdateProgressBar(Convert.ToInt32(persentage), "File copy in progress...");
+                        if (cancelFlag)
+                            break;
                     }
                     // Delete dest file here if cancelled
                     if (cancelFlag)
                         File.Delete(backupFile);
+                    return true;
                 }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Log.LogToFile(ex, "Database Backup failed");
-                if (!_autoRun)
-                    MsgBox.Show("Error performing database backup: " + ex.Message, "Database Backup Error");
-                return false;
+                catch (Exception ex)
+                {
+                    Log.LogToFile(ex, "Database Backup failed");
+                    MsgBox.Show("Error performing database backup: " + ex.Message + Environment.NewLine + Environment.NewLine, "Database Backup Error");
+                    return false;
+                }
             }
         }
-
-		
 	}
 }

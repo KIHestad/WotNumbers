@@ -33,7 +33,6 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.lblBRRStatus = new BadLabel();
-            this.badLabel5 = new BadLabel();
             this.badLabel3 = new BadLabel();
             this.txtResModsSubFolder = new BadTextBox();
             this.badLabel2 = new BadLabel();
@@ -80,18 +79,6 @@
             this.lblBRRStatus.TabIndex = 61;
             this.lblBRRStatus.Text = "BRR Status";
             this.lblBRRStatus.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // badLabel5
-            // 
-            this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.badLabel5.Dimmed = false;
-            this.badLabel5.Image = null;
-            this.badLabel5.Location = new System.Drawing.Point(55, 279);
-            this.badLabel5.Name = "badLabel5";
-            this.badLabel5.Size = new System.Drawing.Size(75, 23);
-            this.badLabel5.TabIndex = 60;
-            this.badLabel5.Text = "badLabel5";
-            this.badLabel5.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // badLabel3
             // 
@@ -475,7 +462,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.Controls.Add(this.lblBRRStatus);
-            this.Controls.Add(this.badLabel5);
             this.Controls.Add(this.badLabel3);
             this.Controls.Add(this.txtResModsSubFolder);
             this.Controls.Add(this.badLabel2);
@@ -545,7 +531,6 @@
         private BadTextBox txtResModsSubFolder;
         private BadLabel badLabel3;
         private BadSeperator badSeperator1;
-        private BadLabel badLabel5;
         private BadLabel lblBRRStatus;
     }
 }
