@@ -108,6 +108,24 @@ namespace WinApp.Code.FormLayout
             return wn8RatingColor;
         }
 
+        //                                vb  bad   avg-  avg   good  go+   great gr+   uniqum u+
+        public static double[] RangePR = { 0, 2555, 3495, 4435, 6515, 7623, 8730, 9452, 10175, 11087 }; // According to XVM
+
+        public static Color PRcolor(double pr)
+        {
+            Color prRatingColor = ColorTheme.Rating_very_bad;
+            if (pr >= RangePR[9]) prRatingColor = ColorTheme.Rating_super_uniqum;
+            else if (pr >= RangePR[8]) prRatingColor = ColorTheme.Rating_uniqum;
+            else if (pr >= RangePR[7]) prRatingColor = ColorTheme.Rating_very_great;
+            else if (pr >= RangePR[6]) prRatingColor = ColorTheme.Rating_great;
+            else if (pr >= RangePR[5]) prRatingColor = ColorTheme.Rating_very_good;
+            else if (pr >= RangePR[4]) prRatingColor = ColorTheme.Rating_good;
+            else if (pr >= RangePR[3]) prRatingColor = ColorTheme.Rating_average;
+            else if (pr >= RangePR[2]) prRatingColor = ColorTheme.Rating_below_average;
+            else if (pr >= RangePR[1]) prRatingColor = ColorTheme.Rating_bad;
+            return prRatingColor;
+        }
+
         public static double[] RangeWR = { 0 }; // Set accoring to application layout settings - SetRatingColors()
         
         public static Color WinRateColor(double wr)

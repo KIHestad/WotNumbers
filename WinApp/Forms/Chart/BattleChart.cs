@@ -16,7 +16,7 @@ namespace WinApp.Forms
 
         int initTankId = 0;
 		int decimals = 3;
-		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChatValues.totals = false)
+		int numPoints = 100; // Max num of points in one chart serie, exept for battle values (ChartValues.totals = false)
 
         // List of all available chart types 
         private List<BattleChartHelper.ChartType> chartTypeList = BattleChartHelper.GetChartTypeList(); 
@@ -155,6 +155,8 @@ namespace WinApp.Forms
 
         private void DrawCurrentChartView()
         {
+            // Default = auto x-axis
+            ChartingMain.ChartAreas[0].AxisX.Minimum = Double.NaN;
             // Check if 2 Yaxis
             bool yAxix1 = false;
             bool yAxix2 = false;
@@ -242,7 +244,7 @@ namespace WinApp.Forms
 			switch (chartTypeName)
 			{
 				case "WN8":
-                    DrawChartSeriesWN8(tankId, chartSerie, chartOrder, chartMode);
+                    DrawChartSeriesWN8(tankId, chartSerie, chartMode);
                     return;
                 case "WN9":
                     if (tankId != 0)
@@ -480,7 +482,7 @@ namespace WinApp.Forms
 			dtCurrent.Clear();
 		}
 
-		private void DrawChartSeriesWN8(int tankId, string chartSerie, string chartOrder, string chartMode)
+		private void DrawChartSeriesWN8(int tankId, string chartSerie, string chartMode)
 		{
 			Cursor = Cursors.WaitCursor;
 			// Find playerTank current value or all tanks current value
@@ -510,55 +512,19 @@ namespace WinApp.Forms
 				"group by t.id ";
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
 			DataTable ptb = DB.FetchData(sql); // ptb holds all parameters needed to calc WN8
-
-            // If per battle, find all battles for reversing to first recorded
-			if (BattleChartHelper.Settings.Xaxis == "Battle")
-			{
-				// Find first value by sutracting sum of recorded values
-                if (chartMode != "ALL")
-                    battleModeWhere = " and b.battleMode='" + chartMode + "' ";
-				bSumWhere = "where t.expDmg is not null" + battleModeWhere + bSumWhere;
-				sql =
-					"select t.id as tankId, sum(b.battlesCount) as battles, sum(b.dmg) as dmg, sum (b.spotted) as spot, sum (b.frags) as frags, " +
-					"  sum (b.def) as def, sum (cap) as cap, sum(victory) as wins " +
-					"from battle b left join " +
-					"  playerTank pt on b.playerTankId=pt.id and pt.playerId=@playerId left join " +
-					"  tank t on pt.tankId = t.id " +
-					GetBattleTimeFilter(bSumWhere) + " " +
-					"group by t.id ";
-				DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-				DataTable dtBattleSum = DB.FetchData(sql);
-				if (dtBattleSum.Rows.Count > 0)
-				{
-					foreach (DataRow ptbRow in ptb.Rows)
-					{
-						DataRow[] bRow = dtBattleSum.Select("tankId = " + tankId);
-						if (bRow.Length > 0)
-						{
-							ptbRow["battles"] = Convert.ToInt32(ptbRow["battles"]) - Convert.ToInt32(bRow[0]["battles"]);
-							ptbRow["dmg"] = Convert.ToInt32(ptbRow["dmg"]) - Convert.ToInt32(bRow[0]["dmg"]);
-							ptbRow["spot"] = Convert.ToInt32(ptbRow["spot"]) - Convert.ToInt32(bRow[0]["spot"]);
-							ptbRow["frags"] = Convert.ToInt32(ptbRow["frags"]) - Convert.ToInt32(bRow[0]["frags"]);
-							ptbRow["def"] = Convert.ToInt32(ptbRow["def"]) - Convert.ToInt32(bRow[0]["def"]);
-							ptbRow["cap"] = Convert.ToInt32(ptbRow["cap"]) - Convert.ToInt32(bRow[0]["cap"]);
-							ptbRow["wins"] = Convert.ToInt32(ptbRow["wins"]) - Convert.ToInt32(bRow[0]["wins"]);
-						}
-					}
-				}
-			}
-
+            
 			// Find battles
             if (chartMode != "ALL")
                 battleModeWhere = " and battleMode='" + chartMode + "' ";
-			sql = 
-				"select battle.*, playerTank.tankId as tankId, battleTime as battle_time, battlesCount as battles_Count " + 
-				"from battle inner join " +
-                "  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId " + 
-                battleModeWhere + 
-				GetBattleTimeFilter(bWhere) + " " + 
-				"order by battleTime " + chartOrder;
+            sql =
+                "select battle.*, playerTank.tankId as tankId, battleTime as battle_time, battlesCount as battles_Count " +
+                "from battle inner join " +
+                "  playerTank on battle.playerTankId = playerTank.id and playerTank.playerId=@playerId " +
+                battleModeWhere +
+                GetBattleTimeFilter(bWhere) + " " +
+                "order by battleTime DESC "; 
 			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-			DataTable dtChart = DB.FetchData(sql);
+			DataTable dtBattle = DB.FetchData(sql);
 			double chartVal = 0;
 
 			// Draw chart per date
@@ -566,66 +532,78 @@ namespace WinApp.Forms
 			{
 				DateTime chartDate = DateTime.Now;
 				double hourInterval = 24;
-				if (dtChart.Rows.Count > 0)
+				if (dtBattle.Rows.Count > 0)
 				{
-					chartDate = Convert.ToDateTime(dtChart.Rows[0]["battle_time"]);
-					if (dtChart.Rows.Count > 5000)
+					chartDate = Convert.ToDateTime(dtBattle.Rows[0]["battle_time"]);
+					if (dtBattle.Rows.Count > 5000)
 						hourInterval = 48;
-					else if (dtChart.Rows.Count > 10000)
+					else if (dtBattle.Rows.Count > 10000)
 						hourInterval = 24 * 7;
 				}
-				foreach (DataRow dr in dtChart.Rows)
+				foreach (DataRow drBattle in dtBattle.Rows)
 				{
-					DateTime thisDate = Convert.ToDateTime(dr["battle_time"]);
+					DateTime thisDate = Convert.ToDateTime(drBattle["battle_time"]);
 					if (thisDate <= chartDate)
 					{
                         chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
 						ChartingMain.Series[chartSerie].Points.AddXY(thisDate, chartVal); // Use battle date
 						chartDate = thisDate.AddHours(-hourInterval);
 					}
-					// Get prev val
-					DataRow[] ptbRow = ptb.Select("tankId = " + tankId);
+                    // Get prev val
+                    DataRow[] ptbRow = ptb.Select("tankId = " + drBattle["tankId"].ToString());
 					if (ptbRow.Length > 0)
 					{
-						ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) - Convert.ToInt32(dr["battlesCount"]);
-						ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) - Convert.ToInt32(dr["dmg"]);
-						ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) - Convert.ToInt32(dr["spotted"]);
-						ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) - Convert.ToInt32(dr["frags"]);
-						ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) - Convert.ToInt32(dr["def"]);
-						ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) - Convert.ToInt32(dr["cap"]);
-						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) - Convert.ToInt32(dr["victory"]);
+						ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) - Convert.ToInt32(drBattle["battlesCount"]);
+						ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) - Convert.ToInt32(drBattle["dmg"]);
+						ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) - Convert.ToInt32(drBattle["spotted"]);
+						ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) - Convert.ToInt32(drBattle["frags"]);
+						ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) - Convert.ToInt32(drBattle["def"]);
+						ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) - Convert.ToInt32(drBattle["cap"]);
+						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) - Convert.ToInt32(drBattle["victory"]);
 					}
 				}
 			}
-			// Draw chart per battle
+			
+            // Draw chart per battle
 			else if (BattleChartHelper.Settings.Xaxis == "Battle")
 			{
-				int step = 0;
-				int stepMod = dtChart.Rows.Count / numPoints;
+                // Get total number of battles
+                int battleTotalCount = Convert.ToInt32(dtBattle.Compute("SUM(battlesCount)", "")) + 1;
+                int step = 0;
+				int stepMod = dtBattle.Rows.Count / numPoints;
 				if (stepMod < 1) stepMod = 1;
 				double battleCount = 0;
-				foreach (DataRow bRow in dtChart.Rows)
+                // First point = Current val
+                chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
+                ChartingMain.Series[chartSerie].Points.AddXY(battleTotalCount - battleCount, chartVal); 
+                // Loop through battles and subtract values
+                foreach (DataRow drBattle in dtBattle.Rows)
 				{
-					DataRow[] ptbRow = ptb.Select("tankId = " + tankId);
-					battleCount += Convert.ToDouble(bRow["battlesCount"]); // Use battle count
+                    battleCount += Convert.ToDouble(drBattle["battlesCount"]); // Use battle count
+                    DataRow[] ptbRow = ptb.Select("tankId = " + drBattle["tankId"].ToString());
 					if (ptbRow.Length > 0)
 					{
-						ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) + Convert.ToInt32(bRow["battlesCount"]); ;
-						ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) + Convert.ToInt32(bRow["dmg"]);
-						ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) + Convert.ToInt32(bRow["spotted"]);
-						ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) + Convert.ToInt32(bRow["frags"]);
-						ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) + Convert.ToInt32(bRow["def"]);
-						ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) + Convert.ToInt32(bRow["cap"]);
-						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) + Convert.ToInt32(bRow["victory"]);
+						ptbRow[0]["battles"] = Convert.ToInt32(ptbRow[0]["battles"]) - Convert.ToInt32(drBattle["battlesCount"]); ;
+						ptbRow[0]["dmg"] = Convert.ToInt32(ptbRow[0]["dmg"]) - Convert.ToInt32(drBattle["dmg"]);
+						ptbRow[0]["spot"] = Convert.ToInt32(ptbRow[0]["spot"]) - Convert.ToInt32(drBattle["spotted"]);
+						ptbRow[0]["frags"] = Convert.ToInt32(ptbRow[0]["frags"]) - Convert.ToInt32(drBattle["frags"]);
+						ptbRow[0]["def"] = Convert.ToInt32(ptbRow[0]["def"]) - Convert.ToInt32(drBattle["def"]);
+						ptbRow[0]["cap"] = Convert.ToInt32(ptbRow[0]["cap"]) - Convert.ToInt32(drBattle["cap"]);
+						ptbRow[0]["wins"] = Convert.ToInt32(ptbRow[0]["wins"]) - Convert.ToInt32(drBattle["victory"]);
 					}
-					step++;
-					if (step % stepMod == 0 || step == 0)
-					{
+                    step++;
+                    if (step % stepMod == 0)
+                    {
                         chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
-						ChartingMain.Series[chartSerie].Points.AddXY(battleCount, chartVal); // Use battle count
-					}
-				}
-			}
+                        ChartingMain.Series[chartSerie].Points.AddXY(battleTotalCount - battleCount, chartVal);
+                    }
+                }
+                // Last point = First battle
+                chartVal = Math.Round(Code.Rating.WN8.CalcPlayerTankBattle(ptb), decimals);
+                ChartingMain.Series[chartSerie].Points.AddXY(battleTotalCount - battleCount, chartVal);
+                // Force chart x-axis to start on 0
+                ChartingMain.ChartAreas[0].AxisX.Minimum = 0;
+            }
 			Cursor = Cursors.Default;
 		}
         

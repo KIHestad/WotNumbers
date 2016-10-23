@@ -5126,6 +5126,9 @@ namespace WinApp.Forms
             Form frm = null;
 			switch (controlName)
 			{
+                case "ucGaugePR":
+                    frm = new Gadget.paramTimeSpan(gadgetId);
+                    break;
                 case "ucGaugeWN9":
                     frm = new Gadget.paramTimeSpan(gadgetId);
                     break;

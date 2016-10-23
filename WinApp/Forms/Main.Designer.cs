@@ -194,6 +194,7 @@
             this.mGadgetWR = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetRWR = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
+            this.wargamingPersonalRatingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN9 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mGadgetWN7 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1871,6 +1872,7 @@
             this.mGadgetWR,
             this.mGadgetRWR,
             this.toolStripSeparator27,
+            this.wargamingPersonalRatingToolStripMenuItem,
             this.mGadgetWN9,
             this.mGadgetWN8,
             this.mGadgetWN7,
@@ -1885,53 +1887,69 @@
             // 
             // mGadgetWR
             // 
+            this.mGadgetWR.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetWR.Name = "mGadgetWR";
-            this.mGadgetWR.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetWR.Size = new System.Drawing.Size(221, 22);
             this.mGadgetWR.Tag = "ucGaugeWinRate";
             this.mGadgetWR.Text = "Win Rate";
             this.mGadgetWR.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetRWR
             // 
+            this.mGadgetRWR.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetRWR.Name = "mGadgetRWR";
-            this.mGadgetRWR.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetRWR.Size = new System.Drawing.Size(221, 22);
             this.mGadgetRWR.Tag = "ucGaugeRWR";
-            this.mGadgetRWR.Text = "RWR";
+            this.mGadgetRWR.Text = "Relative Win Rate (RWR)";
             this.mGadgetRWR.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // toolStripSeparator27
             // 
             this.toolStripSeparator27.Name = "toolStripSeparator27";
-            this.toolStripSeparator27.Size = new System.Drawing.Size(215, 6);
+            this.toolStripSeparator27.Size = new System.Drawing.Size(218, 6);
+            // 
+            // wargamingPersonalRatingToolStripMenuItem
+            // 
+            this.wargamingPersonalRatingToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.wargamingPersonalRatingToolStripMenuItem.Name = "wargamingPersonalRatingToolStripMenuItem";
+            this.wargamingPersonalRatingToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.wargamingPersonalRatingToolStripMenuItem.Tag = "ucGaugePR";
+            this.wargamingPersonalRatingToolStripMenuItem.Text = "Wargaming Personal Rating";
+            this.wargamingPersonalRatingToolStripMenuItem.Visible = false;
+            this.wargamingPersonalRatingToolStripMenuItem.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetWN9
             // 
+            this.mGadgetWN9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetWN9.Name = "mGadgetWN9";
-            this.mGadgetWN9.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetWN9.Size = new System.Drawing.Size(221, 22);
             this.mGadgetWN9.Tag = "ucGaugeWN9";
             this.mGadgetWN9.Text = "WN9";
             this.mGadgetWN9.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetWN8
             // 
+            this.mGadgetWN8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetWN8.Name = "mGadgetWN8";
-            this.mGadgetWN8.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetWN8.Size = new System.Drawing.Size(221, 22);
             this.mGadgetWN8.Tag = "ucGaugeWN8";
             this.mGadgetWN8.Text = "WN8";
             this.mGadgetWN8.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetWN7
             // 
+            this.mGadgetWN7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetWN7.Name = "mGadgetWN7";
-            this.mGadgetWN7.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetWN7.Size = new System.Drawing.Size(221, 22);
             this.mGadgetWN7.Tag = "ucGaugeWN7";
             this.mGadgetWN7.Text = "WN7";
             this.mGadgetWN7.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetEFF
             // 
+            this.mGadgetEFF.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetEFF.Name = "mGadgetEFF";
-            this.mGadgetEFF.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetEFF.Size = new System.Drawing.Size(221, 22);
             this.mGadgetEFF.Tag = "ucGaugeEFF";
             this.mGadgetEFF.Text = "Efficiency";
             this.mGadgetEFF.Click += new System.EventHandler(this.mGadgetAdd);
@@ -1939,20 +1957,22 @@
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(215, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(218, 6);
             // 
             // mGadgetKillDeath
             // 
+            this.mGadgetKillDeath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetKillDeath.Name = "mGadgetKillDeath";
-            this.mGadgetKillDeath.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetKillDeath.Size = new System.Drawing.Size(221, 22);
             this.mGadgetKillDeath.Tag = "ucGaugeKillDeath";
             this.mGadgetKillDeath.Text = "Kill / Death Ratio";
             this.mGadgetKillDeath.Click += new System.EventHandler(this.mGadgetAdd);
             // 
             // mGadgetDamageCausedReceived
             // 
+            this.mGadgetDamageCausedReceived.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mGadgetDamageCausedReceived.Name = "mGadgetDamageCausedReceived";
-            this.mGadgetDamageCausedReceived.Size = new System.Drawing.Size(218, 22);
+            this.mGadgetDamageCausedReceived.Size = new System.Drawing.Size(221, 22);
             this.mGadgetDamageCausedReceived.Tag = "ucGaugeDmgCausedReceived";
             this.mGadgetDamageCausedReceived.Text = "Damage Caused / Received";
             this.mGadgetDamageCausedReceived.Click += new System.EventHandler(this.mGadgetAdd);
@@ -2812,6 +2832,7 @@
         private System.Windows.Forms.ToolStripSeparator mHomeViewRecentSeparator;
         private System.Windows.Forms.ToolStripMenuItem mHomeViewClearRecentList;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountrySweden;
+        private System.Windows.Forms.ToolStripMenuItem wargamingPersonalRatingToolStripMenuItem;
     }
 }
 

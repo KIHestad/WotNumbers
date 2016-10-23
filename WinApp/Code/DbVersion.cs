@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 416; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 417; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2764,7 +2764,6 @@ namespace WinApp.Code
                 case 385:
                     mssql = "ALTER TABLE playerTankBattle ADD wn9maxhist FLOAT NOT NULL default 0; ";
                     sqlite = mssql;
-                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9maxhist
                     break;
                 case 386:
                     mssql = "UPDATE columnSelection SET colNameSum=0, colNameBattleSum=0, colNameBattleSumCalc=1, colNameBattleSumTank=0, colNameBattleSumReversePos=0 WHERE ID = 105; ";
@@ -2775,9 +2774,6 @@ namespace WinApp.Code
                         "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType, colNameBattleSumCalc) " +
                         "VALUES (115, 1, 120, 'playerTankBattle.wn9maxhist', 'WN9 Max Hist', 'WN9 tank rating using max history calculation according to http://jaj22.org.uk/wn9description.html', 'Rating', 50, 'Float', 1); ";
                     sqlite = mssql;
-                    break;
-                case 389:
-                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
                     break;
                 case 391:
                     temp =
@@ -2931,6 +2927,11 @@ namespace WinApp.Code
                 case 416:
                     Config.Settings.res_mods_subfolder = "0.9.16";
                     Config.SaveConfig(out msg);
+                    break;
+                case 417:
+                    RunRecalcBattleWN9 = true;
+                    RunRecalcBattleWN8 = true;
+                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
                     break;
             }
             string sql = "";

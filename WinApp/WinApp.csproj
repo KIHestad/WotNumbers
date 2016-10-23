@@ -202,6 +202,7 @@
       <DependentUpon>ToolStripEx.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Rating\EFF.cs" />
+    <Compile Include="Code\Rating\PR.cs" />
     <Compile Include="Code\Rating\RWR.cs" />
     <Compile Include="Code\Rating\WN7.cs" />
     <Compile Include="Code\Rating\WN8.cs" />
@@ -621,6 +622,12 @@
     <Compile Include="Gadget\ucGaugeRWR.Designer.cs">
       <DependentUpon>ucGaugeRWR.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gadget\ucGaugePR.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gadget\ucGaugePR.Designer.cs">
+      <DependentUpon>ucGaugePR.cs</DependentUpon>
+    </Compile>
     <Compile Include="Gadget\ucGaugeWN9.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -868,6 +875,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeRWR.resx">
       <DependentUpon>ucGaugeRWR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gadget\ucGaugePR.resx">
+      <DependentUpon>ucGaugePR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\ucGaugeWN9.resx">
       <DependentUpon>ucGaugeWN9.cs</DependentUpon>
