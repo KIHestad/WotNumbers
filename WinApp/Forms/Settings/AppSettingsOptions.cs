@@ -32,6 +32,7 @@ namespace WinApp.Forms.Settings
             txtBackupFilePath.Text = Config.Settings.databaseBackupFilePath;
             ddHour.Text = Config.Settings.newDayAtHour.ToString("00");
             SetTextForChkNotifyIconFormExitToMinimize();
+            chkTempBattleresultSave.Checked = Config.SessionSettings.tempBattleResultSave;
             EditChangesApply(false);
         }
 
@@ -58,6 +59,7 @@ namespace WinApp.Forms.Settings
 
         public void SaveChanges()
         {
+            // Settings
             Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
             Config.Settings.notifyIconFormExitToMinimize = chkNotifyIconFormExitToMinimize.Checked;
             Config.Settings.databaseBackupFilePath = txtBackupFilePath.Text;
@@ -65,6 +67,9 @@ namespace WinApp.Forms.Settings
             string msg = "";
             Config.SaveConfig(out msg);
             EditChangesApply(false);
+            //Session Settings
+            Config.SessionSettings.tempBattleResultSave = chkTempBattleresultSave.Checked;
+            Config.SessionSettings.tempBattleResultSaveFirstRun = chkTempBattleresultSave.Checked;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -123,7 +128,10 @@ namespace WinApp.Forms.Settings
             Form frm = new Forms.DatabaseBackup();
             frm.ShowDialog(this);
         }
-      
-                
+
+        private void chkTempBattleresultSave_Click(object sender, EventArgs e)
+        {
+            EditChangesApply(true);
+        }
     }
 }

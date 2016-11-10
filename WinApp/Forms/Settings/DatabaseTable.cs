@@ -14,7 +14,8 @@ namespace WinApp.Forms
 	public partial class DatabaseTable : FormCloseOnEsc
     {
 		private string tableList = "";
-		
+        private string selectSQL = "";
+
 		public DatabaseTable()
 		{
 			InitializeComponent();
@@ -85,15 +86,16 @@ namespace WinApp.Forms
 			}
 			if (tableList.Length > 0)
 				tableList = tableList.Substring(0, tableList.Length - 1); // remove last comma
-			popupSelectTable.Text = ""; // Avoid NULL as default value
+			ddSelectTable.Text = ""; // Avoid NULL as default value
 			RefreshScrollbars();
 		}
 
 		private void popupSelectTable_Click(object sender, EventArgs e)
 		{
-			// Show popup with available tables
-			Code.DropDownGrid.Show(popupSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
-		}
+            // Show popup with available tables
+            selectSQL = "";
+            Code.DropDownGrid.Show(ddSelectTable, Code.DropDownGrid.DropDownGridType.List, tableList);
+        }
 
 
 		#region Grid
@@ -105,12 +107,19 @@ namespace WinApp.Forms
 
 		private void RefreshDataGrid()
 		{
-			// Show content in grid
-			string TableName = popupSelectTable.Text.ToString();
-			if (TableName != "")
-			{
-				dataGridViewShowTable.DataSource = DB.FetchData("SELECT * FROM " + TableName);
-			}
+            // Show content in grid
+            if (selectSQL != "" && selectSQL.ToUpper().StartsWith("SELECT "))
+            {
+                dataGridViewShowTable.DataSource = DB.FetchData(selectSQL);
+            }
+            else
+            {
+                string TableName = ddSelectTable.Text.ToString();
+                if (TableName != "")
+                {
+                    dataGridViewShowTable.DataSource = DB.FetchData("SELECT * FROM " + TableName);
+                }
+            }
 			ResizeNow();			
 		}
 
@@ -269,8 +278,8 @@ namespace WinApp.Forms
 
 		private void popupSelectTable_TextChanged(object sender, EventArgs e)
 		{
-			RefreshDataGrid();
-		}
+            RefreshDataGrid();
+        }
 
 		private void DatabaseTable_LocationChanged(object sender, EventArgs e)
 		{
@@ -284,5 +293,46 @@ namespace WinApp.Forms
 			FormHelper.ClosedOne();
 		}
 
-	}
+        private void btnRunSQL_Click(object sender, EventArgs e)
+        {
+            MsgBox.Button warninganswer = MsgBox.Show(
+                "This feature should only be used if you have database and SQL knowlede." + Environment.NewLine + Environment.NewLine +
+                "Remember running INSERT, UPDATE and DELETE statements might damage the database." + Environment.NewLine + Environment.NewLine +
+                "SELECT statements are normally safe to run, but badly formed sql queries might cause HIGH CPU and disk usage while running." + Environment.NewLine + Environment.NewLine +
+                "Are you sure you want to continue?", "W A R N I N G", MsgBox.Type.YesNo);
+            if (warninganswer == MsgBox.Button.Yes)
+            { 
+                InputBox.ResultClass result = InputBox.Show("Enter the SQL query:", "Run SQL", selectSQL, this);
+                if (result.Button == InputBox.InputButton.OK)
+                {
+                    string sql = result.InputText.Trim();
+                    if (sql.ToUpper().StartsWith("SELECT "))
+                    {
+                        selectSQL = sql;
+                        ddSelectTable.Text = sql; // cases text change on dropdown to trigger grid refresh
+                    }
+                    else if (sql.ToUpper().StartsWith("INSERT ") || sql.ToUpper().StartsWith("UPDATE ") || sql.ToUpper().StartsWith("DELETE "))
+                    {
+                        selectSQL = "";
+                        MsgBox.Button answer = MsgBox.Show(
+                            "Please check the SQL query, and confirm that you want to run it." + Environment.NewLine + Environment.NewLine +
+                            sql + Environment.NewLine + Environment.NewLine, "Confirm running SQL", MsgBox.Type.YesNo);
+                        if (answer == MsgBox.Button.Yes)
+                        {
+                            bool sqlResult = DB.ExecuteNonQuery(sql, true);
+                            if (sqlResult)
+                            {
+                                MsgBox.Show("Sql query has run successfully");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        selectSQL = "";
+                        MsgBox.Show("Not supported SQL statement found. Only SELECT, INSERT, UPDATE and DELETE statements are supported");
+                    }
+                }
+            }
+        }
+    }
 }

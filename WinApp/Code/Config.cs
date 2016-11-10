@@ -13,7 +13,8 @@ using WinApp.Code.FormLayout;
 
 namespace WinApp.Code
 {
-	[Serializable()]
+    // Save in config.json settings file
+    [Serializable()]
 	public class ConfigData
 	{
 		public enum dbType
@@ -136,18 +137,31 @@ namespace WinApp.Code
         public DateTime lastGrindingProgressRecalc { get; set; }    // When latest grinding progress recalc was run
         public string currentHomeView { get; set; }                 // The last used home view menu name, to show on restart
         public string currentChartFavourite { get; set; }           // The last used cahrt favourite, to show on restart
-        public string res_mods_subfolder { get; set; }                 // Current res_mods folder
+        public string res_mods_subfolder { get; set; }              // Current res_mods folder
     }
 
-	class Config
+    // Settings for session, resets on each startup
+    public class ConfigSessionData
+    {
+        public bool tempBattleResultSave { get; set; }              // Save battle result files to %appdata%/BattleResultSaved, temp setting not in config file
+        public bool tempBattleResultSaveFirstRun { get; set; }      // Force first battle fetch after tempBattleResultSave = true to fetch all battle results available
+    }
+
+	public class Config
 	{
-		public static ConfigData Settings = new ConfigData();				// Current configs
-		public static ConfigData LastWorkingSettings = new ConfigData();	// Used for reverting to last working settings if create db fails
-		
-		private const string configfile = "config.json";		// File to load/save config changes
-		
-		private static bool _appDataFolderOK = false;
-		public static string AppDataBaseFolder
+        // Session settings, reset for each startup
+        public static ConfigSessionData SessionSettings = new ConfigSessionData() {
+            tempBattleResultSave = false,
+            tempBattleResultSaveFirstRun = true
+        };
+
+        // Settings to be saved to config.json
+        private const string configfile = "config.json";        // File to load/save config changes
+        public static ConfigData Settings = new ConfigData();				// Current configs
+        public static ConfigData LastWorkingSettings = new ConfigData();	// Used for reverting to last working settings if create db fails
+        private static bool _appDataFolderOK = false;
+       
+        public static string AppDataBaseFolder
 		{
 			get 
 			{
@@ -175,7 +189,11 @@ namespace WinApp.Code
 					{
 						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\BattleResult");
 					}
-					if (!Directory.Exists(appdataFolder + wotnumFolder + "\\Download"))
+                    if (!Directory.Exists(appdataFolder + wotnumFolder + "\\BattleResultSaved"))
+                    {
+                        Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\BattleResultSaved");
+                    }
+                    if (!Directory.Exists(appdataFolder + wotnumFolder + "\\Download"))
 					{
 						Directory.CreateDirectory(appdataFolder + wotnumFolder + "\\Download");
 					}
@@ -229,7 +247,15 @@ namespace WinApp.Code
 			}
 		}
 
-		public static string AppDataDownloadFolder
+        public static string AppDataBattleResultSaved
+        {
+            get
+            {
+                return AppDataBaseFolder + "BattleResultSaved\\";
+            }
+        }
+
+        public static string AppDataDownloadFolder
 		{
 			get
 			{

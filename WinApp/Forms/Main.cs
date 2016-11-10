@@ -234,6 +234,8 @@ namespace WinApp.Forms
                     // Home view recent list
                     GetHomeViewRecentList();
                     mHomeView.Text = Config.Settings.currentHomeView;
+                    // Battle Count Filter init 
+                    BattleCountFilterSet();
                     // Check if current Home View has gadgets, if not use default
                     DataTable dtHomeView = DB.FetchData("select * from gadget");
                     if (dtHomeView == null || dtHomeView.Rows.Count == 0)
@@ -304,7 +306,7 @@ namespace WinApp.Forms
 
                     // Check for new version
                     RunCheckForNewVersion();
-                    
+
                     // Show status message
                     SetStatus2("Application started");
                 }
@@ -1788,7 +1790,88 @@ namespace WinApp.Forms
 
         #endregion
 
-        #region Battle Grouping
+        #region Menu Items: Battle Count Filter
+        private void mBattlesCountSelect_Click(object sender, EventArgs e)
+        {
+            // Set new battle count filter as selected
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            mBattlesCountSelected.Text = menu.Text;
+            mBattlesCountSelected.Tag = menu.Tag;
+            mBattlesCountSelected.Visible = true;
+            // Select the new battle count filter
+            BattleCountSelectMenu();
+        }
+
+        private void mBattlesCountSelected_Click(object sender, EventArgs e)
+        {
+            // Select current battle count filter
+            BattleCountSelectMenu();
+        }
+
+        private void BattleCountSelectMenu()
+        {
+            BattleTimeMenuReset();
+            mBattlesCountSelected.Checked = true;
+            mBattles.Text = mBattlesCountSelected.Text;
+            ShowView("Selected battle count filter: " + mBattlesCountSelected.Text);
+
+        }
+
+        private void mBattlesCountSelectEdit_Click(object sender, EventArgs e)
+        {
+            string id = mBattlesCountSelected.Tag.ToString();
+            if (id == "0")
+            {
+                MsgBox.Show("Please select a battle count filter first.");
+                return;
+            }
+            DataRow dr = BattleCountFilterHelper.Get(id);
+            string count = dr["count"].ToString();
+            InputBox.ResultClass answer = InputBox.Show("Select battle count:", "Edit Battle Count Filter", count, this);
+            if (answer.Button == InputBox.InputButton.OK)
+            {
+                int newCount = 0;
+                if (Int32.TryParse(answer.InputText, out newCount))
+                {
+                    BattleCountFilterHelper.Save(id, newCount);
+                    BattleCountFilterSet(id);
+                    ShowView("Edited battle count filter: " + mBattlesCountSelected.Text);
+                }
+                else
+                {
+                    MsgBox.Show("Illegal numeric value");
+                }
+            }
+        }
+
+        private void BattleCountFilterSet(string id = "0")
+        {
+            DataTable dt = BattleCountFilterHelper.Get();
+            int menuId = 0;
+            foreach (DataRow dr in dt.Rows)
+            {
+                menuId++;
+                ToolStripItem[] menuItemFind = mBattlesCountSelect.DropDownItems.Find("mBattlesCountSelect" + menuId.ToString(), true);
+                ToolStripMenuItem menu = (ToolStripMenuItem)menuItemFind[0];
+                menu.Text = "Last " + dr["count"].ToString() + " Battles";
+                menu.Tag = dr["id"].ToString();
+                if (id == menu.Tag.ToString())
+                {
+                    mBattlesCountSelected.Text = menu.Text;
+                    mBattlesCountSelected.Tag = menu.Tag;
+                    BattleCountSelectMenu();
+                }
+            }
+        }
+
+        private void BattleCountMenuReset()
+        {
+            mBattlesCountSelected.Checked = false;
+        }
+
+        #endregion
+
+        #region Menu Items: Battle Grouping
 
         private void toolItemGroupingSelected_Click(object sender, EventArgs e)
 		{
@@ -1831,28 +1914,17 @@ namespace WinApp.Forms
                 // Get Battle Time filer
                 string battleTimeFilter = "";
                 string battleTimeReadable = "";
-                BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
+                BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable);
                 // Show info
-                SetStatus2("Current battle time filter: " + message + " (" + battleTimeReadable + ")");
+                SetStatus2("Current battle time filter: " + message + battleTimeReadable);
 			}
 		}
 
 		private void SelectBattleTimeMenu(ToolStripMenuItem menuItem)
 		{
-			mBattles1d.Checked = false;
-			mBattles2d.Checked = false;
-			mBattlesYesterday.Checked = false;
-			mBattles3d.Checked = false;
-			mBattles1w.Checked = false;
-			mBattles2w.Checked = false;
-			mBattles1m.Checked = false;
-			mBattles3m.Checked = false;
-			mBattles6m.Checked = false;
-			mBattles1y.Checked = false;
-			mBattles2y.Checked = false;
-			mBattlesAll.Checked = false;
-			mBattlesCustomUse.Checked = false;
-			menuItem.Checked = true;
+            BattleTimeMenuReset();
+            BattleCountMenuReset();
+            menuItem.Checked = true;
 			if (menuItem == mBattlesCustomUse)
 				mBattles.Text = menuItem.Tag.ToString(); // Different name on main tool item then menu name for battle time filter button
 			else
@@ -1860,11 +1932,28 @@ namespace WinApp.Forms
 			ShowView("Selected battle time: " + menuItem.Text);
 		}
 
-		#endregion
+        private void BattleTimeMenuReset()
+        {
+            mBattles1d.Checked = false;
+            mBattles2d.Checked = false;
+            mBattlesYesterday.Checked = false;
+            mBattles3d.Checked = false;
+            mBattles1w.Checked = false;
+            mBattles2w.Checked = false;
+            mBattles1m.Checked = false;
+            mBattles3m.Checked = false;
+            mBattles6m.Checked = false;
+            mBattles1y.Checked = false;
+            mBattles2y.Checked = false;
+            mBattlesAll.Checked = false;
+            mBattlesCustomUse.Checked = false;
+        }
 
-		#region Menu Items: Battle Mode
+        #endregion
 
-		private void toolItemMode_Click(object sender, EventArgs e)
+        #region Menu Items: Battle Mode
+
+        private void toolItemMode_Click(object sender, EventArgs e)
 		{
 			// Selected battle mode from toolbar
 			ToolStripMenuItem selectedMenu = (ToolStripMenuItem)sender;
@@ -2159,61 +2248,76 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void BattleTimeFilter(out string battleTimeFilter, out string battleTimeReadable)
+		private void BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable)
 		{
 			battleTimeFilter = "";
             battleTimeReadable = "";
-			if (!mBattlesAll.Checked)
-			{
-				DateTime dateFilter = new DateTime();
-				if (!mBattlesCustomUse.Checked)
-				{
-					// Normal predefined battle time filters
-					battleTimeFilter = " AND battleTime>=@battleTime ";
+            // Check filters
+            if (mBattlesAll.Checked)
+            {
+                // All battles, no filter at all
+                return;
+            }
+            else if (mBattlesCountSelected.Checked)
+            {
+                // Battle count filter
+                string battleCountId = mBattlesCountSelected.Tag.ToString();
+                int battlesCountTotalMin = BattleCountFilterHelper.GetBattlesCountTotalMin(battleCountId);
+                battleTimeFilter = " AND battlescounttotal >= " + battlesCountTotalMin.ToString() + " ";
+            }
+            else
+            {
+                // Battle time filter
+                DateTime dateFilter = new DateTime();
+                if (!mBattlesCustomUse.Checked)
+                {
+                    // Normal predefined battle time filters
+                    battleTimeFilter = " AND battleTime>=@battleTime ";
                     battleTimeReadable = "@battleTime ->";
-					dateFilter = DateTimeHelper.GetTodayDateTimeStart(); 
-					// Adjust time scale according to selected filter
-					if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-2);
-					else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-1);
-					else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
-					else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
-					else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
-					else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
-					else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
-					else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
-					else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
-					else if (mBattlesYesterday.Checked)
-					{
-						DateTime dateFromYesterdayFilter = dateFilter;
-						dateFilter = dateFilter.AddDays(-1);
-						battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
+                    dateFilter = DateTimeHelper.GetTodayDateTimeStart();
+                    // Adjust time scale according to selected filter
+                    if (mBattles3d.Checked) dateFilter = dateFilter.AddDays(-2);
+                    else if (mBattles2d.Checked) dateFilter = dateFilter.AddDays(-1);
+                    else if (mBattles1w.Checked) dateFilter = dateFilter.AddDays(-7);
+                    else if (mBattles2w.Checked) dateFilter = dateFilter.AddDays(-14);
+                    else if (mBattles1m.Checked) dateFilter = dateFilter.AddMonths(-1);
+                    else if (mBattles3m.Checked) dateFilter = dateFilter.AddMonths(-3);
+                    else if (mBattles6m.Checked) dateFilter = dateFilter.AddMonths(-6);
+                    else if (mBattles1y.Checked) dateFilter = dateFilter.AddYears(-1);
+                    else if (mBattles2y.Checked) dateFilter = dateFilter.AddYears(-2);
+                    else if (mBattlesYesterday.Checked)
+                    {
+                        DateTime dateFromYesterdayFilter = dateFilter;
+                        dateFilter = dateFilter.AddDays(-1);
+                        battleTimeFilter = " AND battleTime>=@battleTime AND battleTime<=@battleFromTime ";
                         battleTimeReadable = "@battleTime  -> <- " + dateFromYesterdayFilter.ToString();
-						DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter, DB.SqlDataType.DateTime);
-					}
-					DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                        DB.AddWithValue(ref battleTimeFilter, "@battleFromTime", dateFromYesterdayFilter, DB.SqlDataType.DateTime);
+                    }
+                    DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
                     battleTimeReadable = battleTimeReadable.Replace("@battleTime", dateFilter.ToString());
-				}
-				else
-				{
-					// Custom battle time filter
-					if (Config.Settings.customBattleTimeFilter.from != null)
-					{
-						battleTimeFilter = " AND battleTime>=@battleTime ";
-						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.from);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
-					}
-					if (Config.Settings.customBattleTimeFilter.to != null)
-					{
-						battleTimeFilter += " AND battleTime<=@battleTime ";
-						dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
-						DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
-					}
+                }
+                else
+                {
+                    // Custom battle time filter
+                    if (Config.Settings.customBattleTimeFilter.from != null)
+                    {
+                        battleTimeFilter = " AND battleTime>=@battleTime ";
+                        dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.from);
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                    }
+                    if (Config.Settings.customBattleTimeFilter.to != null)
+                    {
+                        battleTimeFilter += " AND battleTime<=@battleTime ";
+                        dateFilter = Convert.ToDateTime(Config.Settings.customBattleTimeFilter.to);
+                        DB.AddWithValue(ref battleTimeFilter, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
+                    }
                     if (Config.Settings.customBattleTimeFilter.from != null)
                         battleTimeReadable = Config.Settings.customBattleTimeFilter.from + " -> ";
                     if (Config.Settings.customBattleTimeFilter.to != null)
                         battleTimeReadable += " <- " + Config.Settings.customBattleTimeFilter.to;
-				}
-			}
+                }
+                battleTimeReadable = " (" + battleTimeReadable + ")";
+            }
 		}
 
 		#endregion
@@ -2589,13 +2693,13 @@ namespace WinApp.Forms
 					sortOrder = "ORDER BY " + sorting.ColumnName + " " + sortDirection + " ";
 				}
 				
-				// Get Battle Time filer
+				// Get Battle Time filer or battle count filter
 				string battleTimeFilter = "";
                 string battleTimeReadable = "";
-				BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
-
-				// Get Battle mode filter
-				string battleModeFilter = "";
+				BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable);
+                                
+                // Get Battle mode filter
+                string battleModeFilter = "";
 				string battleMode = "";
 				BattleModeFilter(out battleModeFilter, out battleMode);
 				
@@ -3041,7 +3145,7 @@ namespace WinApp.Forms
                 // Get Battle Time filer
                 string sqlBattleTimeFilter = "";
                 string battleTimeReadable = "";
-                BattleTimeFilter(out sqlBattleTimeFilter, out battleTimeReadable);
+                BattleTimeAndCountFilter(out sqlBattleTimeFilter, out battleTimeReadable);
 
                 // Get Battle mode filter
                 string sqlBattleModeFilter = "";
@@ -3728,7 +3832,7 @@ namespace WinApp.Forms
 			// Get Battle Time filer
 			string battleTimeFilter = "";
             string battleTimeReadable = "";
-			BattleTimeFilter(out battleTimeFilter, out battleTimeReadable);
+			BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable);
 
 			// Get Battle mode filter
 			string battleModeFilter = "";
@@ -4696,6 +4800,12 @@ namespace WinApp.Forms
 			Process.Start("explorer.exe", Config.AppDataLogFolder);
 		}
 
+        private void mSettingsShowAppData_Click(object sender, EventArgs e)
+        {
+            // opens the folder in explorer
+            Process.Start("explorer.exe", Config.AppDataBaseFolder);
+        }
+
         private void mWotNumWebForum_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("http://wotnumbers.com/Forum.aspx?menu=6&_Forum");
@@ -4706,18 +4816,6 @@ namespace WinApp.Forms
             System.Diagnostics.Process.Start("http://wotnumbers.com/?menu=42&_User_Guide");
         }
 
-
-		#endregion
-
-		#region Testing
-		
-		private void ViewRangeTesting()
-		{
-			Form frm = new Forms.ViewRange();
-			frm.ShowDialog();
-		}
-
-		
 
 		#endregion
 
@@ -5452,6 +5550,8 @@ namespace WinApp.Forms
 
         #endregion
 
-        
+
+
+
     }
 }

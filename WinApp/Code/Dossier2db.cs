@@ -998,6 +998,10 @@ namespace WinApp.Code
                 if (lifetime > 180)
                     lifetime -= 120; // Normally lifetime is more than actually lifetime, probably because of loading time is included?
                 sqlValues += ", '" + battleDateTime.AddSeconds(-lifetime).ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) + "'";
+                // Add total battles
+                int totalBattles = BattleCountFilterHelper.GetBattlesCountTotal() + Convert.ToInt32(battleNewRow["battlesCount"]);
+                sqlFields += ", battlescounttotal ";
+                sqlValues += ", " + totalBattles.ToString();
 
                 // Update database
                 if (sqlFields.Length > 0)

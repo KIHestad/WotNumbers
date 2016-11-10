@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsOptions));
             this.folderBrowserDialogBackup = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkTempBattleresultSave = new BadCheckBox();
             this.txtBackupFilePath = new BadTextBox();
             this.badLabel4 = new BadLabel();
             this.btnSelectBackupFilePath = new BadButton();
@@ -48,9 +49,22 @@
             this.btnSave = new BadButton();
             this.SuspendLayout();
             // 
+            // chkTempBattleresultSave
+            // 
+            this.chkTempBattleresultSave.BackColor = System.Drawing.Color.Transparent;
+            this.chkTempBattleresultSave.Checked = false;
+            this.chkTempBattleresultSave.Image = global::WinApp.Properties.Resources.checkboxcheck;
+            this.chkTempBattleresultSave.Location = new System.Drawing.Point(-4, 271);
+            this.chkTempBattleresultSave.Name = "chkTempBattleresultSave";
+            this.chkTempBattleresultSave.Size = new System.Drawing.Size(288, 23);
+            this.chkTempBattleresultSave.TabIndex = 35;
+            this.chkTempBattleresultSave.Text = "Save battle result json file to AppData (until restart)";
+            this.chkTempBattleresultSave.Click += new System.EventHandler(this.chkTempBattleresultSave_Click);
+            // 
             // txtBackupFilePath
             // 
             this.txtBackupFilePath.HasFocus = false;
+            this.txtBackupFilePath.HideBorder = false;
             this.txtBackupFilePath.Image = null;
             this.txtBackupFilePath.Location = new System.Drawing.Point(17, 136);
             this.txtBackupFilePath.MultilineAllow = false;
@@ -232,6 +246,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.chkTempBattleresultSave);
             this.Controls.Add(this.txtBackupFilePath);
             this.Controls.Add(this.badLabel4);
             this.Controls.Add(this.btnSelectBackupFilePath);
@@ -272,5 +287,6 @@
         private BadLabel badLabel4;
         private BadButton btnSelectBackupFilePath;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogBackup;
+        private BadCheckBox chkTempBattleresultSave;
     }
 }

@@ -157,9 +157,9 @@
     <Compile Include="Code\AppSettingsHelper.cs" />
     <Compile Include="Code\AppVersion.cs" />
     <Compile Include="Code\AutoSetupHelper.cs" />
+    <Compile Include="Code\BattleCountFilterHelper.cs" />
     <Compile Include="Code\BattleHelper.cs" />
     <Compile Include="Code\BattleResultRetriever.cs" />
-    <Compile Include="Code\CefBrowser\ControlExtensions.cs" />
     <Compile Include="Code\CursorHelper.cs" />
     <Compile Include="Code\CustomFileCopier.cs" />
     <Compile Include="Code\DbConvert.cs" />
@@ -519,12 +519,6 @@
     <Compile Include="Forms\TankSearch.Designer.cs">
       <DependentUpon>TankSearch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Test\ViewRange.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Test\ViewRange.Designer.cs">
-      <DependentUpon>ViewRange.cs</DependentUpon>
-    </Compile>
     <Compile Include="Gadget\paramTotalStats.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -824,9 +818,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TankSearch.resx">
       <DependentUpon>TankSearch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Test\ViewRange.resx">
-      <DependentUpon>ViewRange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gadget\paramTotalStats.resx">
       <DependentUpon>paramTotalStats.cs</DependentUpon>

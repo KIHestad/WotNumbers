@@ -162,6 +162,16 @@
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.mBattles1y = new System.Windows.Forms.ToolStripMenuItem();
             this.mBattles2y = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator36 = new System.Windows.Forms.ToolStripSeparator();
+            this.mBattlesCountSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattlesCountSelect = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattlesCountSelect1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattlesCountSelect2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattlesCountSelect3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattlesCountSelect4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBattlesCountSelect5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator35 = new System.Windows.Forms.ToolStripSeparator();
+            this.mBattlesCountSelectedEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.mBattlesCustomUse = new System.Windows.Forms.ToolStripMenuItem();
             this.mBattlesCustomChange = new System.Windows.Forms.ToolStripMenuItem();
@@ -1468,6 +1478,9 @@
             this.toolStripSeparator21,
             this.mBattles1y,
             this.mBattles2y,
+            this.toolStripSeparator36,
+            this.mBattlesCountSelected,
+            this.mBattlesCountSelect,
             this.toolStripSeparator22,
             this.mBattlesCustomUse,
             this.mBattlesCustomChange,
@@ -1490,7 +1503,7 @@
             this.mBattles1d.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mBattles1d.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1d.Name = "mBattles1d";
-            this.mBattles1d.Size = new System.Drawing.Size(198, 22);
+            this.mBattles1d.Size = new System.Drawing.Size(203, 22);
             this.mBattles1d.Text = "Today\'s Battles";
             this.mBattles1d.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles1d.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1499,7 +1512,7 @@
             // 
             this.mBattlesYesterday.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesYesterday.Name = "mBattlesYesterday";
-            this.mBattlesYesterday.Size = new System.Drawing.Size(198, 22);
+            this.mBattlesYesterday.Size = new System.Drawing.Size(203, 22);
             this.mBattlesYesterday.Text = "Yesterday\'s Battles";
             this.mBattlesYesterday.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattlesYesterday.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1507,13 +1520,13 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(200, 6);
             // 
             // mBattles2d
             // 
             this.mBattles2d.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles2d.Name = "mBattles2d";
-            this.mBattles2d.Size = new System.Drawing.Size(198, 22);
+            this.mBattles2d.Size = new System.Drawing.Size(203, 22);
             this.mBattles2d.Text = "Battles Last 2 Days";
             this.mBattles2d.ToolTipText = "Battles today and yesterday";
             this.mBattles2d.Click += new System.EventHandler(this.mBattleTime_Click);
@@ -1523,7 +1536,7 @@
             // 
             this.mBattles3d.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles3d.Name = "mBattles3d";
-            this.mBattles3d.Size = new System.Drawing.Size(198, 22);
+            this.mBattles3d.Size = new System.Drawing.Size(203, 22);
             this.mBattles3d.Text = "Battles Last 3 Days";
             this.mBattles3d.ToolTipText = "Battles today and the two previous days";
             this.mBattles3d.Click += new System.EventHandler(this.mBattleTime_Click);
@@ -1532,13 +1545,13 @@
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator19.Size = new System.Drawing.Size(200, 6);
             // 
             // mBattles1w
             // 
             this.mBattles1w.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1w.Name = "mBattles1w";
-            this.mBattles1w.Size = new System.Drawing.Size(198, 22);
+            this.mBattles1w.Size = new System.Drawing.Size(203, 22);
             this.mBattles1w.Text = "Battles Last Week";
             this.mBattles1w.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles1w.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1547,7 +1560,7 @@
             // 
             this.mBattles2w.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles2w.Name = "mBattles2w";
-            this.mBattles2w.Size = new System.Drawing.Size(198, 22);
+            this.mBattles2w.Size = new System.Drawing.Size(203, 22);
             this.mBattles2w.Text = "Battles Last 2 Weeks";
             this.mBattles2w.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles2w.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1555,13 +1568,13 @@
             // toolStripSeparator20
             // 
             this.toolStripSeparator20.Name = "toolStripSeparator20";
-            this.toolStripSeparator20.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator20.Size = new System.Drawing.Size(200, 6);
             // 
             // mBattles1m
             // 
             this.mBattles1m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1m.Name = "mBattles1m";
-            this.mBattles1m.Size = new System.Drawing.Size(198, 22);
+            this.mBattles1m.Size = new System.Drawing.Size(203, 22);
             this.mBattles1m.Text = "Battles Last Month";
             this.mBattles1m.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles1m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1570,7 +1583,7 @@
             // 
             this.mBattles3m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles3m.Name = "mBattles3m";
-            this.mBattles3m.Size = new System.Drawing.Size(198, 22);
+            this.mBattles3m.Size = new System.Drawing.Size(203, 22);
             this.mBattles3m.Text = "Battles Last 3 Months";
             this.mBattles3m.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles3m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1579,7 +1592,7 @@
             // 
             this.mBattles6m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles6m.Name = "mBattles6m";
-            this.mBattles6m.Size = new System.Drawing.Size(198, 22);
+            this.mBattles6m.Size = new System.Drawing.Size(203, 22);
             this.mBattles6m.Text = "Battles Last 6 Months";
             this.mBattles6m.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles6m.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1587,13 +1600,13 @@
             // toolStripSeparator21
             // 
             this.toolStripSeparator21.Name = "toolStripSeparator21";
-            this.toolStripSeparator21.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator21.Size = new System.Drawing.Size(200, 6);
             // 
             // mBattles1y
             // 
             this.mBattles1y.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles1y.Name = "mBattles1y";
-            this.mBattles1y.Size = new System.Drawing.Size(198, 22);
+            this.mBattles1y.Size = new System.Drawing.Size(203, 22);
             this.mBattles1y.Text = "Battles Last Year";
             this.mBattles1y.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles1y.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -1602,21 +1615,105 @@
             // 
             this.mBattles2y.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattles2y.Name = "mBattles2y";
-            this.mBattles2y.Size = new System.Drawing.Size(198, 22);
+            this.mBattles2y.Size = new System.Drawing.Size(203, 22);
             this.mBattles2y.Text = "Battles Last 2 Years";
             this.mBattles2y.Click += new System.EventHandler(this.mBattleTime_Click);
             this.mBattles2y.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
+            // toolStripSeparator36
+            // 
+            this.toolStripSeparator36.Name = "toolStripSeparator36";
+            this.toolStripSeparator36.Size = new System.Drawing.Size(200, 6);
+            // 
+            // mBattlesCountSelected
+            // 
+            this.mBattlesCountSelected.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelected.Name = "mBattlesCountSelected";
+            this.mBattlesCountSelected.Size = new System.Drawing.Size(203, 22);
+            this.mBattlesCountSelected.Tag = "0";
+            this.mBattlesCountSelected.Text = "Last X Battles";
+            this.mBattlesCountSelected.Visible = false;
+            this.mBattlesCountSelected.Click += new System.EventHandler(this.mBattlesCountSelected_Click);
+            this.mBattlesCountSelected.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mBattlesCountSelect
+            // 
+            this.mBattlesCountSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mBattlesCountSelect1,
+            this.mBattlesCountSelect2,
+            this.mBattlesCountSelect3,
+            this.mBattlesCountSelect4,
+            this.mBattlesCountSelect5,
+            this.toolStripSeparator35,
+            this.mBattlesCountSelectedEdit});
+            this.mBattlesCountSelect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelect.Name = "mBattlesCountSelect";
+            this.mBattlesCountSelect.Size = new System.Drawing.Size(203, 22);
+            this.mBattlesCountSelect.Text = "Select Battle Count Filter";
+            // 
+            // mBattlesCountSelect1
+            // 
+            this.mBattlesCountSelect1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelect1.Name = "mBattlesCountSelect1";
+            this.mBattlesCountSelect1.Size = new System.Drawing.Size(248, 22);
+            this.mBattlesCountSelect1.Text = "Last X Battles";
+            this.mBattlesCountSelect1.Click += new System.EventHandler(this.mBattlesCountSelect_Click);
+            // 
+            // mBattlesCountSelect2
+            // 
+            this.mBattlesCountSelect2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelect2.Name = "mBattlesCountSelect2";
+            this.mBattlesCountSelect2.Size = new System.Drawing.Size(248, 22);
+            this.mBattlesCountSelect2.Text = "Last X Battles";
+            this.mBattlesCountSelect2.Click += new System.EventHandler(this.mBattlesCountSelect_Click);
+            // 
+            // mBattlesCountSelect3
+            // 
+            this.mBattlesCountSelect3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelect3.Name = "mBattlesCountSelect3";
+            this.mBattlesCountSelect3.Size = new System.Drawing.Size(248, 22);
+            this.mBattlesCountSelect3.Text = "Last X Battles";
+            this.mBattlesCountSelect3.Click += new System.EventHandler(this.mBattlesCountSelect_Click);
+            // 
+            // mBattlesCountSelect4
+            // 
+            this.mBattlesCountSelect4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelect4.Name = "mBattlesCountSelect4";
+            this.mBattlesCountSelect4.Size = new System.Drawing.Size(248, 22);
+            this.mBattlesCountSelect4.Text = "Last X Battles";
+            this.mBattlesCountSelect4.Click += new System.EventHandler(this.mBattlesCountSelect_Click);
+            // 
+            // mBattlesCountSelect5
+            // 
+            this.mBattlesCountSelect5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelect5.Name = "mBattlesCountSelect5";
+            this.mBattlesCountSelect5.Size = new System.Drawing.Size(248, 22);
+            this.mBattlesCountSelect5.Text = "Last X Battles";
+            this.mBattlesCountSelect5.Click += new System.EventHandler(this.mBattlesCountSelect_Click);
+            // 
+            // toolStripSeparator35
+            // 
+            this.toolStripSeparator35.Name = "toolStripSeparator35";
+            this.toolStripSeparator35.Size = new System.Drawing.Size(245, 6);
+            // 
+            // mBattlesCountSelectedEdit
+            // 
+            this.mBattlesCountSelectedEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mBattlesCountSelectedEdit.Name = "mBattlesCountSelectedEdit";
+            this.mBattlesCountSelectedEdit.Size = new System.Drawing.Size(248, 22);
+            this.mBattlesCountSelectedEdit.Text = "Edit Selected Battle Count Filter...";
+            this.mBattlesCountSelectedEdit.Click += new System.EventHandler(this.mBattlesCountSelectEdit_Click);
+            // 
             // toolStripSeparator22
             // 
             this.toolStripSeparator22.Name = "toolStripSeparator22";
-            this.toolStripSeparator22.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator22.Size = new System.Drawing.Size(200, 6);
             // 
             // mBattlesCustomUse
             // 
             this.mBattlesCustomUse.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesCustomUse.Name = "mBattlesCustomUse";
-            this.mBattlesCustomUse.Size = new System.Drawing.Size(198, 22);
+            this.mBattlesCustomUse.Size = new System.Drawing.Size(203, 22);
             this.mBattlesCustomUse.Tag = "Custom Filter";
             this.mBattlesCustomUse.Text = "Use Custom Filter";
             this.mBattlesCustomUse.Click += new System.EventHandler(this.mBattleTime_Click);
@@ -1626,20 +1723,20 @@
             // 
             this.mBattlesCustomChange.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesCustomChange.Name = "mBattlesCustomChange";
-            this.mBattlesCustomChange.Size = new System.Drawing.Size(198, 22);
+            this.mBattlesCustomChange.Size = new System.Drawing.Size(203, 22);
             this.mBattlesCustomChange.Text = "Change Custom Filter...";
             this.mBattlesCustomChange.Click += new System.EventHandler(this.mBattleTimeCustomChange_Click);
             // 
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(200, 6);
             // 
             // mBattlesAll
             // 
             this.mBattlesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mBattlesAll.Name = "mBattlesAll";
-            this.mBattlesAll.Size = new System.Drawing.Size(198, 22);
+            this.mBattlesAll.Size = new System.Drawing.Size(203, 22);
             this.mBattlesAll.Text = "All Battles";
             this.mBattlesAll.Click += new System.EventHandler(this.mBattleTime_Click);
             // 
@@ -2833,6 +2930,16 @@
         private System.Windows.Forms.ToolStripMenuItem mHomeViewClearRecentList;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountrySweden;
         private System.Windows.Forms.ToolStripMenuItem wargamingPersonalRatingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator36;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelected;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelect;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelect1;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelect2;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelect3;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelect4;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelect5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator35;
+        private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelectedEdit;
     }
 }
 

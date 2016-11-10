@@ -116,11 +116,13 @@ namespace WinApp.Code
 					{
 						string[] filesDat = Directory.GetFiles(folder.FullName, "*.dat");
 						int count = 0;
+                        // Force read all battle files if first battle fetch and saving enabled
+                        bool getAll = (Config.SessionSettings.tempBattleResultSave && Config.SessionSettings.tempBattleResultSaveFirstRun);
 						foreach (string file in filesDat)
 						{
 							string filenameWihoutExt = Path.GetFileNameWithoutExtension(file).ToString();
 							// Check if not copied previous (during this session), and that converted json file do not already exists (from previous sessions)
-							if (!battleResultDatFileCopied.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt))
+							if ((!battleResultDatFileCopied.Exists(x => x == file) && !battleResultJsonFileExists.Exists(x => x == filenameWihoutExt)) || getAll)
 							{
 								// Copy
 								Log.AddToLogBuffer(" > > Start copying battle DAT-file: " + file);
@@ -295,7 +297,15 @@ namespace WinApp.Code
 				bool deleteFileAfterRead = true;
 				foreach (string file in filesJson)
 				{
-					lastFile = file;
+                    // Save file regardless of content if set i settings options
+                    if (Config.SessionSettings.tempBattleResultSave)
+                    {
+                        FileInfo fileBattleJson = new FileInfo(file);
+                        fileBattleJson.CopyTo(Config.AppDataBattleResultSaved + fileBattleJson.Name, true); // copy jason battle file to save folder
+                        Config.SessionSettings.tempBattleResultSaveFirstRun = false;
+                    }
+                    // Start analyzing file content
+                    lastFile = file;
 					processed++;
 					// Read content
 					Application.DoEvents();
@@ -982,12 +992,18 @@ namespace WinApp.Code
 							Log.AddToLogBuffer(" > > > Message: " + message.ToString());
 						Log.AddToLogBuffer(" > > Faulty battle file schedule for delete");
 					}
-					// Delete file unless it OK but not found battle from dossier yet
+					// Delete file unless it is OK but not found battle from dossier yet
 					if (deleteFileAfterRead)
 					{
-						// Done - delete file
+						// Done - get battle file
 						FileInfo fileBattleJson = new FileInfo(file);
-						fileBattleJson.Delete();
+                        // Copy to save folder?
+                        if (Config.SessionSettings.tempBattleResultSave)
+                        {
+                            fileBattleJson.CopyTo(Config.AppDataBattleResultSaved + fileBattleJson.FullName, true); // copy jason battle file to save folder
+                        }
+                        // Delete from battleresult folder
+                        fileBattleJson.Delete();
 						Log.AddToLogBuffer(" > > Deleted read or old JSON file: " + file);
 					}
 				}

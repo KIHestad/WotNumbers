@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 417; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 425; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2868,7 +2868,6 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 403:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     RunWotApi = true;
                     break;
                 case 404:
@@ -2933,6 +2932,49 @@ namespace WinApp.Code
                     RunRecalcBattleWN8 = true;
                     RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
                     break;
+                case 418:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 419:
+                    mssql = "ALTER TABLE battle ADD xpOriginal int NULL; ";
+                    sqlite = mssql.Replace("int", "integer");
+                    break;
+                case 420:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql = temp + "VALUES (118, 2, 405, 'battle.xpOriginal', 'Original XP', 'Original XP earned, not included premium account xp, 2X (or more) for first victory or bonuses', 'XP', 50, 'Int'); ";
+                    sqlite = mssql;
+                    break;
+                case 421:
+                    mssql = "UPDATE json2dbMapping SET dbBattle=dbPlayerTank WHERE dbPlayerTank = 'xpOriginal';";
+                    sqlite = mssql;
+                    break;
+                case 422:
+                    mssql =
+                        "CREATE TABLE battleFilterCount ( " +
+                        "  id int primary key, " +
+                        "  count int NOT NULL); ";
+                    sqlite = mssql.Replace("int", "integer");
+                    break;
+                case 423:
+                    mssql =
+                        "INSERT INTO battleFilterCount (id, count) VALUES (1, 100); " +
+                        "INSERT INTO battleFilterCount (id, count) VALUES (2, 500); " +
+                        "INSERT INTO battleFilterCount (id, count) VALUES (3, 1000); " +
+                        "INSERT INTO battleFilterCount (id, count) VALUES (4, 2000); " +
+                        "INSERT INTO battleFilterCount (id, count) VALUES (5, 3000); ";
+                    sqlite = mssql;
+                    break;
+                case 424:
+                    mssql = "ALTER TABLE battle ADD battlesCountTotal int NULL; ";
+                    sqlite = mssql.Replace("int", "integer");
+                    break;
+                case 425:
+                    BattleCountFilterHelper.RecalcalculateCountTotal();
+                    break;
+
+
+
+
             }
             string sql = "";
 			// get sql for correct dbtype
