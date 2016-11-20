@@ -1914,7 +1914,8 @@ namespace WinApp.Forms
                 // Get Battle Time filer
                 string battleTimeFilter = "";
                 string battleTimeReadable = "";
-                BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable);
+                bool battleCountFilter = false;
+                BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable, out battleCountFilter);
                 // Show info
                 SetStatus2("Current battle time filter: " + message + battleTimeReadable);
 			}
@@ -2248,10 +2249,11 @@ namespace WinApp.Forms
 			}
 		}
 
-		private void BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable)
+		private void BattleTimeAndCountFilter(out string battleTimeFilter, out string battleTimeReadable, out bool battleCountFilter)
 		{
 			battleTimeFilter = "";
             battleTimeReadable = "";
+            battleCountFilter = false;
             // Check filters
             if (mBattlesAll.Checked)
             {
@@ -2261,9 +2263,7 @@ namespace WinApp.Forms
             else if (mBattlesCountSelected.Checked)
             {
                 // Battle count filter
-                string battleCountId = mBattlesCountSelected.Tag.ToString();
-                int battlesCountTotalMin = BattleCountFilterHelper.GetBattlesCountTotalMin(battleCountId);
-                battleTimeFilter = " AND battlescounttotal >= " + battlesCountTotalMin.ToString() + " ";
+                battleCountFilter = true;
             }
             else
             {
@@ -2696,7 +2696,8 @@ namespace WinApp.Forms
 				// Get Battle Time filer or battle count filter
 				string battleTimeFilter = "";
                 string battleTimeReadable = "";
-				BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable);
+                bool battleCountFilter = false;
+				BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable, out battleCountFilter);
                                 
                 // Get Battle mode filter
                 string battleModeFilter = "";
@@ -2708,25 +2709,39 @@ namespace WinApp.Forms
 				string tankFilter = "";
 				string tankJoin = "";
 				Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
-				
-				// Create SQL
-				string sql =
+
+                // Create where part, and check for battle count filter
+                string from =
+                    " FROM   battle INNER JOIN " +
+                    "        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+                    "        tank ON playerTank.tankId = tank.id INNER JOIN " +
+                    "        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
+                    "        country ON tank.countryId = country.Id INNER JOIN " +
+                    "        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
+                    "        map on battle.mapId = map.id INNER JOIN " +
+                    "        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin + " ";
+                string where = "WHERE playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + " ";
+                DB.AddWithValue(ref where, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+                if (battleCountFilter)
+                {
+                    BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
+                    where = " WHERE battlesCountTotal = 1 ";
+                }
+
+                // Create SQL
+                string sql =
 					"SELECT " + select + " " + selectFixed + " " +
-					"FROM    battle INNER JOIN " +
-					"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
-					"        tank ON playerTank.tankId = tank.id INNER JOIN " +
-					"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
-					"        country ON tank.countryId = country.Id INNER JOIN " +
-					"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
-					"        map on battle.mapId = map.id INNER JOIN " +
-					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-					"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter + 
-					groupBy + " " +
+					from +
+					where +
+                    groupBy + " " +
 					sortOrder;
-				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				
+                // Get data
 				DataTable dt = new DataTable();
 				dt = DB.FetchData(sql, Config.Settings.showDBErrors);
+
+                
+
 				// If images add cols in datatable containing the image
 				if (contourimg + smallimg + img > -3)
 				{
@@ -3145,7 +3160,8 @@ namespace WinApp.Forms
                 // Get Battle Time filer
                 string sqlBattleTimeFilter = "";
                 string battleTimeReadable = "";
-                BattleTimeAndCountFilter(out sqlBattleTimeFilter, out battleTimeReadable);
+                bool battleCountFilter = false;
+                BattleTimeAndCountFilter(out sqlBattleTimeFilter, out battleTimeReadable, out battleCountFilter);
 
                 // Get Battle mode filter
                 string sqlBattleModeFilter = "";
@@ -3207,20 +3223,39 @@ namespace WinApp.Forms
                 }
 
                 // Create SQL
-                string sql =
-                    "SELECT " + sqlSelect +
-                    "FROM    map " +
+                string where = "";
+                string from =
+                    " FROM    map " +
                     "  INNER JOIN battle ON map.id = battle.mapId " + sqlBattleTimeFilter + sqlBattleModeFilter +
                     "  INNER JOIN playerTank ON battle.playerTankId = playerTank.id AND playerTank.playerId=@playerid " + sqlPlayerTankFilter +
                     "  INNER JOIN tank ON playerTank.tankId = tank.id " + sqlTankFilter +
                     "  INNER JOIN tankType ON tank.tankTypeId = tankType.Id " +
                     "  INNER JOIN country ON tank.countryId = country.Id " +
                     "  INNER JOIN battleResult ON battle.battleResultId = battleResult.id " +
-                    "  INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin.Replace("INNER JOIN", "LEFT JOIN") +
+                    "  INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin.Replace("INNER JOIN", "LEFT JOIN") + " ";
+                DB.AddWithValue(ref from, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+                if (battleCountFilter)
+                {
+                    BattleCountFilterHelper.SetBattleFilter(from, where, BattleCountFilterHelper.GetBattleLimitFromid(mBattlesCountSelected.Tag.ToString()));
+                    from =
+                    " FROM    map " +
+                    "  INNER JOIN battle ON map.id = battle.mapId AND battle.battlesCountTotal = 1 " +
+                    "  INNER JOIN playerTank ON battle.playerTankId = playerTank.id AND playerTank.playerId=@playerid " + sqlPlayerTankFilter +
+                    "  INNER JOIN tank ON playerTank.tankId = tank.id " + sqlTankFilter +
+                    "  INNER JOIN tankType ON tank.tankTypeId = tankType.Id " +
+                    "  INNER JOIN country ON tank.countryId = country.Id " +
+                    "  INNER JOIN battleResult ON battle.battleResultId = battleResult.id " +
+                    "  INNER JOIN battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin.Replace("INNER JOIN", "LEFT JOIN") + " ";
+                    DB.AddWithValue(ref from, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+                }
+                
+                // Todo: add battle count filter
+                string sql =
+                    "SELECT " + sqlSelect +
+                    from +
                     sqlWhereOldMaps +
                     "GROUP BY " + sqlGroupBy +
                     sqlOrderBy;
-                DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 
                 DataTable dt = new DataTable();
                 dt = DB.FetchData(sql, Config.Settings.showDBErrors);
@@ -3832,7 +3867,8 @@ namespace WinApp.Forms
 			// Get Battle Time filer
 			string battleTimeFilter = "";
             string battleTimeReadable = "";
-			BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable);
+            bool battleCountFilter = false;
+            BattleTimeAndCountFilter(out battleTimeFilter, out battleTimeReadable, out battleCountFilter);
 
 			// Get Battle mode filter
 			string battleModeFilter = "";
@@ -3846,7 +3882,7 @@ namespace WinApp.Forms
 			Tankfilter(out tankFilter, out tankJoin, out tankFilterMessage);
 
 			// Show form
-			Form frm = new Forms.BattleSummary(battleTimeFilter, battleModeFilter, battleMode, tankFilter, tankJoin);
+			Form frm = new BattleSummary(battleTimeFilter, battleCountFilter, battleModeFilter, battleMode, tankFilter, tankJoin); // TODO: add battle count filter
 			FormHelper.OpenFormCenterOfParent(this, frm);
 		}
 

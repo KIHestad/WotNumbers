@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using WinApp.Code;
 using WinApp.Code.Rating;
@@ -18,10 +13,12 @@ namespace WinApp.Forms
 		#region init
 		
 		private string battleTimeFilter = "";
-		private string battleModeFilter = "";
+        private bool battleCountFilter = false;
+        private string battleModeFilter = "";
 		private string battleMode = "";
 		private string tankFilter = "";
 		private string tankJoin = "";
+        private string sqlBattleWhere = "";
         private int wn9 = 0;
         private int wn9avg = 0;
         private int wn8 = 0;
@@ -39,7 +36,7 @@ namespace WinApp.Forms
 		private string lastOrderHeaderText = "Player";
 		private bool? lastOrderAscending = true;
 
-		public BattleSummary(string currentBattleTimeFilter, string currentBattleModeFilter,string currentBattleMode, string currentTankFilter, string currentTankJoin)
+		public BattleSummary(string currentBattleTimeFilter, bool currentBattleCountFilter, string currentBattleModeFilter,string currentBattleMode, string currentTankFilter, string currentTankJoin)
 		{
 			InitializeComponent();
 			battleModeFilter = currentBattleModeFilter;
@@ -47,6 +44,7 @@ namespace WinApp.Forms
 			if (battleMode == "%")
 				battleMode = "";
 			battleTimeFilter = currentBattleTimeFilter;
+            battleCountFilter = currentBattleCountFilter;
 			tankFilter = currentTankFilter;
 			tankJoin = currentTankJoin;
 		}
@@ -56,20 +54,26 @@ namespace WinApp.Forms
 			// Reset list of valid vBAddict players, forces lookup
             ExternalPlayerProfile.vBAddictPlayers = null;
             ExternalPlayerProfile.vBAddictPlayersManualLookup = true;
-            
+
+            // Create battle filter
+            if (battleCountFilter)
+                sqlBattleWhere = " AND battle.battlesCountTotal = 1 ";
+            else
+                sqlBattleWhere = battleTimeFilter + battleModeFilter + tankFilter;
+
             // Create SQL
-			string sql =
-				"SELECT sum(battle.battlescount) " +
-				"FROM    battle INNER JOIN " +
-				"        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
-				"        tank ON playerTank.tankId = tank.id INNER JOIN " +
-				"        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
-				"        country ON tank.countryId = country.Id INNER JOIN " +
-				"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
-				"        map on battle.mapId = map.id INNER JOIN " +
-				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-				"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter;
-			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
+            string sql =
+                "SELECT sum(battle.battlescount) " +
+                "FROM    battle INNER JOIN " +
+                "        playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+                "        tank ON playerTank.tankId = tank.id INNER JOIN " +
+                "        tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
+                "        country ON tank.countryId = country.Id INNER JOIN " +
+                "        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
+                "        map on battle.mapId = map.id INNER JOIN " +
+                "        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
+                "WHERE   playerTank.playerId=@playerid " + sqlBattleWhere;
+            DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DataTable dt = new DataTable();
 			dt = DB.FetchData(sql, Config.Settings.showDBErrors);
 			DataRow dr = null;
@@ -232,7 +236,7 @@ namespace WinApp.Forms
 
 		private void GetStandardGridDetails()
 		{
-			// This battle result
+			// This battle result 
 			string sql =
 				"SELECT sum(battlesCount) as battlesCount, sum(dmg) as dmg, sum(assistSpot) as assistSpot, sum(assistTrack) as assistTrack, sum(dmgBlocked) as dmgBlocked, sum(potentialDmgReceived) as potentialDmgReceived, sum(dmgReceived) as dmgReceived,  " +
 				"  sum(shots) as shots, sum(hits) as hits, sum(pierced) as pierced, sum(heHits) as heHits, sum(piercedReceived) as piercedReceived, sum(shotsReceived) as shotsReceived, sum(heHitsReceived) as heHitsReceived, sum(noDmgShotsReceived) as noDmgShotsReceived, " +
@@ -248,7 +252,7 @@ namespace WinApp.Forms
 				"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
 				"        map on battle.mapId = map.id INNER JOIN " +
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-				"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter;
+				"WHERE   playerTank.playerId=@playerid " + sqlBattleWhere;
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DataTable dtRes = DB.FetchData(sql);
 			// Total result
@@ -391,7 +395,7 @@ namespace WinApp.Forms
 				// Enhanced battle result
 				// Create SQL for getting rows with enhanced battle data
 				// This battle result
-				sql =
+                sql =
 					"SELECT sum(battlesCount) as battlesCount, sum(dmg) as dmg, sum(assistSpot) as assistSpot, sum(assistTrack) as assistTrack, sum(dmgBlocked) as dmgBlocked, sum(potentialDmgReceived) as potentialDmgReceived, sum(dmgReceived) as dmgReceived,  " +
 					"  sum(shots) as shots, sum(hits) as hits, sum(pierced) as pierced, sum(heHits) as heHits, sum(piercedReceived) as piercedReceived, sum(shotsReceived) as shotsReceived, sum(heHitsReceived) as heHitsReceived, sum(noDmgShotsReceived) as noDmgShotsReceived, " +
 					"  sum(frags) as frags, sum(spotted) as spot, sum(cap) as cap, sum(def) as def, sum(battle.mileage) as mileage, sum(battle.treesCut) as treesCut, " +
@@ -406,7 +410,7 @@ namespace WinApp.Forms
 					"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
 					"        map on battle.mapId = map.id INNER JOIN " +
 					"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-					"WHERE   arenaUniqueID is not null AND playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter;
+					"WHERE   arenaUniqueID is not null AND playerTank.playerId=@playerid " + sqlBattleWhere;
 				DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 				dtRes = DB.FetchData(sql);
 				int battleResultRowCount = 0;
@@ -487,6 +491,7 @@ namespace WinApp.Forms
 			dgvWN8.GridColor = ColorTheme.GridHeaderBackLight;
 			dgvWN8.AllowUserToResizeColumns = false;
 			// Get data
+            // todo add battle count filter
 			string sql =
 				"SELECT playerTank.tankId, battle.battlesCount, battle.dmg, battle.spotted, battle.frags, battle.def, battle.victory, " +
 				"      tank.expDmg, tank.expSpot, tank.expFrags, tank.expDef, tank.expWR " +
@@ -498,7 +503,7 @@ namespace WinApp.Forms
 				"        battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
 				"        map on battle.mapId = map.id INNER JOIN " +
 				"        battleSurvive ON battle.battleSurviveId = battleSurvive.id " + tankJoin +
-				"WHERE   playerTank.playerId=@playerid " + battleTimeFilter + battleModeFilter + tankFilter;
+				"WHERE   playerTank.playerId=@playerid " + sqlBattleWhere;
 			DB.AddWithValue(ref sql, "@playerid", Config.Settings.playerId.ToString(), DB.SqlDataType.Int);
 			DataTable dt = DB.FetchData(sql);
 			if (dt.Rows.Count > 0)

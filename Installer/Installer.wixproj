@@ -36,7 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
-      <HintPath>..\..\..\Program Files (x86)\WiX Toolset v3.8\bin\WixUtilExtension.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\WiX Toolset v3.10\bin\WixUtilExtension.dll</HintPath>
       <Name>WixUtilExtension</Name>
     </WixExtension>
     <WixExtension Include="WixNetFxExtension">
@@ -58,7 +58,7 @@
     <Content Include="_Run.bat" />
   </ItemGroup>
   <PropertyGroup>
-    <WixToolPath>$(SolutionDir)packages\WiX.Toolset.3.8.1128.0\tools\wix\</WixToolPath>
+    <WixToolPath>$(SolutionDir)packages\WiX.Toolset.3.9.1208.0\tools\wix\</WixToolPath>
     <WixTargetsPath>$(WixToolPath)wix.targets</WixTargetsPath>
     <WixTasksPath>$(WixToolPath)WixTasks.dll</WixTasksPath>
   </PropertyGroup>
