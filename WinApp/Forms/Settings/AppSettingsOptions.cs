@@ -63,6 +63,7 @@ namespace WinApp.Forms.Settings
             Config.Settings.notifyIconUse = chkNotifyIconUse.Checked;
             Config.Settings.notifyIconFormExitToMinimize = chkNotifyIconFormExitToMinimize.Checked;
             Config.Settings.databaseBackupFilePath = txtBackupFilePath.Text;
+            Config.Settings.databaseBackupPeriod = Convert.ToInt32(ddPeriod.Text);
             Config.Settings.newDayAtHour = Convert.ToInt32(ddHour.Text);
             string msg = "";
             Config.SaveConfig(out msg);
@@ -98,6 +99,18 @@ namespace WinApp.Forms.Settings
         private void ddHour_TextChanged(object sender, EventArgs e)
         {
             if (currentValue != ddHour.Text)
+                EditChangesApply(true);
+        }
+
+        private void ddPeriod_Click(object sender, EventArgs e)
+        {
+            currentValue = ddPeriod.Text;
+            Code.DropDownGrid.Show(ddPeriod, Code.DropDownGrid.DropDownGridType.List, "0,1,2,3,4,5,6,7");
+        }
+
+        private void ddPeriod_TextChanged(object sender, EventArgs e)
+        {
+            if (currentValue != ddPeriod.Text)
                 EditChangesApply(true);
         }
 

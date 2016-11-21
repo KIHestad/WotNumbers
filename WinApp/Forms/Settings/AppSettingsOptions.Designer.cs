@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettingsOptions));
             this.folderBrowserDialogBackup = new System.Windows.Forms.FolderBrowserDialog();
+            this.ddPeriod = new BadDropDownBox();
+            this.badLabel6 = new BadLabel();
+            this.badLabel5 = new BadLabel();
             this.chkTempBattleresultSave = new BadCheckBox();
             this.txtBackupFilePath = new BadTextBox();
             this.badLabel4 = new BadLabel();
@@ -49,6 +52,40 @@
             this.btnSave = new BadButton();
             this.SuspendLayout();
             // 
+            // ddPeriod
+            // 
+            this.ddPeriod.Image = null;
+            this.ddPeriod.Location = new System.Drawing.Point(139, 143);
+            this.ddPeriod.Name = "ddPeriod";
+            this.ddPeriod.Size = new System.Drawing.Size(54, 26);
+            this.ddPeriod.TabIndex = 38;
+            this.ddPeriod.TextChanged += new System.EventHandler(this.ddPeriod_TextChanged);
+            this.ddPeriod.Click += new System.EventHandler(this.ddPeriod_Click);
+            // 
+            // badLabel6
+            // 
+            this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel6.Dimmed = false;
+            this.badLabel6.Image = null;
+            this.badLabel6.Location = new System.Drawing.Point(196, 145);
+            this.badLabel6.Name = "badLabel6";
+            this.badLabel6.Size = new System.Drawing.Size(34, 23);
+            this.badLabel6.TabIndex = 37;
+            this.badLabel6.Text = "days";
+            this.badLabel6.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // badLabel5
+            // 
+            this.badLabel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.badLabel5.Dimmed = false;
+            this.badLabel5.Image = null;
+            this.badLabel5.Location = new System.Drawing.Point(17, 145);
+            this.badLabel5.Name = "badLabel5";
+            this.badLabel5.Size = new System.Drawing.Size(126, 23);
+            this.badLabel5.TabIndex = 36;
+            this.badLabel5.Text = "Backup database every ";
+            this.badLabel5.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
             // chkTempBattleresultSave
             // 
             this.chkTempBattleresultSave.BackColor = System.Drawing.Color.Transparent;
@@ -66,12 +103,12 @@
             this.txtBackupFilePath.HasFocus = false;
             this.txtBackupFilePath.HideBorder = false;
             this.txtBackupFilePath.Image = null;
-            this.txtBackupFilePath.Location = new System.Drawing.Point(17, 136);
+            this.txtBackupFilePath.Location = new System.Drawing.Point(112, 114);
             this.txtBackupFilePath.MultilineAllow = false;
             this.txtBackupFilePath.Name = "txtBackupFilePath";
             this.txtBackupFilePath.PasswordChar = '\0';
             this.txtBackupFilePath.ReadOnly = false;
-            this.txtBackupFilePath.Size = new System.Drawing.Size(323, 23);
+            this.txtBackupFilePath.Size = new System.Drawing.Size(228, 23);
             this.txtBackupFilePath.TabIndex = 32;
             this.txtBackupFilePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtBackupFilePath.ToolTipText = "Leave blank for no backup";
@@ -82,9 +119,9 @@
             this.badLabel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel4.Dimmed = false;
             this.badLabel4.Image = null;
-            this.badLabel4.Location = new System.Drawing.Point(17, 113);
+            this.badLabel4.Location = new System.Drawing.Point(17, 114);
             this.badLabel4.Name = "badLabel4";
-            this.badLabel4.Size = new System.Drawing.Size(126, 23);
+            this.badLabel4.Size = new System.Drawing.Size(96, 23);
             this.badLabel4.TabIndex = 34;
             this.badLabel4.Text = "Backup File Path:";
             this.badLabel4.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -94,7 +131,7 @@
             this.btnSelectBackupFilePath.BlackButton = false;
             this.btnSelectBackupFilePath.Checked = false;
             this.btnSelectBackupFilePath.Image = null;
-            this.btnSelectBackupFilePath.Location = new System.Drawing.Point(346, 136);
+            this.btnSelectBackupFilePath.Location = new System.Drawing.Point(346, 114);
             this.btnSelectBackupFilePath.Name = "btnSelectBackupFilePath";
             this.btnSelectBackupFilePath.Size = new System.Drawing.Size(22, 23);
             this.btnSelectBackupFilePath.TabIndex = 33;
@@ -107,7 +144,7 @@
             this.btnRunBackup.BlackButton = false;
             this.btnRunBackup.Checked = false;
             this.btnRunBackup.Image = null;
-            this.btnRunBackup.Location = new System.Drawing.Point(375, 136);
+            this.btnRunBackup.Location = new System.Drawing.Point(375, 114);
             this.btnRunBackup.Name = "btnRunBackup";
             this.btnRunBackup.Size = new System.Drawing.Size(59, 23);
             this.btnRunBackup.TabIndex = 28;
@@ -119,7 +156,7 @@
             // 
             this.badGroupBox3.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox3.Image = null;
-            this.badGroupBox3.Location = new System.Drawing.Point(3, 93);
+            this.badGroupBox3.Location = new System.Drawing.Point(1, 94);
             this.badGroupBox3.Name = "badGroupBox3";
             this.badGroupBox3.Size = new System.Drawing.Size(445, 82);
             this.badGroupBox3.TabIndex = 27;
@@ -130,7 +167,7 @@
             this.badLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel3.Dimmed = false;
             this.badLabel3.Image = null;
-            this.badLabel3.Location = new System.Drawing.Point(17, 212);
+            this.badLabel3.Location = new System.Drawing.Point(17, 213);
             this.badLabel3.Name = "badLabel3";
             this.badLabel3.Size = new System.Drawing.Size(36, 23);
             this.badLabel3.TabIndex = 26;
@@ -140,7 +177,7 @@
             // ddHour
             // 
             this.ddHour.Image = null;
-            this.ddHour.Location = new System.Drawing.Point(59, 212);
+            this.ddHour.Location = new System.Drawing.Point(59, 213);
             this.ddHour.Name = "ddHour";
             this.ddHour.Size = new System.Drawing.Size(54, 23);
             this.ddHour.TabIndex = 25;
@@ -152,7 +189,7 @@
             this.badLabel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel1.Dimmed = false;
             this.badLabel1.Image = null;
-            this.badLabel1.Location = new System.Drawing.Point(126, 212);
+            this.badLabel1.Location = new System.Drawing.Point(126, 213);
             this.badLabel1.Name = "badLabel1";
             this.badLabel1.Size = new System.Drawing.Size(242, 23);
             this.badLabel1.TabIndex = 24;
@@ -209,7 +246,7 @@
             // 
             this.badGroupBox1.BackColor = System.Drawing.Color.Transparent;
             this.badGroupBox1.Image = null;
-            this.badGroupBox1.Location = new System.Drawing.Point(1, 188);
+            this.badGroupBox1.Location = new System.Drawing.Point(1, 189);
             this.badGroupBox1.Name = "badGroupBox1";
             this.badGroupBox1.Size = new System.Drawing.Size(445, 66);
             this.badGroupBox1.TabIndex = 15;
@@ -246,6 +283,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.Controls.Add(this.ddPeriod);
+            this.Controls.Add(this.badLabel6);
+            this.Controls.Add(this.badLabel5);
             this.Controls.Add(this.chkTempBattleresultSave);
             this.Controls.Add(this.txtBackupFilePath);
             this.Controls.Add(this.badLabel4);
@@ -288,5 +328,8 @@
         private BadButton btnSelectBackupFilePath;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogBackup;
         private BadCheckBox chkTempBattleresultSave;
+        private BadLabel badLabel5;
+        private BadLabel badLabel6;
+        private BadDropDownBox ddPeriod;
     }
 }

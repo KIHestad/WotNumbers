@@ -32,6 +32,7 @@
             BadThemeContainerControl.MainAreaClass mainAreaClass1 = new BadThemeContainerControl.MainAreaClass();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppSettings));
             this.AppSettingsTheme = new BadForm();
+            this.btnTab7 = new BadButton();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.btnTab6 = new BadButton();
             this.btnTab2 = new BadButton();
@@ -40,7 +41,6 @@
             this.btnTab3 = new BadButton();
             this.btnTab1 = new BadButton();
             this.grpMain = new BadGroupBox();
-            this.btnTab7 = new BadButton();
             this.AppSettingsTheme.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,6 +74,20 @@
             this.AppSettingsTheme.TabIndex = 0;
             this.AppSettingsTheme.Text = "Application Settings";
             this.AppSettingsTheme.TitleHeight = 26;
+            // 
+            // btnTab7
+            // 
+            this.btnTab7.BlackButton = false;
+            this.btnTab7.Checked = false;
+            this.btnTab7.Image = null;
+            this.btnTab7.Location = new System.Drawing.Point(84, 47);
+            this.btnTab7.Name = "btnTab7";
+            this.btnTab7.Size = new System.Drawing.Size(60, 23);
+            this.btnTab7.TabIndex = 17;
+            this.btnTab7.Tag = "7";
+            this.btnTab7.Text = "Options";
+            this.btnTab7.ToolTipText = "Import from WOT Statistics";
+            this.btnTab7.Click += new System.EventHandler(this.SelectTab_Click);
             // 
             // pnlMain
             // 
@@ -181,20 +195,6 @@
             this.grpMain.Name = "grpMain";
             this.grpMain.Size = new System.Drawing.Size(486, 340);
             this.grpMain.TabIndex = 8;
-            // 
-            // btnTab7
-            // 
-            this.btnTab7.BlackButton = false;
-            this.btnTab7.Checked = false;
-            this.btnTab7.Image = null;
-            this.btnTab7.Location = new System.Drawing.Point(84, 47);
-            this.btnTab7.Name = "btnTab7";
-            this.btnTab7.Size = new System.Drawing.Size(60, 23);
-            this.btnTab7.TabIndex = 17;
-            this.btnTab7.Tag = "7";
-            this.btnTab7.Text = "Options";
-            this.btnTab7.ToolTipText = "Import from WOT Statistics";
-            this.btnTab7.Click += new System.EventHandler(this.SelectTab_Click);
             // 
             // AppSettings
             // 

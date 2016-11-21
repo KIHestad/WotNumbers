@@ -133,6 +133,7 @@ namespace WinApp.Code
         public int newDayAtHour { get; set; }                       // Hour when new day starts, normally at server time reset: 07:00
         public string databaseBackupFilePath { get; set; }	        // File path for database backup
         public DateTime? databaseBackupLastPerformed { get; set; }	// Last database backup runned
+        public int databaseBackupPeriod { get; set; }               // Number of days between auto database backup
         public bool tankSearchMainModeAdvanced { get; set; }        // Selected tank search main mode, true=advanced, fale=simple
         public DateTime lastGrindingProgressRecalc { get; set; }    // When latest grinding progress recalc was run
         public string currentHomeView { get; set; }                 // The last used home view menu name, to show on restart
@@ -310,6 +311,7 @@ namespace WinApp.Code
             // Database Backup settings
             Config.Settings.databaseBackupFilePath = "";
             Config.Settings.databaseBackupLastPerformed = null;
+            Config.Settings.databaseBackupPeriod = 0;
             // Others
 			Config.Settings.CheckForBrrOnStartup = true;
             Config.Settings.RatingColors = ColorRangeScheme.RatingColorScheme.WN_Official_Colors;

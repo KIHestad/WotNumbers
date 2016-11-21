@@ -868,10 +868,22 @@ namespace WinApp.Forms
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			// Run backup
-            Form frm = new Forms.DatabaseBackup(true);
-            frm.ShowDialog(this);
-            notifyIcon.Visible = false;
+            // Run backup if the database backup period is greater than zero and the number of days
+            // since the last backup is greater than the backup period.
+            if (Config.Settings.databaseBackupPeriod > 0)
+            {
+                // If a database backup has not occured yet, set the last backup date to be 10 days
+                // before today so that the backup is guaranteed to happen (because max period is 7 days).
+                DateTime lastBackup = Config.Settings.databaseBackupLastPerformed ?? (DateTime.Today - new TimeSpan(10, 0, 0, 0));
+
+                if (lastBackup.AddDays(Config.Settings.databaseBackupPeriod) < DateTime.Today)
+                {
+                    Form frm = new Forms.DatabaseBackup(true);
+                    frm.ShowDialog(this);
+                    notifyIcon.Visible = false;
+                }
+            }
+            
 			// Save config to save current screen pos and size
 			Config.Settings.posSize.WindowState = this.WindowState;
 			string msg = "";
