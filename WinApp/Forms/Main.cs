@@ -868,24 +868,25 @@ namespace WinApp.Forms
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e)
 		{
-            // Run backup if the database backup period is greater than zero and the number of days
-            // since the last backup is greater than the backup period.
-            if (Config.Settings.databaseBackupPeriod > 0)
+            // Check for running backup if the database backup if SQLite db, period is greater than zero and file path added
+            if (Config.Settings.databaseBackupPeriod > 0 &&
+                Config.Settings.databaseType == ConfigData.dbType.SQLite && 
+                Config.Settings.databaseBackupFilePath.Trim().Length > 0
+            )
             {
                 // If a database backup has not occured yet, set the last backup date to be 10 days
                 // before today so that the backup is guaranteed to happen (because max period is 7 days).
-                DateTime lastBackup = Config.Settings.databaseBackupLastPerformed ?? (DateTime.Today - new TimeSpan(10, 0, 0, 0));
-
-                if (lastBackup.AddDays(Config.Settings.databaseBackupPeriod) < DateTime.Today)
+                DateTime lastBackup = Config.Settings.databaseBackupLastPerformed ?? (DateTime.Now.AddDays(-10));
+                if (lastBackup.AddDays(Config.Settings.databaseBackupPeriod).CompareTo(DateTime.Now) > 0)
                 {
-                    Form frm = new Forms.DatabaseBackup(true);
+                    Form frm = new DatabaseBackup(true);
                     frm.ShowDialog(this);
-                    notifyIcon.Visible = false;
                 }
             }
-            
-			// Save config to save current screen pos and size
-			Config.Settings.posSize.WindowState = this.WindowState;
+            // Hide systray icon
+            notifyIcon.Visible = false;
+            // Save config to save current screen pos and size
+            Config.Settings.posSize.WindowState = this.WindowState;
 			string msg = "";
 			Config.SaveConfig(out msg);
 			// Log exit

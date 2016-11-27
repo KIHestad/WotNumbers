@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 426; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 427; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2975,7 +2975,10 @@ namespace WinApp.Code
                     mssql = "UPDATE battle SET battlesCountTotal = NULL; ";
                     sqlite = mssql;
                     break;
-
+                case 427:
+                    Config.Settings.databaseBackupPeriod = 1;
+                    Config.SaveConfig(out msg);
+                    break;
 
 
 

@@ -27,26 +27,15 @@ namespace WinApp.Forms
             // Check if database backup settings
             if (Config.Settings.databaseType == ConfigData.dbType.SQLite && Config.Settings.databaseBackupFilePath.Trim().Length > 0)
             {
-                // Get initial text and check if 12 hours since last backup
-                bool lastBackupWithin12H = true;
-                DateTime lastBackup = new DateTime();
+                // Get initial text 
                 if (Config.Settings.databaseBackupLastPerformed == null)
                 {
                     lblProgressStatus.Text = "No backup performed previously";
-                    lastBackupWithin12H = false;
                 }
                 else
                 {
-                    lastBackup = Convert.ToDateTime(Config.Settings.databaseBackupLastPerformed);
+                    DateTime lastBackup = Convert.ToDateTime(Config.Settings.databaseBackupLastPerformed);
                     lblProgressStatus.Text = "Last backup run: " + lastBackup.ToString();
-                    DateTime time12HoursAgo = DateTime.Now.AddHours(-12);
-                    lastBackupWithin12H = (lastBackup.CompareTo(time12HoursAgo) > 0);
-                }
-                // If auto, check for minimum 12 hours since last backup
-                if (_autoRun && lastBackupWithin12H)
-                {
-                    _autoRun = false;
-                    this.Close();
                 }
             }
             else

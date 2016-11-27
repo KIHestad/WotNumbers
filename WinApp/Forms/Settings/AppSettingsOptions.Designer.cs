@@ -55,7 +55,7 @@
             // ddPeriod
             // 
             this.ddPeriod.Image = null;
-            this.ddPeriod.Location = new System.Drawing.Point(139, 143);
+            this.ddPeriod.Location = new System.Drawing.Point(112, 143);
             this.ddPeriod.Name = "ddPeriod";
             this.ddPeriod.Size = new System.Drawing.Size(54, 26);
             this.ddPeriod.TabIndex = 38;
@@ -67,11 +67,11 @@
             this.badLabel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.badLabel6.Dimmed = false;
             this.badLabel6.Image = null;
-            this.badLabel6.Location = new System.Drawing.Point(196, 145);
+            this.badLabel6.Location = new System.Drawing.Point(175, 145);
             this.badLabel6.Name = "badLabel6";
-            this.badLabel6.Size = new System.Drawing.Size(34, 23);
+            this.badLabel6.Size = new System.Drawing.Size(259, 23);
             this.badLabel6.TabIndex = 37;
-            this.badLabel6.Text = "days";
+            this.badLabel6.Text = "( 0 = No automatic database backup)";
             this.badLabel6.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // badLabel5
@@ -81,9 +81,9 @@
             this.badLabel5.Image = null;
             this.badLabel5.Location = new System.Drawing.Point(17, 145);
             this.badLabel5.Name = "badLabel5";
-            this.badLabel5.Size = new System.Drawing.Size(126, 23);
+            this.badLabel5.Size = new System.Drawing.Size(81, 23);
             this.badLabel5.TabIndex = 36;
-            this.badLabel5.Text = "Backup database every ";
+            this.badLabel5.Text = "Interval (days):";
             this.badLabel5.TxtAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // chkTempBattleresultSave

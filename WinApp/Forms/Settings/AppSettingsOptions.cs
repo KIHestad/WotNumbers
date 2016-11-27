@@ -30,6 +30,7 @@ namespace WinApp.Forms.Settings
             chkNotifyIconUse.Checked = Config.Settings.notifyIconUse;
             chkNotifyIconFormExitToMinimize.Checked = Config.Settings.notifyIconFormExitToMinimize;
             txtBackupFilePath.Text = Config.Settings.databaseBackupFilePath;
+            ddPeriod.Text = Config.Settings.databaseBackupPeriod.ToString();
             ddHour.Text = Config.Settings.newDayAtHour.ToString("00");
             SetTextForChkNotifyIconFormExitToMinimize();
             chkTempBattleresultSave.Checked = Config.SessionSettings.tempBattleResultSave;
