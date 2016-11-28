@@ -73,6 +73,10 @@ namespace WinApp.Forms
 			FormTheme.Cursor = Cursors.WaitCursor;
 			badProgressBar.Value = 0;
 			badProgressBar.Visible = true;
+
+            // Release database
+            GC.Collect();
+
             // Perform backup
             DateTime backupTime = DateTime.Now;
             

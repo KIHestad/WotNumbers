@@ -877,7 +877,7 @@ namespace WinApp.Forms
                 // If a database backup has not occured yet, set the last backup date to be 10 days
                 // before today so that the backup is guaranteed to happen (because max period is 7 days).
                 DateTime lastBackup = Config.Settings.databaseBackupLastPerformed ?? (DateTime.Now.AddDays(-10));
-                if (lastBackup.AddDays(Config.Settings.databaseBackupPeriod).CompareTo(DateTime.Now) > 0)
+                if (lastBackup.AddDays(Config.Settings.databaseBackupPeriod).CompareTo(DateTime.Now) < 0)
                 {
                     Form frm = new DatabaseBackup(true);
                     frm.ShowDialog(this);

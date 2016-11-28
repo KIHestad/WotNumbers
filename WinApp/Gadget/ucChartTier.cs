@@ -142,7 +142,7 @@ namespace WinApp.Gadget
 					"FROM   playerTankBattle INNER JOIN " +
 					"		playerTank ON playerTankBattle.playerTankId = playerTank.id INNER JOIN " +
 					"		tank ON playerTank.tankId = tank.id " +
-					"WHERE  (playerTank.playerId = @playerId) " + sqlBattlemode +
+                    "WHERE  (playerTank.playerId = @playerId) AND tank.tier > 0 " + sqlBattlemode +
 					"GROUP BY tank.tier " +
 					"ORDER BY tank.tier ";
 			}
@@ -173,7 +173,7 @@ namespace WinApp.Gadget
 					"FROM   battle INNER JOIN " +
 					"       playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
 					"       tank ON playerTank.tankId = tank.id " +
-					"WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) " + sqlBattlemode +
+                    "WHERE  (battle.battleTime >= @battleTime) AND (playerTank.playerId = @playerId) AND tank.tier > 0 " + sqlBattlemode +
 					"GROUP BY tank.tier " +
 					"ORDER BY tank.tier ";
 				DB.AddWithValue(ref sql, "@battleTime", dateFilter, DB.SqlDataType.DateTime);
