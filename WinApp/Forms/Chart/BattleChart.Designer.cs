@@ -51,7 +51,6 @@
             this.mFavourite13 = new System.Windows.Forms.ToolStripMenuItem();
             this.mFavourite14 = new System.Windows.Forms.ToolStripMenuItem();
             this.mFavourite15 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mFavouriteEdit = new System.Windows.Forms.ToolStripButton();
             this.mFavouriteSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.mChartAdd = new System.Windows.Forms.ToolStripButton();
@@ -135,7 +134,6 @@
             this.mMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.mMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mFavourite,
-            this.mFavouriteEdit,
             this.mFavouriteSave,
             this.toolStripSeparator6,
             this.mChartAdd,
@@ -184,6 +182,7 @@
             this.mFavourite.Name = "mFavourite";
             this.mFavourite.ShowDropDownArrow = false;
             this.mFavourite.Size = new System.Drawing.Size(20, 22);
+            this.mFavourite.Tag = "-1";
             this.mFavourite.ToolTipText = "Select Chart from Favourites";
             // 
             // mFavourite01
@@ -336,18 +335,6 @@
             this.mFavourite15.Click += new System.EventHandler(this.mFavouriteSelect_Click);
             this.mFavourite15.Paint += new System.Windows.Forms.PaintEventHandler(this.mCheckBox_Paint);
             // 
-            // mFavouriteEdit
-            // 
-            this.mFavouriteEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mFavouriteEdit.Enabled = false;
-            this.mFavouriteEdit.Image = ((System.Drawing.Image)(resources.GetObject("mFavouriteEdit.Image")));
-            this.mFavouriteEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mFavouriteEdit.Name = "mFavouriteEdit";
-            this.mFavouriteEdit.Size = new System.Drawing.Size(23, 22);
-            this.mFavouriteEdit.Text = "toolStripButton1";
-            this.mFavouriteEdit.ToolTipText = "Edit or Delete Selected Favourite";
-            this.mFavouriteEdit.Click += new System.EventHandler(this.mFavouriteEdit_Click);
-            // 
             // mFavouriteSave
             // 
             this.mFavouriteSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -440,6 +427,7 @@
             this.mBattleModes.Name = "mBattleModes";
             this.mBattleModes.ShowDropDownArrow = false;
             this.mBattleModes.Size = new System.Drawing.Size(80, 22);
+            this.mBattleModes.Tag = "ALL";
             this.mBattleModes.Text = "All Modes";
             this.mBattleModes.ToolTipText = "Select battle mode";
             // 
@@ -568,6 +556,7 @@
             this.mBattleTimeFilter.Name = "mBattleTimeFilter";
             this.mBattleTimeFilter.ShowDropDownArrow = false;
             this.mBattleTimeFilter.Size = new System.Drawing.Size(79, 22);
+            this.mBattleTimeFilter.Tag = "ALL";
             this.mBattleTimeFilter.Text = "All Battles";
             this.mBattleTimeFilter.ToolTipText = "Select battle time filter";
             // 
@@ -892,7 +881,6 @@
         private System.Windows.Forms.ToolStripMenuItem mFavourite13;
         private System.Windows.Forms.ToolStripMenuItem mFavourite14;
         private System.Windows.Forms.ToolStripMenuItem mFavourite15;
-        private System.Windows.Forms.ToolStripButton mFavouriteEdit;
         private System.Windows.Forms.ToolStripButton mFavouriteSave;
         private System.Windows.Forms.ImageList imageListToolStrip;
     }

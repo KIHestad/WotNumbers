@@ -273,12 +273,6 @@
     <Compile Include="Forms\BattleSummary\BattleSummary.Designer.cs">
       <DependentUpon>BattleSummary.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Chart\FavouriteEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Chart\FavouriteEdit.Designer.cs">
-      <DependentUpon>FavouriteEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Chart\FavouriteSave.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -698,9 +692,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Chart\ChartLineRemove.resx">
       <DependentUpon>ChartLineRemove.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Chart\FavouriteEdit.resx">
-      <DependentUpon>FavouriteEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Chart\FavouriteSave.resx">
       <DependentUpon>FavouriteSave.cs</DependentUpon>

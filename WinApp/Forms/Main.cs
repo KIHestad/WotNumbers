@@ -3385,16 +3385,16 @@ namespace WinApp.Forms
                 // Hide sys cols
                 dataGridMain.Columns["Map_ID"].Visible = false;
                 // Cell Formatting
-                dataGridMain.Columns["Map"].Width = 120;
+                dataGridMain.Columns["Map"].Width = 70 + (Config.Settings.gridFontSize * 8);
                 dataGridMain.Columns["Image"].Width = imgWidth;
                 if (mMapDefault.Checked)
                 {
-                    dataGridMain.Columns["Battles"].Width = 60;
+                    dataGridMain.Columns["Battles"].Width = 10 + (Config.Settings.gridFontSize * 6);
                     dataGridMain.Columns["Battles"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    dataGridMain.Columns["Frequency"].Width = 60;
+                    dataGridMain.Columns["Frequency"].Width = 20 + (Config.Settings.gridFontSize * 8);
                     dataGridMain.Columns["Frequency"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     dataGridMain.Columns["Frequency"].DefaultCellStyle.Format = "N2";
-                    dataGridMain.Columns["Last Battle"].Width = 120;
+                    dataGridMain.Columns["Last Battle"].Width = 40 + (Config.Settings.gridFontSize * 10);
                     dataGridMain.Columns["Win Rate"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     dataGridMain.Columns["Win Rate"].DefaultCellStyle.Format = "N1";
                     dataGridMain.Columns["Win Rate"].Width = 75;

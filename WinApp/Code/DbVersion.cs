@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 427; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 433; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2979,8 +2979,59 @@ namespace WinApp.Code
                     Config.Settings.databaseBackupPeriod = 1;
                     Config.SaveConfig(out msg);
                     break;
-
-
+                case 428:
+                    mssql = "UPDATE map SET id = 75 WHERE id = 73; "; // correct id for map 112_eiffel_tower = Paris
+                    sqlite = mssql;
+                    break;
+                case 429:
+                    mssql =
+                        "CREATE TABLE chartFav ( " +
+                        "id int IDENTITY(1,1) primary key, " +
+                        "favouriteName varchar(MAX) NOT NULL, " +
+                        "battleMode varchar(50) NOT NULL, " +
+                        "battleTime varchar(5) NOT NULL, " +
+                        "xAxis varchar(10) NOT NULL, " +
+                        "bullet bit NOT NULL, " +
+                        "spline bit NOT NULL); ";
+                    sqlite =
+                        "CREATE TABLE chartFav ( " +
+                        "id integer primary key, " +
+                        "favouriteName varchar(999) NOT NULL, " +
+                        "battleMode varchar(50) NOT NULL, " +
+                        "battleTime varchar(5) NOT NULL, " +
+                        "xAxis varchar(10) NOT NULL, " +
+                        "bullet bit NOT NULL, " +
+                        "spline bit NOT NULL); ";
+                    break;
+                case 430:
+                    mssql =
+                        "CREATE TABLE chartFavLine ( " +
+                        "id int IDENTITY(1,1) primary key, " +
+                        "chartFavId int NOT NULL, " +
+                        "tankId int NOT NULL, " +
+                        "chartTypeName varchar(MAX) NOT NULL, " +
+                        "use2ndYaxis bit NOT NULL, " +
+                        "foreign key (chartFavId) references chartFav (id) ); ";
+                    sqlite =
+                        "CREATE TABLE chartFavLine ( " +
+                        "id integer primary key, " +
+                        "chartFavID integer NOT NULL, " +
+                        "tankId integer NOT NULL, " +
+                        "chartTypeName varchar(999) NOT NULL, " +
+                        "use2ndYaxis bit NOT NULL, " +
+                        "foreign key (chartFavId) references chartFav (id) ); ";
+                    break;
+                case 431:
+                    ConvertChartFavourites();
+                    break;
+                case 432:
+                    Config.Settings.currentChartFavourite = "";
+                    Config.SaveConfig(out msg);
+                    break;
+                case 433:
+                    mssql = "DROP TABLE chartFavourite; ";
+                    sqlite = mssql;
+                    break;
 
             }
             string sql = "";
@@ -3137,5 +3188,42 @@ namespace WinApp.Code
 			}
 		}
 
-	}
+        private static void ConvertChartFavourites()
+        {
+            // Create chartFav from chartFavourite
+            string sql = "SELECT favouriteName FROM chartFavourite GROUP BY favouriteName;";
+            DataTable dt = DB.FetchData(sql, true);
+            if (dt.Rows.Count > 0)
+            {
+                sql = "";
+                foreach (DataRow dr in dt.Rows)
+                {
+                    string insert =
+                        "INSERT INTO chartFav (favouriteName, battleMode, battleTime, xAxis, bullet, spline ) " +
+                        "VALUES (@favouriteName, '15', 'ALL', 'Date', 0, 0); ";
+                    DB.AddWithValue(ref insert, "@favouriteName", dr["favouriteName"].ToString(), DB.SqlDataType.VarChar);
+                    sql += insert;
+                }
+                DB.ExecuteNonQuery(sql, false, true);
+            }
+            // Create chartFavLine from chartFavourite
+            sql = 
+                "SELECT chartFavourite.*, chartFav.Id as chartFavId " + 
+                "FROM chartFavourite INNER JOIN chartFav ON chartFavourite.favouriteName = chartFav.favouriteName; ";
+            dt = DB.FetchData(sql, true);
+            foreach (DataRow dr in dt.Rows)
+            {
+                string insert =
+                    "INSERT INTO chartFavLine (chartFavID, tankId, chartTypeName, use2ndYaxis) " +
+                    "VALUES (@chartFavID, @tankId, @chartTypeName, @use2ndYaxis); ";
+                DB.AddWithValue(ref insert, "@chartFavID", Convert.ToInt32(dr["chartFavId"]), DB.SqlDataType.Int);
+                DB.AddWithValue(ref insert, "@tankId", Convert.ToInt32(dr["tankId"]), DB.SqlDataType.Int);
+                DB.AddWithValue(ref insert, "@chartTypeName", dr["chartTypeName"].ToString(), DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref insert, "@use2ndYaxis", Convert.ToBoolean(dr["use2ndYaxis"]), DB.SqlDataType.Boolean);
+                sql += insert;
+            }
+            DB.ExecuteNonQuery(sql, false, true);
+        }
+
+    }
 }

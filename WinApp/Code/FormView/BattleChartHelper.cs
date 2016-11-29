@@ -10,11 +10,9 @@ namespace WinApp.Code.FormView
     {
         // Result from Favourite save
         public static string SaveFavouriteNewFavName = "";
+        public static int SaveFavouriteNewFavId = -1;
         public static bool SaveFavouriteSaved = false;
-
-        // Rsult form Favourite edit
-        public static string EditFavouriteEdited = "";
-        public static bool EditFavouriteDeleted = false;
+        public static bool SaveFavouriteDeleted = false;
 
         // Rsult form Removing chart values
         public static int RemovedChartValues = 0;
