@@ -36,7 +36,7 @@ namespace WinApp.Gadget
                     "SELECT  tankType.shortName AS Type, COUNT(playerTank.id) AS Tanks, SUM(playerTankBattleTotalsView.battles) AS Battles, SUM(playerTankBattleTotalsView.wins) As Victory " +
                     "FROM    playerTank INNER JOIN " +
                     "        tank ON playerTank.tankId = tank.id INNER JOIN " +
-                    "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+                    "        tankType ON tank.tankTypeId = tankType.id AND tankType.id > -1 LEFT OUTER JOIN " +
                     "        playerTankBattleTotalsView ON playerTank.id = playerTankBattleTotalsView.playerTankId " +
                     "WHERE        (playerTank.playerId = @playerId) " +
                     "GROUP BY tankType.shortName ";
@@ -47,7 +47,7 @@ namespace WinApp.Gadget
                     "SELECT  tankType.shortName AS Type, COUNT(playerTank.id) AS Tanks, SUM(playerTankBattle.battles) AS Battles, SUM(playerTankBattle.wins) As Victory " +
                     "FROM    playerTank INNER JOIN " +
                     "        tank ON playerTank.tankId = tank.id INNER JOIN " +
-                    "        tankType ON tank.tankTypeId = tankType.id LEFT OUTER JOIN " +
+                    "        tankType ON tank.tankTypeId = tankType.id AND tankType.id > -1 LEFT OUTER JOIN " +
                     "        playerTankBattle ON playerTank.id = playerTankBattle.playerTankId  " +
                     "WHERE        (playerTank.playerId = @playerId) AND playerTankBattle.battleMode = @battleMode " +
                     "GROUP BY tankType.shortName ";
