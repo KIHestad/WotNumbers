@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 433; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 435; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2867,9 +2867,6 @@ namespace WinApp.Code
                     mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (8, 'Sweden', 'SE', 'sweden', 90); ";
                     sqlite = mssql;
                     break;
-                case 403:
-                    RunWotApi = true;
-                    break;
                 case 404:
                     mssql = "ALTER TABLE battle ADD battleTimeStart datetime NOT NULL DEFAULT GETDATE(); ";
                     sqlite = "ALTER TABLE battle ADD battleTimeStart datetime NULL;";
@@ -2931,9 +2928,6 @@ namespace WinApp.Code
                     RunRecalcBattleWN9 = true;
                     RunRecalcBattleWN8 = true;
                     RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
-                    break;
-                case 418:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
                 case 419:
                     mssql = "ALTER TABLE battle ADD xpOriginal int NULL; ";
@@ -3031,6 +3025,16 @@ namespace WinApp.Code
                 case 433:
                     mssql = "DROP TABLE chartFavourite; ";
                     sqlite = mssql;
+                    break;
+                case 434:
+                    RunWotApi = true;
+                    mssql =
+                        "UPDATE columnSelection SET description = 'Damage Caused/Received = damage caused divided by damage received' WHERE ID IN (220,218); " +
+                        "UPDATE columnSelection SET description = 'Kill/Death Ratio = enemy tanks you have killed (frags) divided by battles you did not survive' WHERE ID IN (219); ";
+                    sqlite = mssql;
+                    break;
+                case 435:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
 
             }
