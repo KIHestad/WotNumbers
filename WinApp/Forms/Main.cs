@@ -3803,12 +3803,18 @@ namespace WinApp.Forms
 				// Check if footer
 				if (dataGridRightClickRow != -1 && dataGridRightClickCol != -1 && MainSettings.View == GridView.Views.Battle)
 				{
-					if (Convert.ToInt32(dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value) > 0)
-					{
-						dataGridRightClickCol = -1;
-						dataGridRightClickRow = -1;
-					}
-				}
+                    if (dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value != null)
+                    {
+                        string s = dataGridMain.Rows[dataGridRightClickRow].Cells["footer"].Value.ToString();
+                        int i = 0;
+                        Int32.TryParse(s, out i);
+                        if (i > 0)
+                        {
+                            dataGridRightClickCol = -1;
+                            dataGridRightClickRow = -1;
+                        }
+                    }
+                }
 
 			}
 			catch (Exception ex)
@@ -4449,7 +4455,10 @@ namespace WinApp.Forms
             bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
             bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
             if (WNnewVer8 || WNnewVer9)
-				RunRecalcBattleWN8or9(true, WNnewVer8, WNnewVer9);
+            {
+                RunRecalcBattleWN8or9(true, WNnewVer8, WNnewVer9);
+                DBVersion.RunDossierFileCheckWithForceUpdate = true;
+            }
             ShowView("Refreshed view");
 		}
 

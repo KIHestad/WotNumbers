@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using System.Data.Sql;
 using System.Net;
+using System.Net.Cache;
 
 namespace WinApp.Code
 {
@@ -22,8 +23,23 @@ namespace WinApp.Code
 			return DateTime.Now + " " + logtext;
 		}
 
+        public static WebResponse GetResponseNoCache(Uri uri)
+        {
+            // Set a default policy level for the "http:" and "https" schemes.
+            HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Default);
+            HttpWebRequest.DefaultCachePolicy = policy;
+            // Create the request.
+            WebRequest request = WebRequest.Create(uri);
+            // Define a cache policy for this request only. 
+            HttpRequestCachePolicy noCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+            request.CachePolicy = noCachePolicy;
+            WebResponse response = request.GetResponse();
+            Console.WriteLine("IsFromCache? {0}", response.IsFromCache);
+            return response;
+        }
+
         // updates all WN8 expected values, or only for one tank if added
-		public static String UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
+        public static String UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
 		{
 			string sql = "";
 			int tankId = 0;
@@ -37,12 +53,17 @@ namespace WinApp.Code
             // Get WN8 from API
             try
 			{
-				string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json";
-				HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpRequest.Timeout = 10000;     // 10 secs
-				httpRequest.UserAgent = "Wot Numbers " + AppVersion.AssemblyVersion;
-				httpRequest.Proxy.Credentials = CredentialCache.DefaultCredentials;
-				HttpWebResponse webResponse = (HttpWebResponse)httpRequest.GetResponse();
+				string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray()); 
+                // Set a default policy level for the "http:" and "https" schemes.
+                HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Default);
+                HttpWebRequest.DefaultCachePolicy = policy;
+                // Create request
+                WebRequest request = WebRequest.Create(url);
+				request.Timeout = 10000;     // 10 secs
+				// Define a cache policy for this request only. 
+                HttpRequestCachePolicy noCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+                request.CachePolicy = noCachePolicy;
+                WebResponse webResponse = request.GetResponse();
 				StreamReader responseStream = new StreamReader(webResponse.GetResponseStream());
 				string json = responseStream.ReadToEnd();
 				responseStream.Close();

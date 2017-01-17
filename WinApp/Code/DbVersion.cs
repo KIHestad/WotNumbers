@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 435; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 436; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3027,7 +3027,6 @@ namespace WinApp.Code
                     sqlite = mssql;
                     break;
                 case 434:
-                    RunWotApi = true;
                     mssql =
                         "UPDATE columnSelection SET description = 'Damage Caused/Received = damage caused divided by damage received' WHERE ID IN (220,218); " +
                         "UPDATE columnSelection SET description = 'Kill/Death Ratio = enemy tanks you have killed (frags) divided by battles you did not survive' WHERE ID IN (219); ";
@@ -3036,6 +3035,10 @@ namespace WinApp.Code
                 case 435:
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
+                case 436:
+                    RunWotApi = true;
+                    break;
+
 
             }
             string sql = "";

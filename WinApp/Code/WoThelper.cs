@@ -47,13 +47,17 @@ namespace WinApp.Code
                         // res mods subfolder = WoT game version, can be 5 part number
                         Int64 factor = (Int64)1000 * (Int64)1000 * (Int64)1000 * (Int64)1000 * (Int64)1000;
                         Int64 currentSubfolderToNumber = 0;
+                        bool convertValid = true;
                         foreach (string s in subFolderPart)
                         {
-                            currentSubfolderToNumber += Convert.ToInt64(s) * factor;
+                            Int64 num = 0;
+                            if (!Int64.TryParse(s, out num))
+                                convertValid = false;
+                            currentSubfolderToNumber += num * factor;
                             factor = factor / 1000; // for each part number, reduce factor with 100
                         }
                         // Check if highest number
-                        if (currentSubfolderToNumber > highestResModsFolderToNumber)
+                        if (convertValid && currentSubfolderToNumber > highestResModsFolderToNumber)
                         {
                             highestResModsFolderToNumber = currentSubfolderToNumber;
                             highestResModsFolder = subfolder.Name;
