@@ -94,7 +94,7 @@ namespace WinApp.Code
                 {
                     case WotApiType.Tank:
                         // NEW - get these fields: tank_id,name,short_name,is_premium_igr,type,nation,tier,description,price_credit,images
-                        url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_premium%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages";
+                        url += "/wot/encyclopedia/vehicles/?application_id=" + applicationId + "&fields=tank_id%2Cname%2Cshort_name%2Cis_premium%2Ctype%2Cnation%2Ctier%2Cdescription%2Cprice_credit%2Cimages%2Cdefault_profile.hp";
                         if (tankId != 0)
                             url += "&tank_id=" + tankId;
                         break;
@@ -283,6 +283,14 @@ namespace WinApp.Code
                                 if (Double.TryParse(price_credit_str, out get_price_credit))
                                     price_credit = get_price_credit;
 
+                                // hp
+                                int? hp = null;
+                                int hp_int = 0;
+                                JToken defaultProfile = itemToken["default_profile"];
+                                string hp_str = defaultProfile["hp"].ToString();
+                                if (Int32.TryParse(hp_str, out hp_int))
+                                    hp = hp_int;
+
                                 // Description
                                 string description = itemToken["description"].ToString();
 
@@ -294,8 +302,8 @@ namespace WinApp.Code
                                 if (!tankExists)
                                 {
                                     sql =
-                                        "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, description, tier, premium, imgPath, price_credit, customTankInfo) " +
-                                        "VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @description, @tier, @premium, @imgPath, @price_credit, 0); ";
+                                        "INSERT INTO tank (id, tankTypeId, countryId, name, short_name, description, tier, premium, imgPath, price_credit, customTankInfo, hp) " +
+                                        "VALUES (@id, @tankTypeId, @countryId, @name, @short_name, @description, @tier, @premium, @imgPath, @price_credit, 0, @hp); ";
                                     logItems.Inserted += name + ", ";
                                     logItems.InsertedCount++;
                                 }
@@ -303,7 +311,7 @@ namespace WinApp.Code
                                 {
                                     sql =
                                         "UPDATE tank set tankTypeId=@tankTypeId, countryId=@countryId, name=@name, short_name=@short_name, description=@description, tier=@tier, " +
-                                        "premium=@premium, imgPath=@imgPath, price_credit=@price_credit, customTankInfo=0 WHERE id=@id; ";
+                                        "premium=@premium, imgPath=@imgPath, price_credit=@price_credit, customTankInfo=0, hp=@hp WHERE id=@id; ";
                                     logItems.Updated += name + ", ";
                                     logItems.UpdatedCount++;
                                 }
@@ -318,6 +326,7 @@ namespace WinApp.Code
                                 DB.AddWithValue(ref sql, "@premium", premium, DB.SqlDataType.Int);
                                 DB.AddWithValue(ref sql, "@imgPath", imgPath, DB.SqlDataType.VarChar);
                                 DB.AddWithValue(ref sql, "@price_credit", price_credit, DB.SqlDataType.Float);
+                                DB.AddWithValue(ref sql, "@hp", hp, DB.SqlDataType.Int);
                                 sqlTotal += sql + Environment.NewLine;
                             }
                         }

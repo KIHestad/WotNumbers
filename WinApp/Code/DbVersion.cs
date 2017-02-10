@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 	
 		// The current databaseversion
-        public static int ExpectedNumber = 436; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 438; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3038,7 +3038,15 @@ namespace WinApp.Code
                 case 436:
                     RunWotApi = true;
                     break;
-
+                case 437:
+                    mssql = "ALTER TABLE tank ADD hp int NULL; ";
+                    sqlite = "ALTER TABLE tank ADD hp integer NULL; ";
+                    break;
+                case 438:
+                    temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
+                    mssql = temp + "VALUES (41, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
+                    sqlite = mssql;
+                    break;
 
             }
             string sql = "";

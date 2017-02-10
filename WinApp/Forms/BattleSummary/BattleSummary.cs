@@ -930,8 +930,9 @@ namespace WinApp.Forms
 				", @CALC(CAST(battlePlayer.droppedCapturePoints AS FLOAT)) as 'Decap' " +
 
 				", '' as separator8 " +
-				
-				", @CALC(battlePlayer.damageDealt) as 'Dmg'" +
+
+                //", @CALC(tank.hp) as 'Tank HP'" +
+                ", @CALC(battlePlayer.damageDealt) as 'Dmg'" +
 				", @CALC(battlePlayer.damageReceived) as 'Dmg Received' " +
 				", @CALC(battlePlayer.damageBlockedByArmor) as 'Dmg Blocked' " +
 

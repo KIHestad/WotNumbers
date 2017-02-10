@@ -930,58 +930,60 @@ namespace WinApp.Forms
 			string fortResourcesFields = "";
 			if (showFortResources) fortResourcesFields = ", fortResource as 'IR' ";
 			string enhancedFields = "";
-			string orderBy = GetSortField(orderHeaderText);
+            string orderBy = GetSortField(orderHeaderText);
 			if (orderBy != "")
 			{
 				orderBy = " ORDER BY " + orderBy;
 				if (!orderAscending)
 					orderBy += " DESC ";
 			}
-			if (showAllColumns)
-				enhancedFields =
-					", '' as separator1 " +
-					", killerName as 'Killed By' " +
+            if (showAllColumns)
+            {
+                enhancedFields =
+                    ", '' as separator1 " +
+                    ", killerName as 'Killed By' " +
 
-					", '' as separator2 " +
-					", damageAssistedTrack as 'Dmg Track' " +
-					", damageAssistedRadio as 'Dmg Spot' " +
-					", sniperDamageDealt as 'Dmg Sniper' " +
+                    ", '' as separator2 " +
+                    ", damageAssistedTrack as 'Dmg Track' " +
+                    ", damageAssistedRadio as 'Dmg Spot' " +
+                    ", sniperDamageDealt as 'Dmg Sniper' " +
 
-					", '' as separator8 " +
-					", damageReceived as 'Dmg Received' " +
-					", damageBlockedByArmor as 'Dmg Blocked' " +
+                    ", '' as separator8 " +
+                    ", damageReceived as 'Dmg Received' " +
+                    ", damageBlockedByArmor as 'Dmg Blocked' " +
 
-					", '' as separator3 " +
-					", spotted as 'Spot' " +
-					", capturePoints as 'Cap' " +
-					", droppedCapturePoints as 'Decap' " +
+                    ", '' as separator3 " +
+                    ", spotted as 'Spot' " +
+                    ", capturePoints as 'Cap' " +
+                    ", droppedCapturePoints as 'Decap' " +
 
-					", '' as separator4 " +
-					", shots as 'Shots' " +
-					", hits as 'Hits' " +
-					", pierced as 'Pierced Hits' " +
-					", explosionHits as 'Explosion Hits' " +
+                    ", '' as separator4 " +
+                    ", shots as 'Shots' " +
+                    ", hits as 'Hits' " +
+                    ", pierced as 'Pierced Hits' " +
+                    ", explosionHits as 'Explosion Hits' " +
 
-					", '' as separator5 " +
-					", directHitsReceived as 'Hits Received' " +
-					", piercingsReceived as 'Piercings Received' " +
-					", explosionHitsReceived as 'Expl Hits Received' " +
-					", noDamageShotsReceived as 'No Dmg Hits Received' " +
+                    ", '' as separator5 " +
+                    ", directHitsReceived as 'Hits Received' " +
+                    ", piercingsReceived as 'Piercings Received' " +
+                    ", explosionHitsReceived as 'Expl Hits Received' " +
+                    ", noDamageShotsReceived as 'No Dmg Hits Received' " +
 
-					", '' as separator6 " + 
-					", mileage as 'Milage' " +
-					", lifeTime as 'Life Time' " +
+                    ", '' as separator6 " +
+                    ", mileage as 'Milage' " +
+                    ", lifeTime as 'Life Time' " +
 
-					", '' as separator7 " + 
-					", credits as 'Base Credit' " +
+                    ", '' as separator7 " +
+                    ", credits as 'Base Credit' " +
 
-					", '' as separator9 " + 
-					", isPrematureLeave as 'Premature Leave' " +
-					", isTeamKiller as 'Team Killer' " +
-					", tkills as 'Team Kills' ";
-
+                    ", '' as separator9 " +
+                    ", isPrematureLeave as 'Premature Leave' " +
+                    ", isTeamKiller as 'Team Killer' " +
+                    ", tkills as 'Team Kills' ";
+            }
 			string sql =
-                "select battlePlayer.accountId, '' as 'vBAddict', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
+                "select battlePlayer.accountId, '' as 'vBAddict', battlePlayer.name as 'Player', clanAbbrev as Clan, tank.name as 'Tank', tank.hp as 'Tank HP', " + 
+                "  damageDealt as 'Dmg', kills as 'Frags', xp as 'XP' " +
 				fortResourcesFields +
 				enhancedFields +
 				", deathReason as 'Dead', tank.id as 'TankId', " + team + " as 'Team' " +
@@ -1059,14 +1061,15 @@ namespace WinApp.Forms
 			dgv.Columns["TankId"].Visible = false;
 			dgv.Columns["Dead"].Visible = false;
 			dgv.Columns["Team"].Visible = false;
-			dgv.Columns["TankImage"].HeaderText = "";
+            dgv.Columns["Tank HP"].Visible = false;
+            dgv.Columns["TankImage"].HeaderText = "";
             dgv.Columns["vBAddict"].HeaderText = "";
 			// Left align text col
 			dgv.Columns["Tank"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dgv.Columns["Clan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dgv.Columns["Player"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			// Format
-			dgv.Columns["Dmg"].DefaultCellStyle.Format = "N0";
+            // Format
+            dgv.Columns["Dmg"].DefaultCellStyle.Format = "N0";
 			dgv.Columns["XP"].DefaultCellStyle.Format = "N0";
 			// Default width and set sorting
 			foreach (DataGridViewColumn dgvc in dgv.Columns)
@@ -1098,8 +1101,8 @@ namespace WinApp.Forms
 				int leftFreeArea = left - 60 - 12 - 50;
 				dgv.Columns["Player"].Width = leftFreeArea / 2;
 				dgv.Columns["Tank"].Width = leftFreeArea - (leftFreeArea / 2);
-				// right part = dmg, frags, xp, IR
-				int right = w - left;
+                // right part = dmg, frags, xp, IR
+                int right = w - left;
 				int rightCols = 3;
 				if (showFortResources) rightCols = 4;
 				int i = right / rightCols;
@@ -1110,7 +1113,9 @@ namespace WinApp.Forms
 			}
 			else
 			{
-				dgv.Columns["Player"].Width = 100;
+                dgv.Columns["Tank HP"].Visible = true;
+                dgv.Columns["Tank HP"].DefaultCellStyle.Format = "N0";
+                dgv.Columns["Player"].Width = 100;
 				dgv.Columns["Tank"].Width = 100;
 				dgv.Columns["Killed By"].Width = 80;
 				dgv.Columns["Killed By"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
