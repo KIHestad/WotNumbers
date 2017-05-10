@@ -79,37 +79,40 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+    <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.7\lib\Net40\IronPython.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\IronPython.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.Modules, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+    <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.7\lib\Net40\IronPython.Modules.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\IronPython.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.SQLite, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\IronPython.SQLite.dll</HintPath>
+    <Reference Include="IronPython.SQLite, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.7\lib\Net40\IronPython.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="IronPython.Wpf, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\IronPython.Wpf.dll</HintPath>
+    <Reference Include="IronPython.Wpf, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.7\lib\Net40\IronPython.Wpf.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="LibGit2Sharp">
       <HintPath>..\packages\LibGit2Sharp.0.18.1.0\lib\net40\LibGit2Sharp.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net40\Microsoft.Dynamic.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\Microsoft.Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net40\Microsoft.Scripting.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\Microsoft.Scripting.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting.AspNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\Microsoft.Scripting.AspNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Scripting.AspNet, Version=1.1.1.21, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net40\Microsoft.Scripting.AspNet.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\IronPython.2.7.4\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -911,7 +914,6 @@
     <None Include="Docs\New_Default_Setup.json" />
     <None Include="Docs\Old_Default_Setup.json" />
     <None Include="Docs\OLD_BRR\__init__.pyc" />
-    <None Include="Dossier2json\battle_results_shared_17.py" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_17.json" />
@@ -933,7 +935,12 @@
     <None Include="Dossier2json\structures_89.json" />
     <None Include="Dossier2json\structures_92.json" />
     <None Include="Dossier2json\structures_94.json" />
+    <None Include="Dossier2json\structures_95.json" />
+    <None Include="Dossier2json\structures_96.json" />
+    <None Include="Dossier2json\structures_97.json" />
     <None Include="Dossier2json\tanks.json" />
+    <None Include="Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
+    <None Include="Lib\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -1149,12 +1156,15 @@
     <Content Include="Dossier2json\battle_results_shared_14.py" />
     <Content Include="Dossier2json\battle_results_shared_15.py" />
     <Content Include="Dossier2json\battle_results_shared_16.py" />
+    <Content Include="Dossier2json\battle_results_shared_17.py" />
     <Content Include="Dossier2json\battle_results_shared_18.py" />
     <Content Include="Dossier2json\battle_results_shared_19.py" />
     <Content Include="Dossier2json\battle_results_shared_20.py" />
     <Content Include="Dossier2json\battle_results_shared_21.py" />
     <Content Include="Dossier2json\battle_results_shared_22.py" />
     <Content Include="Dossier2json\battle_results_shared_23.py" />
+    <Content Include="Dossier2json\battle_results_shared_24.py" />
+    <Content Include="Dossier2json\battle_results_shared_25.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\dictpackers_18.py" />
@@ -1290,6 +1300,7 @@
     <Content Include="Lib\encodings\aliases.py" />
     <Content Include="Lib\encodings\ascii.py" />
     <Content Include="Lib\encodings\base64_codec.py" />
+    <Content Include="Lib\encodings\bz2_codec.py" />
     <Content Include="Lib\encodings\charmap.py" />
     <Content Include="Lib\encodings\cp037.py" />
     <Content Include="Lib\encodings\cp1006.py" />
@@ -1328,6 +1339,7 @@
     <Content Include="Lib\encodings\cp875.py" />
     <Content Include="Lib\encodings\hex_codec.py" />
     <Content Include="Lib\encodings\hp_roman8.py" />
+    <Content Include="Lib\encodings\idna.py" />
     <Content Include="Lib\encodings\iso8859_1.py" />
     <Content Include="Lib\encodings\iso8859_10.py" />
     <Content Include="Lib\encodings\iso8859_11.py" />
@@ -1373,6 +1385,7 @@
     <Content Include="Lib\encodings\utf_16_be.py" />
     <Content Include="Lib\encodings\utf_16_le.py" />
     <Content Include="Lib\encodings\utf_32.py" />
+    <Content Include="Lib\encodings\utf_32_be.py" />
     <Content Include="Lib\encodings\utf_32_le.py" />
     <Content Include="Lib\encodings\utf_7.py" />
     <Content Include="Lib\encodings\utf_8.py" />
@@ -1380,6 +1393,9 @@
     <Content Include="Lib\encodings\uu_codec.py" />
     <Content Include="Lib\encodings\zlib_codec.py" />
     <Content Include="Lib\encodings\__init__.py" />
+    <Content Include="Lib\ensurepip\_uninstall.py" />
+    <Content Include="Lib\ensurepip\__init__.py" />
+    <Content Include="Lib\ensurepip\__main__.py" />
     <Content Include="Lib\filecmp.py" />
     <Content Include="Lib\fileinput.py" />
     <Content Include="Lib\fnmatch.py" />
@@ -1419,6 +1435,7 @@
     <Content Include="Lib\lib2to3\fixer_base.py" />
     <Content Include="Lib\lib2to3\fixer_util.py" />
     <Content Include="Lib\lib2to3\fixes\fix_apply.py" />
+    <Content Include="Lib\lib2to3\fixes\fix_asserts.py" />
     <Content Include="Lib\lib2to3\fixes\fix_basestring.py" />
     <Content Include="Lib\lib2to3\fixes\fix_buffer.py" />
     <Content Include="Lib\lib2to3\fixes\fix_callable.py" />
@@ -1504,6 +1521,20 @@
     <Content Include="Lib\mimify.py" />
     <Content Include="Lib\modulefinder.py" />
     <Content Include="Lib\multifile.py" />
+    <Content Include="Lib\multiprocessing\connection.py" />
+    <Content Include="Lib\multiprocessing\dummy\connection.py" />
+    <Content Include="Lib\multiprocessing\dummy\__init__.py" />
+    <Content Include="Lib\multiprocessing\forking.py" />
+    <Content Include="Lib\multiprocessing\heap.py" />
+    <Content Include="Lib\multiprocessing\managers.py" />
+    <Content Include="Lib\multiprocessing\pool.py" />
+    <Content Include="Lib\multiprocessing\process.py" />
+    <Content Include="Lib\multiprocessing\queues.py" />
+    <Content Include="Lib\multiprocessing\reduction.py" />
+    <Content Include="Lib\multiprocessing\sharedctypes.py" />
+    <Content Include="Lib\multiprocessing\synchronize.py" />
+    <Content Include="Lib\multiprocessing\util.py" />
+    <Content Include="Lib\multiprocessing\__init__.py" />
     <Content Include="Lib\mutex.py" />
     <Content Include="Lib\netrc.py" />
     <Content Include="Lib\new.py" />
@@ -1570,6 +1601,7 @@
     <Content Include="Lib\string.py" />
     <Content Include="Lib\StringIO.py" />
     <Content Include="Lib\stringold.py" />
+    <Content Include="Lib\stringprep.py" />
     <Content Include="Lib\struct.py" />
     <Content Include="Lib\subprocess.py" />
     <Content Include="Lib\sunau.py" />
@@ -1646,6 +1678,7 @@
     <Content Include="Lib\_abcoll.py" />
     <Content Include="Lib\_LWPCookieJar.py" />
     <Content Include="Lib\_MozillaCookieJar.py" />
+    <Content Include="Lib\_osx_support.py" />
     <Content Include="Lib\_pyio.py" />
     <Content Include="Lib\_strptime.py" />
     <Content Include="Lib\_threading_local.py" />

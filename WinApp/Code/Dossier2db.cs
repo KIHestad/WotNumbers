@@ -133,7 +133,12 @@ namespace WinApp.Code
 										{
 											case "String": NewPlayerTankRow[dbField] = currentItem.value.ToString(); break;
 											case "DateTime": NewPlayerTankRow[dbField] = DateTimeHelper.ConvertFromUnixTimestamp(Convert.ToDouble(currentItem.value)); break;
-											case "Int": NewPlayerTankRow[dbField] = Convert.ToInt32(currentItem.value); break;
+											case "Int":
+                                                int i = 0;
+                                                if (currentItem.value != null)
+                                                    Int32.TryParse(currentItem.value.ToString(), out i);
+                                                NewPlayerTankRow[dbField] = i;
+                                                break;
 											case "BigInt": NewPlayerTankRow[dbField] = Convert.ToInt64(currentItem.value); break;
 										}
 									}

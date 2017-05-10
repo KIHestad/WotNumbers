@@ -193,7 +193,7 @@ namespace WinApp.Forms
                         ImportWN9Api2DB.UpdateWN9(this);
 
                         // Update settings for API update runned
-                        DBVersion.RunWotApi = false;
+                        DBVersion.RunDownloadAndUpdateTanks = false;
 						Config.Settings.doneRunWotApi = DateTime.Now;
 
 						// Reset player

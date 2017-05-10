@@ -45,7 +45,7 @@ VEH_INTERACTION_DETAILS_INDICES = dict(((x[1][0], x[0]) for x in enumerate(VEH_I
   
   
 parser = dict()
-parser['version'] = "0.9.16.8"
+parser['version'] = "0.9.18"
 parser['name'] = 'http://www.vbaddict.net'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -108,7 +108,7 @@ def main():
 		# "parser['battleResultVersion'] = LEGACY_VERSIONS[len(battleResults[1])]
 	#else:
 		# Updates higher than v0.9.8 have to be identified using a list of new fields
-	parser['battleResultVersion'] = 23
+	parser['battleResultVersion'] = 25
 	
 	while parser['battleResultVersion']>0:  
 		printmessage("Processing Version: " + str(parser['battleResultVersion']), 0)
@@ -293,7 +293,7 @@ def convertToFullForm(compactForm, battleResultVersion):
 						try:
 							vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
 						except Exception: 
-							pass
+							return 0, {}
 						vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
 						vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
 						vehPersonal['club'] = avatarResults['club']
@@ -315,8 +315,9 @@ def convertToFullForm(compactForm, battleResultVersion):
 				return 0, {}
 			except KeyError, i:
 				return 0, {}
-			except Exception, e: 
-				exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
+			except Exception, e:
+				return 0, {} 
+				#exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
 				
 		elif battleResultVersion >= 18:  
 	

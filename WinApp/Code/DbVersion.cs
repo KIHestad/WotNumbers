@@ -16,7 +16,7 @@ namespace WinApp.Code
 	class DBVersion
 	{
 		public static bool RunDossierFileCheckWithForceUpdate = false;
-		public static bool RunWotApi = false;
+		public static bool RunDownloadAndUpdateTanks = false;
 		public static bool RunRecalcBattleWN8 = false;
         public static bool RunRecalcBattleWN9 = false;
         public static bool RunRecalcBattleCreditPerTank = false;
@@ -24,9 +24,9 @@ namespace WinApp.Code
         public static bool RunRecalcBattleMaxTier = false;
         public static bool RunInstallNewBrrVersion = false;
         public static bool CopyAdminDB = false;
-	
-		// The current databaseversion
-        public static int ExpectedNumber = 438; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+
+        // The current databaseversion
+        public static int ExpectedNumber = 441; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3032,20 +3032,18 @@ namespace WinApp.Code
                         "UPDATE columnSelection SET description = 'Kill/Death Ratio = enemy tanks you have killed (frags) divided by battles you did not survive' WHERE ID IN (219); ";
                     sqlite = mssql;
                     break;
-                case 435:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
-                case 436:
-                    RunWotApi = true;
-                    break;
                 case 437:
                     mssql = "ALTER TABLE tank ADD hp int NULL; ";
                     sqlite = "ALTER TABLE tank ADD hp integer NULL; ";
                     break;
-                case 438:
+                case 439:
                     temp = "INSERT INTO columnSelection (id, colType, position, colName, name, description, colGroup, colWidth, colDataType) ";
-                    mssql = temp + "VALUES (41, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
+                    mssql = temp + "VALUES (226, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
                     sqlite = mssql;
+                    break;
+                case 441:
+                    RunDownloadAndUpdateTanks = true;
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
 
             }

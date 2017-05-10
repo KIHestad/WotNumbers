@@ -593,7 +593,7 @@ namespace WinApp.Forms
 			// Debug option - avoid init dossier file check after startup
 			// if (false)
 			{
-                if (DBVersion.RunWotApi)
+                if (DBVersion.RunDownloadAndUpdateTanks)
 					RunWotApi(true);
 				if (DBVersion.RunRecalcBattleWN8 || DBVersion.RunRecalcBattleWN9)
 					RunRecalcBattleWN8or9(true, DBVersion.RunRecalcBattleWN8, DBVersion.RunRecalcBattleWN9);
@@ -689,7 +689,7 @@ namespace WinApp.Forms
 						if (vi.runWotApi <= DateTime.Now) // Avoid running future planned updates
 						{
 							if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < vi.runWotApi)
-								DBVersion.RunWotApi = true;
+								DBVersion.RunDownloadAndUpdateTanks = true;
 						}
 						// Force dossier file check or just normal - replaces RunInitialDossierFileCheck();
 						if (vi.runForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
@@ -4384,7 +4384,7 @@ namespace WinApp.Forms
             SetFormTitle();
 
             // Check for api update
-            if (DBVersion.RunWotApi)
+            if (DBVersion.RunDownloadAndUpdateTanks)
                 RunWotApi(true);
 
             // Check if new database is created, database should be present but no player should exist

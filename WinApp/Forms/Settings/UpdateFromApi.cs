@@ -95,7 +95,7 @@ namespace WinApp.Forms
             TankHelper.GetAllLists();
 
             // Done
-            DBVersion.RunWotApi = false;
+            DBVersion.RunDownloadAndUpdateTanks = false;
 			UpdateProgressBar("");
 			lblProgressStatus.Text = "Update finished: " + DateTime.Now.ToString();
 			btnStart.Enabled = true;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.17.1.0"?>
+<?define ProductVersion = "0.18.0.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -362,6 +362,15 @@
       <Component Id="cmpstructures94" Directory="INSTALLFOLDER_Dossier2json" Guid="{64541E5F-1CDA-4370-B1D8-216FFFDFB649}">
         <File Id="filstructures94" KeyPath="yes" Source="$(var.D2jSource)\structures_94.json" />
       </Component>
+      <Component Id="cmpstructures95" Directory="INSTALLFOLDER_Dossier2json" Guid="{FDE6E8CE-D65D-405C-A810-43B6E73E25D1}">
+        <File Id="filstructures95" KeyPath="yes" Source="$(var.D2jSource)\structures_95.json" />
+      </Component>
+      <Component Id="cmpstructures96" Directory="INSTALLFOLDER_Dossier2json" Guid="{4D4F229D-5F7D-40D0-9D15-19599B60F6DA}">
+        <File Id="filstructures96" KeyPath="yes" Source="$(var.D2jSource)\structures_96.json" />
+      </Component>
+      <Component Id="cmpstructures97" Directory="INSTALLFOLDER_Dossier2json" Guid="{207F6075-D974-458B-83EE-D9471D0D52E2}">
+        <File Id="filstructures97" KeyPath="yes" Source="$(var.D2jSource)\structures_97.json" />
+      </Component>
 
       <!-- Battle Structs -->
 
@@ -436,6 +445,12 @@
       </Component>
       <Component Id="cmpBRS_23" Directory="INSTALLFOLDER_Dossier2json" Guid="{4AD4C6ED-5238-405C-8942-659229CE081B}">
         <File Id="filBRS_23" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_23.py" />
+      </Component>
+      <Component Id="cmpBRS_24" Directory="INSTALLFOLDER_Dossier2json" Guid="{E2B2BB4E-C926-4DE9-A000-9E201B3F1200}">
+        <File Id="filBRS_24" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_24.py" />
+      </Component>
+      <Component Id="cmpBRS_25" Directory="INSTALLFOLDER_Dossier2json" Guid="{920994B2-9AB6-4B1C-B7CF-007550BFA48E}">
+        <File Id="filBRS_25" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_25.py" />
       </Component>
 
       <!-- Maps and tanks, not in use -->
