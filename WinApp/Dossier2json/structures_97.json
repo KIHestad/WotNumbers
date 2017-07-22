@@ -1,5 +1,4 @@
-[
-{"category": "a15x15", "length": 4, "name": "xp", "offset": 0, "version": 97},
+[{"category": "a15x15", "length": 4, "name": "xp", "offset": 0, "version": 97},
 {"category": "a15x15", "length": 4, "name": "battlesCount", "offset": 4, "version": 97},
 {"category": "a15x15", "length": 4, "name": "wins", "offset": 8, "version": 97},
 {"category": "a15x15", "length": 4, "name": "losses", "offset": 12, "version": 97},
@@ -555,6 +554,7 @@
 {"category": "falloutAchievements", "length": 2, "name": "unreachable", "offset": 16, "version": 97},
 {"category": "falloutAchievements", "length": 2, "name": "champion", "offset": 18, "version": 97},
 {"category": "falloutAchievements", "length": 2, "name": "bannerman", "offset": 20, "version": 97},
+{"category": "falloutAchievements", "length": 2, "name": "deleted", "offset": 22, "version": 97},
 {"category": "ranked", "length": 4, "name": "xp", "offset": 0, "version": 97},
 {"category": "ranked", "length": 4, "name": "battlesCount", "offset": 4, "version": 97},
 {"category": "ranked", "length": 4, "name": "wins", "offset": 8, "version": 97},

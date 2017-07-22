@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 441; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 442; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2441,9 +2441,6 @@ namespace WinApp.Code
                     Config.Settings.downloadFilePathAddSubfolder = false;
                     Config.SaveConfig(out msg);
                     break;
-                case 344:
-                    RunDossierFileCheckWithForceUpdate = true;
-                    break;
                 case 349:
                     mssql = "ALTER TABLE playerTankBattle ADD rwr float";
                     sqlite = mssql;
@@ -2927,7 +2924,6 @@ namespace WinApp.Code
                 case 417:
                     RunRecalcBattleWN9 = true;
                     RunRecalcBattleWN8 = true;
-                    RunDossierFileCheckWithForceUpdate = true; // Force read dossier to update tank WN9 per tanks
                     break;
                 case 419:
                     mssql = "ALTER TABLE battle ADD xpOriginal int NULL; ";
@@ -3044,6 +3040,9 @@ namespace WinApp.Code
                 case 441:
                     RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 442:
+                    RunDossierFileCheckWithForceUpdate = true;
                     break;
 
             }

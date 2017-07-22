@@ -1165,6 +1165,8 @@
     <Content Include="Dossier2json\battle_results_shared_23.py" />
     <Content Include="Dossier2json\battle_results_shared_24.py" />
     <Content Include="Dossier2json\battle_results_shared_25.py" />
+    <Content Include="Dossier2json\battle_results_shared_26.py" />
+    <Content Include="Dossier2json\battle_results_shared_27.py" />
     <Content Include="Dossier2json\DamageEvents.py" />
     <Content Include="Dossier2json\dictpackers.py" />
     <Content Include="Dossier2json\dictpackers_18.py" />
