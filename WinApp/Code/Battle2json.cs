@@ -462,12 +462,13 @@ namespace WinApp.Code
                                 battleValues.Add(new BattleValue() { colname = "vehTypeLockTime", value = (int)token_personel.SelectToken("vehTypeLockTime") });
 								battleValues.Add(new BattleValue() { colname = "marksOnGun", value = (int)token_personel.SelectToken("marksOnGun") });
 								// Rating values, more adds later
-                                Code.Rating.WNHelper.RatingParameters rp = new Code.Rating.WNHelper.RatingParameters();
+                                Rating.WNHelper.RatingParameters rp = new Rating.WNHelper.RatingParameters();
                                 rp.DEF = (int)token_personel.SelectToken("droppedCapturePoints");
 								battleValues.Add(new BattleValue() { colname = "def", value = rp.DEF }); // override def - might be above 100
 								// field returns null
-								if (token_personel.SelectToken("fortResource").HasValues)
-									battleValues.Add(new BattleValue() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
+                                if (getFortResource)
+								    if (token_personel.SelectToken("fortResource") != null && token_personel.SelectToken("fortResource").HasValues)
+									    battleValues.Add(new BattleValue() { colname = "fortResource", value = (int)token_personel.SelectToken("fortResource") });
 								// dayly double
 								int dailyXPFactor = (int)token_personel.SelectToken("dailyXPFactor10") / 10;
 								battleValues.Add(new BattleValue() { colname = "dailyXPFactorTxt", value = "'" + dailyXPFactor.ToString() + " X'" });
@@ -767,19 +768,18 @@ namespace WinApp.Code
 										values += ", " + vechicleInfo.SelectToken(jsonField);
 										values += ", " + vechicleInfo.SelectToken("spotted");
 										values += ", " + vechicleInfo.SelectToken("tkills");
-										JValue fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
-										int fortResourceValue = 0;
-										if (fortResource.Value != null)
-										{
-											fortResourceValue = Convert.ToInt32(fortResource.Value);
-											values += ", " + fortResourceValue.ToString();
-										}
-										else
-										{
-											values += ", 0";
-										}
-										// Added more
-										fields += ", potentialDamageReceived, noDamageShotsReceived, sniperDamageDealt, piercingsReceived, pierced, isTeamKiller";
+                                        // TODO: no longer in use?
+                                        JValue fortResource = null;
+                                        int fortResourceValue = 0;
+                                        if (getFortResource)
+                                        {
+                                            fortResource = (JValue)vechicleInfo.SelectToken("fortResource");
+                                            if (fortResource != null && fortResource.Value != null)
+                                                fortResourceValue = Convert.ToInt32(fortResource.Value);
+                                        }
+                                        values += ", " + fortResourceValue.ToString();
+                                        // Added more
+                                        fields += ", potentialDamageReceived, noDamageShotsReceived, sniperDamageDealt, piercingsReceived, pierced, isTeamKiller";
 										values += ", " + vechicleInfo.SelectToken("potentialDamageReceived");
 										if (btlResultVer >= 15) { jsonField = "noDamageDirectHitsReceived"; } else { jsonField = "noDamageShotsReceived"; } // CHANGED STRUCT FROM WOT 9.8
 										values += ", " + vechicleInfo.SelectToken(jsonField);
@@ -818,7 +818,8 @@ namespace WinApp.Code
 										// If this is current player remember for later save to battle
 										if (player.name == Config.Settings.playerName)
 										{
-											playerFortResources = Convert.ToInt32(fortResource.Value);
+                                            if (getFortResource && fortResource != null && fortResource.Value != null)
+                                                playerFortResources = Convert.ToInt32(fortResource.Value);
 											killerID = playerKillerId;
 											playerPlatoonId = player.platoonID;
 										}

@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 442; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 445; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3037,12 +3037,18 @@ namespace WinApp.Code
                     mssql = temp + "VALUES (226, 1, 7, 'tank.hp', 'HP', 'Tank HP', 'Tank', 50, 'Int'); ";
                     sqlite = mssql;
                     break;
-                case 441:
-                    RunDownloadAndUpdateTanks = true;
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
                 case 442:
                     RunDossierFileCheckWithForceUpdate = true;
+                    break;
+                case 443:
+                    mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (9, 'Poland', 'PL', 'poland', 85); ";
+                    sqlite = mssql;
+                    break;
+                case 444:
+                    RunDownloadAndUpdateTanks = true;
+                    break;
+                case 445:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
 
             }

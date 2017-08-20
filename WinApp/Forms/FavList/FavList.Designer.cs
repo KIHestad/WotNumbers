@@ -69,6 +69,8 @@
             this.toolAllTanks_Nation3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAllTanks_Nation6 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAllTanks_Nation7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolAllTanks_Nation8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolAllTanks_Nation9 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAllTanks_Type = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAllTanks_Type1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAllTanks_Type2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,7 +100,6 @@
             this.lblSelectedTanks = new BadLabel();
             this.lblAllTanks = new BadLabel();
             this.groupTanks = new BadGroupBox();
-            this.toolAllTanks_Nation8 = new System.Windows.Forms.ToolStripMenuItem();
             this.FavTanksTheme.SuspendLayout();
             this.toolColList.SuspendLayout();
             this.toolSelectedTanks.SuspendLayout();
@@ -168,6 +169,7 @@
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 19;
             this.btnClose.Text = "Close";
+            this.btnClose.ToolTipContainer = null;
             this.btnClose.ToolTipText = "";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -345,6 +347,7 @@
             this.btnFavListCancel.Size = new System.Drawing.Size(80, 23);
             this.btnFavListCancel.TabIndex = 18;
             this.btnFavListCancel.Text = "Revert";
+            this.btnFavListCancel.ToolTipContainer = null;
             this.btnFavListCancel.ToolTipText = "";
             this.btnFavListCancel.Click += new System.EventHandler(this.btnFavListCancel_Click);
             // 
@@ -360,6 +363,7 @@
             this.btnFavListSave.Size = new System.Drawing.Size(80, 23);
             this.btnFavListSave.TabIndex = 17;
             this.btnFavListSave.Text = "Save";
+            this.btnFavListSave.ToolTipContainer = null;
             this.btnFavListSave.ToolTipText = "";
             this.btnFavListSave.Click += new System.EventHandler(this.btnFavListSave_Click);
             // 
@@ -490,6 +494,7 @@
             this.toolAllTanks_Nation3,
             this.toolAllTanks_Nation6,
             this.toolAllTanks_Nation7,
+            this.toolAllTanks_Nation9,
             this.toolAllTanks_Nation8});
             this.toolAllTanks_Nation.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation.Image")));
             this.toolAllTanks_Nation.Name = "toolAllTanks_Nation";
@@ -569,6 +574,24 @@
             this.toolAllTanks_Nation7.Text = "Czechoslovakia";
             this.toolAllTanks_Nation7.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
             this.toolAllTanks_Nation7.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // toolAllTanks_Nation8
+            // 
+            this.toolAllTanks_Nation8.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation8.Image")));
+            this.toolAllTanks_Nation8.Name = "toolAllTanks_Nation8";
+            this.toolAllTanks_Nation8.Size = new System.Drawing.Size(155, 22);
+            this.toolAllTanks_Nation8.Text = "Sweden";
+            this.toolAllTanks_Nation8.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+            this.toolAllTanks_Nation8.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // toolAllTanks_Nation9
+            // 
+            this.toolAllTanks_Nation9.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation9.Image")));
+            this.toolAllTanks_Nation9.Name = "toolAllTanks_Nation9";
+            this.toolAllTanks_Nation9.Size = new System.Drawing.Size(155, 22);
+            this.toolAllTanks_Nation9.Text = "Poland";
+            this.toolAllTanks_Nation9.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
+            this.toolAllTanks_Nation9.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // toolAllTanks_Type
             // 
@@ -949,15 +972,6 @@
             this.groupTanks.TabStop = false;
             this.groupTanks.Text = "Tanks";
             // 
-            // toolAllTanks_Nation8
-            // 
-            this.toolAllTanks_Nation8.Image = ((System.Drawing.Image)(resources.GetObject("toolAllTanks_Nation8.Image")));
-            this.toolAllTanks_Nation8.Name = "toolAllTanks_Nation8";
-            this.toolAllTanks_Nation8.Size = new System.Drawing.Size(155, 22);
-            this.toolAllTanks_Nation8.Text = "Sweden";
-            this.toolAllTanks_Nation8.Click += new System.EventHandler(this.toolAllTanks_Nation_Click);
-            this.toolAllTanks_Nation8.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-            // 
             // FavList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1061,5 +1075,6 @@
 		private BadButton btnClose;
         private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation7;
         private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation8;
+        private System.Windows.Forms.ToolStripMenuItem toolAllTanks_Nation9;
     }
 }

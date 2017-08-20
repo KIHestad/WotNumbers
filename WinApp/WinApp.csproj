@@ -794,6 +794,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BadThemeControls\PopupGrid.resx">
       <DependentUpon>PopupGrid.cs</DependentUpon>
@@ -938,6 +939,7 @@
     <None Include="Dossier2json\structures_95.json" />
     <None Include="Dossier2json\structures_96.json" />
     <None Include="Dossier2json\structures_97.json" />
+    <None Include="Dossier2json\structures_98.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
     <None Include="Lib\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />

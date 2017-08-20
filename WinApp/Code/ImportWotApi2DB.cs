@@ -48,36 +48,30 @@ namespace WinApp.Code
 
 		private static string WotServerApiUrl()
 		{
-			string serverURL = "";
-			string server = Config.Settings.playerServer;
-			// override to EU server for not supported regions
-			if (server == "" || server == "ASIA" || server == "KR")
-				server = "EU";
+            // Defaut use EU
+            string serverURL = "http://api.worldoftanks.eu";
+            // Get player server
+            string server = Config.Settings.playerServer;
+			// Change to correct server for NA and RU
 			switch (server)
 			{
-				case "EU": serverURL = "http://api.worldoftanks.eu";  break;
 				case "COM": serverURL = "http://api.worldoftanks.com"; break;
 				case "NET": serverURL = "http://api.worldoftanks.ru"; break;
-				case "ASIA": serverURL = "http://api.worldoftanks-sea.com"; break;
-				case "KR": serverURL = "http://api.worldoftanks.kr"; break;
 			}
 			return serverURL;
 		}
 
 		private static string WotApplicationId()
 		{
-			string applicationId = "";
-			string server = Config.Settings.playerServer;
-			// override to EU server for not supported regions or if missing
-			if (server == "" || server == "ASIA" || server == "KR")
-				server = "EU";
-			switch (server)
+            // Defaut use EU
+            string applicationId = "2a70055c41b7a6fff1e35a3ba9cadbf1";
+            // Get player server
+            string server = Config.Settings.playerServer;
+            // Change to correct server for NA and RU
+            switch (server)
 			{
-				case "EU": applicationId = "2a70055c41b7a6fff1e35a3ba9cadbf1"; break;
 				case "COM": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
 				case "NET": applicationId = "f53b88fef36646161ddfa4418fc5209c"; break;
-				case "ASIA": applicationId = ""; break;
-				case "KR": applicationId = ""; break;
 			}
 			return applicationId;
 		}
@@ -258,6 +252,7 @@ namespace WinApp.Code
                                     case "japan": countryId = 6; break;
                                     case "czech": countryId = 7; break;
                                     case "sweden": countryId = 8; break;
+                                    case "poland": countryId = 9; break;
                                 }
 
                                 // Tank name
@@ -417,6 +412,7 @@ namespace WinApp.Code
                                     case "japan": countryId = 6; break;
                                     case "czech": countryId = 7; break;
                                     case "sweden": countryId = 8; break;
+                                    case "poland": countryId = 9; break;
                                 }
 
                                 // Tank name
@@ -555,7 +551,8 @@ namespace WinApp.Code
                                     case "uk": foundTankInfo.nation = "UK"; break;
                                     case "japan": foundTankInfo.nation = "Japan"; break;
                                     case "czech": foundTankInfo.nation = "Czechoslovakia"; break;
-                                    case "sweden": foundTankInfo.nation = "Sweden"; break; // TODO: Check 9.16
+                                    case "sweden": foundTankInfo.nation = "Sweden"; break;
+                                    case "poland": foundTankInfo.nation = "Poland"; break;
                                 }
 
                                 // Tank name
