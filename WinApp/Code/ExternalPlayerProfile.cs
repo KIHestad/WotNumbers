@@ -25,6 +25,8 @@ namespace WinApp.Code
                     server = "sea";
                 if (server == "com")
                     server = "na";
+                if (server == "login")
+                    server = "na";
                 return server;
             }
             set

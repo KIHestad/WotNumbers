@@ -14,7 +14,8 @@ namespace WinApp.Code
 		public enum DropDownGridType
 		{
 			List = 1,
-			Sql = 2
+			Sql = 2,
+            DataTable = 3,
 		}
 
 		private static bool _ValueSelected;
@@ -39,7 +40,7 @@ namespace WinApp.Code
 		}
 
 
-		public static string Show(BadDropDownBox DropDownControl, DropDownGridType DataSourceType, string DataSource, string OverrideDbCon = "")
+		public static string Show(BadDropDownBox DropDownControl, DropDownGridType DataSourceType, object DataSource, string OverrideDbCon = "")
 		{
 			if (Shown)
 			{
@@ -54,7 +55,7 @@ namespace WinApp.Code
 				if (DataSourceType == DropDownGridType.List)
 				{
 					dt.Columns.Add("Items");
-					string[] list = DataSource.Split(new string[] { "," }, StringSplitOptions.None);
+					string[] list = DataSource.ToString().Split(new string[] { "," }, StringSplitOptions.None);
 					foreach (string item in list)
 					{
 						DataRow dr = dt.NewRow();
@@ -64,8 +65,12 @@ namespace WinApp.Code
 				}
 				else if (DataSourceType == DropDownGridType.Sql)
 				{
-					dt = DB.FetchData(DataSource);
+					dt = DB.FetchData(DataSource.ToString());
 				}
+                else if (DataSourceType == DropDownGridType.DataTable)
+                {
+                    dt = (DataTable)DataSource;
+                }
 				if (dt.Rows.Count > 0)
 				{
 					Point pos = DropDownControl.PointToScreen(new Point(0, 0));

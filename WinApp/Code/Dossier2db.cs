@@ -47,7 +47,7 @@ namespace WinApp.Code
 
 		public static String ReadJson(string filename, bool ForceUpdate = false)
 		{
-			//try
+			try
 			{
 				// Read file into string
 				StreamReader sr = new StreamReader(filename, Encoding.UTF8);
@@ -341,12 +341,12 @@ namespace WinApp.Code
 					ImageHelper.LoadTankImages(); // Load new image by reloading
 				return "Battle fetch performed successfully"; // - time spent " + ts.Minutes + ":" + ts.Seconds + "." + ts.Milliseconds.ToString("000"));
 			}
-			/*catch (Exception ex)
+			catch (Exception ex)
 			{
 				Log.LogToFile(ex);
 				return ("An error occured performing battle fetch, please check the log file");
 			}
-			 * */
+			
 			
 		}
 

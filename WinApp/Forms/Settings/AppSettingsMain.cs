@@ -205,5 +205,11 @@ namespace WinApp.Forms.Settings
         {
             EditChangesApply(true);
         }
+
+        private void btnMergePlayers_Click(object sender, EventArgs e)
+        {
+            Form frm = new Forms.Settings.MergePlayers();
+            frm.ShowDialog();
+        }
     }
 }

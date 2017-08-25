@@ -55,7 +55,7 @@ namespace WinApp.Code
 			// Change to correct server for NA and RU
 			switch (server)
 			{
-				case "COM": serverURL = "http://api.worldoftanks.com"; break;
+				case "LOGIN": serverURL = "http://api.worldoftanks.com"; break;
 				case "NET": serverURL = "http://api.worldoftanks.ru"; break;
 			}
 			return serverURL;
@@ -70,7 +70,7 @@ namespace WinApp.Code
             // Change to correct server for NA and RU
             switch (server)
 			{
-				case "COM": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
+				case "LOGIN": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
 				case "NET": applicationId = "f53b88fef36646161ddfa4418fc5209c"; break;
 			}
 			return applicationId;

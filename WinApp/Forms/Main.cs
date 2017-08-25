@@ -1456,18 +1456,26 @@ namespace WinApp.Forms
 
 		private void FavListMenuUncheck()
 		{
-			// Deselect all tanks
-			mTankFilter_All.Checked = false;
-			mTankFilter_All_NotOwned.Checked = false;
-			// Deselect all favlist
-			for (int i = 1; i <= 10; i++)
-			{
-				ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
-				menuItem.Checked = false;
-			}
+            try
+            {
+                // Deselect all tanks
+                mTankFilter_All.Checked = false;
+                mTankFilter_All_NotOwned.Checked = false;
+                // Deselect all favlist
+                for (int i = 1; i <= 10; i++)
+                {
+                    ToolStripMenuItem menuItem = mTankFilter.DropDownItems["mTankFilter_Fav" + i.ToString("00")] as ToolStripMenuItem;
+                    menuItem.Checked = false;
+                }
 
-			// Remove menu name
-			tankFilterFavListName = "";
+                // Remove menu name
+                tankFilterFavListName = "";
+            }
+            catch (Exception)
+            {
+                
+            }
+            
 		}
 
 		private void toolItemTankFilter_All_Click(object sender, EventArgs e)

@@ -60,7 +60,7 @@
             this.FormTheme.SystemMaximizeImage = null;
             this.FormTheme.SystemMinimizeImage = null;
             this.FormTheme.TabIndex = 0;
-            this.FormTheme.Text = "DatabaseBackup";
+            this.FormTheme.Text = "Database Backup";
             this.FormTheme.TitleHeight = 26;
             // 
             // btnStart
