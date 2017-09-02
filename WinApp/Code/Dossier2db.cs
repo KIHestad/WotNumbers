@@ -47,7 +47,11 @@ namespace WinApp.Code
 
 		public static String ReadJson(string filename, bool ForceUpdate = false)
 		{
-			try
+            // vars to be able to output if error occur
+            string dataType = "";
+            string dbField = "";
+            string dbValue = "";
+            try
 			{
 				// Read file into string
 				StreamReader sr = new StreamReader(filename, Encoding.UTF8);
@@ -123,9 +127,12 @@ namespace WinApp.Code
 							{
 								if (foundRows[0]["dbPlayerTank"] != DBNull.Value) // Found mapping to PlayerTank
 								{
-									string dataType = foundRows[0]["dbDataType"].ToString();
-									string dbField = foundRows[0]["dbPlayerTank"].ToString();
-									var dbPlayerTankMode = foundRows[0]["dbPlayerTankMode"];
+									dataType = foundRows[0]["dbDataType"].ToString();
+									dbField = foundRows[0]["dbPlayerTank"].ToString();
+                                    dbValue = "<NULL>";
+                                    if (currentItem.value != null)
+                                        dbValue = currentItem.value.ToString();
+                                    var dbPlayerTankMode = foundRows[0]["dbPlayerTankMode"];
 									if (dbPlayerTankMode == DBNull.Value)
 									{
 										// Default playerTank value
@@ -343,7 +350,8 @@ namespace WinApp.Code
 			}
 			catch (Exception ex)
 			{
-				Log.LogToFile(ex);
+                string latestData = string.Format("Latest data read from dossier: dataType={0} dbField={1} dbValue={2}", dataType, dbField, dbValue);
+                Log.LogToFile(ex, latestData);
 				return ("An error occured performing battle fetch, please check the log file");
 			}
 			
@@ -986,12 +994,20 @@ namespace WinApp.Code
                 // Rank by avg damage and progress (delta value), only for random battles
                 if (battleMode == BattleMode.TypeEnum.ModeRandom_TC)
                 {
+                    // Get damageRank new and old values
+                    double rankDmgOld = 0;
+                    if (playerTankBattleOldRow["damageRating"] != null)
+                        rankDmgOld = Convert.ToDouble(playerTankBattleOldRow["damageRating"]);
+                    double rankDmg = 0;
+                    if (playerTankBattleNewRow["damageRating"] != null)
+                        rankDmg = Convert.ToDouble(playerTankBattleNewRow["damageRating"]);
+                    else
+                        rankDmg = rankDmgOld; // If not able to fetch damageRank for new battle, use previous one - special fix for tankversion99 with problem getting this value 
                     // Total
-                    double rankDmg = Convert.ToDouble(playerTankBattleNewRow["damageRating"]);
                     sqlFields += ", damageRatingTotal ";
                     sqlValues += ", " + rankDmg.ToString().Replace(",", ".");
                     // Progress
-                    rankDmg -= Convert.ToDouble(playerTankBattleOldRow["damageRating"]);
+                    rankDmg -= rankDmgOld;
                     sqlFields += ", damageRating ";
                     sqlValues += ", " + rankDmg.ToString().Replace(",",".");
                 }

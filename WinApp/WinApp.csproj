@@ -948,6 +948,7 @@
     <None Include="Dossier2json\structures_95.json" />
     <None Include="Dossier2json\structures_96.json" />
     <None Include="Dossier2json\structures_97.json" />
+    <None Include="Dossier2json\structures_99.json" />
     <None Include="Dossier2json\structures_98.json" />
     <None Include="Dossier2json\tanks.json" />
     <None Include="Lib\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
