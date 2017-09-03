@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 445; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 447; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3050,7 +3050,40 @@ namespace WinApp.Code
                 case 445:
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
-
+                case 447:
+                    temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
+                    mssql = "DELETE FROM json2dbMapping WHERE dbPlayerTankMode = 'Grand'; " +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'battlesCount', 'Int', 'battles', 'battlesCount', 'tanks_v2.a30x30.battlesCount', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'battlesCountBefore8_8', 'Int', 'battles8p', NULL, 'tanks_v2.a30x30.battlesCountBefore8_8', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'wins', 'Int', 'wins', 'victory', 'tanks_v2.a30x30.wins', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'losses', 'Int', 'losses', 'defeat', 'tanks_v2.a30x30.losses', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'survivedBattles', 'Int', 'survived', 'survived', 'tanks_v2.a30x30.survivedBattles', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'frags', 'Int', 'frags', 'frags', 'tanks_v2.a30x30.frags', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'frags8p', 'Int', 'frags8p', NULL, 'tanks_v2.a30x30.frags8p', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageDealt', 'Int', 'dmg', 'dmg', 'tanks_v2.a30x30.damageDealt', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageReceived', 'Int', 'dmgReceived', 'dmgReceived', 'tanks_v2.a30x30.damageReceived', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'shots', 'Int', 'shots', 'shots', 'tanks_v2.a30x30.shots', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'hits', 'Int', 'hits', 'hits', 'tanks_v2.a30x30.hits', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'capturePoints', 'Int', 'cap', 'cap', 'tanks_v2.a30x30.capturePoints', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'droppedCapturePoints', 'Int', 'def', 'def', 'tanks_v2.a30x30.droppedCapturePoints', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'spotted', 'Int', 'spot', 'spotted', 'tanks_v2.a30x30.spotted', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'xp', 'Int', 'xp', 'xp', 'tanks_v2.a30x30.xp', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'xpBefore8_8', 'Int', 'xp8p', NULL, 'tanks_v2.a30x30.xpBefore8_8', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'originalXP', 'Int', 'xpOriginal', 'xpOriginal', 'tanks_v2.a30x30.originalXP', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'potentialDamageReceived', 'Int', 'potentialDmgReceived', 'potentialDmgReceived', 'tanks_v2.a30x30.potentialDamageReceived', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageBlockedByArmor', 'Int', 'dmgBlocked', 'dmgBlocked', 'tanks_v2.a30x30.damageBlockedByArmor', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'he_hits', 'Int', 'heHits', 'heHits', 'tanks_v2.a30x30.he_hits', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'pierced', 'Int', 'pierced', 'pierced', 'tanks_v2.a30x30.pierced', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'shotsReceived', 'Int', 'shotsReceived', 'shotsReceived', 'tanks_v2.a30x30.shotsReceived', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'piercingsReceived', 'Int', 'piercedReceived', 'piercedReceived', 'tanks_v2.a30x30.piercingsReceived', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'heHitsReceived', 'Int', 'heHitsReceived', 'heHitsReceived', 'tanks_v2.a30x30.heHitsReceived', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'noDamageShotsReceived', 'Int', 'noDmgShotsReceived', 'noDmgShotsReceived', 'tanks_v2.a30x30.noDamageShotsReceived', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageAssistedRadio', 'Int', 'assistSpot', 'assistSpot', 'tanks_v2.a30x30.damageAssistedRadio', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'a30x30', 'damageAssistedTrack', 'Int', 'assistTrack', 'assistTrack', 'tanks_v2.a30x30.damageAssistedTrack', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'max30x30', 'maxDamage', 'Int', 'maxDmg', NULL, 'tanks_v2.max30x30.maxDamage', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'max30x30', 'maxFrags', 'Int', 'maxFrags', NULL, 'tanks_v2.max30x30.maxFrags', 'Grand');" +
+                        temp + "VALUES ('tanks_v2', 'max30x30', 'maxXP', 'Int', 'maxXp', NULL, 'tanks_v2.max30x30.maxXP', 'Grand');";
+                    break;
             }
             string sql = "";
 			// get sql for correct dbtype

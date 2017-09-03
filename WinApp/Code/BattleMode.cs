@@ -19,6 +19,7 @@ namespace WinApp.Code
             ModeSkirmishes = 4,
             ModeStronghold = 6,
             ModeSpecial = 5,
+            ModeGrand = 9,
         }
 
         public class Item
@@ -80,7 +81,19 @@ namespace WinApp.Code
                 Name = "Special Events",
                 SqlName = "Special" 
             });
-            
+            manBattleModes.Add(new Item()
+            {
+                Type = TypeEnum.ModeSpecial,
+                Name = "Special Events",
+                SqlName = "Special"
+            });
+            manBattleModes.Add(new Item()
+            {
+                Type = TypeEnum.ModeGrand,
+                Name = "Grand Battle",
+                SqlName = "Grand"
+            });
+
             return manBattleModes;
         }
 

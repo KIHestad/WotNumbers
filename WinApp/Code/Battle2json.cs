@@ -415,6 +415,7 @@ namespace WinApp.Code
 								// Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
                                 string battleResultMode = "";
 								bool getEnemyClan = false;
+                                // TODO: Include grand battles
 								switch (bonusType)
 								{
 									case 0: battleResultMode = "Unknown"; break;

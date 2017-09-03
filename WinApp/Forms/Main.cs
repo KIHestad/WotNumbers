@@ -2268,7 +2268,11 @@ namespace WinApp.Forms
 						battleModeFilter = " AND (battleMode = 'GlobalMap') ";
 						battleMode = "GlobalMap";
 						break;
-				}
+                    case GridFilter.BattleModeType.Grand:
+                        battleModeFilter = " AND (battleMode = 'Grand') ";
+                        battleMode = "Grand";
+                        break;
+                }
 			}
 		}
 
@@ -2396,6 +2400,10 @@ namespace WinApp.Forms
                     break;
                 case GridFilter.BattleModeType.GlobalMap:
                     battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).SqlName;
+                    battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
+                    break;
+                case GridFilter.BattleModeType.Grand:
+                    battleModeSQL = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGrand).SqlName;
                     battleModeFilter = " AND (playerTankBattle.battleMode = '" + battleModeSQL + "') ";
                     break;
                 default:

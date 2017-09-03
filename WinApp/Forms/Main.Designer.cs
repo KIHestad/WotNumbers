@@ -88,8 +88,8 @@
             this.mTankFilter_CountryChina = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryJapan = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryCzechoslovakia = new System.Windows.Forms.ToolStripMenuItem();
-            this.mTankFilter_CountrySweden = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_CountryPoland = new System.Windows.Forms.ToolStripMenuItem();
+            this.mTankFilter_CountrySweden = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_Type = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_TypeLT = new System.Windows.Forms.ToolStripMenuItem();
             this.mTankFilter_TypeMT = new System.Windows.Forms.ToolStripMenuItem();
@@ -273,6 +273,7 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.grandBattleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -879,17 +880,6 @@
             this.mTankFilter_CountryCzechoslovakia.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountryCzechoslovakia.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
-            // mTankFilter_CountrySweden
-            // 
-            this.mTankFilter_CountrySweden.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mTankFilter_CountrySweden.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountrySweden.Image")));
-            this.mTankFilter_CountrySweden.Name = "mTankFilter_CountrySweden";
-            this.mTankFilter_CountrySweden.Size = new System.Drawing.Size(155, 22);
-            this.mTankFilter_CountrySweden.Text = "Sweden";
-            this.mTankFilter_CountrySweden.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
-            this.mTankFilter_CountrySweden.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
-            this.mTankFilter_CountrySweden.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
-            // 
             // mTankFilter_CountryPoland
             // 
             this.mTankFilter_CountryPoland.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
@@ -900,6 +890,17 @@
             this.mTankFilter_CountryPoland.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
             this.mTankFilter_CountryPoland.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
             this.mTankFilter_CountryPoland.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
+            // mTankFilter_CountrySweden
+            // 
+            this.mTankFilter_CountrySweden.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mTankFilter_CountrySweden.Image = ((System.Drawing.Image)(resources.GetObject("mTankFilter_CountrySweden.Image")));
+            this.mTankFilter_CountrySweden.Name = "mTankFilter_CountrySweden";
+            this.mTankFilter_CountrySweden.Size = new System.Drawing.Size(155, 22);
+            this.mTankFilter_CountrySweden.Text = "Sweden";
+            this.mTankFilter_CountrySweden.Click += new System.EventHandler(this.toolItemTankFilter_Country_Click);
+            this.mTankFilter_CountrySweden.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolItemTankFilter_Country_MouseDown);
+            this.mTankFilter_CountrySweden.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // mTankFilter_Type
             // 
@@ -1266,6 +1267,7 @@
             this.mModeCompany,
             this.mModeClan,
             this.toolStripSeparatorForBattleView,
+            this.grandBattleToolStripMenuItem,
             this.mModeHistorical,
             this.mModeTeam,
             this.mModeTeamRanked,
@@ -2687,6 +2689,16 @@
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // grandBattleToolStripMenuItem
+            // 
+            this.grandBattleToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.grandBattleToolStripMenuItem.Name = "grandBattleToolStripMenuItem";
+            this.grandBattleToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.grandBattleToolStripMenuItem.Tag = "Grand";
+            this.grandBattleToolStripMenuItem.Text = "Grand Battle";
+            this.grandBattleToolStripMenuItem.Click += new System.EventHandler(this.toolItemMode_Click);
+            this.grandBattleToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2959,6 +2971,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator35;
         private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelectedEdit;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryPoland;
+        private System.Windows.Forms.ToolStripMenuItem grandBattleToolStripMenuItem;
     }
 }
 
