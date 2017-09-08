@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 447; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 449; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3044,12 +3044,6 @@ namespace WinApp.Code
                     mssql = "INSERT INTO country (id, name, shortName, vBAddictName, sortOrder) VALUES (9, 'Poland', 'PL', 'poland', 85); ";
                     sqlite = mssql;
                     break;
-                case 444:
-                    RunDownloadAndUpdateTanks = true;
-                    break;
-                case 445:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
                 case 447:
                     temp = "INSERT INTO json2dbMapping (jsonMain, jsonSub, jsonProperty, dbDataType, dbPlayerTank, dbBattle, jsonMainSubProperty, dbPlayerTankMode) ";
                     mssql = "DELETE FROM json2dbMapping WHERE dbPlayerTankMode = 'Grand'; " +
@@ -3084,6 +3078,16 @@ namespace WinApp.Code
                         temp + "VALUES ('tanks_v2', 'max30x30', 'maxFrags', 'Int', 'maxFrags', NULL, 'tanks_v2.max30x30.maxFrags', 'Grand');" +
                         temp + "VALUES ('tanks_v2', 'max30x30', 'maxXP', 'Int', 'maxXp', NULL, 'tanks_v2.max30x30.maxXP', 'Grand');";
                     break;
+                case 448:
+                    mssql = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
+                    sqlite = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
+                    break;
+                case 449:
+                    RunDownloadAndUpdateTanks = true;
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                
+
             }
             string sql = "";
 			// get sql for correct dbtype

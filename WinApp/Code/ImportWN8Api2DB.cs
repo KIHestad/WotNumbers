@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Data.Sql;
 using System.Net;
 using System.Net.Cache;
+using System.Data;
 
 namespace WinApp.Code
 {
@@ -53,7 +54,10 @@ namespace WinApp.Code
             // Get WN8 from API
             try
 			{
-				string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray()); 
+                // First reset flag for fetched from api
+                DB.ExecuteNonQuery("UPDATE tank SET wn8ExpApiFetch=0;");
+                // Get data from API
+                string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray()); 
                 // Set a default policy level for the "http:" and "https" schemes.
                 HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Default);
                 HttpWebRequest.DefaultCachePolicy = policy;
@@ -104,7 +108,7 @@ namespace WinApp.Code
 
                     if (updateOnlyTankId == 0 || updateOnlyTankId == tankId)
                     {
-                        string newsql = "update tank set expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef where id = @id;";
+                        string newsql = "update tank set expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef, wn8ExpApiFetch=1 where id = @id;";
                         DB.AddWithValue(ref newsql, "@expDmg", expDmg, DB.SqlDataType.Float);
                         DB.AddWithValue(ref newsql, "@expWR", expWR, DB.SqlDataType.Float);
                         DB.AddWithValue(ref newsql, "@expSpot", expSpot, DB.SqlDataType.Float);
@@ -151,5 +155,45 @@ namespace WinApp.Code
 
         }
 
-	}
+        public static String FixMissingWN8(Form parentForm)
+        {
+            DataTable dtMissing = DB.FetchData(@"
+                SELECT tier, tankTypeId
+                FROM tank
+                WHERE wn8ExpApiFetch=0 and tier > 0
+                GROUP BY tier, tankTypeId");
+            foreach (DataRow drMissing in dtMissing.Rows)
+            {
+                string updateSQL = "";
+                string sql = @"
+                    SELECT expDmg, expWR, expSpot, expFrags, expDef
+                    FROM tank
+                    WHERE wn8ExpApiFetch=1 and tier = @tier AND tankTypeId = @tankTypeId 
+                    GROUP BY expDmg, expWR, expSpot, expFrags, expDef
+                    ORDER BY count(id) DESC";
+                DB.AddWithValue(ref sql, "@tier", Convert.ToInt32(drMissing["tier"]), DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@tankTypeId", Convert.ToInt32(drMissing["tankTypeId"]), DB.SqlDataType.Int);
+                DataTable dtExp = DB.FetchData(sql);
+                if (dtExp.Rows.Count > 0)
+                {
+                    string newsql = @"
+                        update tank 
+                        set expDmg = @expDmg, expWR = @expWR, expSpot = @expSpot, expFrags = @expFrags, expDef = @expDef 
+                        where wn8ExpApiFetch=0 AND tier = @tier AND tankTypeId = @tankTypeId;";
+                    DataRow dr = dtExp.Rows[0];
+                    DB.AddWithValue(ref newsql, "@expDmg", dr["expDmg"], DB.SqlDataType.Float);
+                    DB.AddWithValue(ref newsql, "@expWR", dr["expWR"], DB.SqlDataType.Float);
+                    DB.AddWithValue(ref newsql, "@expSpot", dr["expSpot"], DB.SqlDataType.Float);
+                    DB.AddWithValue(ref newsql, "@expFrags", dr["expFrags"], DB.SqlDataType.Float);
+                    DB.AddWithValue(ref newsql, "@expDef", dr["expDef"], DB.SqlDataType.Float);
+                    DB.AddWithValue(ref newsql, "@tier", drMissing["tier"], DB.SqlDataType.Int);
+                    DB.AddWithValue(ref newsql, "@tankTypeId", drMissing["tankTypeId"], DB.SqlDataType.Int);
+                    updateSQL += newsql;
+                }
+                DB.ExecuteNonQuery(updateSQL, true, true);
+            }
+            return "Done adding WN8 exp values for tanks with missing values";
+        }
+
+    }
 }

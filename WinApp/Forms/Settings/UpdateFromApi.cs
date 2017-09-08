@@ -86,6 +86,7 @@ namespace WinApp.Forms
 			// Get WN8 ratings
 			UpdateProgressBar("Retrieves WN8 expected values from API");
 			ImportWN8Api2DB.UpdateWN8(this);
+            ImportWN8Api2DB.FixMissingWN8(this);
 
             // Get WN9 ratings
             UpdateProgressBar("Retrieves WN9 expected values from API");
