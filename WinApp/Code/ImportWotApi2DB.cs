@@ -973,7 +973,12 @@ namespace WinApp.Code
                             string sql = "";
                             bool newMap = (currentMaps.Select("arena_id = '" + arena_id + "'").Count() == 0);
                             if (newMap)
-                                sql = "INSERT INTO map (id, description, name, active, arena_id) VALUES (@id, @description, @name, 1, @arena_id); ";
+                            {
+                                // ISERT NEW MAP DO NOT WORK, NEED TO HAVE EXACT ID
+                                // sql = "INSERT INTO map (id, description, name, active, arena_id) VALUES (@id, @description, @name, 1, @arena_id); ";
+                                MsgBox.Show("New map found: " + name + " missing in Wot Numbers database. Will be added in a later version", "Missing map", parentForm);
+                            }
+
                             else
                                 sql = "UPDATE map SET description=@description, name=@name, active=1 WHERE arena_id=@arena_id; ";
                             DB.AddWithValue(ref sql, "@name", name, DB.SqlDataType.VarChar);

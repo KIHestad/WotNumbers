@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 449; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 451; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3082,11 +3082,15 @@ namespace WinApp.Code
                     mssql = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
                     sqlite = "ALTER TABLE tank ADD wn8ExpApiFetch BIT NOT NULL DEFAULT 0; ";
                     break;
-                case 449:
+                case 450:
+                    mssql =
+                        "DELETE FROM map WHERE arena_id = '212_epic_random_valley' OR id > 700 OR ID = 75; " +
+                        "INSERT INTO map (id, name, arena_id) VALUES (81, 'Nebelburg', '212_epic_random_valley'); " +
+                        "INSERT INTO map (id, name, arena_id) VALUES (75, 'Paris', '112_eiffel_tower_ctf'); " +
+                        "UPDATE battle SET mapId = 81 WHERE battleMode = 'Grand'";
                     RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
-                
 
             }
             string sql = "";

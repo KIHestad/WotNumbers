@@ -295,7 +295,7 @@ namespace WinAdmin
 		{
 			// Recreate table
 			DB.DBResult result = new DB.DBResult();
-			// Add masterybadge table if missing
+			// Add map table if missing
 			string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='map';";
 			DataTable dt = DB.FetchData(sql, Settings.Config, out result);
 			if (dt.Rows.Count == 0)
