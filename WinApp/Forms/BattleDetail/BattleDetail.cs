@@ -55,75 +55,84 @@ namespace WinApp.Forms
 
 		private void BattleDetail_Load(object sender, EventArgs e)
 		{
-            // BattleResult
-			panelBattleReview.Visible = false;
-			panelBattleReview.Top = panelMyResult.Top;
-			panelBattleReview.Left = panelMyResult.Left;
-			panelBattleReview.Height = panelMyResult.Height;
-			panelBattleReview.Width = panelMyResult.Width;
-			panelBattleReview.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
-			// My result
-			GetMyPersonalInfo();
-			// Teams
-			string sql = "select id from battlePlayer where battleId=@battleId";
-			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			if (DB.FetchData(sql).Rows.Count > 0)
-			{
-				// Show team tabs and make ready datagrids
-				btnTeams.Visible = true;
-				btnOurTeam.Visible = true;
-				btnEnemyTeam.Visible = true;
-				dgvTeam1.Visible = false;
-				dgvTeam2.Visible = false;
-				GridHelper.StyleDataGrid(dgvTeam1);
-				GridHelper.StyleDataGrid(dgvTeam2);
-				dgvTeam1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-				dgvTeam2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-				dgvTeam1.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-				dgvTeam2.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-				dgvTeam1.ColumnHeadersHeight = 42;
-				dgvTeam2.ColumnHeadersHeight = 42;
-				dgvTeam1.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
-				dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
-				dgvTeam1.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
-				dgvTeam2.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
-				dgvTeam1.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
-				dgvTeam2.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
-				this.Controls.Add(dgvTeam1);
-				this.Controls.Add(dgvTeam2);
-				dgvTeam1.RowTemplate.Height = 26;
-				dgvTeam2.RowTemplate.Height = 26;
-				// Add panel as background
-				pnlBack.BackColor = ColorTheme.ControlSeparatorGroupBoxBorder;
-				pnlBack.Visible = false;
-				this.Controls.Add(pnlBack);
-				// Add scrollbar
-				scroll.ScrollOrientation = ScrollOrientation.HorizontalScroll;
-				scroll.Name = "scroll";
-				scroll.Height = 17;
-				scroll.Left = grpMain.Left + 1;
-				scroll.Visible = false;
-				this.Controls.Add(scroll);
-				// Add scrollbar events
-				scroll.MouseDown += new MouseEventHandler(scroll_MouseDown);
-				scroll.MouseUp += new MouseEventHandler(scroll_MouseUp);
-				scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
-				// Find team 1 and 2
-				sql = "select team from battlePlayer where battleId=@battleId and name=@name";
-				DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-				DB.AddWithValue(ref sql, "@name", Config.Settings.playerName, DB.SqlDataType.VarChar);
-				DataTable dt = DB.FetchData(sql);
-				if (dt.Rows.Count > 0)
-				{
-					team1 = Convert.ToInt32(dt.Rows[0][0]);
-					team2 = 1;
-					if (team1 == 1) team2 = 2;
-				}
-                // Add right click menu to grid
-                dgvTeam1.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
-                dgvTeam2.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
-                CreateDataGridContextMenu();
-			}
+            try
+            {
+                // BattleResult
+                panelBattleReview.Visible = false;
+                panelBattleReview.Top = panelMyResult.Top;
+                panelBattleReview.Left = panelMyResult.Left;
+                panelBattleReview.Height = panelMyResult.Height;
+                panelBattleReview.Width = panelMyResult.Width;
+                panelBattleReview.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
+                // My result
+                GetMyPersonalInfo();
+                // Teams
+                string sql = "select id from battlePlayer where battleId=@battleId";
+                DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+                if (DB.FetchData(sql).Rows.Count > 0)
+                {
+                    // Show team tabs and make ready datagrids
+                    btnTeams.Visible = true;
+                    btnOurTeam.Visible = true;
+                    btnEnemyTeam.Visible = true;
+                    dgvTeam1.Visible = false;
+                    dgvTeam2.Visible = false;
+                    GridHelper.StyleDataGrid(dgvTeam1);
+                    GridHelper.StyleDataGrid(dgvTeam2);
+                    dgvTeam1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+                    dgvTeam2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+                    dgvTeam1.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dgvTeam2.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dgvTeam1.ColumnHeadersHeight = 42;
+                    dgvTeam2.ColumnHeadersHeight = 42;
+                    dgvTeam1.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
+                    dgvTeam2.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvCellFormatting);
+                    dgvTeam1.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
+                    dgvTeam2.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dgvColumnHeaderMouseClick);
+                    dgvTeam1.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
+                    dgvTeam2.ColumnWidthChanged += new DataGridViewColumnEventHandler(dgvColumnWidthChanged);
+                    this.Controls.Add(dgvTeam1);
+                    this.Controls.Add(dgvTeam2);
+                    dgvTeam1.RowTemplate.Height = 26;
+                    dgvTeam2.RowTemplate.Height = 26;
+                    // Add panel as background
+                    pnlBack.BackColor = ColorTheme.ControlSeparatorGroupBoxBorder;
+                    pnlBack.Visible = false;
+                    this.Controls.Add(pnlBack);
+                    // Add scrollbar
+                    scroll.ScrollOrientation = ScrollOrientation.HorizontalScroll;
+                    scroll.Name = "scroll";
+                    scroll.Height = 17;
+                    scroll.Left = grpMain.Left + 1;
+                    scroll.Visible = false;
+                    this.Controls.Add(scroll);
+                    // Add scrollbar events
+                    scroll.MouseDown += new MouseEventHandler(scroll_MouseDown);
+                    scroll.MouseUp += new MouseEventHandler(scroll_MouseUp);
+                    scroll.MouseMove += new MouseEventHandler(scroll_MouseMove);
+                    // Find team 1 and 2
+                    sql = "select team from battlePlayer where battleId=@battleId and name=@name";
+                    DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+                    DB.AddWithValue(ref sql, "@name", Config.Settings.playerName, DB.SqlDataType.VarChar);
+                    DataTable dt = DB.FetchData(sql);
+                    if (dt.Rows.Count > 0)
+                    {
+                        team1 = Convert.ToInt32(dt.Rows[0][0]);
+                        team2 = 1;
+                        if (team1 == 1) team2 = 2;
+                    }
+                    // Add right click menu to grid
+                    dgvTeam1.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
+                    dgvTeam2.CellMouseDown += new DataGridViewCellMouseEventHandler(DgvTeam_CellMouseDown);
+                    CreateDataGridContextMenu();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, "Battle detail failed on BattleDetail_Load()");
+                MsgBox.Show("An error occured showing battle details, please check log file for complete error message", "Error", parentForm);
+            }
+            
 		}
 
 		private void btnTab_Click(object sender, EventArgs e)
@@ -214,163 +223,178 @@ namespace WinApp.Forms
 
 		private void GetMyPersonalInfo()
 		{
-			string sql =
-				"SELECT battle.*, tank.id as tankId, tank.name as tankName, map.name as mapName, map.arena_id as arena_id, " +
-				"		battleResult.name as battleResultName, battleResult.color as battleResultColor, " + 
-				"		battleSurvive.name as battleSurviveName, battleSurvive.color as battleSurviveColor " +
-				"FROM   battle INNER JOIN " +
-				"       playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
-				"       tank ON playerTank.tankId = tank.id INNER JOIN " +
-				"       tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
-				"       country ON tank.countryId = country.Id INNER JOIN " +
-				"       battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
-				"       map on battle.mapId = map.id INNER JOIN " +
-				"       battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
-				"WHERE	battle.id=@battleId";
-			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataTable dt = DB.FetchData(sql);
-			if (dt.Rows.Count > 0)
-			{
-				DataRow dr = dt.Rows[0];
-				// Battle result
-				string battleResult = dr["battleResultName"].ToString();
-				
-				Color battleResultColor = ColorTranslator.FromHtml(dr["battleResultColor"].ToString());
-				lblResult.ForeColor = battleResultColor;
-				if (dr["enemyClanAbbrev"] != DBNull.Value)
-				{
-					switch (battleResult)
-					{
-						case "Victory": battleResult += " over " + dr["enemyClanAbbrev"].ToString(); break;
-						case "Draw": battleResult += " against " + dr["enemyClanAbbrev"].ToString(); break;
-						case "Defeat": battleResult = "Defeated by " + dr["enemyClanAbbrev"].ToString(); break;
-					}
-				}	
-				lblResult.Text = battleResult;
-				// Tank name
-				lblTankName.Text = dr["tankName"].ToString();
-				// Mastery Badge Image
-				int masteryBadge = 0;
-				if (dr["markOfMastery"] != DBNull.Value) masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
-				picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge, false);
-				// Header picture /tank & Map), and map info
-				Image imgHeader = new Bitmap(picHeader.Width, picHeader.Height);
-				tankId = Convert.ToInt32(dr["tankId"]);
-				picHeader.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
-				string mapName = "";
-				if (dr["mapName"] != DBNull.Value)
-					mapName = dr["mapName"].ToString();
-				else
-					btnBattleReview.Text = "Comment";
-				lblMap.Text = mapName;
-				// Battle time
-				DateTime finished = Convert.ToDateTime(dr["battleTime"]);
-				int duration = Convert.ToInt32(dr["battleLifeTime"]);
-				TimeSpan t = TimeSpan.FromSeconds(duration);
-				lblDate.Text = finished.ToString("d");
-				lblTime.Text = finished.ToString("t");
-				lblDuration.Text = string.Format("{0:D0}:{1:D2}", t.Minutes, t.Seconds);
-				// Battle count
-				int battleCount = Convert.ToInt32(dr["battlesCount"]);
-				int survivedCount = Convert.ToInt32(dr["survived"]);
-				// Survival
-				string survival = dr["battleSurviveName"].ToString();
-				Color battleSurviveColor = ColorTranslator.FromHtml(dr["battleSurviveColor"].ToString());
-				switch (survival)
-				{
-					case "Yes":
-						survival = "Survived"; 
-						if (battleCount > 1)
-							survival = "Battles: " + battleCount.ToString() + " - Survived all"; 
-						break;
-					case "Some": 
-						survival = "Battles: " + battleCount.ToString() + " - Survived: " + survivedCount.ToString(); 
-						break;
-					case "No":
-						survival = "Destroyed";
-						if (battleCount > 1)
-							survival = "Battles: " + battleCount.ToString() + " - Destroyed in all"; 
-						string deathReason = "Destroyed";
-						if (dr["deathReason"] != DBNull.Value) 
-							deathReason = dr["deathReason"].ToString();
-						string killedPrefix = " caused by ";
-						switch (deathReason)
-						{
-							case "Shot": survival = "Killed by a shot"; killedPrefix=" from"; break;
-							case "Burned": survival = "Put on fire"; killedPrefix = " by"; break;
-							case "Rammed": survival = "Rammed"; killedPrefix=" by"; break;
-							case "Chrashed": survival = "Vehicle crashed"; break;
-							case "Death zone": survival = "Destroyed in a death zone"; break;
-							case "Drowned": survival = "Vehicle drowned"; break;
-						}
-						if (dr["killedByPlayerName"] != DBNull.Value)
-							survival += killedPrefix + " " + dr["killedByPlayerName"].ToString();
-						break;
-					
-				}
-				lblSurvival.Text = survival;
-				lblSurvival.ForeColor = battleSurviveColor;
-				// Main Battle Mode
-				string mainMode = dr["battleMode"].ToString();
-				string battleMode = "";
-				switch (mainMode)
-				{
-					case "15":
-                        mainBattleMode = BattleMode.TypeEnum.ModeRandom_TC;
-						battleMode = "Random Battle"; 
-						break;
-					case "7":
-                        mainBattleMode = BattleMode.TypeEnum.ModeTeam;
-						battleMode = "Team: Unranked Battle";
-						break;
-					case "7Ranked":
-                        mainBattleMode = BattleMode.TypeEnum.ModeTeamRanked;
-						battleMode = "Team: Ranked Battle";
-						break;
-					case "Historical":
-                        mainBattleMode = BattleMode.TypeEnum.ModeHistorical;
-						battleMode = "Historical Battle";
-						break;
-					case "Skirmishes":
-                        mainBattleMode = BattleMode.TypeEnum.ModeSkirmishes;
-						battleMode = "Skirmish Battle";
-						showFortResources = true; 
-						break;
-					case "Stronghold":
-                        mainBattleMode = BattleMode.TypeEnum.ModeStronghold;
-						battleMode = "Battle for Stronghold";
-						showFortResources = true;
-						break;
-					case "Special":
-                        mainBattleMode = BattleMode.TypeEnum.ModeSpecial;
-						battleMode = "Special Event Battle";
-						showFortResources = false; 
-						break;
-					case "GlobalMap":
-                        mainBattleMode = BattleMode.TypeEnum.ModeGlobalMap;
-						battleMode = "Global Map";
-						showFortResources = false;
-						break;
-				}
-				// Battle mode text
-				if (dr["battleResultMode"] != DBNull.Value)
-					battleMode = dr["battleResultMode"].ToString() + " Battle";
-				else
-				{
-					if (Convert.ToInt32(dr["modeClan"]) > 0)
-						battleMode = "Clan War Battle";
-					else if (Convert.ToInt32(dr["modeCompany"]) > 0)
-						battleMode = "Tank Company Battle";
-				}
-                // get ratings 
-                wn9 = Convert.ToInt32(dr["wn9"]);
-                wn8 = Convert.ToInt32(dr["wn8"]);
-				wn7 = Convert.ToInt32(dr["wn7"]);
-				eff = Convert.ToInt32(dr["eff"]);
-				lblBattleMode.Text = battleMode;
-				GetWN8Details();
-				GetStandardGridDetails();
-			}
+            try
+            {
+                string sql =
+                "SELECT battle.*, tank.id as tankId, tank.name as tankName, map.name as mapName, map.arena_id as arena_id, " +
+                "		battleResult.name as battleResultName, battleResult.color as battleResultColor, " +
+                "		battleSurvive.name as battleSurviveName, battleSurvive.color as battleSurviveColor " +
+                "FROM   battle INNER JOIN " +
+                "       playerTank ON battle.playerTankId = playerTank.id INNER JOIN " +
+                "       tank ON playerTank.tankId = tank.id INNER JOIN " +
+                "       tankType ON tank.tankTypeId = tankType.Id INNER JOIN " +
+                "       country ON tank.countryId = country.Id INNER JOIN " +
+                "       battleResult ON battle.battleResultId = battleResult.id LEFT JOIN " +
+                "       map on battle.mapId = map.id INNER JOIN " +
+                "       battleSurvive ON battle.battleSurviveId = battleSurvive.id " +
+                "WHERE	battle.id=@battleId";
+                DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+                DataTable dt = DB.FetchData(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    DataRow dr = dt.Rows[0];
+                    // Battle result
+                    string battleResult = dr["battleResultName"].ToString();
+
+                    Color battleResultColor = ColorTranslator.FromHtml(dr["battleResultColor"].ToString());
+                    lblResult.ForeColor = battleResultColor;
+                    if (dr["enemyClanAbbrev"] != DBNull.Value)
+                    {
+                        switch (battleResult)
+                        {
+                            case "Victory": battleResult += " over " + dr["enemyClanAbbrev"].ToString(); break;
+                            case "Draw": battleResult += " against " + dr["enemyClanAbbrev"].ToString(); break;
+                            case "Defeat": battleResult = "Defeated by " + dr["enemyClanAbbrev"].ToString(); break;
+                        }
+                    }
+                    lblResult.Text = battleResult;
+                    // Tank name
+                    lblTankName.Text = dr["tankName"].ToString();
+                    // Mastery Badge Image
+                    int masteryBadge = 0;
+                    if (dr["markOfMastery"] != DBNull.Value) masteryBadge = Convert.ToInt32(dr["markOfMastery"]);
+                    picMB.Image = ImageHelper.GetMasteryBadgeImage(masteryBadge, false);
+                    // Header picture /tank & Map), and map info
+                    Image imgHeader = new Bitmap(picHeader.Width, picHeader.Height);
+                    tankId = Convert.ToInt32(dr["tankId"]);
+                    picHeader.Image = ImageHelper.GetTankImage(tankId, ImageHelper.TankImageType.LargeImage);
+                    string mapName = "";
+                    if (dr["mapName"] != DBNull.Value)
+                        mapName = dr["mapName"].ToString();
+                    else
+                        btnBattleReview.Text = "Comment";
+                    lblMap.Text = mapName;
+                    // Battle time
+                    DateTime finished = Convert.ToDateTime(dr["battleTime"]);
+                    int duration = Convert.ToInt32(dr["battleLifeTime"]);
+                    TimeSpan t = TimeSpan.FromSeconds(duration);
+                    lblDate.Text = finished.ToString("d");
+                    lblTime.Text = finished.ToString("t");
+                    lblDuration.Text = string.Format("{0:D0}:{1:D2}", t.Minutes, t.Seconds);
+                    // Battle count
+                    int battleCount = Convert.ToInt32(dr["battlesCount"]);
+                    int survivedCount = Convert.ToInt32(dr["survived"]);
+                    // Survival
+                    string survival = dr["battleSurviveName"].ToString();
+                    Color battleSurviveColor = ColorTranslator.FromHtml(dr["battleSurviveColor"].ToString());
+                    switch (survival)
+                    {
+                        case "Yes":
+                            survival = "Survived";
+                            if (battleCount > 1)
+                                survival = "Battles: " + battleCount.ToString() + " - Survived all";
+                            break;
+                        case "Some":
+                            survival = "Battles: " + battleCount.ToString() + " - Survived: " + survivedCount.ToString();
+                            break;
+                        case "No":
+                            survival = "Destroyed";
+                            if (battleCount > 1)
+                                survival = "Battles: " + battleCount.ToString() + " - Destroyed in all";
+                            string deathReason = "Destroyed";
+                            if (dr["deathReason"] != DBNull.Value)
+                                deathReason = dr["deathReason"].ToString();
+                            string killedPrefix = " caused by ";
+                            switch (deathReason)
+                            {
+                                case "Shot": survival = "Killed by a shot"; killedPrefix = " from"; break;
+                                case "Burned": survival = "Put on fire"; killedPrefix = " by"; break;
+                                case "Rammed": survival = "Rammed"; killedPrefix = " by"; break;
+                                case "Chrashed": survival = "Vehicle crashed"; break;
+                                case "Death zone": survival = "Destroyed in a death zone"; break;
+                                case "Drowned": survival = "Vehicle drowned"; break;
+                            }
+                            if (dr["killedByPlayerName"] != DBNull.Value)
+                                survival += killedPrefix + " " + dr["killedByPlayerName"].ToString();
+                            break;
+
+                    }
+                    lblSurvival.Text = survival;
+                    lblSurvival.ForeColor = battleSurviveColor;
+                    // Main Battle Mode
+                    string mainMode = dr["battleMode"].ToString();
+                    string battleMode = "";
+                    switch (mainMode)
+                    {
+                        case "15":
+                            mainBattleMode = BattleMode.TypeEnum.ModeRandom_TC;
+                            battleMode = "Random Battle";
+                            break;
+                        case "7":
+                            mainBattleMode = BattleMode.TypeEnum.ModeTeam;
+                            battleMode = "Team: Unranked Battle";
+                            break;
+                        case "7Ranked":
+                            mainBattleMode = BattleMode.TypeEnum.ModeTeamRanked;
+                            battleMode = "Team: Ranked Battle";
+                            break;
+                        case "Historical":
+                            mainBattleMode = BattleMode.TypeEnum.ModeHistorical;
+                            battleMode = "Historical Battle";
+                            break;
+                        case "Skirmishes":
+                            mainBattleMode = BattleMode.TypeEnum.ModeSkirmishes;
+                            battleMode = "Skirmish Battle";
+                            showFortResources = true;
+                            break;
+                        case "Stronghold":
+                            mainBattleMode = BattleMode.TypeEnum.ModeStronghold;
+                            battleMode = "Battle for Stronghold";
+                            showFortResources = true;
+                            break;
+                        case "Special":
+                            mainBattleMode = BattleMode.TypeEnum.ModeSpecial;
+                            battleMode = "Special Event Battle";
+                            showFortResources = false;
+                            break;
+                        case "GlobalMap":
+                            mainBattleMode = BattleMode.TypeEnum.ModeGlobalMap;
+                            battleMode = "Global Map Battle";
+                            showFortResources = false;
+                            break;
+                        case "Grand":
+                            mainBattleMode = BattleMode.TypeEnum.ModeGrand;
+                            battleMode = "Grand Battle";
+                            showFortResources = false;
+                            break;
+
+                    }
+                    // Battle mode text
+                    if (dr["battleResultMode"] != DBNull.Value && dr["battleResultMode"].ToString() != "")
+                        battleMode = dr["battleResultMode"].ToString() + " Battle";
+                    else
+                    {
+                        if (Convert.ToInt32(dr["modeClan"]) > 0)
+                            battleMode = "Clan War Battle";
+                        else if (Convert.ToInt32(dr["modeCompany"]) > 0)
+                            battleMode = "Tank Company Battle";
+                    }
+                    // get ratings 
+                    wn9 = Convert.ToInt32(dr["wn9"]);
+                    wn8 = Convert.ToInt32(dr["wn8"]);
+                    wn7 = Convert.ToInt32(dr["wn7"]);
+                    eff = Convert.ToInt32(dr["eff"]);
+                    lblBattleMode.Text = battleMode;
+                    GetWN8Details();
+                    GetStandardGridDetails();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, "Battle detail failed on GetMyPersonalInfo()");
+                MsgBox.Show("An error occured showing battle details, please check log file for complete error message", "Error", parentForm);
+            }
+            
 		}
 
 		private void GetWN8Details()
@@ -509,217 +533,226 @@ namespace WinApp.Forms
 
 		private void GetStandardGridDetails()
 		{
-			// This battle result
-			string sql =
-				"SELECT battlesCount, dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
-				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, eff, wn7, wn8, wn9, " +
-				"  credits, creditsPenalty, creditsContributionIn, creditsContributionOut, creditsToDraw, autoRepairCost, autoLoadCost, autoEquipCost, " +
-				"    eventCredits , originalCredits, creditsNet, achievementCredits, premiumCreditsFactor10, dailyXPFactorTxt, " +
-				"  real_xp, (xpPenalty * -1) as xpPenalty, freeXP, dailyXPFactor10, premiumXPFactor10, eventXP, eventFreeXP, eventTMenXP, achievementXP, achievementFreeXP " +
-				"FROM battle " +
-				"WHERE id = @battleId";
-			DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
-			DataTable dtRes = DB.FetchData(sql);
-			// Tank total result
-			sql =
-				"SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
-				"  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
-				"  frags, spot, cap, def, mileage, treesCut, eff, wn7, wn8, wn9 " +
-				"FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
-				"WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode and playerTank.playerId=@playerId ";
-			DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-			DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-            DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
-			DataTable dtAvg = DB.FetchData(sql);
-			if (dtRes.Rows.Count > 0)
-			{
-				DataRow drVal = dtRes.Rows[0];
-				DataRow drAvg = null;
-				bool avgOK = (dtAvg.Rows.Count > 0);
-				int avgBattleCount = 0;
-				if (avgOK)
-				{
-					drAvg = dtAvg.Rows[0];
-					if (drAvg["battles"] != DBNull.Value)
-						avgBattleCount = Convert.ToInt32(drAvg["battles"]);
-					avgOK = (avgBattleCount > 0);
-				}
-				// Create new datatable to show result
-				DataTable dt = new DataTable();
-				dt.Columns.Add("Parameter", typeof(string));
-				dt.Columns.Add("Image", typeof(Image));
-				dt.Columns.Add("Result", typeof(string));
-				dt.Columns.Add("Average", typeof(string));
-				
-				// Add Rows to damage grid
-				DataTable dtDamage = dt.Clone();
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Done", "dmg", avgBattleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Spotting", "assistSpot", avgBattleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Tracking", "assistTrack", avgBattleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", avgBattleCount));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", avgBattleCount, false));
-				dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", avgBattleCount, false));
-				// Damage done/received
-				string dmgDoneReceived = "INF";
-				double dmgDR = Convert.ToDouble(drVal["dmgReceived"]);
-				Image dmgDRImage = new Bitmap(1, 1);
-				bool getDmgDRImage = true;
-				if (dmgDR > 0) 
-				{
-					dmgDR = Convert.ToDouble(drVal["dmg"]) / dmgDR;
-					dmgDoneReceived = Math.Round(dmgDR,1).ToString("# ### ##0.0");
-				}
-				else
-					getDmgDRImage = false;
-				string avgDmgDoneReceived = "INF";
-				double avgDmgDR = Convert.ToDouble(drAvg["dmgReceived"]);
-				if (avgDmgDR > 0) 
-				{
-					avgDmgDR = (Convert.ToDouble(drAvg["dmg"]) / avgDmgDR);
-					avgDmgDoneReceived = Math.Round(avgDmgDR,1).ToString("# ### ##0.0");
-				}
-				else
-					getDmgDRImage = false;
-				if (getDmgDRImage) dmgDRImage = GetIndicator(dmgDR, avgDmgDR);
-				dtDamage.Rows.Add(GetValues(dtDamage, dmgDoneReceived, avgDmgDoneReceived, "Dmg Done/Received", dmgDRImage));
+            try
+            {
+                // This battle result
+                string sql =
+                    "SELECT battlesCount, dmg, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, dmgReceived,  " +
+                    "  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
+                    "  frags, spotted as spot, cap, def, arenaUniqueID, mileage, treesCut, eff, wn7, wn8, wn9, " +
+                    "  credits, creditsPenalty, creditsContributionIn, creditsContributionOut, creditsToDraw, autoRepairCost, autoLoadCost, autoEquipCost, " +
+                    "    eventCredits , originalCredits, creditsNet, achievementCredits, premiumCreditsFactor10, dailyXPFactorTxt, " +
+                    "  real_xp, (xpPenalty * -1) as xpPenalty, freeXP, dailyXPFactor10, premiumXPFactor10, eventXP, eventFreeXP, eventTMenXP, achievementXP, achievementFreeXP " +
+                    "FROM battle " +
+                    "WHERE id = @battleId";
+                DB.AddWithValue(ref sql, "@battleId", battleId, DB.SqlDataType.Int);
+                DataTable dtRes = DB.FetchData(sql);
+                // Tank total result
+                sql =
+                    "SELECT battles, dmg, dmgReceived, assistSpot, assistTrack, dmgBlocked, potentialDmgReceived, " +
+                    "  shots, hits, pierced, heHits, piercedReceived, shotsReceived, heHitsReceived, noDmgShotsReceived, " +
+                    "  frags, spot, cap, def, mileage, treesCut, eff, wn7, wn8, wn9 " +
+                    "FROM playerTank INNER JOIN playerTankBattle ON playerTank.id = playerTankBattle.playerTankId " +
+                    "WHERE playerTank.tankId = @tankId and playerTankBattle.battleMode=@battleMode and playerTank.playerId=@playerId ";
+                DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
+                DataTable dtAvg = DB.FetchData(sql);
+                if (dtRes.Rows.Count > 0)
+                {
+                    DataRow drVal = dtRes.Rows[0];
+                    DataRow drAvg = null;
+                    bool avgOK = (dtAvg.Rows.Count > 0);
+                    int avgBattleCount = 0;
+                    if (avgOK)
+                    {
+                        drAvg = dtAvg.Rows[0];
+                        if (drAvg["battles"] != DBNull.Value)
+                            avgBattleCount = Convert.ToInt32(drAvg["battles"]);
+                        avgOK = (avgBattleCount > 0);
+                    }
+                    // Create new datatable to show result
+                    DataTable dt = new DataTable();
+                    dt.Columns.Add("Parameter", typeof(string));
+                    dt.Columns.Add("Image", typeof(Image));
+                    dt.Columns.Add("Result", typeof(string));
+                    dt.Columns.Add("Average", typeof(string));
 
-				// Done;
-				dtDamage.AcceptChanges();
-				dgvDamage.DataSource = dtDamage;
-				FormatStandardDataGrid(dgvDamage, "");
-				
-				// Add Rows to shooting grid
-				DataTable dtShooting = dt.Clone();
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Fired", "shots", avgBattleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Hits", "hits", avgBattleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "pierced", avgBattleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHits", avgBattleCount, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Received", "shotsReceived", avgBattleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "piercedReceived", avgBattleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHitsReceived", avgBattleCount, false, decimals: 1));
-				dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", avgBattleCount, false, decimals: 1));
+                    // Add Rows to damage grid
+                    DataTable dtDamage = dt.Clone();
+                    dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Done", "dmg", avgBattleCount));
+                    dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Spotting", "assistSpot", avgBattleCount));
+                    dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Tracking", "assistTrack", avgBattleCount));
+                    dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      by Blocking", "dmgBlocked", avgBattleCount));
+                    dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "Damage Received", "dmgReceived", avgBattleCount, false));
+                    dtDamage.Rows.Add(GetValues(dtDamage, drVal, drAvg, "      Potential", "potentialDmgReceived", avgBattleCount, false));
+                    // Damage done/received
+                    string dmgDoneReceived = "INF";
+                    double dmgDR = Convert.ToDouble(drVal["dmgReceived"]);
+                    Image dmgDRImage = new Bitmap(1, 1);
+                    bool getDmgDRImage = true;
+                    if (dmgDR > 0)
+                    {
+                        dmgDR = Convert.ToDouble(drVal["dmg"]) / dmgDR;
+                        dmgDoneReceived = Math.Round(dmgDR, 1).ToString("# ### ##0.0");
+                    }
+                    else
+                        getDmgDRImage = false;
+                    string avgDmgDoneReceived = "INF";
+                    double avgDmgDR = Convert.ToDouble(drAvg["dmgReceived"]);
+                    if (avgDmgDR > 0)
+                    {
+                        avgDmgDR = (Convert.ToDouble(drAvg["dmg"]) / avgDmgDR);
+                        avgDmgDoneReceived = Math.Round(avgDmgDR, 1).ToString("# ### ##0.0");
+                    }
+                    else
+                        getDmgDRImage = false;
+                    if (getDmgDRImage) dmgDRImage = GetIndicator(dmgDR, avgDmgDR);
+                    dtDamage.Rows.Add(GetValues(dtDamage, dmgDoneReceived, avgDmgDoneReceived, "Dmg Done/Received", dmgDRImage));
 
-				// Done;
-				dtShooting.AcceptChanges();
-				dgvShooting.DataSource = dtShooting;
-				FormatStandardDataGrid(dgvShooting, "");
+                    // Done;
+                    dtDamage.AcceptChanges();
+                    dgvDamage.DataSource = dtDamage;
+                    FormatStandardDataGrid(dgvDamage, "");
 
-				// Add Rows to shooting grid
-				DataTable dtPerformance = dt.Clone();
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Frags", "frags", avgBattleCount, decimals: 1));
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Spot", "spot", avgBattleCount, decimals: 1));
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Cap", "cap", avgBattleCount, decimals: 1));
-				dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Defence", "def", avgBattleCount, decimals: 1));
-				// Done;
-				dtPerformance.AcceptChanges();
-				dgvPerformance.DataSource = dtPerformance;
-				FormatStandardDataGrid(dgvPerformance, "");
+                    // Add Rows to shooting grid
+                    DataTable dtShooting = dt.Clone();
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Fired", "shots", avgBattleCount, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Hits", "hits", avgBattleCount, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "pierced", avgBattleCount, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHits", avgBattleCount, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "Shots Received", "shotsReceived", avgBattleCount, false, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      Pierced", "piercedReceived", avgBattleCount, false, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      He Hits", "heHitsReceived", avgBattleCount, false, decimals: 1));
+                    dtShooting.Rows.Add(GetValues(dtShooting, drVal, drAvg, "      No Damage", "noDmgShotsReceived", avgBattleCount, false, decimals: 1));
 
-				// Add Rows to other result grid
-				DataTable dtOther = dt.Clone();
-				dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Drive distance (m)", "mileage", avgBattleCount));
-				dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Trees Cut", "treesCut", avgBattleCount, decimals: 1));
-				// Done;
-				dtOther.AcceptChanges();
-				dgvOther.DataSource = dtOther;
-				FormatStandardDataGrid(dgvOther, "");
+                    // Done;
+                    dtShooting.AcceptChanges();
+                    dgvShooting.DataSource = dtShooting;
+                    FormatStandardDataGrid(dgvShooting, "");
 
-				// Add rows to Ratings grid
-				DataTable dtRating = dt.Clone();
-                dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN9", "wn9", 1));
-                dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN8", "wn8", 1));
-				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN7", "wn7", 1));
-				dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "EFF", "eff", 1));
-                wn9avg = Convert.ToInt32(drAvg["wn9"]);
-                wn8avg = Convert.ToInt32(drAvg["wn8"]);
-				wn7avg = Convert.ToInt32(drAvg["wn7"]);
-				effavg = Convert.ToInt32(drAvg["eff"]);
+                    // Add Rows to shooting grid
+                    DataTable dtPerformance = dt.Clone();
+                    dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Frags", "frags", avgBattleCount, decimals: 1));
+                    dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Spot", "spot", avgBattleCount, decimals: 1));
+                    dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Cap", "cap", avgBattleCount, decimals: 1));
+                    dtPerformance.Rows.Add(GetValues(dtPerformance, drVal, drAvg, "Defence", "def", avgBattleCount, decimals: 1));
+                    // Done;
+                    dtPerformance.AcceptChanges();
+                    dgvPerformance.DataSource = dtPerformance;
+                    FormatStandardDataGrid(dgvPerformance, "");
 
-				// Done;
-				dtRating.AcceptChanges();
-				dgvRating.DataSource = dtRating;
-				FormatStandardDataGrid(dgvRating, "");
-                                
-				// Enhanced battle result
-				if (drVal["arenaUniqueID"] == DBNull.Value)
-				{
-					// not fetched battle result
-					pictureBoxCredits.Visible = false;
-					pictureBoxCreditsBack.Visible = false;
-					lblCredits.Visible = false;
-					pictureBoxXP.Visible = false;
-					pictureBoxXPBack.Visible = false;
-					lblXP.Visible = false;
-				}
-				else
-				{
-					// All battle results for this tank
-					sql =
-						"SELECT SUM(battlesCount) as battles, SUM(credits) as credits, SUM(creditsNet) as creditsNet, " +
-						"   SUM(autoRepairCost) as autoRepairCost, SUM(autoLoadCost) as autoLoadCost, SUM(autoEquipCost) as autoEquipCost, SUM(creditsContributionOut) as creditsContributionOut, " +
-						"  SUM(real_xp) as real_xp, SUM(xpPenalty) * -1 as xpPenalty, SUM(freeXP) as freeXP, SUM(eventXP) as eventXP, SUM(eventFreeXP) as eventFreeXP, SUM(eventTMenXP) as eventTMenXP, " +
-						"  SUM(achievementXP) as achievementXP, SUM(achievementFreeXP) as achievementFreeXP " +
-						"FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
-						"WHERE arenaUniqueID is not null AND playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
-					DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
-					DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
-                    DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
-					DataTable dtTotBattle = DB.FetchData(sql);
-					DataRow drTotBattle = dtTotBattle.Rows[0];
-					double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
-				
-					// Add Rows to credit grid
-					DataTable dtCredit = dt.Clone();
-					dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Income", "credits", Convert.ToInt32(totBattleCount)));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Mission", "eventCredits", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Achievement", "achievementCredits", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "creditsToDraw", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "creditsContributionIn", "creditsContributionIn", avgBattleCount));
-					double totalCost =
-						Convert.ToInt32(drVal["autoRepairCost"]) +
-						Convert.ToInt32(drVal["autoLoadCost"]) +
-						Convert.ToInt32(drVal["autoEquipCost"]) +
-						Convert.ToInt32(drVal["creditsContributionOut"]);
-					double avgCost =
-						Convert.ToInt32(drTotBattle["autoRepairCost"]) +
-						Convert.ToInt32(drTotBattle["autoLoadCost"]) +
-						Convert.ToInt32(drTotBattle["autoEquipCost"]) +
-						Convert.ToInt32(drTotBattle["creditsContributionOut"]);
-					avgCost = avgCost / totBattleCount;
-					Image totalCostImg = GetIndicator(totalCost, avgCost, higherIsBest: false);
-					dtCredit.Rows.Add(GetValues(dtCredit, "-" + totalCost.ToString("# ### ###"), "-" + Math.Round(avgCost, 0).ToString("# ### ###"), "Cost", totalCostImg));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Repair", "autoRepairCost", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Ammo", "autoLoadCost", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Consumables", "autoLoadCost", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "autoEquipCost", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   creditsContributionOut", "creditsContributionOut", avgBattleCount));
-					dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Result", "creditsNet", Convert.ToInt32(totBattleCount)));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "originalCredits", "originalCredits", avgBattleCount));
-					//dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "premiumCreditsFactor10", "premiumCreditsFactor10", avgBattleCount));
-					// Done;
-					dtCredit.AcceptChanges();
-					dgvCredit.DataSource = dtCredit;
-					FormatStandardDataGrid(dgvCredit, "");
+                    // Add Rows to other result grid
+                    DataTable dtOther = dt.Clone();
+                    dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Drive distance (m)", "mileage", avgBattleCount));
+                    dtOther.Rows.Add(GetValues(dtOther, drVal, drAvg, "Trees Cut", "treesCut", avgBattleCount, decimals: 1));
+                    // Done;
+                    dtOther.AcceptChanges();
+                    dgvOther.DataSource = dtOther;
+                    FormatStandardDataGrid(dgvOther, "");
 
-					// Show multiplier
-					string multiplier = drVal["dailyXPFactorTxt"].ToString().Replace(" ", "");
-					if (multiplier != "1X")
-						lblXP.Text = "XP (" + multiplier + ")";
-					// Add Rows to XP grid
-					DataTable dtXP = dt.Clone();
-					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Total XP", "real_xp", Convert.ToInt32(totBattleCount)));
-					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventXP", Convert.ToInt32(totBattleCount)));
-					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Fine for causing dmg", "xpPenalty", Convert.ToInt32(totBattleCount)));
-					dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Free XP", "freeXP", Convert.ToInt32(totBattleCount)));
-					//dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventFreeXP", Convert.ToInt32(totBattleCount)));
-					// Done;
-					dtXP.AcceptChanges();
-					dgvXP.DataSource = dtXP;
-					FormatStandardDataGrid(dgvXP, "");
-				}
-				
-			}
+                    // Add rows to Ratings grid
+                    DataTable dtRating = dt.Clone();
+                    dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN9", "wn9", 1));
+                    dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN8", "wn8", 1));
+                    dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "WN7", "wn7", 1));
+                    dtRating.Rows.Add(GetValues(dtRating, drVal, drAvg, "EFF", "eff", 1));
+                    wn9avg = Convert.ToInt32(drAvg["wn9"]);
+                    wn8avg = Convert.ToInt32(drAvg["wn8"]);
+                    wn7avg = Convert.ToInt32(drAvg["wn7"]);
+                    effavg = Convert.ToInt32(drAvg["eff"]);
+
+                    // Done;
+                    dtRating.AcceptChanges();
+                    dgvRating.DataSource = dtRating;
+                    FormatStandardDataGrid(dgvRating, "");
+
+                    // Enhanced battle result
+                    if (drVal["arenaUniqueID"] == DBNull.Value)
+                    {
+                        // not fetched battle result
+                        pictureBoxCredits.Visible = false;
+                        pictureBoxCreditsBack.Visible = false;
+                        lblCredits.Visible = false;
+                        pictureBoxXP.Visible = false;
+                        pictureBoxXPBack.Visible = false;
+                        lblXP.Visible = false;
+                    }
+                    else
+                    {
+                        // All battle results for this tank
+                        sql =
+                            "SELECT SUM(battlesCount) as battles, SUM(credits) as credits, SUM(creditsNet) as creditsNet, " +
+                            "   SUM(autoRepairCost) as autoRepairCost, SUM(autoLoadCost) as autoLoadCost, SUM(autoEquipCost) as autoEquipCost, SUM(creditsContributionOut) as creditsContributionOut, " +
+                            "  SUM(real_xp) as real_xp, SUM(xpPenalty) * -1 as xpPenalty, SUM(freeXP) as freeXP, SUM(eventXP) as eventXP, SUM(eventFreeXP) as eventFreeXP, SUM(eventTMenXP) as eventTMenXP, " +
+                            "  SUM(achievementXP) as achievementXP, SUM(achievementFreeXP) as achievementFreeXP " +
+                            "FROM battle INNER JOIN playerTank ON battle.playerTankId = playerTank.Id " +
+                            "WHERE arenaUniqueID is not null AND playerTank.tankId = @tankId and battle.battleMode=@battleMode and playerTank.playerId=@playerId ";
+                        DB.AddWithValue(ref sql, "@tankId", tankId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sql, "@playerId", Config.Settings.playerId, DB.SqlDataType.Int);
+                        DB.AddWithValue(ref sql, "@battleMode", BattleMode.GetItemFromType(mainBattleMode).SqlName, DB.SqlDataType.VarChar);
+                        DataTable dtTotBattle = DB.FetchData(sql);
+                        DataRow drTotBattle = dtTotBattle.Rows[0];
+                        double totBattleCount = Convert.ToInt32(drTotBattle["battles"]);
+
+                        // Add Rows to credit grid
+                        DataTable dtCredit = dt.Clone();
+                        dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Income", "credits", Convert.ToInt32(totBattleCount)));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Mission", "eventCredits", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Achievement", "achievementCredits", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "creditsToDraw", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "creditsContributionIn", "creditsContributionIn", avgBattleCount));
+                        double totalCost =
+                            Convert.ToInt32(drVal["autoRepairCost"]) +
+                            Convert.ToInt32(drVal["autoLoadCost"]) +
+                            Convert.ToInt32(drVal["autoEquipCost"]) +
+                            Convert.ToInt32(drVal["creditsContributionOut"]);
+                        double avgCost =
+                            Convert.ToInt32(drTotBattle["autoRepairCost"]) +
+                            Convert.ToInt32(drTotBattle["autoLoadCost"]) +
+                            Convert.ToInt32(drTotBattle["autoEquipCost"]) +
+                            Convert.ToInt32(drTotBattle["creditsContributionOut"]);
+                        avgCost = avgCost / totBattleCount;
+                        Image totalCostImg = GetIndicator(totalCost, avgCost, higherIsBest: false);
+                        dtCredit.Rows.Add(GetValues(dtCredit, "-" + totalCost.ToString("# ### ###"), "-" + Math.Round(avgCost, 0).ToString("# ### ###"), "Cost", totalCostImg));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Repair", "autoRepairCost", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Ammo", "autoLoadCost", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   for Consumables", "autoLoadCost", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   Dmg Compensation", "autoEquipCost", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "   creditsContributionOut", "creditsContributionOut", avgBattleCount));
+                        dtCredit.Rows.Add(GetValues(dtCredit, drVal, drTotBattle, "Result", "creditsNet", Convert.ToInt32(totBattleCount)));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "originalCredits", "originalCredits", avgBattleCount));
+                        //dtCredit.Rows.Add(GetValues(dtCredit, drVal, drVal, "premiumCreditsFactor10", "premiumCreditsFactor10", avgBattleCount));
+                        // Done;
+                        dtCredit.AcceptChanges();
+                        dgvCredit.DataSource = dtCredit;
+                        FormatStandardDataGrid(dgvCredit, "");
+
+                        // Show multiplier
+                        string multiplier = drVal["dailyXPFactorTxt"].ToString().Replace(" ", "");
+                        if (multiplier != "1X")
+                            lblXP.Text = "XP (" + multiplier + ")";
+                        // Add Rows to XP grid
+                        DataTable dtXP = dt.Clone();
+                        dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Total XP", "real_xp", Convert.ToInt32(totBattleCount)));
+                        dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventXP", Convert.ToInt32(totBattleCount)));
+                        dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Fine for causing dmg", "xpPenalty", Convert.ToInt32(totBattleCount)));
+                        dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "Free XP", "freeXP", Convert.ToInt32(totBattleCount)));
+                        //dtXP.Rows.Add(GetValues(dtXP, drVal, drTotBattle, "    Due to mission", "eventFreeXP", Convert.ToInt32(totBattleCount)));
+                        // Done;
+                        dtXP.AcceptChanges();
+                        dgvXP.DataSource = dtXP;
+                        FormatStandardDataGrid(dgvXP, "");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogToFile(ex, "Battle detail failed on GetStandardGridDetails()");
+                MsgBox.Show("An error occured showing battle details, please check log file for complete error message", "Error", parentForm);
+            }
+            	
+			
 		}
 
 		private void dgvRating_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

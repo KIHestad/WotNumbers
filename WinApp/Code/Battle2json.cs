@@ -415,7 +415,7 @@ namespace WinApp.Code
 								// Get battle mode as text from bonus type, also set flag for get clan for spesific battle types
                                 string battleResultMode = "";
 								bool getEnemyClan = false;
-                                // TODO: Include grand battles
+                                // TODO: Include grand battles, take a chance on 14
 								switch (bonusType)
 								{
 									case 0: battleResultMode = "Unknown"; break;
@@ -432,7 +432,9 @@ namespace WinApp.Code
                                     case 11: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeStronghold).Name; getEnemyClan = true; break;
                                     case 12: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeTeamRanked).Name; getEnemyClan = true; break;
 									case 13: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGlobalMap).Name; getEnemyClan = true; break;
-								}
+                                    case 24: battleResultMode = BattleMode.GetItemFromType(BattleMode.TypeEnum.ModeGrand).Name; break;
+
+                                }
 								battleValues.Add(new BattleValue() { colname = "bonusTypeName", value = "'" + (string)token_common.SelectToken("bonusTypeName") + "'" });
 								battleValues.Add(new BattleValue() { colname = "finishReasonName", value = "'" + (string)token_common.SelectToken("finishReasonName") + "'" });
 								// personal - credits

@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 451; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 453; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3088,9 +3088,24 @@ namespace WinApp.Code
                         "INSERT INTO map (id, name, arena_id) VALUES (81, 'Nebelburg', '212_epic_random_valley'); " +
                         "INSERT INTO map (id, name, arena_id) VALUES (75, 'Paris', '112_eiffel_tower_ctf'); " +
                         "UPDATE battle SET mapId = 81 WHERE battleMode = 'Grand'";
+                    sqlite = mssql;
                     RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
+                case 453:
+                    mssql =
+                        "UPDATE battle SET battleResultMode='Random' WHERE bonusType=1 AND battleResultMode IS NULL;" +
+                        "UPDATE battle SET battleResultMode='Special Event' WHERE bonusType=9 AND battleResultMode='';" +
+                        "UPDATE battle SET battleResultMode='Grand' WHERE bonusType=24;" +
+                        "UPDATE battle SET battleResultMode='Skirmishes' WHERE bonusType=10 AND battleResultMode IS NULL;" +
+                        "UPDATE battle SET battleResultMode='Skirmishes' WHERE bonusType=10 AND battleResultMode='Skimish';" +
+                        "UPDATE battle SET battleResultMode='Stronghold' WHERE bonusType=11 AND battleResultMode='';" +
+                        "UPDATE battle SET battleResultMode='Global Map' WHERE bonusType=13 AND battleResultMode IS NULL;";
+                    sqlite = mssql;
+                    break;
+
+
+
 
             }
             string sql = "";
