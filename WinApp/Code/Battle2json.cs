@@ -1124,19 +1124,22 @@ namespace WinApp.Code
 					argv.Add(battle2jsonScript); // Have to add filename to run as first arg
 					argv.Add(filename);
 					argv.Add("-f");
-					PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
-					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
+
+                    PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
+					ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
 					dynamic result = scope.GetVariable("main")();
-					//ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
-					//setup.DebugMode = true;
-					//setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
-					//ScriptRuntime runtime = new ScriptRuntime(setup);
-					//ScriptEngine engine = runtime.GetEngineByTypeName(typeof(PythonContext).AssemblyQualifiedName);
-					//ScriptSource script = engine.CreateScriptSourceFromFile(battle2jsonScript);
-					//CompiledCode code = script.Compile();
-					//ScriptScope scope = engine.CreateScope();
-					//script.Execute(scope);
-					Application.DoEvents();
+
+                    //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
+                    //setup.DebugMode = true;
+                    //setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
+                    //ScriptRuntime runtime = new ScriptRuntime(setup);
+                    //ScriptEngine engine = runtime.GetEngineByTypeName(typeof(PythonContext).AssemblyQualifiedName);
+                    //ScriptSource script = engine.CreateScriptSourceFromFile(battle2jsonScript);
+                    //CompiledCode code = script.Compile();
+                    //ScriptScope scope = engine.CreateScope();
+                    //script.Execute(scope);
+
+                    Application.DoEvents();
 					Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
 					ok = true;
 					deleteFile = true;

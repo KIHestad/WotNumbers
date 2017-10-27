@@ -377,6 +377,9 @@
       <Component Id="cmpBRS_27" Directory="INSTALLFOLDER_Dossier2json" Guid="{858E8A31-BCF1-448F-B294-6469CFDAA4F3}">
         <File Id="filBRS_27" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_27.py" />
       </Component>
+      <Component Id="cmpBRS_28" Directory="INSTALLFOLDER_Dossier2json" Guid="{7AF8459B-04D5-4C01-AC4E-7D63FC485A74}">
+        <File Id="filBRS_28" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_28.py" />
+      </Component>
 
       <!-- Maps and tanks, not in use -->
 
@@ -387,20 +390,11 @@
         <File Id="fil43C93A51802E58A2266566EE76D87EF7" KeyPath="yes" Source="$(var.D2jSource)\maps.json" />
       </Component>
 
-      <Component Id="cmpDamageEvents" Directory="INSTALLFOLDER_Dossier2json" Guid="{B7B6D606-C7FE-4A4E-A608-0C59644B504D}">
-        <File Id="filDamageEvents" KeyPath="yes" Source="$(var.D2jSource)\DamageEvents.py" />
-      </Component>
-      <Component Id="cmpdictpackers" Directory="INSTALLFOLDER_Dossier2json" Guid="{35718663-29CA-4E93-8C29-4F6014D191B0}">
-        <File Id="fildictpackers" KeyPath="yes" Source="$(var.D2jSource)\dictpackers.py" />
-      </Component>
-      <Component Id="cmpdictpackers_18" Directory="INSTALLFOLDER_Dossier2json" Guid="{987489C1-D027-4211-87A7-7DF1C1025625}">
-        <File Id="fildictpackers_18" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_18.py" />
-      </Component>
-      <Component Id="cmpdictpackers_19" Directory="INSTALLFOLDER_Dossier2json" Guid="{B0507634-119F-4ECB-944D-355CDCC7FDE5}">
-        <File Id="fildictpackers_19" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_19.py" />
-      </Component>
       <Component Id="cmpdictpackers_20" Directory="INSTALLFOLDER_Dossier2json" Guid="{83509700-2F1D-4463-9571-FEDD8922D9D5}">
         <File Id="fildictpackers_20" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_20.py" />
+      </Component>
+      <Component Id="cmpdictpackers_28" Directory="INSTALLFOLDER_Dossier2json" Guid="{FC9AB77E-E694-4A2C-9198-21DD4553892C}">
+        <File Id="fildictpackers_28" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_28.py" />
       </Component>
 
       <Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">

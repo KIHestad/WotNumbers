@@ -1,6 +1,10 @@
+# uncompyle6 version 2.11.3
+# Python bytecode 2.7 (62211)
+# Decompiled from: Python 2.7.10 (default, May 23 2015, 09:40:32) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
-#from debug_utils import *
+
+from binascii import crc32
 
 def roundToInt(val):
     return int(round(val))
@@ -8,7 +12,7 @@ def roundToInt(val):
 
 class DeltaPacker(object):
 
-    def __init__(self, packPredicate = None):
+    def __init__(self, packPredicate=None):
         self.packPredicate = packPredicate
 
     def pack(self, seq):
@@ -50,18 +54,35 @@ class ValueReplayPacker:
         return value
 
 
+class BunchProxyPacker(object):
+
+    def __init__(self, bunchMetaData):
+        self.__metaData = bunchMetaData
+
+    @property
+    def extMeta(self):
+        return self.__metaData
+
+    def pack(self, bunchOfDicts):
+        return {key:self.__metaData[key][0].pack(value) for key, value in bunchOfDicts.iteritems()}
+
+    def unpack(self, bunchOfLists):
+        return {key:self.__metaData[key][0].unpack(value) for key, value in bunchOfLists.iteritems()}
+
+
 class DictPacker(object):
 
     def __init__(self, *metaData):
         self._metaData = tuple(metaData)
+        self._checksum = self.checksum(self._metaData)
 
     def pack(self, dataDict):
         metaData = self._metaData
-        l = [None] * len(metaData)
+        l = [None] * (len(metaData) + 1)
+        l[0] = self._checksum
         for index, metaEntry in enumerate(metaData):
             try:
-                name, transportType, default, packer = metaEntry
-                default = copy.deepcopy(default)
+                name, transportType, default, packer, aggFunc = metaEntry
                 v = dataDict.get(name, default)
                 if v is None:
                     pass
@@ -69,11 +90,11 @@ class DictPacker(object):
                     v = None
                 elif packer is not None:
                     v = packer.pack(v)
-                elif transportType is not None and type(v) is not transportType:
+                elif transportType is not None and not isinstance(v, transportType):
                     v = transportType(v)
                     if v == default:
                         v = None
-                l[index] = v
+                l[index + 1] = v
             except Exception as e:
                 LOG_ERROR('error while packing:', index, metaEntry, str(e))
                 raise
@@ -82,17 +103,29 @@ class DictPacker(object):
 
     def unpack(self, dataList):
         ret = {}
-        for index, meta in enumerate(self._metaData):
-            val = dataList[index]
-            name, _, default, packer = meta
-            default = copy.deepcopy(default)
-            if val is None:
-                val = default
-            elif packer is not None:
-                val = packer.unpack(val)
-            ret[name] = val
+        if len(dataList) == 0 or dataList[0] != self._checksum:
+            return
+        else:
+            for index, meta in enumerate(self._metaData):
+                val = dataList[index + 1]
+                name, _, default, packer, aggFunc = meta
+                if val is None:
+                    val = copy.deepcopy(default)
+                elif packer is not None:
+                    val = packer.unpack(val)
+                ret[name] = val
 
-        return ret
+            return ret
+
+    @staticmethod
+    def checksum(metaData):
+        meta_descriptor = []
+        for entry in tuple(metaData):
+            name, entry_type, default, packer, aggregatorName = entry
+            meta_descriptor.append(''.join([name, str(entry_type),
+             str(default), str(type(packer)), str(aggregatorName)]))
+
+        return crc32(''.join(meta_descriptor))
 
 
 class SimpleDictPacker(object):
@@ -122,10 +155,10 @@ class SimpleDictPacker(object):
 
 
 class MetaEntry(object):
-    __slots__ = ('name', 'transportType', 'default', 'packer')
+    __slots__ = ('name', 'transportType', 'default', 'packer', 'aggFunc')
 
     def __init__(self, *data):
-        self.name, self.transportType, default, self.packer = data
+        self.name, self.transportType, default, self.packer, self.aggFunc = data
         self.default = copy.deepcopy(default)
 
 
