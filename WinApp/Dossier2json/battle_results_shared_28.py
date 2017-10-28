@@ -12,6 +12,7 @@ class FLAG_ACTION:
     CAPTURED = 2
     LOST = 3
     RANGE = (PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
+
 VEHICLE_DEVICE_TYPE_NAMES = ('engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice')
 VEHICLE_TANKMAN_TYPE_NAMES = ('commander', 'driver', 'radioman', 'gunner', 'loader')
 
@@ -49,11 +50,14 @@ def _buildMapsForExt(*fields):
      tuple(((v[0], v[2]) for v in fields)), {v[0]:i for i, v in enumerate(fields)})
 
 
-VEH_CELL_RESULTS_EXTS = {'extPublic': {'example': _buildMapsForExt((
-                           'stat1', int, 0, None, 'sum'), (
-                           'stat2', int, 0, None, 'max'))
-                 }
-   }
+VEH_CELL_RESULTS_EXTS = {
+    'extPublic': {
+        'example': _buildMapsForExt(
+            ('stat1', int, 0, None, 'sum'), 
+            ('stat2', int, 0, None, 'max'))
+        }
+    }
+
 _VEH_CELL_RESULTS_PUBLIC = Meta((
  'health', int, 0, None, 'skip'), (
  'credits', int, 0, None, 'sum'), (
@@ -107,7 +111,9 @@ _VEH_CELL_RESULTS_PUBLIC = Meta((
  'winPoints', int, 0, None, 'sum'), (
  'resourceAbsorbed', int, 0, None, 'sum'), (
  'stopRespawn', bool, False, None, 'max'), (
- 'extPublic', dict, {}, BunchProxyPacker(VEH_CELL_RESULTS_EXTS['extPublic']), 'joinExts'), (
+ 'extPublic', dict, {}, 
+ BunchProxyPacker(VEH_CELL_RESULTS_EXTS['extPublic']), 
+ 'joinExts'), (
  'bossDamageDealt', int, 0, None, 'sum'), (
  'bossDirectHits', int, 0, None, 'sum'), (
  'bossDamageReceived', int, 0, None, 'sum'), (

@@ -117,6 +117,20 @@ class DictPacker(object):
 
             return ret
 
+    def unpackWthoutChecksum(self, dataList):
+        ret = {}
+        for index, meta in enumerate(self._metaData):
+            val = dataList[index + 1]
+            name, _, default, packer, aggFunc = meta
+            if val is None:
+                val = copy.deepcopy(default)
+            elif packer is not None:
+                val = packer.unpack(val)
+            ret[name] = val
+
+        return ret
+
+
     @staticmethod
     def checksum(metaData):
         meta_descriptor = []

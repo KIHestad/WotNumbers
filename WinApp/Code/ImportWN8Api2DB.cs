@@ -38,7 +38,7 @@ namespace WinApp.Code
             Console.WriteLine("IsFromCache? {0}", response.IsFromCache);
             return response;
         }
-
+        
         // updates all WN8 expected values, or only for one tank if added
         public static String UpdateWN8(Form parentForm, int updateOnlyTankId = 0)
 		{
@@ -49,22 +49,25 @@ namespace WinApp.Code
 			double expSpot = 0;
 			double expDef = 0;
 			double expWR = 0;
-			int WN8Version = 0;
-            int updateCount = 0;
+			int updateCount = 0;
             // Get WN8 from API
+            string urlBase = "https://stat.modxvm.com/wn8-data-exp/json/wn8exp.json";
             try
-			{
+            {
                 // First reset flag for fetched from api
                 DB.ExecuteNonQuery("UPDATE tank SET wn8ExpApiFetch=0;");
                 // Get data from API
-                string url = "http://www.wnefficiency.net/exp/expected_tank_values_latest.json?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray()); 
+                string url = urlBase + "?GUID=" + Convert.ToBase64String(Guid.NewGuid().ToByteArray()); 
                 // Set a default policy level for the "http:" and "https" schemes.
                 HttpRequestCachePolicy policy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Default);
                 HttpWebRequest.DefaultCachePolicy = policy;
                 // Create request
-                WebRequest request = WebRequest.Create(url);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 				request.Timeout = 10000;     // 10 secs
-				// Define a cache policy for this request only. 
+                request.KeepAlive = true;
+                // Set security
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                // Define a cache policy for this request only. 
                 HttpRequestCachePolicy noCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
                 request.CachePolicy = noCachePolicy;
                 WebResponse webResponse = request.GetResponse();
@@ -74,9 +77,9 @@ namespace WinApp.Code
 				// Get ready to parse through WN8 exp values
 				JObject allTokens = JObject.Parse(json);
 			
-				JToken headerToken = allTokens.First;
-				JToken versionToken = headerToken.First;
-				WN8Version = (int)versionToken.First;
+				//JToken headerToken = allTokens.First;
+				//JToken versionToken = headerToken.First;
+				//WN8Version = (int)versionToken.First;
 
 				JArray items = (JArray)allTokens["data"];
 				JObject item;
@@ -125,7 +128,7 @@ namespace WinApp.Code
 			{
 				Log.LogToFile(ex);
 				string msg = 
-					"Could not connect to http://www.wnefficiency.net, please check your Internet access." + Environment.NewLine + Environment.NewLine +
+					"Could not connect to " + urlBase + ", please check your Internet access." + Environment.NewLine + Environment.NewLine +
 					ex.Message + Environment.NewLine +
 					ex.InnerException + Environment.NewLine + Environment.NewLine;
 				MsgBox.Show(msg, "Problem connecting to http://www.wnefficiency.net", parentForm);
@@ -136,7 +139,8 @@ namespace WinApp.Code
 			try
 			{
 				DB.ExecuteNonQuery(sql, true, true);
-				sql = "update _version_ set version=" + WN8Version + " where id=2;";
+                int wn8LastUpdated = DateTime.Now.Year * 10000 + DateTime.Now.Month * 100 + DateTime.Now.Day;
+				sql = "update _version_ set version=" + wn8LastUpdated + " where id=2;";
 				DB.ExecuteNonQuery(sql, true, true);
 			}
 			catch (Exception ex)

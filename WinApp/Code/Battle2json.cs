@@ -339,9 +339,11 @@ namespace WinApp.Code
                         DateTime battleTimeStart = DateTimeHelper.AdjustForTimeZone(DateTimeHelper.ConvertFromUnixTimestamp(arenaCreateTime));
                         // Personal token
                         JToken token_personel;
-						if (btlResultVer >= 15)
-							token_personel = token_root["personal"].First.First;
-						else
+                        if (token_root["personal"].First.First != null)
+                            token_personel = token_root["personal"].First.First;
+                        else if (token_root["personal"].First != null)
+                            token_personel = token_root["personal"].First;
+                        else
 							token_personel = token_root["personal"];
 						// Get tank
 						int tankId = (int)token_personel.SelectToken("typeCompDescr"); // tankId

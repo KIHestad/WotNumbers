@@ -38,7 +38,7 @@ def _whatsnd(data):
     return None
 
 
-
+
 class MIMEAudio(MIMENonMultipart):
     """Class for generating audio/* MIME documents."""
 

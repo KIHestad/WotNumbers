@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 453; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 455; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2717,9 +2717,6 @@ namespace WinApp.Code
                     Config.Settings.lastGrindingProgressRecalc = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day);
                     Config.SaveConfig(out msg);
                     break;
-                case 377:
-                    RunRecalcBattleWN8 = true;
-                    break;
                 case 378:
                     mssql =
                         "ALTER TABLE tank ADD mmrange int NULL; " +
@@ -2923,7 +2920,6 @@ namespace WinApp.Code
                     break;
                 case 417:
                     RunRecalcBattleWN9 = true;
-                    RunRecalcBattleWN8 = true;
                     break;
                 case 419:
                     mssql = "ALTER TABLE battle ADD xpOriginal int NULL; ";
@@ -3089,8 +3085,6 @@ namespace WinApp.Code
                         "INSERT INTO map (id, name, arena_id) VALUES (75, 'Paris', '112_eiffel_tower_ctf'); " +
                         "UPDATE battle SET mapId = 81 WHERE battleMode = 'Grand'";
                     sqlite = mssql;
-                    RunDownloadAndUpdateTanks = true;
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
                 case 453:
                     mssql =
@@ -3103,8 +3097,13 @@ namespace WinApp.Code
                         "UPDATE battle SET battleResultMode='Global Map' WHERE bonusType=13 AND battleResultMode IS NULL;";
                     sqlite = mssql;
                     break;
-
-
+                case 454:
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
+                case 455:
+                    RunDownloadAndUpdateTanks = true;
+                    RunRecalcBattleWN8 = true;
+                    break;
 
 
             }

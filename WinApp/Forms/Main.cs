@@ -4470,11 +4470,11 @@ namespace WinApp.Forms
             double WNcurrentVer9 = DBVersion.GetWNVersion(9);
             Form frm = new Forms.UpdateFromApi(autoRun);
 			frm.ShowDialog();
-            bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
+            //bool WNnewVer8 = (DBVersion.GetWNVersion(8) > WNcurrentVer8);
             bool WNnewVer9 = (DBVersion.GetWNVersion(9) > WNcurrentVer9);
-            if (WNnewVer8 || WNnewVer9)
+            if (WNnewVer9) //
             {
-                RunRecalcBattleWN8or9(true, WNnewVer8, WNnewVer9);
+                RunRecalcBattleWN8or9(true, false, WNnewVer9); // Disabled auto update WN8 because new version is set per day
                 DBVersion.RunDossierFileCheckWithForceUpdate = true;
             }
             ShowView("Refreshed view");

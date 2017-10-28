@@ -110,7 +110,7 @@ def quote(c):
     return "=%02X" % ord(c)
 
 
-
+
 def header_encode(header, charset="iso-8859-1", keep_eols=False,
                   maxlinelen=76, eol=NL):
     """Encode a single header line with quoted-printable (like) encoding.
@@ -174,7 +174,7 @@ def header_encode(header, charset="iso-8859-1", keep_eols=False,
     return joiner.join(['=?%s?q?%s?=' % (charset, line) for line in quoted])
 
 
-
+
 def encode(body, binary=False, maxlinelen=76, eol=NL):
     """Encode with quoted-printable, wrapping at maxlinelen characters.
 
