@@ -499,7 +499,8 @@ def exitwitherror(message):
     dossierheader['parser']['result'] = "error"
     dossierheader['parser']['message'] = message 
     dumpjson(dossierheader) 
-    cachefile.close() # IRONPYTHON MODIFIED: close dossier output file
+    if cachefile is not None:
+        cachefile.close() # IRONPYTHON MODIFIED: close dossier output file
     sys.exit(1) 
 
 def dumpjson(bresult): 
