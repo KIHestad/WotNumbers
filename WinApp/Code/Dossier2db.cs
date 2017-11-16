@@ -1036,9 +1036,10 @@ namespace WinApp.Code
                 // Update database
                 if (sqlFields.Length > 0)
 				{
-					// Insert Battle
+                    // Insert Battle
 					string sql = "INSERT INTO battle (playerTankId " + sqlFields + ") VALUES (@playerTankId " + sqlValues + "); ";
-					DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
+                    Log.AddToLogBuffer("Adding battle to db: " + sql);
+                    DB.AddWithValue(ref sql, "@playerTankId", playerTankId, DB.SqlDataType.Int);
 					DB.ExecuteNonQuery(sql);
 					// Get the last battle id
 					int battleId = 0;

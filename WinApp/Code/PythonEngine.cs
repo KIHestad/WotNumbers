@@ -6,14 +6,14 @@ using System.Text;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using System.Diagnostics;
-
+using System.Threading;
 
 namespace WinApp.Code
 {
     class PythonEngine
 	{
 		public static Microsoft.Scripting.Hosting.ScriptEngine Engine; // allow to run ironpython programs
-		public static bool InUse = false;
+        private static Mutex pythonLock = new Mutex();
 
 		// Fetch output
 		public static string ipyOutput;
@@ -41,7 +41,22 @@ namespace WinApp.Code
 			Engine.Runtime.IO.SetOutput(ipyMemoryStream, outputWr);
 		}
 
-		private static void sWr_StringWritten(object sender, MyEvtArgs<string> e)
+        public static bool LockPython(int timeout = 1)
+        {
+            if (pythonLock.WaitOne(TimeSpan.FromSeconds(timeout)))
+            {
+                return true;
+            }
+            Log.AddToLogBuffer("Unable to lock Python environment!");
+            return false;
+        }
+
+        public static void UnlockPython()
+        {
+            pythonLock.ReleaseMutex();
+        }
+
+        private static void sWr_StringWritten(object sender, MyEvtArgs<string> e)
 		{
 			ipyOutput += e.Value;
 		}
