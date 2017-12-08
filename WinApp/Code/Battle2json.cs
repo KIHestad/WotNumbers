@@ -130,7 +130,7 @@ namespace WinApp.Code
 								string filename = Path.GetFileName(file);
 								if( !WaitUntilFileReadyToRead(file, 4000)) // Since we cannot read the file, skip it rather then crash further down.
 								{
-									EventLog.AddToLogBuffer(" > > > Could not read battle DAT-file: " + file);
+									Log.AddToLogBuffer(" > > > Could not read battle DAT-file: " + file);
 									continue;
 								}
 								fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
