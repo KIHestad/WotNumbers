@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?define ProductVersion = "0.19.10.0"?>
+<?define ProductVersion = "0.19.11.0"?>
 <?define UpgradeCode = "{31e0492c-bcf9-47e7-a9be-1d4ec4637d93}"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -380,6 +380,9 @@
       <Component Id="cmpBRS_28" Directory="INSTALLFOLDER_Dossier2json" Guid="{7AF8459B-04D5-4C01-AC4E-7D63FC485A74}">
         <File Id="filBRS_28" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_28.py" />
       </Component>
+      <Component Id="cmpBRS_29" Directory="INSTALLFOLDER_Dossier2json" Guid="{0CA3C862-C3CE-4755-B011-3B4EEEC04F37}">
+        <File Id="filBRS_29" KeyPath="yes" Source="$(var.D2jSource)\battle_results_shared_29.py" />
+      </Component>
 
       <!-- Maps and tanks, not in use -->
 
@@ -395,6 +398,9 @@
       </Component>
       <Component Id="cmpdictpackers_28" Directory="INSTALLFOLDER_Dossier2json" Guid="{FC9AB77E-E694-4A2C-9198-21DD4553892C}">
         <File Id="fildictpackers_28" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_28.py" />
+      </Component>
+      <Component Id="cmpdictpackers_29" Directory="INSTALLFOLDER_Dossier2json" Guid="{5C8DFA3E-5302-4D96-B54A-DBBADCD6E2F3}">
+        <File Id="fildictpackers_29" KeyPath="yes" Source="$(var.D2jSource)\dictpackers_29.py" />
       </Component>
 
       <Component Id="cmp9118B4EF27BCC49090F03ABFEB1661DC" Directory="INSTALLFOLDER_Dossier2json" Guid="{57D92770-C430-4636-963B-A3217901533C}">

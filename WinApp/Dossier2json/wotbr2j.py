@@ -102,7 +102,7 @@ def main():
         exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
     # Set last struct version, loop from highest to lowest version until valid struct found
-    parser['battleResultVersion'] = 29
+    parser['battleResultVersion'] = 28
     while parser['battleResultVersion']>0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
