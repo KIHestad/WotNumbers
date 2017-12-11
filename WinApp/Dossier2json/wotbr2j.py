@@ -4,6 +4,7 @@
 # originally by Phalynx www.vbaddict.net (retired) # 
 #################################################### 
 import struct, json, time, sys, os, zlib, cPickle, StringIO
+import traceback
 from itertools import izip 
 
 VEH_INTERACTION_DETAILS_LEGACY = ('spotted', 'killed', 'hits', 'he_hits', 'pierced', 'damageDealt', 'damageAssisted', 'crits', 'fire') 
@@ -101,7 +102,7 @@ def main():
         exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
     # Set last struct version, loop from highest to lowest version until valid struct found
-    parser['battleResultVersion'] = 28
+    parser['battleResultVersion'] = 29
     while parser['battleResultVersion']>0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
@@ -493,8 +494,9 @@ def detailsDictToString(mydict):
         mydictcopy[str(key[0]) + '-' + str(key[1])] = value
     return mydictcopy
     
-def exitwitherror(message): 
-    global parser
+def exitwitherror(message):
+    traceback.print_exc()
+    global parser, cachefile
     printmessage(message, 1) 
     dossierheader = dict() 
     dossierheader['parser'] = dict() 
