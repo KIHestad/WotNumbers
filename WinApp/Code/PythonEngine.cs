@@ -23,12 +23,12 @@ namespace WinApp.Code
 		public static void CreateEngine()
 		{
 			// Create Engine - Debug mode
-			Dictionary<string, object> options = new Dictionary<string, object>();
-			options["Debug"] = true;
-			Engine = Python.CreateEngine(options); 
+			// Dictionary<string, object> options = new Dictionary<string, object>();
+			// options["Debug"] = true;
+			// Engine = Python.CreateEngine(options); 
 
 			// Create Engine - Normal mode
-			// Engine = Python.CreateEngine();
+			Engine = Python.CreateEngine();
 
 			/*
 			System.IO.FileStream fs = new System.IO.FileStream(ipyLogFile, System.IO.FileMode.Create);

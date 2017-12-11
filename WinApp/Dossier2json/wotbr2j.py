@@ -55,7 +55,7 @@ def usage():
 def main(): 
 
     import struct, json, time, sys, os, shutil, datetime 
-    global filename_source, filename_target, option_logging, option_format, parser, log_file
+    global filename_source, filename_target, option_logging, option_format, parser, log_file, cachefile
     
     option_format = 0
     option_logging = 0
