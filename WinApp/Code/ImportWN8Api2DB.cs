@@ -51,7 +51,7 @@ namespace WinApp.Code
 			double expWR = 0;
 			int updateCount = 0;
             // Get WN8 from API
-            string urlBase = "https://stat.modxvm.com/wn8-data-exp/json/wn8exp.json";
+            string urlBase = "https://static.modxvm.com/wn8-data-exp/json/wn8exp.json";
             try
             {
                 // First reset flag for fetched from api
