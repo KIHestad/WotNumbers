@@ -130,7 +130,7 @@ namespace WinApp.Code
 								string filename = Path.GetFileName(file);
 								if( !WaitUntilFileReadyToRead(file, 4000)) // Since we cannot read the file, skip it rather then crash further down.
 								{
-									EventLog.AddToLogBuffer(" > > > Could not read battle DAT-file: " + file);
+									Log.AddToLogBuffer(" > > > Could not read battle DAT-file: " + file);
 									continue;
 								}
 								fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
@@ -156,7 +156,6 @@ namespace WinApp.Code
 					int totFilesDat = filesDatCopied.Count();
 					if (totFilesDat > 0)
 					{
-						WaitUntilIronPythonReady(10000); // Wait until IronPython Engine is available, max 10 seconds
 						Log.AddToLogBuffer(" > > Start converting " + totFilesDat.ToString() + " battle DAT-files to json");
 						foreach (string file in filesDatCopied)
 						{
@@ -1116,77 +1115,64 @@ namespace WinApp.Code
 			// Locate Python script
 			string appPath = Path.GetDirectoryName(Application.ExecutablePath); // path to app dir
 			string battle2jsonScript = appPath + "\\dossier2json\\wotbr2j.py"; // python-script for converting dossier file
-			// Use IronPython
-			PythonEngine.ipyOutput = ""; // clear ipy output
-			try
-			{
-				//var ipy = Python.CreateRuntime();
-				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
-				//ipyrun.main();
+                                                                               // Use IronPython
+            if (PythonEngine.LockPython(timeout: 10))
+            {
+                try
+                {
+                    PythonEngine.ipyOutput = ""; // clear ipy output
+                    try
+                    {
+                        //var ipy = Python.CreateRuntime();
+                        //dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
+                        //ipyrun.main();
 
-				if (!PythonEngine.InUse)
-				{
-					PythonEngine.InUse = true;
-					Log.AddToLogBuffer(" > > Starting to converted battle DAT-file to JSON file: " + filename);
-					var argv = new List();
-					argv.Add(battle2jsonScript); // Have to add filename to run as first arg
-					argv.Add(filename);
-					argv.Add("-f");
+                        Log.AddToLogBuffer(" > > Starting to converted battle DAT-file to JSON file: " + filename);
+                        var argv = new List();
+                        argv.Add(battle2jsonScript); // Have to add filename to run as first arg
+                        argv.Add(filename);
+                        argv.Add("-f");
 
-                    PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
-					ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
-					dynamic result = scope.GetVariable("main")();
+                        PythonEngine.Engine.GetSysModule().SetVariable("argv", argv);
+                        ScriptScope scope = PythonEngine.Engine.ExecuteFile(battle2jsonScript); // this is your python program
+                        dynamic result = scope.GetVariable("main")();
 
-                    //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
-                    //setup.DebugMode = true;
-                    //setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
-                    //ScriptRuntime runtime = new ScriptRuntime(setup);
-                    //ScriptEngine engine = runtime.GetEngineByTypeName(typeof(PythonContext).AssemblyQualifiedName);
-                    //ScriptSource script = engine.CreateScriptSourceFromFile(battle2jsonScript);
-                    //CompiledCode code = script.Compile();
-                    //ScriptScope scope = engine.CreateScope();
-                    //script.Execute(scope);
+                        //ScriptRuntimeSetup setup = new ScriptRuntimeSetup();
+                        //setup.DebugMode = true;
+                        //setup.LanguageSetups.Add(Python.CreateLanguageSetup(null));
+                        //ScriptRuntime runtime = new ScriptRuntime(setup);
+                        //ScriptEngine engine = runtime.GetEngineByTypeName(typeof(PythonContext).AssemblyQualifiedName);
+                        //ScriptSource script = engine.CreateScriptSourceFromFile(battle2jsonScript);
+                        //CompiledCode code = script.Compile();
+                        //ScriptScope scope = engine.CreateScope();
+                        //script.Execute(scope);
 
-                    Application.DoEvents();
-					Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
-					ok = true;
-					deleteFile = true;
-					PythonEngine.InUse = false;
-				}
-				else
-				{
-					Log.AddToLogBuffer(" > > IronPython Engine in use, not converted battle DAT-file to JSON file: " + filename);
-					ok = true;
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.AddToLogBuffer(" > > IronPython exception thrown converted battle DAT-file to JSON file: " + filename);
-				Log.LogToFile(ex, "ConvertBattleUsingPython exception running: " + battle2jsonScript + " with args: " + filename + " -f");
-				// Cleanup
-				deleteFile = true;
-				PythonEngine.InUse = false;
-			}
-			Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
-			Log.WriteLogBuffer();
-			return ok;
-		}
-
-		private static void WaitUntilIronPythonReady(int maxWaitTime)
-		{
-			// Checks if IronPython is ready
-			int waitInterval = 250; // time to wait in ms per read operation to check filesize
-			Stopwatch stopWatch = new Stopwatch();
-			stopWatch.Start();
-			while (stopWatch.ElapsedMilliseconds < maxWaitTime && PythonEngine.InUse)
-			{
-				TimeSpan ts = stopWatch.Elapsed;
-				Log.AddToLogBuffer(String.Format(" > > IronPython in use, waiting for process to finish (waited: {0:0000}ms)", stopWatch.ElapsedMilliseconds.ToString()));
-				System.Threading.Thread.Sleep(waitInterval);
-			}
-			Log.AddToLogBuffer(String.Format(" > > IronPython ready to read battle files"));
-			stopWatch.Stop();
-		}
+                        Application.DoEvents();
+                        Log.AddToLogBuffer(" > > > Converted battle DAT-file to JSON file: " + filename);
+                        ok = true;
+                        deleteFile = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.AddToLogBuffer(" > > IronPython exception thrown converted battle DAT-file to JSON file: " + filename);
+                        Log.LogToFile(ex, "ConvertBattleUsingPython exception running: " + battle2jsonScript + " with args: " + filename + " -f");
+                        // Cleanup
+                        deleteFile = true;
+                    }
+                    Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
+                    Log.WriteLogBuffer();
+                }
+                finally
+                {
+                    PythonEngine.UnlockPython();
+                }
+            }
+            else
+            {
+                Log.AddToLogBuffer(" > > Unable to lock Python environment for Dossier DAT-file conversion");
+            }
+            return ok;
+        }
 
         private static int? GetMaxBattleTier(int battleId)
         {

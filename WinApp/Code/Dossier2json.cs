@@ -336,35 +336,41 @@ namespace WinApp.Code
 
 		private static bool ConvertDossierUsingPython(string dossier2jsonScript, string dossierDatFile)
 		{
-			// Use IronPython
-			bool convertResult = true;
-			PythonEngine.ipyOutput = ""; // clear ipy output
-			try
-			{
-				//var ipy = Python.CreateRuntime();
-				//dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
-				//ipyrun.main();
-
-				if (!PythonEngine.InUse)
-				{
-					Log.AddToLogBuffer(" > > Start converting Dossier DAT-file to json");
-					PythonEngine.InUse = true;
-					Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
-					dynamic result = scope.GetVariable("main")();
-					PythonEngine.InUse = false;
-					Log.AddToLogBuffer(" > > Finish converted Dossier DAT-file to json");
-				}
-
-			}
-			catch (Exception ex)
-			{
-				Log.LogToFile(ex, "Dossier2json exception running: " + dossier2jsonScript);
-				PythonEngine.InUse = false;
-				convertResult = false;
-			}
-			Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
-			Log.WriteLogBuffer();
-			return convertResult;
+            if (PythonEngine.LockPython(timeout: 60))
+            {
+                try
+                {
+                    // Use IronPython
+                    bool convertResult = true;
+                    PythonEngine.ipyOutput = ""; // clear ipy output
+                    try
+                    {
+                        //var ipy = Python.CreateRuntime();
+                        //dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
+                        //ipyrun.main();
+                        Log.AddToLogBuffer(" > > Start converting Dossier DAT-file to json");
+                        Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
+                        dynamic result = scope.GetVariable("main")();
+                        Log.AddToLogBuffer(" > > Finish converted Dossier DAT-file to json");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogToFile(ex, "Dossier2json exception running: " + dossier2jsonScript);
+                        convertResult = false;
+                    }
+                    Log.AddIpyToLogBuffer(PythonEngine.ipyOutput);
+                    Log.WriteLogBuffer();
+                    return convertResult;
+                }
+                finally
+                {
+                    PythonEngine.UnlockPython();
+                }
+            } else
+            {
+                Log.AddToLogBuffer(" > > Unable to lock Python environment for Dossier DAT-file conversion");
+                return false;
+            }
 		}
 
 		private static bool FilesContentsAreEqual(FileInfo fileInfo1, FileInfo fileInfo2)

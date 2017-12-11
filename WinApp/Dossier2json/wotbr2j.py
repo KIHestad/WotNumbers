@@ -84,8 +84,10 @@ def main():
     filename_target = os.path.splitext(filename_source)[0] 
     filename_target = filename_target + '.json'
     
-    if not os.path.exists(filename_source) or not os.path.isfile(filename_source) or not os.access(filename_source, os.R_OK): 
-        exitwitherror('Battle Result does not exists!') 
+    if not os.path.exists(filename_source) or not os.path.isfile(filename_source):
+        exitwitherror('Battle Result does not exists! file: ' + filename_source)
+    if not os.access(filename_source, os.R_OK):
+        exitwitherror('Cannot read Battle result, read-access was denied for file: ' + filename_source)
 
     cachefile = open(filename_source, 'rb') 
               
@@ -499,7 +501,8 @@ def exitwitherror(message):
     dossierheader['parser']['result'] = "error"
     dossierheader['parser']['message'] = message 
     dumpjson(dossierheader) 
-    cachefile.close() # IRONPYTHON MODIFIED: close dossier output file
+    if cachefile is not None:
+        cachefile.close() # IRONPYTHON MODIFIED: close dossier output file
     sys.exit(1) 
 
 def dumpjson(bresult): 
