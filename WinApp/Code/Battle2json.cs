@@ -128,7 +128,11 @@ namespace WinApp.Code
 								Log.AddToLogBuffer(" > > Start copying battle DAT-file: " + file);
 								FileInfo fileBattleOriginal = new FileInfo(file); // the original dossier file
 								string filename = Path.GetFileName(file);
-								WaitUntilFileReadyToRead(file, 4000);
+								if( !WaitUntilFileReadyToRead(file, 4000)) // Since we cannot read the file, skip it rather then crash further down.
+								{
+									EventLog.AddToLogBuffer(" > > > Could not read battle DAT-file: " + file);
+									continue;
+								}
 								fileBattleOriginal.CopyTo(Config.AppDataBattleResultFolder + filename, true); // copy original dossier fil and rename it for analyze
 								Application.DoEvents();
 								// if successful copy remember it
@@ -199,7 +203,7 @@ namespace WinApp.Code
 			return ok;
 		}
 
-		private static void WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
+		private static bool WaitUntilFileReadyToRead(string filePath, int maxWaitTime)
 		{
 			// Checks file is readable
 			bool fileOK = false;
@@ -225,6 +229,8 @@ namespace WinApp.Code
 				}
 			}
 			stopWatch.Stop();
+
+			return fileOK;
 		}
 
 		private static void vBAddictBattleResultToUpload()
