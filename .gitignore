@@ -157,3 +157,9 @@ $RECYCLE.BIN/
 /packages
 /Dokumentasjon
 sh.exe.stackdump
+
+# =========================
+# Wot Numbers custom ignore
+# =========================
+
+.vs/

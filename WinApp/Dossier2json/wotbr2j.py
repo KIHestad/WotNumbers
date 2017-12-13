@@ -43,7 +43,7 @@ VEH_INTERACTION_DETAILS_TYPES = dict(((x[0], x[1]) for x in VEH_INTERACTION_DETA
   
   
 parser = dict()
-parser['version'] = "0.9.20.1.1"
+parser['version'] = "0.9.21.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
   
@@ -102,7 +102,7 @@ def main():
         exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
     # Set last struct version, loop from highest to lowest version until valid struct found
-    parser['battleResultVersion'] = 28
+    parser['battleResultVersion'] = 29
     while parser['battleResultVersion']>0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 

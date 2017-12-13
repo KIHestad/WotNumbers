@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 455; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
+        public static int ExpectedNumber = 457; // <--------------------------------------- REMEMBER TO ADD DB VERSION NUMBER HERE - AND SUPPLY SQL SCRIPT BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3097,14 +3097,18 @@ namespace WinApp.Code
                         "UPDATE battle SET battleResultMode='Global Map' WHERE bonusType=13 AND battleResultMode IS NULL;";
                     sqlite = mssql;
                     break;
-                case 454:
-                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
-                    break;
                 case 455:
-                    RunDownloadAndUpdateTanks = true;
                     RunRecalcBattleWN8 = true;
                     break;
-
+                case 456:
+                    mssql =
+                        "INSERT INTO map (id, name, arena_id) VALUES (82, 'Klondike', '217_er_alaska'); ";
+                    sqlite = mssql;
+                    break;
+                case 457:
+                    RunDownloadAndUpdateTanks = true;
+                    CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
+                    break;
 
             }
             string sql = "";

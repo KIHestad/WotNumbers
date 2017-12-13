@@ -974,9 +974,12 @@ namespace WinApp.Code
                             bool newMap = (currentMaps.Select("arena_id = '" + arena_id + "'").Count() == 0);
                             if (newMap)
                             {
-                                // ISERT NEW MAP DO NOT WORK, NEED TO HAVE EXACT ID
+                                // INSERT NEW MAP, DO NOT WORK, NEED TO HAVE EXACT ID
                                 // sql = "INSERT INTO map (id, description, name, active, arena_id) VALUES (@id, @description, @name, 1, @arena_id); ";
-                                MsgBox.Show("New map found: " + name + " missing in Wot Numbers database. Will be added in a later version", "Missing map", parentForm);
+                                MsgBox.Show(
+                                    "New map found: " + name + " missing in Wot Numbers database. Will be added in a later version" + Environment.NewLine + Environment.NewLine +
+                                    "arena_id: " + arena_id + Environment.NewLine + Environment.NewLine
+                                    , "Missing map", parentForm);
                             }
 
                             else
