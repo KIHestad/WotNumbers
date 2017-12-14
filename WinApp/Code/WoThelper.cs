@@ -29,6 +29,14 @@ namespace WinApp.Code
             else
                 return GetFullInstallPath += "res_mods\\" + subFolder + "\\";
         }
+        public static string GetResModsPathSubfolder(string subFolder = "")
+        {
+            if (subFolder == "")
+                return "\\res_mods\\" + Config.Settings.res_mods_subfolder + "\\";
+            else
+                return "\\res_mods\\" + subFolder + "\\";
+        }
+
 
         private static string GetHighestResModsFolder()
         {

@@ -118,13 +118,25 @@ namespace WinApp.Forms.Settings
                 MsgBox.Show("Optimization mode selected, but no CPU's selected. Settings are not saved.", "Save settings terminated");
                 return;
             }
-            // Check for valid res_mods folder
-            if (txtResModsSubFolder.Text.Trim() == "" || !Directory.Exists(WoThelper.GetFullResModsPath(txtResModsSubFolder.Text.Trim())))
+            if (txtFolder.Text == "" || !Directory.Exists(txtFolder.Text))
             {
-                MsgBox.Show("Illegal res_mods folder. Settings are not saved.", "Save settings terminated");
+                MsgBox.Show(
+                    "Illegal game folder: " + txtFolder.Text + Environment.NewLine + Environment.NewLine +
+                    "Settings are not saved." + Environment.NewLine + Environment.NewLine,
+                    "Save settings terminated");
                 return;
             }
-
+            // Check for valid res_mods folder
+            string res_modFolder = txtFolder.Text + WoThelper.GetResModsPathSubfolder(txtResModsSubFolder.Text.Trim());
+            if (res_modFolder == "" || !Directory.Exists(res_modFolder))
+            {
+                MsgBox.Show(
+                    "Illegal res_mods folder: " + res_modFolder + Environment.NewLine + Environment.NewLine +
+                    "Settings are not saved." + Environment.NewLine + Environment.NewLine,
+                    "Save settings terminated");
+                return;
+            }
+            
             ConfigData.WoTGameStartType wotGameStartType = ConfigData.WoTGameStartType.None;
             if (ddStartApp.Text == "Wot Game")
                 wotGameStartType = ConfigData.WoTGameStartType.Game;
