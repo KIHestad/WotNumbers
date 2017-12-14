@@ -1,9 +1,16 @@
-#################################################### 
-# World of Tanks Battle Results to JSON            # 
-# by BadButton at wotnumbers.com                   # 
-# originally by Phalynx www.vbaddict.net (retired) # 
-#################################################### 
-import struct, json, time, sys, os, zlib, cPickle, StringIO
+####################################################
+# World of Tanks Battle Results to JSON #
+# by BadButton at wotnumbers.com #
+# originally by Phalynx www.vbaddict.net (retired) #
+####################################################
+import struct
+import json
+import time
+import sys
+import os
+import zlib
+import cPickle
+import StringIO
 import traceback
 from itertools import izip 
 
@@ -13,27 +20,26 @@ VEH_INTERACTION_DETAILS_INDICES_LEGACY = dict(((x[1], x[0]) for x in enumerate(V
 VEHICLE_DEVICE_TYPE_NAMES = ('engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice')
 VEHICLE_TANKMAN_TYPE_NAMES = ('commander', 'driver', 'radioman', 'gunner', 'loader')
 
-VEH_INTERACTION_DETAILS = (
-    ('spotted', 'B', 1, 0),
-    ('deathReason', 'b', 10, -1),
-    ('directHits', 'H', 65535, 0),
-    ('secondaryDirectHits', 'H', 65535, 0),
-    ('explosionHits', 'H', 65535, 0),
-    ('piercings', 'H', 65535, 0),
-    ('secondaryPiercings', 'H', 65535, 0),
-    ('damageDealt', 'H', 65535, 0),
-    ('damageAssistedTrack', 'H', 65535, 0),
-    ('damageAssistedRadio', 'H', 65535, 0),
-    ('damageAssistedStun', 'H', 65535, 0),
-    ('crits', 'I', 4294967295L, 0),
-    ('fire', 'H', 65535, 0),
-    ('stunNum', 'H', 65535, 0),
-    ('stunDuration', 'f', 65535.0, 0.0),
-    ('damageBlockedByArmor', 'I', 4294967295L, 0),
-    ('damageReceived', 'H', 65535, 0),
-    ('rickochetsReceived', 'H', 65535, 0),
-    ('noDamageDirectHitsReceived', 'H', 65535, 0),
-    ('targetKills', 'B', 255, 0))
+VEH_INTERACTION_DETAILS = (('spotted', 'B', 1, 0),
+ ('deathReason', 'b', 10, -1),
+ ('directHits', 'H', 65535, 0),
+ ('secondaryDirectHits', 'H', 65535, 0),
+ ('explosionHits', 'H', 65535, 0),
+ ('piercings', 'H', 65535, 0),
+ ('secondaryPiercings', 'H', 65535, 0),
+ ('damageDealt', 'H', 65535, 0),
+ ('damageAssistedTrack', 'H', 65535, 0),
+ ('damageAssistedRadio', 'H', 65535, 0),
+ ('damageAssistedStun', 'H', 65535, 0),
+ ('crits', 'I', 4294967295L, 0),
+ ('fire', 'H', 65535, 0),
+ ('stunNum', 'H', 65535, 0),
+ ('stunDuration', 'f', 65535.0, 0.0),
+ ('damageBlockedByArmor', 'I', 4294967295L, 0),
+ ('damageReceived', 'H', 65535, 0),
+ ('rickochetsReceived', 'H', 65535, 0),
+ ('noDamageDirectHitsReceived', 'H', 65535, 0),
+ ('targetKills', 'B', 255, 0))
 VEH_INTERACTION_DETAILS_NAMES = [ x[0] for x in VEH_INTERACTION_DETAILS ]
 VEH_INTERACTION_DETAILS_MAX_VALUES = dict(((x[0], x[2]) for x in VEH_INTERACTION_DETAILS))
 VEH_INTERACTION_DETAILS_INIT_VALUES = [ x[3] for x in VEH_INTERACTION_DETAILS ]
@@ -55,7 +61,13 @@ def usage():
   
 def main(): 
 
-    import struct, json, time, sys, os, shutil, datetime 
+    import struct
+    import json
+    import time
+    import sys
+    import os
+    import shutil
+    import datetime
     global filename_source, filename_target, option_logging, option_format, parser, log_file, cachefile
     
     option_format = 0
@@ -73,18 +85,18 @@ def main():
             option_logging = 0 #No logging allowed
 
 
-    filename_source = str(sys.argv[1]) 
+    filename_source = str(sys.argv[1])
 
-    printmessage('', 1) 
+    printmessage('', 1)
     printmessage('### WoTBR2J ' + parser['version'] + ' BATTLE FILE CONVERT TO JSON ###', 1) 
-    printmessage('Time: ' + str(datetime.datetime.now()), 1) 
+    printmessage('Time: ' + str(datetime.datetime.now()), 1)
     printmessage('Encoding: ' + str(sys.getdefaultencoding()) + ' - ' + str(sys.getfilesystemencoding()), 1)
 
     printmessage('Processing file: ' + filename_source, 1) 
       
     filename_target = os.path.splitext(filename_source)[0] 
     filename_target = filename_target + '.json'
-    
+
     if not os.path.exists(filename_source) or not os.path.isfile(filename_source):
         exitwitherror('Battle Result does not exists! file: ' + filename_source)
     if not os.access(filename_source, os.R_OK):
@@ -93,7 +105,8 @@ def main():
     cachefile = open(filename_source, 'rb') 
               
     try: 
-        #from os.path import SafeUnpickler - IRONPYTHON MODIFIED: no use if SafeUnpickler
+        #from os.path import SafeUnpickler - IRONPYTHON MODIFIED: no use if
+        #SafeUnpickler
         legacyBattleResultVersion, battleResults = SafeUnpickler.load(cachefile) 
     except Exception, e: 
         exitwitherror('Battle Result cannot be read (pickle could not be read) ' + e.message) 
@@ -101,13 +114,14 @@ def main():
     if not 'battleResults' in locals(): 
         exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
-    # Set last struct version, loop from highest to lowest version until valid struct found
+    # Set last struct version, loop from highest to lowest version until valid
+    # struct found
     parser['battleResultVersion'] = 29
-    while parser['battleResultVersion']>0:
+    while parser['battleResultVersion'] > 0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
-        if issuccess==0:
-            parser['battleResultVersion'] = parser['battleResultVersion']-1
+        if issuccess == 0:
+            parser['battleResultVersion'] = parser['battleResultVersion'] - 1
         else:
             break
     
@@ -115,7 +129,7 @@ def main():
         exitwitherror('Battle Result cannot be read (personal does not exist)')
     
     # version 0.9.8 and higher
-    if len(list(bresult['personal'].keys()))<10:
+    if len(list(bresult['personal'].keys())) < 10:
         for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
             if type(ownResults) is dict:
                 if 'details' in ownResults:
@@ -126,7 +140,7 @@ def main():
                 
             bresult['personal'][vehTypeCompDescr] = ownResults
             
-    # lower version than 0.9.8 
+    # lower version than 0.9.8
     else:
         if 'details' in bresult['personal']:
           
@@ -136,7 +150,7 @@ def main():
                 bresult['personal']['details'] = VehicleInteractionDetails.fromPacked(bresult['personal']['details']).toDict()             
             
             bresult['personal']['details'] = handleDetailsCrits(bresult['personal']['details'])
-    
+
     parser['result'] = 'ok'
     bresult['parser'] = parser
     
@@ -145,7 +159,7 @@ def main():
 
     printmessage('### Done ###', 1) 
     printmessage('', 0) 
-    
+
     # IRONPYTHON MODIFIED: close dossier input file
     cachefile.close()
     # IRONPYTHON MODIFIED: no need for exit, throws error when calling sys.exit
@@ -157,8 +171,8 @@ def convertToFullForm(compactForm, battleResultVersion):
     handled = 0
     import importlib
     battle_results_data = importlib.import_module('battle_results_shared_' + str(battleResultVersion).zfill(2))
-    
-    if len(battle_results_data.VEH_FULL_RESULTS)==0:
+
+    if len(battle_results_data.VEH_FULL_RESULTS) == 0:
         exitwitherror("Unsupported Battle Result Version: " + str(battleResultVersion))
     else:
         if battleResultVersion >= 28:
@@ -251,7 +265,8 @@ def convertToFullForm(compactForm, battleResultVersion):
                 return 0, {}
             except Exception, e: 
                 return 0, {}
-                #exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
+                #exitwitherror("Error occured while transforming Battle Result
+                #Version: " + str(battleResultVersion) + " Error: " + str(e))
                 
         elif battleResultVersion >= 19:
 
@@ -297,7 +312,8 @@ def convertToFullForm(compactForm, battleResultVersion):
                 return 0, {}
             except Exception, e: 
                 return 0, {}
-                #exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
+                #exitwitherror("Error occured while transforming Battle Result
+                #Version: " + str(battleResultVersion) + " Error: " + str(e))
                 
         elif battleResultVersion >= 18:  
     
@@ -469,12 +485,13 @@ def prepareForJSON(bresult):
                                     for achievement, amount in oldClubDossier.iteritems():
                                         bresult['personal'][vehTypeCompDescr]['club']['clubDossierPopUps'][str(list(achievement)[0]) + '-' + str(list(achievement)[1])] = amount
         
-            if len(bresult['personal'].copy())>1 and len(bresult['personal'].copy())<10 :
+            if len(bresult['personal'].copy()) > 1 and len(bresult['personal'].copy()) < 10 :
                 pass
             for vehTypeCompDescr, ownResults in bresult['personal'].copy().iteritems():
                 if ownResults is not None:
                     for detail in ownResults:
-                        if (type(ownResults[detail]) is str): # MC: This is a hack to remove suspicious entries. The resulting string is not a valid number.
+                        if (type(ownResults[detail]) is str): # MC: This is a hack to remove suspicious entries.  The resulting string is
+                                                              # not a valid number.
                             ownResults[detail] = 0
                     
                     if 'details' in ownResults:
@@ -502,7 +519,7 @@ def exitwitherror(message):
     dossierheader['parser'] = dict() 
     dossierheader['parser']['result'] = "error"
     dossierheader['parser']['message'] = message 
-    dumpjson(dossierheader) 
+    dumpjson(dossierheader)
     if cachefile is not None:
         cachefile.close() # IRONPYTHON MODIFIED: close dossier output file
     sys.exit(1) 
@@ -539,7 +556,7 @@ def print_array(oarray):
     print json.dumps(oarray, sort_keys=True, indent=4)
 
 def handleDetailsCrits(details):
-    if type(details) is dict and len(details)>0: 
+    if type(details) is dict and len(details) > 0:
         for vehicleid, detail_values in details.items(): 
             details[vehicleid]['critsDestroyedTankmenList'] = getDestroyedTankmen(detail_values)
             details[vehicleid]['critsCriticalDevicesList'] = getCriticalDevicesList(detail_values)
@@ -549,7 +566,7 @@ def handleDetailsCrits(details):
 
 def getDestroyedTankmen(detail_values):
     destroyedTankmenList = [] 
-    if detail_values['crits']>0: 
+    if detail_values['crits'] > 0:
         destroyedTankmen = detail_values['crits'] >> 24 & 255
           
         for shift in range(len(VEHICLE_TANKMAN_TYPE_NAMES)): 
@@ -559,7 +576,7 @@ def getDestroyedTankmen(detail_values):
 
 def getCriticalDevicesList(detail_values):
     criticalDevicesList = [] 
-    if detail_values['crits']>0: 
+    if detail_values['crits'] > 0:
         criticalDevices = detail_values['crits'] & 4095
           
         for shift in range(len(VEHICLE_DEVICE_TYPE_NAMES)): 
@@ -569,7 +586,7 @@ def getCriticalDevicesList(detail_values):
         
 def getDestroyedDevicesList(detail_values):
     destroyedDevicesList = [] 
-    if detail_values['crits']>0: 
+    if detail_values['crits'] > 0:
         destroyedDevices = detail_values['crits'] >> 12 & 4095
         for shift in range(len(VEHICLE_DEVICE_TYPE_NAMES)): 
         
@@ -585,11 +602,12 @@ def printmessage(logtext, to_log):
     print str(logtext)
         
     #if to_log == 1 and option_logging == 1:
-    #    now = datetime.datetime.now() 
-    #    message = str(now.strftime("%Y-%m-%d %H:%M:%S")) + " - " + str(logtext) + "\r\n"
-    #    logFile = open(log_file, "a+b") 
-    #    logFile.write(message) 
-    #    logFile.close() 
+    #    now = datetime.datetime.now()
+    #    message = str(now.strftime("%Y-%m-%d %H:%M:%S")) + " - " +
+    #    str(logtext) + "\r\n"
+    #    logFile = open(log_file, "a+b")
+    #    logFile.write(message)
+    #    logFile.close()
 
 # Pre 98
 class _VehicleInteractionDetailsItem(object): 
@@ -606,11 +624,10 @@ class _VehicleInteractionDetailsItem(object):
   
     def __iter__(self): 
         return izip(VEH_INTERACTION_DETAILS_NAMES, self.__values[self.__offset:]) 
-  
-  
-  
+
+
+
 class VehicleInteractionDetails(object): 
-  
     def __init__(self, vehicleIDs, values): 
         self.__vehicleIDs = vehicleIDs 
         self.__values = values 
@@ -713,20 +730,23 @@ class VehicleInteractionDetails_LEGACY(object):
         return dict([ (vehID, dict(_VehicleInteractionDetailsItem_LEGACY(self.__values, offset))) for vehID, offset in self.__offsets.iteritems() ]) 
 
 class SafeUnpickler(object):
-    # IRONPYTHON MODIFIED: not really in use, method just performs normal cPicle.Unpickler
+    # IRONPYTHON MODIFIED: not really in use, method just performs normal
+    # cPicle.Unpickler
     
     #PICKLE_SAFE = {'DamageEvents', 'collections'}
     
     #@classmethod
     #def find_class(cls, module, name):
     #	if not module in cls.PICKLE_SAFE:
-    #		raise cPickle.UnpicklingError('Attempting to unpickle unsafe module %s' % module)
+    #		raise cPickle.UnpicklingError('Attempting to unpickle unsafe module %s'
+    #		% module)
     
     #	__import__(module)
     #	mod = sys.modules[module]
     
     #	if not name in cls.PICKLE_SAFE[module]:
-    #		raise cPickle.UnpicklingError('Attempting to unpickle unsafe class %s' % name)
+    #		raise cPickle.UnpicklingError('Attempting to unpickle unsafe class %s' %
+    #		name)
     
     #	klass = getattr(mod, name)
     #	return klass
@@ -735,7 +755,8 @@ class SafeUnpickler(object):
     def loads(cls, pickle_string):
         try:
             safeUnpickler = cPickle.Unpickler(StringIO.StringIO(pickle_string))
-            # IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+            # IRONPYTHON MODIFIED: added cPicler and StringIO instead of
+            # SafePicler
             #safeUnpickler.find_global = cls.find_class
             return safeUnpickler.load()
         except Exception, e:
@@ -747,7 +768,8 @@ class SafeUnpickler(object):
     def load(cls, pickle_file):
         try:
             safeUnpickler = cPickle.Unpickler(pickle_file)
-            # IRONPYTHON MODIFIED: added cPicler and StringIO instead of SafePicler
+            # IRONPYTHON MODIFIED: added cPicler and StringIO instead of
+            # SafePicler
             #safeUnpickler.find_global = cls.find_class
             return safeUnpickler.load()
         
@@ -762,4 +784,4 @@ class SafeUnpickler(object):
             raise cPickle.UnpicklingError('Unpickler Error')
 
 if __name__ == '__main__': 
-    main() 
+    main()

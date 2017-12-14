@@ -3,7 +3,6 @@
 # Decompiled from: Python 2.7.14 (v2.7.14:84471935ed, Sep 16 2017, 20:19:30) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: scripts/common/DictPackers.py
 import copy
-
 from binascii import crc32
 
 def roundToInt(val):
@@ -127,12 +126,12 @@ class DictPacker(object):
             name, _, default, packer, aggFunc = meta
             if val is None:
                 val = copy.deepcopy(default)
-            elif packer is not None:
-                val = packer.unpack(val)
+            else:
+                if packer is not None:
+                    val = packer.unpack(val)
             ret[name] = val
 
         return ret
-
 
     @staticmethod
     def checksum(metaData):
