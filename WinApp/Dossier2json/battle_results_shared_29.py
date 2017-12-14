@@ -12,7 +12,10 @@ class FLAG_ACTION:
     CAPTURED = 2
     LOST = 3
     RANGE = (PICKED_UP_FROM_BASE, PICKED_UP_FROM_GROUND, CAPTURED, LOST)
-VEHICLE_DEVICE_TYPE_NAMES = ('engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice')
+
+
+VEHICLE_DEVICE_TYPE_NAMES = (
+'engine', 'ammoBay', 'fuelTank', 'radio', 'track', 'gun', 'turretRotator', 'surveyingDevice')
 VEHICLE_TANKMAN_TYPE_NAMES = ('commander', 'driver', 'radioman', 'gunner', 'loader')
 
 VEH_INTERACTION_DETAILS = (
@@ -289,6 +292,10 @@ VEH_FULL_RESULTS_UPDATE = Meta((
  'aogasFactor10', int, 0, None, 'max'), (
  'refSystemXPFactor10', int, 0, None, 'any'), (
  'fairplayFactor10', int, 0, None, 'skip'), (
+ 'newYearXPFactor100', int, 0, None, 'any'), (
+ 'newYearTmenXPFactor100', int, 0, None, 'any'), (
+ 'newYearFreeXPFactor100', int, 0, None, 'any'), (
+ 'newYearCreditsFactor100', int, 0, None, 'any'), (
  'orderCredits', int, 0, None, 'sum'), (
  'orderXP', int, 0, None, 'sum'), (
  'orderFreeXP', int, 0, None, 'sum'), (
