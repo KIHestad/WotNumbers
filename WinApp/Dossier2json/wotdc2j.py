@@ -14,7 +14,7 @@ def usage():
 	print '-f Formats the JSON to be more human readable'
 	print '-r Export all fields with their values and recognized names'
 	print '-k Dont export Frags'
-	print '-s Server Mode, disable writing of timestamp, enable logging'
+	print '-s Server Mode, disable writing of timestamp, enable logging (vBAddict mode)'
 
 def main():
 	

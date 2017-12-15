@@ -1,6 +1,6 @@
 ####################################################
-# World of Tanks Battle Results to JSON #
-# by BadButton at wotnumbers.com #
+# World of Tanks Battle Results to JSON            #
+# by BadButton and cuddlyTomato at wotnumbers.com  #
 # originally by Phalynx www.vbaddict.net (retired) #
 ####################################################
 import struct
@@ -58,6 +58,7 @@ def usage():
     print 'Options:'
     print '-f Formats output result to JSON pretty print (includes line breaks and indents)'
     print '-l Logging to file enabled, output to file: wotbr2j_log.txt'
+    print '-s Server Mode, disable writing of timestamp, enable logging (vBAddict mode)'
   
 def main(): 
 
@@ -68,10 +69,13 @@ def main():
     import os
     import shutil
     import datetime
-    global filename_source, filename_target, option_logging, option_format, parser, log_file, cachefile
+    global filename_source, filename_target, option_server, option_logging, option_format, parser, log_file, cachefile
     
     option_format = 0
+    option_server = 0
     option_logging = 0
+    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+    log_file = os.path.join(script_dir, "wotbr2j_log.txt")
               
     if len(sys.argv) == 1: 
         usage() 
@@ -83,6 +87,8 @@ def main():
             option_format = 1
         if argument == "-l": 
             option_logging = 0 #No logging allowed
+        if argument == "-s": 
+            option_server = 0 #No server mode allowed
 
 
     filename_source = str(sys.argv[1])
@@ -114,9 +120,13 @@ def main():
     if not 'battleResults' in locals(): 
         exitwitherror('Battle Result cannot be read (battleResults does not exist)') 
 
-    # Set last struct version, loop from highest to lowest version until valid
-    # struct found
+    ############################################################################
+    # Set last struct version, loop from highest to lowest version until valid #
+    ############################################################################
+    
     parser['battleResultVersion'] = 29
+        
+    # Process file
     while parser['battleResultVersion'] > 0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
@@ -520,24 +530,28 @@ def exitwitherror(message):
     dossierheader['parser']['result'] = "error"
     dossierheader['parser']['message'] = message 
     dumpjson(dossierheader)
+    # IRONPYTHON MODIFIED: close dossier output file
     if cachefile is not None:
-        cachefile.close() # IRONPYTHON MODIFIED: close dossier output file
+        cachefile.close() 
     sys.exit(1) 
 
 def dumpjson(bresult): 
-    global option_logging, option_format, filename_target
+    global option_server, option_logging, option_format, filename_target
     bresult = prepareForJSON(bresult)
     
     try:
-        finalfile = open(filename_target, 'w') 
-        
-        if option_format == 1: 
-            finalfile.write(json.dumps(bresult, sort_keys=True, indent=4)) 
-        else: 
-            finalfile.write(json.dumps(bresult)) 
-        finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
-    except Exception, e: 
-        finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
+        if option_server == 1: 
+            print json.dumps(bresult) 
+        else:
+            finalfile = open(filename_target, 'w') 
+            if option_format == 1: 
+                finalfile.write(json.dumps(bresult, sort_keys=True, indent=4)) 
+            else: 
+                finalfile.write(json.dumps(bresult)) 
+            finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
+    except Exception, e:
+        if finalfile is not None: 
+            finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
         exitwitherror("Exception: " + str(e))
 
 def dictToList(indices, d): 
@@ -595,19 +609,25 @@ def getDestroyedDevicesList(detail_values):
     return destroyedDevicesList 
   
 def printmessage(logtext, to_log): 
-    #import datetime, os # IRONPYTHON MODIFIED, PRINT RESULT ONLY TO CONSOLE
+    import datetime, os  
 
-    #global option_logging, log_file
+    global option_server, option_logging, filename_source, log_file
 
-    print str(logtext)
+    if option_server == 0: 
+        print str(logtext)
         
-    #if to_log == 1 and option_logging == 1:
-    #    now = datetime.datetime.now()
-    #    message = str(now.strftime("%Y-%m-%d %H:%M:%S")) + " - " +
-    #    str(logtext) + "\r\n"
-    #    logFile = open(log_file, "a+b")
-    #    logFile.write(message)
-    #    logFile.close()
+    if to_log == 1:
+        now = datetime.datetime.now() 
+        message = str(now.strftime("%Y-%m-%d %H:%M:%S")) + " # WOTBR2J: " + str(logtext) + " # " + str(filename_source) + "\r\n"
+
+        if option_server == 1: 
+            logFile = open("/var/log/wotdc2j/wotdc2j.log", "a+b") 
+            logFile.write(message) 
+            logFile.close()
+        elif option_logging == 1:
+            logFile = open(log_file, "a+b")
+            logFile.write(message) 
+            logFile.close()
 
 # Pre 98
 class _VehicleInteractionDetailsItem(object): 
