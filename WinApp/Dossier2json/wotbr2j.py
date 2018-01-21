@@ -123,9 +123,9 @@ def main():
     ############################################################################
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
-    
-    parser['battleResultVersion'] = 29
-        
+
+    parser['battleResultVersion'] = 30
+
     # Process file
     while parser['battleResultVersion'] > 0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
@@ -199,6 +199,9 @@ def convertToFullForm(compactForm, battleResultVersion):
                     'vehicles': {},
                     'avatars': {}}
                 
+                if len(battle_results_data.AVATAR_FULL_RESULTS) != len(avatarResults):
+                    # Wrong number of items in lists, ie wrong parser version
+                    return 0, {}
                 personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpack(avatarResults)
 
                 for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
@@ -226,12 +229,16 @@ def convertToFullForm(compactForm, battleResultVersion):
                     for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
                         fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpackWthoutChecksum(vehicleInfo))
             except IndexError, i:
+                printmessage(traceback.format_exc(i), 1)
                 return 0, {}
             except KeyError, i:
+                printmessage(traceback.format_exc(i), 1)
                 return 0, {}
-            except Exception, e: 
-                #return 0, {}
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
+            except Exception, e:
+                # return 0, {}
+                exitwitherror(
+                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
+                    e)
 
         elif battleResultVersion >= 27:
             
@@ -521,15 +528,20 @@ def detailsDictToString(mydict):
         mydictcopy[str(key[0]) + '-' + str(key[1])] = value
     return mydictcopy
     
-def exitwitherror(message):
-    traceback.print_exc()
+def exitwitherror(message, e=None, abort=False):
     global parser, cachefile
-    printmessage(message, 1) 
-    dossierheader = dict() 
-    dossierheader['parser'] = dict() 
-    dossierheader['parser']['result'] = "error"
-    dossierheader['parser']['message'] = message 
-    dumpjson(dossierheader)
+    if e is None:
+        printmessage(message, 1)
+    else:
+        printmessage(message + e.message, 1)
+        printmessage(traceback.format_exc(e), 1)
+    if not abort:
+        dossierheader = dict()
+        dossierheader['parser'] = dict()
+        dossierheader['parser']['result'] = "error"
+        dossierheader['parser']['message'] = message
+        dumpjson(dossierheader)
+
     # IRONPYTHON MODIFIED: close dossier output file
     if cachefile is not None:
         cachefile.close() 
@@ -552,7 +564,7 @@ def dumpjson(bresult):
     except Exception, e:
         if finalfile is not None: 
             finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
-        exitwitherror("Exception: " + str(e))
+        exitwitherror("Exception: ", e, abort=True)
 
 def dictToList(indices, d): 
     l = [None] * len(indices) 
