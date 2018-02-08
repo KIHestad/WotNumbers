@@ -218,7 +218,8 @@ _AVATAR_BASE_PRIVATE_RESULTS = Meta((
  'shields', dict, {}, None, 'skip'), (
  'prevShields', dict, {}, None, 'skip'), (
  'rankedSeason', tuple, (0, 0), None, 'skip'), (
- 'eligibleForCrystalRewards', bool, False, None, 'skip'))
+ 'eligibleForCrystalRewards', bool, False, None, 'skip'), (
+ 'activeRents', dict, {}, None, 'skip'))
 _AVATAR_BASE_PUBLIC_RESULTS = Meta((
  'avatarDamaged', int, 0, None, 'skip'), (
  'totalDamaged', int, 0, None, 'skip'), (

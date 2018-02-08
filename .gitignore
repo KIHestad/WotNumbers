@@ -163,3 +163,5 @@ sh.exe.stackdump
 # =========================
 
 .vs/
+.idea
+*.pyc
