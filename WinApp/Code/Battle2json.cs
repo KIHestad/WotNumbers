@@ -296,18 +296,12 @@ namespace WinApp.Code
 
         private static string lastFile = "";
 
-        public static void RunBattleResultRead(bool refreshGridOnFoundBattles = true, bool forceReadFiles = false)
+        public static void RunBattleResultRead()
         {
             bool deleteLastFileOnError = false;
             try
             {
                 Log.AddToLogBuffer(" > Start looking for battle result");
-                if (forceReadFiles)
-                {
-                    battleResultDatFileCopied = new List<string>();
-                    Log.AddToLogBuffer(" > Clear history, force check all DAT-files");
-                }
-                bool refreshAfterUpdate = false;
                 // Look for new files
                 bool convertOK = ConvertBattleFilesToJson();
                 // Get all json files
@@ -979,7 +973,6 @@ namespace WinApp.Code
                                 TankCreditCalculation.RecalculateForTank(playerTankId);
                                 // Done
                                 deleteFileAfterRead = true;
-                                refreshAfterUpdate = true;
                                 GridView.scheduleGridRefresh = true;
                                 Log.AddToLogBuffer(" > > Done reading into DB JSON file: " + file);
                                 added++;
@@ -1035,12 +1028,7 @@ namespace WinApp.Code
                         Log.AddToLogBuffer(" > > Deleted read or old JSON file: " + file);
                     }
                 }
-                // Create alert file if new battle result added 
-                if (refreshAfterUpdate && refreshGridOnFoundBattles)
-                {
-                    GridView.scheduleGridRefresh = false;
-                    Log.BattleResultDoneLog();
-                }
+
                 // Result logging
                 if (filesJson.Length == 0) // Any files?
                     Log.AddToLogBuffer(" > > No battle files available");
