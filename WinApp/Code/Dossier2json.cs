@@ -300,7 +300,7 @@ namespace WinApp.Code
 				}
 				// Check for battle result
 				Log.AddToLogBuffer(" > Reading battle files started after successfully dossier file check");
-				Battle2json.RunBattleResultRead(false);
+				Battle2json.RunBattleResultRead();
 				// If new battle saved and not in process of reading battles, create alert file
 				if (Dossier2db.battleSaved || GridView.scheduleGridRefresh)
 				{

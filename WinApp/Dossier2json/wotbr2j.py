@@ -52,7 +52,8 @@ parser = dict()
 parser['version'] = "0.9.21.0.0"
 parser['name'] = 'http://wotnumbers.com'
 parser['processingTime'] = int(time.mktime(time.localtime()))
-  
+cachefile = None
+
 def usage(): 
     print str(sys.argv[0]) + " battleresult.dat [options]"
     print 'Options:'
@@ -123,14 +124,15 @@ def main():
     ############################################################################
     # Set last struct version, loop from highest to lowest version until valid #
     ############################################################################
-    
-    parser['battleResultVersion'] = 29
-        
+
+    parser['battleResultVersion'] = 30
+
     # Process file
     while parser['battleResultVersion'] > 0:
         printmessage("Processing version: " + str(parser['battleResultVersion']), 1)
         issuccess, bresult = convertToFullForm(battleResults, parser['battleResultVersion']) 
         if issuccess == 0:
+            printmessage( "version %i failed due to: %s" % (parser['battleResultVersion'], bresult), 1)
             parser['battleResultVersion'] = parser['battleResultVersion'] - 1
         else:
             break
@@ -199,6 +201,9 @@ def convertToFullForm(compactForm, battleResultVersion):
                     'vehicles': {},
                     'avatars': {}}
                 
+                if len(battle_results_data.AVATAR_FULL_RESULTS) + 1 != len(avatarResults):
+                    # Wrong number of items in lists, ie wrong parser version
+                    return 0, {'error': 'Wrong number of items in avatar result list, ie wrong parser version'}
                 personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpack(avatarResults)
 
                 for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
@@ -206,8 +211,8 @@ def convertToFullForm(compactForm, battleResultVersion):
                     if type(vehPersonal) is dict:
                         try:
                             vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
-                        except Exception: 
-                            return 0, {}
+                        except Exception, e:
+                            return 0, {'error': 'Unable to unpack vehicle details: %s' % e.message}
                         vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
                         vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
 
@@ -226,12 +231,16 @@ def convertToFullForm(compactForm, battleResultVersion):
                     for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
                         fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpackWthoutChecksum(vehicleInfo))
             except IndexError, i:
-                return 0, {}
+                printmessage(traceback.format_exc(i), 1)
+                return 0, {'error': '%s' % i.message}
             except KeyError, i:
-                return 0, {}
-            except Exception, e: 
-                #return 0, {}
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
+                printmessage(traceback.format_exc(i), 1)
+                return 0, {'error': 'Missing key in data: %s' % i.message}
+            except Exception, e:
+                # return 0, {}
+                exitwitherror(
+                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
+                    e)
 
         elif battleResultVersion >= 27:
             
@@ -252,8 +261,8 @@ def convertToFullForm(compactForm, battleResultVersion):
                     if type(vehPersonal) is dict:
                         try:
                             vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
-                        except Exception: 
-                            return 0, {}
+                        except Exception, e:
+                            return 0, {'error': 'Unable to unpack vehicle details: %s' % e.message}
                         vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
                         vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
 
@@ -270,16 +279,15 @@ def convertToFullForm(compactForm, battleResultVersion):
                     for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
                         fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
             except IndexError, i:
-                return 0, {}
+                return 0, {'error': '%s' % i.message}
             except KeyError, i:
-                return 0, {}
+                return 0, {'error': 'Missing key in data: %s' % i.message}
             except Exception, e: 
                 return 0, {}
-                #exitwitherror("Error occured while transforming Battle Result
-                #Version: " + str(battleResultVersion) + " Error: " + str(e))
-                
+                exitwitherror(
+                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
+                    e)
         elif battleResultVersion >= 19:
-
             arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
             fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
             avatarResults = SafeUnpickler.loads(zlib.decompress(avatarResults))
@@ -297,8 +305,8 @@ def convertToFullForm(compactForm, battleResultVersion):
                     if type(vehPersonal) is dict:
                         try:
                             vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
-                        except Exception: 
-                            return 0, {}
+                        except Exception, e:
+                            return 0, {'error': 'Unable to unpack vehicle details: %s' % e.message}
                         vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
                         vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
                         vehPersonal['club'] = avatarResults['club']
@@ -317,154 +325,17 @@ def convertToFullForm(compactForm, battleResultVersion):
                     for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
                         fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
             except IndexError, i:
-                return 0, {}
+                return 0, {'error': '%s' % i.message}
             except KeyError, i:
+                return 0, {'error': 'Missing key in data: %s' % i.message}
+            except Exception, e:
                 return 0, {}
-            except Exception, e: 
-                return 0, {}
-                #exitwitherror("Error occured while transforming Battle Result
-                #Version: " + str(battleResultVersion) + " Error: " + str(e))
-                
-        elif battleResultVersion >= 18:  
-    
-            arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
-            fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
-            avatarResults = SafeUnpickler.loads(zlib.decompress(avatarResults))
-            personal = {}
-            try:
-                fullForm = {'arenaUniqueID': arenaUniqueID,
-                'personal': personal,
-                'common': {},
-                'players': {},
-                'vehicles': {},
-                'avatars': {}}
-                personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpack(avatarResults)
-                for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
-                    vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpack(ownResults)
-                    vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
-                    vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
-                    vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
-                    vehPersonal['club'] = avatarResults['club']
-                    vehPersonal['enemyClub'] = avatarResults['enemyClub']
-                
-                commonAsList, playersAsList, vehiclesAsList, avatarsAsList = SafeUnpickler.loads(zlib.decompress(pickled))
-                fullForm['common'] = battle_results_data.COMMON_RESULTS.unpack(commonAsList)
-                for accountDBID, playerAsList in playersAsList.iteritems():
-                    fullForm['players'][accountDBID] = battle_results_data.PLAYER_INFO.unpack(playerAsList)
+                exitwitherror(
+                    "Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: ",
+                    e)
 
-                for accountDBID, avatarAsList in avatarsAsList.iteritems():
-                    fullForm['avatars'][accountDBID] = battle_results_data.AVATAR_PUBLIC_RESULTS.unpack(avatarAsList)
-
-                for vehicleID, vehiclesInfo in vehiclesAsList.iteritems():
-                    fullForm['vehicles'][vehicleID] = []
-                    for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
-                        fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
-            except IndexError, i:
-                return 0, {}
-            except KeyError, i:
-                return 0, {}
-            except Exception, e: 
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
-                
-        elif battleResultVersion >= 17:  
-
-            arenaUniqueID, avatarResults, fullResultsList, pickled = compactForm
-            fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
-            avatarResults = SafeUnpickler.loads(zlib.decompress(avatarResults))
-            personal = {}
-            try:
-                fullForm = {'arenaUniqueID': arenaUniqueID,
-                'personal': personal,
-                'common': {},
-                'players': {},
-                'vehicles': {},
-                'avatars': {}}
-                personal['avatar'] = avatarResults = battle_results_data.AVATAR_FULL_RESULTS.unpack(avatarResults)
-                for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
-                    vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpack(ownResults)
-                    vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
-                    vehPersonal['isPrematureLeave'] = avatarResults['isPrematureLeave']
-                    vehPersonal['fairplayViolations'] = avatarResults['fairplayViolations']
-
-                commonAsList, playersAsList, vehiclesAsList, avatarsAsList = SafeUnpickler.loads(zlib.decompress(pickled))
-                fullForm['common'] = battle_results_data.COMMON_RESULTS.unpack(commonAsList)
-                for accountDBID, playerAsList in playersAsList.iteritems():
-                    fullForm['players'][accountDBID] = battle_results_data.PLAYER_INFO.unpack(playerAsList)
-
-                for accountDBID, avatarAsList in avatarsAsList.iteritems():
-                    fullForm['avatars'][accountDBID] = battle_results_data.AVATAR_PUBLIC_RESULTS.unpack(avatarAsList)
-
-                for vehicleID, vehiclesInfo in vehiclesAsList.iteritems():
-                    fullForm['vehicles'][vehicleID] = []
-                    for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
-                        fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
-            except IndexError, i:
-                return 0, {}
-            except KeyError, i:
-                return 0, {}
-            except Exception, e: 
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
-                
-        elif battleResultVersion >= 15:  
-
-            arenaUniqueID, fullResultsList, pickled, uniqueSubUrl = compactForm
-            fullResultsList = SafeUnpickler.loads(zlib.decompress(fullResultsList))
-            personal = {}
-            try:
-                fullForm = {'arenaUniqueID': arenaUniqueID,
-                    'personal': personal,
-                    'common': {},
-                    'players': {},
-                    'vehicles': {},
-                    'uniqueSubUrl': uniqueSubUrl}
-                    
-                for vehTypeCompDescr, ownResults in fullResultsList.iteritems():
-                    vehPersonal = personal[vehTypeCompDescr] = battle_results_data.VEH_FULL_RESULTS.unpack(ownResults)
-                    
-                    vehPersonal['details'] = battle_results_data.VehicleInteractionDetails.fromPacked(vehPersonal['details']).toDict()
-                            
-                commonAsList, playersAsList, vehiclesAsList = SafeUnpickler.loads(zlib.decompress(pickled))
-                fullForm['common'] = battle_results_data.COMMON_RESULTS.unpack(commonAsList)
-                
-                for accountDBID, playerAsList in playersAsList.iteritems():
-                    fullForm['players'][accountDBID] = battle_results_data.PLAYER_INFO.unpack(playerAsList)
-
-                for vehicleID, vehiclesInfo in vehiclesAsList.iteritems():
-                    fullForm['vehicles'][vehicleID] = []
-                    for vehTypeCompDescr, vehicleInfo in vehiclesInfo.iteritems():
-                        fullForm['vehicles'][vehicleID].append(battle_results_data.VEH_PUBLIC_RESULTS.unpack(vehicleInfo))
-                            
-            except IndexError, i:
-                return 0, {}
-            except Exception, e: 
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
-        else:    
-            fullForm = dict()
-            try:
-                fullForm = {'arenaUniqueID': compactForm[0], 
-                 'personal': listToDict(battle_results_data.VEH_FULL_RESULTS, compactForm[1]), 
-                 'common': {}, 
-                 'players': {}, 
-                 'vehicles': {}}
-
-            except Exception, e: 
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
-        
-            if not 'personal' in fullForm:
-                return fullForm
-                  
-            try:
-                commonAsList, playersAsList, vehiclesAsList = SafeUnpickler.loads(compactForm[2]) 
-            except Exception, e: 
-                exitwitherror("Error occured while transforming Battle Result Version: " + str(battleResultVersion) + " Error: " + str(e))
-            
-            fullForm['common'] = listToDict(battle_results_data.COMMON_RESULTS, commonAsList) 
-            
-            for accountDBID, playerAsList in playersAsList.iteritems(): 
-                fullForm['players'][accountDBID] = listToDict(battle_results_data.PLAYER_INFO, playerAsList) 
-              
-            for vehicleID, vehicleAsList in vehiclesAsList.iteritems(): 
-                fullForm['vehicles'][vehicleID] = listToDict(battle_results_data.VEH_PUBLIC_RESULTS, vehicleAsList)
+        else:
+            exitwitherror("Unsupported version")
       
     return 1, fullForm 
 
@@ -521,15 +392,20 @@ def detailsDictToString(mydict):
         mydictcopy[str(key[0]) + '-' + str(key[1])] = value
     return mydictcopy
     
-def exitwitherror(message):
-    traceback.print_exc()
+def exitwitherror(message, e=None, abort=False):
     global parser, cachefile
-    printmessage(message, 1) 
-    dossierheader = dict() 
-    dossierheader['parser'] = dict() 
-    dossierheader['parser']['result'] = "error"
-    dossierheader['parser']['message'] = message 
-    dumpjson(dossierheader)
+    if e is None:
+        printmessage(message, 1)
+    else:
+        printmessage(message + e.message, 1)
+        printmessage(traceback.format_exc(e), 1)
+    if not abort:
+        dossierheader = dict()
+        dossierheader['parser'] = dict()
+        dossierheader['parser']['result'] = "error"
+        dossierheader['parser']['message'] = message
+        dumpjson(dossierheader)
+
     # IRONPYTHON MODIFIED: close dossier output file
     if cachefile is not None:
         cachefile.close() 
@@ -552,7 +428,7 @@ def dumpjson(bresult):
     except Exception, e:
         if finalfile is not None: 
             finalfile.close() # IRONPYTHON MODIFIED: close dossier output file
-        exitwitherror("Exception: " + str(e))
+        exitwitherror("Exception: ", e, abort=True)
 
 def dictToList(indices, d): 
     l = [None] * len(indices) 
