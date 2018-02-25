@@ -4884,12 +4884,12 @@ namespace WinApp.Forms
 
         private void mWotNumWebForum_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://wotnumbers.com/Forum.aspx?menu=6&_Forum");
+            System.Diagnostics.Process.Start("http://wotnumbers.com/Forum/List/8/All_Topcs");
         }
 
         private void mWotNumWebUserGuide_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://wotnumbers.com/?menu=42&_User_Guide");
+            System.Diagnostics.Process.Start("http://wotnumbers.com/Forum/List/2/User_Guides");
         }
 
 

@@ -138,6 +138,7 @@
             this.mModeCompany = new System.Windows.Forms.ToolStripMenuItem();
             this.mModeClan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorForBattleView = new System.Windows.Forms.ToolStripSeparator();
+            this.grandBattleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mModeHistorical = new System.Windows.Forms.ToolStripMenuItem();
             this.mModeTeam = new System.Windows.Forms.ToolStripMenuItem();
             this.mModeTeamRanked = new System.Windows.Forms.ToolStripMenuItem();
@@ -273,7 +274,6 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
-            this.grandBattleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -1399,6 +1399,16 @@
             this.toolStripSeparatorForBattleView.Name = "toolStripSeparatorForBattleView";
             this.toolStripSeparatorForBattleView.Size = new System.Drawing.Size(202, 6);
             // 
+            // grandBattleToolStripMenuItem
+            // 
+            this.grandBattleToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.grandBattleToolStripMenuItem.Name = "grandBattleToolStripMenuItem";
+            this.grandBattleToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.grandBattleToolStripMenuItem.Tag = "Grand";
+            this.grandBattleToolStripMenuItem.Text = "Grand Battle";
+            this.grandBattleToolStripMenuItem.Click += new System.EventHandler(this.toolItemMode_Click);
+            this.grandBattleToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
+            // 
             // mModeHistorical
             // 
             this.mModeHistorical.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
@@ -2465,16 +2475,18 @@
             // 
             // mWotNumWebUserGuide
             // 
+            this.mWotNumWebUserGuide.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mWotNumWebUserGuide.Name = "mWotNumWebUserGuide";
             this.mWotNumWebUserGuide.Size = new System.Drawing.Size(286, 22);
-            this.mWotNumWebUserGuide.Text = "User Guide...";
+            this.mWotNumWebUserGuide.Text = "Wot Numbers User Guides...";
             this.mWotNumWebUserGuide.Click += new System.EventHandler(this.mWotNumWebUserGuide_Click);
             // 
             // mWotNumWebForum
             // 
+            this.mWotNumWebForum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mWotNumWebForum.Name = "mWotNumWebForum";
             this.mWotNumWebForum.Size = new System.Drawing.Size(286, 22);
-            this.mWotNumWebForum.Text = "Forum (Q&&A)...";
+            this.mWotNumWebForum.Text = "Wot Numbers Forum...";
             this.mWotNumWebForum.Click += new System.EventHandler(this.mWotNumWebForum_Click);
             // 
             // toolStripSeparator23
@@ -2484,6 +2496,7 @@
             // 
             // mHelpCheckVersion
             // 
+            this.mHelpCheckVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHelpCheckVersion.Name = "mHelpCheckVersion";
             this.mHelpCheckVersion.Size = new System.Drawing.Size(286, 22);
             this.mHelpCheckVersion.Text = "Check for new version";
@@ -2491,6 +2504,7 @@
             // 
             // mHelpMessage
             // 
+            this.mHelpMessage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHelpMessage.Name = "mHelpMessage";
             this.mHelpMessage.Size = new System.Drawing.Size(286, 22);
             this.mHelpMessage.Text = "View message from Wot Numbers Team";
@@ -2503,6 +2517,7 @@
             // 
             // mHelpAbout
             // 
+            this.mHelpAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHelpAbout.Name = "mHelpAbout";
             this.mHelpAbout.Size = new System.Drawing.Size(286, 22);
             this.mHelpAbout.Text = "About Wot Numbers...";
@@ -2688,16 +2703,6 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // grandBattleToolStripMenuItem
-            // 
-            this.grandBattleToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.grandBattleToolStripMenuItem.Name = "grandBattleToolStripMenuItem";
-            this.grandBattleToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.grandBattleToolStripMenuItem.Tag = "Grand";
-            this.grandBattleToolStripMenuItem.Text = "Grand Battle";
-            this.grandBattleToolStripMenuItem.Click += new System.EventHandler(this.toolItemMode_Click);
-            this.grandBattleToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
             // 
             // Main
             // 
