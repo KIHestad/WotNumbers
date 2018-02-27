@@ -381,12 +381,6 @@
     <Compile Include="Forms\Settings\RecalcBattleRating.Designer.cs">
       <DependentUpon>RecalcBattleRating.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Settings\Download.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Settings\Download.Designer.cs">
-      <DependentUpon>Download.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FavList\FavListAddRemoveTank.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -752,9 +746,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\RecalcBattleRating.resx">
       <DependentUpon>RecalcBattleRating.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings\Download.resx">
-      <DependentUpon>Download.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FavList\FavListAddRemoveTank.resx">
       <DependentUpon>FavListAddRemoveTank.cs</DependentUpon>

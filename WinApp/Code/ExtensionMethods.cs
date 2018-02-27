@@ -98,5 +98,18 @@ namespace WinApp.Code
 				calendar.TitleBackColor = ColorTheme.ControlDimmedFont;
 			}
 		}
-	}
+
+        public static int ToVersionNumber(this string text)
+        {
+            int versionNumber = 0;
+            string[] numberPart = text.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+            int factor = 10000;
+            for (int i = 0; i < numberPart.Length; i++)
+            {
+                versionNumber += Convert.ToInt32(numberPart[i]) * factor;
+                factor = factor / 100;
+            }
+            return versionNumber;
+        }
+    }
 }

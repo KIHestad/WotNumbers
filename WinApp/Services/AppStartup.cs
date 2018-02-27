@@ -12,17 +12,29 @@ using Newtonsoft.Json;
 
 namespace WinApp.Services
 {
-	[Serializable()]
-	public class AppStartupModel // Same model as returnes from Wot Numbers website returned from API
-	{
+    public class AppStartupModel
+    {
+        public AppStartupModel()
+        {
+            Success = false;
+        }
         public bool Success { get; set; }                       // Overall result
+        public string Message { get; set; }                     // Message for connection result and more
+        public int PlayerId { get; set; }                       // Player Id for later authentication for posting data
+        public Guid PlayerToken { get; set; }                   // Player token for later authentication for posting data
+        public string DownloadUrl { get; set; }                 // URL for goto download page
+        public AppStartupDownloadVersionModel ReleaseVersion { get; set; }
+        public AppStartupDownloadVersionModel PilotVersion { get; set; }
+    }
+
+    public class AppStartupDownloadVersionModel
+    {
+        public string AppVersion { get; set; }                  // Latest version available for user in format X.X.X
         public DateTime? MessageDate { get; set; }               // New message posted at date to be validated in client for showing automatically
         public string Message { get; set; }                     // Message result to be displayed if not success or if message date > last message displayed
         public bool MaintenanceMode { get; set; }               // Downloading not available, download in maintenance mode
-        public string LatestAppVersion { get; set; }            // Latest version available for user in format X.X.X
-        public string DownloadUrl { get; set; }                 // URL for goto download latest version                     
-        public DateTime? RunWotApi { get; set; }                 // Run action
-        public DateTime? RunForceDossierFileCheck { get; set; }  // Run action
+        public DateTime? RunWotApi { get; set; }                // Run action
+        public DateTime? RunForceDossierFileCheck { get; set; } // Run action
     }
 
     public class Request
@@ -61,23 +73,7 @@ namespace WinApp.Services
                 };
 			}
 		}
-
-		public static double MakeVersionToDouble(string version)
-		{
-			double intVersion = 0;
-			if (version != null)
-			{
-				const char separator = '.';
-				string[] versionParts = version.Split(separator);
-				double exp = Math.Pow(1000, versionParts.Length - 1);
-				foreach (string versionPart in versionParts)
-				{
-					intVersion += Convert.ToInt32(versionPart) * exp;
-					exp = exp / 1000;
-				}
-			}
-			return intVersion;
-		}
+        
 	}
 
 
