@@ -535,9 +535,8 @@ namespace WinApp.Forms
 				if (LoadConfigOK)
 				{
 					Config.Settings.dossierFileWathcherRun = 1;
-					string msg = "";
-					Config.SaveConfig(out msg);
-				}
+                    Config.SaveConfig(out string msg);
+                }
 			}
 			else
 			{
@@ -571,22 +570,127 @@ namespace WinApp.Forms
 
 		#region Check For New Version and Download
 
-		private BackgroundWorker bwCheckForNewVersion;
-		private bool _onlyCheckVersionWithMessage = false;
-		private void RunCheckForNewVersion(bool onlyCheckVersionWithMessage = false)
+		private async void RunCheckForNewVersion(bool onlyCheckVersionWithMessage = false)
 		{
-			_onlyCheckVersionWithMessage = onlyCheckVersionWithMessage;
-			bwCheckForNewVersion = new BackgroundWorker();
-			bwCheckForNewVersion.WorkerSupportsCancellation = false;
-			bwCheckForNewVersion.WorkerReportsProgress = false;
-			bwCheckForNewVersion.DoWork += new DoWorkEventHandler(CheckForNewVersion.GetVersion);
-			bwCheckForNewVersion.RunWorkerCompleted += new RunWorkerCompletedEventHandler(PerformCheckForNewVersion);
-			//bwCheckForNewVersion.RunWorkerCompleted += 
-			if (bwCheckForNewVersion.IsBusy != true)
-			{
-				bwCheckForNewVersion.RunWorkerAsync();
-			}
-		}
+            Services.AppStartup appStartup = new Services.AppStartup();
+            Services.AppStartupModel appStartupModel = await appStartup.Run();
+            if (!appStartupModel.Success)
+            {
+                // Could not check for new version, run normal dossier file check
+                if (!onlyCheckVersionWithMessage)
+                {
+                    RunInitialDossierFileCheck("Could not check for new version, no connection to Wot Numbers website");
+                }
+                // Message if debug mode or manual version check
+                if (Config.Settings.showDBErrors || onlyCheckVersionWithMessage)
+                {
+                    MsgBox.Show(
+                        "Could not check for new version, remote server is not available or you have no Internet access." + Environment.NewLine + Environment.NewLine +
+                        appStartupModel.Message+ Environment.NewLine + Environment.NewLine + Environment.NewLine,
+                        "Version check failed",
+                        this);
+                }
+            }
+            else if (appStartupModel.MaintenanceMode)
+            {
+                // Web is currently in maintance mode, just skip version check - perform normal startup
+                if (!onlyCheckVersionWithMessage)
+                {
+                    RunInitialDossierFileCheck("Wot Numbers website in maintenance mode, version check skipped");
+                }
+                else
+                {
+                    // Message if debug mode
+                    if (Config.Settings.showDBErrors || onlyCheckVersionWithMessage)
+                        MsgBox.Show(
+                            "Could not check for new version, Wot Numbers web server is currently in maintenance mode." + Environment.NewLine + Environment.NewLine,
+                            "Version check terminated", this);
+                }
+            }
+            else
+            {
+                // version found, check result
+                double currentVersion = Services.AppStartup.MakeVersionToDouble(AppVersion.AssemblyVersion);
+                double newVersion = newVersion = Services.AppStartup.MakeVersionToDouble(appStartupModel.LatestAppVersion);
+                if (currentVersion >= newVersion)
+                {
+                    if (onlyCheckVersionWithMessage)
+                    {
+                        // Not found new versipn
+                        string msg =
+                            "You are running the latest version: " + appStartupModel.LatestAppVersion + Environment.NewLine + Environment.NewLine +
+                            "Do you want to download this version anyway?" + Environment.NewLine + Environment.NewLine;
+                        MsgBox.Button answer = MsgBox.Show(msg, "Version Check", MsgBox.Type.YesNo, this);
+                        if (answer == MsgBox.Button.Yes)
+                        {
+                            Form frm = new Download(appStartupModel);
+                            frm.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        // Normal startup, no new version
+                        if (String.IsNullOrEmpty(appStartupModel.Message) && appStartupModel.MessageDate <= DateTime.Now)
+                        {
+                            if (appStartupModel.MessageDate != null && (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupModel.MessageDate))
+                            {
+                                // Display message from Wot Numbers API
+                                MsgBox.Show(appStartupModel.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupModel.MessageDate).ToString("dd.MM.yyyy"), this);
+                                // Save read message
+                                Config.Settings.readMessage = DateTime.Now;
+                                string msg = "";
+                                Config.SaveConfig(out msg);
+                            }
+                        }
+                        // Force dossier file check 
+                        if (appStartupModel.RunWotApi != null && appStartupModel.RunWotApi <= DateTime.Now) // Avoid running future planned updates
+                        {
+                            if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < appStartupModel.RunWotApi)
+                                DBVersion.RunDownloadAndUpdateTanks = true;
+                        }
+                        // Force dossier file check or just normal - replaces RunInitialDossierFileCheck();
+                        if (appStartupModel.RunForceDossierFileCheck != null && appStartupModel.RunForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
+                        {
+                            if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < appStartupModel.RunForceDossierFileCheck)
+                                DBVersion.RunDossierFileCheckWithForceUpdate = true;
+                        }
+                        RunInitialDossierFileCheck("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
+                    }
+                }
+                else
+                {
+                    // New version avaliable
+                    string msg = "Wot Numbers version " + appStartupModel.LatestAppVersion + " is available for download." + Environment.NewLine + Environment.NewLine +
+                        "You are currently running version: " + AppVersion.AssemblyVersion + "." + Environment.NewLine + Environment.NewLine +
+                        "Press 'OK' to download the new version now." + Environment.NewLine + Environment.NewLine;
+                    MsgBox.Button answer = MsgBox.Show(msg, "New version avaliable for download", MsgBox.Type.OKCancel, this);
+                    if (answer == MsgBox.Button.OK)
+                    {
+                        Form frm = new Download(appStartupModel);
+                        frm.ShowDialog();
+                        // RunInitialDossierFileCheck("New version downloaded (Wot Numbers " + appStartupModel.LatestAppVersion + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
+                    }
+                    else
+                    {
+                        if (!onlyCheckVersionWithMessage)
+                            RunInitialDossierFileCheck("New version found (Wot Numbers " + appStartupModel.LatestAppVersion + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
+                    }
+                }
+            }
+            // Enable Settings menues
+            mSettingsRun.Enabled = true;
+            mSettingsRunBattleCheck.Enabled = true;
+            mRecalcTankStatistics.Enabled = true;
+            mUpdateDataFromAPI.Enabled = true;
+            mRecalcBattleRatings.Enabled = true;
+            mRecalcBattleWN9.Enabled = true;
+            mRecalcBattleWN8.Enabled = true;
+            mRecalcBattleWN7.Enabled = true;
+            mRecalcBattleEFF.Enabled = true;
+            mRecalcBattleAllRatings.Enabled = true;
+            mRecalcBattleCreditsPerTank.Enabled = true;
+            mAppSettings.Enabled = true;
+        }
 		
 		private void RunInitialDossierFileCheck(string message)
 		{
@@ -615,125 +719,7 @@ namespace WinApp.Forms
 				}
 			}
 		}
-
-		private void PerformCheckForNewVersion(object sender, RunWorkerCompletedEventArgs e)
-		{
-			VersionInfo vi = CheckForNewVersion.versionInfo;
-			if (vi.error)
-			{
-				// Could not check for new version, run normal dossier file check
-				if (!_onlyCheckVersionWithMessage)
-				{
-					RunInitialDossierFileCheck("Could not check for new version, no connection to Wot Numbers website");
-				}
-				// Message if debug mode or manual version check
-				if (Config.Settings.showDBErrors || _onlyCheckVersionWithMessage)
-				{
-					Code.MsgBox.Show("Could not check for new version, remote server is not available or you have no Internet access." + Environment.NewLine + Environment.NewLine +
-										vi.errorMsg + Environment.NewLine + Environment.NewLine + Environment.NewLine,
-										"Version check failed",
-										this);
-				}
-			}
-			else if (vi.maintenanceMode)
-			{
-				// Web is currently in maintance mode, just skip version check - perform normal startup
-				if (!_onlyCheckVersionWithMessage)
-				{
-					RunInitialDossierFileCheck("Wot Numbers website in maintenance mode, version check skipped");
-				}
-				else
-				{
-					// Message if debug mode
-					if (Config.Settings.showDBErrors || _onlyCheckVersionWithMessage)
-						Code.MsgBox.Show("Could not check for new version, Wot Numbers web server is currently in maintenance mode." + Environment.NewLine + Environment.NewLine,
-											"Version check terminated", this);
-				}
-			}
-			else
-			{
-				// version found, check result
-				double currentVersion = CheckForNewVersion.MakeVersionToDouble(AppVersion.AssemblyVersion);
-				double newVersion = newVersion = CheckForNewVersion.MakeVersionToDouble(vi.version);
-				if (currentVersion >= newVersion)
-				{
-					if (_onlyCheckVersionWithMessage)
-					{
-                        // Not found new versipn
-                        string msg = 
-                            "You are running the latest version: " + vi.version + Environment.NewLine + Environment.NewLine +
-                            "Do you want to download this version anyway?" + Environment.NewLine + Environment.NewLine;
-                        Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "Version Check", MsgBox.Type.YesNo, this);
-                        if (answer == MsgBox.Button.Yes)
-                        {
-                            Form frm = new Forms.Download();
-                            frm.ShowDialog();
-                        }
-					}
-					else
-					{
-						// Normal startup, no new version
-						if (vi.message != "" && vi.messageDate <= DateTime.Now)
-						{
-							if (Config.Settings.readMessage == null || Config.Settings.readMessage < vi.messageDate)
-							{
-								// Display message from Wot Numbers API
-								MsgBox.Show(vi.message + Environment.NewLine + Environment.NewLine, "Message published " + vi.messageDate.ToString("dd.MM.yyyy"), this);
-								// Save read message
-								Config.Settings.readMessage = DateTime.Now;
-								string msg = "";
-								Config.SaveConfig(out msg);
-							}
-						}
-						// Force dossier file check 
-						if (vi.runWotApi <= DateTime.Now) // Avoid running future planned updates
-						{
-							if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < vi.runWotApi)
-								DBVersion.RunDownloadAndUpdateTanks = true;
-						}
-						// Force dossier file check or just normal - replaces RunInitialDossierFileCheck();
-						if (vi.runForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
-						{
-							if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < vi.runForceDossierFileCheck)
-								DBVersion.RunDossierFileCheckWithForceUpdate = true;
-						}
-						RunInitialDossierFileCheck("You are running the latest version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
-					}
-				}
-				else
-				{
-					// New version avaliable
-					string msg = "Wot Numbers version " + vi.version + " is available for download." + Environment.NewLine + Environment.NewLine +
-						"You are currently running version: " + AppVersion.AssemblyVersion + "." + Environment.NewLine + Environment.NewLine +
-						"Press 'OK' to download the new version now." + Environment.NewLine + Environment.NewLine;
-                    Code.MsgBox.Button answer = Code.MsgBox.Show(msg, "New version avaliable for download", MsgBox.Type.OKCancel, this);
-					if (answer == MsgBox.Button.OK)
-					{
-						Form frm = new Forms.Download();
-						frm.ShowDialog();
-						RunInitialDossierFileCheck("New version downloaded (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
-					}
-					else
-					{
-						if (!_onlyCheckVersionWithMessage)
-							RunInitialDossierFileCheck("New version found (Wot Numbers " + vi.version + "), running installed version (Wot Numbers " + AppVersion.AssemblyVersion + ")");
-					}
-				}
-			}
-			// Enable Settings menues
-			mSettingsRun.Enabled = true;
-			mSettingsRunBattleCheck.Enabled = true;
-            mRecalcTankStatistics.Enabled = true;
-			mUpdateDataFromAPI.Enabled = true;
-            mRecalcBattleRatings.Enabled = true;
-            mRecalcBattleWN9.Enabled = true;
-            mRecalcBattleWN8.Enabled = true;
-            mRecalcBattleWN7.Enabled = true;
-            mRecalcBattleEFF.Enabled = true;
-            mRecalcBattleAllRatings.Enabled = true;
-            mRecalcBattleCreditsPerTank.Enabled = true;
-			mAppSettings.Enabled = true;
-		}
+        		
 
 		#endregion
 
@@ -4656,16 +4642,24 @@ namespace WinApp.Forms
 			RunCheckForNewVersion(true);
 		}
 
-		private void mHelpMessage_Click(object sender, EventArgs e)
+		private async void mHelpMessage_Click(object sender, EventArgs e)
 		{
-			// Message
-			VersionInfo vi = CheckForNewVersion.versionInfo;
-			if (vi.message == null)
-				MsgBox.Show("Message not fetched yet, try again in some seconds...", "Message not retrieved yet", this);
-			else if (vi.message != "")
-				MsgBox.Show(vi.message + Environment.NewLine + Environment.NewLine, "Message published " + vi.messageDate.ToString("dd.MM.yyyy"), this);
+            // Message
+            Services.AppStartup appStartup = new Services.AppStartup();
+            Services.AppStartupModel appStatupModel = await appStartup.Run();
+            if (!appStatupModel.Success)
+                MsgBox.Show(appStatupModel.Message, "Error getting message", this);
+            if (String.IsNullOrEmpty(appStatupModel.Message))
+				MsgBox.Show("No message published from the Wot Numbers Team.", "No Message", this);
 			else
-				MsgBox.Show("No message is currently published", "No message published", this);
+            {
+                DateTime published = DateTime.Now;
+                if (appStatupModel.MessageDate != null)
+                    published = Convert.ToDateTime(appStatupModel.MessageDate);
+                MsgBox.Show(appStatupModel.Message + Environment.NewLine + Environment.NewLine, "Message published " + published.ToString("dd.MM.yyyy"), this);
+            } 
+
+				
 		}
 
 		private void mTankFilter_GetInGarage_Click(object sender, EventArgs e)

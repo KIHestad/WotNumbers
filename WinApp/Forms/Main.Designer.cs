@@ -387,6 +387,7 @@
             this.mColumnSelect,
             this.mMapViewType,
             this.mTankFilter,
+            this.mSettings,
             this.mMode,
             this.mBattles,
             this.mBattleGroup,
@@ -395,7 +396,6 @@
             this.toolStripSeparator34,
             this.mViewChart,
             this.toolStripSeparator16,
-            this.mSettings,
             this.mHelp,
             this.toolStripSeparator30,
             this.mVBaddict});
@@ -2295,6 +2295,7 @@
             // mSettingsRun
             // 
             this.mSettingsRun.Enabled = false;
+            this.mSettingsRun.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsRun.Name = "mSettingsRun";
             this.mSettingsRun.Size = new System.Drawing.Size(264, 22);
             this.mSettingsRun.Text = "Automatically Fetch New Battles";
@@ -2304,6 +2305,7 @@
             // mSettingsRunBattleCheck
             // 
             this.mSettingsRunBattleCheck.Enabled = false;
+            this.mSettingsRunBattleCheck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsRunBattleCheck.Name = "mSettingsRunBattleCheck";
             this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(264, 22);
             this.mSettingsRunBattleCheck.Text = "Check for New Battle";
@@ -2317,6 +2319,7 @@
             // mUpdateDataFromAPI
             // 
             this.mUpdateDataFromAPI.Enabled = false;
+            this.mUpdateDataFromAPI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
             this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
             this.mUpdateDataFromAPI.Text = "Download and Update Tanks...";
@@ -2330,6 +2333,7 @@
             // mRecalcTankStatistics
             // 
             this.mRecalcTankStatistics.Enabled = false;
+            this.mRecalcTankStatistics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcTankStatistics.Name = "mRecalcTankStatistics";
             this.mRecalcTankStatistics.Size = new System.Drawing.Size(264, 22);
             this.mRecalcTankStatistics.Text = "Recalculate Tank Statistics";
@@ -2345,6 +2349,7 @@
             this.toolStripSeparator29,
             this.mRecalcBattleAllRatings});
             this.mRecalcBattleRatings.Enabled = false;
+            this.mRecalcBattleRatings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcBattleRatings.Name = "mRecalcBattleRatings";
             this.mRecalcBattleRatings.Size = new System.Drawing.Size(264, 22);
             this.mRecalcBattleRatings.Text = "Recalculate Battle Ratings";
@@ -2403,6 +2408,7 @@
             // mRecalcBattleCreditsPerTank
             // 
             this.mRecalcBattleCreditsPerTank.Enabled = false;
+            this.mRecalcBattleCreditsPerTank.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcBattleCreditsPerTank.Name = "mRecalcBattleCreditsPerTank";
             this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(264, 22);
             this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
@@ -2415,6 +2421,7 @@
             // 
             // mSettingsShowLogFiles
             // 
+            this.mSettingsShowLogFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
             this.mSettingsShowLogFiles.Size = new System.Drawing.Size(264, 22);
             this.mSettingsShowLogFiles.Text = "Show Log Files...";
@@ -2422,6 +2429,7 @@
             // 
             // mShowDbTables
             // 
+            this.mShowDbTables.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mShowDbTables.Name = "mShowDbTables";
             this.mShowDbTables.Size = new System.Drawing.Size(264, 22);
             this.mShowDbTables.Text = "Show Database Tables...";
@@ -2435,6 +2443,7 @@
             // mAppSettings
             // 
             this.mAppSettings.Enabled = false;
+            this.mAppSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAppSettings.Name = "mAppSettings";
             this.mAppSettings.Size = new System.Drawing.Size(264, 22);
             this.mAppSettings.Text = "Application Settings...";
@@ -2447,6 +2456,7 @@
             // 
             // mExit
             // 
+            this.mExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mExit.Name = "mExit";
             this.mExit.Size = new System.Drawing.Size(264, 22);
             this.mExit.Text = "Exit";
