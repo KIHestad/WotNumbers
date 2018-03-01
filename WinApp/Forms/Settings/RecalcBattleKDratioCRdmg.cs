@@ -77,7 +77,7 @@ namespace WinApp.Forms
 			{
 				// Current battle to check
 				string battleId = dr["battleId"].ToString();
-				string playerName = PlayerHelper.GetPlayerNameFromNameAndServer(dr["name"].ToString());
+				string playerName = dr["playerName"].ToString();
 				// Show progress
 				UpdateProgressBar("Battle #" + battleId + " - " + Convert.ToDateTime(dr["battleTime"]));
 				// Get all battlePlayers

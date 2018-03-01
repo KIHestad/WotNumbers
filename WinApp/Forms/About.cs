@@ -27,11 +27,12 @@ namespace WinApp.Forms
 			lblDBver.Text = DBVersion.GetDBVersion().ToString("0000");
 			lblWN8ver.Text = DBVersion.GetWNVersion(8).ToString();
             lblWN9ver.Text = DBVersion.GetWNVersion(9).ToString();
+            linkWotNumbers.Text = Constants.WotNumWebUrl();
         }
 
 		private void linkWotNumbers_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://wotnumbers.com/");
+			System.Diagnostics.Process.Start(Constants.WotNumWebUrl());
 		}
 
 		private void linkVbAddict_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

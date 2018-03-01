@@ -185,46 +185,29 @@ namespace WinApp.Code
 				string playerNameAndServer = playerName + " (" + playerServer + ")";
 				// Get player ID
 				int playerId = 0;
+                bool playerExists = false;
 				string sql = "select id from player where name=@name";
 				DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
 				DataTable dt = DB.FetchData(sql);
 				if (dt.Rows.Count > 0)
-					playerId = Convert.ToInt32(dt.Rows[0][0]);
+                {
+                    playerId = Convert.ToInt32(dt.Rows[0][0]);
+                    playerExists = true;
+                }
 				// If no player found, create now
-				if (playerId == 0)
+				if (!playerExists)
 				{
-					// Check first if playername exists as player - from old method when server was not used
+					// Create new player now
+					sql = "INSERT INTO player (name, playerName, playerServer) VALUES (@name, @playerName, @playerServer)";
+                    DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
+                    DB.ExecuteNonQuery(sql);
 					sql = "select id from player where name=@name";
-					DB.AddWithValue(ref sql, "@name", playerName, DB.SqlDataType.VarChar);
+					DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
 					dt = DB.FetchData(sql);
 					if (dt.Rows.Count > 0)
-					{
-						// Yes, player exist, missing server name
-						// Update player table
 						playerId = Convert.ToInt32(dt.Rows[0][0]);
-						sql = "UPDATE player SET name=@name WHERE id=@id";
-						DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-						DB.AddWithValue(ref sql, "@id", playerId, DB.SqlDataType.Int);
-						DB.ExecuteNonQuery(sql);
-						// SaveFileDialog to settings
-						Config.Settings.playerServer = playerServer;
-						string msg = "";
-						Config.SaveConfig(out msg);
-					}
-					else
-					{
-						// Create new player now
-						sql = "INSERT INTO player (name) VALUES (@name)";
-						DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-						DB.ExecuteNonQuery(sql);
-						sql = "select id from player where name=@name";
-						DB.AddWithValue(ref sql, "@name", playerNameAndServer, DB.SqlDataType.VarChar);
-						dt = DB.FetchData(sql);
-						if (dt.Rows.Count > 0)
-							playerId = Convert.ToInt32(dt.Rows[0][0]);
-					}
-					dt.Dispose();
-					dt.Clear();
 				}
 				// If still not identified player break with error
 				if (playerId == 0)

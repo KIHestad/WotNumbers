@@ -43,9 +43,9 @@ namespace WinApp.Forms.Settings
                 FROM     battle LEFT OUTER JOIN
                          playerTank ON battle.playerTankId = playerTank.id LEFT OUTER JOIN
                          player ON playerTank.playerId = player.id
-                WHERE    player.name = @PlayerName;
+                WHERE    player.name = @playerNameAndServer;
             ";
-            DB.AddWithValue(ref sql, "@PlayerName", ddPlayerMergeFrom.Text, DB.SqlDataType.VarChar);
+            DB.AddWithValue(ref sql, "@playerNameAndServer", ddPlayerMergeFrom.Text, DB.SqlDataType.VarChar);
             DataTable dt = DB.FetchData(sql);
             // Get result
             battleCount = 0;

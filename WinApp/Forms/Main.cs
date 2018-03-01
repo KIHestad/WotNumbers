@@ -574,16 +574,16 @@ namespace WinApp.Forms
 		{
             // Run appstart procedure, webservice to wot numbers website, log app usage + get playerId/token for posting data to website + check for new version
             Services.AppStartup appStartup = new Services.AppStartup();
-            Services.AppStartupModel appStartupModel = await appStartup.Run();
+            Services.AppStartupModel appStartupModel = await appStartup.Run(!manualVersionCheck);
 
             // Not success getting appstart data from website api
             if (!appStartupModel.Success)
             {
                 // Manual check for new version, or debug mode, show message box popup
-                if (manualVersionCheck || Config.Settings.showDBErrors)
+                if (manualVersionCheck)
                 {
                     MsgBox.Show(
-                        "Could not check for new version, remote server is not available or you have no Internet access." + Environment.NewLine + Environment.NewLine +
+                        "Could not access webservice, remote server is not available or you have no Internet access." + Environment.NewLine + Environment.NewLine +
                         appStartupModel.Message + Environment.NewLine + Environment.NewLine + Environment.NewLine,
                         "Version check failed",
                         this);
@@ -591,7 +591,7 @@ namespace WinApp.Forms
                 // Normal startup, continue with startup actions, show notification in status bar
                 if (!manualVersionCheck)
                 {
-                    RunAppStartupActions("Could not check for new version, no connection to Wot Numbers website");
+                    RunAppStartupActions("Could not access webservice to check for new version.");
                 }
             }
             // Success getting appstart data
@@ -606,7 +606,7 @@ namespace WinApp.Forms
                 if (userIsTestPilot)
                     latestPilotVersion = appStartupModel.PilotVersion.AppVersion.ToVersionNumber();
                 // Chcek if new version found
-                bool newReleseVersion = (latestReleaseVersion > currentVersion);
+                bool newReleaseVersion = (latestReleaseVersion > currentVersion);
                 bool newPilotVersion = false;
                 if (userIsTestPilot)
                     newPilotVersion = (latestPilotVersion > currentVersion);
@@ -616,12 +616,12 @@ namespace WinApp.Forms
                 {
                     // Web is currently in maintance mode, just skip version check - perform normal startup
                     // Manual check for new version, or debug mode, show message box popup
-                    if (manualVersionCheck || Config.Settings.showDBErrors)
+                    if (manualVersionCheck)
                     {
                         // Message if debug mode
                         if (Config.Settings.showDBErrors || manualVersionCheck)
                             MsgBox.Show(
-                                "Could not check for new version, Wot Numbers web server is currently in maintenance mode." + Environment.NewLine + Environment.NewLine,
+                                "Wot Numbers download service is currently in maintenance mode, try again later." + Environment.NewLine + Environment.NewLine,
                                 "Version check terminated", this);
                     }
                     if (!manualVersionCheck)
@@ -633,7 +633,7 @@ namespace WinApp.Forms
                 else
                 {
                     // Check if new release version, force upgrade
-                    if (newReleseVersion)
+                    if (newReleaseVersion)
                     {
                         string msg =
                             "New version is available: " + appStartupModel.ReleaseVersion.AppVersion + Environment.NewLine + Environment.NewLine +
@@ -671,26 +671,26 @@ namespace WinApp.Forms
                         }
                     }
                     // No new version found, continue with checking message and startup actions
-                    // Release version
-                    if (currentVersion == latestReleaseVersion) 
+                    // Running release version
+                    if (currentVersion <= latestReleaseVersion) 
                     {
-                        // Message
-                        if (appStartupModel.ReleaseVersion.Message != null && appStartupModel.ReleaseVersion.MessageDate != null && 
+                        // Message, if exits and not set to be shown in the future, and user not seen it yet
+                        if (appStartupModel.ReleaseVersion.Message != null && appStartupModel.ReleaseVersion.MessageDate != null && appStartupModel.ReleaseVersion.MessageDate <= DateTime.Now &&
                             (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupModel.ReleaseVersion.MessageDate))
                         {
                             // Display message from Wot Numbers API
-                            MsgBox.Show(appStartupModel.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
+                            MsgBox.Show(appStartupModel.ReleaseVersion.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                             // Save read message
                             Config.Settings.readMessage = DateTime.Now;
                             Config.SaveConfig(out string msg);
                         }
-                        // Actions
+                        // Action: Run force wot api
                         if (appStartupModel.ReleaseVersion.RunWotApi != null && appStartupModel.ReleaseVersion.RunWotApi <= DateTime.Now) // Avoid running future planned updates
                         {
                             if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < appStartupModel.ReleaseVersion.RunWotApi)
                                 DBVersion.RunDownloadAndUpdateTanks = true;
                         }
-                        // Force dossier file check or just normal 
+                        // Action: Force dossier file check or just normal 
                         if (appStartupModel.ReleaseVersion.RunForceDossierFileCheck != null && appStartupModel.ReleaseVersion.RunForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
                         {
                             if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < appStartupModel.ReleaseVersion.RunForceDossierFileCheck)
@@ -698,25 +698,25 @@ namespace WinApp.Forms
                         }
                     }
                     // Pilot version
-                    else if (currentVersion <= latestPilotVersion)
+                    else if (currentVersion > latestReleaseVersion)
                     {
-                        // Message
-                        if (appStartupModel.PilotVersion.Message != null && appStartupModel.PilotVersion.MessageDate != null &&
+                        // Message, if exits and not set to be shown in the future, and user not seen it yet
+                        if (appStartupModel.PilotVersion.Message != null && appStartupModel.PilotVersion.MessageDate != null && appStartupModel.PilotVersion.MessageDate <= DateTime.Now &&
                             (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupModel.PilotVersion.MessageDate))
                         {
                             // Display message from Wot Numbers API
-                            MsgBox.Show(appStartupModel.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
+                            MsgBox.Show(appStartupModel.PilotVersion.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                             // Save read message
                             Config.Settings.readMessage = DateTime.Now;
                             Config.SaveConfig(out string msg);
                         }
-                        // Actions
+                        // Action: Run force wot api
                         if (appStartupModel.PilotVersion.RunWotApi != null && appStartupModel.PilotVersion.RunWotApi <= DateTime.Now) // Avoid running future planned updates
                         {
                             if (Config.Settings.doneRunWotApi == null || Config.Settings.doneRunWotApi < appStartupModel.PilotVersion.RunWotApi)
                                 DBVersion.RunDownloadAndUpdateTanks = true;
                         }
-                        // Force dossier file check or just normal 
+                        // Action: Force dossier file check or just normal 
                         if (appStartupModel.PilotVersion.RunForceDossierFileCheck != null && appStartupModel.PilotVersion.RunForceDossierFileCheck <= DateTime.Now) // Avoid running future planned updates
                         {
                             if (Config.Settings.doneRunForceDossierFileCheck == null || Config.Settings.doneRunForceDossierFileCheck < appStartupModel.PilotVersion.RunForceDossierFileCheck)
@@ -4668,7 +4668,7 @@ namespace WinApp.Forms
 		{
             // Message
             Services.AppStartup appStartup = new Services.AppStartup();
-            Services.AppStartupModel appStartupModel = await appStartup.Run();
+            Services.AppStartupModel appStartupModel = await appStartup.Run(false);
             if (!appStartupModel.Success)
                 MsgBox.Show(appStartupModel.Message, "Error getting message", this);
             else
@@ -4682,22 +4682,20 @@ namespace WinApp.Forms
                 double latestPilotVersion = 0;
                 if (userIsTestPilot)
                     latestPilotVersion = appStartupModel.PilotVersion.AppVersion.ToVersionNumber();
-                // Release version
-                if (currentVersion == latestReleaseVersion && appStartupModel.ReleaseVersion.Message != null && appStartupModel.ReleaseVersion.MessageDate != null &&
-                    (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupModel.ReleaseVersion.MessageDate))
+                // Running Release version, and message exits and not set to be shown in the future
+                if (currentVersion <= latestReleaseVersion && appStartupModel.ReleaseVersion.Message != null && appStartupModel.ReleaseVersion.MessageDate != null && appStartupModel.ReleaseVersion.MessageDate <= DateTime.Now)
                 {
                     // Display message from Wot Numbers API
-                    MsgBox.Show(appStartupModel.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
+                    MsgBox.Show(appStartupModel.ReleaseVersion.Message + Environment.NewLine + Environment.NewLine, "Message published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                     // Save read message
                     Config.Settings.readMessage = DateTime.Now;
                     Config.SaveConfig(out string msg);
                 }
-                // Pilot version
-                else if (currentVersion <= latestPilotVersion && appStartupModel.PilotVersion.Message != null && appStartupModel.PilotVersion.MessageDate != null &&
-                    (Config.Settings.readMessage == null || Config.Settings.readMessage < appStartupModel.PilotVersion.MessageDate))
+                // Pilot version, and message exits and not set to be shown in the future
+                else if (currentVersion > latestReleaseVersion && appStartupModel.PilotVersion.Message != null && appStartupModel.PilotVersion.MessageDate != null && appStartupModel.PilotVersion.MessageDate <= DateTime.Now)
                 {
                     // Display message from Wot Numbers API
-                    MsgBox.Show(appStartupModel.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupModel.ReleaseVersion.MessageDate).ToString("dd.MM.yyyy"), this);
+                    MsgBox.Show(appStartupModel.PilotVersion.Message + Environment.NewLine + Environment.NewLine, "Message to test pilot published " + Convert.ToDateTime(appStartupModel.PilotVersion.MessageDate).ToString("dd.MM.yyyy"), this);
                     // Save read message
                     Config.Settings.readMessage = DateTime.Now;
                     Config.SaveConfig(out string msg);
@@ -4925,12 +4923,12 @@ namespace WinApp.Forms
 
         private void mWotNumWebForum_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://wotnumbers.com/Forum/List/8/All_Topcs");
+            Process.Start($"{Constants.WotNumWebUrl()}/Forum/List/8/All_Topcs");
         }
 
         private void mWotNumWebUserGuide_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://wotnumbers.com/Forum/List/2/User_Guides");
+            Process.Start($"{Constants.WotNumWebUrl()}/Forum/List/2/User_Guides");
         }
 
 

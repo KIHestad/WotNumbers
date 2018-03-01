@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
-
+using WinApp.Code;
 
 namespace WinApp.Services
 {
@@ -44,11 +44,11 @@ namespace WinApp.Services
 
     public class AppStartup
 	{
-		public async Task<AppStartupModel> Run()
+		public async Task<AppStartupModel> Run(bool refreshPlayerApiToken)
 		{
             // Body data to send
-            string token = Code.Config.Settings.playerName + '&' + Code.Config.Settings.playerServer + '&' + Code.AppVersion.AssemblyVersion;
-            token = Code.UtilSecurity.Encrypt(token);
+            string token = Config.Settings.playerName + '&' + Config.Settings.playerServer + '&' + AppVersion.AssemblyVersion;
+            token = UtilSecurity.Encrypt(token);
             //token = HttpUtility.UrlEncode(token);
             Request request = new Request()
             {
@@ -57,11 +57,22 @@ namespace WinApp.Services
             // Call Wot Numbers Web service
             try
 			{
+                // Log app start and request data form wot num website
                 HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.PostAsJsonAsync("http://wotnumbers2.com/Api/AppStartup", request);
+                HttpResponseMessage response = await client.PostAsJsonAsync($"{Constants.WotNumWebUrl()}/Api/AppStartup", request);
                 response.EnsureSuccessStatusCode();
                 string result = await response.Content.ReadAsStringAsync();
                 AppStartupModel appStartupModel = JsonConvert.DeserializeObject<AppStartupModel>(result);
+                // Check result and store player id + token
+                if (refreshPlayerApiToken && appStartupModel.Success)
+                {
+                    string sql = "UPDATE player SET playerApiId=@playerId, playerApiToken=@playerToken WHERE playerName=@playerName AND playerServer=@playerServer;";
+                    DB.AddWithValue(ref sql, "@playerId", appStartupModel.PlayerId, DB.SqlDataType.Int);
+                    DB.AddWithValue(ref sql, "@playerToken", appStartupModel.PlayerToken, DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sql, "@playerName", Config.Settings.playerName, DB.SqlDataType.VarChar);
+                    DB.AddWithValue(ref sql, "@playerServer", Config.Settings.playerServer, DB.SqlDataType.VarChar);
+                    DB.ExecuteNonQuery(sql);
+                }
                 return appStartupModel;
 			}
 			catch (Exception ex)

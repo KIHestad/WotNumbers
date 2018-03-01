@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 458; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 460; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -2464,7 +2464,7 @@ namespace WinApp.Code
                     //  CAST(colNameBattleSumCalc AS VARCHAR)+', colNameBattleSumReversePos='+
                     //  CAST(colNameBattleSumReversePos AS VARCHAR)+' WHERE id='+
                     //  CAST(id as VARCHAR)+';" + '
-                    //FROM [WotNumbers].[dbo].[columnSelection]
+                    //FROM columnSelection
                     //WHERE colNameSum is not null;
                     mssql =
                         "UPDATE columnSelection SET colNameSum='CAST(SUM(tank.Tier * playerTankBattle.battles) AS FLOAT) / nullif(SUM(playerTankBattle.battles),0)', colNameBattleSum='SUM(tank.Tier * battle.battlescount)',colNameBattleSumTank='SUM(tank.Tier * playerTankBattle.battles)', colNameBattleSumCalc=1, colNameBattleSumReversePos=0 WHERE id=12;" +
@@ -3109,6 +3109,17 @@ namespace WinApp.Code
                     RunDownloadAndUpdateTanks = true;
                     CopyAdminDB = true; // New Admin DB deployd with installer, copy to %APPDATA%
                     break;
+                case 459:
+                    mssql =
+                        "ALTER TABLE player ADD playerName varchar(50) NULL; " +
+                        "ALTER TABLE player ADD playerServer varchar(10) NULL; " +
+                        "ALTER TABLE player ADD playerApiId int NULL; " +
+                        "ALTER TABLE player ADD playerApiToken varchar(50) NULL; ";
+                    sqlite = mssql.Replace("int", "integer");
+                    break;
+                case 460:
+                    FixPlayerTable();
+                    break;
 
             }
             string sql = "";
@@ -3239,11 +3250,14 @@ namespace WinApp.Code
 			// Loop through each player
 			foreach (DataRow drPlayer in dtPlayer.Rows)
 			{
-				// Get player info
+				// Get player info, when this upgrade was made the player fields playerName and playerServer did not exits
 				int playerId = Convert.ToInt32(drPlayer["id"]);
-				string PlayerNameAndServer = drPlayer["name"].ToString();
-				string playerName = PlayerHelper.GetPlayerNameFromNameAndServer(PlayerNameAndServer);
-				// Update for team 1 and 2 if this is players team
+                string playerNameAndServer = drPlayer["name"].ToString();
+                string playerName = "";
+                int pos = playerNameAndServer.IndexOf(" ");
+                if (pos > 0)
+                    playerName = playerNameAndServer.Substring(0, pos);
+                // Update for team 1 and 2 if this is players team
 				sql =
 					"UPDATE battlePlayer SET playerTeam = 1 WHERE team=1 AND battleId IN " +
 					"(SELECT        battle.id " +
@@ -3300,6 +3314,35 @@ namespace WinApp.Code
                 sql += insert;
             }
             DB.ExecuteNonQuery(sql, false, true);
+        }
+
+        private static void FixPlayerTable()
+        {
+            DataTable dt = DB.FetchData("SELECT * FROM player");
+            foreach (DataRow dr in dt.Rows)
+            {
+                int id = Convert.ToInt32(dr["id"]);
+                string playerNameAndServer = dr["name"].ToString();
+                // get player name
+                string playerName = "";
+                int pos = playerNameAndServer.IndexOf(" ");
+                if (pos > 0)
+                    playerName = playerNameAndServer.Substring(0, pos);
+                // get player server
+                string playerServer = "";
+                pos = playerNameAndServer.IndexOf(" (");
+                if (pos > 0)
+                    playerServer = playerNameAndServer.Substring(pos + 2);
+                pos = playerServer.IndexOf(")");
+                if (pos > 0)
+                    playerServer = playerServer.Substring(0, pos);
+                // update
+                string sql = "UPDATE player SET playerName=@playerName, playerServer=@playerServer WHERE id=@id;";
+                DB.AddWithValue(ref sql, "@playerName", playerName, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@playerServer", playerServer, DB.SqlDataType.VarChar);
+                DB.AddWithValue(ref sql, "@id", id, DB.SqlDataType.Int);
+                DB.ExecuteNonQuery(sql);
+            }
         }
 
     }
