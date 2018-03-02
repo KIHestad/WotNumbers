@@ -54,7 +54,7 @@ namespace WinApp.Code
 		public string  databasePwd { get; set; }				// MSSQL Password (if SQL authentication)
 		public string  databaseName { get; set; }				// MSSQL Databasename
 		public int     playerId { get; set; }					// Player ID selected
-		public string  playerName { get; set; }				    // Player Name selected
+        public string  playerName { get; set; }				    // Player Name selected
 		public string  playerServer { get; set; }				// Player Server selected
 		public string  playerNameAndServer						// Construct playername with servername as name used in player-table as unique playername
 		{
@@ -80,8 +80,6 @@ namespace WinApp.Code
 					playerName = value;
 					playerServer = "";
 				}
-				
-				
 			}
 		}
 		public string  dossierFilePath { get; set; }			// Dossier file path

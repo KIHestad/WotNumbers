@@ -255,6 +255,9 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mAppSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.mAdminTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.mAdminToolsUploadBattlesNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.mAdminToolsUploadBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.mWotNumWebUserGuide = new System.Windows.Forms.ToolStripMenuItem();
@@ -387,7 +390,6 @@
             this.mColumnSelect,
             this.mMapViewType,
             this.mTankFilter,
-            this.mSettings,
             this.mMode,
             this.mBattles,
             this.mBattleGroup,
@@ -396,6 +398,7 @@
             this.toolStripSeparator34,
             this.mViewChart,
             this.toolStripSeparator16,
+            this.mSettings,
             this.mHelp,
             this.toolStripSeparator30,
             this.mVBaddict});
@@ -2284,6 +2287,7 @@
             this.toolStripSeparator1,
             this.mAppSettings,
             this.toolStripSeparator7,
+            this.mAdminTools,
             this.mExit});
             this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
             this.mSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -2453,6 +2457,32 @@
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(261, 6);
+            // 
+            // mAdminTools
+            // 
+            this.mAdminTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mAdminToolsUploadBattlesNew,
+            this.mAdminToolsUploadBattlesAll});
+            this.mAdminTools.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mAdminTools.Name = "mAdminTools";
+            this.mAdminTools.Size = new System.Drawing.Size(264, 22);
+            this.mAdminTools.Text = "Admin Tools";
+            // 
+            // mAdminToolsUploadBattlesNew
+            // 
+            this.mAdminToolsUploadBattlesNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mAdminToolsUploadBattlesNew.Name = "mAdminToolsUploadBattlesNew";
+            this.mAdminToolsUploadBattlesNew.Size = new System.Drawing.Size(214, 22);
+            this.mAdminToolsUploadBattlesNew.Text = "Upload new battles to web";
+            this.mAdminToolsUploadBattlesNew.Click += new System.EventHandler(this.mAdminToolsUploadBattlesNew_Click);
+            // 
+            // mAdminToolsUploadBattlesAll
+            // 
+            this.mAdminToolsUploadBattlesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mAdminToolsUploadBattlesAll.Name = "mAdminToolsUploadBattlesAll";
+            this.mAdminToolsUploadBattlesAll.Size = new System.Drawing.Size(214, 22);
+            this.mAdminToolsUploadBattlesAll.Text = "Upload all battles to web";
+            this.mAdminToolsUploadBattlesAll.Click += new System.EventHandler(this.mAdminToolsUploadBattlesAll_Click);
             // 
             // mExit
             // 
@@ -2987,6 +3017,9 @@
         private System.Windows.Forms.ToolStripMenuItem mBattlesCountSelectedEdit;
         private System.Windows.Forms.ToolStripMenuItem mTankFilter_CountryPoland;
         private System.Windows.Forms.ToolStripMenuItem grandBattleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mAdminTools;
+        private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesNew;
+        private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesAll;
     }
 }
 

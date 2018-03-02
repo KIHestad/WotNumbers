@@ -15,6 +15,8 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -32,8 +34,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -167,6 +167,7 @@
     <Compile Include="Code\ExternalPlayerProfile.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
     <Compile Include="Code\Battle2json.cs" />
+    <Compile Include="Services\AppBattleUpload.cs" />
     <Compile Include="Services\AppStartup.cs" />
     <Compile Include="Code\DateTimeHelper.cs" />
     <Compile Include="Code\ExtensionMethods.cs" />
@@ -672,6 +673,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Code\TankHelper.cs" />
+    <Compile Include="Services\Models\AppBattlesUploadModels.cs" />
+    <Compile Include="Services\Models\AppStartypModels.cs" />
     <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>

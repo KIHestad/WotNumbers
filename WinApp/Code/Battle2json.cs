@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using IronPython.Hosting;
 using IronPython.Runtime;
@@ -69,7 +70,7 @@ namespace WinApp.Code
 
         }
 
-        private static void BattleResultFileCreated(object source, FileSystemEventArgs e)
+        private async static void BattleResultFileCreated(object source, FileSystemEventArgs e)
         {
             if (!Dossier2db.Running)
             {
@@ -296,7 +297,7 @@ namespace WinApp.Code
 
         private static string lastFile = "";
 
-        public static void RunBattleResultRead()
+        public async static void RunBattleResultRead()
         {
             bool deleteLastFileOnError = false;
             try
@@ -311,6 +312,7 @@ namespace WinApp.Code
                 int processed = 0;
                 int added = 0;
                 bool deleteFileAfterRead = true;
+                List<int> battleListSuccess = new List<int>();
                 foreach (string file in filesJson)
                 {
                     // Save file regardless of content if set i settings options
@@ -976,6 +978,10 @@ namespace WinApp.Code
                                 GridView.scheduleGridRefresh = true;
                                 Log.AddToLogBuffer(" > > Done reading into DB JSON file: " + file);
                                 added++;
+
+                                // Add to success read battle list for later upload battles to website
+                                battleListSuccess.Add(battleId);
+
                                 // Check for upload replay file to vBAddict
                                 if (vBAddictHelper.Settings.UploadReplayActive)
                                 {
@@ -1027,6 +1033,13 @@ namespace WinApp.Code
                         fileBattleJson.Delete();
                         Log.AddToLogBuffer(" > > Deleted read or old JSON file: " + file);
                     }
+                }
+
+                // Upload to wot num web server
+                if (battleListSuccess.Count > 0)
+                {
+                    string uploadResult = await new Services.AppBattleUpload().RunForBattles(battleListSuccess);
+                    Log.LogToFile($" > > Battle upload status: {uploadResult}");
                 }
 
                 // Result logging

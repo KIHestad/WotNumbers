@@ -26,7 +26,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 460; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 462; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3119,6 +3119,15 @@ namespace WinApp.Code
                     break;
                 case 460:
                     FixPlayerTable();
+                    break;
+                case 461:
+                    mssql = "UPDATE battle SET markOfMastery = NULL WHERE markOfMastery > 4;";
+                    sqlite = mssql;
+                    break;
+                case 462:
+                    mssql =
+                        "ALTER TABLE battle ADD transferred BIT NOT NULL DEFAULT 0; ";
+                    sqlite = mssql.Replace("int", "integer");
                     break;
 
             }
