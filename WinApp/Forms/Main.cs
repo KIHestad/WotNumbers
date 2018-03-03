@@ -67,7 +67,6 @@ namespace WinApp.Forms
             mHomeView.Visible = true;
             mHomeViewEditMode.Visible = true;
             mBattleGroup.Visible = false;
-            mAdminTools.Visible = Constants.IsDebugging();
             // Check config
             if (DB.CheckConnection(false))
             {
@@ -742,6 +741,7 @@ namespace WinApp.Forms
             mRecalcBattleAllRatings.Enabled = true;
             mRecalcBattleCreditsPerTank.Enabled = true;
             mAppSettings.Enabled = true;
+            mAdminTools.Enabled = true;
         }
 		
 		private async void RunAppStartupActions(string message)
@@ -2112,14 +2112,20 @@ namespace WinApp.Forms
         {
             Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
             string result = await appBattleUpload.Run(false);
-            MsgBox.Show(result, "Upload new battles to Wot Numbers website");
+            MsgBox.Show(result, "Upload new battles to Wot Numbers website", this);
         }
 
         private async void mAdminToolsUploadBattlesAll_Click(object sender, EventArgs e)
         {
-            Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
-            string result = await appBattleUpload.Run(true);
-            MsgBox.Show(result, "Upload all battles to Wot Numbers website");
+            MsgBox.Button answer = MsgBox.Show(
+                "This operation transfer all battles even if they have been transferred previously. Are you sure you want to run the job?" + Environment.NewLine + Environment.NewLine,
+                "Warning", MsgBox.Type.YesNo, this);
+            if (answer == MsgBox.Button.Yes)
+            {
+                Services.AppBattleUpload appBattleUpload = new Services.AppBattleUpload();
+                string result = await appBattleUpload.Run(true);
+                MsgBox.Show(result, "Upload all battles to Wot Numbers website", this);
+            }
         }
         
         #endregion

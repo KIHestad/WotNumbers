@@ -70,7 +70,7 @@ namespace WinApp.Code
 
         }
 
-        private async static void BattleResultFileCreated(object source, FileSystemEventArgs e)
+        private static void BattleResultFileCreated(object source, FileSystemEventArgs e)
         {
             if (!Dossier2db.Running)
             {

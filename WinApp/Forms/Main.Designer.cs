@@ -238,6 +238,9 @@
             this.mSettingsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mSettingsRunBattleCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+            this.mAdminTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.mAdminToolsUploadBattlesNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.mAdminToolsUploadBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mUpdateDataFromAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.mRecalcTankStatistics = new System.Windows.Forms.ToolStripMenuItem();
@@ -255,9 +258,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mAppSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.mAdminTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.mAdminToolsUploadBattlesNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.mAdminToolsUploadBattlesAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.mWotNumWebUserGuide = new System.Windows.Forms.ToolStripMenuItem();
@@ -2276,6 +2276,7 @@
             this.mSettingsRun,
             this.mSettingsRunBattleCheck,
             this.toolStripSeparator24,
+            this.mAdminTools,
             this.mUpdateDataFromAPI,
             this.toolStripSeparator18,
             this.mRecalcTankStatistics,
@@ -2287,7 +2288,6 @@
             this.toolStripSeparator1,
             this.mAppSettings,
             this.toolStripSeparator7,
-            this.mAdminTools,
             this.mExit});
             this.mSettings.Image = ((System.Drawing.Image)(resources.GetObject("mSettings.Image")));
             this.mSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -2301,7 +2301,7 @@
             this.mSettingsRun.Enabled = false;
             this.mSettingsRun.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsRun.Name = "mSettingsRun";
-            this.mSettingsRun.Size = new System.Drawing.Size(264, 22);
+            this.mSettingsRun.Size = new System.Drawing.Size(271, 22);
             this.mSettingsRun.Text = "Automatically Fetch New Battles";
             this.mSettingsRun.Click += new System.EventHandler(this.toolItemSettingsRun_Click);
             this.mSettingsRun.Paint += new System.Windows.Forms.PaintEventHandler(this.toolItem_Checked_paint);
@@ -2311,35 +2311,62 @@
             this.mSettingsRunBattleCheck.Enabled = false;
             this.mSettingsRunBattleCheck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsRunBattleCheck.Name = "mSettingsRunBattleCheck";
-            this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(264, 22);
+            this.mSettingsRunBattleCheck.Size = new System.Drawing.Size(271, 22);
             this.mSettingsRunBattleCheck.Text = "Check for New Battle";
             this.mSettingsRunBattleCheck.Click += new System.EventHandler(this.mSettingsRunBattleCheck_Click);
             // 
             // toolStripSeparator24
             // 
             this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator24.Size = new System.Drawing.Size(268, 6);
+            // 
+            // mAdminTools
+            // 
+            this.mAdminTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mAdminToolsUploadBattlesNew,
+            this.mAdminToolsUploadBattlesAll});
+            this.mAdminTools.Enabled = false;
+            this.mAdminTools.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mAdminTools.Name = "mAdminTools";
+            this.mAdminTools.Size = new System.Drawing.Size(271, 22);
+            this.mAdminTools.Text = "Sync Battles to Wot Numbers website";
+            // 
+            // mAdminToolsUploadBattlesNew
+            // 
+            this.mAdminToolsUploadBattlesNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mAdminToolsUploadBattlesNew.Name = "mAdminToolsUploadBattlesNew";
+            this.mAdminToolsUploadBattlesNew.Size = new System.Drawing.Size(177, 22);
+            this.mAdminToolsUploadBattlesNew.Text = "Upload New Battles";
+            this.mAdminToolsUploadBattlesNew.Click += new System.EventHandler(this.mAdminToolsUploadBattlesNew_Click);
+            // 
+            // mAdminToolsUploadBattlesAll
+            // 
+            this.mAdminToolsUploadBattlesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mAdminToolsUploadBattlesAll.Name = "mAdminToolsUploadBattlesAll";
+            this.mAdminToolsUploadBattlesAll.Size = new System.Drawing.Size(177, 22);
+            this.mAdminToolsUploadBattlesAll.Text = "Upload All Battles";
+            this.mAdminToolsUploadBattlesAll.Click += new System.EventHandler(this.mAdminToolsUploadBattlesAll_Click);
             // 
             // mUpdateDataFromAPI
             // 
             this.mUpdateDataFromAPI.Enabled = false;
             this.mUpdateDataFromAPI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mUpdateDataFromAPI.Name = "mUpdateDataFromAPI";
-            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(264, 22);
+            this.mUpdateDataFromAPI.Size = new System.Drawing.Size(271, 22);
             this.mUpdateDataFromAPI.Text = "Download and Update Tanks...";
             this.mUpdateDataFromAPI.Click += new System.EventHandler(this.toolItemUpdateDataFromAPI_Click);
             // 
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(268, 6);
             // 
             // mRecalcTankStatistics
             // 
             this.mRecalcTankStatistics.Enabled = false;
             this.mRecalcTankStatistics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcTankStatistics.Name = "mRecalcTankStatistics";
-            this.mRecalcTankStatistics.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcTankStatistics.Size = new System.Drawing.Size(271, 22);
             this.mRecalcTankStatistics.Text = "Recalculate Tank Statistics";
             this.mRecalcTankStatistics.Click += new System.EventHandler(this.mRecalcTankStatistics_Click);
             // 
@@ -2355,7 +2382,7 @@
             this.mRecalcBattleRatings.Enabled = false;
             this.mRecalcBattleRatings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcBattleRatings.Name = "mRecalcBattleRatings";
-            this.mRecalcBattleRatings.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcBattleRatings.Size = new System.Drawing.Size(271, 22);
             this.mRecalcBattleRatings.Text = "Recalculate Battle Ratings";
             // 
             // mRecalcBattleWN9
@@ -2414,20 +2441,20 @@
             this.mRecalcBattleCreditsPerTank.Enabled = false;
             this.mRecalcBattleCreditsPerTank.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mRecalcBattleCreditsPerTank.Name = "mRecalcBattleCreditsPerTank";
-            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(264, 22);
+            this.mRecalcBattleCreditsPerTank.Size = new System.Drawing.Size(271, 22);
             this.mRecalcBattleCreditsPerTank.Text = "Recalculate Battle Credits per Tank...";
             this.mRecalcBattleCreditsPerTank.Click += new System.EventHandler(this.mRecalcBattleCreditsPerTank_Click);
             // 
             // toolStripSeparator25
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator25.Size = new System.Drawing.Size(268, 6);
             // 
             // mSettingsShowLogFiles
             // 
             this.mSettingsShowLogFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mSettingsShowLogFiles.Name = "mSettingsShowLogFiles";
-            this.mSettingsShowLogFiles.Size = new System.Drawing.Size(264, 22);
+            this.mSettingsShowLogFiles.Size = new System.Drawing.Size(271, 22);
             this.mSettingsShowLogFiles.Text = "Show Log Files...";
             this.mSettingsShowLogFiles.Click += new System.EventHandler(this.mSettingsShowLogFiles_Click);
             // 
@@ -2435,60 +2462,34 @@
             // 
             this.mShowDbTables.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mShowDbTables.Name = "mShowDbTables";
-            this.mShowDbTables.Size = new System.Drawing.Size(264, 22);
+            this.mShowDbTables.Size = new System.Drawing.Size(271, 22);
             this.mShowDbTables.Text = "Show Database Tables...";
             this.mShowDbTables.Click += new System.EventHandler(this.toolItemShowDbTables_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(268, 6);
             // 
             // mAppSettings
             // 
             this.mAppSettings.Enabled = false;
             this.mAppSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAppSettings.Name = "mAppSettings";
-            this.mAppSettings.Size = new System.Drawing.Size(264, 22);
+            this.mAppSettings.Size = new System.Drawing.Size(271, 22);
             this.mAppSettings.Text = "Application Settings...";
             this.mAppSettings.Click += new System.EventHandler(this.mAppSettings_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(261, 6);
-            // 
-            // mAdminTools
-            // 
-            this.mAdminTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mAdminToolsUploadBattlesNew,
-            this.mAdminToolsUploadBattlesAll});
-            this.mAdminTools.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mAdminTools.Name = "mAdminTools";
-            this.mAdminTools.Size = new System.Drawing.Size(264, 22);
-            this.mAdminTools.Text = "Admin Tools";
-            // 
-            // mAdminToolsUploadBattlesNew
-            // 
-            this.mAdminToolsUploadBattlesNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mAdminToolsUploadBattlesNew.Name = "mAdminToolsUploadBattlesNew";
-            this.mAdminToolsUploadBattlesNew.Size = new System.Drawing.Size(214, 22);
-            this.mAdminToolsUploadBattlesNew.Text = "Upload new battles to web";
-            this.mAdminToolsUploadBattlesNew.Click += new System.EventHandler(this.mAdminToolsUploadBattlesNew_Click);
-            // 
-            // mAdminToolsUploadBattlesAll
-            // 
-            this.mAdminToolsUploadBattlesAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.mAdminToolsUploadBattlesAll.Name = "mAdminToolsUploadBattlesAll";
-            this.mAdminToolsUploadBattlesAll.Size = new System.Drawing.Size(214, 22);
-            this.mAdminToolsUploadBattlesAll.Text = "Upload all battles to web";
-            this.mAdminToolsUploadBattlesAll.Click += new System.EventHandler(this.mAdminToolsUploadBattlesAll_Click);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(268, 6);
             // 
             // mExit
             // 
             this.mExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mExit.Name = "mExit";
-            this.mExit.Size = new System.Drawing.Size(264, 22);
+            this.mExit.Size = new System.Drawing.Size(271, 22);
             this.mExit.Text = "Exit";
             this.mExit.Click += new System.EventHandler(this.mExit_Click);
             // 
