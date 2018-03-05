@@ -2118,7 +2118,7 @@ namespace WinApp.Forms
         private async void mAdminToolsUploadBattlesAll_Click(object sender, EventArgs e)
         {
             MsgBox.Button answer = MsgBox.Show(
-                "This operation transfer all battles even if they have been transferred previously. Are you sure you want to run the job?" + Environment.NewLine + Environment.NewLine,
+                "This operation will transfer all battles even if they have been transferred previously, it might take a while. Are you sure you want to run the job?" + Environment.NewLine + Environment.NewLine,
                 "Warning", MsgBox.Type.YesNo, this);
             if (answer == MsgBox.Button.Yes)
             {
@@ -2127,7 +2127,23 @@ namespace WinApp.Forms
                 MsgBox.Show(result, "Upload all battles to Wot Numbers website", this);
             }
         }
-        
+
+        #endregion
+
+        #region Menu Item: Go to web
+
+        private void mWotNumWebStats_Click(object sender, EventArgs e)
+        {
+            string serverURL = string.Format("{0}/Stats/Index?player={1}&server={2}", Constants.WotNumWebUrl(), Config.Settings.playerName, Config.Settings.playerServer);
+            Process.Start(serverURL);
+        }
+
+        private void mVBaddict_Click(object sender, EventArgs e)
+        {
+            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
+            Process.Start(serverURL);
+        }
+
         #endregion
 
         #region Filters 
@@ -4868,12 +4884,6 @@ namespace WinApp.Forms
 			}
 		}
 
-        private void mVBaddict_Click(object sender, EventArgs e)
-        {
-            string serverURL = string.Format("http://www.vbaddict.net/player/{0}-{1}", Config.Settings.playerName.ToLower(), ExternalPlayerProfile.GetServer);
-            System.Diagnostics.Process.Start(serverURL);
-        }
-
 		private int timerWotAffnityCount = 0;
 		private void timerWoTAffnity_Tick(object sender, EventArgs e)
 		{
@@ -5697,8 +5707,8 @@ namespace WinApp.Forms
 
 
 
-        #endregion
 
+        #endregion
         
     }
 }

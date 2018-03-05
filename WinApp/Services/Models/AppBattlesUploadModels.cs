@@ -55,6 +55,7 @@ namespace WinApp.Services.Models
             public byte? FragsEnemy { get; set; }
             public short? DmgRating { get; set; }
             public short? DmgRatingTotal { get; set; }
+            public short? MapId { get; set; }
         }
     }
 

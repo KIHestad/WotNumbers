@@ -33,6 +33,7 @@ namespace WinApp.Services
         public async Task<string> Run(bool updateExisting, string battleIds = null)
         {
             string debug = "";
+            string debugField = "";
             try
             {
                 // Get player
@@ -68,53 +69,94 @@ namespace WinApp.Services
                 int uploadTotal = 0;
                 foreach (DataRow dr in dtBattle.Rows)
                 {
-                    debug = $"BattleId={dr["id"].ToString()}";
-                    // Get 
-                    byte battleModeId = 15;
-                    switch (dr["battleMode"].ToString())
+                    try
                     {
-                        case "15": battleModeId = 1; break;
-                        case "7": battleModeId = 2; break;
-                        case "7Ranked": battleModeId = 3; break;
-                        case "GlobalMap": battleModeId = 4; break;
-                        case "Special": battleModeId = 5; break;
-                        case "Historical": battleModeId = 6; break;
-                        case "Grand": battleModeId = 7; break;
-                        case "Stronghold": battleModeId = 8; break;
-                        case "Skirmishes": battleModeId = 9; break;
+                        debug = $"BattleId={dr["id"].ToString()}";
+                        // Get
+                        debugField = "battlemode (convert to byte)";
+                        byte battleModeId = 15;
+                        switch (dr["battleMode"].ToString())
+                        {
+                            case "15": battleModeId = 1; break;
+                            case "7": battleModeId = 2; break;
+                            case "7Ranked": battleModeId = 3; break;
+                            case "GlobalMap": battleModeId = 4; break;
+                            case "Special": battleModeId = 5; break;
+                            case "Historical": battleModeId = 6; break;
+                            case "Grand": battleModeId = 7; break;
+                            case "Stronghold": battleModeId = 8; break;
+                            case "Skirmishes": battleModeId = 9; break;
+                        }
+                        // Create battle dataset
+                        Models.AppBattleUploadModels.AppBattle b = new Models.AppBattleUploadModels.AppBattle();
+                        debugField = "playerId";
+                        b.PlayerId = playerId;
+                        debugField = "id";
+                        b.PlayerBattleAppId = Convert.ToInt32(dr["id"]);
+                        debugField = "battleTime";
+                        b.BattleTime = Convert.ToDateTime(dr["battleTime"]);
+                        debugField = "battlemode";
+                        b.BattleModeId = battleModeId;
+                        debugField = "battleResultId";
+                        b.BattleResultId = Convert.ToByte(dr["battleResultId"]);
+                        debugField = "battleSurviveId";
+                        b.BattleSurviveId = Convert.ToByte(dr["battleSurviveId"]);
+                        debugField = "tankId";
+                        b.TankId = Convert.ToInt32(dr["tankId"]);
+                        debugField = "frags";
+                        b.Frags = Convert.ToByte(dr["frags"]);
+                        debugField = "dmg";
+                        b.Dmg = Convert.ToInt16(dr["dmg"]);
+                        debugField = "dmgReceived";
+                        b.DmgReceived = Convert.ToInt16(dr["dmgReceived"]);
+                        debugField = "cap";
+                        b.Cap = Convert.ToByte(dr["cap"]);
+                        debugField = "def";
+                        b.Def = Convert.ToByte(dr["def"]);
+                        debugField = "shots";
+                        b.Shots = Convert.ToInt16(dr["shots"]);
+                        debugField = "hits";
+                        b.Hits = Convert.ToInt16(dr["hits"]);
+                        debugField = "spotted";
+                        b.Spotted = Convert.ToByte(dr["spotted"]);
+                        debugField = "xp";
+                        b.Xp = Convert.ToInt16(dr["xp"]);
+                        debugField = "xpOriginal";
+                        b.XpOriginal = Convert.ToInt16(dr["xpOriginal"]);
+                        debugField = "wn8";
+                        b.Wn8 = Convert.ToInt16(dr["wn8"]);
+                        debugField = "arenaUniqueID";
+                        b.ArenaUniqueId = dr["arenaUniqueID"] == DBNull.Value ? (long?)null : Convert.ToInt64(dr["arenaUniqueID"]);
+                        if (b.ArenaUniqueId != null)
+                        {
+                            debugField = "real_xp";
+                            b.XpReal = dr["real_xp"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["real_xp"]);
+                            debugField = "creditsNet";
+                            b.Credits = dr["creditsNet"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["creditsNet"]);
+                            debugField = "markOfMastery";
+                            b.MarkOfMastery = dr["markOfMastery"] == DBNull.Value ? (byte?)null : Convert.ToByte(dr["markOfMastery"]);
+                            debugField = "fragsteam";
+                            b.FragsTeam = dr["fragsteam"] == DBNull.Value ? (byte?)null : Convert.ToByte(dr["fragsteam"]);
+                            debugField = "fragsenemy";
+                            b.FragsEnemy = dr["fragsenemy"] == DBNull.Value ? (byte?)null : Convert.ToByte(dr["fragsenemy"]);
+                            debugField = "damageRating";
+                            b.DmgRating = dr["damageRating"] == DBNull.Value ? (Int16?)null : Convert.ToInt16(dr["damageRating"]);
+                            debugField = "damageRatingTotal";
+                            b.DmgRatingTotal = dr["damageRatingTotal"] == DBNull.Value ? (Int16?)null : Convert.ToInt16(dr["damageRatingTotal"]);
+                            debugField = "mapId";
+                            b.MapId = dr["mapId"] == DBNull.Value ? (Int16?)null : Convert.ToInt16(dr["mapId"]);
+                        }
+                        battles.Add(b);
                     }
-                    // Create battle dataset
-                    Models.AppBattleUploadModels.AppBattle b = new Models.AppBattleUploadModels.AppBattle();
-                    b.PlayerId = playerId;
-                    b.PlayerBattleAppId = Convert.ToInt32(dr["id"]);
-                    b.BattleTime = Convert.ToDateTime(dr["battleTime"]);
-                    b.BattleModeId = battleModeId;
-                    b.BattleResultId = Convert.ToByte(dr["battleResultId"]);
-                    b.BattleSurviveId = Convert.ToByte(dr["battleSurviveId"]);
-                    b.TankId = Convert.ToInt32(dr["tankId"]);
-                    b.Frags = Convert.ToByte(dr["frags"]);
-                    b.Dmg = Convert.ToInt16(dr["dmg"]);
-                    b.DmgReceived = Convert.ToInt16(dr["dmgReceived"]);
-                    b.Cap = Convert.ToByte(dr["cap"]);
-                    b.Def = Convert.ToByte(dr["def"]);
-                    b.Shots = Convert.ToInt16(dr["shots"]);
-                    b.Hits = Convert.ToInt16(dr["hits"]);
-                    b.Spotted = Convert.ToByte(dr["spotted"]);
-                    b.Xp = Convert.ToInt16(dr["xp"]);
-                    b.XpOriginal = Convert.ToInt16(dr["xpOriginal"]);
-                    b.Wn8 = Convert.ToInt16(dr["wn8"]);
-                    b.ArenaUniqueId = dr["arenaUniqueID"] == DBNull.Value ? (long?)null : Convert.ToInt64(dr["arenaUniqueID"]);
-                    if (b.ArenaUniqueId != null)
+                    catch (Exception ex)
                     {
-                        b.XpReal = dr["real_xp"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["real_xp"]);
-                        b.Credits = dr["creditsNet"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["creditsNet"]);
-                        b.MarkOfMastery = dr["markOfMastery"] == DBNull.Value ? (byte?)null : Convert.ToByte(dr["markOfMastery"]);
-                        b.FragsTeam = dr["fragsteam"] == DBNull.Value ? (byte?)null : Convert.ToByte(dr["fragsteam"]);
-                        b.FragsEnemy = dr["fragsenemy"] == DBNull.Value ? (byte?)null : Convert.ToByte(dr["fragsenemy"]);
-                        b.DmgRating = dr["damageRating"] == DBNull.Value ? (Int16?)null : Convert.ToInt16(dr["damageRating"]);
-                        b.DmgRatingTotal = dr["damageRatingTotal"] == DBNull.Value ? (Int16?)null : Convert.ToInt16(dr["damageRatingTotal"]);
+                        var value = dr[debugField];
+                        if (value == DBNull.Value)
+                            value = "NULL";
+                        Log.LogToFile(" ### Error reading battle: " + debug + " field: " + debugField + " with value: " + value.ToString() + " for upload to web");
+                        DB.ExecuteNonQuery($"UPDATE battle SET transferred=1 WHERE id={debug}");
                     }
-                    battles.Add(b);
+                    
                     // Upload for each 1000 battles
                     if (battles.Count > 999)
                     {

@@ -23,9 +23,7 @@ namespace WinApp.Code
                     server = "ru";
                 if (server == "asia")
                     server = "sea";
-                if (server == "com")
-                    server = "na";
-                if (server == "login")
+                if (server == "com" || server == "login")
                     server = "na";
                 return server;
             }
