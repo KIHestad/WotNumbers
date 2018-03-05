@@ -267,8 +267,8 @@
             this.mHelpMessage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.mWotNumWebStats = new System.Windows.Forms.ToolStripButton();
             this.mLinksSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.mWotNumWebStats = new System.Windows.Forms.ToolStripButton();
             this.mVBaddict = new System.Windows.Forms.ToolStripButton();
             this.lblStatusRowCount = new System.Windows.Forms.Label();
             this.panelMainArea = new System.Windows.Forms.Panel();
@@ -278,6 +278,8 @@
             this.scrollX = new BadScrollBar();
             this.lblStatus2 = new System.Windows.Forms.Label();
             this.lblStatus1 = new System.Windows.Forms.Label();
+            this.timerWotNumMenuItem = new System.Windows.Forms.Timer(this.components);
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcherNewBattle)).BeginInit();
             this.MainTheme.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -2567,6 +2569,11 @@
             this.mHelpAbout.Text = "About Wot Numbers...";
             this.mHelpAbout.Click += new System.EventHandler(this.mHelpAbout_Click);
             // 
+            // mLinksSeparator
+            // 
+            this.mLinksSeparator.Name = "mLinksSeparator";
+            this.mLinksSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
             // mWotNumWebStats
             // 
             this.mWotNumWebStats.BackColor = System.Drawing.Color.Transparent;
@@ -2574,15 +2581,10 @@
             this.mWotNumWebStats.Image = ((System.Drawing.Image)(resources.GetObject("mWotNumWebStats.Image")));
             this.mWotNumWebStats.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mWotNumWebStats.Name = "mWotNumWebStats";
-            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 20);
+            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 22);
             this.mWotNumWebStats.Text = "Stats on Web";
             this.mWotNumWebStats.ToolTipText = "Go to the Stats page on Wot Numbers website";
             this.mWotNumWebStats.Click += new System.EventHandler(this.mWotNumWebStats_Click);
-            // 
-            // mLinksSeparator
-            // 
-            this.mLinksSeparator.Name = "mLinksSeparator";
-            this.mLinksSeparator.Size = new System.Drawing.Size(6, 25);
             // 
             // mVBaddict
             // 
@@ -2591,7 +2593,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -2759,6 +2761,10 @@
             this.lblStatus1.TabIndex = 14;
             this.lblStatus1.Text = "Status";
             this.lblStatus1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // timerWotNumMenuItem
+            // 
+            this.timerWotNumMenuItem.Tick += new System.EventHandler(this.timerWotNumMenuItem_Tick);
             // 
             // Main
             // 
@@ -3037,6 +3043,8 @@
         private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesNew;
         private System.Windows.Forms.ToolStripMenuItem mAdminToolsUploadBattlesAll;
         private System.Windows.Forms.ToolStripButton mWotNumWebStats;
+        private System.Windows.Forms.Timer timerWotNumMenuItem;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

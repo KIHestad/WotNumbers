@@ -153,7 +153,7 @@ namespace WinApp.Services
                         var value = dr[debugField];
                         if (value == DBNull.Value)
                             value = "NULL";
-                        Log.LogToFile(" ### Error reading battle: " + debug + " field: " + debugField + " with value: " + value.ToString() + " for upload to web");
+                        Log.LogToFile(ex, " ### Error reading battle: " + debug + " field: " + debugField + " with value: " + value.ToString() + " for upload to web.");
                         DB.ExecuteNonQuery($"UPDATE battle SET transferred=1 WHERE id={debug}");
                     }
                     

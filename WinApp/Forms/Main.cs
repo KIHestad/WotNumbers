@@ -773,15 +773,48 @@ namespace WinApp.Forms
                 // Upload battles to website
                 string result = await new Services.AppBattleUpload().Run(false);
                 Log.LogToFile($" > > Initial battle upload status: {result}");
-			}
+
+                // Start wot num web toolbar button pulsating
+                timerWotNumMenuItem.Interval = 20000;
+                timerWotNumMenuItem.Enabled = wotNumWebMenuItemPulsatingEnabled;
+                
+            }
 		}
-        		
 
-		#endregion
+        // Pulsating wot num web toolbar button: mWotNumWebStats
+        bool wotNumWebMenuItemPulsatingEnabled = true;
+        byte wotNumWebMenuItemPulsatingCount = 0;
+        int wotNumWebMenuItemRedColor = 45;
+        int wotNumWebMenuItemRedColorInterval = 10;
+        private void timerWotNumMenuItem_Tick(object sender, EventArgs e)
+        {
+            wotNumWebMenuItemRedColor += wotNumWebMenuItemRedColorInterval;
+            timerWotNumMenuItem.Interval = 100;
+            if (wotNumWebMenuItemRedColor > 180)
+            {
+                wotNumWebMenuItemRedColorInterval = -10;
+            }
+            else if (wotNumWebMenuItemRedColor < 45)
+            {
+                timerWotNumMenuItem.Interval = 2000;
+                wotNumWebMenuItemRedColorInterval = 10;
+                wotNumWebMenuItemRedColor = 45;
+                wotNumWebMenuItemPulsatingCount++;
+            }
+            if (wotNumWebMenuItemPulsatingEnabled && wotNumWebMenuItemPulsatingCount < 30)
+                mWotNumWebStats.BackColor = Color.FromArgb(255, wotNumWebMenuItemRedColor, 45 + ((wotNumWebMenuItemRedColor - 45) / 2), 49); 
+            else
+            {
+                timerWotNumMenuItem.Enabled = false;
+                mWotNumWebStats.BackColor = Color.FromArgb(255, 45, 45, 49);
+            }
+        }
 
-		#region Common Events
+        #endregion
 
-		private int status2DefaultColor = 200;
+        #region Common Events
+
+        private int status2DefaultColor = 200;
 		private int status2fadeColor = 200;
 		
 
@@ -2134,7 +2167,9 @@ namespace WinApp.Forms
 
         private void mWotNumWebStats_Click(object sender, EventArgs e)
         {
-            string serverURL = string.Format("{0}/Stats/Index?player={1}&server={2}", Constants.WotNumWebUrl(), Config.Settings.playerName, Config.Settings.playerServer);
+            timerWotNumMenuItem.Enabled = false;
+            wotNumWebMenuItemPulsatingEnabled = false;
+            string serverURL = string.Format("{0}/Stats/Index/{1}/{2}", Constants.WotNumWebUrl(), Config.Settings.playerName, Config.Settings.playerServer);
             Process.Start(serverURL);
         }
 
@@ -5709,6 +5744,7 @@ namespace WinApp.Forms
 
 
         #endregion
+
         
     }
 }
