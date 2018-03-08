@@ -32,8 +32,6 @@ namespace WinApp.Services
 
         public async Task<string> Run(bool updateExisting, string battleIds = null)
         {
-            string debug = "";
-            string debugField = "";
             try
             {
                 // Get player
@@ -69,9 +67,10 @@ namespace WinApp.Services
                 int uploadTotal = 0;
                 foreach (DataRow dr in dtBattle.Rows)
                 {
+                    int battleId = Convert.ToInt32(dr["id"]);
+                    string debugField = "";
                     try
                     {
-                        debug = $"BattleId={dr["id"].ToString()}";
                         // Get
                         debugField = "battlemode (convert to byte)";
                         byte battleModeId = 15;
@@ -92,7 +91,7 @@ namespace WinApp.Services
                         debugField = "playerId";
                         b.PlayerId = playerId;
                         debugField = "id";
-                        b.PlayerBattleAppId = Convert.ToInt32(dr["id"]);
+                        b.PlayerBattleAppId = battleId;
                         debugField = "battleTime";
                         b.BattleTime = Convert.ToDateTime(dr["battleTime"]);
                         debugField = "battlemode";
@@ -153,8 +152,8 @@ namespace WinApp.Services
                         var value = dr[debugField];
                         if (value == DBNull.Value)
                             value = "NULL";
-                        Log.LogToFile(ex, " ### Error reading battle: " + debug + " field: " + debugField + " with value: " + value.ToString() + " for upload to web.");
-                        DB.ExecuteNonQuery($"UPDATE battle SET transferred=1 WHERE id={debug}");
+                        Log.LogToFile(ex, " ### Error reading battle: " + battleId.ToString() + " field: " + debugField + " with value: " + value.ToString() + " for upload to web.");
+                        DB.ExecuteNonQuery($"UPDATE battle SET transferred=1 WHERE id={battleId}");
                     }
                     
                     // Upload for each 1000 battles
@@ -181,9 +180,8 @@ namespace WinApp.Services
             }
             catch (Exception ex)
             {
-                return ex.Message + Environment.NewLine + Environment.NewLine +
-                    "Debug: " + debug + Environment.NewLine + Environment.NewLine +
-                    "Trace: " + ex.StackTrace + Environment.NewLine + Environment.NewLine;
+                Log.LogToFile(ex, " ### Error uploading battles to web");
+                return $"Error uploading battles to web. Please check log file. Error: {ex.Message}" + Environment.NewLine + Environment.NewLine; 
             }
         }
 
