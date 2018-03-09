@@ -369,7 +369,7 @@
             this.MainTheme.MainArea = mainAreaClass1;
             this.MainTheme.Name = "MainTheme";
             this.MainTheme.Resizable = true;
-            this.MainTheme.Size = new System.Drawing.Size(1101, 631);
+            this.MainTheme.Size = new System.Drawing.Size(1131, 631);
             this.MainTheme.SystemExitImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemExitImage")));
             this.MainTheme.SystemMaximizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMaximizeImage")));
             this.MainTheme.SystemMinimizeImage = ((System.Drawing.Image)(resources.GetObject("MainTheme.SystemMinimizeImage")));
@@ -409,7 +409,7 @@
             this.mVBaddict});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(1083, 25);
+            this.toolMain.Size = new System.Drawing.Size(1061, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 18;
             this.toolMain.Text = "toolStripEx1";
@@ -2581,7 +2581,7 @@
             this.mWotNumWebStats.Image = ((System.Drawing.Image)(resources.GetObject("mWotNumWebStats.Image")));
             this.mWotNumWebStats.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mWotNumWebStats.Name = "mWotNumWebStats";
-            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 22);
+            this.mWotNumWebStats.Size = new System.Drawing.Size(96, 20);
             this.mWotNumWebStats.Text = "Stats on Web";
             this.mWotNumWebStats.ToolTipText = "Go to the Stats page on Wot Numbers website";
             this.mWotNumWebStats.Click += new System.EventHandler(this.mWotNumWebStats_Click);
@@ -2593,7 +2593,7 @@
             this.mVBaddict.Image = ((System.Drawing.Image)(resources.GetObject("mVBaddict.Image")));
             this.mVBaddict.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVBaddict.Name = "mVBaddict";
-            this.mVBaddict.Size = new System.Drawing.Size(23, 22);
+            this.mVBaddict.Size = new System.Drawing.Size(23, 20);
             this.mVBaddict.Text = "toolStripButton1";
             this.mVBaddict.ToolTipText = "Go to vBAddict Player Profile";
             this.mVBaddict.Visible = false;
@@ -2604,7 +2604,7 @@
             this.lblStatusRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatusRowCount.BackColor = System.Drawing.Color.Transparent;
             this.lblStatusRowCount.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblStatusRowCount.Location = new System.Drawing.Point(1012, 611);
+            this.lblStatusRowCount.Location = new System.Drawing.Point(1042, 611);
             this.lblStatusRowCount.Margin = new System.Windows.Forms.Padding(0);
             this.lblStatusRowCount.Name = "lblStatusRowCount";
             this.lblStatusRowCount.Size = new System.Drawing.Size(77, 13);
@@ -2771,7 +2771,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Fuchsia;
-            this.ClientSize = new System.Drawing.Size(1101, 631);
+            this.ClientSize = new System.Drawing.Size(1131, 631);
             this.Controls.Add(this.MainTheme);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

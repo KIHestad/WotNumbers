@@ -907,13 +907,13 @@
     <None Include="DevDocs\Python277\ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
     <None Include="DevDocs\Python277\ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
     <None Include="DevDocs\Python277\getopt.pyc" />
-    <None Include="Docs\OLD_BRR\BRR.pyc" />
-    <None Include="Docs\OLD_BRR\CameraNode.pyc" />
+    <None Include="DevDocs\OLD_BRR\BRR.pyc" />
+    <None Include="DevDocs\OLD_BRR\CameraNode.pyc" />
     <None Include="Docs\Database\Admin.db" />
     <None Include="Docs\mod_BRR.pyc" />
     <None Include="Docs\New_Default_Setup.json" />
     <None Include="Docs\Old_Default_Setup.json" />
-    <None Include="Docs\OLD_BRR\__init__.pyc" />
+    <None Include="DevDocs\OLD_BRR\__init__.pyc" />
     <None Include="Dossier2json\maps.json" />
     <None Include="Dossier2json\structures_10.json" />
     <None Include="Dossier2json\structures_17.json" />
