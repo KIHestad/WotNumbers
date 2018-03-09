@@ -409,7 +409,7 @@
             this.mVBaddict});
             this.toolMain.Location = new System.Drawing.Point(9, 29);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(1092, 25);
+            this.toolMain.Size = new System.Drawing.Size(1083, 25);
             this.toolMain.Stretch = true;
             this.toolMain.TabIndex = 18;
             this.toolMain.Text = "toolStripEx1";

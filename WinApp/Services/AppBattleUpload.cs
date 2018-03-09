@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
 using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using WinApp.Code;
 using System.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace WinApp.Services
 {
@@ -195,7 +194,8 @@ namespace WinApp.Services
             };
             // Call Wot Numbers Web service, log app start and request data 
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.PostAsJsonAsync($"{Constants.WotNumWebUrl()}/Api/AppBattle", request);
+            StringContent httpContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync($"{Constants.WotNumWebUrl()}/Api/AppBattle", httpContent);
             response.EnsureSuccessStatusCode();
             string json = await response.Content.ReadAsStringAsync();
             Models.AppBattleUploadModels.Result result = JsonConvert.DeserializeObject<Models.AppBattleUploadModels.Result>(json);
