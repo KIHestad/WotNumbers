@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{D5BDEE9C-3AB3-432E-BC01-1CFACEB88C93}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerWix3", "InstallerWix3\InstallerWix3.wixproj", "{296D714E-750D-499F-B489-C7DFD9B5F0BA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55E2A3AB-AA77-42B1-9720-038AED1250E3} = {55E2A3AB-AA77-42B1-9720-038AED1250E3}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
