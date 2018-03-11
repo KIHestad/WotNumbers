@@ -23,10 +23,11 @@ namespace WinApp.Code
 		public static bool RunRecalcBattleKDratioCRdmg = false;
         public static bool RunRecalcBattleMaxTier = false;
         public static bool RunInstallNewBrrVersion = false;
+        public static bool RunUploadAllToWotNumWeb = false;
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 462; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 463; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3128,6 +3129,9 @@ namespace WinApp.Code
                     mssql =
                         "ALTER TABLE battle ADD transferred BIT NOT NULL DEFAULT 0; ";
                     sqlite = mssql.Replace("int", "integer");
+                    break;
+                case 463:
+                    RunUploadAllToWotNumWeb = true;
                     break;
 
             }

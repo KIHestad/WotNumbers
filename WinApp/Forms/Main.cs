@@ -771,9 +771,11 @@ namespace WinApp.Forms
 				}
 
                 // Upload battles to website
-                string result = await new Services.AppBattleUpload().Run(false);
-                Log.LogToFile($" > > Initial battle upload status: {result}");
-
+                string result = await new Services.AppBattleUpload().Run(DBVersion.RunUploadAllToWotNumWeb);
+                if (DBVersion.RunUploadAllToWotNumWeb)
+                    Log.LogToFile($" > > Battle upload to Wot Numbers webside for all battles done. Status: {result}");
+                else
+                    Log.LogToFile($" > > Battle upload to Wot Numbers webside for new battles done. status: {result}");
                 // Start wot num web toolbar button pulsating
                 timerWotNumMenuItem.Interval = 20000;
                 timerWotNumMenuItem.Enabled = wotNumWebMenuItemPulsatingEnabled;

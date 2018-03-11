@@ -125,6 +125,8 @@ namespace WinApp.Services
                         b.Wn8 = Convert.ToInt16(dr["wn8"]);
                         debugField = "arenaUniqueID";
                         b.ArenaUniqueId = dr["arenaUniqueID"] == DBNull.Value ? (long?)null : Convert.ToInt64(dr["arenaUniqueID"]);
+                        debugField = "battlesCount";
+                        b.BattlesCount = Convert.ToInt16(dr["battlesCount"]);
                         if (b.ArenaUniqueId != null)
                         {
                             debugField = "real_xp";

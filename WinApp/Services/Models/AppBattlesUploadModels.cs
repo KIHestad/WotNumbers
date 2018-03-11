@@ -56,6 +56,7 @@ namespace WinApp.Services.Models
             public short? DmgRating { get; set; }
             public short? DmgRatingTotal { get; set; }
             public short? MapId { get; set; }
+            public short BattlesCount { get; set; }
         }
     }
 
