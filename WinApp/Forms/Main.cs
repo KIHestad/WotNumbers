@@ -2173,6 +2173,7 @@ namespace WinApp.Forms
             wotNumWebMenuItemPulsatingEnabled = false;
             string serverURL = string.Format("{0}/Stats/Index/{1}/{2}", Constants.WotNumWebUrl(), Config.Settings.playerName, Config.Settings.playerServer);
             Process.Start(serverURL);
+            mWotNumWebStats.BackColor = Color.FromArgb(255, 45, 45, 49);
         }
 
         private void mVBaddict_Click(object sender, EventArgs e)
@@ -4498,7 +4499,7 @@ namespace WinApp.Forms
 
 		#region App, DB and other Settings + Help/About + Chart
 
-        private void mAppSettings_Click(object sender, EventArgs e)
+        private async void mAppSettings_Click(object sender, EventArgs e)
         {
             // Stop file watchers if running
             int runState = Config.Settings.dossierFileWathcherRun;
@@ -4566,6 +4567,9 @@ namespace WinApp.Forms
             SetFavListMenu(); // Reload fav list items
             SetColListMenu(); // Refresh column setup list now
             mVBaddict.Visible = (Config.Settings.vBAddictShowToolBarMenu); // Show vbAddict Player Profil toolbar if upload activated
+
+            // Upload battles to wotnumweb
+            await new Services.AppBattleUpload().Run(false);
 
             // Refresh data
             SetStatus2("Refreshed grid");

@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 463; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 465; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3098,9 +3098,6 @@ namespace WinApp.Code
                         "UPDATE battle SET battleResultMode='Global Map' WHERE bonusType=13 AND battleResultMode IS NULL;";
                     sqlite = mssql;
                     break;
-                case 455:
-                    RunRecalcBattleWN8 = true;
-                    break;
                 case 456:
                     mssql =
                         "INSERT INTO map (id, name, arena_id) VALUES (82, 'Klondike', '217_er_alaska'); ";
@@ -3130,7 +3127,8 @@ namespace WinApp.Code
                         "ALTER TABLE battle ADD transferred BIT NOT NULL DEFAULT 0; ";
                     sqlite = mssql.Replace("int", "integer");
                     break;
-                case 463:
+                case 465:
+                    RunRecalcBattleWN8 = true;
                     RunUploadAllToWotNumWeb = true;
                     break;
 
