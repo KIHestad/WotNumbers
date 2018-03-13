@@ -699,7 +699,7 @@ namespace WinApp.Forms
                         }
                     }
                     // Pilot version
-                    else if (currentVersion > latestReleaseVersion)
+                    else if (appStartupResult.PilotVersion != null && currentVersion > latestReleaseVersion)
                     {
                         // Message, if exits and not set to be shown in the future, and user not seen it yet
                         if (appStartupResult.PilotVersion.Message != null && appStartupResult.PilotVersion.MessageDate != null && appStartupResult.PilotVersion.MessageDate <= DateTime.Now &&
