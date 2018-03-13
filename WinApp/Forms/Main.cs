@@ -699,7 +699,7 @@ namespace WinApp.Forms
                         }
                     }
                     // Pilot version
-                    else if (currentVersion > latestReleaseVersion)
+                    else if (appStartupResult.PilotVersion != null && currentVersion > latestReleaseVersion)
                     {
                         // Message, if exits and not set to be shown in the future, and user not seen it yet
                         if (appStartupResult.PilotVersion.Message != null && appStartupResult.PilotVersion.MessageDate != null && appStartupResult.PilotVersion.MessageDate <= DateTime.Now &&
@@ -848,13 +848,11 @@ namespace WinApp.Forms
 				if (status2fadeColor >= 2)
 				{
 					lblStatus2.ForeColor = Color.FromArgb(255, status2fadeColor, status2fadeColor, status2fadeColor); // Fading
-					Application.DoEvents();
 				}
 				else
 				{
 					timerStatus2.Enabled = false;
 					lblStatus2.Text = "";
-					Application.DoEvents();
 					if (StatusBarHelper.MessageExists)
 					{
 						SetStatus2();
@@ -876,11 +874,9 @@ namespace WinApp.Forms
 				if (msg != "")
 				{
 					timerStatus2.Enabled = false;
-					Application.DoEvents();
 					timerStatus2.Interval = 3000;
 					lblStatus2.ForeColor = Color.FromArgb(255, status2DefaultColor, status2DefaultColor, status2DefaultColor); // White color, not faded
 					lblStatus2.Text = msg;
-					Application.DoEvents();
 					timerStatus2.Enabled = true;
 					if (StatusBarHelper.MessageExists)
 						StatusBarHelper.CheckForClear();
@@ -909,7 +905,7 @@ namespace WinApp.Forms
 			{
 				lblStatus1.Text = "Running";
 				notifyIcon.Text = "Wot Numbers - Running";
-				lblStatus1.ForeColor = System.Drawing.Color.ForestGreen;
+				lblStatus1.ForeColor = Color.ForestGreen;
 			}
 			else
 			{
@@ -995,7 +991,7 @@ namespace WinApp.Forms
 
 		private void ResizeNow()
 		{
-			// Set Form border color
+            // Set Form border color
 			SetFormBorder();
 			// Set Main Area Panel
 			panelMainArea.Width = MainTheme.MainArea.Width;
@@ -1077,7 +1073,7 @@ namespace WinApp.Forms
             ChangeView(GridView.Views.Map);
         }
 
-		private void ChangeView(GridView.Views newGridView, bool forceUpdate = false)
+       	private void ChangeView(GridView.Views newGridView, bool forceUpdate = false)
 		{
 			if (newGridView != MainSettings.View || forceUpdate) // Only do action if changed view or selected force update
 			{
@@ -1118,7 +1114,7 @@ namespace WinApp.Forms
 					case GridView.Views.Overall:
 						// Select view
 						mViewOverall.Checked = true;
-						dataGridMain.Visible = false;
+                        dataGridMain.Visible = false;
                         Application.DoEvents();
 						scrollX.Visible = false;
 						scrollY.Visible = false;
@@ -1141,7 +1137,8 @@ namespace WinApp.Forms
 						mViewTankInfo.Checked = true;
 						// Show grid
 						dataGridMain.Visible = true;
-						scrollX.Visible = true;
+                        Application.DoEvents();
+                        scrollX.Visible = true;
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
 						dataGridMain.RowHeadersWidth = Config.Settings.mainGridTankRowWidht;
@@ -1178,6 +1175,7 @@ namespace WinApp.Forms
 						mViewBattles.Checked = true;
 						// Show grid
 						dataGridMain.Visible = true;
+                        Application.DoEvents();
 						scrollX.Visible = true;
 						scrollY.Visible = true;
 						scrollCorner.Visible = true;
@@ -1215,6 +1213,7 @@ namespace WinApp.Forms
                         mViewMaps.Checked = true;
                         // Show grid
                         dataGridMain.Visible = true;
+                        Application.DoEvents();
                         scrollX.Visible = true;
                         scrollY.Visible = true;
                         scrollCorner.Visible = true;
@@ -1275,19 +1274,15 @@ namespace WinApp.Forms
 						{
 							Config.Settings.dossierFileWathcherRun = 0;
 							SetListener();
-							Application.DoEvents();
 						}
 						currentPlayerId = Config.Settings.playerId;
 						SetFormTitle();
-						MsgBox.Show("Current player is changed because new player data is fetched." +
-							Environment.NewLine + Environment.NewLine + "Player changed to: " + Config.Settings.playerNameAndServer +
-							Environment.NewLine + Environment.NewLine, "Current player chenged", this);
+						MsgBox.Show($"Current player is changed to {Config.Settings.playerNameAndServer} because new player data is fetched." + Environment.NewLine + Environment.NewLine, "Current player changed", this);
 						// Return to prev file watcher state
 						if (runState != Config.Settings.dossierFileWathcherRun)
 						{
 							Config.Settings.dossierFileWathcherRun = runState;
 							SetListener();
-							Application.DoEvents();
 						}
 					}
 					switch (MainSettings.View)

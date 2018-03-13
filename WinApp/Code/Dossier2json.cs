@@ -179,9 +179,16 @@ namespace WinApp.Code
 				bool ok = true;
 				returVal = "Starting file handling...";
 				Log.AddToLogBuffer(" > > Dossier file handling started");
-				// Get player name and server from dossier
-				string playerName = GetPlayerName(dossierFile);
-				string playerServer = GetPlayerServer(dossierFile);
+                // Get player name and server from dossier
+                DossierHelper.DossierFileInfo dfi = DossierHelper.GetDossierFileInfo(dossierFile);
+                if (!dfi.Success)
+                {
+                    Log.AddToLogBuffer(" > > Dossier file check terminated, could not get plyerinfo from dossier file. " + dfi.Message);
+                    Dossier2db.Running = false;
+                    return dfi.Message;
+                }
+				string playerName = dfi.PlayerName;
+				string playerServer = dfi.ServerRealmName;
 				string playerNameAndServer = playerName + " (" + playerServer + ")";
 				// Get player ID
 				int playerId = 0;
@@ -332,7 +339,7 @@ namespace WinApp.Code
                         //dynamic ipyrun = ipy.UseFile(dossier2jsonScript);
                         //ipyrun.main();
                         Log.AddToLogBuffer(" > > Start converting Dossier DAT-file to json");
-                        Microsoft.Scripting.Hosting.ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
+                        ScriptScope scope = PythonEngine.Engine.ExecuteFile(dossier2jsonScript); // this is your python program
                         dynamic result = scope.GetVariable("main")();
                         Log.AddToLogBuffer(" > > Finish converted Dossier DAT-file to json");
                     }
@@ -407,57 +414,6 @@ namespace WinApp.Code
 				}
 			}
 		}
-
-		
-
-		// Gets the names of the player from name of dossier file
-		public static string GetPlayerName(string dossierFileName)
-		{
-			try
-			{
-				FileInfo fi = new FileInfo(dossierFileName);
-				var decodedFileName = DecodFileName(fi);
-				const char separator = ';';
-				return decodedFileName.Split(separator)[1];
-			}
-			catch (Exception)
-			{
-				Log.AddToLogBuffer("Error getting player name from dossier file", true);
-				return "";
-			}
-			
-		}
-
-		public static string GetPlayerServer(string dossierFileName)
-		{
-			try
-			{
-				FileInfo fi = new FileInfo(dossierFileName);
-				var decodedFileName = DecodFileName(fi);
-				if (decodedFileName.Contains("worldoftanks"))
-					decodedFileName = decodedFileName.Substring(decodedFileName.IndexOf("worldoftanks"));
-				if (dossierFileName.Contains(":"))
-					decodedFileName = decodedFileName.Substring(0, decodedFileName.IndexOf(":"));
-				const char separator = '.';
-				return decodedFileName.Split(separator)[1].ToUpper();
-			}
-			catch (Exception)
-			{
-				Log.AddToLogBuffer("Error getting player server (realm) from dossier file", true);
-				return "";
-			}
-		}
-
-		// Decods the name of the file.
-		public static string DecodFileName(FileInfo fi)
-		{
-			string str = fi.Name.Replace(fi.Extension, string.Empty);
-			byte[] decodedFileNameBytes = Base32.Base32Encoder.Decode(str.ToLowerInvariant());
-			string decodedFileName = Encoding.UTF8.GetString(decodedFileNameBytes);
-			return decodedFileName;
-		}
-
-
 
 	}
 }

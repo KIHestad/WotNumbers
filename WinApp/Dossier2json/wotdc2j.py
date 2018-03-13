@@ -95,8 +95,10 @@ def main():
 		except:
 			catch_fatal('Cannot remove target file ' + filename_target)
 
-			
-	cachefile = open(filename_source, 'rb')
+	try:		
+	    cachefile = open(filename_source, 'rb')
+	except Exception, e:
+		exitwitherror('Could not open dossier file: ' + filename_source + ' Error: ' + e.message)
 
 	try:
 		# removed safeunpicler - from SafeUnpickler import SafeUnpickler

@@ -53,11 +53,10 @@ namespace WinApp.Code
             // Get player server
             string server = Config.Settings.playerServer;
 			// Change to correct server for NA and RU
-			switch (server)
-			{
-				case "LOGIN": serverURL = "http://api.worldoftanks.com"; break;
-				case "NET": serverURL = "http://api.worldoftanks.ru"; break;
-			}
+            if (server == "NA" || server == "LOGIN")
+                serverURL = "http://api.worldoftanks.com";
+            else if (server == "RU" || server == "NET")
+                serverURL = "http://api.worldoftanks.ru";
 			return serverURL;
 		}
 
@@ -68,11 +67,10 @@ namespace WinApp.Code
             // Get player server
             string server = Config.Settings.playerServer;
             // Change to correct server for NA and RU
-            switch (server)
-			{
-				case "LOGIN": applicationId = "417860beae5ef8a03e11520aaacbf123"; break;
-				case "NET": applicationId = "f53b88fef36646161ddfa4418fc5209c"; break;
-			}
+            if (server == "NA" || server == "LOGIN")
+                applicationId = "417860beae5ef8a03e11520aaacbf123"; 
+            else if (server == "RU" || server == "NET")
+                applicationId = "f53b88fef36646161ddfa4418fc5209c"; ;
 			return applicationId;
 		}
 

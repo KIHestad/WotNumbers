@@ -159,6 +159,7 @@
     <Compile Include="Code\CursorHelper.cs" />
     <Compile Include="Code\CustomFileCopier.cs" />
     <Compile Include="Code\DbConvert.cs" />
+    <Compile Include="Code\DossierHelper.cs" />
     <Compile Include="Code\ExternalPlayerProfile.cs" />
     <Compile Include="Code\FormControl\BadGridView.cs" />
     <Compile Include="Code\Battle2json.cs" />
@@ -220,11 +221,9 @@
     </Compile>
     <Compile Include="Code\DbVersion.cs" />
     <Compile Include="Code\TankCreditCalculation.cs" />
-    <Compile Include="Code\TankPerformance.cs" />
     <Compile Include="Code\TankSearchHelper.cs" />
     <Compile Include="Code\UtilSecurity.cs" />
     <Compile Include="Code\vBAddictHelper.cs" />
-    <Compile Include="Code\ViewRange.cs" />
     <Compile Include="Code\WoThelper.cs" />
     <Compile Include="Code\XmlHelper.cs" />
     <Compile Include="Forms\About.cs">

@@ -27,7 +27,7 @@ namespace WinApp.Code
         public static bool CopyAdminDB = false;
 
         // The current databaseversion
-        public static int ExpectedNumber = 465; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
+        public static int ExpectedNumber = 466; // <--- REMEMBER TO SET DB VERSION NUMBER HERE - ADD DATABASE CHANGES AND FORCE RUN SYSTEM JOBS BELOW
 
 		// The upgrade scripts
 		private static string UpgradeSQL(int version, ConfigData.dbType dbType, Form parentForm, bool newDatabase)
@@ -3130,6 +3130,12 @@ namespace WinApp.Code
                 case 465:
                     RunRecalcBattleWN8 = true;
                     RunUploadAllToWotNumWeb = true;
+                    break;
+                case 466:
+                    mssql =
+                        "UPDATE player SET name = playerName + ' (NA)', playerServer = 'NA' WHERE playerServer = 'LOGIN'; " +
+                        "UPDATE player SET name = playerName + ' (RU)', playerServer = 'RU' WHERE playerServer = 'NET'; ";
+                    sqlite = mssql.Replace("+", "||");
                     break;
 
             }

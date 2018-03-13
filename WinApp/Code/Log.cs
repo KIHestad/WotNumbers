@@ -21,11 +21,12 @@ namespace WinApp.Code
 			bool loggingOk = true;
 			if (Config.Settings.showDBErrors || forceLogging)
 			{
-				Application.DoEvents();
 				loggingOk = LogToFileLogBuffer(logBuffer, false);
 			}
 			if (loggingOk)
-				logBuffer = new List<string>();
+            {
+                logBuffer = new List<string>();
+            }
 		}
 
 		public static void AddToLogBuffer(string logtext, bool addDateTime = true)

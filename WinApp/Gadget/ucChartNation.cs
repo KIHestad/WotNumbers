@@ -313,7 +313,6 @@ namespace WinApp.Gadget
 			}
 			chart1.ChartAreas[0].AxisY.Maximum = (max * 1.2);
 			serie1.Points.ResumeUpdates();
-			Application.DoEvents();
 		}
 	}
 }

@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using IronPython.Hosting;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.Scripting.Hosting.Providers;
+using IronPython.Runtime;
 
 namespace WinApp.Code
 {
@@ -22,21 +24,25 @@ namespace WinApp.Code
 		
 		public static void CreateEngine()
 		{
-			// Create Engine - Debug mode
-			// Dictionary<string, object> options = new Dictionary<string, object>();
-			// options["Debug"] = true;
-			// Engine = Python.CreateEngine(options); 
+            // Create Engine - Debug mode
+            Dictionary<string, object> options = new Dictionary<string, object>();
+            options["Debug"] = true;
+            Engine = Python.CreateEngine(options); 
 
-			// Create Engine - Normal mode
-			Engine = Python.CreateEngine();
+            // Create Engine - Normal mode
+            //Engine = Python.CreateEngine();
 
-			/*
+            var pc = HostingHelpers.GetLanguageContext(Engine) as PythonContext;
+            var hooks = pc.SystemState.Get__dict__()["path_hooks"] as List;
+            hooks.Clear();
+
+            /*
 			System.IO.FileStream fs = new System.IO.FileStream(ipyLogFile, System.IO.FileMode.Create);
 			Engine.Runtime.IO.SetOutput(fs, Encoding.UTF8); // write to file
 			*/
 
-			// Create handlers for fetching python output
-			outputWr = new EventRaisingStreamWriter(ipyMemoryStream);
+            // Create handlers for fetching python output
+            outputWr = new EventRaisingStreamWriter(ipyMemoryStream);
 			outputWr.StringWritten += new EventHandler<MyEvtArgs<string>>(sWr_StringWritten);
 			Engine.Runtime.IO.SetOutput(ipyMemoryStream, outputWr);
 		}
